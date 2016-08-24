@@ -664,9 +664,9 @@ bool EffectNoiseReduction::Worker::Process
       double t1 = std::min(trackEnd, mT1);
 
       if (t1 > t0) {
-         sampleCount start = track->TimeToLongSamples(t0);
-         sampleCount end = track->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(t0);
+         auto end = track->TimeToLongSamples(t1);
+         auto len = end - start;
 
          if (!ProcessOne(effect, statistics, factory,
                          count, track, start, len))
@@ -1291,11 +1291,11 @@ bool EffectNoiseReduction::Worker::ProcessOne
    if(!mDoProfile)
       outputTrack = factory.NewWaveTrack(track->GetSampleFormat(), track->GetRate());
 
-   sampleCount bufferSize = track->GetMaxBlockSize();
+   auto bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);
 
    bool bLoopSuccess = true;
-   sampleCount samplePos = start;
+   auto samplePos = start;
    while (bLoopSuccess && samplePos < start + len) {
       //Get a blockSize of samples (smaller than the size of the buffer)
       const auto blockSize = limitSampleBufferSize(

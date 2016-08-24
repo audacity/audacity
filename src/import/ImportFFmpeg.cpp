@@ -603,9 +603,10 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
             WaveTrack *t = stream[c].get();
             odTask->AddWaveTrack(t);
 
-            sampleCount maxBlockSize = t->GetMaxBlockSize();
+            auto maxBlockSize = t->GetMaxBlockSize();
             //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
-            for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) {
+
+            for (decltype(sampleDuration) i = 0; i < sampleDuration; i += maxBlockSize) {
                const auto blockLen =
                   limitSampleBufferSize( maxBlockSize, sampleDuration - i );
 

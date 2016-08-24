@@ -172,7 +172,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
          _("Mixing and rendering tracks"));
 
       while (updateResult == eProgressSuccess) {
-         sampleCount blockLen = mixer.Process(maxBlockLen);
+         auto blockLen = mixer.Process(maxBlockLen);
 
          if (blockLen == 0)
             break;
@@ -418,7 +418,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
    const double tstep = 1.0 / trackRate;
    int sampleSize = SAMPLE_SIZE(floatSample);
 
-   sampleCount out = 0;
+   decltype(mMaxOut) out = 0;
 
    /* time is floating point. Sample rate is integer. The number of samples
     * has to be integer, but the multiplication gives a float result, which we
@@ -438,7 +438,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
    const double tEnd = backwards
       ? std::max(startTime, mT1)
       : std::min(endTime, mT1);
-   const sampleCount endPos = track->TimeToLongSamples(tEnd);
+   const auto endPos = track->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
    double t = (*pos + (backwards ? *queueLen : - *queueLen)) / trackRate;
 
@@ -488,7 +488,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          }
       }
 
-      sampleCount thisProcessLen = mProcessLen;
+      auto thisProcessLen = mProcessLen;
       bool last = (*queueLen < mProcessLen);
       if (last) {
          thisProcessLen = *queueLen;
@@ -625,7 +625,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
    //   return 0;
 
    int i, j;
-   sampleCount maxOut = 0;
+   decltype(Process(0)) maxOut = 0;
    int *channelFlags = new int[mNumChannels];
 
    mMaxOut = maxToProcess;

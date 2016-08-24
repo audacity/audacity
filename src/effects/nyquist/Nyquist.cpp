@@ -626,8 +626,8 @@ bool NyquistEffect::Process()
          gtLast = gt;
 
          mCurStart[0] = mCurTrack[0]->TimeToLongSamples(mT0);
-         sampleCount end = mCurTrack[0]->TimeToLongSamples(mT1);
-         mCurLen = (sampleCount)(end - mCurStart[0]);
+         auto end = mCurTrack[0]->TimeToLongSamples(mT1);
+         mCurLen = end - mCurStart[0];
 
          if (mCurLen > NYQ_MAX_LEN) {
             float hours = (float)NYQ_MAX_LEN / (44100 * 60 * 60);

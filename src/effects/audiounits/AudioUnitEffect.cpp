@@ -1440,7 +1440,7 @@ sampleCount AudioUnitEffect::RealtimeProcess(int group,
 
    for (int c = 0; c < mAudioIns; c++)
    {
-      for (sampleCount s = 0; s < numSamples; s++)
+      for (decltype(numSamples) s = 0; s < numSamples; s++)
       {
          mMasterIn[c][s] += inbuf[c][s];
       }

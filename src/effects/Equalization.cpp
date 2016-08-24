@@ -548,9 +548,9 @@ bool EffectEqualization::Process()
       double t1 = mT1 > trackEnd? trackEnd: mT1;
 
       if (t1 > t0) {
-         sampleCount start = track->TimeToLongSamples(t0);
-         sampleCount end = track->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(t0);
+         auto end = track->TimeToLongSamples(t1);
+         auto len = end - start;
 
          if (!ProcessOne(count, track, start, len))
          {
@@ -1061,8 +1061,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    int L = windowSize - (mM - 1);   //Process L samples at a go
-   sampleCount s = start;
-   sampleCount idealBlockLen = t->GetMaxBlockSize() * 4;
+   auto s = start;
+   auto idealBlockLen = t->GetMaxBlockSize() * 4;
    if (idealBlockLen % L != 0)
       idealBlockLen += (L - (idealBlockLen % L));
 
@@ -1073,7 +1073,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    float *thisWindow = window1;
    float *lastWindow = window2;
 
-   sampleCount originalLen = len;
+   auto originalLen = len;
 
    int i,j;
    for(i=0; i<windowSize; i++)
@@ -1086,7 +1086,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    while (len != 0)
    {
-      sampleCount block = idealBlockLen;
+      auto block = idealBlockLen;
       if (block > len)
          block = len;
 

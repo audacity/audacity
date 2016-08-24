@@ -240,7 +240,7 @@ void ODComputeSummaryTask::OrderBlockFiles
    //Note that this code assumes that the array is sorted in time.
 
    //find the startpoint
-   sampleCount processStartSample = GetDemandSample();
+   auto processStartSample = GetDemandSample();
    for(int i= ((int)unorderedBlocks.size())-1;i>= 0;i--)
    {
       //check to see if the refcount is at least two before we add it to the list.

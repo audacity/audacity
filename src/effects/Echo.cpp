@@ -105,7 +105,7 @@ sampleCount EffectEcho::ProcessBlock(float **inBlock, float **outBlock, sampleCo
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
-   for (sampleCount i = 0; i < blockLen; i++, histPos++)
+   for (decltype(blockLen) i = 0; i < blockLen; i++, histPos++)
    {
       if (histPos == histLen)
       {

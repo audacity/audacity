@@ -1289,7 +1289,6 @@ bool Effect::ProcessPass()
 
    ChannelName map[3];
 
-   sampleCount prevBufferSize = 0;
    mBufferSize = 0;
    mBlockSize = 0;
 
@@ -1374,12 +1373,12 @@ bool Effect::ProcessPass()
       SetSampleRate(left->GetRate());
 
       // Get the block size the client wants to use
-      sampleCount max = left->GetMaxBlockSize() * 2;
+      auto max = left->GetMaxBlockSize() * 2;
       mBlockSize = SetBlockSize(max);
 
       // Calculate the buffer size to be at least the max rounded up to the clients
       // selected block size.
-      prevBufferSize = mBufferSize;
+      const auto prevBufferSize = mBufferSize;
       mBufferSize = ((max + (mBlockSize - 1)) / mBlockSize) * mBlockSize;
 
       // If the buffer size has changed, then (re)allocate the buffers
@@ -1536,24 +1535,23 @@ bool Effect::ProcessTrack(int count,
    // there is no further input data to process, the loop continues to call the
    // effect with an empty input buffer until the effect has had a chance to 
    // return all of the remaining delayed samples.
-   sampleCount inLeftPos = leftStart;
-   sampleCount inRightPos = rightStart;
-   sampleCount outLeftPos = leftStart;
-   sampleCount outRightPos = rightStart;
+   auto inLeftPos = leftStart;
+   auto inRightPos = rightStart;
+   auto outLeftPos = leftStart;
+   auto outRightPos = rightStart;
 
-   sampleCount inputRemaining = len;
-   sampleCount delayRemaining = 0;
-   sampleCount curBlockSize = 0;
-   sampleCount curDelay = 0;
+   auto inputRemaining = len;
+   decltype(GetLatency()) curDelay = 0, delayRemaining = 0;
+   decltype(mBlockSize) curBlockSize = 0;
 
-   size_t inputBufferCnt = 0;
-   sampleCount outputBufferCnt = 0;
+   decltype(mBufferSize) inputBufferCnt = 0;
+   decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
    int chans = wxMin(mNumAudioOut, mNumChannels);
 
    std::unique_ptr<WaveTrack> genLeft, genRight;
-   sampleCount genLength = 0;
+   decltype(len) genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
    double genDur = 0;
@@ -1616,7 +1614,7 @@ bool Effect::ProcessTrack(int count,
 
             // Clear the remainder of the buffers so that a full block can be passed
             // to the effect
-            sampleCount cnt = mBlockSize - curBlockSize;
+            auto cnt = mBlockSize - curBlockSize;
             for (int i = 0; i < mNumChannels; i++)
             {
                for (int j = 0 ; j < cnt; j++)
@@ -1668,7 +1666,7 @@ bool Effect::ProcessTrack(int count,
       }
 
       // Finally call the plugin to process the block
-      sampleCount processed;
+      decltype(curBlockSize) processed;
       try
       {
          processed = ProcessBlock(mInBufPos, mOutBufPos, curBlockSize);
@@ -1701,7 +1699,7 @@ bool Effect::ProcessTrack(int count,
       // Get the current number of delayed samples and accumulate
       if (isProcessor)
       {
-         sampleCount delay = GetLatency();
+         auto delay = GetLatency();
          curDelay += delay;
          delayRemaining += delay;
 
@@ -2020,7 +2018,7 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
 
    if (t1 > t0) {
       *start = track->TimeToLongSamples(t0);
-      sampleCount end = track->TimeToLongSamples(t1);
+      auto end = track->TimeToLongSamples(t1);
       *len = (sampleCount)(end - *start);
    }
    else {
@@ -2374,7 +2372,7 @@ sampleCount Effect::RealtimeProcess(int group,
    float **clientIn = (float **) alloca(mNumAudioIn * sizeof(float *));
    float **clientOut = (float **) alloca(mNumAudioOut * sizeof(float *));
    float *dummybuf = (float *) alloca(numSamples * sizeof(float));
-   sampleCount len = 0;
+   decltype(numSamples) len = 0;
    int ichans = chans;
    int ochans = chans;
    int gchans = chans;
@@ -2448,9 +2446,9 @@ sampleCount Effect::RealtimeProcess(int group,
 
       // Finally call the plugin to process the block
       len = 0;
-      for (sampleCount block = 0; block < numSamples; block += mBlockSize)
+      for (decltype(numSamples) block = 0; block < numSamples; block += mBlockSize)
       {
-         sampleCount cnt = (block + mBlockSize > numSamples ? numSamples - block : mBlockSize);
+         auto cnt = (block + mBlockSize > numSamples ? numSamples - block : mBlockSize);
          len += RealtimeProcess(processor, clientIn, clientOut, cnt);
 
          for (int i = 0 ; i < mNumAudioIn; i++)

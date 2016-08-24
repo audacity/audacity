@@ -370,7 +370,7 @@ bool EffectCompressor::InitPass1()
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
    while (track) {
-      sampleCount len=track->GetMaxBlockSize();
+      auto len = track->GetMaxBlockSize();
       if(len > maxlen)
          maxlen = len;
       //Iterate to the next track

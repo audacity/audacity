@@ -190,7 +190,7 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
 
       RegionList trackSilences;
 
-      sampleCount index = wt->TimeToLongSamples(mT0);
+      auto index = wt->TimeToLongSamples(mT0);
       sampleCount silentFrame = 0; // length of the current silence
 
       Analyze(silences, trackSilences, wt, &silentFrame, &index, whichTrack, &inputLength, &minInputLength);
@@ -378,7 +378,7 @@ bool EffectTruncSilence::FindSilences
       WaveTrack *const wt = static_cast<WaveTrack *>(t);
 
       // Smallest silent region to detect in frames
-      sampleCount minSilenceFrames =
+      auto minSilenceFrames =
          sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
 
       //
@@ -386,7 +386,7 @@ bool EffectTruncSilence::FindSilences
       //
       RegionList trackSilences;
 
-      sampleCount index = wt->TimeToLongSamples(mT0);
+      auto index = wt->TimeToLongSamples(mT0);
       sampleCount silentFrame = 0;
 
       // Detect silences
@@ -487,7 +487,7 @@ bool EffectTruncSilence::DoRemoval
          {
             // In WaveTracks, clear with a cross-fade
             WaveTrack *const wt = static_cast<WaveTrack*>(t);
-            sampleCount blendFrames = mBlendFrameCount;
+            auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
             cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
             cutEnd = wt->LongSamplesToTime(wt->TimeToLongSamples(cutEnd));
@@ -501,13 +501,13 @@ bool EffectTruncSilence::DoRemoval
             // Perform cross-fade in memory
             float *buf1 = new float[blendFrames];
             float *buf2 = new float[blendFrames];
-            sampleCount t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
-            sampleCount t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
+            auto t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
+            auto t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
 
             wt->Get((samplePtr)buf1, floatSample, t1, blendFrames);
             wt->Get((samplePtr)buf2, floatSample, t2, blendFrames);
 
-            for (sampleCount i = 0; i < blendFrames; ++i)
+            for (decltype(blendFrames) i = 0; i < blendFrames; ++i)
             {
                buf1[i] = ((blendFrames-i) * buf1[i] + i * buf2[i]) /
                          (double)blendFrames;
@@ -542,12 +542,12 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                                  double* minInputLength /*= NULL*/)
 {
    // Smallest silent region to detect in frames
-   sampleCount minSilenceFrames = sampleCount(std::max( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
+   auto minSilenceFrames = sampleCount(std::max( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
 
    double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
-   sampleCount blockLen = wt->GetMaxBlockSize();
-   sampleCount start = wt->TimeToLongSamples(mT0);
-   sampleCount end = wt->TimeToLongSamples(mT1);
+   auto blockLen = wt->GetMaxBlockSize();
+   auto start = wt->TimeToLongSamples(mT0);
+   auto end = wt->TimeToLongSamples(mT1);
    sampleCount outLength = 0;
 
    double previewLength;
@@ -596,8 +596,8 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
          // No more regions -- no need to process the rest of the track
          if (inputLength) {
             // Add available samples up to previewLength.
-            sampleCount remainingTrackSamples = wt->TimeToLongSamples(wt->GetEndTime()) - *index;
-            sampleCount requiredTrackSamples = previewLen - outLength;
+            auto remainingTrackSamples = wt->TimeToLongSamples(wt->GetEndTime()) - *index;
+            auto requiredTrackSamples = previewLen - outLength;
             outLength += (remainingTrackSamples > requiredTrackSamples)? requiredTrackSamples : remainingTrackSamples;
          }
 
@@ -612,9 +612,9 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
             ));
          }
          *silentFrame = 0;
-         sampleCount newIndex = wt->TimeToLongSamples(rit->start);
+         auto newIndex = wt->TimeToLongSamples(rit->start);
          if (inputLength) {
-            sampleCount requiredTrackSamples = previewLen - outLength;
+            auto requiredTrackSamples = previewLen - outLength;
             // Add non-silent sample to outLength
             outLength += ((newIndex - *index) > requiredTrackSamples)? requiredTrackSamples : newIndex - *index;
          }

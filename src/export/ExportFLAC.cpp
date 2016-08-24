@@ -324,7 +324,7 @@ int ExportFLAC::Export(AudacityProject *project,
          _("Exporting the entire project as FLAC"));
 
       while (updateResult == eProgressSuccess) {
-         sampleCount samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
+         auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
          if (samplesThisRun == 0) { //stop encoding
             break;
          }

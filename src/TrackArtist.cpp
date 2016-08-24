@@ -1312,14 +1312,14 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    const double toffset = clip->GetOffset();
    double rate = clip->GetRate();
    const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
-   const sampleCount s0 = sampleCount(floor(t0 * rate));
-   const sampleCount snSamples = clip->GetNumSamples();
+   const auto s0 = sampleCount(floor(t0 * rate));
+   const auto snSamples = clip->GetNumSamples();
    if (s0 > snSamples)
       return;
 
    const double t1 = zoomInfo.PositionToTime(rect.width - 1, -leftOffset) - toffset;
-   const sampleCount s1 = sampleCount(ceil(t1 * rate));
-   const sampleCount slen = std::min(snSamples - s0, s1 - s0 + 1);
+   const auto s1 = sampleCount(ceil(t1 * rate));
+   sampleCount slen = std::min(snSamples - s0, s1 - s0 + 1);
    if (slen <= 0)
       return;
 
@@ -1330,14 +1330,13 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    int *ypos = new int[slen];
    int *clipped = NULL;
    int clipcnt = 0;
-   sampleCount s;
 
    if (mShowClipping)
       clipped = new int[slen];
 
    dc.SetPen(muted ? muteSamplePen : samplePen);
 
-   for (s = 0; s < slen; s++) {
+   for (decltype(slen) s = 0; s < slen; s++) {
       const double time = toffset + (s + s0) / rate;
       const int xx = // An offset into the rectangle rect
          std::max(-10000, std::min(10000,
@@ -1356,7 +1355,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    }
 
    // Draw lines
-   for (s = 0; s < slen - 1; s++) {
+   for (decltype(slen) s = 0; s < slen - 1; s++) {
       AColor::Line(dc,
                    rect.x + xpos[s], rect.y + ypos[s],
                    rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
@@ -1371,7 +1370,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
       pr.height = tickSize;
       //different colour when draggable.
       dc.SetBrush( bigPoints ? dragsampleBrush : sampleBrush);
-      for (s = 0; s < slen; s++) {
+      for (decltype(slen) s = 0; s < slen; s++) {
          if (ypos[s] >= 0 && ypos[s] < rect.height) {
             pr.x = rect.x + xpos[s] - tickSize/2;
             pr.y = rect.y + ypos[s] - tickSize/2;
@@ -1384,7 +1383,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    if (clipcnt) {
       dc.SetPen(muted ? muteClippedPen : clippedPen);
       while (--clipcnt >= 0) {
-         s = clipped[clipcnt];
+         auto s = clipped[clipcnt];
          AColor::Line(dc, rect.x + s, rect.y, rect.x + s, rect.y + rect.height);
       }
    }
@@ -1576,7 +1575,7 @@ struct ClipParameters
 
       //trim selection so that it only contains the actual samples
       if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
-         ssel1 = (sampleCount)(0.5 + trackLen * rate);
+         ssel1 = 0.5 + trackLen * rate;
       }
 
       // The variable "hiddenMid" will be the rectangle containing the
@@ -1844,13 +1843,13 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
       if (portion.inFisheye) {
          if (!showIndividualSamples) {
             fisheyeDisplay.Allocate();
-            const sampleCount numSamples = clip->GetNumSamples();
+            const auto numSamples = clip->GetNumSamples();
             // Get wave display data for different magnification
             int jj = 0;
             for (; jj < rect.width; ++jj) {
                const double time =
                   zoomInfo.PositionToTime(jj, -leftOffset) - tOffset;
-               const sampleCount sample = (sampleCount)floor(time * rate + 0.5);
+               const auto sample = (sampleCount)floor(time * rate + 0.5);
                if (sample < 0) {
                   ++rect.x;
                   ++skippedLeft;
@@ -2428,7 +2427,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       float *const uncached =
          inFisheye ? &specCache.freq[(fisheyeColumn++) * half] : 0;
 
-      sampleCount w0 = w1;
+      auto w0 = w1;
       w1 = sampleCount(0.5 + rate *
          (zoomInfo.PositionToTime(xx + 1, -leftOffset) - tOffset)
       );

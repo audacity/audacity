@@ -100,15 +100,15 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
    }
    else {
 
-      sampleCount lastsubthresholdsample;     // keeps track of the sample number of the last sample to not exceed the threshold
-
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
       unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
       unsigned int SignalWindowSizeInt = (unsigned int)(rate  * mSignalWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;   //Indexes the number of samples remaining in the selection
-      lastsubthresholdsample = start;          //start this off at the selection start
+      auto lastsubthresholdsample = start;          //start this off at the selection start
+      // keeps track of the sample number of the last sample to not exceed the threshold
+
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
 
 
@@ -247,15 +247,15 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
    }
    else {
 
-      sampleCount lastsubthresholdsample;     // keeps track of the sample number of the last sample to not exceed the threshold
-
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
       unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
       //unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;                 //Indexes the number of samples remaining in the selection
-      lastsubthresholdsample = end;            //start this off at the end
+      auto lastsubthresholdsample = end;            //start this off at the end
+      // keeps track of the sample number of the last sample to not exceed the threshold
+
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
 
 
@@ -384,8 +384,6 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
    }
    else {
 
-       sampleCount lastsubthresholdsample;     // keeps track of the sample number of the last sample to not exceed the threshold
-
 
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
@@ -393,7 +391,9 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
       unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;   //Indexes the number of samples remaining in the selection
-      lastsubthresholdsample = start;          //start this off at the selection start
+      auto lastsubthresholdsample = start;          //start this off at the selection start
+      // keeps track of the sample number of the last sample to not exceed the threshold
+
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
 
       //This loop goes through the selection a block at a time.  If a long enough run
@@ -520,15 +520,15 @@ sampleCount VoiceKey::OffBackward (WaveTrack & t, sampleCount end, sampleCount l
    }
    else {
 
-      sampleCount lastsubthresholdsample;     // keeps track of the sample number of the last sample to not exceed the threshold
-
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
       unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
       //unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;                 //Indexes the number of samples remaining in the selection
-      lastsubthresholdsample = end;            //start this off at the end
+      auto lastsubthresholdsample = end;            //start this off at the end
+      // keeps track of the sample number of the last sample to not exceed the threshold
+
       int blockruns=0;                         //keeps track of the number of consecutive above-threshold blocks
 
       //This loop goes through the selection a block at a time in reverse order.  If a long enough run
@@ -839,8 +839,8 @@ double VoiceKey::TestEnergy (WaveTrack & t, sampleCount start, sampleCount len)
 {
 
    double sum = 1;
-   sampleCount s = start;                                //Keep track of start
-   sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
+   auto s = start;                                //Keep track of start
+   auto originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
    const auto blockSize = limitSampleBufferSize(
       t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    float *buffer = new float[blockSize];       //Get a sampling buffer
@@ -880,8 +880,8 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 {
 
 
-   sampleCount s = start;                                //Keep track of start
-   sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
+   auto s = start;                                //Keep track of start
+   auto originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
    const auto blockSize = limitSampleBufferSize(
       t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    unsigned long signchanges = 1;
@@ -936,8 +936,8 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
 {
 
 
-   sampleCount s = start;                                //Keep track of start
-   sampleCount originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
+   auto s = start;                                //Keep track of start
+   auto originalLen = len;                        //Keep track of the length of block to process (its not the length of t)
    const auto blockSize = limitSampleBufferSize(
       t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    unsigned long directionchanges = 1;

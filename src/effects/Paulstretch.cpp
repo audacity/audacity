@@ -238,9 +238,9 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    int stretch_buf_size = GetBufferSize(track->GetRate());
    double amount = this->mAmount;
 
-   sampleCount start = track->TimeToLongSamples(t0);
-   sampleCount end = track->TimeToLongSamples(t1);
-   sampleCount len = (sampleCount)(end - start);
+   auto start = track->TimeToLongSamples(t0);
+   auto end = track->TimeToLongSamples(t1);
+   auto len = end - start;
 
    int minDuration = stretch_buf_size * 2 + 1;
    if (len < minDuration){   //error because the selection is too short
@@ -292,18 +292,17 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    PaulStretch stretch(amount,stretch_buf_size,track->GetRate());
 
-   sampleCount nget=stretch.get_nsamples_for_fill();
+   auto nget = stretch.get_nsamples_for_fill();
 
    int bufsize=stretch.poolsize;
    float *buffer0=new float[bufsize];
    float *bufferptr0=buffer0;
-   sampleCount outs=0;
    bool first_time=true;
 
    int fade_len=100;
    if (fade_len>(bufsize/2-1)) fade_len=bufsize/2-1;
    float *fade_track_smps=new float[fade_len];
-   sampleCount s=0;
+   decltype(len) s=0;
    bool cancelled=false;
 
    while (s<len){
@@ -314,7 +313,6 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          stretch.process(buffer0,0);
       };
 
-      outs+=stretch.out_bufsize;
       s+=nget;
 
       if (first_time){//blend the the start of the selection

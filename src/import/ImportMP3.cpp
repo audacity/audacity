@@ -456,13 +456,12 @@ enum mad_flow output_cb(void *_data,
                         struct mad_pcm *pcm)
 {
    int channels, samplerate;
-   sampleCount samples;
    struct private_data *data = (struct private_data *)_data;
    int smpl;
 
    samplerate= pcm->samplerate;
    channels  = pcm->channels;
-   samples   = pcm->length;
+   const auto samples   = pcm->length;
 
    /* If this is the first run, we need to create the WaveTracks that
     * will hold the data.  We do this now because now is the first

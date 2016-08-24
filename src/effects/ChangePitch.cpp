@@ -417,7 +417,7 @@ void EffectChangePitch::DeduceFrequencies()
 
       double trackStart = track->GetStartTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
-      sampleCount start = track->TimeToLongSamples(t0);
+      auto start = track->TimeToLongSamples(t0);
 
       int analyzeSize = windowSize * numWindows;
       float * buffer;

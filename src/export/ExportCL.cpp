@@ -448,7 +448,7 @@ int ExportCL::Export(AudacityProject *project,
 
          // Need to mix another block
          if (numBytes == 0) {
-            sampleCount numSamples = mixer->Process(maxBlockLen);
+            auto numSamples = mixer->Process(maxBlockLen);
             if (numSamples == 0) {
                break;
             }

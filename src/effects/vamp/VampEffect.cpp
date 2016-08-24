@@ -492,9 +492,9 @@ bool VampEffect::Process()
          data[c] = new float[block];
       }
 
-      sampleCount originalLen = len;
-      sampleCount ls = lstart;
-      sampleCount rs = rstart;
+      auto originalLen = len;
+      auto ls = lstart;
+      auto rs = rstart;
 
       while (len != 0)
       {
