@@ -534,7 +534,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
    // generate a fade-in of duration 1/250th of second
    if (last == 0) {
       A = (fs / kFadeInOut);
-      for(sampleCount i = 0; i < A; i++) {
+      for(size_t i = 0; i < A; i++) {
          buffer[i] *= i/A;
       }
    }
@@ -548,7 +548,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
       // protect against negative offset, which can occur if too a
       // small selection is made
       if (offset >= 0) {
-         for(sampleCount i = 0; i < A; i++) {
+         for(size_t i = 0; i < A; i++) {
             buffer[i + offset] *= (1 - (i / A));
          }
       }

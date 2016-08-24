@@ -1429,7 +1429,7 @@ bool WaveTrack::InsertSilence(double t, double len)
 bool WaveTrack::Disjoin(double t0, double t1)
 {
    sampleCount minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
-   sampleCount maxAtOnce = 1048576;
+   size_t maxAtOnce = 1048576;
    float *buffer = new float[ maxAtOnce ];
    Regions regions;
 

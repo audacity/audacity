@@ -288,7 +288,7 @@ bool EffectAutoDuck::Process()
    int rmsPos = 0;
    float rmsSum = 0;
    float *rmsWindow = new float[kRMSWindowSize];
-   for (i = 0; i < kRMSWindowSize; i++)
+   for (size_t i = 0; i < kRMSWindowSize; i++)
       rmsWindow[i] = 0;
 
    float *buf = new float[kBufSize];
@@ -393,7 +393,7 @@ bool EffectAutoDuck::Process()
 
          WaveTrack* t = (WaveTrack*)iterTrack;
 
-         for (i = 0; i < (int)regions.GetCount(); i++)
+         for (size_t i = 0; i < regions.GetCount(); i++)
          {
             const AutoDuckRegion& region = regions[i];
             if (ApplyDuckFade(trackNumber, t, region.t0, region.t1))
