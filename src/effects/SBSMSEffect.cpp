@@ -280,7 +280,7 @@ bool EffectSBSMS::Process()
 
             // SBSMS has a fixed sample rate - we just convert to its sample rate and then convert back
             float srTrack = leftTrack->GetRate();
-            float srProcess = bLinkRatePitch?srTrack:44100.0;
+            float srProcess = bLinkRatePitch ? srTrack : 44100.0;
 
             // the resampler needs a callback to supply its samples
             ResampleBuf rb;
@@ -300,9 +300,6 @@ bool EffectSBSMS::Process()
 
             SlideType outSlideType;
             SBSMSResampleCB outResampleCB;
-
-            sampleCount processPresamples = 0;
-            sampleCount trackPresamples = 0;
 
             if(bLinkRatePitch) {
               rb.bPitch = true;
@@ -327,10 +324,18 @@ bool EffectSBSMS::Process()
               rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
               rb.SBSMSBuf = (audio*)calloc(rb.SBSMSBlockSize,sizeof(audio));
 
-              processPresamples = wxMin(rb.quality->getMaxPresamples(),
-                                        (long)((float)(start-trackStart)*(srProcess/srTrack)));
-              trackPresamples = wxMin(start-trackStart,
-                                      (long)((float)(processPresamples)*(srTrack/srProcess)));
+              // Note: width of getMaxPresamples() is only long.  Widen it
+              decltype(start) processPresamples = rb.quality->getMaxPresamples();
+              processPresamples =
+                 std::min(processPresamples,
+                          decltype(processPresamples)
+                             ((float)(start-trackStart)*(srProcess/srTrack)));
+
+              auto trackPresamples = start - trackStart;
+              trackPresamples =
+                  std::min(trackPresamples,
+                           decltype(trackPresamples)
+                              ((float)(processPresamples)*(srTrack/srProcess)));
               rb.offset = start - trackPresamples;
               rb.end = trackEnd;
               rb.iface = std::make_unique<SBSMSEffectInterface>
@@ -340,7 +345,9 @@ bool EffectSBSMS::Process()
                    // The argument type is only long!
                    static_cast<long> ( static_cast<size_t> (
                         samplesToProcess ) ),
-                   processPresamples,
+                   // This argument type is also only long!
+                   static_cast<long> ( static_cast<size_t> (
+                        processPresamples ) ),
                    rb.quality.get());
             }
             
