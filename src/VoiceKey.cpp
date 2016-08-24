@@ -848,12 +848,12 @@ double VoiceKey::TestEnergy (WaveTrack & t, sampleCount start, sampleCount len)
    while(len > 0)
       {
          //Figure out how much to grab
-         const auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
+         auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
          t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
          //Now, go through the block and calculate energy
-         for(auto i = 0; i< block; i++)
+         for(decltype(block) i = 0; i< block; i++)
             {
                sum += buffer[i]*buffer[i];
             }
@@ -891,7 +891,7 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 
    while(len > 0) {
       //Figure out how much to grab
-      const auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
+      auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
       t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
@@ -903,7 +903,7 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
 
       //Now, go through the block and calculate zero crossings
 
-      for(auto i = 0; i< block; i++)
+      for(decltype(block) i = 0; i< block; i++)
          {
             if( sgn(buffer[i]) != currentsign)
                {
@@ -948,7 +948,7 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
 
    while(len > 0) {
       //Figure out how much to grab
-      const auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
+      auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
       t.Get((samplePtr)buffer,floatSample, s,block);                      //grab the block;
 
@@ -960,7 +960,7 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
       //Now, go through the block and calculate zero crossings
 
 
-      for(auto i = 0; i< block; i++){
+      for(decltype(block) i = 0; i< block; i++){
 
          if( sgn(buffer[i]-lastval) != lastdirection) {
             directionchanges++;

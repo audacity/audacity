@@ -448,7 +448,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
          *queueStart = 0;
 
-         const auto getLen = limitSampleBufferSize(
+         auto getLen = limitSampleBufferSize(
             mQueueMaxLen - *queueLen,
             backwards ? *pos - endPos : endPos - *pos
          );
@@ -476,7 +476,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos += getLen;
             }
 
-            for (auto i = 0; i < getLen; i++) {
+            for (decltype(getLen) i = 0; i < getLen; i++) {
                queue[(*queueLen) + i] *= mEnvValues[i];
             }
 

@@ -281,7 +281,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
    while (sourceSampleCount < end) {
       //Get a block of samples (smaller than the size of the buffer)
       //Adjust the block size if it is the final block in the track
-      const auto blockSize = limitSampleBufferSize(
+      auto blockSize = limitSampleBufferSize(
          leftTrack->GetBestBlockSize(sourceSampleCount),
          end - sourceSampleCount
       );
@@ -291,7 +291,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
       rightTrack->Get((samplePtr)(rightBuffer), floatSample, sourceSampleCount, blockSize);
 
       // Interleave into soundTouchBuffer.
-      for (auto index = 0; index < blockSize; index++) {
+      for (decltype(blockSize) index = 0; index < blockSize; index++) {
          soundTouchBuffer[index*2]       = leftBuffer[index];
          soundTouchBuffer[(index*2)+1]   = rightBuffer[index];
       }

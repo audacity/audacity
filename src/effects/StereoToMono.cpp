@@ -144,8 +144,8 @@ bool EffectStereoToMono::ProcessOne(int count)
    while (index < mEnd) {
       bResult &= mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
       bResult &= mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
-      const auto limit = limitSampleBufferSize( idealBlockLen, mEnd - index );
-      for (auto i = 0; i < limit; ++i) {
+      auto limit = limitSampleBufferSize( idealBlockLen, mEnd - index );
+      for (decltype(limit) i = 0; i < limit; ++i) {
          index++;
          curLeftFrame = leftBuffer[i];
          curRightFrame = rightBuffer[i];
