@@ -199,11 +199,11 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxString(wxT("")) + 
          wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
          _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
-         _(" email to [[mailto:james@audacityteam.org|'james@audacityteam.org']] - for help using DarkAudacity.") + wxT("</li><li>") +
-         _(" see [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between DarkAudacity and Audacity.") + wxT("</li></ul>") +
+         _(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
+         _(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
+         _(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
 
          _("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
-         _(" [[http://manual.audacityteam.org/quick_help.html|'Quick Help']] - for getting started with Audacity.") + wxT("</li><li>") +
          _(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
          _(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>") 
       );

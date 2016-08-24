@@ -296,9 +296,9 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    }
    else if (releasePageName == wxT("Quick_Help"))
    {
-      releasePageName = wxT("quick_help") + HelpSystem::ReleaseSuffix + anchor;
+      releasePageName = wxT("video") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
-      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
+      webHelpPath = wxT("http://www.darkaudacity.com/");
    }
    else
    {

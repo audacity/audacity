@@ -1090,7 +1090,10 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginMenu(_("&Help"));
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
-      c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
+      // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
+      // At the moment the video tutorials are aspirational (aka do not exist yet).
+      // Emphasise that manual is for Audacity, not DarkAudacity.
+      c->AddItem(wxT("QuickHelp"), _("&Getting Started"), FN(OnQuickHelp));
       c->AddItem(wxT("Manual"), _("Audacity &Manual"), FN(OnManual));
 
       c->AddSeparator();
