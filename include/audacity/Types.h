@@ -42,6 +42,7 @@
 #ifndef __AUDACITY_TYPES_H__
 #define __AUDACITY_TYPES_H__
 
+#include <algorithm>
 #include <wx/string.h>
 #include <wx/arrstr.h>
 

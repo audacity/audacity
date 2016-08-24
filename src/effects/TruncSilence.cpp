@@ -624,13 +624,13 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       // End of optimization
 
       // Limit size of current block if we've reached the end
-      const auto count = limitSampleBufferSize( blockLen, end - *index );
+      auto count = limitSampleBufferSize( blockLen, end - *index );
 
       // Fill buffer
       wt->Get((samplePtr)(buffer), floatSample, *index, count);
 
       // Look for silenceList in current block
-      for (decltype(+count) i = 0; i < count; ++i) {
+      for (decltype(count) i = 0; i < count; ++i) {
          if (inputLength && ((outLength >= previewLen) || (outLength > wt->TimeToLongSamples(*minInputLength)))) {
             *inputLength = wt->LongSamplesToTime(*index + i) - wt->LongSamplesToTime(start);
             break;

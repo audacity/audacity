@@ -1459,11 +1459,11 @@ bool WaveTrack::Disjoin(double t0, double t1)
       sampleCount len = ( end - start );
       for( sampleCount done = 0; done < len; done += maxAtOnce )
       {
-         const auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
+         auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
 
          clip->GetSamples( ( samplePtr )buffer, floatSample, start + done,
                numSamples );
-         for( decltype(+numSamples) i = 0; i < numSamples; i++ )
+         for( decltype(numSamples) i = 0; i < numSamples; i++ )
          {
             sampleCount curSamplePos = start + done + i;
 

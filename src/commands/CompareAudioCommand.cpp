@@ -110,13 +110,13 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
    while (position < s1)
    {
       // Get a block of data into the buffers
-      const auto block = limitSampleBufferSize(
+      auto block = limitSampleBufferSize(
          mTrack0->GetBestBlockSize(position), s1 - position
       );
       mTrack0->Get((samplePtr)buff0, floatSample, position, block);
       mTrack1->Get((samplePtr)buff1, floatSample, position, block);
 
-      for (decltype(+block) buffPos = 0; buffPos < block; ++buffPos)
+      for (decltype(block) buffPos = 0; buffPos < block; ++buffPos)
       {
          if (CompareSample(buff0[buffPos], buff1[buffPos]) > errorThreshold)
          {
