@@ -3102,8 +3102,8 @@
 		EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportExportCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		EDD94EDA103CB520000873F1 /* ImportExportCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportExportCommands.h; sourceTree = "<group>"; tabWidth = 3; };
 		EDE325FF168243EF00C19E60 /* vr32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vr32.c; sourceTree = "<group>"; };
-		EDF3B7AE1588C0D50032D35F /* Paulstretch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paulstretch.h; path = effects/Paulstretch.h; sourceTree = "<group>"; };
-		EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Paulstretch.cpp; path = effects/Paulstretch.cpp; sourceTree = "<group>"; };
+		EDF3B7AE1588C0D50032D35F /* Paulstretch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Paulstretch.h; sourceTree = "<group>"; };
+		EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Paulstretch.cpp; sourceTree = "<group>"; };
 		EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenSaveCommands.cpp; sourceTree = "<group>"; };
 		EDFCEB9B18894AE600C98E51 /* OpenSaveCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSaveCommands.h; sourceTree = "<group>"; };
 		EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RealFFTf48x.cpp; sourceTree = "<group>"; };
@@ -3874,7 +3874,6 @@
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
 				1790B0AF09883BFD008A330A /* NoteTrack.cpp */,
-				EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */,
 				1790B0B109883BFD008A330A /* PitchName.cpp */,
 				1790B0B309883BFD008A330A /* PlatformCompatibility.cpp */,
 				287E207E102561F300BF47A2 /* PluginManager.cpp */,
@@ -3966,7 +3965,6 @@
 				280A8B4619F4403B0091DE70 /* ModuleManager.h */,
 				1790B0B009883BFD008A330A /* NoteTrack.h */,
 				280F5C8B1B676699003022C5 /* NumberScale.h */,
-				EDF3B7AE1588C0D50032D35F /* Paulstretch.h */,
 				1790B0B209883BFD008A330A /* PitchName.h */,
 				1790B0B409883BFD008A330A /* PlatformCompatibility.h */,
 				2803C8B519F35AA000278526 /* PluginManager.h */,
@@ -4115,6 +4113,8 @@
 				1790B03409883BFD008A330A /* nyquist */,
 				1790B03A09883BFD008A330A /* Phaser.cpp */,
 				1790B03B09883BFD008A330A /* Phaser.h */,
+				EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */,
+				EDF3B7AE1588C0D50032D35F /* Paulstretch.h */,
 				28EBA7FA0A78FADE00C8BB1F /* Repair.cpp */,
 				28EBA7FB0A78FADE00C8BB1F /* Repair.h */,
 				1790B03E09883BFD008A330A /* Repeat.cpp */,
