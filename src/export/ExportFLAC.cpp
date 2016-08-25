@@ -311,7 +311,7 @@ int ExportFLAC::Export(AudacityProject *project,
                             numChannels, SAMPLES_PER_RUN, false,
                             rate, format, true, mixerSpec);
 
-   int i, j;
+   int i;
    FLAC__int32 **tmpsmplbuf = new FLAC__int32*[numChannels];
    for (i = 0; i < numChannels; i++) {
       tmpsmplbuf[i] = (FLAC__int32 *) calloc(SAMPLES_PER_RUN, sizeof(FLAC__int32));
@@ -324,7 +324,7 @@ int ExportFLAC::Export(AudacityProject *project,
          _("Exporting the entire project as FLAC"));
 
       while (updateResult == eProgressSuccess) {
-         sampleCount samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
+         auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
          if (samplesThisRun == 0) { //stop encoding
             break;
          }
@@ -332,12 +332,12 @@ int ExportFLAC::Export(AudacityProject *project,
             for (i = 0; i < numChannels; i++) {
                samplePtr mixed = mixer->GetBuffer(i);
                if (format == int24Sample) {
-                  for (j = 0; j < samplesThisRun; j++) {
+                  for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                      tmpsmplbuf[i][j] = ((int *)mixed)[j];
                   }
                }
                else {
-                  for (j = 0; j < samplesThisRun; j++) {
+                  for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                      tmpsmplbuf[i][j] = ((short *)mixed)[j];
                   }
                }

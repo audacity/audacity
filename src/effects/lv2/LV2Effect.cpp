@@ -919,7 +919,7 @@ sampleCount LV2Effect::RealtimeProcess(int group,
 
    for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
    {
-      for (sampleCount s = 0; s < numSamples; s++)
+      for (decltype(numSamples) s = 0; s < numSamples; s++)
       {
          mMasterIn[p][s] += inbuf[p][s];
       }

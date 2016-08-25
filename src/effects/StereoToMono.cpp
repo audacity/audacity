@@ -95,12 +95,12 @@ bool EffectStereoToMono::Process()
          mRightTrack = (WaveTrack *)iter.Next();
 
          if ((mLeftTrack->GetRate() == mRightTrack->GetRate())) {
-            sampleCount leftTrackStart = mLeftTrack->TimeToLongSamples(mLeftTrack->GetStartTime());
-            sampleCount rightTrackStart = mRightTrack->TimeToLongSamples(mRightTrack->GetStartTime());
+            auto leftTrackStart = mLeftTrack->TimeToLongSamples(mLeftTrack->GetStartTime());
+            auto rightTrackStart = mRightTrack->TimeToLongSamples(mRightTrack->GetStartTime());
             mStart = wxMin(leftTrackStart, rightTrackStart);
 
-            sampleCount leftTrackEnd = mLeftTrack->TimeToLongSamples(mLeftTrack->GetEndTime());
-            sampleCount rightTrackEnd = mRightTrack->TimeToLongSamples(mRightTrack->GetEndTime());
+            auto leftTrackEnd = mLeftTrack->TimeToLongSamples(mLeftTrack->GetEndTime());
+            auto rightTrackEnd = mRightTrack->TimeToLongSamples(mRightTrack->GetEndTime());
             mEnd = wxMax(leftTrackEnd, rightTrackEnd);
 
             bGoodResult = ProcessOne(count);
@@ -135,8 +135,8 @@ bool EffectStereoToMono::ProcessOne(int count)
    float  curRightFrame;
    float  curMonoFrame;
 
-   sampleCount idealBlockLen = mLeftTrack->GetMaxBlockSize() * 2;
-   sampleCount index = mStart;
+   auto idealBlockLen = mLeftTrack->GetMaxBlockSize() * 2;
+   auto index = mStart;
    float *leftBuffer = new float[idealBlockLen];
    float *rightBuffer = new float[idealBlockLen];
    bool bResult = true;
@@ -144,8 +144,8 @@ bool EffectStereoToMono::ProcessOne(int count)
    while (index < mEnd) {
       bResult &= mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
       bResult &= mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
-      const auto limit = limitSampleBufferSize( idealBlockLen, mEnd - index );
-      for (auto i = 0; i < limit; ++i) {
+      auto limit = limitSampleBufferSize( idealBlockLen, mEnd - index );
+      for (decltype(limit) i = 0; i < limit; ++i) {
          index++;
          curLeftFrame = leftBuffer[i];
          curRightFrame = rightBuffer[i];

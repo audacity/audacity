@@ -150,7 +150,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
 
 
-   int maxBlockLen = mixLeft->GetIdealBlockSize();
+   auto maxBlockLen = mixLeft->GetIdealBlockSize();
 
    // If the caller didn't specify a time range, use the whole range in which
    // any input track had clips in it.
@@ -172,7 +172,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
          _("Mixing and rendering tracks"));
 
       while (updateResult == eProgressSuccess) {
-         sampleCount blockLen = mixer.Process(maxBlockLen);
+         auto blockLen = mixer.Process(maxBlockLen);
 
          if (blockLen == 0)
             break;
@@ -338,9 +338,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
       mQueueLen[i] = 0;
    }
 
-   int envLen = mInterleavedBufferSize;
-   if (mQueueMaxLen > envLen)
-      envLen = mQueueMaxLen;
+   const auto envLen = std::max(mQueueMaxLen, mInterleavedBufferSize);
    mEnvValues = new double[envLen];
 }
 
@@ -418,7 +416,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
    const double tstep = 1.0 / trackRate;
    int sampleSize = SAMPLE_SIZE(floatSample);
 
-   sampleCount out = 0;
+   decltype(mMaxOut) out = 0;
 
    /* time is floating point. Sample rate is integer. The number of samples
     * has to be integer, but the multiplication gives a float result, which we
@@ -438,7 +436,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
    const double tEnd = backwards
       ? std::max(startTime, mT1)
       : std::min(endTime, mT1);
-   const sampleCount endPos = track->TimeToLongSamples(tEnd);
+   const auto endPos = track->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
    double t = (*pos + (backwards ? *queueLen : - *queueLen)) / trackRate;
 
@@ -448,7 +446,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
          *queueStart = 0;
 
-         const auto getLen = limitSampleBufferSize(
+         auto getLen = limitSampleBufferSize(
             mQueueMaxLen - *queueLen,
             backwards ? *pos - endPos : endPos - *pos
          );
@@ -476,7 +474,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos += getLen;
             }
 
-            for (auto i = 0; i < getLen; i++) {
+            for (decltype(getLen) i = 0; i < getLen; i++) {
                queue[(*queueLen) + i] *= mEnvValues[i];
             }
 
@@ -488,7 +486,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          }
       }
 
-      sampleCount thisProcessLen = mProcessLen;
+      auto thisProcessLen = mProcessLen;
       bool last = (*queueLen < mProcessLen);
       if (last) {
          thisProcessLen = *queueLen;
@@ -557,7 +555,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
                                sampleCount *pos)
 {
    const WaveTrack *const track = cache.GetTrack();
-   int slen = mMaxOut;
+   auto slen = mMaxOut;
    int c;
    const double t = *pos / track->GetRate();
    const double trackEndTime = track->GetEndTime();
@@ -625,7 +623,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
    //   return 0;
 
    int i, j;
-   sampleCount maxOut = 0;
+   decltype(Process(0)) maxOut = 0;
    int *channelFlags = new int[mNumChannels];
 
    mMaxOut = maxToProcess;

@@ -1361,23 +1361,23 @@ bool WaveTrack::Silence(double t0, double t1)
    if (t1 < t0)
       return false;
 
-   sampleCount start = (sampleCount)floor(t0 * mRate + 0.5);
-   sampleCount len = (sampleCount)floor(t1 * mRate + 0.5) - start;
+   auto start = (sampleCount)floor(t0 * mRate + 0.5);
+   auto len = (sampleCount)floor(t1 * mRate + 0.5) - start;
    bool result = true;
 
    for (const auto &clip : mClips)
    {
-      sampleCount clipStart = clip->GetStartSample();
-      sampleCount clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetStartSample();
+      auto clipEnd = clip->GetEndSample();
 
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         sampleCount samplesToCopy = start+len - clipStart;
+         auto samplesToCopy = start+len - clipStart;
          if (samplesToCopy > clip->GetNumSamples())
             samplesToCopy = clip->GetNumSamples();
-         sampleCount inclipDelta = 0;
-         sampleCount startDelta = clipStart - start;
+         auto startDelta = clipStart - start;
+         decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
          {
             inclipDelta = -startDelta; // make positive value
@@ -1428,8 +1428,8 @@ bool WaveTrack::InsertSilence(double t, double len)
 //Analyses selected region for possible Joined clips and disjoins them
 bool WaveTrack::Disjoin(double t0, double t1)
 {
-   sampleCount minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
-   sampleCount maxAtOnce = 1048576;
+   auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
+   size_t maxAtOnce = 1048576;
    float *buffer = new float[ maxAtOnce ];
    Regions regions;
 
@@ -1456,16 +1456,16 @@ bool WaveTrack::Disjoin(double t0, double t1)
       clip->TimeToSamplesClip( startTime, &start );
       clip->TimeToSamplesClip( endTime, &end );
 
-      sampleCount len = ( end - start );
-      for( sampleCount done = 0; done < len; done += maxAtOnce )
+      auto len = ( end - start );
+      for( decltype(len) done = 0; done < len; done += maxAtOnce )
       {
-         const auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
+         auto numSamples = limitSampleBufferSize( maxAtOnce, len - done );
 
          clip->GetSamples( ( samplePtr )buffer, floatSample, start + done,
                numSamples );
-         for( auto i = 0; i < numSamples; i++ )
+         for( decltype(numSamples) i = 0; i < numSamples; i++ )
          {
-            sampleCount curSamplePos = start + done + i;
+            auto curSamplePos = start + done + i;
 
             //start a NEW sequence
             if( buffer[ i ] == 0.0 && seqStart == -1 )
@@ -1474,7 +1474,7 @@ bool WaveTrack::Disjoin(double t0, double t1)
             {
                if( seqStart != -1 )
                {
-                  sampleCount seqEnd;
+                  decltype(end) seqEnd;
 
                   //consider the end case, where selection ends in zeroes
                   if( curSamplePos == end - 1 && buffer[ i ] == 0.0 )
@@ -1597,8 +1597,8 @@ sampleCount WaveTrack::GetBlockStart(sampleCount s) const
 {
    for (const auto &clip : mClips)
    {
-      const sampleCount startSample = (sampleCount)floor(0.5 + clip->GetStartTime()*mRate);
-      const sampleCount endSample = startSample + clip->GetNumSamples();
+      const auto startSample = (sampleCount)floor(0.5 + clip->GetStartTime()*mRate);
+      const auto endSample = startSample + clip->GetNumSamples();
       if (s >= startSample && s < endSample)
          return startSample + clip->GetSequence()->GetBlockStart(s - startSample);
    }
@@ -1608,12 +1608,12 @@ sampleCount WaveTrack::GetBlockStart(sampleCount s) const
 
 sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
 {
-   sampleCount bestBlockSize = GetMaxBlockSize();
+   auto bestBlockSize = GetMaxBlockSize();
 
    for (const auto &clip : mClips)
    {
-      sampleCount startSample = (sampleCount)floor(clip->GetStartTime()*mRate + 0.5);
-      sampleCount endSample = startSample + clip->GetNumSamples();
+      auto startSample = (sampleCount)floor(clip->GetStartTime()*mRate + 0.5);
+      auto endSample = startSample + clip->GetNumSamples();
       if (s >= startSample && s < endSample)
       {
          bestBlockSize = clip->GetSequence()->GetBestBlockSize(s - startSample);
@@ -1851,7 +1851,7 @@ bool WaveTrack::Unlock() const
 
 AUDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
 {
-   return (sampleCount)floor(t0 * mRate + 0.5);
+   return floor(t0 * mRate + 0.5);
 }
 
 double WaveTrack::LongSamplesToTime(sampleCount pos) const
@@ -2025,17 +2025,17 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 
    for (const auto &clip: mClips)
    {
-      sampleCount clipStart = clip->GetStartSample();
-      sampleCount clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetStartSample();
+      auto clipEnd = clip->GetEndSample();
 
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         sampleCount samplesToCopy = start+len - clipStart;
+         auto samplesToCopy = start+len - clipStart;
          if (samplesToCopy > clip->GetNumSamples())
             samplesToCopy = clip->GetNumSamples();
-         sampleCount inclipDelta = 0;
-         sampleCount startDelta = clipStart - start;
+         auto startDelta = clipStart - start;
+         decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
          {
             inclipDelta = -startDelta; // make positive value
@@ -2062,17 +2062,17 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
 
    for (const auto &clip: mClips)
    {
-      sampleCount clipStart = clip->GetStartSample();
-      sampleCount clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetStartSample();
+      auto clipEnd = clip->GetEndSample();
 
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         sampleCount samplesToCopy = start+len - clipStart;
+         auto samplesToCopy = start+len - clipStart;
          if (samplesToCopy > clip->GetNumSamples())
             samplesToCopy = clip->GetNumSamples();
-         sampleCount inclipDelta = 0;
-         sampleCount startDelta = clipStart - start;
+         auto startDelta = clipStart - start;
+         decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
          {
             inclipDelta = -startDelta; // make positive value
@@ -2106,7 +2106,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    // be set twice.  Unfortunately, there is no easy way around this since the clips are not
    // stored in increasing time order.  If they were, we could just track the time as the
    // buffer is filled.
-   for (int i = 0; i < bufferLen; i++)
+   for (decltype(bufferLen) i = 0; i < bufferLen; i++)
    {
       buffer[i] = 1.0;
    }
@@ -2127,7 +2127,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
 
          if (rt0 < dClipStartTime)
          {
-            sampleCount nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
+            auto nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
             rbuf += nDiff;
             wxASSERT(nDiff <= rlen);
             rlen -= nDiff;
@@ -2171,10 +2171,8 @@ WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
 {
    for (const auto &clip: mClips)
    {
-      sampleCount start, len;
-
-      start = clip->GetStartSample();
-      len   = clip->GetNumSamples();
+      auto start = clip->GetStartSample();
+      auto len   = clip->GetNumSamples();
 
       if (sample >= start && sample < start + len)
          return clip.get();
@@ -2623,7 +2621,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
    sampleCount start, sampleCount len)
 {
    if (format == floatSample && len > 0) {
-      const sampleCount end = start + len;
+      const auto end = start + len;
 
       bool fillFirst = (mNValidBuffers < 1);
       bool fillSecond = (mNValidBuffers < 2);
@@ -2669,9 +2667,9 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
 
       // Refill buffers as needed
       if (fillFirst) {
-         const sampleCount start0 = mPTrack->GetBlockStart(start);
+         const auto start0 = mPTrack->GetBlockStart(start);
          if (start0 >= 0) {
-            const sampleCount len0 = mPTrack->GetBestBlockSize(start0);
+            const auto len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
             if (!mPTrack->Get(samplePtr(mBuffers[0].data), floatSample, start0, len0))
                return 0;
@@ -2693,11 +2691,11 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       wxASSERT(!fillSecond || mNValidBuffers > 0);
       if (fillSecond) {
          mNValidBuffers = 1;
-         const sampleCount end0 = mBuffers[0].end();
+         const auto end0 = mBuffers[0].end();
          if (end > end0) {
-            const sampleCount start1 = mPTrack->GetBlockStart(end0);
+            const auto start1 = mPTrack->GetBlockStart(end0);
             if (start1 == end0) {
-               const sampleCount len1 = mPTrack->GetBestBlockSize(start1);
+               const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
                if (!mPTrack->Get(samplePtr(mBuffers[1].data), floatSample, start1, len1))
                   return 0;
@@ -2710,7 +2708,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       wxASSERT(mNValidBuffers < 2 || mBuffers[0].end() == mBuffers[1].start);
 
       samplePtr buffer = 0;
-      sampleCount remaining = len;
+      auto remaining = len;
 
       // Possibly get an initial portion that is uncached
 
@@ -2731,8 +2729,9 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
 
       // Now satisfy the request from the buffers
       for (int ii = 0; ii < mNValidBuffers && remaining > 0; ++ii) {
-         const sampleCount starti = start - mBuffers[ii].start;
-         const sampleCount leni = std::min(remaining, mBuffers[ii].len - starti);
+         const auto starti = start - mBuffers[ii].start;
+         const auto leni =
+            std::min( sampleCount( remaining ), mBuffers[ii].len - starti );
          if (initLen == 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
             return samplePtr(mBuffers[ii].data + starti);

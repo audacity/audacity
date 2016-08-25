@@ -100,7 +100,6 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    int encoding = 0; // Guess Format
    sampleFormat format;
    sf_count_t offset = 0;
-   sampleCount totalFrames;
    double rate = 44100.0;
    double percent = 100.0;
    TrackHolders channels;
@@ -176,7 +175,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
       SFCall<sf_count_t>(sf_seek, sndFile.get(), 0, SEEK_SET);
 
-      totalFrames = (sampleCount)(sndInfo.frames * percent / 100.0);
+      auto totalFrames = (sampleCount)(sndInfo.frames * percent / 100.0);
 
       //
       // Sample format:
@@ -218,12 +217,12 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          firstChannel->SetLinked(true);
       }
 
-      sampleCount maxBlockSize = firstChannel->GetMaxBlockSize();
+      auto maxBlockSize = firstChannel->GetMaxBlockSize();
 
       SampleBuffer srcbuffer(maxBlockSize * numChannels, format);
       SampleBuffer buffer(maxBlockSize, format);
 
-      sampleCount framescompleted = 0;
+      decltype(totalFrames) framescompleted = 0;
       if (totalFrames < 0) {
          wxASSERT(false);
          totalFrames = 0;

@@ -125,9 +125,9 @@ bool EffectRepeat::Process()
       {
          WaveTrack* track = (WaveTrack*)t;
 
-         sampleCount start = track->TimeToLongSamples(mT0);
-         sampleCount end = track->TimeToLongSamples(mT1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = track->TimeToLongSamples(mT0);
+         auto end = track->TimeToLongSamples(mT1);
+         auto len = end - start;
          double tLen = track->LongSamplesToTime(len);
          double tc = mT0 + tLen;
 

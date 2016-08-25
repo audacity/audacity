@@ -111,7 +111,7 @@ int EffectAmplify::GetAudioOutCount()
 
 sampleCount EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   for (sampleCount i = 0; i < blockLen; i++)
+   for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
       outBlock[0][i] = inBlock[0][i] * mRatio;
    }

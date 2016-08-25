@@ -107,7 +107,7 @@ sampleCount EffectLeveller::ProcessBlock(float **inBlock, float **outBlock, samp
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
    
-   for (sampleCount i = 0; i < blockLen; i++)
+   for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
       float frame = ibuf[i];
       for (int pass = 0; pass < mNumPasses; pass++)

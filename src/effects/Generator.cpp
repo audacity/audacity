@@ -119,7 +119,7 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
 {
    bool bGoodResult = true;
    numSamples = track.TimeToLongSamples(GetDuration());
-   sampleCount i = 0;
+   decltype(numSamples) i = 0;
    float *data = new float[tmp->GetMaxBlockSize()];
 
    while ((i < numSamples) && bGoodResult) {

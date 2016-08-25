@@ -125,9 +125,9 @@ bool EffectFindClipping::Process()
       double t1 = mT1 > trackEnd ? trackEnd : mT1;
 
       if (t1 > t0) {
-         sampleCount start = t->TimeToLongSamples(t0);
-         sampleCount end = t->TimeToLongSamples(t1);
-         sampleCount len = (sampleCount)(end - start);
+         auto start = t->TimeToLongSamples(t0);
+         auto end = t->TimeToLongSamples(t1);
+         auto len = end - start;
 
          if (!ProcessOne(lt, count, t, start, len)) {
             return false;
@@ -153,8 +153,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
                                     sampleCount len)
 {
    bool bGoodResult = true;
-   sampleCount s = 0;
-   sampleCount blockSize = (sampleCount) (mStart * 1000);
+   auto blockSize = (sampleCount) (mStart * 1000);
 
    if (len < mStart) {
       return true;
@@ -164,10 +163,8 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
 
    float *ptr = buffer;
 
-   sampleCount startrun = 0;
-   sampleCount stoprun = 0;
-   sampleCount samps = 0;
-   size_t block = 0;
+   decltype(len) s = 0, startrun = 0, stoprun = 0, samps = 0;
+   decltype(blockSize) block = 0;
    double startTime = -1.0;
 
    while (s < len) {

@@ -1764,7 +1764,7 @@ int ExportMP3::Export(AudacityProject *project,
       exporter.SetChannel(CHANNEL_STEREO);
    }
 
-   sampleCount inSamples = exporter.InitializeStream(channels, rate);
+   auto inSamples = exporter.InitializeStream(channels, rate);
    if (((int)inSamples) < 0) {
       wxMessageBox(_("Unable to initialize MP3 stream"));
       return false;
@@ -1829,7 +1829,7 @@ int ExportMP3::Export(AudacityProject *project,
       ProgressDialog progress(wxFileName(fName).GetName(), title);
 
       while (updateResult == eProgressSuccess) {
-         sampleCount blockLen = mixer->Process(inSamples);
+         auto blockLen = mixer->Process(inSamples);
 
          if (blockLen == 0) {
             break;

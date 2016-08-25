@@ -634,8 +634,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //delete[] maxRight;
    //delete[] rmsRight;
 
-   sampleCount startSample = (sampleCount)((mLeftTrack->GetRate() * t0) + 0.5);
-   sampleCount nFrames = (sampleCount)((mLeftTrack->GetRate() * (t1 - t0)) + 0.5);
+   auto startSample = (sampleCount)((mLeftTrack->GetRate() * t0) + 0.5);
+   auto nFrames = (sampleCount)((mLeftTrack->GetRate() * (t1 - t0)) + 0.5);
    float* meterFloatsArray = NULL;
    float* tempFloatsArray = new float[nFrames];
    bool bSuccess = mLeftTrack->Get((samplePtr)tempFloatsArray, floatSample, startSample, nFrames);

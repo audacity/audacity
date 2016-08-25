@@ -365,7 +365,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
       if (sc != (streamContext*)1)
       {
          //find out the dts we've seekd to.  can't use the stream->cur_dts because it is faulty.  also note that until we do the first seek, pkt.dts can be false and will change for the same samples after the initial seek.
-         sampleCount actualDecodeStart = mCurrentPos;
+         auto actualDecodeStart = mCurrentPos;
 
          // we need adjacent samples, so don't use dts most of the time which will leave gaps between frames
          // for some formats

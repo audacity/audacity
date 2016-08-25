@@ -82,14 +82,14 @@ sampleCount EffectFade::ProcessBlock(float **inBlock, float **outBlock, sampleCo
 
    if (mFadeIn)
    {
-      for (sampleCount i = 0; i < blockLen; i++)
+      for (decltype(blockLen) i = 0; i < blockLen; i++)
       {
          obuf[i] = (ibuf[i] * ((float) mSample++)) / mSampleCnt;
       }
    }
    else
    {
-      for (sampleCount i = 0; i < blockLen; i++)
+      for (decltype(blockLen) i = 0; i < blockLen; i++)
       {
          obuf[i] = (ibuf[i] * ((float) mSampleCnt - 1 - mSample++)) / mSampleCnt;
       }

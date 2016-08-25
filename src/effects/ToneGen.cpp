@@ -159,7 +159,6 @@ sampleCount EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBl
 {
    float *buffer = outBlock[0];
    double throwaway = 0;        //passed to modf but never used
-   sampleCount i;
    double f = 0.0;
    double a, b;
    int k;
@@ -196,7 +195,7 @@ sampleCount EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBl
    }
 
    // synth loop
-   for (i = 0; i < blockLen; i++)
+   for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
       switch (mWaveform)
       {

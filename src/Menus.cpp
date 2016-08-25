@@ -3412,7 +3412,7 @@ double AudacityProject::NearestZeroCrossing(double t0)
       WaveTrack *one = (WaveTrack *)track;
       int oneWindowSize = (int)(one->GetRate() / 100);
       float *oneDist = new float[oneWindowSize];
-      sampleCount s = one->TimeToLongSamples(t0);
+      auto s = one->TimeToLongSamples(t0);
       // fillTwo to ensure that missing values are treated as 2, and hence do not
       // get used as zero crossings.
       one->Get((samplePtr)oneDist, floatSample,

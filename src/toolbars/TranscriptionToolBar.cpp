@@ -409,8 +409,8 @@ void TranscriptionToolBar::GetSamples(WaveTrack *t, sampleCount *s0, sampleCount
    double start = p->GetSel0();
    double end = p->GetSel1();
 
-   sampleCount ss0 = sampleCount( (start - t->GetOffset()) * t->GetRate() );
-   sampleCount ss1 = sampleCount( (end - t->GetOffset()) * t->GetRate() );
+   auto ss0 = sampleCount( (start - t->GetOffset()) * t->GetRate() );
+   auto ss1 = sampleCount( (end - t->GetOffset()) * t->GetRate() );
 
    if (start < t->GetOffset()) {
       ss0 = 0;
@@ -535,7 +535,7 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
       //if(len == 0)
       //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
 
-      sampleCount newstart = mVk->OnForward(*(WaveTrack*)t,start,len);
+      auto newstart = mVk->OnForward(*(WaveTrack*)t,start,len);
       double newpos = newstart / ((WaveTrack*)t)->GetRate();
 
       p->SetSel0(newpos);
@@ -568,7 +568,7 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       //if(len == 0)
       //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
 
-      sampleCount newstart = mVk->OffForward(*(WaveTrack*)t,start,len);
+      auto newstart = mVk->OffForward(*(WaveTrack*)t,start,len);
       double newpos = newstart / ((WaveTrack*)t)->GetRate();
 
       p->SetSel0(newpos);
@@ -603,7 +603,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
             len = start;
             start = 0;
          }
-      sampleCount newEnd = mVk->OnBackward(*(WaveTrack*)t,start+ len,len);
+      auto newEnd = mVk->OnBackward(*(WaveTrack*)t,start+ len,len);
       double newpos = newEnd / ((WaveTrack*)t)->GetRate();
 
       p->SetSel1(newpos);
@@ -638,7 +638,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
          len = start;
          start = 0;
       }
-      sampleCount newEnd = mVk->OffBackward(*(WaveTrack*)t,start+ len,len);
+      auto newEnd = mVk->OffBackward(*(WaveTrack*)t,start+ len,len);
       double newpos = newEnd / ((WaveTrack*)t)->GetRate();
 
       p->SetSel1(newpos);
@@ -678,8 +678,8 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
          //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
 
          double rate =  ((WaveTrack*)t)->GetRate();
-         sampleCount newstart = mVk->OffBackward(*(WaveTrack*)t,start,start);
-         sampleCount newend   = mVk->OffForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
+         auto newstart = mVk->OffBackward(*(WaveTrack*)t,start,start);
+         auto newend   = mVk->OffForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
 
          //reset the selection bounds.
          p->SetSel0(newstart / rate);
@@ -717,8 +717,8 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
          //if(len == 0)
          //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
          double rate =  ((WaveTrack*)t)->GetRate();
-         sampleCount newstart = mVk->OnBackward(*(WaveTrack*)t,start,start);
-         sampleCount newend   = mVk->OnForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
+         auto newstart = mVk->OnBackward(*(WaveTrack*)t,start,start);
+         auto newend   = mVk->OnForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
 
          //reset the selection bounds.
          p->SetSel0(newstart /  rate);
@@ -813,7 +813,6 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                start = 0;
             }
          int lastlen = 0;
-         sampleCount newStart, newEnd;
          double newStartPos, newEndPos;
 
 
@@ -827,7 +826,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
                lastlen = len;
 
-               newStart = mVk->OnForward(*(WaveTrack*)t,start,len);
+               auto newStart = mVk->OnForward(*(WaveTrack*)t,start,len);
 
                //JKC: If no start found then don't add any labels.
                if( newStart==start)
@@ -844,7 +843,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                //OK, now we have found a NEW starting point.  A 'word' should be at least
                //50 ms long, so jump ahead minWordSize
 
-               newEnd   = mVk->OffForward(*(WaveTrack*)t,newStart+minWordSize, len);
+               auto newEnd   = mVk->OffForward(*(WaveTrack*)t,newStart+minWordSize, len);
 
                //If newEnd didn't move, we should give up, because
                // there isn't another end before the end of the selection.

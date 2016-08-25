@@ -298,7 +298,7 @@ BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar
                                          sampleCount len, sampleFormat format)
 {
    wxFileNameWrapper fileName;
-   sampleCount summaryLen = 0;
+   size_t summaryLen = 0;
    bool noRMS = false;
    long nValue;
 
@@ -324,6 +324,7 @@ BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar
          else if (!wxStrcmp(attr, wxT("format")) && XMLValueChecker::IsValidSampleFormat(nValue))
             format = (sampleFormat)nValue;
          else if (!wxStrcmp(attr, wxT("summarylen")) && (nValue > 0))
+            // Note attribute "summarylen" was written as int, no need for 64 bits
             summaryLen = nValue;
       }
    }

@@ -117,13 +117,13 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    // extra samples may get created as mDuration may now be > mT1 - mT0;
    // However we are making our best efforts at creating what was asked for.
 
-   sampleCount nT0 = (sampleCount)floor(mT0 * mSampleRate + 0.5);
-   sampleCount nT1 = (sampleCount)floor((mT0 + duration) * mSampleRate + 0.5);
+   auto nT0 = (sampleCount)floor(mT0 * mSampleRate + 0.5);
+   auto nT1 = (sampleCount)floor((mT0 + duration) * mSampleRate + 0.5);
    numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
 
    //make under-estimates if anything, and then redistribute the few remaining samples
-   numSamplesTone = (sampleCount)floor(dtmfTone * mSampleRate);
-   numSamplesSilence = (sampleCount)floor(dtmfSilence * mSampleRate);
+   numSamplesTone = floor(dtmfTone * mSampleRate);
+   numSamplesSilence = floor(dtmfSilence * mSampleRate);
 
    // recalculate the sum, and spread the difference - due to approximations.
    // Since diff should be in the order of "some" samples, a division (resulting in zero)
@@ -153,7 +153,7 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
 sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sampleCount size)
 {
    float *buffer = outbuf[0];
-   sampleCount processed = 0;
+   decltype(size) processed = 0;
 
    // for the whole dtmf sequence, we will be generating either tone or silence
    // according to a bool value, and this might be done in small chunks of size
@@ -527,14 +527,14 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
 
    // now generate the wave: 'last' is used to avoid phase errors
    // when inside the inner for loop of the Process() function.
-   for(sampleCount i=0; i<len; i++) {
+   for(decltype(len) i = 0; i < len; i++) {
       buffer[i]=amplitude*0.5*(sin(A*(i+last))+sin(B*(i+last)));
    }
 
    // generate a fade-in of duration 1/250th of second
    if (last == 0) {
       A = (fs / kFadeInOut);
-      for(sampleCount i = 0; i < A; i++) {
+      for(size_t i = 0; i < A; i++) {
          buffer[i] *= i/A;
       }
    }
@@ -544,11 +544,11 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
       // we are at the last buffer of 'len' size, so, offset is to
       // backup 'A' samples, from 'len'
       A = (fs / kFadeInOut);
-      sampleCount offset = len - (sampleCount)(fs / kFadeInOut);
+      auto offset = len - decltype(len)(fs / kFadeInOut);
       // protect against negative offset, which can occur if too a
       // small selection is made
       if (offset >= 0) {
-         for(sampleCount i = 0; i < A; i++) {
+         for(size_t i = 0; i < A; i++) {
             buffer[i + offset] *= (1 - (i / A));
          }
       }

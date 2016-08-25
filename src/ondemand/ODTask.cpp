@@ -329,7 +329,7 @@ void ODTask::DemandTrackUpdate(WaveTrack* track, double seconds)
    {
       if(track == mWaveTracks[i])
       {
-         sampleCount newDemandSample = (sampleCount)(seconds * track->GetRate());
+         auto newDemandSample = (sampleCount)(seconds * track->GetRate());
          demandSampleChanged = newDemandSample != GetDemandSample();
          SetDemandSample(newDemandSample);
          break;

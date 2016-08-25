@@ -205,8 +205,7 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
                                       float *summary256, float *summary64K)
 {
-   sampleCount sumLen;
-   sampleCount i, j, jcount;
+   decltype(len) sumLen;
 
    float min, max;
    float sumsq;
@@ -217,16 +216,16 @@ void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
    sumLen = (len + 255) / 256;
    int summaries = 256;
 
-   for (i = 0; i < sumLen; i++) {
+   for (decltype(sumLen) i = 0; i < sumLen; i++) {
       min = fbuffer[i * 256];
       max = fbuffer[i * 256];
       sumsq = ((float)min) * ((float)min);
-      jcount = 256;
+      decltype(len) jcount = 256;
       if (jcount > len - i * 256) {
          jcount = len - i * 256;
          fraction = 1.0 - (jcount / 256.0);
       }
-      for (j = 1; j < jcount; j++) {
+      for (decltype(jcount) j = 1; j < jcount; j++) {
          float f1 = fbuffer[i * 256 + j];
          sumsq += ((float)f1) * ((float)f1);
          if (f1 < min)
@@ -242,7 +241,7 @@ void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
       summary256[i * 3 + 1] = max;
       summary256[i * 3 + 2] = rms;  // The rms is correct, but this may be for less than 256 samples in last loop.
    }
-   for (i = sumLen; i < mSummaryInfo.frames256; i++) {
+   for (auto i = sumLen; i < mSummaryInfo.frames256; i++) {
       // filling in the remaining bits with non-harming/contributing values
       // rms values are not "non-harming", so keep  count of them:
       summaries--;
@@ -257,12 +256,12 @@ void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
    // Recalc 64K summaries
    sumLen = (len + 65535) / 65536;
 
-   for (i = 0; i < sumLen; i++) {
+   for (decltype(sumLen) i = 0; i < sumLen; i++) {
       min = summary256[3 * i * 256];
       max = summary256[3 * i * 256 + 1];
       sumsq = (float)summary256[3 * i * 256 + 2];
       sumsq *= sumsq;
-      for (j = 1; j < 256; j++) {   // we can overflow the useful summary256 values here, but have put non-harmful values in them
+      for (decltype(len) j = 1; j < 256; j++) {   // we can overflow the useful summary256 values here, but have put non-harmful values in them
          if (summary256[3 * (i * 256 + j)] < min)
             min = summary256[3 * (i * 256 + j)];
          if (summary256[3 * (i * 256 + j) + 1] > max)
@@ -278,7 +277,7 @@ void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
       summary64K[i * 3 + 1] = max;
       summary64K[i * 3 + 2] = rms;
    }
-   for (i = sumLen; i < mSummaryInfo.frames64K; i++) {
+   for (auto i = sumLen; i < mSummaryInfo.frames64K; i++) {
       wxASSERT_MSG(false, wxT("Out of data for mSummaryInfo"));   // Do we ever get here?
       summary64K[i * 3] = 0.0f;  // probably should be FLT_MAX, need a test case
       summary64K[i * 3 + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
@@ -289,7 +288,7 @@ void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
    min = summary64K[0];
    max = summary64K[1];
 
-   for (i = 1; i < sumLen; i++) {
+   for (decltype(sumLen) i = 1; i < sumLen; i++) {
       if (summary64K[3*i] < min)
          min = summary64K[3*i];
       if (summary64K[3*i+1] > max)

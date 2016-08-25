@@ -2342,9 +2342,9 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
 
    // Grab samples, just for this track, at these times
    std::vector<float> frequencySnappingData;
-   const sampleCount start =
+   const auto start =
       pTrack->TimeToLongSamples(mViewInfo->selectedRegion.t0());
-   const sampleCount end =
+   const auto end =
       pTrack->TimeToLongSamples(mViewInfo->selectedRegion.t1());
    const auto length =
       std::min(frequencySnappingData.max_size(),
@@ -3248,7 +3248,7 @@ namespace {
          // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
          // instead calculate the time manually
          double rate = pTrack->GetRate();
-         sampleCount s0 = (sampleCount)(time * rate + 0.5);
+         auto s0 = (sampleCount)(time * rate + 0.5);
 
          if (s0 >= 0)
             return pTrack->GetClipAtSample(s0);
@@ -4507,15 +4507,15 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
 
    //Now, redraw all samples between current and last redrawn sample, inclusive
    //Go from the smaller to larger sample.
-   const int start = std::min( s0, mDrawingLastDragSample);
-   const int end   = std::max( s0, mDrawingLastDragSample);
+   const auto start = std::min( s0, mDrawingLastDragSample);
+   const auto end   = std::max( s0, mDrawingLastDragSample);
    const int size = end - start + 1;
    if (size == 1) {
       mDrawingTrack->Set((samplePtr)&newLevel, floatSample, start, size);
    }
    else {
       std::vector<float> values(size);
-      for (sampleCount i = start; i <= end; ++i) {
+      for (auto i = start; i <= end; ++i) {
          //This interpolates each sample linearly:
          values[i - start] =
             mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
@@ -6657,7 +6657,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent &
 
    // Just get one sample.
    float oneSample;
-   sampleCount s0 = (sampleCount)(tt * rate + 0.5);
+   auto s0 = (sampleCount)(tt * rate + 0.5);
    wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1);
 
    // Get y distance of envelope point from center line (in pixels).
