@@ -69,7 +69,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("name"), mFileName.GetFullName());
    xmlFile.WriteAttr(wxT("aliaspath"), mAliasedFileName.GetFullPath());
    xmlFile.WriteAttr(wxT("aliasstart"),
-                     static_cast<long long>( mAliasStart ));
+                     mAliasStart.as_long_long() );
    xmlFile.WriteAttr(wxT("aliaslen"), mLen);
    xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
    xmlFile.WriteAttr(wxT("summarylen"), mSummaryInfo.totalSummaryBytes);

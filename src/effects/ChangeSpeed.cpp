@@ -479,7 +479,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
 
    // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
@@ -524,7 +524,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       samplePos += results.first;
 
       // Update the Progress meter
-      if (TrackProgress(mCurTrackNum, (samplePos - start) / len)) {
+      if (TrackProgress(mCurTrackNum, (samplePos - start).as_double() / len)) {
          bResult = false;
          break;
       }

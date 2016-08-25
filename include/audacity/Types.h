@@ -69,6 +69,11 @@ public:
 
    operator type () const { return value; }
 
+   float as_float() const { return value; }
+   double as_double() const { return value; }
+
+   long long as_long_long() const { return value; }
+
    sampleCount &operator += (sampleCount b) { value += b.value; return *this; }
    sampleCount &operator -= (sampleCount b) { value -= b.value; return *this; }
    sampleCount &operator *= (sampleCount b) { value *= b.value; return *this; }

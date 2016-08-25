@@ -116,8 +116,8 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    data->buf = r->buf;
    data->size = blockSize;
    if(r->bPitch) {
-     float t0 = (float)(r->processed) / r->iface->getSamplesToInput();
-     float t1 = (float)(r->processed + blockSize) / r->iface->getSamplesToInput();
+     float t0 = r->processed.as_float() / r->iface->getSamplesToInput();
+     float t1 = (r->processed + blockSize).as_float() / r->iface->getSamplesToInput();
      data->ratio0 = r->iface->getStretch(t0);
      data->ratio1 = r->iface->getStretch(t1);
    } else {
@@ -295,7 +295,7 @@ bool EffectSBSMS::Process()
             auto samplesIn = end - start;
 
             // Samples for SBSMS to process after resampling
-            auto samplesToProcess = (sampleCount) ((float)samplesIn*(srProcess/srTrack));
+            auto samplesToProcess = (sampleCount) (samplesIn.as_float() * (srProcess/srTrack));
 
             SlideType outSlideType;
             SBSMSResampleCB outResampleCB;
@@ -310,12 +310,12 @@ bool EffectSBSMS::Process()
                static_assert(sizeof(sampleCount::type) <=
                              sizeof(_sbsms_::SampleCountType),
                              "Type _sbsms_::SampleCountType is too narrow to hold a sampleCount");
-              rb.iface = std::make_unique<SBSMSInterfaceSliding>(&rateSlide,&pitchSlide,
-                                                       bPitchReferenceInput,
-                                                       samplesToProcess,0,
-                                                       nullptr);
-
-             
+              rb.iface = std::make_unique<SBSMSInterfaceSliding>
+                  (&rateSlide, &pitchSlide, bPitchReferenceInput,
+                   static_cast<_sbsms_::SampleCountType>
+                      ( samplesToProcess.as_long_long() ),
+                   0, nullptr);
+               
             } else {
               rb.bPitch = false;
               outSlideType = (srProcess==srTrack?SlideIdentity:SlideConstant);
@@ -332,13 +332,14 @@ bool EffectSBSMS::Process()
               processPresamples =
                  std::min(processPresamples,
                           decltype(processPresamples)
-                             ((float)(start-trackStart)*(srProcess/srTrack)));
-
+                             (( start - trackStart ).as_float() *
+                                 (srProcess/srTrack)));
               auto trackPresamples = start - trackStart;
               trackPresamples =
                   std::min(trackPresamples,
                            decltype(trackPresamples)
-                              ((float)(processPresamples)*(srTrack/srProcess)));
+                              (processPresamples.as_float() *
+                                  (srTrack/srProcess)));
               rb.offset = start - trackPresamples;
               rb.end = trackEnd;
               rb.iface = std::make_unique<SBSMSEffectInterface>
@@ -346,11 +347,9 @@ bool EffectSBSMS::Process()
                    bPitchReferenceInput,
                    // UNSAFE_SAMPLE_COUNT_TRUNCATION
                    // The argument type is only long!
-                   static_cast<long> ( static_cast<size_t> (
-                        samplesToProcess ) ),
+                   static_cast<long> ( samplesToProcess.as_long_long() ),
                    // This argument type is also only long!
-                   static_cast<long> ( static_cast<size_t> (
-                        processPresamples ) ),
+                   static_cast<long> ( processPresamples.as_long_long() ),
                    rb.quality.get());
             }
             
@@ -364,7 +363,7 @@ bool EffectSBSMS::Process()
             sampleCount samplesToOutput = rb.iface->getSamplesToOutput();
 
             // Samples in output after resampling back
-            auto samplesOut = (sampleCount) ((float)samplesToOutput * (srTrack/srProcess));
+            auto samplesOut = (sampleCount) (samplesToOutput.as_float() * (srTrack/srProcess));
 
             // Duration in track time
             double duration =  (mCurT1-mCurT0) * mTotalStretch;
@@ -399,7 +398,7 @@ bool EffectSBSMS::Process()
                if(rightTrack)
                   rb.outputRightTrack->Append((samplePtr)outBufRight, floatSample, outputCount);
 
-               double frac = (double)pos/(double)samplesOut;
+               double frac = (double)pos / samplesOut.as_double();
                int nWhichTrack = mCurTrackNum;
                if(rightTrack) {
                   nWhichTrack = 2*(mCurTrackNum/2);

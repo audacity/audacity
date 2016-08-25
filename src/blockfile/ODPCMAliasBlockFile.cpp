@@ -248,7 +248,7 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
       xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"),
-                        static_cast<long long>( mAliasStart));
+                        mAliasStart.as_long_long());
       xmlFile.WriteAttr(wxT("aliaslen"), mLen);
       xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
 
@@ -531,7 +531,8 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    // Third party library has its own type alias, check it
    static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
                  "Type sf_count_t is too narrow to hold a sampleCount");
-   SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
+   SFCall<sf_count_t>(sf_seek, sf.get(),
+                      ( mAliasStart + start ).as_long_long(), SEEK_SET);
 
    wxASSERT(info.channels >= 0);
    SampleBuffer buffer(len * info.channels, floatSample);

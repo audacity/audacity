@@ -245,7 +245,8 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
       len -= 2 * block;
       first += block;
 
-      if( TrackProgress(count, 2*(first-originalStart) / (double) originalLen) ) {
+      if( TrackProgress(count, 2 * ( first - originalStart ).as_double() /
+                        originalLen.as_double() ) ) {
          rc = false;
          break;
       }

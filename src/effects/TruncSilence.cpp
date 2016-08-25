@@ -553,7 +553,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    double previewLength;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLength, 6.0);
    // Minimum required length in samples.
-   const sampleCount previewLen = previewLength * wt->GetRate();
+   const sampleCount previewLen( previewLength * wt->GetRate() );
 
    // Keep position in overall silences list for optimization
    RegionList::iterator rit(silenceList.begin());
@@ -574,8 +574,10 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       if (!inputLength) {
          // Show progress dialog, test for cancellation
          bool cancelled = TotalProgress(
-               detectFrac * (whichTrack + (*index - start) / (double)(end - start)) /
-               (double)GetNumWaveTracks());
+               detectFrac * (whichTrack +
+                             (*index - start).as_double() /
+                             (end - start).as_double()) /
+                             (double)GetNumWaveTracks());
          if (cancelled) {
             delete [] buffer;
             return false;
@@ -649,8 +651,11 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                         break;
                      case kCompress:
                         allowed = wt->TimeToLongSamples(mInitialAllowedSilence);
-                        outLength += allowed +
-                                       (*silentFrame - allowed) * mSilenceCompressPercent / 100.0;
+                        outLength += sampleCount(
+                           allowed.as_double() +
+                              (*silentFrame - allowed).as_double()
+                                 * mSilenceCompressPercent / 100.0
+                        );
                         break;
                      // default: // Not currently used.
                   }

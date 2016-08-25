@@ -273,7 +273,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    if (len < minDuration) {   //error because the selection is too short
 
-      float maxTimeRes = log(len) / log(2.0);
+      float maxTimeRes = log( len.as_double() ) / log(2.0);
       maxTimeRes = pow(2.0, floor(maxTimeRes) + 0.5);
       maxTimeRes = maxTimeRes / track->GetRate();
 
@@ -313,8 +313,9 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    }
 
 
-   double adjust_amount = (double)len /
-      ((double)len - ((double)stretch_buf_size * 2.0));
+   auto dlen = len.as_double();
+   double adjust_amount = dlen /
+      (dlen - ((double)stretch_buf_size * 2.0));
    amount = 1.0 + (amount - 1.0) * adjust_amount;
 
    auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
@@ -371,11 +372,13 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
                              stretch.out_bufsize);
 
          nget = stretch.get_nsamples();
-         if (TrackProgress(count, (s / (double) len))) {
+         if (TrackProgress(count,
+            s.as_double() / len.as_double()
+         )) {
             cancelled=true;
             break;
-         };
-      };
+         }
+      }
 
       delete [] fade_track_smps;
       outputTrack->Flush();

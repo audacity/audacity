@@ -88,7 +88,7 @@ VoiceKey::~VoiceKey()
 sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount len)
 {
 
-   if((mWindowSize) >= len+10){
+   if((mWindowSize) >= (len + 10).as_double() ){
 
       /* i18n-hint: Voice key is an experimental/incomplete feature that
          is used to navigate in vocal recordings, to move forwards and
@@ -240,7 +240,7 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
 {
 
 
-   if((mWindowSize) >= len+10){
+   if((mWindowSize) >= (len + 10).as_double() ){
 
       wxMessageBox(_("Selection is too small to use voice key."));
       return end;
@@ -377,7 +377,7 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
 sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount len)
 {
 
-   if((mWindowSize) >= len+10){
+   if((mWindowSize) >= (len + 10).as_double() ){
       wxMessageBox(_("Selection is too small to use voice key."));
 
       return start;
@@ -390,7 +390,7 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
       unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
       unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
-      auto samplesleft = len - WindowSizeInt;   //Indexes the number of samples remaining in the selection
+      sampleCount samplesleft ( len.as_double() - WindowSizeInt );   //Indexes the number of samples remaining in the selection
       auto lastsubthresholdsample = start;          //start this off at the selection start
       // keeps track of the sample number of the last sample to not exceed the threshold
 
@@ -513,7 +513,7 @@ sampleCount VoiceKey::OffBackward (WaveTrack & t, sampleCount end, sampleCount l
 {
 
 
-   if((mWindowSize) >= len+10){
+   if((mWindowSize) >= (len + 10).as_double() ){
 
       wxMessageBox(_("Selection is too small to use voice key."));
       return end;
@@ -863,7 +863,7 @@ double VoiceKey::TestEnergy (WaveTrack & t, sampleCount start, sampleCount len)
       }
 
    delete [] buffer;
-   return sum / originalLen;
+   return sum / originalLen.as_double();
 }
 
 
@@ -916,7 +916,7 @@ double VoiceKey::TestSignChanges(WaveTrack & t, sampleCount start, sampleCount l
       s += block;
    }
    delete [] buffer;
-   return (double)signchanges/originalLen;
+   return (double)signchanges / originalLen.as_double();
 }
 
 void VoiceKey::TestSignChangesUpdate(double & currentsignchanges, int len,
@@ -973,7 +973,7 @@ double VoiceKey::TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCo
       s += block;
    }
    delete [] buffer;
-   return (double)directionchanges/originalLen;
+   return (double)directionchanges/originalLen.as_double();
 }
 
 

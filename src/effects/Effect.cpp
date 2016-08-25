@@ -1566,7 +1566,7 @@ bool Effect::ProcessTrack(int count,
          genDur = mDuration;
       }
 
-      genLength = left->GetRate() * genDur;
+      genLength = sampleCount( left->GetRate() * genDur );
       delayRemaining = genLength;
       cleared = true;
 
@@ -1772,7 +1772,9 @@ bool Effect::ProcessTrack(int count,
 
       if (mNumChannels > 1)
       {
-         if (TrackGroupProgress(count, (inLeftPos - leftStart) / (double) (isGenerator ? genLength : len)))
+         if (TrackGroupProgress(count,
+               (inLeftPos - leftStart).as_double() /
+               (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
             break;
@@ -1780,7 +1782,9 @@ bool Effect::ProcessTrack(int count,
       }
       else
       {
-         if (TrackProgress(count, (inLeftPos - leftStart) / (double) (isGenerator ? genLength : len)))
+         if (TrackProgress(count,
+               (inLeftPos - leftStart).as_double() /
+               (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
             break;

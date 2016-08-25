@@ -524,7 +524,7 @@ bool VampEffect::Process()
          // UNSAFE_SAMPLE_COUNT_TRUNCATION
          // Truncation in case of very long tracks!
          Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(
-            (long) static_cast<long long>( ls ),
+            long( ls.as_long_long() ),
             (int)(mRate + 0.5)
          );
 
@@ -545,14 +545,18 @@ bool VampEffect::Process()
 
          if (channels > 1)
          {
-            if (TrackGroupProgress(count, (ls - lstart) / double(originalLen)))
+            if (TrackGroupProgress(count,
+                  (ls - lstart).as_double() /
+                  originalLen.as_double() ))
             {
                return false;
             }
          }
          else
          {
-            if (TrackProgress(count, (ls - lstart) / double(originalLen)))
+            if (TrackProgress(count,
+                  (ls - lstart).as_double() /
+                  originalLen.as_double() ))
             {
                return false;
             }

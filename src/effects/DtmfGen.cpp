@@ -122,8 +122,8 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
 
    //make under-estimates if anything, and then redistribute the few remaining samples
-   numSamplesTone = floor(dtmfTone * mSampleRate);
-   numSamplesSilence = floor(dtmfSilence * mSampleRate);
+   numSamplesTone = sampleCount( floor(dtmfTone * mSampleRate) );
+   numSamplesSilence = sampleCount( floor(dtmfSilence * mSampleRate) );
 
    // recalculate the sum, and spread the difference - due to approximations.
    // Since diff should be in the order of "some" samples, a division (resulting in zero)
@@ -528,7 +528,9 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
    // now generate the wave: 'last' is used to avoid phase errors
    // when inside the inner for loop of the Process() function.
    for(decltype(len) i = 0; i < len; i++) {
-      buffer[i]=amplitude*0.5*(sin(A*(i+last))+sin(B*(i+last)));
+      buffer[i] = amplitude * 0.5 *
+         (sin( A * (i + last).as_double() ) +
+          sin( B * (i + last).as_double() ));
    }
 
    // generate a fade-in of duration 1/250th of second

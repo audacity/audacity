@@ -169,8 +169,12 @@ sampleCount EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBl
    double BlendedLogFrequency = 0.0;
 
    // calculate delta, and reposition from where we left
-   double amplitudeQuantum = (mAmplitude[1] - mAmplitude[0]) / mSampleCnt;
-   BlendedAmplitude = mAmplitude[0] + amplitudeQuantum * mSample;
+   auto doubleSampleCount = mSampleCnt.as_double();
+   auto doubleSample = mSample.as_double();
+   double amplitudeQuantum =
+      (mAmplitude[1] - mAmplitude[0]) / doubleSampleCount;
+   BlendedAmplitude = mAmplitude[0] +
+      amplitudeQuantum * doubleSample;
 
    // precalculations:
    double pre2PI = 2.0 * M_PI;
@@ -183,15 +187,15 @@ sampleCount EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBl
       mLogFrequency[0] = log10(mFrequency[0]);
       mLogFrequency[1] = log10(mFrequency[1]);
       // calculate delta, and reposition from where we left
-      frequencyQuantum = (mLogFrequency[1] - mLogFrequency[0]) / mSampleCnt;
-      BlendedLogFrequency = mLogFrequency[0] + frequencyQuantum * mSample;
+      frequencyQuantum = (mLogFrequency[1] - mLogFrequency[0]) / doubleSampleCount;
+      BlendedLogFrequency = mLogFrequency[0] + frequencyQuantum * doubleSample;
       BlendedFrequency = pow(10.0, BlendedLogFrequency);
    }
    else
    {
       // this for regular case, linear interpolation
-      frequencyQuantum = (mFrequency[1] - mFrequency[0]) / mSampleCnt;
-      BlendedFrequency = mFrequency[0] + frequencyQuantum * mSample;
+      frequencyQuantum = (mFrequency[1] - mFrequency[0]) / doubleSampleCount;
+      BlendedFrequency = mFrequency[0] + frequencyQuantum * doubleSample;
    }
 
    // synth loop

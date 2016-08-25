@@ -396,7 +396,10 @@ sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBl
       if (((data.skipcount++) % lfoskipsamples) == 0)
       {
          //compute sine between 0 and 1
-         data.gain = (1.0 + cos(data.skipcount * data.lfoskip + data.phase)) / 2.0;
+         data.gain =
+            (1.0 +
+             cos(data.skipcount.as_double() * data.lfoskip
+                 + data.phase)) / 2.0;
 
          // change lfo shape
          data.gain = expm1(data.gain * phaserlfoshape) / expm1(phaserlfoshape);

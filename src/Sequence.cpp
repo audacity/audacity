@@ -371,7 +371,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // PRL: catch bugs like 1320:
    wxASSERT(length == len);
 
-   *outRMS = sqrt(sumsq/length);
+   *outRMS = sqrt(sumsq / length.as_double() );
 
    return true;
 }
@@ -450,20 +450,20 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       wxLogError(
          wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(((wxLongLong)s).ToDouble(), 0).c_str(),
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str());
+         Internat::ToString(s.as_double(), 0).c_str(),
+         Internat::ToString(mNumSamples.as_double(), 0).c_str());
       wxASSERT(false);
       return false;
    }
 
    // Quick check to make sure that it doesn't overflow
-   if (Overflows(((double)mNumSamples) + ((double)src->mNumSamples)))
+   if (Overflows((mNumSamples.as_double()) + (src->mNumSamples.as_double())))
    {
       wxLogError(
          wxT("Sequence::Paste: mNumSamples %s + src->mNumSamples %s would overflow."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(),
-         Internat::ToString(((wxLongLong)src->mNumSamples).ToDouble(), 0).c_str());
+         Internat::ToString(mNumSamples.as_double(), 0).c_str(),
+         Internat::ToString(src->mNumSamples.as_double(), 0).c_str());
       wxASSERT(false);
       return false;
    }
@@ -629,7 +629,7 @@ bool Sequence::SetSilence(sampleCount s0, sampleCount len)
 bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 {
    // Quick check to make sure that it doesn't overflow
-   if (Overflows(((double)mNumSamples) + ((double)len)))
+   if (Overflows((mNumSamples.as_double()) + (len.as_double())))
       return false;
 
    if (len <= 0)
@@ -676,7 +676,7 @@ bool Sequence::AppendAlias(const wxString &fullPath,
                            sampleCount len, int channel, bool useOD)
 {
    // Quick check to make sure that it doesn't overflow
-   if (Overflows(((double)mNumSamples) + ((double)len)))
+   if (Overflows((mNumSamples.as_double()) + ((double)len)))
       return false;
 
    SeqBlock newBlock(
@@ -695,7 +695,7 @@ bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
                             sampleCount len, int channel, int decodeType)
 {
    // Quick check to make sure that it doesn't overflow
-   if (Overflows(((double)mNumSamples) + ((double)len)))
+   if (Overflows((mNumSamples.as_double()) + ((double)len)))
       return false;
 
    SeqBlock newBlock(
@@ -711,7 +711,7 @@ bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
 bool Sequence::AppendBlock(const SeqBlock &b)
 {
    // Quick check to make sure that it doesn't overflow
-   if (Overflows(((double)mNumSamples) + ((double)b.f->GetLength())))
+   if (Overflows((mNumSamples.as_double()) + ((double)b.f->GetLength())))
       return false;
 
    SeqBlock newBlock(
@@ -939,8 +939,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             wxLogWarning(
                wxT("   Sequence has missing block file with length %s > mMaxSamples %s.\n      Setting length to mMaxSamples. This will likely cause some block files to be considered orphans."),
                // PRL:  Why bother with Internat when the above is just wxT?
-               Internat::ToString(((wxLongLong)len).ToDouble(), 0).c_str(),
-               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
+               Internat::ToString(len.as_double(), 0).c_str(),
+               Internat::ToString((double)mMaxSamples, 0).c_str());
             len = mMaxSamples;
          }
          block.f = make_blockfile<SilentBlockFile>(len);
@@ -965,9 +965,9 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             wxT("   Start (%s) for block file %s is not one sample past end of previous block (%s).\n")
             wxT("   Moving start so blocks are contiguous."),
             // PRL:  Why bother with Internat when the above is just wxT?
-            Internat::ToString(((wxLongLong)(block.start)).ToDouble(), 0).c_str(),
+            Internat::ToString(block.start.as_double(), 0).c_str(),
             sFileAndExtension.c_str(),
-            Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0).c_str());
+            Internat::ToString(numSamples.as_double(), 0).c_str());
          block.start = numSamples;
          mErrorOpening = true;
       }
@@ -977,8 +977,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
       wxLogWarning(
          wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."),
          // PRL:  Why bother with Internat when the above is just wxT?
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(),
-         Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0).c_str());
+         Internat::ToString(mNumSamples.as_double(), 0).c_str(),
+         Internat::ToString(numSamples.as_double(), 0).c_str());
       mNumSamples = numSamples;
       mErrorOpening = true;
    }
@@ -1003,7 +1003,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
 
    xmlFile.WriteAttr(wxT("maxsamples"), mMaxSamples);
    xmlFile.WriteAttr(wxT("sampleformat"), mSampleFormat);
-   xmlFile.WriteAttr(wxT("numsamples"), mNumSamples);
+   xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
       SeqBlock &bb = mBlock[b];
@@ -1024,7 +1024,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
       }
 
       xmlFile.StartTag(wxT("waveblock"));
-      xmlFile.WriteAttr(wxT("start"), bb.start);
+      xmlFile.WriteAttr(wxT("start"), bb.start.as_long_long() );
 
       bb.f->SaveXML(xmlFile);
 
@@ -1050,7 +1050,8 @@ int Sequence::FindBlock(sampleCount pos) const
       //this is not a binary search, but a
       //dictionary search where we guess something smarter than the binary division
       //of the unsearched area, since samples are usually proportional to block file number.
-      const double frac = double(pos - loSamples) / (hiSamples - loSamples);
+      const double frac = (pos - loSamples).as_double() /
+         (hiSamples - loSamples).as_double();
       guess = std::min(hi - 1, lo + size_t(frac * (hi - lo)));
       const SeqBlock &block = mBlock[guess];
 
@@ -1333,7 +1334,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
 
       // Decide the summary level
       const double samplesPerPixel =
-         double(whereNext - whereNow) / (nextPixel - pixel);
+         (whereNext - whereNow).as_double() / (nextPixel - pixel);
       const int divisor =
            (samplesPerPixel >= 65536) ? 65536
          : (samplesPerPixel >= 256) ? 256
@@ -1478,7 +1479,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
                       sampleCount len, XMLWriter* blockFileLog /*=NULL*/)
 {
    // Quick check to make sure that it doesn't overflow
-   if (Overflows(((double)mNumSamples) + ((double)len)))
+   if (Overflows(mNumSamples.as_double() + ((double)len)))
       return false;
 
    // If the last block is not full, we need to add samples to it
@@ -1773,7 +1774,7 @@ void Sequence::DebugPrintf(wxString *dest) const
       *dest += wxString::Format
          (wxT("   Block %3u: start %8lld, len %8lld, refs %ld, "),
           i,
-          (long long) seqBlock.start,
+          seqBlock.start.as_long_long(),
           seqBlock.f ? (long long) seqBlock.f->GetLength() : 0,
           seqBlock.f ? seqBlock.f.use_count() : 0);
 
@@ -1792,7 +1793,7 @@ void Sequence::DebugPrintf(wxString *dest) const
    }
    if (pos != mNumSamples)
       *dest += wxString::Format
-         (wxT("ERROR mNumSamples = %lld\n"), (long long) mNumSamples);
+         (wxT("ERROR mNumSamples = %lld\n"), mNumSamples.as_long_long());
 }
 
 // static

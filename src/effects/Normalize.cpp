@@ -377,7 +377,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -408,7 +408,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
 
       //Update the Progress meter
       if (TrackProgress(mCurTrackNum,
-                        ((double)(s - start) / len)/2.0, msg)) {
+                        ((s - start).as_double() / len)/2.0, msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
@@ -417,7 +417,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
    //Clean up the buffer
    delete[] buffer;
 
-   mOffset = (float)(-mSum / mCount);  // calculate actual offset (amount that needs to be added on)
+   mOffset = -mSum / mCount.as_double();  // calculate actual offset (amount that needs to be added on)
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
@@ -437,7 +437,7 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -468,7 +468,7 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
 
       //Update the Progress meter
       if (TrackProgress(mCurTrackNum,
-                        0.5+((double)(s - start) / len)/2.0, msg)) {
+                        0.5+((s - start).as_double() / len)/2.0, msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }

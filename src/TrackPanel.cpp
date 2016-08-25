@@ -4585,7 +4585,8 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
          //This interpolates each sample linearly:
          values[i - start] =
             mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
-            (float)(i - mDrawingLastDragSample) / (s0 - mDrawingLastDragSample);
+            (i - mDrawingLastDragSample).as_float() /
+            (s0 - mDrawingLastDragSample).as_float();
       }
       mDrawingTrack->Set((samplePtr)&values[0], floatSample, start, size);
    }

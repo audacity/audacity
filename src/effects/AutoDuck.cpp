@@ -357,8 +357,11 @@ bool EffectAutoDuck::Process()
 
       pos += len;
 
-      if (TotalProgress( ((double)(pos-start)) / (end-start) /
-                         (GetNumWaveTracks() + 1) ))
+      if (TotalProgress(
+            (pos - start).as_double() /
+            (end - start).as_double() /
+            (GetNumWaveTracks() + 1)
+      ))
       {
          cancel = true;
          break;
@@ -526,8 +529,8 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
    if (fadeUpSamples < 1)
       fadeUpSamples = 1;
 
-   float fadeDownStep = mDuckAmountDb / fadeDownSamples;
-   float fadeUpStep = mDuckAmountDb / fadeUpSamples;
+   float fadeDownStep = mDuckAmountDb / fadeDownSamples.as_double();
+   float fadeUpStep = mDuckAmountDb / fadeUpSamples.as_double();
 
    while (pos < end)
    {
@@ -537,8 +540,8 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 
       for (auto i = pos; i < pos + len; i++)
       {
-         float gainDown = fadeDownStep * (i - start);
-         float gainUp = fadeUpStep * (end - i);;
+         float gainDown = fadeDownStep * (i - start).as_float();
+         float gainUp = fadeUpStep * (end - i).as_float();
 
          float gain;
          if (gainDown > gainUp)

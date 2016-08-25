@@ -194,7 +194,7 @@ int ODFlacDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCoun
    static_assert(sizeof(sampleCount::type) <=
                  sizeof(FLAC__int64),
                  "Type FLAC__int64 is too narrow to hold a sampleCount");
-   if(!mFile->seek_absolute(start))
+   if(!mFile->seek_absolute(static_cast<FLAC__int64>( start.as_long_long() )))
    {
       mFlacFileLock.Unlock();
       return -1;

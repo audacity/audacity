@@ -209,7 +209,7 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
       LockRead();
       xmlFile.WriteAttr(wxT("audiofile"), mAudioFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"),
-                        static_cast<long long>( mAliasStart ));
+                        mAliasStart.as_long_long());
       xmlFile.WriteAttr(wxT("aliaslen"), mLen);
       xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
       xmlFile.WriteAttr(wxT("decodetype"), (size_t)mType);

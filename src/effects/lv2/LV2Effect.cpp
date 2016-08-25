@@ -774,7 +774,7 @@ sampleCount LV2Effect::GetLatency()
    if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)
    {
       mLatencyDone = true;
-      return mLatency;
+      return sampleCount( mLatency );
    }
 
    return 0;

@@ -330,7 +330,10 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          mCurrentPos = start+len +1;
          while(numAttempts++ < kMaxSeekRewindAttempts && mCurrentPos > start) {
             //we want to move slightly before the start of the block file, but not too far ahead
-            targetts = (start-kDecodeSampleAllowance*numAttempts/kMaxSeekRewindAttempts)  * ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ));
+            targetts =
+               (start - kDecodeSampleAllowance * numAttempts / kMaxSeekRewindAttempts)
+                  .as_long_long() *
+               ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ));
             if(targetts<0)
                targetts=0;
 
@@ -384,7 +387,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             seeking = false;
          }
          if(actualDecodeStart != mCurrentPos)
-            printf("ts not matching - now:%llu , last:%llu, lastlen:%llu, start %llu, len %llu\n",actualDecodeStart, mCurrentPos, mCurrentLen, start, len);
+            printf("ts not matching - now:%llu , last:%llu, lastlen:%llu, start %llu, len %llu\n",actualDecodeStart.as_long_long(), mCurrentPos.as_long_long(), mCurrentLen, start.as_long_long(), len);
             //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
          if(actualDecodeStart>start && firstpass) {
             // find the number of samples for the leading silence

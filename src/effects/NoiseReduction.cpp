@@ -1312,7 +1312,9 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
       // Update the Progress meter, let user cancel
       bLoopSuccess = 
-         !effect.TrackProgress(count, (samplePos - start) / (double)len);
+         !effect.TrackProgress(count,
+                               ( samplePos - start ).as_double() /
+                               len.as_double() );
    }
 
    if (bLoopSuccess) {

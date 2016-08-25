@@ -1484,8 +1484,10 @@ bool WaveTrack::Disjoin(double t0, double t1)
                   if( seqEnd - seqStart + 1 > minSamples )
                   {
                      regions.push_back(Region(
-                        seqStart / GetRate() + clip->GetStartTime(),
-                        seqEnd / GetRate() + clip->GetStartTime()));
+                        seqStart.as_double() / GetRate()
+                                              + clip->GetStartTime(),
+                        seqEnd.as_double() / GetRate()
+                                              + clip->GetStartTime()));
                   }
                   seqStart = -1;
                }
@@ -1851,12 +1853,12 @@ bool WaveTrack::Unlock() const
 
 AUDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
 {
-   return floor(t0 * mRate + 0.5);
+   return sampleCount( floor(t0 * mRate + 0.5) );
 }
 
 double WaveTrack::LongSamplesToTime(sampleCount pos) const
 {
-   return ((double)pos) / mRate;
+   return pos.as_double() / mRate;
 }
 
 double WaveTrack::GetStartTime() const
@@ -1976,15 +1978,16 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
          {
             clip->TimeToSamplesClip(wxMax(t0, clip->GetStartTime()), &clipStart);
             clip->TimeToSamplesClip(wxMin(t1, clip->GetEndTime()), &clipEnd);
-            sumsq += cliprms * cliprms * (clipEnd - clipStart);
+            sumsq += cliprms * cliprms * (clipEnd - clipStart).as_float();
             length += (clipEnd - clipStart);
-         } else
+         }
+         else
          {
             result = false;
          }
       }
    }
-   *rms = length > 0.0 ? sqrt(sumsq / length) : 0.0;
+   *rms = length > 0 ? sqrt(sumsq / length.as_double()) : 0.0;
 
    return result;
 }
@@ -2366,7 +2369,7 @@ bool WaveTrack::SplitAt(double t)
 
          //offset the NEW clip by the splitpoint (noting that it is already offset to c->GetStartTime())
          sampleCount here = llrint(floor(((t - c->GetStartTime()) * mRate) + 0.5));
-         newClip->Offset((double)here/(double)mRate);
+         newClip->Offset(here.as_double()/(double)mRate);
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
          mClips.push_back(std::move(newClip)); // transfer ownership
