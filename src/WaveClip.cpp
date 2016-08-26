@@ -426,7 +426,7 @@ void WaveClip::ClearWaveCache()
 }
 
 ///Adds an invalid region to the wavecache so it redraws that portion only.
-void WaveClip::AddInvalidRegion(long startSample, long endSample)
+void WaveClip::AddInvalidRegion(sampleCount startSample, sampleCount endSample)
 {
    ODLocker locker(&mWaveCacheMutex);
    if(mWaveCache!=NULL)

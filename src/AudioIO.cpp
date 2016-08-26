@@ -3528,7 +3528,8 @@ void AudioIO::FillBuffers()
                // The mixer here isn't actually mixing: it's just doing
                // resampling, format conversion, and possibly time track
                // warping
-               int processed = 0;
+               decltype(mPlaybackMixers[i]->Process(frames))
+                  processed = 0;
                samplePtr warpedSamples;
                //don't do anything if we have no length.  In particular, Process() will fail an wxAssert
                //that causes a crash since this is not the GUI thread and wxASSERT is a GUI call.

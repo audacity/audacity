@@ -360,7 +360,7 @@ public:
    void ClearWaveCache();
 
    ///Adds an invalid region to the wavecache so it redraws that portion only.
-   void AddInvalidRegion(long startSample, long endSample);
+   void AddInvalidRegion(sampleCount startSample, sampleCount endSample);
 
    //
    // XMLTagHandler callback methods for loading and saving

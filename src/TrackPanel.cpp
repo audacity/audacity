@@ -4383,7 +4383,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
       //Get a sample  from the track to do some tricks on.
       mDrawingTrack->Get((samplePtr)sampleRegion, floatSample,
-                                       (int)mDrawingStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
+                                       mDrawingStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
                                        sampleRegionSize);
       int i, j;
 
