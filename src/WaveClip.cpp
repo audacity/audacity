@@ -46,6 +46,12 @@
 //#undef _OPENMP
 #ifdef _OPENMP
 #include <omp.h>
+#else
+// Comment this out if you want to profile non OpenMP builds too.
+#undef BEGIN_TASK_PROFILING
+#undef END_TASK_PROFILING
+#define BEGIN_TASK_PROFILING(TASK_DESCRIPTION) 
+#define END_TASK_PROFILING(TASK_DESCRIPTION) 
 #endif
 
 class WaveCache {
