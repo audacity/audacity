@@ -1667,6 +1667,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       }
       mValueString[digitPosition] = wxChar(keyCode);
       ControlsToValue();
+      Refresh();// Force an update of the control. [Bug 1497]
       ValueToControls();
       mFocusedDigit = (mFocusedDigit + 1) % (mDigits.GetCount());
       Updated();
@@ -1686,6 +1687,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       if (theDigit != wxChar('-'))
          theDigit = '0';
       ControlsToValue();
+      Refresh();// Force an update of the control. [Bug 1497]
       ValueToControls();
       Updated();
    }

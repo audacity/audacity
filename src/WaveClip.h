@@ -97,7 +97,8 @@ public:
        double offset, double rate, double pixelsPerSecond,
        int lowerBoundX, int upperBoundX,
        const std::vector<float> &gainFactors,
-       float *scratch);
+       float* __restrict scratch,
+       float* __restrict out) const;
 
    void Populate
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
