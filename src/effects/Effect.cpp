@@ -1627,10 +1627,7 @@ bool Effect::ProcessTrack(int count,
             if (delayRemaining != 0)
             {
                // Don't use more than needed
-               if (delayRemaining < cnt)
-               {
-                  cnt = delayRemaining;
-               }
+               cnt = limitSampleBufferSize(cnt, delayRemaining);
                delayRemaining -= cnt;
                curBlockSize += cnt;
             }
@@ -1640,11 +1637,7 @@ bool Effect::ProcessTrack(int count,
       else if (delayRemaining != 0)
       {
          // Calculate the number of samples to process
-         curBlockSize = mBlockSize;
-         if (curBlockSize > delayRemaining)
-         {
-            curBlockSize = delayRemaining;
-         }
+         curBlockSize = limitSampleBufferSize( mBlockSize, delayRemaining );
          delayRemaining -= curBlockSize;
 
          // From this point on, we only want to feed zeros to the plugin
