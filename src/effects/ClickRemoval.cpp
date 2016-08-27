@@ -217,9 +217,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    float *datawindow = new float[windowSize];
    while ((s < len)  &&  ((len - s) > windowSize/2))
    {
-      auto block = idealBlockLen;
-      if (s + block > len)
-         block = len - s;
+      auto block = limitSampleBufferSize( idealBlockLen, len - s );
 
       track->Get((samplePtr) buffer, floatSample, start + s, block);
 

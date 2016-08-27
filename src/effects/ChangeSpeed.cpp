@@ -502,11 +502,10 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    auto samplePos = start;
    while (samplePos < end) {
       //Get a blockSize of samples (smaller than the size of the buffer)
-      auto blockSize = track->GetBestBlockSize(samplePos);
-
-      //Adjust the block size if it is the final block in the track
-      if (samplePos + blockSize > end)
-         blockSize = end - samplePos;
+      auto blockSize = limitSampleBufferSize(
+         track->GetBestBlockSize(samplePos),
+         end - samplePos
+      );
 
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr) inBuffer, floatSample, samplePos, blockSize);

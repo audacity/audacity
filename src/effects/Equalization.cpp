@@ -1086,9 +1086,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    while (len != 0)
    {
-      auto block = idealBlockLen;
-      if (block > len)
-         block = len;
+      auto block = limitSampleBufferSize( idealBlockLen, len );
 
       t->Get((samplePtr)buffer, floatSample, s, block);
 
