@@ -124,6 +124,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
 
       //Copy the sequences over to the NEW vector, casting as you go.
       for(int i = 0; i < numclips; i++)
+         // PRL: what the ... ?  This cast is just wrong!
          shortSeq.push_back((short*)tmpSequence[i]);
 
 
@@ -141,6 +142,8 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
             if(j + clipStart[i] >= 0 &&
                clipStart[i]+len < clipLength[i])//only copy if we are within the clip
             {
+               // UNSAFE_SAMPLE_COUNT_TRUNCATION
+               // -- but class CrossFader is not used as of this writing
                f += shortSeq[i][j+ clipStart[i]];
                clips++;
             }
@@ -171,6 +174,8 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
 
       //Copy the sequences over to the NEW vector, casting as you go.
       for(int i = 0; i < numclips; i++)
+         // Murder most foul!  As in the best it is,
+         // But this most foul, strange, and unnatural.
          intSeq.push_back((int*)tmpSequence[i]);
 
       int clips=0;
@@ -187,6 +192,8 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
             //only copy if we are within the clip
             if(j + clipStart[i] >= 0 && clipStart[i] + len < clipLength[i])
             {
+               // UNSAFE_SAMPLE_COUNT_TRUNCATION
+               // -- but class CrossFader is not used as of this writing
                f+= intSeq[i][j+clipStart[i]];
                clips++;
             }
@@ -231,6 +238,11 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
             if(j + clipStart[i] >= 0 &&
                clipStart[i] + j < clipLength[i])//only copy if we are within the clip
             {
+               // UNSAFE_SAMPLE_COUNT_TRUNCATION
+               // -- but class CrossFader is not used as of this writing
+               // -- hey wait, you never even tried to initialize floatSeq,
+               // not even with bad casts!!!
+               // Subscripts out of bounds, bombs away!!!
                f += floatSeq[i][j + clipStart[i]];
                clips++;
             }

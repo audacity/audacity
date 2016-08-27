@@ -61,7 +61,7 @@ void GetFLACImportPlugin(ImportPluginList &importPluginList,
 {
    unusableImportPluginList.push_back(
       make_movable<UnusableImportPlugin>
-         (DESC, wxArrayString(WXSIZEOF(exts), exts));
+         (DESC, wxArrayString(WXSIZEOF(exts), exts))
    );
 }
 

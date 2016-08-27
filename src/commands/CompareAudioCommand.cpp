@@ -125,7 +125,9 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
       }
 
       position += block;
-      Progress((position - s0) / length);
+      Progress(
+         double(position - s0) / double(length)
+      );
    }
 
    delete [] buff0;
