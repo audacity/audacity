@@ -159,7 +159,17 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
       return true;
    }
 
-   float *buffer = new float[blockSize];
+   float *buffer;
+   try {
+      if (blockSize < mStart)
+         // overflow
+         throw std::bad_alloc{};
+      buffer = new float[blockSize];
+   }
+   catch( const std::bad_alloc & ) {
+      wxMessageBox(_("Requested value exceeds memory capacity."));
+      return false;
+   }
 
    float *ptr = buffer;
 
