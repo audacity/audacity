@@ -50,7 +50,7 @@ private:
    // EffectPaulstretch implementation
    
    void OnText(wxCommandEvent & evt);
-   int GetBufferSize(double rate);
+   size_t GetBufferSize(double rate);
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
