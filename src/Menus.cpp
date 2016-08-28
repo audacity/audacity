@@ -648,9 +648,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
 
       c->AddSeparator();
-      c->BeginSubMenu(_("Track Size"));
+      c->BeginSubMenu(_("&Track Size"));
       c->AddItem(wxT("FitInWindow"), _("&Fit to Width"), FN(OnZoomFit), wxT("Ctrl+F"));
-      c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
+      c->AddItem(wxT("FitV"), _("Fit to &Height"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
       c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
       c->AddItem(wxT("ExpandAllTracks"), _("E&xpand All Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
       c->EndSubMenu();
