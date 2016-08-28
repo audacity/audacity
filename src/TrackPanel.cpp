@@ -7569,7 +7569,11 @@ void TrackPanel::OnTrackMenu(Track *t)
          : OnSpectrumID,
          true
       );
-      theMenu->Enable(OnSpectrogramSettingsID, display == WaveTrack::Spectrum);
+      // Bug 1253.  Shouldn't open preferences if audio is busy.
+      // We can't change them on the fly yet anyway.
+      const bool bAudioBusy = gAudioIO->IsBusy();
+      theMenu->Enable(OnSpectrogramSettingsID, 
+         (display == WaveTrack::Spectrum) && !bAudioBusy);
 
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
       SetMenuCheck(*mFormatMenu, IdOfFormat(track->GetSampleFormat()));
@@ -8014,6 +8018,13 @@ private:
 
 void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
 {
+
+   if (gAudioIO->IsBusy()){
+      wxMessageBox(_("To change Spectrogram Settings, stop any\n."
+         "playing or recording first."), 
+         _("Stop the Audio First"), wxOK | wxICON_EXCLAMATION | wxCENTRE);
+      return;
+   }
    WaveTrack *const wt = static_cast<WaveTrack*>(mPopupMenuTarget);
    // WaveformPrefsFactory waveformFactory(wt);
    SpectrumPrefsFactory spectrumFactory(wt);
