@@ -2441,7 +2441,7 @@ sampleCount Effect::RealtimeProcess(int group,
       len = 0;
       for (decltype(numSamples) block = 0; block < numSamples; block += mBlockSize)
       {
-         auto cnt = (block + mBlockSize > numSamples ? numSamples - block : mBlockSize);
+         auto cnt = std::min(numSamples - block, mBlockSize);
          len += RealtimeProcess(processor, clientIn, clientOut, cnt);
 
          for (int i = 0 ; i < mNumAudioIn; i++)

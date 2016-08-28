@@ -1488,7 +1488,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
        (length =
         (pLastBlock = &mBlock.back())->f->GetLength()) < mMinSamples) {
       SeqBlock &lastBlock = *pLastBlock;
-      const sampleCount addLen = std::min(mMaxSamples - length, len);
+      const auto addLen = std::min(mMaxSamples - length, len);
 
       Read(buffer2.ptr(), mSampleFormat, lastBlock, 0, length);
 

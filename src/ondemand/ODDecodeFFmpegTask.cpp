@@ -387,7 +387,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
          if(actualDecodeStart>start && firstpass) {
             // find the number of samples for the leading silence
-            int amt = actualDecodeStart - start;
+            auto amt = actualDecodeStart - start;
             auto cache = make_movable<FFMpegDecodeCache>();
 
             //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
@@ -503,21 +503,20 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
          if(start<mDecodeCache[i]->start && start+len  > mDecodeCache[i]->start+mDecodeCache[i]->len)
             continue;
 
-         int samplesHit;
-         int hitStartInCache;
-         int hitStartInRequest;
          int nChannels = mDecodeCache[i]->numChannels;
-         samplesHit = FFMIN(start+len,mDecodeCache[i]->start+mDecodeCache[i]->len)
-                        - FFMAX(mDecodeCache[i]->start,start);
+         auto samplesHit = (
+            FFMIN(start+len,mDecodeCache[i]->start+mDecodeCache[i]->len)
+               - FFMAX(mDecodeCache[i]->start,start)
+         );
          //find the start of the hit relative to the cache buffer start.
-         hitStartInCache   = FFMAX(0,start-mDecodeCache[i]->start);
+         const auto hitStartInCache   = FFMAX(0,start-mDecodeCache[i]->start);
          //we also need to find out which end was hit - if it is the tail only we need to update from a later index.
-         hitStartInRequest = start <mDecodeCache[i]->start?len - samplesHit: 0;
-         sampleCount outIndex,inIndex;
-         for(int j=0;j<samplesHit;j++)
+         const auto hitStartInRequest = start < mDecodeCache[i]->start
+            ? len - samplesHit : 0;
+         for(decltype(samplesHit) j = 0; j < samplesHit; j++)
          {
-            outIndex = hitStartInRequest + j;
-            inIndex = (hitStartInCache + j) * nChannels + channel;
+            const auto outIndex = hitStartInRequest + j;
+            const auto inIndex = (hitStartInCache + j) * nChannels + channel;
             switch (mDecodeCache[i]->samplefmt)
             {
                case AV_SAMPLE_FMT_U8:
