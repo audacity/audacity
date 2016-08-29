@@ -1480,11 +1480,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
    int namesCnt = (int) names.GetCount();
    int perGroup;
 
-#if defined(__WXGTK__)
    gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 15);
-#else
-   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
-#endif
 
    int groupCnt = namesCnt;
    for (int i = 0; i < namesCnt; i++)
