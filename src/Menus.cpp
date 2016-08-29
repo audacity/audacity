@@ -512,8 +512,8 @@ void AudacityProject::CreateMenusAndCommands()
 #else
          wxT("Ctrl+M"),
 #endif
-         AlwaysEnabledFlag, // is this correct??
-         AudioIONotBusyFlag);
+         AudioIOBusyFlag, 
+         AudioIOBusyFlag);
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
          AudioIONotBusyFlag, AudioIONotBusyFlag);
