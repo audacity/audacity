@@ -4972,18 +4972,19 @@ void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl) {
-      SelectTrack(t, !t->GetSelected());
+      SelectTrack(t, !t->GetSelected(), false);
       Refresh(false);
    }
    else {
-      SelectNone();
       if (shift && mLastPickedTrack)
          SelectRangeOfTracks(t, mLastPickedTrack);
-      else
+      else{
+         SelectNone();
          SelectTrack(t, true);
-      SetFocusedTrack(t);
-      SelectTrackLength(t);
+         SelectTrackLength(t);
+      }
 
+      SetFocusedTrack(t);
       this->Refresh(false);
       MixerBoard* pMixerBoard = this->GetMixerBoard();
       if (pMixerBoard)
@@ -6198,9 +6199,21 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
          return true;
       }
 
+
       return true;
    }
 
+   if( event.LeftDown() ){
+      bool bShift = event.ShiftDown();
+      bool bCtrlDown = event.ControlDown();
+      bool unsafe = IsUnsafe();
+
+      if( bShift || bCtrlDown ){
+
+         HandleListSelection(track, bShift, bCtrlDown, !unsafe);
+         return true;
+      }
+   }
    return false;
 }
 
@@ -6266,6 +6279,19 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
       return true;
    }
 
+   if( event.LeftDown() ){
+      bool bShift = event.ShiftDown();
+      bool bCtrlDown = event.ControlDown();
+      bool unsafe = IsUnsafe();
+
+      if( bShift || bCtrlDown ){
+
+         HandleListSelection(lTrack, bShift, bCtrlDown, !unsafe);
+         return true;
+      }
+   }
+
+
    // IF the user clicked a label, THEN select all other tracks by Label
    if (lTrack->IsSelected()) {
       SelectTracksByLabel(lTrack);
@@ -6289,6 +6315,9 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
       Refresh(false);
       return;
    }*/
+
+
+
 
    // return false, there is more to do...
    return false;
