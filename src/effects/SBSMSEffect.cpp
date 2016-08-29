@@ -306,11 +306,15 @@ bool EffectSBSMS::Process()
               outResampleCB = resampleCB;
               rb.offset = start;
               rb.end = end;
+               // Third party library has its own type alias, check it
+               static_assert(sizeof(sampleCount::type) <=
+                             sizeof(_sbsms_::SampleCountType),
+                             "Type _sbsms_::SampleCountType is too narrow to hold a sampleCount");
               rb.iface = std::make_unique<SBSMSInterfaceSliding>(&rateSlide,&pitchSlide,
                                                        bPitchReferenceInput,
                                                        samplesToProcess,0,
                                                        nullptr);
-               
+
              
             } else {
               rb.bPitch = false;

@@ -528,6 +528,9 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    mSilentAliasLog=FALSE;
 
+   // Third party library has its own type alias, check it
+   static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
+                 "Type sf_count_t is too narrow to hold a sampleCount");
    SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
 
    wxASSERT(info.channels >= 0);

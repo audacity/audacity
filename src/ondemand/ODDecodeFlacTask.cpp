@@ -190,6 +190,10 @@ int ODFlacDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCoun
 
    mTargetChannel=channel;
 
+   // Third party library has its own type alias, check it
+   static_assert(sizeof(sampleCount::type) <=
+                 sizeof(FLAC__int64),
+                 "Type FLAC__int64 is too narrow to hold a sampleCount");
    if(!mFile->seek_absolute(start))
    {
       mFlacFileLock.Unlock();
