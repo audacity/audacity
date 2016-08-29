@@ -387,6 +387,9 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
          if(actualDecodeStart>start && firstpass) {
             // find the number of samples for the leading silence
+            // UNSAFE_SAMPLE_COUNT_TRUNCATION
+            // -- but used only experimentally as of this writing
+            // Is there a proof size_t will not overflow?
             auto amt = actualDecodeStart - start;
             auto cache = make_movable<FFMpegDecodeCache>();
 
@@ -509,6 +512,9 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
                - FFMAX(mDecodeCache[i]->start,start)
          );
          //find the start of the hit relative to the cache buffer start.
+         // UNSAFE_SAMPLE_COUNT_TRUNCATION
+         // -- but used only experimentally as of this writing
+         // Is there a proof size_t will not overflow?
          const auto hitStartInCache   = FFMAX(0,start-mDecodeCache[i]->start);
          //we also need to find out which end was hit - if it is the tail only we need to update from a later index.
          const auto hitStartInRequest = start < mDecodeCache[i]->start
