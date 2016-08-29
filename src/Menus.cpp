@@ -916,8 +916,8 @@ void AudacityProject::CreateMenusAndCommands()
 #else
          wxT("Ctrl+M"),
 #endif
-         AlwaysEnabledFlag, // is this correct??
-         AudioIONotBusyFlag);
+         AudioIOBusyFlag, 
+         AudioIOBusyFlag);
       c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
 
       c->AddSeparator();
