@@ -692,6 +692,7 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
+   // The 'screen' is the area minus the task bar.
    wxRect screenRect = wxGetClientDisplayRect();
 
 #if defined(__WXMAC__)
@@ -705,16 +706,16 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 #endif
 
-
-   // Make sure initial sizes fit within the display bounds
+   // We don't mind being 32 pixels off the screen in any direction.
+   // Make sure initial sizes (pretty much) fit within the display bounds
    // We used to trim the sizes which could result in ridiculously small windows.
    // contributing to bug 1243.
-   // Now instead if the window doesn't fit the screen, we use the default 
+   // Now instead if the window significantly doesn't fit the screen, we use the default 
    // window instead, which we know does.
-   if (!screenRect.Contains( normalRect )) {
+   if (!screenRect.Contains( wxRect(normalRect).Deflate( 32, 32 ))) {
       normalRect = defaultRect;
    }
-   if (!screenRect.Contains( windowRect )) {
+   if (!screenRect.Contains( wxRect(windowRect).Deflate( 32, 32 ) )) {
       windowRect = defaultRect;
    }
 
@@ -754,10 +755,16 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       nextRect->y += inc;
    }
 
+   // Windows can say that we are off screen when actually we are not.
+   // On Windows 10 I am seeing miscalculation by about 6 pixels.
+   // To fix this we allow some sloppiness on the edge being counted as off screen.
+   // This matters most when restoring very carefully sized windows that are maximised
+   // in one dimension (height or width) but not both.
+   const int edgeSlop = 10;
 
    //Have we hit the right side of the screen?
    wxPoint bottomRight = nextRect->GetBottomRight();
-   if (bottomRight.x > screenRect.GetRight()) {
+   if (bottomRight.x > (screenRect.GetRight()+edgeSlop)) {
       int newWidth = screenRect.GetWidth() - nextRect->GetLeft();
       if (newWidth < defaultRect.GetWidth()) {
          nextRect->x = windowRect.x;
@@ -771,10 +778,10 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
 
    //Have we hit the bottom of the screen?
    bottomRight = nextRect->GetBottomRight();
-   if (bottomRight.y > screenRect.GetBottom()) {
+   if (bottomRight.y > (screenRect.GetBottom()+edgeSlop)) {
       nextRect->y -= inc;
       bottomRight = nextRect->GetBottomRight();
-      if (bottomRight.y > screenRect.GetBottom()) {
+      if (bottomRight.y > (screenRect.GetBottom()+edgeSlop)) {
          nextRect->SetBottom(screenRect.GetBottom());
       }
    }
