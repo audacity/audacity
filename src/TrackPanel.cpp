@@ -6208,7 +6208,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
       bool bCtrlDown = event.ControlDown();
       bool unsafe = IsUnsafe();
 
-      if( bShift || bCtrlDown ){
+      if( /*bShift ||*/ bCtrlDown ){
 
          HandleListSelection(track, bShift, bCtrlDown, !unsafe);
          return true;
@@ -6284,7 +6284,7 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
       bool bCtrlDown = event.ControlDown();
       bool unsafe = IsUnsafe();
 
-      if( bShift || bCtrlDown ){
+      if( /*bShift ||*/ bCtrlDown ){
 
          HandleListSelection(lTrack, bShift, bCtrlDown, !unsafe);
          return true;
