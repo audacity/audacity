@@ -1888,6 +1888,44 @@ void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
    }
 }
 
+void TrackPanel::ChangeSelectionOnShiftClick(Track * pTrack){
+
+   // Optional: Track already selected?  Nothing to do.
+   // If we enable this, Shift-Click behaves like click in this case.
+   //if( pTrack->GetSelected() )
+   //   return;
+
+   // Find first and last selected track.
+   Track* pFirst = nullptr;
+   Track* pLast = nullptr;
+   // We will either extend from the first or from the last.
+   Track* pExtendFrom= nullptr;
+
+   TrackListIterator iter(GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      const bool isSelected = t->GetSelected();
+      // If our track is after the first, extend from the first.
+      if( t == pTrack ){
+         pExtendFrom = pFirst;
+      }
+      // Record first and last selected.
+      if( isSelected ){
+         if( !pFirst )
+            pFirst = t;
+         pLast = t;
+      }
+   }
+   // Our track was the first or earlier.  Extend from the last.
+   if( !pExtendFrom )
+      pExtendFrom = pLast;
+
+   SelectNone();
+   if( pExtendFrom )
+      SelectRangeOfTracks(pTrack, pExtendFrom);
+   else
+      SelectTrack( pTrack, true );
+}
+
 /// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
@@ -1929,11 +1967,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
        && !stretch
 #endif
    ) {
-      SelectNone();
-      if (mLastPickedTrack && event.ShiftDown())
-         SelectRangeOfTracks(pTrack, mLastPickedTrack);
-      else
-         SelectTrack(pTrack, true);
+
+      ChangeSelectionOnShiftClick( pTrack );
 
       double value;
       // Shift-click, choose closest boundary
@@ -4977,7 +5012,7 @@ void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
    }
    else {
       if (shift && mLastPickedTrack)
-         SelectRangeOfTracks(t, mLastPickedTrack);
+         ChangeSelectionOnShiftClick( t );
       else{
          SelectNone();
          SelectTrack(t, true);
