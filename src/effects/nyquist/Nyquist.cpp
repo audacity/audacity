@@ -1752,7 +1752,9 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
       }
    }
 
-   long offset = (mCurStart[ch] + start) - mCurBufferStart[ch];
+   // We have guaranteed above that this is nonnegative and bounded by
+   // mCurBufferLen[ch]:
+   auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
    CopySamples(mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample), floatSample,
                (samplePtr)buffer, floatSample,
                len);

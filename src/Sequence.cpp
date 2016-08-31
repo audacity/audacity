@@ -264,8 +264,12 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
       theFile->GetMinMax(&block0Min, &block0Max, &block0RMS);
 
       if (block0Min < min || block0Max > max) {
-         auto s0 = start - theBlock.start;
-         const auto maxl0 = theBlock.start + theFile->GetLength() - start;
+         // start lies within theBlock:
+         auto s0 = ( start - theBlock.start ).as_size_t();
+         const auto maxl0 = (
+            // start lies within theBlock:
+            theBlock.start + theFile->GetLength() - start
+         ).as_size_t();
          wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
          const auto l0 = limitSampleBufferSize ( maxl0, len );
 
@@ -288,7 +292,8 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
 
       if (block1Min < min || block1Max > max) {
 
-         const auto l0 = (start + len) - theBlock.start;
+         // start + len - 1 lies in theBlock:
+         const auto l0 = ( start + len - theBlock.start ).as_size_t();
          wxASSERT(l0 <= mMaxSamples); // Vaughan, 2011-10-19
 
          float partialMin, partialMax, partialRMS;
@@ -343,8 +348,11 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    {
       const SeqBlock &theBlock = mBlock[block0];
       const auto &theFile = theBlock.f;
-      auto s0 = start - theBlock.start;
-      const auto maxl0 = theBlock.start + theFile->GetLength() - start;
+      // start lies within theBlock
+      auto s0 = ( start - theBlock.start ).as_size_t();
+      // start lies within theBlock
+      const auto maxl0 =
+         (theBlock.start + theFile->GetLength() - start).as_size_t();
       wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
       const auto l0 = limitSampleBufferSize( maxl0, len );
 
@@ -359,7 +367,8 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       const SeqBlock &theBlock = mBlock[block1];
       const auto &theFile = theBlock.f;
 
-      const auto l0 = (start + len) - theBlock.start;
+      // start + len - 1 lies within theBlock
+      const auto l0 = ( start + len - theBlock.start ).as_size_t();
       wxASSERT(l0 <= mMaxSamples); // PRL: I think Vaughan missed this
 
       float partialMin, partialMax, partialRMS;
@@ -405,7 +414,9 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
    const SeqBlock &block0 = mBlock[b0];
    if (s0 != block0.start) {
       const auto &file = block0.f;
-      blocklen = std::min(s1, block0.start + file->GetLength()) - s0;
+      // Nonnegative result is length of block0 or less:
+      blocklen =
+         ( std::min(s1, block0.start + file->GetLength()) - s0 ).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen);
 
@@ -422,7 +433,8 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
    if (b1 > b0) {
       const SeqBlock &block = mBlock[b1];
       const auto &file = block.f;
-      blocklen = (s1 - block.start);
+      // s1 is within block:
+      blocklen = (s1 - block.start).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
          Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen);
@@ -512,18 +524,24 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       // one block!
 
       SeqBlock &block = *pBlock;
-      SampleBuffer buffer(largerBlockLen, mSampleFormat);
+      // largerBlockLen is not more than mMaxSamples...
+      SampleBuffer buffer(largerBlockLen.as_size_t(), mSampleFormat);
 
-      int splitPoint = s - block.start;
+      // ...and addedLen is not more than largerBlockLen
+      auto sAddedLen = addedLen.as_size_t();
+      // s lies within block:
+      auto splitPoint = ( s - block.start ).as_size_t();
       Read(buffer.ptr(), mSampleFormat, block, 0, splitPoint);
       src->Get(0, buffer.ptr() + splitPoint*sampleSize,
-               mSampleFormat, 0, addedLen);
-      Read(buffer.ptr() + (splitPoint + addedLen)*sampleSize,
+               mSampleFormat, 0, sAddedLen);
+      Read(buffer.ptr() + (splitPoint + sAddedLen) * sampleSize,
            mSampleFormat, block,
            splitPoint, length - splitPoint);
 
       auto file =
-         mDirManager->NewSimpleBlockFile(buffer.ptr(), largerBlockLen, mSampleFormat);
+         mDirManager->NewSimpleBlockFile(
+            // largerBlockLen is not more than mMaxSamples...
+            buffer.ptr(), largerBlockLen.as_size_t(), mSampleFormat);
 
       block.f = file;
 
@@ -545,19 +563,22 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
    SeqBlock &splitBlock = mBlock[b];
    auto splitLen = splitBlock.f->GetLength();
-   int splitPoint = s - splitBlock.start;
+   // s lies within splitBlock
+   auto splitPoint = ( s - splitBlock.start ).as_size_t();
 
    unsigned int i;
    if (srcNumBlocks <= 4) {
 
-      sampleCount sum = splitLen + addedLen;
+      // addedLen is at most four times maximum block size
+      auto sAddedLen = addedLen.as_size_t();
+      const auto sum = splitLen + sAddedLen;
 
       SampleBuffer sumBuffer(sum, mSampleFormat);
       Read(sumBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
       src->Get(0, sumBuffer.ptr() + splitPoint * sampleSize,
                mSampleFormat,
-               0, addedLen);
-      Read(sumBuffer.ptr() + (splitPoint + addedLen) * sampleSize, mSampleFormat,
+               0, sAddedLen);
+      Read(sumBuffer.ptr() + (splitPoint + sAddedLen) * sampleSize, mSampleFormat,
            splitBlock, splitPoint,
            splitLen - splitPoint);
 
@@ -646,7 +667,10 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    sampleCount pos = 0;
 
-   sTrack.mBlock.reserve((len + idealSamples - 1) / idealSamples);
+   // Could nBlocks overflow a size_t?  Not very likely.  You need perhaps
+   // 2 ^ 52 samples which is over 3000 years at 44.1 kHz.
+   auto nBlocks = (len + idealSamples - 1) / idealSamples;
+   sTrack.mBlock.reserve(nBlocks.as_size_t());
 
    BlockFilePtr silentFile {};
    if (len >= idealSamples)
@@ -659,7 +683,8 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
    }
    if (len != 0) {
       sTrack.mBlock.push_back(SeqBlock(
-         make_blockfile<SilentBlockFile>(len), pos));
+         // len is not more than idealSamples:
+         make_blockfile<SilentBlockFile>( len.as_size_t() ), pos));
       pos += len;
    }
 
@@ -770,7 +795,8 @@ sampleCount Sequence::GetBestBlockSize(sampleCount start) const
    int numBlocks = mBlock.size();
 
    const SeqBlock &block = mBlock[b];
-   sampleCount result = (block.start + block.f->GetLength() - start);
+   // start is in block:
+   auto result = (block.start + block.f->GetLength() - start).as_size_t();
 
    decltype(result) length;
    while(result < mMinSamples && b+1<numBlocks &&
@@ -943,7 +969,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
                Internat::ToString((double)mMaxSamples, 0).c_str());
             len = mMaxSamples;
          }
-         block.f = make_blockfile<SilentBlockFile>(len);
+         // len is at most mMaxSamples:
+         block.f = make_blockfile<SilentBlockFile>( len.as_size_t() );
          wxLogWarning(
             wxT("Gap detected in project file. Replacing missing block file with silence."));
          mErrorOpening = true;
@@ -1148,7 +1175,9 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
 {
    while (len) {
       const SeqBlock &block = mBlock[b];
-      const sampleCount bstart = (start - (block.start));
+      // start is in block
+      const auto bstart = (start - block.start).as_size_t();
+      // bstart is not more than block length
       const auto blen = std::min(len, block.f->GetLength() - bstart);
 
       Read(buffer, format, block, bstart, blen);
@@ -1182,7 +1211,8 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
 
    while (len != 0) {
       SeqBlock &block = mBlock[b];
-      const sampleCount bstart = start - block.start;
+      // start is within block
+      const auto bstart = ( start - block.start ).as_size_t();
       const auto fileLength = block.f->GetLength();
       const auto blen = limitSampleBufferSize( fileLength - bstart, len );
 
@@ -1343,10 +1373,14 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       int blockStatus = b;
 
       // How many samples or triples are needed?
-      const sampleCount startPosition =
-         std::max(sampleCount(0), (srcX - start) / divisor);
-      const sampleCount inclusiveEndPosition =
-         std::min((mMaxSamples / divisor) - 1, (nextSrcX - 1 - start) / divisor);
+
+      const size_t startPosition =
+         // srcX and start are in the same block
+         std::max(sampleCount(0), (srcX - start) / divisor).as_size_t();
+      const size_t inclusiveEndPosition =
+         // nextSrcX - 1 and start are in the same block
+         std::min((sampleCount(mMaxSamples) / divisor) - 1,
+                  (nextSrcX - 1 - start) / divisor).as_size_t();
       const auto num = 1 + inclusiveEndPosition - startPosition;
       if (num <= 0) {
          // What?  There was a zero length block file?
@@ -1392,7 +1426,8 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       // The previous pixel column might straddle blocks.
       // If so, impute some of the data to it.
       if (b > block0 && pixel > 0) {
-         sampleCount midPosition = (whereNow - start) / divisor;
+         // whereNow and start are in the same block
+         auto midPosition = ((whereNow - start) / divisor).as_size_t();
          int diff(midPosition - filePosition);
          if (diff > 0) {
             MinMaxSumsq values(temp, diff, divisor);
@@ -1423,7 +1458,9 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          decltype(filePosition) positionX = 0;
          while (pixelX < nextPixel &&
             filePosition ==
-                (positionX = (std::min(s1 - 1, where[pixelX]) - start) / divisor)
+               (positionX = (
+                  // s1 - 1 or where[pixelX] and start are in the same block
+                  (std::min(s1 - 1, where[pixelX]) - start) / divisor).as_size_t() )
          )
             ++pixelX;
          if (pixelX >= nextPixel)
@@ -1608,14 +1645,21 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    if (b0 == b1 && (length = (pBlock = &mBlock[b0])->f->GetLength()) - len >= mMinSamples) {
       SeqBlock &b = *pBlock;
-      sampleCount pos = start - b.start;
-      sampleCount newLen = length - len;
+      // start is within block
+      auto pos = ( start - b.start ).as_size_t();
+      wxASSERT(len < length);
+      // len must be less than length
+      // because start + len - 1 is also in the block...
+      auto newLen = ( length - len ).as_size_t();
 
       scratch.Allocate(scratchSize, mSampleFormat);
 
       Read(scratch.ptr(), mSampleFormat, b, 0, pos);
       Read(scratch.ptr() + (pos * sampleSize), mSampleFormat,
-           b, pos + len, newLen - pos);
+           b,
+           // ... and therefore pos + len
+           // is not more than the length of the block
+           ( pos + len ).as_size_t(), newLen - pos);
 
       b = SeqBlock(
          mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat),
@@ -1645,7 +1689,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    // Otherwise combine it with the previous block (splitting them
    // 50/50 if necessary).
    const SeqBlock &preBlock = mBlock[b0];
-   sampleCount preBufferLen = start - preBlock.start;
+   // start is within preBlock
+   auto preBufferLen = ( start - preBlock.start ).as_size_t();
    if (preBufferLen) {
       if (preBufferLen >= mMinSamples || b0 == 0) {
          if (!scratch.ptr())
@@ -1682,14 +1727,17 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    // the array, write it out.  Otherwise combine it with the
    // subsequent block (splitting them 50/50 if necessary).
    const SeqBlock &postBlock = mBlock[b1];
-   sampleCount postBufferLen =
-       (postBlock.start + postBlock.f->GetLength()) - (start + len);
+   // start + len - 1 lies within postBlock
+   const auto postBufferLen = (
+       (postBlock.start + postBlock.f->GetLength()) - (start + len)
+   ).as_size_t();
    if (postBufferLen) {
       if (postBufferLen >= mMinSamples || b1 == numBlocks - 1) {
          if (!scratch.ptr())
             // Last use of scratch, can ask for smaller
             scratch.Allocate(postBufferLen, mSampleFormat);
-         sampleCount pos = (start + len) - postBlock.start;
+         // start + len - 1 lies within postBlock
+         auto pos = (start + len - postBlock.start).as_size_t();
          Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
          auto file =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), postBufferLen, mSampleFormat);
@@ -1703,7 +1751,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          if (!scratch.ptr())
             // Last use of scratch, can ask for smaller
             scratch.Allocate(sum, mSampleFormat);
-         sampleCount pos = (start + len) - postBlock.start;
+         // start + len - 1 lies within postBlock
+         auto pos = (start + len - postBlock.start).as_size_t();
          Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
          Read(scratch.ptr() + (postBufferLen * sampleSize), mSampleFormat,
               postpostBlock, 0, postpostLen);

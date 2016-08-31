@@ -312,7 +312,9 @@ bool EffectAutoDuck::Process()
       for (auto i = pos; i < pos + len; i++)
       {
          rmsSum -= rmsWindow[rmsPos];
-         rmsWindow[rmsPos] = buf[i - pos] * buf[i - pos];
+         // i - pos is bounded by len:
+         auto index = ( i - pos ).as_size_t();
+         rmsWindow[rmsPos] = buf[ index ] * buf[ index ];
          rmsSum += rmsWindow[rmsPos];
          rmsPos = (rmsPos + 1) % kRMSWindowSize;
 
@@ -551,7 +553,8 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
          if (gain < mDuckAmountDb)
             gain = mDuckAmountDb;
 
-         buf[i - pos] *= DB_TO_LINEAR(gain);
+         // i - pos is bounded by len:
+         buf[ ( i - pos ).as_size_t() ] *= DB_TO_LINEAR(gain);
       }
 
       t->Set((samplePtr)buf, floatSample, pos, len);

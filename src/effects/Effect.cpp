@@ -1610,7 +1610,8 @@ bool Effect::ProcessTrack(int count,
          if (curBlockSize > inputRemaining)
          {
             // We've reached the last block...set current block size to what's left 
-            curBlockSize = inputRemaining;
+            // inputRemaining is positive and bounded by a size_t
+            curBlockSize = inputRemaining.as_size_t();
             inputRemaining = 0;
 
             // Clear the remainder of the buffers so that a full block can be passed
@@ -1709,10 +1710,12 @@ bool Effect::ProcessTrack(int count,
          // so overlay them by shifting the remaining output samples.
          else if (curDelay > 0)
          {
-            curBlockSize -= curDelay;
+            // curDelay is bounded by curBlockSize:
+            auto delay = curDelay.as_size_t();
+            curBlockSize -= delay;
             for (int i = 0; i < chans; i++)
             {
-               memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, sizeof(float) * curBlockSize);
+               memmove(mOutBufPos[i], mOutBufPos[i] + delay, sizeof(float) * curBlockSize);
             }
             curDelay = 0;
          }

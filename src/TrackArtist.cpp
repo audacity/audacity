@@ -1319,7 +1319,11 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
 
    const double t1 = zoomInfo.PositionToTime(rect.width - 1, -leftOffset) - toffset;
    const auto s1 = sampleCount(ceil(t1 * rate));
-   sampleCount slen = std::min(snSamples - s0, s1 - s0 + 1);
+
+   // Assume size_t will not overflow, else we wouldn't be here drawing the
+   // few individual samples
+   auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
+
    if (slen <= 0)
       return;
 

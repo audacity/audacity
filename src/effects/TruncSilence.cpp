@@ -495,7 +495,8 @@ bool EffectTruncSilence::DoRemoval
             // Make sure the cross-fade does not affect non-silent frames
             if (wt->LongSamplesToTime(blendFrames) > inLength)
             {
-               blendFrames = wt->TimeToLongSamples(inLength);
+               // Result is not more than blendFrames:
+               blendFrames = wt->TimeToLongSamples(inLength).as_size_t();
             }
 
             // Perform cross-fade in memory

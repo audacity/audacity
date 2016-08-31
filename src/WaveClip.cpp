@@ -645,13 +645,16 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
             if (right > left) {
                float *b;
-               sampleCount len = right-left;
+               // left is nonnegative and at most mAppendBufferLen:
+               auto sLeft = left.as_size_t();
+               // The difference is at most mAppendBufferLen:
+               size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer.ptr())[left];
+                  b = &((float *)mAppendBuffer.ptr())[sLeft];
                else {
                   b = new float[len];
-                  CopySamples(mAppendBuffer.ptr() + left*SAMPLE_SIZE(seqFormat),
+                  CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
                               seqFormat,
                               (samplePtr)b, floatSample, len);
                }
@@ -831,7 +834,8 @@ bool SpecCache::CalculateOneSpectrum
 
          if (start + myLen > numSamples) {
             // Near the end of the clip, pad right with zeroes as needed.
-            int newlen = numSamples - start;
+            // newlen is bounded by myLen:
+            auto newlen = ( numSamples - start ).as_size_t();
             for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
                adj[ii] = 0;
             myLen = newlen;

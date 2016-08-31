@@ -74,6 +74,12 @@ public:
 
    long long as_long_long() const { return value; }
 
+   size_t as_size_t() const {
+      wxASSERT(value >= 0);
+      wxASSERT(value <= std::numeric_limits<size_t>::max());
+      return value;
+   }
+
    sampleCount &operator += (sampleCount b) { value += b.value; return *this; }
    sampleCount &operator -= (sampleCount b) { value -= b.value; return *this; }
    sampleCount &operator *= (sampleCount b) { value *= b.value; return *this; }

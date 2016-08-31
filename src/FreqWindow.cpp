@@ -569,7 +569,8 @@ void FreqWindow::GetAudio()
                mDataLen = 10485760;
             }
             else
-               mDataLen = dataLen;
+               // dataLen is not more than 10 * 2 ^ 20
+               mDataLen = dataLen.as_size_t();
             mData = new float[mDataLen];
             track->Get((samplePtr)mData, floatSample, start, mDataLen);
          }

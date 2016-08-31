@@ -393,8 +393,9 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             // find the number of samples for the leading silence
             // UNSAFE_SAMPLE_COUNT_TRUNCATION
             // -- but used only experimentally as of this writing
-            // Is there a proof size_t will not overflow?
-            auto amt = actualDecodeStart - start;
+            // Is there a proof size_t will not overflow size_t?
+            // Result is surely nonnegative.
+            auto amt = (actualDecodeStart - start).as_size_t();
             auto cache = make_movable<FFMpegDecodeCache>();
 
             //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
@@ -513,14 +514,19 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
 
          auto nChannels = mDecodeCache[i]->numChannels;
          auto samplesHit = (
+            // Proof that the result is never negative: consider four cases
+            // of FFMIN and FFMAX choices, and use the if-condition enclosing.
+            // The result is not more than len.
             FFMIN(start+len,mDecodeCache[i]->start+mDecodeCache[i]->len)
-               - FFMAX(mDecodeCache[i]->start,start)
-         );
+               - FFMAX(mDecodeCache[i]->start, start)
+         ).as_size_t();
          //find the start of the hit relative to the cache buffer start.
          // UNSAFE_SAMPLE_COUNT_TRUNCATION
          // -- but used only experimentally as of this writing
          // Is there a proof size_t will not overflow?
-         const auto hitStartInCache   = FFMAX(sampleCount{0},start-mDecodeCache[i]->start);
+         const auto hitStartInCache =
+            // result is less than mDecodeCache[i]->len:
+            FFMAX(sampleCount{0},start-mDecodeCache[i]->start).as_size_t();
          //we also need to find out which end was hit - if it is the tail only we need to update from a later index.
          const auto hitStartInRequest = start < mDecodeCache[i]->start
             ? len - samplesHit : sampleCount{ 0 };

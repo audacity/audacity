@@ -592,7 +592,8 @@ struct AudioIO::ScrubQueue
          auto remaining = pEntry->mDuration - pEntry->mPlayed;
          if (frames >= remaining)
          {
-            frames -= remaining;
+            // remaining is not more than frames
+            frames -= remaining.as_size_t();
             pEntry->mPlayed = pEntry->mDuration;
          }
          else

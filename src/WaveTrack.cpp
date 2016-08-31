@@ -2042,11 +2042,24 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
          {
             inclipDelta = -startDelta; // make positive value
             samplesToCopy -= inclipDelta;
+            // samplesToCopy is now either len or
+            //    (clipEnd - clipStart) - (start - clipStart)
+            //    == clipEnd - start > 0
+            // samplesToCopy is not more than len
+            //
             startDelta = 0;
+            // startDelta is zero
+         }
+         else {
+            // startDelta is nonnegative and less than than len
+            // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->GetSamples((samplePtr)(((char*)buffer)+startDelta*SAMPLE_SIZE(format)),
-                               format, inclipDelta, samplesToCopy))
+         if (!clip->GetSamples(
+               (samplePtr)(((char*)buffer) +
+                           startDelta.as_size_t() *
+                           SAMPLE_SIZE(format)),
+               format, inclipDelta, samplesToCopy.as_size_t() ))
          {
             wxASSERT(false); // should always work
             return false;
@@ -2078,11 +2091,24 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
          {
             inclipDelta = -startDelta; // make positive value
             samplesToCopy -= inclipDelta;
+            // samplesToCopy is now either len or
+            //    (clipEnd - clipStart) - (start - clipStart)
+            //    == clipEnd - start > 0
+            // samplesToCopy is not more than len
+            //
             startDelta = 0;
+            // startDelta is zero
+         }
+         else {
+            // startDelta is nonnegative and less than than len
+            // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->SetSamples((samplePtr)(((char*)buffer)+startDelta*SAMPLE_SIZE(format)),
-                               format, inclipDelta, samplesToCopy))
+         if (!clip->SetSamples(
+               (samplePtr)(((char*)buffer) +
+                           startDelta.as_size_t() *
+                           SAMPLE_SIZE(format)),
+               format, inclipDelta, samplesToCopy.as_size_t() ))
          {
             wxASSERT(false); // should always work
             return false;
@@ -2128,10 +2154,13 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
 
          if (rt0 < dClipStartTime)
          {
+            // This is not more than the number of samples in
+            // (endTime - startTime) which is bufferLen:
             auto nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
-            rbuf += nDiff;
-            wxASSERT(nDiff <= rlen);
-            rlen -= nDiff;
+            auto snDiff = nDiff.as_size_t();
+            rbuf += snDiff;
+            wxASSERT(snDiff <= rlen);
+            rlen -= snDiff;
             rt0 = dClipStartTime;
          }
 
@@ -2722,30 +2751,45 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       if (initLen > 0) {
          // This might be fetching zeroes between clips
          mOverlapBuffer.Resize(len, format);
-         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, initLen))
+         // initLen is not more than len:
+         auto sinitLen = initLen.as_size_t();
+         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen))
             return 0;
-         remaining -= initLen;
+         wxASSERT( sinitLen <= remaining );
+         remaining -= sinitLen;
          start += initLen;
-         buffer = mOverlapBuffer.ptr() + initLen * SAMPLE_SIZE(format);
+         buffer = mOverlapBuffer.ptr() + sinitLen * SAMPLE_SIZE(format);
       }
 
       // Now satisfy the request from the buffers
       for (int ii = 0; ii < mNValidBuffers && remaining > 0; ++ii) {
          const auto starti = start - mBuffers[ii].start;
+         // Treatment of initLen above establishes this loop invariant,
+         // and statements below preserve it:
+         wxASSERT(starti >= 0);
+
+         // This may be negative
          const auto leni =
             std::min( sampleCount( remaining ), mBuffers[ii].len - starti );
          if (initLen <= 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
-            return samplePtr(mBuffers[ii].data + starti);
+            // leni is nonnegative, therefore start falls within mBuffers[ii],
+            // so starti is bounded between 0 and buffer length
+            return samplePtr(mBuffers[ii].data + starti.as_size_t() );
          }
          else if (leni > 0) {
+            // leni is nonnegative, therefore start falls within mBuffers[ii]
+            // But we can't satisfy all from one buffer, so copy
             if (buffer == 0) {
                mOverlapBuffer.Resize(len, format);
                buffer = mOverlapBuffer.ptr();
             }
-            const size_t size = sizeof(float) * leni;
-            memcpy(buffer, mBuffers[ii].data + starti, size);
-            remaining -= leni;
+            // leni is positive and not more than remaining
+            const size_t size = sizeof(float) * leni.as_size_t();
+            // starti is less than mBuffers[ii].len and nonnegative
+            memcpy(buffer, mBuffers[ii].data + starti.as_size_t(), size);
+            wxASSERT( leni <= remaining );
+            remaining -= leni.as_size_t();
             start += leni;
             buffer += size;
          }
