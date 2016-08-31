@@ -937,7 +937,7 @@ bool SpecCache::CalculateOneSpectrum
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
                   // about 5% slower vs allowing it to race.
-                  #pragma omp atomic
+                  #pragma omp atomic update
 #endif
                   out[index] += power;
                }
@@ -1015,7 +1015,7 @@ void SpecCache::Populate
          void init(WaveTrackCache &waveTrackCache, size_t scratchSize) {
             if (!cache) {
                cache = new WaveTrackCache(waveTrackCache.GetTrack());
-               scratch.reserve(scratchSize);
+               scratch.resize(scratchSize);
             }
          }
          WaveTrackCache* cache;
