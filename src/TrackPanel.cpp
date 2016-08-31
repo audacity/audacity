@@ -1961,14 +1961,24 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    bool stretch = HitTestStretch(pTrack, rect, event);
 #endif
 
-   if (event.ShiftDown()
+   bool bShiftDown = event.ShiftDown();
+   bool bCtrlDown = event.ControlDown();
+   if (bShiftDown || bCtrlDown
 
 #ifdef USE_MIDI
        && !stretch
 #endif
    ) {
 
-      ChangeSelectionOnShiftClick( pTrack );
+      if( bShiftDown )
+         ChangeSelectionOnShiftClick( pTrack );
+      if( bCtrlDown ){
+         //bool bIsSelected = pTrack->GetSelected();
+         bool bIsSelected = false;
+         // could set bIsSelected true here, but toggling is more technically correct.
+         // if we want to match behaviour in Track Control Panel.
+         SelectTrack( pTrack, !bIsSelected, false );
+      }
 
       double value;
       // Shift-click, choose closest boundary
@@ -2757,7 +2767,8 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 
    if (event.CmdDown()) {
       // Ctrl-drag has no meaning, fuhggeddaboudit
-      return;
+      // JKC YES it has meaning.
+      //return;
    }
 
    wxRect rect      = mCapturedRect;
@@ -6242,7 +6253,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
       bool bShift = event.ShiftDown();
       bool bCtrlDown = event.ControlDown();
       bool unsafe = IsUnsafe();
-
+      bCtrlDown = false;
       if( /*bShift ||*/ bCtrlDown ){
 
          HandleListSelection(track, bShift, bCtrlDown, !unsafe);
