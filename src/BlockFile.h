@@ -105,8 +105,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual GetFileNameResult GetFileName() const;
    virtual void SetFileName(wxFileNameWrapper &&name);
 
-   virtual sampleCount GetLength() const { return mLen; }
-   virtual void SetLength(const sampleCount newLen) { mLen = newLen; }
+   sampleCount GetLength() const { return mLen; }
+   void SetLength(const sampleCount newLen) { mLen = newLen; }
 
    /// Locks this BlockFile, to prevent it from being moved
    virtual void Lock();
