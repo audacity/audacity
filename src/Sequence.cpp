@@ -578,7 +578,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       const auto srcLastTwoLen =
          penultimate.f->GetLength() +
          srcBlock[srcNumBlocks - 1].f->GetLength();
-      const sampleCount rightSplit = splitBlock.f->GetLength() - splitPoint;
+      const auto rightSplit = splitBlock.f->GetLength() - splitPoint;
       const auto rightLen = rightSplit + srcLastTwoLen;
 
       SampleBuffer sampleBuffer(std::max(leftLen, rightLen), mSampleFormat);
