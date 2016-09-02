@@ -14,8 +14,7 @@
 #ifndef _WIN_FILEDIALOGPRIVATE_H_
 #define _WIN_FILEDIALOGPRIVATE_H_
 
-#include <windows.h>
-
+#include <wx/app.h>
 #include <wx/modalhook.h>
 
 //-------------------------------------------------------------------------

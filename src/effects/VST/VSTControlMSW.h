@@ -11,8 +11,7 @@
 #ifndef AUDACITY_VSTCONTROLMSW_H
 #define AUDACITY_VSTCONTROLMSW_H
 
-#include <Windows.h>
-
+#include <wx/app.h>
 #include <wx/control.h>
 
 #include "aeffectx.h"
