@@ -1,11 +1,17 @@
 #!/bin/bash
 
 srcdir=.
+host=
 while [ $# -gt 0 ]
 do
    if [[ "$1" =~ --srcdir=.* ]]
    then
       srcdir=${1#*=}
+      break
+   fi
+   if [[ "$1" =~ --host=.* ]]
+   then
+      host=${1#*=}
       break
    fi
    shift
@@ -30,6 +36,19 @@ function waf
          ln -s "${f}"
       fi
    done
+
+   # apparently waf doesn't include cross-compiler support so do this
+   if [ ! -z $host ]; then
+      export CC="$host-gcc"
+      export CXX="$host-g++"
+      export AR="$host-ar"
+      export PKGCONFIG="$host-pkg-config"
+
+      # cross pkg-config won't look at PKG_CONFIG_PATH, but rather
+      # PKG_CONFIG_PATH_<host with underscores>
+      name=`echo $host | sed 's/[-\.]/_/g'`
+      export PKG_CONFIG_PATH_$name=$PKG_CONFIG_PATH
+   fi
 
    $(which python python2 | tail -1) waf --prefix="." --include="." $@ configure || exit 1
    popd >/dev/null
