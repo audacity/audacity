@@ -99,7 +99,14 @@ fi
 dnl --- check for required libraries ---
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+dnl there is no AC_PATH_TOOLS so we have this loop
+if [[ ! -x "$WX_CONFIG" ]]; then
+    for tool in $WX_CONFIG wx-config wx-config-3.0; do
+        AC_PATH_TOOL(WX_CONFIG, $tool, no, $PATH:/usr/local/bin)
+        if [[ -x "$WX_CONFIG" ]]; then break; fi
+    done
+fi
+
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
 fi
@@ -141,6 +148,19 @@ WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
 WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
 AC_SUBST([WX_CXXFLAGS])
 AC_SUBST([WX_LIBS])
+
+
+AC_CANONICAL_HOST
+
+case "${host_os}" in
+   cygwin* | mingw32*)
+      dnl Bug in wx-config on mingw/gcc 4.9
+      CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+   ;;
+
+   *)
+   ;;
+esac
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
