@@ -108,7 +108,14 @@ fi
 dnl --- check for required libraries ---
 dnl system libraries
 AC_CHECK_FUNCS([strchr memmove])
-AC_FUNC_MALLOC
+
+dnl Can't do this test on a cross compiler (requires execution of test program)
+if test "$cross_compiling" = no; then
+   AC_FUNC_MALLOC
+else
+   AC_MSG_NOTICE(Assuming GNUC comptible malloc)
+fi
+
 AC_HEADER_STDBOOL
 
 dnl Checks for header files.
