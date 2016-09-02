@@ -83,7 +83,9 @@ have_wmme=no
 have_ds=no
 AC_CHECK_HEADER(windows.h, have_windows=yes, have_windows=no)
 if [[ $have_windows = "yes" ]] ; then
-   AC_CHECK_HEADER(pa_win_wmme.h, have_wmme=yes)
+   AC_CHECK_HEADERS(pa_win_wmme.h, have_wmme=yes, [],
+   [#include <windows.h>
+   ])
    if [[ $have_wmme = "yes" ]] ; then
       AC_EGREP_HEADER([PaWinMME_GetStreamInputHandle], [pa_win_wmme.h], , [have_wmme=no])
       if [[ $have_wmme = "no" ]] ; then
@@ -91,10 +93,12 @@ if [[ $have_windows = "yes" ]] ; then
       fi
    fi
 
-   AC_CHECK_HEADER(pa_win_ds.h, have_ds=yes)
+   AC_CHECK_HEADERS(pa_win_ds.h, have_ds=yes, [], 
+   [#include <windows.h>
+   ])
    if [[ $have_ds = "yes" ]] ; then
       AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_ds=no])
-      if [[ $have_support = "no" ]] ; then
+      if [[ $have_ds = "no" ]] ; then
          AC_MSG_WARN([Missing PaWinDS_GetStreamInputGUID support in pa_win_ds.h]);
       fi
    fi
@@ -136,6 +140,22 @@ if [[ $have_coreaudio = "yes" ]] ; then
    AC_DEFINE(PX_USE_MAC_COREAUDIO)
    have_support=yes
 fi
+
+AM_CONDITIONAL([USE_WIN_MME], [test "$have_wmme" = yes])
+if [[ $have_wmme = "yes" ]] ; then
+   AC_MSG_NOTICE([Including support for MME])
+   AC_DEFINE(PX_USE_WIN_MME)
+   have_support=yes
+fi
+
+AM_CONDITIONAL([USE_WIN_DSOUND], [test "$have_ds" = yes])
+if [[ $have_ds = "yes" ]] ; then
+   AC_MSG_NOTICE([Including support for DirectSound])
+   AC_DEFINE(PX_USE_WIN_DSOUND)
+   have_support=yes
+fi
+
+AM_CONDITIONAL([USE_WIN], [test "$have_ds" = yes -o "$have_wmme" = yes])
 
 if [[ $have_support = "no" ]] ; then
    AC_MSG_ERROR([No supported mixer interfaces detected])
