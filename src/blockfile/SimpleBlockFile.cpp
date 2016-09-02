@@ -395,15 +395,14 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
 
-      if (len > mLen - start)
-         len = mLen - start;
+      len = std::min(len, std::max(start, mLen) - start);
       CopySamples(
          (samplePtr)(((char*)mCache.sampleData) +
             start * SAMPLE_SIZE(mCache.format)),
          mCache.format, data, format, len);
       return len;
-   } else
-   {
+   }
+   else {
       //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
 
       SF_INFO info;

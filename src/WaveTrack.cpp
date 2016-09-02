@@ -2031,9 +2031,8 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         auto samplesToCopy = start+len - clipStart;
-         if (samplesToCopy > clip->GetNumSamples())
-            samplesToCopy = clip->GetNumSamples();
+         auto samplesToCopy =
+            std::min( start+len - clipStart, clip->GetNumSamples() );
          auto startDelta = clipStart - start;
          decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
@@ -2068,9 +2067,8 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         auto samplesToCopy = start+len - clipStart;
-         if (samplesToCopy > clip->GetNumSamples())
-            samplesToCopy = clip->GetNumSamples();
+         auto samplesToCopy =
+            std::min( start+len - clipStart, clip->GetNumSamples() );
          auto startDelta = clipStart - start;
          decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)

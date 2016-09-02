@@ -635,15 +635,12 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          sampleFormat seqFormat = mSequence->GetSampleFormat();
          bool didUpdate = false;
          for(i=a; i<p1; i++) {
-            auto left = where[i] - numSamples;
-            auto right = where[i + 1] - numSamples;
+            auto left = std::max(sampleCount{ 0 },
+                                 where[i] - numSamples);
+            auto right = std::min(sampleCount{ mAppendBufferLen },
+                                  where[i + 1] - numSamples);
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
-
-            if (left < 0)
-               left = 0;
-            if (right > mAppendBufferLen)
-               right = mAppendBufferLen;
 
             if (right > left) {
                float *b;
@@ -1315,9 +1312,8 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       if (len == 0)
          break;
 
-      int toCopy = maxBlockSize - mAppendBufferLen;
-      if (toCopy > len)
-         toCopy = len;
+      wxASSERT(mAppendBufferLen <= maxBlockSize);
+      auto toCopy = std::min(len, maxBlockSize - mAppendBufferLen);
 
       CopySamples(buffer, format,
                   mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),

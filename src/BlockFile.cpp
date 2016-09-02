@@ -438,8 +438,8 @@ bool BlockFile::Read256(float *buffer,
    // FIXME: TRAP_ERR ReadSummay() could return fail.
    this->ReadSummary(summary);
 
-   if (start+len > mSummaryInfo.frames256)
-      len = mSummaryInfo.frames256 - start;
+   start = std::min( start, mSummaryInfo.frames256 );
+   len = std::min( len, mSummaryInfo.frames256 - start );
 
    CopySamples(summary + mSummaryInfo.offset256 + (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
@@ -478,8 +478,8 @@ bool BlockFile::Read64K(float *buffer,
    // FIXME: TRAP_ERR ReadSummay() could return fail.
    this->ReadSummary(summary);
 
-   if (start+len > mSummaryInfo.frames64K)
-      len = mSummaryInfo.frames64K - start;
+   start = std::min( start, mSummaryInfo.frames64K );
+   len = std::min( len, mSummaryInfo.frames64K - start );
 
    CopySamples(summary + mSummaryInfo.offset64K +
                (start * mSummaryInfo.bytesPerFrame),
