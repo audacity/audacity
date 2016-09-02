@@ -710,7 +710,9 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 
 
+   wxRect screenRect( wxGetClientDisplayRect());
 #if defined(__WXMAC__)
+
    // On OSX, the top of the window should never be less than the menu height,
    // so something is amiss if it is
    if (normalRect.y < screenRect.y) {
@@ -787,7 +789,7 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    wxPoint p = nextRect->GetLeftTop();
    int scr = std::max( 0, wxDisplay::GetFromPoint( p ));
    wxDisplay d( scr );
-   wxRect screenRect = d.GetClientArea();
+   screenRect = d.GetClientArea();
 
    // Now we (possibly) start trimming our rectangle down.
    // Have we hit the right side of the screen?
