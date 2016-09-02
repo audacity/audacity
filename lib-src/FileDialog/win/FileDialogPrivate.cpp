@@ -46,6 +46,7 @@
 #include <wx/scopeguard.h>
 #include <wx/tokenzr.h>
 #include <wx/modalhook.h>
+#include <wx/sizer.h>
 
 #include "../FileDialog.h"
 
