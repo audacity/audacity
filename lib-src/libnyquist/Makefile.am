@@ -14,17 +14,33 @@ INC = \
    -I${srcdir}/nyquist/nyqsrc \
    -I${srcdir}/nyquist/tran \
    -I${srcdir}/nyquist/xlisp \
-   -I${srcdir}/nyquist/sys/unix \
    -I${srcdir}/nyquist/cmt \
    -I${srcdir}/nyquist/ffts/src \
    -I${srcdir}/nyquist/nyqstk/include \
    -I${srcdir}/nyquist/nyqstk
+
+if TARGET_WIN32
+    INC += -I${srcdir}/nyquist/sys/win/common
+endif
+
+if TARGET_MINGW
+    INC += -I${srcdir}/nyquist/sys/win/mingw
+endif
+
+if TARGET_UNIX
+    INC += -I${srcdir}/nyquist/sys/unix
+endif
 
 AM_CFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT
 
 AM_CXXFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT
+
+if TARGET_MINGW
+   AM_CFLAGS += -DUSE_NO_MINGW_SETJMP_TWO_ARGS
+   AM_CXXFLAGS += -DUSE_NO_MINGW_SETJMP_TWO_ARGS
+endif
 
 # define the output library (link with -lportSMF)
 lib_LIBRARIES = libnyquist.a
