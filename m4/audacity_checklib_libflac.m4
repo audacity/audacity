@@ -38,13 +38,17 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
 
    dnl see if FLAC is available in the source dir
 
-   AC_CHECK_FILE(${srcdir}/lib-src/libflac/include/FLAC/format.h,
-                 flac_h_available="yes",
-                 flac_h_available="no")
+   if test -f "${srcdir}/lib-src/libflac/include/FLAC/format.h"; then
+      flac_h_available="yes"
+   else
+      flac_h_available="no"
+   fi
 
-   AC_CHECK_FILE(${srcdir}/lib-src/libflac/include/FLAC++/decoder.h,
-                 flacpp_h_available="yes",
-                 flacpp_h_available="no")
+   if test -f "${srcdir}/lib-src/libflac/include/FLAC++/decoder.h"; then
+      flacpp_h_available="yes"
+   else
+      flacpp_h_available="no"
+   fi
 
    if test "$flac_h_available" = "yes" -a "$flacpp_h_available" = "yes"; then
       LIBFLAC_LOCAL_AVAILABLE="yes"
