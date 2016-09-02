@@ -59,7 +59,7 @@ public:
 
    // EffectClientInterface implementation
 
-   int GetAudioInCount() override;
+   unsigned GetAudioInCount() override;
    bool GetAutomationParameters(EffectAutomationParameters & parms) override;
    bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 

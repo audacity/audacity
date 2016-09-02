@@ -151,7 +151,7 @@ int FormatClassifier::GetResultFormatLibSndfile()
    return format;
 }
 
-int FormatClassifier::GetResultChannels()
+unsigned FormatClassifier::GetResultChannels()
 {
    return mResultChannels;
 }

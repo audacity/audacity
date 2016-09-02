@@ -49,7 +49,7 @@ struct FFMpegDecodeCache
    uint8_t* samplePtr{};//interleaved samples
    sampleCount start;
    sampleCount len;
-   int         numChannels;
+   unsigned    numChannels;
    AVSampleFormat samplefmt; // input (from libav) sample format
 
 };
@@ -396,6 +396,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
 
             //put it in the cache so the other channels can use it.
+            // wxASSERT(sc->m_stream->codec->channels > 0);
             cache->numChannels = sc->m_stream->codec->channels;
             cache->len = amt;
             cache->start=start;
@@ -506,7 +507,7 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
          if(start<mDecodeCache[i]->start && start+len  > mDecodeCache[i]->start+mDecodeCache[i]->len)
             continue;
 
-         int nChannels = mDecodeCache[i]->numChannels;
+         auto nChannels = mDecodeCache[i]->numChannels;
          auto samplesHit = (
             FFMIN(start+len,mDecodeCache[i]->start+mDecodeCache[i]->len)
                - FFMAX(mDecodeCache[i]->start,start)
@@ -602,6 +603,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //However if other ODDecode tasks need this, we should do a NEW class for caching.
       auto cache = make_movable<FFMpegDecodeCache>();
       //len is number of samples per channel
+      // wxASSERT(sc->m_stream->codec->channels > 0);
       cache->numChannels = sc->m_stream->codec->channels;
 
       cache->len = (sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize) / cache->numChannels;

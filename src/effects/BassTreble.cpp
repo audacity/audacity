@@ -111,12 +111,12 @@ bool EffectBassTreble::SupportsRealtime()
 
 // EffectClientInterface implementation
 
-int EffectBassTreble::GetAudioInCount()
+unsigned EffectBassTreble::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectBassTreble::GetAudioOutCount()
+unsigned EffectBassTreble::GetAudioOutCount()
 {
    return 1;
 }
@@ -142,7 +142,7 @@ bool EffectBassTreble::RealtimeInitialize()
    return true;
 }
 
-bool EffectBassTreble::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
 {
    EffectBassTrebleState slave;
 

@@ -184,7 +184,7 @@ bool VampEffect::IsDefault()
 
 // EffectClientInterface implementation
 
-int VampEffect::GetAudioInCount()
+unsigned VampEffect::GetAudioInCount()
 {
    return mPlugin->getMaxChannelCount();
 }
@@ -400,7 +400,7 @@ bool VampEffect::Process()
    WaveTrack *left = (WaveTrack *)iter.First();
 
    bool multiple = false;
-   int prevTrackChannels = 0;
+   unsigned prevTrackChannels = 0;
 
    if (GetNumWaveGroups() > 1)
    {
@@ -420,7 +420,7 @@ bool VampEffect::Process()
       GetSamples(left, &lstart, &len);
 
       WaveTrack *right = NULL;
-      int channels = 1;
+      unsigned channels = 1;
 
       if (left->GetLinked())
       {

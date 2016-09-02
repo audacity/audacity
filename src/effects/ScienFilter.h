@@ -52,8 +52,8 @@ public:
 
    // EffectClientInterface implementation
 
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
    bool GetAutomationParameters(EffectAutomationParameters & parms) override;

@@ -130,7 +130,7 @@ struct GStreamContext
    GstElement    *mSink{};         // Application sink
    bool           mUse{};          // True if this stream should be imported
    TrackHolders   mChannels;     // Array of WaveTrack pointers, one for each channel
-   gint           mNumChannels{};  // Number of channels
+   unsigned       mNumChannels{};  // Number of channels
    gdouble        mSampleRate{};   // Sample rate
    GstString      mType;         // Audio type
    sampleFormat   mFmt{ floatSample };          // Sample format
@@ -762,7 +762,7 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
 
       // Allocate the track array
       c->mChannels.resize(c->mNumChannels);
-      if (gint(c->mChannels.size()) != c->mNumChannels)
+      if (c->mChannels.size() != c->mNumChannels)
       {
          WARN(mPipeline.get(), ("OnNewSample: unable to allocate track array"));
          return;
@@ -811,7 +811,7 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
    });
 
    // Cache a few items
-   int nChannels = c->mNumChannels;
+   auto nChannels = c->mNumChannels;
    sampleFormat fmt = c->mFmt;
    samplePtr data = (samplePtr) info.data;
    sampleCount samples = info.size / nChannels / SAMPLE_SIZE(fmt);
@@ -1127,11 +1127,11 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
       return updateResult;
    }
 
-   // Grah the streams lock
+   // Grab the streams lock
    g_mutex_locker locker{ mStreamsLock };
 
    // Count the total number of tracks collected
-   int outNumTracks = 0;
+   unsigned outNumTracks = 0;
    for (guint s = 0; s < mStreams.size(); s++)
    {
       GStreamContext *c = mStreams[s].get();

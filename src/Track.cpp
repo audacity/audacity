@@ -1194,7 +1194,7 @@ const TimeTrack *TrackList::GetTimeTrack() const
    return const_cast<TrackList*>(this)->GetTimeTrack();
 }
 
-int TrackList::GetNumExportChannels(bool selectionOnly) const
+unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
 {
    /* counters for tracks panned different places */
    int numLeft = 0;

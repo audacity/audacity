@@ -68,12 +68,12 @@ EffectType EffectEcho::GetType()
 
 // EffectClientInterface implementation
 
-int EffectEcho::GetAudioInCount()
+unsigned EffectEcho::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectEcho::GetAudioOutCount()
+unsigned EffectEcho::GetAudioOutCount()
 {
    return 1;
 }

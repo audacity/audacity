@@ -205,12 +205,12 @@ EffectType EffectScienFilter::GetType()
 
 // EffectClientInterface implementation
 
-int EffectScienFilter::GetAudioInCount()
+unsigned EffectScienFilter::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectScienFilter::GetAudioOutCount()
+unsigned EffectScienFilter::GetAudioOutCount()
 {
    return 1;
 }

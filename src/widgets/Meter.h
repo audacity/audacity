@@ -153,7 +153,7 @@ class Meter final : public wxPanelWrapper
     *
     * The second overload is for ease of use in MixerBoard.
     */
-   void UpdateDisplay(int numChannels,
+   void UpdateDisplay(unsigned numChannels,
                       int numFrames, float *sampleData);
 
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
@@ -256,7 +256,7 @@ class Meter final : public wxPanelWrapper
 
    bool      mActive;
 
-   int       mNumBars;
+   unsigned  mNumBars;
    MeterBar  mBar[kMaxMeterBars];
 
    bool      mLayoutValid;

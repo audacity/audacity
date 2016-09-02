@@ -56,12 +56,12 @@ bool EffectStereoToMono::IsInteractive()
 
 // EffectClientInterface implementation
 
-int EffectStereoToMono::GetAudioInCount()
+unsigned EffectStereoToMono::GetAudioInCount()
 {
    return 2;
 }
 
-int EffectStereoToMono::GetAudioOutCount()
+unsigned EffectStereoToMono::GetAudioOutCount()
 {
    return 1;
 }

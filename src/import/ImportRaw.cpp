@@ -50,7 +50,7 @@ and sample size to help you importing data of an unknown format.
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 
-#include "RawAudioGuess.h"
+// #include "RawAudioGuess.h"
 #include "MultiFormatReader.h"
 #include "SpecPowerMeter.h"
 #include "FormatClassifier.h"
@@ -61,7 +61,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 
   public:
    ImportRawDialog(wxWindow * parent,
-                   int encoding, int channels,
+                   int encoding, unsigned channels,
                    int offset, double rate);
    ~ImportRawDialog();
 
@@ -72,7 +72,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 
    // in and out
    int mEncoding;
-   int mChannels;
+   unsigned mChannels;
    int mOffset;
    double mRate;
    double mPercent;
@@ -109,7 +109,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       SF_INFO sndInfo;
       int result;
 
-      int numChannels = 0;
+      unsigned numChannels = 0;
 
       try {
          // Yes, FormatClassifier currently handles filenames in UTF8 format only, that's
@@ -131,6 +131,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          offset = 0;
       }
 
+      numChannels = std::max(1u, numChannels);
       ImportRawDialog dlog(parent, encoding, numChannels, (int)offset, rate);
       dlog.ShowModal();
       if (!dlog.GetReturnCode())
@@ -197,7 +198,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       channels.resize(numChannels);
 
       auto iter = channels.begin();
-      for (int c = 0; c < numChannels; ++iter, ++c) {
+      for (decltype(numChannels) c = 0; c < numChannels; ++iter, ++c) {
          const auto channel =
          (*iter = trackFactory->NewWaveTrack(format, rate)).get();
 
@@ -261,7 +262,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
          if (block) {
             auto iter = channels.begin();
-            for(int c=0; c<numChannels; ++iter, ++c) {
+            for(decltype(numChannels) c = 0; c < numChannels; ++iter, ++c) {
                if (format==int16Sample) {
                   for(decltype(block) j=0; j<block; j++)
                      ((short *)buffer.ptr())[j] =
@@ -313,7 +314,7 @@ BEGIN_EVENT_TABLE(ImportRawDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 ImportRawDialog::ImportRawDialog(wxWindow * parent,
-                                 int encoding, int channels,
+                                 int encoding, unsigned channels,
                                  int offset, double rate)
 :  wxDialogWrapper(parent, wxID_ANY, _("Import Raw Data"),
             wxDefaultPosition, wxDefaultSize,
@@ -323,6 +324,8 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
     mOffset(offset),
     mRate(rate)
 {
+   wxASSERT(channels >= 1);
+
    SetName(GetTitle());
 
    ShuttleGui S(this, eIsCreating);

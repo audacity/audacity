@@ -240,7 +240,6 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    UInt32 quality = kQTAudioRenderQuality_Max;
    AudioStreamBasicDescription desc;
    UInt32 maxSampleSize;
-   UInt32 numchan;
    UInt32 bufsize;
    bool res = false;
 
@@ -296,7 +295,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          break;
       }
    
-      numchan = desc.mChannelsPerFrame;
+      auto numchan = desc.mChannelsPerFrame;
       bufsize = 5 * desc.mSampleRate;
    
       // determine sample format

@@ -25,4 +25,4 @@
    SF_FORMAT value
 */
 int RawAudioGuess(const wxString &in_fname,
-                  int *out_offset, int *out_channels);
+                  int *out_offset, unsigned *out_channels);

@@ -133,7 +133,7 @@ public:
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
    int Export(AudacityProject *project,
-               int channels,
+               unsigned channels,
                const wxString &fName,
                bool selectedOnly,
                double t0,
@@ -159,7 +159,7 @@ ExportOGG::ExportOGG()
 }
 
 int ExportOGG::Export(AudacityProject *project,
-                       int numChannels,
+                       unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
                        double t0,

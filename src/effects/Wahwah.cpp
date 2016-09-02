@@ -121,12 +121,12 @@ bool EffectWahwah::SupportsRealtime()
 
 // EffectClientInterface implementation
 
-int EffectWahwah::GetAudioInCount()
+unsigned EffectWahwah::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectWahwah::GetAudioOutCount()
+unsigned EffectWahwah::GetAudioOutCount()
 {
    return 1;
 }
@@ -157,7 +157,7 @@ bool EffectWahwah::RealtimeInitialize()
    return true;
 }
 
-bool EffectWahwah::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
 {
    EffectWahwahState slave;
 

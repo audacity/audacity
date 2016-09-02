@@ -117,8 +117,8 @@ public:
 
    virtual bool SetHost(EffectHostInterface *host) = 0;
 
-   virtual int GetAudioInCount() = 0;
-   virtual int GetAudioOutCount() = 0;
+   virtual unsigned GetAudioInCount() = 0;
+   virtual unsigned GetAudioOutCount() = 0;
 
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;
@@ -135,7 +135,7 @@ public:
    virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) = 0;
 
    virtual bool RealtimeInitialize() = 0;
-   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate) = 0;
+   virtual bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) = 0;
    virtual bool RealtimeFinalize() = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() = 0;

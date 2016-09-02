@@ -643,7 +643,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
    }
 
    // Figure out how many channels we should export.
-   int channels = mTracks->GetNumExportChannels(false);
+   auto channels = mTracks->GetNumExportChannels(false);
 
    wxArrayString otherNames;  // keep track of file names we will use, so we
    // don't duplicate them
@@ -932,7 +932,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    return ok ;
 }
 
-int ExportMultiple::DoExport(int channels,
+int ExportMultiple::DoExport(unsigned channels,
                               const wxFileName &inName,
                               bool selectedOnly,
                               double t0,

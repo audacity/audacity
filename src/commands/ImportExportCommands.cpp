@@ -102,7 +102,8 @@ bool ExportCommand::Apply(CommandExecutionContext context)
 
    Exporter exporter;
 
-   bool exportSuccess = exporter.Process(context.GetProject(), numChannels,
+   bool exportSuccess = exporter.Process(context.GetProject(),
+                                         std::max(0L, numChannels),
                                          extension.c_str(), filename,
                                          selection, t0, t1);
 

@@ -208,12 +208,12 @@ bool EffectDistortion::SupportsRealtime()
 
 // EffectClientInterface implementation
 
-int EffectDistortion::GetAudioInCount()
+unsigned EffectDistortion::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectDistortion::GetAudioOutCount()
+unsigned EffectDistortion::GetAudioOutCount()
 {
    return 1;
 }
@@ -238,7 +238,7 @@ bool EffectDistortion::RealtimeInitialize()
    return true;
 }
 
-bool EffectDistortion::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
 {
    EffectDistortionState slave;
 

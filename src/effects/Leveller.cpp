@@ -92,12 +92,12 @@ EffectType EffectLeveller::GetType()
 
 // EffectClientInterface implementation
 
-int EffectLeveller::GetAudioInCount()
+unsigned EffectLeveller::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectLeveller::GetAudioOutCount()
+unsigned EffectLeveller::GetAudioOutCount()
 {
    return 1;
 }

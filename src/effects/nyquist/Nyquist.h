@@ -205,7 +205,7 @@ private:
    int               mVersion;
    NyqControlArray   mControls;
 
-   int               mCurNumChannels;
+   unsigned          mCurNumChannels;
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
    sampleCount       mCurLen;
@@ -213,8 +213,8 @@ private:
    int               mTrackIndex;
    bool              mFirstInGroup;
    double            mOutputTime;
-   int               mCount;
-   int               mNumSelectedChannels;
+   unsigned          mCount;
+   unsigned          mNumSelectedChannels;
    double            mProgressIn;
    double            mProgressOut;
    double            mProgressTot;

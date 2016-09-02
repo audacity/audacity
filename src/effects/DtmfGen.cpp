@@ -102,7 +102,7 @@ EffectType EffectDtmf::GetType()
 
 // EffectClientInterface implementation
 
-int EffectDtmf::GetAudioOutCount()
+unsigned EffectDtmf::GetAudioOutCount()
 {
    return 1;
 }

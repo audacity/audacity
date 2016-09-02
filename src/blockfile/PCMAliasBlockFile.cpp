@@ -117,6 +117,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    mSilentAliasLog=FALSE;
 
    SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
+   wxASSERT(info.channels >= 0);
    SampleBuffer buffer(len * info.channels, floatSample);
 
    int framesRead = 0;

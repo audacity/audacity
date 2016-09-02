@@ -241,7 +241,7 @@ Mixer::WarpOptions::WarpOptions(double min, double max)
 Mixer::Mixer(const WaveTrackConstArray &inputTracks,
              const WarpOptions &warpOptions,
              double startTime, double stopTime,
-             int numOutChannels, int outBufferSize, bool outInterleaved,
+             unsigned numOutChannels, int outBufferSize, bool outInterleaved,
              double outRate, sampleFormat outFormat,
              bool highQuality, MixerSpec *mixerSpec)
 {
@@ -376,7 +376,7 @@ void Mixer::Clear()
    }
 }
 
-void MixBuffers(int numChannels, int *channelFlags, float *gains,
+void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
                 samplePtr src, SampleBuffer *dests,
                 int len, bool interleaved)
 {
@@ -385,7 +385,7 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
          continue;
 
       samplePtr destPtr;
-      int skip;
+      unsigned skip;
 
       if (interleaved) {
          destPtr = dests[0].ptr() + c*SAMPLE_SIZE(floatSample);
@@ -747,7 +747,7 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
    Reposition(t0);
 }
 
-MixerSpec::MixerSpec( int numTracks, int maxNumChannels )
+MixerSpec::MixerSpec( unsigned numTracks, unsigned maxNumChannels )
 {
    mNumTracks = mNumChannels = numTracks;
    mMaxNumChannels = maxNumChannels;
@@ -795,7 +795,7 @@ void MixerSpec::Free()
    delete[] mMap;
 }
 
-bool MixerSpec::SetNumChannels( int newNumChannels )
+bool MixerSpec::SetNumChannels( unsigned newNumChannels )
 {
    if( mNumChannels == newNumChannels )
       return true;

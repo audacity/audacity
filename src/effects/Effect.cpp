@@ -285,7 +285,7 @@ bool Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-int Effect::GetAudioInCount()
+unsigned Effect::GetAudioInCount()
 {
    if (mClient)
    {
@@ -295,7 +295,7 @@ int Effect::GetAudioInCount()
    return 0;
 }
 
-int Effect::GetAudioOutCount()
+unsigned Effect::GetAudioOutCount()
 {
    if (mClient)
    {
@@ -420,7 +420,7 @@ bool Effect::RealtimeInitialize()
    return false;
 }
 
-bool Effect::RealtimeAddProcessor(int numChannels, float sampleRate)
+bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
    if (mClient)
    {
@@ -1548,7 +1548,7 @@ bool Effect::ProcessTrack(int count,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   int chans = wxMin(mNumAudioOut, mNumChannels);
+   auto chans = std::min(mNumAudioOut, mNumChannels);
 
    std::unique_ptr<WaveTrack> genLeft, genRight;
    decltype(len) genLength = 0;
@@ -2282,11 +2282,11 @@ double Effect::CalcPreviewInputLength(double previewLength)
 // RealtimeAddProcessor and RealtimeProcess use the same method of
 // determining the current processor index, so updates to one should
 // be reflected in the other.
-bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
+bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
 {
-   int ichans = chans;
-   int ochans = chans;
-   int gchans = chans;
+   auto ichans = chans;
+   auto ochans = chans;
+   auto gchans = chans;
 
    // Reset processor index
    if (group == 0)
@@ -2348,7 +2348,7 @@ bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
 // determining the current processor group, so updates to one should
 // be reflected in the other.
 sampleCount Effect::RealtimeProcess(int group,
-                                    int chans,
+                                    unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
                                     sampleCount numSamples)
@@ -2366,9 +2366,9 @@ sampleCount Effect::RealtimeProcess(int group,
    float **clientOut = (float **) alloca(mNumAudioOut * sizeof(float *));
    float *dummybuf = (float *) alloca(numSamples * sizeof(float));
    decltype(numSamples) len = 0;
-   int ichans = chans;
-   int ochans = chans;
-   int gchans = chans;
+   auto ichans = chans;
+   auto ochans = chans;
+   auto gchans = chans;
    int indx = 0;
    int ondx = 0;
 

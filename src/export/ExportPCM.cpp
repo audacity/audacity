@@ -314,7 +314,7 @@ public:
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
-               int channels,
+               unsigned channels,
                const wxString &fName,
                bool selectedOnly,
                double t0,
@@ -351,7 +351,8 @@ ExportPCM::ExportPCM()
       format = AddFormat() - 1;
 
       si.format = kFormats[i].format;
-      for (si.channels = 1; sf_format_check(&si); si.channels++){};
+      for (si.channels = 1; sf_format_check(&si); si.channels++)
+         ;
       wxString ext = sf_header_extension(si.format);
 
       SetFormat(kFormats[i].name, format);
@@ -384,7 +385,7 @@ ExportPCM::ExportPCM()
  * file type, or giving the user full control over libsndfile.
  */
 int ExportPCM::Export(AudacityProject *project,
-                       int numChannels,
+                       unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
                        double t0,
@@ -476,6 +477,7 @@ int ExportPCM::Export(AudacityProject *project,
       const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
       {
+         wxASSERT(info.channels >= 0);
          auto mixer = CreateMixer(waveTracks,
                                   tracks->GetTimeTrack(),
                                   t0, t1,

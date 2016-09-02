@@ -460,7 +460,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
 
 bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
-   int numChannels = 2;
+   unsigned numChannels = 2;
    if (IsMono()) {
       numChannels = 1;
    }
@@ -509,7 +509,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
 
    AudacityProject *project = GetActiveProject();
 
-   int numChannels = 1;    //used to switch between mono and stereo export
+   unsigned numChannels = 1;    //used to switch between mono and stereo export
    if (IsMono()) {
       numChannels = 1;  //export in mono
    } else {

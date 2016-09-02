@@ -1948,7 +1948,7 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       {
          WaveTrack *vt = gAudioIO->mPlaybackTracks[i];
 
-         int chanCnt = 1;
+         unsigned chanCnt = 1;
          if (vt->GetLinked())
          {
             i++;
@@ -3634,7 +3634,7 @@ void AudioIO::FillBuffers()
          // Append captured samples to the end of the WaveTracks.
          // The WaveTracks have their own buffering for efficiency.
          AutoSaveFile blockFileLog;
-         int numChannels = mCaptureTracks.size();
+         auto numChannels = mCaptureTracks.size();
 
          for( i = 0; (int)i < numChannels; i++ )
          {
@@ -3871,9 +3871,8 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 void AudioIO::FillMidiBuffers()
 {
    bool hasSolo = false;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
-   int t;
-   for(t = 0; t < numPlaybackTracks; t++ )
+   auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
+   for(unsigned t = 0; t < numPlaybackTracks; t++ )
       if( gAudioIO->mPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
          break;
@@ -4120,7 +4119,7 @@ void AudioIO::AILAProcess(double maxPeak) {
 
 static void DoSoftwarePlaythrough(const void *inputBuffer,
                                   sampleFormat inputFormat,
-                                  int inputChannels,
+                                  unsigned inputChannels,
                                   float *outputBuffer,
                                   int len)
 {
@@ -4151,9 +4150,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
                           const PaStreamCallbackFlags WXUNUSED(statusFlags), void * WXUNUSED(userData) )
 {
-   int numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
-   int numCaptureChannels = gAudioIO->mNumCaptureChannels;
+   auto numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
+   auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
+   auto numCaptureChannels = gAudioIO->mNumCaptureChannels;
    int callbackReturn = paContinue;
    void *tempBuffer = alloca(framesPerBuffer*sizeof(float)*
                              MAX(numCaptureChannels,numPlaybackChannels));
@@ -4178,7 +4177,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
 
    unsigned int i;
-   int t;
 
    /* Send data to recording VU meter if applicable */
 
@@ -4322,7 +4320,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             gAudioIO->mWarpedTime = std::abs(gAudioIO->mWarpedTime);
 
             // Reset mixer positions and flush buffers for all tracks
-            for (i = 0; i < (unsigned int)numPlaybackTracks; i++)
+            for (i = 0; i < numPlaybackTracks; i++)
             {
                gAudioIO->mPlaybackMixers[i]->Reposition(gAudioIO->mTime);
                const auto toDiscard =
@@ -4347,8 +4345,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             return paContinue;
          }
 
-         int numSolo = 0;
-         for( t = 0; t < numPlaybackTracks; t++ )
+         unsigned numSolo = 0;
+         for(unsigned t = 0; t < numPlaybackTracks; t++ )
             if( gAudioIO->mPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -4372,7 +4370,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          int group = 0;
          int chanCnt = 0;
          int maxLen = 0;
-         for (t = 0; t < numPlaybackTracks; t++)
+         for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
 
@@ -4573,7 +4571,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       if( inputBuffer && (numCaptureChannels > 0) )
       {
          size_t len = framesPerBuffer;
-         for( t = 0; t < numCaptureChannels; t++) {
+         for(unsigned t = 0; t < numCaptureChannels; t++) {
             len = std::min( len,
                gAudioIO->mCaptureBuffers[t]->AvailForPut());
          }
@@ -4585,7 +4583,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          }
 
          if (len > 0) {
-            for( t = 0; t < numCaptureChannels; t++) {
+            for(unsigned t = 0; t < numCaptureChannels; t++) {
 
                // dmazzoni:
                // Un-interleave.  Ugly special-case code required because the

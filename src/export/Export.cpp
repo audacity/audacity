@@ -140,7 +140,7 @@ void ExportPlugin::SetMask(const wxString & mask, int index)
    mFormatInfos[index].mMask = mask;
 }
 
-void ExportPlugin::SetMaxChannels(int maxchannels, int index)
+void ExportPlugin::SetMaxChannels(unsigned maxchannels, unsigned index)
 {
    mFormatInfos[index].mMaxChannels = maxchannels;
 }
@@ -188,7 +188,7 @@ wxString ExportPlugin::GetMask(int index)
    return mask;
 }
 
-int ExportPlugin::GetMaxChannels(int index)
+unsigned ExportPlugin::GetMaxChannels(int index)
 {
    return mFormatInfos[index].mMaxChannels;
 }
@@ -240,7 +240,7 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
-         int numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
@@ -369,7 +369,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
    return success;
 }
 
-bool Exporter::Process(AudacityProject *project, int numChannels,
+bool Exporter::Process(AudacityProject *project, unsigned numChannels,
                        const wxChar *type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
 {
@@ -747,11 +747,11 @@ bool Exporter::CheckMix()
       else {
          mChannels = 1;
       }
-      if (mChannels > mPlugins[mFormat]->GetMaxChannels(mSubFormat))
-         mChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
+      mChannels = std::min(mChannels,
+                           mPlugins[mFormat]->GetMaxChannels(mSubFormat));
 
-      int numLeft =  mNumLeft + mNumMono;
-      int numRight = mNumRight + mNumMono;
+      auto numLeft =  mNumLeft + mNumMono;
+      auto numRight = mNumRight + mNumMono;
 
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
          wxString exportFormat = mPlugins[mFormat]->GetFormat(mSubFormat);
@@ -783,7 +783,7 @@ bool Exporter::CheckMix()
    }
    else
    {
-      if (exportedChannels == -1)
+      if (exportedChannels < 0)
          exportedChannels = mPlugins[mFormat]->GetMaxChannels(mSubFormat);
 
       ExportMixerDialog md(mProject->GetTracks(),
@@ -1225,13 +1225,13 @@ BEGIN_EVENT_TABLE( ExportMixerDialog, wxDialogWrapper )
 END_EVENT_TABLE()
 
 ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly,
-      int maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title,
+      unsigned maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title,
       const wxPoint &position, const wxSize& size, long style ) :
    wxDialogWrapper( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
    SetName(GetTitle());
 
-   int numTracks = 0;
+   unsigned numTracks = 0;
    TrackListConstIterator iter( tracks );
 
    for( const Track *t = iter.First(); t; t = iter.Next() )

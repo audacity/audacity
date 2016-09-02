@@ -73,7 +73,7 @@ private:
     * @param t1 End time for export
     * @param tags Metadata to include in the file (if possible).
     */
-   int DoExport(int channels,
+   int DoExport(unsigned channels,
                  const wxFileName &name,
                  bool selectedOnly,
                  double t0,
@@ -196,7 +196,7 @@ private:
       wxFileName destfile; /**< The file to export to */
       double t0;           /**< Start time for the export */
       double t1;           /**< End time for the export */
-      int channels;        /**< Number of channels for ExportMultipleByTrack */
+      unsigned channels;   /**< Number of channels for ExportMultipleByTrack */
    };  // end of ExportKit declaration
    /* we are going to want an set of these kits, and don't know how many until
     * runtime. I would dearly like to use a std::vector, but it seems that

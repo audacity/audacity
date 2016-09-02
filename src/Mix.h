@@ -42,13 +42,13 @@ void MixAndRender(TrackList * tracks, TrackFactory *factory,
                   double startTime, double endTime,
                   std::unique_ptr<WaveTrack> &uLeft, std::unique_ptr<WaveTrack> &uRight);
 
-void MixBuffers(int numChannels, int *channelFlags, float *gains,
+void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
                 samplePtr src,
                 samplePtr *dests, int len, bool interleaved);
 
 class AUDACITY_DLL_API MixerSpec
 {
-   int mNumTracks, mNumChannels, mMaxNumChannels;
+   unsigned mNumTracks, mNumChannels, mMaxNumChannels;
 
    void Alloc();
    void Free();
@@ -56,15 +56,15 @@ class AUDACITY_DLL_API MixerSpec
    public:
    bool **mMap;
 
-   MixerSpec( int numTracks, int maxNumChannels );
+   MixerSpec( unsigned numTracks, unsigned maxNumChannels );
    MixerSpec( const MixerSpec &mixerSpec );
    virtual ~MixerSpec();
 
-   bool SetNumChannels( int numChannels );
-   int GetNumChannels() { return mNumChannels; }
+   bool SetNumChannels( unsigned numChannels );
+   unsigned GetNumChannels() { return mNumChannels; }
 
-   int GetMaxNumChannels() { return mMaxNumChannels; }
-   int GetNumTracks() { return mNumTracks; }
+   unsigned GetMaxNumChannels() { return mMaxNumChannels; }
+   unsigned GetNumTracks() { return mNumTracks; }
 
    MixerSpec& operator=( const MixerSpec &mixerSpec );
 };
@@ -95,7 +95,7 @@ class AUDACITY_DLL_API Mixer {
    Mixer(const WaveTrackConstArray &inputTracks,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
-         int numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality = true, MixerSpec *mixerSpec = NULL);
 
@@ -173,8 +173,8 @@ class AUDACITY_DLL_API Mixer {
 
    // Output
    int              mMaxOut;
-   int              mNumChannels;
-   int              mNumBuffers;
+   unsigned         mNumChannels;
+   unsigned         mNumBuffers;
    int              mBufferSize;
    int              mInterleavedBufferSize;
    sampleFormat     mFormat;

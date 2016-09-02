@@ -58,12 +58,12 @@ bool EffectFade::IsInteractive()
 
 // EffectClientInterface implementation
 
-int EffectFade::GetAudioInCount()
+unsigned EffectFade::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectFade::GetAudioOutCount()
+unsigned EffectFade::GetAudioOutCount()
 {
    return 1;
 }

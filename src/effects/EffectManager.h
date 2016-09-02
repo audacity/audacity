@@ -103,12 +103,12 @@ public:
    void RealtimeRemoveEffect(Effect *effect);
    void RealtimeSetEffects(const EffectArray & mActive);
    void RealtimeInitialize();
-   void RealtimeAddProcessor(int group, int chans, float rate);
+   void RealtimeAddProcessor(int group, unsigned chans, float rate);
    void RealtimeFinalize();
    void RealtimeSuspend();
    void RealtimeResume();
    void RealtimeProcessStart();
-   sampleCount RealtimeProcess(int group, int chans, float **buffers, sampleCount numSamples);
+   sampleCount RealtimeProcess(int group, unsigned chans, float **buffers, sampleCount numSamples);
    void RealtimeProcessEnd();
    int GetRealtimeLatency();
 
@@ -137,7 +137,7 @@ private:
    int mRealtimeLatency;
    bool mRealtimeSuspended;
    bool mRealtimeActive;
-   wxArrayInt mRealtimeChans;
+   std::vector<unsigned> mRealtimeChans;
    wxArrayDouble mRealtimeRates;
 
    // Set true if we want to skip pushing state 
