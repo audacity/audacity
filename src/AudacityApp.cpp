@@ -1593,9 +1593,10 @@ bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
 
 #ifdef __WXMAC__
    // This test is to fix bug 1220 on a 1.x to 2.x to 2.1.3 upgrade.
-   // It is very slightly less permissive than we could be as it stops a path
-   // with this string ANYWHERE within it.
-   if( Name.Contains( "/tmp/audacity1.") )
+   // It is less permissive than we could be as it stops a path
+   // with this string ANYWHERE within it rather than excluding just
+   // the paths that the earlier Audacities used to create.
+   if( Name.Contains( "/tmp/") )
       return false;
    BadPath = BadPath.BeforeLast( '/' ) + "/";
    wxFileName cmpFile( Name );
