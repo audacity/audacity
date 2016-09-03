@@ -135,7 +135,10 @@ if test "$USE_MAINTAINER_MODE" = yes; then
 	AC_SUBST(WARNING_CFLAGS)
 fi
 
-
+dnl Required for linking binaries to static lib
+if test $enable_static = yes; then
+   CFLAGS+=" -DLIBTWOLAME_STATIC"
+fi
 
 dnl ############## Output files
 
