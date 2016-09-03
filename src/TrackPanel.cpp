@@ -1167,8 +1167,12 @@ void TrackPanel::HandleInterruptedDrag()
     WasOverCutLine,
     IsStretching
     */
-
+   // The bogus id isn't used anywhere, but may help with debugging.
+   // as this is sending a bogus mouse up.  The mouse button is still actually down
+   // and may go up again.
+   const int idBogusUp = 2;
    wxMouseEvent evt { wxEVT_LEFT_UP };
+   evt.SetId( idBogusUp );
    evt.SetPosition(this->ScreenToClient(::wxGetMousePosition()));
    this->ProcessEvent(evt);
 }
@@ -3068,7 +3072,10 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
    if (mCapturedTrack)
       ForwardEventToEnvelope(event);
 
-   if (event.LeftUp()) {
+   // We test for IsEnveloping, because we could have had our action stopped already,
+   // and already recorded and the second mouse up is bogus.
+   // e.g could be stopped by some key press.  Bug 1496.
+   if ((mMouseCapture == IsEnveloping ) && event.LeftUp()) {
       SetCapturedTrack( NULL );
       MakeParentPushState(
          /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
