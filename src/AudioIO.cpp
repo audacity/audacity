@@ -383,12 +383,12 @@ struct AudioIO::ScrubQueue
       , mUpdating()
       , mMaxDebt { maxDebt }
    {
-      const long s0 = std::max(options.minSample, std::min(options.maxSample,
-         lrint(t0 * mRate)
+      const auto s0 = std::max(options.minSample, std::min(options.maxSample,
+         sampleCount(lrint(t0 * mRate))
       ));
-      const long s1 = lrint(t1 * mRate);
+      const auto s1 = sampleCount(lrint(t1 * mRate));
       Duration dd { *this };
-      long actualDuration = std::max(1L, dd.duration);
+      auto actualDuration = std::max(sampleCount{1}, dd.duration);
       auto success = mEntries[mMiddleIdx].Init(nullptr,
          s0, s1, actualDuration, options);
       if (success)
@@ -439,14 +439,14 @@ struct AudioIO::ScrubQueue
          auto previous = &mEntries[(mLeadingIdx + Size - 1) % Size];
 
          // Use the previous end as NEW start.
-         const long s0 = previous->mS1;
+         const auto s0 = previous->mS1;
          Duration dd { *this };
          const auto &origDuration = dd.duration;
          if (origDuration <= 0)
             return false;
 
          auto actualDuration = origDuration;
-         const long s1 = options.enqueueBySpeed
+         const sampleCount s1 = options.enqueueBySpeed
             ? s0 + lrint(origDuration * end) // end is a speed
             : lrint(end * mRate);            // end is a time
          auto success =
@@ -487,7 +487,8 @@ struct AudioIO::ScrubQueue
       }
    }
 
-   void Transformer(long &startSample, long &endSample, long &duration,
+   void Transformer(sampleCount &startSample, sampleCount &endSample,
+                    sampleCount &duration,
                     Maybe<wxMutexLocker> &cleanup)
    {
       // Audio thread is ready for the next interval.
@@ -537,7 +538,7 @@ struct AudioIO::ScrubQueue
                auto &start = entry.mS0;
                const auto end = entry.mS1;
                const auto ratio = static_cast<double>(toDiscard) / static_cast<double>(dur);
-               const auto adjustment = static_cast<long>(std::abs(end - start) * ratio);
+               const sampleCount adjustment = std::abs(end - start) * ratio;
                if (start <= end)
                   start += adjustment;
                else
@@ -584,7 +585,7 @@ struct AudioIO::ScrubQueue
       while (1)
       {
          Entry *pEntry = &mEntries[mTrailingIdx];
-         unsigned long remaining = pEntry->mDuration - pEntry->mPlayed;
+         auto remaining = pEntry->mDuration - pEntry->mPlayed;
          if (frames >= remaining)
          {
             frames -= remaining;
@@ -614,8 +615,8 @@ private:
          , mPlayed(0)
       {}
 
-      bool Init(Entry *previous, long s0, long s1,
-         long &duration /* in/out */,
+      bool Init(Entry *previous, sampleCount s0, sampleCount s1,
+         sampleCount &duration /* in/out */,
          const ScrubbingOptions &options)
       {
          const bool &adjustStart = options.adjustStart;
@@ -671,7 +672,7 @@ private:
          if (adjustedSpeed && !adjustStart)
          {
             // adjust s1
-            const long diff = lrint(speed * duration);
+            const sampleCount diff = lrint(speed * duration);
             if (s0 < s1)
                s1 = s0 + diff;
             else
@@ -685,11 +686,11 @@ private:
          // (Assume s0 is in bounds, because it equals the last scrub's s1 which was checked.)
          if (s1 != s0)
          {
-            long newDuration = duration;
-            const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
+            auto newDuration = duration;
+            const auto newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
             if(s1 != newS1)
-               newDuration = std::max(0L,
-                  static_cast<long>(duration * static_cast<double>(newS1 - s0) / (s1 - s0))
+               newDuration = std::max<sampleCount>(0,
+                  (duration * double(newS1 - s0) / (s1 - s0))
                );
             // When playback follows a fast mouse movement by "stuttering"
             // at maximum playback, don't make stutters too short to be useful.
@@ -710,7 +711,8 @@ private:
          if (adjustStart && !silent)
          {
             // Limit diff because this is seeking.
-            const long diff = lrint(std::min(options.maxSpeed, speed) * duration);
+            const sampleCount diff =
+               lrint(std::min(options.maxSpeed, speed) * duration);
             if (s0 < s1)
                s0 = s1 - diff;
             else
@@ -724,7 +726,7 @@ private:
          return true;
       }
 
-      void InitSilent(const Entry &previous, long duration)
+      void InitSilent(const Entry &previous, sampleCount duration)
       {
          mGoal = previous.mGoal;
          mS0 = mS1 = previous.mS1;
@@ -741,20 +743,20 @@ private:
       }
 
       // These sample counts are initialized in the UI, producer, thread:
-      long mS0;
-      long mS1;
-      long mGoal;
+      sampleCount mS0;
+      sampleCount mS1;
+      sampleCount mGoal;
       // This field is initialized in the UI thread too, and
       // this work queue item corresponds to exactly this many samples of
       // playback output:
-      long mDuration;
+      sampleCount mDuration;
 
       // The middleman Audio thread does not change these entries, but only
       // changes indices in the queue structure.
 
       // This increases from 0 to mDuration as the PortAudio, consumer,
       // thread catches up.  When they are equal, this entry can be discarded:
-      long mPlayed;
+      sampleCount mPlayed;
    };
 
    struct Duration {
@@ -769,7 +771,7 @@ private:
 
       ScrubQueue &queue;
       const wxLongLong clockTime { ::wxGetLocalTimeMillis() };
-      const long duration { static_cast<long>
+      const sampleCount duration { static_cast<long long>
          (queue.mRate * (clockTime - queue.mLastScrubTimeMillis).ToDouble() / 1000.0)
       };
       bool cancelled { false };
@@ -784,8 +786,8 @@ private:
    wxLongLong mLastScrubTimeMillis;
 
    wxLongLong mLastTransformerTimeMillis { -1LL };
-   long mCredit { 0L };
-   long mDebt { 0L };
+   sampleCount mCredit { 0 };
+   sampleCount mDebt { 0 };
    const long mMaxDebt;
 
    mutable wxMutex mUpdating;
@@ -3494,12 +3496,12 @@ void AudioIO::FillBuffers()
          Maybe<wxMutexLocker> cleanup;
          do {
             // How many samples to produce for each channel.
-            long frames = available;
+            size_t frames = available;
             bool progress = true;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             if (mPlayMode == PLAY_SCRUB)
                // scrubbing does not use warped time and length
-               frames = std::min(frames, mScrubDuration);
+               frames = limitSampleBufferSize(frames, mScrubDuration);
             else
 #endif
             {
@@ -3513,8 +3515,6 @@ void AudioIO::FillBuffers()
                      !(mPlayMode == PLAY_LOOPED &&
                        mWarpedTime == 0.0 && frames == 0);
                   mWarpedTime = mWarpedLength;
-                  if (frames < 0) // this should never happen
-                     frames = 0;
                }
                else
                   mWarpedTime += deltat;
@@ -3577,7 +3577,7 @@ void AudioIO::FillBuffers()
                done = (available == 0);
                if (!done && mScrubDuration <= 0)
                {
-                  long startSample, endSample;
+                  sampleCount startSample, endSample;
                   mScrubQueue->Transformer(startSample, endSample, mScrubDuration, cleanup);
                   if (mScrubDuration < 0)
                   {

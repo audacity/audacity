@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 #include "../../widgets/Overlay.h"
+#include "../../../include/audacity/Types.h"
 
 class AudacityProject;
 
@@ -37,8 +38,8 @@ struct ScrubbingOptions {
    bool adjustStart {};
 
    // usually from TrackList::GetEndTime()
-   long maxSample {};
-   long minSample {};
+   sampleCount maxSample {};
+   sampleCount minSample {};
 
    bool enqueueBySpeed {};
 
