@@ -3453,7 +3453,7 @@ void AudioIO::FillBuffers()
       // things simple, we only write as much data as is vacant in
       // ALL buffers, and advance the global time by that much.
       // MB: subtract a few samples because the code below has rounding errors
-      int available = GetCommonlyAvailPlayback() - 10;
+      auto nAvailable = (int)GetCommonlyAvailPlayback() - 10;
 
       //
       // Don't fill the buffers at all unless we can do the
@@ -3464,14 +3464,14 @@ void AudioIO::FillBuffers()
       // The exception is if we're at the end of the selected
       // region - then we should just fill the buffer.
       //
-      if (available >= mPlaybackSamplesToCopy ||
+      if (nAvailable >= (int)mPlaybackSamplesToCopy ||
           (mPlayMode == PLAY_STRAIGHT &&
-           available > 0 &&
-           mWarpedTime+(available/mRate) >= mWarpedLength))
+           nAvailable > 0 &&
+           mWarpedTime+(nAvailable/mRate) >= mWarpedLength))
       {
          // Limit maximum buffer size (increases performance)
-         if (available > mPlaybackSamplesToCopy)
-            available = mPlaybackSamplesToCopy;
+         auto available =
+            std::min<size_t>( nAvailable, mPlaybackSamplesToCopy );
 
          // msmeyer: When playing a very short selection in looped
          // mode, the selection must be copied to the buffer multiple
@@ -3483,7 +3483,7 @@ void AudioIO::FillBuffers()
          Maybe<wxMutexLocker> cleanup;
          do {
             // How many samples to produce for each channel.
-            size_t frames = available;
+            auto frames = available;
             bool progress = true;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             if (mPlayMode == PLAY_SCRUB)
