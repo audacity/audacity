@@ -189,7 +189,7 @@ void QuitAudacity();
 /* The GCC-win32 implementation */
 // bizzarely, GCC-for-win32 supports Visual Studio style symbol visibility, so
 // we use that if building on Cygwin
-#if defined __CYGWIN__ && defined __GNUC__
+#if (defined(__CYGWIN__) || defined(__MINGW32__)) && defined __GNUC__
    #ifndef AUDACITY_DLL_API
       #ifdef BUILDING_AUDACITY
          #define AUDACITY_DLL_API _declspec(dllexport)
