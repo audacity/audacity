@@ -170,19 +170,33 @@ AC_ARG_ENABLE(debug,
 
 AC_ARG_WITH(lib-preference,
             [AS_HELP_STRING([--with-lib-preference],
-                            [whether to use local and/or system libraries, in order of preference (default="system local")])],
+                            [whether to use local and/or system libraries, in order of preference [default="system local"]])],
             lib_preference=$withval,
             lib_preference="system local")
 
-AC_ARG_ENABLE(sse, [AS_HELP_STRING([--enable-sse],[enable SSE optimizations])], enable_sse=$enableval, enable_sse=yes)
+AC_ARG_ENABLE(sse,
+            [AS_HELP_STRING([--enable-sse],
+                            [enable SSE optimizations [default=yes]])],
+            enable_sse="$enableval",
+            enable_sse="yes")
 
-AC_ARG_ENABLE(universal_binary,[  --enable-universal_binary enable universal binary build: (default: disable)],[enable_universal_binary=$enableval],[enable_universal_binary=no])
+AC_ARG_ENABLE(openmp,
+            [AS_HELP_STRING([--enable-openmp],
+                            [enable OpenMP support [default=no]])],
+            enable_openmp="$enableval",
+            enable_openmp="no")
+
+AC_ARG_ENABLE(universal-binary,
+            [AS_HELP_STRING([--enable-universal-binary],
+                            [enable universal binary [default=no]])],
+            enable_universal_binary="$enableval",
+            enable_universal_binary="no")
 
 AC_ARG_ENABLE(dynamic-loading,
             [AS_HELP_STRING([--enable-dynamic-loading],
                             [enable dynamic loading of lame and FFmpeg [default=yes]])],
-            [dynamic_loading="$enableval"],
-            [dynamic_loading="yes"])
+            dynamic_loading="$enableval",
+            dynamic_loading="yes")
 
 AC_ARG_WITH(wx-version,
            [AS_HELP_STRING([--with-wx-version],
@@ -206,7 +220,7 @@ fi
 
 if test x$enable_sse = xyes; then
 
-   if test "${ax_cv_cxx_compiler_vendor}" = "gnu"; then
+   if test "${ax_cv_c_compiler_vendor}" = "gnu"; then
       AX_CHECK_COMPILER_FLAGS(-msse, [SBSMS_CFLAGS="$SBSMS_CFLAGS -msse"],[AC_MSG_ERROR([Need a version of gcc with -msse])])
    fi
 
@@ -215,6 +229,10 @@ if test x$enable_sse = xyes; then
    if test x$sse_ok = xyes; then
       AC_DEFINE(ENABLE_SSE,1,[Define to enable sse])
    fi
+fi
+
+if test x$enable_openmp = xyes; then
+   AX_CHECK_COMPILER_FLAGS(-fopenmp, [CXXFLAGS="$CXXFLAGS -fopenmp"],[AC_MSG_ERROR([OpenMP is not available])])
 fi
 
 if test x"$debug_preference" = "xyes" ; then
@@ -288,10 +306,18 @@ dnl there isn't a way to turn them off.
 dnl-------------------------------------------------------------
 
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
-AC_PATH_PROGS(WX_CONFIG, $WX_CONFIG wx-config wx-config-3.0, no, $PATH:/usr/local/bin )
+dnl there is no AC_PATH_TOOLS so we have this loop
+if [[ ! -x "$WX_CONFIG" ]]; then
+    for tool in $WX_CONFIG wx-config wx-config-3.0; do
+        AC_PATH_TOOL(WX_CONFIG, $tool, no, $PATH:/usr/local/bin)
+        if [[ -x "$WX_CONFIG" ]]; then break; fi
+    done
+fi
+
 if [[ "$WX_CONFIG" = "no" ]] ; then
    AC_MSG_ERROR([Could not find wx-config: is wxWidgets installed? is wx-config in your path?])
 fi
+
 
 if test "x$debug_preference" = "xyes"; then
    dnl want debug wx as well
@@ -545,6 +571,7 @@ AC_ARG_WITH(portmixer,
 AC_CANONICAL_HOST
 
 dnl OS-specific configuration
+target_win32=no
 
 case "${host_os}" in
    darwin* | rhapsody*)
@@ -561,17 +588,40 @@ case "${host_os}" in
          use_quicktime="yes"
       fi
       ;;
-
-   cygwin*)
-      dnl Windows/CygWin configuration
-      LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm"
+   cygwin* | mingw32*)
+      dnl Windows configuration
       CONFIGHEADER="configwin.h"
 
-      AC_DEFINE(__CYGWIN__,1,[We're using cygwin])
-      dnl ' (end endless string in vim)
-      AC_DEFINE(_FILE_OFFSET_BITS,32,[Placeholder for large file support])
-      ;;
+      target_win32=yes
 
+      LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm -lshlwapi"
+
+      dnl messes up mingw compile, is it still needed?
+      if [[[ "$host_os" == cygwin* ]]]; then
+          AC_DEFINE(__CYGWIN__,1,[We're using cygwin])
+          AC_DEFINE(_FILE_OFFSET_BITS,32,[Placeholder for large file support])
+      fi
+
+      dnl enable portaudio backends
+      ac_configure_args="$ac_configure_args --with-winapi=directx,wmme"
+
+      dnl Check for wx patches
+      echo -n "checking for wxMSWDisableSettingHighDPIAware in wxWidgets... "
+      cxxflags_save=${CXXFLAGS}
+      CXXFLAGS+=" ${WX_CXXFLAGS}"
+      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <wx/app.h>]], [[wxMSWDisableSettingHighDPIAware();]])], 
+        [wx_hidpi_patch=yes], [wx_hidpi_patch=no])
+      echo $wx_hidpi_patch
+      CXXFLAGS=${cxxflags_save}
+
+      if [[ "$wx_hidpi_patch" = "yes" ]] ; then
+         AC_DEFINE(HAVE_WXMSWDISABLEHIGHDPIAWARE, 1, [Define if wxWidgets has wxMSWDisableSettingHighDPIAware()])
+      fi
+
+      dnl use wx commandline to compile resources
+      AC_SUBST([RC], $($WX_CONFIG --rescomp))
+
+      ;;
    *)
       dnl Unix configuration
       CONFIGHEADER="configunix.h"
@@ -618,7 +668,7 @@ case "${host_os}" in
       LIBS="-framework AudioUnit -framework AudioToolbox $LIBS"
       LIBS="-framework CoreAudio $LIBS -lz"
       ;;
-   cygwin*)
+   cygwin* | mingw32*)
       ;;
    *)
       dnl Unix
@@ -674,6 +724,9 @@ if [[ "$use_ladspa" = "yes" ]] ; then
    esac
 fi
 
+dnl switch to add source files specific to windows build
+AM_CONDITIONAL([TARGET_WIN32], [test "$target_win32" = yes])
+
 AM_CONDITIONAL([USE_AUDIO_UNITS], [test "$use_audiounits" = yes])
 if [[ "$use_audiounits" = "yes" ]] ; then
    AC_DEFINE(USE_AUDIO_UNITS, 1,
@@ -693,7 +746,7 @@ if [[ "$use_vst" = "yes" ]] ; then
 fi
 
 case "${host_os}" in
-   cygwin*)
+   cygwin* | mingw32*)
       AC_CONFIG_HEADER(src/configwin.h:src/configtemplate.h)
       ;;
    *)

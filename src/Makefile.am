@@ -49,7 +49,6 @@ libaudacity_la_SOURCES = \
 	$(NULL)
 
 audacity_CPPFLAGS = \
-	-std=c++11 \
 	-Wno-deprecated-declarations \
 	-D__STDC_CONSTANT_MACROS \
 	-DLIBDIR=\"$(libdir)\" \
@@ -81,7 +80,12 @@ audacity_CPPFLAGS = \
 audacity_CXXFLAGS = \
    -Wno-unused-local-typedefs
 
+if TARGET_WIN32
+audacity_LDFLAGS =
+else
 audacity_LDFLAGS = -rdynamic
+endif
+
 audacity_LDADD = \
 	$(EXPAT_LIBS) \
 	$(FILEDIALOG_LIBS) \
@@ -837,9 +841,21 @@ audacity_SOURCES += \
 	effects/VST/aeffectx.h \
 	effects/VST/VSTEffect.cpp \
 	effects/VST/VSTEffect.h \
+	$(NULL)
+
+if TARGET_WIN32
+audacity_SOURCES += \
+	effects/VST/VSTControlMSW.cpp \
+	effects/VST/VSTControlMSW.h \
+	../win/audacity.rc \
+	$(NULL)
+else
+audacity_SOURCES += \
 	effects/VST/VSTControlGTK.cpp \
 	effects/VST/VSTControlGTK.h \
 	$(NULL)
+endif
+
 endif
 
 # TODO: Check *.cpp and *.h files if they are needed.
@@ -851,3 +867,8 @@ EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
 	effects/ScoreAlignDialog.cpp \
 	effects/ScoreAlignDialog.h \
 	$(NULL)
+
+# rule to compile resource files
+.rc.o:
+	$(RC) --include-dir=. $< -o $@
+
