@@ -3052,34 +3052,21 @@ MidiThread::ExitCode MidiThread::Entry()
 }
 #endif
 
-int AudioIO::GetCommonlyAvailPlayback()
+size_t AudioIO::GetCommonlyAvailPlayback()
 {
-   int commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
-   unsigned int i;
-
-   for (i = 1; i < mPlaybackTracks.size(); i++)
-   {
-      int thisBlockAvail = mPlaybackBuffers[i]->AvailForPut();
-
-      if( thisBlockAvail < commonlyAvail )
-         commonlyAvail = thisBlockAvail;
-   }
-
+   auto commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
+   for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mPlaybackBuffers[i]->AvailForPut());
    return commonlyAvail;
 }
 
-int AudioIO::GetCommonlyAvailCapture()
+size_t AudioIO::GetCommonlyAvailCapture()
 {
-   int commonlyAvail = mCaptureBuffers[0]->AvailForGet();
-   unsigned int i;
-
-   for (i = 1; i < mCaptureTracks.size(); i++)
-   {
-      int avail = mCaptureBuffers[i]->AvailForGet();
-      if( avail < commonlyAvail )
-         commonlyAvail = avail;
-   }
-
+   auto commonlyAvail = mCaptureBuffers[0]->AvailForGet();
+   for (unsigned i = 1; i < mCaptureTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mCaptureBuffers[i]->AvailForGet());
    return commonlyAvail;
 }
 
@@ -3546,7 +3533,11 @@ void AudioIO::FillBuffers()
                   processed = mPlaybackMixers[i]->Process(frames);
                   wxASSERT(processed <= frames);
                   warpedSamples = mPlaybackMixers[i]->GetBuffer();
-                  mPlaybackBuffers[i]->Put(warpedSamples, floatSample, processed);
+                  const auto put = mPlaybackBuffers[i]->Put
+                     (warpedSamples, floatSample, processed);
+                  // wxASSERT(put == processed);
+                  // but we can't assert in this thread
+                  wxUnusedVar(put);
                }
                
                //if looping and processed is less than the full chunk/block/buffer that gets pulled from
@@ -3560,7 +3551,11 @@ void AudioIO::FillBuffers()
                {
                   mSilentBuf.Resize(frames, floatSample);
                   ClearSamples(mSilentBuf.ptr(), floatSample, 0, frames);
-                  mPlaybackBuffers[i]->Put(mSilentBuf.ptr(), floatSample, frames - processed);
+                  const auto put = mPlaybackBuffers[i]->Put
+                     (mSilentBuf.ptr(), floatSample, frames - processed);
+                  // wxASSERT(put == frames - processed);
+                  // but we can't assert in this thread
+                  wxUnusedVar(put);
                }
             }
 
@@ -3626,7 +3621,7 @@ void AudioIO::FillBuffers()
 
    if (mCaptureTracks.size() > 0) // start record buffering
    {
-      int commonlyAvail = GetCommonlyAvailCapture();
+      auto commonlyAvail = GetCommonlyAvailCapture();
 
       //
       // Determine how much this will add to captured tracks
@@ -3643,7 +3638,7 @@ void AudioIO::FillBuffers()
 
          for( i = 0; (int)i < numChannels; i++ )
          {
-            int avail = commonlyAvail;
+            auto avail = commonlyAvail;
             sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
 
             AutoSaveFile appendLog;
@@ -3651,7 +3646,11 @@ void AudioIO::FillBuffers()
             if( mFactor == 1.0 )
             {
                SampleBuffer temp(avail, trackFormat);
-               mCaptureBuffers[i]->Get   (temp.ptr(), trackFormat, avail);
+               const auto got =
+                  mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, avail);
+               // wxASSERT(got == avail);
+               // but we can't assert in this thread
+               wxUnusedVar(got);
                mCaptureTracks[i]-> Append(temp.ptr(), trackFormat, avail, 1,
                                           &appendLog);
             }
@@ -3660,7 +3659,11 @@ void AudioIO::FillBuffers()
                size_t size = lrint(avail * mFactor);
                SampleBuffer temp1(avail, floatSample);
                SampleBuffer temp2(size, floatSample);
-               mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
+               const auto got =
+                  mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
+               // wxASSERT(got == avail);
+               // but we can't assert in this thread
+               wxUnusedVar(got);
                /* we are re-sampling on the fly. The last resampling call
                 * must flush any samples left in the rate conversion buffer
                 * so that they get recorded
@@ -4322,7 +4325,13 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             for (i = 0; i < (unsigned int)numPlaybackTracks; i++)
             {
                gAudioIO->mPlaybackMixers[i]->Reposition(gAudioIO->mTime);
-               gAudioIO->mPlaybackBuffers[i]->Discard(gAudioIO->mPlaybackBuffers[i]->AvailForGet());
+               const auto toDiscard =
+                  gAudioIO->mPlaybackBuffers[i]->AvailForGet();
+               const auto discarded =
+                  gAudioIO->mPlaybackBuffers[i]->Discard( toDiscard );
+               // wxASSERT( discarded == toDiscard );
+               // but we can't assert in this thread
+               wxUnusedVar(discarded);
             }
 
             // Reload the ring buffers
@@ -4406,7 +4415,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             {
                len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
                                                          floatSample,
-                                                         (int)framesPerBuffer);
+                                                         framesPerBuffer);
                if (len < framesPerBuffer)
                   // Pad with zeroes to the end, in case of a short channel
                   memset((void*)&tempBufs[chanCnt][len], 0,
@@ -4435,17 +4444,17 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             // silence? If it terminates immediately, does that terminate any MIDI
             // playback that might also be going on? ...Maybe muted audio tracks + MIDI,
             // the playback would NEVER terminate. ...I think the #else part is probably preferable...
-            unsigned int len;
+            size_t len;
             if (cut)
             {
-               len = (unsigned int)
+               len =
                   gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
             } else
             {
-               len = (unsigned int)
+               len =
                   gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
                                                      floatSample,
-                                                     (int)framesPerBuffer);
+                                                     framesPerBuffer);
             }
 #endif
 
@@ -4563,12 +4572,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
       if( inputBuffer && (numCaptureChannels > 0) )
       {
-         unsigned int len = framesPerBuffer;
+         size_t len = framesPerBuffer;
          for( t = 0; t < numCaptureChannels; t++) {
-            unsigned int avail =
-               (unsigned int)gAudioIO->mCaptureBuffers[t]->AvailForPut();
-            if (avail < len)
-               len = avail;
+            len = std::min( len,
+               gAudioIO->mCaptureBuffers[t]->AvailForPut());
          }
 
          if (len < framesPerBuffer)
@@ -4614,9 +4621,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                } break;
                } // switch
 
-               gAudioIO->mCaptureBuffers[t]->Put((samplePtr)tempBuffer,
-                                                 gAudioIO->mCaptureFormat,
-                                                 len);
+               const auto put =
+                  gAudioIO->mCaptureBuffers[t]->Put(
+                     (samplePtr)tempBuffer, gAudioIO->mCaptureFormat, len);
+               // wxASSERT(put == len);
+               // but we can't assert in this thread
+               wxUnusedVar(put);
             }
          }
       }
