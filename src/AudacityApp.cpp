@@ -675,8 +675,10 @@ extern "C" int WINAPI WinMain(HINSTANCE hInstance,
 {
    wxDISABLE_DEBUG_SUPPORT();
 
+#ifdef HAVE_WXMSWDISABLEHIGHDPIAWARE
    // Disable setting of HiDPI aware mode
    wxMSWDisableSettingHighDPIAware();
+#endif
 
    /* NB: We pass NULL in place of lpCmdLine to behave the same as  */
    /*     Borland-specific wWinMain() above. If it becomes needed   */
@@ -2333,7 +2335,7 @@ void AudacityApp::AssociateFileTypes()
                associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\command"));
                wxString tmpRegAudPath;
                if(associateFileTypes.Exists()) {
-                  tmpRegAudPath = wxString(associateFileTypes).Lower();
+                  tmpRegAudPath = associateFileTypes.GetName().Lower();
                }
                if (!associateFileTypes.Exists() ||
                      (tmpRegAudPath.Find(wxT("audacity.exe")) >= 0)) {
