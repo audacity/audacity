@@ -1167,8 +1167,12 @@ void TrackPanel::HandleInterruptedDrag()
     WasOverCutLine,
     IsStretching
     */
-
+   // The bogus id isn't used anywhere, but may help with debugging.
+   // as this is sending a bogus mouse up.  The mouse button is still actually down
+   // and may go up again.
+   const int idBogusUp = 2;
    wxMouseEvent evt { wxEVT_LEFT_UP };
+   evt.SetId( idBogusUp );
    evt.SetPosition(this->ScreenToClient(::wxGetMousePosition()));
    this->ProcessEvent(evt);
 }
@@ -1888,6 +1892,44 @@ void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
    }
 }
 
+void TrackPanel::ChangeSelectionOnShiftClick(Track * pTrack){
+
+   // Optional: Track already selected?  Nothing to do.
+   // If we enable this, Shift-Click behaves like click in this case.
+   //if( pTrack->GetSelected() )
+   //   return;
+
+   // Find first and last selected track.
+   Track* pFirst = nullptr;
+   Track* pLast = nullptr;
+   // We will either extend from the first or from the last.
+   Track* pExtendFrom= nullptr;
+
+   TrackListIterator iter(GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      const bool isSelected = t->GetSelected();
+      // If our track is after the first, extend from the first.
+      if( t == pTrack ){
+         pExtendFrom = pFirst;
+      }
+      // Record first and last selected.
+      if( isSelected ){
+         if( !pFirst )
+            pFirst = t;
+         pLast = t;
+      }
+   }
+   // Our track was the first or earlier.  Extend from the last.
+   if( !pExtendFrom )
+      pExtendFrom = pLast;
+
+   SelectNone();
+   if( pExtendFrom )
+      SelectRangeOfTracks(pTrack, pExtendFrom);
+   else
+      SelectTrack( pTrack, true );
+}
+
 /// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
@@ -1923,17 +1965,24 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    bool stretch = HitTestStretch(pTrack, rect, event);
 #endif
 
-   if (event.ShiftDown()
+   bool bShiftDown = event.ShiftDown();
+   bool bCtrlDown = event.ControlDown();
+   if (bShiftDown || bCtrlDown
 
 #ifdef USE_MIDI
        && !stretch
 #endif
    ) {
-      SelectNone();
-      if (mLastPickedTrack && event.ShiftDown())
-         SelectRangeOfTracks(pTrack, mLastPickedTrack);
-      else
-         SelectTrack(pTrack, true);
+
+      if( bShiftDown )
+         ChangeSelectionOnShiftClick( pTrack );
+      if( bCtrlDown ){
+         //bool bIsSelected = pTrack->GetSelected();
+         bool bIsSelected = false;
+         // could set bIsSelected true here, but toggling is more technically correct.
+         // if we want to match behaviour in Track Control Panel.
+         SelectTrack( pTrack, !bIsSelected, false );
+      }
 
       double value;
       // Shift-click, choose closest boundary
@@ -2722,7 +2771,8 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 
    if (event.CmdDown()) {
       // Ctrl-drag has no meaning, fuhggeddaboudit
-      return;
+      // JKC YES it has meaning.
+      //return;
    }
 
    wxRect rect      = mCapturedRect;
@@ -3022,7 +3072,10 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
    if (mCapturedTrack)
       ForwardEventToEnvelope(event);
 
-   if (event.LeftUp()) {
+   // We test for IsEnveloping, because we could have had our action stopped already,
+   // and already recorded and the second mouse up is bogus.
+   // e.g could be stopped by some key press.  Bug 1496.
+   if ((mMouseCapture == IsEnveloping ) && event.LeftUp()) {
       SetCapturedTrack( NULL );
       MakeParentPushState(
          /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
@@ -4977,7 +5030,7 @@ void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
    }
    else {
       if (shift && mLastPickedTrack)
-         SelectRangeOfTracks(t, mLastPickedTrack);
+         ChangeSelectionOnShiftClick( t );
       else{
          SelectNone();
          SelectTrack(t, true);
@@ -6207,8 +6260,8 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
       bool bShift = event.ShiftDown();
       bool bCtrlDown = event.ControlDown();
       bool unsafe = IsUnsafe();
-
-      if( bShift || bCtrlDown ){
+      bCtrlDown = false;
+      if( /*bShift ||*/ bCtrlDown ){
 
          HandleListSelection(track, bShift, bCtrlDown, !unsafe);
          return true;
@@ -6284,7 +6337,7 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMous
       bool bCtrlDown = event.ControlDown();
       bool unsafe = IsUnsafe();
 
-      if( bShift || bCtrlDown ){
+      if( /*bShift ||*/ bCtrlDown ){
 
          HandleListSelection(lTrack, bShift, bCtrlDown, !unsafe);
          return true;

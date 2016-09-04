@@ -636,16 +636,21 @@ void GetDefaultWindowRect(wxRect *defRect)
    }
 }
 
+// true iff we have enough of the top bar to be able to reposition the window.
 bool IsWindowAccessible(wxRect *requestedRect)
 {
    wxDisplay display;
    wxRect targetTitleRect(requestedRect->GetLeftTop(), requestedRect->GetBottomRight());
+   // Hackery to approximate a window top bar size from a window size.
+   // and exclude the open/close and borders.
    targetTitleRect.x += 15;
    targetTitleRect.width -= 100;
    if (targetTitleRect.width <  165) targetTitleRect.width = 165;
    targetTitleRect.height = 15;
    int targetBottom = targetTitleRect.GetBottom();
    int targetRight = targetTitleRect.GetRight();
+   // This looks like overkill to check each and every pixel in the ranges.
+   // and decide that if any is visible on screen we are OK.
    for (int i =  targetTitleRect.GetLeft(); i < targetRight; i++) {
       for (int j = targetTitleRect.GetTop(); j < targetBottom; j++) {
          int monitor = display.GetFromPoint(wxPoint(i, j));
@@ -655,6 +660,18 @@ bool IsWindowAccessible(wxRect *requestedRect)
       }
    }
    return FALSE;
+}
+
+// Returns the screen containing a rectangle, or -1 if none does.
+int ScreenContaining( wxRect & r ){
+   unsigned int n = wxDisplay::GetCount();
+   for(unsigned int i = 0;i<n;i++){
+      wxDisplay d(i);
+      wxRect scr = d.GetClientArea();
+      if( scr.Contains( r ) )
+         return (int)i;
+   }
+   return -1;
 }
 
 // BG: Calculate where to place the next window (could be the first window)
@@ -692,9 +709,10 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
-   wxRect screenRect = wxGetClientDisplayRect();
 
+   wxRect screenRect( wxGetClientDisplayRect());
 #if defined(__WXMAC__)
+
    // On OSX, the top of the window should never be less than the menu height,
    // so something is amiss if it is
    if (normalRect.y < screenRect.y) {
@@ -705,16 +723,16 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 #endif
 
-
-   // Make sure initial sizes fit within the display bounds
+   // We don't mind being 32 pixels off the screen in any direction.
+   // Make sure initial sizes (pretty much) fit within the display bounds
    // We used to trim the sizes which could result in ridiculously small windows.
    // contributing to bug 1243.
-   // Now instead if the window doesn't fit the screen, we use the default 
+   // Now instead if the window significantly doesn't fit the screen, we use the default 
    // window instead, which we know does.
-   if (!screenRect.Contains( normalRect )) {
+   if (ScreenContaining( wxRect(normalRect).Deflate( 32, 32 ))<0) {
       normalRect = defaultRect;
    }
-   if (!screenRect.Contains( windowRect )) {
+   if (ScreenContaining( wxRect(windowRect).Deflate( 32, 32 ) )<0) {
       windowRect = defaultRect;
    }
 
@@ -754,10 +772,29 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       nextRect->y += inc;
    }
 
+   // defaultrect is a rectangle on the first screen.  It's the right fallback to 
+   // use most of the time if things are not working out right with sizing.
+   // windowRect is a saved rectangle size.
+   // normalRect seems to be a substitute for windowRect when iconized or maximised.
 
-   //Have we hit the right side of the screen?
+   // Windows can say that we are off screen when actually we are not.
+   // On Windows 10 I am seeing miscalculation by about 6 pixels.
+   // To fix this we allow some sloppiness on the edge being counted as off screen.
+   // This matters most when restoring very carefully sized windows that are maximised
+   // in one dimension (height or width) but not both.
+   const int edgeSlop = 10;
+
+   // Next four lines are getting the rectangle for the screen that contains the
+   // top left corner of nextRect (and defaulting to rect of screen 0 otherwise).
+   wxPoint p = nextRect->GetLeftTop();
+   int scr = std::max( 0, wxDisplay::GetFromPoint( p ));
+   wxDisplay d( scr );
+   screenRect = d.GetClientArea();
+
+   // Now we (possibly) start trimming our rectangle down.
+   // Have we hit the right side of the screen?
    wxPoint bottomRight = nextRect->GetBottomRight();
-   if (bottomRight.x > screenRect.GetRight()) {
+   if (bottomRight.x > (screenRect.GetRight()+edgeSlop)) {
       int newWidth = screenRect.GetWidth() - nextRect->GetLeft();
       if (newWidth < defaultRect.GetWidth()) {
          nextRect->x = windowRect.x;
@@ -769,16 +806,19 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       }
    }
 
-   //Have we hit the bottom of the screen?
+   // Have we hit the bottom of the screen?
    bottomRight = nextRect->GetBottomRight();
-   if (bottomRight.y > screenRect.GetBottom()) {
+   if (bottomRight.y > (screenRect.GetBottom()+edgeSlop)) {
       nextRect->y -= inc;
       bottomRight = nextRect->GetBottomRight();
-      if (bottomRight.y > screenRect.GetBottom()) {
+      if (bottomRight.y > (screenRect.GetBottom()+edgeSlop)) {
          nextRect->SetBottom(screenRect.GetBottom());
       }
    }
 
+   // After all that we could have a window that does not have a visible
+   // top bar.  [It is unlikely, but something might have gone wrong]
+   // If so, use the safe fallback size.
    if (!IsWindowAccessible(nextRect)) {
       *nextRect = defaultRect;
    }

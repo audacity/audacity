@@ -296,6 +296,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
 protected:
 
+   virtual void ChangeSelectionOnShiftClick(Track * pTrack);
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect rect);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
