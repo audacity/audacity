@@ -688,7 +688,7 @@ private:
    std::unique_ptr<ScrubQueue> mScrubQueue;
 
    bool mSilentScrub;
-   long mScrubDuration;
+   sampleCount mScrubDuration;
 #endif
 };
 
