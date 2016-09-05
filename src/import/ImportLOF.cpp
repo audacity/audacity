@@ -124,7 +124,7 @@ public:
    ~LOFImportFileHandle();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -226,7 +226,7 @@ wxString LOFImportFileHandle::GetFileDescription()
    return DESC;
 }
 
-int LOFImportFileHandle::GetFileUncompressedBytes()
+auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    return 0;
 }

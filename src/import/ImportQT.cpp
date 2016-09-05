@@ -135,7 +135,7 @@ class QTImportFileHandle final : public ImportFileHandle
    }
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
 
    wxInt32 GetStreamCount()
    {
@@ -219,7 +219,7 @@ wxString QTImportFileHandle::GetFileDescription()
    return DESC;
 }
 
-int QTImportFileHandle::GetFileUncompressedBytes()
+auto QTImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    return 0;
 }
@@ -460,8 +460,8 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
 
       QTPropertyValuePtr outValPtr = nil;
       QTPropertyValueType outPropType;
-      ByteCount outPropValueSize;
-      ByteCount outPropValueSizeUsed = 0;
+      ::ByteCount outPropValueSize;
+      ::ByteCount outPropValueSizeUsed = 0;
       UInt32 outPropFlags;
       UInt32 dataType;
 

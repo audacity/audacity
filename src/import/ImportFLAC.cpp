@@ -153,7 +153,7 @@ public:
    bool Init();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -427,7 +427,7 @@ wxString FLACImportFileHandle::GetFileDescription()
 }
 
 
-int FLACImportFileHandle::GetFileUncompressedBytes()
+auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO: Get Uncompressed byte count.
    return 0;
