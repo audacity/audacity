@@ -140,7 +140,9 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Create a NEW BlockFile identical to this, using the given filename
    virtual BlockFilePtr Copy(wxFileNameWrapper &&newFileName) = 0;
 
-   virtual wxLongLong GetSpaceUsage() const = 0;
+   // Report disk space usage.
+   using DiskByteCount = unsigned long long;
+   virtual DiskByteCount GetSpaceUsage() const = 0;
 
    /// if the on-disk state disappeared, either recover it (if it was
    //summary only), write out a placeholder of silence data (missing
@@ -223,7 +225,7 @@ class AliasBlockFile /* not final */ : public BlockFile
 
    // Reading
 
-   wxLongLong GetSpaceUsage() const override;
+   DiskByteCount GetSpaceUsage() const override;
 
    /// as SilentLog (which would affect Summary data access), but
    // applying to Alias file access

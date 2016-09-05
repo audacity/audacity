@@ -73,7 +73,7 @@ struct UndoState {
 
 using UndoStack = std::vector <movable_ptr<UndoStackElem>>;
 
-using SpaceArray = std::vector <wxLongLong_t> ;
+using SpaceArray = std::vector <unsigned long long> ;
 
 // These flags control what extra to do on a PushState
 // Default is AUTOSAVE

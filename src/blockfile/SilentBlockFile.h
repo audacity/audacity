@@ -42,7 +42,7 @@ class SilentBlockFile final : public BlockFile {
    BlockFilePtr Copy(wxFileNameWrapper &&newFileName) override;
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
-   wxLongLong GetSpaceUsage() const override;
+   DiskByteCount GetSpaceUsage() const override;
    void Recover() override { };
 
    static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);

@@ -547,7 +547,7 @@ BlockFilePtr SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
    return newBlockFile;
 }
 
-wxLongLong SimpleBlockFile::GetSpaceUsage() const
+auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    if (mCache.active && mCache.needWrite)
    {
@@ -598,9 +598,11 @@ wxLongLong SimpleBlockFile::GetSpaceUsage() const
       file.Close();
    }
 
-   return sizeof(auHeader) + 
+   return
+          sizeof(auHeader) +
           mSummaryInfo.totalSummaryBytes +
-          (GetLength() * SAMPLE_SIZE_DISK(mFormat));
+          (GetLength() * SAMPLE_SIZE_DISK(mFormat))
+   ;
 }
 
 void SimpleBlockFile::Recover(){

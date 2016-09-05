@@ -72,7 +72,7 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    /// Write an XML representation of this file
    void SaveXML(XMLWriter &xmlFile) override;
 
-   wxLongLong GetSpaceUsage() const override;
+   DiskByteCount GetSpaceUsage() const override;
    void Recover() override;
 
    static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);

@@ -634,7 +634,7 @@ void AliasBlockFile::ChangeAliasedFileName(wxFileNameWrapper &&newAliasedFile)
    mAliasedFileName = std::move(newAliasedFile);
 }
 
-wxLongLong AliasBlockFile::GetSpaceUsage() const
+auto AliasBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    wxFFile summaryFile(mFileName.GetFullPath());
    return summaryFile.Length();

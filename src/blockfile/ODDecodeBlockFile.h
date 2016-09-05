@@ -60,7 +60,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    bool IsSummaryBeingComputed() override { return false; }
 
    //Calls that rely on summary files need to be overidden
-   wxLongLong GetSpaceUsage() const override;
+   DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
    void GetMinMax(sampleCount start, sampleCount len,
                           float *outMin, float *outMax, float *outRMS) const override;

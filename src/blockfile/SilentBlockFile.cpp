@@ -82,7 +82,7 @@ BlockFilePtr SilentBlockFile::Copy(wxFileNameWrapper &&)
    return newBlockFile;
 }
 
-wxLongLong SilentBlockFile::GetSpaceUsage() const
+auto SilentBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    return 0;
 }
