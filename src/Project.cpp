@@ -889,6 +889,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mStatusBar = CreateStatusBar(4);
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   mProjectNamedFromImport = false;
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
    // MM: We don't need to Ref() here because it start with refcount=1
@@ -3913,6 +3914,8 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    if (initiallyEmpty && mDirManager->GetProjectName() == wxT("")) {
       wxString name = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast(wxT('.'));
       mFileName =::wxPathOnly(fileName) + wxFILE_SEP_PATH + name + wxT(".aup");
+
+      mProjectNamedFromImport = true;
       SetProjectTitle();
    }
 
@@ -4105,10 +4108,11 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
-   //check to see if the NEW project file already exists.
-   //We should only overwrite it if this project already has the same name, where the user
-   //simply chose to use the save as command although the save command would have the effect.
-   if (mFileName != fName && filename.FileExists()) {
+   // Only overwrite a project if this project has the same name
+   // (but excluding projects that have gained the same name due to importing),
+   // where the user simply chose to use the save as command
+   // although the save command would have the effect.
+   if ((mFileName != fName || mProjectNamedFromImport) && filename.FileExists()) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -4125,6 +4129,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    bool success = Save(false, true, bWantSaveCompressed);
 
    if (success) {
+      mProjectNamedFromImport = false; // project name is because we have saved.
       wxGetApp().AddFileToHistory(mFileName);
    }
    if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
