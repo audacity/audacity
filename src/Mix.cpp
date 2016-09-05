@@ -508,23 +508,18 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                (t, t + (double)thisProcessLen / trackRate);
       }
 
-      int input_used;
-      int outgen = pResample->Process(factor,
+      auto results = pResample->Process(factor,
                                       &queue[*queueStart],
                                       thisProcessLen,
                                       last,
-                                      &input_used,
                                       &mFloatBuffer[out],
                                       mMaxOut - out);
 
-      if (outgen < 0) {
-         return 0;
-      }
-
+      const auto input_used = results.first;
       *queueStart += input_used;
       *queueLen -= input_used;
-      out += outgen;
-      t += ((backwards ? -input_used : input_used) / trackRate);
+      out += results.second;
+      t += (input_used / trackRate) * (backwards ? -1 : 1);
 
       if (last) {
          break;

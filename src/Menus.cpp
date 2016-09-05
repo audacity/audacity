@@ -91,7 +91,6 @@ simplifies construction of menu items.
 #include "Screenshot.h"
 #include "ondemand/ODManager.h"
 
-#include "Resample.h"
 #include "BatchProcessDialog.h"
 #include "BatchCommands.h"
 #include "prefs/BatchPrefs.h"

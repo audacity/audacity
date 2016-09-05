@@ -15,7 +15,6 @@ been abandoned.
 #include "CrossFade.h"
 
 #include "SampleFormat.h"
-#include "Resample.h"
 #include "WaveClip.h"
 
 #include <iostream>

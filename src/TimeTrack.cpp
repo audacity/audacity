@@ -22,7 +22,6 @@
 #include "Envelope.h"
 #include "Prefs.h"
 #include "Internat.h"
-#include "Resample.h"
 #include "ViewInfo.h"
 
 //TODO-MB: are these sensible values?

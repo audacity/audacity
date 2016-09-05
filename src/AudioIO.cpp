@@ -3657,7 +3657,7 @@ void AudioIO::FillBuffers()
             }
             else
             {
-               int size = lrint(avail * mFactor);
+               size_t size = lrint(avail * mFactor);
                SampleBuffer temp1(avail, floatSample);
                SampleBuffer temp2(size, floatSample);
                mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
@@ -3665,8 +3665,10 @@ void AudioIO::FillBuffers()
                 * must flush any samples left in the rate conversion buffer
                 * so that they get recorded
                 */
-               size = mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail, !IsStreamActive(),
-                                            &size, (float *)temp2.ptr(), size);
+               const auto results =
+                  mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail,
+                     !IsStreamActive(), (float *)temp2.ptr(), size);
+               size = results.second;
                mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
                                           &appendLog);
             }

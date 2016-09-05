@@ -74,20 +74,20 @@ const wxString Resample::GetBestMethodKey()
 int Resample::GetFastMethodDefault() {return 1;}
 int Resample::GetBestMethodDefault() {return 3;}
 
-int Resample::Process(double  factor,
+std::pair<size_t, size_t>
+      Resample::Process(double  factor,
                         float  *inBuffer,
-                        int     inBufferLen,
+                        size_t  inBufferLen,
                         bool    lastFlag,
-                        int    *inBufferUsed,
                         float  *outBuffer,
-                        int     outBufferLen)
+                        size_t  outBufferLen)
 {
    size_t idone, odone;
    if (mbWantConstRateResampling)
    {
       soxr_process((soxr_t)mHandle,
-            inBuffer , (size_t)(lastFlag? ~inBufferLen : inBufferLen), &idone,
-            outBuffer, (size_t)                          outBufferLen, &odone);
+            inBuffer , (lastFlag? ~inBufferLen : inBufferLen), &idone,
+            outBuffer,                           outBufferLen, &odone);
    }
    else
    {
@@ -95,11 +95,10 @@ int Resample::Process(double  factor,
 
       inBufferLen = lastFlag? ~inBufferLen : inBufferLen;
       soxr_process((soxr_t)mHandle,
-            inBuffer , (size_t)inBufferLen , &idone,
-            outBuffer, (size_t)outBufferLen, &odone);
+            inBuffer , inBufferLen , &idone,
+            outBuffer, outBufferLen, &odone);
    }
-   *inBufferUsed = (int)idone;
-   return (int)odone;
+   return { idone, odone };
 }
 
 void Resample::SetMethod(const bool useBestMethod)

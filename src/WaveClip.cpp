@@ -1793,11 +1793,11 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          break;
       }
 
-      int inBufferUsed = 0;
-      outGenerated = resample.Process(factor, inBuffer, inLen, isLast,
-                                           &inBufferUsed, outBuffer, bufsize);
+      const auto results = resample.Process(factor, inBuffer, inLen, isLast,
+                                            outBuffer, bufsize);
+      outGenerated = results.second;
 
-      pos += inBufferUsed;
+      pos += results.first;
 
       if (outGenerated < 0)
       {
