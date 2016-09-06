@@ -58,6 +58,13 @@ AC_ARG_WITH(wx-version,
            wx_preference="")
 dnl Right now only support wx 3.0
 
+dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
+if test "${ac_cv_cxx_compiler_gnu}" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
 dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
 dnl ----------------------------------------------------
@@ -148,19 +155,6 @@ WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
 WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
 AC_SUBST([WX_CXXFLAGS])
 AC_SUBST([WX_LIBS])
-
-
-AC_CANONICAL_HOST
-
-case "${host_os}" in
-   cygwin* | mingw32*)
-      dnl Bug in wx-config on mingw/gcc 4.9
-      CXXFLAGS="${CXXFLAGS} --std=gnu++11"
-   ;;
-
-   *)
-   ;;
-esac
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

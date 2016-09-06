@@ -378,6 +378,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
+AM_LIBTOOLFLAGS = --tag=CXX
 EXTRA_DIST = libwidgetextra.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libwidgetextra.pc

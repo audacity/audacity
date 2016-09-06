@@ -16235,6 +16235,12 @@ else
 fi
 
 
+if test "${ac_cv_cxx_compiler_gnu}" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
 
 if test x"$debug_preference" = "xyes" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Adding -g for debugging to CFLAGS and CXXFLAGS ..." >&5
@@ -16705,18 +16711,6 @@ WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
 WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
 
 
-
-
-
-
-case "${host_os}" in
-   cygwin* | mingw32*)
-            CXXFLAGS="${CXXFLAGS} --std=gnu++11"
-   ;;
-
-   *)
-   ;;
-esac
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for an ANSI C-conforming const" >&5
 $as_echo_n "checking for an ANSI C-conforming const... " >&6; }
