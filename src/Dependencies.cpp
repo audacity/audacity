@@ -126,7 +126,7 @@ void FindDependencies(AudacityProject *project,
             continue;
 
          const wxString &fileNameStr = fileName.GetFullPath();
-         int blockBytes = (SAMPLE_SIZE(format) *
+         auto blockBytes = (SAMPLE_SIZE(format) *
                            aliasBlockFile->GetLength());
          if (aliasedFileHash.count(fileNameStr) > 0)
             // Already put this AliasBlockFile in aliasedFileHash.

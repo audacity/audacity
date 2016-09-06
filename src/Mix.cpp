@@ -414,7 +414,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
    const double trackRate = track->GetRate();
    const double initialWarp = mRate / mSpeed / trackRate;
    const double tstep = 1.0 / trackRate;
-   int sampleSize = SAMPLE_SIZE(floatSample);
+   auto sampleSize = SAMPLE_SIZE(floatSample);
 
    decltype(mMaxOut) out = 0;
 

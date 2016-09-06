@@ -123,9 +123,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
       mCache.active = true;
       mCache.needWrite = true;
       mCache.format = format;
-      mCache.sampleData = new char[sampleLen * SAMPLE_SIZE(format)];
-      memcpy(mCache.sampleData,
-             sampleData, sampleLen * SAMPLE_SIZE(format));
+      const auto sampleDataSize = sampleLen * SAMPLE_SIZE(format);
+      mCache.sampleData = new char[sampleDataSize];
+      memcpy(mCache.sampleData, sampleData, sampleDataSize);
       ArrayOf<char> cleanup;
       void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
          format, cleanup);
@@ -269,7 +269,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       }
    }
 
-    return true;
+   return true;
 }
 
 void SimpleBlockFile::FillCache()
