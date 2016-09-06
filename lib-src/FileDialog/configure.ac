@@ -47,6 +47,14 @@ AC_ARG_WITH(wx-config,
             WX_CONFIG="$withval",
             WX_CONFIG="$WX_CONFIG")
 
+
+dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
+if test "${ac_cv_cxx_compiler_gnu}" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
 dnl there is no AC_PATH_TOOLS so we have this loop
 if [[ ! -x "$WX_CONFIG" ]]; then
@@ -112,9 +120,6 @@ case "${host_os}" in
    cygwin* | mingw32*)
       dnl Windows/CygWin configuration
       IMPLEMENTATION="win"
-
-      dnl Bug in wx-config on mingw/gcc 4.9
-      CXXFLAGS="${CXXFLAGS} --std=gnu++11"
    ;;
 
    *)

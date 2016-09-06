@@ -15945,6 +15945,13 @@ else
 fi
 
 
+
+if test "${ac_cv_cxx_compiler_gnu}" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
 if [ ! -x "$WX_CONFIG" ]; then
     for tool in $WX_CONFIG wx-config wx-config-3.0; do
         if test -n "$ac_tool_prefix"; then
@@ -16306,8 +16313,6 @@ case "${host_os}" in
 
    cygwin* | mingw32*)
             IMPLEMENTATION="win"
-
-            CXXFLAGS="${CXXFLAGS} --std=gnu++11"
    ;;
 
    *)
