@@ -428,6 +428,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
+AM_LIBTOOLFLAGS = --tag=CXX
 lib_LTLIBRARIES = libFileDialog.la
 libFileDialog_la_CPPFLAGS = $(WX_CXXFLAGS) \
 	-Wno-deprecated-declarations $(am__append_1)
