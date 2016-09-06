@@ -233,7 +233,8 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    OSErr err = noErr;
    MovieAudioExtractionRef maer = NULL;
    int updateResult = eProgressSuccess;
-   auto totSamples = (sampleCount) GetMovieDuration(mMovie);
+   auto totSamples =
+      (sampleCount) GetMovieDuration(mMovie); // convert from TimeValue
    decltype(totSamples) numSamples = 0;
    Boolean discrete = true;
    UInt32 quality = kQTAudioRenderQuality_Max;

@@ -367,7 +367,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       channels.begin()->get()->SetLinked(true);
    }
 
-   auto fileTotalFrames = (sampleCount)mInfo.frames;
+   auto fileTotalFrames =
+      (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    int updateResult = false;
 

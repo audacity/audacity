@@ -175,7 +175,9 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
       SFCall<sf_count_t>(sf_seek, sndFile.get(), 0, SEEK_SET);
 
-      auto totalFrames = (sampleCount)(sndInfo.frames * percent / 100.0);
+      auto totalFrames =
+         // fraction of a sf_count_t value
+         (sampleCount)(sndInfo.frames * percent / 100.0);
 
       //
       // Sample format:
