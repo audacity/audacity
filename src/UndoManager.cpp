@@ -106,7 +106,7 @@ void UndoManager::CalculateSpaceUsage()
                // in the previous level
                if (prev->count( &*file ) == 0 && cur->count( &*file ) == 0)
                {
-                  space[i] += { file->GetSpaceUsage() };
+                  space[i] += unsigned long long { file->GetSpaceUsage() };
                }
                
                // Add file to current set
