@@ -387,7 +387,7 @@ void BlockFile::GetMinMax(sampleCount start, sampleCount len,
    float max = -FLT_MAX;
    float sumsq = 0;
 
-   for( int i = 0; i < len; i++ )
+   for( decltype(len) i = 0; i < len; i++ )
    {
       float sample = ((float*)blockData.ptr())[i];
 
@@ -447,8 +447,7 @@ bool BlockFile::Read256(float *buffer,
 
    if (mSummaryInfo.fields == 2) {
       // No RMS info
-      int i;
-      for(i=len-1; i>=0; i--) {
+      for(auto i = len; i--;) {
          buffer[3*i+2] = (fabs(buffer[2*i]) + fabs(buffer[2*i+1]))/4.0;
          buffer[3*i+1] = buffer[2*i+1];
          buffer[3*i] = buffer[2*i];
@@ -488,8 +487,7 @@ bool BlockFile::Read64K(float *buffer,
 
    if (mSummaryInfo.fields == 2) {
       // No RMS info; make guess
-      int i;
-      for(i=len-1; i>=0; i--) {
+      for(auto i = len; i--;) {
          buffer[3*i+2] = (fabs(buffer[2*i]) + fabs(buffer[2*i+1]))/4.0;
          buffer[3*i+1] = buffer[2*i+1];
          buffer[3*i] = buffer[2*i];

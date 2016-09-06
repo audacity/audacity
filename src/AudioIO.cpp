@@ -4495,14 +4495,14 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                   // Output volume emulation: possibly copy meter samples, then
                   // apply volume, then copy to the output buffer
                   if (outputMeterFloats != outputFloats)
-                     for (int i = 0; i < len; ++i)
+                     for (decltype(len) i = 0; i < len; ++i)
                         outputMeterFloats[numPlaybackChannels*i] +=
                            gain*tempFloats[i];
 
                   if (gAudioIO->mEmulateMixerOutputVol)
                      gain *= gAudioIO->mMixerOutputVol;
 
-                  for(int i=0; i<len; i++)
+                  for(decltype(len) i = 0; i < len; i++)
                      outputFloats[numPlaybackChannels*i] += gain*tempBufs[c][i];
                }
 
@@ -4513,14 +4513,14 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
                   // Output volume emulation (as above)
                   if (outputMeterFloats != outputFloats)
-                     for (int i = 0; i < len; ++i)
+                     for (decltype(len) i = 0; i < len; ++i)
                         outputMeterFloats[numPlaybackChannels*i+1] +=
                            gain*tempFloats[i];
 
                   if (gAudioIO->mEmulateMixerOutputVol)
                      gain *= gAudioIO->mMixerOutputVol;
 
-                  for(int i=0; i<len; i++)
+                  for(decltype(len) i = 0; i < len; i++)
                      outputFloats[numPlaybackChannels*i+1] += gain*tempBufs[c][i];
                }
             }

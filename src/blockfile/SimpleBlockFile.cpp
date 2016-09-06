@@ -624,10 +624,11 @@ void SimpleBlockFile::Recover(){
    header.channels = 1;
    file.Write(&header, sizeof(header));
 
-   for(i=0;i<mSummaryInfo.totalSummaryBytes;i++)
+   for(decltype(mSummaryInfo.totalSummaryBytes) i = 0;
+       i < mSummaryInfo.totalSummaryBytes; i++)
       file.Write(wxT("\0"),1);
 
-   for(i=0;i<mLen*2;i++)
+   for(decltype(mLen) i = 0; i < mLen * 2; i++)
       file.Write(wxT("\0"),1);
 
 }

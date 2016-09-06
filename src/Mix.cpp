@@ -573,7 +573,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
       auto results = cache.Get(floatSample, *pos - (slen - 1), slen);
       memcpy(mFloatBuffer, results, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues, slen, t - (slen - 1) / mRate);
-      for(int i=0; i<slen; i++)
+      for(decltype(slen) i = 0; i < slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
       ReverseSamples((samplePtr)mFloatBuffer, floatSample, 0, slen);
 
@@ -583,7 +583,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
       auto results = cache.Get(floatSample, *pos, slen);
       memcpy(mFloatBuffer, results, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues, slen, t);
-      for(int i=0; i<slen; i++)
+      for(decltype(slen) i = 0; i < slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
 
       *pos += slen;
