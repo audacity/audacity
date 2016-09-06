@@ -153,7 +153,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
                                     sampleCount len)
 {
    bool bGoodResult = true;
-   auto blockSize = (sampleCount) (mStart * 1000);
+   size_t blockSize = (mStart * 1000);
 
    if (len < mStart) {
       return true;

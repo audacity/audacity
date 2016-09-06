@@ -44,8 +44,9 @@ private:
 
    bool ProcessOne(int count, WaveTrack * track,
                    sampleCount start,
-                   sampleCount len,
-                   sampleCount repairStart, sampleCount repairLen);
+                   size_t len,
+                   size_t repairStart, // offset relative to start
+                   size_t repairLen);
 };
 
 #endif // __AUDACITY_EFFECT_REPAIT__

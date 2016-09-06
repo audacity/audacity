@@ -150,7 +150,7 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    return true;
 }
 
-sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sampleCount size)
+size_t EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t size)
 {
    float *buffer = outbuf[0];
    decltype(size) processed = 0;
@@ -429,7 +429,7 @@ void EffectDtmf::Recalculate()
    }
 }
 
-bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)
+bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)
 {
 /*
   --------------------------------------------
@@ -546,7 +546,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
       // we are at the last buffer of 'len' size, so, offset is to
       // backup 'A' samples, from 'len'
       A = (fs / kFadeInOut);
-      auto offset = len - decltype(len)(fs / kFadeInOut);
+      auto offset = long(len) - long(fs / kFadeInOut);
       // protect against negative offset, which can occur if too a
       // small selection is made
       if (offset >= 0) {

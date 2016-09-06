@@ -22,23 +22,23 @@ class PCMAliasBlockFile /* not final */ : public AliasBlockFile
    PCMAliasBlockFile(wxFileNameWrapper &&baseFileName,
                      wxFileNameWrapper &&aliasedFileName,
                      sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel);
+                     size_t aliasLen, int aliasChannel);
    ///Constructs a PCMAliasBlockFile with the option of not writing to disk
    PCMAliasBlockFile(wxFileNameWrapper &&fileName,
                      wxFileNameWrapper &&aliasedFileName,
                      sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,bool writeSummary);
+                     size_t aliasLen, int aliasChannel,bool writeSummary);
 
    PCMAliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
                      wxFileNameWrapper &&aliasedFileName,
                      sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,
+                     size_t aliasLen, int aliasChannel,
                      float min, float max, float rms);
    virtual ~PCMAliasBlockFile();
 
    /// Reads the specified data from the aliased file using libsndfile
-   int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const override;
+   size_t ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const override;
 
    void SaveXML(XMLWriter &xmlFile) override;
    BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;

@@ -113,7 +113,7 @@ public:
    void SetMetadata(const Tags *tags, const char *name, const wxChar *tag);
 
    /// Encodes audio
-   bool EncodeAudioFrame(int16_t *pFrame, int frameSize);
+   bool EncodeAudioFrame(int16_t *pFrame, size_t frameSize);
 
    /// Flushes audio encoder
    bool Finalize();
@@ -760,7 +760,7 @@ void ExportFFmpeg::FreeResources()
    av_log_set_callback(av_log_default_callback);
 }
 
-bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
+bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 {
    int nBytesToWrite = 0;
    uint8_t *pRawSamples = NULL;

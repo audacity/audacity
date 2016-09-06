@@ -48,7 +48,7 @@
 #include "blockfile/SimpleBlockFile.h"
 #include "blockfile/SilentBlockFile.h"
 
-int Sequence::sMaxDiskBlockSize = 1048576;
+size_t Sequence::sMaxDiskBlockSize = 1048576;
 
 // Sequence methods
 Sequence::Sequence(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format)
@@ -77,12 +77,12 @@ Sequence::~Sequence()
 {
 }
 
-sampleCount Sequence::GetMaxBlockSize() const
+size_t Sequence::GetMaxBlockSize() const
 {
    return mMaxSamples;
 }
 
-sampleCount Sequence::GetIdealBlockSize() const
+size_t Sequence::GetIdealBlockSize() const
 {
    return mMaxSamples;
 }
@@ -698,7 +698,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
 bool Sequence::AppendAlias(const wxString &fullPath,
                            sampleCount start,
-                           sampleCount len, int channel, bool useOD)
+                           size_t len, int channel, bool useOD)
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)len)))
@@ -717,7 +717,7 @@ bool Sequence::AppendAlias(const wxString &fullPath,
 }
 
 bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType)
+                            size_t len, int channel, int decodeType)
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)len)))
@@ -781,7 +781,7 @@ sampleCount Sequence::GetBlockStart(sampleCount position) const
    return mBlock[b].start;
 }
 
-sampleCount Sequence::GetBestBlockSize(sampleCount start) const
+size_t Sequence::GetBestBlockSize(sampleCount start) const
 {
    // This method returns a nice number of samples you should try to grab in
    // one big chunk in order to land on a block boundary, based on the starting
@@ -897,6 +897,8 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                mErrorOpening = true;
                return false;
             }
+
+            // nValue is now safe for size_t
             mMaxSamples = nValue;
 
             // PRL:  Is the following really okay?  DirManager might be shared across projects!
@@ -1111,21 +1113,19 @@ int Sequence::FindBlock(sampleCount pos) const
 }
 
 bool Sequence::Read(samplePtr buffer, sampleFormat format,
-                    const SeqBlock &b, sampleCount start, sampleCount len) const
+                    const SeqBlock &b, size_t blockRelativeStart, size_t len)
+                    const
 {
    const auto &f = b.f;
 
-   wxASSERT(start >= 0);
-   wxASSERT(start + len <= f->GetLength());
+   wxASSERT(blockRelativeStart + len <= f->GetLength());
 
-   int result = f->ReadData(buffer, format, start, len);
+   auto result = f->ReadData(buffer, format, blockRelativeStart, len);
 
    if (result != len)
    {
       wxLogWarning(wxT("Expected to read %ld samples, got %d samples."),
-                   (long long)len, result);
-      if (result < 0)
-         result = 0;
+                   len, result);
       ClearSamples(buffer, format, result, len-result);
    }
 
@@ -1134,7 +1134,7 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
 bool Sequence::CopyWrite(SampleBuffer &scratch,
                          samplePtr buffer, SeqBlock &b,
-                         sampleCount start, sampleCount len)
+                         size_t blockRelativeStart, size_t len)
 {
    // We don't ever write to an existing block; to support Undo,
    // we copy the old block entirely into memory, dereference it,
@@ -1142,13 +1142,13 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
 
    const auto length = b.f->GetLength();
    wxASSERT(length <= mMaxSamples);
-   wxASSERT(start + len <= length);
-   wxASSERT(start >= 0);
+   wxASSERT(blockRelativeStart + len <= length);
 
    auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
    Read(scratch.ptr(), mSampleFormat, b, 0, length);
-   memcpy(scratch.ptr() + start*sampleSize, buffer, len*sampleSize);
+   memcpy(scratch.ptr() +
+          blockRelativeStart * sampleSize, buffer, len*sampleSize);
 
    b.f = mDirManager->NewSimpleBlockFile(scratch.ptr(), length, mSampleFormat);
 
@@ -1156,7 +1156,7 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
 }
 
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
-   sampleCount start, sampleCount len) const
+   sampleCount start, size_t len) const
 {
    if (start == mNumSamples) {
       return len == 0;
@@ -1171,7 +1171,7 @@ bool Sequence::Get(samplePtr buffer, sampleFormat format,
 }
 
 bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
-   sampleCount start, sampleCount len) const
+   sampleCount start, size_t len) const
 {
    while (len) {
       const SeqBlock &block = mBlock[b];
@@ -1497,7 +1497,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    return true;
 }
 
-sampleCount Sequence::GetIdealAppendLen()
+size_t Sequence::GetIdealAppendLen() const
 {
    int numBlocks = mBlock.size();
    const auto max = GetMaxBlockSize();
@@ -1513,7 +1513,7 @@ sampleCount Sequence::GetIdealAppendLen()
 }
 
 bool Sequence::Append(samplePtr buffer, sampleFormat format,
-                      sampleCount len, XMLWriter* blockFileLog /*=NULL*/)
+                      size_t len, XMLWriter* blockFileLog /*=NULL*/)
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows(mNumSamples.as_double() + ((double)len)))
@@ -1592,7 +1592,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len)
+void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
 {
    if (len <= 0)
       return;
@@ -1846,12 +1846,12 @@ void Sequence::DebugPrintf(wxString *dest) const
 }
 
 // static
-void Sequence::SetMaxDiskBlockSize(int bytes)
+void Sequence::SetMaxDiskBlockSize(size_t bytes)
 {
    sMaxDiskBlockSize = bytes;
 }
 
-int Sequence::GetMaxDiskBlockSize()
+size_t Sequence::GetMaxDiskBlockSize()
 {
    return sMaxDiskBlockSize;
 }

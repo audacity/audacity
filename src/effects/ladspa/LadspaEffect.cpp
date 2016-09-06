@@ -891,7 +891,7 @@ void LadspaEffect::SetSampleRate(double rate)
    mSampleRate = rate;
 }
 
-sampleCount LadspaEffect::SetBlockSize(sampleCount maxBlockSize)
+size_t LadspaEffect::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = maxBlockSize;
 
@@ -909,7 +909,7 @@ sampleCount LadspaEffect::GetLatency()
    return 0;
 }
 
-sampleCount LadspaEffect::GetTailSize()
+size_t LadspaEffect::GetTailSize()
 {
    return 0;
 }
@@ -950,7 +950,7 @@ bool LadspaEffect::ProcessFinalize()
    return true;
 }
 
-sampleCount LadspaEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t LadspaEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    for (int i = 0; i < mAudioIns; i++)
    {
@@ -1013,10 +1013,10 @@ bool LadspaEffect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount LadspaEffect::RealtimeProcess(int group,
+size_t LadspaEffect::RealtimeProcess(int group,
                                           float **inbuf,
                                           float **outbuf,
-                                          sampleCount numSamples)
+                                          size_t numSamples)
 {
    for (int i = 0; i < mAudioIns; i++)
    {

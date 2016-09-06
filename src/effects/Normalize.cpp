@@ -480,14 +480,14 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
    return rc;
 }
 
-void EffectNormalize::AnalyzeData(float *buffer, sampleCount len)
+void EffectNormalize::AnalyzeData(float *buffer, size_t len)
 {
    for(decltype(len) i = 0; i < len; i++)
       mSum += (double)buffer[i];
    mCount += len;
 }
 
-void EffectNormalize::ProcessData(float *buffer, sampleCount len)
+void EffectNormalize::ProcessData(float *buffer, size_t len)
 {
    for(decltype(len) i = 0; i < len; i++) {
       float adjFrame = (buffer[i] + mOffset) * mMult;

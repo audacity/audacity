@@ -135,8 +135,8 @@ bool EffectRepair::Process()
 
 bool EffectRepair::ProcessOne(int count, WaveTrack * track,
                               sampleCount start,
-                              sampleCount len,
-                              sampleCount repairStart, sampleCount repairLen)
+                              size_t len,
+                              size_t repairStart, size_t repairLen)
 {
    float *buffer = new float[len];
    track->Get((samplePtr) buffer, floatSample, start, len);

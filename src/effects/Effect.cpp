@@ -335,7 +335,7 @@ void Effect::SetSampleRate(double rate)
    mSampleRate = rate;
 }
 
-sampleCount Effect::SetBlockSize(sampleCount maxBlockSize)
+size_t Effect::SetBlockSize(size_t maxBlockSize)
 {
    if (mClient)
    {
@@ -357,7 +357,7 @@ sampleCount Effect::GetLatency()
    return 0;
 }
 
-sampleCount Effect::GetTailSize()
+size_t Effect::GetTailSize()
 {
    if (mClient)
    {
@@ -397,7 +397,7 @@ bool Effect::ProcessFinalize()
    return true;
 }
 
-sampleCount Effect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t Effect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    if (mClient)
    {
@@ -494,10 +494,10 @@ bool Effect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount Effect::RealtimeProcess(int group,
+size_t Effect::RealtimeProcess(int group,
                                     float **inbuf,
                                     float **outbuf,
-                                    sampleCount numSamples)
+                                    size_t numSamples)
 {
    if (mClient)
    {
@@ -2355,11 +2355,11 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
 // RealtimeAddProcessor and RealtimeProcess use the same method of
 // determining the current processor group, so updates to one should
 // be reflected in the other.
-sampleCount Effect::RealtimeProcess(int group,
+size_t Effect::RealtimeProcess(int group,
                                     unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
-                                    sampleCount numSamples)
+                                    size_t numSamples)
 {
    //
    // The caller passes the number of channels to process and specifies

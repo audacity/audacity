@@ -350,13 +350,13 @@ void WaveClip::SetOffset(double offset)
 }
 
 bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len) const
+                   sampleCount start, size_t len) const
 {
    return mSequence->Get(buffer, format, start, len);
 }
 
 bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len)
+                   sampleCount start, size_t len)
 {
    bool bResult = mSequence->Set(buffer, format, start, len);
    MarkChanged();
@@ -1297,7 +1297,7 @@ void WaveClip::GetDisplayRect(wxRect* r)
 }
 
 bool WaveClip::Append(samplePtr buffer, sampleFormat format,
-                      sampleCount len, unsigned int stride /* = 1 */,
+                      size_t len, unsigned int stride /* = 1 */,
                       XMLWriter* blockFileLog /*=NULL*/)
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
@@ -1348,7 +1348,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
 }
 
 bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel,bool useOD)
+                            size_t len, int channel,bool useOD)
 {
    bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
    if (result)
@@ -1360,7 +1360,7 @@ bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
 }
 
 bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType)
+                            size_t len, int channel, int decodeType)
 {
    bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);
    if (result)
@@ -1786,7 +1786,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    double factor = (double)rate / (double)mRate;
    ::Resample resample(true, factor, factor); // constant rate resampling
 
-   int bufsize = 65536;
+   size_t bufsize = 65536;
    float* inBuffer = new float[bufsize];
    float* outBuffer = new float[bufsize];
    sampleCount pos = 0;

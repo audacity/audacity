@@ -48,7 +48,7 @@ const wxChar *GetSampleFormatStr(sampleFormat format);
 // Allocating/Freeing Samples
 //
 
-AUDACITY_DLL_API samplePtr NewSamples(int count, sampleFormat format);
+AUDACITY_DLL_API samplePtr NewSamples(size_t count, sampleFormat format);
 AUDACITY_DLL_API void DeleteSamples(samplePtr p);
 
 // RAII version of above
@@ -58,7 +58,7 @@ public:
    SampleBuffer()
       : mPtr(0)
    {}
-   SampleBuffer(int count, sampleFormat format)
+   SampleBuffer(size_t count, sampleFormat format)
       : mPtr(NewSamples(count, format))
    {}
    ~SampleBuffer()
@@ -67,7 +67,7 @@ public:
    }
 
    // WARNING!  May not preserve contents.
-   SampleBuffer &Allocate(int count, sampleFormat format)
+   SampleBuffer &Allocate(size_t count, sampleFormat format)
    {
       Free();
       mPtr = NewSamples(count, format);
@@ -96,12 +96,12 @@ public:
       , mCount(0)
    {}
 
-   GrowableSampleBuffer(int count, sampleFormat format)
+   GrowableSampleBuffer(size_t count, sampleFormat format)
       : SampleBuffer(count, format)
       , mCount(count)
    {}
 
-   GrowableSampleBuffer &Resize(int count, sampleFormat format)
+   GrowableSampleBuffer &Resize(size_t count, sampleFormat format)
    {
       if (!ptr() || mCount < count) {
          Allocate(count, format);
@@ -119,7 +119,7 @@ public:
    using SampleBuffer::ptr;
 
 private:
-   int mCount;
+   size_t mCount;
 };
 
 //

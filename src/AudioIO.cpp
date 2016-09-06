@@ -1770,6 +1770,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    // mouse input, so make fillings more and shorter.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
+   wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
 
    // Capacity of the playback buffer.
@@ -1853,9 +1854,9 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
             // Allocate output buffers.  For every output track we allocate
             // a ring buffer of five seconds
             auto playbackBufferSize =
-               (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
+               (size_t)lrint(mRate * mPlaybackRingBufferSecs);
             auto playbackMixBufferSize =
-               (sampleCount)mPlaybackSamplesToCopy;
+               mPlaybackSamplesToCopy;
 
             mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.size()];
             mPlaybackMixers  = new Mixer*      [mPlaybackTracks.size()];
@@ -1892,8 +1893,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          {
             // Allocate input buffers.  For every input track we allocate
             // a ring buffer of five seconds
-            auto captureBufferSize =
-               (sampleCount)(mRate * mCaptureRingBufferSecs + 0.5);
+            auto captureBufferSize = (size_t)(mRate * mCaptureRingBufferSecs + 0.5);
 
             // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
             if(captureBufferSize < 100)
@@ -1931,10 +1931,8 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          bDone = false;
 
          // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-         auto playbackBufferSize =
-            (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
-         auto playbackMixBufferSize =
-            (sampleCount)mPlaybackSamplesToCopy;
+         auto playbackBufferSize = (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+         auto playbackMixBufferSize = mPlaybackSamplesToCopy;
          if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
          {
             StartStreamCleanup();

@@ -114,7 +114,7 @@ bool EffectEcho::ProcessFinalize()
    return true;
 }
 
-sampleCount EffectEcho::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectEcho::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

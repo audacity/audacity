@@ -488,8 +488,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    float * inBuffer = new float[inBufferSize];
 
    // mFactor is at most 100-fold so this shouldn't overflow size_t
-   auto outBufferSize =
-      (sampleCount)((mFactor * inBufferSize) + 10);
+   auto outBufferSize = size_t( mFactor * inBufferSize + 10 );
    float * outBuffer = new float[outBufferSize];
 
    // Set up the resampling stuff for this track.

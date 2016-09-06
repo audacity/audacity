@@ -48,7 +48,7 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(
       wxFileNameWrapper &&fileName,
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel)
+      size_t aliasLen, int aliasChannel)
 : PCMAliasBlockFile { std::move(fileName), std::move(aliasedFileName),
                       aliasStart, aliasLen, aliasChannel, false }
 {
@@ -60,7 +60,7 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(
       wxFileNameWrapper &&existingSummaryFileName,
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel,
+      size_t aliasLen, int aliasChannel,
       float min, float max, float rms, bool summaryAvailable)
 : PCMAliasBlockFile(std::move(existingSummaryFileName), std::move(aliasedFileName),
                     aliasStart, aliasLen,
@@ -121,7 +121,7 @@ void ODPCMAliasBlockFile::Unlock()
 
 
 /// Gets extreme values for the specified region
-void ODPCMAliasBlockFile::GetMinMax(sampleCount start, sampleCount len,
+void ODPCMAliasBlockFile::GetMinMax(size_t start, size_t len,
                           float *outMin, float *outMax, float *outRMS) const
 {
    if(IsSummaryAvailable())
@@ -156,7 +156,7 @@ void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
 }
 
 /// Returns the 256 byte summary data block.  Clients should check to see if the summary is available before trying to read it with this call.
-bool ODPCMAliasBlockFile::Read256(float *buffer, sampleCount start, sampleCount len)
+bool ODPCMAliasBlockFile::Read256(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
    {
@@ -171,7 +171,7 @@ bool ODPCMAliasBlockFile::Read256(float *buffer, sampleCount start, sampleCount 
 }
 
 /// Returns the 64K summary data block. Clients should check to see if the summary is available before trying to read it with this call.
-bool ODPCMAliasBlockFile::Read64K(float *buffer, sampleCount start, sampleCount len)
+bool ODPCMAliasBlockFile::Read64K(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
    {
@@ -267,7 +267,8 @@ BlockFilePtr ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **at
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper aliasFileName;
-   sampleCount aliasStart=0, aliasLen=0;
+   sampleCount aliasStart = 0;
+   size_t aliasLen = 0;
    int aliasChannel=0;
    long nValue;
    long long nnValue;
@@ -437,7 +438,7 @@ void ODPCMAliasBlockFile::WriteSummary()
 /// @param buffer A buffer containing the sample data to be analyzed
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
-void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
+void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
                              sampleFormat format, ArrayOf<char> &cleanup)
 {
    cleanup.reinit(mSummaryInfo.totalSummaryBytes);
@@ -483,8 +484,8 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 /// @param format The format to convert the data into
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
-int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len) const
+size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
+                                size_t start, size_t len) const
 {
 
    LockRead();
@@ -537,7 +538,7 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    wxASSERT(info.channels >= 0);
    SampleBuffer buffer(len * info.channels, floatSample);
 
-   int framesRead = 0;
+   size_t framesRead = 0;
 
    if (format == int16Sample &&
        !sf_subtype_more_than_16_bits(info.format)) {

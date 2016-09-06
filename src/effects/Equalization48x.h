@@ -45,8 +45,8 @@ public:
    float* mBufferSouce[__MAXBUFFERCOUNT];
    float* mBufferDest[__MAXBUFFERCOUNT];
    int mBufferLength;
-   sampleCount mFftWindowSize;
-   sampleCount mFftFilterSize;
+   size_t mFftWindowSize;
+   size_t mFftFilterSize;
    float* mScratchBuffer;
    int mContiguousBufferSize;
    EQBufferStatus mBufferStatus;

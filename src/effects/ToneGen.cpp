@@ -155,7 +155,7 @@ bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNam
    return true;
 }
 
-sampleCount EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, sampleCount blockLen)
+size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, size_t blockLen)
 {
    float *buffer = outBlock[0];
    double throwaway = 0;        //passed to modf but never used

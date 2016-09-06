@@ -159,7 +159,7 @@ unsigned EffectReverb::GetAudioOutCount()
    return mParams.mStereoWidth ? 2 : 1;
 }
 
-#define BLOCK 16384
+static size_t BLOCK = 16384;
 
 bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
 {
@@ -204,7 +204,7 @@ bool EffectReverb::ProcessFinalize()
    return true;
 }
 
-sampleCount EffectReverb::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectReverb::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};

@@ -102,8 +102,8 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
 
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
-      unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
-      unsigned int SignalWindowSizeInt = (unsigned int)(rate  * mSignalWindowSize);   //This much signal is necessary to trip key
+      size_t WindowSizeInt = (rate  * mWindowSize);               //Size of window to examine
+      size_t SignalWindowSizeInt = (rate  * mSignalWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;   //Indexes the number of samples remaining in the selection
       auto lastsubthresholdsample = start;          //start this off at the selection start
@@ -144,7 +144,7 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
 
          //Calculate how many to scan through--we only have to go through (at most)
          //the first window + 1 samples--but we need another window samples to draw from.
-         auto remaining = 2*WindowSizeInt+1;
+         size_t remaining = 2*WindowSizeInt+1;
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SignalWindowSizeInt samples, and choose the first that trips the key.
@@ -249,7 +249,7 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
 
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
-      unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
+      size_t WindowSizeInt = (rate  * mWindowSize);               //Size of window to examine
       //unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;                 //Indexes the number of samples remaining in the selection
@@ -293,7 +293,7 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
 
          //Calculate how many to scan through--we only have to go through (at most)
          //the first window + 1 samples--but we need another window samples to draw from.
-         auto remaining = 2*WindowSizeInt+1;
+         size_t remaining = 2*WindowSizeInt+1;
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first mSilentWindowSizeInt samples, and choose the first that trips the key.
@@ -320,7 +320,7 @@ sampleCount VoiceKey::OnBackward (WaveTrack & t, sampleCount end, sampleCount le
 
          //Now, go through the sound again, sample by sample.
          size_t i;
-         for(i = remaining - 1;  i > WindowSizeInt; i--) {
+         for(i = remaining - 1; i > WindowSizeInt; i--) {
             int tests = 0;
             int testThreshold = 0;
             //Update the test statistics
@@ -428,7 +428,7 @@ sampleCount VoiceKey::OffForward (WaveTrack & t, sampleCount start, sampleCount 
 
          //Calculate how many to scan through--we only have to go through (at most)
          //the first window + 1 samples--but we need another window samples to draw from.
-         auto remaining = 2*WindowSizeInt+1;
+         size_t remaining = 2*WindowSizeInt+1;
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
@@ -564,7 +564,7 @@ sampleCount VoiceKey::OffBackward (WaveTrack & t, sampleCount end, sampleCount l
 
          //Calculate how many to scan through--we only have to go through (at most)
          //the first window + 1 samples--but we need another window samples to draw from.
-         auto remaining = 2*WindowSizeInt+1;
+         const size_t remaining = 2*WindowSizeInt+1;
 
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.

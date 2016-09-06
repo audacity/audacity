@@ -38,7 +38,7 @@ CrossFader::~CrossFader()
 
 
 bool CrossFader::GetSamples(samplePtr buffer, sampleFormat format,
-                            sampleCount start, sampleCount len)
+                            sampleCount start, size_t len)
 {
    switch (mType)
    {
@@ -57,7 +57,7 @@ bool CrossFader::GetSamples(samplePtr buffer, sampleFormat format,
 
 }
 
-bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, sampleCount len)
+bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, size_t len)
 {
 
    std::cout << "Crossfading from " << start.as_long_long()

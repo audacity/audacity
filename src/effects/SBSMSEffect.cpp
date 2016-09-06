@@ -54,8 +54,8 @@ public:
    audio *buf;
    double ratio;
    sampleCount processed;
-   sampleCount blockSize;
-   sampleCount SBSMSBlockSize;
+   size_t blockSize;
+   long SBSMSBlockSize;
    sampleCount offset;
    sampleCount end;
    float *leftBuffer;

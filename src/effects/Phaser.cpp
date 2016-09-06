@@ -151,7 +151,7 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-sampleCount EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -183,10 +183,10 @@ bool EffectPhaser::RealtimeFinalize()
    return true;
 }
 
-sampleCount EffectPhaser::RealtimeProcess(int group,
+size_t EffectPhaser::RealtimeProcess(int group,
                                           float **inbuf,
                                           float **outbuf,
-                                          sampleCount numSamples)
+                                          size_t numSamples)
 {
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
@@ -372,7 +372,7 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    return;
 }
 
-sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

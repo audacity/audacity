@@ -104,7 +104,7 @@ private:
 
    wxArrayString mDbChoices;
 
-   sampleCount mBlendFrameCount;
+   size_t mBlendFrameCount;
 
    wxChoice *mTruncDbChoice;
    wxChoice *mActionChoice;

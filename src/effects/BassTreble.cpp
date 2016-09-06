@@ -128,7 +128,7 @@ bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-sampleCount EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -160,10 +160,10 @@ bool EffectBassTreble::RealtimeFinalize()
    return true;
 }
 
-sampleCount EffectBassTreble::RealtimeProcess(int group,
+size_t EffectBassTreble::RealtimeProcess(int group,
                                               float **inbuf,
                                               float **outbuf,
-                                              sampleCount numSamples)
+                                              size_t numSamples)
 {
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
@@ -335,10 +335,10 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 // EffectClientInterface implementation
 
 
-sampleCount EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
+size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
                                               float **inBlock,
                                               float **outBlock,
-                                              sampleCount blockLen)
+                                              size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

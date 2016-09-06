@@ -70,7 +70,7 @@ out.
 static const int headerTagLen = 20;
 static char headerTag[headerTagLen + 1] = "AudacityBlockFile112";
 
-SummaryInfo::SummaryInfo(sampleCount samples)
+SummaryInfo::SummaryInfo(size_t samples)
 {
    format = floatSample;
 
@@ -98,7 +98,7 @@ ArrayOf<char> BlockFile::fullSummary;
 ///                 will store at least the summary data here.
 ///
 /// @param samples  The number of samples this BlockFile contains.
-BlockFile::BlockFile(wxFileNameWrapper &&fileName, sampleCount samples):
+BlockFile::BlockFile(wxFileNameWrapper &&fileName, size_t samples):
    mLockCount(0),
    mFileName(std::move(fileName)),
    mLen(samples),
@@ -177,7 +177,7 @@ bool BlockFile::IsLocked()
 /// @param buffer A buffer containing the sample data to be analyzed
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
-void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
+void *BlockFile::CalcSummary(samplePtr buffer, size_t len,
                              sampleFormat format, ArrayOf<char> &cleanup)
 {
    // Caller has nothing to deallocate
@@ -201,7 +201,7 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    return fullSummary.get();
 }
 
-void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
+void BlockFile::CalcSummaryFromBuffer(const float *fbuffer, size_t len,
                                       float *summary256, float *summary64K)
 {
    decltype(len) sumLen;
@@ -375,7 +375,7 @@ void BlockFile::FixSummary(void *data)
 ///                should be stored
 /// @param *outRMS A pointer to where the maximum RMS value for this
 ///                region should be stored.
-void BlockFile::GetMinMax(sampleCount start, sampleCount len,
+void BlockFile::GetMinMax(size_t start, size_t len,
                   float *outMin, float *outMax, float *outRMS) const
 {
    // TODO: actually use summaries
@@ -429,12 +429,12 @@ void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 /// @param start   The offset in 256-sample increments
 /// @param len     The number of 256-sample summary frames to read
 bool BlockFile::Read256(float *buffer,
-                        sampleCount start, sampleCount len)
+                        size_t start, size_t len)
 {
    wxASSERT(start >= 0);
 
    char *summary = new char[mSummaryInfo.totalSummaryBytes];
-   // FIXME: TRAP_ERR ReadSummay() could return fail.
+   // FIXME: TRAP_ERR ReadSummary() could return fail.
    this->ReadSummary(summary);
 
    start = std::min( start, mSummaryInfo.frames256 );
@@ -468,12 +468,12 @@ bool BlockFile::Read256(float *buffer,
 /// @param start   The offset in 64K-sample increments
 /// @param len     The number of 64K-sample summary frames to read
 bool BlockFile::Read64K(float *buffer,
-                        sampleCount start, sampleCount len)
+                        size_t start, size_t len)
 {
    wxASSERT(start >= 0);
 
    char *summary = new char[mSummaryInfo.totalSummaryBytes];
-   // FIXME: TRAP_ERR ReadSummay() could return fail.
+   // FIXME: TRAP_ERR ReadSummary() could return fail.
    this->ReadSummary(summary);
 
    start = std::min( start, mSummaryInfo.frames64K );
@@ -520,7 +520,7 @@ bool BlockFile::Read64K(float *buffer,
 AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&baseFileName,
                                wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
-                               sampleCount aliasLen, int aliasChannel):
+                               size_t aliasLen, int aliasChannel):
    BlockFile {
       (baseFileName.SetExt(wxT("auf")), std::move(baseFileName)),
       aliasLen
@@ -535,7 +535,7 @@ AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&baseFileName,
 AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
                                wxFileNameWrapper &&aliasedFileName,
                                sampleCount aliasStart,
-                               sampleCount aliasLen,
+                               size_t aliasLen,
                                int aliasChannel,
                                float min, float max, float rms):
    BlockFile{ std::move(existingSummaryFileName), aliasLen },

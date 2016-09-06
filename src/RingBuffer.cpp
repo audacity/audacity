@@ -27,7 +27,7 @@
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
    : mFormat{ format }
    , mBufferSize{ std::max<size_t>(size, 64) }
-   , mBuffer( mBufferSize, mFormat )
+   , mBuffer{ mBufferSize, mFormat }
 {
 }
 

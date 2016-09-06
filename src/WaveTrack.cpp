@@ -1563,7 +1563,7 @@ bool WaveTrack::Join(double t0, double t1)
 }
 
 bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
-                       sampleCount len, unsigned int stride /* = 1 */,
+                       size_t len, unsigned int stride /* = 1 */,
                        XMLWriter *blockFileLog /* = NULL */)
 {
    return RightmostOrNewClip()->Append(buffer, format, len, stride,
@@ -1571,14 +1571,14 @@ bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
 }
 
 bool WaveTrack::AppendAlias(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel,bool useOD)
+                            size_t len, int channel,bool useOD)
 {
    return RightmostOrNewClip()->AppendAlias(fName, start, len, channel, useOD);
 }
 
 
 bool WaveTrack::AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType)
+                            size_t len, int channel, int decodeType)
 {
    return RightmostOrNewClip()->AppendCoded(fName, start, len, channel, decodeType);
 }
@@ -1608,7 +1608,7 @@ sampleCount WaveTrack::GetBlockStart(sampleCount s) const
    return -1;
 }
 
-sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
+size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 {
    auto bestBlockSize = GetMaxBlockSize();
 
@@ -1626,7 +1626,7 @@ sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
    return bestBlockSize;
 }
 
-sampleCount WaveTrack::GetMaxBlockSize() const
+size_t WaveTrack::GetMaxBlockSize() const
 {
    decltype(GetMaxBlockSize()) maxblocksize = 0;
    for (const auto &clip : mClips)
@@ -1646,7 +1646,7 @@ sampleCount WaveTrack::GetMaxBlockSize() const
    return maxblocksize;
 }
 
-sampleCount WaveTrack::GetIdealBlockSize()
+size_t WaveTrack::GetIdealBlockSize()
 {
    return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
 }
@@ -1993,7 +1993,7 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
 }
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, sampleCount len, fillFormat fill ) const
+                    sampleCount start, size_t len, fillFormat fill ) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
@@ -2071,7 +2071,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 }
 
 bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
-                    sampleCount start, sampleCount len)
+                    sampleCount start, size_t len)
 {
    bool result = true;
 
@@ -2648,7 +2648,7 @@ void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
 }
 
 constSamplePtr WaveTrackCache::Get(sampleFormat format,
-   sampleCount start, sampleCount len)
+   sampleCount start, size_t len)
 {
    if (format == floatSample && len > 0) {
       const auto end = start + len;

@@ -1192,7 +1192,7 @@ void AudioUnitEffect::SetSampleRate(double rate)
    mSampleRate = rate;
 }
 
-sampleCount AudioUnitEffect::SetBlockSize(sampleCount maxBlockSize)
+size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
 {
    return mBlockSize;
 }
@@ -1219,7 +1219,7 @@ sampleCount AudioUnitEffect::GetLatency()
    return 0;
 }
 
-sampleCount AudioUnitEffect::GetTailSize()
+size_t AudioUnitEffect::GetTailSize()
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
@@ -1306,7 +1306,7 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-sampleCount AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    for (int i = 0; i < mAudioIns; i++)
    {
@@ -1431,10 +1431,10 @@ bool AudioUnitEffect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount AudioUnitEffect::RealtimeProcess(int group,
+size_t AudioUnitEffect::RealtimeProcess(int group,
                                              float **inbuf,
                                              float **outbuf,
-                                             sampleCount numSamples)
+                                             size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
 

@@ -65,7 +65,7 @@ Param( Truncate,  double,  XO("Truncate"),   0.5,        0.0,     10000.0,      
 Param( Compress,  double,  XO("Compress"),   50.0,       0.0,     99.9,                      1  );
 Param( Independent, bool,  XO("Independent"), false,     false,   true,                      1  );
 
-static const sampleCount DEF_BlendFrameCount = 100;
+static const size_t DEF_BlendFrameCount = 100;
 
 // Lower bound on the amount of silence to find at a time -- this avoids
 // detecting silence repeatedly in low-frequency sounds.

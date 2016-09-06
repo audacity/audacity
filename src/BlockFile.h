@@ -29,14 +29,14 @@
 
 class SummaryInfo {
  public:
-   SummaryInfo(sampleCount samples);
+   SummaryInfo(size_t samples);
 
    int            fields; /* Usually 3 for Min, Max, RMS */
    sampleFormat   format;
    int            bytesPerFrame;
-   sampleCount    frames64K;
+   size_t         frames64K;
    int            offset64K;
-   sampleCount    frames256;
+   size_t         frames256;
    int            offset256;
    int            totalSummaryBytes;
 };
@@ -58,7 +58,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // Constructor / Destructor
 
    /// Construct a BlockFile.
-   BlockFile(wxFileNameWrapper &&fileName, sampleCount samples);
+   BlockFile(wxFileNameWrapper &&fileName, size_t samples);
    virtual ~BlockFile();
 
    static unsigned long gBlockFileDestructionCount;
@@ -66,8 +66,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // Reading
 
    /// Retrieves audio data from this BlockFile
-   virtual int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const = 0;
+   virtual size_t ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const = 0;
 
    // Other Properties
 
@@ -105,8 +105,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual GetFileNameResult GetFileName() const;
    virtual void SetFileName(wxFileNameWrapper &&name);
 
-   sampleCount GetLength() const { return mLen; }
-   void SetLength(const sampleCount newLen) { mLen = newLen; }
+   size_t GetLength() const { return mLen; }
+   void SetLength(size_t newLen) { mLen = newLen; }
 
    /// Locks this BlockFile, to prevent it from being moved
    virtual void Lock();
@@ -116,14 +116,14 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual bool IsLocked();
 
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(sampleCount start, sampleCount len,
+   virtual void GetMinMax(size_t start, size_t len,
                           float *outMin, float *outMax, float *outRMS) const;
    /// Gets extreme values for the entire block
    virtual void GetMinMax(float *outMin, float *outMax, float *outRMS) const;
    /// Returns the 256 byte summary data block
-   virtual bool Read256(float *buffer, sampleCount start, sampleCount len);
+   virtual bool Read256(float *buffer, size_t start, size_t len);
    /// Returns the 64K summary data block
-   virtual bool Read64K(float *buffer, sampleCount start, sampleCount len);
+   virtual bool Read64K(float *buffer, size_t start, size_t len);
 
    /// Returns TRUE if this block references another disk file
    virtual bool IsAlias() const { return false; }
@@ -170,12 +170,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
  protected:
    /// Calculate summary data for the given sample data
    /// Overrides have differing details of memory management
-   virtual void *CalcSummary(samplePtr buffer, sampleCount len,
+   virtual void *CalcSummary(samplePtr buffer, size_t len,
                              sampleFormat format,
                              // This gets filled, if the caller needs to deallocate.  Else it is null.
                              ArrayOf<char> &cleanup);
    // Common, nonvirtual calculation routine for the use of the above
-   void CalcSummaryFromBuffer(const float *fbuffer, sampleCount len,
+   void CalcSummaryFromBuffer(const float *fbuffer, size_t len,
                               float *summary256, float *summary64K);
 
    /// Read the summary section of the file.  Derived classes implement.
@@ -192,7 +192,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
  protected:
    wxFileNameWrapper mFileName;
-   sampleCount mLen;
+   size_t mLen;
    SummaryInfo mSummaryInfo;
    float mMin, mMax, mRMS;
    mutable bool mSilentLog;
@@ -216,10 +216,10 @@ class AliasBlockFile /* not final */ : public BlockFile
    /// Constructs an AliasBlockFile
    AliasBlockFile(wxFileNameWrapper &&baseFileName,
                   wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
-                  sampleCount aliasLen, int aliasChannel);
+                  size_t aliasLen, int aliasChannel);
    AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
                   wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
-                  sampleCount aliasLen, int aliasChannel,
+                  size_t aliasLen, int aliasChannel,
                   float min, float max, float RMS);
    virtual ~AliasBlockFile();
 

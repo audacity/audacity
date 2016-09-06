@@ -31,7 +31,7 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&fileName,
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel)
+      size_t aliasLen, int aliasChannel)
 : AliasBlockFile{ std::move(fileName), std::move(aliasedFileName),
                   aliasStart, aliasLen, aliasChannel }
 {
@@ -42,7 +42,7 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper&& fileName,
       wxFileNameWrapper&& aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel,bool writeSummary)
+      size_t aliasLen, int aliasChannel,bool writeSummary)
 : AliasBlockFile{ std::move(fileName), std::move(aliasedFileName),
                   aliasStart, aliasLen, aliasChannel }
 {
@@ -54,7 +54,7 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&existingSummaryFileName,
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel,
+      size_t aliasLen, int aliasChannel,
       float min, float max, float rms)
 : AliasBlockFile{ std::move(existingSummaryFileName), std::move(aliasedFileName),
                   aliasStart, aliasLen,
@@ -73,8 +73,8 @@ PCMAliasBlockFile::~PCMAliasBlockFile()
 /// @param format The format to convert the data into
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
-int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len) const
+size_t PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
+                                size_t start, size_t len) const
 {
    SF_INFO info;
 
@@ -124,7 +124,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    wxASSERT(info.channels >= 0);
    SampleBuffer buffer(len * info.channels, floatSample);
 
-   int framesRead = 0;
+   size_t framesRead = 0;
 
    if (format == int16Sample &&
        !sf_subtype_more_than_16_bits(info.format)) {
