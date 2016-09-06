@@ -147,8 +147,10 @@ public:
    virtual wxString GetFileDescription() = 0;
 
    // Return an estimate of how many bytes the file will occupy once
-   // imported
-   virtual int GetFileUncompressedBytes() = 0;
+   // imported.  In principle this may exceed main memory, so don't use
+   // size_t.
+   using ByteCount = unsigned long long;
+   virtual ByteCount GetFileUncompressedBytes() = 0;
 
    // do the actual import, creating whatever tracks are necessary with
    // the TrackFactory and calling the progress callback every iteration

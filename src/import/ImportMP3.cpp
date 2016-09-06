@@ -130,7 +130,7 @@ public:
    ~MP3ImportFileHandle();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -199,7 +199,7 @@ wxString MP3ImportFileHandle::GetFileDescription()
    return DESC;
 }
 
-int MP3ImportFileHandle::GetFileUncompressedBytes()
+auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO
    return 0;

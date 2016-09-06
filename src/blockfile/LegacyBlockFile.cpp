@@ -344,7 +344,7 @@ BlockFilePtr LegacyBlockFile::Copy(wxFileNameWrapper &&newFileName)
         mLen, mSummaryInfo.fields < 3);
 }
 
-wxLongLong LegacyBlockFile::GetSpaceUsage() const
+auto LegacyBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    wxFFile dataFile(mFileName.GetFullPath());
    return dataFile.Length();

@@ -123,9 +123,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
       mCache.active = true;
       mCache.needWrite = true;
       mCache.format = format;
-      mCache.sampleData = new char[sampleLen * SAMPLE_SIZE(format)];
-      memcpy(mCache.sampleData,
-             sampleData, sampleLen * SAMPLE_SIZE(format));
+      const auto sampleDataSize = sampleLen * SAMPLE_SIZE(format);
+      mCache.sampleData = new char[sampleDataSize];
+      memcpy(mCache.sampleData, sampleData, sampleDataSize);
       ArrayOf<char> cleanup;
       void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
          format, cleanup);
@@ -269,7 +269,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       }
    }
 
-    return true;
+   return true;
 }
 
 void SimpleBlockFile::FillCache()
@@ -547,7 +547,7 @@ BlockFilePtr SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
    return newBlockFile;
 }
 
-wxLongLong SimpleBlockFile::GetSpaceUsage() const
+auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    if (mCache.active && mCache.needWrite)
    {
@@ -598,9 +598,11 @@ wxLongLong SimpleBlockFile::GetSpaceUsage() const
       file.Close();
    }
 
-   return sizeof(auHeader) + 
+   return
+          sizeof(auHeader) +
           mSummaryInfo.totalSummaryBytes +
-          (GetLength() * SAMPLE_SIZE_DISK(mFormat));
+          (GetLength() * SAMPLE_SIZE_DISK(mFormat))
+   ;
 }
 
 void SimpleBlockFile::Recover(){

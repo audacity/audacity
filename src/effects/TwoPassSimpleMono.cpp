@@ -95,7 +95,7 @@ bool EffectTwoPassSimpleMono::ProcessPass()
 
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
-//and executes ProcessSimpleMono on these blocks
+//and executes TwoBufferProcessPass1 or TwoBufferProcessPass2 on these blocks
 bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
                                          sampleCount start, sampleCount end)
 {

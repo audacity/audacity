@@ -204,7 +204,7 @@ public:
 
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
@@ -460,7 +460,7 @@ wxString FFmpegImportFileHandle::GetFileDescription()
 }
 
 
-int FFmpegImportFileHandle::GetFileUncompressedBytes()
+auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO: Get Uncompressed byte count.
    return 0;

@@ -58,20 +58,20 @@ class Resample final
     @param inBufferLen Length of the input buffer, in samples.
     @param lastFlag Flag to indicate this is the last lot of input samples and
     the buffer needs to be emptied out into the rate converter.
-    @param inBufferUsed Number of samples from inBuffer that have been used
     (unless lastFlag is true, we don't garuntee to process all the samples in
     the input this time, we may leave some for next time)
     @param outBuffer Buffer to write output (converted) samples to.
     @param outBufferLen How big outBuffer is.
-    @return Number of output samples created by this call
+    @return Number of input samples consumed, and number of output samples
+    created by this call
    */
-   int Process(double   factor,
+   std::pair<size_t, size_t>
+                Process(double  factor,
                         float  *inBuffer,
-                        int     inBufferLen,
+                        size_t  inBufferLen,
                         bool    lastFlag,
-                        int    *inBufferUsed,
                         float  *outBuffer,
-                        int     outBufferLen);
+                        size_t  outBufferLen);
 
  protected:
    void SetMethod(const bool useBestMethod);

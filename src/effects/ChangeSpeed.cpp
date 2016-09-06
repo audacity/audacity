@@ -510,25 +510,20 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr) inBuffer, floatSample, samplePos, blockSize);
 
-      int inUsed;
-      int outgen = resample.Process(mFactor,
+      const auto results = resample.Process(mFactor,
                                     inBuffer,
                                     blockSize,
                                     ((samplePos + blockSize) >= end),
-                                    &inUsed,
                                     outBuffer,
                                     outBufferSize);
-      if (outgen < 0) {
-         bResult = false;
-         break;
-      }
+      const auto outgen = results.second;
 
       if (outgen > 0)
          outputTrack->Append((samplePtr)outBuffer, floatSample,
                              outgen);
 
       // Increment samplePos
-      samplePos += inUsed;
+      samplePos += results.first;
 
       // Update the Progress meter
       if (TrackProgress(mCurTrackNum, (samplePos - start) / len)) {

@@ -77,11 +77,11 @@ ODPCMAliasBlockFile::~ODPCMAliasBlockFile()
 
 
 //Check to see if we have the file for these calls.
-wxLongLong ODPCMAliasBlockFile::GetSpaceUsage() const
+auto ODPCMAliasBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    if(IsSummaryAvailable())
    {
-      wxLongLong ret;
+      DiskByteCount ret;
       mFileNameMutex.Lock();
       wxFFile summaryFile(mFileName.GetFullPath());
       ret= summaryFile.Length();

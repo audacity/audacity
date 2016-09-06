@@ -16,7 +16,6 @@
 /// to produce the desired crossfading
 
 #include "SampleFormat.h"
-#include "Resample.h"
 #include "WaveClip.h"
 
 

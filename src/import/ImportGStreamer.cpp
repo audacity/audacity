@@ -170,7 +170,7 @@ public:
    bool Init();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
 
    ///! Called by Import.cpp
    ///\return number of readable audio streams in the file
@@ -1005,8 +1005,8 @@ GStreamerImportFileHandle::GetFileDescription()
 
 // ----------------------------------------------------------------------------
 // Return number of uncompressed bytes in file...doubtful this is possible
-int
-GStreamerImportFileHandle::GetFileUncompressedBytes()
+auto
+GStreamerImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    return 0;
 }

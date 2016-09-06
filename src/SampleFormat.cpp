@@ -88,17 +88,17 @@ AUDACITY_DLL_API void DeleteSamples(samplePtr p)
 void ClearSamples(samplePtr src, sampleFormat format,
                   int start, int len)
 {
-   int size = SAMPLE_SIZE(format);
+   auto size = SAMPLE_SIZE(format);
    memset(src + start*size, 0, len*size);
 }
 
 void ReverseSamples(samplePtr src, sampleFormat format,
                   int start, int len)
 {
-   int size = SAMPLE_SIZE(format);
+   auto size = SAMPLE_SIZE(format);
    samplePtr first = src + start * size;
    samplePtr last = src + (start + len - 1) * size;
-   enum { fixedSize = SAMPLE_SIZE(floatSample) };
+   enum : size_t { fixedSize = SAMPLE_SIZE(floatSample) };
    wxASSERT(size <= fixedSize);
    char temp[fixedSize];
    while (first < last) {

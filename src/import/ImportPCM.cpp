@@ -93,7 +93,7 @@ public:
    ~PCMImportFileHandle();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -215,7 +215,7 @@ wxString PCMImportFileHandle::GetFileDescription()
    return SFCall<wxString>(sf_header_name, mInfo.format);
 }
 
-int PCMImportFileHandle::GetFileUncompressedBytes()
+auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
 }
@@ -367,7 +367,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       channels.begin()->get()->SetLinked(true);
    }
 
-   auto fileTotalFrames = (sampleCount)mInfo.frames;
+   auto fileTotalFrames =
+      (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    int updateResult = false;
 
