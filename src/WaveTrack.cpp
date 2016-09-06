@@ -2661,6 +2661,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          mBuffers[1] = mBuffers[0];
          mBuffers[0].data = save;
          fillFirst = true;
+         fillSecond = false;
          // Cache is not in a consistent state yet
          mNValidBuffers = 0;
       }
@@ -2732,7 +2733,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          const auto starti = start - mBuffers[ii].start;
          const auto leni =
             std::min( sampleCount( remaining ), mBuffers[ii].len - starti );
-         if (initLen == 0 && leni == len) {
+         if (initLen <= 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
             return samplePtr(mBuffers[ii].data + starti);
          }

@@ -1366,10 +1366,20 @@ wxString AudacityProject::GetName()
    return name;
 }
 
-void AudacityProject::SetProjectTitle()
+// Pass a number in to show project number, or -1 not to.
+void AudacityProject::SetProjectTitle( int number)
 {
    wxString name = GetName();
-   if( name.IsEmpty() )
+
+   // If we are showing project numbers, then we also explicitly show "<untitled>" if there
+   // is none.
+   if( number >= 0 ){
+      /* i18n-hint: The %02i is the project number, the %s is the project name.*/
+      name = wxString::Format( wxT("[Project %02i] Audacity \"%s\""), number+1 ,
+         name.IsEmpty() ? "<untitled>" : name.c_str() );
+   }
+   // If we are not showing numbers, then <untitled> shows as 'Audacity'.
+   else if( name.IsEmpty() )
    {
       name = wxT("Audacity");
    }
@@ -2001,6 +2011,42 @@ void AudacityProject::HandleResize()
    UpdateLayout();
 }
 
+// What number is this project?
+int AudacityProject::GetProjectNumber()
+{
+   int i;
+   for(i=0;i<gAudacityProjects.size();i++){
+      if(gAudacityProjects[i].get() == this )
+         return i;
+   }
+   return -1;
+}
+
+// How many projects that do not have a name yet?
+int AudacityProject::CountUnnamed()
+{
+   int i;
+   int j=0;
+   for(i=0;i<gAudacityProjects.size();i++){
+      if(gAudacityProjects[i])
+         if( gAudacityProjects[i]->GetName().IsEmpty() )
+            j++;
+   }
+   return j;
+}
+
+void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
+{
+   int i;
+   for(i=0;i<gAudacityProjects.size();i++){
+      if(gAudacityProjects[i]){
+         if( !gAudacityProjects[i]->mIconized ){
+            gAudacityProjects[i]->SetProjectTitle( bShowProjectNumbers ? i : -1 );
+         }
+      }
+   }
+}
+
 void AudacityProject::OnIconize(wxIconizeEvent &event)
 {
 
@@ -2317,6 +2363,34 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
       SetActiveProject(this);
 }
 
+// TitleRestorer restores project window titles to what they were, in its destructor.
+class TitleRestorer{
+public:
+   TitleRestorer(AudacityProject * p ){
+      // Construct this projects name and number.
+      sProjNumber = "";
+      sProjName = p->GetName();
+      if (sProjName.IsEmpty()){
+         sProjName = _("<untitled>");
+         UnnamedCount=AudacityProject::CountUnnamed();
+         if( UnnamedCount > 1 ){
+            sProjNumber.Printf( "[Project %02i] ", p->GetProjectNumber()+1 );
+            AudacityProject::RefreshAllTitles( true ); 
+         } 
+      } else {
+         UnnamedCount = 0;
+      }
+   };
+   ~TitleRestorer() { 
+      if( UnnamedCount > 1 )
+         AudacityProject::RefreshAllTitles( false ); 
+   };
+   wxString sProjNumber;
+   wxString sProjName;
+   int UnnamedCount;
+};
+
+
 // LL: All objects that have a reference to the DirManager should
 //     be deleted before the final mDirManager->Deref() in this
 //     routine.  Failing to do so can cause unwanted recursion
@@ -2379,14 +2453,16 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // project is now empty.
    if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
       if (GetUndoManager()->UnsavedChanges()) {
-
+         TitleRestorer Restorer( this );// RAII
+         /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
+         wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
          wxString Message = _("Save changes before closing?");
          if( !bHasTracks )
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
          }
          int result = wxMessageBox( Message,
-                                   _("Save changes?"),
+                                    Title,
                                    wxYES_NO | wxCANCEL | wxICON_QUESTION,
                                    this);
 
@@ -4050,13 +4126,12 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    return(success);
 }
 
+
 bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
-   wxFileName filename(mFileName);
+   TitleRestorer Restorer(this); // RAII
 
-   wxString sProjName = this->GetName();
-   if (sProjName.IsEmpty())
-      sProjName = _("<untitled>");
+   wxFileName filename(mFileName);
 
    wxString sDialogTitle;
    if (bWantSaveCompressed)
@@ -4073,7 +4148,7 @@ To open a compressed project takes longer than usual, as it imports \n\
 each compressed track.\n"),
                            true) != wxID_OK)
          return false;
-      sDialogTitle.Printf(_("Save Compressed Project \"%s\" As..."), sProjName.c_str());
+      sDialogTitle.Printf(_("%sSave Compressed Project \"%s\" As..."), Restorer.sProjNumber.c_str(),Restorer.sProjName.c_str());
    }
    else
    {
@@ -4083,7 +4158,7 @@ each compressed track.\n"),
 For an audio file that will open in other apps, use 'Export'.\n"),
                            true) != wxID_OK)
          return false;
-      sDialogTitle.Printf(_("Save Project \"%s\" As..."), sProjName.c_str());
+      sDialogTitle.Printf(_("%sSave Project \"%s\" As..."), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
    }
 
    // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking

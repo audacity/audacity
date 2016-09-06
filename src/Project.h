@@ -257,7 +257,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    const wxString &GetFileName() { return mFileName; }
    bool GetDirty() { return mDirty; }
-   void SetProjectTitle();
+   void SetProjectTitle( int number =-1);
 
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
@@ -341,6 +341,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    static TrackList *GetClipboardTracks();
    static void DeleteClipboard();
 
+   int GetProjectNumber();
+   static int CountUnnamed();
+   static void RefreshAllTitles(bool bShowProjectNumbers );
    // checkActive is a temporary hack that should be removed as soon as we
    // get multiple effect preview working
    void UpdateMenus(bool checkActive = true);
