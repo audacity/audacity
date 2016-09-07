@@ -1694,11 +1694,12 @@ bool WaveClip::ExpandCutLine(double cutLinePosition)
          // another cutline!), invalidating the iterator we had.
          auto begin = mCutLines.begin(), end = mCutLines.end();
          it = std::find_if(begin, end,
-            [=](const decltype(*begin) &p){ return p.get() == cutline; });
+            [=](decltype(*begin) &p){ return p.get() == cutline; });
          if (it != end)
             mCutLines.erase(it); // deletes cutline!
-         else
+         else {
             wxASSERT(false);
+         }
          return true;
       }
    }
