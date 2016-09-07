@@ -1764,7 +1764,7 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr) const
 void Sequence::DebugPrintf(wxString *dest) const
 {
    unsigned int i;
-   int pos = 0;
+   decltype(mNumSamples) pos = 0;
 
    for (i = 0; i < mBlock.size(); i++) {
       const SeqBlock &seqBlock = mBlock[i];

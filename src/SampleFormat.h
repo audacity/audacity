@@ -139,7 +139,7 @@ void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                       unsigned int dstStride=1);
 
 void      ClearSamples(samplePtr buffer, sampleFormat format,
-                       int start, int len);
+                       size_t start, size_t len);
 
 void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);

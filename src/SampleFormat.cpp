@@ -86,7 +86,7 @@ AUDACITY_DLL_API void DeleteSamples(samplePtr p)
 
 // TODO: Risky?  Assumes 0.0f is represented by 0x00000000;
 void ClearSamples(samplePtr src, sampleFormat format,
-                  int start, int len)
+                  size_t start, size_t len)
 {
    auto size = SAMPLE_SIZE(format);
    memset(src + start*size, 0, len*size);
