@@ -1683,12 +1683,22 @@ bool WaveClip::ExpandCutLine(double cutLinePosition)
 {
    for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
    {
-      const auto &cutline = *it;
+      WaveClip *const cutline = it->get();
       if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
-         if (!Paste(mOffset+cutline->GetOffset(), cutline.get()))
+         if (!Paste(mOffset+cutline->GetOffset(), cutline))
             return false;
-         mCutLines.erase(it); // deletes cutline!
+         // Now erase the cutline,
+         // but be careful to find it again, because Paste above may
+         // have modified the array of cutlines (if our cutline contained
+         // another cutline!), invalidating the iterator we had.
+         auto begin = mCutLines.begin(), end = mCutLines.end();
+         it = std::find_if(begin, end,
+            [=](const decltype(*begin) &p){ return p.get() == cutline; });
+         if (it != end)
+            mCutLines.erase(it); // deletes cutline!
+         else
+            wxASSERT(false);
          return true;
       }
    }
