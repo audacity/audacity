@@ -544,6 +544,7 @@ public:
    bool IsSoloNone() { return mSoloPref == wxT("None"); }
 
  private:
+    bool mProjectNamedFromImport;
 
    // The project's name and file info
    wxString mFileName;
