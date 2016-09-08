@@ -14,6 +14,7 @@ before_install:
     - FLAGS="-w -std=gnu++11"
     - export CFLAGS="$CFLAGS $FLAGS"
     - export CXXFLAGS="$CXXFLAGS $FLAGS"
+    - g++-4.9 --version
 language:
     - cpp
 script:
