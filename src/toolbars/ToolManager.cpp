@@ -494,7 +494,7 @@ static struct DefaultConfigEntry {
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
-   { DeviceBarID,            ScrubbingBarID,         TransportBarID         },
+   { DeviceBarID,            ScrubbingBarID,         NoBarID         },
 
    // Hidden by default in top dock
    { MeterBarID,             NoBarID,                NoBarID                },
@@ -852,7 +852,7 @@ void ToolManager::ReadConfig()
                // Remember not to place the device toolbar again
                deviceWasPositioned = true;
             }
-
+            Expose( t->GetId(), show[ t->GetId() ] );
             continue;
          }
 
