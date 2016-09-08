@@ -547,6 +547,7 @@ public:
 
    // The project's name and file info
    wxString mFileName;
+   bool mbLoadedFromAup;
    std::shared_ptr<DirManager> mDirManager; // MM: DirManager now created dynamically
 
    double mRate;

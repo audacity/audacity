@@ -877,7 +877,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
      mUndoManager(std::make_unique<UndoManager>()),
-     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
+     mbLoadedFromAup( false )
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -1381,6 +1382,7 @@ void AudacityProject::SetProjectTitle( int number)
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if( name.IsEmpty() )
    {
+      mbLoadedFromAup = false;
       name = wxT("Audacity");
    }
 
@@ -2947,6 +2949,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    ///
 
    mFileName = fileName;
+   mbLoadedFromAup = true;
 
    mRecoveryAutoSaveDataDir = wxT("");
    mIsRecovered = false;
@@ -3284,6 +3287,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                realFileName += wxT(".aup");
                projPath = realFileDir.GetFullPath();
                mFileName = wxFileName(projPath, realFileName).GetFullPath();
+               mbLoadedFromAup = true;
                projName = value;
             }
 
@@ -3989,6 +3993,7 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    if (initiallyEmpty && mDirManager->GetProjectName() == wxT("")) {
       wxString name = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast(wxT('.'));
       mFileName =::wxPathOnly(fileName) + wxFILE_SEP_PATH + name + wxT(".aup");
+      mbLoadedFromAup = false;
       SetProjectTitle();
    }
 
@@ -4095,10 +4100,11 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 {
    wxString oldFileName = mFileName;
 
+   bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==newFileName);
    //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
-   if(mFileName!=newFileName && wxFileExists(newFileName)) {
+   if( !bOwnsNewAupName && wxFileExists(newFileName)) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -4109,7 +4115,8 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    }
 
    mFileName = newFileName;
-   SetProjectTitle();
+   //Don't change the title, unless we succeed.
+   //SetProjectTitle();
 
    bool success = Save(false, true, bWantSaveCompressed);
 
@@ -4118,8 +4125,10 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    }
    if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
    {
-      // Reset file name on error
+      // Restore file name on error
       mFileName = oldFileName;
+   } else {
+      mbLoadedFromAup = true;
       SetProjectTitle();
    }
 
@@ -4180,10 +4189,11 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
+   bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==fName);
    //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
-   if (mFileName != fName && filename.FileExists()) {
+   if (!bOwnsNewAupName && filename.FileExists()) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -4195,7 +4205,6 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
    wxString oldFileName = mFileName;
    mFileName = fName;
-   SetProjectTitle();
 
    bool success = Save(false, true, bWantSaveCompressed);
 
@@ -4206,8 +4215,11 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    {
       // Reset file name on error
       mFileName = oldFileName;
+   } else {
+      mbLoadedFromAup = true;
       SetProjectTitle();
    }
+
 
    return(success);
 }
@@ -5505,17 +5517,16 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    }
 
    mFileName = sNewFileName;
-   SetProjectTitle();
 
    bool bSuccess = Save(false, true, false);
 
    if (bSuccess) {
       wxGetApp().AddFileToHistory(mFileName);
-   } else
-   {
-      // Reset file name on error
-      mFileName = sOldFilename;
+      mbLoadedFromAup = true;
       SetProjectTitle();
+   } else  {
+      // Restore file name on error
+      mFileName = sOldFilename;
    }
 
    return bSuccess;
