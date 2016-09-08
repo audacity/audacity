@@ -19,7 +19,6 @@
 
 #include "ToolBar.h"
 
-class wxArrayPtrVoid;
 class wxCommandEvent;
 class wxEraseEvent;
 class wxSizeEvent;

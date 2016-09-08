@@ -494,8 +494,8 @@ private:
 
    bool mUIDebug;
 
-   wxArrayPtrVoid mIMap;
-   wxArrayPtrVoid mOMap;
+   std::vector<Track*> mIMap;
+   std::vector<Track*> mOMap;
 
    int mNumTracks; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
    int mNumGroups;

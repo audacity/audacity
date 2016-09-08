@@ -2046,8 +2046,8 @@ void Effect::CopyInputTracks()
 void Effect::CopyInputTracks(int trackType)
 {
    // Reset map
-   mIMap.Clear();
-   mOMap.Clear();
+   mIMap.clear();
+   mOMap.clear();
 
    mOutputTracks = std::make_unique<TrackList>();
    mOutputTracksType = trackType;
@@ -2063,16 +2063,16 @@ void Effect::CopyInputTracks(int trackType)
             (trackType == Track::All && aTrack->IsSyncLockSelected()))
       {
          Track *o = mOutputTracks->Add(aTrack->Duplicate());
-         mIMap.Add(aTrack);
-         mOMap.Add(o);
+         mIMap.push_back(aTrack);
+         mOMap.push_back(o);
       }
    }
 }
 
 Track *Effect::AddToOutputTracks(std::unique_ptr<Track> &&t)
 {
-   mIMap.Add(NULL);
-   mOMap.Add(t.get());
+   mIMap.push_back(NULL);
+   mOMap.push_back(t.get());
    return mOutputTracks->Add(std::move(t));
 }
 
@@ -2178,8 +2178,8 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       mOutputTracks->Clear();
 
       // Reset map
-      mIMap.Clear();
-      mOMap.Clear();
+      mIMap.clear();
+      mOMap.clear();
 
       //TODO:undo the non-gui ODTask transfer
       return;
@@ -2187,7 +2187,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    auto iterOut = mOutputTracks->begin(), iterEnd = mOutputTracks->end();
 
-   size_t cnt = mOMap.GetCount();
+   size_t cnt = mOMap.size();
    size_t i = 0;
 
    for (; iterOut != iterEnd; ++i) {
@@ -2195,7 +2195,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
       while (i < cnt && mOMap[i] != o.get()) {
-         Track *t = (Track *) mIMap[i];
+         const auto t = mIMap[i];
          if (t) {
             mTracks->Remove(t);
          }
@@ -2208,7 +2208,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // Remove the track from the output list...don't DELETE it
       iterOut = mOutputTracks->erase(iterOut);
 
-      Track *t = (Track *) mIMap[i];
+      const auto  t = mIMap[i];
       if (t == NULL)
       {
          // This track is a NEW addition to output tracks; add it to mTracks
@@ -2232,16 +2232,16 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    // If tracks were removed from mOutputTracks, then there may be tracks
    // left at the end of the map that must be removed from mTracks.
    while (i < cnt) {
-      Track *t = (Track *) mIMap[i];
+      const auto t = mIMap[i];
       if (t) {
-         mTracks->Remove((Track *)mIMap[i]);
+         mTracks->Remove(t);
       }
       i++;
    }
 
    // Reset map
-   mIMap.Clear();
-   mOMap.Clear();
+   mIMap.clear();
+   mOMap.clear();
 
    // Make sure we processed everything
    wxASSERT(mOutputTracks->empty());

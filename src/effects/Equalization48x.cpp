@@ -329,10 +329,11 @@ bool EffectEqualization48x::TrackCompare()
       mEffectEqualization->mM=(mEffectEqualization->mM&(~15))+1;
    AllocateBuffersWorkers(sMathPath&MATH_FUNCTION_THREADED);
    // Reset map
-   wxArrayPtrVoid SecondIMap;
-   wxArrayPtrVoid SecondOMap;
-   SecondIMap.Clear();
-   SecondOMap.Clear();
+   // PRL:  These two maps aren't really used
+   std::vector<Track*> SecondIMap;
+   std::vector<Track*> SecondOMap;
+   SecondIMap.clear();
+   SecondOMap.clear();
    
    TrackList      SecondOutputTracks;
 
@@ -346,8 +347,8 @@ bool EffectEqualization48x::TrackCompare()
          (mEffectEqualization->mOutputTracksType == Track::All && aTrack->IsSyncLockSelected()))
       {
          auto o = aTrack->Duplicate();
-         SecondIMap.Add(aTrack);
-         SecondIMap.Add(o.get());
+         SecondIMap.push_back(aTrack);
+         SecondIMap.push_back(o.get());
          SecondOutputTracks.Add(std::move(o));
       }
    }

@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WIDGETS_FILEHISTORY__
 #define __AUDACITY_WIDGETS_FILEHISTORY__
 
+#include <vector>
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/dynarray.h>
@@ -43,7 +44,7 @@ class AUDACITY_DLL_API FileHistory
    size_t mMaxFiles;
    wxWindowID mIDBase;
 
-   wxArrayPtrVoid mMenus;
+   std::vector<wxMenu*> mMenus;
    wxArrayString mHistory;
 
 };

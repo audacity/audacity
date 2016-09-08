@@ -100,19 +100,27 @@ size_t FileHistory::GetCount()
 
 void FileHistory::UseMenu(wxMenu *menu)
 {
-   wxASSERT(mMenus.Index(menu) == wxNOT_FOUND);
+   auto end = mMenus.end();
+   auto iter = std::find(mMenus.begin(), end, menu);
+   auto found = (iter != end);
 
-   if (mMenus.Index(menu) == wxNOT_FOUND) {
-      mMenus.Add(menu);
+   if (!found)
+      mMenus.push_back(menu);
+   else {
+      wxASSERT(false);
    }
 }
 
 void FileHistory::RemoveMenu(wxMenu *menu)
 {
-   wxASSERT(mMenus.Index(menu) != wxNOT_FOUND);
+   auto end = mMenus.end();
+   auto iter = std::find(mMenus.begin(), end, menu);
+   auto found = (iter != end);
 
-   if (mMenus.Index(menu) != wxNOT_FOUND) {
-      mMenus.Remove(menu);
+   if (found)
+      mMenus.erase(iter);
+   else {
+      wxASSERT(false);
    }
 }
 
@@ -151,9 +159,8 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
 
 void FileHistory::AddFilesToMenu()
 {
-   for (size_t i = 0; i < mMenus.GetCount(); i++) {
-      AddFilesToMenu((wxMenu *) mMenus[i]);
-   }
+   for (auto pMenu : mMenus)
+      AddFilesToMenu(pMenu);
 }
 
 void FileHistory::AddFilesToMenu(wxMenu *menu)

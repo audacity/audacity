@@ -925,9 +925,8 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    }
 
    // Restore the selection states
-   for (size_t i = 0; i < mSelected.GetCount(); i++) {
-      selected[i]->SetSelected(true);
-   }
+   for (auto pTrack : mSelected)
+      pTrack->SetSelected(true);
 
    return ok ;
 }
