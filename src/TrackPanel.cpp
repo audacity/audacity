@@ -8272,14 +8272,11 @@ int TrackPanel::IdOfFormat( int format )
 /// Puts a check mark at a given position in a menu.
 void TrackPanel::SetMenuCheck( wxMenu & menu, int newId )
 {
-   wxMenuItemList & list = menu.GetMenuItems();
-   wxMenuItem * item;
-   int id;
+   auto & list = menu.GetMenuItems();
 
-   for ( wxMenuItemList::compatibility_iterator node = list.GetFirst(); node; node = node->GetNext() )
+   for ( auto item : list )
    {
-      item = node->GetData();
-      id = item->GetId();
+      auto id = item->GetId();
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
       if (id==newId)
          menu.Check( id, true );

@@ -166,11 +166,8 @@ void FileHistory::AddFilesToMenu()
 void FileHistory::AddFilesToMenu(wxMenu *menu)
 {
    wxMenuItemList items = menu->GetMenuItems();
-   wxMenuItemList::compatibility_iterator node = items.GetFirst();
-   while (node) {
-      menu->Destroy((wxMenuItem *) node->GetData());
-      node = node->GetNext();
-   }
+   for (auto end = items.end(), iter = items.begin(); iter != end;)
+      menu->Destroy(*iter++);
 
    for (size_t i = 0; i < mHistory.GetCount(); i++) {
       menu->Append(mIDBase + 1 + i, mHistory[i]);
