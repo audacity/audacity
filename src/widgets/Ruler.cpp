@@ -2138,8 +2138,14 @@ namespace {
 #else
       wxMouseState State = wxGetMouseState();
       if( State.LeftIsDown() )
-         return _("Release and move to Scrub. Drag to Seek.");
-      return _("Move to Scrub, drag to Seek");
+         // Since mouse is down, mention dragging first.
+         // IsScrubbing is true if Scrubbing OR seeking.
+         if( scrubber.IsOneShotSeeking() )
+            return _("Drag to Seek.  Release to stop seeking.");
+         else 
+            return _("Drag to Seek.  Release and move to Scrub.");
+      // Since mouse is up, mention moving first.
+      return _("Move to Scrub. Drag to Seek.");
 #endif
    }
 
@@ -2457,6 +2463,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       return;
    }
    else if( !HasCapture() && evt.LeftUp() && inScrubZone ) {
+      if( scrubber.IsOneShotSeeking() ){
+         scrubber.mInOneShotMode = false;
+         return;
+      }
       //wxLogDebug("up");
       // mouse going up => we shift to scrubbing.
       scrubber.MarkScrubStart(evt.m_x,
@@ -2472,6 +2482,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       bool repaint_all = false;
       if (evt.LeftDown()) {
          //wxLogDebug("down");
+         scrubber.mInOneShotMode = !scrubber.IsScrubbing();
          scrubber.MarkScrubStart(evt.m_x,
             TracksPrefs::GetPinnedHeadPreference(), false);
          UpdateStatusBarAndTooltips(StatusChoice::EnteringScrubZone);

@@ -194,6 +194,8 @@ Scrubber::Scrubber(AudacityProject *project)
    , mProject(project)
    , mPoller { std::make_unique<ScrubPoller>(*this) }
    , mOptions {}
+   , mInOneShotMode( false )
+
 {
    if (wxTheApp)
       wxTheApp->Connect
