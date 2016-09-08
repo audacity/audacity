@@ -12,6 +12,7 @@
 #define __AUDACITY_WIDGETS_FILEHISTORY__
 
 #include <vector>
+#include <algorithm>
 #include <wx/defs.h>
 #include <wx/choice.h>
 #include <wx/dynarray.h>
