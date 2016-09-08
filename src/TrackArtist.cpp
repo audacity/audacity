@@ -2015,7 +2015,7 @@ void TrackArtist::DrawSpectrum(const WaveTrack *track,
 }
 
 static inline float findValue
-(const float *spectrum, float bin0, float bin1, int half,
+(const float *spectrum, float bin0, float bin1, unsigned half,
  bool autocorrelation, int gain, int range)
 {
    float value;
@@ -2035,7 +2035,7 @@ static inline float findValue
          bin0 += 1.0;
       }
       // Do not reference past end of freq array.
-      if (int(bin1) >= half) {
+      if (int(bin1) >= (int)half) {
          bin1 -= 1.0;
       }
 
@@ -2043,7 +2043,6 @@ static inline float findValue
       value /= binwidth;
    }
 #else
-   wxUnusedVar(half);
    // Maximum method, and no apportionment of any single bins over multiple pixel rows
    // See Bug971
    int index, limitIndex;
@@ -2058,8 +2057,8 @@ static inline float findValue
       ));
    }
    else {
-      index = std::min(half - 1, int(floor(0.5 + bin0)));
-      limitIndex = std::min(half, int(floor(0.5 + bin1)));
+      index = std::min<int>(half - 1, int(floor(0.5 + bin0)));
+      limitIndex = std::min<int>(half, int(floor(0.5 + bin1)));
    }
    value = spectrum[index];
    while (++index < limitIndex)
@@ -2166,14 +2165,15 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       return;
    unsigned char *data = image.GetData();
 
-   const int half = settings.GetFFTLength() / 2;
+   const auto half = settings.GetFFTLength() / 2;
    const double binUnit = rate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
    bool updated;
    {
       const double pps = averagePixelsPerSample * rate;
-      updated = clip->GetSpectrogram(waveTrackCache, freq, where, hiddenMid.width,
+      updated = clip->GetSpectrogram(waveTrackCache, freq, where,
+                                     (size_t)hiddenMid.width,
          t0, pps);
    }
 
@@ -2399,12 +2399,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    const int end = hidden
       ? 0
       : std::min(mid.width, int(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
-   const int numPixels = std::max(0, end - begin);
-   const int zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+   const size_t numPixels = std::max(0, end - begin);
+   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
    SpecCache specCache
       (numPixels, settings.algorithm, -1,
        t0, settings.windowType,
-       settings.windowSize, zeroPaddingFactor, settings.frequencyGain);
+       settings.WindowSize(), zeroPaddingFactor, settings.frequencyGain);
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {
          const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;

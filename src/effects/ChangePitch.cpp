@@ -406,44 +406,41 @@ void EffectChangePitch::DeduceFrequencies()
       // Aim for around 2048 samples at 44.1 kHz (good down to about 100 Hz).
       // To detect single notes, analysis period should be about 0.2 seconds.
       // windowSize must be a power of 2.
-      int windowSize = wxRound(pow(2.0, floor((log(rate / 20.0)/log(2.0)) + 0.5)));
-      // windowSize < 256 too inaccurate
-      windowSize = (windowSize > 256)? windowSize : 256;
+      const size_t windowSize =
+         // windowSize < 256 too inaccurate
+         std::max(256, wxRound(pow(2.0, floor((log(rate / 20.0)/log(2.0)) + 0.5))));
 
       // we want about 0.2 seconds to catch the first note.
       // number of windows rounded to nearest integer >= 1.
-      int numWindows = wxRound((double)(rate / (5.0f * windowSize)));
-      numWindows = (numWindows > 0)? numWindows : 1;
+      const unsigned numWindows =
+         std::max(1, wxRound((double)(rate / (5.0f * windowSize))));
 
       double trackStart = track->GetStartTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
       auto start = track->TimeToLongSamples(t0);
 
-      int analyzeSize = windowSize * numWindows;
+      auto analyzeSize = windowSize * numWindows;
       float * buffer;
       buffer = new float[analyzeSize];
 
       float * freq;
-      freq = new float[windowSize/2];
+      freq = new float[windowSize / 2];
 
       float * freqa;
-      freqa = new float[windowSize/2];
+      freqa = new float[windowSize / 2];
 
-      int i, j, argmax;
-      int lag;
-
-      for(j=0; j<windowSize/2; j++)
+      for(size_t j = 0; j < windowSize / 2; j++)
          freqa[j] = 0;
 
       track->Get((samplePtr) buffer, floatSample, start, analyzeSize);
-      for(i=0; i<numWindows; i++) {
-         ComputeSpectrum(buffer+i*windowSize, windowSize,
+      for(unsigned i = 0; i < numWindows; i++) {
+         ComputeSpectrum(buffer + i * windowSize, windowSize,
                          windowSize, rate, freq, true);
-         for(j=0; j<windowSize/2; j++)
+         for(size_t j = 0; j < windowSize / 2; j++)
             freqa[j] += freq[j];
       }
-      argmax=0;
-      for(j=1; j<windowSize/2; j++)
+      size_t argmax = 0;
+      for(size_t j = 1; j < windowSize / 2; j++)
          if (freqa[j] > freqa[argmax])
             argmax = j;
 
@@ -451,7 +448,7 @@ void EffectChangePitch::DeduceFrequencies()
       delete [] freqa;
       delete [] buffer;
 
-      lag = (windowSize/2 - 1) - argmax;
+      auto lag = (windowSize / 2 - 1) - argmax;
       m_dStartFrequency = rate / lag;
    }
 

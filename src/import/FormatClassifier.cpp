@@ -28,7 +28,6 @@ for classification of the sample format and the used endianness.
 #include <wx/defs.h>
 
 #include "MultiFormatReader.h"
-#include "SpecPowerMeter.h"
 #include "sndfile.h"
 
 FormatClassifier::FormatClassifier(const char* filename) :

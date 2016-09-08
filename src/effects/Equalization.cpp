@@ -434,7 +434,9 @@ bool EffectEqualization::Startup()
    if (gPrefs->Exists(base))
    {
       // These get saved to the current preset
-      gPrefs->Read(base + wxT("FilterLength"), &mM, 4001);
+      int filterLength;
+      gPrefs->Read(base + wxT("FilterLength"), &filterLength, 4001);
+      mM = std::max(0, filterLength);
       if ((mM < 21) || (mM > 8191)) {  // corrupted Prefs?
          mM = 4001;  //default
       }
@@ -808,7 +810,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxEXPAND, 1);
             {
                S.SetStyle(wxSL_HORIZONTAL);
-               mMSlider = S.Id(ID_Length).AddSlider(wxT(""), (mM -1) / 2, 4095, 10);
+               mMSlider = S.Id(ID_Length).AddSlider(wxT(""), (mM - 1) / 2, 4095, 10);
                mMSlider->SetName(_("Length of Filter"));
             }
             S.EndHorizontalLay();
@@ -816,7 +818,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 0);
             {
                wxString label;
-               label.Printf(wxT("%d"), mM);
+               label.Printf(wxT("%ld"), mM);
                mMText = S.AddVariableText(label);
                mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
             }
@@ -963,7 +965,7 @@ bool EffectEqualization::TransferDataToWindow()
 
    mGridOnOff->SetValue( mDrawGrid ); // checks/unchecks the box on the interface
 
-   mMSlider->SetValue((mM-1)/2);
+   mMSlider->SetValue((mM - 1) / 2);
    mM = 0;                        // force refresh in TransferDataFromWindow()
 
    mdBMinSlider->SetValue((int)mdBMin);
@@ -1060,7 +1062,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    AudacityProject *p = GetActiveProject();
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
-   int L = windowSize - (mM - 1);   //Process L samples at a go
+   wxASSERT(mM - 1 < windowSize);
+   size_t L = windowSize - (mM - 1);   //Process L samples at a go
    auto s = start;
    auto idealBlockLen = t->GetMaxBlockSize() * 4;
    if (idealBlockLen % L != 0)
@@ -1075,14 +1078,13 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
    auto originalLen = len;
 
-   int i,j;
-   for(i=0; i<windowSize; i++)
+   for(size_t i = 0; i < windowSize; i++)
       lastWindow[i] = 0;
 
    TrackProgress(count, 0.);
    bool bLoopSuccess = true;
-   int wcopy = 0;
-   int offset = (mM - 1)/2;
+   size_t wcopy = 0;
+   int offset = (mM - 1) / 2;
 
    while (len != 0)
    {
@@ -1090,20 +1092,20 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
       t->Get((samplePtr)buffer, floatSample, s, block);
 
-      for(i=0; i<block; i+=L)   //go through block in lumps of length L
+      for(size_t i = 0; i < block; i += L)   //go through block in lumps of length L
       {
-         wcopy = std::min <int> (L, block - i);
-         for(j=0; j<wcopy; j++)
+         wcopy = std::min <size_t> (L, block - i);
+         for(size_t j = 0; j < wcopy; j++)
             thisWindow[j] = buffer[i+j];   //copy the L (or remaining) samples
-         for(j=wcopy; j<windowSize; j++)
+         for(auto j = wcopy; j < windowSize; j++)
             thisWindow[j] = 0;   //this includes the padding
 
          Filter(windowSize, thisWindow);
 
          // Overlap - Add
-         for(j=0; (j<mM-1) && (j<wcopy); j++)
+         for(size_t j = 0; (j < mM - 1) && (j < wcopy); j++)
             buffer[i+j] = thisWindow[j] + lastWindow[L + j];
-         for(j=mM-1; j<wcopy; j++)
+         for(size_t j = mM - 1; j < wcopy; j++)
             buffer[i+j] = thisWindow[j];
 
          float *tempP = thisWindow;
@@ -1125,20 +1127,21 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    if(bLoopSuccess)
    {
       // mM-1 samples of 'tail' left in lastWindow, get them now
-      if(wcopy < (mM-1)) {
+      if(wcopy < (mM - 1)) {
          // Still have some overlap left to process
          // (note that lastWindow and thisWindow have been exchanged at this point
          //  so that 'thisWindow' is really the window prior to 'lastWindow')
-         for(j=0; j<mM-1-wcopy; j++)
+         size_t j = 0;
+         for(; j < mM - 1 - wcopy; j++)
             buffer[j] = lastWindow[wcopy + j] + thisWindow[L + wcopy + j];
          // And fill in the remainder after the overlap
-         for( ; j<mM-1; j++)
+         for( ; j < mM - 1; j++)
             buffer[j] = lastWindow[wcopy + j];
       } else {
-         for(j=0; j<mM-1; j++)
+         for(size_t j = 0; j < mM - 1; j++)
             buffer[j] = lastWindow[wcopy + j];
       }
-      output->Append((samplePtr)buffer, floatSample, mM-1);
+      output->Append((samplePtr)buffer, floatSample, mM - 1);
       output->Flush();
 
       // now move the appropriate bit of the output back to the track
@@ -1182,7 +1185,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
       }
       //now go thru and replace the old clips with NEW
-      for(unsigned int i=0;i<clipStartEndTimes.size();i++)
+      for(unsigned int i = 0; i < clipStartEndTimes.size(); i++)
       {
          //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
@@ -1217,7 +1220,7 @@ bool EffectEqualization::CalcFilter()
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
 
-   double delta = mHiFreq / ((double)(mWindowSize/2.));
+   double delta = mHiFreq / ((double)(mWindowSize / 2.));
    double val0;
    double val1;
 
@@ -1234,8 +1237,7 @@ bool EffectEqualization::CalcFilter()
    mFilterFuncR[0] = val0;
    double freq = delta;
 
-   int i;
-   for(i=1; i<=mWindowSize/2; i++)
+   for(size_t i = 1; i <= mWindowSize / 2; i++)
    {
       double when;
       if( IsLinear() )
@@ -1259,55 +1261,68 @@ bool EffectEqualization::CalcFilter()
       }
       freq += delta;
    }
-   mFilterFuncR[mWindowSize/2] = val1;
+   mFilterFuncR[mWindowSize / 2] = val1;
 
    mFilterFuncR[0] = DB_TO_LINEAR(mFilterFuncR[0]);
-   for(i=1;i<mWindowSize/2;i++)
+
    {
-      mFilterFuncR[i] = DB_TO_LINEAR(mFilterFuncR[i]);
-      mFilterFuncR[mWindowSize-i]=mFilterFuncR[i];   //Fill entire array
+      size_t i = 1;
+      for(; i < mWindowSize / 2; i++)
+      {
+         mFilterFuncR[i] = DB_TO_LINEAR(mFilterFuncR[i]);
+         mFilterFuncR[mWindowSize - i] = mFilterFuncR[i];   //Fill entire array
+      }
+      mFilterFuncR[i] = DB_TO_LINEAR(mFilterFuncR[i]);   //do last one
    }
-   mFilterFuncR[i] = DB_TO_LINEAR(mFilterFuncR[i]);   //do last one
 
    //transfer to time domain to do the padding and windowing
    float *outr = new float[mWindowSize];
    float *outi = new float[mWindowSize];
    InverseRealFFT(mWindowSize, mFilterFuncR, NULL, outr); // To time domain
 
-   for(i=0;i<=(mM-1)/2;i++)
-   {  //Windowing - could give a choice, fixed for now - MJS
-      //      double mult=0.54-0.46*cos(2*M_PI*(i+(mM-1)/2.0)/(mM-1));   //Hamming
-      //Blackman
-      double mult=0.42-0.5*cos(2*M_PI*(i+(mM-1)/2.0)/(mM-1))+.08*cos(4*M_PI*(i+(mM-1)/2.0)/(mM-1));
-      outr[i]*=mult;
-      if(i!=0){
-         outr[mWindowSize-i]*=mult;
+   {
+      size_t i = 0;
+      for(; i <= (mM - 1) / 2; i++)
+      {  //Windowing - could give a choice, fixed for now - MJS
+         //      double mult=0.54-0.46*cos(2*M_PI*(i+(mM-1)/2.0)/(mM-1));   //Hamming
+         //Blackman
+         double mult =
+            0.42 -
+            0.5 * cos(2 * M_PI * (i + (mM - 1) / 2.0) / (mM - 1)) +
+            .08 * cos(4 * M_PI * (i + (mM - 1) / 2.0) / (mM - 1));
+         outr[i] *= mult;
+         if(i != 0){
+            outr[mWindowSize - i] *= mult;
+         }
+      }
+      for(; i <= mWindowSize / 2; i++)
+      {   //Padding
+         outr[i] = 0;
+         outr[mWindowSize - i] = 0;
       }
    }
-   for(;i<=mWindowSize/2;i++)
-   {   //Padding
-      outr[i]=0;
-      outr[mWindowSize-i]=0;
-   }
    float *tempr = new float[mM];
-   for(i=0;i<(mM-1)/2;i++)
-   {   //shift so that padding on right
-      tempr[(mM-1)/2+i]=outr[i];
-      tempr[i]=outr[mWindowSize-(mM-1)/2+i];
+   {
+      size_t i = 0;
+      for(; i < (mM - 1) / 2; i++)
+      {   //shift so that padding on right
+         tempr[(mM - 1) / 2 + i] = outr[i];
+         tempr[i] = outr[mWindowSize - (mM - 1) / 2 + i];
+      }
+      tempr[(mM - 1) / 2 + i] = outr[i];
    }
-   tempr[(mM-1)/2+i]=outr[i];
 
-   for(i=0;i<mM;i++)
+   for(size_t i = 0; i < mM; i++)
    {   //and copy useful values back
-      outr[i]=tempr[i];
+      outr[i] = tempr[i];
    }
-   for(i=mM;i<mWindowSize;i++)
+   for(size_t i = mM; i < mWindowSize; i++)
    {   //rest is padding
       outr[i]=0.;
    }
 
    //Back to the frequency domain so we can use it
-   RealFFT(mWindowSize,outr,mFilterFuncR,mFilterFuncI);
+   RealFFT(mWindowSize, outr, mFilterFuncR, mFilterFuncI);
 
    delete[] outr;
    delete[] outi;
@@ -1316,9 +1331,8 @@ bool EffectEqualization::CalcFilter()
    return TRUE;
 }
 
-void EffectEqualization::Filter(sampleCount len, float *buffer)
+void EffectEqualization::Filter(size_t len, float *buffer)
 {
-   int i;
    float re,im;
    // Apply FFT
    RealFFTf(buffer, hFFT);
@@ -1327,7 +1341,7 @@ void EffectEqualization::Filter(sampleCount len, float *buffer)
    // Apply filter
    // DC component is purely real
    mFFTBuffer[0] = buffer[0] * mFilterFuncR[0];
-   for(i=1; i<(len/2); i++)
+   for(size_t i = 1; i < (len / 2); i++)
    {
       re=buffer[hFFT->BitReversed[i]  ];
       im=buffer[hFFT->BitReversed[i]+1];
@@ -3021,7 +3035,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxSOLID));
    double scale = (double)mEnvRect.height/(mEffect->mdBMax-mEffect->mdBMin);   //pixels per dB
    double yF;   //gain at this freq
-   double delta = mEffect->mHiFreq/(((double)mEffect->mWindowSize/2.));   //size of each freq bin
+   double delta = mEffect->mHiFreq / (((double)mEffect->mWindowSize / 2.));   //size of each freq bin
 
    bool lin = mEffect->IsLinear();   // log or lin scale?
 
@@ -3029,7 +3043,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    double step = lin ? mEffect->mHiFreq : (log10(mEffect->mHiFreq) - loLog);
    step /= ((double)mEnvRect.width-1.);
    double freq;   //actual freq corresponding to x position
-   int halfM = (mEffect->mM-1)/2;
+   int halfM = (mEffect->mM - 1) / 2;
    int n;   //index to mFreqFunc
    for(int i=0; i<mEnvRect.width; i++)
    {

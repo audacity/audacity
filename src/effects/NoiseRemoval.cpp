@@ -363,7 +363,7 @@ void EffectNoiseRemoval::StartNewTrack()
 
    mInputPos = 0;
    mInSampleCount = 0;
-   mOutSampleCount = -(mWindowSize / 2) * (mHistoryLen - 1);
+   mOutSampleCount = -(int)((mWindowSize / 2) * (mHistoryLen - 1));
 }
 
 void EffectNoiseRemoval::ProcessSamples(sampleCount len, float *buffer)

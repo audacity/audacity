@@ -7,16 +7,16 @@
 struct FFTParam {
    int *BitReversed;
    fft_type *SinTable;
-   int Points;
+   size_t Points;
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    int pow2Bits;
 #endif
 };
 typedef FFTParam * HFFT;
 
-HFFT InitializeFFT(int);
+HFFT InitializeFFT(size_t);
 void EndFFT(HFFT);
-HFFT GetFFT(int);
+HFFT GetFFT(size_t);
 void ReleaseFFT(HFFT);
 void CleanupFFT();
 void RealFFTf(fft_type *,HFFT);

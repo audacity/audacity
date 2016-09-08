@@ -130,25 +130,25 @@ private:
    bool ProcessBuffer(fft_type *sourceBuffer, fft_type *destBuffer, sampleCount bufferLength);
    bool ProcessBuffer1x(BufferInfo *bufferInfo);
    bool ProcessOne1x(int count, WaveTrack * t, sampleCount start, sampleCount len);
-   void Filter1x(sampleCount len, float *buffer, float *scratchBuffer);
+   void Filter1x(size_t len, float *buffer, float *scratchBuffer);
 
    bool ProcessBuffer4x(BufferInfo *bufferInfo);
    bool ProcessOne4x(int count, WaveTrack * t, sampleCount start, sampleCount len);
    bool ProcessOne1x4xThreaded(int count, WaveTrack * t, sampleCount start, sampleCount len, int processingType=4);
-   void Filter4x(sampleCount len, float *buffer, float *scratchBuffer);
+   void Filter4x(size_t len, float *buffer, float *scratchBuffer);
 
 #ifdef __AVX_ENABLED
    bool ProcessBuffer8x(BufferInfo *bufferInfo);
    bool ProcessOne8x(int count, WaveTrack * t, sampleCount start, sampleCount len);
    bool ProcessOne8xThreaded(int count, WaveTrack * t, sampleCount start, sampleCount len);
-   void Filter8x(sampleCount len, float *buffer, float *scratchBuffer);
+   void Filter8x(size_t len, float *buffer, float *scratchBuffer);
 #endif
    
    EffectEqualization* mEffectEqualization;
    int mThreadCount;
-   sampleCount mFilterSize;
-   sampleCount mBlockSize;
-   sampleCount mWindowSize;
+   size_t mFilterSize;
+   size_t mBlockSize;
+   size_t  mWindowSize;
    int mBufferCount;
    int mWorkerDataCount;
    int mBlocksPerBuffer;

@@ -371,8 +371,8 @@ namespace
 {
    enum { WINDOW, TWINDOW, DWINDOW };
    void RecreateWindow(
-      float *&window, int which, int fftLen,
-      int padding, int windowType, int windowSize, double &scale)
+      float *&window, int which, size_t fftLen,
+      size_t padding, int windowType, size_t windowSize, double &scale)
    {
       if (window != NULL)
          delete[] window;
@@ -402,7 +402,7 @@ namespace
          // Future, reassignment
       case TWINDOW:
          NewWindowFunc(windowType, windowSize, extra, window + padding);
-         for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
+         for (int ii = padding, multiplier = -(int)windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
             window[ii] *= multiplier;
          break;
       case DWINDOW:
@@ -429,8 +429,8 @@ void SpectrogramSettings::CacheWindows() const
    if (hFFT == NULL || window == NULL) {
 
       double scale;
-      const int fftLen = windowSize * zeroPaddingFactor;
-      const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+      const auto fftLen = WindowSize() * ZeroPaddingFactor();
+      const auto padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
 
       if (hFFT != NULL)
          EndFFT(hFFT);
@@ -475,7 +475,7 @@ void SpectrogramSettings::ConvertToActualWindowSizes()
 #endif
 }
 
-int SpectrogramSettings::GetFFTLength() const
+size_t SpectrogramSettings::GetFFTLength() const
 {
    return windowSize
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
@@ -488,7 +488,7 @@ NumberScale SpectrogramSettings::GetScale
 (float minFreq, float maxFreq, double rate, bool bins) const
 {
    NumberScaleType type = nstLinear;
-   const int half = GetFFTLength() / 2;
+   const auto half = GetFFTLength() / 2;
 
    // Don't assume the correspondence of the enums will remain direct in the future.
    // Do this switch.

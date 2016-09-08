@@ -2346,7 +2346,7 @@ inline double findMaxRatio(double center, double rate)
 void TrackPanel::SnapCenterOnce(const WaveTrack *pTrack, bool up)
 {
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
-   const int windowSize = settings.GetFFTLength();
+   const auto windowSize = settings.GetFFTLength();
    const double rate = pTrack->GetRate();
    const double nyq = rate / 2.0;
    const double binFrequency = rate / windowSize;
@@ -2409,7 +2409,7 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
    // except, shrink the window as needed so we get some answers
 
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
-   int windowSize = settings.GetFFTLength();
+   auto windowSize = settings.GetFFTLength();
 
    while(windowSize > effectiveLength)
       windowSize >>= 1;
@@ -4102,7 +4102,7 @@ void TrackPanel::HandleWaveTrackVZoom
    if (spectral) {
       track->GetSpectrumBounds(&min, &max);
       scale = (settings.GetScale(min, max, rate, false));
-      const int fftLength = settings.GetFFTLength();
+      const auto fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
 
       // JKC:  Following discussions of Bug 1208 I'm allowing zooming in 

@@ -50,8 +50,8 @@ Param( MaximumPause,       double,  XO("MaximumPause"),     1.0,     0.0,     DB
  * Common constants
  */
 
-static const int kBufSize = 131072;     // number of samples to process at once
-static const int kRMSWindowSize = 100;  // samples in circular RMS window buffer
+enum : size_t { kBufSize = 131072 };     // number of samples to process at once
+enum : size_t { kRMSWindowSize = 100 };  // samples in circular RMS window buffer
 
 /*
  * A auto duck region and an array of auto duck regions

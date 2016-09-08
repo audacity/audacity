@@ -100,12 +100,20 @@ public:
    int frequencyGain;
 
    int windowType;
+
+private:
    int windowSize;
+public:
+   size_t WindowSize() const { return windowSize; }
+
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+private:
    int zeroPaddingFactor;
+public:
+   size_t ZeroPaddingFactor() const { return zeroPaddingFactor; }
 #endif
 
-   int GetFFTLength() const; // window size (times zero padding, if STFT)
+   size_t GetFFTLength() const; // window size (times zero padding, if STFT)
 
    bool isGrayscale;
 

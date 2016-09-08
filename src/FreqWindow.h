@@ -62,8 +62,8 @@ public:
    // Return true iff successful
    bool Calculate(Algorithm alg,
       int windowFunc, // see FFT.h for values
-      int windowSize, double rate,
-      const float *data, int dataLen,
+      size_t windowSize, double rate,
+      const float *data, size_t dataLen,
       float *pYMin = NULL, float *pYMax = NULL, // outputs
       FreqGauge *progress = NULL);
 
@@ -80,7 +80,7 @@ private:
 private:
    Algorithm mAlg;
    double mRate;
-   int mWindowSize;
+   size_t mWindowSize;
    std::vector<float> mProcessed;
 };
 
@@ -199,9 +199,9 @@ private:
 
 
    double mRate;
-   int mDataLen;
+   size_t mDataLen;
    float *mData;
-   int mWindowSize;
+   size_t mWindowSize;
 
    bool mLogAxis;
    float mYMin;
