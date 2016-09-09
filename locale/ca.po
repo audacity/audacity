@@ -1,19 +1,20 @@
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # Francesc Busquets <fbusquets@yahoo.com>, 2007.
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2016.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ca\n"
+"Project-Id-Version: audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2015-09-07 12:40+0100\n"
-"PO-Revision-Date: 2016-05-26 11:08+0200\n"
+"POT-Creation-Date: 2016-08-22 18:29+0200\n"
+"PO-Revision-Date: 2016-08-22 18:29+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.8.8\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
@@ -56,9 +57,8 @@ msgid "File dialog failed with error code %0lx."
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:195
-#, fuzzy
 msgid "&Nyquist Workbench..."
-msgstr "Línia d'ordres del Nyquist..."
+msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "&Undo\tCtrl+Z"
@@ -125,19 +125,16 @@ msgid "Split &Vertically"
 msgstr "Encabeix &verticalment"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:779
-#, fuzzy
 msgid "Split &Horizontally"
-msgstr "Horitzontal"
+msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:781
-#, fuzzy
 msgid "Show S&cript"
-msgstr "Mostra la sortida"
+msgstr "Mostra l's&cript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:782
-#, fuzzy
 msgid "Show &Output"
-msgstr "Mostra la sortida"
+msgstr "Mostra la s&ortida"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
 msgid "&Large Icons"
@@ -231,9 +228,8 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1427
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1495
-#, fuzzy
 msgid "Nyquist Effect Workbench"
-msgstr "Efectes Nyquist"
+msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1494
 msgid "No matches found"
@@ -248,9 +244,8 @@ msgid "Untitled"
 msgstr "Sense títol"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1651
-#, fuzzy
 msgid "Nyquist Effect Workbench - "
-msgstr "Efectes Nyquist"
+msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715 src/PluginManager.cpp:492
 #: src/prefs/ModulePrefs.cpp:102
@@ -336,7 +331,7 @@ msgstr "Desfés"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726
 msgid "Undo last change"
-msgstr "Desfés l'ultim canvi"
+msgstr "Desfés l'últim canvi"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727 src/prefs/KeyConfigPrefs.cpp:888
 #: src/toolbars/EditToolBar.cpp:148 src/toolbars/EditToolBar.cpp:209
@@ -423,9 +418,8 @@ msgid "Panel 1"
 msgstr ""
 
 #: lib-src/mod-track-panel/TrackPanel2.cpp:68
-#, fuzzy
 msgid "Diagnostics"
-msgstr "executa l'autodiagnòstic"
+msgstr "Diagnòstics"
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -446,7 +440,7 @@ msgstr "assegurament de la qualitat"
 
 #: src/AboutDialog.cpp:179
 msgid "About Audacity"
-msgstr "Quant a l'Audacity"
+msgstr "Quant a Audacity"
 
 #: src/AboutDialog.cpp:215
 msgid ""
@@ -455,10 +449,10 @@ msgid ""
 "href=\"http://audacityteam.org/download\">available</a> for Windows, Mac, "
 "and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"L'Audacity és un programa lliure escrit per un equip de <a href=\"http://"
-"audacityteam.org/about/credits\">desenvolupadors</a>. L'Audacity està <a "
-"href=\"http://audacityteam.org/download\">disponible</a> per a Windows, Mac "
-"i GNU/Linux (així com per a altres sistemes Unix)."
+"Audacity és un programa lliure escrit per un equip de <a href=\"http://"
+"audacityteam.org/about/credits\">desenvolupadors</a>. Audacity està <a href="
+"\"http://audacityteam.org/download\">disponible</a> per a Windows, Mac i GNU/"
+"Linux (així com per a altres sistemes Unix)."
 
 #: src/AboutDialog.cpp:225
 msgid ""
@@ -488,7 +482,7 @@ msgid ""
 "free, open source, cross-platform software for recording and editing "
 "sounds<br>"
 msgstr ""
-"programari lliure, multi-plataforma i de codi obert per enregistrar i editar "
+"programari lliure, multiplataforma i de codi obert per enregistrar i editar "
 "sons<br>"
 
 #: src/AboutDialog.cpp:254
@@ -497,11 +491,11 @@ msgstr "Crèdits"
 
 #: src/AboutDialog.cpp:257
 msgid "Audacity Developers"
-msgstr "Desenvolupadors de l'Audacity:"
+msgstr "Desenvolupadors d'Audacity:"
 
 #: src/AboutDialog.cpp:260
 msgid "Audacity Support Team"
-msgstr "Equip de suport de l'Audacity"
+msgstr "Equip de suport d'Audacity"
 
 #: src/AboutDialog.cpp:263
 msgid "Emeritus Developers"
@@ -517,7 +511,7 @@ msgstr "Altres contribuïdors"
 
 #: src/AboutDialog.cpp:272
 msgid "Audacity is based on code from the following projects:"
-msgstr "L'Audacity està basat en codi dels següents projectes:"
+msgstr "Audacity està basat en codi dels següents projectes:"
 
 #: src/AboutDialog.cpp:275
 msgid "Special thanks:"
@@ -536,7 +530,7 @@ msgstr ""
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp:336 src/AboutDialog.cpp:349 src/AboutDialog.cpp:520
 msgid "Build Information"
-msgstr "Informació de compilació"
+msgstr "Informació de la construcció"
 
 #: src/AboutDialog.cpp:342 src/PluginManager.cpp:490
 #: src/prefs/ModulePrefs.cpp:99
@@ -627,7 +621,7 @@ msgstr "Compatibilitat amb els canvis extrems de tonalitat i de tempo"
 
 #: src/AboutDialog.cpp:524
 msgid "Program build date: "
-msgstr "Data de compilació del programa:"
+msgstr "Data de construcció del programa:"
 
 #: src/AboutDialog.cpp:530
 msgid "Commit Id:"
@@ -635,15 +629,15 @@ msgstr "Id. de pujada:"
 
 #: src/AboutDialog.cpp:535 src/AboutDialog.cpp:537
 msgid "Build type:"
-msgstr "Tipus de compilació:"
+msgstr "Tipus de construcció:"
 
 #: src/AboutDialog.cpp:535
 msgid "Debug build"
-msgstr "Versió de proves"
+msgstr "Construcció de depuració"
 
 #: src/AboutDialog.cpp:537
 msgid "Release build"
-msgstr "Versió final"
+msgstr "Construcció de llançament"
 
 #: src/AboutDialog.cpp:543
 msgid "Installation Prefix: "
@@ -701,7 +695,7 @@ msgstr "Informe generat per a:"
 
 #: src/AudacityApp.cpp:1081
 msgid "Audacity Support Data"
-msgstr "Dades de suport de l'Audacity"
+msgstr "Dades de suport d'Audacity"
 
 #: src/AudacityApp.cpp:1166
 msgid "Master Gain Control"
@@ -721,7 +715,7 @@ msgstr "Ha fallat la descodificació\n"
 
 #: src/AudacityApp.cpp:1369
 msgid "Audacity is starting up..."
-msgstr "L'Audacity s'està iniciant..."
+msgstr "Audacity s'està iniciant..."
 
 #. i18n-hint: "New" is an action (verb) to create a new project
 #: src/AudacityApp.cpp:1387 src/Menus.cpp:341
@@ -739,7 +733,7 @@ msgstr "Obre un fitxer &recent..."
 
 #: src/AudacityApp.cpp:1390 src/Menus.cpp:1089
 msgid "&About Audacity..."
-msgstr "Quant a l'&Audacity..."
+msgstr "Quant a &Audacity..."
 
 #: src/AudacityApp.cpp:1391
 msgid "&Preferences..."
@@ -754,7 +748,7 @@ msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"L'Audacity no troba cap lloc per desar-hi els fitxers temporals.\n"
+"Audacity no troba cap lloc per desar-hi els fitxers temporals.\n"
 "Si us plau, indiqueu un directori adient a les preferències."
 
 #: src/AudacityApp.cpp:1565
@@ -762,8 +756,8 @@ msgid ""
 "Audacity is now going to exit. Please launch Audacity again to use the new "
 "temporary directory."
 msgstr ""
-"L'Audacity es tancarà tot seguit. Reinicieu-lo per començar a utilitzar el "
-"nou directori temporal."
+"Audacity es tancarà tot seguit. Reinicieu-lo per començar a utilitzar el nou "
+"directori temporal."
 
 #: src/AudacityApp.cpp:1599
 msgid ""
@@ -771,8 +765,8 @@ msgid ""
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
-"Si feu funcionar simultàniament dues còpies de l'Audacity\n"
-"us podeu trobar amb pèrdua de dades, o que falli el sistema.\n"
+"Si feu funcionar simultàniament dues còpies d'Audacity us\n"
+"podeu trobar amb pèrdua de dades, o que falli el sistema.\n"
 "\n"
 
 #: src/AudacityApp.cpp:1606
@@ -780,13 +774,13 @@ msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
 msgstr ""
-"L'Audacity no ha estat capaç de bloquejar la carpeta de fitxers\n"
+"Audacity no ha estat capaç de bloquejar la carpeta de fitxers\n"
 "temporals. Pot ser que aquesta carpeta estigui en ús\n"
-"per alguna altra còpia de l'Audacity.\n"
+"per alguna altra còpia d'Audacity.\n"
 
 #: src/AudacityApp.cpp:1608
 msgid "Do you still want to start Audacity?"
-msgstr "Segur que voleu engegar l'Audacity?"
+msgstr "Encara voleu que iniciar Audacity?"
 
 #: src/AudacityApp.cpp:1610
 msgid "Error Locking Temporary Folder"
@@ -795,7 +789,7 @@ msgstr "S'ha produït un error en bloquejar la carpeta de fitxers temporals"
 #: src/AudacityApp.cpp:1707
 msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr ""
-"El sistema ha detectat que hi ha una altra còpia de l'Audacity en "
+"El sistema ha detectat que hi ha una altra còpia d'Audacity en "
 "funcionament.\n"
 
 #: src/AudacityApp.cpp:1709
@@ -803,12 +797,12 @@ msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
-"per obrir diversos projectes de forma simultània\n"
-"podeu utilitzar les ordres 'Nou' o 'Obre' del procés actual de l'Audacity.\n"
+"per obrir diversos projectes de forma simultània podeu utilitzar les\n"
+"ordres 'Nou' o 'Obre' del procés actual d'Audacity.\n"
 
 #: src/AudacityApp.cpp:1710
 msgid "Audacity is already running"
-msgstr "L'Audacity ja està en execució"
+msgstr "Audacity ja està en execució"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
@@ -834,7 +828,7 @@ msgstr "executa l'autodiagnòstic"
 #. i18n-hint: This displays the Audacity version
 #: src/AudacityApp.cpp:1808
 msgid "display Audacity version"
-msgstr "mostra la versió de l'Audacity"
+msgstr "mostra la versió d'Audacity"
 
 #. i18n-hint: This is a list of one or more files that Audacity
 #. *           should open upon startup
@@ -850,17 +844,17 @@ msgid ""
 "Associate them, so they open on double-click?"
 msgstr ""
 "Els fitxers de tipus 'projecte Audacity' (.AUP) no es troben actualment \n"
-"associats a l'Audacity. \n"
+"associats a Audacity. \n"
 "\n"
 "Voleu associar-los-hi per tal que es puguin obrir amb un doble clic?"
 
 #: src/AudacityApp.cpp:2088
 msgid "Audacity Project Files"
-msgstr "Fitxers de projecte de l'Audacity"
+msgstr "Fitxers de projecte d'Audacity"
 
 #: src/AudacityLogger.cpp:168
 msgid "Audacity Log"
-msgstr "Fitxer de registre de l'Audacity"
+msgstr "Registre d'Audacity"
 
 #: src/AudacityLogger.cpp:202 src/Tags.cpp:813
 msgid "&Save..."
@@ -940,7 +934,7 @@ msgid ""
 msgstr ""
 "L'ajust de la correcció de latència ha fet que el so enregistrat hagi quedat "
 "ocult abans del zero.\n"
-"L'Audacity ha mogut el fragment per tal que comenci al zero.\n"
+"Audacity ha mogut el fragment per tal que comenci al zero.\n"
 "Podeu fer servir l'eina de desplaçament en el temps (<---> o F5) per "
 "arrossegar la pista al seu lloc."
 
@@ -960,7 +954,7 @@ msgstr ""
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr ""
-"La funció d'Ajustament Automàtic del Volum d'Enregistrament ha baixat el "
+"La funció d'Ajustament Automàtic del Volum d'Enregistrament ha abaixat el "
 "volum a %f."
 
 #: src/AudioIO.cpp:3866
@@ -1015,7 +1009,7 @@ msgid ""
 "Fortunately, the following projects can be automatically recovered:"
 msgstr ""
 "Alguns projectes no es van desar bé la darrera vegada que es va utilitzar "
-"l'Audacity.\n"
+"Audacity.\n"
 "Per sort, els projectes següents poden ser recuperats de manera automàtica:"
 
 #: src/AutoRecovery.cpp:82
@@ -1034,7 +1028,7 @@ msgstr ""
 
 #: src/AutoRecovery.cpp:96
 msgid "Quit Audacity"
-msgstr "Surt de l'Audacity"
+msgstr "Surt d'Audacity"
 
 #: src/AutoRecovery.cpp:97
 msgid "Discard Projects"
@@ -1060,7 +1054,8 @@ msgstr "Confirmeu el descartament de projectes"
 
 #: src/AutoRecovery.cpp:158 src/AutoRecovery.cpp:195
 msgid "Could not enumerate files in auto save directory."
-msgstr "No s'han pogut enumerar els fitxers de la carpeta de desat automàtic."
+msgstr ""
+"No s'han pogut enumerar els fitxers de la carpeta de desament automàtic."
 
 #: src/BatchCommandDialog.cpp:60 src/BatchCommandDialog.cpp:64
 #: src/BatchCommandDialog.cpp:65
@@ -1091,13 +1086,13 @@ msgstr "Selecció d'&ordre"
 msgid "Ogg Vorbis support is not included in this build of Audacity"
 msgstr ""
 "La compatibilitat per al format Ogg Vorbis no s'ha inclòs en aquesta "
-"distribució de l'Audacity."
+"construcció d'Audacity."
 
 #: src/BatchCommands.cpp:580
 msgid "FLAC support is not included in this build of Audacity"
 msgstr ""
-"La compatibilitat per al format FLAC no s'ha inclòs en aquesta distribució "
-"de l'Audacity."
+"La compatibilitat per al format FLAC no s'ha inclòs en aquesta construcció "
+"d'Audacity."
 
 #: src/BatchCommands.cpp:584
 #, c-format
@@ -1288,7 +1283,7 @@ msgstr "S'estan eliminant les dependències"
 
 #: src/Dependencies.cpp:170
 msgid "Copying audio data into project..."
-msgstr "S'estan escrivint les dades de so del projecte"
+msgstr "S'estan escrivint les dades de so del projecte..."
 
 #: src/Dependencies.cpp:305
 msgid "Project Depends on Other Audio Files"
@@ -1301,7 +1296,7 @@ msgid ""
 msgstr ""
 "Si copieu aquests fitxers dins del vostre projecte eliminareu aquesta "
 "dependència.\n"
-"Això és més segur, però requereix de més espai de disc."
+"Això és més segur, però requereix més espai de disc."
 
 #: src/Dependencies.cpp:332
 msgid ""
@@ -1435,7 +1430,7 @@ msgid ""
 "Please consider saving and reloading the project to perform a complete "
 "project check."
 msgstr ""
-"L'Audacity ha trobat un tros de fitxer orfe: %s. \n"
+"Audacity ha trobat un tros de fitxer orfe: %s. \n"
 "Si us plau, considereu la possibilitat de desar i tornar a obrir el projecte "
 "per fer-ne una comprovació completa."
 
@@ -1528,7 +1523,7 @@ msgid ""
 msgstr ""
 "En la comprovació de la carpeta de projecte \"%s\"\n"
 "s'han detectat %lld fitxer(s) extern(s) de so desaparegut(s) \n"
-"('fitxers amb àlies'). L'Audacity no pot recuperar \n"
+"('fitxers amb àlies'). Audacity no pot recuperar \n"
 "aquests fitxers de manera automàtica. \n"
 "\n"
 "Si escolliu la primera o la segona opció de les que es mostren, \n"
@@ -1549,7 +1544,7 @@ msgstr "Tracta l'àudio perdut com a silenci (només durant aquesta sessió)"
 #: src/DirManager.cpp:1448
 msgid "Replace missing audio with silence (permanent immediately)."
 msgstr ""
-"Substitueix l'àudio perdut per silenci (de manera immediata i permanent)"
+"Substitueix l'àudio perdut per silenci (de manera immediata i permanent)."
 
 #: src/DirManager.cpp:1451
 msgid "Warning - Missing Aliased File(s)"
@@ -1571,7 +1566,7 @@ msgid ""
 msgstr ""
 "La comprovació de la carpeta \"%s\" del projecte\n"
 "ha detectat %lld fitxer(s) àlies (.auf) de bloc(s) perdut(s). \n"
-"L'Audacity pot regenerar totalment aquests fitxers \n"
+"Audacity pot regenerar totalment aquests fitxers \n"
 "a partir de l'àudio actualment existent al projecte."
 
 #: src/DirManager.cpp:1508
@@ -1615,7 +1610,7 @@ msgstr ""
 "La comprovació de la carpeta \"%s\" del projecte \n"
 "ha detectat %lld bloc(s) de fitxers de so (.au) desaparegut(s), \n"
 "probablement a causa d'una errada, una pana del sistema o un esborrament \n"
-"accidental. L'Audacity no té cap manera de recuperar aquestes dades \n"
+"accidental. Audacity no té cap manera de recuperar aquestes dades \n"
 "perdudes de manera automàtica.\n"
 "\n"
 "Si escolliu la primera o segona opció de les que es mostren, \n"
@@ -1755,16 +1750,16 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"L'FFmpeg es va configurar a les Preferències i s'havia carregat amb èxit en "
+"FFmpeg es va configurar a les Preferències i s'havia carregat amb èxit en "
 "ocasions anteriors,                       \n"
-"però aquesta vegada l'Audacity no ha pogut carregar-lo a "
+"però aquesta vegada Audacity no ha pogut carregar-lo a "
 "l'inici.                       \n"
 "\n"
 "Hauríeu de tornar a Preferències > Biblioteques i configurar-lo novament."
 
 #: src/FFmpeg.cpp:108
 msgid "FFmpeg startup failed"
-msgstr "Ha fallat la iniciació de l'FFmpeg"
+msgstr "Ha fallat la iniciació de FFmpeg"
 
 #: src/FFmpeg.cpp:117
 msgid "FFmpeg library not found"
@@ -1778,8 +1773,8 @@ msgstr "Ubicació de FFmpeg"
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
-"L'Audacity necessita el fitxer '%s' per importar i exportar àudio mitjançant "
-"l'FFmpeg."
+"Audacity necessita el fitxer '%s' per importar i exportar àudio mitjançant "
+"FFmpeg."
 
 #: src/FFmpeg.cpp:480
 #, c-format
@@ -1814,11 +1809,11 @@ msgstr "On és '%s'?"
 
 #: src/FFmpeg.cpp:707
 msgid "Failed to find compatible FFmpeg libraries."
-msgstr "No s'han trobat biblioteques compatibles amb l'FFmpeg."
+msgstr "No s'han trobat biblioteques compatibles amb FFmpeg."
 
 #: src/FFmpeg.h:178
 msgid "FFmpeg not found"
-msgstr "No s'ha trobat l'FFmpeg"
+msgstr "No s'ha trobat FFmpeg"
 
 #: src/FFmpeg.h:193
 msgid ""
@@ -1828,11 +1823,11 @@ msgid ""
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
-"L'Audacity ha intentat fer servir l'FFmpeg per importar un fitxer d'àudio,\n"
+"Audacity ha intentat utilitzar FFmpeg per importar un fitxer d'àudio,\n"
 "però no ha pogut trobar les biblioteques.\n"
 "\n"
 "Per importar mitjançant FFmpeg aneu a Preferències > Biblioteques\n"
-"i descarregueu o localitzeu les biblioteques de l'FFmpeg."
+"i descarregueu o localitzeu les biblioteques de FFmpeg."
 
 #: src/FFmpeg.h:201
 msgid "Do not show this warning again"
@@ -1970,7 +1965,7 @@ msgstr ""
 
 #: src/FreqWindow.cpp:658
 msgid "Not enough data selected."
-msgstr "No s'han seleccionat prou dades"
+msgstr "No s'han seleccionat prou dades."
 
 #. i18n-hint: This is the abbreviation for "Hertz", or
 #. cycles per second.
@@ -2095,7 +2090,7 @@ msgstr "<center><h3>Com aconseguir ajuda</h3></center>"
 
 #: src/HelpText.cpp:190
 msgid "Welcome to Audacity "
-msgstr "Benvingut a l'Audacity "
+msgstr "Benvingut a Audacity "
 
 #: src/HelpText.cpp:191
 msgid "These are our support methods:"
@@ -2108,8 +2103,8 @@ msgid ""
 "isn't</a>)"
 msgstr ""
 " [[file:quick_help.html|Ajuda ràpida]] (S'hauria d'haver instal·lat amb "
-"l'Audacity. Vegeu la <a href=\"http://manual.audacityteam.org/o/quick_help."
-"html\">versió en línia</a> si no hi és)"
+"Audacity. Vegeu la <a href=\"http://manual.audacityteam.org/o/quick_help.html"
+"\">versió en línia</a> si no hi és)"
 
 #: src/HelpText.cpp:193
 msgid ""
@@ -2151,10 +2146,10 @@ msgid ""
 "audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\"> FFmpeg "
 "library</a> to your computer."
 msgstr ""
-"L'Audacity pot importar fitxers no protegits en molts altres formats (com "
-"ara M4A i WMA, fitxers WAV comprimits com els de les gravadores de so i "
-"bandes sonores de vídeo) sempre i quan descarregueu i instal·leu la "
-"biblioteca opcional <a href=\"http://manual.audacityteam.org/o/man/"
+"Audacity pot importar fitxers no protegits en molts altres formats (com ara "
+"M4A i WMA, fitxers WAV comprimits com els de les gravadores de so i bandes "
+"sonores de vídeo) sempre i quan descarregueu i instal·leu la biblioteca "
+"opcional <a href=\"http://manual.audacityteam.org/o/man/"
 "faq_opening_and_saving_files.html#foreign\">FFmpeg</a>."
 
 #: src/HelpText.cpp:207
@@ -2263,7 +2258,7 @@ msgstr "Edita les etiquetes"
 
 #: src/LabelDialog.cpp:114
 msgid "Press F2 or double click to edit cell contents."
-msgstr "Premeu F2 o feu doble clic per editar el contingut de les cel·les"
+msgstr "Premeu F2 o feu doble clic per editar el contingut de les cel·les."
 
 #: src/LabelDialog.cpp:127
 msgid "Insert &After"
@@ -2381,11 +2376,11 @@ msgstr "S'ha eliminat l'etiqueta"
 #. * time Audacity has been run.
 #: src/LangChoice.cpp:60
 msgid "Audacity First Run"
-msgstr "És la primera vegada que s'inicia l'Audacity"
+msgstr "És la primera vegada que s'executa Audacity"
 
 #: src/LangChoice.cpp:93
 msgid "Choose Language for Audacity to use:"
-msgstr "Trieu l'idioma que farà servir l'Audacity:"
+msgstr "Trieu l'idioma que farà servir Audacity:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
 #. * versions of language names.
@@ -2414,7 +2409,7 @@ msgstr "S'està obrint el projecte Audacity"
 #: src/LyricsWindow.cpp:47
 #, c-format
 msgid "Audacity Karaoke%s"
-msgstr "Karaoke de l'Audacity%s"
+msgstr "Karaoke d'Audacity%s"
 
 #: src/Menus.cpp:227 src/Menus.cpp:231 src/Menus.cpp:273 src/Menus.cpp:277
 #: src/Menus.cpp:305 src/Menus.cpp:309
@@ -2471,7 +2466,7 @@ msgstr "Expo&rta l'àudio seleccionat..."
 
 #: src/Menus.cpp:403
 msgid "Export &Labels..."
-msgstr "Exporta les &etiquetes"
+msgstr "Exporta les &etiquetes..."
 
 #: src/Menus.cpp:407
 msgid "Export &Multiple..."
@@ -2690,7 +2685,7 @@ msgstr "Desa la &regió"
 
 #: src/Menus.cpp:635
 msgid "Regio&n Restore"
-msgstr "Restaura la regió"
+msgstr "Res&taura la regió"
 
 #: src/Menus.cpp:643
 msgid "Pla&y Region"
@@ -2742,7 +2737,7 @@ msgstr "Vés a l'&inici de la selecció"
 
 #: src/Menus.cpp:696
 msgid "Go to Selection En&d"
-msgstr "Ves al &final de la selecció"
+msgstr "Vés al &final de la selecció"
 
 #: src/Menus.cpp:699
 msgid "&Collapse All Tracks"
@@ -2850,7 +2845,7 @@ msgstr "Reprodueix/atura i &estableix la posició del cursor"
 
 #: src/Menus.cpp:794
 msgid "&Loop Play"
-msgstr "Reprodueix en &bucle"
+msgstr "Reprodueix en buc&le"
 
 #: src/Menus.cpp:797
 msgid "&Pause"
@@ -2887,7 +2882,7 @@ msgstr "Reprodueix &mentre s'enregistra (actiu/inactiu)"
 
 #: src/Menus.cpp:820
 msgid "Sound A&ctivated Recording (on/off)"
-msgstr "Enregistrament activat pel so (actiu/inactiu)"
+msgstr "Enregistrament &activat pel so (actiu/inactiu)"
 
 #: src/Menus.cpp:821
 msgid "Sound Activation Le&vel..."
@@ -2907,7 +2902,7 @@ msgstr "Pis&tes"
 
 #: src/Menus.cpp:839
 msgid "Add &New"
-msgstr "Afegeix una nova"
+msgstr "Afegeix una &nova"
 
 #: src/Menus.cpp:841
 msgid "&Mono Track"
@@ -3156,7 +3151,7 @@ msgstr "Reprodueix un segon"
 
 #: src/Menus.cpp:1128
 msgid "Play To Selection"
-msgstr "Reprodueix fins la selecció"
+msgstr "Reprodueix fins a la selecció"
 
 #: src/Menus.cpp:1131
 msgid "Play Before Selection Start"
@@ -3220,11 +3215,11 @@ msgstr "Desplaça un bon tros a la dreta durant la reproducció"
 
 #: src/Menus.cpp:1165
 msgid "Move Focus to Previous Track"
-msgstr "Ves a la pista anterior"
+msgstr "Vés a la pista anterior"
 
 #: src/Menus.cpp:1166
 msgid "Move Focus to Next Track"
-msgstr "Ves a la pista següent"
+msgstr "Vés a la pista següent"
 
 #: src/Menus.cpp:1167
 msgid "Move Focus to First Track"
@@ -3236,11 +3231,11 @@ msgstr "Mou el focus a la darrera pista"
 
 #: src/Menus.cpp:1171
 msgid "Move Focus to Previous and Select"
-msgstr "Ves a la pista anterior i selecciona-la"
+msgstr "Vés a la pista anterior i selecciona-la"
 
 #: src/Menus.cpp:1172
 msgid "Move Focus to Next and Select"
-msgstr "Ves a la pista següent i selecciona-la"
+msgstr "Vés a la pista següent i selecciona-la"
 
 #: src/Menus.cpp:1173 src/Menus.cpp:1174
 msgid "Toggle Focused Track"
@@ -3521,7 +3516,7 @@ msgstr "etiquetes.txt"
 
 #: src/Menus.cpp:3524
 msgid "There are no label tracks to export."
-msgstr "No hi ha cap pista d'etiquetes per exportar"
+msgstr "No hi ha cap pista d'etiqueta per exportar."
 
 #: src/Menus.cpp:3609
 msgid "Export MIDI As:"
@@ -3569,7 +3564,7 @@ msgstr "Divideix i retalla"
 
 #: src/Menus.cpp:4027
 msgid "Pasting one type of track into another is not allowed."
-msgstr "No es pot copiar la pista d'un tipus en una de tipus diferent"
+msgstr "No es pot copiar la pista d'un tipus en una de tipus diferent."
 
 #: src/Menus.cpp:4039
 msgid "Copying stereo audio into a mono track is not allowed."
@@ -3939,7 +3934,7 @@ msgstr "S'ha creat una pista d'etiquetes nova"
 msgid ""
 "This version of Audacity only allows one time track for each project window."
 msgstr ""
-"Aquesta versió de l'Audacity només permet tenir una pista de temps a cada "
+"Aquesta versió d'Audacity només permet tenir una pista de temps a cada "
 "finestra de projecte."
 
 #: src/Menus.cpp:6258
@@ -4068,7 +4063,7 @@ msgstr "S'ha mogut el botó lliscant de posició estereofònica"
 #: src/MixerBoard.cpp:1736
 #, c-format
 msgid "Audacity Mixer Board%s"
-msgstr "Taula de mescles de l'Audacity%s"
+msgstr "Taula de mescles d'Audacity%s"
 
 #: src/ModuleManager.cpp:120
 #, c-format
@@ -4119,7 +4114,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Utilitzeu només mòduls provinents de fonts en les que confieu"
+"Utilitzeu només mòduls provinents de fonts en què confieu"
 
 #: src/ModuleManager.cpp:290
 msgid "Yes"
@@ -4131,7 +4126,7 @@ msgstr "Núm."
 
 #: src/ModuleManager.cpp:292
 msgid "Audacity Module Loader"
-msgstr "Carregador de mòduls de l'Audacity"
+msgstr "Carregador de mòduls d'Audacity"
 
 #: src/ModuleManager.cpp:292
 msgid "Try and load this module?"
@@ -4258,7 +4253,7 @@ msgstr ""
 
 #: src/Prefs.cpp:192
 msgid "Reset Audacity Preferences"
-msgstr "Restableix les preferències de l'Audacity"
+msgstr "Restableix les preferències d'Audacity"
 
 #: src/Printing.cpp:169
 msgid "There was a problem printing."
@@ -4278,7 +4273,7 @@ msgstr "Mescla principal"
 #: src/Project.cpp:1014
 #, c-format
 msgid "Welcome to Audacity version %s"
-msgstr "Benvingut a la versió %s de l'Audacity"
+msgstr "Benvingut a la versió %s d'Audacity"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: src/Project.cpp:1232
@@ -4345,9 +4340,9 @@ msgid ""
 "\n"
 "Open this file now?"
 msgstr ""
-"Aquest fitxer va ser desat amb l'Audacity %s. El format ha canviat.\n"
+"Aquest fitxer es va desar amb Audacity %s. El format ha canviat.\n"
 "\n"
-"L'Audacity pot intentar obrir i desar aquest fitxer, però el fet de desar-lo "
+"Audacity pot intentar obrir i desar aquest fitxer, però el fet de desar-lo "
 "amb el nou format\n"
 "farà que no es pugui obrir amb versions antigues (1.2 o anteriors) del "
 "programa.\n"
@@ -4408,7 +4403,7 @@ msgstr "S'ha produït un error en obrir el fitxer o el projecte"
 msgid ""
 "Audacity was unable to convert an Audacity 1.0 project to the new project "
 "format."
-msgstr "No s'ha pogut convertir el projecte de l'Audacity 1.0 al nou format."
+msgstr "No s'ha pogut convertir el projecte d'Audacity 1.0 al nou format."
 
 #: src/Project.cpp:2637
 msgid "Could not decode file: "
@@ -4447,9 +4442,9 @@ msgid ""
 "You are using Audacity %s. You may need to upgrade to a newer version to "
 "open this file."
 msgstr ""
-"Aquest fitxer es va desar amb l'Audacity %s.\n"
-"Esteu fent servir l'Audacity %s. Per obrir aquest fitxer heu d'actualitzar "
-"el programa a una versió més recent."
+"Aquest fitxer es va desar amb Audacity %s.\n"
+"Esteu utilitzant Audacity %s. Per obrir aquest fitxer heu d'actualitzar el "
+"programa a una versió més recent."
 
 #: src/Project.cpp:3045
 msgid "Can't open project file"
@@ -4663,7 +4658,7 @@ msgstr "No s'ha pogut eliminar el fitxer antic de restabliment automàtic:"
 #: src/Project.cpp:4767
 #, c-format
 msgid "Actual Rate: %d"
-msgstr "Freqüència actual: %d"
+msgstr "Freqüència real: %d"
 
 #: src/Project.cpp:4789
 msgid "Recorded Audio"
@@ -4928,7 +4923,7 @@ msgstr "Nivell d'activació (dB):"
 
 #: src/SplashDialog.cpp:62
 msgid "Welcome to Audacity!"
-msgstr "Benvingut a l'Audacity!"
+msgstr "Benvingut a Audacity!"
 
 #: src/SplashDialog.cpp:116
 msgid "Don't show this again at start up"
@@ -5042,7 +5037,7 @@ msgid ""
 "Audacity could not write file:\n"
 "  %s."
 msgstr ""
-"L'Audacity no ha pogut escriure al fitxer:\n"
+"Audacity no ha pogut escriure al fitxer:\n"
 "  %s."
 
 #: src/Theme.cpp:658
@@ -5052,7 +5047,7 @@ msgid ""
 "  %s\n"
 "for writing."
 msgstr ""
-"L'Audacity no ha pogut obrir el fitxer:\n"
+"Audacity no ha pogut obrir el fitxer:\n"
 "  %s\n"
 "per escriure-hi."
 
@@ -5062,7 +5057,7 @@ msgid ""
 "Audacity could not write images to file:\n"
 "  %s."
 msgstr ""
-"L'Audacity no ha pogut escriure les imatges al fitxer:\n"
+"Audacity no ha pogut escriure les imatges al fitxer:\n"
 "  %s."
 
 #: src/Theme.cpp:801
@@ -5072,7 +5067,7 @@ msgid ""
 "  %s.\n"
 "Theme not loaded."
 msgstr ""
-"L'Audacity no ha pogut trobar el fitxer:\n"
+"Audacity no ha pogut trobar el fitxer:\n"
 "  %s.\n"
 "El tema no s'ha carregat."
 
@@ -5083,7 +5078,7 @@ msgid ""
 "  %s.\n"
 "Bad png format perhaps?"
 msgstr ""
-"L'Audacity no pot carregar el fitxer:\n"
+"Audacity no pot carregar el fitxer:\n"
 "  %s.\n"
 "Potser té un format PNG incorrecte?"
 
@@ -5092,7 +5087,7 @@ msgid ""
 "Audacity could not read its default theme.\n"
 "Please report the problem."
 msgstr ""
-"L'Audacity no ha pogut carregar el tema per defecte.\n"
+"Audacity no ha pogut carregar el tema predeterminat.\n"
 "Si us plau, informeu del problema."
 
 #: src/Theme.cpp:922
@@ -5121,7 +5116,7 @@ msgid ""
 "Audacity could not save file:\n"
 "  %s"
 msgstr ""
-"L'Audacity no ha pogut desar el fitxer:\n"
+"Audacity no ha pogut desar el fitxer:\n"
 "  %s"
 
 #: src/Theme.cpp:979
@@ -5152,7 +5147,7 @@ msgstr "Pista de temps"
 
 #: src/TimerRecordDialog.cpp:72
 msgid "Audacity Timer Record"
-msgstr "Enregistrament programat de l'Audacity"
+msgstr "Enregistrament programat d'Audacity"
 
 #: src/TimerRecordDialog.cpp:218
 msgid "Duration is zero. Nothing will be recorded."
@@ -5172,7 +5167,7 @@ msgstr "Fi de l'enregistrament"
 
 #: src/TimerRecordDialog.cpp:261
 msgid "Audacity Timer Record Progress"
-msgstr "Progrés de l'enregistrament temporitzat de l'Audacity"
+msgstr "Progrés de l'enregistrament temporitzat d'Audacity"
 
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
@@ -5221,8 +5216,7 @@ msgstr "S'està esperant per començar l'enregistrament a %s.\n"
 
 #: src/TimerRecordDialog.cpp:490
 msgid "Audacity Timer Record - Waiting for Start"
-msgstr ""
-"Enregistrament temporitzat de l'Audacity - S'està esperant per començar"
+msgstr "Enregistrament temporitzat d'Audacity - S'està esperant per començar"
 
 #: src/TrackPanel.cpp:697
 msgid "Ma&ke Stereo Track"
@@ -5241,9 +5235,8 @@ msgid "&Mono"
 msgstr "&Mono"
 
 #: src/TrackPanel.cpp:714
-#, fuzzy
 msgid "Split Stereo to &Mono"
-msgstr "Divideix d'estèreo a m&ono"
+msgstr ""
 
 #: src/TrackPanel.cpp:715
 msgid "Spl&it Stereo Track"
@@ -5271,16 +5264,15 @@ msgstr "E&spectrograma"
 
 #: src/TrackPanel.cpp:761
 msgid "S&pectrogram Settings..."
-msgstr "Ajusts de l'espectrograma..."
+msgstr "Ajusts de l'es&pectrograma..."
 
 #: src/TrackPanel.cpp:769
 msgid "&Format"
 msgstr "&Format"
 
 #: src/TrackPanel.cpp:773
-#, fuzzy
 msgid "&Rate"
-msgstr "Especifica la freqüència"
+msgstr ""
 
 #: src/TrackPanel.cpp:778
 msgid "Up &Octave"
@@ -5335,9 +5327,8 @@ msgid "Zoom In\tLeft-Click/Left-Drag"
 msgstr "Apropa el zoom\tLeft-Click/Left-Drag"
 
 #: src/TrackPanel.cpp:827
-#, fuzzy
 msgid "Zoom Out\tShift-Left-Click"
-msgstr "Maj+clic esquerre"
+msgstr ""
 
 #: src/TrackPanel.cpp:828
 msgid "Zoom to Fit\tShift-Right-Click"
@@ -5375,7 +5366,7 @@ msgstr "Feu clic i arrossegueu per canviar la mida de la pista."
 
 #: src/TrackPanel.cpp:1765
 msgid "Drag one or more label boundaries."
-msgstr "Arrossegueu un o més límits d'etiqueta"
+msgstr "Arrossegueu un o més límits d'etiqueta."
 
 #: src/TrackPanel.cpp:1766
 msgid "Drag label boundary."
@@ -5403,7 +5394,8 @@ msgstr "Mode multi-eina: Feu %s per veure les preferències de ratolí i teclat.
 
 #: src/TrackPanel.cpp:1905
 msgid "Click and drag to set frequency bandwidth."
-msgstr "Feu clic i arrossegueu per establir l'ample de banda de la freqüència."
+msgstr ""
+"Feu clic i arrossegueu per establir l'amplada de banda de la freqüència."
 
 #: src/TrackPanel.cpp:1931
 msgid "Click and drag to stretch within selected region."
@@ -5722,7 +5714,7 @@ msgstr "Mida de portada"
 
 #: src/TrackPanel.cpp:9668
 msgid "Stereo, 999999Hz"
-msgstr "Estèreo, 999999Hz"
+msgstr "Estèreo, 999999 Hz"
 
 #: src/TrackPanelAx.cpp:290 src/TrackPanelAx.cpp:482
 msgid "TrackView"
@@ -5772,7 +5764,7 @@ msgstr "La selecció és massa petita per utilitzar la clau de veu."
 
 #: src/VoiceKey.cpp:826
 msgid "Calibration Results\n"
-msgstr "Resultat de la cal·libració\n"
+msgstr "Resultat del calibratge\n"
 
 #. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
 #: src/VoiceKey.cpp:828
@@ -5877,7 +5869,7 @@ msgstr "Incrementa o redueix el volum de l'àudio que tingueu seleccionat"
 
 #: src/effects/Amplify.cpp:220
 msgid "Amplification (dB):"
-msgstr "Amplificació (dB)"
+msgstr "Amplificació (dB):"
 
 #: src/effects/Amplify.cpp:230
 msgid "Amplification dB"
@@ -6022,7 +6014,7 @@ msgid ""
 "Increases or decreases the lower frequencies and higher frequencies of your "
 "audio independently"
 msgstr ""
-"Incrementa o redueix les freqüencies inferiors i les freqüencies superiors "
+"Incrementa o redueix les freqüències inferiors i les freqüències superiors "
 "de manera independent"
 
 #: src/effects/BassTreble.cpp:276
@@ -6446,7 +6438,7 @@ msgstr "Volum"
 
 #: src/effects/Contrast.cpp:226
 msgid "&Foreground:"
-msgstr "&Primer pla"
+msgstr "&Primer pla:"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and hundredths of a second (1/100 second)
@@ -6609,7 +6601,7 @@ msgstr "Resultats"
 
 #: src/effects/Contrast.cpp:537
 msgid "Difference is indeterminate."
-msgstr "La diferència és indeterminant."
+msgstr "La diferència és indeterminada."
 
 #: src/effects/Contrast.cpp:540
 #, c-format
@@ -6651,7 +6643,7 @@ msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
 "keypad on telephones"
 msgstr ""
-"Genera tons duals multi freqüencia (DTMF) com els que produeixen els "
+"Genera tons duals multi freqüència (DTMF) com els que produeixen els "
 "telèfons de tecles"
 
 #: src/effects/DtmfGen.cpp:307
@@ -6713,7 +6705,7 @@ msgstr "Temps de retard (segons):"
 
 #: src/effects/Echo.cpp:151
 msgid "Decay factor:"
-msgstr "Factor de decaïment"
+msgstr "Factor de decaïment:"
 
 #: src/effects/Echo.h:23
 msgid "Echo"
@@ -7120,22 +7112,20 @@ msgid "kHz"
 msgstr "kHz"
 
 #: src/effects/Equalization.cpp:758
-#, fuzzy
 msgid "&EQ Type:"
-msgstr "Tipus:"
+msgstr ""
 
 #: src/effects/Equalization.cpp:766
 msgid "&Draw"
-msgstr ""
+msgstr "&Dibuixa"
 
 #: src/effects/Equalization.cpp:767
 msgid "Draw Curves"
 msgstr "Dibuixa les corbes"
 
 #: src/effects/Equalization.cpp:769
-#, fuzzy
 msgid "&Graphic"
-msgstr "Equalitzador &gràfic"
+msgstr "&Gràfic"
 
 #: src/effects/Equalization.cpp:770
 msgid "Graphic EQ"
@@ -7182,14 +7172,12 @@ msgid "&Invert"
 msgstr "&Inverteix"
 
 #: src/effects/Equalization.cpp:871
-#, fuzzy
 msgid "Show g&rid lines"
-msgstr "Mostra els fitxers ocults"
+msgstr "Habilita les línies de la &quadrícula"
 
 #: src/effects/Equalization.cpp:872
-#, fuzzy
 msgid "Show grid lines"
-msgstr "Mostra els fitxers ocults"
+msgstr "Habilita les línies de la quadrícula"
 
 #: src/effects/Equalization.cpp:894
 msgid "&Processing: "
@@ -7205,7 +7193,7 @@ msgstr "&SSE"
 
 #: src/effects/Equalization.cpp:901
 msgid "SSE &Threaded"
-msgstr "SSE &multiprocès"
+msgstr "SSE &multiprocés"
 
 #: src/effects/Equalization.cpp:903
 msgid "A&VX"
@@ -7213,7 +7201,7 @@ msgstr "A&VX"
 
 #: src/effects/Equalization.cpp:905
 msgid "AV&X Threaded"
-msgstr "AV&X multiprocès"
+msgstr "AV&X multiprocés"
 
 #: src/effects/Equalization.cpp:932
 msgid "&Bench"
@@ -7549,11 +7537,11 @@ msgstr "Efectes predefinits"
 #: src/effects/ladspa/LadspaEffect.cpp:125 src/effects/lv2/LoadLV2.cpp:111
 #: src/effects/nyquist/LoadNyquist.cpp:113 src/effects/vamp/LoadVamp.cpp:89
 msgid "The Audacity Team"
-msgstr "L'equip de l'Audacity"
+msgstr "L'equip d'Audacity"
 
 #: src/effects/LoadEffects.cpp:261
 msgid "Provides builtin effects to Audacity"
-msgstr "Proporciona suport per utilitzar efectes predefinits amb l'Audacity"
+msgstr "Proporciona suport per utilitzar efectes predefinits amb Audacity"
 
 #: src/effects/Noise.cpp:40
 msgid "White"
@@ -7696,7 +7684,7 @@ msgstr "Temps d'atac"
 
 #: src/effects/NoiseReduction.cpp:1467
 msgid "R&elease time (secs):"
-msgstr "Temps de caiguda (segons):"
+msgstr "T&emps de caiguda (segons):"
 
 #: src/effects/NoiseReduction.cpp:1467
 msgid "Release time"
@@ -7732,7 +7720,7 @@ msgid ""
 "then click Get Noise Profile:"
 msgstr ""
 "Seleccioneu uns quants segons de so on només hi hagi soroll, de manera que "
-"l'Audacity\n"
+"Audacity\n"
 "sàpiga què és el que cal filtrar. Després feu clic a 'Obtenció del perfil de "
 "soroll':"
 
@@ -8136,18 +8124,16 @@ msgid "Number of repeats to add:"
 msgstr "Nombre de repeticions a afegir:"
 
 #: src/effects/Repeat.cpp:185
-#, fuzzy
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Longitud de selecció nova: dd:hh:mm:ss"
+msgstr "Longitud de selecció actual: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:186
 msgid "New selection length: dd:hh:mm:ss"
 msgstr "Longitud de selecció nova: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:227
-#, fuzzy
 msgid "Current selection length: "
-msgstr "Longitud de selecció nova:"
+msgstr "Longitud de selecció actual: "
 
 #: src/effects/Repeat.cpp:237
 msgid "New selection length: "
@@ -8227,7 +8213,7 @@ msgstr "Sala gran"
 
 #: src/effects/Reverb.cpp:74
 msgid "Church Hall"
-msgstr "Nau d'esglèsia"
+msgstr "Nau d'església"
 
 #: src/effects/Reverb.cpp:75
 msgid "Cathedral"
@@ -8381,7 +8367,7 @@ msgstr "A&tenuació de banda eliminada mínima:"
 
 #: src/effects/ScienFilter.cpp:517
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr "Atenuació de banda eliminada mínima (dB)"
+msgstr "A&tenuació de banda eliminada mínima (dB)"
 
 #: src/effects/ScienFilter.h:34
 msgid "Classic Filters"
@@ -8596,7 +8582,7 @@ msgid ""
 "Generates four different types of tone waveform while allowing starting and "
 "ending amplitude and frequency"
 msgstr ""
-"Genera quatre tipus diferents d'ones de modulació a partir del l'establiment "
+"Genera quatre tipus diferents d'ones de modulació a partir de l'establiment "
 "de valors d'amplitud i freqüència inicials i finals"
 
 #: src/effects/ToneGen.cpp:133
@@ -8697,7 +8683,7 @@ msgstr "Efectes VST"
 
 #: src/effects/VST/VSTEffect.cpp:317
 msgid "Adds the ability to use VST effects in Audacity."
-msgstr "Afegeix la capacitat d'utilitzar efectes VST amb l'Audacity"
+msgstr "Afegeix la capacitat d'utilitzar efectes VST amb Audacity:"
 
 #: src/effects/VST/VSTEffect.cpp:484
 #, c-format
@@ -8767,7 +8753,7 @@ msgstr ""
 #: src/effects/audiounits/AudioUnitEffect.cpp:348
 #: src/effects/ladspa/LadspaEffect.cpp:371 src/effects/lv2/LV2Effect.cpp:219
 msgid "audio to Audacity. When not compensating for this delay, you will "
-msgstr "l'àudio a l'Audacity. Si no compenseu aquest retard observareu "
+msgstr "l'àudio a Audacity. Si no compenseu aquest retard observareu "
 
 #: src/effects/VST/VSTEffect.cpp:786
 #: src/effects/audiounits/AudioUnitEffect.cpp:349
@@ -8931,8 +8917,7 @@ msgstr "Efectes Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:113
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr ""
-"Proporciona suport per utilitzar efectes Audio Unit (AU) amb l'Audacity"
+msgstr "Proporciona suport per utilitzar efectes AU (Audio Unit) amb Audacity"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:315
 msgid "Audio Unit Effect Options"
@@ -8983,7 +8968,7 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:372
 msgid "Select &interface"
-msgstr "Selecciona la interfície"
+msgstr "Selecciona la &interfície"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:453
 msgid "Export Audio Unit Presets"
@@ -9077,7 +9062,7 @@ msgstr "Efectes LV2"
 
 #: src/effects/lv2/LoadLV2.cpp:122
 msgid "Provides LV2 Effects support to Audacity"
-msgstr "Proporciona suport per utilitzar efectes LV2 amb l'Audacity"
+msgstr "Proporciona suport per utilitzar efectes LV2 amb Audacity"
 
 #: src/effects/nyquist/LoadNyquist.cpp:103
 msgid "Nyquist Effects"
@@ -9085,7 +9070,7 @@ msgstr "Efectes Nyquist"
 
 #: src/effects/nyquist/LoadNyquist.cpp:124
 msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Proporciona suport per utilitzar efectes Nyquist amb l'Audacity"
+msgstr "Proporciona suport per utilitzar efectes Nyquist amb Audacity"
 
 #: src/effects/nyquist/Nyquist.cpp:90
 msgid "Version"
@@ -9114,9 +9099,8 @@ msgid ""
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:591
-#, fuzzy
 msgid "Nyquist Error"
-msgstr "Línia d'ordres del Nyquist"
+msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:682
 msgid "Nyquist"
@@ -9239,7 +9223,7 @@ msgstr "Efectes Vamp"
 
 #: src/effects/vamp/LoadVamp.cpp:100
 msgid "Provides Vamp Effects support to Audacity"
-msgstr "Proporciona suport per utilitzar efectes Vamp amb l'Audacity"
+msgstr "Proporciona suport per utilitzar efectes Vamp amb Audacity"
 
 #: src/effects/vamp/VampEffect.cpp:364
 msgid ""
@@ -9299,7 +9283,7 @@ msgid ""
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
-"Sou a punt d'exportar un fitxer %s amb el nom \"%s\".\n"
+"Esteu a punt d'exportar un fitxer %s amb el nom \"%s\".\n"
 "\n"
 "Normalment aquests fitxers acaben en \".%s\", i alguns programes no obren "
 "fitxers amb extensions no estàndard.\n"
@@ -9308,7 +9292,7 @@ msgstr ""
 
 #: src/export/Export.cpp:650
 msgid "Sorry, pathnames longer than 256 characters not supported."
-msgstr "No es permet l'ús de noms de camí de més de 256 caràcters"
+msgstr "No es permet l'ús de noms de camí de més de 256 caràcters."
 
 #: src/export/Export.cpp:668
 msgid ""
@@ -9472,9 +9456,9 @@ msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
 msgstr ""
-"L'FFmpeg no ha pogut trobar el còdec d'àudio 0x%x.\n"
-"És probable que aquest còdec no estigui suportat en la compilació de "
-"l'FFmpeg que esteu fent servir."
+"FFmpeg no ha pogut trobar el còdec d'àudio 0x%x.\n"
+"És probable que aquest còdec no estigui suportat en la compilació de FFmpeg "
+"que esteu fent servir."
 
 #: src/export/ExportFFmpeg.cpp:497
 #, c-format
@@ -9519,7 +9503,7 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp:746
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
-msgstr "FFmpeg : ERROR - nAudioFrameSizeOut és massa llarg."
+msgstr "FFmpeg : ERROR - nAudioFrameSizeOut és massa gran."
 
 #: src/export/ExportFFmpeg.cpp:764
 msgid "FFmpeg : ERROR - Can't encode audio frame."
@@ -9604,9 +9588,8 @@ msgid "%.2f kbps"
 msgstr "%.2f kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp:431
-#, fuzzy
 msgid "Open custom FFmpeg format options"
-msgstr "Exportació FFmpeg personalitzada"
+msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp:566
 #, c-format
@@ -9634,7 +9617,7 @@ msgstr "El valor predefinit '%s' no existeix."
 #: src/export/ExportFFmpegDialogs.cpp:761
 #, c-format
 msgid "Replace preset '%s'?"
-msgstr "Voleu eliminar la el valor predefinit '%s'?"
+msgstr "Voleu eliminar el valor predefinit '%s'?"
 
 #: src/export/ExportFFmpegDialogs.cpp:1190
 msgid "LC"
@@ -9693,9 +9676,8 @@ msgid "Log search"
 msgstr "Cerca logarítmica"
 
 #: src/export/ExportFFmpegDialogs.cpp:1307
-#, fuzzy
 msgid "Configure custom FFmpeg options"
-msgstr "Exportació FFmpeg personalitzada"
+msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp:1400
 msgid "Preset:"
@@ -9727,7 +9709,7 @@ msgid ""
 "compatible with all codecs."
 msgstr ""
 "No tots els formats i còdecs són compatibles. Ni totes les combinacions "
-"d'opcions són compatibles amb tots els códecs."
+"d'opcions són compatibles amb tots els còdecs."
 
 #: src/export/ExportFFmpegDialogs.cpp:1424
 msgid "Show All Formats"
@@ -10239,7 +10221,7 @@ msgstr "Ubicació de LAME"
 #: src/export/ExportMP3.cpp:589
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
-msgstr "L'Audacity necessita trobar el fitxer %s per poder crear fitxers MP3."
+msgstr "Audacity necessita el fitxer %s per crear els MP3."
 
 #: src/export/ExportMP3.cpp:595
 #, c-format
@@ -10273,7 +10255,7 @@ msgid ""
 "Please download the latest version of the LAME MP3 library."
 msgstr ""
 "Esteu enllaçant amb lame_enc.dll v%d.%d. Aquesta versió no és compatible amb "
-"l'Audacity %d.%d.%d.\n"
+"Audacity %d.%d.%d.\n"
 "Si us plau, descarregueu la darrera versió de la biblioteca LAME MP3."
 
 #: src/export/ExportMP3.cpp:1420
@@ -10566,7 +10548,7 @@ msgstr "Altres fitxers no comprimits"
 
 #: src/export/ExportPCM.cpp:435
 msgid "Cannot export audio in this format."
-msgstr "No es pot exportar el so en aquest format"
+msgstr "No es pot exportar el so en aquest format."
 
 #: src/export/ExportPCM.cpp:492
 #, c-format
@@ -10604,7 +10586,7 @@ msgstr "Seleccioneu el(s) flux(es) de dades a importar"
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
 msgstr ""
-"Aquesta versió de l'Audacity no s'ha compilat amb la compatibilitat per a %s"
+"Aquesta versió d'Audacity no s'ha compilat amb la compatibilitat per a %s."
 
 #: src/import/Import.cpp:614
 #, c-format
@@ -10616,7 +10598,7 @@ msgid ""
 msgstr ""
 "\"%s\" \n"
 "és un fitxer de tipus MIDI, i no conté so. \n"
-"L'Audacity no pot obrir aquest tipus de fitxer per reproduir-lo, però podeu\n"
+"Audacity no pot obrir aquest tipus de fitxer per reproduir-lo, però podeu\n"
 "editar-lo fent clic a Fitxer > Importa > MIDI."
 
 #. i18n-hint: %s will be the filename
@@ -10629,9 +10611,9 @@ msgid ""
 "Audacity can import, such as WAV or AIFF."
 msgstr ""
 "\"%s\" és una pista d'un CD d'àudio. \n"
-"L'Audacity no pot obrir directament aquest tipus de recurs.\n"
+"Audacity no pot obrir directament aquest tipus de recurs.\n"
 "Heu d'extreure (ripejar) les pistes de so del CD a un format que\n"
-"l'Audacity sigui capaç d'importar, com ara WAV o AIFF."
+"Audacity sigui capaç d'importar, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:632
 #, c-format
@@ -10643,8 +10625,8 @@ msgid ""
 "files."
 msgstr ""
 "\"%s\" és una llista de reproducció.\n"
-"L'Audacity no pot obrir aquest fitxer perquè conté únicament enllaços a "
-"altres fitxers.\n"
+"Audacity no pot obrir aquest fitxer perquè conté únicament enllaços a altres "
+"fitxers.\n"
 "Podeu intentar d'obrir-lo amb un editor de text i baixar els fitxers de so "
 "reals."
 
@@ -10656,8 +10638,8 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" és un fitxer de tipus WMA (Windows Media Audio). \n"
-"L'Audacity no pot obrir aquest tipus de fitxer a causa de les restriccions "
-"de les patents.\n"
+"Audacity no pot obrir aquest tipus de fitxer a causa de les restriccions de "
+"les patents.\n"
 "Hauríeu de convertir-lo a un format de so admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:644
@@ -10668,7 +10650,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" és un fitxer de tipus AAC (Advanced Audio Coding). \n"
-"L'Audacity no pot obrir fitxers d'aquest tipus.\n"
+"Audacity no pot obrir fitxers d'aquest tipus.\n"
 "Hauríeu de convertir-lo a algun format de so admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:650
@@ -10682,8 +10664,8 @@ msgid ""
 msgstr ""
 "\"%s\"  és un fitxer de so . \n"
 "Probablement ha estat adquirit en una botiga de música en línia. \n"
-"L'Audacity no pot obrir aquest fitxer a causa del xifrat.\n"
-"Intenteu enregistrar el so des de l'Audacity, o enregistreu un CD i\n"
+"Audacity no pot obrir aquest fitxer a causa del xifrat.\n"
+"Intenteu enregistrar el so des d'Audacity, o enregistreu un CD i\n"
 "després extraieu les pistes del CD a un format admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:656
@@ -10694,7 +10676,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" és un fitxer de tipus RealPlayer. \n"
-"L'Audacity no pot obrir aquest format propietari.\n"
+"Audacity no pot obrir aquest format propietari.\n"
 "Hauríeu de convertir-lo a algun format de so admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:663
@@ -10706,9 +10688,9 @@ msgid ""
 "then import it, or record it into Audacity."
 msgstr ""
 "El fitxer \"%s\" està basat en notes, i no conté so.\n"
-"L'Audacity no pot obrir fitxers d'aquest tipus.\n"
+"Audacity no pot obrir fitxers d'aquest tipus.\n"
 "Hauríeu de convertir-lo a algun format de so com ara WAV o AIFF,\n"
-"i després importar-lo a l'Audacity."
+"i després importar-lo a Audacity."
 
 #: src/import/Import.cpp:670
 #, c-format
@@ -10721,7 +10703,7 @@ msgid ""
 "format, such as WAV or AIFF."
 msgstr ""
 "El fitxer \"%s\" és de tipus Musepack. \n"
-"L'Audacity no pot obrir aquest tipus de fitxer.\n"
+"Audacity no pot obrir aquest tipus de fitxer.\n"
 "Si penseu que podria tractar-se d'un fitxer mp3, canvieu-li el nom per tal "
 "que acabi en \".mp3\" \n"
 "i intenteu importar-lo. Altrament haureu de convertir-lo a\n"
@@ -10735,7 +10717,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "El fitxer \"%s\" és de tipus Wavpack. \n"
-"L'Audacity no pot obrir fitxers d'aquest tipus.\n"
+"Audacity no pot obrir fitxers d'aquest tipus.\n"
 "Hauríeu de convertir-lo a algun format de so admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:684
@@ -10746,7 +10728,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "El fitxer \"%s\" és de tipus Dolby Digital. \n"
-"L'Audacity no pot obrir fitxers d'aquest tipus.\n"
+"Audacity no pot obrir fitxers d'aquest tipus.\n"
 "Hauríeu de convertir-lo a algun format de so admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:691
@@ -10757,7 +10739,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "El fitxer \"%s\" és de tipus Ogg Speex. \n"
-"L'Audacity no pot obrir fitxers d'aquest tipus.\n"
+"Audacity no pot obrir fitxers d'aquest tipus.\n"
 "Hauríeu de convertir-lo a algun format de so admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:698
@@ -10768,7 +10750,7 @@ msgid ""
 "You need to extract the audio to a supported format, such as WAV or AIFF."
 msgstr ""
 "El fitxer \"%s\" és un vídeo. \n"
-"L'Audacity no pot obrir fitxers d'aquest tipus.\n"
+"Audacity no pot obrir fitxers d'aquest tipus.\n"
 "Hauríeu d'extreure'n l'àudio a algun format admès, com ara WAV o AIFF."
 
 #: src/import/Import.cpp:705
@@ -10777,7 +10759,7 @@ msgid ""
 "\"%s\" is an Audacity Project file. \n"
 "Use the 'File > Open' command to open Audacity Projects."
 msgstr ""
-"\"%s\" és un fitxer de projecte de l'Audacity. \n"
+"\"%s\" és un fitxer de projecte d'Audacity. \n"
 "Utilitzeu l'ordre 'Fitxers > Obre' per obrir projectes Audacity."
 
 #: src/import/Import.cpp:711
@@ -10786,7 +10768,7 @@ msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
 msgstr ""
-"L'Audacity no reconeix el tipus del fitxer '%s'.\n"
+"Audacity no reconeix el tipus del fitxer '%s'.\n"
 "Si conté so no comprimit proveu d'importar-lo amb l'opció \"Importa dades "
 "crues\"."
 
@@ -10798,7 +10780,7 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
-"L'Audacity reconeix el tipus de fitxer '%s'.\n"
+"Audacity reconeix el tipus de fitxer '%s'.\n"
 "Els importadors que suposadament haurien de suportar aquests fitxers són:\n"
 "%s,\n"
 "però cap d'ells ha entès el format del fitxer."
@@ -10829,7 +10811,7 @@ msgstr "Llista dels fitxers en un format bàsic de text"
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp:326
 msgid "Invalid window offset in LOF file."
-msgstr "Indicació incorrecta de posició de finestra en el fitxer LOF"
+msgstr "Indicació incorrecta de posició de finestra en el fitxer LOF."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp:328 src/import/ImportLOF.cpp:349
@@ -10840,7 +10822,7 @@ msgstr "Error de LOF"
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp:347
 msgid "Invalid duration in LOF file."
-msgstr "Indicació incorrecta de durada en el fitxer LOF"
+msgstr "Indicació incorrecta de durada en el fitxer LOF."
 
 #: src/import/ImportLOF.cpp:443
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
@@ -10851,7 +10833,7 @@ msgstr ""
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp:464
 msgid "Invalid track offset in LOF file."
-msgstr "Indicació incorrecta de posició de pista en el fitxer LOF"
+msgstr "Indicació incorrecta de posició de pista en el fitxer LOF."
 
 #: src/import/ImportMIDI.cpp:31 src/import/ImportMIDI.cpp:39
 #: src/import/ImportMIDI.cpp:45 src/import/ImportMIDI.cpp:54
@@ -10860,11 +10842,11 @@ msgstr "No s'ha pogut obrir el fitxer"
 
 #: src/import/ImportMIDI.cpp:31
 msgid ": Filename too short."
-msgstr ": El nom del fitxer és massa curt"
+msgstr ": El nom del fitxer és massa curt."
 
 #: src/import/ImportMIDI.cpp:39
 msgid ": Incorrect filetype."
-msgstr ": El tipus de fitxer és incorrecte"
+msgstr ": El tipus de fitxer és incorrecte."
 
 #: src/import/ImportMP3.cpp:47
 msgid "MP3 files"
@@ -11117,7 +11099,7 @@ msgstr "Enregistrament"
 
 #: src/prefs/DevicePrefs.cpp:147
 msgid "De&vice:"
-msgstr "&Dis&positiu:"
+msgstr "Dispositi&u:"
 
 #: src/prefs/DevicePrefs.cpp:152
 msgid "Cha&nnels:"
@@ -11210,7 +11192,7 @@ msgid ""
 "Changes to temporary directory will not take effect until Audacity is "
 "restarted"
 msgstr ""
-"Els canvis en el directori temporal tindran efecte en reiniciar l'Audacity"
+"Els canvis en el directori temporal tindran efecte en reiniciar Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp:231
 msgid "Temp Directory Update"
@@ -11266,12 +11248,11 @@ msgstr "Opcions del connector"
 
 #: src/prefs/EffectsPrefs.cpp:142
 msgid "Check for updated plugins when Audacity starts"
-msgstr "Comprova si hi ha connectors actualitzats quan s'iniciï l'Audacity"
+msgstr "Comprova si hi ha connectors actualitzats quan s'iniciï Audacity"
 
 #: src/prefs/EffectsPrefs.cpp:145
 msgid "Rescan plugins next time Audacity is started"
-msgstr ""
-"Torna a escanejar els efectes la propera vegada que l'Audacity s'iniciï"
+msgstr "Torna a escanejar els efectes la próxima vegada que Audacity s'iniciï"
 
 #: src/prefs/EffectsPrefs.cpp:153
 msgid "Instruction Set"
@@ -11342,8 +11323,8 @@ msgid ""
 msgstr ""
 "Hi ha lletres d'espai en blanc (espais, salts de línia, tabuladors o retorns "
 "de carro) en un dels elements. Aquests caràcters podrien trencar la cerca "
-"per patrons. A no ser que sapigueu exactament què esteu fent, es recomanable "
-"que elimineu aquests espais en blanc. Voleu que l'Audacity netegi els espais "
+"per patrons. A no ser que sapigueu exactament què esteu fent, és recomanable "
+"que elimineu aquests espais en blanc. Voleu que Audacity netegi els espais "
 "en blanc?"
 
 #: src/prefs/ExtImportPrefs.cpp:488
@@ -11412,9 +11393,8 @@ msgid "S&how 'How to Get Help' dialog box at program start up"
 msgstr "Mostra el missatge '&Com aconseguir ajuda' a l'inici del programa"
 
 #: src/prefs/GUIPrefs.cpp:119
-#, fuzzy
 msgid "Meter dB &range:"
-msgstr "Rang en dB de les Ones/Mesuradors:"
+msgstr "Rang en dB del mesurador:"
 
 #: src/prefs/GUIPrefs.cpp:126
 msgid "&Language:"
@@ -11503,7 +11483,7 @@ msgstr "Les preferències del teclat no es troben disponibles en aquest moment."
 
 #: src/prefs/KeyConfigPrefs.cpp:130 src/prefs/KeyConfigPrefs.cpp:730
 msgid "Open a new project to modify keyboard shortcuts."
-msgstr "Obre un projecte nou per modificar les dreceres de teclat"
+msgstr "Obre un projecte nou per modificar les dreceres de teclat."
 
 #: src/prefs/KeyConfigPrefs.cpp:155 src/prefs/KeyConfigPrefs.cpp:615
 msgid "&Hotkey:"
@@ -11573,7 +11553,7 @@ msgstr "Valors per &defecte"
 
 #: src/prefs/KeyConfigPrefs.cpp:331 src/prefs/KeyConfigPrefs.cpp:914
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "Seleccioneu un fitxer XML amb les dreceres de teclat de l'Audacity..."
+msgstr "Seleccioneu un fitxer XML amb les dreceres de teclat d'Audacity..."
 
 #: src/prefs/KeyConfigPrefs.cpp:350 src/prefs/KeyConfigPrefs.cpp:933
 msgid "Error Importing Keyboard Shortcuts"
@@ -11707,7 +11687,7 @@ msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
 msgstr ""
-"L'Audacity ja ha detectat automàticament unes biblioteques FFmpeg vàlides.\n"
+"Audacity ja ha detectat automàticament unes biblioteques FFmpeg vàlides.\n"
 "Tot i això, voleu localitzar-les manualment?"
 
 #: src/prefs/MidiIOPrefs.cpp:58
@@ -11759,20 +11739,20 @@ msgid ""
 msgstr ""
 "Aquests mòduls són experimentals. Activeu-los només si us heu llegit el "
 "manual\n"
-"de l'Audacity i sabeu el que esteu fent."
+"d'Audacity i sabeu el que esteu fent."
 
 #: src/prefs/ModulePrefs.cpp:108
 msgid ""
 "'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"'Demana-m'ho' significa que l'Audacity us preguntarà si voleu carregar el "
+"'Demana-m'ho' significa que Audacity us preguntarà si voleu carregar el "
 "connector cada vegada que engegui."
 
 #: src/prefs/ModulePrefs.cpp:109
 msgid "'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr ""
-"'Fallit' significa que l'Audacity creu que el connector està trencat i no "
+"'Fallit' significa que Audacity creu que el connector està trencat i no "
 "l'executarà."
 
 #: src/prefs/ModulePrefs.cpp:110
@@ -11782,8 +11762,8 @@ msgstr "'Nou' significa que encara no s'ha fet cap selecció."
 #: src/prefs/ModulePrefs.cpp:111
 msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr ""
-"Els canvis en aquests ajusts només tindran efecte quan l'Audacity s'iniciï "
-"de nou."
+"Els canvis en aquests ajusts només tindran efecte quan Audacity s'iniciï de "
+"nou."
 
 #: src/prefs/ModulePrefs.cpp:122
 msgid "No modules were found"
@@ -11873,9 +11853,8 @@ msgid "Seek"
 msgstr "Cerca"
 
 #: src/prefs/MousePrefs.cpp:118
-#, fuzzy
 msgid "-Left-Double-Click"
-msgstr "Doble clic esquerre"
+msgstr ""
 
 #: src/prefs/MousePrefs.cpp:118
 msgid "Scroll-scrub"
@@ -12052,7 +12031,7 @@ msgstr "Període &llarg:"
 
 #: src/prefs/PrefsDialog.cpp:202
 msgid "Audacity Preferences"
-msgstr "Preferències de l'Audacity"
+msgstr "Preferències d'Audacity"
 
 #: src/prefs/PrefsDialog.cpp:473 src/prefs/PrefsDialog.h:51
 msgid "Preferences: "
@@ -12238,9 +12217,8 @@ msgstr "ERB"
 
 #. i18n-hint: Time units, that is Period = 1 / Frequency
 #: src/prefs/SpectrogramSettings.cpp:161
-#, fuzzy
 msgid "Period"
-msgstr "Període de la trama d'àudio"
+msgstr ""
 
 #: src/prefs/SpectrogramSettings.cpp:177
 msgid "Frequencies"
@@ -12347,7 +12325,7 @@ msgstr "A&lgorisme"
 
 #: src/prefs/SpectrumPrefs.cpp:224
 msgid "Window &size:"
-msgstr "&Mida de la finestra"
+msgstr "&Mida de la finestra:"
 
 #: src/prefs/SpectrumPrefs.cpp:229
 msgid "Window &type:"
@@ -12457,7 +12435,7 @@ msgstr ""
 "ara el Gimp.\n"
 "\n"
 "Feu clic a \"Carrega la mostra del tema\" per comprovar com es veuen a "
-"l'Audacity els\n"
+"Audacity els\n"
 "canvis fets a les imatges i els colors .\n"
 "\n"
 "(Ara per ara els canvis només afecten la barra d'eines de transport i els "
@@ -12471,8 +12449,8 @@ msgid ""
 "will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
-"Heu compilat l'Audacity amb un botó extra, 'Sortida de codi font', que "
-"serveix per desar un\n"
+"Heu compilat Audacity amb un botó extra, 'Sortida de codi font', que serveix "
+"per desar un\n"
 "fitxer en llenguatge C de la imatge de mostra, que podreu fer servir per a "
 "una nova compilació."
 
@@ -12609,14 +12587,12 @@ msgid "&Importing uncompressed audio files"
 msgstr "Quan s'&importin fitxers d'àudio sense comprimir"
 
 #: src/prefs/WaveformPrefs.cpp:29
-#, fuzzy
 msgid "Waveforms"
-msgstr "So en forma d'ona"
+msgstr ""
 
 #: src/prefs/WaveformPrefs.cpp:96
-#, fuzzy
 msgid "Waveform dB &range"
-msgstr "Rang en dB de les Ones/Mesuradors:"
+msgstr ""
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -12705,7 +12681,7 @@ msgstr "Seleccioneu els canals d'enregistrament"
 
 #: src/toolbars/DeviceToolBar.cpp:779
 msgid "Device information is not available."
-msgstr "La informació del dispositiu no està disponible"
+msgstr "La informació del dispositiu no està disponible."
 
 #: src/toolbars/EditToolBar.cpp:133
 msgid "Cut selection"
@@ -12927,7 +12903,7 @@ msgstr "Freqüència alta:"
 #: src/toolbars/ToolBar.cpp:299
 #, c-format
 msgid "Audacity %s Toolbar"
-msgstr "Barra d'eines %s de l'Audacity"
+msgstr "Barra d'eines %s d'Audacity"
 
 #: src/toolbars/ToolBar.cpp:448 src/toolbars/ToolBar.cpp:492
 msgid "Click and drag to resize toolbar"
@@ -13142,7 +13118,7 @@ msgstr ""
 
 #: src/widgets/Meter.cpp:1935
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "Freqüència de refresc del mesurador per segon [1-100]"
+msgstr "Freqüència de refresc del mesurador per segon [1-100]: "
 
 #: src/widgets/Meter.cpp:1938
 msgid "Meter refresh rate per second [1-100]"
@@ -13640,2734 +13616,3 @@ msgstr "S'ha produït un error en tancar el fitxer"
 #: src/xml/XMLWriter.cpp:305
 msgid "Error Writing to File"
 msgstr "S'ha produït un error en escriure al fitxer"
-
-#~ msgid "<DIR>"
-#~ msgstr "<DIR>"
-
-#~ msgid "<LINK>"
-#~ msgstr "<ENLLAÇ>"
-
-#~ msgid "<DRIVE>"
-#~ msgstr "<UNITAT>"
-
-#~ msgid "%ld bytes"
-#~ msgstr "%ld bytes"
-
-#~ msgid "Modified"
-#~ msgstr "Modificat"
-
-#~ msgid "Permissions"
-#~ msgstr "Permisos"
-
-#~ msgid "Attributes"
-#~ msgstr "Atributs"
-
-#~ msgid "NewName"
-#~ msgstr "NomNou"
-
-#~ msgid "Operation not permitted."
-#~ msgstr "L'operació no és permesa."
-
-#~ msgid "."
-#~ msgstr "."
-
-#~ msgid ".."
-#~ msgstr ".."
-
-#~ msgid "Illegal directory name."
-#~ msgstr "el nom del directori no és vàlid."
-
-#~ msgid "File name exists already."
-#~ msgstr "Ja hi ha un fitxer amb el mateix nom."
-
-#~ msgid "View files as a list view"
-#~ msgstr "Visualitza els fitxers com a llista"
-
-#~ msgid "View files as a detailed view"
-#~ msgstr "Visualitza els detalls dels fitxers"
-
-#~ msgid "Go to parent directory"
-#~ msgstr "Ves al directori superior"
-
-#~ msgid "Go to home directory"
-#~ msgstr "Vés al directori de l'usuari"
-
-#~ msgid "Create new directory"
-#~ msgstr "Crea un directori nou"
-
-#~ msgid "Current directory:"
-#~ msgstr "Directori actual:"
-
-#~ msgid "Illegal file specification."
-#~ msgstr "Especificació de fitxer incorrecta."
-
-#~ msgid "Directory doesn't exist."
-#~ msgstr "El directori no existeix."
-
-#~ msgid "!Simplified View"
-#~ msgstr "!Vista simplificada"
-
-#~ msgid "Spectrogram l&og(f)"
-#~ msgstr "Espectrograma l&og(f)"
-
-#~ msgid "S&pectral Selection"
-#~ msgstr "Selecció es&pectral"
-
-#~ msgid "Spectral Selection lo&g(f)"
-#~ msgstr "Selecció espectral lo&g(f)"
-
-#~ msgid "Pitc&h (EAC)"
-#~ msgstr "&To (EAC)"
-
-#~ msgid "&Right Channel"
-#~ msgstr "Canal &dret"
-
-#~ msgid "Set Sample &Format"
-#~ msgstr "Estableix el &format de mostreig"
-
-#~ msgid "Set Rat&e"
-#~ msgstr "Es&tableix la freqüència de mostreig"
-
-#~ msgid "Set Ra&nge..."
-#~ msgstr "Estableix el ra&ng"
-
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down "
-#~ "Menu."
-#~ msgstr ""
-#~ "Per utilitzar l'eina de dibuix, seleccioneu 'Ona' o 'dB d'ona'al menú "
-#~ "desplegable de la pista."
-
-#~ msgid "Plug-ins %i to %i"
-#~ msgstr "Connectors %i a %i"
-
-#~ msgid "&Draw Curves"
-#~ msgstr "&Dibuixa les corbes"
-
-#~ msgid "Save and Manage Curves"
-#~ msgstr "Desa i gestiona corbes"
-
-#~ msgid "G&rids"
-#~ msgstr "G&raelles"
-
-#~ msgid "Grids"
-#~ msgstr "Graelles"
-
-#~ msgid "Default"
-#~ msgstr "Per defecte"
-
-#~ msgid "SSE"
-#~ msgstr "SSE"
-
-#~ msgid "AVX"
-#~ msgstr "AVX"
-
-#~ msgid "AVX Threaded"
-#~ msgstr "AVX multiprocès"
-
-#~ msgid ""
-#~ "Most Audio Unit effects have a graphical interface for setting parameter "
-#~ "values."
-#~ msgstr ""
-#~ "Molts efectes Audio Unit tenen una interfície gràfica per indicar-hi els "
-#~ "valors dels paràmetres."
-
-#~ msgid "LV2 Effects Module"
-#~ msgstr "Mòdul d'efectes LV2"
-
-#~ msgid "&Options..."
-#~ msgstr "&Opcions"
-
-#~ msgid "Specify Command Line Encoder"
-#~ msgstr "Indiqueu el comandament de línia d'ordres del codificador"
-
-#~ msgid "Command Line Export Setup"
-#~ msgstr "Configuració de l'exportació de la línia d'ordres"
-
-#~ msgid "Specify AC3 Options"
-#~ msgstr "Especificació de les opcions AC3"
-
-#~ msgid "AC3 Export Setup"
-#~ msgstr "Configuració de l'exportació a AC3"
-
-#~ msgid "Specify AAC Options"
-#~ msgstr "Especificació de les opcions AAC"
-
-#~ msgid "AAC Export Setup"
-#~ msgstr "Configuració de l'exportació a AAC"
-
-#~ msgid "Specify AMR-NB Options"
-#~ msgstr "Especificació de les opcions AMR-NB"
-
-#~ msgid "AMR-NB Export Setup"
-#~ msgstr "Configuració de l'exportació a AMR-NB"
-
-#~ msgid "Specify WMA Options"
-#~ msgstr "Especificació de les opcions WMA"
-
-#~ msgid "WMA Export Setup"
-#~ msgstr "Configuració de l'exportació a WMA"
-
-#~ msgid "Specify Other Options"
-#~ msgstr "Especificació d'altres opcions"
-
-#~ msgid "Specify FLAC Options"
-#~ msgstr "Opcions FLAC"
-
-#~ msgid "FLAC Export Setup"
-#~ msgstr "Configuració de l'exportació a FLAC"
-
-#~ msgid "Specify MP2 Options"
-#~ msgstr "Opcions MP2"
-
-#~ msgid "MP2 Export Setup"
-#~ msgstr "Configuració de l'exportació a MP2"
-
-#~ msgid "Specify MP3 Options"
-#~ msgstr "Opcions MP3"
-
-#~ msgid "MP3 Export Setup"
-#~ msgstr "Configuració dels paràmetres d'exportació a MP3"
-
-#~ msgid "Export format:"
-#~ msgstr "Format d'exportació:"
-
-#~ msgid "Specify Ogg Vorbis Options"
-#~ msgstr "Indiqueu les opcions d'Ogg Vorbis"
-
-#~ msgid "Ogg Vorbis Export Setup"
-#~ msgstr "Configuració de l'exportació a Ogg Vorbis"
-
-#~ msgid "Specify Uncompressed Options"
-#~ msgstr "Indiqueu les opcions per al format no comprimit"
-
-#~ msgid "Uncompressed Export Setup"
-#~ msgstr "Configuració de l'exportació a format no comprimit"
-
-#~ msgid "(Not all combinations of headers and encodings are possible.)"
-#~ msgstr ""
-#~ "(No totes les combinacions de capçaleres i codificacions són possibles)"
-
-#~ msgid "There are no options for this format.\n"
-#~ msgstr "No hi ha opcions per aquest format.\n"
-
-#~ msgid "Your file will be exported as a \"%s\" file\n"
-#~ msgstr "El fitxer s'exportarà en el format \"%s\"\n"
-
-#~ msgid ""
-#~ "If you need more control over the export format please use the \"%s\" "
-#~ "format."
-#~ msgstr ""
-#~ "Si necessiteu més control sobre el format d'exportació feu servir el "
-#~ "format anomenat \"%s\"."
-
-#~ msgid "Ctrl-Left-Click"
-#~ msgstr "Ctrl+clic esquerre"
-
-#~ msgid "Ctrl-Left-Drag"
-#~ msgstr "Ctrl+Arrossega a l'esquerra"
-
-#~ msgid "Ctrl-Left-Double-Click"
-#~ msgstr "Ctrl+Doble clic esquerre"
-
-#~ msgid "Ctrl-Wheel-Rotate"
-#~ msgstr "Ctrl+Roda del ratolí"
-
-#~ msgid "FFT Window"
-#~ msgstr "Finestra FFT"
-
-#~ msgid "Spectrogram"
-#~ msgstr "Espectrograma"
-
-#~ msgid "Spectrogram log(f)"
-#~ msgstr "Espectrograma log(f)"
-
-#~ msgid "Spectral Selection log(f)"
-#~ msgstr "Seleccio espectral log(f)"
-
-#~ msgid "Error while opening sound device. "
-#~ msgstr "S'ha produït un error en obrir el dispositiu."
-
-#~ msgid "Stereo to Mono Effect not found"
-#~ msgstr "No s'ha trobat l'efecte de conversió d'estèreo a mono"
-
-#~ msgid "Replot"
-#~ msgstr "Redibuixa"
-
-#~ msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
-#~ msgstr "Cursor: %d Hz (%s) = %d dB    Pic: %d Hz (%s) = %.1f dB"
-
-#~ msgid ""
-#~ "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
-#~ msgstr ""
-#~ "Cursor: %.4f segons (%d Hz) (%s) = %f,    Pic: %.4f segons (%d Hz) (%s) = "
-#~ "%.3f"
-
-#~ msgid "Plot Spectrum"
-#~ msgstr "Traçat de l'espectre"
-
-#~ msgid "Drawing Spectrum"
-#~ msgstr "Dibuix de l'espectre"
-
-#~ msgid "&Audio Track"
-#~ msgstr "Pista d'&àudio"
-
-#~ msgid "Unsorted"
-#~ msgstr "Desordenat"
-
-#~ msgid "Register Effects"
-#~ msgstr "Cerca i registra efectes"
-
-#~ msgid "&Select Plug-ins to Install or press ENTER to Install All"
-#~ msgstr ""
-#~ "&Seleccioneu els connectors a instal·lar o premeu Retorn per instal·lar-"
-#~ "los tots"
-
-#~ msgid "Plug-in Name"
-#~ msgstr "Nom del connector"
-
-#~ msgid "New Project"
-#~ msgstr "Projecte nou"
-
-#~ msgid "High-quality Sinc Interpolation"
-#~ msgstr "Interpolació sincronitzada d'alta qualitat"
-
-#~ msgid "Fast Sinc Interpolation"
-#~ msgstr "Interpolació sincronitzada ràpida"
-
-#~ msgid "Libsamplerate error: %d\n"
-#~ msgstr "Error del Libsamplerate: %d\n"
-
-#~ msgid "Applied effect: %s %.1f dB"
-#~ msgstr "S'ha aplicat l'efecte: %s %.1f dB"
-
-#~ msgid "Amplify..."
-#~ msgstr "Amplifica..."
-
-#~ msgid "Amplifying"
-#~ msgstr "S'està amplificant"
-
-#~ msgid "Please enter valid values."
-#~ msgstr "Si us plau, escriviu valors vàlids."
-
-#~ msgid "Auto Duck..."
-#~ msgstr "Auto Duck..."
-
-#~ msgid "Processing Auto Duck..."
-#~ msgstr "S'està processant l'Auto Duck..."
-
-#~ msgid "Applied effect: %s bass = %.1f dB, treble = %.1f dB"
-#~ msgstr "S'ha aplicat l'efecte: %s baixos = %.1f bB, aguts = %.1f dB"
-
-#~ msgid ", level enabled at = %.1f dB"
-#~ msgstr ", nivell activat a = %.1f dB"
-
-#~ msgid ", level disabled"
-#~ msgstr ", nivell desactivat"
-
-#~ msgid "Bass and Treble..."
-#~ msgstr "Baixos i aguts..."
-
-#~ msgid "Adjusting Bass and Treble"
-#~ msgstr "Ajustament de baixos i aguts"
-
-#~ msgid "Applied effect: %s %.2f semitones"
-#~ msgstr "S'ha aplicat l'efecte: %s %.2f semitons"
-
-#~ msgid "Change Pitch..."
-#~ msgstr "Canvia el to..."
-
-#~ msgid "Changing Pitch"
-#~ msgstr "S'està canviant el to"
-
-#~ msgid "Applied effect: %s %.3f%%"
-#~ msgstr "S'ha aplicat l'efecte: %s %.3f%%"
-
-#~ msgid "Change Speed..."
-#~ msgstr "Canvia la velocitat..."
-
-#~ msgid "Changing Speed"
-#~ msgstr "S'està canviant la velocitat"
-
-#~ msgid "Applied effect: %s %.1f%%"
-#~ msgstr "S'ha aplicat l'efecte: %s %.1f%%"
-
-#~ msgid "Change Tempo..."
-#~ msgstr "Canvia el temps..."
-
-#~ msgid "Changing Tempo"
-#~ msgstr "S'està canviant el temps"
-
-#~ msgid "Click Removal..."
-#~ msgstr "Eliminació de sorolls \"clic\"..."
-
-#~ msgid "Removing clicks and pops..."
-#~ msgstr "S'estan eliminant sorolls \"clic\" i \"pop\"..."
-
-#~ msgid "Dynamic Range Compressor"
-#~ msgstr "Compressor d'abast dinàmic"
-
-#~ msgid "Compressor..."
-#~ msgstr "Compressor..."
-
-#~ msgid "Applying Dynamic Range Compression..."
-#~ msgstr "S'està aplicant la compressió de rang dinàmic..."
-
-#~ msgid "DTMF Tone Generator"
-#~ msgstr "Generador de tons DTMF"
-
-#~ msgid "Applied effect: Generate DTMF tones, %.6lf seconds"
-#~ msgstr "S'ha aplicat l'efecte de generar tons DTMF durant %.6lf segons"
-
-#~ msgid "Generating DTMF tones"
-#~ msgstr "S'estan generant els tons DTMF"
-
-#~ msgid "Applied effect: %s delay = %f seconds, decay factor = %f"
-#~ msgstr ""
-#~ "S'ha aplicat l'efecte: %s retard = %f segons, factor de decaïment= %f"
-
-#~ msgid "Echo..."
-#~ msgstr "Eco..."
-
-#~ msgid "Performing Echo"
-#~ msgstr "S'està aplicant l'eco"
-
-#~ msgid "Applying "
-#~ msgstr "S'està aplicant"
-
-#~ msgid "Instrument"
-#~ msgstr "Instrument"
-
-#~ msgid "Oscillator"
-#~ msgstr "Oscil·lador"
-
-#~ msgid "Utility"
-#~ msgstr "Utilitat"
-
-#~ msgid "Converter"
-#~ msgstr "Conversor"
-
-#~ msgid "Analyser"
-#~ msgstr "Analitzador"
-
-#~ msgid "Simulator"
-#~ msgstr "Simulador"
-
-#~ msgid "Modulator"
-#~ msgstr "Modulador"
-
-#~ msgid "Flanger"
-#~ msgstr "Flanger"
-
-#~ msgid "Chorus"
-#~ msgstr "Chorus"
-
-#~ msgid "Bandpass"
-#~ msgstr "Pas de banda"
-
-#~ msgid "Comb"
-#~ msgstr "Comb"
-
-#~ msgid "Allpass"
-#~ msgstr "Passa tot"
-
-#~ msgid "Equaliser"
-#~ msgstr "Equalitzador"
-
-#~ msgid "Parametric"
-#~ msgstr "Paramètric"
-
-#~ msgid "Multiband"
-#~ msgstr "Multibanda"
-
-#~ msgid "Spectral Processor"
-#~ msgstr "Processador espectral"
-
-#~ msgid "Pitch Shifter"
-#~ msgstr "Desplaçament de to"
-
-#~ msgid "Amplifier"
-#~ msgstr "Amplificador"
-
-#~ msgid "Distortion"
-#~ msgstr "Distorsió"
-
-#~ msgid "Waveshaper"
-#~ msgstr "Waveshaper"
-
-#~ msgid "Dynamics Processor"
-#~ msgstr "Processador de dinàmica"
-
-#~ msgid "Expander"
-#~ msgstr "Expandidor"
-
-#~ msgid "Limiter"
-#~ msgstr "Limitador"
-
-#~ msgid "Gate"
-#~ msgstr "Porta"
-
-#~ msgid "Pitch and Tempo"
-#~ msgstr "To i temps"
-
-#~ msgid "Time"
-#~ msgstr "Temps"
-
-#~ msgid "Onsets"
-#~ msgstr "Atacs"
-
-#~ msgid "Equalization..."
-#~ msgstr "Equalització..."
-
-#~ msgid "Performing Equalization"
-#~ msgstr "S'està realitzant l'equalització"
-
-#~ msgid "Fading In"
-#~ msgstr "S'està fent una fosa d'obertura"
-
-#~ msgid "Fading Out"
-#~ msgstr "S'està fent una fosa de tancament"
-
-#~ msgid "Detect clipping"
-#~ msgstr "Detecta l'escapçament de pics"
-
-#~ msgid "Find Clipping..."
-#~ msgstr "Troba pics escapçats..."
-
-#~ msgid "Detecting clipping"
-#~ msgstr "S'estan detectant els pics escapçats"
-
-#~ msgid "Inverting"
-#~ msgstr "S'està fent la inversió..."
-
-#~ msgid "Leveler..."
-#~ msgstr "Anivellador..."
-
-#~ msgid "Applying Leveler..."
-#~ msgstr "S'està aplicant l'anivellador..."
-
-#~ msgid "Noise Generator"
-#~ msgstr "Generador de soroll"
-
-#~ msgid "Noise..."
-#~ msgstr "Soroll..."
-
-#~ msgid "Applied effect: Generate Noise, %.6lf seconds"
-#~ msgstr "S'ha aplicat l'efecte: Genera soroll durant %.6lf segons"
-
-#~ msgid "Generating Noise"
-#~ msgstr "S'està generant soroll"
-
-#~ msgid "Noise Reduction..."
-#~ msgstr "Reducció de soroll..."
-
-#~ msgid "Creating Noise Profile"
-#~ msgstr "S'està creant un perfil de soroll"
-
-#~ msgid "Reducing Noise"
-#~ msgstr "S'està reduint el soroll"
-
-#~ msgid "Noise Removal..."
-#~ msgstr "Treu soroll..."
-
-#~ msgid "Removing Noise"
-#~ msgstr "S'està traient el soroll"
-
-#~ msgid ""
-#~ "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, "
-#~ "stereo independent %s"
-#~ msgstr ""
-#~ "S'ha aplicat l'efecte: %s desplaçament dc eliminat = %s, amplitud "
-#~ "normalitzada = %s, estèreo independent %s"
-
-#~ msgid "true"
-#~ msgstr "cert"
-
-#~ msgid ", maximum amplitude = %.1f dB"
-#~ msgstr ", amplitud màxima = %.1f dB"
-
-#~ msgid "Normalize..."
-#~ msgstr "Normalitza..."
-
-#~ msgid "Normalizing..."
-#~ msgstr "S'està normalitzant..."
-
-#~ msgid ""
-#~ "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
-#~ msgstr ""
-#~ "S'ha aplicat l'efecte: %s factor d'estirament = %f vegades, resolució "
-#~ "temporal = %f segons"
-
-#~ msgid "Stretching with Paulstretch"
-#~ msgstr "Estira amb Paulstretch"
-
-#~ msgid ""
-#~ "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start "
-#~ "phase = %.0f deg, depth = %d, feedback = %.0f%%"
-#~ msgstr ""
-#~ "S'ha aplicat l'efecte: %s %d etapes, %.0f%% humit, freqüència = %.1f Hz, "
-#~ "fase inicial = %.0f graus, intensitat = %d, resposta = %.0f%%"
-
-#~ msgid "Phaser..."
-#~ msgstr "Phaser..."
-
-#~ msgid "Applying Phaser"
-#~ msgstr "S'està aplicant l'efecte Phaser"
-
-#~ msgid "Repairing damaged audio"
-#~ msgstr "S'està reparant el so danyat"
-
-#~ msgid "Repeated %d times"
-#~ msgstr "Repetit %d vegades"
-
-#~ msgid "Selection is too short to repeat."
-#~ msgstr "La selecció és massa curta per repetir."
-
-#~ msgid "Tracks are too long to repeat the selection."
-#~ msgstr "Les pistes són massa llargues per repetir la selecció."
-
-#~ msgid "Repeat..."
-#~ msgstr "Repeteix..."
-
-#~ msgid "Performing Repeat"
-#~ msgstr "S'està realitzant la repetició"
-
-#~ msgid ", Room Size = %.0f"
-#~ msgstr ", Mida de l'estança = %.0f"
-
-#~ msgid ", Delay = %.0fms"
-#~ msgstr ", Caiguda = %.0fms"
-
-#~ msgid ", Reverberance = %.0f%%"
-#~ msgstr ", Reverberació = %.0f%%"
-
-#~ msgid ", Damping = %.0f%%"
-#~ msgstr ", Amortiment = %.0f%%"
-
-#~ msgid ", Tone Low = %.0f%%"
-#~ msgstr ", To baix = %.0f%%"
-
-#~ msgid ", Tone High = %.0f%%"
-#~ msgstr ", Tone alt = %.0f%%"
-
-#~ msgid ", Wet Gain = %.0fdB"
-#~ msgstr ", Guany humit = %.0fdB"
-
-#~ msgid ", Dry Gain Size = %.0fdB"
-#~ msgstr ", Mida del guany sec = %.0fdB"
-
-#~ msgid ", Stereo Width = %.0f%%"
-#~ msgstr ", Amplada estereofònica = %.0f%%"
-
-#~ msgid "Presets:"
-#~ msgstr "Configuracions:"
-
-#~ msgid "Lo&ad"
-#~ msgstr "C&arrega"
-
-#~ msgid "User settings:"
-#~ msgstr "Preferències de l'usuari:"
-
-#~ msgid "Loa&d"
-#~ msgstr "Carre&ga"
-
-#~ msgid "R&ename"
-#~ msgstr "R&eanomena"
-
-#~ msgid "Reverb settings"
-#~ msgstr "Paràmetres de reverberació"
-
-#~ msgid "Load preset:"
-#~ msgstr "Carrega una configuració:"
-
-#~ msgid "Save current settings as:"
-#~ msgstr "Desa la configuració actual com a:"
-
-#~ msgid "Rename settings:"
-#~ msgstr "Reanomena la configuració:"
-
-#~ msgid "Change name to:"
-#~ msgstr "Canvia el nom a:"
-
-#~ msgid "Reverb..."
-#~ msgstr "Reverberació..."
-
-#~ msgid "Applying Reverb"
-#~ msgstr "S'està aplicant la reverberació"
-
-#~ msgid "Reversing"
-#~ msgstr "S'està aplicant la marxa enrere..."
-
-#~ msgid "Maximum passband attenuation (dB):"
-#~ msgstr "Atenuació de banda passant màxima (dB):"
-
-#~ msgid "Classic Filters..."
-#~ msgstr "Filtres clàssics..."
-
-#~ msgid "Performing Classic Filtering"
-#~ msgstr "S'està fent un filtratge clàssic"
-
-#~ msgid "Silence Generator"
-#~ msgstr "Generador de silenci"
-
-#~ msgid "Silence..."
-#~ msgstr "Silenci..."
-
-#~ msgid "Generating Silence"
-#~ msgstr "S'està generant el silenci"
-
-#~ msgid "Applied effect: Generate Silence, %.6lf seconds"
-#~ msgstr "S'ha aplicat l'efecte: Generació d'un silenci de %.6lf segons"
-
-#~ msgid "Applying Stereo to Mono"
-#~ msgstr "S'està aplicant la conversió d'estèreo a mono"
-
-#~ msgid "Sliding Time Scale/Pitch Shift..."
-#~ msgstr "Desplaçament de l'escala de temps/Desplaçament de to..."
-
-#~ msgid "Changing Tempo/Pitch"
-#~ msgstr "S'està canviant el temps/to"
-
-#~ msgid ""
-#~ "Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = "
-#~ "%.2f, %.6lf seconds"
-#~ msgstr ""
-#~ "S'ha aplicat l'efecte: Genera %s ona o ones %s, de freqüència = %.2f Hz, "
-#~ "amplitud = %.2f, %.6lf segons"
-
-#~ msgid "Chirp Generator"
-#~ msgstr "Generador de supertons"
-
-#~ msgid "Tone Generator"
-#~ msgstr "Generador de tons"
-
-#~ msgid "Frequency (Hz)"
-#~ msgstr "Freqüència (Hz)"
-
-#~ msgid "Generating Chirp"
-#~ msgstr "S'està generant el supertò"
-
-#~ msgid "Generating Tone"
-#~ msgstr "S'està generant un to"
-
-#~ msgid "Minimum detection duration: 0.001 seconds."
-#~ msgstr "Durada mínima de la detecció: 0.001 seconds."
-
-#~ msgid "Maximum detection duration: 10000 seconds."
-#~ msgstr "Durada màxima de la detecció: 10000 seconds."
-
-#~ msgid "Cannot truncate to less than 0 seconds."
-#~ msgstr "No es pot truncar a menys de 0 segons."
-
-#~ msgid "Maximum truncation length is 10000 seconds."
-#~ msgstr "La durada màxima del truncament és de 1000 segons."
-
-#~ msgid "Compression cannot be less than 0 percent."
-#~ msgstr "La compressió no pot ser de menys del 0 per cent."
-
-#~ msgid "Compression must be less than 100 percent"
-#~ msgstr "La compressió ha de ser de menys del 100 per cent"
-
-#~ msgid "Truncate Silence..."
-#~ msgstr "Trunca un silenci..."
-
-#~ msgid "Truncating Silence..."
-#~ msgstr "S'està truncant el silenci..."
-
-#~ msgid ""
-#~ "This effect does not support a textual interface. At this time, you may "
-#~ "not use this effect on Linux."
-#~ msgstr ""
-#~ "Aquest efecte no suporta una interfície de text. Ara per ara no podeu "
-#~ "utilitzar aquest efecte amb el Linux."
-
-#~ msgid "VST Effect"
-#~ msgstr "Efecte VST"
-
-#~ msgid ""
-#~ "This effect does not support a textual interface.  Falling back to "
-#~ "graphical display."
-#~ msgstr ""
-#~ "Aquest efecte no suporta cap interfície de text. Es retornarà a la "
-#~ "visualització gràfica."
-
-#~ msgid ""
-#~ "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = "
-#~ "%.0f%%, resonance = %.1f, frequency offset = %.0f%%"
-#~ msgstr ""
-#~ "S'ha aplicat l'efecte: %s freqüència = %.1f Hz, fase inicial = %.0f "
-#~ "graus, profunditat = %.0f%%, ressonància = %.1f, desplaçament de "
-#~ "freqüència = %.0f%%"
-
-#~ msgid "Wahwah..."
-#~ msgstr "Wahwah..."
-
-#~ msgid "Applying Wahwah"
-#~ msgstr "S'està aplicant l'efecte Wahwah"
-
-#~ msgid "Performing Effect: %s"
-#~ msgstr "S'està aplicant l'efecte: %s"
-
-#~ msgid ""
-#~ "Sorry, Plug-in Effects cannot be performed on stereo tracks where the "
-#~ "individual channels of the track do not match."
-#~ msgstr ""
-#~ "Els efectes complementaris no es poden aplicar a pistes estereofòniques "
-#~ "quan els dos canals no coincideixen."
-
-#~ msgid "Unable to load plug-in %s"
-#~ msgstr "No s'ha pogut carregar el connector %s"
-
-#~ msgid "Author: "
-#~ msgstr "Autor:"
-
-#~ msgid "Length (seconds)"
-#~ msgstr "Longitud (segons)"
-
-#~ msgid "Note length (seconds)"
-#~ msgstr "Longitud de la nota (segons)"
-
-#~ msgid "Note velocity"
-#~ msgstr "Dinàmica (velocity) de la nota"
-
-#~ msgid "Note key"
-#~ msgstr "Clau de la nota"
-
-#~ msgid "Extracting features: %s"
-#~ msgstr "Funcionalitats d'extracció: %s"
-
-#~ msgid " - Vamp audio analysis plugin"
-#~ msgstr " - connector d'anàlisi d'àudio Vamp"
-
-#~ msgid "GSM 6.10 WAV (mobile)"
-#~ msgstr "WAV GSM 6.10 (mòbil)"
-
-#~ msgid "Your file will be exported as a 16-bit AIFF (Apple/SGI) file.\n"
-#~ msgstr "El fitxer s'exportarà en el format AIFF (Apple/SGI) de 16 bits.\n"
-
-#~ msgid "Your file will be exported as a 16-bit WAV (Microsoft) file.\n"
-#~ msgstr "El fitxer s'exportarà en format WAV (Microsoft) de 16 bits.\n"
-
-#~ msgid "Set Selection Point and Play"
-#~ msgstr "Estableix el punt de selecció i interpreta"
-
-#~ msgid "SpectralSelection"
-#~ msgstr "Selecció espectral"
-
-#~ msgid "Vertical Ruler"
-#~ msgstr "Regle vertical"
-
-#~ msgid "Using block size of %ld\n"
-#~ msgstr "Emprant blocs de %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Ordre desconeguda: %s\n"
-
-#~ msgid "Command-line options supported:"
-#~ msgstr "Opcions admeses a la línia d'ordres:"
-
-#~ msgid ""
-#~ "In addition, specify the name of an audio file or Audacity project to "
-#~ "open it."
-#~ msgstr ""
-#~ "A més, heu d'indicar el nom d'un fitxer de so o un projecte Audacity per "
-#~ "obrir-lo."
-
-#~ msgid "&Quick Help (in web browser)"
-#~ msgstr "&Ajuda ràpida (al navegador web)"
-
-#~ msgid "&Manual (in web browser)"
-#~ msgstr "&Manual (al navegador web)"
-
-#~ msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
-#~ msgstr ""
-#~ "Mode multi-eina: Feu Ctrl-P per veure les preferències de ratolí i teclat"
-
-#~ msgid "To RPM"
-#~ msgstr "A (RPM)"
-
-#~ msgid "Install VST Effects"
-#~ msgstr "Instal·la efectes VST"
-
-#~ msgid "Buffer Delay Compensation"
-#~ msgstr "Compensació del retard a la memòria intermèdia"
-
-#~ msgid "To improve Audacity startup, a search for VST effects is performed "
-#~ msgstr ""
-#~ "Per tal de millorar l'engegada inicial de l'Audacity, es realitza una "
-#~ "cerca dels efectes VST disponibles "
-
-#~ msgid "once and relevant information is recorded. When you add VST effects "
-#~ msgstr ""
-#~ "una única vegada, guardant només la informació més relevant. Quan afegiu "
-#~ "nous efectes VST "
-
-#~ msgid "to your system, you need to tell Audacity to rescan so the new "
-#~ msgstr ""
-#~ "al vostre sistema, heu d'indicar a l'Audacity que torni a escanejar-los "
-#~ "per tal que els nous "
-
-#~ msgid "information can be recorded."
-#~ msgstr "la informació es pot enregistrar."
-
-#~ msgid "&Rescan effects on next launch"
-#~ msgstr "&Torna a escanejar els efectes en engegar l'Audacity"
-
-#~ msgid "VST GUI interfaces are currently unsupported on Linux"
-#~ msgstr ""
-#~ "Les interfícies gràfiques dels efectes VST no estan disponibles en Linux"
-
-#~ msgid "Could not load file or incompatible content."
-#~ msgstr ""
-#~ "No s'ha pogut llegir el fitxer, o bé el seu contingut és incompatibe."
-
-#~ msgid "Performing Effect: "
-#~ msgstr "S'està aplicant l'efecte:"
-
-#~ msgid "Both channels of a stereo track must be the same sample rate."
-#~ msgstr ""
-#~ "Els dos canals d'una pista estereofònica han de tenir la mateixa "
-#~ "freqüència de mostreig."
-
-#~ msgid "Both channels of a stereo track must be the same length."
-#~ msgstr ""
-#~ "Els dos canals d'una pista estereofònica han de tenir la mateixa durada."
-
-#~ msgid "Checking %s"
-#~ msgstr "S'esta comprovant %s"
-
-#~ msgid "Restart Audacity to apply changes."
-#~ msgstr "Reinicieu l'Audacity per aplicar els canvis."
-
-#~ msgid "Display Audio Unit effects in Graphical Mode"
-#~ msgstr "Mostra els efectes de la unitat d'àudio en mode gràfic"
-
-#~ msgid "&Display VST effects in Graphical Mode"
-#~ msgstr "&Mostra els efectes VST en mode gràfic"
-
-#~ msgid "&Rescan VST effects next time Audacity is started"
-#~ msgstr ""
-#~ "To&rna a escanejar els efectes VST la propera vegada que s'iniciï "
-#~ "l'Audacity"
-
-#~ msgid "'New' is like 'Ask', but asks just once."
-#~ msgstr "'Nou' és com 'Demana-m'ho', però ho pregunta només una vegada."
-
-#~ msgid "Recording Level (Click to monitor.)"
-#~ msgstr "Nivell d'enregistrament (feu clic per monitoritzar-lo)"
-
-#~ msgid "Enable Meter"
-#~ msgstr "Habilita el picòmetre"
-
-#~ msgid "Disable Meter"
-#~ msgstr "Inhabilita el picòmetre"
-
-#~ msgid "Stop Automated Recording Level Adjustment"
-#~ msgstr "Atura l'ajustament automàtic del nivell d'entrada"
-
-#~ msgid "Start Automated Recording Level Adjustment"
-#~ msgstr "Inicia l'ajustament automàtic del nivell d'entrada"
-
-#~ msgid "Vertical Stereo"
-#~ msgstr "Estèreo vertical"
-
-#~ msgid "Automated Recording Level Adjustment stopped as requested by user."
-#~ msgstr ""
-#~ "S'ha aturat l'ajustament automàtic del nivell d'entrada a petició de "
-#~ "l'usuari/ària."
-
-#~ msgid "Input Meter"
-#~ msgstr "Picòmetre d'entrada"
-
-#~ msgid ""
-#~ "Recovering a project will not change any files on disk before you save it."
-#~ msgstr ""
-#~ "La recuperació d'un projecte no modificarà cap fitxer del disc fins que "
-#~ "no el deseu."
-
-#~ msgid "Do Not Recover"
-#~ msgstr "No el recuperis"
-
-#~ msgid "Confirm?"
-#~ msgstr "Ho confirmeu?"
-
-#~ msgid "GStreamer %s: %s"
-#~ msgstr "GStreamer %s: %s"
-
-#~ msgid ""
-#~ "GStreamer was configured in preferences and successfully loaded before,\n"
-#~ "                      but this time Audacity failed to load it at "
-#~ "startup.\n"
-#~ "                      You may want to go back to Preferences > Libraries "
-#~ "and re-configure it."
-#~ msgstr ""
-#~ "El GStreamer es va configurar a les preferències i havia funcionat "
-#~ "correctament en ocasions anteriors,\n"
-#~ "                      però aquesta vegada l'Audacity no ha pogut carregar-"
-#~ "lo a l'inici.\n"
-#~ "                      hauríeu d'anar a Preferències > Biblioteques i "
-#~ "tornar a configurar-lo."
-
-#~ msgid "GStreamer startup failed"
-#~ msgstr "Ha fallat la iniciació del GStreamer"
-
-#~ msgid ""
-#~ "You have left blank label names.  These will be\n"
-#~ "skipped when repopulating the Label Tracks.\n"
-#~ "\n"
-#~ "Would you like to go back and provide names?"
-#~ msgstr ""
-#~ "Heu deixat alguns noms d'etiquetes en blanc.  Aquests elements\n"
-#~ "seran ignorats quan es regenerin les pistes d'etiquetes.\n"
-#~ "\n"
-#~ "Voleu tornar enrere i posar noms a aquestes etiquetes?"
-
-#, fuzzy
-#~ msgid "R&emove Audio or Labels"
-#~ msgstr "Edició de les categories o les etiquetes de dades"
-
-#~ msgid "Pl&ay"
-#~ msgstr "Re&produeix"
-
-#~ msgid "Align Tracks To&gether"
-#~ msgstr "Alinea les pistes &conjuntament"
-
-#~ msgid "Align with &Zero"
-#~ msgstr "Alinea amb el &zero"
-
-#~ msgid "Align with &Cursor"
-#~ msgstr "Alinea amb el &cursor"
-
-#~ msgid "Align with Selection &Start"
-#~ msgstr "Alinea amb l'&inici de la selecció"
-
-#~ msgid "Align with Selection &End"
-#~ msgstr "Alinea amb el final de la &selecció"
-
-#~ msgid "Align End with Cu&rsor"
-#~ msgstr "Alinea per darrera amb el cu&rsor"
-
-#~ msgid "Align End with Selection En&d"
-#~ msgstr "Alinea per darrera amb el &final de la selecció"
-
-#~ msgid "Ali&gn and Move Cursor"
-#~ msgstr "Alin&ea i mou el cursor"
-
-#, fuzzy
-#~ msgid "Change output device"
-#~ msgstr "Dispositiu d'àudio de sortida"
-
-#~ msgid "Adjust output gain"
-#~ msgstr "Ajusta el guany de sortida"
-
-#~ msgid "Increase output gain"
-#~ msgstr "Incrementa el guany de sortida"
-
-#~ msgid "Decrease output gain"
-#~ msgstr "Redueix el guany de sortida"
-
-#~ msgid "Adjust input gain"
-#~ msgstr "Ajusta el guany d'entrada"
-
-#~ msgid "Increase input gain"
-#~ msgstr "Incrementa el guany d'entrada"
-
-#~ msgid "Decrease input gain"
-#~ msgstr "Redueix el guany d'entrada"
-
-#~ msgid "Aligned with zero"
-#~ msgstr "Alineat amb el zero"
-
-#~ msgid "Aligned cursor"
-#~ msgstr "Alineat amb el cursor"
-
-#~ msgid "Aligned end with cursor"
-#~ msgstr "Alineat pel darrera amb el cursor"
-
-#~ msgid "Aligned end with selection start"
-#~ msgstr "Alineat pel darrera amb l'inici de la selecció"
-
-#~ msgid "Aligned end with selection end"
-#~ msgstr "Alineat pel darrera amb el final de la selecció"
-
-#~ msgid ""
-#~ "Audacity compressed project files (.aup) save your work in a smaller, "
-#~ "compressed (.ogg) format. \n"
-#~ "Compressed project files are a good way to transmit your project online, "
-#~ "because they are much smaller. \n"
-#~ "To open a compressed project takes longer than usual, as it imports each "
-#~ "compressed track. \n"
-#~ "\n"
-#~ "Most other programs can't open Audacity project files.\n"
-#~ "When you want to save a file that can be opened by other programs, select "
-#~ "one of the\n"
-#~ "Export commands."
-#~ msgstr ""
-#~ "Els fitxers comprimits de projecte Audacity (.aup) desen la vostra feina "
-#~ "en un format reduït i comprimit (.ogg).\n"
-#~ "Els fitxers comprimits són una bona manera de transmetre els projectes "
-#~ "per la xarxa, ja que són molt més petits. \n"
-#~ "L'obertura dels projectes comprimits requereix més temps, ja que totes "
-#~ "les pistes han de ser importades i descomprimides.\n"
-#~ " \n"
-#~ "La majoria de programes no poden obrir els fitxers de projecte de "
-#~ "l'Audacity.\n"
-#~ "Si voleu desar el fitxer en un format que pugui ser obert per altres "
-#~ "programes, seleccioneu alguna de les\n"
-#~ " Ordres d'exportació."
-
-#~ msgid ""
-#~ "You are saving an Audacity project file (.aup).\n"
-#~ "\n"
-#~ "Saving a project creates a file that only Audacity can open.\n"
-#~ "\n"
-#~ "To save an audio file for other programs, use one of the \"File > Export"
-#~ "\" commands.\n"
-#~ msgstr ""
-#~ "Esteu enregistrant un fitxer de projecte Audacity (.aup).\n"
-#~ "\n"
-#~ "En enregistrar un projecte es genera un fitxer que només pot obrir "
-#~ "l'Audacity.\n"
-#~ "\n"
-#~ "Per generar un fitxer de so que pugui ser obert per altres programes feu "
-#~ "servir alguna de les opcions del menú \"Fitxer > Exporta\".\n"
-
-#, fuzzy
-#~ msgid "Waveform (d&B)"
-#~ msgstr "So en forma d'ona"
-
-#~ msgid "Plugins 1 to %i"
-#~ msgstr "Connectors 1 a %i"
-
-#~ msgid "Decay Time:"
-#~ msgstr "Temps de caiguda:"
-
-#, fuzzy
-#~ msgid "WCAG 2 Help"
-#~ msgstr "Temes d'ajuda"
-
-#~ msgid "Min silence duration:"
-#~ msgstr "Durada mínima del silenci:"
-
-#~ msgid "Max silence duration:"
-#~ msgstr "Durada màxima del silenci:"
-
-#~ msgid ":1"
-#~ msgstr ":1"
-
-#~ msgid "Threshold for silence:"
-#~ msgstr "Llindar de silenci:"
-
-#~ msgid ""
-#~ "   Duration must be at least 1 millisecond\n"
-#~ "   Compress ratio must be at least 1:1"
-#~ msgstr ""
-#~ "   La durada ha de ser d'almenys un mil·lisegon\n"
-#~ "   El coeficient de compressió ha de ser d'almenys 1:1"
-
-#~ msgid "Load VST Program:"
-#~ msgstr "Carrega el programa VST:"
-
-#, fuzzy
-#~ msgid "Enable these Modules (if present), next time Audacity is started"
-#~ msgstr ""
-#~ "Torna a escanejar els efectes VST la propera vegada que s'iniciï "
-#~ "l'Audacity"
-
-#, fuzzy
-#~ msgid "mod-&script-pipe"
-#~ msgstr "Envia la sortida al programa"
-
-#, fuzzy
-#~ msgid "mod-&nyq-bench"
-#~ msgstr "Retorna l'invers d'n mod m"
-
-#, fuzzy
-#~ msgid "mod-&track-panel"
-#~ msgstr "acoblador o quadre"
-
-#~ msgid "Output Device"
-#~ msgstr "Dispositiu de sortida"
-
-#~ msgid "Input Device"
-#~ msgstr "Dispositiu d'entrada"
-
-#, fuzzy
-#~ msgid "Input Channels"
-#~ msgstr "Nombre de canals"
-
-#, fuzzy
-#~ msgid "Select Output Device"
-#~ msgstr "Seleccioneu un dispositiu de sortida d'àudio"
-
-#, fuzzy
-#~ msgid "Output Level"
-#~ msgstr "nivell de sortida de depuració"
-
-#~ msgid "Output Volume"
-#~ msgstr "Volum de sortida"
-
-#~ msgid "Slider Output"
-#~ msgstr "Sortida del lliscador"
-
-#~ msgid "Input Volume"
-#~ msgstr "Volum d'entrada"
-
-#~ msgid "Slider Input"
-#~ msgstr "Entrada del lliscador"
-
-#, fuzzy
-#~ msgid "Output Volume: %.2f"
-#~ msgstr "Monitoritza el volum del so de sortida"
-
-#~ msgid "A Free Digital Audio Editor<br>"
-#~ msgstr "Programari lliure d'edició de so digital<br>"
-
-#~ msgid "CleanSpeech Batch Processing"
-#~ msgstr "Processament per lots de CleanSpeech"
-
-#~ msgid "Select vocal file(s) for batch CleanSpeech Chain..."
-#~ msgstr "Seleccioneu un o més fitxers per al processament per lots..."
-
-#~ msgid ""
-#~ "<p>You do not appear to have 'help' installed on your computer.<br> "
-#~ "Please <a href=\"*URL*\">view or download it online</a>."
-#~ msgstr ""
-#~ "<p>Sembla ser que no teniu l'ajuda instal·lada al vostre ordinador.<br> "
-#~ "Si us plau, <a href=\"*URL*\">vegeu-la o descarregueu-la en línia</a>."
-
-#~ msgid "Open Me&tadata Editor..."
-#~ msgstr "Obre l'editor de me&tadades..."
-
-#~ msgid "Export CleanSpeech &Presets..."
-#~ msgstr "Exporta &configuracions del CleanSpeech..."
-
-#~ msgid "I&mport CleanSpeech Presets..."
-#~ msgstr "Importa &configuracions del CleanSpeech..."
-
-#~ msgid "&About Audacity CleanSpeech..."
-#~ msgstr "&Quant a l'Audacity CleanSpeech..."
-
-#~ msgid "Edit the metadata tags"
-#~ msgstr "Edita les etiquetes de metadades"
-
-#~ msgid "Save CleanSpeech Preset File As:"
-#~ msgstr "Enregistra aquesta configuració del CleanSpeech com a:"
-
-#~ msgid "CleanSpeech Presets (*.csp)|*.csp"
-#~ msgstr "Configuracions del CleanSpeech (*.csp)|*.csp"
-
-#~ msgid "Problem encountered exporting presets."
-#~ msgstr "Hi ha hagut un problema en exportar les configuracions."
-
-#, fuzzy
-#~ msgid "Unable to Export"
-#~ msgstr "No s'ha pogut exportar"
-
-#~ msgid "Save Speech As:"
-#~ msgstr "Enregistra les dades Speech com a:"
-
-#~ msgid "Windows PCM Audio file (*.wav)|*.wav"
-#~ msgstr "Fitxer de so Windows PCM (*.wav)|*.wav"
-
-#~ msgid "Resampling disabled."
-#~ msgstr "Delmatge inhabilitat"
-
-#~ msgid "by Dominic Mazzoni"
-#~ msgstr "per Dominic Mazzoni"
-
-#~ msgid "Auto Duck by Markus Meyer"
-#~ msgstr "Auto Duck per Markus Meyer"
-
-#~ msgid "by Steve Daulton"
-#~ msgstr "per Steve Daulton"
-
-#, fuzzy
-#~ msgid "Gain (dB)"
-#~ msgstr "Guany (dB):"
-
-#~ msgid "Change Length..."
-#~ msgstr "Canvia la longitud..."
-
-#~ msgid "Changing Length..."
-#~ msgstr "S'està canviant la longitud..."
-
-#~ msgid "by Vaughan Johnson && Dominic Mazzoni"
-#~ msgstr "per Vaughan Johnson && Dominic Mazzoni"
-
-#~ msgid "using SoundTouch, by Olli Parviainen"
-#~ msgstr "S'està emprant el SoundTouch, d'Olli Parviainen"
-
-#~ msgid "From:"
-#~ msgstr "Des de:"
-
-#~ msgid "From Pitch"
-#~ msgstr "Des del to"
-
-#~ msgid "To Pitch"
-#~ msgstr "Fins al to:"
-
-#~ msgid "From frequency in hertz"
-#~ msgstr "Des de la freqüència en Hertz"
-
-#~ msgid "To frequency in seconds"
-#~ msgstr "A la freqüència en segons"
-
-#~ msgid "using SampleRate, by Erik de Castro Lopo"
-#~ msgstr "s'està fent servir el SampleRate, d'Erik de Castro Lopo"
-
-#~ msgid "Click and Pop Removal by Craig DeForest"
-#~ msgstr "Supressió de sorolls \"clic\" i \"pop\", per Craig DeForest"
-
-#~ msgid "Select threshold"
-#~ msgstr "Selecció del llindar"
-
-#, fuzzy
-#~ msgid "by Salvo Ventura"
-#~ msgstr "per Salvo Ventura (2006)"
-
-#~ msgid "by Dominic Mazzoni && Vaughan Johnson"
-#~ msgstr "per  Dominic Mazzoni i Vaughan Johnson"
-
-#~ msgid "Equalization, by Martyn Shaw && Mitch Golden"
-#~ msgstr "Equalizació, per Martyn Shaw i Mitch Golden"
-
-#~ msgid "by Lynn Allan"
-#~ msgstr "per Lynn Allan"
-
-#~ msgid "Degree of Leveling"
-#~ msgstr "Grau d'anivellament"
-
-#~ msgid "Noise Threshold (Hiss/Hum/Ambient Noise)"
-#~ msgstr "Llindar de soroll (Soroll \"hiss\", \"hum\" o d'ambient)"
-
-#~ msgid "Threshold for Noise:"
-#~ msgstr "Llindar de soroll:"
-
-#~ msgid ""
-#~ "Could not open file:\n"
-#~ "  %s"
-#~ msgstr ""
-#~ "No s'ha pogut obrir el fitxer: \n"
-#~ " %s"
-
-#~ msgid "Attempt to run Noise Removal without a noise profile.\n"
-#~ msgstr ""
-#~ "S'ha intentat aplicar la reducció de soroll sense haver definit abans el "
-#~ "perfil.\n"
-
-#~ msgid "Noise Removal by Dominic Mazzoni"
-#~ msgstr "Supressió de soroll, per Dominic Mazzoni"
-
-#~ msgid "Normalize maximum amplitude to:"
-#~ msgstr "Normalitza l'amplitud màxima a:"
-
-#~ msgid "by Nasca Octavian Paul"
-#~ msgstr "per Nasca Octavian Paul"
-
-#~ msgid ""
-#~ "Sorry, this effect cannot be performed on stereo tracks where the "
-#~ "individual channels of the track do not match."
-#~ msgstr ""
-#~ "Aquest efecte no es pot aplicar a pistes estereofòniques on els dos "
-#~ "canals no coincideixen."
-
-#~ msgid "using SBSMS, by Clayton Otey"
-#~ msgstr "emprant SBSMS, de Clayton Otey"
-
-#~ msgid "by Lynn Allan && Philip Van Baren"
-#~ msgstr "per Lynn Allan i Philip Van Baren"
-
-#~ msgid "Edit metadata"
-#~ msgstr "Edita les metadades"
-
-#~ msgid "Modes"
-#~ msgstr "Modes"
-
-#, fuzzy
-#~ msgid "Clea&nSpeech Mode (Customized GUI)"
-#~ msgstr "Mode Cl&eanSpeech (Entorn personalitzat)"
-
-#~ msgid "Don't a&pply effects in batch mode"
-#~ msgstr "&No apliquis efectes quan facis un procés per lots"
-
-#~ msgid "Play (Shift for Loop Play)"
-#~ msgstr "Reprodueix (amb Maj. per a reproduir en bucle)"
-
-#~ msgid "Record (Shift for Append Record)"
-#~ msgstr "Enregistra (amb Majúscules per a Enregistrar afegint)"
-
-#~ msgid ""
-#~ "Recording in CleanSpeech mode is not possible when a track, or more than "
-#~ "one project, is already open."
-#~ msgstr ""
-#~ "L'enregistrament en la modalitat CleanSpeech no és possible quan una "
-#~ "pista, o més d'un projecte, es troben oberts alhora."
-
-#, fuzzy
-#~ msgid ""
-#~ "This is a Beta version of the program. It may contain bugs and unfinished "
-#~ "features. We depend on your feedback: please send bug reports and feature "
-#~ "requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> "
-#~ "address. For help, use the Help menu in the program, view the tips and "
-#~ "tricks on our <a href=\"http://wiki.audacityteam.org/index.php?"
-#~ "title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://"
-#~ "audacityteam.org/forum/\">Forum</a>."
-#~ msgstr ""
-#~ "Aquesta és una versió beta del programa. Pot contenir errors i "
-#~ "funcionalitats inacabades. Depenem dels vostres comentaris epr a millorar-"
-#~ "lo: si us plau, envieu informes d'errades i demandes de noves "
-#~ "funcionalitats escrivint en anglès a l'adreça d'<a href=\"mailto:"
-#~ "feedback@audacityteam.org\">opinions dels usuaris</a>. Per a obtenir "
-#~ "ajuda sobre l'ús de l'Audacity visiteu el nostre <a href=\"http://"
-#~ "audacityteam.org/forum/\">fòrum</a>. "
-
-#~ msgid ""
-#~ "Your project is self-contained; it does not depend on any external audio "
-#~ "files."
-#~ msgstr "El vostre projecte és autònom. No depèn de cap fitxer extern de so."
-
-#~ msgid ""
-#~ "Project check detected %d input file[s] being used in place\n"
-#~ "('alias files') are now missing.  There is no way for Audacity\n"
-#~ "to recover these files automatically; you may choose to\n"
-#~ "permanently fill in silence for the missing files, temporarily\n"
-#~ "fill in silence for this session only, or close the project now\n"
-#~ "and try to restore the missing files by hand."
-#~ msgstr ""
-#~ "La comprovació del projecte ha detectat que %d fitxers d'entrada que "
-#~ "s'estaven fent servir\n"
-#~ "('fitxers àlies') han desaparegut.  No hi ha manera de que l'Audacity\n"
-#~ "pugui recuperar els fitxers automàticament; heu d'escollir entre\n"
-#~ "omplir amb silencis de manera permanent els espais del projecte "
-#~ "corresponents a aquests fitxers,\n"
-#~ "i mirar de restaurar manualment els fitxers que han desaparegut."
-
-#~ msgid "Replace missing data with silence [permanent upon save]"
-#~ msgstr ""
-#~ "Substitueix les dades perdudes per silencis [de manera permanent si es "
-#~ "desa el projecte]"
-
-#, fuzzy
-#~ msgid "FreqWindow"
-#~ msgstr "Finestra FFT"
-
-#~ msgid "&Control Toolbar"
-#~ msgstr "Barra de &control"
-
-#~ msgid "&Link Audio and Label Tracks"
-#~ msgstr "En&llaça l'àudio i les pistes d'etiquetes"
-
-#~ msgid "S&ort tracks"
-#~ msgstr "&Ordena les pistes"
-
-#~ msgid "Trim"
-#~ msgstr "Deixa només la selecció"
-
-#~ msgid "Silence Labels"
-#~ msgstr "Silencia etiquetes"
-
-#~ msgid "Split Labels"
-#~ msgstr "Divideix etiquetes"
-
-#~ msgid "Join Labels"
-#~ msgstr "Ajunta etiquetes"
-
-#~ msgid "Split at labels"
-#~ msgstr "Divideix a les etiquetes"
-
-#~ msgid "Alignment completed."
-#~ msgstr "Alineament acabat"
-
-#~ msgid ""
-#~ "The version of Audacity you are using does not support multiple time "
-#~ "tracks."
-#~ msgstr ""
-#~ "La versió de l'Audacity que esteu utilitzant no permet l'ús de múltiples "
-#~ "pistes de temps."
-
-#~ msgid ""
-#~ "This file was saved by Audacity %s, a much\n"
-#~ "older version.  The format has changed.\n"
-#~ "\n"
-#~ "Audacity could corrupt the file in opening\n"
-#~ "it, so you must back it up first.\n"
-#~ "\n"
-#~ "Open this file now?"
-#~ msgstr ""
-#~ "Aquest fitxer va ser desat amb l'Audacity %s, una versió\n"
-#~ "molt antiga del programa. El format dels fitxers ha canviat.\n"
-#~ "\n"
-#~ "L'Audacity podria fer malbé les dades en intentar obrir-lo,\n"
-#~ "o sigui que millor que en feu abans una còpia de seguretat.\n"
-#~ "\n"
-#~ "Voleu obrir ara aquest fitxer?"
-
-#~ msgid "Error saving project"
-#~ msgstr "S'ha produït un error en desar el projecte"
-
-#~ msgid "Libresample by Dominic Mazzoni and Julius Smith"
-#~ msgstr "Libresample, per Dominic Mazzoni i Julius Smith"
-
-#~ msgid "Libsamplerate by Erik de Castro Lopo"
-#~ msgstr "Libsamplerate, per Erik de Castro Lopo"
-
-#~ msgid "Control"
-#~ msgstr "Control"
-
-#~ msgid "Gap detected in project file\n"
-#~ msgstr "S'ha detectat un forat al fitxer de projecte\n"
-
-#~ msgid "Bass Boost"
-#~ msgstr "Potenciació de baixos"
-
-#~ msgid "Frequency Hertz"
-#~ msgstr "Hertz de freqüència"
-
-#~ msgid "Boost dB"
-#~ msgstr "dB de potenciació"
-
-#~ msgid "BassBoost..."
-#~ msgstr "Amplificació dels baixos..."
-
-#~ msgid "custom"
-#~ msgstr "personalitzat"
-
-#~ msgid "Enter the desired name of the curve"
-#~ msgstr "Escriviu el nom que vulgueu donar a la corba"
-
-#~ msgid "None-Skip"
-#~ msgstr "Cap / Saltar-s'ho"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Spike Cleaner"
-#~ msgstr "Netejador de pics"
-
-#~ msgid "SpikeCleaner by Lynn Allan"
-#~ msgstr "SpikeCleaner per Lynn Allan"
-
-#~ msgid ""
-#~ "Max Spike Duration (milliseconds): \n"
-#~ "(99999 or greater is off)"
-#~ msgstr ""
-#~ "Durada màxima dels pics (en mil·lisegons): \n"
-#~ "(un valor de 99999 o més els elimina completament)"
-
-#~ msgid "Theshold for silence: "
-#~ msgstr "Llindar de silenci:"
-
-#~ msgid "Spike Cleaner..."
-#~ msgstr "Netejador de pics..."
-
-#~ msgid "Applying Spike Cleaner..."
-#~ msgstr "S'està aplicant el netejador de pics..."
-
-#~ msgid "Initial Tempo Change (%):"
-#~ msgstr "Canvi de temps inicial (%):"
-
-#~ msgid "Final Tempo Change (%):"
-#~ msgstr "Canvi de temps final (%):"
-
-#~ msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
-#~ msgstr "Desplaçament de to inicial (semitons) [de -12 a 12]:"
-
-#, fuzzy
-#~ msgid "AMR support is not distributable"
-#~ msgstr "El suport a AMR no és distribuïble"
-
-#~ msgid ""
-#~ "Properly configured FFmpeg is required to proceed.\n"
-#~ "You can configure it at Preferences > Libraries.\n"
-#~ "\n"
-#~ "Note that AMR support is not available with our FFmpeg\n"
-#~ "installer, but requires you compile FFmpeg yourself."
-#~ msgstr ""
-#~ "Cal que l'FFmpeg estigui correctament configurat per a procedir.\n"
-#~ "Podeu configurar-lo a Preferències > Biblioteques.\n"
-#~ "\n"
-#~ "Tingueu en compte que el suport a AMR no està disponible en el nostre "
-#~ "instal·lador\n"
-#~ "d'FFmpeg, però podeu obtenir-lo compilant-vos vosaltres mateixos l'FFmpeg."
-
-#~ msgid "Specify AMR-WB Options"
-#~ msgstr "Especificació de les opcions AMR-WB"
-
-#~ msgid "AMR-WB Export Setup"
-#~ msgstr "Configuració de l'exportació a AMR-WB"
-
-#, fuzzy
-#~ msgid "AMR (wide band) Files (FFmpeg)"
-#~ msgstr "Fitxers AMR (banda estreta) (FFmpeg)"
-
-#~ msgid ""
-#~ "If you have more than one Audio Track, you can export each track as a "
-#~ "separate file,\n"
-#~ "or if you have a Label Track, you can export a new file for each label.\n"
-#~ "\n"
-#~ "This project does not have multiple tracks or a Label Track, so you "
-#~ "cannot export multiple files."
-#~ msgstr ""
-#~ "Si teniu més d'una pista de so podeu exportar-les en fitxers separats,\n"
-#~ "i si teniu una pista d'etiquetes, podeu generar un fitxer a partir de "
-#~ "cada etiqueta.\n"
-#~ "\n"
-#~ "Aquest projecte no té ni múltiples pistes ni pista d'etiquetes, o sigui "
-#~ "que és impossible fer-ne una exportació múltiple."
-
-#~ msgid "Can't export multiple files"
-#~ msgstr "No es poden exportar múltiples fitxers"
-
-#, fuzzy
-#~ msgid "Numbering after Label/Track Name"
-#~ msgstr "S'està emprant el nom de pista o etiqueta"
-
-#~ msgid "Cl&eanSpeech Mode (Customized GUI)"
-#~ msgstr "Mode Cl&eanSpeech (Entorn personalitzat)"
-
-#, fuzzy
-#~ msgid "N&yquist"
-#~ msgstr "Nyquist"
-
-#~ msgid "36"
-#~ msgstr "36"
-
-#~ msgid "60"
-#~ msgstr "60"
-
-#~ msgid "96"
-#~ msgstr "96"
-
-#~ msgid "120"
-#~ msgstr "120"
-
-#~ msgid "145"
-#~ msgstr "145"
-
-#, fuzzy
-#~ msgid "Closing last window &quits Audacity"
-#~ msgstr "Tanca l'Audacity quan es tanqui la darrera &finestra"
-
-#~ msgid ""
-#~ "Note: Export quality options can be chosen by clicking the Options\n"
-#~ "button in the Export dialog."
-#~ msgstr ""
-#~ "Nota: Les opcions referents a la qualitat de l'exportació es poden "
-#~ "escollir\n"
-#~ "fent clic al botó Opcions del diàleg Exporta."
-
-#~ msgid "Error saving keyboard shortcuts"
-#~ msgstr "S'ha produït un error en desar les dreceres de teclat"
-
-#~ msgid "&Play other tracks while recording new one"
-#~ msgstr "Re&produeix les altres pistes mentre se n'enregistra una de nova"
-
-#~ msgid "&Hardware Playthrough (Play new track while recording it)"
-#~ msgstr ""
-#~ "Reproducció a través del &Maquinari (interpreta el so mentre s'enregistra "
-#~ "una pista nova)"
-
-#~ msgid "&Software Playthrough (Play new track while recording it)"
-#~ msgstr ""
-#~ "Reproducció a través del &programari (interpreta el so mentre "
-#~ "s'enregistra una pista nova)"
-
-#~ msgid "Play before cut region:"
-#~ msgstr "Interpreta abans de la regió retallada:"
-
-#~ msgid "Play after cut region:"
-#~ msgstr "Interpreta després de la regió retallada:"
-
-#~ msgid "Audio to buffer:"
-#~ msgstr "So a la memòria intermèdia:"
-
-#~ msgid "Short period:"
-#~ msgstr "Període curt:"
-
-#~ msgid "Long period:"
-#~ msgstr "Període llarg:"
-
-#~ msgid "Play when previewing:"
-#~ msgstr "Interpreta mentre es previsualitza:"
-
-#~ msgid "Zoom in or out"
-#~ msgstr "Apropa o allunya"
-
-#~ msgid "Auto save"
-#~ msgstr "Desa automàticament"
-
-#, fuzzy
-#~ msgid "Auto &save a copy of the project in a separate folder"
-#~ msgstr "Desa automàticament una còpia del projecte en una altra carpeta"
-
-#, fuzzy
-#~ msgid "Auto save in&terval:"
-#~ msgstr "Desa automàticament cada:"
-
-#~ msgid "minutes"
-#~ msgstr "minuts"
-
-#~ msgid "2048"
-#~ msgstr "2048"
-
-#~ msgid "4096 - most narrowband"
-#~ msgstr "4096 - banda més estreta"
-
-#~ msgid "FFT Skip Points"
-#~ msgstr "Punts d'omissió FFT"
-
-#~ msgid "Skip Points"
-#~ msgstr "Punts d'omissió"
-
-#~ msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-#~ msgstr "La freqüència màxima ha de trobar-se entre 100 Hz i 100.000 Hz"
-
-#~ msgid "Clean Speech"
-#~ msgstr "CleanSpeech"
-
-#~ msgid "Output level meter"
-#~ msgstr "Picòmetre de sortida"
-
-#~ msgid "Input Source"
-#~ msgstr "Font d'entrada"
-
-#~ msgid "Input Source:"
-#~ msgstr "Font d'entrada:"
-
-#, fuzzy
-#~ msgid "Input Level Slider"
-#~ msgstr "Dispositiu d'entrada"
-
-#, fuzzy
-#~ msgid "Output Level Slider"
-#~ msgstr "Picòmetre de sortida"
-
-#~ msgid "Adjust left selection to next onset"
-#~ msgstr "Ajusta la selecció esquerra al següent punt d'inici"
-
-#~ msgid "Adjust right selection to previous offset"
-#~ msgstr "Ajusta la selecció dreta a l'anterior punt final"
-
-#~ msgid "Adjust left selection to next offset"
-#~ msgstr "Ajusta la selecció esquerra al següent punt final"
-
-#~ msgid "Adjust right selection to previous onset"
-#~ msgstr "Ajusta la selecció dreta a l'anterior punt inicial"
-
-#~ msgid "Select region of sound around cursor"
-#~ msgstr "Selecciona la regió de so al voltant del cursor"
-
-#~ msgid "Select region of silence around cursor"
-#~ msgstr "Selecciona una regió de silenci al voltant del cursor"
-
-#~ msgid "Automatically make labels from words"
-#~ msgstr "Crea etiquetes de manera automàtica des de les paraules"
-
-#~ msgid "Add label at selection"
-#~ msgstr "Afegeix una etiqueta a la selecció"
-
-#~ msgid "Calibrate voicekey"
-#~ msgstr "Calibra la clau de veu"
-
-#~ msgid "Adjust Sensitivity"
-#~ msgstr "Ajusta la sensibilitat"
-
-#~ msgid "Energy"
-#~ msgstr "Energia"
-
-#~ msgid "Sign Changes (Low Threshold)"
-#~ msgstr "Canvis de signe (llindar baix)"
-
-#~ msgid "Sign Changes (High Threshold)"
-#~ msgstr "Canvis de signe (llindar alt)"
-
-#~ msgid "Direction Changes (Low Threshold)"
-#~ msgstr "Canvis de direcció (llindar baix)"
-
-#~ msgid "Direction Changes (High Threshold)"
-#~ msgstr "Canvis de direcció (llindar alt)"
-
-#~ msgid "Key type"
-#~ msgstr "Tipus de clau"
-
-#~ msgid "Left-to-On"
-#~ msgstr "Esquerra-a-PuntInici"
-
-#~ msgid "Right-to-Off"
-#~ msgstr "Dreta-a-PuntFinal"
-
-#~ msgid "Left-to-Off"
-#~ msgstr "Esquerra-a-PuntFinal"
-
-#~ msgid "Right-to-On"
-#~ msgstr "Dreta-a-PuntInicial"
-
-#~ msgid "Select-Sound"
-#~ msgstr "Selecciona-So"
-
-#~ msgid "Select-Silence"
-#~ msgstr "Selecciona-Silenci"
-
-#~ msgid "Make Labels"
-#~ msgstr "Crea etiquetes"
-
-#~ msgid "Add Label"
-#~ msgstr "Afegeix una etiqueta"
-
-#~ msgid "Calibrate"
-#~ msgstr "Calibra"
-
-#~ msgid ""
-#~ "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files "
-#~ "(*.mp3)|*.mp3"
-#~ msgstr ""
-#~ "Fitxers de veu (*.wav;*.mp3)|*.wav;*.mp3|Fitxers WAV (*.wav)|*.wav|"
-#~ "Fitxers MP3 (*.mp3)|*.mp3"
-
-#~ msgid ""
-#~ "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU "
-#~ "files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|"
-#~ "FLAC files (*.flac)|*.flac"
-#~ msgstr ""
-#~ "Tots els fitxers (*.*)|*.*|Fitxers WAV (*.wav)|*.wav|Fitxers AIFF (*.aif)|"
-#~ "*.aif|Fitxers AU (*.au)|*.au|Fitxers MP3 (*.mp3)|*.mp3|FitxersOgg Vorbis "
-#~ "(*.ogg)|*.ogg|Fitxers FLAC (*.flac)|*.flac"
-
-#~ msgid "Bouncing Ball"
-#~ msgstr "Pilota rebotant"
-
-#~ msgid "Highlight"
-#~ msgstr "Realçament"
-
-#~ msgid "Sile&nce"
-#~ msgstr "Sile&ncia"
-
-#~ msgid "Can't Undo"
-#~ msgstr "No es pot desfer"
-
-#~ msgid "Can't Redo"
-#~ msgstr "No es pot refer"
-
-#~ msgid "Disjoined %.2f seconds at t=%.2f"
-#~ msgstr "S'han separat %.2f segons a la posició t=%.2f"
-
-#~ msgid "Disjoin"
-#~ msgstr "Separa"
-
-#~ msgid "Disjoin Labels"
-#~ msgstr "Separa etiquetes"
-
-#~ msgid "Disjoined labeled regions"
-#~ msgstr "S'han separat les regions etiquetades"
-
-#~ msgid "Audacity projects (*.aup)|*.aup"
-#~ msgstr "Projectes de l'Audacity (*.aup)|*.aup"
-
-#~ msgid "Track Accessible out of sync"
-#~ msgstr "S'ha perdut la sincronia de la pista accessible"
-
-#~ msgid "Contrast Tool Foreground"
-#~ msgstr "Regió de primer pla de l'eina de contrasts"
-
-#~ msgid ""
-#~ "Foreground times selected.\n"
-#~ "Now select background and use Ctrl+Shift+T or menu again."
-#~ msgstr ""
-#~ "S'han seleccionat els temps de la regió de primer pla.\n"
-#~ "Ara seleccioneu la regió de fons i feu servir Ctrl+Maj+T, o novament el "
-#~ "menú."
-
-#~ msgid "Contrast Analyzer"
-#~ msgstr "Analitzador de contrasts"
-
-#~ msgid "Measured"
-#~ msgstr "Mesurat"
-
-#~ msgid "Information"
-#~ msgstr "Informació"
-
-#~ msgid "Help for WCAG2 Audio Contrast Analyzer"
-#~ msgstr "Ajuda de l'analitzador de contrasts de so WCAG2"
-
-#~ msgid "Close (keeping times)"
-#~ msgstr "Tanca (conservant els temps)"
-
-#~ msgid "Measure"
-#~ msgstr "Compàs"
-
-#~ msgid "Format selector:"
-#~ msgstr "Selector de formats:"
-
-#~ msgid "Codec selector:"
-#~ msgstr "Selector de còdecs:"
-
-#~ msgid "Use Variable Block Length"
-#~ msgstr "Fes servir una longitud de bloc variable"
-
-#~ msgid "Compression Level:"
-#~ msgstr "Nivell de compressió:"
-
-#~ msgid "LPC coefficients precision"
-#~ msgstr "Precisió dels coeficients LPC"
-
-#~ msgid "Minimal prediction order"
-#~ msgstr "Ordre de predicció mínim"
-
-#~ msgid "Maximal prediction order"
-#~ msgstr "Ordre màxim de predicció"
-
-#~ msgid "Minimal partition order"
-#~ msgstr "Ordre mínim de partició"
-
-#~ msgid "Maximal partition order"
-#~ msgstr "Ordre màxim de partició"
-
-#~ msgid "Low Complexity"
-#~ msgstr "Baixa complexitat"
-
-#~ msgid "Main profile"
-#~ msgstr "Perfil principal"
-
-#~ msgid "Numbering consecutively"
-#~ msgstr "Numeració consecutiva"
-
-#~ msgid "ExportMultiple"
-#~ msgstr "ExportMultiple"
-
-#~ msgid ""
-#~ "Audacity recognized the type of the file '%s',\n"
-#~ "but was unable to import it."
-#~ msgstr ""
-#~ "L'Audacity ha reconegut el tipus del fitxer '%s',\n"
-#~ "però ha estat incapaç d'importar-lo."
-
-#~ msgid "VAMP effects"
-#~ msgstr "Efectes VAMP"
-
-#~ msgid "&Hardware Playthrough: Play new track while recording it"
-#~ msgstr ""
-#~ "Reproducció a través del &Maquinari: Interpreta una pista nova mentre "
-#~ "s'està enregistrant."
-
-#~ msgid "Automatic Volume Recording"
-#~ msgstr "Volum automàtic d'enregistrament"
-
-#~ msgid "Enable Automatic Volume recording."
-#~ msgstr "Activa el volum automàtic d'enregistrament"
-
-#~ msgid "When saving &empty project"
-#~ msgstr "En desar un projecte &buit"
-
-#~ msgid "When &disk space is getting low"
-#~ msgstr "Quan l'espai de &disc sigui escàs"
-
-#~ msgid "To [[welcome|Welcome screen]]"
-#~ msgstr "A la [[welcome|pàgina de benvinguda]]."
-
-#~ msgid ""
-#~ "Learn how to: <ul><li>[[play|play]] an existing audio file <li>[[record|"
-#~ "record]] your voice, LP or tape <li>[[edit|edit]] sounds <li>[[save|save "
-#~ "or open an Audacity project]] <li>[[export|export]] to an MP3 or other "
-#~ "audio file, or [[burncd|burn to a CD]]  </ul></p><p>"
-#~ msgstr ""
-#~ "Descobriu com: <ul><li>[[play|escoltar]] un fitxer de so existent "
-#~ "<li>[[record|enregistrar]] la vostra veu, un disc o una cinta de casset "
-#~ "<li>[[edit|editar]] sons <li>[[save|desar o obrir un projecte de "
-#~ "l'Audacity]] <li>[[export|exportar]] un fitxer de so en MP3 o altres "
-#~ "formats, o [[burncd|enregistrar un CD]]  </ul></p><p>"
-
-#~ msgid ""
-#~ "This screen can be viewed at any time by clicking the <i>Help</i> menu, "
-#~ "then <i>Show Welcome Message</i>. For a detailed guide to all the "
-#~ "Audacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, "
-#~ "or download our <a href=\"http://audacity.sourceforge.net/help/"
-#~ "documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
-#~ msgstr ""
-#~ "Aquesta finestra es pot veure en qualsevol moment fent clic al menú "
-#~ "<i>Ajuda</i> - <i>Mostra el missatge de benvinguda</i>. Per a una guia "
-#~ "detallada dels menús i conttols de l'Audacity feu clic a <i>Ajuda</i> - "
-#~ "<i>Índex</i>, o descarregueu-vos el <a href=\"http://audacity.sourceforge."
-#~ "net/help/documentation/manual_1.4.pdf\">manual complet</a> en format PDF."
-#~ "</p>"
-
-#~ msgid ""
-#~ "<p><b>Opening audio files:</b> Either drag the files into the current "
-#~ "project window, or click <i>File &gt; Import &gt; Audio</i>. Files can be "
-#~ "opened into a new project window with <i>File &gt; Open</i>. The main "
-#~ "formats Audacity plays are <b>AIFF, AU, FLAC, M4A</b> (only on a Mac), "
-#~ "<b>MP2/MP3, OGG Vorbis</b> and <b>WAV</b>. Click [[wma-proprietary|here]] "
-#~ "if your file is in some other format. <b>To import a CD:</b> extract it "
-#~ "to WAV or AIFF using iTunes, Windows Media Player 11 or similar. See our "
-#~ "online guide: [[wiki:How_to_import_CDs|importing CDs]].</p><p> "
-#~ "<p><b>Playing audio:</b> Press the green Play button to start playback. "
-#~ "Press the blue Pause button once to pause playback, and again to resume. "
-#~ "To stop, press the yellow Stop button. Spacebar can be used to either "
-#~ "play or stop. After stopping, playback resumes from its last starting "
-#~ "point. To change the starting point, click in the track at your desired "
-#~ "starting point. The <b>|&lt;&lt;</b> and <b>&gt;&gt;|</b> buttons can be "
-#~ "used to skip to the start or end of the track respectively. </p><br><br>"
-#~ msgstr ""
-#~ "<p><b>Com obrir fitxers de so:</b> Es pot fer tant arrossegant-los dins "
-#~ "de la finestra del projecte o fent clic al menú <i>Fitxer &gt; Importa "
-#~ "&gt; Àudio</i>. Els fitxers es poden obrir també en una finestra nova "
-#~ "mitjançant el menú <i>Fitxer &gt; Obre</i>. Els principals formats "
-#~ "reconeguts per l'Audacity són <b>AIFF, AU, FLAC, M4A</b> (només en un "
-#~ "Mac), <b>MP2/MP3, OGG Vorbis</b> i <b>WAV</b>. Feu clic [[wma-proprietary|"
-#~ "aquí]] si teniu un fitxer en algun altre format. <b>Per a importar un CD:"
-#~ "</b> heu d'extreure el so a un fitxer WAV o AIFF mitjançant l'iTunes, el "
-#~ "Windows Media Player 11 o similar. Vegeu la guia d'ajuda en línia: [[wiki:"
-#~ "How_to_import_CDs|importació de CD]].</p><p> <p><b>Interpretar el so:</b> "
-#~ "Feu clic al botó verd Play per a iniciar la reproducció. Feu clic al botó "
-#~ "blau Pausa per a aturar o reprendre l'interpretació. Feu clic al botó "
-#~ "groc Stop per aturar-la. També es pot fer servir la barra d'espais per a "
-#~ "engegar o aturar la reproducció. Un cop aturada la reproducció, el cursor "
-#~ "torna al punt on s'havia iniciat. Per a canviar el punt d'inici feu clic "
-#~ "dins de la pista de so al lloc on desitgeu establir-lo. Els botons <b>|"
-#~ "&lt;&lt;</b> i <b>&gt;&gt;|</b> es poden fer servir per a saltar a "
-#~ "l'inici i al final de la pista. </p><br><br>"
-
-#~ msgid ""
-#~ "<p><b>To record:</b> Set the recording device and input source, adjust "
-#~ "the input level, then press the red Record button.</b></p><p> 1) "
-#~ "[[inputdevice|Set Recording Device]] either in the <i>Audio I/O tab of "
-#~ "Preferences</i> or in <i>Device Toolbar</i>. Audio I/O Preferences lets "
-#~ "you choose stereo recording if required.<br> 2) [[inputsource|Set input "
-#~ "source]] for that device (for example, microphone or line-in) in the "
-#~ "dropdown selector of the <i>Mixer Toolbar</i>, or (on some systems) at "
-#~ "Recording Device in the <i>Audio I/O tab of Preferences</i> or in "
-#~ "<i>Device Toolbar</i>.<br> 3) [[inputlevel|Adjust input level]] using the "
-#~ "right-hand slider on the <i>Mixer Toolbar</i>. Correct adjustment of "
-#~ "level before recording is essential to avoid noise or distortion. </p><p> "
-#~ "More help at: \"Recording\" <a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq\">FAQs</a>, our Tutorial <a href=\"http://www.audacityteam.org/"
-#~ "manual/index.php?title=Tutorial_-_Your_First_Recording\"> Your First "
-#~ "Recording</a> in the <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">Manual</a>, and our Wiki [[wiki:Recording_Tips|"
-#~ "Recording Tips]] and [[wiki:Troubleshooting_Recordings|Troubleshooting "
-#~ "Recordings]] pages. </p><br><br>"
-#~ msgstr ""
-#~ "<p><b>Per gravar:</b> Establiu el dispositiu d'enregistrament i la font "
-#~ "d'entrada, ajusteu el nivell d'entrada i feu clic al botó vermell "
-#~ "Enregistra.</b></p><p> 1) [[inputdevice|Establiment del dispositiu "
-#~ "d'enregistrament]] Podeu escollir el dispositiu des de la pestanya <I>E/S "
-#~ "d'Àudio de les Preferències</I> o a la <i>Barra d'eines de dispositius</"
-#~ "i>. Les preferències d'E/S d'àudio us permeten escollir un tipus "
-#~ "d'enregistrament estereofònic o monofònic.<br> 2) [[inputsource|"
-#~ "Establiment de la font d'entrada]] per a aquest dispositiu (per exemple, "
-#~ "micròfon o entrada de línia) a la llista desplegable de la <i>Barra "
-#~ "d'Eines del Mesclador</i>, o (en alguns sistemes) al camp Dispositiu "
-#~ "d'Enregistrament de la <i>Pestanya d'E/S d'Àudio de les Preferències</i> "
-#~ "o a la <i>Barra d'Eines de Dispositius</i>.<br> 3) [[inputlevel|Ajustar "
-#~ "el nivell d'entrada]] mitjançant el picòmetre que hi ha a la dreta a la "
-#~ "<i>Barra d'Eines del Mesclador</i>. Un ajustament correcte del nivell és "
-#~ "essencial abans de començar a enregistrar, per tal d'evitar sorolls o "
-#~ "distorsions. </p><p> Trobareu més ajuda a l'apartat \"Recording\" de les "
-#~ "<a href=\"http://audacity.sourceforge.net/help/faq\">Preguntes Més "
-#~ "Freqüents</a>, al tutorial <a href=\"http://www.audacityteam.org/manual/"
-#~ "index.php?title=Tutorial_-_Your_First_Recording\"> Your First Recording</"
-#~ "a> del <a href=\"http://www.audacityteam.org/manual/index.php?"
-#~ "title=Main_Page\">Manual</a> i a les seccions [[wiki:Recording_Tips|"
-#~ "Recording Tips]] i [[wiki:Troubleshooting_Recordings|Troubleshooting "
-#~ "Recordings]] del Wiki. </p><br><br>"
-
-#~ msgid ""
-#~ "<p>The input device is the actual physical sound device you are recording "
-#~ "from. This is chosen at \"Recording Device\" in the <i>Audio I/O tab of "
-#~ "Preferences</i>, On Windows and Linux, Preferences are at the bottom of "
-#~ "the <i>Edit</i> Menu. On a Mac, they in the <i>Audacity</i> Menu. You can "
-#~ "also conveniently select Recording Device in the <i>Device Toolbar</i>, "
-#~ "which can be enabled at <i>View &gt; Toolbars...</i>. </p><p> By default, "
-#~ "Audacity uses the device currently being used by the system, (usually "
-#~ "your inbuilt sound device), so it is often not necessary to change the "
-#~ "input device. On Windows, this current system device can be selected as "
-#~ "\"Microsoft Sound Mapper\". If you are recording from an external USB or "
-#~ "Firewire device such as a USB turntable, select it explicitly by name as "
-#~ "recording device after connecting it. </p><p> Back to [[record|Recording "
-#~ "Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>El dispositiu d'entrada és el dispositiu físic pel qual esteu "
-#~ "enregistrant el so. L'heu d'escollir a la llista \"Dispositiu "
-#~ "d'Enregistrament\" de la pestanya <i>E/S d'àudio de les Preferències</i>. "
-#~ "A Windows i a Linux les Preferències són a la part inferior del menú "
-#~ "<i>Edita</i>. Al Mac, són al menú <i>Audacity</i>. També podeu "
-#~ "seleccionar el dispositiu d'enregistrament a la <i>Barra d'eines de "
-#~ "dispositius</i>, que es pot activar des del menú <i>Mostra &gt; Barres "
-#~ "d'eines...</i>. </p><p> Per defecte, l'Audacity farà servir el dispositiu "
-#~ "actualment seleccionat pel sistema (normalment el dispositiu de so "
-#~ "integrat), de manera que no us caldrà canviar-lo sovint. Als sistemes "
-#~ "Windows, aquest dispositiu es pot seleccionar al \"Mapejador de so "
-#~ "Microsoft\". Si esteu enregistrant des d'un dispositiu extern de tipus "
-#~ "USB o Firewire, com ara un tocadiscs USB, l'haureu de seleccionar pel seu "
-#~ "nom un cop l'hàgiu connectat. </p><p> Torna a [[record|Enregistrant so]] "
-#~ "<br></p>"
-
-#~ msgid ""
-#~ "<p>Select the input source (such as microphone or line-in) for your "
-#~ "[[inputdevice|recording device]]:<br> - <b>On Windows (except Vista)</b> "
-#~ "and <b>Linux</b>, in the dropdown selector on the right of the <i>Mixer "
-#~ "Toolbar</i>.<br> - <b>On Windows Vista</b> and <b>Mac</b>, at Recording "
-#~ "Device on the <i>Audio I/O tab of Preferences</i>, or in <i>Device "
-#~ "Toolbar</i>. The source will be shown as part of the parent device (for "
-#~ "example, <i>High Def Audio Card: Microphone</i>). If necessary, Mac users "
-#~ "can choose the input source at Apple Audio MIDI Setup. <br><i><b>Note:</"
-#~ "b> many USB or Firewire recording devices don't have a choice of inputs, "
-#~ "so this step is not necessary. If in doubt, see the documentation for "
-#~ "your device. </i></p><p> <b>Tip:</b> To <a href=\"http://audacity."
-#~ "sourceforge.net/help/faq?s=recording&i=streaming\">record audio playing "
-#~ "on the computer</a>, Windows and Linux users can choose the \"Stereo Mix"
-#~ "\", \"Wave Out\", \"Sum\" or comparable input source. </p><p> Back to "
-#~ "[[record|Recording Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>Seleccioneu la font d'entrada (com ara micròfon o entrada de línia) "
-#~ "del vostre [[inputdevice|dispositiu d'enregistrament]]:<br> - <b>En "
-#~ "sistemes Windows (excepte en el Vista)</b> i a <b>Linux</b>, a la llista "
-#~ "desplegable que hi ha a la dreta a la <i>Barra d'eines del mesclador</i>."
-#~ "<br> - <b>En el Windows Vista</b> i el <b>Mac</b>, a la llista Dispositiu "
-#~ "d'Enregistrament dins de la pestanya <i>E/S d'àudio de les Preferències</"
-#~ "i>, o a la <i>Barra d'eines de dispositius</i>. La font es mostrarà com a "
-#~ "part del dispositiu pare (per exemple, <i>High Def Audio Card: Micròfon</"
-#~ "i>). Si fos necessari, els usuaris de Mac poden seleccionar la font "
-#~ "d'entrada a la configuració MIDI d'Apple. <br><i><b>Nota:</b> molts "
-#~ "dispositius USB o Firewire no ofereixen més que una única font d'entrada, "
-#~ "per la qual cosa aquest pas és innecessari. En cas de dubte, vegeu la "
-#~ "documentació del vostre dispositiu. </i></p><p> <b>Un consell:</b> "
-#~ "Consulteu la pàgina <a href=\"http://audacity.sourceforge.net/help/faq?"
-#~ "s=recording&i=streaming\">com enregistrar qualsevol so que s'escolti per "
-#~ "l'ordinador</a>, on s'explica com els usuaris de Windows i Linux poden "
-#~ "escollir les fonts \"Mescla estèreo\", \"Wave Out\", \"Sum\" o similar. </"
-#~ "p><p> Torna a [[record|Enregistrant so]] <br></p>"
-
-#~ msgid ""
-#~ "<p>The input level must be set correctly. If the level is too low, there "
-#~ "will be background noise. If the level is too high, there will be "
-#~ "distortion in the loud parts. </p><p>To set the level, either see this "
-#~ "[[wiki:Recording_levels|illustrated online guide]] or follow these steps: "
-#~ "<ol><li>Turn on <b>monitoring</b>. Double-click the right-hand of the two "
-#~ "<i>VU Meters</i> (or right-click over it) and click \"Start Monitoring\". "
-#~ "If the meters are not visible, click <i>View &gt; Toolbars</i> and check "
-#~ "\"Meter Toolbar\". </li><li>Adjust the input slider on the <i>Mixer "
-#~ "Toolbar</i> (by the microphone symbol), so that the red bars in the meter "
-#~ "come close to <b>but do not touch</b> the right edge of the scale. If you "
-#~ "can't hear the monitored audio, go to the <i>Audio I/O tab of "
-#~ "Preferences</i> and check \"Software Playthrough\". </li></ol></p><p> "
-#~ "Back to [[record|Recording Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>El nivell d'entrada s'ha d'ajustar correctament. Si el nivell és massa "
-#~ "baix, tindreu soroll de fons. Si és massa alt, l'enregistrament patirà "
-#~ "distorsions en les parts més sorolloses. </p><p>Per a ajustar el nivell "
-#~ "podeu optar entre consultar aquesta [[wiki:Recording_levels|guia en línia "
-#~ "il·lustrada]] o seguir aquests passos: <ol><li>Activeu la "
-#~ "<b>monitorització</b>. Feu doble clic a la dreta dels dos <i>picòmetres "
-#~ "d'entrada</i> (o feu clic amb el botó dret damunt seu) i feu clic a  "
-#~ "\"Comença a monitoritzar\". Si els picòmetres no fossin visibles, feu "
-#~ "clic a <i>Mostra &gt; Barres d'eines</i> i marqueu la \"Barra de "
-#~ "picòmetres\". </li><li>Ajusteu el nivell d'entrada a la <i>Barra del "
-#~ "mesclador</i> (on hi ha el símbol del micròfon), fins que les barres "
-#~ "vermelles del picòmetre estiguin a prop <b>però no toquin</b> el límit "
-#~ "dret de l'escala. Si no podeu escoltar el so que esteu monitoritzant, "
-#~ "aneu a la pestanya <i>E/S de so de les Preferències</i> i marqueu l'opció "
-#~ "\"Reproducció a través del programari\". </li></ol></p><p> Torna a "
-#~ "[[record|Enregistrant so]] <br></p>"
-
-#~ msgid ""
-#~ "<p>The main commands for editing audio are under the <i>Edit</i> menu "
-#~ "(such as cut, copy and paste) and the <i>Effect</i> menu (you can do "
-#~ "things like boost the bass, change pitch or tempo, or remove noise). </"
-#~ "p><p> Audacity applies edits to selected areas of the audio track. To "
-#~ "select a particular area, click in the track and drag the shaded area "
-#~ "with the mouse. If no audio is selected, Audacity selects all the audio "
-#~ "in the project window.</p><p> When playing or recording, the Edit and "
-#~ "Effect menus will appear greyed out, because a moving track can't be "
-#~ "edited. Commands can sometimes be unavailable for other reasons too. For "
-#~ "example, you can't run effects until you have audio on the screen, and "
-#~ "you can't paste audio until you've cut or copied it to Audacity's "
-#~ "clipboard. </p><br><br>"
-#~ msgstr ""
-#~ "<p>La majoria d'ordres per a editar sons es troben als menús <i>Edita</i> "
-#~ "(com ara retalla, copia i enganxa) i  <i>Efectes</i> (on podeu fer coses "
-#~ "com potenciar els baixos, canviar el to o el temps, o netejar el soroll "
-#~ "de fons). </p><p> L'Audacity aplica les edicions a la zona seleccionada "
-#~ "de la pista de so. Per a seleccionar una determinada àrea feu clic a la "
-#~ "pista i arrossegueu el ratolí. Si no seleccioneu cap fragment de so, "
-#~ "l'Audacity seleccionarà tot el so de la finestra del projecte.</p><p> "
-#~ "Quan interpreteu o enregistreu, els menús Edita i Efecte es mostraran en "
-#~ "gris, degut a que una pista que s'està movent no pot ser editada. Les "
-#~ "ordres poden també estar no disponibles per altres raons. Per exemple, no "
-#~ "es poden executar efectes si el projecte encara no té gens de so, i no es "
-#~ "pot enganxar so fins que no l'hàgiu copiat al porta-retalls de "
-#~ "l'Audacity. </p><br><br>"
-
-#~ msgid ""
-#~ "<p>To return later to your unfinished work in Audacity with all tracks "
-#~ "and edits as you left them, save an Audacity project. To play your "
-#~ "current work in other media programs or send it to others, [[export|"
-#~ "export]] an audio file such as WAV or MP3. </p><p> <i>File &gt; Save "
-#~ "Project</i> saves an <b>.aup</b> project file and  a <b>_data</b> folder "
-#~ "containing the actual audio. To re-open a saved project, click <i>File "
-#~ "&gt; Open</i> and open the .aup file. If you save and exit more than "
-#~ "once, an .aup.bak backup file is created, but the .aup file should always "
-#~ "be opened if present. When your final exported file is exactly as you "
-#~ "want, delete the project files and _data folder to save disc space. </"
-#~ "p><p><i>File &gt; Save Project As...</i> is for saving an empty project. "
-#~ "It also lets you save an existing Project to a <b> new</b> name. This is "
-#~ "the only safe way to rename a project. The .aup file and _data folder "
-#~ "should not be moved or renamed manually. </p><p>"
-#~ msgstr ""
-#~ "<p>Per retornar a un treball no acabat de l'Audacity amb totes les pistes "
-#~ "i modificacions tal com les heu deixat, deseu-lo com a Projecte Audacity. "
-#~ "Per a interpretar el vostre treball en altres programes, o enviar-lo a "
-#~ "altres persones, [[export|exporteu-lo]] a WAV o MP3. </p><p>L'ordre "
-#~ "<i>Fitxer &gt; Desa el projecte</i> crearà un fitxer de projecte amb "
-#~ "extensió <b>.aup</b> i una carpeta <b>_data</b> on es guardarà tot el so. "
-#~ "Per a tornar a obrir un projecte feu clic a <i>Fitxer &gt; Obre</i> i "
-#~ "obriu el fitxer .aup. Si deseu el fitxer i sortiu més d'una vegada, se'n "
-#~ "crearà un altre amb extensió .aup.bak, que actua com a còpia de "
-#~ "seguretat. Quan el fitxer que voleu exportar sigui exactament igual al "
-#~ "que voleu, elimineu els fitxers de projecte i els directoris _data per a "
-#~ "estalviar espai de disc.</p><p>El menú <i>Fitxer &gt; Anomena i desa el "
-#~ "projecte...</i> serveix per a desar un projecte buit, o per a desar un "
-#~ "projecte existent amb un nom diferent. Aquesta és la única manera segura "
-#~ "de canviar el nom a un projecte. Els fitxers .aup i els directoris _data "
-#~ "mai no s'han de moure o canviar de nom manualment.. </p><p>"
-
-#~ msgid ""
-#~ "To hear your work in other media programs, export it to an audio file "
-#~ "such as WAV or MP3 (some formats are [[wma-proprietary|unsupported]]). "
-#~ "[[save|Saving an Audacity project]] creates a project file (and linked "
-#~ "_data folder) containing all your edited tracks, so you can return to "
-#~ "your work later. However, other programs can't read Audacity projects. </"
-#~ "p><p> To export, click <i>File &gt; Export</i> then choose the file "
-#~ "format you want to export to in the \"Save as type\" dropdown. To "
-#~ "[[burncd|burn a CD]] for standalone CD players, choose WAV or AIFF. To "
-#~ "export as MP3, the [[wiki:Lame_Installation|Lame Encoder]] must be "
-#~ "installed. </p><p> <i>File &gt; Export Selection</i> exports only a "
-#~ "selected area of audio. <i>Use File &gt; Export Multiple</i> to export "
-#~ "multiple files at the same time, either one for each audio track, or one "
-#~ "for each labeled area in a single track. <i>Tracks &gt; Add Label At "
-#~ "Selection</i> lets you [[wiki:Splitting_recordings_into_separate_tracks|"
-#~ "split the tracks]] from an album for multiple export as separate files. </"
-#~ "p><br><br>"
-#~ msgstr ""
-#~ "Per a escoltar el vostre treball en altres programes multimèdia, exporteu-"
-#~ "lo a un format d'àudio com ara WAV o MP3 (alguns formats són [[wma-"
-#~ "proprietary|no suportats]]). Quan [[save|deseu el projecte Audacity]] es "
-#~ "crearà un fitxer de projecte (amb una carpeta anomenada _data) que "
-#~ "contindrà totes les pistes que esteu editant, de manera que més endavant "
-#~ "podreu tornar a reprendre el vostre treball. Amb tot, els altres "
-#~ "programes no podran obrir directament els projectes Audacity. </p><p> Per "
-#~ "a exportar-los, feu clic a <i>Fitxer &gt; Exporta</i> i escolliu el "
-#~ "format a la llista desplegable \"Desa com a\". Per a [[burncd|enregistrar "
-#~ "un CD]] que es pugui escoltar en un equip de música, escolliu WAV o AIFF. "
-#~ "Per a exportar a MP3, haureu d'instal·lar-vos un [[wiki:Lame_Installation|"
-#~ "Codificador Lame]]. </p><p> L'opció <i>Fitxer &gt; Exporta la selecció</"
-#~ "i> exporta només l'àrea que es trobi seleccionada. <i>Feu sevir Fitxer "
-#~ "&gt; Exporta múltiples fitxers</i> per a exportar diversos fitxers en una "
-#~ "única operació, un per a cada pista de so, o un per a cada àrea "
-#~ "etiquetada en una pista única. La funció <i>Pistes &gt; Afegeix una "
-#~ "etiqueta a la selecció</i> us permet [[wiki:"
-#~ "Splitting_recordings_into_separate_tracks|separar les pistes]] d'un àlbum "
-#~ "per a desar-les en fitxers independents. </p><br><br>"
-
-#~ msgid ""
-#~ "<p>Audacity <b>cannot</b> [[play|play]] or [[export|export]] files in "
-#~ "<b>WMA, RealAudio, Shorten (SHN)</b> or most other proprietary formats, "
-#~ "due to licensing and patent restrictions.  On a Mac computer, unprotected "
-#~ "<b>AAC</b> formats such as <b>M4A</b> can be imported. Some open formats "
-#~ "are not yet supported, including <b>Ogg Speex</b> and <b>Musepack</b>. "
-#~ "Files protected by any kind of Digital Rights Management (DRM), including "
-#~ "most purchased online such as from iTunes or Napster, <b>cannot</b> be "
-#~ "imported.</p><p> If you can't import your file into Audacity, then if it "
-#~ "is not DRM-protected, use iTunes or <a href=\"http://www.erightsoft.com/"
-#~ "SUPER.html#Dnload\">SUPER</a> to convert it to WAV or AIFF. If it is "
-#~ "protected, burn it to an audio CD in the program licensed to play it, "
-#~ "then extract the CD track to WAV or AIFF using iTunes or (on Windows) <a "
-#~ "href=\"http://cdexos.sourceforge.net/?q=download\">CDex</a> or Windows "
-#~ "Media Player 11. You could also <a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq?s=recording&amp;i=streaming\">record</a> the CD to your "
-#~ "computer. <i>To export to an unsupported format, export to WAV or AIFF "
-#~ "and convert it to the desired format in iTunes or <a href=\"http://www."
-#~ "erightsoft.com/SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-#~ msgstr ""
-#~ "<p>L'Audacity <b>no pot</b> [[play|interpretar]] o [[export|exportar]] "
-#~ "fitxers en <b>WMA, RealAudio, Shorten (SHN)</b> o altres formats "
-#~ "propietaris degut a restriccions de llicències i patents. En els "
-#~ "ordinadors Mac es poden importar fitxers en format <b>AAC</b> i <b>M4A</"
-#~ "b>. Alguns formats oberts, com l'<b>Ogg Speex</b> o el <b>Musepack</b> "
-#~ "tampoc estan suportats. Els fitxers protegits per qualsevol tipus de "
-#~ "Gestió de Drets Digitals (DRM), incloent la majoria dels que es compren a "
-#~ "les botigues en línia, com ara iTunes o Napster, <b>no es poden</b> "
-#~ "importar.</p><p> Si no podeu importa un fitxer a l'Audacity i no està "
-#~ "protegit per DRM, feu servir l'iTunes o el <a href=\"http://www."
-#~ "erightsoft.com/SUPER.html#Dnload\">SUPER</a> per convertir-lo a WAV o "
-#~ "AIFF. Si està protegit, enregistreu-lo a CD amb el programa llicenciat "
-#~ "per a interpretar-lo i extraieu després la pista del CD a WAV o AIFF "
-#~ "mitjançant l'ITunes o (en Windows) el <a href=\"http://cdexos.sourceforge."
-#~ "net/?q=download\">CDex</a> o el Windows Media Player 11. També podeu <a "
-#~ "href=\"http://audacity.sourceforge.net/help/faq?s=recording&amp;"
-#~ "i=streaming\">enregistrar</a> el CD mentre el feu sonar al vostre "
-#~ "ordinador. <i>Per exportar a un format no suportat, exporteu primer a WAV "
-#~ "o AIFF i convertiu-lo al format desitjat amb l'iTunes o el <a href="
-#~ "\"http://www.erightsoft.com/SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-
-#~ msgid ""
-#~ "<p>To burn your work to an audio CD for standalone CD players, first "
-#~ "[[export|export]] it as WAV or AIFF. The exported file should be stereo, "
-#~ "44100 Hz (set in the \"Project Rate\" button bottom left) and 16 bit (set "
-#~ "in the \"Options\" button in the file export dialog). These are "
-#~ "Audacity's default settings, so normally you will not need to change "
-#~ "these before exporting. <p>Burn the exported file to an \"audio CD\" - "
-#~ "not a \"data CD\" or \"MP3 CD\" - with a CD burning program like iTunes "
-#~ "or Windows Media Player. For more help, see [[wiki:How_to_burn_CDs|How to "
-#~ "burn CDs]] online. </p><p>"
-#~ msgstr ""
-#~ "<p>Si voleu enregistrar el vostre treball en un CD d'àudio per a escoltar-"
-#~ "lo en un equip de música, haureu de començar per [[export|exportar-lo]] "
-#~ "al format WAV or AIFF, en format estèreo a 44100 Hz (ajusteu-ho "
-#~ "mitjançant el botó \"Freqüència del projecte\" que hi ha a baix a "
-#~ "l'esquerra) i 16 bits (ajusteu-ho mitjançant el botó \"Opcions\" del "
-#~ "diàleg d'exportació de fitxers). Aquests són els paràmetres per defecte "
-#~ "de l'Audacity, de manera que normalment no haureu de canviar-ho abans "
-#~ "d'exportar. <p>Enregistreu el fitxer en un CD de tipus \"audio CD\" - no "
-#~ "\"CD de dades\" or \"CD MP3\" - amb una aplicació d'enregistrament de CD "
-#~ "com ara l'iTunes o el Windows Media Player. Per a més ajuda, consulteu la "
-#~ "pàgina del wiki [[wiki:How_to_burn_CDs|Com enregistrar CDs]]. </p><p>"
-
-#~ msgid ""
-#~ "<p>Help for Audacity Beta is currently unfinished. For now, a draft "
-#~ "manual is available <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">online</a>. Alternatively, click <a href=\"http://"
-#~ "www.audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export"
-#~ "\">here</a> to download a single-page version of the manual which can be "
-#~ "viewed in this window."
-#~ msgstr ""
-#~ "<p>L'ajuda de l'Audacity Beta encara no està acabada. Podeu consultar "
-#~ "l'esborrany del manual <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">en línia</a>. També podeu fer clic <a href=\"http://"
-#~ "www.audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export"
-#~ "\">en aquest enllaç</a> per a descarregar una versió del manual condensat "
-#~ "en una pàgina, que es visualitzarà en aquesta finestra."
-
-#~ msgid "&Show Welcome Message..."
-#~ msgstr "Mo&stra el missatge de benvinguda..."
-
-#~ msgid "&Help..."
-#~ msgstr "&Ajuda..."
-
-#~ msgid "AMR (wide band) Files (FFmpeg, undistributable)"
-#~ msgstr "Fitxers AMR (banda ampla) Files (FFmpeg, no distribuïble)"
-
-#~ msgid "In Browser"
-#~ msgstr "Al navegador"
-
-#~ msgid "Help:"
-#~ msgstr "Ajuda:"
-
-#~ msgid "Mix Volume"
-#~ msgstr "Volum mesclat"
-
-#~ msgid ""
-#~ "This determines how often the meter is refreshed.\n"
-#~ "If you have a slower PC you may want to select a\n"
-#~ "lower refresh rate (30 per second or lower), so that\n"
-#~ "audio qualtiy is not affected by the meter display."
-#~ msgstr ""
-#~ "Això determina cada quant de temps s'ha de refrescar el picòmetre.\n"
-#~ "Si teniu un ordinador lent us serà convenient seleccionar una\n"
-#~ "freqüència de refresc baixa (30 per segon o menys), de manera que\n"
-#~ "la qualitat del so no es vegi afectada per la representació gràfica de "
-#~ "mesurador."
-
-#~ msgid ""
-#~ "This is a stable, completed release of Audacity. However, if you find a "
-#~ "bug or have a suggestion, please contact us. We depend on feedback from "
-#~ "users in order to continue to improve Audacity. For more information, "
-#~ "visit our website."
-#~ msgstr ""
-#~ "Aquesta és una versió estable i completa de l'Audacity. Tanmateix, "
-#~ "contacteu-nos si trobeu algun error o voleu fer algun suggeriment. Per a "
-#~ "poder seguir millorant l'Audacity necessitem l'opinió dels usuaris.  Per "
-#~ "a més informació visiteu el nostre lloc web."
-
-#~ msgid "&Preferences...\tCtrl+,"
-#~ msgstr "&Preferències...\tCtrl+,"
-
-#~ msgid "Changing block %s\n"
-#~ msgstr "S'està canviant el bloc %s\n"
-
-#~ msgid "Download..."
-#~ msgstr "Descarrega..."
-
-#~ msgid "&New\tCtrl+N"
-#~ msgstr "&Nou\tCtrl+N"
-
-#~ msgid "&Audio...\tCtrl+Shift+I"
-#~ msgstr "&So...\tCtrl+Maj+I"
-
-#~ msgid "E&xit\tCtrl+Q"
-#~ msgstr "&Surt\tCtrl+Q"
-
-#~ msgid "Spl&it Cut\tCtrl+Alt+X"
-#~ msgstr "Divideix i re&talla\tCtrl+Alt+X"
-
-#~ msgid "Tri&m\tCtrl+T"
-#~ msgstr "Deixa no&més la selecció\tCtrl+T"
-
-#~ msgid "&Delete\tCtrl+K"
-#~ msgstr "&Elimina\tCtrl+K"
-
-#~ msgid "Split D&elete\tCtrl+Alt+K"
-#~ msgstr "Divideix i &elimina\tCtrl+Alt+K"
-
-#~ msgid "Sp&lit\tCtrl+I"
-#~ msgstr "Divi&deix\tCtrl+I"
-
-#~ msgid "Split Ne&w\tCtrl+Alt+I"
-#~ msgstr "Divideix en un de no&u\tCtrl+Alt+I"
-
-#~ msgid "&Join\tCtrl+J"
-#~ msgstr "A&junta\tCtrl+J"
-
-#~ msgid "Duplic&ate\tCtrl+D"
-#~ msgstr "Duplic&a\tCtrl+D"
-
-#~ msgid "&Cut\tAlt+X"
-#~ msgstr "&Retalla\tAlt+X"
-
-#~ msgid "&Split Cut\tShift+Alt+X"
-#~ msgstr "Divideix i re&talla\tMaj+Alt+X"
-
-#~ msgid "Co&py\tShift+Alt+C"
-#~ msgstr "Co&pia\tMaj+Alt+C"
-
-#~ msgid "&Delete\tAlt+K"
-#~ msgstr "E&limina\tAlt+K"
-
-#~ msgid "Sp&lit Delete\tShift+Alt+K"
-#~ msgstr "Di&videix i elimina\tMaj+Alt+K"
-
-#~ msgid "Sile&nce\tAlt+L"
-#~ msgstr "Sile&nci\tAlt+L"
-
-#~ msgid "Spli&t\tAlt+I"
-#~ msgstr "Di&videix\tAlt+I"
-
-#~ msgid "&Join\tAlt+J"
-#~ msgstr "A&junta\tAlt+J"
-
-#, fuzzy
-#~ msgid "Detac&h at Silences\tShift+Alt+J"
-#~ msgstr "Se&para\tMaj+Alt+J"
-
-#~ msgid "&None\tCtrl+Shift+A"
-#~ msgstr "&Cap...\tCtrl+Maj+A"
-
-#~ msgid "Turn Snap-To On"
-#~ msgstr "Habilita l'arrodoniment de mesures"
-
-#~ msgid "Turn Snap-To Off"
-#~ msgstr "Inhabilita l'arrodoniment de mesures"
-
-#~ msgid "Turn Grid Snap On"
-#~ msgstr "Habilita l'aproximació a la quadrícula"
-
-#~ msgid "Turn Grid Snap Off"
-#~ msgstr "Inhabilita l'aproximació a la quadrícula"
-
-#, fuzzy
-#~ msgid "Pre&ferences...\tCtrl+,"
-#~ msgstr "&Preferències...\tCtrl+,"
-
-#, fuzzy
-#~ msgid "Pre&ferences...\tCtrl+P"
-#~ msgstr "&Preferències...\tCtrl+P"
-
-#~ msgid "Zoom &In\tCtrl+1"
-#~ msgstr "A&propa\tCtrl+1"
-
-#~ msgid "Zoom &Out\tCtrl+3"
-#~ msgstr "A&llunya\tCtrl+3"
-
-#, fuzzy
-#~ msgid "Play\tSpacebar"
-#~ msgstr "Reprodueix/Atura't\tEspai"
-
-#, fuzzy
-#~ msgid "&Loop Play\tShift+Spacebar"
-#~ msgstr "Reprodueix en bucle\tMaj+Espai"
-
-#, fuzzy
-#~ msgid "&Pause\tP"
-#~ msgstr "Pausa\tP"
-
-#, fuzzy
-#~ msgid "&Stop\tSpacebar"
-#~ msgstr "Reprodueix/Atura't\tEspai"
-
-#~ msgid "Skip to Start\tHome"
-#~ msgstr "Vés a l'inici\tInici"
-
-#~ msgid "Skip to End\tEnd"
-#~ msgstr "Vés a la pista següent i canvia la selecció\tMaj+Avall"
-
-#, fuzzy
-#~ msgid "&Record\tR"
-#~ msgstr "Enregistra\tR"
-
-#~ msgid "&Audio Track\tCtrl+Shift+N"
-#~ msgstr "Pista de &so\tCtrl+Maj+N"
-
-#~ msgid "&UnMute All Tracks\tCtrl+Shift+U"
-#~ msgstr "&Activa el so a totes les pistes\tCtrl+Maj+U"
-
-#~ msgid "Add &Label At Selection\tCtrl+B"
-#~ msgstr "Afegeix una e&tiqueta a la selecció\tCtrl+B"
-
-#~ msgid "&Index..."
-#~ msgstr "&Índex..."
-
-#~ msgid ""
-#~ "Cycle backward through Dock, Track View, and Selection Bar\tCtrl+Shift+F6"
-#~ msgstr ""
-#~ "Mou-te enrere entre l'acoblador, la vista de pistes i la barra de selecció"
-#~ "\tCtrl+Maj+F6"
-
-#~ msgid "Cycle forward through Dock, Track View, and Selection Bar\tCtrl+F6"
-#~ msgstr ""
-#~ "Mou-te entre l'acoblador, la vista de pistes i la barra de selecció\tCtrl"
-#~ "+F6"
-
-#~ msgid "Selection Tool\tF1"
-#~ msgstr "Eina de selecció\tF1"
-
-#~ msgid "Envelope Tool\tF2"
-#~ msgstr "Eina d'envolupant\tF2"
-
-#~ msgid "Draw Tool\tF3"
-#~ msgstr "Eina de dibuix\tF3"
-
-#~ msgid "Zoom Tool\tF4"
-#~ msgstr "Eina de zoom\tF4"
-
-#~ msgid "Time Shift Tool\tF5"
-#~ msgstr "Eina de desplaçament en el temps\tF5"
-
-#~ msgid "Multi Tool\tF6"
-#~ msgstr "Multi-eina"
-
-#~ msgid "Stop\tS"
-#~ msgstr "Atura't\tS"
-
-#~ msgid "Pause\tP"
-#~ msgstr "Pausa\tP"
-
-#~ msgid "Record\tR"
-#~ msgstr "Enregistra\tR"
-
-#~ msgid "Record Append\tShift+R"
-#~ msgstr "Enregistra afegint\tShift+R"
-
-#~ msgid "Play Looped\tL"
-#~ msgstr "Reprodueix en bucle\tL"
-
-#~ msgid "Play Looped\tShift+Spacebar"
-#~ msgstr "Reprodueix en bucle\tMaj+Espai"
-
-#~ msgid "Selection to Start\tShift+Home"
-#~ msgstr "Selecciona fins a l'inici\tMaj+Inici"
-
-#~ msgid "Selection to End\tShift+End"
-#~ msgstr "Selecciona fins al final\tMaj+Fi"
-
-#~ msgid "DeleteKey\tBackspace"
-#~ msgstr "Tecla d'eliminació\tRetrocés"
-
-#~ msgid "DeleteKey2\tDelete"
-#~ msgstr "Tecla d'eliminació 2\tSupr"
-
-#~ msgid "Seek left long period during playback\tShift+Left"
-#~ msgstr "Retrocedeix un tros llarg durant la interpretació\tMaj.+Esquera"
-
-#~ msgid "Seek right long period during playback\tShift+Right"
-#~ msgstr "Avança un tros llarg durant la interpretació\tMaj.+Dreta"
-
-#~ msgid "Move Focus to Previous and Change Selection\tShift+Up"
-#~ msgstr "Vés a la pista anterior i canvia la selecció\tMaj+Amunt"
-
-#~ msgid "Toggle Focused Track\tNUMPAD_ENTER"
-#~ msgstr "Commuta la pista actual\tNUMPAD_ENTER"
-
-#~ msgid "Toggle Focused Track\tCtrl+Spacebar"
-#~ msgstr "Commuta la pista actual\tCtrl+Espai"
-
-#~ msgid "Selection Contract Right\tCtrl+Shift+Left"
-#~ msgstr "Contreu la selecció a la dreta\tCtrl+Maj+Esquerra"
-
-#~ msgid "Repeat %s\tCtrl+R"
-#~ msgstr "Repeteix %s\tCtrl+R"
-
-#~ msgid "&Mix and Render"
-#~ msgstr "&Mescla i renderitza"
-
-#~ msgid "Press F2 or double click to edit."
-#~ msgstr "Premeu F2 o feu doble clic per a editar-lo."
-
-#~ msgid "Tag Name"
-#~ msgstr "Nom de l'etiqueta"
-
-#~ msgid "Tag Value"
-#~ msgstr "Valor de l'etiqueta"
-
-#~ msgid "Title:"
-#~ msgstr "Títol:"
-
-#~ msgid "Artist:"
-#~ msgstr "Artista:"
-
-#~ msgid "Album:"
-#~ msgstr "Àlbum:"
-
-#~ msgid "Composer:"
-#~ msgstr "Compositor/a:"
-
-#~ msgid "Lyricist:"
-#~ msgstr "Lletrista:"
-
-#~ msgid "Comments:"
-#~ msgstr "Comentaris:"
-
-#~ msgid "Encoded By:"
-#~ msgstr "Codificat per:"
-
-#~ msgid "Copyright:"
-#~ msgstr "Copyright:"
-
-#~ msgid "Track Number:"
-#~ msgstr "Número de pista:"
-
-#~ msgid "Year:"
-#~ msgstr "Any:"
-
-#~ msgid "Genre:"
-#~ msgstr "Gènere:"
-
-#~ msgid "No Genres"
-#~ msgstr "Cap gènere"
-
-#~ msgid "Advanced"
-#~ msgstr "Avançat"
-
-#~ msgid ""
-#~ "Maximum length of attribute '%s' is %d characters. Data was truncated."
-#~ msgstr ""
-#~ "La longitud màxima de l'atribut '%s' és de %d caràcters. S'han truncat "
-#~ "les dades."
-
-#~ msgid "Artist"
-#~ msgstr "Artista"
-
-#~ msgid "Album"
-#~ msgstr "Àlbum"
-
-#~ msgid "Disallowed for some reason.  Try selecting some Audio first?"
-#~ msgstr ""
-#~ "Ha estat rebutjat per alguna raó. Proveu-ho seleccionant abans un "
-#~ "fragment de so."
-
-#~ msgid ""
-#~ "Sorry, VST Effects cannot be performed on stereo tracks where the "
-#~ "individual channels of the track do not match."
-#~ msgstr ""
-#~ "Els efectes VST no es poden aplicar a les pistes estereofòniques quan els "
-#~ "dos canals no coincideixen."
-
-#~ msgid "Can't process replacing"
-#~ msgstr "No es pot processar la substitució"
-
-#~ msgid "VST Plug-in parameters:"
-#~ msgstr "Paràmetres del complement VST:"
-
-#~ msgid ""
-#~ "No tracks are selected! Use Ctrl-A (Select All)\n"
-#~ "Choose Export... to export all tracks."
-#~ msgstr ""
-#~ "No hi ha cap pista seleccionada! Feu servir Ctrl+A (Selecciona-ho tot)\n"
-#~ "Feu servir \"Exporta...\" per a exportar totes les pistes."
-
-#~ msgid "Importing %s File..."
-#~ msgstr "S'està important el fitxer %s..."
-
-#~ msgid "Portaudio v"
-#~ msgstr "Portaudio v"
-
-#~ msgid "&Software Playthrough: Play new track while recording it"
-#~ msgstr ""
-#~ "Reproducció a través del &programari: Interpreta una nova pista mentre "
-#~ "s'enregistra"
-
-#~ msgid "&Find Library"
-#~ msgstr "&Cerca la biblioteca"
-
-#, fuzzy
-#~ msgid "Show prompt to sa&ve, even if project is empty"
-#~ msgstr "&Pregunta si es vol desar, fins i tot si està buit"
-
-#~ msgid "Display range minimum: meters and 'Waveform (dB)'"
-#~ msgstr "Rang mínim de representació: mesuradors i so en forma d'ona (dB)'"
-
-#~ msgid "Other interface choices"
-#~ msgstr "Altres opcions de l'interfície"
-
-#~ msgid "Real-time sample rate converter:"
-#~ msgstr "Convertidor de freqüència en temps real:"
-
-#~ msgid "High-quality sample rate converter:"
-#~ msgstr "Convertidor de freqüència de mostreig d'alta qualitat:"
-
-#~ msgid "Real-time dither:"
-#~ msgstr "Arrodoniment en temps real:"
-
-#~ msgid "High-quality dither:"
-#~ msgstr "Arrodoniment d'alta qualitat:"
-
-#~ msgid "Conversion"
-#~ msgstr "Conversió"
-
-#~ msgid "Real-time:"
-#~ msgstr "Temps real:"
-
-#~ msgid "FFT Size"
-#~ msgstr "Mida FFT"
-
-#~ msgid "&Grayscale"
-#~ msgstr "Escala de &grisos"
-
-#~ msgid "Zoom Toggle"
-#~ msgstr "Commuta el zoom"
-
-#~ msgid "%d rows, %d columns"
-#~ msgstr "%d files, %d columnes"
-
-#~ msgid "Row %d"
-#~ msgstr "Fila %d"
-
-#~ msgid "Time Control"
-#~ msgstr "Control de temps"
-
-#~ msgid ""
-#~ "<p>You don't appear to have Audacity help files on your machine. Either "
-#~ "<a href=\"http://audacity.sourceforge.net/help/documentation\">download</"
-#~ "a> the help files and then access them again from Audacity by clicking "
-#~ "<i>Help</i> then <i>Index</i>, or click <a href=\"http://www.audacityteam."
-#~ "org/manual/index.php?title=Main_Page\">here</a> to read the full Manual "
-#~ "online."
-#~ msgstr ""
-#~ "<p>Sembla que no teniu els fitxers d'ajuda de l'Audacity instal·lats al "
-#~ "vostre ordinador. Podeu <a href=\"http://audacity.sourceforge.net/help/"
-#~ "documentation\">descarregar</a> els fitxers d'ajuda i accedir-hi des de "
-#~ "l'Audacity tal com havíeu intentat fer, o fer clic <a href=\"http://www."
-#~ "audacityteam.org/manual/index.php?title=Main_Page\">aquí</a> per llegir "
-#~ "el manual complet en línia."
-
-#~ msgid "Disj&oin\tCtrl+Alt+J"
-#~ msgstr "Se&para\tCtrl+Alt+J"
