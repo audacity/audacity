@@ -767,9 +767,8 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    //rawValue = 4.9995f; Only for testing!
    if (mType == TIME)
       rawValue =
-      (double)((sampleCount)floor(rawValue * mSampleRate +
-                                  (nearest ? 0.5f : 0.0f)))
-         / mSampleRate; // put on a sample
+         floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f))
+            / mSampleRate; // put on a sample
    double theValue =
       rawValue * mScalingFactor + .000001; // what's this .000001 for? // well, no log of 0
    sampleCount t_int;

@@ -99,8 +99,8 @@ class VSTEffect final : public wxEvtHandler,
 
    bool SetHost(EffectHostInterface *host) override;
 
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -117,7 +117,7 @@ class VSTEffect final : public wxEvtHandler,
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
 
    bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
@@ -183,8 +183,8 @@ private:
    static int b64decode(const wxString &in, void *out);
 
    // Realtime
-   int GetChannelCount();
-   void SetChannelCount(int numChannels);
+   unsigned GetChannelCount();
+   void SetChannelCount(unsigned numChannels);
 
    // UI
    void OnSlider(wxCommandEvent & evt);
@@ -262,8 +262,8 @@ private:
    EffectHostInterface *mHost;
    PluginID mID;
    wxString mPath;
-   int mAudioIns;
-   int mAudioOuts;
+   unsigned mAudioIns;
+   unsigned mAudioOuts;
    int mMidiIns;
    int mMidiOuts;
    bool mAutomatable;
@@ -328,7 +328,7 @@ private:
    // Realtime processing
    VSTEffect *mMaster;     // non-NULL if a slave
    VSTEffectArray mSlaves;
-   int mNumChannels;
+   unsigned mNumChannels;
    float **mMasterIn;
    float **mMasterOut;
    sampleCount mNumSamples;

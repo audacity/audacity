@@ -123,9 +123,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
       mCache.active = true;
       mCache.needWrite = true;
       mCache.format = format;
-      mCache.sampleData = new char[sampleLen * SAMPLE_SIZE(format)];
-      memcpy(mCache.sampleData,
-             sampleData, sampleLen * SAMPLE_SIZE(format));
+      const auto sampleDataSize = sampleLen * SAMPLE_SIZE(format);
+      mCache.sampleData = new char[sampleDataSize];
+      memcpy(mCache.sampleData, sampleData, sampleDataSize);
       ArrayOf<char> cleanup;
       void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
          format, cleanup);
@@ -269,7 +269,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       }
    }
 
-    return true;
+   return true;
 }
 
 void SimpleBlockFile::FillCache()
@@ -395,15 +395,14 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
 
-      if (len > mLen - start)
-         len = mLen - start;
+      len = std::min(len, std::max(start, mLen) - start);
       CopySamples(
          (samplePtr)(((char*)mCache.sampleData) +
             start * SAMPLE_SIZE(mCache.format)),
          mCache.format, data, format, len);
       return len;
-   } else
-   {
+   }
+   else {
       //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
 
       SF_INFO info;
@@ -547,7 +546,7 @@ BlockFilePtr SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
    return newBlockFile;
 }
 
-wxLongLong SimpleBlockFile::GetSpaceUsage() const
+auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    if (mCache.active && mCache.needWrite)
    {
@@ -598,9 +597,11 @@ wxLongLong SimpleBlockFile::GetSpaceUsage() const
       file.Close();
    }
 
-   return sizeof(auHeader) + 
+   return
+          sizeof(auHeader) +
           mSummaryInfo.totalSummaryBytes +
-          (GetLength() * SAMPLE_SIZE_DISK(mFormat));
+          (GetLength() * SAMPLE_SIZE_DISK(mFormat))
+   ;
 }
 
 void SimpleBlockFile::Recover(){
@@ -623,10 +624,11 @@ void SimpleBlockFile::Recover(){
    header.channels = 1;
    file.Write(&header, sizeof(header));
 
-   for(i=0;i<mSummaryInfo.totalSummaryBytes;i++)
+   for(decltype(mSummaryInfo.totalSummaryBytes) i = 0;
+       i < mSummaryInfo.totalSummaryBytes; i++)
       file.Write(wxT("\0"),1);
 
-   for(i=0;i<mLen*2;i++)
+   for(decltype(mLen) i = 0; i < mLen * 2; i++)
       file.Write(wxT("\0"),1);
 
 }

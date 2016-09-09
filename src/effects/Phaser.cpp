@@ -130,12 +130,12 @@ bool EffectPhaser::SupportsRealtime()
 
 // EffectClientInterface implementation
 
-int EffectPhaser::GetAudioInCount()
+unsigned EffectPhaser::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectPhaser::GetAudioOutCount()
+unsigned EffectPhaser::GetAudioOutCount()
 {
    return 1;
 }
@@ -165,7 +165,7 @@ bool EffectPhaser::RealtimeInitialize()
    return true;
 }
 
-bool EffectPhaser::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
 {
    EffectPhaserState slave;
 

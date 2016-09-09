@@ -97,8 +97,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool SetHost(EffectHostInterface *host) override;
    
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -115,7 +115,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
 
    bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
@@ -242,9 +242,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                  bool shouldPrompt = true);
 
    // Realtime Effect Processing
-   /* not virtual */ bool RealtimeAddProcessor(int group, int chans, float rate);
+   /* not virtual */ bool RealtimeAddProcessor(int group, unsigned chans, float rate);
    /* not virtual */ sampleCount RealtimeProcess(int group,
-                               int chans,
+                               unsigned chans,
                                float **inbuf,
                                float **outbuf,
                                sampleCount numSamples);
@@ -494,16 +494,16 @@ private:
 
    bool mUIDebug;
 
-   wxArrayPtrVoid mIMap;
-   wxArrayPtrVoid mOMap;
+   std::vector<Track*> mIMap;
+   std::vector<Track*> mOMap;
 
    int mNumTracks; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
    int mNumGroups;
 
    // For client driver
    EffectClientInterface *mClient;
-   int mNumAudioIn;
-   int mNumAudioOut;
+   unsigned mNumAudioIn;
+   unsigned mNumAudioOut;
 
    float **mInBuffer;
    float **mOutBuffer;
@@ -512,7 +512,7 @@ private:
 
    sampleCount mBufferSize;
    sampleCount mBlockSize;
-   int mNumChannels;
+   unsigned mNumChannels;
 
    wxArrayInt mGroupProcessor;
    int mCurrentProcessor;

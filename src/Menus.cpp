@@ -91,7 +91,6 @@ simplifies construction of menu items.
 #include "Screenshot.h"
 #include "ondemand/ODManager.h"
 
-#include "Resample.h"
 #include "BatchProcessDialog.h"
 #include "BatchCommands.h"
 #include "prefs/BatchPrefs.h"
@@ -2923,13 +2922,12 @@ void AudacityProject::PrevFrame()
 void AudacityProject::NextWindow()
 {
    wxWindow *w = wxGetTopLevelParent(wxWindow::FindFocus());
-   const wxWindowList & list = GetChildren();
-   wxWindowList::compatibility_iterator iter;
+   const auto & list = GetChildren();
+   auto iter = list.begin(), end = list.end();
 
    // If the project window has the current focus, start the search with the first child
    if (w == this)
    {
-      iter = list.GetFirst();
    }
    // Otherwise start the search with the current window's next sibling
    else
@@ -2937,31 +2935,27 @@ void AudacityProject::NextWindow()
       // Find the window in this projects children.  If the window with the
       // focus isn't a child of this project (like when a dialog is created
       // without specifying a parent), then we'll get back NULL here.
-      iter = list.Find(w);
-      if (iter)
-      {
-         iter = iter->GetNext();
-      }
+      while (iter != end && *iter != w)
+         ++iter;
+      if (iter != end)
+         ++iter;
    }
 
    // Search for the next toplevel window
-   while (iter)
+   for (; iter != end; ++iter)
    {
       // If it's a toplevel, visible (we have hidden windows) and is enabled,
       // then we're done.  The IsEnabled() prevents us from moving away from 
       // a modal dialog because all other toplevel windows will be disabled.
-      w = iter->GetData();
+      w = *iter;
       if (w->IsTopLevel() && w->IsShown() && w->IsEnabled())
       {
          break;
       }
-
-      // Get the next sibling
-      iter = iter->GetNext();
    }
 
    // Ran out of siblings, so make the current project active
-   if (!iter && IsEnabled())
+   if ((iter == end) && IsEnabled())
    {
       w = this;
    }
@@ -2984,43 +2978,35 @@ void AudacityProject::NextWindow()
 void AudacityProject::PrevWindow()
 {
    wxWindow *w = wxGetTopLevelParent(wxWindow::FindFocus());
-   const wxWindowList & list = GetChildren();
-   wxWindowList::compatibility_iterator iter;
+   const auto & list = GetChildren();
+   auto iter = list.rbegin(), end = list.rend();
 
    // If the project window has the current focus, start the search with the last child
    if (w == this)
    {
-      iter = list.GetLast();
    }
    // Otherwise start the search with the current window's previous sibling
    else
    {
-      if (list.Find(w))
-         iter = list.Find(w)->GetPrevious();
+      while (iter != end && *iter != w)
+         ++iter;
+      if (iter != end)
+         ++iter;
    }
 
    // Search for the previous toplevel window
-   while (iter)
+   for (; iter != end; ++iter)
    {
       // If it's a toplevel and is visible (we have come hidden windows), then we're done
-      w = iter->GetData();
+      w = *iter;
       if (w->IsTopLevel() && w->IsShown() && IsEnabled())
       {
          break;
       }
-
-      // Find the window in this projects children.  If the window with the
-      // focus isn't a child of this project (like when a dialog is created
-      // without specifying a parent), then we'll get back NULL here.
-      iter = list.Find(w);
-      if (iter)
-      {
-         iter = iter->GetPrevious();
-      }
    }
 
    // Ran out of siblings, so make the current project active
-   if (!iter && IsEnabled())
+   if ((iter == end) && IsEnabled())
    {
       w = this;
    }

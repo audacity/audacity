@@ -636,16 +636,21 @@ void GetDefaultWindowRect(wxRect *defRect)
    }
 }
 
+// true iff we have enough of the top bar to be able to reposition the window.
 bool IsWindowAccessible(wxRect *requestedRect)
 {
    wxDisplay display;
    wxRect targetTitleRect(requestedRect->GetLeftTop(), requestedRect->GetBottomRight());
+   // Hackery to approximate a window top bar size from a window size.
+   // and exclude the open/close and borders.
    targetTitleRect.x += 15;
    targetTitleRect.width -= 100;
    if (targetTitleRect.width <  165) targetTitleRect.width = 165;
    targetTitleRect.height = 15;
    int targetBottom = targetTitleRect.GetBottom();
    int targetRight = targetTitleRect.GetRight();
+   // This looks like overkill to check each and every pixel in the ranges.
+   // and decide that if any is visible on screen we are OK.
    for (int i =  targetTitleRect.GetLeft(); i < targetRight; i++) {
       for (int j = targetTitleRect.GetTop(); j < targetBottom; j++) {
          int monitor = display.GetFromPoint(wxPoint(i, j));
@@ -655,6 +660,18 @@ bool IsWindowAccessible(wxRect *requestedRect)
       }
    }
    return FALSE;
+}
+
+// Returns the screen containing a rectangle, or -1 if none does.
+int ScreenContaining( wxRect & r ){
+   unsigned int n = wxDisplay::GetCount();
+   for(unsigned int i = 0;i<n;i++){
+      wxDisplay d(i);
+      wxRect scr = d.GetClientArea();
+      if( scr.Contains( r ) )
+         return (int)i;
+   }
+   return -1;
 }
 
 // BG: Calculate where to place the next window (could be the first window)
@@ -692,9 +709,10 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
-   wxRect screenRect = wxGetClientDisplayRect();
 
+   wxRect screenRect( wxGetClientDisplayRect());
 #if defined(__WXMAC__)
+
    // On OSX, the top of the window should never be less than the menu height,
    // so something is amiss if it is
    if (normalRect.y < screenRect.y) {
@@ -705,16 +723,16 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 #endif
 
-
-   // Make sure initial sizes fit within the display bounds
+   // We don't mind being 32 pixels off the screen in any direction.
+   // Make sure initial sizes (pretty much) fit within the display bounds
    // We used to trim the sizes which could result in ridiculously small windows.
    // contributing to bug 1243.
-   // Now instead if the window doesn't fit the screen, we use the default 
+   // Now instead if the window significantly doesn't fit the screen, we use the default 
    // window instead, which we know does.
-   if (!screenRect.Contains( normalRect )) {
+   if (ScreenContaining( wxRect(normalRect).Deflate( 32, 32 ))<0) {
       normalRect = defaultRect;
    }
-   if (!screenRect.Contains( windowRect )) {
+   if (ScreenContaining( wxRect(windowRect).Deflate( 32, 32 ) )<0) {
       windowRect = defaultRect;
    }
 
@@ -754,10 +772,29 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       nextRect->y += inc;
    }
 
+   // defaultrect is a rectangle on the first screen.  It's the right fallback to 
+   // use most of the time if things are not working out right with sizing.
+   // windowRect is a saved rectangle size.
+   // normalRect seems to be a substitute for windowRect when iconized or maximised.
 
-   //Have we hit the right side of the screen?
+   // Windows can say that we are off screen when actually we are not.
+   // On Windows 10 I am seeing miscalculation by about 6 pixels.
+   // To fix this we allow some sloppiness on the edge being counted as off screen.
+   // This matters most when restoring very carefully sized windows that are maximised
+   // in one dimension (height or width) but not both.
+   const int edgeSlop = 10;
+
+   // Next four lines are getting the rectangle for the screen that contains the
+   // top left corner of nextRect (and defaulting to rect of screen 0 otherwise).
+   wxPoint p = nextRect->GetLeftTop();
+   int scr = std::max( 0, wxDisplay::GetFromPoint( p ));
+   wxDisplay d( scr );
+   screenRect = d.GetClientArea();
+
+   // Now we (possibly) start trimming our rectangle down.
+   // Have we hit the right side of the screen?
    wxPoint bottomRight = nextRect->GetBottomRight();
-   if (bottomRight.x > screenRect.GetRight()) {
+   if (bottomRight.x > (screenRect.GetRight()+edgeSlop)) {
       int newWidth = screenRect.GetWidth() - nextRect->GetLeft();
       if (newWidth < defaultRect.GetWidth()) {
          nextRect->x = windowRect.x;
@@ -769,16 +806,19 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       }
    }
 
-   //Have we hit the bottom of the screen?
+   // Have we hit the bottom of the screen?
    bottomRight = nextRect->GetBottomRight();
-   if (bottomRight.y > screenRect.GetBottom()) {
+   if (bottomRight.y > (screenRect.GetBottom()+edgeSlop)) {
       nextRect->y -= inc;
       bottomRight = nextRect->GetBottomRight();
-      if (bottomRight.y > screenRect.GetBottom()) {
+      if (bottomRight.y > (screenRect.GetBottom()+edgeSlop)) {
          nextRect->SetBottom(screenRect.GetBottom());
       }
    }
 
+   // After all that we could have a window that does not have a visible
+   // top bar.  [It is unlikely, but something might have gone wrong]
+   // If so, use the safe fallback size.
    if (!IsWindowAccessible(nextRect)) {
       *nextRect = defaultRect;
    }
@@ -837,7 +877,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
      mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
      mUndoManager(std::make_unique<UndoManager>()),
-     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom())
+     mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
+     mbLoadedFromAup( false )
 {
 
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -1329,11 +1370,22 @@ wxString AudacityProject::GetName()
    return name;
 }
 
-void AudacityProject::SetProjectTitle()
+// Pass a number in to show project number, or -1 not to.
+void AudacityProject::SetProjectTitle( int number)
 {
    wxString name = GetName();
-   if( name.IsEmpty() )
+
+   // If we are showing project numbers, then we also explicitly show "<untitled>" if there
+   // is none.
+   if( number >= 0 ){
+      /* i18n-hint: The %02i is the project number, the %s is the project name.*/
+      name = wxString::Format( wxT("[Project %02i] Audacity \"%s\""), number+1 ,
+         name.IsEmpty() ? "<untitled>" : name.c_str() );
+   }
+   // If we are not showing numbers, then <untitled> shows as 'Audacity'.
+   else if( name.IsEmpty() )
    {
+      mbLoadedFromAup = false;
       name = wxT("DarkAudacity");
    }
 
@@ -1964,6 +2016,42 @@ void AudacityProject::HandleResize()
    UpdateLayout();
 }
 
+// What number is this project?
+int AudacityProject::GetProjectNumber()
+{
+   int i;
+   for(i=0;i<gAudacityProjects.size();i++){
+      if(gAudacityProjects[i].get() == this )
+         return i;
+   }
+   return -1;
+}
+
+// How many projects that do not have a name yet?
+int AudacityProject::CountUnnamed()
+{
+   int i;
+   int j=0;
+   for(i=0;i<gAudacityProjects.size();i++){
+      if(gAudacityProjects[i])
+         if( gAudacityProjects[i]->GetName().IsEmpty() )
+            j++;
+   }
+   return j;
+}
+
+void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
+{
+   int i;
+   for(i=0;i<gAudacityProjects.size();i++){
+      if(gAudacityProjects[i]){
+         if( !gAudacityProjects[i]->mIconized ){
+            gAudacityProjects[i]->SetProjectTitle( bShowProjectNumbers ? i : -1 );
+         }
+      }
+   }
+}
+
 void AudacityProject::OnIconize(wxIconizeEvent &event)
 {
 
@@ -2280,6 +2368,34 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
       SetActiveProject(this);
 }
 
+// TitleRestorer restores project window titles to what they were, in its destructor.
+class TitleRestorer{
+public:
+   TitleRestorer(AudacityProject * p ){
+      // Construct this projects name and number.
+      sProjNumber = "";
+      sProjName = p->GetName();
+      if (sProjName.IsEmpty()){
+         sProjName = _("<untitled>");
+         UnnamedCount=AudacityProject::CountUnnamed();
+         if( UnnamedCount > 1 ){
+            sProjNumber.Printf( "[Project %02i] ", p->GetProjectNumber()+1 );
+            AudacityProject::RefreshAllTitles( true ); 
+         } 
+      } else {
+         UnnamedCount = 0;
+      }
+   };
+   ~TitleRestorer() { 
+      if( UnnamedCount > 1 )
+         AudacityProject::RefreshAllTitles( false ); 
+   };
+   wxString sProjNumber;
+   wxString sProjName;
+   int UnnamedCount;
+};
+
+
 // LL: All objects that have a reference to the DirManager should
 //     be deleted before the final mDirManager->Deref() in this
 //     routine.  Failing to do so can cause unwanted recursion
@@ -2342,14 +2458,16 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // project is now empty.
    if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
       if (GetUndoManager()->UnsavedChanges()) {
-
+         TitleRestorer Restorer( this );// RAII
+         /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
+         wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
          wxString Message = _("Save changes before closing?");
          if( !bHasTracks )
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
          }
          int result = wxMessageBox( Message,
-                                   _("Save changes?"),
+                                    Title,
                                    wxYES_NO | wxCANCEL | wxICON_QUESTION,
                                    this);
 
@@ -2834,6 +2952,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    ///
 
    mFileName = fileName;
+   mbLoadedFromAup = true;
 
    mRecoveryAutoSaveDataDir = wxT("");
    mIsRecovered = false;
@@ -3171,6 +3290,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                realFileName += wxT(".aup");
                projPath = realFileDir.GetFullPath();
                mFileName = wxFileName(projPath, realFileName).GetFullPath();
+               mbLoadedFromAup = true;
                projName = value;
             }
 
@@ -3876,6 +3996,7 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    if (initiallyEmpty && mDirManager->GetProjectName() == wxT("")) {
       wxString name = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast(wxT('.'));
       mFileName =::wxPathOnly(fileName) + wxFILE_SEP_PATH + name + wxT(".aup");
+      mbLoadedFromAup = false;
       SetProjectTitle();
    }
 
@@ -3982,10 +4103,11 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 {
    wxString oldFileName = mFileName;
 
+   bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==newFileName);
    //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
-   if(mFileName!=newFileName && wxFileExists(newFileName)) {
+   if( !bOwnsNewAupName && wxFileExists(newFileName)) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -3996,7 +4118,8 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    }
 
    mFileName = newFileName;
-   SetProjectTitle();
+   //Don't change the title, unless we succeed.
+   //SetProjectTitle();
 
    bool success = Save(false, true, bWantSaveCompressed);
 
@@ -4005,21 +4128,22 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    }
    if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
    {
-      // Reset file name on error
+      // Restore file name on error
       mFileName = oldFileName;
+   } else {
+      mbLoadedFromAup = true;
       SetProjectTitle();
    }
 
    return(success);
 }
 
+
 bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
-   wxFileName filename(mFileName);
+   TitleRestorer Restorer(this); // RAII
 
-   wxString sProjName = this->GetName();
-   if (sProjName.IsEmpty())
-      sProjName = _("<untitled>");
+   wxFileName filename(mFileName);
 
    wxString sDialogTitle;
    if (bWantSaveCompressed)
@@ -4036,7 +4160,7 @@ To open a compressed project takes longer than usual, as it imports \n\
 each compressed track.\n"),
                            true) != wxID_OK)
          return false;
-      sDialogTitle.Printf(_("Save Compressed Project \"%s\" As..."), sProjName.c_str());
+      sDialogTitle.Printf(_("%sSave Compressed Project \"%s\" As..."), Restorer.sProjNumber.c_str(),Restorer.sProjName.c_str());
    }
    else
    {
@@ -4046,7 +4170,7 @@ each compressed track.\n"),
 For an audio file that will open in other apps, use 'Export'.\n"),
                            true) != wxID_OK)
          return false;
-      sDialogTitle.Printf(_("Save Project \"%s\" As..."), sProjName.c_str());
+      sDialogTitle.Printf(_("%sSave Project \"%s\" As..."), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
    }
 
    // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
@@ -4068,10 +4192,11 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    filename.SetExt(wxT("aup"));
    fName = filename.GetFullPath();
 
+   bool bOwnsNewAupName = mbLoadedFromAup && (mFileName==fName);
    //check to see if the NEW project file already exists.
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
-   if (mFileName != fName && filename.FileExists()) {
+   if (!bOwnsNewAupName && filename.FileExists()) {
       wxMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
@@ -4083,7 +4208,6 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
    wxString oldFileName = mFileName;
    mFileName = fName;
-   SetProjectTitle();
 
    bool success = Save(false, true, bWantSaveCompressed);
 
@@ -4094,8 +4218,11 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    {
       // Reset file name on error
       mFileName = oldFileName;
+   } else {
+      mbLoadedFromAup = true;
       SetProjectTitle();
    }
+
 
    return(success);
 }
@@ -5393,17 +5520,16 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    }
 
    mFileName = sNewFileName;
-   SetProjectTitle();
 
    bool bSuccess = Save(false, true, false);
 
    if (bSuccess) {
       wxGetApp().AddFileToHistory(mFileName);
-   } else
-   {
-      // Reset file name on error
-      mFileName = sOldFilename;
+      mbLoadedFromAup = true;
       SetProjectTitle();
+   } else  {
+      // Restore file name on error
+      mFileName = sOldFilename;
    }
 
    return bSuccess;

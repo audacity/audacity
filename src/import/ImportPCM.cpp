@@ -93,7 +93,7 @@ public:
    ~PCMImportFileHandle();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -109,7 +109,7 @@ public:
 
 private:
    SFFile                mFile;
-   SF_INFO               mInfo;
+   const SF_INFO         mInfo;
    sampleFormat          mFormat;
 };
 
@@ -194,6 +194,8 @@ PCMImportFileHandle::PCMImportFileHandle(wxString name,
    mFile(std::move(file)),
    mInfo(info)
 {
+   wxASSERT(info.channels >= 0);
+
    //
    // Figure out the format to use.
    //
@@ -215,7 +217,7 @@ wxString PCMImportFileHandle::GetFileDescription()
    return SFCall<wxString>(sf_header_name, mInfo.format);
 }
 
-int PCMImportFileHandle::GetFileUncompressedBytes()
+auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
 }
@@ -367,7 +369,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       channels.begin()->get()->SetLinked(true);
    }
 
-   auto fileTotalFrames = (sampleCount)mInfo.frames;
+   auto fileTotalFrames =
+      (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
    int updateResult = false;
 
@@ -431,6 +434,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
       // PRL:  guard against excessive memory buffer allocation in case of many channels
       using type = decltype(maxBlockSize);
+      if (mInfo.channels < 1)
+         return eProgressFailed;
       auto maxBlock = std::min(maxBlockSize,
          std::numeric_limits<type>::max() /
             (mInfo.channels * SAMPLE_SIZE(mFormat))
@@ -439,6 +444,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          return eProgressFailed;
 
       SampleBuffer srcbuffer;
+      wxASSERT(mInfo.channels >= 0);
       while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
       {
          maxBlock >>= 1;

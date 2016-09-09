@@ -54,12 +54,12 @@ bool EffectInvert::IsInteractive()
 
 // EffectClientInterface implementation
 
-int EffectInvert::GetAudioInCount()
+unsigned EffectInvert::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectInvert::GetAudioOutCount()
+unsigned EffectInvert::GetAudioOutCount()
 {
    return 1;
 }

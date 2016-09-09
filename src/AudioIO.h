@@ -350,8 +350,8 @@ class AUDACITY_DLL_API AudioIO final {
    double GetStreamTime();
 
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
-   int GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
-   int GetNumCaptureChannels() const { return mNumCaptureChannels; }
+   unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
+   unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
    /** \brief Array of common audio sample rates
     *
@@ -439,7 +439,7 @@ private:
    *
    * Returns the smallest of the buffer free space values in the event that
    * they are different. */
-   int GetCommonlyAvailPlayback();
+   size_t GetCommonlyAvailPlayback();
 
    /** \brief Get the number of audio samples ready in all of the recording
     * buffers.
@@ -447,7 +447,7 @@ private:
     * Returns the smallest of the number of samples available for storage in
     * the recording buffers (i.e. the number of samples that can be read from
     * all record buffers without underflow). */
-   int GetCommonlyAvailCapture();
+   size_t GetCommonlyAvailCapture();
 
    /** \brief get the index of the supplied (named) recording device, or the
     * device selected in the preferences if none given.
@@ -688,7 +688,7 @@ private:
    std::unique_ptr<ScrubQueue> mScrubQueue;
 
    bool mSilentScrub;
-   long mScrubDuration;
+   sampleCount mScrubDuration;
 #endif
 };
 

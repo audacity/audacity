@@ -99,12 +99,12 @@ EffectType EffectAmplify::GetType()
 
 // EffectClientInterface implementation
 
-int EffectAmplify::GetAudioInCount()
+unsigned EffectAmplify::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectAmplify::GetAudioOutCount()
+unsigned EffectAmplify::GetAudioOutCount()
 {
    return 1;
 }

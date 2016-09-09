@@ -123,7 +123,7 @@ public:
    ~OggImportFileHandle();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -223,7 +223,7 @@ wxString OggImportFileHandle::GetFileDescription()
    return DESC;
 }
 
-int OggImportFileHandle::GetFileUncompressedBytes()
+auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO:
    return 0;

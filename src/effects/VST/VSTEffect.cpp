@@ -1306,12 +1306,12 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-int VSTEffect::GetAudioInCount()
+unsigned VSTEffect::GetAudioInCount()
 {
    return mAudioIns;
 }
 
-int VSTEffect::GetAudioOutCount()
+unsigned VSTEffect::GetAudioOutCount()
 {
    return mAudioOuts;
 }
@@ -1410,12 +1410,12 @@ sampleCount VSTEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCou
    return blockLen;
 }
 
-int VSTEffect::GetChannelCount()
+unsigned VSTEffect::GetChannelCount()
 {
    return mNumChannels;
 }
 
-void VSTEffect::SetChannelCount(int numChannels)
+void VSTEffect::SetChannelCount(unsigned numChannels)
 {
    mNumChannels = numChannels;
 }
@@ -1438,7 +1438,7 @@ bool VSTEffect::RealtimeInitialize()
    return ProcessInitialize(0, NULL);
 }
 
-bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
+bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
    VSTEffect *slave = new VSTEffect(mPath, this);
    mSlaves.Add(slave);

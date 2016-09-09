@@ -1167,12 +1167,12 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-int AudioUnitEffect::GetAudioInCount()
+unsigned AudioUnitEffect::GetAudioInCount()
 {
    return mAudioIns;
 }
 
-int AudioUnitEffect::GetAudioOutCount()
+unsigned AudioUnitEffect::GetAudioOutCount()
 {
    return mAudioOuts;
 }
@@ -1361,7 +1361,7 @@ bool AudioUnitEffect::RealtimeInitialize()
    return ProcessInitialize(0);
 }
 
-bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
+bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
    auto slave = make_movable<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->SetHost(NULL))
@@ -2114,12 +2114,12 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
    return true;
 }
 
-int AudioUnitEffect::GetChannelCount()
+unsigned AudioUnitEffect::GetChannelCount()
 {
    return mNumChannels;
 }
 
-void AudioUnitEffect::SetChannelCount(int numChannels)
+void AudioUnitEffect::SetChannelCount(unsigned numChannels)
 {
    mNumChannels = numChannels;
 }

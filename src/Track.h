@@ -482,7 +482,7 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    * Mono, Stereo etc. @param selectionOnly Whether to consider the entire track
    * list or only the selected members of it
    */
-   int GetNumExportChannels(bool selectionOnly) const;
+   unsigned GetNumExportChannels(bool selectionOnly) const;
 
    WaveTrackArray GetWaveTrackArray(bool selectionOnly, bool includeMuted = true);
    WaveTrackConstArray GetWaveTrackConstArray(bool selectionOnly, bool includeMuted = true) const;

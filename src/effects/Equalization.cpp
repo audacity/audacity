@@ -1095,9 +1095,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
       for(i=0; i<block; i+=L)   //go through block in lumps of length L
       {
-         wcopy = L;
-         if (i + wcopy > block)   //if last lump would exceed block
-            wcopy = block - i;   //shorten it
+         wcopy = std::min <int> (L, block - i);
          for(j=0; j<wcopy; j++)
             thisWindow[j] = buffer[i+j];   //copy the L (or remaining) samples
          for(j=wcopy; j<windowSize; j++)

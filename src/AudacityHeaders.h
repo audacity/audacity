@@ -58,7 +58,6 @@
 #include "NoteTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "Resample.h"
 #include "SampleFormat.h"
 #include "Sequence.h"
 #include "TimeTrack.h"

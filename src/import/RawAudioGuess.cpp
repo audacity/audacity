@@ -287,7 +287,7 @@ static void Extract(bool bits16,
 }
 
 static int GuessFloatFormats(int numTests, char **rawData, int dataSize,
-                             int *out_offset, int *out_channels)
+                             int *out_offset, unsigned *out_channels)
 {
    int format;
    int bestOffset = 0;
@@ -521,7 +521,7 @@ static int GuessFloatFormats(int numTests, char **rawData, int dataSize,
    return format;
 }
 
-static int Guess8Bit(int numTests, char **rawData, int dataSize, int *out_channels)
+static int Guess8Bit(int numTests, char **rawData, int dataSize, unsigned *out_channels)
 {
    bool guessSigned = false;
    bool guessStereo = false;
@@ -681,7 +681,7 @@ static int Guess8Bit(int numTests, char **rawData, int dataSize, int *out_channe
 
 static int Guess16Bit(int numTests, char **rawData,
                       int dataSize, bool evenMSB,
-                      int *out_offset, int *out_channels)
+                      int *out_offset, unsigned *out_channels)
 {
    int format;
    bool guessSigned = false;
@@ -959,7 +959,7 @@ static int Guess16Bit(int numTests, char **rawData,
 }
 
 static int GuessIntFormats(int numTests, char **rawData, int dataSize,
-                           int *out_offset, int *out_channels)
+                           int *out_offset, unsigned *out_channels)
 {
    int format = SF_FORMAT_RAW;
    bool guess16bit = false;
@@ -1045,7 +1045,7 @@ static int GuessIntFormats(int numTests, char **rawData, int dataSize,
 }
 
 int RawAudioGuess(const wxString &in_fname,
-                  int *out_offset, int *out_channels)
+                  int *out_offset, unsigned *out_channels)
 {
    const int numTests = 11;
    size_t headerSkipSize = 64;

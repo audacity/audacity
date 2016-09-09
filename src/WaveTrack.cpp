@@ -2031,9 +2031,8 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         auto samplesToCopy = start+len - clipStart;
-         if (samplesToCopy > clip->GetNumSamples())
-            samplesToCopy = clip->GetNumSamples();
+         auto samplesToCopy =
+            std::min( start+len - clipStart, clip->GetNumSamples() );
          auto startDelta = clipStart - start;
          decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
@@ -2068,9 +2067,8 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
       if (clipEnd > start && clipStart < start+len)
       {
          // Clip sample region and Get/Put sample region overlap
-         auto samplesToCopy = start+len - clipStart;
-         if (samplesToCopy > clip->GetNumSamples())
-            samplesToCopy = clip->GetNumSamples();
+         auto samplesToCopy =
+            std::min( start+len - clipStart, clip->GetNumSamples() );
          auto startDelta = clipStart - start;
          decltype(startDelta) inclipDelta = 0;
          if (startDelta < 0)
@@ -2661,6 +2659,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          mBuffers[1] = mBuffers[0];
          mBuffers[0].data = save;
          fillFirst = true;
+         fillSecond = false;
          // Cache is not in a consistent state yet
          mNValidBuffers = 0;
       }
@@ -2732,7 +2731,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          const auto starti = start - mBuffers[ii].start;
          const auto leni =
             std::min( sampleCount( remaining ), mBuffers[ii].len - starti );
-         if (initLen == 0 && leni == len) {
+         if (initLen <= 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
             return samplePtr(mBuffers[ii].data + starti);
          }

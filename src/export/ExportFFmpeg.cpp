@@ -141,7 +141,7 @@ public:
    ///\param subformat index of export type
    ///\return true if export succeded
    int Export(AudacityProject *project,
-      int channels,
+      unsigned channels,
       const wxString &fName,
       bool selectedOnly,
       double t0,
@@ -162,7 +162,7 @@ private:
    int               mSubFormat{};
    int               mBitRate{};
    int               mSampleRate{};
-   int               mChannels{};
+   unsigned          mChannels{};
    bool              mSupportsUTF8{};
 
    // Smart pointer fields, their order is the reverse in which they are reset in Finalize():
@@ -824,7 +824,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
 
 
 int ExportFFmpeg::Export(AudacityProject *project,
-                       int channels, const wxString &fName,
+                       unsigned channels, const wxString &fName,
                        bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
    if (!CheckFFmpegPresence())

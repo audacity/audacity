@@ -72,8 +72,8 @@ public:
 
    bool SetHost(EffectHostInterface *host) override;
 
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -90,7 +90,7 @@ public:
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
 
    bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
@@ -137,8 +137,8 @@ private:
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
 
    // Realtime
-   int GetChannelCount();
-   void SetChannelCount(int numChannels);
+   unsigned GetChannelCount();
+   void SetChannelCount(unsigned numChannels);
    
    static OSStatus RenderCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *inActionFlags,
@@ -181,7 +181,7 @@ private:
    bool mSupportsStereo;
 
    EffectHostInterface *mHost;
-   int mAudioIns;
+   unsigned mAudioIns;
    int mAudioOuts;
    bool mInteractive;
    bool mLatencyDone;
@@ -205,7 +205,7 @@ private:
 
    AudioUnitEffect *mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
-   int mNumChannels;
+   unsigned mNumChannels;
    float **mMasterIn;
    float **mMasterOut;
    sampleCount mNumSamples;

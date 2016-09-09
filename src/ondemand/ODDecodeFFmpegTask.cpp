@@ -49,7 +49,7 @@ struct FFMpegDecodeCache
    uint8_t* samplePtr{};//interleaved samples
    sampleCount start;
    sampleCount len;
-   int         numChannels;
+   unsigned    numChannels;
    AVSampleFormat samplefmt; // input (from libav) sample format
 
 };
@@ -387,12 +387,16 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
          if(actualDecodeStart>start && firstpass) {
             // find the number of samples for the leading silence
-            int amt = actualDecodeStart - start;
+            // UNSAFE_SAMPLE_COUNT_TRUNCATION
+            // -- but used only experimentally as of this writing
+            // Is there a proof size_t will not overflow?
+            auto amt = actualDecodeStart - start;
             auto cache = make_movable<FFMpegDecodeCache>();
 
             //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
 
             //put it in the cache so the other channels can use it.
+            // wxASSERT(sc->m_stream->codec->channels > 0);
             cache->numChannels = sc->m_stream->codec->channels;
             cache->len = amt;
             cache->start=start;
@@ -503,21 +507,23 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
          if(start<mDecodeCache[i]->start && start+len  > mDecodeCache[i]->start+mDecodeCache[i]->len)
             continue;
 
-         int samplesHit;
-         int hitStartInCache;
-         int hitStartInRequest;
-         int nChannels = mDecodeCache[i]->numChannels;
-         samplesHit = FFMIN(start+len,mDecodeCache[i]->start+mDecodeCache[i]->len)
-                        - FFMAX(mDecodeCache[i]->start,start);
+         auto nChannels = mDecodeCache[i]->numChannels;
+         auto samplesHit = (
+            FFMIN(start+len,mDecodeCache[i]->start+mDecodeCache[i]->len)
+               - FFMAX(mDecodeCache[i]->start,start)
+         );
          //find the start of the hit relative to the cache buffer start.
-         hitStartInCache   = FFMAX(0,start-mDecodeCache[i]->start);
+         // UNSAFE_SAMPLE_COUNT_TRUNCATION
+         // -- but used only experimentally as of this writing
+         // Is there a proof size_t will not overflow?
+         const auto hitStartInCache   = FFMAX(0,start-mDecodeCache[i]->start);
          //we also need to find out which end was hit - if it is the tail only we need to update from a later index.
-         hitStartInRequest = start <mDecodeCache[i]->start?len - samplesHit: 0;
-         sampleCount outIndex,inIndex;
-         for(int j=0;j<samplesHit;j++)
+         const auto hitStartInRequest = start < mDecodeCache[i]->start
+            ? len - samplesHit : 0;
+         for(decltype(samplesHit) j = 0; j < samplesHit; j++)
          {
-            outIndex = hitStartInRequest + j;
-            inIndex = (hitStartInCache + j) * nChannels + channel;
+            const auto outIndex = hitStartInRequest + j;
+            const auto inIndex = (hitStartInCache + j) * nChannels + channel;
             switch (mDecodeCache[i]->samplefmt)
             {
                case AV_SAMPLE_FMT_U8:
@@ -597,6 +603,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //However if other ODDecode tasks need this, we should do a NEW class for caching.
       auto cache = make_movable<FFMpegDecodeCache>();
       //len is number of samples per channel
+      // wxASSERT(sc->m_stream->codec->channels > 0);
       cache->numChannels = sc->m_stream->codec->channels;
 
       cache->len = (sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize) / cache->numChannels;

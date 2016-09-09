@@ -29,7 +29,7 @@ typedef enum {
 } sampleFormat;
 
 /** \brief Return the size (in memory) of one sample (bytes) */
-#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
+#define SAMPLE_SIZE(SampleFormat) ( size_t{ (SampleFormat) >> 16 } )
 #endif
 
 // Used to determine how to fill in empty areas of audio.
@@ -39,8 +39,8 @@ typedef enum {
 }fillFormat;
 
 /** \brief Return the size on disk of one uncompressed sample (bytes) */
-#define SAMPLE_SIZE_DISK(SampleFormat) ((SampleFormat == int24Sample) ? \
-   3 : SAMPLE_SIZE(SampleFormat) )
+#define SAMPLE_SIZE_DISK(SampleFormat) (((SampleFormat) == int24Sample) ? \
+   size_t{ 3 } : SAMPLE_SIZE(SampleFormat) )
 
 const wxChar *GetSampleFormatStr(sampleFormat format);
 
@@ -139,7 +139,7 @@ void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                       unsigned int dstStride=1);
 
 void      ClearSamples(samplePtr buffer, sampleFormat format,
-                       int start, int len);
+                       size_t start, size_t len);
 
 void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);

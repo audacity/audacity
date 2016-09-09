@@ -285,7 +285,7 @@ bool Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-int Effect::GetAudioInCount()
+unsigned Effect::GetAudioInCount()
 {
    if (mClient)
    {
@@ -295,7 +295,7 @@ int Effect::GetAudioInCount()
    return 0;
 }
 
-int Effect::GetAudioOutCount()
+unsigned Effect::GetAudioOutCount()
 {
    if (mClient)
    {
@@ -420,7 +420,7 @@ bool Effect::RealtimeInitialize()
    return false;
 }
 
-bool Effect::RealtimeAddProcessor(int numChannels, float sampleRate)
+bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
    if (mClient)
    {
@@ -1548,7 +1548,7 @@ bool Effect::ProcessTrack(int count,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   int chans = wxMin(mNumAudioOut, mNumChannels);
+   auto chans = std::min(mNumAudioOut, mNumChannels);
 
    std::unique_ptr<WaveTrack> genLeft, genRight;
    decltype(len) genLength = 0;
@@ -2046,8 +2046,8 @@ void Effect::CopyInputTracks()
 void Effect::CopyInputTracks(int trackType)
 {
    // Reset map
-   mIMap.Clear();
-   mOMap.Clear();
+   mIMap.clear();
+   mOMap.clear();
 
    mOutputTracks = std::make_unique<TrackList>();
    mOutputTracksType = trackType;
@@ -2063,16 +2063,16 @@ void Effect::CopyInputTracks(int trackType)
             (trackType == Track::All && aTrack->IsSyncLockSelected()))
       {
          Track *o = mOutputTracks->Add(aTrack->Duplicate());
-         mIMap.Add(aTrack);
-         mOMap.Add(o);
+         mIMap.push_back(aTrack);
+         mOMap.push_back(o);
       }
    }
 }
 
 Track *Effect::AddToOutputTracks(std::unique_ptr<Track> &&t)
 {
-   mIMap.Add(NULL);
-   mOMap.Add(t.get());
+   mIMap.push_back(NULL);
+   mOMap.push_back(t.get());
    return mOutputTracks->Add(std::move(t));
 }
 
@@ -2178,8 +2178,8 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       mOutputTracks->Clear();
 
       // Reset map
-      mIMap.Clear();
-      mOMap.Clear();
+      mIMap.clear();
+      mOMap.clear();
 
       //TODO:undo the non-gui ODTask transfer
       return;
@@ -2187,7 +2187,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    auto iterOut = mOutputTracks->begin(), iterEnd = mOutputTracks->end();
 
-   size_t cnt = mOMap.GetCount();
+   size_t cnt = mOMap.size();
    size_t i = 0;
 
    for (; iterOut != iterEnd; ++i) {
@@ -2195,7 +2195,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // If tracks were removed from mOutputTracks, then there will be
       // tracks in the map that must be removed from mTracks.
       while (i < cnt && mOMap[i] != o.get()) {
-         Track *t = (Track *) mIMap[i];
+         const auto t = mIMap[i];
          if (t) {
             mTracks->Remove(t);
          }
@@ -2208,7 +2208,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       // Remove the track from the output list...don't DELETE it
       iterOut = mOutputTracks->erase(iterOut);
 
-      Track *t = (Track *) mIMap[i];
+      const auto  t = mIMap[i];
       if (t == NULL)
       {
          // This track is a NEW addition to output tracks; add it to mTracks
@@ -2232,16 +2232,16 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    // If tracks were removed from mOutputTracks, then there may be tracks
    // left at the end of the map that must be removed from mTracks.
    while (i < cnt) {
-      Track *t = (Track *) mIMap[i];
+      const auto t = mIMap[i];
       if (t) {
-         mTracks->Remove((Track *)mIMap[i]);
+         mTracks->Remove(t);
       }
       i++;
    }
 
    // Reset map
-   mIMap.Clear();
-   mOMap.Clear();
+   mIMap.clear();
+   mOMap.clear();
 
    // Make sure we processed everything
    wxASSERT(mOutputTracks->empty());
@@ -2282,11 +2282,11 @@ double Effect::CalcPreviewInputLength(double previewLength)
 // RealtimeAddProcessor and RealtimeProcess use the same method of
 // determining the current processor index, so updates to one should
 // be reflected in the other.
-bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
+bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
 {
-   int ichans = chans;
-   int ochans = chans;
-   int gchans = chans;
+   auto ichans = chans;
+   auto ochans = chans;
+   auto gchans = chans;
 
    // Reset processor index
    if (group == 0)
@@ -2348,7 +2348,7 @@ bool Effect::RealtimeAddProcessor(int group, int chans, float rate)
 // determining the current processor group, so updates to one should
 // be reflected in the other.
 sampleCount Effect::RealtimeProcess(int group,
-                                    int chans,
+                                    unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
                                     sampleCount numSamples)
@@ -2366,9 +2366,9 @@ sampleCount Effect::RealtimeProcess(int group,
    float **clientOut = (float **) alloca(mNumAudioOut * sizeof(float *));
    float *dummybuf = (float *) alloca(numSamples * sizeof(float));
    decltype(numSamples) len = 0;
-   int ichans = chans;
-   int ochans = chans;
-   int gchans = chans;
+   auto ichans = chans;
+   auto ochans = chans;
+   auto gchans = chans;
    int indx = 0;
    int ondx = 0;
 
@@ -2441,7 +2441,7 @@ sampleCount Effect::RealtimeProcess(int group,
       len = 0;
       for (decltype(numSamples) block = 0; block < numSamples; block += mBlockSize)
       {
-         auto cnt = (block + mBlockSize > numSamples ? numSamples - block : mBlockSize);
+         auto cnt = std::min(numSamples - block, mBlockSize);
          len += RealtimeProcess(processor, clientIn, clientOut, cnt);
 
          for (int i = 0 ; i < mNumAudioIn; i++)

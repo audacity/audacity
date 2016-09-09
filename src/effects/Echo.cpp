@@ -68,12 +68,12 @@ EffectType EffectEcho::GetType()
 
 // EffectClientInterface implementation
 
-int EffectEcho::GetAudioInCount()
+unsigned EffectEcho::GetAudioInCount()
 {
    return 1;
 }
 
-int EffectEcho::GetAudioOutCount()
+unsigned EffectEcho::GetAudioOutCount()
 {
    return 1;
 }
@@ -87,7 +87,16 @@ bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
 
    histPos = 0;
    histLen = (sampleCount) (mSampleRate * delay);
-   history = new float[histLen];
+
+   // Guard against extreme delay values input by the user
+   try {
+      history = new float[histLen];
+   }
+   catch ( const std::bad_alloc& ) {
+      wxMessageBox(_("Requested value exceeds memory capacity."));
+      return false;
+   }
+
    memset(history, 0, sizeof(float) * histLen);
    
    return history != NULL;

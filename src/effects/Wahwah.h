@@ -61,12 +61,12 @@ public:
 
    // EffectClientInterface implementation
 
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
    bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() override;
    sampleCount RealtimeProcess(int group,
                                        float **inbuf,

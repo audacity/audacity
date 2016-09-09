@@ -284,7 +284,7 @@ public:
    wxWindow *OptionsCreate(wxWindow *parent, int format);
 
    int Export(AudacityProject *project,
-               int channels,
+               unsigned channels,
                const wxString &fName,
                bool selectedOnly,
                double t0,
@@ -306,7 +306,7 @@ ExportCL::ExportCL()
 }
 
 int ExportCL::Export(AudacityProject *project,
-                      int channels,
+                      unsigned channels,
                       const wxString &fName,
                       bool selectionOnly,
                       double t0,

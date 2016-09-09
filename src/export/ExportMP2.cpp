@@ -174,7 +174,7 @@ public:
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
-               int channels,
+               unsigned channels,
                const wxString &fName,
                bool selectedOnly,
                double t0,
@@ -204,7 +204,7 @@ ExportMP2::ExportMP2()
 }
 
 int ExportMP2::Export(AudacityProject *project,
-   int channels, const wxString &fName,
+   unsigned channels, const wxString &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int WXUNUSED(subformat))
 {

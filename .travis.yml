@@ -3,17 +3,18 @@ addons:
         sources:
             - ubuntu-toolchain-r-test
         packages:
-            - g++-4.8
-            - gcc-4.8
+            - g++-4.9
+            - gcc-4.9
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y libwxgtk3.0-dev libgtk2.0-dev
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")"
     - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")" > ./src/RevisionIdent.h
-    - export CXX="g++-4.8" CC="gcc-4.8"
-    - FLAGS="-Wall -Wextra"
+    - export CXX="g++-4.9" CC="gcc-4.9"
+    - FLAGS="-w -std=gnu++11"
     - export CFLAGS="$CFLAGS $FLAGS"
     - export CXXFLAGS="$CXXFLAGS $FLAGS"
+    - g++-4.9 --version
 language:
     - cpp
 script:

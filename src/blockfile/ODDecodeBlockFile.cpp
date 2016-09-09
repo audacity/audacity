@@ -77,7 +77,7 @@ ODDecodeBlockFile::~ODDecodeBlockFile()
 
 
 //Check to see if we have the file for these calls.
-wxLongLong ODDecodeBlockFile::GetSpaceUsage() const
+auto ODDecodeBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    if(IsSummaryAvailable())
    {

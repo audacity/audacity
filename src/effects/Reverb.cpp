@@ -149,12 +149,12 @@ EffectType EffectReverb::GetType()
 
 // EffectClientInterface implementation
 
-int EffectReverb::GetAudioInCount()
+unsigned EffectReverb::GetAudioInCount()
 {
    return mParams.mStereoWidth ? 2 : 1;
 }
 
-int EffectReverb::GetAudioOutCount()
+unsigned EffectReverb::GetAudioOutCount()
 {
    return mParams.mStereoWidth ? 2 : 1;
 }

@@ -383,12 +383,12 @@ struct AudioIO::ScrubQueue
       , mUpdating()
       , mMaxDebt { maxDebt }
    {
-      const long s0 = std::max(options.minSample, std::min(options.maxSample,
-         lrint(t0 * mRate)
+      const auto s0 = std::max(options.minSample, std::min(options.maxSample,
+         sampleCount(lrint(t0 * mRate))
       ));
-      const long s1 = lrint(t1 * mRate);
+      const auto s1 = sampleCount(lrint(t1 * mRate));
       Duration dd { *this };
-      long actualDuration = std::max(1L, dd.duration);
+      auto actualDuration = std::max(sampleCount{1}, dd.duration);
       auto success = mEntries[mMiddleIdx].Init(nullptr,
          s0, s1, actualDuration, options);
       if (success)
@@ -439,14 +439,14 @@ struct AudioIO::ScrubQueue
          auto previous = &mEntries[(mLeadingIdx + Size - 1) % Size];
 
          // Use the previous end as NEW start.
-         const long s0 = previous->mS1;
+         const auto s0 = previous->mS1;
          Duration dd { *this };
          const auto &origDuration = dd.duration;
          if (origDuration <= 0)
             return false;
 
          auto actualDuration = origDuration;
-         const long s1 = options.enqueueBySpeed
+         const sampleCount s1 = options.enqueueBySpeed
             ? s0 + lrint(origDuration * end) // end is a speed
             : lrint(end * mRate);            // end is a time
          auto success =
@@ -487,7 +487,8 @@ struct AudioIO::ScrubQueue
       }
    }
 
-   void Transformer(long &startSample, long &endSample, long &duration,
+   void Transformer(sampleCount &startSample, sampleCount &endSample,
+                    sampleCount &duration,
                     Maybe<wxMutexLocker> &cleanup)
    {
       // Audio thread is ready for the next interval.
@@ -537,7 +538,7 @@ struct AudioIO::ScrubQueue
                auto &start = entry.mS0;
                const auto end = entry.mS1;
                const auto ratio = static_cast<double>(toDiscard) / static_cast<double>(dur);
-               const auto adjustment = static_cast<long>(std::abs(end - start) * ratio);
+               const sampleCount adjustment = std::abs(end - start) * ratio;
                if (start <= end)
                   start += adjustment;
                else
@@ -584,7 +585,7 @@ struct AudioIO::ScrubQueue
       while (1)
       {
          Entry *pEntry = &mEntries[mTrailingIdx];
-         unsigned long remaining = pEntry->mDuration - pEntry->mPlayed;
+         auto remaining = pEntry->mDuration - pEntry->mPlayed;
          if (frames >= remaining)
          {
             frames -= remaining;
@@ -614,8 +615,8 @@ private:
          , mPlayed(0)
       {}
 
-      bool Init(Entry *previous, long s0, long s1,
-         long &duration /* in/out */,
+      bool Init(Entry *previous, sampleCount s0, sampleCount s1,
+         sampleCount &duration /* in/out */,
          const ScrubbingOptions &options)
       {
          const bool &adjustStart = options.adjustStart;
@@ -671,7 +672,7 @@ private:
          if (adjustedSpeed && !adjustStart)
          {
             // adjust s1
-            const long diff = lrint(speed * duration);
+            const sampleCount diff = lrint(speed * duration);
             if (s0 < s1)
                s1 = s0 + diff;
             else
@@ -685,11 +686,11 @@ private:
          // (Assume s0 is in bounds, because it equals the last scrub's s1 which was checked.)
          if (s1 != s0)
          {
-            long newDuration = duration;
-            const long newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
+            auto newDuration = duration;
+            const auto newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
             if(s1 != newS1)
-               newDuration = std::max(0L,
-                  static_cast<long>(duration * static_cast<double>(newS1 - s0) / (s1 - s0))
+               newDuration = std::max<sampleCount>(0,
+                  (duration * double(newS1 - s0) / (s1 - s0))
                );
             // When playback follows a fast mouse movement by "stuttering"
             // at maximum playback, don't make stutters too short to be useful.
@@ -710,7 +711,8 @@ private:
          if (adjustStart && !silent)
          {
             // Limit diff because this is seeking.
-            const long diff = lrint(std::min(options.maxSpeed, speed) * duration);
+            const sampleCount diff =
+               lrint(std::min(options.maxSpeed, speed) * duration);
             if (s0 < s1)
                s0 = s1 - diff;
             else
@@ -724,7 +726,7 @@ private:
          return true;
       }
 
-      void InitSilent(const Entry &previous, long duration)
+      void InitSilent(const Entry &previous, sampleCount duration)
       {
          mGoal = previous.mGoal;
          mS0 = mS1 = previous.mS1;
@@ -741,20 +743,20 @@ private:
       }
 
       // These sample counts are initialized in the UI, producer, thread:
-      long mS0;
-      long mS1;
-      long mGoal;
+      sampleCount mS0;
+      sampleCount mS1;
+      sampleCount mGoal;
       // This field is initialized in the UI thread too, and
       // this work queue item corresponds to exactly this many samples of
       // playback output:
-      long mDuration;
+      sampleCount mDuration;
 
       // The middleman Audio thread does not change these entries, but only
       // changes indices in the queue structure.
 
       // This increases from 0 to mDuration as the PortAudio, consumer,
       // thread catches up.  When they are equal, this entry can be discarded:
-      long mPlayed;
+      sampleCount mPlayed;
    };
 
    struct Duration {
@@ -769,7 +771,7 @@ private:
 
       ScrubQueue &queue;
       const wxLongLong clockTime { ::wxGetLocalTimeMillis() };
-      const long duration { static_cast<long>
+      const sampleCount duration { static_cast<long long>
          (queue.mRate * (clockTime - queue.mLastScrubTimeMillis).ToDouble() / 1000.0)
       };
       bool cancelled { false };
@@ -784,8 +786,8 @@ private:
    wxLongLong mLastScrubTimeMillis;
 
    wxLongLong mLastTransformerTimeMillis { -1LL };
-   long mCredit { 0L };
-   long mDebt { 0L };
+   sampleCount mCredit { 0 };
+   sampleCount mDebt { 0 };
    const long mMaxDebt;
 
    mutable wxMutex mUpdating;
@@ -1946,7 +1948,7 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       {
          WaveTrack *vt = gAudioIO->mPlaybackTracks[i];
 
-         int chanCnt = 1;
+         unsigned chanCnt = 1;
          if (vt->GetLinked())
          {
             i++;
@@ -3050,34 +3052,21 @@ MidiThread::ExitCode MidiThread::Entry()
 }
 #endif
 
-int AudioIO::GetCommonlyAvailPlayback()
+size_t AudioIO::GetCommonlyAvailPlayback()
 {
-   int commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
-   unsigned int i;
-
-   for (i = 1; i < mPlaybackTracks.size(); i++)
-   {
-      int thisBlockAvail = mPlaybackBuffers[i]->AvailForPut();
-
-      if( thisBlockAvail < commonlyAvail )
-         commonlyAvail = thisBlockAvail;
-   }
-
+   auto commonlyAvail = mPlaybackBuffers[0]->AvailForPut();
+   for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mPlaybackBuffers[i]->AvailForPut());
    return commonlyAvail;
 }
 
-int AudioIO::GetCommonlyAvailCapture()
+size_t AudioIO::GetCommonlyAvailCapture()
 {
-   int commonlyAvail = mCaptureBuffers[0]->AvailForGet();
-   unsigned int i;
-
-   for (i = 1; i < mCaptureTracks.size(); i++)
-   {
-      int avail = mCaptureBuffers[i]->AvailForGet();
-      if( avail < commonlyAvail )
-         commonlyAvail = avail;
-   }
-
+   auto commonlyAvail = mCaptureBuffers[0]->AvailForGet();
+   for (unsigned i = 1; i < mCaptureTracks.size(); ++i)
+      commonlyAvail = std::min(commonlyAvail,
+         mCaptureBuffers[i]->AvailForGet());
    return commonlyAvail;
 }
 
@@ -3464,7 +3453,7 @@ void AudioIO::FillBuffers()
       // things simple, we only write as much data as is vacant in
       // ALL buffers, and advance the global time by that much.
       // MB: subtract a few samples because the code below has rounding errors
-      int available = GetCommonlyAvailPlayback() - 10;
+      auto nAvailable = (int)GetCommonlyAvailPlayback() - 10;
 
       //
       // Don't fill the buffers at all unless we can do the
@@ -3475,14 +3464,14 @@ void AudioIO::FillBuffers()
       // The exception is if we're at the end of the selected
       // region - then we should just fill the buffer.
       //
-      if (available >= mPlaybackSamplesToCopy ||
+      if (nAvailable >= (int)mPlaybackSamplesToCopy ||
           (mPlayMode == PLAY_STRAIGHT &&
-           available > 0 &&
-           mWarpedTime+(available/mRate) >= mWarpedLength))
+           nAvailable > 0 &&
+           mWarpedTime+(nAvailable/mRate) >= mWarpedLength))
       {
          // Limit maximum buffer size (increases performance)
-         if (available > mPlaybackSamplesToCopy)
-            available = mPlaybackSamplesToCopy;
+         auto available =
+            std::min<size_t>( nAvailable, mPlaybackSamplesToCopy );
 
          // msmeyer: When playing a very short selection in looped
          // mode, the selection must be copied to the buffer multiple
@@ -3494,12 +3483,12 @@ void AudioIO::FillBuffers()
          Maybe<wxMutexLocker> cleanup;
          do {
             // How many samples to produce for each channel.
-            long frames = available;
+            auto frames = available;
             bool progress = true;
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
             if (mPlayMode == PLAY_SCRUB)
                // scrubbing does not use warped time and length
-               frames = std::min(frames, mScrubDuration);
+               frames = limitSampleBufferSize(frames, mScrubDuration);
             else
 #endif
             {
@@ -3513,8 +3502,6 @@ void AudioIO::FillBuffers()
                      !(mPlayMode == PLAY_LOOPED &&
                        mWarpedTime == 0.0 && frames == 0);
                   mWarpedTime = mWarpedLength;
-                  if (frames < 0) // this should never happen
-                     frames = 0;
                }
                else
                   mWarpedTime += deltat;
@@ -3546,7 +3533,11 @@ void AudioIO::FillBuffers()
                   processed = mPlaybackMixers[i]->Process(frames);
                   wxASSERT(processed <= frames);
                   warpedSamples = mPlaybackMixers[i]->GetBuffer();
-                  mPlaybackBuffers[i]->Put(warpedSamples, floatSample, processed);
+                  const auto put = mPlaybackBuffers[i]->Put
+                     (warpedSamples, floatSample, processed);
+                  // wxASSERT(put == processed);
+                  // but we can't assert in this thread
+                  wxUnusedVar(put);
                }
                
                //if looping and processed is less than the full chunk/block/buffer that gets pulled from
@@ -3560,7 +3551,11 @@ void AudioIO::FillBuffers()
                {
                   mSilentBuf.Resize(frames, floatSample);
                   ClearSamples(mSilentBuf.ptr(), floatSample, 0, frames);
-                  mPlaybackBuffers[i]->Put(mSilentBuf.ptr(), floatSample, frames - processed);
+                  const auto put = mPlaybackBuffers[i]->Put
+                     (mSilentBuf.ptr(), floatSample, frames - processed);
+                  // wxASSERT(put == frames - processed);
+                  // but we can't assert in this thread
+                  wxUnusedVar(put);
                }
             }
 
@@ -3577,7 +3572,7 @@ void AudioIO::FillBuffers()
                done = (available == 0);
                if (!done && mScrubDuration <= 0)
                {
-                  long startSample, endSample;
+                  sampleCount startSample, endSample;
                   mScrubQueue->Transformer(startSample, endSample, mScrubDuration, cleanup);
                   if (mScrubDuration < 0)
                   {
@@ -3626,7 +3621,7 @@ void AudioIO::FillBuffers()
 
    if (mCaptureTracks.size() > 0) // start record buffering
    {
-      int commonlyAvail = GetCommonlyAvailCapture();
+      auto commonlyAvail = GetCommonlyAvailCapture();
 
       //
       // Determine how much this will add to captured tracks
@@ -3639,11 +3634,11 @@ void AudioIO::FillBuffers()
          // Append captured samples to the end of the WaveTracks.
          // The WaveTracks have their own buffering for efficiency.
          AutoSaveFile blockFileLog;
-         int numChannels = mCaptureTracks.size();
+         auto numChannels = mCaptureTracks.size();
 
          for( i = 0; (int)i < numChannels; i++ )
          {
-            int avail = commonlyAvail;
+            auto avail = commonlyAvail;
             sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
 
             AutoSaveFile appendLog;
@@ -3651,22 +3646,32 @@ void AudioIO::FillBuffers()
             if( mFactor == 1.0 )
             {
                SampleBuffer temp(avail, trackFormat);
-               mCaptureBuffers[i]->Get   (temp.ptr(), trackFormat, avail);
+               const auto got =
+                  mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, avail);
+               // wxASSERT(got == avail);
+               // but we can't assert in this thread
+               wxUnusedVar(got);
                mCaptureTracks[i]-> Append(temp.ptr(), trackFormat, avail, 1,
                                           &appendLog);
             }
             else
             {
-               int size = lrint(avail * mFactor);
+               size_t size = lrint(avail * mFactor);
                SampleBuffer temp1(avail, floatSample);
                SampleBuffer temp2(size, floatSample);
-               mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
+               const auto got =
+                  mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
+               // wxASSERT(got == avail);
+               // but we can't assert in this thread
+               wxUnusedVar(got);
                /* we are re-sampling on the fly. The last resampling call
                 * must flush any samples left in the rate conversion buffer
                 * so that they get recorded
                 */
-               size = mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail, !IsStreamActive(),
-                                            &size, (float *)temp2.ptr(), size);
+               const auto results =
+                  mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail,
+                     !IsStreamActive(), (float *)temp2.ptr(), size);
+               size = results.second;
                mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
                                           &appendLog);
             }
@@ -3866,9 +3871,8 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 void AudioIO::FillMidiBuffers()
 {
    bool hasSolo = false;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
-   int t;
-   for(t = 0; t < numPlaybackTracks; t++ )
+   auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
+   for(unsigned t = 0; t < numPlaybackTracks; t++ )
       if( gAudioIO->mPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
          break;
@@ -4115,7 +4119,7 @@ void AudioIO::AILAProcess(double maxPeak) {
 
 static void DoSoftwarePlaythrough(const void *inputBuffer,
                                   sampleFormat inputFormat,
-                                  int inputChannels,
+                                  unsigned inputChannels,
                                   float *outputBuffer,
                                   int len)
 {
@@ -4146,9 +4150,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
                           const PaStreamCallbackFlags WXUNUSED(statusFlags), void * WXUNUSED(userData) )
 {
-   int numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
-   int numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
-   int numCaptureChannels = gAudioIO->mNumCaptureChannels;
+   auto numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
+   auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
+   auto numCaptureChannels = gAudioIO->mNumCaptureChannels;
    int callbackReturn = paContinue;
    void *tempBuffer = alloca(framesPerBuffer*sizeof(float)*
                              MAX(numCaptureChannels,numPlaybackChannels));
@@ -4173,7 +4177,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
 
    unsigned int i;
-   int t;
 
    /* Send data to recording VU meter if applicable */
 
@@ -4317,10 +4320,16 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             gAudioIO->mWarpedTime = std::abs(gAudioIO->mWarpedTime);
 
             // Reset mixer positions and flush buffers for all tracks
-            for (i = 0; i < (unsigned int)numPlaybackTracks; i++)
+            for (i = 0; i < numPlaybackTracks; i++)
             {
                gAudioIO->mPlaybackMixers[i]->Reposition(gAudioIO->mTime);
-               gAudioIO->mPlaybackBuffers[i]->Discard(gAudioIO->mPlaybackBuffers[i]->AvailForGet());
+               const auto toDiscard =
+                  gAudioIO->mPlaybackBuffers[i]->AvailForGet();
+               const auto discarded =
+                  gAudioIO->mPlaybackBuffers[i]->Discard( toDiscard );
+               // wxASSERT( discarded == toDiscard );
+               // but we can't assert in this thread
+               wxUnusedVar(discarded);
             }
 
             // Reload the ring buffers
@@ -4336,8 +4345,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             return paContinue;
          }
 
-         int numSolo = 0;
-         for( t = 0; t < numPlaybackTracks; t++ )
+         unsigned numSolo = 0;
+         for(unsigned t = 0; t < numPlaybackTracks; t++ )
             if( gAudioIO->mPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -4361,7 +4370,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          int group = 0;
          int chanCnt = 0;
          int maxLen = 0;
-         for (t = 0; t < numPlaybackTracks; t++)
+         for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
 
@@ -4404,7 +4413,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             {
                len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
                                                          floatSample,
-                                                         (int)framesPerBuffer);
+                                                         framesPerBuffer);
                if (len < framesPerBuffer)
                   // Pad with zeroes to the end, in case of a short channel
                   memset((void*)&tempBufs[chanCnt][len], 0,
@@ -4433,17 +4442,17 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             // silence? If it terminates immediately, does that terminate any MIDI
             // playback that might also be going on? ...Maybe muted audio tracks + MIDI,
             // the playback would NEVER terminate. ...I think the #else part is probably preferable...
-            unsigned int len;
+            size_t len;
             if (cut)
             {
-               len = (unsigned int)
+               len =
                   gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
             } else
             {
-               len = (unsigned int)
+               len =
                   gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
                                                      floatSample,
-                                                     (int)framesPerBuffer);
+                                                     framesPerBuffer);
             }
 #endif
 
@@ -4484,14 +4493,14 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                   // Output volume emulation: possibly copy meter samples, then
                   // apply volume, then copy to the output buffer
                   if (outputMeterFloats != outputFloats)
-                     for (int i = 0; i < len; ++i)
+                     for (decltype(len) i = 0; i < len; ++i)
                         outputMeterFloats[numPlaybackChannels*i] +=
                            gain*tempFloats[i];
 
                   if (gAudioIO->mEmulateMixerOutputVol)
                      gain *= gAudioIO->mMixerOutputVol;
 
-                  for(int i=0; i<len; i++)
+                  for(decltype(len) i = 0; i < len; i++)
                      outputFloats[numPlaybackChannels*i] += gain*tempBufs[c][i];
                }
 
@@ -4502,14 +4511,14 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
                   // Output volume emulation (as above)
                   if (outputMeterFloats != outputFloats)
-                     for (int i = 0; i < len; ++i)
+                     for (decltype(len) i = 0; i < len; ++i)
                         outputMeterFloats[numPlaybackChannels*i+1] +=
                            gain*tempFloats[i];
 
                   if (gAudioIO->mEmulateMixerOutputVol)
                      gain *= gAudioIO->mMixerOutputVol;
 
-                  for(int i=0; i<len; i++)
+                  for(decltype(len) i = 0; i < len; i++)
                      outputFloats[numPlaybackChannels*i+1] += gain*tempBufs[c][i];
                }
             }
@@ -4561,12 +4570,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
       if( inputBuffer && (numCaptureChannels > 0) )
       {
-         unsigned int len = framesPerBuffer;
-         for( t = 0; t < numCaptureChannels; t++) {
-            unsigned int avail =
-               (unsigned int)gAudioIO->mCaptureBuffers[t]->AvailForPut();
-            if (avail < len)
-               len = avail;
+         size_t len = framesPerBuffer;
+         for(unsigned t = 0; t < numCaptureChannels; t++) {
+            len = std::min( len,
+               gAudioIO->mCaptureBuffers[t]->AvailForPut());
          }
 
          if (len < framesPerBuffer)
@@ -4576,7 +4583,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          }
 
          if (len > 0) {
-            for( t = 0; t < numCaptureChannels; t++) {
+            for(unsigned t = 0; t < numCaptureChannels; t++) {
 
                // dmazzoni:
                // Un-interleave.  Ugly special-case code required because the
@@ -4612,9 +4619,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                } break;
                } // switch
 
-               gAudioIO->mCaptureBuffers[t]->Put((samplePtr)tempBuffer,
-                                                 gAudioIO->mCaptureFormat,
-                                                 len);
+               const auto put =
+                  gAudioIO->mCaptureBuffers[t]->Put(
+                     (samplePtr)tempBuffer, gAudioIO->mCaptureFormat, len);
+               // wxASSERT(put == len);
+               // but we can't assert in this thread
+               wxUnusedVar(put);
             }
          }
       }

@@ -153,7 +153,7 @@ public:
    bool Init();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -427,7 +427,7 @@ wxString FLACImportFileHandle::GetFileDescription()
 }
 
 
-int FLACImportFileHandle::GetFileUncompressedBytes()
+auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO: Get Uncompressed byte count.
    return 0;
@@ -487,7 +487,8 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
    //add the task to the ODManager
    if(useOD)
    {
-      auto fileTotalFrames = (sampleCount)mNumSamples;
+      auto fileTotalFrames =
+         (sampleCount)mNumSamples; // convert from FLAC__uint64
       auto maxBlockSize = mChannels.begin()->get()->GetMaxBlockSize();
       for (decltype(fileTotalFrames) i = 0; i < fileTotalFrames; i += maxBlockSize) {
          const auto blockLen =

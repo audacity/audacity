@@ -43,7 +43,6 @@
 
 #include "Experimental.h"
 
-//#undef _OPENMP
 #ifdef _OPENMP
 #include <omp.h>
 #else
@@ -636,15 +635,12 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          sampleFormat seqFormat = mSequence->GetSampleFormat();
          bool didUpdate = false;
          for(i=a; i<p1; i++) {
-            auto left = where[i] - numSamples;
-            auto right = where[i + 1] - numSamples;
+            auto left = std::max(sampleCount{ 0 },
+                                 where[i] - numSamples);
+            auto right = std::min(sampleCount{ mAppendBufferLen },
+                                  where[i + 1] - numSamples);
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
-
-            if (left < 0)
-               left = 0;
-            if (right > mAppendBufferLen)
-               right = mAppendBufferLen;
 
             if (right > left) {
                float *b;
@@ -930,8 +926,18 @@ bool SpecCache::CalculateOneSpectrum
 
                int correctedX = (floor(0.5 + xx + timeCorrection * pixelsPerSecond / rate));
                if (correctedX >= lowerBoundX && correctedX < upperBoundX)
-                  result = true,
-                  out[half * correctedX + bin] += power;
+               {
+                  result = true;
+
+                  int index = half * correctedX + bin;
+#ifdef _OPENMP
+                  // This assignment can race if index reaches into another thread's bins.
+                  // The probability of a race very low, so this carries little overhead,
+                  // about 5% slower vs allowing it to race.
+                  #pragma omp atomic update
+#endif
+                  out[index] += power;
+               }
             }
          }
       }
@@ -990,29 +996,6 @@ void SpecCache::Populate
    if (!autocorrelation)
       ComputeSpectrogramGainFactors(fftLen, rate, frequencyGain, gainFactors);
 
-#ifdef _OPENMP
-   // todo: query # of threads or make it a setting
-   const int numThreads = 8;
-   omp_set_num_threads(numThreads);
-
-   // We need certain per-thread data for thread safety
-   // Assumes WaveTrackCache is reentrant since it takes a const* to WaveTrack
-   struct {
-      WaveTrackCache* cache;
-      float* scratch;
-   } threadLocalStorage[numThreads];
-
-   // May as well use existing data for one of the threads
-   assert(numThreads > 0);
-   threadLocalStorage[0].cache   = &waveTrackCache;
-   threadLocalStorage[0].scratch = &scratch[0];
-
-   for (int i = 1; i < numThreads; i++) {
-      threadLocalStorage[i].cache   = new WaveTrackCache( waveTrackCache.GetTrack() );
-      threadLocalStorage[i].scratch = new float[scratchSize];
-   }
-#endif
-
    // Loop over the ranges before and after the copied portion and compute anew.
    // One of the ranges may be empty.
    for (int jj = 0; jj < 2; ++jj) {
@@ -1020,24 +1003,36 @@ void SpecCache::Populate
       const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
 #ifdef _OPENMP
-      #pragma omp parallel for
+      // Storage for mutable per-thread data.
+      // private clause ensures one copy per thread
+      struct ThreadLocalStorage {
+         ThreadLocalStorage()  { cache = nullptr; }
+         ~ThreadLocalStorage() { delete cache; }
+
+         void init(WaveTrackCache &waveTrackCache, size_t scratchSize) {
+            if (!cache) {
+               cache = new WaveTrackCache(waveTrackCache.GetTrack());
+               scratch.resize(scratchSize);
+            }
+         }
+         WaveTrackCache* cache;
+         std::vector<float> scratch;
+      } tls;
+
+      #pragma omp parallel for private(tls)
 #endif
       for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
       {
 #ifdef _OPENMP
-         int threadNum = omp_get_thread_num();
-
-         assert(threadNum >=0 && threadNum < numThreads);
-
-         WaveTrackCache* cache = threadLocalStorage[threadNum].cache;
-         float* buffer         = threadLocalStorage[threadNum].scratch;
+         tls.init(waveTrackCache, scratchSize);
+         WaveTrackCache& cache = *tls.cache;
+         float* buffer = &tls.scratch[0];
 #else
-         WaveTrackCache* cache = &waveTrackCache;
+         WaveTrackCache& cache = waveTrackCache;
          float* buffer = &scratch[0];
 #endif
-
          CalculateOneSpectrum(
-            settings, *cache, xx, numSamples,
+            settings, cache, xx, numSamples,
             offset, rate, pixelsPerSecond,
             lowerBoundX, upperBoundX,
             gainFactors, buffer, &freq[0]);
@@ -1098,14 +1093,6 @@ void SpecCache::Populate
          }
       }
    }
-
-#ifdef _OPENMP
-   for (int i = 1; i < numThreads; i++)
-   {
-       delete[] threadLocalStorage[i].scratch;
-       delete   threadLocalStorage[i].cache;
-   }
-#endif
 }
 
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
@@ -1325,9 +1312,8 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       if (len == 0)
          break;
 
-      int toCopy = maxBlockSize - mAppendBufferLen;
-      if (toCopy > len)
-         toCopy = len;
+      wxASSERT(mAppendBufferLen <= maxBlockSize);
+      auto toCopy = std::min(len, maxBlockSize - mAppendBufferLen);
 
       CopySamples(buffer, format,
                   mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
@@ -1697,12 +1683,23 @@ bool WaveClip::ExpandCutLine(double cutLinePosition)
 {
    for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
    {
-      const auto &cutline = *it;
+      WaveClip *const cutline = it->get();
       if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
       {
-         if (!Paste(mOffset+cutline->GetOffset(), cutline.get()))
+         if (!Paste(mOffset+cutline->GetOffset(), cutline))
             return false;
-         mCutLines.erase(it); // deletes cutline!
+         // Now erase the cutline,
+         // but be careful to find it again, because Paste above may
+         // have modified the array of cutlines (if our cutline contained
+         // another cutline!), invalidating the iterator we had.
+         auto begin = mCutLines.begin(), end = mCutLines.end();
+         it = std::find_if(begin, end,
+            [=](decltype(*begin) &p){ return p.get() == cutline; });
+         if (it != end)
+            mCutLines.erase(it); // deletes cutline!
+         else {
+            wxASSERT(false);
+         }
          return true;
       }
    }
@@ -1803,11 +1800,11 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          break;
       }
 
-      int inBufferUsed = 0;
-      outGenerated = resample.Process(factor, inBuffer, inLen, isLast,
-                                           &inBufferUsed, outBuffer, bufsize);
+      const auto results = resample.Process(factor, inBuffer, inLen, isLast,
+                                            outBuffer, bufsize);
+      outGenerated = results.second;
 
-      pos += inBufferUsed;
+      pos += results.first;
 
       if (outGenerated < 0)
       {

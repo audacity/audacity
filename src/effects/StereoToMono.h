@@ -35,8 +35,8 @@ public:
 
    // EffectClientInterface implementation
 
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
 
    // Effect implementation
 

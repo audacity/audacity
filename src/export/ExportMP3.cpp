@@ -836,7 +836,7 @@ public:
    wxString GetLibraryTypeString();
 
    /* returns the number of samples PER CHANNEL to send for each call to EncodeBuffer */
-   int InitializeStream(int channels, int sampleRate);
+   int InitializeStream(unsigned channels, int sampleRate);
 
    /* In bytes. must be called AFTER InitializeStream */
    int GetOutBufferSize();
@@ -1210,7 +1210,7 @@ wxString MP3Exporter::GetLibraryVersion()
    return wxString::Format(wxT("LAME %hs"), get_lame_version());
 }
 
-int MP3Exporter::InitializeStream(int channels, int sampleRate)
+int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
 {
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    if (!mLibraryLoaded) {
@@ -1588,7 +1588,7 @@ public:
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
    int Export(AudacityProject *project,
-               int channels,
+               unsigned channels,
                const wxString &fName,
                bool selectedOnly,
                double t0,
@@ -1648,7 +1648,7 @@ int ExportMP3::SetNumExportChannels()
 
 
 int ExportMP3::Export(AudacityProject *project,
-                       int channels,
+                       unsigned channels,
                        const wxString &fName,
                        bool selectionOnly,
                        double t0,

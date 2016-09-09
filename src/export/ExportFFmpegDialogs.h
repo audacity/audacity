@@ -41,7 +41,7 @@ struct ExposedFormat
    const wxChar *name;        //!< format name (internal, should be unique; if not - export dialog may show unusual behaviour)
    const wxChar *extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
    const wxChar *shortname;   //!< used to guess the format
-   int maxchannels;           //!< how much channels this format could handle
+   unsigned maxchannels;      //!< how many channels this format could handle
    int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
    const wxChar *description; //!< format description (will be shown in export dialog)

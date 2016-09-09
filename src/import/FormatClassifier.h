@@ -90,7 +90,7 @@ private:
    float*               mStereoFeat;
    
    FormatClassT         mResultFormat;
-   int                  mResultChannels;
+   unsigned             mResultChannels { 0 };
 
 public:
    FormatClassifier(const char* filename);
@@ -98,7 +98,7 @@ public:
 
    FormatClassT GetResultFormat();
    int GetResultFormatLibSndfile();
-   int GetResultChannels();
+   unsigned GetResultChannels();
 private:
    void Run();
    void ReadSignal(FormatClassT format, size_t stride);

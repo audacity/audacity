@@ -702,14 +702,14 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-int LV2Effect::GetAudioInCount()
+unsigned LV2Effect::GetAudioInCount()
 {
-   return (int) mAudioInputs.GetCount();
+   return mAudioInputs.GetCount();
 }
 
-int LV2Effect::GetAudioOutCount()
+unsigned LV2Effect::GetAudioOutCount()
 {
-   return (int) mAudioOutputs.GetCount();
+   return mAudioOutputs.GetCount();
 }
 
 int LV2Effect::GetMidiInCount()
@@ -943,7 +943,7 @@ sampleCount LV2Effect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LV2Effect::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
 {
    LilvInstance *slave = InitInstance(sampleRate);
    if (!slave)

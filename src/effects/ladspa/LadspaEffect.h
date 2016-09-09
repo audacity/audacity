@@ -67,8 +67,8 @@ public:
 
    bool SetHost(EffectHostInterface *host) override;
 
-   int GetAudioInCount() override;
-   int GetAudioOutCount() override;
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -85,7 +85,7 @@ public:
    sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
 
    bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(int numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
@@ -162,10 +162,10 @@ private:
 
    bool mInteractive;
 
-   int mAudioIns;
+   unsigned mAudioIns;
    unsigned long *mInputPorts;
 
-   int mAudioOuts;
+   unsigned mAudioOuts;
    unsigned long *mOutputPorts;
 
    int mNumInputControls;

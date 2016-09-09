@@ -223,26 +223,47 @@ void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
    EnableApply(mUIParent->TransferDataFromWindow());
 }
 
-int EffectPaulstretch::GetBufferSize(double rate)
+size_t EffectPaulstretch::GetBufferSize(double rate)
 {
    // Audacity's fft requires a power of 2
    float tmp = rate * mTime_resolution / 2.0;
    tmp = log(tmp) / log(2.0);
    tmp = pow(2.0, floor(tmp + 0.5));
 
-   return std::max<int>((int)tmp, 128);
+   auto stmp = size_t(tmp);
+   if (stmp != tmp)
+      // overflow
+      return 0;
+   if (stmp >= 2 * stmp)
+      // overflow
+      return 0;
+
+   return std::max<size_t>(stmp, 128);
 }
 
 bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int count)
 {
-   int stretch_buf_size = GetBufferSize(track->GetRate());
+   auto badAllocMessage = _("Requested value exceeds memory capacity.");
+
+   const auto stretch_buf_size = GetBufferSize(track->GetRate());
+   if (stretch_buf_size == 0) {
+      ::wxMessageBox( badAllocMessage );
+      return false;
+   }
+
    double amount = this->mAmount;
 
    auto start = track->TimeToLongSamples(t0);
    auto end = track->TimeToLongSamples(t1);
    auto len = end - start;
 
-   int minDuration = stretch_buf_size * 2 + 1;
+   const auto minDuration = stretch_buf_size * 2 + 1;
+   if (minDuration < stretch_buf_size) {
+      // overflow!
+      ::wxMessageBox( badAllocMessage );
+      return false;
+   }
+
    if (len < minDuration){   //error because the selection is too short
 
       float maxTimeRes = log(len) / log(2.0);
@@ -290,69 +311,78 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 
    auto outputTrack = mFactory->NewWaveTrack(track->GetSampleFormat(),track->GetRate());
 
-   PaulStretch stretch(amount,stretch_buf_size,track->GetRate());
+   try {
+      // This encloses all the allocations of buffers, including those in
+      // the constructor of the PaulStretch object
 
-   auto nget = stretch.get_nsamples_for_fill();
+      PaulStretch stretch(amount,stretch_buf_size,track->GetRate());
 
-   int bufsize=stretch.poolsize;
-   float *buffer0=new float[bufsize];
-   float *bufferptr0=buffer0;
-   bool first_time=true;
+      auto nget = stretch.get_nsamples_for_fill();
 
-   int fade_len=100;
-   if (fade_len>(bufsize/2-1)) fade_len=bufsize/2-1;
-   float *fade_track_smps=new float[fade_len];
-   decltype(len) s=0;
-   bool cancelled=false;
+      int bufsize=stretch.poolsize;
+      float *buffer0=new float[bufsize];
+      float *bufferptr0=buffer0;
+      bool first_time=true;
 
-   while (s<len){
-      track->Get((samplePtr)bufferptr0,floatSample,start+s,nget);
-      stretch.process(buffer0,nget);
+      int fade_len=100;
+      if (fade_len>(bufsize/2-1)) fade_len=bufsize/2-1;
+      float *fade_track_smps=new float[fade_len];
+      decltype(len) s=0;
+      bool cancelled=false;
 
-      if (first_time) {
-         stretch.process(buffer0,0);
-      };
+      while (s<len){
+         track->Get((samplePtr)bufferptr0,floatSample,start+s,nget);
+         stretch.process(buffer0,nget);
 
-      s+=nget;
+         if (first_time) {
+            stretch.process(buffer0,0);
+         };
 
-      if (first_time){//blend the the start of the selection
-         track->Get((samplePtr)fade_track_smps,floatSample,start,fade_len);
-         first_time=false;
-         for (int i=0;i<fade_len;i++){
-            float fi=(float)i/(float)fade_len;
-            stretch.out_buf[i]=stretch.out_buf[i]*fi+(1.0-fi)*fade_track_smps[i];
+         s+=nget;
+
+         if (first_time){//blend the the start of the selection
+            track->Get((samplePtr)fade_track_smps,floatSample,start,fade_len);
+            first_time=false;
+            for (int i=0;i<fade_len;i++){
+               float fi=(float)i/(float)fade_len;
+               stretch.out_buf[i]=stretch.out_buf[i]*fi+(1.0-fi)*fade_track_smps[i];
+            };
+         };
+         if (s>=len){//blend the end of the selection
+            track->Get((samplePtr)fade_track_smps,floatSample,end-fade_len,fade_len);
+            for (int i=0;i<fade_len;i++){
+               float fi=(float)i/(float)fade_len;
+               int i2=bufsize/2-1-i;
+               stretch.out_buf[i2]=stretch.out_buf[i2]*fi+(1.0-fi)*fade_track_smps[fade_len-1-i];
+            };
+         };
+
+         outputTrack->Append((samplePtr)stretch.out_buf,floatSample,stretch.out_bufsize);
+
+         nget=stretch.get_nsamples();
+         if (TrackProgress(count, (s / (double) len))) {
+            cancelled=true;
+            break;
          };
       };
-      if (s>=len){//blend the end of the selection
-         track->Get((samplePtr)fade_track_smps,floatSample,end-fade_len,fade_len);
-         for (int i=0;i<fade_len;i++){
-            float fi=(float)i/(float)fade_len;
-            int i2=bufsize/2-1-i;
-            stretch.out_buf[i2]=stretch.out_buf[i2]*fi+(1.0-fi)*fade_track_smps[fade_len-1-i];
-         };
-      };
 
-      outputTrack->Append((samplePtr)stretch.out_buf,floatSample,stretch.out_bufsize);
+      delete [] fade_track_smps;
+      outputTrack->Flush();
 
-      nget=stretch.get_nsamples();
-      if (TrackProgress(count, (s / (double) len))) {
-         cancelled=true;
-         break;
-      };
-   };
-
-   delete [] fade_track_smps;
-   outputTrack->Flush();
-
-   track->Clear(t0,t1);
-   bool success = track->Paste(t0, outputTrack.get());
-   if (!cancelled && success){
-      m_t1 = mT0 + outputTrack->GetEndTime();
+      track->Clear(t0,t1);
+      bool success = track->Paste(t0, outputTrack.get());
+      if (!cancelled && success){
+         m_t1 = mT0 + outputTrack->GetEndTime();
+      }
+      
+      delete []buffer0;
+      
+      return !cancelled;
    }
-
-   delete []buffer0;
-
-   return !cancelled;
+   catch ( const std::bad_alloc& ) {
+      ::wxMessageBox( badAllocMessage );
+      return false;
+   }
 };
 
 /*************************************************************/

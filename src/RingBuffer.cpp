@@ -24,20 +24,18 @@
 
 #include "RingBuffer.h"
 
-RingBuffer::RingBuffer(sampleFormat format, int size)
-   : mFormat(format)
-   , mBufferSize(size > 64 ? size : 64)
-   , mBuffer(mBufferSize, mFormat)
+RingBuffer::RingBuffer(sampleFormat format, size_t size)
+   : mFormat{ format }
+   , mBufferSize{ std::max<size_t>(size, 64) }
+   , mBuffer( mBufferSize, mFormat )
 {
-   mStart = 0;
-   mEnd = 0;
 }
 
 RingBuffer::~RingBuffer()
 {
 }
 
-int RingBuffer::Len()
+size_t RingBuffer::Len()
 {
    return (mEnd + mBufferSize - mStart) % mBufferSize;
 }
@@ -46,31 +44,21 @@ int RingBuffer::Len()
 // For the writer only:
 //
 
-int RingBuffer::AvailForPut()
+size_t RingBuffer::AvailForPut()
 {
-   return (mBufferSize-4) - Len();
+   return std::max<size_t>(mBufferSize - Len(), 4) - 4;
 }
 
-int RingBuffer::Put(samplePtr buffer, sampleFormat format,
-                    int samplesToCopy)
+size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
+                    size_t samplesToCopy)
 {
-   samplePtr src;
-   int block;
-   int copied;
-   int pos;
-   int len = Len();
-
-   if (samplesToCopy > (mBufferSize-4) - len)
-      samplesToCopy = (mBufferSize-4) - len;
-
-   src = buffer;
-   copied = 0;
-   pos = mEnd;
+   samplesToCopy = std::min( samplesToCopy, AvailForPut() );
+   auto src = buffer;
+   size_t copied = 0;
+   auto pos = mEnd;
 
    while(samplesToCopy) {
-      block = samplesToCopy;
-      if (block > mBufferSize - pos)
-         block = mBufferSize - pos;
+      auto block = std::min( samplesToCopy, mBufferSize - pos );
 
       CopySamples(src, format,
                   mBuffer.ptr() + pos * SAMPLE_SIZE(mFormat), mFormat,
@@ -91,29 +79,20 @@ int RingBuffer::Put(samplePtr buffer, sampleFormat format,
 // For the reader only:
 //
 
-int RingBuffer::AvailForGet()
+size_t RingBuffer::AvailForGet()
 {
    return Len();
 }
 
-int RingBuffer::Get(samplePtr buffer, sampleFormat format,
-                    int samplesToCopy)
+size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
+                       size_t samplesToCopy)
 {
-   samplePtr dest;
-   int block;
-   int copied;
-   int len = Len();
-
-   if (samplesToCopy > len)
-      samplesToCopy = len;
-
-   dest = buffer;
-   copied = 0;
+   samplesToCopy = std::min( samplesToCopy, Len() );
+   auto dest = buffer;
+   size_t copied = 0;
 
    while(samplesToCopy) {
-      block = samplesToCopy;
-      if (block > mBufferSize - mStart)
-         block = mBufferSize - mStart;
+      auto block = std::min( samplesToCopy, mBufferSize - mStart );
 
       CopySamples(mBuffer.ptr() + mStart * SAMPLE_SIZE(mFormat), mFormat,
                   dest, format,
@@ -128,12 +107,9 @@ int RingBuffer::Get(samplePtr buffer, sampleFormat format,
    return copied;
 }
 
-int RingBuffer::Discard(int samplesToDiscard)
+size_t RingBuffer::Discard(size_t samplesToDiscard)
 {
-   int len = Len();
-
-   if (samplesToDiscard > len)
-      samplesToDiscard = len;
+   samplesToDiscard = std::min( samplesToDiscard, Len() );
 
    mStart = (mStart + samplesToDiscard) % mBufferSize;
 

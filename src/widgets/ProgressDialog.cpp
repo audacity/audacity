@@ -1482,15 +1482,12 @@ void ProgressDialog::SetMessage(const wxString & message)
 //
 bool ProgressDialog::SearchForWindow(const wxWindowList & list, const wxWindow *searchfor) const
 {
-   wxWindowList::compatibility_iterator node = list.GetFirst();
-   while (node)
+   for (auto win : list)
    {
-      wxWindow *win = node->GetData();
       if (win == searchfor || SearchForWindow(win->GetChildren(), searchfor))
       {
          return true;
       }
-      node = node->GetNext();
    }
 
    return false;

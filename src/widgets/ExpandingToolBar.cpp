@@ -321,12 +321,8 @@ void ExpandingToolBar::RecursivelyPushEventHandlers(wxWindow *win)
    }
 
    wxWindowList children = win->GetChildren();
-
-   typedef wxWindowList::compatibility_iterator Node;
-   for(Node node = children.GetFirst(); node; node = node->GetNext()) {
-      wxWindow *child = node->GetData();
+   for(auto child : children)
       RecursivelyPushEventHandlers(child);
-   }
 }
 
 bool ExpandingToolBar::Layout()

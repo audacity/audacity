@@ -77,11 +77,11 @@ ODPCMAliasBlockFile::~ODPCMAliasBlockFile()
 
 
 //Check to see if we have the file for these calls.
-wxLongLong ODPCMAliasBlockFile::GetSpaceUsage() const
+auto ODPCMAliasBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
    if(IsSummaryAvailable())
    {
-      wxLongLong ret;
+      DiskByteCount ret;
       mFileNameMutex.Lock();
       wxFFile summaryFile(mFileName.GetFullPath());
       ret= summaryFile.Length();
@@ -530,6 +530,7 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
 
+   wxASSERT(info.channels >= 0);
    SampleBuffer buffer(len * info.channels, floatSample);
 
    int framesRead = 0;

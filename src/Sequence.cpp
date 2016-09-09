@@ -480,7 +480,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    const BlockArray &srcBlock = src->mBlock;
    auto addedLen = src->mNumSamples;
    const unsigned int srcNumBlocks = srcBlock.size();
-   int sampleSize = SAMPLE_SIZE(mSampleFormat);
+   auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
    if (addedLen == 0 || srcNumBlocks == 0)
       return true;
@@ -578,7 +578,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       const auto srcLastTwoLen =
          penultimate.f->GetLength() +
          srcBlock[srcNumBlocks - 1].f->GetLength();
-      const sampleCount rightSplit = splitBlock.f->GetLength() - splitPoint;
+      const auto rightSplit = splitBlock.f->GetLength() - splitPoint;
       const auto rightLen = rightSplit + srcLastTwoLen;
 
       SampleBuffer sampleBuffer(std::max(leftLen, rightLen), mSampleFormat);
@@ -1116,7 +1116,7 @@ bool Sequence::CopyWrite(SampleBuffer &scratch,
    wxASSERT(start + len <= length);
    wxASSERT(start >= 0);
 
-   int sampleSize = SAMPLE_SIZE(mSampleFormat);
+   auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
    Read(scratch.ptr(), mSampleFormat, b, 0, length);
    memcpy(scratch.ptr() + start*sampleSize, buffer, len*sampleSize);
@@ -1488,7 +1488,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
        (length =
         (pLastBlock = &mBlock.back())->f->GetLength()) < mMinSamples) {
       SeqBlock &lastBlock = *pLastBlock;
-      const sampleCount addLen = std::min(mMaxSamples - length, len);
+      const auto addLen = std::min(mMaxSamples - length, len);
 
       Read(buffer2.ptr(), mSampleFormat, lastBlock, 0, length);
 
@@ -1590,7 +1590,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    const unsigned int b0 = FindBlock(start);
    unsigned int b1 = FindBlock(start + len - 1);
 
-   int sampleSize = SAMPLE_SIZE(mSampleFormat);
+   auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
    // Special case: if the samples to DELETE are all within a single
    // block and the resulting length is not too small, perform the
@@ -1764,7 +1764,7 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr) const
 void Sequence::DebugPrintf(wxString *dest) const
 {
    unsigned int i;
-   int pos = 0;
+   decltype(mNumSamples) pos = 0;
 
    for (i = 0; i < mBlock.size(); i++) {
       const SeqBlock &seqBlock = mBlock[i];

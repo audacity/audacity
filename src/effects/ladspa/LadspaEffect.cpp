@@ -866,12 +866,12 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-int LadspaEffect::GetAudioInCount()
+unsigned LadspaEffect::GetAudioInCount()
 {
    return mAudioIns;
 }
 
-int LadspaEffect::GetAudioOutCount()
+unsigned LadspaEffect::GetAudioOutCount()
 {
    return mAudioOuts;
 }
@@ -974,7 +974,7 @@ bool LadspaEffect::RealtimeInitialize()
    return true;
 }
 
-bool LadspaEffect::RealtimeAddProcessor(int WXUNUSED(numChannels), float sampleRate)
+bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
 {
    LADSPA_Handle slave = InitInstance(sampleRate);
    if (!slave)

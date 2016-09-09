@@ -78,44 +78,33 @@ bool EffectRepair::Process()
    WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
    while (track) {
+      const
       double trackStart = track->GetStartTime();
+      const double repair_t0 = std::max(mT0, trackStart);
+      const
       double trackEnd = track->GetEndTime();
-      double repair_t0 = mT0;
-      double repair_t1 = mT1;
-      repair_t0 = (repair_t0 < trackStart? trackStart: repair_t0);
-      repair_t1 = (repair_t1 > trackEnd? trackEnd: repair_t1);
-      if (repair_t0 < repair_t1) {  // selection is within track audio
-         double rate = track->GetRate();
-         double repair_deltat = repair_t1 - repair_t0;
-
-         double spacing = repair_deltat * 2;
-
-         if (spacing < 128. / rate)
-            spacing = 128. / rate;
-
-         double t0 = repair_t0 - spacing;
-         double t1 = repair_t1 + spacing;
-
-         t0 = t0 < trackStart? trackStart: t0;
-         t1 = t1 > trackEnd? trackEnd: t1;
-
-         repair_t0 = (repair_t0 < t0? t0: repair_t0);
-         repair_t1 = (repair_t1 > t1? t1: repair_t1);
-
-         auto s0 = track->TimeToLongSamples(t0);
-         auto repair0 = track->TimeToLongSamples(repair_t0);
-         auto repair1 = track->TimeToLongSamples(repair_t1);
-         auto s1 = track->TimeToLongSamples(t1);
-
-         auto repairStart = repair0 - s0;
-         auto repairLen = repair1 - repair0;
-         auto len = s1 - s0;
-
+      const double repair_t1 = std::min(mT1, trackEnd);
+      const
+      double repair_deltat = repair_t1 - repair_t0;
+      if (repair_deltat > 0) {  // selection is within track audio
+         const auto repair0 = track->TimeToLongSamples(repair_t0);
+         const auto repair1 = track->TimeToLongSamples(repair_t1);
+         const auto repairLen = repair1 - repair0;
          if (repairLen > 128) {
             ::wxMessageBox(_("The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair."));
             bGoodResult = false;
             break;
          }
+
+         const double rate = track->GetRate();
+         const double spacing = std::max(repair_deltat * 2, 128. / rate);
+         const double t0 = std::max(repair_t0 - spacing, trackStart);
+         const double t1 = std::min(repair_t1 + spacing, trackEnd);
+
+         const auto s0 = track->TimeToLongSamples(t0);
+         const auto s1 = track->TimeToLongSamples(t1);
+         const auto repairStart = (repair0 - s0);
+         const auto len = s1 - s0;
 
          if (s0 == repair0 && s1 == repair1) {
             ::wxMessageBox(_("Repair works by using audio data outside the selection region.\n\nPlease select a region that has audio touching at least one side of it.\n\nThe more surrounding audio, the better it performs."));

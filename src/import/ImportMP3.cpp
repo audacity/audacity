@@ -98,7 +98,7 @@ struct private_data {
    TrackFactory *trackFactory;
    TrackHolders channels;
    ProgressDialog *progress;
-   int numChannels;
+   unsigned numChannels;
    int updateResult;
    bool id3checked;
 };
@@ -130,7 +130,7 @@ public:
    ~MP3ImportFileHandle();
 
    wxString GetFileDescription();
-   int GetFileUncompressedBytes();
+   ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -199,7 +199,7 @@ wxString MP3ImportFileHandle::GetFileDescription()
    return DESC;
 }
 
-int MP3ImportFileHandle::GetFileUncompressedBytes()
+auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
    // TODO
    return 0;
@@ -455,12 +455,12 @@ enum mad_flow output_cb(void *_data,
                         struct mad_header const * WXUNUSED(header),
                         struct mad_pcm *pcm)
 {
-   int channels, samplerate;
+   int samplerate;
    struct private_data *data = (struct private_data *)_data;
    int smpl;
 
    samplerate= pcm->samplerate;
-   channels  = pcm->channels;
+   auto channels  = pcm->channels;
    const auto samples   = pcm->length;
 
    /* If this is the first run, we need to create the WaveTracks that

@@ -911,11 +911,11 @@ static float ToDB(float v, float range)
    return ClipZeroToOne((db + range) / range);
 }
 
-void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
+void Meter::UpdateDisplay(unsigned numChannels, int numFrames, float *sampleData)
 {
    int i, j;
    float *sptr = sampleData;
-   int num = intmin(numChannels, mNumBars);
+   auto num = std::min(numChannels, mNumBars);
    MeterUpdateMsg msg;
 
    memset(&msg, 0, sizeof(msg));
