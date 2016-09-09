@@ -304,6 +304,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
       _("Customised version of the Audacity free, open source, cross-platform software " ) +
       _("for recording and editing sounds.") +
+      wxT("<p><br>") + _("&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright")+
+      wxT("&copy; 1999-2016 Audacity Team.<br>") +
+      _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+
       //wxT("<p><br>") + par1Str +
       //wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
@@ -334,9 +338,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 
       wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
       wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
-      wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
-      wxT("&copy; 1999-2016 Audacity Team.<br>") +
-      _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") +
+
       wxT("</center>")
    );
 
