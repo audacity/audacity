@@ -90,6 +90,7 @@ bool ZoomInfo::ZoomOutAvailable() const
 void ZoomInfo::SetZoom(double pixelsPerSecond)
 {
    zoom = std::max(gMinZoom, std::min(gMaxZoom, pixelsPerSecond));
+#ifdef EXPERIMENTAL_DA
    // Disable snapping if user zooms in a long way.
    // Helps stop users be trapped in snap-to.
    // The level chosen is in sample viewing range with samples
@@ -100,6 +101,7 @@ void ZoomInfo::SetZoom(double pixelsPerSecond)
       if( project )
          project->OnSnapToOff();
    }
+#endif
 }
 
 void ZoomInfo::ZoomBy(double multiplier)

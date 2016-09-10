@@ -223,8 +223,12 @@ void ControlToolBar::RegenerateTooltips()
             break;
          case ID_RECORD_BUTTON:
             commands.push_back(wxT("Record"));
+#ifndef EXPERIMENTAL_DA
+            commands.push_back(wxT("RecordBelow"));
+#else
             commands.push_back(_("Record Below"));
             commands.push_back(wxT("RecordBelow"));
+#endif
             break;
          case ID_PAUSE_BUTTON:
             commands.push_back(wxT("Pause"));
@@ -875,12 +879,14 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    if (p) {
       TrackList *trackList = p->GetTracks();
       TrackListIterator it(trackList);
+
       bool shifted = mRecord->WasShiftDown();
-#ifdef EXPERIMENTAL_DARK_AUDACITY
+#ifdef EXPERIMENTAL_DA
       shifted = !shifted;
 #endif
       if(it.First() == NULL)
          shifted = false;
+
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
       if (t1 == t0)
@@ -981,7 +987,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       else {
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
-         
+
          // Count the tracks.  
          int numTracks = 0;
 

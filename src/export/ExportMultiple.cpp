@@ -886,6 +886,14 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          continue;
       }
 
+      // Bug 1510 possibly increment iter, before deciding whether to export.
+      // Check for a linked track
+      tr2 = NULL;
+      if (tr->GetLinked()) {
+         tr2 = iter.Next();
+      }
+
+      wxLogDebug( "Get setting %i", count );
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
       if( activeSetting.destfile.GetName().IsEmpty() ){
@@ -895,15 +903,9 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
 
       /* Select the track */
       tr->SetSelected(true);
-
-      // Check for a linked track
-      tr2 = NULL;
-      if (tr->GetLinked()) {
-         tr2 = iter.Next();
-         if (tr2) {
-            // Select it also
-            tr2->SetSelected(true);
-         }
+      if (tr2) {
+         // Select it also
+         tr2->SetSelected(true);
       }
 
       // Export the data. "channels" are per track.

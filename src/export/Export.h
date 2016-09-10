@@ -174,7 +174,6 @@ public:
    wxFileName GetAutoExportFileName();
 
 private:
-
    bool ExamineTracks();
    bool GetFilename();
    bool CheckFilename();

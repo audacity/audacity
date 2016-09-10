@@ -341,7 +341,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    static TrackList *GetClipboardTracks();
    static void DeleteClipboard();
 
-   int GetProjectNumber();
+   int GetProjectNumber(){ return mProjectNo;};
    static int CountUnnamed();
    static void RefreshAllTitles(bool bShowProjectNumbers );
    // checkActive is a temporary hack that should be removed as soon as we
@@ -522,6 +522,7 @@ public:
    void PushState(const wxString &desc, const wxString &shortDesc, UndoPush flags);
    void RollbackState();
 
+
  private:
 
    void OnCapture(wxCommandEvent & evt);
@@ -549,6 +550,9 @@ public:
    wxString mFileName;
    bool mbLoadedFromAup;
    std::shared_ptr<DirManager> mDirManager; // MM: DirManager now created dynamically
+
+   static int mProjectCounter;// global counter.
+   int mProjectNo; // count when this project was created.
 
    double mRate;
    sampleFormat mDefaultFormat;

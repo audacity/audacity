@@ -50,6 +50,7 @@
 
 // enables dark theme and customisations.
 #define EXPERIMENTAL_DARK_AUDACITY
+#define EXPERIMENTAL_DA
 
 // experimental theming
 // Work in progress, June-2008.
