@@ -171,6 +171,16 @@ void QuitAudacity();
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) wxT(s)
 
+#ifndef IN_RC
+#include <wx/defs.h>
+#include <wx/string.h>
+
+const wxString& GetCustomTranslation(const wxString& str1 );
+
+#define WXINTL_NO_GETTEXT_MACRO
+#define _(s)                     GetCustomTranslation((s))
+#endif
+
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete
 

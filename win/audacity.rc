@@ -1,5 +1,6 @@
 AudacityLogo ICON "audacity.ico"
 #include "wx/msw/wx.rc"
+#define IN_RC
 #include "Audacity.h"
 /////////////////////////////////////////////////////////////////////////////
 //
