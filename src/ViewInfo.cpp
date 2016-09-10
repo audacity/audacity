@@ -15,6 +15,7 @@ Paul Licameli
 
 #include "AudioIO.h"
 #include "Internat.h"
+#include "Project.h"
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "xml/XMLWriter.h"
