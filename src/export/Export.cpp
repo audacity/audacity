@@ -265,6 +265,7 @@ Exporter::Exporter()
 {
    mMixerSpec = NULL;
    mBook = NULL;
+   mFormatName = "";
 
    SetFileDialogTitle( _("Export Audio") );
 
@@ -488,7 +489,9 @@ bool Exporter::GetFilename()
    mFormat = -1;
 
    wxString maskString;
-   wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"),
+   wxString defaultFormat = mFormatName;
+   if( defaultFormat.IsEmpty() )
+      defaultFormat = gPrefs->Read(wxT("/Export/Format"),
                                          wxT("WAV"));
 
    mFilterIndex = 0;
@@ -678,7 +681,8 @@ bool Exporter::CheckFilename()
    if (!mProject->GetDirManager()->EnsureSafeFilename(mFilename))
       return false;
 
-   gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
+   if( mFormatName.IsEmpty() )
+      gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
    gPrefs->Write(wxT("/Export/Path"), mFilename.GetPath());
    gPrefs->Flush();
 

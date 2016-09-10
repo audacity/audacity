@@ -62,11 +62,10 @@ static wxString FileLink( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-static wxString HttpLink( const wxString &Key, const wxString& Text )
+static wxString TypedLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='") +
-      wxT("http:") +
       Key +
       wxT("'>") +
       Text +
@@ -101,7 +100,15 @@ static wxString LinkExpand( const wxString & Text )
       }
       else if( Key.StartsWith( wxT("http:") ))
       {
-         Replacement = HttpLink( Key.Mid( 5 ), LinkText );
+         Replacement = TypedLink( Key, LinkText );
+      }
+      else if( Key.StartsWith( wxT("mailto:") ))
+      {
+         Replacement = TypedLink( Key, LinkText );
+      }
+      else if( Key.StartsWith( wxT("*URL*") ))
+      {
+         Replacement = TypedLink( Key, LinkText );
       }
       else
       {
@@ -189,9 +196,9 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 
          _("These are our support methods:") + wxT("<p><ul><li>") +
-         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, <a href=\"http://manual.audacityteam.org/quick_help.html\">view online</a>") + wxT("</li><li>") +
-         _(" [[file:index.html|Manual]] - if not installed locally, <a href=\"http://manual.audacityteam.org/\">view online</a>") + wxT("</li><li>") +
-         _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") + 
+         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
+         _(" [[file:index.html|Manual]] - if not installed locally, [[http://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
+         _(" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") + 
          _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>")
       );
    }
@@ -201,12 +208,12 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxString(wxT("<p>"))+
          _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign\"> \
-FFmpeg library</a> to your computer.") + wxT("</p><p>") +
+the optional [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
+FFmpeg library]] to your computer.") + wxT("</p><p>") +
          _("You can also read our help on importing \
-<a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi\">MIDI files</a> \
-and tracks from <a href=\"http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd\"> \
-audio CDs</a>.") + wxT("</p>")
+[[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI files]] \
+and tracks from [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
+audio CDs]].") + wxT("</p>")
       );
    }
 
@@ -217,9 +224,9 @@ audio CDs</a>.") + wxT("</p>")
    {
 // *URL* will be replaced by whatever URL we are looking for.
       return WrapText(_("The Manual does not appear to be installed. \
-Please <a href=\"*URL*\">view the Manual online</a> or \
-<a href=\"http://manual.audacityteam.org/man/unzipping_the_manual.html\"> \
-download the Manual</a>.<br><br>\
+Please [[*URL*|view the Manual online]] or \
+[[http://manual.audacityteam.org/man/unzipping_the_manual.html| \
+download the Manual]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
          );
@@ -244,4 +251,16 @@ wxString HelpText( const wxString & Key )
 
    // Perhaps useful for debugging - we'll return key that we didn't find.
    return WrapText( Key );
+}
+
+wxString FormatHtmlText( const wxString & Text ){
+
+   wxString localeStr = wxLocale::GetSystemEncodingName();
+
+   return 
+      wxT("<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=") +
+      localeStr +
+      wxT("\"></head>") +
+      WrapText( LinkExpand( Text ))+
+      wxT("</html>");
 }

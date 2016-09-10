@@ -38,6 +38,7 @@ class TracksPrefs final : public PrefsPanel
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 
+   static int iPreferencePinned;
    wxArrayString mSoloCodes;
    wxArrayString mSoloChoices;
    wxArrayInt    mViewCodes;
