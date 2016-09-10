@@ -2364,6 +2364,10 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 class TitleRestorer{
 public:
    TitleRestorer(AudacityProject * p ){
+      if( p->IsIconized() )
+         p->Restore();
+      p->Raise(); // May help identifying the window on Mac
+
       // Construct this projects name and number.
       sProjNumber = "";
       sProjName = p->GetName();
