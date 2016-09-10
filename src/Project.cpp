@@ -199,6 +199,9 @@ const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the 
 #include "AllThemeResources.h"
 #endif
 
+int AudacityProject::mProjectCounter=0;// global counter.
+
+
 ////////////////////////////////////////////////////////////
 /// Custom events
 ////////////////////////////////////////////////////////////
@@ -888,6 +891,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // field. Currently there are no such help strings, but it they were introduced, then
    // there would need to be an event handler to send them to the appropriate field.
    mStatusBar = CreateStatusBar(4);
+   mProjectNo = mProjectCounter++; // Bug 322
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
@@ -2013,17 +2017,6 @@ void AudacityProject::HandleResize()
    UpdateLayout();
 }
 
-// What number is this project?
-int AudacityProject::GetProjectNumber()
-{
-   int i;
-   for(i=0;i<gAudacityProjects.size();i++){
-      if(gAudacityProjects[i].get() == this )
-         return i;
-   }
-   return -1;
-}
-
 // How many projects that do not have a name yet?
 int AudacityProject::CountUnnamed()
 {
@@ -2043,7 +2036,9 @@ void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
    for(i=0;i<gAudacityProjects.size();i++){
       if(gAudacityProjects[i]){
          if( !gAudacityProjects[i]->mIconized ){
-            gAudacityProjects[i]->SetProjectTitle( bShowProjectNumbers ? i : -1 );
+            AudacityProject * p;
+            p = gAudacityProjects[i].get();
+            p->SetProjectTitle( bShowProjectNumbers ? p->GetProjectNumber() : -1 );
          }
       }
    }
