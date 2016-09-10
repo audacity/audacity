@@ -147,10 +147,9 @@ class AColor {
 inline void GetColorGradient(float value,
                              AColor::ColorGradientChoice selected,
                              bool grayscale,
-                             unsigned char *red,
-                             unsigned char *green, unsigned char *blue) {
-   if (!AColor::gradient_inited)
-      AColor::PreComputeGradient();
+                             unsigned char * __restrict red,
+                             unsigned char * __restrict green,
+                             unsigned char * __restrict blue) {
 
    int idx = value * (AColor::gradientSteps - 1);
 
