@@ -484,7 +484,7 @@ bool Exporter::ExamineTracks()
    return true;
 }
 
-bool Exporter::GetFilename( )
+bool Exporter::GetFilename()
 {
    mFormat = -1;
 

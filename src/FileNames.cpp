@@ -234,7 +234,11 @@ wxString FileNames::ThemeImageDefsAsCee()
 
 wxString FileNames::ThemeCacheAsCee( )
 {
+#ifndef EXPERIMENTAL_DA
+   return wxFileName( ThemeDir(), wxT("ThemeAsCeeCode.h") ).GetFullPath();
+#else
    return wxFileName( ThemeDir(), wxT("DarkThemeAsCeeCode.h") ).GetFullPath();
+#endif
 }
 
 wxString FileNames::ThemeComponent(const wxString &Str)

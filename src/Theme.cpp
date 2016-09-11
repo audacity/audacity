@@ -189,7 +189,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 
 // Include the ImageCache...
 static unsigned char ImageCacheAsData[] = {
-#ifdef EXPERIMENTAL_DARK_AUDACITY
+#ifdef EXPERIMENTAL_DA
 #include "DarkThemeAsCeeCode.h"
 #else
 #include "ThemeAsCeeCode.h"

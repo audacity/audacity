@@ -169,7 +169,7 @@ wxString TitleText( const wxString & Key )
    if(Key ==wxT("save") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Saving a Audacity Project");
+      return _("Saving an Audacity Project");
    }
    if(Key ==wxT("wma-proprietary") )
    {
