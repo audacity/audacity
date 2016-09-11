@@ -173,8 +173,8 @@ void QuitAudacity();
 #include <wx/defs.h>
 #include <wx/string.h>
 
-const wxString& GetCustomTranslation(const wxString& str1 );
-const wxString& GetCustomSubstitution(const wxString& str1 );
+extern const wxString& GetCustomTranslation(const wxString& str1 );
+extern const wxString& GetCustomSubstitution(const wxString& str1 );
 
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) GetCustomSubstitution(s)
