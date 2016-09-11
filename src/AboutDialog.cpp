@@ -270,7 +270,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 
    wxString par1Str = _(
 "Audacity is a free program written by a worldwide team of [[http://audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[http://audacityteam.org/download|available]] available for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+Audacity is [[http://audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
