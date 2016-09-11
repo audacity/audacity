@@ -207,6 +207,14 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
          wxT(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
          wxT(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>") 
+#else
+         wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
+         _("How to get help") + wxT("</h3></center>") + 
+         _("These are our support methods:") + wxT("<p><ul><li>") +
+         _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
+         _(" [[file:index.html|Manual]] - if not installed locally, [[http://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
+         _(" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") + 
+         _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>")
 #endif
       );
    }
@@ -231,10 +239,19 @@ audio CDs]].") + wxT("</p>")
    if(Key ==  wxT("remotehelp") )
    {
 // *URL* will be replaced by whatever URL we are looking for.
+#ifdef EXPERIMENTAL_DA
       return WrapText(_("The Manual does not appear to be installed. \
 Please [[*URL*|view the Manual online]].<br><br>\
 To always view the Manual online, change \"Location of Manual\" in \
 Interface Preferences to \"From Internet\".")
+#else
+      return WrapText(_("The Manual does not appear to be installed. \
+Please [[*URL*|view the Manual online]] or \
+[[http://manual.audacityteam.org/man/unzipping_the_manual.html| \
+download the Manual]].<br><br>\
+To always view the Manual online, change \"Location of Manual\" in \
+Interface Preferences to \"From Internet\".")
+#endif
          );
    }
    return wxT("");

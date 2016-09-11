@@ -217,14 +217,19 @@ void ControlToolBar::RegenerateTooltips()
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:
+            // Without shift
             commands.push_back(wxT("Play"));
+            // With shift
             commands.push_back(_("Loop Play"));
             commands.push_back(wxT("PlayLooped"));
             break;
          case ID_RECORD_BUTTON:
+            // Without shift
             commands.push_back(wxT("Record"));
+            // With shift
 #ifndef EXPERIMENTAL_DA
-            commands.push_back(wxT("RecordBelow"));
+            commands.push_back(_("Append Record"));
+            commands.push_back(wxT("RecordAppend"));
 #else
             commands.push_back(_("Record Below"));
             commands.push_back(wxT("RecordBelow"));
