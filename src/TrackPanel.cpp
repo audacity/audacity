@@ -2467,7 +2467,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
 void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
                                      int trackHeight, Track *pTrack)
 {
-   mFreqSelTrack = 0;
+   mFreqSelTrack = NULL;
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
