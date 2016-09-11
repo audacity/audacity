@@ -264,7 +264,7 @@ void
 GetGStreamerImportPlugin(ImportPluginList &importPluginList,
                          UnusableImportPluginList & WXUNUSED(unusableImportPluginList))
 {
-   wxLogMessage(wxT("DarkAudacity is built against GStreamer version %d.%d.%d-%d"),
+   wxLogMessage( wxString(AUDACITY_NAME) + wxT(" is built against GStreamer version %d.%d.%d-%d"),
                 GST_VERSION_MAJOR,
                 GST_VERSION_MINOR,
                 GST_VERSION_MICRO,

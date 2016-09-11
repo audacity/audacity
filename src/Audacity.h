@@ -168,14 +168,19 @@ void QuitAudacity();
 #define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
 #define LINEAR_TO_DB(x) (20.0 * log10(x))
 
-// Marks strings for extraction only...must use wxGetTranslation() to translate.
-#define XO(s) wxT(s)
 
 #ifndef IN_RC
 #include <wx/defs.h>
 #include <wx/string.h>
 
 const wxString& GetCustomTranslation(const wxString& str1 );
+const wxString& GetCustomSubstitution(const wxString& str1 );
+
+// Marks strings for extraction only...must use wxGetTranslation() to translate.
+#define XO(s) GetCustomSubstitution(s)
+// Marks string for substitution only.
+#define _TS( s ) GetCustomSubstitution(s)
+
 
 #define WXINTL_NO_GETTEXT_MACRO
 #define _(s)                     GetCustomTranslation((s))

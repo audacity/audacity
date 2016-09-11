@@ -472,7 +472,7 @@ public:
       S.SetBorder(10);
       S.StartVerticalLay(true);
       {
-         text.Printf(_("DarkAudacity needs the file '%s' to import and export audio via FFmpeg."), mName.c_str());
+         text.Printf(_("Audacity needs the file '%s' to import and export audio via FFmpeg."), mName.c_str());
          S.AddTitle(text);
 
          S.SetBorder(3);

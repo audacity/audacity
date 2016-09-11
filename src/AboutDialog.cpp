@@ -237,7 +237,7 @@ AboutDialog *AboutDialog::ActiveIntance()
 }
 
 AboutDialog::AboutDialog(wxWindow * parent)
-   :  wxDialogWrapper(parent, -1, _("About DarkAudacity"),
+   :  wxDialogWrapper(parent, -1, _("About Audacity"),
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
@@ -301,12 +301,16 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 
    wxString creditStr = FormatHtmlText(
       wxString( wxT("<center>") ) +
+#ifdef EXPERIMENTAL_DA
+      #undef _
+      #define _(s) wxGetTranslation((s))
       wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      _("Customised version of the Audacity free, open source, cross-platform software " ) +
-      _("for recording and editing sounds.") +
-      wxT("<p><br>") + _("&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright")+
+      wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
+      wxT("for recording and editing sounds.") +
+      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright")+
       wxT("&copy; 1999-2016 Audacity Team.<br>") +
-      _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+      wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+#endif
 
       //wxT("<p><br>") + par1Str +
       //wxT("<p>") + par2Str +
@@ -337,12 +341,14 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       GetCreditsByRole(roleThanks) +
 
       wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+#ifdef EXPERIMENTAL_DA
       wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
+#endif
 
       wxT("</center>")
    );
 
-   auto pPage = S.StartNotebookPage( wxT("DarkAudacity") );
+   auto pPage = S.StartNotebookPage( _("Audacity") );
    pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
    S.StartVerticalLay(1);
    {

@@ -871,7 +871,7 @@ END_EVENT_TABLE()
 AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
-   : wxFrame(parent, id, wxT("DarkAudacity"), pos, size),
+   : wxFrame(parent, id, _TS("Audacity"), pos, size),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
@@ -1155,7 +1155,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
-   wxString msg = wxString::Format(_("Welcome to DarkAudacity version %s"),
+   wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    GetControlToolBar()->UpdateStatusBar(this);
@@ -1383,14 +1383,14 @@ void AudacityProject::SetProjectTitle( int number)
    // is none.
    if( number >= 0 ){
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
-      name = wxString::Format( wxT("[Project %02i] Audacity \"%s\""), number+1 ,
+      name = wxString::Format( _TS("[Project %02i] Audacity \"%s\""), number+1 ,
          name.IsEmpty() ? "<untitled>" : name.c_str() );
    }
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if( name.IsEmpty() )
    {
       mbLoadedFromAup = false;
-      name = wxT("DarkAudacity");
+      name = _TS("Audacity");
    }
 
    if (mIsRecovered)
@@ -2929,7 +2929,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       // Convert to the NEW format.
       bool success = ConvertLegacyProjectFile(wxFileName{ fileName });
       if (!success) {
-         wxMessageBox(_("DarkAudacity was unable to convert an Audacity 1.0 project to the new project format."),
+         wxMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
                       _("Error Opening Project"),
                       wxOK | wxCENTRE, this);
          return;

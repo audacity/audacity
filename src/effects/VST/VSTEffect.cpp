@@ -316,7 +316,7 @@ wxString VSTEffectsModule::GetVersion()
 
 wxString VSTEffectsModule::GetDescription()
 {
-   return XO("Adds the ability to use VST effects in DarkAudacity.");
+   return XO("Adds the ability to use VST effects in Audacity.");
 }
 
 // ============================================================================
@@ -771,7 +771,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText(wxString() +
                _("As part of their processing, some VST effects must delay returning ") +
-               _("audio to DarkAudacity. When not compensating for this delay, you will ") +
+               _("audio to Audacity. When not compensating for this delay, you will ") +
                _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this option will provide that compensation, but it may ") +
                _("not work for all VST effects."))->Wrap(650);

@@ -122,7 +122,7 @@ wxString NyquistEffectsModule::GetVersion()
 
 wxString NyquistEffectsModule::GetDescription()
 {
-   return XO("Provides Nyquist Effects support to DarkAudacity");
+   return XO("Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================

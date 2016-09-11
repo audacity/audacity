@@ -98,7 +98,7 @@ wxString VampEffectsModule::GetVersion()
 
 wxString VampEffectsModule::GetDescription()
 {
-   return XO("Provides Vamp Effects support to DarkAudacity");
+   return XO("Provides Vamp Effects support to Audacity");
 }
 
 // ============================================================================

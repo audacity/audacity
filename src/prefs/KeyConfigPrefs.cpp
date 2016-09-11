@@ -328,7 +328,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),
                                 ::wxGetCwd());
 
-   file = FileSelector(_("Select an XML file containing DarkAudacity keyboard shortcuts..."),
+   file = FileSelector(_("Select an XML file containing Audacity keyboard shortcuts..."),
                        path,
                        file,
                        wxT(""),
@@ -909,7 +909,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),
                                 ::wxGetCwd());
 
-   file = FileSelector(_("Select an XML file containing DarkAudacity keyboard shortcuts..."),
+   file = FileSelector(_("Select an XML file containing Audacity keyboard shortcuts..."),
                        path,
                        file,
                        wxT(""),

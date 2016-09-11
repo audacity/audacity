@@ -169,7 +169,7 @@ wxString TitleText( const wxString & Key )
    if(Key ==wxT("save") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Saving a DarkAudacity Project");
+      return _("Saving a Audacity Project");
    }
    if(Key ==wxT("wma-proprietary") )
    {
@@ -197,22 +197,24 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) + 
+#ifdef EXPERIMENTAL_DA
          wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
          _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
          _(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
          _(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
          _(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
 
-         _("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
-         _(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
-         _(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>") 
+         wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
+         wxT(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
+         wxT(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>") 
+#endif
       );
    }
    if(Key==wxT("wma-proprietary"))
    {
       return WrapText(
          wxString(wxT("<p>"))+
-         _("DarkAudacity can import unprotected files in many other formats (such as M4A and WMA, \
+         _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
 the optional [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|\
 FFmpeg library]] to your computer.") + wxT("</p><p>") +

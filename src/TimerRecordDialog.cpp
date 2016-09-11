@@ -139,7 +139,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent, bool bAlreadySaved)
-: wxDialogWrapper(parent, -1, _("DarkAudacity Timer Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
    SetName(GetTitle());
@@ -566,7 +566,7 @@ int TimerRecordDialog::RunWaitDialog()
 
       TimerProgressDialog
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
-                  _("DarkAudacity Timer Record Progress"),
+                  _("Audacity Timer Record Progress"),
                   strMsg,
                   pdlgHideCancelButton | pdlgConfirmStopCancel);
 
@@ -919,7 +919,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             wxArrayString arrayOptions;
             arrayOptions.Add(_("Do nothing"));
-            arrayOptions.Add(_("Exit DarkAudacity"));
+            arrayOptions.Add(_("Exit Audacity"));
             arrayOptions.Add(_("Restart system"));
             arrayOptions.Add(_("Shutdown system"));
 
@@ -1038,7 +1038,7 @@ int TimerRecordDialog::WaitForStart()
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
    TimerProgressDialog progress(waitDuration.GetMilliseconds().GetValue(),
-      _("DarkAudacity Timer Record - Waiting for Start"),
+      _("Audacity Timer Record - Waiting for Start"),
       strMsg,
       pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
       _("Recording will commence in:"));
@@ -1075,7 +1075,7 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
    wxDateTime dtActionTime = dtNow.Add(tsWait);
 
    TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
-                          _("DarkAudacity Timer Record - Waiting"),
+                          _("Audacity Timer Record - Waiting"),
                           sMessage,
                           pdlgHideStopButton | pdlgHideElapsedTime,
                           sCountdownLabel);

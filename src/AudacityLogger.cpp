@@ -79,7 +79,7 @@ void AudacityLogger::DoLogText(const wxString & str)
 
       TimeStamp(&stamp);
 
-      mBuffer << stamp << wxT("DarkAudacity ") << AUDACITY_VERSION_STRING << wxT("\n");
+      mBuffer << stamp << _TS("Audacity ") << AUDACITY_VERSION_STRING << wxT("\n");
    }
 
    mBuffer << str << wxT("\n");
@@ -161,7 +161,7 @@ void AudacityLogger::Show(bool show)
 
    // This is the first use, so create the frame
    Destroy_ptr<wxFrame> frame
-      { safenew wxFrame(NULL, wxID_ANY, _("DarkAudacity Log")) };
+      { safenew wxFrame(NULL, wxID_ANY, _("Audacity Log")) };
    frame->SetName(frame->GetTitle());
    frame->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 

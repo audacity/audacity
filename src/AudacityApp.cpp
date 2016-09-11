@@ -1069,7 +1069,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    rpt.AddAll(ctx);
 
    wxFileName fn(FileNames::DataDir(), wxT("audacity.cfg"));
-   rpt.AddFile(fn.GetFullPath(), wxT("DarkAudacity Configuration"));
+   rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));
    rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
    rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
 
@@ -1081,7 +1081,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    AudacityLogger *logger = GetLogger();
    if (logger)
    {
-      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("DarkAudacity Log"));
+      rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Audacity Log"));
    }
 
    bool ok = wxDebugReportPreviewStd().Show(rpt);
@@ -1094,7 +1094,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    {
       wxTextEntryDialog dlg(NULL,
                               _("Report generated to:"),
-                              _("DarkAudacity Support Data"),
+                              _("Audacity Support Data"),
                               rpt.GetCompressedFileName(),
                               wxOK | wxCENTER);
       dlg.SetName(dlg.GetTitle());
@@ -1191,14 +1191,18 @@ bool AudacityApp::OnInit()
 
 #ifdef AUDACITY_NAME
    wxString appName = wxT(AUDACITY_NAME);
-#else
-   wxString appName = wxT("DarkAudacity");
+#else 
+   #ifndef EXPERIMENTAL_DA
+      wxString appName = wxT("Audacity");
+   #else
+      wxString appName = wxT("DarkAudacity");
+   #endif
 #endif
 
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
-   wxTheApp->SetAppDisplayName(wxT("DarkAudacity"));
-   wxTheApp->SetVendorName(wxT("Audacity"));
+   wxTheApp->SetAppDisplayName(appName);
+   wxTheApp->SetVendorName(appName);
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
@@ -1223,8 +1227,11 @@ bool AudacityApp::OnInit()
 
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
-
+#ifndef EXPERIMENTAL_DA
+   wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
+#else
    wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
+#endif
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
@@ -1443,7 +1450,7 @@ bool AudacityApp::OnInit()
       fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
       fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
       fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
-      fileMenu->Append(wxID_ABOUT, _("&About DarkAudacity..."));
+      fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
       fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
       {
@@ -1709,16 +1716,16 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    wxString sockFile(dir + wxT("/.audacity.sock"));
 #endif
 
-   wxString runningTwoCopiesStr = _("Running two copies of DarkAudacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
+   wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
    if (!checker->Create(name, dir)) {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
       wxString prompt =
-         _("DarkAudacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
+         _("Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
          runningTwoCopiesStr +
-         _("Do you still want to start DarkAudacity?");
+         _("Do you still want to start Audacity?");
       int action = wxMessageBox(prompt,
                                 _("Error Locking Temporary Folder"),
                                 wxYES_NO | wxICON_EXCLAMATION,
@@ -1810,10 +1817,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       // There is another copy of Audacity running.  Force quit.
 
       wxString prompt =
-         _("The system has detected that another copy of DarkAudacity is running.\n") +
+         _("The system has detected that another copy of Audacity is running.\n") +
          runningTwoCopiesStr +
-         _("Use the New or Open commands in the currently running DarkAudacity\nprocess to open multiple projects simultaneously.\n");
-      wxMessageBox(prompt, _("DarkAudacity is already running"),
+         _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
+      wxMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
       return false;
    }
