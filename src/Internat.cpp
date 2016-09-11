@@ -39,6 +39,34 @@ wxChar Internat::mDecimalSeparator = wxT('.'); // default
 wxArrayString Internat::exclude;
 wxCharBuffer Internat::mFilename;
 
+#ifdef EXPERIMENTAL_DA
+// This function allows us to replace Audacity by DarkAudacity without peppering 
+// the source code with changes.  We split out this step, the customisation, as 
+// it is used on its own (without translation) in the wxTS macro.
+const wxString& GetCustomSubstitution(const wxString& str2)
+{
+   // If contains 'DarkAudacity, already converted.
+   if( str2.Contains( "DarkAudacity" ))
+      return str2;
+   // If does not contain 'Audacity', nothing to do.
+   if( !str2.Contains( "Audacity" ))
+      return str2;
+   wxString str3 = str2;
+   str3.Replace( "Audacity", "DarkAudacity" );
+   str3.Replace( " an DarkAudacity", " a DarkAudacity" );
+   return wxTranslations::GetUntranslatedString(str3);
+}
+
+// In any translated string, we can replace the name 'Audacity' by 'DarkAudacity'
+// without requiring translators to see extra strings for the two versions.
+const wxString& GetCustomTranslation(const wxString& str1)
+{
+   const wxString& str2 = wxGetTranslation( str1 );
+   return GetCustomSubstitution( str2 );
+}
+#endif
+
+
 void Internat::Init()
 {
    // Save decimal point character
