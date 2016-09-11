@@ -1750,7 +1750,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    }
 }
 
-void NumericTextCtrl::SetFieldFocus(int digit)
+void NumericTextCtrl::SetFieldFocus(int  digit)
 {
 #if wxUSE_ACCESSIBILITY
    if (mDigits.GetCount() == 0)

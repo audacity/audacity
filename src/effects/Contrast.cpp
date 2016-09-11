@@ -542,7 +542,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.Close();
 }
 
-void ContrastDialog::OnReset(wxCommandEvent & event)
+void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 {
    mForegroundStartT->SetValue(0.0);
    mForegroundEndT->SetValue(0.0);

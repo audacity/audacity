@@ -414,7 +414,7 @@ int ExportPCM::Export(AudacityProject *project,
 
       wxString     formatStr;
       SF_INFO      info;
-      int          err;
+      //int          err;
 
       //This whole operation should not occur while a file is being loaded on OD,
       //(we are worried about reading from a file being written to,) so we block.

@@ -244,7 +244,7 @@ bool RecordingPrefs::Apply()
    return true;
 }
 
-void RecordingPrefs::OnToggleCustomName(wxCommandEvent & Evt)
+void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
 {
    mUseCustomTrackName = !mUseCustomTrackName;
    mToggleCustomName->Enable(mUseCustomTrackName);

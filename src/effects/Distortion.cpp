@@ -578,21 +578,21 @@ sampleCount EffectDistortion::InstanceProcess(EffectDistortionState& data, float
    return blockLen;
 }
 
-void EffectDistortion::OnTypeChoice(wxCommandEvent& evt)
+void EffectDistortion::OnTypeChoice(wxCommandEvent& /*evt*/)
 {
    mTypeChoiceCtrl->GetValidator()->TransferFromWindow();
 
    UpdateUI();
 }
 
-void EffectDistortion::OnDCBlockCheckbox(wxCommandEvent& evt)
+void EffectDistortion::OnDCBlockCheckbox(wxCommandEvent& /*evt*/)
 {
    mParams.mDCBlock = mDCBlockCheckBox->GetValue();
    mbSavedFilterState = mParams.mDCBlock;
 }
 
 
-void EffectDistortion::OnThresholdText(wxCommandEvent& evt)
+void EffectDistortion::OnThresholdText(wxCommandEvent& /*evt*/)
 {
    mThresholdT->GetValidator()->TransferFromWindow();
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
@@ -607,7 +607,7 @@ void EffectDistortion::OnThresholdSlider(wxCommandEvent& evt)
    mThresholdT->GetValidator()->TransferToWindow();
 }
 
-void EffectDistortion::OnNoiseFloorText(wxCommandEvent& evt)
+void EffectDistortion::OnNoiseFloorText(wxCommandEvent& /*evt*/)
 {
    mNoiseFloorT->GetValidator()->TransferFromWindow();
    mNoiseFloorS->SetValue((int) floor(mParams.mNoiseFloor + 0.5));
@@ -620,7 +620,7 @@ void EffectDistortion::OnNoiseFloorSlider(wxCommandEvent& evt)
 }
 
 
-void EffectDistortion::OnParam1Text(wxCommandEvent& evt)
+void EffectDistortion::OnParam1Text(wxCommandEvent& /*evt*/)
 {
    mParam1T->GetValidator()->TransferFromWindow();
    mParam1S->SetValue((int) floor(mParams.mParam1 + 0.5));
@@ -632,7 +632,7 @@ void EffectDistortion::OnParam1Slider(wxCommandEvent& evt)
    mParam1T->GetValidator()->TransferToWindow();
 }
 
-void EffectDistortion::OnParam2Text(wxCommandEvent& evt)
+void EffectDistortion::OnParam2Text(wxCommandEvent& /*evt*/)
 {
    mParam2T->GetValidator()->TransferFromWindow();
    mParam2S->SetValue((int) floor(mParams.mParam2 + 0.5));
@@ -644,7 +644,7 @@ void EffectDistortion::OnParam2Slider(wxCommandEvent& evt)
    mParam2T->GetValidator()->TransferToWindow();
 }
 
-void EffectDistortion::OnRepeatsText(wxCommandEvent& evt)
+void EffectDistortion::OnRepeatsText(wxCommandEvent& /*evt*/)
 {
    mRepeatsT->GetValidator()->TransferFromWindow();
    mRepeatsS->SetValue(mParams.mRepeats);

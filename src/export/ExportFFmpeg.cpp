@@ -651,7 +651,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
 
 bool ExportFFmpeg::Finalize()
 {
-   int i, nEncodedBytes;
+   int nEncodedBytes;
 
    // Flush the audio FIFO and encoder.
    for (;;)
