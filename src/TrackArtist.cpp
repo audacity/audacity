@@ -182,7 +182,6 @@ audio tracks.
 #include "widgets/Ruler.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
-
 #include "Experimental.h"
 
 #undef PROFILE_WAVEFORM
@@ -2114,22 +2113,23 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    enum { DASH_LENGTH = 10 /* pixels */ };
 
    const ClipParameters params(true, track, clip, rect, selectedRegion, zoomInfo);
-   const wxRect &hiddenMid = params.hiddenMid;
+   const wxRect hiddenMid = params.hiddenMid;
+
    // The "hiddenMid" rect contains the part of the display actually
    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
    if (hiddenMid.width <= 0) {
       return;
    }
 
-   const double &t0 = params.t0;
-   const double &tOffset = params.tOffset;
-   const double &ssel0 = params.ssel0;
-   const double &ssel1 = params.ssel1;
-   const double &averagePixelsPerSample = params.averagePixelsPerSample;
-   const double &rate = params.rate;
-   const double &hiddenLeftOffset = params.hiddenLeftOffset;
-   const double &leftOffset = params.leftOffset;
-   const wxRect &mid = params.mid;
+   const double t0 = params.t0;
+   const double tOffset = params.tOffset;
+   const double ssel0 = params.ssel0;
+   const double ssel1 = params.ssel1;
+   const double averagePixelsPerSample = params.averagePixelsPerSample;
+   const double rate = params.rate;
+   const double hiddenLeftOffset = params.hiddenLeftOffset;
+   const double leftOffset = params.leftOffset;
+   const wxRect mid = params.mid;
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
@@ -2142,17 +2142,17 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    freqHi = selectedRegion.f1();
 #endif
 
-   const bool &isGrayscale = settings.isGrayscale;
-   const int &range = settings.range;
-   const int &gain = settings.gain;
+   const bool isGrayscale = settings.isGrayscale;
+   const int range = settings.range;
+   const int gain = settings.gain;
 #ifdef EXPERIMENTAL_FIND_NOTES
-   const bool &fftFindNotes = settings.fftFindNotes;
-   const bool &findNotesMinA = settings.findNotesMinA;
-   const bool &numberOfMaxima = settings.numberOfMaxima;
-   const bool &findNotesQuantize = settings.findNotesQuantize;
+   const bool fftFindNotes = settings.fftFindNotes;
+   const bool findNotesMinA = settings.findNotesMinA;
+   const bool numberOfMaxima = settings.numberOfMaxima;
+   const bool findNotesQuantize = settings.findNotesQuantize;
 #endif
 #ifdef EXPERIMENTAL_FFT_Y_GRID
-   const bool &fftYGrid = settings.fftYGrid;
+   const bool fftYGrid = settings.fftYGrid;
 #endif
 
    dc.SetPen(*wxTRANSPARENT_PEN);
@@ -2182,7 +2182,21 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+   // nearest frequency to each pixel row from number scale, for selecting
+   // the desired fft bin(s) for display on that row
+   float bins[ hiddenMid.height + 1 ];
+   {
+       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+
+       NumberScale::Iterator it = numberScale.begin(mid.height);
+       float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+       int yy;
+       for (yy = 0; yy < hiddenMid.height; ++yy) {
+          bins[yy] = nextBin;
+          nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+       }
+       bins[yy] = nextBin;
+   }
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    const float
@@ -2262,12 +2276,13 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       int *indexes = new int[maxTableSize];
 #endif //EXPERIMENTAL_FIND_NOTES
 
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
       for (int xx = 0; xx < hiddenMid.width; ++xx) {
-         NumberScale::Iterator it = numberScale.begin(mid.height);
-         float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
          for (int yy = 0; yy < hiddenMid.height; ++yy) {
-            const float bin = nextBin;
-            nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+            const float bin     = bins[yy];
+            const float nextBin = bins[yy+1];
 
             if (settings.scaleType != SpectrogramSettings::stLogarithmic) {
                const float value = findValue
@@ -2387,10 +2402,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    float selBinCenter =
       ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi)) / binUnit;
 
-   sampleCount w1(0.5 + rate *
-      (zoomInfo.PositionToTime(0, -leftOffset) - tOffset)
-   );
-
    const bool isSpectral = settings.SpectralSelectionEnabled();
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
    const int begin = hidden
@@ -2419,38 +2430,56 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
        );
    }
 
-   int correctedX = leftOffset - hiddenLeftOffset;
+   // build color gradient tables (not thread safe)
+   if (!AColor::gradient_inited)
+      AColor::PreComputeGradient();
+
    int fisheyeColumn = 0;
-   for (int xx = 0; xx < mid.width; ++xx, ++correctedX)
+
+   // get the time the display starts and time between pixel columns,
+   // (in samples), use it to determine if a pixel column is selected or not
+   auto initialTime = sampleCount(0.5 + rate *
+      (zoomInfo.PositionToTime(0, -leftOffset) - tOffset));
+
+   auto timeStep = sampleCount(0.5 + rate *
+      (zoomInfo.PositionToTime(1, -leftOffset) - tOffset)) - initialTime;
+
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+   for (int xx = 0; xx < mid.width; ++xx)
    {
+      int correctedX = xx + leftOffset - hiddenLeftOffset;
+
       const bool inFisheye = zoomInfo.InFisheye(xx, -leftOffset);
       float *const uncached =
          inFisheye ? &specCache.freq[(fisheyeColumn++) * half] : 0;
 
-      auto w0 = w1;
-      w1 = sampleCount(0.5 + rate *
-         (zoomInfo.PositionToTime(xx + 1, -leftOffset) - tOffset)
-      );
+      auto w0 = initialTime + timeStep*xx;
+      auto w1 = w0 + timeStep;
 
-      NumberScale::Iterator it = numberScale.begin(mid.height);
-      float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+      bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
+
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
-         const float bin = nextBin;
-         nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+         const float bin     = bins[yy];
+         const float nextBin = bins[yy+1];
 
          // For spectral selection, determine what colour
          // set to use.  We use a darker selection if
          // in both spectral range and time range.
 
          AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
+
          // If we are in the time selected range, then we may use a different color set.
-         if (ssel0 <= w0 && w1 < ssel1)
+         if (maybeSelected)
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+
          const float value = uncached
             ? findValue(uncached, bin, nextBin, half, autocorrelation, gain, range)
             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
+
          unsigned char rv, gv, bv;
          GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
 
