@@ -269,8 +269,8 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    CreateCreditsList();
 
    wxString par1Str = _(
-"Audacity is a free program written by a worldwide team of [[http://audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[http://audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
@@ -302,7 +302,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxString( wxT("<center>")) +
       wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
       _("Free, open source, cross-platform software for recording and editing sounds.") +
-      wxT(" [[http://audacityteam.org/|http://audacityteam.org/]]") +
+      wxT(" [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
       wxT("<p><br>") + par1Str +
       wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
