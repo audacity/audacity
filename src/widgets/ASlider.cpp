@@ -1615,11 +1615,6 @@ void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
-#ifdef EXPERIMENTAL_THEMING
-   wxColour Col(GetParent()->GetBackgroundColour());
-   this->SetBackgroundColour( Col );
-#endif
-
    mLWSlider->OnPaint(dc);
 
    if ( mSliderIsFocused )

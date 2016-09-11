@@ -174,7 +174,6 @@ public:
    wxFileName GetAutoExportFileName();
 
 private:
-   wxString mFormatName;
    bool ExamineTracks();
    bool GetFilename();
    bool CheckFilename();
@@ -186,6 +185,7 @@ private:
    void OnFilterChanged(wxFileCtrlEvent & evt);
 
 private:
+   wxString mFormatName;
    FileDialog *mDialog;
    wxString mFileDialogTitle;
    AudacityProject *mProject;

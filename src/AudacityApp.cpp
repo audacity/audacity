@@ -1069,7 +1069,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    rpt.AddAll(ctx);
 
    wxFileName fn(FileNames::DataDir(), wxT("audacity.cfg"));
-   rpt.AddFile(fn.GetFullPath(), wxT("Audacity Configuration"));
+   rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));
    rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
    rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
 
@@ -1081,7 +1081,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    AudacityLogger *logger = GetLogger();
    if (logger)
    {
-      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("Audacity Log"));
+      rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Audacity Log"));
    }
 
    bool ok = wxDebugReportPreviewStd().Show(rpt);
@@ -1197,8 +1197,8 @@ bool AudacityApp::OnInit()
 
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
-   wxTheApp->SetAppDisplayName(wxT("Audacity"));
-   wxTheApp->SetVendorName(wxT("Audacity"));
+   wxTheApp->SetAppDisplayName(appName);
+   wxTheApp->SetVendorName(appName);
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...

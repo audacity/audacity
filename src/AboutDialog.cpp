@@ -269,19 +269,19 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    CreateCreditsList();
 
    wxString par1Str = _(
-"Audacity is a free program written by a worldwide team of <a href=\"http://audacityteam.org/about/credits\">volunteers</a>. \
-Audacity is <a href=\"http://audacityteam.org/download\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity is a free program written by a worldwide team of [[http://audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[http://audacityteam.org/download|available]] available for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    wxString par2StrUntranslated = wxT(
-"If you find a bug or have a suggestion for us, please write, in English, to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
-For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
-visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
+visit our [[http://forum.audacityteam.org/|forum]].");
    wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
-For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
-visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
+"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
+visit our [[http://forum.audacityteam.org/|forum]].");
 
    if( par2Str == par2StrUntranslated )
       par2Str.Replace( wxT(", in English,"), wxT("") );
@@ -302,35 +302,36 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
       wxString( wxT("<center>")) +
       wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
       _("Free, open source, cross-platform software for recording and editing sounds.") +
-      wxT(" <a href=\"http://audacityteam.org/\">http://audacityteam.org/</a>") +
+      wxT(" [[http://audacityteam.org/|http://audacityteam.org/]]") +
       wxT("<p><br>") + par1Str +
       wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
 
-      wxT("<p><b>") + wxString::Format(_("Team Members")) + wxT("</b><br><br>") +
+      wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br><br>") +
       GetCreditsByRole(roleTeamMember) +
 
       wxT("<p><b> ") + _("Emeritus:") + wxT("</b><br>") +
       _("Distinguished Audacity Team members, not currently active") + wxT("<br><br>") +
       GetCreditsByRole(roleEmeritusTeam) +
 
-      wxT("<p><b>") + _("Contributors") + wxT("</b><br><br>") +
+      wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
 
       wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
-      translatorCredits + wxT("<br>") +
+      translatorCredits + 
       GetCreditsByRole(roleTranslators) +
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
       wxT("Audacity includes code from the following projects:") + wxT("<br><br>") +
       GetCreditsByRole(roleLibrary) +
 
-      wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br><br>") +
+      wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
+      wxT("<p><br>") + _("<b>Audacity<sup>&reg;</sup></b> software is copyright")+
       wxT("&copy; 1999-2016 Audacity Team.<br>") +
-      _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") +
+      _("The name <b>Audacity<sup>&reg;</sup></b> is a registered trademark of Dominic Mazzoni.") +
+      wxT("<p><br>")+_("Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
       wxT("</center>"));
 
 
@@ -579,7 +580,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
 // Uncomment the next two lines to test hyperlinks work from here.
 //   AddBuildinfoRow(&informationStr, wxT("Link Test:"), 
-//      wxT("<a href=\"https:web.audacityteam.org\">Click bait</a>") );
+//      wxT("[[https:www.audacityteam.org|Click bait]]") );
 
    AddBuildinfoRow(&informationStr, _("Commit Id:"),
 #include "RevisionIdent.h"

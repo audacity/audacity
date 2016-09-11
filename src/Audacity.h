@@ -169,6 +169,8 @@ void QuitAudacity();
 
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) wxT(s)
+// Marks string for substitution only.
+#define _TS(s) wxT(s)
 
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete

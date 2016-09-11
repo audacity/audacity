@@ -22,6 +22,7 @@ It is also a place to document colour usage policy in Audacity
 
 #include <wx/colour.h>
 #include <wx/dc.h>
+#include <wx/dcmemory.h>
 #include <wx/settings.h>
 #include <wx/utils.h>
 
@@ -225,6 +226,19 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
 
    AColor::Line(dc, r.x + r.width, r.y, r.x + r.width, r.y + r.height);
    AColor::Line(dc, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
+}
+
+void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r)
+{
+   wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonLarge : bmpDownButtonLarge );
+   wxMemoryDC memDC;
+   memDC.SelectObject(Bmp);
+   int h = wxMin( r.height, Bmp.GetHeight() );
+
+
+   dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0 );
+   dc.Blit( r.x+r.width/2,r.y,r.width/2, h, &memDC, 
+      Bmp.GetWidth() - r.width/2, 0 );
 }
 
 wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )

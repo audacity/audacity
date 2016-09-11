@@ -197,7 +197,6 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
       gPrefs->Flush();
 }
 
-
 bool TracksPrefs::Apply()
 {
    ShuttleGui S(this, eIsSavingToPrefs);

@@ -871,7 +871,7 @@ END_EVENT_TABLE()
 AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
-   : wxFrame(parent, id, wxT("Audacity"), pos, size),
+   : wxFrame(parent, id, _TS("Audacity"), pos, size),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
@@ -1380,14 +1380,14 @@ void AudacityProject::SetProjectTitle( int number)
    // is none.
    if( number >= 0 ){
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
-      name = wxString::Format( wxT("[Project %02i] Audacity \"%s\""), number+1 ,
+      name = wxString::Format( _TS("[Project %02i] Audacity \"%s\""), number+1 ,
          name.IsEmpty() ? "<untitled>" : name.c_str() );
    }
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if( name.IsEmpty() )
    {
       mbLoadedFromAup = false;
-      name = wxT("Audacity");
+      name = _TS("Audacity");
    }
 
    if (mIsRecovered)
