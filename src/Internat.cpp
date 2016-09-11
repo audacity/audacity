@@ -30,6 +30,7 @@ and on Mac OS X for the filesystem.
 
 #include "Internat.h"
 #include "FileDialog.h"
+#include "Experimental.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
