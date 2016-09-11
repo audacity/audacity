@@ -230,6 +230,19 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
 
 void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r)
 {
+   wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonLarge : bmpDownButtonLarge );
+   wxMemoryDC memDC;
+   memDC.SelectObject(Bmp);
+   int h = wxMin( r.height, Bmp.GetHeight() );
+
+
+   dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0 );
+   dc.Blit( r.x+r.width/2,r.y,r.width/2, h, &memDC, 
+      Bmp.GetWidth() - r.width/2, 0 );
+}
+
+void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r)
+{
    wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonExpand : bmpDownButtonExpand );
    wxMemoryDC memDC;
    memDC.SelectObject(Bmp);

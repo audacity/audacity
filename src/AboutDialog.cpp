@@ -592,7 +592,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
 // Uncomment the next two lines to test hyperlinks work from here.
 //   AddBuildinfoRow(&informationStr, wxT("Link Test:"), 
-//      wxT("[[https:web.audacityteam.org|Click bait]]") );
+//      wxT("[[https:www.audacityteam.org|Click bait]]") );
 
    AddBuildinfoRow(&informationStr, _("Commit Id:"),
 #include "RevisionIdent.h"
