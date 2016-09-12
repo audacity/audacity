@@ -78,6 +78,9 @@ public:
    int Update(int current, int total, const wxString & message = wxEmptyString);
    void SetMessage(const wxString & message);
 
+   // 'ETB' character to indicate a new column in the message text.
+   static const wxChar ColoumnSplitMarker = (char)23;
+
 protected:
    wxWindow *mHadFocus;
 
@@ -109,6 +112,8 @@ private:
    bool ConfirmAction(const wxString & sPrompt,
                       const wxString & sTitle,
                       int iButtonID = -1);
+
+   void AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText);
 
 private:
    // This guarantees we have an active event loop...possible during OnInit()
