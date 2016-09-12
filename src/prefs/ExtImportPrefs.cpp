@@ -218,7 +218,9 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    ImportPlugin *ip1, *ip2;
 
    auto &items = Importer::Get().GetImportItems();
-   ExtImportItem *item = items[last_selected].get();
+   ExtImportItem *item = NULL;
+   if( last_selected >= 0 )
+      item = items[last_selected].get();
 
    t = PluginList->GetItemText (row1);
    d = PluginList->GetItemData (row1);
@@ -229,6 +231,8 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    {
       PluginList->SetItemData (row1, PluginList->GetItemData (row2));
       PluginList->SetItemData (row2, d);
+      if( !item )
+         return;
       if (d == -1)
       {
          item->divider = row2;
@@ -240,6 +244,8 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    }
    else
    {
+      if( !item )
+         return;
       ip1 = item->filter_objects[d];
       ip2 = item->filter_objects[d2];
       item->filter_objects[d] = ip2;
@@ -332,6 +338,8 @@ void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& WXUNUSED(event))
    dragtext2->SetText(wxT(""));
    dragSource.SetData(*dragtext2);
    mDragFocus = PluginList;
+   if( mDragFocus == NULL )
+      return;
    wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
    mDragFocus = NULL;
    switch (result)
