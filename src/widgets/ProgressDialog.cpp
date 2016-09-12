@@ -1122,7 +1122,6 @@ bool ProgressDialog::Create(const wxString & title,
 
       // There may be more than one column, so create a BoxSizer container
       auto uColSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      //wxBoxSizer * pColSizer = safenew wxBoxSizer(wxHORIZONTAL);
       auto colSizer = uColSizer.get();
 
       for (size_t column = 0; column < arMessages.GetCount(); column++) {
