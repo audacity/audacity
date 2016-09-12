@@ -399,8 +399,8 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
 /*************************************************************/
 
 
-PaulStretch::PaulStretch(float rap_, size_t in_bufsize_, float /*samplerate_*/)
-   : samplerate { samplerate }
+PaulStretch::PaulStretch(float rap_, size_t in_bufsize_, float samplerate_ )
+   : samplerate { samplerate_ }
    , rap { std::max(1.0f, rap_) }
    , in_bufsize { in_bufsize_ }
    , out_bufsize { std::max(size_t{ 8 }, in_bufsize) }
