@@ -868,10 +868,12 @@ static float floatMax(float a, float b)
    return a>b? a: b;
 }
 
+/* Unused as yet.
 static int intmin(int a, int b)
 {
    return a<b? a: b;
 }
+*/
 
 static int intmax(int a, int b)
 {

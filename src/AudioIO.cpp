@@ -515,7 +515,7 @@ struct AudioIO::ScrubQueue
          // There is work in the queue, but if Producer is outrunning us, discard some,
          // which may make a skip yet keep playback better synchronized with user gestures.
          const auto interval = (now - mLastTransformerTimeMillis).ToDouble() / 1000.0;
-         const Entry &previous = mEntries[(mMiddleIdx + Size - 1) % Size];
+         //const Entry &previous = mEntries[(mMiddleIdx + Size - 1) % Size];
          const auto deficit =
             static_cast<long>(interval * mRate) - // Samples needed in the last time interval
             mCredit;                              // Samples done in the last time interval
