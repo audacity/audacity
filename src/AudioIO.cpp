@@ -1631,7 +1631,7 @@ void AudioIO::StartMonitoring(double sampleRate)
    }
 }
 
-int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
+int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
                          const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                          const NoteTrackArray &midiPlaybackTracks,
@@ -1946,7 +1946,7 @@ int AudioIO::StartStream(const WaveTrackArray &playbackTracks,
       int group = 0;
       for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt; i++)
       {
-         WaveTrack *vt = gAudioIO->mPlaybackTracks[i];
+         const WaveTrack *vt = gAudioIO->mPlaybackTracks[i];
 
          unsigned chanCnt = 1;
          if (vt->GetLinked())
@@ -4356,7 +4356,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                numSolo++;
 #endif
 
-         WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
+         const WaveTrack **chans = (const WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
          float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
          for (int c = 0; c < numPlaybackChannels; c++)
          {
@@ -4372,7 +4372,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          int maxLen = 0;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
-            WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
+            const WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
 
             chans[chanCnt] = vt;
 

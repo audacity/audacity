@@ -50,7 +50,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    uLeft.reset(), uRight.reset();
 
    // This function was formerly known as "Quick Mix".
-   Track *t;
+   const Track *t;
    bool mono = false;   /* flag if output can be mono without loosing anything*/
    bool oneinput = false;  /* flag set to true if there is only one input track
                               (mono or stereo) */
@@ -93,7 +93,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         waveArray.push_back(static_cast<WaveTrack *>(t));
+         waveArray.push_back(static_cast<const WaveTrack *>(t));
          tstart = t->GetStartTime();
          tend = t->GetEndTime();
          if (tend > mixEndTime)

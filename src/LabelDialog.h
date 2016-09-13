@@ -58,7 +58,7 @@ class LabelDialog final : public wxDialogWrapper
    bool TransferDataFromWindow();
    bool Validate();
    void FindAllLabels();
-   void AddLabels(LabelTrack *t);
+   void AddLabels(const LabelTrack *t);
    void FindInitialRow();
    wxString TrackName(int & index, const wxString &dflt = _("Label Track"));
 

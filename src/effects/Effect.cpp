@@ -2579,7 +2579,7 @@ void Effect::Preview(bool dryOnly)
 
       if (success)
       {
-         WaveTrackArray playbackTracks;
+         WaveTrackConstArray playbackTracks;
          WaveTrackArray recordingTracks;
 
          SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);

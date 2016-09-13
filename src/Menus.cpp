@@ -4129,13 +4129,13 @@ void AudacityProject::OnPaste()
    TrackListIterator clipIter(msClipboard.get());
 
    Track *n = iter.First();
-   Track *c = clipIter.First();
+   const Track *c = clipIter.First();
    if (c == NULL)
       return;
    Track *ff = NULL;
-   Track *tmpSrc = NULL;
-   Track *tmpC = NULL;
-   Track *prev = NULL;
+   const Track *tmpSrc = NULL;
+   const Track *tmpC = NULL;
+   const Track *prev = NULL;
 
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;

@@ -149,22 +149,22 @@ void GetProjectInfoCommand::SendTracksInfo(TrackList *projTracks,
    Status(boolValueStr);
 }
 
-bool GetProjectInfoCommand::testSelected(Track * track) const
+bool GetProjectInfoCommand::testSelected(const Track * track) const
 {
    return track->GetSelected();
 }
 
-bool GetProjectInfoCommand::testLinked(Track * track) const
+bool GetProjectInfoCommand::testLinked(const Track * track) const
 {
    return track->GetLinked();
 }
 
-bool GetProjectInfoCommand::testSolo(Track * track) const
+bool GetProjectInfoCommand::testSolo(const Track * track) const
 {
    return track->GetSolo();
 }
 
-bool GetProjectInfoCommand::testMute(Track * track) const
+bool GetProjectInfoCommand::testMute(const Track * track) const
 {
    return track->GetMute();
 }

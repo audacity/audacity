@@ -3319,7 +3319,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mHSlideAmount = 0.0;
    mDidSlideVertically = false;
 
-   mTrackExclusions.Clear();
+   mTrackExclusions.clear();
 
    Track *vt = FindTrack(event.m_x, event.m_y, false, false, &rect);
    if (!vt)
@@ -3367,7 +3367,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             if (t->GetSelected()) {
                AddClipsToCaptured(t, true);
                if (t->GetKind() != Track::Wave)
-                  mTrackExclusions.Add(t);
+                  mTrackExclusions.push_back(t);
             }
          }
       }
@@ -3406,7 +3406,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                         mCapturedClipArray[i].clip->GetStartTime(),
                         mCapturedClipArray[i].clip->GetEndTime() );
                   if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.Add(t);
+                     mTrackExclusions.push_back(t);
                }
             }
 #ifdef USE_MIDI
@@ -3419,7 +3419,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                {
                   AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
                   if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.Add(t);
+                     mTrackExclusions.push_back(t);
                }
             }
 #endif

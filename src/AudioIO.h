@@ -58,6 +58,7 @@ class AudacityProject;
 
 class WaveTrack;
 using WaveTrackArray = std::vector < WaveTrack* >;
+using ConstWaveTrackArray = std::vector < const WaveTrack* >;
 
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
@@ -145,7 +146,7 @@ class AUDACITY_DLL_API AudioIO final {
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive() below */
 
-   int StartStream(const WaveTrackArray &playbackTracks, const WaveTrackArray &captureTracks,
+   int StartStream(const ConstWaveTrackArray &playbackTracks, const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                    const NoteTrackArray &midiTracks,
 #endif
@@ -557,7 +558,7 @@ private:
    RingBuffer        **mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
    RingBuffer        **mPlaybackBuffers;
-   WaveTrackArray      mPlaybackTracks;
+   ConstWaveTrackArray mPlaybackTracks;
 
    Mixer             **mPlaybackMixers;
    volatile int        mStreamToken;
