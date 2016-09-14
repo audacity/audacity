@@ -74,7 +74,7 @@ private:
    double mThresholdDb;
    double mMaximumPause;
 
-   WaveTrack *mControlTrack;
+   const WaveTrack *mControlTrack;
 
    wxTextCtrl *mDuckAmountDbBox;
    wxTextCtrl *mInnerFadeDownLenBox;

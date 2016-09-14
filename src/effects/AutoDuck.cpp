@@ -201,7 +201,7 @@ bool EffectAutoDuck::Init()
    Track *t = iter.First();
 
    bool lastWasSelectedWaveTrack = false;
-   WaveTrack *controlTrackCandidate = NULL;
+   const WaveTrack *controlTrackCandidate = NULL;
 
    while(t)
    {
