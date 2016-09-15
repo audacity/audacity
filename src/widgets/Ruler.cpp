@@ -3370,7 +3370,7 @@ bool AdornedRulerPanel::s_AcceptsFocus{ false };
 
 auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
    s_AcceptsFocus = true;
-   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 void AdornedRulerPanel::SetFocusFromKbd()

@@ -533,7 +533,7 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
    if (!Clear(t0, t1))
       return{};
 
-   return std::move(tmp);
+   return tmp;
 }
 
 Track::Holder WaveTrack::SplitCut(double t0, double t1)
@@ -548,7 +548,7 @@ Track::Holder WaveTrack::SplitCut(double t0, double t1)
    if (!SplitDelete(t0, t1))
       return{};
 
-   return std::move(tmp);
+   return tmp;
 }
 
 #if 0
@@ -564,7 +564,7 @@ Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
    if (!ClearAndAddCutLine(t0, t1))
       return {};
 
-   return std::move(tmp);
+   return tmp;
 }
 #endif
 
@@ -706,7 +706,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1) const
       }
    }
 
-   return std::move(result);
+   return result;
 }
 
 Track::Holder WaveTrack::CopyNonconst(double t0, double t1)

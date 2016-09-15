@@ -576,7 +576,7 @@ void AButton::SetControl(bool control)
 
 auto AButton::TemporarilyAllowFocus() -> TempAllowFocus {
    s_AcceptsFocus = true;
-   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 #if wxUSE_ACCESSIBILITY

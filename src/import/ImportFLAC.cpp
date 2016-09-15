@@ -332,6 +332,7 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filenam
       return nullptr;
    }
 
+   // This std::move is needed to "upcast" the pointer type
    return std::move(handle);
 }
 

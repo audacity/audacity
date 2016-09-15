@@ -165,7 +165,7 @@ public:
          path.reserve(mIters.size());
          for (const auto &triple : mIters)
             path.push_back(triple.current - triple.begin);
-         return std::move(path);
+         return path;
       }
 
       friend inline bool operator ==

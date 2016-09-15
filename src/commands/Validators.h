@@ -125,6 +125,7 @@ public:
    {
       auto v = std::make_unique<OptionValidator>();
       v->mOptions = mOptions;
+      // This std::move is needed to "upcast" the pointer type
       return std::move(v);
    }
 };

@@ -333,6 +333,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
       return nullptr;
    }
 
+   // This std::move is needed to "upcast" the pointer type
    return std::move(handle);
 }
 

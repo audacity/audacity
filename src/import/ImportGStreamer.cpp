@@ -418,6 +418,7 @@ std::unique_ptr<ImportFileHandle> GStreamerImportPlugin::Open(const wxString &fi
       return nullptr;
    }
 
+   // This std::move is needed to "upcast" the pointer type
    return std::move(handle);
 }
 

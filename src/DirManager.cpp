@@ -596,7 +596,7 @@ wxFileNameWrapper DirManager::MakeBlockFilePath(const wxString &value) {
          wxLogSysError(_("mkdir in DirManager::MakeBlockFilePath failed."));
       }
    }
-   return std::move(dir);
+   return dir;
 }
 
 bool DirManager::AssignFile(wxFileNameWrapper &fileName,
@@ -921,7 +921,7 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
    // FIXME: Might we get here without midkey having been set?
    //    Seemed like a possible problem in these changes in .aup directory hierarchy.
    BalanceFileAdd(midkey);
-   return std::move(ret);
+   return ret;
 }
 
 BlockFilePtr DirManager::NewSimpleBlockFile(

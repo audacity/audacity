@@ -2337,7 +2337,7 @@ Track::Holder LabelTrack::Cut(double t0, double t1)
    if (!Clear(t0, t1))
       return{};
 
-   return std::move(tmp);
+   return tmp;
 }
 
 #if 0
@@ -2351,7 +2351,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
    if (!SplitDelete(t0, t1))
       return {};
 
-   return std::move(tmp);
+   return tmp;
 }
 #endif
 
@@ -2402,6 +2402,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1) const
    }
    lt->mClipLen = (t1 - t0);
 
+   // This std::move is needed to "upcast" the pointer type
    return std::move(tmp);
 }
 

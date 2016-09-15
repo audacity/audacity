@@ -39,6 +39,7 @@ movable_ptr<ODTask> ODDecodeFlacTask::Clone() const
    clone->mDemandSample = GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
+   // This std::move is needed to "upcast" the pointer type
    return std::move(clone);
 }
 
