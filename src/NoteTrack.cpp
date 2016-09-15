@@ -500,7 +500,8 @@ bool NoteTrack::Clear(double t0, double t1)
       return false;
    double len = t1-t0;
 
-   mSeq->clear(t0 - GetOffset(), len, false);
+   if (mSeq)
+      mSeq->clear(t0 - GetOffset(), len, false);
 
    return true;
 }
