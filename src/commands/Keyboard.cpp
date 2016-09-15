@@ -43,12 +43,13 @@ wxString KeyStringNormalize(const wxString & key)
 #endif
 }
 
-wxString KeyStringDisplay(const wxString & key, bool useSspecialChars)
+wxString KeyStringDisplay(const wxString & key, bool usesSpecialChars)
 {
+   (void)usesSpecialChars;//compiler food
    wxString newkey = KeyStringNormalize(key);
 #if defined(__WXMAC__)
 
-   if (!useSspecialChars) {
+   if (!usesSpecialChars) {
       // Compose user-visible keystroke names, all ASCII
       newkey.Replace(wxT("XCtrl+"), wxT("Control+"));
       newkey.Replace(wxT("Alt+"), wxT("Option+"));

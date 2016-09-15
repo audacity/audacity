@@ -180,6 +180,7 @@ bool EffectEqualization48x::AllocateBuffersWorkers(int nThreads)
       FreeBuffersWorkers(); 
    mFilterSize=(mEffectEqualization->mM-1)&(~15); // 4000 !!! Filter MUST BE QUAD WORD ALIGNED !!!!
    mWindowSize=mEffectEqualization->windowSize;
+   wxASSERT(mFilterSize < mWindowSize);
    mBlockSize=mWindowSize-mFilterSize; // 12,384
    mThreaded = (nThreads > 0 );
    if(mThreaded)
@@ -680,7 +681,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
    return bBreakLoop;
 }
 
-void EffectEqualization48x::Filter1x(sampleCount len,
+void EffectEqualization48x::Filter1x(size_t len,
                                      float *buffer, float *scratchBuffer)
 {
    int i;
@@ -692,13 +693,13 @@ void EffectEqualization48x::Filter1x(sampleCount len,
    // DC component is purely real
 
    float filterFuncR, filterFuncI;
-   filterFuncR=mEffectEqualization->mFilterFuncR[0];
-   scratchBuffer[0]=buffer[0]*filterFuncR; 
-   int halfLength=(len/2);
+   filterFuncR = mEffectEqualization->mFilterFuncR[0];
+   scratchBuffer[0] = buffer[0] * filterFuncR;
+   auto halfLength = (len / 2);
 
    bool useBitReverseTable=sMathPath&1;
 
-   for(i=1; i<halfLength; i++)
+   for(i = 1; i < halfLength; i++)
    {
       if(useBitReverseTable) {
          real=buffer[mEffectEqualization->hFFT->BitReversed[i]  ];
@@ -973,7 +974,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
    return bBreakLoop;
 }
 
-void EffectEqualization48x::Filter4x(sampleCount len,
+void EffectEqualization48x::Filter4x(size_t len,
                                      float *buffer, float *scratchBuffer)
 {
    int i;
@@ -987,13 +988,13 @@ void EffectEqualization48x::Filter4x(sampleCount len,
    __m128 *localBuffer=(__m128 *)buffer;
 
    __m128 filterFuncR, filterFuncI;
-   filterFuncR=_mm_set1_ps(mEffectEqualization->mFilterFuncR[0]);
-   localFFTBuffer[0]=_mm_mul_ps(localBuffer[0], filterFuncR); 
-   int halfLength=(len/2);
+   filterFuncR = _mm_set1_ps(mEffectEqualization->mFilterFuncR[0]);
+   localFFTBuffer[0] = _mm_mul_ps(localBuffer[0], filterFuncR);
+   auto halfLength = (len / 2);
 
-   bool useBitReverseTable=sMathPath&1;
+   bool useBitReverseTable = sMathPath & 1;
 
-   for(i=1; i<halfLength; i++)
+   for(i = 1; i < halfLength; i++)
    {
       if(useBitReverseTable) {
          real128=localBuffer[mEffectEqualization->hFFT->BitReversed[i]  ];
@@ -1273,7 +1274,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
 
 
 
-void EffectEqualization48x::Filter8x(sampleCount len,
+void EffectEqualization48x::Filter8x(size_t len,
                                      float *buffer, float *scratchBuffer)
 {
    int i;
@@ -1287,13 +1288,13 @@ void EffectEqualization48x::Filter8x(sampleCount len,
    __m256 *localBuffer=(__m256 *)buffer;
 
    __m256 filterFuncR, filterFuncI;
-   filterFuncR=_mm256_set1_ps(mEffectEqualization->mFilterFuncR[0]);
-   localFFTBuffer[0]=_mm256_mul_ps(localBuffer[0], filterFuncR); 
-   int halfLength=(len/2);
+   filterFuncR = _mm256_set1_ps(mEffectEqualization->mFilterFuncR[0]);
+   localFFTBuffer[0] = _mm256_mul_ps(localBuffer[0], filterFuncR);
+   auto halfLength = (len / 2);
 
-   bool useBitReverseTable=sMathPath&1;
+   bool useBitReverseTable = sMathPath & 1;
 
-   for(i=1; i<halfLength; i++)
+   for(i = 1; i < halfLength; i++)
    {
       if(useBitReverseTable) {
          real256=localBuffer[mEffectEqualization->hFFT->BitReversed[i]  ];

@@ -314,7 +314,7 @@ void WaveTrack::GetSpectrumBounds(float *min, float *max) const
       bottom = 0.0f;
    else if (type == SpectrogramSettings::stPeriod) {
       // special case
-      const int half = settings.GetFFTLength() / 2;
+      const auto half = settings.GetFFTLength() / 2;
       // EAC returns no data for below this frequency:
       const float bin2 = rate / half;
       bottom = bin2;

@@ -2346,7 +2346,7 @@ inline double findMaxRatio(double center, double rate)
 void TrackPanel::SnapCenterOnce(const WaveTrack *pTrack, bool up)
 {
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
-   const int windowSize = settings.GetFFTLength();
+   const auto windowSize = settings.GetFFTLength();
    const double rate = pTrack->GetRate();
    const double nyq = rate / 2.0;
    const double binFrequency = rate / windowSize;
@@ -2409,7 +2409,7 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
    // except, shrink the window as needed so we get some answers
 
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
-   int windowSize = settings.GetFFTLength();
+   auto windowSize = settings.GetFFTLength();
 
    while(windowSize > effectiveLength)
       windowSize >>= 1;
@@ -2467,7 +2467,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
 void TrackPanel::StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
                                      int trackHeight, Track *pTrack)
 {
-   mFreqSelTrack = 0;
+   mFreqSelTrack = NULL;
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
@@ -4102,7 +4102,7 @@ void TrackPanel::HandleWaveTrackVZoom
    if (spectral) {
       track->GetSpectrumBounds(&min, &max);
       scale = (settings.GetScale(min, max, rate, false));
-      const int fftLength = settings.GetFFTLength();
+      const auto fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
 
       // JKC:  Following discussions of Bug 1208 I'm allowing zooming in 
@@ -4860,9 +4860,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 void TrackPanel::OnTrackListResized(wxCommandEvent & e)
 {
    Track *t = (Track *) e.GetClientData();
-
    UpdateVRuler(t);
-
    e.Skip();
 }
 
@@ -7291,16 +7289,20 @@ void TrackPanel::UpdateVRulerSize()
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    if (t) {
+      // Find the maximum of the VRuler sizes.
+      // We are only interested in width in fact.
       wxSize s = t->vrulerSize;
       while (t) {
          s.IncTo(t->vrulerSize);
          t = iter.Next();
       }
-      if (vrulerSize != s) {
-         vrulerSize = s;
+      // If the width of the VRuler has changed, we need to 
+      // shift the HRuler 
+      if (vrulerSize.GetWidth() != s.GetWidth()) {
          mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();
       }
+      vrulerSize = s;
    }
    Refresh(false);
 }

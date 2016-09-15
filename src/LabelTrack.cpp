@@ -2165,7 +2165,7 @@ void LabelTrack::Import(wxTextFile & in)
          LabelStruct l { LabelStruct::Import(in, index) };
          mLabels.push_back(l);
       }
-      catch(const LabelStruct::BadFormatException&l) {}
+      catch(const LabelStruct::BadFormatException&) {}
    }
    SortLabels();
 }

@@ -164,7 +164,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetFormatString(const wxString & formatString);
    void SetFormatName(const wxString & formatName);
 
-   void SetFieldFocus(int digit);
+   void SetFieldFocus(int /* digit */);
 
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);

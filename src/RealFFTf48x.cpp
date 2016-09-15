@@ -343,7 +343,7 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /*
    *  Butterfly:
@@ -353,39 +353,39 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      sptr=h->SinTable;
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      sptr = h->SinTable;
 
-      while(A<endptr1)
+      while(A < endptr1)
       {
-         sin=*sptr;
-         cos=*(sptr+1);
-         endptr2=B;
-         while(A<endptr2)
+         sin = *sptr;
+         cos = *(sptr + 1);
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=*B*cos + *(B+1)*sin;
-            v2=*B*sin - *(B+1)*cos;
-            *B=(*A+v1);
-            *(A++)=*(B++)-2*v1;
-            *B=(*A-v2);
-            *(A++)=*(B++)+2*v2;
+            v1 = *B * cos + *(B+1) * sin;
+            v2 = *B * sin - *(B+1) * cos;
+            *B = (*A + v1);
+            *(A++) = *(B++) - 2 * v1;
+            *B = (*A - v2);
+            *(A++) = *(B++) + 2 * v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
-         sptr+=2;
+         A = B;
+         B + =ButterfliesPerGroup * 2;
+         sptr += 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
-   br1=h->BitReversed+1;
-   br2=h->BitReversed+h->Points-1;
+   br1 = h->BitReversed + 1;
+   br2 = h->BitReversed + h->Points - 1;
 
-   while(br1<br2)
+   while(br1 < br2)
    {
       sin=h->SinTable[*br1];
       cos=h->SinTable[*br1+1];
@@ -445,13 +445,13 @@ void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=buffer+2;
-   B=buffer+h->Points*2-2;
-   br1=h->BitReversed+1;
-   while(A<B)
+   A = buffer + 2;
+   B = buffer + h->Points * 2 - 2;
+   br1 = h->BitReversed + 1;
+   while(A < B)
    {
       sin=h->SinTable[*br1];
       cos=h->SinTable[*br1+1];
@@ -490,30 +490,30 @@ void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      sptr=h->SinTable;
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      sptr = h->SinTable;
 
-      while(A<endptr1)
+      while(A < endptr1)
       {
-         sin=*(sptr++);
-         cos=*(sptr++);
-         endptr2=B;
-         while(A<endptr2)
+         sin = *(sptr++);
+         cos = *(sptr++);
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=*B*cos - *(B+1)*sin;
-            v2=*B*sin + *(B+1)*cos;
-            *B=(*A+v1)*(fft_type)0.5;
-            *(A++)=*(B++)-v1;
-            *B=(*A+v2)*(fft_type)0.5;
-            *(A++)=*(B++)-v2;
+            v1 = *B * cos - *(B + 1) * sin;
+            v2 = *B * sin + *(B + 1) * cos;
+            *B = (*A + v1) * (fft_type)0.5;
+            *(A++) = *(B++) - v1;
+            *B = (*A + v2) * (fft_type)0.5;
+            *(A++) = *(B++) - v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -522,7 +522,7 @@ void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
 void ReorderToFreq1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       RealOut[i]=buffer[hFFT->BitReversed[i]  ];
       ImagOut[i]=buffer[hFFT->BitReversed[i]+1];
    }
@@ -535,7 +535,7 @@ void ReorderToFreq1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut
 void ReorderToTime1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       TimeOut[i*2  ]=buffer[hFFT->BitReversed[i]  ];
       TimeOut[i*2+1]=buffer[hFFT->BitReversed[i]+1];
    }
@@ -554,7 +554,7 @@ void RealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    int br1Value, br2Value;
    __m128 HRplus,HRminus,HIplus,HIminus;
    __m128 v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /*
    *  Butterfly:
@@ -564,37 +564,37 @@ void RealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=&localBuffer[h->Points*2];
+   endptr1 = &localBuffer[h->Points * 2];
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=&localBuffer[ButterfliesPerGroup*2];
-      sptr=h->SinTable;
-      while(A<endptr1)
+      A = localBuffer;
+      B = &localBuffer[ButterfliesPerGroup * 2];
+      sptr = h->SinTable;
+      while(A < endptr1)
       {
-         sin=_mm_set1_ps(*(sptr++));
-         cos=_mm_set1_ps(*(sptr++));
-         endptr2=B;
-         while(A<endptr2)
+         sin = _mm_set1_ps(*(sptr++));
+         cos = _mm_set1_ps(*(sptr++));
+         endptr2 = B;
+         while(A < endptr2)
          {
             v1 = _mm_add_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B+1), sin));
             v2 = _mm_sub_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B+1), cos));
-            *B=_mm_add_ps( *A, v1);
+            *B = _mm_add_ps( *A, v1);
             __m128 temp128 = _mm_set1_ps( 2.0); 
-            *(A++)=_mm_sub_ps(*(B++), _mm_mul_ps(temp128, v1));
-            *B=_mm_sub_ps(*A,v2);
-            *(A++)=_mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
+            *(A++) = _mm_sub_ps(*(B++), _mm_mul_ps(temp128, v1));
+            *B = _mm_sub_ps(*A,v2);
+            *(A++) = _mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed + 1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
    while(br1Index<br2Index)
    {
@@ -660,17 +660,17 @@ void InverseRealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    __m128 HRplus,HRminus,HIplus,HIminus;
    __m128 v1,v2,sin,cos;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=localBuffer+2;
-   B=localBuffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   while(A<B)
+   A = localBuffer + 2;
+   B = localBuffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   while(A < B)
    {
-      br1Value=h->BitReversed[br1Index];
-      sin=_mm_set1_ps(h->SinTable[br1Value]);
-      cos=_mm_set1_ps(h->SinTable[br1Value+1]);
+      br1Value = h->BitReversed[br1Index];
+      sin = _mm_set1_ps(h->SinTable[br1Value]);
+      cos = _mm_set1_ps(h->SinTable[br1Value + 1]);
       HRminus = _mm_sub_ps(*A,  *B);
       HRplus = _mm_add_ps(HRminus, _mm_mul_ps(*B,  _mm_set1_ps(2.0)));
       HIminus = _mm_sub_ps( *(A+1), *(B+1));
@@ -710,29 +710,29 @@ void InverseRealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=localBuffer+h->Points*2;
+   endptr1 = localBuffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=localBuffer+ButterfliesPerGroup*2;
-      sptr=h->SinTable;
-      while(A<endptr1)
+      A = localBuffer;
+      B = localBuffer + ButterfliesPerGroup * 2;
+      sptr = h->SinTable;
+      while(A < endptr1)
       {
-         sin=_mm_set1_ps(*(sptr++));
-         cos=_mm_set1_ps(*(sptr++));
-         endptr2=B;
-         while(A<endptr2)
+         sin = _mm_set1_ps(*(sptr++));
+         cos = _mm_set1_ps(*(sptr++));
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=_mm_sub_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B+1), sin));
-            v2=_mm_add_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B+1), cos));
-            *B=_mm_mul_ps( _mm_add_ps(*A, v1), _mm_set1_ps(0.5));
-            *(A++)=_mm_sub_ps(*(B++), v1);
-            *B=_mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
-            *(A++)=_mm_sub_ps(*(B++),v2);
+            v1 = _mm_sub_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B + 1), sin));
+            v2 = _mm_add_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B + 1), cos));
+            *B = _mm_mul_ps( _mm_add_ps(*A, v1), _mm_set1_ps(0.5));
+            *(A++) = _mm_sub_ps(*(B++), v1);
+            *B = _mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
+            *(A++) = _mm_sub_ps(*(B++), v2);
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -745,7 +745,7 @@ void ReorderToFreq4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut
    __m128 *localImagOut=(__m128 *)ImagOut;
 
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
       brValue=hFFT->BitReversed[i];
       localRealOut[i]=localBuffer[brValue  ];
@@ -762,11 +762,11 @@ void ReorderToTime4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut
    __m128 *localBuffer=(__m128 *)buffer;
    __m128 *localTimeOut=(__m128 *)TimeOut;
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
-      brValue=hFFT->BitReversed[i];
-      localTimeOut[i*2  ]=localBuffer[brValue  ];
-      localTimeOut[i*2+1]=localBuffer[brValue+1];
+      brValue = hFFT->BitReversed[i];
+      localTimeOut[i*2  ] = localBuffer[brValue  ];
+      localTimeOut[i*2+1] = localBuffer[brValue+1];
    }
 }
 
@@ -801,44 +801,44 @@ void RealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
    int br1Value, br2Value;
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow - pow2BitsMinus1);
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
-         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
-         sin=sSinCosTable.mSinCosTable[sinCosLookup].mSin;
-         cos=sSinCosTable.mSinCosTable[sinCosLookup].mCos;
+         int sinCosLookup = (*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
+         sin = sSinCosTable.mSinCosTable[sinCosLookup].mSin;
+         cos = sSinCosTable.mSinCosTable[sinCosLookup].mCos;
          iSinCosIndex++;
-         endptr2=B;
-         while(A<endptr2)
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=*B*cos + *(B+1)*sin;
-            v2=*B*sin - *(B+1)*cos;
-            *B=(*A+v1);
-            *(A++)=*(B++)-2*v1;
-            *B=(*A-v2);
-            *(A++)=*(B++)+2*v2;
+            v1 = *B*cos + *(B+1)*sin;
+            v2 = *B*sin - *(B+1)*cos;
+            *B = (*A+v1);
+            *(A++) = *(B++) - 2 * v1;
+            *B = (*A - v2);
+            *(A++) = *(B++) + 2 * v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; 
-   br2Index=h->Points-1;   
+   br1Index = 1;
+   br2Index = h->Points - 1;
 
-   while(br1Index<br2Index)
+   while(br1Index < br2Index)
    {
       br1Value=(*SmallVRB[h->pow2Bits])(br1Index);
       br2Value=(*SmallVRB[h->pow2Bits])(br2Index);
@@ -899,21 +899,21 @@ void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
    int *br1;
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow - pow2BitsMinus1);
 
    /* Massage input to get the input for a real output sequence. */
-   A=buffer+2;
-   B=buffer+h->Points*2-2;
-   br1=h->BitReversed+1;
-   br1Index=1; //h->BitReversed+1;
-   while(A<B)
+   A = buffer + 2;
+   B = buffer + h->Points * 2 - 2;
+   br1 = h->BitReversed + 1;
+   br1Index = 1; //h->BitReversed + 1;
+   while(A < B)
    {
-      br1Value=(*SmallVRB[h->pow2Bits])(br1Index);
-      int sinCosIndex=br1Index<<sinCosShift;
-      sin=sSinCosTable.mSinCosTable[sinCosIndex].mSin;
-      cos=sSinCosTable.mSinCosTable[sinCosIndex].mCos;
+      br1Value = (*SmallVRB[h->pow2Bits])(br1Index);
+      int sinCosIndex = br1Index << sinCosShift;
+      sin = sSinCosTable.mSinCosTable[sinCosIndex].mSin;
+      cos = sSinCosTable.mSinCosTable[sinCosIndex].mCos;
       HRplus = (HRminus = *A     - *B    ) + (*B     * 2);
       HIplus = (HIminus = *(A+1) - *(B+1)) + (*(B+1) * 2);
       v1 = (sin*HRminus + cos*HIplus);
@@ -949,31 +949,31 @@ void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
-         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
-         sin=sSinCosTable.mSinCosTable[sinCosLookup].mSin;
-         cos=sSinCosTable.mSinCosTable[sinCosLookup].mCos;
+         int sinCosLookup = (*SmallVRB[pow2BitsMinus1])(iSinCosIndex) << sinCosShift;
+         sin = sSinCosTable.mSinCosTable[sinCosLookup].mSin;
+         cos = sSinCosTable.mSinCosTable[sinCosLookup].mCos;
          iSinCosIndex++;
-         endptr2=B;
-         while(A<endptr2)
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=*B*cos - *(B+1)*sin;
-            v2=*B*sin + *(B+1)*cos;
-            *B=(*A+v1)*(fft_type)0.5;
-            *(A++)=*(B++)-v1;
-            *B=(*A+v2)*(fft_type)0.5;
-            *(A++)=*(B++)-v2;
+            v1 = *B * cos - *(B + 1) * sin;
+            v2 = *B * sin + *(B + 1) * cos;
+            *B = (*A + v1) * (fft_type)0.5;
+            *(A++) = *(B++) - v1;
+            *B = (*A + v2) * (fft_type)0.5;
+            *(A++) = *(B++) - v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -982,22 +982,22 @@ void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
 void ReorderToTime1xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0;i < hFFT->Points; i++) {
       int brValue;
       brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      TimeOut[i*2  ]=buffer[brValue  ];
-      TimeOut[i*2+1]=buffer[brValue+1];
+      TimeOut[i*2  ] = buffer[brValue  ];
+      TimeOut[i*2+1] = buffer[brValue+1];
    }
 }
 
 void ReorderToFreq1xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
-      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      RealOut[i]=buffer[brValue  ];
-      ImagOut[i]=buffer[brValue+1];
+      brValue = (*SmallVRB[hFFT->pow2Bits])(i);
+      RealOut[i] = buffer[brValue  ];
+      ImagOut[i] = buffer[brValue+1];
    }
    RealOut[0] = buffer[0]; // DC component
    ImagOut[0] = 0;
@@ -1017,9 +1017,9 @@ void RealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
    int br1Value, br2Value;
    __m128 HRplus,HRminus,HIplus,HIminus;
    __m128 v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow - pow2BitsMinus1);
 
    /*
    *  Butterfly:
@@ -1029,41 +1029,41 @@ void RealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=&localBuffer[h->Points*2];
+   endptr1 = &localBuffer[h->Points * 2];
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=&localBuffer[ButterfliesPerGroup*2];
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = &localBuffer[ButterfliesPerGroup * 2];
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
-         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
-         sin=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mSin);
-         cos=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mCos);
+         int sinCosLookup = (*SmallVRB[pow2BitsMinus1])(iSinCosIndex) << sinCosShift;
+         sin = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mSin);
+         cos = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mCos);
          iSinCosIndex++;
-         endptr2=B;
-         while(A<endptr2)
+         endptr2 = B;
+         while(A < endptr2)
          {
             v1 = _mm_add_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B+1), sin));
             v2 = _mm_sub_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B+1), cos));
-            *B=_mm_add_ps( *A, v1);
+            *B = _mm_add_ps( *A, v1);
             __m128 temp128 = _mm_set1_ps( 2.0); 
-            *(A++)=_mm_sub_ps(*(B++), _mm_mul_ps(temp128, v1));
-            *B=_mm_sub_ps(*A,v2);
-            *(A++)=_mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
+            *(A++) = _mm_sub_ps(*(B++), _mm_mul_ps(temp128, v1));
+            *B = _mm_sub_ps(*A,v2);
+            *(A++) = _mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed + 1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
-   while(br1Index<br2Index)
+   while(br1Index < br2Index)
    {
       br1Value=(*SmallVRB[h->pow2Bits])(br1Index);
       br2Value=(*SmallVRB[h->pow2Bits])(br2Index);
@@ -1121,25 +1121,25 @@ void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
 
    __m128 *localBuffer=(__m128 *)buffer;
 
-   __m128 *A,*B;
-   __m128 *endptr1,*endptr2;
+   __m128 *A, *B;
+   __m128 *endptr1, *endptr2;
    int br1Index, br1Value;
-   __m128 HRplus,HRminus,HIplus,HIminus;
-   __m128 v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   __m128 HRplus, HRminus, HIplus, HIminus;
+   __m128 v1, v2, sin, cos;
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow - pow2BitsMinus1);
 
    /* Massage input to get the input for a real output sequence. */
-   A=localBuffer+2;
-   B=localBuffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   while(A<B)
+   A = localBuffer + 2;
+   B = localBuffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   while(A < B)
    {
-      br1Value=(*SmallVRB[h->pow2Bits])(br1Index);
-      int sinCosIndex=br1Index<<sinCosShift;
-      sin=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mSin);
-      cos=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mCos);
+      br1Value = (*SmallVRB[h->pow2Bits])(br1Index);
+      int sinCosIndex = br1Index << sinCosShift;
+      sin = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mSin);
+      cos = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mCos);
       HRminus = _mm_sub_ps(*A,  *B);
       HRplus = _mm_add_ps(HRminus, _mm_mul_ps(*B,  _mm_set1_ps(2.0)));
       HIminus = _mm_sub_ps( *(A+1), *(B+1));
@@ -1151,13 +1151,13 @@ void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
       *(A+1) = _mm_mul_ps(_mm_sub_ps(HIminus, v2) , _mm_set1_ps(0.5));
       *(B+1) = _mm_sub_ps(*(A+1), HIminus);
 
-      A=&A[2];
-      B=&B[-2];
+      A = &A[2];
+      B = &B[-2];
       br1Index++;
    }
    /* Handle center bin (just need conjugate) */
    // negate sse style
-   *(A+1)=_mm_xor_ps(*(A+1), _mm_set1_ps(-0.f));
+   *(A+1) = _mm_xor_ps(*(A+1), _mm_set1_ps(-0.f));
 
    /* Handle DC bin separately - this ignores any Fs/2 component
    buffer[1]=buffer[0]=buffer[0]/2;*/
@@ -1166,10 +1166,10 @@ void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
    /* The Fs/2 bin is passed in as the imaginary part of the DC complex value */
    /* (v1+v2) = buffer[0] == the DC component */
    /* (v1-v2) = buffer[1] == the Fs/2 component */
-   v1=_mm_mul_ps(_mm_set1_ps(0.5), _mm_add_ps(localBuffer[0], localBuffer[1]));
-   v2=_mm_mul_ps(_mm_set1_ps(0.5), _mm_sub_ps(localBuffer[0], localBuffer[1]));
-   localBuffer[0]=v1;
-   localBuffer[1]=v2;
+   v1 = _mm_mul_ps(_mm_set1_ps(0.5), _mm_add_ps(localBuffer[0], localBuffer[1]));
+   v2 = _mm_mul_ps(_mm_set1_ps(0.5), _mm_sub_ps(localBuffer[0], localBuffer[1]));
+   localBuffer[0] = v1;
+   localBuffer[1] = v2;
 
    /*
    *  Butterfly:
@@ -1179,31 +1179,31 @@ void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=localBuffer+h->Points*2;
+   endptr1 = localBuffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=localBuffer+ButterfliesPerGroup*2;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = localBuffer + ButterfliesPerGroup * 2;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
-         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
-         sin=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mSin);
-         cos=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mCos);
+         int sinCosLookup = (*SmallVRB[pow2BitsMinus1])(iSinCosIndex) << sinCosShift;
+         sin = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mSin);
+         cos = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosLookup].mCos);
          iSinCosIndex++;
-         endptr2=B;
-         while(A<endptr2)
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=_mm_sub_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B+1), sin));
-            v2=_mm_add_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B+1), cos));
-            *B=_mm_mul_ps( _mm_add_ps(*A, v1), _mm_set1_ps(0.5));
-            *(A++)=_mm_sub_ps(*(B++), v1);
-            *B=_mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
-            *(A++)=_mm_sub_ps(*(B++),v2);
+            v1 = _mm_sub_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B+1), sin));
+            v2 = _mm_add_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B+1), cos));
+            *B = _mm_mul_ps( _mm_add_ps(*A, v1), _mm_set1_ps(0.5));
+            *(A++) = _mm_sub_ps(*(B++), v1);
+            *B = _mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
+            *(A++) = _mm_sub_ps(*(B++),v2);
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -1211,29 +1211,29 @@ void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
 
 void ReorderToTime4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
-   __m128 *localBuffer=(__m128 *)buffer;
-   __m128 *localTimeOut=(__m128 *)TimeOut;
+   __m128 *localBuffer = (__m128 *)buffer;
+   __m128 *localTimeOut = (__m128 *)TimeOut;
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
-      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      localTimeOut[i*2  ]=localBuffer[brValue  ];
-      localTimeOut[i*2+1]=localBuffer[brValue+1];
+      brValue = (*SmallVRB[hFFT->pow2Bits])(i);
+      localTimeOut[i*2  ] = localBuffer[brValue  ];
+      localTimeOut[i*2+1] = localBuffer[brValue+1];
    }
 }
 
 void ReorderToFreq4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
-   __m128 *localBuffer=(__m128 *)buffer;
-   __m128 *localRealOut=(__m128 *)RealOut;
-   __m128 *localImagOut=(__m128 *)ImagOut;
+   __m128 *localBuffer = (__m128 *)buffer;
+   __m128 *localRealOut = (__m128 *)RealOut;
+   __m128 *localImagOut = (__m128 *)ImagOut;
 
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
-      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      localRealOut[i]=localBuffer[brValue  ];
-      localImagOut[i]=localBuffer[brValue+1];
+      brValue = (*SmallVRB[hFFT->pow2Bits])(i);
+      localRealOut[i] = localBuffer[brValue  ];
+      localImagOut[i] = localBuffer[brValue+1];
    }
    localRealOut[0] = localBuffer[0]; // DC component
    localImagOut[0] = _mm_set1_ps(0.0);
@@ -1266,33 +1266,33 @@ void ReorderToFreq4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *Real
 void RealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
 {
    fft_type *A,*B;
-   fft_type *endptr1,*endptr2;
+   fft_type *endptr1, *endptr2;
    int br1Index, br2Index;
    int br1Value, br2Value;
-   fft_type HRplus,HRminus,HIplus,HIminus;
-   fft_type v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int bitReverseShiftM1=17-h->pow2Bits;
-   int bitReverseShift=bitReverseShiftM1-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   fft_type HRplus, HRminus, HIplus, HIminus;
+   fft_type v1, v2, sin, cos;
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
+   int bitReverseShift = bitReverseShiftM1 - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow - pow2BitsMinus1);
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
 //         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
-         int sinCosLookup=( ((sSmallRBTable[*((unsigned char *)&iSinCosIndex)]<<8) + (sSmallRBTable[*(((unsigned char *)&iSinCosIndex)+1)]) )>>bitReverseShiftM1)<<sinCosShift;
-         sin=sSinCosTable.mSinCosTable[sinCosLookup].mSin;
-         cos=sSinCosTable.mSinCosTable[sinCosLookup].mCos;
+         int sinCosLookup = ( ((sSmallRBTable[*((unsigned char *)&iSinCosIndex)]<<8) + (sSmallRBTable[*(((unsigned char *)&iSinCosIndex)+1)]) )>>bitReverseShiftM1)<<sinCosShift;
+         sin = sSinCosTable.mSinCosTable[sinCosLookup].mSin;
+         cos = sSinCosTable.mSinCosTable[sinCosLookup].mCos;
          iSinCosIndex++;
-         endptr2=B;
-         while(A<endptr2)
+         endptr2 = B;
+         while(A < endptr2)
          {
             v1=*B*cos + *(B+1)*sin;
             v2=*B*sin - *(B+1)*cos;
@@ -1301,25 +1301,25 @@ void RealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
             *B=(*A-v2);
             *(A++)=*(B++)+2*v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; 
-   br2Index=h->Points-1;   
+   br1Index = 1;
+   br2Index = h->Points - 1;
 
-   while(br1Index<br2Index)
+   while(br1Index < br2Index)
    {
       br1Value=( ((sSmallRBTable[*((unsigned char *)&br1Index)]<<8) + (sSmallRBTable[*(((unsigned char *)&br1Index)+1)]) )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br1Index);
       br2Value=( ((sSmallRBTable[*((unsigned char *)&br2Index)]<<8) + (sSmallRBTable[*(((unsigned char *)&br2Index)+1)]) )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br2Index);
-      int sinCosIndex=br1Index<<sinCosShift;
-      sin=sSinCosTable.mSinCosTable[sinCosIndex].mSin;
-      cos=sSinCosTable.mSinCosTable[sinCosIndex].mCos;
-      A=&buffer[br1Value];
-      B=&buffer[br2Value];
+      int sinCosIndex = br1Index << sinCosShift;
+      sin = sSinCosTable.mSinCosTable[sinCosIndex].mSin;
+      cos = sSinCosTable.mSinCosTable[sinCosIndex].mCos;
+      A = &buffer[br1Value];
+      B = &buffer[br2Value];
       HRplus = (HRminus = *A     - *B    ) + (*B     * 2);
       HIplus = (HIminus = *(A+1) - *(B+1)) + (*(B+1) * 2);
       v1 = (sin*HRminus - cos*HIplus);
@@ -1370,22 +1370,22 @@ void InverseRealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
    int br1Index;
-   fft_type HRplus,HRminus,HIplus,HIminus;
-   fft_type v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
-   int bitReverseShiftM1=17-h->pow2Bits;
+   fft_type HRplus, HRminus, HIplus, HIminus;
+   fft_type v1, v2, sin, cos;
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
 
    /* Massage input to get the input for a real output sequence. */
-   A=buffer+2;
-   B=buffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   while(A<B)
+   A = buffer + 2;
+   B = buffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   while(A < B)
    {
-      int sinCosIndex=br1Index<<sinCosShift;
-      sin=sSinCosTable.mSinCosTable[sinCosIndex].mSin;
-      cos=sSinCosTable.mSinCosTable[sinCosIndex].mCos;
+      int sinCosIndex = br1Index << sinCosShift;
+      sin = sSinCosTable.mSinCosTable[sinCosIndex].mSin;
+      cos = sSinCosTable.mSinCosTable[sinCosIndex].mCos;
       HRplus = (HRminus = *A     - *B    ) + (*B     * 2);
       HIplus = (HIminus = *(A+1) - *(B+1)) + (*(B+1) * 2);
       v1 = (sin*HRminus + cos*HIplus);
@@ -1421,14 +1421,14 @@ void InverseRealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
 //         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
          int sinCosLookup=( ((sSmallRBTable[*((unsigned char *)&iSinCosIndex)]<<8) + (sSmallRBTable[*(((unsigned char *)&iSinCosIndex)+1)]) )>>bitReverseShiftM1)<<sinCosShift;
@@ -1445,8 +1445,8 @@ void InverseRealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
             *B=(*A+v2)*(fft_type)0.5;
             *(A++)=*(B++)-v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -1456,12 +1456,12 @@ void ReorderToFreq1xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealO
 {
    int bitReverseShift=16-hFFT->pow2Bits;
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
-      RealOut[i]=buffer[brValue  ];
-      ImagOut[i]=buffer[brValue+1];
+      brValue = ( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
+      RealOut[i] = buffer[brValue  ];
+      ImagOut[i] = buffer[brValue+1];
    }
    RealOut[0] = buffer[0]; // DC component
    ImagOut[0] = 0;
@@ -1473,12 +1473,12 @@ void ReorderToTime1xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeO
 {
    int bitReverseShift=16-hFFT->pow2Bits;
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
-      TimeOut[i*2  ]=buffer[brValue  ];
-      TimeOut[i*2+1]=buffer[brValue+1];
+      TimeOut[i*2  ] = buffer[brValue  ];
+      TimeOut[i*2+1] = buffer[brValue+1];
    }
 }
 
@@ -1488,17 +1488,17 @@ void RealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
 
    __m128 *localBuffer=(__m128 *)buffer;
 
-   __m128 *A,*B;
-   __m128 *endptr1,*endptr2;
+   __m128 *A, *B;
+   __m128 *endptr1, *endptr2;
    int br1Index, br2Index;
    int br1Value, br2Value;
-   __m128 HRplus,HRminus,HIplus,HIminus;
-   __m128 v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
-   int bitReverseShiftM1=17-h->pow2Bits;
-   int bitReverseShift=bitReverseShiftM1-1;
+   __m128 HRplus, HRminus, HIplus, HIminus;
+   __m128 v1, v2, sin, cos;
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
+   int bitReverseShift = bitReverseShiftM1 - 1;
 
    /*
    *  Butterfly:
@@ -1508,14 +1508,14 @@ void RealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=&localBuffer[h->Points*2];
+   endptr1 = &localBuffer[h->Points * 2];
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=&localBuffer[ButterfliesPerGroup*2];
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = &localBuffer[ButterfliesPerGroup * 2];
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
 //         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
          int sinCosLookup=( ((sSmallRBTable[*((unsigned char *)&iSinCosIndex)]<<8) + (sSmallRBTable[*(((unsigned char *)&iSinCosIndex)+1)]) )>>bitReverseShiftM1)<<sinCosShift;
@@ -1533,17 +1533,17 @@ void RealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
             *B=_mm_sub_ps(*A,v2);
             *(A++)=_mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed + 1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
-   while(br1Index<br2Index)
+   while(br1Index < br2Index)
    {
       br1Value=( ((sSmallRBTable[*((unsigned char *)&br1Index)]<<8) + (sSmallRBTable[*(((unsigned char *)&br1Index)+1)]) )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br1Index);
       br2Value=( ((sSmallRBTable[*((unsigned char *)&br2Index)]<<8) + (sSmallRBTable[*(((unsigned char *)&br2Index)+1)]) )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br2Index);
@@ -1602,25 +1602,25 @@ void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
 
    __m128 *localBuffer=(__m128 *)buffer;
 
-   __m128 *A,*B;
-   __m128 *endptr1,*endptr2;
+   __m128 *A, *B;
+   __m128 *endptr1, *endptr2;
    int br1Index;
-   __m128 HRplus,HRminus,HIplus,HIminus;
-   __m128 v1,v2,sin,cos;
-   int ButterfliesPerGroup=h->Points/2;
-   int pow2BitsMinus1=h->pow2Bits-1;
-   int sinCosShift=(sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
-   int bitReverseShiftM1=17-h->pow2Bits;
+   __m128 HRplus, HRminus, HIplus, HIminus;
+   __m128 v1, v2, sin, cos;
+   auto ButterfliesPerGroup = h->Points / 2;
+   int pow2BitsMinus1 = h->pow2Bits - 1;
+   int sinCosShift = (sSinCosTable.mSinCosTablePow-pow2BitsMinus1);
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
 
    /* Massage input to get the input for a real output sequence. */
-   A=localBuffer+2;
-   B=localBuffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   while(A<B)
+   A = localBuffer + 2;
+   B = localBuffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   while(A < B)
    {
-      int sinCosIndex=br1Index<<sinCosShift;
-      sin=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mSin);
-      cos=_mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mCos);
+      int sinCosIndex = br1Index << sinCosShift;
+      sin = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mSin);
+      cos = _mm_set1_ps(sSinCosTable.mSinCosTable[sinCosIndex].mCos);
       HRminus = _mm_sub_ps(*A,  *B);
       HRplus = _mm_add_ps(HRminus, _mm_mul_ps(*B,  _mm_set1_ps(2.0)));
       HIminus = _mm_sub_ps( *(A+1), *(B+1));
@@ -1649,8 +1649,8 @@ void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
    /* (v1-v2) = buffer[1] == the Fs/2 component */
    v1=_mm_mul_ps(_mm_set1_ps(0.5), _mm_add_ps(localBuffer[0], localBuffer[1]));
    v2=_mm_mul_ps(_mm_set1_ps(0.5), _mm_sub_ps(localBuffer[0], localBuffer[1]));
-   localBuffer[0]=v1;
-   localBuffer[1]=v2;
+   localBuffer[0] = v1;
+   localBuffer[1] = v2;
 
    /*
    *  Butterfly:
@@ -1660,14 +1660,14 @@ void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=localBuffer+h->Points*2;
+   endptr1 = localBuffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=localBuffer+ButterfliesPerGroup*2;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = localBuffer + ButterfliesPerGroup * 2;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
 //         int sinCosLookup=(*SmallVRB[pow2BitsMinus1])(iSinCosIndex)<<sinCosShift;
          int sinCosLookup=( ((sSmallRBTable[*((unsigned char *)&iSinCosIndex)]<<8) + (sSmallRBTable[*(((unsigned char *)&iSinCosIndex)+1)]) )>>bitReverseShiftM1)<<sinCosShift;
@@ -1684,8 +1684,8 @@ void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
             *B=_mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
             *(A++)=_mm_sub_ps(*(B++),v2);
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -1693,34 +1693,34 @@ void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
 
 void ReorderToTime4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
-   __m128 *localBuffer=(__m128 *)buffer;
-   __m128 *localTimeOut=(__m128 *)TimeOut;
-   int bitReverseShift=16-hFFT->pow2Bits;
+   __m128 *localBuffer = (__m128 *)buffer;
+   __m128 *localTimeOut = (__m128 *)TimeOut;
+   int bitReverseShift = 16 - hFFT->pow2Bits;
 
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      localTimeOut[i*2  ]=localBuffer[brValue  ];
-      localTimeOut[i*2+1]=localBuffer[brValue+1];
+      localTimeOut[i*2  ] = localBuffer[brValue  ];
+      localTimeOut[i*2+1] = localBuffer[brValue+1];
    }
 }
 
 void ReorderToFreq4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
-   __m128 *localBuffer=(__m128 *)buffer;
-   __m128 *localRealOut=(__m128 *)RealOut;
-   __m128 *localImagOut=(__m128 *)ImagOut;
-   int bitReverseShift=16-hFFT->pow2Bits;
+   __m128 *localBuffer = (__m128 *)buffer;
+   __m128 *localRealOut = (__m128 *)RealOut;
+   __m128 *localImagOut = (__m128 *)ImagOut;
+   int bitReverseShift = 16 - hFFT->pow2Bits;
 
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      localRealOut[i]=localBuffer[brValue  ];
-      localImagOut[i]=localBuffer[brValue+1];
+      localRealOut[i] = localBuffer[brValue  ];
+      localImagOut[i] = localBuffer[brValue+1];
    }
    localRealOut[0] = localBuffer[0]; // DC component
    localImagOut[0] = _mm_set1_ps(0.0);
@@ -1752,16 +1752,16 @@ void ReorderToFreq4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealO
 */
 void RealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
 {
-   fft_type *A,*B;
-   fft_type *endptr1,*endptr2;
+   fft_type *A, *B;
+   fft_type *endptr1, *endptr2;
    int br1Index, br2Index;
    int br1Value, br2Value;
-   fft_type HRplus,HRminus,HIplus,HIminus;
-   fft_type v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points);
-   int bitReverseShift=24-h->pow2Bits; 
-   int bitReverseShiftM1=bitReverseShift+1;
-   int ButterfliesPerGroup=h->Points/2;
+   fft_type HRplus, HRminus, HIplus, HIminus;
+   fft_type v1, v2, sin, cos;
+   fft_type iToRad = 2 * M_PI/(2 * h->Points);
+   int bitReverseShift = 24 - h->pow2Bits;
+   int bitReverseShiftM1 = bitReverseShift + 1;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /*
    *  Butterfly:
@@ -1771,16 +1771,16 @@ void RealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
    const v4sf zeroes = {0.0,0.0,0.0,0.0};
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -1817,18 +1817,18 @@ void RealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
             *B=(*A-v2);
             *(A++)=*(B++)+2*v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed + 1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
-   int sinCosCalIndex=0;
-   while(br1Index<br2Index)
+   int sinCosCalIndex = 0;
+   while(br1Index < br2Index)
    {
       v4sf sin4_2, cos4_2;
       br1Value=( ((sSmallRBTable[*((unsigned char *)&br1Index)]<<16) + (sSmallRBTable[*(((unsigned char *)&br1Index)+1)]<<8) + sSmallRBTable[*(((unsigned char *)&br1Index)+2)]  )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br1Index);
@@ -1902,19 +1902,19 @@ void InverseRealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
    int br1Index; 
-   fft_type HRplus,HRminus,HIplus,HIminus;
-   fft_type v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points); 
-   int bitReverseShiftM1=25-h->pow2Bits;
+   fft_type HRplus, HRminus, HIplus, HIminus;
+   fft_type v1, v2, sin, cos;
+   fft_type iToRad = 2 * M_PI / (2 * h->Points);
+   int bitReverseShiftM1 = 25 - h->pow2Bits;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=buffer+2;
-   B=buffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   int sinCosCalIndex=0;
-   while(A<B)
+   A = buffer + 2;
+   B = buffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   int sinCosCalIndex = 0;
+   while(A < B)
    {
       v4sf sin4_2, cos4_2;
       if(!sinCosCalIndex)
@@ -1969,15 +1969,15 @@ void InverseRealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -2011,8 +2011,8 @@ void InverseRealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
             *B=(*A+v2)*(fft_type)0.5;
             *(A++)=*(B++)-v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -2020,15 +2020,15 @@ void InverseRealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
 
 void ReorderToFreq1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
-   int bitReverseShift=24-hFFT->pow2Bits;
+   int bitReverseShift = 24 - hFFT->pow2Bits;
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<16) + (sSmallRBTable[*(((unsigned char *)&i)+1)]<<8) + sSmallRBTable[*(((unsigned char *)&i)+2)] )>>bitReverseShift);
 
-      RealOut[i]=buffer[brValue  ];
-      ImagOut[i]=buffer[brValue+1];
+      RealOut[i] = buffer[brValue  ];
+      ImagOut[i] = buffer[brValue+1];
    }
    RealOut[0] = buffer[0]; // DC component
    ImagOut[0] = 0;
@@ -2038,14 +2038,14 @@ void ReorderToFreq1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
 
 void ReorderToTime1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
-   int bitReverseShift=24-hFFT->pow2Bits;
+   int bitReverseShift = 24 - hFFT->pow2Bits;
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<16) + (sSmallRBTable[*(((unsigned char *)&i)+1)]<<8) + sSmallRBTable[*(((unsigned char *)&i)+2)] )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      TimeOut[i*2  ]=buffer[brValue  ];
-      TimeOut[i*2+1]=buffer[brValue+1];
+      TimeOut[i*2  ] = buffer[brValue  ];
+      TimeOut[i*2+1] = buffer[brValue+1];
    }
 }
 
@@ -2060,10 +2060,10 @@ void RealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
    int br1Value, br2Value;
    __m128 HRplus,HRminus,HIplus,HIminus;
    __m128 v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points); 
-   int ButterfliesPerGroup=h->Points/2;
-   int bitReverseShift=24-h->pow2Bits;
-   int bitReverseShiftM1=bitReverseShift+1;
+   fft_type iToRad = 2 * M_PI/(2 * h->Points);
+   auto ButterfliesPerGroup = h->Points / 2;
+   int bitReverseShift = 24 - h->pow2Bits;
+   int bitReverseShiftM1 = bitReverseShift + 1;
 
    /*
    *  Butterfly:
@@ -2073,15 +2073,15 @@ void RealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=&localBuffer[h->Points*2];
+   endptr1 = &localBuffer[h->Points * 2];
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=&localBuffer[ButterfliesPerGroup*2];
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = &localBuffer[ButterfliesPerGroup * 2];
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -2116,18 +2116,18 @@ void RealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
             *B=_mm_sub_ps(*A,v2);
             *(A++)=_mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed+1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
-   int sinCosCalIndex=0;
-   while(br1Index<br2Index)
+   int sinCosCalIndex = 0;
+   while(br1Index < br2Index)
    {
       v4sf sin4_2, cos4_2;
       br1Value=( ((sSmallRBTable[*((unsigned char *)&br1Index)]<<16) + (sSmallRBTable[*(((unsigned char *)&br1Index)+1)]<<8) + sSmallRBTable[*(((unsigned char *)&br1Index)+2)] )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br1Index);
@@ -2207,16 +2207,16 @@ void InverseRealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
    int br1Index; 
    __m128 HRplus,HRminus,HIplus,HIminus;
    __m128 v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points);
-   int bitReverseShiftM1=25-h->pow2Bits;
-   int ButterfliesPerGroup=h->Points/2;
+   fft_type iToRad = 2 * M_PI/(2 * h->Points);
+   int bitReverseShiftM1 = 25 - h->pow2Bits;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=localBuffer+2;
-   B=localBuffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   int sinCosCalIndex=0;
-   while(A<B)
+   A = localBuffer + 2;
+   B = localBuffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   int sinCosCalIndex = 0;
+   while(A < B)
    {
       v4sf sin4_2, cos4_2;
       if(!sinCosCalIndex)
@@ -2275,15 +2275,15 @@ void InverseRealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=localBuffer+h->Points*2;
+   endptr1 = localBuffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=localBuffer+ButterfliesPerGroup*2;
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = localBuffer + ButterfliesPerGroup * 2;
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -2317,8 +2317,8 @@ void InverseRealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
             *B=_mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
             *(A++)=_mm_sub_ps(*(B++),v2);
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -2326,14 +2326,14 @@ void InverseRealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
 
 void ReorderToFreq4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
-   __m128 *localBuffer=(__m128 *)buffer;
-   __m128 *localRealOut=(__m128 *)RealOut;
-   __m128 *localImagOut=(__m128 *)ImagOut;
-   int bitReverseShift=24-hFFT->pow2Bits;
+   __m128 *localBuffer = (__m128 *)buffer;
+   __m128 *localRealOut = (__m128 *)RealOut;
+   __m128 *localImagOut = (__m128 *)ImagOut;
+   int bitReverseShift = 24-hFFT->pow2Bits;
 
 
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<16) + (sSmallRBTable[*(((unsigned char *)&i)+1)]<<8) + sSmallRBTable[*(((unsigned char *)&i)+2)] )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
@@ -2348,17 +2348,17 @@ void ReorderToFreq4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
 
 void ReorderToTime4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
-   __m128 *localBuffer=(__m128 *)buffer;
-   __m128 *localTimeOut=(__m128 *)TimeOut;
-   int bitReverseShift=24-hFFT->pow2Bits;
+   __m128 *localBuffer = (__m128 *)buffer;
+   __m128 *localTimeOut = (__m128 *)TimeOut;
+   int bitReverseShift = 24-hFFT->pow2Bits;
 
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<16) + (sSmallRBTable[*(((unsigned char *)&i)+1)]<<8) + sSmallRBTable[*(((unsigned char *)&i)+2)] )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      localTimeOut[i*2  ]=localBuffer[brValue  ];
-      localTimeOut[i*2+1]=localBuffer[brValue+1];
+      localTimeOut[i*2  ] = localBuffer[brValue  ];
+      localTimeOut[i*2+1] = localBuffer[brValue+1];
    }
 }
 
@@ -2393,10 +2393,10 @@ void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
    int br1Value, br2Value;
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points);
-   int bitReverseShiftM1=17-h->pow2Bits;
-   int bitReverseShift=bitReverseShiftM1-1;
-   int ButterfliesPerGroup=h->Points/2;
+   fft_type iToRad = 2 * M_PI / (2 * h->Points);
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
+   int bitReverseShift = bitReverseShiftM1 - 1;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /*
    *  Butterfly:
@@ -2406,15 +2406,15 @@ void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -2448,18 +2448,18 @@ void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
             *B=(*A-v2);
             *(A++)=*(B++)+2*v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed+1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
-   int sinCosCalIndex=0;
-   while(br1Index<br2Index)
+   int sinCosCalIndex = 0;
+   while(br1Index < br2Index)
    {
       v4sf sin4_2, cos4_2;
       br1Value=( ((sSmallRBTable[*((unsigned char *)&br1Index)]<<8) + (sSmallRBTable[*(((unsigned char *)&br1Index)+1)]) )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br1Index);
@@ -2467,10 +2467,10 @@ void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
       if(!sinCosCalIndex)
       {
          v4sf vx;
-         for(int i=0;i<4;i++)
+         for(int i = 0; i < 4; i++)
             vx.m128_f32[i]=((float)(br1Index+i))*iToRad;
          sincos_ps(vx, &sin4_2, &cos4_2);
-         sin=-sin4_2.m128_f32[0];
+         sin = -sin4_2.m128_f32[0];
          cos=-cos4_2.m128_f32[0];
          sinCosCalIndex++;
       } else {
@@ -2535,17 +2535,17 @@ void InverseRealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
    int br1Index; 
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points); 
+   fft_type iToRad=2 * M_PI / (2 * h->Points);
    int bitReverseShiftM1=17-h->pow2Bits;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=buffer+2;
-   B=buffer+h->Points*2-2;
-   br1Index=1; //h->BitReversed+1;
-   int sinCosCalIndex=0;
-   while(A<B)
+   A = buffer + 2;
+   B = buffer + h->Points * 2 - 2;
+   br1Index = 1; //h->BitReversed + 1;
+   int sinCosCalIndex = 0;
+   while(A < B)
    {
       v4sf sin4_2, cos4_2;
       if(!sinCosCalIndex)
@@ -2600,22 +2600,22 @@ void InverseRealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
          {
             v4sf vx;
-            for(int i=0;i<4;i++) {
-               int brTemp=iSinCosIndex+i;
+            for(int i = 0; i < 4; i++) {
+               int brTemp = iSinCosIndex + i;
                vx.m128_f32[i]=( ((sSmallRBTable[*((unsigned char *)&brTemp)]<<8) + (sSmallRBTable[*(((unsigned char *)&brTemp)+1)]) )>>bitReverseShiftM1)*iToRad;
 //               vx.m128_f32[i]=((fft_type )SmallRB(iSinCosIndex+i,h->pow2Bits-1))*iToRad;
             }
@@ -2642,8 +2642,8 @@ void InverseRealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
             *B=(*A+v2)*(fft_type)0.5;
             *(A++)=*(B++)-v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -2651,14 +2651,14 @@ void InverseRealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
 
 void ReorderToFreq1xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
-   int bitReverseShift=16-hFFT->pow2Bits;
+   int bitReverseShift = 16 - hFFT->pow2Bits;
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
-      RealOut[i]=buffer[brValue  ];
-      ImagOut[i]=buffer[brValue+1];
+      RealOut[i] = buffer[brValue  ];
+      ImagOut[i] = buffer[brValue+1];
    }
    RealOut[0] = buffer[0]; // DC component
    ImagOut[0] = 0;
@@ -2670,30 +2670,30 @@ void ReorderToTime1xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    int bitReverseShift=16-hFFT->pow2Bits;
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      TimeOut[i*2  ]=buffer[brValue  ];
-      TimeOut[i*2+1]=buffer[brValue+1];
+      TimeOut[i*2  ] = buffer[brValue  ];
+      TimeOut[i*2+1] = buffer[brValue+1];
    }
 }
 
 void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
 {
 
-   __m128 *localBuffer=(__m128 *)buffer;
+   __m128 *localBuffer = (__m128 *)buffer;
 
    __m128 *A,*B;
-   __m128 *endptr1,*endptr2;
+   __m128 *endptr1, *endptr2;
    int br1Index, br2Index;
    int br1Value, br2Value;
-   __m128 HRplus,HRminus,HIplus,HIminus;
-   __m128 v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points); 
-   int ButterfliesPerGroup=h->Points/2;
-   int bitReverseShiftM1=17-h->pow2Bits;
-   int bitReverseShift=bitReverseShiftM1-1;
+   __m128 HRplus, HRminus, HIplus, HIminus;
+   __m128 v1, v2, sin, cos;
+   fft_type iToRad = 2 * M_PI/(2 * h->Points);
+   auto ButterfliesPerGroup = h->Points / 2;
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
+   int bitReverseShift = bitReverseShiftM1 - 1;
 
    /*
    *  Butterfly:
@@ -2703,15 +2703,15 @@ void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=&localBuffer[h->Points*2];
+   endptr1 = &localBuffer[h->Points * 2];
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=&localBuffer[ButterfliesPerGroup*2];
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = &localBuffer[ButterfliesPerGroup * 2];
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -2746,18 +2746,18 @@ void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
             *B=_mm_sub_ps(*A,v2);
             *(A++)=_mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
 
-   br1Index=1; // h->BitReversed+1;
-   br2Index=h->Points-1;   //h->BitReversed+h->Points-1;
+   br1Index = 1; // h->BitReversed + 1;
+   br2Index = h->Points - 1;   //h->BitReversed + h->Points - 1;
 
-   int sinCosCalIndex=0;
-   while(br1Index<br2Index)
+   int sinCosCalIndex = 0;
+   while(br1Index < br2Index)
    {
       v4sf sin4_2, cos4_2;
       br1Value=( ((sSmallRBTable[*((unsigned char *)&br1Index)]<<8) + (sSmallRBTable[*(((unsigned char *)&br1Index)+1)]) )>>bitReverseShift); // (*SmallVRB[h->pow2Bits])(br1Index);
@@ -2765,22 +2765,22 @@ void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
       if(!sinCosCalIndex)
       {
          v4sf vx;
-         for(int i=0;i<4;i++)
-            vx.m128_f32[i]=((float)(br1Index+i))*iToRad;
+         for(int i = 0; i < 4; i++)
+            vx.m128_f32[i] = ((float)(br1Index+i)) * iToRad;
          sincos_ps(vx, &sin4_2, &cos4_2);
-         sin=_mm_set1_ps(-sin4_2.m128_f32[0]);
-         cos=_mm_set1_ps(-cos4_2.m128_f32[0]);
+         sin = _mm_set1_ps(-sin4_2.m128_f32[0]);
+         cos = _mm_set1_ps(-cos4_2.m128_f32[0]);
          sinCosCalIndex++;
       } else {
-         sin=_mm_set1_ps(-sin4_2.m128_f32[sinCosCalIndex]);
-         cos=_mm_set1_ps(-cos4_2.m128_f32[sinCosCalIndex]);
-         if(sinCosCalIndex==3)
-            sinCosCalIndex=0;
+         sin = _mm_set1_ps(-sin4_2.m128_f32[sinCosCalIndex]);
+         cos = _mm_set1_ps(-cos4_2.m128_f32[sinCosCalIndex]);
+         if(sinCosCalIndex == 3)
+            sinCosCalIndex = 0;
          else
             sinCosCalIndex++;
       } 
-      A=&localBuffer[br1Value];
-      B=&localBuffer[br2Value];
+      A = &localBuffer[br1Value];
+      B = &localBuffer[br2Value];
       __m128 temp128 = _mm_set1_ps( 2.0);
       HRplus = _mm_add_ps(HRminus = _mm_sub_ps( *A, *B ), _mm_mul_ps(*B, temp128));
       HIplus = _mm_add_ps(HIminus = _mm_sub_ps(*(A+1), *(B+1) ), _mm_mul_ps(*(B+1), temp128));
@@ -2832,18 +2832,18 @@ void InverseRealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
 
    __m128 *localBuffer=(__m128 *)buffer;
 
-   __m128 *A,*B;
-   __m128 *endptr1,*endptr2;
+   __m128 *A, *B;
+   __m128 *endptr1, *endptr2;
    int br1Index; 
-   __m128 HRplus,HRminus,HIplus,HIminus;
-   __m128 v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points);
-   int bitReverseShiftM1=17-h->pow2Bits;
-   int ButterfliesPerGroup=h->Points/2;
+   __m128 HRplus, HRminus, HIplus, HIminus;
+   __m128 v1, v2, sin, cos;
+   fft_type iToRad = 2 * M_PI/(2 * h->Points);
+   int bitReverseShiftM1 = 17 - h->pow2Bits;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=localBuffer+2;
-   B=localBuffer+h->Points*2-2;
+   A = localBuffer + 2;
+   B = localBuffer + h->Points * 2 - 2;
    br1Index=1; //h->BitReversed+1;
    int sinCosCalIndex=0;
    while(A<B)
@@ -2905,15 +2905,15 @@ void InverseRealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=localBuffer+h->Points*2;
+   endptr1 = localBuffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=localBuffer;
-      B=localBuffer+ButterfliesPerGroup*2;
-      int sinCosCalIndex=0;
-      int iSinCosIndex=0;
-      while(A<endptr1)
+      A = localBuffer;
+      B = localBuffer + ButterfliesPerGroup * 2;
+      int sinCosCalIndex = 0;
+      int iSinCosIndex = 0;
+      while(A < endptr1)
       {
          v4sf sin4_2, cos4_2;
          if(!sinCosCalIndex)
@@ -2947,8 +2947,8 @@ void InverseRealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
             *B=_mm_mul_ps(_mm_add_ps(*A, v2), _mm_set1_ps(0.5));
             *(A++)=_mm_sub_ps(*(B++),v2);
          }
-         A=B;
-         B=&B[ButterfliesPerGroup*2];
+         A = B;
+         B = &B[ButterfliesPerGroup * 2];
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -2963,7 +2963,7 @@ void ReorderToFreq4xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
 
 
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
+   for(size_t i = 1; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
@@ -2983,12 +2983,12 @@ void ReorderToTime4xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
    int bitReverseShift=16-hFFT->pow2Bits;
 
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       int brValue;
       brValue=( ((sSmallRBTable[*((unsigned char *)&i)]<<8) + (sSmallRBTable[*(((unsigned char *)&i)+1)]) )>>bitReverseShift);
 //      brValue=(*SmallVRB[hFFT->pow2Bits])(i);
-      localTimeOut[i*2  ]=localBuffer[brValue  ];
-      localTimeOut[i*2+1]=localBuffer[brValue+1];
+      localTimeOut[i*2  ] = localBuffer[brValue  ];
+      localTimeOut[i*2+1] = localBuffer[brValue+1];
    }
 }
 

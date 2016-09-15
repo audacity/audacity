@@ -42,6 +42,7 @@ static bool bStopWatchStarted = false;
 
 void diagnostics_do_diag( t_diag_struct * pDiag ){
    wxLog * pLog = wxLog::SetActiveTarget(NULL);
+   // this macro is empty if wxWidgets is not compiled in debug mode
    wxLogDebug( wxT("%s"), pDiag->pMessage );
    wxLog::SetActiveTarget(pLog);
 }

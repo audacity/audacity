@@ -124,7 +124,7 @@ private:
    // EffectEqualization implementation
 
    // Number of samples in an FFT window
-   enum {windowSize=16384};   //MJS - work out the optimum for this at run time?  Have a dialog box for it?
+   enum : size_t {windowSize=16384};   //MJS - work out the optimum for this at run time?  Have a dialog box for it?
 
    // Low frequency of the FFT.  20Hz is the
    // low range of human hearing
@@ -133,7 +133,7 @@ private:
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
    bool CalcFilter();
-   void Filter(sampleCount len, float *buffer);
+   void Filter(size_t len, float *buffer);
    
    void Flatten();
    void ForceRecalc();
@@ -193,7 +193,7 @@ private:
    float *mFFTBuffer;
    float *mFilterFuncR;
    float *mFilterFuncI;
-   int mM;
+   size_t mM;
    wxString mCurveName;
    bool mLin;
    float mdBMax;
@@ -212,7 +212,7 @@ private:
    bool mDisallowCustom;
    double mLoFreq;
    double mHiFreq;
-   long mWindowSize;
+   size_t mWindowSize;
    bool mDirty;
    int mSlidersOld[NUMBER_OF_BANDS];
    double mEQVals[NUMBER_OF_BANDS+1];
@@ -315,7 +315,7 @@ private:
    wxRect mEnvRect;
    int mWidth;
    int mHeight;
-//   long mWindowSize;
+//   size_t mWindowSize;
 //   float *mFilterFuncR;
 //   float *mFilterFuncI;
    float *mOutr;

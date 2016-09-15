@@ -385,7 +385,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             //   ? ControlToolBar::PlayAppearance::Seek
             //   : ControlToolBar::PlayAppearance::Scrub;
                  ControlToolBar::PlayAppearance::Straight;
-            const bool cutPreview = false;
+//            const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
             static const double maxScrubSpeedBase =
@@ -686,7 +686,7 @@ void Scrubber::OnActivateOrDeactivateApp(wxActivateEvent &event)
 
 void Scrubber::Forwarder::OnMouse(wxMouseEvent &event)
 {
-   auto ruler = scrubber.mProject->GetRulerPanel();
+   //auto ruler = scrubber.mProject->GetRulerPanel();
    auto isScrubbing = scrubber.IsScrubbing();
    if (isScrubbing && !event.HasAnyModifiers()) {
       if(event.LeftDown() && scrubber.MayDragToSeek()) {

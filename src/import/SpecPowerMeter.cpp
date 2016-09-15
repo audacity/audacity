@@ -24,10 +24,10 @@ measurements in subbands or in the entire signal band.
 
 #include "../FFT.h"
 
-SpecPowerMeter::SpecPowerMeter(int sigLen)
+SpecPowerMeter::SpecPowerMeter(size_t sigLen)
+  : mSigLen(sigLen)
 {
-   mSigLen = sigLen;
-   
+
    // Init buffers
    mSigI = new float[sigLen];
    mSigFR = new float[sigLen];
@@ -85,7 +85,7 @@ int SpecPowerMeter::Freq2Bin(float fc)
    
    // There is no round() in (older) MSVSs ...
    bin = floor((double)fc * mSigLen);
-   bin %= mSigLen;
+   bin %= (int)mSigLen;
    
    return bin;   
 }

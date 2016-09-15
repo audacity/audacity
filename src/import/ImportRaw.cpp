@@ -52,7 +52,6 @@ and sample size to help you importing data of an unknown format.
 
 // #include "RawAudioGuess.h"
 #include "MultiFormatReader.h"
-#include "SpecPowerMeter.h"
 #include "FormatClassifier.h"
 
 #include "sndfile.h"

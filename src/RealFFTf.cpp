@@ -54,11 +54,9 @@
 *  Initialize the Sine table and Twiddle pointers (bit-reversed pointers)
 *  for the FFT routine.
 */
-HFFT InitializeFFT(int fftlen)
+HFFT InitializeFFT(size_t fftlen)
 {
-   int i;
    int temp;
-   int mask;
    HFFT h;
 
    if((h=(HFFT)malloc(sizeof(FFTParam)))==NULL)
@@ -71,7 +69,7 @@ HFFT InitializeFFT(int fftlen)
    *  The full FFT output can be reconstructed from this FFT's output.
    *  (This optimization can be made since the data is real.)
    */
-   h->Points = fftlen/2;
+   h->Points = fftlen / 2;
 
    if((h->SinTable=(fft_type *)malloc(2*h->Points*sizeof(fft_type)))==NULL)
    {
@@ -85,16 +83,16 @@ HFFT InitializeFFT(int fftlen)
       exit(8);
    }
 
-   for(i=0;i<h->Points;i++)
+   for(size_t i = 0; i < h->Points; i++)
    {
-      temp=0;
-      for(mask=h->Points/2;mask>0;mask >>= 1)
-         temp=(temp >> 1) + (i&mask ? h->Points : 0);
+      temp = 0;
+      for(size_t mask = h->Points / 2; mask > 0; mask >>= 1)
+         temp = (temp >> 1) + (i & mask ? h->Points : 0);
 
-      h->BitReversed[i]=temp;
+      h->BitReversed[i] = temp;
    }
 
-   for(i=0;i<h->Points;i++)
+   for(size_t i = 0; i < h->Points; i++)
    {
       h->SinTable[h->BitReversed[i]  ]=(fft_type)-sin(2*M_PI*i/(2*h->Points));
       h->SinTable[h->BitReversed[i]+1]=(fft_type)-cos(2*M_PI*i/(2*h->Points));
@@ -102,9 +100,9 @@ HFFT InitializeFFT(int fftlen)
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    // NEW SSE FFT routines work on live data
-   for(i=0;i<32;i++)
-      if((1<<i)&fftlen)
-         h->pow2Bits=i;
+   for(size_t i = 0; i < 32; i++)
+      if((1 << i) & fftlen)
+         h->pow2Bits = i;
 #endif
 
    return h;
@@ -115,25 +113,29 @@ HFFT InitializeFFT(int fftlen)
 */
 void EndFFT(HFFT h)
 {
-   if(h->Points>0) {
+   if(h->Points > 0) {
       free(h->BitReversed);
       free(h->SinTable);
    }
-   h->Points=0;
+   h->Points = 0;
    free(h);
 }
 
-#define MAX_HFFT 10
+enum : size_t { MAX_HFFT = 10 };
 static HFFT hFFTArray[MAX_HFFT] = { NULL };
 static int nFFTLockCount[MAX_HFFT] = { 0 };
 
 /* Get a handle to the FFT tables of the desired length */
 /* This version keeps common tables rather than allocating a NEW table every time */
-HFFT GetFFT(int fftlen)
+HFFT GetFFT(size_t fftlen)
 {
-   int h,n = fftlen/2;
-   for(h=0; (h<MAX_HFFT) && (hFFTArray[h] != NULL) && (n != hFFTArray[h]->Points); h++);
-   if(h<MAX_HFFT) {
+   size_t h = 0;
+   auto n = fftlen/2;
+   for(;
+       (h < MAX_HFFT) && (hFFTArray[h] != NULL) && (n != hFFTArray[h]->Points);
+       h++)
+      ;
+   if(h < MAX_HFFT) {
       if(hFFTArray[h] == NULL) {
          hFFTArray[h] = InitializeFFT(fftlen);
          nFFTLockCount[h] = 0;
@@ -142,7 +144,7 @@ HFFT GetFFT(int fftlen)
       return hFFTArray[h];
    } else {
       // All buffers used, so fall back to allocating a NEW set of tables
-      return InitializeFFT(fftlen);;
+      return InitializeFFT(fftlen);
    }
 }
 
@@ -197,7 +199,7 @@ void RealFFTf(fft_type *buffer,HFFT h)
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points/2;
 
    /*
    *  Butterfly:
@@ -207,37 +209,37 @@ void RealFFTf(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      sptr=h->SinTable;
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      sptr = h->SinTable;
 
-      while(A<endptr1)
+      while(A < endptr1)
       {
-         sin=*sptr;
-         cos=*(sptr+1);
-         endptr2=B;
-         while(A<endptr2)
+         sin = *sptr;
+         cos = *(sptr+1);
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=*B*cos + *(B+1)*sin;
-            v2=*B*sin - *(B+1)*cos;
-            *B=(*A+v1);
-            *(A++)=*(B++)-2*v1;
-            *B=(*A-v2);
-            *(A++)=*(B++)+2*v2;
+            v1 = *B * cos + *(B + 1) * sin;
+            v2 = *B * sin - *(B + 1) * cos;
+            *B = (*A + v1);
+            *(A++) = *(B++) - 2 * v1;
+            *B = (*A - v2);
+            *(A++) = *(B++) + 2 * v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
-         sptr+=2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
+         sptr += 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
-   br1=h->BitReversed+1;
-   br2=h->BitReversed+h->Points-1;
+   br1 = h->BitReversed + 1;
+   br2 = h->BitReversed + h->Points - 1;
 
    while(br1<br2)
    {
@@ -299,12 +301,12 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    fft_type HRplus,HRminus,HIplus,HIminus;
    fft_type v1,v2,sin,cos;
 
-   int ButterfliesPerGroup=h->Points/2;
+   auto ButterfliesPerGroup = h->Points / 2;
 
    /* Massage input to get the input for a real output sequence. */
-   A=buffer+2;
-   B=buffer+h->Points*2-2;
-   br1=h->BitReversed+1;
+   A = buffer + 2;
+   B = buffer + h->Points * 2 - 2;
+   br1 = h->BitReversed + 1;
    while(A<B)
    {
       sin=h->SinTable[*br1];
@@ -344,30 +346,30 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    *     Bin-----Bout
    */
 
-   endptr1=buffer+h->Points*2;
+   endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup>0)
+   while(ButterfliesPerGroup > 0)
    {
-      A=buffer;
-      B=buffer+ButterfliesPerGroup*2;
-      sptr=h->SinTable;
+      A = buffer;
+      B = buffer + ButterfliesPerGroup * 2;
+      sptr = h->SinTable;
 
-      while(A<endptr1)
+      while(A < endptr1)
       {
-         sin=*(sptr++);
-         cos=*(sptr++);
-         endptr2=B;
-         while(A<endptr2)
+         sin = *(sptr++);
+         cos = *(sptr++);
+         endptr2 = B;
+         while(A < endptr2)
          {
-            v1=*B*cos - *(B+1)*sin;
-            v2=*B*sin + *(B+1)*cos;
-            *B=(*A+v1)*(fft_type)0.5;
-            *(A++)=*(B++)-v1;
-            *B=(*A+v2)*(fft_type)0.5;
-            *(A++)=*(B++)-v2;
+            v1 = *B * cos - *(B + 1) * sin;
+            v2 = *B * sin + *(B + 1) * cos;
+            *B = (*A + v1) * (fft_type)0.5;
+            *(A++) = *(B++) - v1;
+            *B = (*A + v2) * (fft_type)0.5;
+            *(A++) = *(B++) - v2;
          }
-         A=B;
-         B+=ButterfliesPerGroup*2;
+         A = B;
+         B += ButterfliesPerGroup * 2;
       }
       ButterfliesPerGroup >>= 1;
    }
@@ -377,9 +379,9 @@ void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
 		   fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
-   for(int i=1;i<hFFT->Points;i++) {
-      RealOut[i]=buffer[hFFT->BitReversed[i]  ];
-      ImagOut[i]=buffer[hFFT->BitReversed[i]+1];
+   for(size_t i = 1; i < hFFT->Points; i++) {
+      RealOut[i] = buffer[hFFT->BitReversed[i]  ];
+      ImagOut[i] = buffer[hFFT->BitReversed[i]+1];
    }
    RealOut[0] = buffer[0]; // DC component
    ImagOut[0] = 0;
@@ -390,7 +392,7 @@ void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
 void ReorderToTime(HFFT hFFT, const fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
-   for(int i=0;i<hFFT->Points;i++) {
+   for(size_t i = 0; i < hFFT->Points; i++) {
       TimeOut[i*2  ]=buffer[hFFT->BitReversed[i]  ];
       TimeOut[i*2+1]=buffer[hFFT->BitReversed[i]+1];
    }

@@ -448,7 +448,7 @@ void ControlToolBar::EnableDisableButtons()
    mRewind->SetEnabled(!playing && !recording);
    mFF->SetEnabled(tracks && !playing && !recording);
 
-   auto pProject = GetActiveProject();
+   //auto pProject = GetActiveProject();
    mPause->SetEnabled(CanStopAudioStream());
 }
 

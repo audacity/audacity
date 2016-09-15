@@ -84,7 +84,7 @@ static void GetAllSeqBlocks(AudacityProject *project,
 static void ReplaceBlockFiles(AudacityProject *project,
                               ReplacedBlockFileHash &hash)
 {
-   const auto &dirManager = project->GetDirManager();
+   //const auto &dirManager = project->GetDirManager();
    BlockPtrArray blocks;
    GetAllSeqBlocks(project, &blocks);
 

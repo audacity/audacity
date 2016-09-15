@@ -1779,14 +1779,14 @@ AdornedRulerPanel *QuickPlayRulerOverlay::GetRuler() const
    return mPartner.mProject->GetRulerPanel();
 }
 
-std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize size)
+std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
 {
    const auto x = mOldQPIndicatorPos;
    if (x >= 0) {
       // These dimensions are always sufficient, even if a little
       // excessive for the small triangle:
       const int width = IndicatorBigWidth() * 3 / 2;
-      const auto height = IndicatorHeightForWidth(width);
+      //const auto height = IndicatorHeightForWidth(width);
 
       const int indsize = width / 2;
 
@@ -1803,7 +1803,7 @@ std::pair<wxRect, bool> QuickPlayRulerOverlay::DoGetRectangle(wxSize size)
       return { {}, mNewQPIndicatorPos >= 0 };
 }
 
-void QuickPlayRulerOverlay::Draw(OverlayPanel &panel, wxDC &dc)
+void QuickPlayRulerOverlay::Draw(OverlayPanel & /*panel*/, wxDC &dc)
 {
    mOldQPIndicatorPos = mNewQPIndicatorPos;
    if (mOldQPIndicatorPos >= 0) {
@@ -2110,7 +2110,7 @@ void AdornedRulerPanel::InvalidateRuler()
 }
 
 namespace {
-   const wxString StartScrubbingMessage(const Scrubber &scrubber)
+   const wxString StartScrubbingMessage(const Scrubber &/*scrubber*/)
    {
       /* i18n-hint: These commands assist the user in finding a sound by ear. ...
        "Scrubbing" is variable-speed playback, ...
@@ -2573,7 +2573,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
       CaptureMouse();
 }
 
-void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX)
+void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
 {
    bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
@@ -2878,7 +2878,7 @@ void AdornedRulerPanel::UpdateButtonStates()
    }
 }
 
-void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & event)
+void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 {
    mProject->OnTogglePinnedHead();
    UpdateButtonStates();

@@ -41,13 +41,10 @@ public:
 
    // Make invalid cache
    SpecCache()
-      : len(-1)
-      , algorithm(-1)
+      : algorithm(-1)
       , pps(-1.0)
       , start(-1.0)
       , windowType(-1)
-      , windowSize(-1)
-      , zeroPaddingFactor(-1)
       , frequencyGain(-1)
 #if 0
       , freq(NULL)
@@ -58,9 +55,9 @@ public:
    }
 
    // Make valid cache, to be filled in
-   SpecCache(int cacheLen, int algorithm_,
-      double pps_, double start_, int windowType_, int windowSize_,
-      int zeroPaddingFactor_, int frequencyGain_)
+   SpecCache(size_t cacheLen, int algorithm_,
+      double pps_, double start_, int windowType_, size_t windowSize_,
+      unsigned zeroPaddingFactor_, int frequencyGain_)
       : len(cacheLen)
       , algorithm(algorithm_)
       , pps(pps_)
@@ -102,17 +99,17 @@ public:
 
    void Populate
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
-       int copyBegin, int copyEnd, int numPixels,
+       int copyBegin, int copyEnd, size_t numPixels,
        sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond);
 
-   const int          len; // counts pixels, not samples
+   const size_t       len { 0 }; // counts pixels, not samples
    const int          algorithm;
    const double       pps;
    const double       start;
    const int          windowType;
-   const int          windowSize;
-   const int          zeroPaddingFactor;
+   const size_t       windowSize { 0 };
+   const unsigned     zeroPaddingFactor { 0 };
    const int          frequencyGain;
    std::vector<float> freq;
    std::vector<sampleCount> where;
@@ -280,7 +277,7 @@ public:
                        double t0, double pixelsPerSecond, bool &isLoadingOD) const;
    bool GetSpectrogram(WaveTrackCache &cache,
                        const float *& spectrogram, const sampleCount *& where,
-                       int numPixels,
+                       size_t numPixels,
                        double t0, double pixelsPerSecond) const;
    bool GetMinMax(float *min, float *max, double t0, double t1) const;
    bool GetRMS(float *rms, double t0, double t1);

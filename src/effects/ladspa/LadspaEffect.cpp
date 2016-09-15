@@ -1411,7 +1411,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             item = safenew wxStaticText(w, 0, labelText + wxT(":"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-            LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
+            //LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
 
             wxString bound;
             float lower = 0.0;

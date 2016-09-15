@@ -606,7 +606,7 @@ auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 
 void SimpleBlockFile::Recover(){
    wxFFile file(mFileName.GetFullPath(), wxT("wb"));
-   int i;
+   //int i;
 
    if( !file.IsOpened() ){
       // Can't do anything else.

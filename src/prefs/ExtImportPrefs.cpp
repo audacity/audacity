@@ -113,7 +113,9 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
             RuleTable->SetRowLabelSize (0);
             RuleTable->SetSelectionMode (wxGrid::wxGridSelectRows);
-            RuleTable->AutoSizeColumns ();
+            // call SetMinSize to enable scrolling on large content
+            RuleTable->Fit();
+            RuleTable->SetMinSize(RuleTable->GetSize());
 
             ExtImportPrefsDropTarget *dragtarget1 {};
             RuleTable->SetDropTarget (
@@ -216,7 +218,9 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    ImportPlugin *ip1, *ip2;
 
    auto &items = Importer::Get().GetImportItems();
-   ExtImportItem *item = items[last_selected].get();
+   ExtImportItem *item = NULL;
+   if( last_selected >= 0 )
+      item = items[last_selected].get();
 
    t = PluginList->GetItemText (row1);
    d = PluginList->GetItemData (row1);
@@ -227,6 +231,8 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    {
       PluginList->SetItemData (row1, PluginList->GetItemData (row2));
       PluginList->SetItemData (row2, d);
+      if( !item )
+         return;
       if (d == -1)
       {
          item->divider = row2;
@@ -238,6 +244,8 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    }
    else
    {
+      if( !item )
+         return;
       ip1 = item->filter_objects[d];
       ip2 = item->filter_objects[d2];
       item->filter_objects[d] = ip2;
@@ -330,7 +338,9 @@ void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& WXUNUSED(event))
    dragtext2->SetText(wxT(""));
    dragSource.SetData(*dragtext2);
    mDragFocus = PluginList;
-   wxDragResult result = dragSource.DoDragDrop(TRUE);
+   if( mDragFocus == NULL )
+      return;
+   wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
    mDragFocus = NULL;
    switch (result)
    {
@@ -644,7 +654,7 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    dragtext1->SetText(wxT(""));
    dragSource.SetData(*dragtext1);
    mDragFocus = RuleTable;
-   wxDragResult result = dragSource.DoDragDrop(TRUE);
+   wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
    mDragFocus = NULL;
    switch (result)
    {
@@ -711,8 +721,8 @@ bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
    Grid *RuleTable = mPrefs->GetRuleTable();
    if (mPrefs->GetDragFocus() == RuleTable)
    {
-      if (RuleTable->YToRow (y -
-            RuleTable->GetColLabelSize ()) == wxNOT_FOUND)
+      if (RuleTable->YToRow(
+            RuleTable->CalcUnscrolledPosition(wxPoint(x, y)).y) == wxNOT_FOUND)
          return false;
    }
    else if (mPrefs->GetDragFocus() == PluginList)
@@ -746,8 +756,7 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
    if (mPrefs->GetDragFocus() == RuleTable)
    {
       int row;
-      row = RuleTable->YToRow (y -
-         RuleTable->GetColLabelSize ());
+      row = RuleTable->YToRow(RuleTable->CalcUnscrolledPosition(wxPoint(x, y)).y);
       if (row == wxNOT_FOUND)
          return wxDragNone;
 
@@ -785,7 +794,7 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
                wxLIST_STATE_SELECTED);
       }
    }
-   return wxDragCopy;
+   return wxDragMove;
 }
 
 void ExtImportPrefsDropTarget::OnLeave()

@@ -61,7 +61,7 @@
  * input array, and that NumSamples must be a power of two.
  */
 
-void PowerSpectrum(int NumSamples, const float *In, float *Out);
+void PowerSpectrum(size_t NumSamples, const float *In, float *Out);
 
 /*
  * Computes an FFT when the input data is real but you still
@@ -70,7 +70,7 @@ void PowerSpectrum(int NumSamples, const float *In, float *Out);
  * NumSamples must be a power of two.
  */
 
-void RealFFT(int NumSamples,
+void RealFFT(size_t NumSamples,
              const float *RealIn, float *RealOut, float *ImagOut);
 
 /*
@@ -78,7 +78,7 @@ void RealFFT(int NumSamples,
  * so the output is purely real.  NumSamples must be a power of
  * two.
  */
-void InverseRealFFT(int NumSamples,
+void InverseRealFFT(size_t NumSamples,
 		    const float *RealIn, const float *ImagIn, float *RealOut);
 
 /*
@@ -87,7 +87,7 @@ void InverseRealFFT(int NumSamples,
  * inverse transform as well.
  */
 
-void FFT(int NumSamples,
+void FFT(size_t NumSamples,
          bool InverseTransform,
          const float *RealIn, const float *ImagIn, float *RealOut, float *ImagOut);
 
@@ -115,7 +115,7 @@ enum eWindowFunctions
    eWinFuncCount
 };
 
-void WindowFunc(int whichFunction, int NumSamples, float *data);
+void WindowFunc(int whichFunction, size_t NumSamples, float *data);
 
 /*
  * Multiply values in data by values of the chosen function
@@ -123,7 +123,7 @@ void WindowFunc(int whichFunction, int NumSamples, float *data);
  * otherwise about (NumSamples - 1) / 2
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
-void NewWindowFunc(int whichFunction, int NumSamples, bool extraSample, float *data);
+void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *data);
 
 /*
  * Multiply values in data by derivative of the chosen function, assuming
@@ -132,7 +132,7 @@ void NewWindowFunc(int whichFunction, int NumSamples, bool extraSample, float *d
  * otherwise about (NumSamples - 1) / 2
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
-void DerivativeOfWindowFunc(int whichFunction, int NumSamples, bool extraSample, float *data);
+void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *data);
 
 /*
  * Returns the name of the windowing function (for UI display)

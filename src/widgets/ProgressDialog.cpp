@@ -1076,7 +1076,7 @@ bool ProgressDialog::Create(const wxString & title,
    // Set this boolean to indicate if we are using the "Elapsed" labels
    m_bShowElapsedTime = !(flags & pdlgHideElapsedTime);
    // Set this boolean to indicate if we confirm the Cancel/Stop actions
-   m_bConfirmAction = (flags & pdlgConfirmStopCancel);
+   m_bConfirmAction = (flags & pdlgConfirmStopCancel)!=0;
 
    bool success = wxDialogWrapper::Create(parent,
                                    wxID_ANY,

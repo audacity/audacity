@@ -57,7 +57,6 @@ class WaveCache {
 public:
    WaveCache()
       : dirty(-1)
-      , len(-1)
       , start(-1)
       , pps(0)
       , rate(-1)
@@ -70,7 +69,7 @@ public:
    {
    }
 
-   WaveCache(int len_, double pixelsPerSecond, double rate_, double t0, int dirty_)
+   WaveCache(size_t len_, double pixelsPerSecond, double rate_, double t0, int dirty_)
       : dirty(dirty_)
       , len(len_)
       , start(t0)
@@ -94,7 +93,7 @@ public:
    }
 
    int          dirty;
-   const int    len; // counts pixels, not samples
+   const size_t len { 0 }; // counts pixels, not samples
    const double start;
    const double pps;
    const int    rate;
@@ -108,10 +107,12 @@ public:
    class InvalidRegion
    {
    public:
-     InvalidRegion(int s, int e):start(s),end(e){}
+     InvalidRegion(size_t s, size_t e)
+         : start(s), end(e)
+     {}
      //start and end pixel count.  (not samples)
-     int start;
-     int end;
+     size_t start;
+     size_t end;
    };
 
 
@@ -157,7 +158,7 @@ public:
             //if the regions intersect OR are pixel adjacent
             InvalidRegion &region = mRegions[i];
             if(region.start <= invalEnd+1
-               && region.end >= invalStart-1)
+               && region.end + 1 >= invalStart)
             {
                //take the union region
                if(region.start > invalStart)
@@ -183,8 +184,8 @@ public:
 
       if(!added)
       {
-         InvalidRegion newRegion(invalStart,invalEnd);
-         mRegions.insert(mRegions.begin(),newRegion);
+         InvalidRegion newRegion(invalStart, invalEnd);
+         mRegions.insert(mRegions.begin(), newRegion);
       }
 
 
@@ -195,7 +196,7 @@ public:
          InvalidRegion &region = mRegions[i];
          InvalidRegion &prevRegion = mRegions[i - 1];
          if(region.start <= prevRegion.end+1
-            && region.end >= prevRegion.start-1)
+            && region.end + 1 >= prevRegion.start)
          {
             //take the union region
             if(region.start > prevRegion.start)
@@ -218,8 +219,8 @@ public:
 
    //lock before calling these in a section.  unlock after finished.
    int GetNumInvalidRegions() const {return mRegions.size();}
-   int GetInvalidRegionStart(int i) const {return mRegions[i].start;}
-   int GetInvalidRegionEnd(int i) const {return mRegions[i].end;}
+   size_t GetInvalidRegionStart(int i) const {return mRegions[i].start;}
+   size_t GetInvalidRegionEnd(int i) const {return mRegions[i].end;}
 
    void ClearInvalidRegions()
    {
@@ -228,8 +229,8 @@ public:
 
    void LoadInvalidRegion(int ii, Sequence *sequence, bool updateODCount)
    {
-      const int invStart = GetInvalidRegionStart(ii);
-      const int invEnd = GetInvalidRegionEnd(ii);
+      const auto invStart = GetInvalidRegionStart(ii);
+      const auto invEnd = GetInvalidRegionEnd(ii);
 
       //before check number of ODPixels
       int regionODPixels = 0;
@@ -258,7 +259,7 @@ public:
          LoadInvalidRegion(i, sequence, updateODCount);
    }
 
-   int CountODPixels(int start, int end)
+   int CountODPixels(size_t start, size_t end)
    {
       using namespace std;
       const int *begin = &bl[0];
@@ -272,23 +273,23 @@ protected:
 };
 
 static void ComputeSpectrumUsingRealFFTf
-   (float * __restrict buffer, HFFT hFFT, const float * __restrict window, int len, float * __restrict out)
+   (float * __restrict buffer, HFFT hFFT, const float * __restrict window, size_t len, float * __restrict out)
 {
-   int i;
-   if(len > hFFT->Points*2)
-      len = hFFT->Points*2;
-   for(i=0; i<len; i++)
+   size_t i;
+   if(len > hFFT->Points * 2)
+      len = hFFT->Points * 2;
+   for(i = 0; i < len; i++)
       buffer[i] *= window[i];
-   for( ; i<(hFFT->Points*2); i++)
-      buffer[i]=0; // zero pad as needed
+   for( ; i < (hFFT->Points * 2); i++)
+      buffer[i] = 0; // zero pad as needed
    RealFFTf(buffer, hFFT);
    // Handle the (real-only) DC
-   float power = buffer[0]*buffer[0];
+   float power = buffer[0] * buffer[0];
    if(power <= 0)
       out[0] = -160.0;
    else
-      out[0] = 10.0*log10f(power);
-   for(i=1;i<hFFT->Points;i++) {
+      out[0] = 10.0 * log10f(power);
+   for(i = 1; i < hFFT->Points; i++) {
       const int index = hFFT->BitReversed[i];
       const float re = buffer[index], im = buffer[index + 1];
       power = re * re + im * im;
@@ -435,7 +436,8 @@ void WaveClip::AddInvalidRegion(sampleCount startSample, sampleCount endSample)
 namespace {
 
 inline
-void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int newLen,
+void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
+         size_t newLen,
          double t0, double rate, double samplesPerPixel,
          int &oldX0, double &correction)
 {
@@ -478,7 +480,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int ne
 }
 
 inline void
-fillWhere(std::vector<sampleCount> &where, int len, double bias, double correction,
+fillWhere(std::vector<sampleCount> &where, size_t len, double bias, double correction,
           double t0, double rate, double samplesPerPixel)
 {
    // Be careful to make the first value non-negative
@@ -500,10 +502,10 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 {
    const bool allocated = (display.where != 0);
 
-   const int numPixels = display.width;
+   const size_t numPixels = (int)display.width;
 
-   int p0 = 0;         // least column requiring computation
-   int p1 = numPixels; // greatest column requiring computation, plus one
+   size_t p0 = 0;         // least column requiring computation
+   size_t p1 = numPixels; // greatest column requiring computation, plus one
 
    float *min;
    float *max;
@@ -558,7 +560,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
       int oldX0 = 0;
       double correction = 0.0;
-      int copyBegin = 0, copyEnd = 0;
+      size_t copyBegin = 0, copyEnd = 0;
       if (match) {
          findCorrection(oldCache->where, oldCache->len, numPixels,
             t0, mRate, samplesPerPixel,
@@ -566,9 +568,10 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          // Remember our first pixel maps to oldX0 in the old cache,
          // possibly out of bounds.
          // For what range of pixels can data be copied?
-         copyBegin = std::min(numPixels, std::max(0, -oldX0));
-         copyEnd = std::min(numPixels,
-            copyBegin + oldCache->len - std::max(0, oldX0)
+         copyBegin = std::min<size_t>(numPixels, std::max(0, -oldX0));
+         copyEnd = std::min<size_t>(numPixels,
+            std::max(0,
+               (int)copyBegin + (int)oldCache->len - std::max(0, oldX0))
          );
       }
       if (!(copyEnd > copyBegin))
@@ -603,7 +606,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          // Copy what we can from the old cache.
          const int length = copyEnd - copyBegin;
          const size_t sizeFloats = length * sizeof(float);
-         const int srcIdx = copyBegin + oldX0;
+         const int srcIdx = (int)copyBegin + oldX0;
          memcpy(&min[copyBegin], &oldCache->min[srcIdx], sizeFloats);
          memcpy(&max[copyBegin], &oldCache->max[srcIdx], sizeFloats);
          memcpy(&rms[copyBegin], &oldCache->rms[srcIdx], sizeFloats);
@@ -618,11 +621,11 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       /* handle values in the append buffer */
 
       auto numSamples = mSequence->GetNumSamples();
-      int a;
+      auto a = p0;
 
       // Not all of the required columns might be in the sequence.
       // Some might be in the append buffer.
-      for (a = p0; a < p1; ++a) {
+      for (; a < p1; ++a) {
          if (where[a + 1] > numSamples)
             break;
       }
@@ -630,11 +633,9 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       // Handle the columns that land in the append buffer.
       //compute the values that are outside the overlap from scratch.
       if (a < p1) {
-         int i;
-
          sampleFormat seqFormat = mSequence->GetSampleFormat();
          bool didUpdate = false;
-         for(i=a; i<p1; i++) {
+         for(auto i = a; i < p1; i++) {
             auto left = std::max(sampleCount{ 0 },
                                  where[i] - numSamples);
             auto right = std::min(sampleCount{ mAppendBufferLen },
@@ -724,7 +725,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 namespace {
 
 void ComputeSpectrogramGainFactors
-   (int fftLen, double rate, int frequencyGain, std::vector<float> &gainFactors)
+   (size_t fftLen, double rate, int frequencyGain, std::vector<float> &gainFactors)
 {
    if (frequencyGain > 0) {
       // Compute a frequency-dependent gain factor
@@ -733,7 +734,7 @@ void ComputeSpectrogramGainFactors
       // This is the reciprocal of the bin number of 1000 Hz:
       const double factor = ((double)rate / (double)fftLen) / 1000.0;
 
-      int half = fftLen / 2;
+      auto half = fftLen / 2;
       gainFactors.reserve(half);
       // Don't take logarithm of zero!  Let bin 0 replicate the gain factor for bin 1.
       gainFactors.push_back(frequencyGain*log10(factor));
@@ -760,8 +761,8 @@ bool SpecCache::Matches
       ppsMatch &&
       dirty == dirty_ &&
       windowType == settings.windowType &&
-      windowSize == settings.windowSize &&
-      zeroPaddingFactor == settings.zeroPaddingFactor &&
+      windowSize == settings.WindowSize() &&
+      zeroPaddingFactor == settings.ZeroPaddingFactor() &&
       frequencyGain == settings.frequencyGain &&
       algorithm == settings.algorithm;
 }
@@ -778,7 +779,7 @@ bool SpecCache::CalculateOneSpectrum
    bool result = false;
    const bool reassignment =
       (settings.algorithm == SpectrogramSettings::algReassignment);
-   const int windowSize = settings.windowSize;
+   const size_t windowSize = settings.WindowSize();
 
    sampleCount start;
    if (xx < 0)
@@ -790,10 +791,10 @@ bool SpecCache::CalculateOneSpectrum
 
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
-   const int zeroPaddingFactor = (autocorrelation ? 1 : settings.zeroPaddingFactor);
-   const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
-   const int fftLen = windowSize * zeroPaddingFactor;
-   const int half = fftLen / 2;
+   const size_t zeroPaddingFactor = (autocorrelation ? 1 : settings.ZeroPaddingFactor());
+   const size_t padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+   const size_t fftLen = windowSize * zeroPaddingFactor;
+   const auto half = fftLen / 2;
 
    if (start <= 0 || start >= numSamples) {
       if (xx >= 0 && xx < len) {
@@ -864,26 +865,26 @@ bool SpecCache::CalculateOneSpectrum
 
          {
             const float *const window = settings.window;
-            for (int ii = 0; ii < fftLen; ++ii)
+            for (size_t ii = 0; ii < fftLen; ++ii)
                scratch[ii] *= window[ii];
             RealFFTf(scratch, hFFT);
          }
 
          {
             const float *const dWindow = settings.dWindow;
-            for (int ii = 0; ii < fftLen; ++ii)
+            for (size_t ii = 0; ii < fftLen; ++ii)
                scratch2[ii] *= dWindow[ii];
             RealFFTf(scratch2, hFFT);
          }
 
          {
             const float *const tWindow = settings.tWindow;
-            for (int ii = 0; ii < fftLen; ++ii)
+            for (size_t ii = 0; ii < fftLen; ++ii)
                scratch3[ii] *= tWindow[ii];
             RealFFTf(scratch3, hFFT);
          }
 
-         for (int ii = 0; ii < hFFT->Points; ++ii) {
+         for (size_t ii = 0; ii < hFFT->Points; ++ii) {
             const int index = hFFT->BitReversed[ii];
             const float
                denomRe = scratch[index],
@@ -895,7 +896,7 @@ bool SpecCache::CalculateOneSpectrum
 
             double freqCorrection;
             {
-               const double multiplier = -fftLen / (2.0f * M_PI);
+               const double multiplier = -(fftLen / (2.0f * M_PI));
                const float
                   numRe = scratch2[index],
                   numIm = ii == 0 ? 0 : scratch2[index + 1];
@@ -929,7 +930,8 @@ bool SpecCache::CalculateOneSpectrum
                {
                   result = true;
 
-                  int index = half * correctedX + bin;
+                  // Can this be negative?
+                  int index = (int)half * correctedX + bin;
 #ifdef _OPENMP
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
@@ -954,7 +956,7 @@ bool SpecCache::CalculateOneSpectrum
             (useBuffer, settings.hFFT, settings.window, fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependant gain factor
-            for (int ii = 0; ii < half; ++ii)
+            for (size_t ii = 0; ii < half; ++ii)
                results[ii] += gainFactors[ii];
          }
       }
@@ -965,28 +967,28 @@ bool SpecCache::CalculateOneSpectrum
 
 void SpecCache::Populate
    (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
-    int copyBegin, int copyEnd, int numPixels,
+    int copyBegin, int copyEnd, size_t numPixels,
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
    settings.CacheWindows();
 
    const int &frequencyGain = settings.frequencyGain;
-   const int &windowSize = settings.windowSize;
+   const size_t windowSize = settings.WindowSize();
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
 #else
-   const int zeroPaddingFactor = 1;
+   const size_t zeroPaddingFactor = 1;
 #endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
-   const int fftLen = windowSize * zeroPaddingFactor;
-   const int half = fftLen / 2;
+   const size_t fftLen = windowSize * zeroPaddingFactor;
+   const auto half = fftLen / 2;
 
    const size_t bufferSize = fftLen;
    const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
@@ -1078,7 +1080,7 @@ void SpecCache::Populate
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
             float *const results = &freq[half * xx];
             const HFFT hFFT = settings.hFFT;
-            for (int ii = 0; ii < hFFT->Points; ++ii) {
+            for (size_t ii = 0; ii < hFFT->Points; ++ii) {
                float &power = results[ii];
                if (power <= 0)
                   power = -160.0;
@@ -1087,7 +1089,7 @@ void SpecCache::Populate
             }
             if (!gainFactors.empty()) {
                // Apply a frequency-dependant gain factor
-               for (int ii = 0; ii < half; ++ii)
+               for (size_t ii = 0; ii < half; ++ii)
                   results[ii] += gainFactors[ii];
             }
          }
@@ -1097,7 +1099,7 @@ void SpecCache::Populate
 
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               const float *& spectrogram, const sampleCount *& where,
-                              int numPixels,
+                              size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
    BEGIN_TASK_PROFILING("GetSpectrogram");
@@ -1107,18 +1109,18 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int &frequencyGain = settings.frequencyGain;
-   const int &windowSize = settings.windowSize;
+   const size_t windowSize = settings.WindowSize();
    const int &windowType = settings.windowType;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
 #else
-   const int zeroPaddingFactor = 1;
+   const size_t zeroPaddingFactor = 1;
 #endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
-   const int fftLen = windowSize * zeroPaddingFactor;
-   const int half = fftLen / 2;
+   const size_t fftLen = windowSize * zeroPaddingFactor;
+   const auto half = fftLen / 2;
 
    bool match =
       mSpecCache &&
@@ -1158,9 +1160,9 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // Remember our first pixel maps to oldX0 in the old cache,
       // possibly out of bounds.
       // For what range of pixels can data be copied?
-      copyBegin = std::min(numPixels, std::max(0, -oldX0));
-      copyEnd = std::min(numPixels,
-         copyBegin + oldCache->len - std::max(0, oldX0)
+      copyBegin = std::min((int)numPixels, std::max(0, -oldX0));
+      copyEnd = std::min((int)numPixels,
+         copyBegin + (int)oldCache->len - std::max(0, oldX0)
       );
    }
 

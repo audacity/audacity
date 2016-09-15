@@ -11,9 +11,11 @@
 #ifndef __AUDACITY_SPECPOWERMETER_H_
 #define __AUDACITY_SPECPOWERMETER_H_
 
+#include <cstddef>
+
 class SpecPowerMeter
 {
-   int mSigLen;
+   const size_t mSigLen;
    
    float* mSigI;
    float* mSigFR;
@@ -22,7 +24,7 @@ class SpecPowerMeter
    float CalcBinPower(float* sig_f_r, float* sig_f_i, int loBin, int hiBin);
    int Freq2Bin(float fc);
 public:
-   SpecPowerMeter(int sigLen);
+   SpecPowerMeter(size_t sigLen);
    ~SpecPowerMeter();
    
    float CalcPower(float* sig, float fc, float bw);

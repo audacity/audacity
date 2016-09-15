@@ -1262,8 +1262,9 @@ struct MinMaxSumsq
 }
 
 bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
-                              int len, const sampleCount *where)
+                              size_t len, const sampleCount *where)
 {
+   wxASSERT(len > 0);
    const auto s0 = std::max(sampleCount(0), where[0]);
    if (s0 >= mNumSamples)
       // None of the samples asked for are in range. Abandon.
@@ -1276,7 +1277,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
    float *temp = new float[mMaxSamples];
 
-   int pixel = 0;
+   decltype(len) pixel = 0;
 
    auto srcX = s0;
    decltype(srcX) nextSrcX = 0;
@@ -1305,7 +1306,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
 
       // Find the range of pixels covered by the current block file
       // (Their starting samples covered by it, to be exact)
-      int nextPixel;
+      decltype(len) nextPixel;
       if (nextSrcX >= s1)
          // last pass
          nextPixel = len;
@@ -1416,7 +1417,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          // (normally just one, but maybe more when zoomed very close)
          // and the range of positions for those columns
          // (normally one or more, for that one column)
-         int pixelX = pixel + 1;
+         auto pixelX = pixel + 1;
          decltype(filePosition) positionX = 0;
          while (pixelX < nextPixel &&
             filePosition ==

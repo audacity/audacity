@@ -51,7 +51,7 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
       mDefaulted = false;
    }
 
-   const int windowSize = mTempSettings.windowSize;
+   const auto windowSize = mTempSettings.WindowSize();
    mTempSettings.ConvertToEnumeratedWindowSizes();
    Populate(windowSize);
 }
@@ -78,7 +78,7 @@ enum {
    ID_DEFAULTS,
 };
 
-void SpectrumPrefs::Populate(int windowSize)
+void SpectrumPrefs::Populate(size_t windowSize)
 {
    mSizeChoices.Add(_("8 - most wideband"));
    mSizeChoices.Add(wxT("16"));
@@ -112,7 +112,7 @@ void SpectrumPrefs::Populate(int windowSize)
    // ----------------------- End of main section --------------
 }
 
-void SpectrumPrefs::PopulatePaddingChoices(int windowSize)
+void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 {
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoice = 1;
@@ -132,9 +132,9 @@ void SpectrumPrefs::PopulatePaddingChoices(int windowSize)
       pPaddingSizeControl->Clear();
    }
 
-   int padding = 1;
+   unsigned padding = 1;
    int numChoices = 0;
-   const int maxWindowSize = 1 << (SpectrogramSettings::LogMaxWindowSize);
+   const size_t maxWindowSize = 1 << (SpectrogramSettings::LogMaxWindowSize);
    while (windowSize <= maxWindowSize) {
       const wxString numeral = wxString::Format(wxT("%d"), padding);
       mZeroPaddingChoices.Add(numeral);
@@ -449,7 +449,7 @@ void SpectrumPrefs::OnWindowSize(wxCommandEvent &evt)
    // size and padding may not exceed the largest window size.
    wxChoice *const pWindowSizeControl =
       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
-   int windowSize = 1 <<
+   size_t windowSize = 1 <<
       (pWindowSizeControl->GetSelection() + SpectrogramSettings::LogMinWindowSize);
    PopulatePaddingChoices(windowSize);
 

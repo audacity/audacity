@@ -46,13 +46,12 @@ out.
 #include "BlockFile.h"
 
 #include <float.h>
-#include <math.h>
+#include <cmath>
 
 #include <wx/utils.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
-#include <wx/math.h>
 
 #include "Internat.h"
 #include "MemoryX.h"
@@ -317,7 +316,7 @@ static void ComputeMinMax256(float *summary256,
          max = summary256[3*i+1];
       else if (!(summary256[3*i+1] <= max))
          bad++;
-      if (wxIsNaN(summary256[3*i+2]))
+      if (std::isnan(summary256[3*i+2]))
          bad++;
       if (summary256[3*i+2] < -1 || summary256[3*i+2] > 1)
          bad++;

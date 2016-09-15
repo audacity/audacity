@@ -1955,7 +1955,7 @@ void AudacityProject::ModifyToolbarMenus()
 
 // checkActive is a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void AudacityProject::UpdateMenus(bool checkActive)
+void AudacityProject::UpdateMenus(bool /*checkActive*/)
 {
    //ANSWER-ME: Why UpdateMenus only does active project?
    //JKC: Is this test fixing a bug when multiple projects are open?

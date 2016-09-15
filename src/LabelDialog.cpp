@@ -562,7 +562,7 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    }
 
    // Remove the row
-   RowData &rd = mData[row];
+   //RowData &rd = mData[row];
    mData.erase(mData.begin() + row);
 
    // Repopulate the grid

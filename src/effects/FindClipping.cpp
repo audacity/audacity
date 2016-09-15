@@ -96,7 +96,7 @@ bool EffectFindClipping::Process()
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
    Maybe<ModifiedAnalysisTrack> modifiedTrack;
-   Track *original = NULL;
+   //Track *original = NULL;
    const wxString name{ _("Clipping") };
 
    LabelTrack *lt = NULL;

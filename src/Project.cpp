@@ -1655,7 +1655,7 @@ void AudacityProject::OnScrollRight()
 ///
 ///  This handles the event when the left direction button on the scrollbar is depresssed
 ///
-void AudacityProject::OnScrollLeftButton(wxScrollEvent & event)
+void AudacityProject::OnScrollLeftButton(wxScrollEvent & /*event*/)
 {
    wxInt64 pos = mHsbar->GetThumbPosition();
    // move at least one scroll increment
@@ -1674,7 +1674,7 @@ void AudacityProject::OnScrollLeftButton(wxScrollEvent & event)
 ///
 ///  This handles  the event when the right direction button on the scrollbar is depresssed
 ///
-void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
+void AudacityProject::OnScrollRightButton(wxScrollEvent & /*event*/)
 {
    wxInt64 pos = mHsbar->GetThumbPosition();
    // move at least one scroll increment
@@ -2279,6 +2279,7 @@ void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 
 void AudacityProject::MacShowUndockedToolbars(bool show)
 {
+   (void)show;//compiler food
 #ifdef __WXMAC__
    // Find all the floating toolbars, and show or hide them
    const auto &children = GetChildren();

@@ -488,7 +488,7 @@ void EffectBassTreble::OnGainSlider(wxCommandEvent & evt)
    EnableApply(mUIParent->Validate());
 }
 
-void EffectBassTreble::OnLinkCheckbox(wxCommandEvent& evt)
+void EffectBassTreble::OnLinkCheckbox(wxCommandEvent& /*evt*/)
 {
    mLink = mLinkCheckBox->GetValue();
 }

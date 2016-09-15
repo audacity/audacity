@@ -198,10 +198,11 @@ bool EffectClickRemoval::Process()
 
 bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
-   if (len <= windowSize/2)
+   if (len <= windowSize / 2)
    {
       wxMessageBox(
-         wxString::Format(_("Selection must be larger than %d samples."), windowSize/2),
+         wxString::Format(_("Selection must be larger than %d samples."),
+                          windowSize / 2),
          GetName(),
          wxOK | wxICON_ERROR);
       return false;
@@ -215,27 +216,24 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    decltype(len) s = 0;
    float *buffer = new float[idealBlockLen];
    float *datawindow = new float[windowSize];
-   while ((s < len)  &&  ((len - s) > windowSize/2))
+   while ((len - s) > windowSize / 2)
    {
       auto block = limitSampleBufferSize( idealBlockLen, len - s );
 
       track->Get((samplePtr) buffer, floatSample, start + s, block);
 
-      for (int i=0; i < (block-windowSize/2); i += windowSize/2)
+      for (decltype(block) i = 0; i + windowSize / 2 < block; i += windowSize / 2)
       {
-         int wcopy = windowSize;
-         if (i + wcopy > block)
-            wcopy = block - i;
+         auto wcopy = std::min( windowSize, block - i );
 
-         int j;
-         for(j=0; j<wcopy; j++)
+         for(decltype(wcopy) j = 0; j < wcopy; j++)
             datawindow[j] = buffer[i+j];
-         for(j=wcopy; j<windowSize; j++)
+         for(auto j = wcopy; j < windowSize; j++)
             datawindow[j] = 0;
 
          mbDidSomething |= RemoveClicks(windowSize, datawindow);
 
-         for(j=0; j<wcopy; j++)
+         for(decltype(wcopy) j = 0; j < wcopy; j++)
            buffer[i+j] = datawindow[j];
       }
 

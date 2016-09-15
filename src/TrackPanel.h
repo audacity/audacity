@@ -597,7 +597,7 @@ protected:
    // FREQ_SEL_BOTTOM_FREE,
    // and is ignored otherwise.
    double mFreqSelPin;
-   const WaveTrack *mFreqSelTrack;
+   const WaveTrack *mFreqSelTrack = NULL;
    std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
    // For toggling of spectral seletion

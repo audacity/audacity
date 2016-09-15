@@ -48,8 +48,8 @@ class SpectrumPrefs final : public PrefsPanel
    bool Validate() override;
 
  private:
-   void Populate(int windowSize);
-   void PopulatePaddingChoices(int windowSize);
+   void Populate(size_t windowSize);
+   void PopulatePaddingChoices(size_t windowSize);
    void PopulateOrExchange(ShuttleGui & S);
 
    void OnControl(wxCommandEvent &event);

@@ -69,7 +69,7 @@ private:
 
    // Parameters chosen before the first phase
    double    mSampleRate;
-   int       mWindowSize;
+   size_t    mWindowSize;
    int       mSpectrumSize;
    float     mMinSignalTime;    // in secs
 

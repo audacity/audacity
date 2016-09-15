@@ -331,7 +331,7 @@ void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
    Show(false);
 }
 
-void ContrastDialog::OnGetForeground(wxCommandEvent & event)
+void ContrastDialog::OnGetForeground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
    SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
@@ -347,7 +347,7 @@ void ContrastDialog::OnGetForeground(wxCommandEvent & event)
    results();
 }
 
-void ContrastDialog::OnGetBackground(wxCommandEvent & event)
+void ContrastDialog::OnGetBackground(wxCommandEvent & /*event*/)
 {
    AudacityProject *p = GetActiveProject();
    SelectedTrackListOfKindIterator iter(Track::Wave, p->GetTracks());
@@ -542,7 +542,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.Close();
 }
 
-void ContrastDialog::OnReset(wxCommandEvent & event)
+void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 {
    mForegroundStartT->SetValue(0.0);
    mForegroundEndT->SetValue(0.0);
