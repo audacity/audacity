@@ -284,7 +284,7 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
 // Gets the name of the specified object.
 wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
 {
-#if defined(__WXMSW__)
+#if defined(__WXMSW__) || defined(__WXMAC__)
    if( childId == wxACC_SELF )
    {
       *name = _( "TrackView" );
