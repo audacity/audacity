@@ -426,7 +426,7 @@ private:
    void RegenerateEffectsList(int iShowWhat);
    void SetState(int i, bool toggle, bool state = true);
 
-   static int wxCALLBACK SortCompare(long item1, long item2, long sortData);
+   static int wxCALLBACK SortCompare(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
    int SortCompare(ItemData *item1, ItemData *item2);
 
    void OnChangedVisibility(wxCommandEvent & evt);
@@ -802,7 +802,7 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
    }
 }
 
-int wxCALLBACK PluginRegistrationDialog::SortCompare(long item1, long item2, long sortData)
+int wxCALLBACK PluginRegistrationDialog::SortCompare(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData)
 {
    PluginRegistrationDialog *dlg = (PluginRegistrationDialog *) sortData;
    ItemData *i1 = (ItemData *) item1;
