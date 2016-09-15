@@ -1036,7 +1036,9 @@ void MixerBoard::UpdateTrackClusters()
 #else
             mMixerTrackClusters[nClusterIndex]->mLeftTrack = (WaveTrack*)pLeftTrack;
 #endif
-            mMixerTrackClusters[nClusterIndex]->mRightTrack = (WaveTrack*)pRightTrack;
+            // Assume linked track is wave or null
+            mMixerTrackClusters[nClusterIndex]->mRightTrack =
+               static_cast<WaveTrack*>(pRightTrack);
             mMixerTrackClusters[nClusterIndex]->UpdateForStateChange();
          }
          else
@@ -1051,7 +1053,9 @@ void MixerBoard::UpdateTrackClusters()
             wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
             pMixerTrackCluster =
                safenew MixerTrackCluster(mScrolledWindow, this, mProject,
-                                       (WaveTrack*)pLeftTrack, (WaveTrack*)pRightTrack,
+                                       static_cast<WaveTrack*>(pLeftTrack),
+                                       // Assume linked track is wave or null
+                                       static_cast<WaveTrack*>(pRightTrack),
                                        clusterPos, clusterSize);
             if (pMixerTrackCluster)
                mMixerTrackClusters.Add(pMixerTrackCluster);

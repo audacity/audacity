@@ -2994,11 +2994,11 @@ void AudacityProject::OnTrackPan()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
    if (slider->ShowDialog()) {
-      SetTrackPan(track, slider);
+      SetTrackPan(wt, slider);
    }
 }
 
@@ -3008,11 +3008,11 @@ void AudacityProject::OnTrackPanLeft()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
    slider->Decrease(1);
-   SetTrackPan(track, slider);
+   SetTrackPan(wt, slider);
 }
 
 void AudacityProject::OnTrackPanRight()
@@ -3021,11 +3021,11 @@ void AudacityProject::OnTrackPanRight()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
    slider->Increase(1);
-   SetTrackPan(track, slider);
+   SetTrackPan(wt, slider);
 }
 
 void AudacityProject::OnTrackGain()
@@ -3035,11 +3035,11 @@ void AudacityProject::OnTrackGain()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
    if (slider->ShowDialog()) {
-      SetTrackGain(track, slider);
+      SetTrackGain(wt, slider);
    }
 }
 
@@ -3049,11 +3049,11 @@ void AudacityProject::OnTrackGainInc()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
    slider->Increase(1);
-   SetTrackGain(track, slider);
+   SetTrackGain(wt, slider);
 }
 
 void AudacityProject::OnTrackGainDec()
@@ -3062,11 +3062,11 @@ void AudacityProject::OnTrackGainDec()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
    slider->Decrease(1);
-   SetTrackGain(track, slider);
+   SetTrackGain(wt, slider);
 }
 
 void AudacityProject::OnTrackMenu()

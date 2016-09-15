@@ -378,7 +378,7 @@ protected:
        bool fixedMousePoint);
 
    // Handle sample editing using the 'draw' tool.
-   virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
+   virtual bool IsSampleEditingPossible( wxMouseEvent & event, const WaveTrack * t );
    virtual void HandleSampleEditing(wxMouseEvent & event);
    float FindSampleEditingLevel(wxMouseEvent &event, double dBRange, double t0);
    virtual void HandleSampleEditingClick( wxMouseEvent & event );
@@ -462,7 +462,7 @@ protected:
    virtual void OnZoomFitVertical(wxCommandEvent &event);
 
    virtual void SetMenuCheck( wxMenu & menu, int newId );
-   virtual void SetRate(Track *pTrack, double rate);
+   virtual void SetRate(WaveTrack *pTrack, double rate);
    virtual void OnRateChange(wxCommandEvent &event);
    virtual void OnRateOther(wxCommandEvent &event);
 
@@ -531,7 +531,7 @@ protected:
    int mLabelTrackStartXPos;
    int mLabelTrackStartYPos;
 
-   virtual wxString TrackSubText(Track *t);
+   virtual wxString TrackSubText(WaveTrack *t);
 
    TrackInfo mTrackInfo;
  public:
@@ -673,7 +673,7 @@ protected:
       (bool shiftDown, wxString &tip, const wxCursor ** ppCursor);
 
    void HandleCenterFrequencyClick
-      (bool shiftDown, Track *pTrack, double value);
+      (bool shiftDown, const WaveTrack *pTrack, double value);
 
    double PositionToFrequency(const WaveTrack *wt,
                               bool maySnap,

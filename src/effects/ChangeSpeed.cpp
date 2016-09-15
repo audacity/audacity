@@ -231,7 +231,7 @@ bool EffectChangeSpeed::Process()
       if (t->GetKind() == Track::Label) {
          if (t->GetSelected() || t->IsSyncLockSelected())
          {
-            if (!ProcessLabelTrack(t)) {
+            if (!ProcessLabelTrack(static_cast<LabelTrack*>(t))) {
                bGoodResult = false;
                break;
             }
@@ -453,13 +453,11 @@ bool EffectChangeSpeed::TransferDataFromWindow()
 
 // Labels are time-scaled linearly inside the affected region, and labels after
 // the region are shifted along according to how the region size changed.
-bool EffectChangeSpeed::ProcessLabelTrack(Track *t)
+bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 {
    SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
                      std::make_unique<LinearTimeWarper>(mT0, mT0,
                          mT1, mT0 + (mT1-mT0)*mFactor)));
-   LabelTrack *lt = (LabelTrack*)t;
-   if (lt == NULL) return false;
    lt->WarpLabels(*GetTimeWarper());
    return true;
 }

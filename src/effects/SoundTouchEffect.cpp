@@ -25,22 +25,18 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "TimeWarper.h"
 #include "../NoteTrack.h"
 
-bool EffectSoundTouch::ProcessLabelTrack(Track *track)
+bool EffectSoundTouch::ProcessLabelTrack(LabelTrack *lt)
 {
 //   SetTimeWarper(std::make_unique<RegionTimeWarper>(mCurT0, mCurT1,
  //           std::make_unique<LinearTimeWarper>(mCurT0, mCurT0,
    //            mCurT1, mCurT0 + (mCurT1-mCurT0)*mFactor)));
-   LabelTrack *lt = (LabelTrack*)track;
-   if (lt == NULL) return false;
    lt->WarpLabels(*GetTimeWarper());
    return true;
 }
 
 #ifdef USE_MIDI
-bool EffectSoundTouch::ProcessNoteTrack(Track *track)
+bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt)
 {
-   NoteTrack *nt = (NoteTrack *) track;
-   if (nt == NULL) return false;
    nt->WarpAndTransposeNotes(mCurT0, mCurT1, *GetTimeWarper(), mSemitones);
    return true;
 }
@@ -74,7 +70,7 @@ bool EffectSoundTouch::Process()
       if (t->GetKind() == Track::Label &&
             (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
-         if (!ProcessLabelTrack(t))
+         if (!ProcessLabelTrack(static_cast<LabelTrack*>(t)))
          {
             bGoodResult = false;
             break;
@@ -84,7 +80,7 @@ bool EffectSoundTouch::Process()
       else if (t->GetKind() == Track::Note &&
                (t->GetSelected() || (mustSync && t->IsSyncLockSelected())))
       {
-         if (!ProcessNoteTrack(t))
+         if (!ProcessNoteTrack(static_cast<NoteTrack*>(t)))
          {
             bGoodResult = false;
             break;
@@ -108,7 +104,8 @@ bool EffectSoundTouch::Process()
 
             if (leftTrack->GetLinked()) {
                double t;
-               WaveTrack* rightTrack = (WaveTrack*)(iter.Next());
+               // Assume linked track is wave
+               WaveTrack* rightTrack = static_cast<WaveTrack*>(iter.Next());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();

@@ -1346,7 +1346,8 @@ bool Effect::ProcessPass()
       rightStart = 0;
       if (left->GetLinked() && mNumAudioIn > 1)
       {
-         right = (WaveTrack *) iter.Next();
+         // Assume linked track is wave
+         right = static_cast<WaveTrack *>(iter.Next());
          if (!isGenerator)
          {
             GetSamples(right, &rightStart, &len);

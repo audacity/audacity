@@ -185,12 +185,10 @@ std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double durati
 
 // Labels inside the affected region are moved to match the audio; labels after
 // it are shifted along appropriately.
-bool EffectSBSMS::ProcessLabelTrack(Track *t)
+bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
 {
    auto warper = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
    SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1, std::move(warper)));
-   LabelTrack *lt = (LabelTrack*)t;
-   if (lt == NULL) return false;
    lt->WarpLabels(*GetTimeWarper());
    return true;
 }
@@ -231,7 +229,7 @@ bool EffectSBSMS::Process()
       if (t->GetKind() == Track::Label &&
             (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
-         if (!ProcessLabelTrack(t)) {
+         if (!ProcessLabelTrack(static_cast<LabelTrack*>(t))) {
             bGoodResult = false;
             break;
          }
@@ -257,7 +255,8 @@ bool EffectSBSMS::Process()
             WaveTrack* rightTrack = NULL;
             if (leftTrack->GetLinked()) {
                double t;
-               rightTrack = (WaveTrack*)(iter.Next());
+               // Assume linked track is wave or null
+               rightTrack = static_cast<WaveTrack*>(iter.Next());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();

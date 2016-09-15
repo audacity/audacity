@@ -25,6 +25,7 @@ class Track;
 class TrackArray;
 class TrackClipArray;
 class WaveClip;
+class WaveTrack;
 class TrackList;
 class ZoomInfo;
 
@@ -42,7 +43,7 @@ public:
 
    Track *track;
    Track *origTrack;
-   Track *dstTrack;
+   WaveTrack *dstTrack;
    WaveClip *clip;
    movable_ptr<WaveClip> holder;
 };

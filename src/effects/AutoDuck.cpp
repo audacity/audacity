@@ -219,7 +219,8 @@ bool EffectAutoDuck::Init()
          if (t->GetKind() == Track::Wave)
          {
             lastWasSelectedWaveTrack = true;
-         } else
+         }
+         else
          {
             wxMessageBox(
                _("You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
@@ -387,8 +388,6 @@ bool EffectAutoDuck::Process()
 
       while (iterTrack)
       {
-         wxASSERT(iterTrack->GetKind() == Track::Wave);
-
          WaveTrack* t = (WaveTrack*)iterTrack;
 
          for (size_t i = 0; i < regions.GetCount(); i++)

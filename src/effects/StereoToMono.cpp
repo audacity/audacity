@@ -92,7 +92,8 @@ bool EffectStereoToMono::Process()
          mLeftTrack->GetSelected() &&
          mLeftTrack->GetLinked()) {
 
-         mRightTrack = (WaveTrack *)iter.Next();
+         // Assume linked track is wave
+         mRightTrack = static_cast<WaveTrack*>(iter.Next());
 
          if ((mLeftTrack->GetRate() == mRightTrack->GetRate())) {
             auto leftTrackStart = mLeftTrack->TimeToLongSamples(mLeftTrack->GetStartTime());

@@ -136,8 +136,11 @@ bool WaveformPrefs::Apply()
 {
    const bool isOpenPage = this->IsShown();
 
-   WaveTrack *const partner =
-      mWt ? static_cast<WaveTrack*>(mWt->GetLink()) : 0;
+   const auto partner =
+      mWt ?
+            // Assume linked track is wave or null
+            static_cast<WaveTrack*>(mWt->GetLink())
+          : nullptr;
 
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);

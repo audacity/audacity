@@ -371,8 +371,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    void DoTrackMute(Track *pTrack, bool exclusive);
    void DoTrackSolo(Track *pTrack, bool exclusive);
-   void SetTrackGain(Track * track, LWSlider * slider);
-   void SetTrackPan(Track * track, LWSlider * slider);
+   void SetTrackGain(WaveTrack * track, LWSlider * slider);
+   void SetTrackPan(WaveTrack * track, LWSlider * slider);
 
    void RemoveTrack(Track * toRemove);
 
