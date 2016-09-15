@@ -8012,7 +8012,8 @@ void TrackPanel::SplitStereo(bool stereo)
    if (!stereo)
       mPopupMenuTarget->SetChannel(Track::MonoChannel);
 
-   Track *partner = mPopupMenuTarget->GetLink();
+   // Assume partner is present, and is wave
+   auto partner = static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
    wxASSERT(partner);
    if (!partner)
       return;
@@ -8022,8 +8023,7 @@ void TrackPanel::SplitStereo(bool stereo)
       // Come here only from wave track menu
       static_cast<WaveTrack*>(mPopupMenuTarget)->SetVirtualState(true,true);
    if(!stereo && MONO_WAVE_PAN(partner))
-      // Assume partner is present, and is wave
-      static_cast<WaveTrack*>(partner)->SetVirtualState(true,true);
+      partner->SetVirtualState(true,true);
 #endif
 
    if (partner)
@@ -8034,7 +8034,7 @@ void TrackPanel::SplitStereo(bool stereo)
 
       //On Demand - have each channel add it's own.
       if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
-         ODManager::Instance()->MakeWaveTrackIndependent((WaveTrack*)partner);
+         ODManager::Instance()->MakeWaveTrackIndependent(partner);
    }
 
    mPopupMenuTarget->SetLinked(false);

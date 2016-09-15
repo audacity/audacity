@@ -339,7 +339,7 @@ bool EffectScienFilter::Init()
 
    while (t)
    {
-      if (t->GetSelected() && t->GetKind() == Track::Wave)
+      if (t->GetSelected())
       {
          if (selcount == 0)
          {
