@@ -1117,7 +1117,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       len -= block;
       s += block;
 
-      if (TrackProgress(count, (s-start)/(double)originalLen))
+      if (TrackProgress(count, ( s - start ).as_double() /
+                        originalLen.as_double()))
       {
          bLoopSuccess = false;
          break;

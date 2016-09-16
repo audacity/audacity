@@ -375,7 +375,7 @@ int ExportCL::Export(AudacityProject *project,
 
    // establish parameters
    int rate = lrint(project->GetRate());
-   sampleCount maxBlockLen = 44100 * 5;
+   const size_t maxBlockLen = 44100 * 5;
    unsigned long totalSamples = lrint((t1 - t0) * rate);
    unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(int16Sample);
 

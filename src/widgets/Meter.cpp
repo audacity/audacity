@@ -942,7 +942,7 @@ void Meter::UpdateDisplay(unsigned numChannels, int numFrames, float *sampleData
 //                           // Need to make these double-indexed arrays if we handle more than 2 channels.
 //                           float* maxLeft, float* rmsLeft,
 //                           float* maxRight, float* rmsRight,
-//                           const sampleCount kSampleCount)
+//                           const size_t kSampleCount)
 //{
 //   int i, j;
 //   int num = intmin(numChannels, mNumBars);

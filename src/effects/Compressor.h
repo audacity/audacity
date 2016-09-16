@@ -62,15 +62,16 @@ protected:
    bool InitPass1() override;
    bool InitPass2() override;
    bool NewTrackPass1() override;
-   bool ProcessPass2(float *buffer, sampleCount len) override;
-   bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2) override;
+   bool ProcessPass2(float *buffer, size_t len) override;
+   bool TwoBufferProcessPass1
+      (float *buffer1, size_t len1, float *buffer2, size_t len2) override;
 
 private:
    // EffectCompressor implementation
 
    void FreshenCircle();
    float AvgCircle(float x);
-   void Follow(float *buffer, float *env, int len, float *previous, int previous_len);
+   void Follow(float *buffer, float *env, size_t len, float *previous, size_t previous_len);
    float DoCompression(float x, double env);
 
    void OnSlider(wxCommandEvent & evt);
@@ -101,7 +102,7 @@ private:
    double    mLastLevel;
    float	   *mFollow1;
    float	   *mFollow2;
-   sampleCount mFollowLen;
+   size_t    mFollowLen;
 
    double    mMax;			//MJS
 

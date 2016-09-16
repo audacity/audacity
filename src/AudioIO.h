@@ -573,7 +573,7 @@ private:
    double              mSeek;
    double              mPlaybackRingBufferSecs;
    double              mCaptureRingBufferSecs;
-   long                mPlaybackSamplesToCopy;
+   size_t              mPlaybackSamplesToCopy;
    double              mMinCaptureSecsToCopy;
    bool                mPaused;
    PaStream           *mPortStreamV19;

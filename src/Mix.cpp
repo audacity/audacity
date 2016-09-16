@@ -241,7 +241,7 @@ Mixer::WarpOptions::WarpOptions(double min, double max)
 Mixer::Mixer(const WaveTrackConstArray &inputTracks,
              const WarpOptions &warpOptions,
              double startTime, double stopTime,
-             unsigned numOutChannels, int outBufferSize, bool outInterleaved,
+             unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
              double outRate, sampleFormat outFormat,
              bool highQuality, MixerSpec *mixerSpec)
 {
@@ -405,7 +405,7 @@ void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
    }
 }
 
-sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
+size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                                     sampleCount *pos, float *queue,
                                     int *queueStart, int *queueLen,
                                     Resample * pResample)
@@ -438,7 +438,8 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
       : std::min(endTime, mT1);
    const auto endPos = track->TimeToLongSamples(tEnd);
    // Find the time corresponding to the start of the queue, for use with time track
-   double t = (*pos + (backwards ? *queueLen : - *queueLen)) / trackRate;
+   double t = ((*pos).as_long_long() +
+               (backwards ? *queueLen : - *queueLen)) / trackRate;
 
    while (out < mMaxOut) {
       if (*queueLen < mProcessLen) {
@@ -459,8 +460,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
 
                track->GetEnvelopeValues(mEnvValues,
                                         getLen,
-                                        (*pos - (getLen- 1)) / trackRate);
-
+                                        (*pos - (getLen- 1)).as_double() / trackRate);
                *pos -= getLen;
             }
             else {
@@ -469,7 +469,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
 
                track->GetEnvelopeValues(mEnvValues,
                                         getLen,
-                                        (*pos) / trackRate);
+                                        (*pos).as_double() / trackRate);
 
                *pos += getLen;
             }
@@ -546,13 +546,13 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
    return out;
 }
 
-sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
+size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
                                sampleCount *pos)
 {
    const WaveTrack *const track = cache.GetTrack();
    auto slen = mMaxOut;
    int c;
-   const double t = *pos / track->GetRate();
+   const double t = ( *pos ).as_double() / track->GetRate();
    const double trackEndTime = track->GetEndTime();
    const double trackStartTime = track->GetStartTime();
    const bool backwards = (mT1 < mT0);
@@ -601,7 +601,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
    return slen;
 }
 
-sampleCount Mixer::Process(sampleCount maxToProcess)
+size_t Mixer::Process(size_t maxToProcess)
 {
    // MB: this is wrong! mT represented warped time, and mTime is too inaccurate to use
    // it here. It's also unnecessary I think.
@@ -652,7 +652,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
          maxOut = std::max(maxOut,
             MixSameRate(channelFlags, mInputTrack[i], &mSamplePos[i]));
 
-      double t = (double)mSamplePos[i] / (double)track->GetRate();
+      double t = mSamplePos[i].as_double() / (double)track->GetRate();
       if (mT0 > mT1)
          // backwards (as possibly in scrubbing)
          mTime = std::max(std::min(t, mTime), mT1);

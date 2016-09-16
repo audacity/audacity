@@ -345,7 +345,7 @@ DirManager::DirManager()
 
    mLoadingTarget = NULL;
    mLoadingTargetIdx = 0;
-   mMaxSamples = -1;
+   mMaxSamples = ~size_t(0);
 
    // toplevel pool hash is fully populated to begin
    {
@@ -925,7 +925,7 @@ wxFileNameWrapper DirManager::MakeBlockFileName()
 }
 
 BlockFilePtr DirManager::NewSimpleBlockFile(
-                                 samplePtr sampleData, sampleCount sampleLen,
+                                 samplePtr sampleData, size_t sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite)
 {
@@ -942,7 +942,7 @@ BlockFilePtr DirManager::NewSimpleBlockFile(
 
 BlockFilePtr DirManager::NewAliasBlockFile(
                                  const wxString &aliasedFile, sampleCount aliasStart,
-                                 sampleCount aliasLen, int aliasChannel)
+                                 size_t aliasLen, int aliasChannel)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName = filePath.GetName();
@@ -959,7 +959,7 @@ BlockFilePtr DirManager::NewAliasBlockFile(
 
 BlockFilePtr DirManager::NewODAliasBlockFile(
                                  const wxString &aliasedFile, sampleCount aliasStart,
-                                 sampleCount aliasLen, int aliasChannel)
+                                 size_t aliasLen, int aliasChannel)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
@@ -976,7 +976,7 @@ BlockFilePtr DirManager::NewODAliasBlockFile(
 
 BlockFilePtr DirManager::NewODDecodeBlockFile(
                                  const wxString &aliasedFile, sampleCount aliasStart,
-                                 sampleCount aliasLen, int aliasChannel, int decodeType)
+                                 size_t aliasLen, int aliasChannel, int decodeType)
 {
    wxFileNameWrapper filePath{ MakeBlockFileName() };
    const wxString fileName{ filePath.GetName() };
@@ -1135,7 +1135,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return false;
 
    // Check the length here so we don't have to do it in each BuildFromXML method.
-   if ((mMaxSamples > -1) && // is initialized
+   if ((mMaxSamples != ~size_t(0)) && // is initialized
          (pBlockFile->GetLength() > mMaxSamples))
    {
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c13.

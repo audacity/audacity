@@ -1326,7 +1326,7 @@ int VSTEffect::GetMidiOutCount()
    return mMidiOuts;
 }
 
-sampleCount VSTEffect::SetBlockSize(sampleCount maxBlockSize)
+size_t VSTEffect::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = std::min((int)maxBlockSize, mUserBlockSize);
    return mBlockSize;
@@ -1350,7 +1350,7 @@ sampleCount VSTEffect::GetLatency()
    return 0;
 }
 
-sampleCount VSTEffect::GetTailSize()
+size_t VSTEffect::GetTailSize()
 {
    return 0;
 }
@@ -1395,7 +1395,7 @@ bool VSTEffect::ProcessFinalize()
    return true;
 }
 
-sampleCount VSTEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t VSTEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    // Only call the effect if there's something to do...some do not like zero-length block
    if (blockLen)
@@ -1534,7 +1534,7 @@ bool VSTEffect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount numSamples)
+size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
 

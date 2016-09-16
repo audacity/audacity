@@ -4575,7 +4575,9 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
    //Go from the smaller to larger sample.
    const auto start = std::min( s0, mDrawingLastDragSample);
    const auto end   = std::max( s0, mDrawingLastDragSample);
-   const int size = end - start + 1;
+   // Few enough samples to be drawn individually on screen will not
+   // overflow size_t:
+   const auto size = ( end - start + 1 ).as_size_t();
    if (size == 1) {
       mDrawingTrack->Set((samplePtr)&newLevel, floatSample, start, size);
    }
@@ -4583,9 +4585,11 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
       std::vector<float> values(size);
       for (auto i = start; i <= end; ++i) {
          //This interpolates each sample linearly:
-         values[i - start] =
+         // i - start will not overflow size_t either:
+         values[( i - start ).as_size_t()] =
             mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
-            (float)(i - mDrawingLastDragSample) / (s0 - mDrawingLastDragSample);
+            (i - mDrawingLastDragSample).as_float() /
+            (s0 - mDrawingLastDragSample).as_float();
       }
       mDrawingTrack->Set((samplePtr)&values[0], floatSample, start, size);
    }

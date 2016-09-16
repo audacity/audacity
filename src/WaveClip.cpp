@@ -124,9 +124,9 @@ public:
          return;
       double samplesPerPixel = rate/pps;
       //rate is SR, start is first time of the waveform (in second) on cache
-      long invalStart = (sampleStart - start*rate)/samplesPerPixel ;
+      long invalStart = (sampleStart.as_double() - start*rate) / samplesPerPixel ;
 
-      long invalEnd = (sampleEnd - start*rate)/samplesPerPixel +1; //we should cover the end..
+      long invalEnd = (sampleEnd.as_double() - start*rate)/samplesPerPixel +1; //we should cover the end..
 
       //if they are both off the cache boundary in the same direction, the cache is missed,
       //so we are safe, and don't need to track this one.
@@ -326,7 +326,7 @@ WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &proj
    mEnvelope = std::make_unique<Envelope>();
    mEnvelope->Paste(0.0, orig.mEnvelope.get());
    mEnvelope->SetOffset(orig.GetOffset());
-   mEnvelope->SetTrackLen(((double)orig.mSequence->GetNumSamples()) / orig.mRate);
+   mEnvelope->SetTrackLen((orig.mSequence->GetNumSamples().as_double()) / orig.mRate);
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
@@ -350,13 +350,13 @@ void WaveClip::SetOffset(double offset)
 }
 
 bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len) const
+                   sampleCount start, size_t len) const
 {
    return mSequence->Get(buffer, format, start, len);
 }
 
 bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len)
+                   sampleCount start, size_t len)
 {
    bool bResult = mSequence->Set(buffer, format, start, len);
    MarkChanged();
@@ -378,7 +378,7 @@ double WaveClip::GetEndTime() const
 {
    auto numSamples = mSequence->GetNumSamples();
 
-   double maxLen = mOffset + double(numSamples+mAppendBufferLen)/mRate;
+   double maxLen = mOffset + (numSamples+mAppendBufferLen).as_double()/mRate;
    // JS: calculated value is not the length;
    // it is a maximum value and can be negative; no clipping to 0
 
@@ -387,7 +387,7 @@ double WaveClip::GetEndTime() const
 
 sampleCount WaveClip::GetStartSample() const
 {
-   return floor(mOffset * mRate + 0.5);
+   return sampleCount( floor(mOffset * mRate + 0.5) );
 }
 
 sampleCount WaveClip::GetEndSample() const
@@ -446,7 +446,7 @@ void findCorrection(const std::vector<sampleCount> &oldWhere, size_t oldLen,
    // Look at the loop that populates "where" below to understand this.
 
    // Find the sample position that is the origin in the old cache.
-   const double oldWhere0 = oldWhere[1] - samplesPerPixel;
+   const double oldWhere0 = oldWhere[1].as_double() - samplesPerPixel;
    const double oldWhereLast = oldWhere0 + oldLen * samplesPerPixel;
    // Find the length in samples of the old cache.
    const double denom = oldWhereLast - oldWhere0;
@@ -485,9 +485,9 @@ fillWhere(std::vector<sampleCount> &where, size_t len, double bias, double corre
 {
    // Be careful to make the first value non-negative
    const double w0 = 0.5 + correction + bias + t0 * rate;
-   where[0] = std::max(0.0, floor(w0));
+   where[0] = sampleCount( std::max(0.0, floor(w0)) );
    for (decltype(len) x = 1; x < len + 1; x++)
-      where[x] = floor(w0 + double(x) * samplesPerPixel);
+      where[x] = sampleCount( floor(w0 + double(x) * samplesPerPixel) );
 }
 
 }
@@ -645,13 +645,16 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
             if (right > left) {
                float *b;
-               sampleCount len = right-left;
+               // left is nonnegative and at most mAppendBufferLen:
+               auto sLeft = left.as_size_t();
+               // The difference is at most mAppendBufferLen:
+               size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer.ptr())[left];
+                  b = &((float *)mAppendBuffer.ptr())[sLeft];
                else {
                   b = new float[len];
-                  CopySamples(mAppendBuffer.ptr() + left*SAMPLE_SIZE(seqFormat),
+                  CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
                               seqFormat,
                               (samplePtr)b, floatSample, len);
                }
@@ -783,9 +786,13 @@ bool SpecCache::CalculateOneSpectrum
 
    sampleCount start;
    if (xx < 0)
-      start = where[0] + xx * (rate / pixelsPerSecond);
+      start = sampleCount(
+         where[0].as_double() + xx * (rate / pixelsPerSecond)
+      );
    else if (xx > len)
-      start = where[len] + (xx - len) * (rate / pixelsPerSecond);
+      start = sampleCount(
+         where[len].as_double() + (xx - len) * (rate / pixelsPerSecond)
+      );
    else
       start = where[xx];
 
@@ -820,14 +827,15 @@ bool SpecCache::CalculateOneSpectrum
             // Start is at least -windowSize / 2
             for (auto ii = start; ii < 0; ++ii)
                *adj++ = 0;
-            myLen += start;
+            myLen += start.as_long_long(); // add a negative
             start = 0;
             copy = true;
          }
 
          if (start + myLen > numSamples) {
             // Near the end of the clip, pad right with zeroes as needed.
-            int newlen = numSamples - start;
+            // newlen is bounded by myLen:
+            auto newlen = ( numSamples - start ).as_size_t();
             for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
                adj[ii] = 0;
             myLen = newlen;
@@ -835,8 +843,12 @@ bool SpecCache::CalculateOneSpectrum
          }
 
          if (myLen > 0) {
-            useBuffer = (float*)(waveTrackCache.Get(floatSample,
-               floor(0.5 + start + offset * rate), myLen));
+            useBuffer = (float*)(waveTrackCache.Get(
+               floatSample, sampleCount(
+                  floor(0.5 + start.as_double() + offset * rate)
+               ),
+               myLen)
+            );
 
             if (copy)
                memcpy(adj, useBuffer, myLen * sizeof(float));
@@ -1255,17 +1267,17 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format)
 
 void WaveClip::UpdateEnvelopeTrackLen()
 {
-   mEnvelope->SetTrackLen(((double)mSequence->GetNumSamples()) / mRate);
+   mEnvelope->SetTrackLen((mSequence->GetNumSamples().as_double()) / mRate);
 }
 
 void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
 {
    if (t0 < mOffset)
       *s0 = 0;
-   else if (t0 > mOffset + double(mSequence->GetNumSamples())/mRate)
+   else if (t0 > mOffset + mSequence->GetNumSamples().as_double()/mRate)
       *s0 = mSequence->GetNumSamples();
    else
-      *s0 = floor(((t0 - mOffset) * mRate) + 0.5);
+      *s0 = sampleCount( floor(((t0 - mOffset) * mRate) + 0.5) );
 }
 
 void WaveClip::ClearDisplayRect() const
@@ -1285,7 +1297,7 @@ void WaveClip::GetDisplayRect(wxRect* r)
 }
 
 bool WaveClip::Append(samplePtr buffer, sampleFormat format,
-                      sampleCount len, unsigned int stride /* = 1 */,
+                      size_t len, unsigned int stride /* = 1 */,
                       XMLWriter* blockFileLog /*=NULL*/)
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
@@ -1336,7 +1348,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
 }
 
 bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel,bool useOD)
+                            size_t len, int channel,bool useOD)
 {
    bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
    if (result)
@@ -1348,7 +1360,7 @@ bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
 }
 
 bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType)
+                            size_t len, int channel, int decodeType)
 {
    bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);
    if (result)
@@ -1462,8 +1474,8 @@ bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
 
    mEnvelope = std::make_unique<Envelope>();
    mEnvelope->CopyFrom(other->mEnvelope.get(),
-      mOffset + (double)s0/mRate,
-      mOffset + (double)s1/mRate);
+      mOffset + s0.as_double()/mRate,
+      mOffset + s1.as_double()/mRate);
 
    MarkChanged();
 
@@ -1503,7 +1515,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    if (mSequence->Paste(s0, pastedClip->mSequence.get()))
    {
       MarkChanged();
-      mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope.get());
+      mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
       mEnvelope->RemoveUnneededPoints();
       OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
@@ -1774,7 +1786,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    double factor = (double)rate / (double)mRate;
    ::Resample resample(true, factor, factor); // constant rate resampling
 
-   int bufsize = 65536;
+   size_t bufsize = 65536;
    float* inBuffer = new float[bufsize];
    float* outBuffer = new float[bufsize];
    sampleCount pos = 0;
@@ -1823,7 +1835,10 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       if (progress)
       {
-         int updateResult = progress->Update(pos, numSamples);
+         int updateResult = progress->Update(
+            pos.as_long_long(),
+            numSamples.as_long_long()
+         );
          error = (updateResult != eProgressSuccess);
          if (error)
          {

@@ -96,7 +96,7 @@ static wxUint32 SwapUintEndianess(wxUint32 in)
 /// @param format       The format of the given samples.
 /// @param allowDeferredWrite    Allow deferred write-caching
 SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
-                                 samplePtr sampleData, sampleCount sampleLen,
+                                 samplePtr sampleData, size_t sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite /* = false */,
                                  bool bypassCache /* = false */):
@@ -139,7 +139,7 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
 /// existing block file.  This file must exist and be a valid block file.
 ///
 /// @param existingFile The disk file this SimpleBlockFile should use.
-SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
+SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, size_t len,
                                  float min, float max, float rms):
    BlockFile{ std::move(existingFile), len }
 {
@@ -164,7 +164,7 @@ SimpleBlockFile::~SimpleBlockFile()
 
 bool SimpleBlockFile::WriteSimpleBlockFile(
     samplePtr sampleData,
-    sampleCount sampleLen,
+    size_t sampleLen,
     sampleFormat format,
     void* summaryData)
 {
@@ -388,8 +388,8 @@ bool SimpleBlockFile::ReadSummary(void *data)
 /// @param format The format the data will be stored in
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
-int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const
+size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const
 {
    if (mCache.active)
    {
@@ -439,7 +439,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       SFCall<sf_count_t>(sf_seek, sf.get(), start, SEEK_SET);
       SampleBuffer buffer(len, floatSample);
 
-      int framesRead = 0;
+      size_t framesRead = 0;
 
       // If both the src and dest formats are integer formats,
       // read integers from the file (otherwise we would be
@@ -495,7 +495,7 @@ BlockFilePtr SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileNameWrapper fileName;
    float min = 0.0f, max = 0.0f, rms = 0.0f;
-   sampleCount len = 0;
+   size_t len = 0;
    double dblValue;
    long nValue;
 
@@ -597,11 +597,11 @@ auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
       file.Close();
    }
 
-   return
+   return {
           sizeof(auHeader) +
           mSummaryInfo.totalSummaryBytes +
           (GetLength() * SAMPLE_SIZE_DISK(mFormat))
-   ;
+   };
 }
 
 void SimpleBlockFile::Recover(){

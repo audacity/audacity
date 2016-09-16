@@ -154,7 +154,7 @@ bool EffectStereoToMono::ProcessOne(int count)
          leftBuffer[i] = curMonoFrame;
       }
       bResult &= mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
-      if (TrackProgress(count, 2.*((double)index / (double)(mEnd - mStart))))
+      if (TrackProgress(count, 2.*(index.as_double() / (mEnd - mStart).as_double())))
          return false;
    }
 

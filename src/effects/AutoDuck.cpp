@@ -312,7 +312,9 @@ bool EffectAutoDuck::Process()
       for (auto i = pos; i < pos + len; i++)
       {
          rmsSum -= rmsWindow[rmsPos];
-         rmsWindow[rmsPos] = buf[i - pos] * buf[i - pos];
+         // i - pos is bounded by len:
+         auto index = ( i - pos ).as_size_t();
+         rmsWindow[rmsPos] = buf[ index ] * buf[ index ];
          rmsSum += rmsWindow[rmsPos];
          rmsPos = (rmsPos + 1) % kRMSWindowSize;
 
@@ -357,8 +359,11 @@ bool EffectAutoDuck::Process()
 
       pos += len;
 
-      if (TotalProgress( ((double)(pos-start)) / (end-start) /
-                         (GetNumWaveTracks() + 1) ))
+      if (TotalProgress(
+            (pos - start).as_double() /
+            (end - start).as_double() /
+            (GetNumWaveTracks() + 1)
+      ))
       {
          cancel = true;
          break;
@@ -526,8 +531,8 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
    if (fadeUpSamples < 1)
       fadeUpSamples = 1;
 
-   float fadeDownStep = mDuckAmountDb / fadeDownSamples;
-   float fadeUpStep = mDuckAmountDb / fadeUpSamples;
+   float fadeDownStep = mDuckAmountDb / fadeDownSamples.as_double();
+   float fadeUpStep = mDuckAmountDb / fadeUpSamples.as_double();
 
    while (pos < end)
    {
@@ -537,8 +542,8 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 
       for (auto i = pos; i < pos + len; i++)
       {
-         float gainDown = fadeDownStep * (i - start);
-         float gainUp = fadeUpStep * (end - i);;
+         float gainDown = fadeDownStep * (i - start).as_float();
+         float gainUp = fadeUpStep * (end - i).as_float();
 
          float gain;
          if (gainDown > gainUp)
@@ -548,7 +553,8 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
          if (gain < mDuckAmountDb)
             gain = mDuckAmountDb;
 
-         buf[i - pos] *= DB_TO_LINEAR(gain);
+         // i - pos is bounded by len:
+         buf[ ( i - pos ).as_size_t() ] *= DB_TO_LINEAR(gain);
       }
 
       t->Set((samplePtr)buf, floatSample, pos, len);

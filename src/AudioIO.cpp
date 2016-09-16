@@ -412,7 +412,7 @@ struct AudioIO::ScrubQueue
       // Needed by the main thread sometimes
       wxMutexLocker locker(mUpdating);
       const Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
-      return previous.mS1 / mRate;
+      return previous.mS1.as_double() / mRate;
    }
 
    // This is for avoiding deadlocks while starting a scrub:
@@ -446,9 +446,11 @@ struct AudioIO::ScrubQueue
             return false;
 
          auto actualDuration = origDuration;
-         const sampleCount s1 = options.enqueueBySpeed
-            ? s0 + lrint(origDuration * end) // end is a speed
-            : lrint(end * mRate);            // end is a time
+         const sampleCount s1 ( options.enqueueBySpeed
+            ? s0.as_double() +
+               lrint(origDuration.as_double() * end) // end is a speed
+            : lrint(end * mRate)            // end is a time
+         );
          auto success =
             current->Init(previous, s0, s1, actualDuration, options);
          if (success)
@@ -537,8 +539,10 @@ struct AudioIO::ScrubQueue
                // Adjust the start time
                auto &start = entry.mS0;
                const auto end = entry.mS1;
-               const auto ratio = static_cast<double>(toDiscard) / static_cast<double>(dur);
-               const sampleCount adjustment = std::abs(end - start) * ratio;
+               const auto ratio = toDiscard.as_double() / dur.as_double();
+               const sampleCount adjustment(
+                  std::abs((end - start).as_long_long()) * ratio
+               );
                if (start <= end)
                   start += adjustment;
                else
@@ -588,7 +592,8 @@ struct AudioIO::ScrubQueue
          auto remaining = pEntry->mDuration - pEntry->mPlayed;
          if (frames >= remaining)
          {
-            frames -= remaining;
+            // remaining is not more than frames
+            frames -= remaining.as_size_t();
             pEntry->mPlayed = pEntry->mDuration;
          }
          else
@@ -622,7 +627,8 @@ private:
          const bool &adjustStart = options.adjustStart;
 
          wxASSERT(duration > 0);
-         double speed = static_cast<double>(std::abs(s1 - s0)) / duration;
+         double speed =
+            (std::abs((s1 - s0).as_long_long())) / duration.as_double();
          bool adjustedSpeed = false;
 
          auto minSpeed = std::min(options.minSpeed, options.maxSpeed);
@@ -655,7 +661,7 @@ private:
 
          if (speed < minSpeed) {
             // Trim the duration.
-            duration = std::max(0L, lrint(speed * duration / minSpeed));
+            duration = std::max(0L, lrint(speed * duration.as_double() / minSpeed));
             speed = minSpeed;
             adjustedSpeed = true;
          }
@@ -672,7 +678,7 @@ private:
          if (adjustedSpeed && !adjustStart)
          {
             // adjust s1
-            const sampleCount diff = lrint(speed * duration);
+            const sampleCount diff = lrint(speed * duration.as_double());
             if (s0 < s1)
                s1 = s0 + diff;
             else
@@ -689,8 +695,11 @@ private:
             auto newDuration = duration;
             const auto newS1 = std::max(options.minSample, std::min(options.maxSample, s1));
             if(s1 != newS1)
-               newDuration = std::max<sampleCount>(0,
-                  (duration * double(newS1 - s0) / (s1 - s0))
+               newDuration = std::max( sampleCount{ 0 },
+                  sampleCount(
+                     duration.as_double() * (newS1 - s0).as_double() /
+                        (s1 - s0).as_double()
+                  )
                );
             // When playback follows a fast mouse movement by "stuttering"
             // at maximum playback, don't make stutters too short to be useful.
@@ -712,7 +721,7 @@ private:
          {
             // Limit diff because this is seeking.
             const sampleCount diff =
-               lrint(std::min(options.maxSpeed, speed) * duration);
+               lrint(std::min(options.maxSpeed, speed) * duration.as_double());
             if (s0 < s1)
                s0 = s1 - diff;
             else
@@ -737,8 +746,8 @@ private:
       double GetTime(double rate) const
       {
          return
-            (mS0 +
-             (mS1 - mS0) * static_cast<double>(mPlayed) / static_cast<double>(mDuration))
+            (mS0.as_double() +
+             (mS1 - mS0).as_double() * mPlayed.as_double() / mDuration.as_double())
             / rate;
       }
 
@@ -1761,6 +1770,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    // mouse input, so make fillings more and shorter.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
+   wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
 
    // Capacity of the playback buffer.
@@ -1844,9 +1854,9 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
             // Allocate output buffers.  For every output track we allocate
             // a ring buffer of five seconds
             auto playbackBufferSize =
-               (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
+               (size_t)lrint(mRate * mPlaybackRingBufferSecs);
             auto playbackMixBufferSize =
-               (sampleCount)mPlaybackSamplesToCopy;
+               mPlaybackSamplesToCopy;
 
             mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.size()];
             mPlaybackMixers  = new Mixer*      [mPlaybackTracks.size()];
@@ -1883,8 +1893,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          {
             // Allocate input buffers.  For every input track we allocate
             // a ring buffer of five seconds
-            auto captureBufferSize =
-               (sampleCount)(mRate * mCaptureRingBufferSecs + 0.5);
+            auto captureBufferSize = (size_t)(mRate * mCaptureRingBufferSecs + 0.5);
 
             // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
             if(captureBufferSize < 100)
@@ -1922,10 +1931,8 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          bDone = false;
 
          // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
-         auto playbackBufferSize =
-            (sampleCount)lrint(mRate * mPlaybackRingBufferSecs);
-         auto playbackMixBufferSize =
-            (sampleCount)mPlaybackSamplesToCopy;
+         auto playbackBufferSize = (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+         auto playbackMixBufferSize = mPlaybackSamplesToCopy;
          if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
          {
             StartStreamCleanup();
@@ -3587,9 +3594,10 @@ void AudioIO::FillBuffers()
                      if (!mSilentScrub)
                      {
                         double startTime, endTime, speed;
-                        startTime = startSample / mRate;
-                        endTime = endSample / mRate;
-                        speed = double(std::abs(endSample - startSample)) / mScrubDuration;
+                        startTime = startSample.as_double() / mRate;
+                        endTime = endSample.as_double() / mRate;
+                        auto diff = (endSample - startSample).as_long_long();
+                        speed = double(std::abs(diff)) / mScrubDuration.as_double();
                         for (i = 0; i < mPlaybackTracks.size(); i++)
                            mPlaybackMixers[i]->SetTimesAndSpeed(startTime, endTime, speed);
                      }

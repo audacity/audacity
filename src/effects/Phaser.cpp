@@ -151,7 +151,7 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-sampleCount EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -183,10 +183,10 @@ bool EffectPhaser::RealtimeFinalize()
    return true;
 }
 
-sampleCount EffectPhaser::RealtimeProcess(int group,
+size_t EffectPhaser::RealtimeProcess(int group,
                                           float **inbuf,
                                           float **outbuf,
-                                          sampleCount numSamples)
+                                          size_t numSamples)
 {
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
@@ -372,7 +372,7 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    return;
 }
 
-sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
@@ -396,7 +396,10 @@ sampleCount EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBl
       if (((data.skipcount++) % lfoskipsamples) == 0)
       {
          //compute sine between 0 and 1
-         data.gain = (1.0 + cos(data.skipcount * data.lfoskip + data.phase)) / 2.0;
+         data.gain =
+            (1.0 +
+             cos(data.skipcount.as_double() * data.lfoskip
+                 + data.phase)) / 2.0;
 
          // change lfo shape
          data.gain = expm1(data.gain * phaserlfoshape) / expm1(phaserlfoshape);

@@ -1319,7 +1319,11 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
 
    const double t1 = zoomInfo.PositionToTime(rect.width - 1, -leftOffset) - toffset;
    const auto s1 = sampleCount(ceil(t1 * rate));
-   sampleCount slen = std::min(snSamples - s0, s1 - s0 + 1);
+
+   // Assume size_t will not overflow, else we wouldn't be here drawing the
+   // few individual samples
+   auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
+
    if (slen <= 0)
       return;
 
@@ -1337,7 +1341,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    dc.SetPen(muted ? muteSamplePen : samplePen);
 
    for (decltype(slen) s = 0; s < slen; s++) {
-      const double time = toffset + (s + s0) / rate;
+      const double time = toffset + (s + s0).as_double() / rate;
       const int xx = // An offset into the rectangle rect
          std::max(-10000, std::min(10000,
             int(zoomInfo.TimeToPosition(time, -leftOffset))));
@@ -1575,7 +1579,7 @@ struct ClipParameters
 
       //trim selection so that it only contains the actual samples
       if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
-         ssel1 = 0.5 + trackLen * rate;
+         ssel1 = sampleCount( 0.5 + trackLen * rate );
       }
 
       // The variable "hiddenMid" will be the rectangle containing the
@@ -2122,8 +2126,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const double &t0 = params.t0;
    const double &tOffset = params.tOffset;
-   const double &ssel0 = params.ssel0;
-   const double &ssel1 = params.ssel1;
+   const auto ssel0 = params.ssel0;
+   const auto ssel1 = params.ssel1;
    const double &averagePixelsPerSample = params.averagePixelsPerSample;
    const double &rate = params.rate;
    const double &hiddenLeftOffset = params.hiddenLeftOffset;

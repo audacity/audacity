@@ -102,7 +102,7 @@ unsigned EffectLeveller::GetAudioOutCount()
    return 1;
 }
 
-sampleCount EffectLeveller::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectLeveller::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

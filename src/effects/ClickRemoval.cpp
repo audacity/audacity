@@ -242,7 +242,8 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 
       s += block;
 
-      if (TrackProgress(count, s / (double) len)) {
+      if (TrackProgress(count, s.as_double() /
+                               len.as_double())) {
          bResult = false;
          break;
       }
@@ -254,7 +255,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    return bResult;
 }
 
-bool EffectClickRemoval::RemoveClicks(sampleCount len, float *buffer)
+bool EffectClickRemoval::RemoveClicks(int len, float *buffer)
 {
    bool bResult = false; // This effect usually does nothing.
    int i;

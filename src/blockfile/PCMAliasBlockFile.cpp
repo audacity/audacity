@@ -31,7 +31,7 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&fileName,
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel)
+      size_t aliasLen, int aliasChannel)
 : AliasBlockFile{ std::move(fileName), std::move(aliasedFileName),
                   aliasStart, aliasLen, aliasChannel }
 {
@@ -42,7 +42,7 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper&& fileName,
       wxFileNameWrapper&& aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel,bool writeSummary)
+      size_t aliasLen, int aliasChannel,bool writeSummary)
 : AliasBlockFile{ std::move(fileName), std::move(aliasedFileName),
                   aliasStart, aliasLen, aliasChannel }
 {
@@ -54,7 +54,7 @@ PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileNameWrapper &&existingSummaryFileName,
       wxFileNameWrapper &&aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel,
+      size_t aliasLen, int aliasChannel,
       float min, float max, float rms)
 : AliasBlockFile{ std::move(existingSummaryFileName), std::move(aliasedFileName),
                   aliasStart, aliasLen,
@@ -73,8 +73,8 @@ PCMAliasBlockFile::~PCMAliasBlockFile()
 /// @param format The format to convert the data into
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
-int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len) const
+size_t PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
+                                size_t start, size_t len) const
 {
    SF_INFO info;
 
@@ -116,11 +116,15 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    }
    mSilentAliasLog=FALSE;
 
-   SFCall<sf_count_t>(sf_seek, sf.get(), mAliasStart + start, SEEK_SET);
+   // Third party library has its own type alias, check it
+   static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
+                 "Type sf_count_t is too narrow to hold a sampleCount");
+   SFCall<sf_count_t>(sf_seek, sf.get(),
+                      ( mAliasStart + start ).as_long_long(), SEEK_SET);
    wxASSERT(info.channels >= 0);
    SampleBuffer buffer(len * info.channels, floatSample);
 
-   int framesRead = 0;
+   size_t framesRead = 0;
 
    if (format == int16Sample &&
        !sf_subtype_more_than_16_bits(info.format)) {
@@ -167,7 +171,7 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
    xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
    xmlFile.WriteAttr(wxT("aliasstart"),
-                     static_cast<long long>( mAliasStart ));
+                     mAliasStart.as_long_long());
    xmlFile.WriteAttr(wxT("aliaslen"), mLen);
    xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
    xmlFile.WriteAttr(wxT("min"), mMin);

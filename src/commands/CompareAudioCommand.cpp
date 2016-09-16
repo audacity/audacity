@@ -126,7 +126,8 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
 
       position += block;
       Progress(
-         double(position - s0) / double(length)
+         (position - s0).as_double() /
+         length.as_double()
       );
    }
 

@@ -62,14 +62,14 @@ public:
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
-   sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
+   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() override;
-   sampleCount RealtimeProcess(int group,
+   size_t RealtimeProcess(int group,
                                float **inbuf,
                                float **outbuf,
-                               sampleCount numSamples) override;
+                               size_t numSamples) override;
    bool GetAutomationParameters(EffectAutomationParameters & parms) override;
    bool SetAutomationParameters(EffectAutomationParameters & parms) override;
 
@@ -86,7 +86,7 @@ private:
    // EffectBassTreble implementation
 
    void InstanceInit(EffectBassTrebleState & data, float sampleRate);
-   sampleCount InstanceProcess(EffectBassTrebleState & data, float **inBlock, float **outBlock, sampleCount blockLen);
+   size_t InstanceProcess(EffectBassTrebleState & data, float **inBlock, float **outBlock, size_t blockLen);
 
    void Coefficents(double hz, double slope, double gain, double samplerate, int type,
                     double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);

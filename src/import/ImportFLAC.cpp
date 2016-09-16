@@ -499,7 +499,10 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
          for (int c = 0; c < mNumChannels; ++c, ++iter)
             iter->get()->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFLAC);
 
-         mUpdateResult = mProgress->Update(i, fileTotalFrames);
+         mUpdateResult = mProgress->Update(
+            i.as_long_long(),
+            fileTotalFrames.as_long_long()
+         );
          if (mUpdateResult != eProgressSuccess)
             break;
       }

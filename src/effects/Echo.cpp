@@ -86,10 +86,15 @@ bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    }
 
    histPos = 0;
-   histLen = (sampleCount) (mSampleRate * delay);
+   auto requestedHistLen = (sampleCount) (mSampleRate * delay);
 
    // Guard against extreme delay values input by the user
    try {
+      // Guard against huge delay values from the user.
+      // Don't violate the assertion in as_size_t
+      if (requestedHistLen !=
+            (histLen = static_cast<size_t>(requestedHistLen.as_long_long())))
+         throw std::bad_alloc{};
       history = new float[histLen];
    }
    catch ( const std::bad_alloc& ) {
@@ -109,7 +114,7 @@ bool EffectEcho::ProcessFinalize()
    return true;
 }
 
-sampleCount EffectEcho::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectEcho::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

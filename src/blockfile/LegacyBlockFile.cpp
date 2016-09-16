@@ -128,8 +128,8 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
 /// @param existingFile The disk file this LegacyBlockFile should use.
 LegacyBlockFile::LegacyBlockFile(wxFileNameWrapper &&existingFile,
                                  sampleFormat format,
-                                 sampleCount summaryLen,
-                                 sampleCount len,
+                                 size_t summaryLen,
+                                 size_t len,
                                  bool noRMS):
    BlockFile{ std::move(existingFile), len },
    mFormat(format)
@@ -188,8 +188,8 @@ bool LegacyBlockFile::ReadSummary(void *data)
 /// @param format The format the data will be stored in
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
-int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              sampleCount start, sampleCount len) const
+size_t LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
+                              size_t start, size_t len) const
 {
    SF_INFO info;
 
@@ -246,7 +246,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    SFCall<sf_count_t>(sf_seek, sf.get(), seekstart , SEEK_SET);
 
    SampleBuffer buffer(len, floatSample);
-   int framesRead = 0;
+   size_t framesRead = 0;
 
    // If both the src and dest formats are integer formats,
    // read integers from the file (otherwise we would be
@@ -295,7 +295,7 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
 BlockFilePtr LegacyBlockFile::BuildFromXML(const wxString &projDir, const wxChar **attrs,
-                                         sampleCount len, sampleFormat format)
+                                         size_t len, sampleFormat format)
 {
    wxFileNameWrapper fileName;
    size_t summaryLen = 0;

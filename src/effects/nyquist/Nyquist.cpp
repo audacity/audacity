@@ -972,7 +972,7 @@ bool NyquistEffect::ProcessOne()
       // increased with a nyquist comment directive.
       // See the parsing of "maxlen"
 
-      auto curLen = (long)(static_cast<long long>(mCurLen));
+      auto curLen = long(mCurLen.as_long_long());
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
       nyx_set_input_audio(StaticGetCallback, (void *)this,
@@ -1752,13 +1752,16 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
       }
    }
 
-   long offset = (mCurStart[ch] + start) - mCurBufferStart[ch];
+   // We have guaranteed above that this is nonnegative and bounded by
+   // mCurBufferLen[ch]:
+   auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
    CopySamples(mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample), floatSample,
                (samplePtr)buffer, floatSample,
                len);
 
    if (ch == 0) {
-      double progress = mScale*(((float)start+len)/mCurLen);
+      double progress = mScale *
+         ( (start+len)/ mCurLen.as_double() );
 
       if (progress > mProgressIn) {
          mProgressIn = progress;

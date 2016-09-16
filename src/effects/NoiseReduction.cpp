@@ -270,7 +270,7 @@ private:
 
    void StartNewTrack();
    void ProcessSamples(Statistics &statistics,
-      WaveTrack *outputTrack, sampleCount len, float *buffer);
+      WaveTrack *outputTrack, size_t len, float *buffer);
    void FillFirstHistoryWindow();
    void ApplyFreqSmoothing(FloatVector &gains);
    void GatherStatistics(Statistics &statistics);
@@ -911,10 +911,10 @@ void EffectNoiseReduction::Worker::StartNewTrack()
 
 void EffectNoiseReduction::Worker::ProcessSamples
 (Statistics &statistics, WaveTrack *outputTrack,
- sampleCount len, float *buffer)
+ size_t len, float *buffer)
 {
    while (len && mOutStepCount * mStepSize < mInSampleCount) {
-      auto avail = std::min(len, sampleCount(mWindowSize - mInWavePos));
+      auto avail = std::min(len, mWindowSize - mInWavePos);
       memmove(&mInWaveBuffer[mInWavePos], buffer, avail * sizeof(float));
       buffer += avail;
       len -= avail;
@@ -1312,7 +1312,9 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
       // Update the Progress meter, let user cancel
       bLoopSuccess = 
-         !effect.TrackProgress(count, (samplePos - start) / (double)len);
+         !effect.TrackProgress(count,
+                               ( samplePos - start ).as_double() /
+                               len.as_double() );
    }
 
    if (bLoopSuccess) {

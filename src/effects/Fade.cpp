@@ -75,7 +75,7 @@ bool EffectFade::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    return true;
 }
 
-sampleCount EffectFade::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectFade::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
@@ -84,14 +84,18 @@ sampleCount EffectFade::ProcessBlock(float **inBlock, float **outBlock, sampleCo
    {
       for (decltype(blockLen) i = 0; i < blockLen; i++)
       {
-         obuf[i] = (ibuf[i] * ((float) mSample++)) / mSampleCnt;
+         obuf[i] =
+            (ibuf[i] * ( mSample++ ).as_float()) /
+            mSampleCnt.as_float();
       }
    }
    else
    {
       for (decltype(blockLen) i = 0; i < blockLen; i++)
       {
-         obuf[i] = (ibuf[i] * ((float) mSampleCnt - 1 - mSample++)) / mSampleCnt;
+         obuf[i] = (ibuf[i] *
+                    ( mSampleCnt - 1 - mSample++ ).as_float()) /
+            mSampleCnt.as_float();
       }
    }
 

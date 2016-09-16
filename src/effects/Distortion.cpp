@@ -224,7 +224,7 @@ bool EffectDistortion::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-sampleCount EffectDistortion::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectDistortion::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -256,10 +256,10 @@ bool EffectDistortion::RealtimeFinalize()
    return true;
 }
 
-sampleCount EffectDistortion::RealtimeProcess(int group,
+size_t EffectDistortion::RealtimeProcess(int group,
                                               float **inbuf,
                                               float **outbuf,
-                                              sampleCount numSamples)
+                                              size_t numSamples)
 {
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
@@ -503,7 +503,7 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
    return;
 }
 
-sampleCount EffectDistortion::InstanceProcess(EffectDistortionState& data, float** inBlock, float** outBlock, sampleCount blockLen)
+size_t EffectDistortion::InstanceProcess(EffectDistortionState& data, float** inBlock, float** outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

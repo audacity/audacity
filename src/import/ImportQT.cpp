@@ -360,8 +360,9 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          numSamples += numFrames;
    
-         updateResult = mProgress->Update((wxULongLong_t)numSamples,
-                                          (wxULongLong_t)totSamples);
+         updateResult = mProgress->Update(
+            numSamples.as_long_long(),
+            totSamples.as_long_long() );
    
          if (numFrames == 0 || flags & kQTMovieAudioExtractionComplete) {
             break;

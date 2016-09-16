@@ -23,12 +23,6 @@
 
 #include "audacity/Types.h"
 
-#if 0
-// Moved to "audacity/types.h"
-typedef wxLongLong_t sampleCount; /** < A native 64-bit integer type, because
-                                    32-bit integers may not be enough */
-#endif
-
 class BlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
@@ -65,8 +59,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Static methods
    //
 
-   static void SetMaxDiskBlockSize(int bytes);
-   static int GetMaxDiskBlockSize();
+   static void SetMaxDiskBlockSize(size_t bytes);
+   static size_t GetMaxDiskBlockSize();
 
    //
    // Constructor / Destructor / Duplicator
@@ -88,7 +82,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    sampleCount GetNumSamples() const { return mNumSamples; }
 
    bool Get(samplePtr buffer, sampleFormat format,
-            sampleCount start, sampleCount len) const;
+            sampleCount start, size_t len) const;
+
+   // Note that len is not size_t, because nullptr may be passed for buffer, in
+   // which case, silence is inserted, possibly a large amount.
    bool Set(samplePtr buffer, sampleFormat format,
             sampleCount start, sampleCount len);
 
@@ -105,16 +102,16 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const;
    bool Paste(sampleCount s0, const Sequence *src);
 
-   sampleCount GetIdealAppendLen();
-   bool Append(samplePtr buffer, sampleFormat format, sampleCount len,
+   size_t GetIdealAppendLen() const;
+   bool Append(samplePtr buffer, sampleFormat format, size_t len,
                XMLWriter* blockFileLog=NULL);
    bool Delete(sampleCount start, sampleCount len);
    bool AppendAlias(const wxString &fullPath,
                     sampleCount start,
-                    sampleCount len, int channel, bool useOD);
+                    size_t len, int channel, bool useOD);
 
    bool AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType);
+                            size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
    unsigned int GetODFlags();
@@ -177,10 +174,13 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Getting block size and alignment information
    //
 
+   // This returns a possibly large or negative value
    sampleCount GetBlockStart(sampleCount position) const;
-   sampleCount GetBestBlockSize(sampleCount start) const;
-   sampleCount GetMaxBlockSize() const;
-   sampleCount GetIdealBlockSize() const;
+
+   // These return a nonnegative number of samples meant to size a memory buffer
+   size_t GetBestBlockSize(sampleCount start) const;
+   size_t GetMaxBlockSize() const;
+   size_t GetIdealBlockSize() const;
 
    //
    // This should only be used if you really, really know what
@@ -214,7 +214,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Private static variables
    //
 
-   static int    sMaxDiskBlockSize;
+   static size_t    sMaxDiskBlockSize;
 
    //
    // Private variables
@@ -224,10 +224,12 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    BlockArray    mBlock;
    sampleFormat  mSampleFormat;
+
+   // Not size_t!  May need to be large:
    sampleCount   mNumSamples{ 0 };
 
-   sampleCount   mMinSamples; // min samples per block
-   sampleCount   mMaxSamples; // max samples per block
+   size_t   mMinSamples; // min samples per block
+   size_t   mMaxSamples; // max samples per block
 
    bool          mErrorOpening{ false };
 
@@ -244,16 +246,16 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
-             sampleCount start, sampleCount len) const;
+             size_t blockRelativeStart, size_t len) const;
 
    bool CopyWrite(SampleBuffer &scratch,
-                  samplePtr buffer,    SeqBlock &b,
-                  sampleCount start, sampleCount len);
+                  samplePtr buffer, SeqBlock &b,
+                  size_t blockRelativeStart, size_t len);
 
-   void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, sampleCount len);
+   void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
 
    bool Get(int b, samplePtr buffer, sampleFormat format,
-      sampleCount start, sampleCount len) const;
+      sampleCount start, size_t len) const;
 
  public:
 

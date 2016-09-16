@@ -6216,7 +6216,7 @@ class ASAProgress final : public SAProgress {
 long mixer_process(void *mixer, float **buffer, long n)
 {
    Mixer *mix = (Mixer *) mixer;
-   long frame_count = mix->Process(n);
+   long frame_count = mix->Process(std::max(0L, n));
    *buffer = (float *) mix->GetBuffer();
    return frame_count;
 }
@@ -6301,7 +6301,7 @@ void AudacityProject::OnScoreAlign()
          0.0,                     // double startTime
          endTime,                 // double stopTime
          2,                       // int numOutChannels
-         44100,                   // int outBufferSize
+         44100u,                   // size_t outBufferSize
          true,                    // bool outInterleaved
          mRate,                   // double outRate
          floatSample,             // sampleFormat outFormat

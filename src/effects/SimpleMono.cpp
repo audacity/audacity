@@ -84,7 +84,7 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -118,7 +118,9 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(mCurTrackNum, (s - start) / len)) {
+      if (TrackProgress(mCurTrackNum,
+                        (s - start).as_double() /
+                        len)) {
          delete[]buffer;
          return false;
       }

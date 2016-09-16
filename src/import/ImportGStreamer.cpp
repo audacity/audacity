@@ -815,7 +815,7 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
    auto nChannels = c->mNumChannels;
    sampleFormat fmt = c->mFmt;
    samplePtr data = (samplePtr) info.data;
-   sampleCount samples = info.size / nChannels / SAMPLE_SIZE(fmt);
+   size_t samples = info.size / nChannels / SAMPLE_SIZE(fmt);
 
    // Add sample data to tracks...depends on interleaved src data
    for (int chn = 0; chn < nChannels; chn++)
