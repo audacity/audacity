@@ -903,7 +903,7 @@ void EffectNoiseReduction::Worker::StartNewTrack()
       mOutStepCount = -(int)(mHistoryLen - 1)
          // ... and then must pass over the padded windows,
          // before the first full window:
-         - (mStepsPerWindow - 1);
+         - (int)(mStepsPerWindow - 1);
    }
 
    mInSampleCount = 0;
@@ -1202,7 +1202,7 @@ void EffectNoiseReduction::Worker::ReduceNoise
    }
 
 
-   if (mOutStepCount >= -(mStepsPerWindow - 1)) {
+   if (mOutStepCount >= -(int)(mStepsPerWindow - 1)) {
       Record &record = *mQueue[mHistoryLen - 1];  // end of the queue
       const auto last = mSpectrumSize - 1;
 
