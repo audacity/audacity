@@ -1,12 +1,11 @@
-At this time, the newest SDK version that Audacity can build with
-is 10.6.  To build Audacity using Xcode 5.1 or newer, you need
-to extract the 10.6 SDK from an earlier version of Xcode.
+At this time, the newest SDK version that Audacity can build with is 10.6. 
+To build Audacity using Xcode 5.1 or newer, you need to extract the 10.6 SDK
+from an earlier version of Xcode.
 
-In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and
-Xcode 5.1.1 will be used.  Xcode 6.1.1, 6.3, 6.4.1, and 7.1
-have also been verified to work. Xcode 7.2 and later require a 
-custom build setting to accept the 10.6 SDK, or to edit 
-src\MemoryX.h in the Audacity code. See this topic:
+In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and Xcode 5.1.1 will
+be used.  Xcode 6.1.1, 6.3, 6.4.1, and 7.1 have also been verified to work. 
+Xcode 7.2 and later require a custom build setting to accept the 10.6 SDK, or 
+to edit src\MemoryX.h in the Audacity code. See this topic:
 http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
 
 1) Download Xcode 5.1.1 or greater and install it to /Applications.
@@ -24,11 +23,13 @@ http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
 
    Xcode is now ready.
 
-7) Download wxWidgets.  We currently require version 3.0.2, which can be downloaded from:
+7) Download wxWidgets 3.0.2 fron the wxWidgets project: 
+   http://sourceforge.net/projects/wxwindows/files/3.0.2/wxWidgets-3.0.2.tar.bz2 .
 
-   http://sourceforge.net/projects/wxwindows/files/3.0.2/wxWidgets-3.0.2.tar.bz2
+   Don't be tempted to use Widgets already installed by a package manager such 
+   as Homebrew because this may cause problems.              
 
-8) Once the download is complete, untar it (your browser may have already done this):
+8) Once the download is complete, untar it (your browser may do this itelf):
 
    tar xf wxWidgets-3.0.2.tar.bz2 .
 
@@ -45,12 +46,20 @@ http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
 
    sudo <path to Audacity source>/mac/build_wxwidgets .
 
-You should now be able to build Audacity using either the Xcode application or the
-xcodebuild command line tool.
+You should now be able to build Audacity using either the Xcode application or 
+the Xcodebuild command line tool. 
 
-If you need Audacity to use languages other than English, then you'll have to install
-the gettext suite of tools (to get the msgfmt command).  The source can be downloaded
-from:
+* Using xcodebuild, build Audacity and create DMG and ZIP bundles in 
+  /private/tmp by typing the following in the terminal:
+
+  xcodebuild -configuration Release install   
+
+* If you use the Xcode application, don't make any changes to 
+  Audacity.xcodeproj recommended by Xcode. In particular, be sure to leave the
+  Base SDK configuration set to 10.6 as it is now. 
+
+If you need Audacity to show languages other than English, install the gettext
+suite of tools (to get the msgfmt command).  The source can be downloaded from:
 
    ftp://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
 
