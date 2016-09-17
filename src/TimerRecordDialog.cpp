@@ -301,19 +301,24 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    if (fName == wxT(""))
       return;
 
-   // MY: If project already exits then abort - we do not allow users to overwrite an existing project
-   if (wxFileExists(fName)) {
+   AudacityProject* pProject = GetActiveProject();
+
+   // If project already exits then abort - we do not allow users to overwrite an existing project
+   // unless it is the current project.
+   if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
       wxMessageDialog m(
          NULL,
-         _("The selected file name could not be used\nfor Timer Recording because it would overwrite another project.\nPlease try again and select an original name."),
+         _("The selected file name could not be used\nfor Timer Recording because it \
+would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Timer Recording Project"),
          wxOK|wxICON_ERROR);
       m.ShowModal();
       return;
    }
 
-   // MY: Set this boolean to false so we now do a SaveAs at the end of the recording
-   m_bProjectAlreadySaved = false;
+   // Set this boolean to false so we now do a SaveAs at the end of the recording
+   // unless we're saving the current project.
+   m_bProjectAlreadySaved = pProject->GetFileName() == fName? true : false;
 
    m_fnAutoSaveFile = fName;
    m_fnAutoSaveFile.SetExt(wxT("aup"));
