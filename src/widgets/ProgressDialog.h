@@ -113,7 +113,7 @@ private:
                       const wxString & sTitle,
                       int iButtonID = -1);
 
-   void AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText);
+   void AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText, bool bFirstColumn);
 
 private:
    // This guarantees we have an active event loop...possible during OnInit()
