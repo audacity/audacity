@@ -1966,12 +1966,12 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
    bool bShiftDown = event.ShiftDown();
    bool bCtrlDown = event.ControlDown();
-   if (bShiftDown || bCtrlDown
+   if (bShiftDown || (bCtrlDown
 
 #ifdef USE_MIDI
        && !stretch
 #endif
-   ) {
+   )) {
 
       if( bShiftDown )
          ChangeSelectionOnShiftClick( pTrack );
