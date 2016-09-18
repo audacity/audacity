@@ -1317,8 +1317,8 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    }
 
    float mYMin = 1000000, mYMax = -1000000;
-   switch (alg) {
    double scale;
+   switch (alg) {
    case Spectrum:
       // Convert to decibels
       mYMin = 1000000.;
