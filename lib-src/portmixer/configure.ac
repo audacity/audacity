@@ -3,7 +3,7 @@
 #
 
 AC_PREREQ([2.60])
-AC_INIT([PortMixer], [2.0], [audacity.sourceforge.net], [portmixer])
+AC_INIT([PortMixer], [2.0], [feedback@audacityteam.org], [portmixer])
 AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR(src)
