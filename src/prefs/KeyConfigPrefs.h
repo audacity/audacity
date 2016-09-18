@@ -88,7 +88,7 @@ private:
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #else
@@ -143,7 +143,7 @@ class KeyConfigPrefs final : public PrefsPanel
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

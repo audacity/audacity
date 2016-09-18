@@ -132,7 +132,7 @@ class Grabber final : public wxWindow
 
  public:
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

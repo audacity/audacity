@@ -69,8 +69,8 @@ private:
 
 public:
 
-   DECLARE_CLASS(EditToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(EditToolBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

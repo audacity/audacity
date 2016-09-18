@@ -43,7 +43,7 @@ class LibraryPrefs final : public PrefsPanel
    wxStaticText *mMP3Version;
    wxStaticText *mFFmpegVersion;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class LibraryPrefsFactory final : public PrefsPanelFactory

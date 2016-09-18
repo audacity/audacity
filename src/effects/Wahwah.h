@@ -138,7 +138,7 @@ private:
    wxSlider *mFreqOfsS;
    wxSlider *mOutGainS;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -154,7 +154,7 @@ public:
 
    void OnExit() {};
 
-   DECLARE_DYNAMIC_CLASS(VSTSubEntry);
+   DECLARE_DYNAMIC_CLASS(VSTSubEntry)
 };
 IMPLEMENT_DYNAMIC_CLASS(VSTSubEntry, wxModule);
 

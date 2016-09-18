@@ -93,8 +93,8 @@ class EditToolBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(EditToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(EditToolBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

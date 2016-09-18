@@ -125,7 +125,7 @@ private:
    int mLastW;
    int mLastH;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class AUDACITY_DLL_API TimerProgressDialog final : public ProgressDialog

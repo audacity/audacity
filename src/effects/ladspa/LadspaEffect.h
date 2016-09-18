@@ -191,7 +191,7 @@ private:
    wxCheckBox **mToggles;
    LadspaEffectMeter **mMeters;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class LadspaEffectsModule;
 };

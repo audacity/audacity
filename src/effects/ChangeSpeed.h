@@ -115,7 +115,7 @@ private:
    double   mToLength;        // target length of selection
    wxString mFormat;          // time control format
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__

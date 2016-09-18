@@ -1381,7 +1381,7 @@ void AudacityProject::SetProjectTitle( int number)
    if( number >= 0 ){
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
       name = wxString::Format( _TS("[Project %02i] Audacity \"%s\""), number+1 ,
-         name.IsEmpty() ? "<untitled>" : name.c_str() );
+         name.IsEmpty() ? "<untitled>" : (const char *)name.c_str() );
    }
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if( name.IsEmpty() )

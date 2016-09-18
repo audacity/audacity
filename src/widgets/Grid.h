@@ -232,7 +232,7 @@ class Grid final : public wxGrid
 
  public:
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #if wxUSE_ACCESSIBILITY

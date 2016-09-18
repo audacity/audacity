@@ -40,7 +40,7 @@ public:
    void SetViewInfoFromScrollBar();
 
    ViewInfo * mpViewInfo;
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif // __AUDACITY_ATTACHABLE_SCROLL_BAR__

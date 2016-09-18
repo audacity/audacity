@@ -146,7 +146,7 @@ private:
    wxCheckBox *   mUseSBSMSCheckBox;
 #endif
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif // __AUDACITY_EFFECT_CHANGEPITCH__

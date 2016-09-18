@@ -354,7 +354,7 @@ private:
    long mXMLVersion;
    VstPatchChunkInfo mXMLInfo;
    
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class VSTEffectsModule;
 };

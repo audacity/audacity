@@ -340,8 +340,8 @@ public:
 
  public:
 
-   DECLARE_CLASS( ToolDock );
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS( ToolDock )
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

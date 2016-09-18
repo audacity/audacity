@@ -447,7 +447,7 @@ private:
    float mMax;
    float mLastValue;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(LadspaEffectMeter, wxWindow)

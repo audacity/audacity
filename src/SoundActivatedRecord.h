@@ -31,7 +31,7 @@ private:
 
    void PopulateOrExchange(ShuttleGui& S);
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

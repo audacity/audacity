@@ -91,7 +91,7 @@ private:
    wxSize mOrigSize;
    wxWindow *mOrigFocus{};
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 //

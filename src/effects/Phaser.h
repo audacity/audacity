@@ -146,7 +146,7 @@ private:
    wxSlider *mFeedbackS;
    wxSlider *mOutGainS;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

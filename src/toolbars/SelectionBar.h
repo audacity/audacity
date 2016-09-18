@@ -92,8 +92,8 @@ class SelectionBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(SelectionBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(SelectionBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

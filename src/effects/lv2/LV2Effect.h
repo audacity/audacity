@@ -248,7 +248,7 @@ private:
    // Declare the static URI nodes
    #undef URI
    #define URI(n, u) static LilvNode *n;
-   URILIST;
+   URILIST
 
    const LilvPlugin *mPlug;
 
@@ -321,7 +321,7 @@ private:
    wxArrayString mFactoryPresetNames;
    wxArrayString mFactoryPresetUris;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class LV2EffectSettingsDialog;
    friend class LV2EffectsModule;

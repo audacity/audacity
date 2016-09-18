@@ -212,7 +212,7 @@ private:
 
    Params mParams;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

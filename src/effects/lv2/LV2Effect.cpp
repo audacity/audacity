@@ -87,7 +87,7 @@ private:
    const LV2Port & mCtrl;
    float mLastValue;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
@@ -182,7 +182,7 @@ private:
    bool mUseLatency;
    bool mUseGUI;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)

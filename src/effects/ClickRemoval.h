@@ -82,7 +82,7 @@ private:
    wxTextCtrl *mWidthT;
    wxTextCtrl *mThreshT;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

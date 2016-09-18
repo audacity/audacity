@@ -161,7 +161,7 @@ public:
 
 private:
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 /// Entry for the Applicability table
@@ -217,7 +217,7 @@ private:
    wxArrayString mCodecLongNames;
    wxArrayString mProfileNames;
    wxArrayInt    mProfileLabels;
-   wxArrayString mPredictionOrderMethodNames;;
+   wxArrayString mPredictionOrderMethodNames;
    wxArrayInt    mPredictionOrderMethodLabels;
 
    wxChoice *mFormatChoice;

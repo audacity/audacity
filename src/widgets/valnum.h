@@ -126,9 +126,9 @@ private:
     // Combination of wxVAL_NUM_XXX values.
     int m_style;
 
-    DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 
-    DECLARE_NO_ASSIGN_CLASS(NumValidatorBase);
+    DECLARE_NO_ASSIGN_CLASS(NumValidatorBase)
 };
 
 namespace Private
@@ -257,7 +257,7 @@ private:
 
     ValueType * const m_value;
 
-    DECLARE_NO_ASSIGN_CLASS(NumValidator);
+    DECLARE_NO_ASSIGN_CLASS(NumValidator)
 };
 
 } // namespace Private
@@ -322,7 +322,7 @@ private:
     // Minimal and maximal values accepted (inclusive).
     LongestValueType m_min, m_max;
 
-    DECLARE_NO_ASSIGN_CLASS(IntegerValidatorBase);
+    DECLARE_NO_ASSIGN_CLASS(IntegerValidatorBase)
 };
 
 // Validator for integer numbers. It can actually work with any integer type
@@ -353,7 +353,7 @@ public:
     wxObject *Clone() const override { return safenew IntegerValidator(*this); }
 
 private:
-    DECLARE_NO_ASSIGN_CLASS(IntegerValidator);
+    DECLARE_NO_ASSIGN_CLASS(IntegerValidator)
 };
 
 // Helper function for creating integer validators which allows to avoid
@@ -425,7 +425,7 @@ private:
     // Minimal and maximal values accepted (inclusive).
     LongestValueType m_min, m_max;
 
-    DECLARE_NO_ASSIGN_CLASS(FloatingPointValidatorBase);
+    DECLARE_NO_ASSIGN_CLASS(FloatingPointValidatorBase)
 };
 
 // Validator for floating point numbers. It can be used with float, double or

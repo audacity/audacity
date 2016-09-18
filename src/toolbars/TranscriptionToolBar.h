@@ -157,8 +157,8 @@ class TranscriptionToolBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(TranscriptionToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(TranscriptionToolBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -104,7 +104,7 @@ private:
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif // __AUDACITY_EFFECT_TIMESCALE
