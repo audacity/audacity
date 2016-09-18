@@ -237,7 +237,7 @@ private:
    wxTextCtrl *mCommandText;
    wxCheckBox *mVersionCheckBox;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class NyquistEffectsModule;
 };
@@ -254,7 +254,7 @@ private:
    void OnOk(wxCommandEvent & event);
 
 private:
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 

@@ -171,8 +171,8 @@ class ControlToolBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(ControlToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(ControlToolBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

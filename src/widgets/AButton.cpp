@@ -59,8 +59,8 @@ public:
    void OnKeyUp(wxKeyEvent & event);
    void OnTimer(wxTimerEvent & event);
 
-   DECLARE_CLASS(AButton::Listener);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(AButton::Listener)
+   DECLARE_EVENT_TABLE()
 
 private:
    AButton *mButton;

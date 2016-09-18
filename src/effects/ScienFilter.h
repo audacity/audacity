@@ -130,7 +130,7 @@ private:
    RulerPanel *mdBRuler;
    RulerPanel *mfreqRuler;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class EffectScienFilterPanel;
 };
@@ -170,7 +170,7 @@ private:
 
    friend class EffectScienFilter;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #if wxUSE_ACCESSIBILITY

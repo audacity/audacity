@@ -564,7 +564,7 @@ private:
    int mType;
    int mAdditionalButtons;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 //
@@ -656,7 +656,7 @@ private:
 
    bool mDismissed{};
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class EffectPresetsDialog final : public wxDialogWrapper
@@ -684,7 +684,7 @@ private:
    wxArrayString mUserPresets;
    wxString mSelection;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 // Utility functions

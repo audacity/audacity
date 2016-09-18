@@ -83,15 +83,15 @@ private:
    void On ## n ## Slider(wxCommandEvent & evt); \
    void On ## n ## Text(wxCommandEvent & evt);
 
-   SpinSliderHandlers(RoomSize);
-   SpinSliderHandlers(PreDelay);
-   SpinSliderHandlers(Reverberance);
-   SpinSliderHandlers(HfDamping);
-   SpinSliderHandlers(ToneLow);
-   SpinSliderHandlers(ToneHigh);
-   SpinSliderHandlers(WetGain);
-   SpinSliderHandlers(DryGain);
-   SpinSliderHandlers(StereoWidth);
+   SpinSliderHandlers(RoomSize)
+   SpinSliderHandlers(PreDelay)
+   SpinSliderHandlers(Reverberance)
+   SpinSliderHandlers(HfDamping)
+   SpinSliderHandlers(ToneLow)
+   SpinSliderHandlers(ToneHigh)
+   SpinSliderHandlers(WetGain)
+   SpinSliderHandlers(DryGain)
+   SpinSliderHandlers(StereoWidth)
 
 #undef SpinSliderHandlers
 
@@ -107,21 +107,21 @@ private:
    wxSpinCtrl  *m ## n ## T; \
    wxSlider    *m ## n ## S;
 
-   SpinSlider(RoomSize);
-   SpinSlider(PreDelay);
-   SpinSlider(Reverberance);
-   SpinSlider(HfDamping);
-   SpinSlider(ToneLow);
-   SpinSlider(ToneHigh);
-   SpinSlider(WetGain);
-   SpinSlider(DryGain);
-   SpinSlider(StereoWidth);
+   SpinSlider(RoomSize)
+   SpinSlider(PreDelay)
+   SpinSlider(Reverberance)
+   SpinSlider(HfDamping)
+   SpinSlider(ToneLow)
+   SpinSlider(ToneHigh)
+   SpinSlider(WetGain)
+   SpinSlider(DryGain)
+   SpinSlider(StereoWidth)
 
 #undef SpinSlider
 
    wxCheckBox  *mWetOnlyC;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

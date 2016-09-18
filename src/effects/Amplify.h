@@ -82,7 +82,7 @@ private:
    wxTextCtrl *mNewPeakT;
    wxCheckBox *mClip;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif // __AUDACITY_EFFECT_AMPLIFY__

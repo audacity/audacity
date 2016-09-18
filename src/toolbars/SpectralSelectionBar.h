@@ -76,8 +76,8 @@ private:
 
 public:
 
-   DECLARE_CLASS(SpectralSelectionBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(SpectralSelectionBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

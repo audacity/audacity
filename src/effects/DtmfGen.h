@@ -98,7 +98,7 @@ private:
    wxStaticText *mDtmfSilenceT;
    wxStaticText *mDtmfDutyT;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

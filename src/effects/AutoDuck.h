@@ -85,7 +85,7 @@ private:
    wxTextCtrl *mMaximumPauseBox;
    EffectAutoDuckPanel *mPanel;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class EffectAutoDuckPanel;
 };
@@ -132,7 +132,7 @@ private:
    wxPoint mMouseDownPoint;
    bool mControlPointMoveActivated;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

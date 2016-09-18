@@ -53,7 +53,7 @@ class TimeDialog final : public wxDialogWrapper
 
    NumericTextCtrl *mTimeCtrl;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

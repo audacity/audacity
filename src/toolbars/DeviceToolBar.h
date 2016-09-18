@@ -77,8 +77,8 @@ class DeviceToolBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(DeviceToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(DeviceToolBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

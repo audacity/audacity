@@ -38,7 +38,7 @@ class ThemePrefs final : public PrefsPanel
    void OnReadThemeInternal(wxCommandEvent & e);
    void OnSaveThemeAsCode(wxCommandEvent & e);
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class ThemePrefsFactory final : public PrefsPanelFactory

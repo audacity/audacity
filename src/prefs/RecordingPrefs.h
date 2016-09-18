@@ -37,7 +37,7 @@ class RecordingPrefs final : public PrefsPanel
    bool mUseCustomTrackName;
    bool mOldNameChoice;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class RecordingPrefsFactory final : public PrefsPanelFactory

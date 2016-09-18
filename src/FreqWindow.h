@@ -118,7 +118,7 @@ private:
 private:
     FreqWindow *freqWindow;
 
-    DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
 
 class FreqWindow final : public wxDialogWrapper
@@ -213,7 +213,7 @@ private:
 
    std::unique_ptr<SpectrumAnalyst> mAnalyst;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class FreqPlot;
 };

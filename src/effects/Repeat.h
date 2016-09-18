@@ -62,7 +62,7 @@ private:
    wxStaticText *mCurrentTime;
    wxStaticText *mTotalTime;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

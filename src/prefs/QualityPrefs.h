@@ -50,7 +50,7 @@ class QualityPrefs final : public PrefsPanel
    wxTextCtrl *mOtherSampleRate;
    int mOtherSampleRateValue;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class QualityPrefsFactory final : public PrefsPanelFactory
