@@ -1753,7 +1753,7 @@ void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
 
 bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 {
-   OSStatus result;
+   // OSStatus result;
 
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;

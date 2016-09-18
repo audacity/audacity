@@ -832,7 +832,7 @@ void ToolDock::Updated()
 //
 void ToolDock::OnGrabber( GrabberEvent & event )
 {
-   auto pos = event.GetPosition();
+   // auto pos = event.GetPosition();
    if (!event.IsEscaping()) {
       ToolBar *t = mBars[ event.GetId() ];
 
