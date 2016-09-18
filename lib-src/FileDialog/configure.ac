@@ -3,7 +3,7 @@
 #
 
 AC_PREREQ([2.59])
-AC_INIT([FileDialog],[1.0],[audacity.sourceforge.net],[FileDialog])
+AC_INIT([FileDialog],[1.0],[feedback@audacityteam.org],[FileDialog])
 AC_CONFIG_AUX_DIR([autotools])
 AC_CONFIG_MACRO_DIR([m4])
 

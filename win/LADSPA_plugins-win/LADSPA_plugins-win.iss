@@ -7,9 +7,9 @@
 AppName=LADSPA_plugins-win
 AppVerName=LADSPA_plugins-win-0.4.15
 AppPublisher=Audacity Team
-AppPublisherURL=http://audacity.sourceforge.net
-AppSupportURL=http://audacity.sourceforge.net
-AppUpdatesURL=http://audacity.sourceforge.net
+AppPublisherURL=http://www.audacityteam.org
+AppSupportURL=http://www.audacityteam.org
+AppUpdatesURL=http://www.audacityteam.org
 DefaultDirName={pf}\Audacity\Plug-Ins
 ; Don't do the dir exists warning. We want it to already exist.
 DirExistsWarning=no

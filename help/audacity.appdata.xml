@@ -18,10 +18,10 @@
 	<li>Apply a wide range of other effects to audio recordings</li>
 	</ul>
   </description>
-  <url type="homepage">http://audacity.sourceforge.net/</url>
+  <url type="homepage">http://www.audacityteam.org/</url>
   <screenshots>
-    <screenshot type="default">http://audacity.sourceforge.net/about/images/audacity-linux.png</screenshot>
-    <screenshot>http://audacity.sourceforge.net/about/images/recording.png</screenshot>
+    <screenshot type="default">http://www.audacity.audio/wp-content/uploads/2016/01/audacity-212-linux.png</screenshot>
+    <screenshot>http://www.audacity.audio/wp-content/uploads/2015/11/Recording-with-Audacity-212.png</screenshot>
   </screenshots>
   <updatecontact>audacity-devel@lists.sourceforge.net</updatecontact>
 </application>
