@@ -392,7 +392,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       }
    } while (false);
 
-done:
+// done:
 
    if (maer) {
       MovieAudioExtractionEnd(maer);
@@ -441,7 +441,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
 
    for (int i = 0; i < WXSIZEOF(names); i++) {
       QTMetaDataItem item = kQTMetaDataItemUninitialized;
-      OSType key = names[i].key;
+      // OSType key = names[i].key;
 
       err = QTMetaDataGetNextItem(metaDataRef,
                                   kQTMetaDataStorageFormatWildcard,

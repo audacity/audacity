@@ -102,6 +102,7 @@ static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxStr
    }
 }
 
+#if 0
 // Recursive routine to copy all groups and entries from one wxConfig object to another
 static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase *dst)
 {
@@ -128,6 +129,7 @@ static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase 
       groupKeepGoing = src->GetNextGroup(groupName, groupIndex);
    }
 }
+#endif
 
 void InitPreferences()
 {

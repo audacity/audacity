@@ -181,9 +181,9 @@ ODLock &AudacityProject::AllProjectDeleteMutex()
 };
 
 #if defined(__WXMAC__)
-const int sbarSpaceWidth = 15;
-const int sbarControlWidth = 16;
-const int sbarExtraLen = 1;
+// const int sbarSpaceWidth = 15;
+// const int sbarControlWidth = 16;
+// const int sbarExtraLen = 1;
 const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #elif defined(__WXMSW__)
 const int sbarSpaceWidth = 16;
@@ -414,7 +414,7 @@ public:
 
    bool OnDrop(wxCoord x, wxCoord y) override
    {
-      bool foundSupported = false;
+      // bool foundSupported = false;
 #if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;

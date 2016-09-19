@@ -55,7 +55,7 @@ enum {
 };
 
 static const double MinStutter = 0.2;
-static const double MaxDragSpeed = 1.0;
+// static const double MaxDragSpeed = 1.0;
 
 namespace {
    double FindScrubbingSpeed(const ViewInfo &viewInfo, double maxScrubSpeed, double screen, double timeAtMouse)

@@ -1753,7 +1753,7 @@ void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
 
 bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 {
-   OSStatus result;
+   // OSStatus result;
 
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
@@ -1948,17 +1948,35 @@ bool AudioUnitEffect::SetRateAndChannels()
       mUnitInitialized = false;
    }
 
-   AudioStreamBasicDescription streamFormat = {0};
+   AudioStreamBasicDescription streamFormat {
+      // Float64 mSampleRate;
+      mSampleRate,
 
-   streamFormat.mSampleRate = mSampleRate;
-   streamFormat.mFormatID = kAudioFormatLinearPCM;
-   streamFormat.mFormatFlags = kAudioFormatFlagsNativeFloatPacked |
-                               kAudioFormatFlagIsNonInterleaved;
-   streamFormat.mBitsPerChannel = sizeof(float) * 8;
-   streamFormat.mChannelsPerFrame = mAudioIns;
-   streamFormat.mFramesPerPacket = 1;
-   streamFormat.mBytesPerFrame = sizeof(float);
-   streamFormat.mBytesPerPacket = sizeof(float);
+      // UInt32  mFormatID;
+      kAudioFormatLinearPCM,
+
+      // UInt32  mFormatFlags;
+      (kAudioFormatFlagsNativeFloatPacked |
+          kAudioFormatFlagIsNonInterleaved),
+
+      // UInt32  mBytesPerPacket;
+      sizeof(float),
+
+      // UInt32  mFramesPerPacket;
+      1,
+
+      // UInt32  mBytesPerFrame;
+      sizeof(float),
+
+      // UInt32  mChannelsPerFrame;
+      mAudioIns,
+
+      // UInt32  mBitsPerChannel;
+      sizeof(float) * 8,
+
+      // UInt32  mReserved;
+      0
+   };
 
    result = AudioUnitSetProperty(mUnit,
                                  kAudioUnitProperty_SampleRate,
