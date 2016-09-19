@@ -7321,20 +7321,16 @@ void TrackPanel::UpdateVRulerSize()
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    if (t) {
-      // Find the maximum of the VRuler sizes.
-      // We are only interested in width in fact.
       wxSize s = t->vrulerSize;
       while (t) {
          s.IncTo(t->vrulerSize);
          t = iter.Next();
       }
-      // If the width of the VRuler has changed, we need to 
-      // shift the HRuler 
-      if (vrulerSize.GetWidth() != s.GetWidth()) {
+      if (vrulerSize != s) {
+         vrulerSize = s;
          mRuler->SetLeftOffset(GetLeftOffset());  // bevel on AdornedRuler
          mRuler->Refresh();
       }
-      vrulerSize = s;
    }
    Refresh(false);
 }
