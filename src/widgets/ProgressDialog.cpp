@@ -1069,7 +1069,7 @@ void ProgressDialog::Init()
 }
 
 // Add a new text column each time this is called.
-void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText) {
+void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText, bool bFirstColumn) {
 
    // Assuming that we don't want empty columns, bail out if there is no text.
    if (sText.IsEmpty())
@@ -1085,6 +1085,12 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sT
                                               wxDefaultSize,
                                               wxALIGN_LEFT);
    oText->SetName(sText); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   // If this is the first column then set the mMessage pointer so non-TimerRecord usages
+   // will still work correctly
+   if (bFirstColumn) {
+      mMessage = oText;
+   }
 
    pSizer->Add(oText, 1, wxEXPAND | wxALL, 5);
 }
@@ -1125,7 +1131,8 @@ bool ProgressDialog::Create(const wxString & title,
       auto colSizer = uColSizer.get();
 
       for (size_t column = 0; column < arMessages.GetCount(); column++) {
-         AddMessageAsColumn(colSizer, arMessages[column]);
+         bool bFirstCol = (column == 0);
+         AddMessageAsColumn(colSizer, arMessages[column], bFirstCol);
       }
 
       // and put message column(s) into a main vertical sizer.
