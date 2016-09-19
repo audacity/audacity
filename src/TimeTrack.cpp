@@ -16,6 +16,7 @@
 #include "Audacity.h"
 #include "TimeTrack.h"
 
+#include <cfloat>
 #include <wx/intl.h>
 #include "AColor.h"
 #include "widgets/Ruler.h"
@@ -44,7 +45,7 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mDisplayLog = false;
 
    mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->SetTrackLen(1000000000.0);
+   mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetInterpolateDB(true);
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);
@@ -71,7 +72,7 @@ TimeTrack::TimeTrack(const TimeTrack &orig):
 
    ///@TODO: Give Envelope:: a copy-constructor instead of this?
    mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->SetTrackLen(1000000000.0);
+   mEnvelope->SetTrackLen(DBL_MAX);
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);

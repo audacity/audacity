@@ -303,7 +303,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
 
    AudacityProject* pProject = GetActiveProject();
 
-   // If project already exits then abort - we do not allow users to overwrite an existing project
+   // If project already exists then abort - we do not allow users to overwrite an existing project
    // unless it is the current project.
    if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
       wxMessageDialog m(

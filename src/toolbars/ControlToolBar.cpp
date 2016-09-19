@@ -33,6 +33,7 @@
 *//*******************************************************************/
 
 #include <algorithm>
+#include <cfloat>
 
 #include "../Audacity.h"
 #include "../Experimental.h"
@@ -891,7 +892,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
       if (t1 == t0)
-         t1 = 1000000000.0;     // record for a long, long time (tens of years)
+         t1 = DBL_MAX;     // record for a long, long time
 
       /* TODO: set up stereo tracks if that is how the user has set up
        * their preferences, and choose sample format based on prefs */
@@ -985,7 +986,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
-         t1 = 1000000000.0;     // record for a long, long time (tens of years)
+         t1 = DBL_MAX;     // record for a long, long time
       }
       else {
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;

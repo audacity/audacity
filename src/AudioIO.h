@@ -70,7 +70,8 @@ bool ValidateDeviceNames();
 
 class AudioIOListener;
 
-#define BAD_STREAM_TIME -1000000000.0
+// #include <cfloat> if you need this constant
+#define BAD_STREAM_TIME (-DBL_MAX)
 
 #define MAX_MIDI_BUFFER_SIZE 5000
 #define DEFAULT_SYNTH_LATENCY 5
