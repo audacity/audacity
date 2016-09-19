@@ -269,6 +269,7 @@ writing audio.
 #include "AudioIO.h"
 #include "float_cast.h"
 
+#include <cfloat>
 #include <math.h>
 #include <stdlib.h>
 #include <algorithm>

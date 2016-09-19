@@ -5888,7 +5888,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    wxString action;
    wxString shortAction;
    double offset;
-   double minOffset = 1000000000.0;
+   double minOffset = DBL_MAX;
    double maxEndOffset = 0.0;
    double leftOffset = 0.0;
    bool bRightChannel = false;
