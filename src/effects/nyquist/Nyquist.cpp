@@ -1208,8 +1208,8 @@ bool NyquistEffect::ProcessOne()
          wxMessageBox(_("Nyquist did not return audio.\n"),
                       wxT("Nyquist"),
                       wxOK | wxCENTRE, mUIParent);
-         for (i = 0; i < outChannels; i++) {
-            mOutputTrack[i].reset();
+         for (int j = 0; j < outChannels; j++) {
+            mOutputTrack[j].reset();
          }
          return true;
       }
