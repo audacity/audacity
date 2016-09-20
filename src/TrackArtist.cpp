@@ -151,6 +151,10 @@ audio tracks.
 #include <float.h>
 #include <limits>
 
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+#endif
+
 #include <wx/brush.h>
 #include <wx/colour.h>
 #include <wx/dc.h>
@@ -182,7 +186,6 @@ audio tracks.
 #include "widgets/Ruler.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
-
 #include "Experimental.h"
 
 #undef PROFILE_WAVEFORM
@@ -2002,7 +2005,6 @@ void TrackArtist::DrawTimeSlider(wxDC & dc,
    }
 }
 
-
 void TrackArtist::DrawSpectrum(const WaveTrack *track,
                                wxDC & dc,
                                const wxRect & rect,
@@ -2126,8 +2128,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const double &t0 = params.t0;
    const double &tOffset = params.tOffset;
-   const auto ssel0 = params.ssel0;
-   const auto ssel1 = params.ssel1;
+   const auto &ssel0 = params.ssel0;
+   const auto &ssel1 = params.ssel1;
    const double &averagePixelsPerSample = params.averagePixelsPerSample;
    const double &rate = params.rate;
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
@@ -2148,6 +2150,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    const bool &isGrayscale = settings.isGrayscale;
    const int &range = settings.range;
    const int &gain = settings.gain;
+
 #ifdef EXPERIMENTAL_FIND_NOTES
    const bool &fftFindNotes = settings.fftFindNotes;
    const bool &findNotesMinA = settings.findNotesMinA;
@@ -2186,7 +2189,22 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+   // nearest frequency to each pixel row from number scale, for selecting
+   // the desired fft bin(s) for display on that row
+   float *bins = (float*)alloca(sizeof(*bins)*(hiddenMid.height + 1));
+   {
+       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+
+       NumberScale::Iterator it = numberScale.begin(mid.height);
+       float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+
+       int yy;
+       for (yy = 0; yy < hiddenMid.height; ++yy) {
+          bins[yy] = nextBin;
+          nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+       }
+       bins[yy] = nextBin;
+   }
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    const float
@@ -2266,12 +2284,13 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       int *indexes = new int[maxTableSize];
 #endif //EXPERIMENTAL_FIND_NOTES
 
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
       for (int xx = 0; xx < hiddenMid.width; ++xx) {
-         NumberScale::Iterator it = numberScale.begin(mid.height);
-         float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
          for (int yy = 0; yy < hiddenMid.height; ++yy) {
-            const float bin = nextBin;
-            nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+            const float bin     = bins[yy];
+            const float nextBin = bins[yy+1];
 
             if (settings.scaleType != SpectrogramSettings::stLogarithmic) {
                const float value = findValue
@@ -2391,10 +2410,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    float selBinCenter =
       ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi)) / binUnit;
 
-   sampleCount w1(0.5 + rate *
-      (zoomInfo.PositionToTime(0, -leftOffset) - tOffset)
-   );
-
    const bool isSpectral = settings.SpectralSelectionEnabled();
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
    const int begin = hidden
@@ -2423,38 +2438,62 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
        );
    }
 
-   int correctedX = leftOffset - hiddenLeftOffset;
-   int fisheyeColumn = 0;
-   for (int xx = 0; xx < mid.width; ++xx, ++correctedX)
-   {
-      const bool inFisheye = zoomInfo.InFisheye(xx, -leftOffset);
-      float *const uncached =
-         inFisheye ? &specCache.freq[(fisheyeColumn++) * half] : 0;
+   // build color gradient tables (not thread safe)
+   if (!AColor::gradient_inited)
+      AColor::PreComputeGradient();
 
-      auto w0 = w1;
-      w1 = sampleCount(0.5 + rate *
-         (zoomInfo.PositionToTime(xx + 1, -leftOffset) - tOffset)
-      );
+   // left pixel column of the fisheye
+   int fisheyeLeft = zoomInfo.GetFisheyeLeftBoundary(-leftOffset);
 
-      NumberScale::Iterator it = numberScale.begin(mid.height);
-      float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+   for (int xx = 0; xx < mid.width; ++xx) {
+
+      int correctedX = xx + leftOffset - hiddenLeftOffset;
+
+      // in fisheye mode the time scale has changed, so the row values aren't cached
+      // in the loop above, and must be fetched from fft cache
+      float* uncached;
+      if (!zoomInfo.InFisheye(xx, -leftOffset)) {
+          uncached = 0;
+      }
+      else {
+          int specIndex = (xx - fisheyeLeft) * half;
+          wxASSERT(specIndex >= 0 && specIndex < specCache.freq.size());
+          uncached = &specCache.freq[specIndex];
+      }
+
+      // zoomInfo must be queried for each column since with fisheye enabled
+      // time between columns is variable
+      auto w0 = sampleCount(0.5 + rate *
+                   (zoomInfo.PositionToTime(xx, -leftOffset) - tOffset));
+
+      auto w1 = sampleCount(0.5 + rate *
+                    (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
+
+      bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
+
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
-         const float bin = nextBin;
-         nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+         const float bin     = bins[yy];
+         const float nextBin = bins[yy+1];
 
          // For spectral selection, determine what colour
          // set to use.  We use a darker selection if
          // in both spectral range and time range.
 
          AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
+
          // If we are in the time selected range, then we may use a different color set.
-         if (ssel0 <= w0 && w1 < ssel1)
+         if (maybeSelected)
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+
          const float value = uncached
             ? findValue(uncached, bin, nextBin, half, autocorrelation, gain, range)
             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
+
          unsigned char rv, gv, bv;
          GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
 
