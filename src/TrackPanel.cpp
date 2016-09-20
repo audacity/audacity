@@ -2990,13 +2990,13 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
       const wxInt64 topSel = (f1 >= 0)
          ? FrequencyToPosition(wt, f1, rect.y, rect.height)
          : rect.y;
-      wxInt64 signedBottomDist = int(event.m_y - bottomSel);
+      wxInt64 signedBottomDist = (int)(event.m_y - bottomSel);
       wxInt64 verticalDist = std::abs(signedBottomDist);
       if (bottomSel == topSel)
          // Top and bottom are too close to resolve on screen
          chooseBottom = (signedBottomDist >= 0);
       else {
-         const wxInt64 topDist = abs(int(event.m_y - topSel));
+         const wxInt64 topDist = abs((int)(event.m_y - topSel));
          if (topDist < verticalDist)
             chooseBottom = false, verticalDist = topDist;
       }
@@ -3007,7 +3007,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
          ) {
          const wxInt64 centerSel =
             FrequencyToPosition(wt, fc, rect.y, rect.height);
-         const wxInt64 centerDist = abs(int(event.m_y - centerSel));
+         const wxInt64 centerDist = abs((int)(event.m_y - centerSel));
          if (centerDist < verticalDist)
             chooseCenter = true, verticalDist = centerDist,
             ratio = f1 / fc;
@@ -6309,7 +6309,7 @@ bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEve
       if (x >= 0 && x < rect.width)
       {
          wxRect locRect;
-         locRect.x = int(rect.x + x) - 5;
+         locRect.x = (int)(rect.x + x) - 5;
          locRect.width = 11;
          locRect.y = rect.y;
          locRect.height = rect.height;
@@ -7747,13 +7747,13 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    if (display == WaveTrack::Waveform) {
       theMenu = mRulerWaveformMenu.get();
       const int id =
-         OnFirstWaveformScaleID + int(wt->GetWaveformSettings().scaleType);
+         OnFirstWaveformScaleID + (int)(wt->GetWaveformSettings().scaleType);
       theMenu->Check(id, true);
    }
    else {
       theMenu = mRulerSpectrumMenu.get();
       const int id =
-         OnFirstSpectrumScaleID + int(wt->GetSpectrogramSettings().scaleType);
+         OnFirstSpectrumScaleID + (int)(wt->GetSpectrogramSettings().scaleType);
       theMenu->Check(id, true);
    }
 
@@ -8525,7 +8525,7 @@ void TrackPanel::OnWaveformScaleType(wxCommandEvent &evt)
    const WaveformSettings::ScaleType newScaleType =
       WaveformSettings::ScaleType(
          std::max(0,
-            std::min(int(WaveformSettings::stNumScaleTypes) - 1,
+            std::min((int)(WaveformSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstWaveformScaleID
       )));
    if (wt->GetWaveformSettings().scaleType != newScaleType) {
@@ -8547,7 +8547,7 @@ void TrackPanel::OnSpectrumScaleType(wxCommandEvent &evt)
    const SpectrogramSettings::ScaleType newScaleType =
       SpectrogramSettings::ScaleType(
          std::max(0,
-            std::min(int(SpectrogramSettings::stNumScaleTypes) - 1,
+            std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstSpectrumScaleID
       )));
    if (wt->GetSpectrogramSettings().scaleType != newScaleType) {

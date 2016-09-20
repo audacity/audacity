@@ -686,7 +686,7 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
          double measures = beat / 4.0;
          double imeasures = ROUND(measures);
          if (!within(measures, imeasures, ALG_EPS)) {
-            double bar_offset = (int(measures) + 1) * 4.0 - beat;
+            double bar_offset = ((int)(measures) + 1) * 4.0 - beat;
             seq->set_time_sig(bar_offset, 4, 4);
          }
       // This case should never be true because if i == 0, either there
@@ -705,7 +705,7 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
             // beat is not on a measure, so we need to insert a time sig
             // to force a bar line at the first measure location after
             // beat
-            double bar = tsp->beat + beats_per_measure * (int(measures) + 1);
+            double bar = tsp->beat + beats_per_measure * ((int)(measures) + 1);
             double bar_offset = bar - beat;
             // insert NEW time signature at bar_offset in NEW sequence
             // It will have the same time signature, but the position will

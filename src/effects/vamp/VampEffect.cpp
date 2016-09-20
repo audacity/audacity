@@ -329,7 +329,7 @@ bool VampEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
             if (qs != 0.0)
             {
-               val = int((val - lower) / qs + 0.5) * qs + lower;
+               val = (int)((val - lower) / qs + 0.5) * qs + lower;
             }
          }
 
@@ -844,7 +844,7 @@ void VampEffect::UpdateFromPlugin()
 
             if (qs != 0.0)
             {
-               value = int((value - lower) / qs + 0.5) * qs + lower;
+               value = (int)((value - lower) / qs + 0.5) * qs + lower;
             }
          }
 
@@ -891,7 +891,7 @@ void VampEffect::OnSlider(wxCommandEvent & evt)
 
       if (qs != 0.0)
       {
-         val = int(val / qs + 0.5) * qs;
+         val = (int)(val / qs + 0.5) * qs;
       }
    }
 
@@ -920,7 +920,7 @@ void VampEffect::OnTextCtrl(wxCommandEvent & evt)
 
       if (qs != 0.0)
       {
-         val = int((val - lower) / qs + 0.5) * qs + lower;
+         val = (int)((val - lower) / qs + 0.5) * qs + lower;
       }
    }
 

@@ -210,7 +210,7 @@ WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
    if (viewMode < 0) {
       int oldMode;
       gPrefs->Read(wxT("/GUI/DefaultViewMode"), &oldMode,
-         int(WaveTrack::Waveform));
+         (int)(WaveTrack::Waveform));
       viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
    }
 

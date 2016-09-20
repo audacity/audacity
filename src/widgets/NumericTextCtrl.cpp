@@ -891,7 +891,7 @@ void NumericConverter::ControlsToValue()
 
    t /= mScalingFactor;
    if(mNtscDrop) {
-      int t_int = int(t + .000000001);
+      int t_int = (int)(t + .000000001);
       double t_frac = (t - t_int);
       int tenMins = t_int/600;
       double frames = tenMins*17982;

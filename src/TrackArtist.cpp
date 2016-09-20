@@ -865,7 +865,7 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
             }
             else {
                // use Hz
-               vruler->SetRange(int(maxFreq), int(minFreq));
+               vruler->SetRange((int)(maxFreq), (int)(minFreq));
                vruler->SetUnits(wxT(""));
             }
             vruler->SetLog(false);
@@ -1127,8 +1127,8 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
 
    // If sync-lock selected, draw in linked graphics.
    if (bIsSyncLockSelected && t0 < t1) {
-      const int begin = std::max(0, std::min(rect.width, int(zoomInfo.TimeToPosition(t0, -leftOffset))));
-      const int end = std::max(0, std::min(rect.width, int(zoomInfo.TimeToPosition(t1, -leftOffset))));
+      const int begin = std::max(0, std::min(rect.width, (int)(zoomInfo.TimeToPosition(t0, -leftOffset))));
+      const int end = std::max(0, std::min(rect.width, (int)(zoomInfo.TimeToPosition(t1, -leftOffset))));
       DrawSyncLockTiles(&dc, wxRect(rect.x + begin, rect.y, end - 1 - begin, rect.height));
    }
 
@@ -1347,7 +1347,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
       const double time = toffset + (s + s0).as_double() / rate;
       const int xx = // An offset into the rectangle rect
          std::max(-10000, std::min(10000,
-            int(zoomInfo.TimeToPosition(time, -leftOffset))));
+            (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
       xpos[s] = xx;
 
       const double tt = buffer[s] * clip->GetEnvelope()->GetValue(time);
@@ -1711,7 +1711,7 @@ void FindWavePortions
          prev = it++;
       if (it == end)
          break;
-      const int right = std::max(left, int(it->position));
+      const int right = std::max(left, (int)(it->position));
       const int width = right - left;
       if (width > 0)
          portions.push_back(
@@ -2029,23 +2029,23 @@ static inline float findValue
 
 #if 0
    // Averaging method
-   if (int(bin1) == int(bin0)) {
-      value = spectrum[int(bin0)];
+   if ((int)(bin1) == (int)(bin0)) {
+      value = spectrum[(int)(bin0)];
    } else {
       float binwidth= bin1 - bin0;
-      value = spectrum[int(bin0)] * (1.f - bin0 + (int)bin0);
+      value = spectrum[(int)(bin0)] * (1.f - bin0 + (int)bin0);
 
-      bin0 = 1 + int (bin0);
-      while (bin0 < int(bin1)) {
-         value += spectrum[int(bin0)];
+      bin0 = 1 + (int)(bin0);
+      while (bin0 < (int)(bin1)) {
+         value += spectrum[(int)(bin0)];
          bin0 += 1.0;
       }
       // Do not reference past end of freq array.
-      if (int(bin1) >= (int)half) {
+      if ((int)(bin1) >= (int)half) {
          bin1 -= 1.0;
       }
 
-      value += spectrum[int(bin1)] * (bin1 - int(bin1));
+      value += spectrum[(int)(bin1)] * (bin1 - (int)(bin1));
       value /= binwidth;
    }
 #else
@@ -2063,8 +2063,8 @@ static inline float findValue
       ));
    }
    else {
-      index = std::min<int>(half - 1, int(floor(0.5 + bin0)));
-      limitIndex = std::min<int>(half, int(floor(0.5 + bin1)));
+      index = std::min<int>(half - 1, (int)(floor(0.5 + bin0)));
+      limitIndex = std::min<int>(half, (int)(floor(0.5 + bin1)));
    }
    value = spectrum[index];
    while (++index < limitIndex)
@@ -2307,9 +2307,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                      indexes[i] = -1;
 
                   // Build a table of (most) values, put the index in it.
-                  for (int i = int(i0); i < int(i1); i++) {
-                     float freqi = freq[x0 + int(i)];
-                     int value = int((freqi + gain + range) / range*(maxTableSize - 1));
+                  for (int i = (int)(i0); i < (int)(i1); i++) {
+                     float freqi = freq[x0 + (int)(i)];
+                     int value = (int)((freqi + gain + range) / range*(maxTableSize - 1));
                      if (value < 0)
                         value = 0;
                      if (value >= maxTableSize)
@@ -2350,7 +2350,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                      float f = float(index)*bin2f;
                      if (findNotesQuantize)
                      {
-                        f = expf(int(log(f / 440) / log2 * 12 - 0.5) / 12.0f*log2) * 440;
+                        f = expf((int)(log(f / 440) / log2 * 12 - 0.5) / 12.0f*log2) * 440;
                         maxima[i] = f*f2bin;
                      }
                      float f0 = expf((log(f / 440) / log2 * 24 - 1) / 24.0f*log2) * 440;
@@ -2414,10 +2414,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
    const int begin = hidden
       ? 0
-      : std::max(0, int(zoomInfo.GetFisheyeLeftBoundary(-leftOffset)));
+      : std::max(0, (int)(zoomInfo.GetFisheyeLeftBoundary(-leftOffset)));
    const int end = hidden
       ? 0
-      : std::min(mid.width, int(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
+      : std::min(mid.width, (int)(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
    const size_t numPixels = std::max(0, end - begin);
    const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
    SpecCache specCache
@@ -2688,7 +2688,7 @@ const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def
 #define GREEN(i) ( unsigned char )( (((i) >> 8) & 0xff) )
 #define BLUE(i) ( unsigned char )( ((i) & 0xff) )
 
-//#define PITCH_TO_Y(p) (rect.y + rect.height - int(pitchht * ((p) + 0.5 - pitch0) + 0.5))
+//#define PITCH_TO_Y(p) (rect.y + rect.height - (int)(pitchht * ((p) + 0.5 - pitch0) + 0.5))
 
 /*
 int PitchToY(double p, int bottom)
@@ -3032,11 +3032,11 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                      // extreme zooms caues problems under windows, so we have to do some
                      // clipping before calling display routine
                      if (xx < h) { // clip line on left
-                        yy = int((yy + (y1 - yy) * (h - xx) / (x1 - xx)) + 0.5);
+                        yy = (int)((yy + (y1 - yy) * (h - xx) / (x1 - xx)) + 0.5);
                         xx = h;
                      }
                      if (x1 > h1) { // clip line on right
-                        y1 = int((yy + (y1 - yy) * (h1 - xx) / (x1 - xx)) + 0.5);
+                        y1 = (int)((yy + (y1 - yy) * (h1 - xx) / (x1 - xx)) + 0.5);
                         x1 = h1;
                      }
                      AColor::Line(dc, TIME_TO_X(xx), yy, TIME_TO_X(x1), y1);
@@ -3352,7 +3352,7 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
       wxRect within = rect;
       wxRect after = rect;
 
-      before.width = int(zoomInfo.TimeToPosition(sel0) + 2);
+      before.width = (int)(zoomInfo.TimeToPosition(sel0) + 2);
       if (before.GetRight() > rect.GetRight()) {
          before.width = rect.width;
       }
@@ -3363,7 +3363,7 @@ void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &rect,
 
          within.x = 1 + before.GetRight();
       }
-      within.width = rect.x + int(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
+      within.width = rect.x + (int)(zoomInfo.TimeToPosition(sel1) + 2) - within.x;
 
       if (within.GetRight() > rect.GetRight()) {
          within.width = 1 + rect.GetRight() - within.x;

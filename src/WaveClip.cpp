@@ -923,7 +923,7 @@ bool SpecCache::CalculateOneSpectrum
                freqCorrection = multiplier * quotIm;
             }
 
-            const int bin = int(ii + freqCorrection + 0.5f);
+            const int bin = (int)(ii + freqCorrection + 0.5f);
             if (bin >= 0 && bin < hFFT->Points) {
                double timeCorrection;
                {
@@ -1058,7 +1058,7 @@ void SpecCache::Populate
          // I'm not sure what's a good stopping criterion?
          auto xx = lowerBoundX;
          const double pixelsPerSample = pixelsPerSecond / rate;
-         const int limit = std::min(int(0.5 + fftLen * pixelsPerSample), 100);
+         const int limit = std::min((int)(0.5 + fftLen * pixelsPerSample), 100);
          for (int ii = 0; ii < limit; ++ii)
          {
             const bool result =

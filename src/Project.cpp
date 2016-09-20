@@ -1734,7 +1734,7 @@ void AudacityProject::SetHorizontalThumb(double scrollto)
    const int pos =
       std::min(max,
          std::max(0,
-            int(floor(0.5 + unscaled * mViewInfo.sbarScale))));
+            (int)(floor(0.5 + unscaled * mViewInfo.sbarScale))));
    mHsbar->SetThumbPosition(pos);
    mViewInfo.sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
    mViewInfo.sbarH = std::max(mViewInfo.sbarH,
@@ -1915,7 +1915,7 @@ void AudacityProject::FixScrollbars()
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
       const int offset =
-         int(floor(0.5 + mViewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
+         (int)(floor(0.5 + mViewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
@@ -4857,7 +4857,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       {
          WaveTrack *wt = ( WaveTrack* )n;
          Track::Holder merged;
-         for( int i = ( int )regions.size() - 1; i >= 0; i-- )
+         for( int i = (int)regions.size() - 1; i >= 0; i-- )
          {
             const Region &region = regions.at(i);
             auto dest = ( wt->*action )( region.start, region.end );

@@ -736,7 +736,7 @@ EffectNoiseReduction::Worker::Worker
 
 , mSpectrumSize(1 + mWindowSize / 2)
 , mFreqSmoothingScratch(mSpectrumSize)
-, mFreqSmoothingBins(int(settings.mFreqSmoothingBands))
+, mFreqSmoothingBins((int)(settings.mFreqSmoothingBands))
 , mBinLow(0)
 , mBinHigh(mSpectrumSize)
 
@@ -1415,7 +1415,7 @@ struct ControlInfo {
    wxString Text(double value) const
    {
       if (formatAsInt)
-         return wxString::Format(format, int(value));
+         return wxString::Format(format, (int)(value));
       else
          return wxString::Format(format, value);
    }

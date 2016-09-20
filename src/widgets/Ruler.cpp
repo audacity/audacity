@@ -1114,7 +1114,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       if (mMin * mMax < 0.0) {
          int mid;
          if (zoomInfo != NULL)
-            mid = int(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
          else
             mid = (int)(mLength*(mMin / (mMin - mMax)) + 0.5);
          const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
@@ -1240,8 +1240,8 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       for (i = 0; i <= steps; i++) {
          // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
          if (!(mFormat == IntFormat && decade < 10.0)) {
-            for (int f = start; f != int(end); f += mstep) {
-               if (int(f / 10) != f / 10.0f) {
+            for (int f = start; f != (int)(end); f += mstep) {
+               if ((int)(f / 10) != f / 10.0f) {
                   val = decade * f / 10;
                   if (val >= rMin && val < rMax) {
                      const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
@@ -1682,8 +1682,8 @@ inline int IndicatorWidthForHeight(int height)
 
 inline int IndicatorBigHeight()
 {
-   return std::max(int(ScrubHeight - TopMargin),
-                   int(IndicatorMediumWidth));
+   return std::max((int)(ScrubHeight - TopMargin),
+                   (int)(IndicatorMediumWidth));
 }
 
 inline int IndicatorBigWidth()
@@ -2277,7 +2277,7 @@ void AdornedRulerPanel::UpdateRects()
 
    if (mShowScrubbing) {
       mScrubZone = mInner;
-      auto scrubHeight = std::min(mScrubZone.height, int(ScrubHeight));
+      auto scrubHeight = std::min(mScrubZone.height, (int)(ScrubHeight));
 
       int topHeight;
 #ifdef SCRUB_ABOVE
