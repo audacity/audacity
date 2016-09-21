@@ -356,43 +356,6 @@ void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
    HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"), true);
 }
 
-wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
-   
-   wxString sFormatted = "";
-   wxString sHours = "";
-   wxString sMins = "";
-
-   if (iMinutes < 1) {
-      // Less than a minute...
-      sFormatted = _("Less than 1 minute");
-      return sFormatted;
-   }
-
-   // Calculate
-   int iHours = iMinutes / 60;
-   int iMins = iMinutes % 60;
-
-   // Format the hours
-   if (iHours == 1) {
-      sHours = _("1 hour and ");
-   }
-   else if (iHours > 1) {
-      sHours.Printf(_("%d hours and"), iHours);
-   }
-
-   // Format the minutes
-   if (iMins == 1) {
-      sMins = _("1 minute");
-   }
-   else if (iMins > 1) {
-      sMins.Printf(_("%d minutes"), iMins);
-   }
-
-   // Build the string
-   sFormatted.Printf("%s %s", sHours, sMins);
-   return sFormatted;
-}
-
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    this->TransferDataFromWindow();
@@ -440,9 +403,9 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
       // Format the strings
       wxString sRemainingTime = "";
-      sRemainingTime = GetHoursMinsString(iMinsLeft);
+      sRemainingTime = pProject->GetHoursMinsString(iMinsLeft);
       wxString sPlannedTime = "";
-      sPlannedTime = GetHoursMinsString(iMinsRecording);
+      sPlannedTime = pProject->GetHoursMinsString(iMinsRecording);
 
       // Create the message string
       wxString sMessage = "";

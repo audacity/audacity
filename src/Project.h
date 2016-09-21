@@ -291,7 +291,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool ProjectHasTracks();
 
    // Routine to estimate how many minutes of recording time are left on disk
-   int GetEstimatedRecordingMinsLeftOnDisk();
+   int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
+   // Converts number of minutes to human readable format
+   wxString GetHoursMinsString(int iMinutes);
 
 #include "Menus.h"
 

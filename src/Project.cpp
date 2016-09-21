@@ -4656,43 +4656,12 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = mDirManager->GetFreeDiskSpace();
       if (freeSpace >= 0) {
-         wxString msg;
-         double recTime;
-         int recMins;
-         // JKC: Bug 50: Use preferences to get actual sample format.
-         // However there is a slight performance impact due to Bug 1436
-         // So have left the old code in that gets the size (in RAM) but 
-         // #ifdeffed out.
-#if 1
-         sampleFormat oCaptureFormat = (sampleFormat)
-               gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
-#else
-         sampleFormat oCaptureFormat = gAudioIO->GetCaptureFormat();
-#endif
-         double bytesOnDiskPerSample = SAMPLE_SIZE_DISK(oCaptureFormat);
-         recTime = freeSpace.GetHi() * 4294967296.0 + freeSpace.GetLo();
-         recTime /= bytesOnDiskPerSample;
-         // note size on disk (=3 for 24-bit) not in memory (=4 for 24-bit)
-         recTime /= gAudioIO->GetNumCaptureChannels();
-         recTime /= GetRate();
-         recMins = (int)(recTime / 60.0);
+         wxString sMessage;
 
-         if (recMins >= 120)
-            msg.Printf(_("Disk space remains for recording %d hours and %d minutes."),
-                       recMins/60, recMins%60);
-         else if (recMins >= 60)
-            msg.Printf(_("Disk space remains for recording 1 hour and %d minutes."),
-                       recMins-60);
-         else if (recMins > 3)
-            msg.Printf(_("Disk space remains for recording %d minutes."),
-                       recMins);
-         else if (recTime >= 2)
-            msg.Printf(_("Disk space remains for recording %d seconds."),
-                       (int)recTime);
-         else
-            msg.Printf(_("Out of disk space"));
+         int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
+         sMessage.Printf(_("Disk space remains for recording %s"), GetHoursMinsString(iRecordingMins));
 
-         mStatusBar->SetStatusText(msg, mainStatusBarField);
+         mStatusBar->SetStatusText(sMessage, mainStatusBarField);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -5530,7 +5499,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    return bSuccess;
 }
 
-// MY: Does the project have any tracks?
+// Does the project have any tracks?
 bool AudacityProject::ProjectHasTracks() {
    // These two lines test for an 'empty' project.
    // of course it could still have a history at this stage.
@@ -5539,20 +5508,43 @@ bool AudacityProject::ProjectHasTracks() {
    return bHasTracks;
 }
 
-// MY: This routine will give an estimate of how many
+wxString AudacityProject::GetHoursMinsString(int iMinutes)
+{
+
+   wxString sFormatted = wxEmptyString;
+   wxString sHours = wxEmptyString;
+   wxString sMins = wxEmptyString;
+
+   if (iMinutes < 1) {
+      // Less than a minute...
+      sFormatted = _("Less than 1 minute");
+      return sFormatted;
+   }
+
+   // Calculate
+   int iHours = iMinutes / 60;
+   int iMins = iMinutes % 60;
+
+   // Use wxPLURAL to get strings
+   sHours = wxPLURAL("hour", "hours", iHours);
+   sMins = wxPLURAL("minute", "minutes", iMins);
+
+   sFormatted.Printf(_("%d %s and %d %s."), iHours, sHours, iMins, sMins);
+   return sFormatted;
+}
+
+// This routine will give an estimate of how many
 // minutes of recording time we have available.
-// This is called from TimerRecordDialog::OnOK() to allow
-// the user to resolve a potential disk space issue before
-// Timer Recording starts.
 // The calculations made are based on the user's current
 // preferences.
-int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
+int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
 
    // Obtain the current settings
    sampleFormat oCaptureFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
-   long lCaptureChannels;
-   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+   if (lCaptureChannels == 0) {
+      gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+   }
 
    // Find out how much free space we have on disk
    wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
@@ -5569,7 +5561,7 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
    dRecTime /= GetRate();
 
    // Convert to minutes before returning
-   int iRecMins = (int)(dRecTime / 60.0);
+   int iRecMins = (int)round(dRecTime / 60.0);
    return iRecMins;
 }
 
