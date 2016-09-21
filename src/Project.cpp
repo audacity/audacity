@@ -2020,11 +2020,10 @@ void AudacityProject::HandleResize()
 // How many projects that do not have a name yet?
 int AudacityProject::CountUnnamed()
 {
-   int i;
-   int j=0;
-   for(i=0;i<gAudacityProjects.size();i++){
-      if(gAudacityProjects[i])
-         if( gAudacityProjects[i]->GetName().IsEmpty() )
+   int j = 0;
+   for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
+      if ( gAudacityProjects[i] )
+         if ( gAudacityProjects[i]->GetName().IsEmpty() )
             j++;
    }
    return j;
@@ -2032,10 +2031,9 @@ int AudacityProject::CountUnnamed()
 
 void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
 {
-   int i;
-   for(i=0;i<gAudacityProjects.size();i++){
-      if(gAudacityProjects[i]){
-         if( !gAudacityProjects[i]->mIconized ){
+   for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
+      if ( gAudacityProjects[i] ) {
+         if ( !gAudacityProjects[i]->mIconized ) {
             AudacityProject * p;
             p = gAudacityProjects[i].get();
             p->SetProjectTitle( bShowProjectNumbers ? p->GetProjectNumber() : -1 );
@@ -2458,7 +2456,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          TitleRestorer Restorer( this );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
          wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
-         wxString Message = _("Save changes before closing?");
+         wxString Message = _("Save project before closing?");
          if( !bHasTracks )
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
