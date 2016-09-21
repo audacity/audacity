@@ -8,7 +8,7 @@ Updated September 27, 2006
 LADSPA_plugins-win is a project to port Steve Harris's LADSPA plugins 
 (http://plugin.org.uk/) to Windows OS as DLLs. 
 
-LADSPA_plugins-win is a part of Audacity (http://http://www.audacityteam.org) 
+LADSPA_plugins-win is a part of Audacity (http://www.audacityteam.org) 
 and is licensed under the Audacity license, which is the GNU GPL. See 
 http://www.audacityteam.org/about/license/ or audacity\LICENSE.txt.
 
