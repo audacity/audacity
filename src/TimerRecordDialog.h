@@ -101,8 +101,6 @@ private:
    int ExecutePostRecordActions(bool bWasStopped);
    int PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
 
-   wxString GetHoursMinsString(int iMinutes);
-
 private:
    wxDateTime m_DateTime_Start;
    wxDateTime m_DateTime_End;
