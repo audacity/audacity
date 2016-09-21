@@ -405,7 +405,7 @@ Bug fixes:
       for physical inputs (up to 24-bit depth) as well as loopback recording.  
    * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units.
    * Please report any issues with WASAPI recording/playback or Yosemite 
-      to http://audacity.sourceforge.net/contact/#feedback .
+      to http://www.audacityteam.org/contact/#feedback .
    * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
      Audacity menus. Keyboard shortcuts are visible if you install the classic
      GNOME Flashback interface or under Unity if you open Audacity with the
@@ -861,7 +861,7 @@ Summary of bug fixes and new features between 1.2.6 and 2.0.0:
       FLAC now fully supported. Added support for optional FFmpeg library 
       for import/export of AC3/M4A/WMA and import of audio from video files. 
 
-   Please visit http://audacity.sourceforge.net/about/features for a full
+   Please visit http://www.audacityteam.org/about/features/ for a full
    list of features in 2.0.0. You can click Help > Manual (in web browser) 
    in the program to read more. 
 
