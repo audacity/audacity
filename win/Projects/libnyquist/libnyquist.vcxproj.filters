@@ -19,9 +19,6 @@
     <Filter Include="nyquist\sys\win">
       <UniqueIdentifier>{80113197-531a-434a-9e97-db2eb5eb124d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="nyquist\sys\win\msvc">
-      <UniqueIdentifier>{9b0fdc29-d3ea-4ab0-82b4-e626c13f4a93}</UniqueIdentifier>
-    </Filter>
     <Filter Include="nyquist\tran">
       <UniqueIdentifier>{7dc77384-7003-4e2a-be93-41a927059f09}</UniqueIdentifier>
     </Filter>
@@ -33,6 +30,9 @@
     </Filter>
     <Filter Include="nyquist\nyqstk\src">
       <UniqueIdentifier>{8aef0bda-5dca-454d-9a0f-02cb77eeff56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nyquist\sys\win\common">
+      <UniqueIdentifier>{9b0fdc29-d3ea-4ab0-82b4-e626c13f4a93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -185,9 +185,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\yin.c">
       <Filter>nyquist\nyqsrc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc\winfun.c">
-      <Filter>nyquist\sys\win\msvc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\abs.c">
       <Filter>nyquist\tran</Filter>
@@ -646,6 +643,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.c">
       <Filter>nyquist\nyqsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\sys\win\common\winfun.c">
+      <Filter>nyquist\sys\win\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
