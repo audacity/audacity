@@ -358,9 +358,10 @@ void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 
 wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
    
-   wxString sFormatted = "";
-   wxString sHours = "";
-   wxString sMins = "";
+   wxString sFormatted = wxEmptyString;
+   wxString sHours = wxEmptyString;
+   wxString sMins = wxEmptyString;
+   wxString sAnd = wxEmptyString;
 
    if (iMinutes < 1) {
       // Less than a minute...
@@ -374,10 +375,10 @@ wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
 
    // Format the hours
    if (iHours == 1) {
-      sHours = _("1 hour and ");
+      sHours = _("1 hour");
    }
    else if (iHours > 1) {
-      sHours.Printf(_("%d hours and"), iHours);
+      sHours.Printf(_("%d hours"), iHours);
    }
 
    // Format the minutes
@@ -388,8 +389,13 @@ wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
       sMins.Printf(_("%d minutes"), iMins);
    }
 
+   // Do we need an and?
+   if ((sHours != wxEmptyString) && (sMins != wxEmptyString)) {
+      sAnd = _(" and ");
+   }
+
    // Build the string
-   sFormatted.Printf("%s %s", sHours, sMins);
+   sFormatted.Printf("%s%s%s", sHours, sAnd, sMins);
    return sFormatted;
 }
 
