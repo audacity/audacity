@@ -1304,7 +1304,7 @@ bool AudacityApp::OnInit()
 
    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
    // wrong because it would get cleared out on a reboot.
-   defaultTempDir.Printf(wxT("%s/Library/Application\ Support/audacity/SessionData"),
+   defaultTempDir.Printf(wxT("%s/Library/Application Support/audacity/SessionData"),
       tmpDirLoc.c_str());
 
    //defaultTempDir.Printf(wxT("%s/audacity-%s"),
