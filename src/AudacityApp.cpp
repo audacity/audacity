@@ -1130,7 +1130,8 @@ int AudacityApp::FilterEvent(wxEvent & event)
    }
 #endif
 
-#ifdef __WXMAC__
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
    if (event.GetEventType() == wxEVT_ACTIVATE)
    {
       wxActivateEvent & e = static_cast<wxActivateEvent &>(event);

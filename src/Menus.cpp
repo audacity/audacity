@@ -2925,7 +2925,8 @@ void AudacityProject::NextWindow()
    // (Really only works on Windows)
    w->Raise();
 
-#ifdef __WXMAC__
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
    // bug 868
    // Simulate a TAB key press before continuing, else the cycle of
    // navigation among top level windows stops because the keystrokes don't
@@ -2976,7 +2977,8 @@ void AudacityProject::PrevWindow()
    // (Really only works on Windows)
    w->Raise();
 
-#ifdef __WXMAC__
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
    // bug 868
    // Simulate a TAB key press before continuing, else the cycle of
    // navigation among top level windows stops because the keystrokes don't
