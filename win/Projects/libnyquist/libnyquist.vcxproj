@@ -139,7 +139,10 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\stats.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\trigger.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\yin.c" />
-    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\sys\win\common\winfun.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\sys\win\common\winfun.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\abs.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\allpoles.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\alpass.c" />
