@@ -938,17 +938,22 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    mUIParent->SetAutoLayout(false);
    mUIParent->Layout();
 
-   szrV->Show(szrG, true);
-   szrH->Show(szrI, true);
-   szrH->Show(szrL, false);
+   // "show" settings for graphics mode before setting the size of the dialog
+   // as this needs more space than draw mode
+   szrV->Show(szrG,true);  // eq sliders
+   szrH->Show(szrI,true);  // interpolation choice
+   szrH->Show(szrL,false); // linear freq checkbox
 
    mUIParent->SetSizeHints(mUIParent->GetBestSize());
 
 //   szrL->SetMinSize( szrI->GetSize() );
 
-   szrV->Show(szrG, false);
-   szrH->Show(szrI, false);
-   szrH->Show(szrL, true);
+   // switch to "show" settings for draw mode if necessary
+   if (mDrawMode) {
+      szrV->Show(szrG, false);
+      szrH->Show(szrI, false);
+      szrH->Show(szrL, true);
+   }
 
    return;
 }
