@@ -943,6 +943,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetAutoLayout(true);
+   mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
 
    //
    // Create the ToolDock
@@ -1180,7 +1181,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    //Initialize the last selection adjustment time.
    mLastSelectionAdjustment = ::wxGetLocalTimeMillis();
-
+   ClearBackground();// For wxGTK.
 }
 
 AudacityProject::~AudacityProject()
