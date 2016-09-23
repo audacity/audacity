@@ -262,7 +262,7 @@ Meter::Meter(AudacityProject *project,
 
    UpdatePrefs();
 
-   wxColour backgroundColour = GetParent()->GetBackgroundColour();
+   wxColour backgroundColour = theTheme.Colour( clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxSOLID);
