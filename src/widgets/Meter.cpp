@@ -446,10 +446,10 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       // LLL:  Should research USE_AQUA_THEME usefulness...
 #ifndef USE_AQUA_THEME
 #ifdef EXPERIMENTAL_THEMING
-      if( !mMeterDisabled )
-      {
-         mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
-      }
+      //if( !mMeterDisabled )
+      //{
+      //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
+      //}
 #endif
    
       dc.SetPen(*wxTRANSPARENT_PEN);
