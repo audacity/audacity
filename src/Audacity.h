@@ -177,13 +177,18 @@ extern const wxString& GetCustomTranslation(const wxString& str1 );
 extern const wxString& GetCustomSubstitution(const wxString& str1 );
 
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
-#define XO(s) GetCustomSubstitution(s)
+#define XO(s)  wxT(s)
 // Marks string for substitution only.
-#define _TS( s ) GetCustomSubstitution(s)
+#define _TS( s ) GetCustomSubstitution( s )
 
 
 #define WXINTL_NO_GETTEXT_MACRO
-#define _(s)                     GetCustomTranslation((s))
+
+#ifdef _
+#undef _
+#endif
+
+#define _(s) GetCustomTranslation((s))
 #endif
 
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
