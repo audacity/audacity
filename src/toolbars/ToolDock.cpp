@@ -873,10 +873,10 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
 
    // Start with a clean background
    //
-   // Under GTK, we specifically set the toolbar background to the background
-   // colour in the system theme.
+   // Under GTK, we don't set the toolbar background to the background
+   // colour in the system theme.  Instead we use our own colour.
 #if defined( __WXGTK__ )
-   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium )));
 #endif
    dc.Clear();
 
