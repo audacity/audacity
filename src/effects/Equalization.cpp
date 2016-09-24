@@ -948,13 +948,6 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
 //   szrL->SetMinSize( szrI->GetSize() );
 
-   // switch to "show" settings for draw mode if necessary
-   if (mDrawMode) {
-      szrV->Show(szrG, false);
-      szrH->Show(szrI, false);
-      szrH->Show(szrL, true);
-   }
-
    return;
 }
 
@@ -989,10 +982,12 @@ bool EffectEqualization::TransferDataToWindow()
    if (mDrawMode)
    {
       mDraw->SetValue(true);
+      UpdateDraw();
    }
    else
    {
       mGraphic->SetValue(true);
+      UpdateGraphic();
    }
 
    TransferDataFromWindow();
