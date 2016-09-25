@@ -860,9 +860,9 @@ void ToolBar::OnPaint( wxPaintEvent & event )
    // Under GTK, we specifically set the toolbar background to the background
    // colour in the system theme.
 #if defined( __WXGTK__ )
-   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
+   //dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
 #endif
-
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
 // EXPERIMENTAL_THEMING is set to not apply the gradient
@@ -870,7 +870,7 @@ void ToolBar::OnPaint( wxPaintEvent & event )
 #ifdef USE_AQUA_THEME
    Repaint( &dc );
 #else
-
+   return;
 #ifdef EXPERIMENTAL_THEMING
    wxImage * mpBackGradient =   &theTheme.Image( bmpRecoloredUpLarge  );
 
