@@ -371,7 +371,7 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
     EVT_MENU(OnSwapChannelsID, TrackPanel::OnSwapChannels)
-    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
+    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnSplitStereoMonoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnMergeStereoID, TrackPanel::OnMergeStereo)
 
@@ -625,13 +625,13 @@ void TrackPanel::BuildMenus(void)
 
    // include both mono and stereo items as a work around for bug 1250
 
-   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
    mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
    mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
-   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+//   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), (mFormatMenu = formatMenu.release()));
@@ -7622,6 +7622,9 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnSwapChannelsID, t->GetLinked());
       theMenu->Enable(OnMergeStereoID, canMakeStereo);
       theMenu->Enable(OnSplitStereoID, t->GetLinked());
+
+// Several menu items no longer needed....
+#if 0
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
@@ -7646,6 +7649,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnChannelMonoID, !t->GetLinked());
       theMenu->Enable(OnChannelLeftID, !t->GetLinked());
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
+#endif
 
       WaveTrack *const track = (WaveTrack *)t;
       const int display = track->GetDisplay();
@@ -7983,8 +7987,10 @@ void TrackPanel::SplitStereo(bool stereo)
 {
    wxASSERT(mPopupMenuTarget);
 
-   if (!stereo)
+   if (!stereo){
+      mPopupMenuTarget->SetPanFromChannelType();
       mPopupMenuTarget->SetChannel(Track::MonoChannel);
+   }
 
    Track *partner = mPopupMenuTarget->GetLink();
 
@@ -7998,8 +8004,10 @@ void TrackPanel::SplitStereo(bool stereo)
    if (partner)
    {
       partner->SetName(mPopupMenuTarget->GetName());
-      if (!stereo)
+      if (!stereo){
+         partner->SetPanFromChannelType();
          partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
+      }
 
       //On Demand - have each channel add it's own.
       if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
@@ -8044,7 +8052,9 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
       // Set partner's parameters to match target.
       partner->Merge(*mPopupMenuTarget);
 
+      mPopupMenuTarget->SetPan( 0.0f );
       mPopupMenuTarget->SetChannel(Track::LeftChannel);
+      partner->SetPan( 0.0f );
       partner->SetChannel(Track::RightChannel);
 
       // Set NEW track heights and minimized state
