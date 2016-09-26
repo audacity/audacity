@@ -172,7 +172,6 @@ void ThemePrefs::OnSaveThemeComponents(wxCommandEvent & WXUNUSED(event))
 void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 {
    theTheme.ReadImageCache();
-   AColor::ReInit();
    theTheme.ApplyUpdatedImages();
 }
 

@@ -165,6 +165,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
 
+   void ResetColours();
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks.get(); }

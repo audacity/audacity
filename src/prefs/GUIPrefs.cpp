@@ -24,12 +24,16 @@
 
 #include "../AudacityApp.h"
 #include "../Languages.h"
+#include "../Theme.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "GUISettings.h"
 
 #include "../Experimental.h"
+
+#include "ThemePrefs.h"
+#include "../AColor.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Interface"))
@@ -157,6 +161,21 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    }
    S.EndStatic();
+
+   S.StartStatic(_("Theme"));
+   {
+      S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("dark"));
+      {
+         S.TieRadioButton(_("Dark"),
+                          wxT("dark"));
+         S.TieRadioButton(_("Light"),
+                          wxT("light"));
+         S.TieRadioButton(_("Custom"),
+                          wxT("custom"));
+      }
+      S.EndRadioButtonGroup();
+   }
+   S.EndStatic();
 }
 
 bool GUIPrefs::Apply()
@@ -171,6 +190,20 @@ bool GUIPrefs::Apply()
       // lang was not usable.  We got overridden.
       gPrefs->Write(wxT("/Locale/Language"), usedLang);
       gPrefs->Flush();
+   }
+
+   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
+   if( theme != "foo" ){
+//      gPrefs->Write(wxT("/GUI/Theme"), theme);
+//      gPrefs->Flush();
+      wxArrayString aThemes;
+      aThemes.Add( "dark" );
+      aThemes.Add( "light" );
+      aThemes.Add( "custom" );
+      int themeIx = std::max( 0, aThemes.Index( theme ));
+
+      theTheme.ReadImageCache( (teThemeType)themeIx );
+      theTheme.ApplyUpdatedImages();
    }
 
    return true;

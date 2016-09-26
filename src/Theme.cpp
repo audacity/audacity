@@ -188,14 +188,18 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #include "AllThemeResources.h"
 
 // Include the ImageCache...
-static unsigned char ImageCacheAsData[] = {
 #ifdef EXPERIMENTAL_DA
-//#include "DarkThemeAsCeeCode.h"
-#include "LightThemeAsCeeCode.h"
-#else
-#include "ThemeAsCeeCode.h"
-#endif
+static unsigned char ImageCacheAsData[] = {
+#include "DarkThemeAsCeeCode.h"
 };
+static unsigned char LightImageCacheAsData[] = {
+#include "LightThemeAsCeeCode.h"
+};
+#else
+static unsigned char ImageCacheAsData[] = {
+#include "ThemeAsCeeCode.h"
+};
+#endif
 
 // theTheme is a global variable.
 AUDACITY_DLL_API Theme theTheme;
@@ -229,7 +233,9 @@ void Theme::EnsureInitialised()
 
 void Theme::ApplyUpdatedImages()
 {
+   AColor::ReInit();
    AudacityProject *p = GetActiveProject();
+   p->ResetColours();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
       ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
@@ -282,7 +288,6 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
 {
    EnsureInitialised();
 
-   const bool cbBinaryRead =true;
    const bool cbOkIfNotFound = true;
 
    // IF not interested in external files,
@@ -298,7 +303,7 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
       return;
    }
    // ELSE IF can't read the external image cache.
-   else if( !ReadImageCache( cbBinaryRead, cbOkIfNotFound ) )
+   else if( !ReadImageCache( themeDark, cbOkIfNotFound ) )
    {
       // THEN get the default set.
       ReadThemeInternal();
@@ -793,7 +798,7 @@ void ThemeBase::WriteImageDefs( )
 ///   otherwise the data is taken from a compiled in block of memory.
 /// @param bOkIfNotFound if true means do not report absent file.
 /// @return true iff we loaded the images.
-bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
+bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 {
    EnsureInitialised();
    wxImage ImageCache;
@@ -805,8 +810,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
-   // IF bBinary read THEN a normal read from a PNG file
-   if(  bBinaryRead )
+   if(  type == themeFromFile )
    {
       const wxString &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
@@ -832,8 +836,17 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    // ELSE we are reading from internal storage.
    else
    {
+#ifndef EXPERIMENTAL_DA
       wxMemoryInputStream InternalStream(
          (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
+#else
+      wxMemoryInputStream DarkInternalStream(
+         (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
+      wxMemoryInputStream LightInternalStream(
+         (char *)LightImageCacheAsData, sizeof(LightImageCacheAsData));
+      wxMemoryInputStream & InternalStream = (type == themeDark) ?
+         DarkInternalStream : LightInternalStream;
+#endif
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
       {
          // If we get this message, it means that the data in file
@@ -1019,7 +1032,7 @@ void ThemeBase::SaveComponents()
 void ThemeBase::ReadThemeInternal()
 {
    // false indicates not using standard binary method.
-   ReadImageCache( false );
+   ReadImageCache( themeDark );
 }
 
 void ThemeBase::SaveThemeAsCode()

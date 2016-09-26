@@ -1209,6 +1209,13 @@ AudacityProject::~AudacityProject()
                      this);
 }
 
+void AudacityProject::ResetColours()
+{
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+   ClearBackground();// For wxGTK.
+}
+
+
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 {
    AudioIOStartStreamOptions options { GetRate() };

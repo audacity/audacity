@@ -44,6 +44,13 @@ enum teResourceFlags
    resFlagInternal = 0x08  // For image manipulation.  Don't save or load.
 };
 
+enum teThemeType
+{
+   themeDark,
+   themeLight,
+   themeFromFile
+};
+
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxImage,  ArrayOfImages, AUDACITY_DLL_API);
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxBitmap, ArrayOfBitmaps, AUDACITY_DLL_API);
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxColour, ArrayOfColours, AUDACITY_DLL_API);
@@ -99,7 +106,7 @@ public:
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
    void CreateImageCache(bool bBinarySave = true);
-   bool ReadImageCache( bool bBinaryRead = true, bool bOkIfNotFound=false);
+   bool ReadImageCache( teThemeType type = themeFromFile, bool bOkIfNotFound=false);
    void LoadComponents( bool bOkIfNotFound =false);
    void SaveComponents();
    void ReadThemeInternal();
