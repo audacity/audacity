@@ -982,7 +982,9 @@ bool EffectEqualization::TransferDataToWindow()
    if (mDrawMode)
    {
       mDraw->SetValue(true);
-      UpdateDraw();
+      szrV->Show(szrG,false);    // eq sliders
+      szrH->Show(szrI,false);    // interpolation choice
+      szrH->Show(szrL,true);     // linear freq checkbox
    }
    else
    {
