@@ -18,15 +18,21 @@
 #include "Audacity.h"
 #include "HelpText.h"
 #include "FileNames.h"
+#include "AllThemeResources.h"
 
 
+wxString HtmlColourOfIndex( int i ){
+   wxColour c =  theTheme.Colour(i);
+   return wxString::Format("\"#%02X%02X%02X\"",
+      c.Red(), c.Green(), c.Blue() );
+}
 
 static wxString WrapText( const wxString & Text )
 {
    return wxString(wxT(""))+
       wxT("<html><head></head>") +
-      wxT("<body bgcolor=\"#404040\">") +
-      wxT("<font color=\"#fedfb2\">")+
+      wxT("<body bgcolor=") + HtmlColourOfIndex(clrDark) + wxT(">") +
+      wxT("<font color=") + HtmlColourOfIndex(clrTrackPanelText) + wxT(">") +
       wxT("<p>") + Text +
       wxT("</font>")+
       wxT("</body></html>");
@@ -91,7 +97,7 @@ static wxString LinkExpand( const wxString & Text )
       Key = Key.Mid( 0, j );
       LinkText = LinkText.Mid( 0, k );
 
-      LinkText="<font color=\"#ffffff\">"+LinkText+"</font>";
+      LinkText=wxString("<font color=") + HtmlColourOfIndex(clrSample) + wxT(">") +LinkText+"</font>";
       wxString Replacement;
       if( Key.StartsWith( wxT("wiki:") ))
       {

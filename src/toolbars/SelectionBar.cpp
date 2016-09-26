@@ -52,6 +52,7 @@ with changes in the SelectionBar.
 #include "../Project.h"
 #include "../Snap.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "../AllThemeResources.h"
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
 
@@ -136,7 +137,7 @@ void SelectionBar::Populate()
    // Top row (mostly labels)
    //
 
-   wxColour clrText = *wxWHITE;
+   wxColour clrText = theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
    wxStaticText * pProjRate = safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
    // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines

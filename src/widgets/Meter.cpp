@@ -430,6 +430,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    std::unique_ptr<wxDC> paintDC{ wxAutoBufferedPaintDCFactory(this) };
 #endif
    wxDC & destDC = *paintDC;
+   wxColour clrText = theTheme.Colour( clrTrackPanelText );
+   wxColour clrBoxFill = theTheme.Colour( clrMedium );
 
    if (mLayoutValid == false)
    {
@@ -471,7 +473,6 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          }
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
          dc.SetFont(GetFont());
-         wxColour clrText = *wxWHITE;
          dc.SetTextForeground( clrText );
          dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
          dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
@@ -573,7 +574,6 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 #endif
          }
       }
-      wxColour clrText = *wxWHITE;
       mRuler.SetTickColour( clrText );
       dc.SetTextForeground( clrText );
       // Draw the ruler
@@ -592,7 +592,6 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       DrawMeterBar(destDC, &mBar[i]);
    }
 
-   wxColour clrText = *wxWHITE;
    destDC.SetTextForeground( clrText );
 
 #if 0
@@ -631,7 +630,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                            Siz.GetHeight(),
                            Siz.GetWidth() );
 
-               destDC.SetBrush( *wxGREY_BRUSH );
+               destDC.SetBrush( wxBrush( clrBoxFill ) );
                destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
@@ -650,7 +649,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                          Siz.GetWidth(),
                          Siz.GetHeight() );
 
-               destDC.SetBrush( *wxGREY_BRUSH );
+               destDC.SetBrush( wxBrush( clrBoxFill ) );
                destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
