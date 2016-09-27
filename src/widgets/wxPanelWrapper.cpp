@@ -8,6 +8,7 @@
 
 #include "../Audacity.h"
 #include "wxPanelWrapper.h"
+#include <wx/grid.h>
 
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
@@ -15,7 +16,13 @@ void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
    // Compensate for the regressions in TAB key navigation
    // due to the switch to wxWidgets 3.0.2
    if (event.GetKeyCode() == WXK_TAB) {
-      wxWindow::FindFocus()->Navigate(
+      auto focus = wxWindow::FindFocus();
+      if (dynamic_cast<wxGrid*>(focus)) {
+         // Let wxGrid do its own TAB key handling
+         event.Skip();
+         return;
+      }
+      focus->Navigate(
          event.ShiftDown()
          ? wxNavigationKeyEvent::IsBackward
          :  wxNavigationKeyEvent::IsForward
