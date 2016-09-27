@@ -244,7 +244,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       IntegerValidator<int> vldStages(&mStages);
       vldStages.SetRange(MIN_Stages, MAX_Stages);
-      mStagesT = S.Id(ID_Stages).AddTextBox(_("Stages:"), wxT(""), 15);
+      mStagesT = S.Id(ID_Stages).AddTextBox(_("&Stages:"), wxT(""), 15);
       mStagesT->SetValidator(vldStages);
 
       S.SetStyle(wxSL_HORIZONTAL);
@@ -255,7 +255,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       IntegerValidator<int> vldDryWet(&mDryWet);
       vldDryWet.SetRange(MIN_DryWet, MAX_DryWet);
-      mDryWetT = S.Id(ID_DryWet).AddTextBox(_("Dry/Wet:"), wxT(""), 15);
+      mDryWetT = S.Id(ID_DryWet).AddTextBox(_("&Dry/Wet:"), wxT(""), 15);
       mDryWetT->SetValidator(vldDryWet);
 
       S.SetStyle(wxSL_HORIZONTAL);
@@ -265,7 +265,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       FloatingPointValidator<double> vldFreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
       vldFreq.SetRange(MIN_Freq, MAX_Freq);
-      mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 15);
+      mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
       mFreqT->SetValidator(vldFreq);
 
       S.SetStyle(wxSL_HORIZONTAL);
@@ -275,7 +275,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       FloatingPointValidator<double> vldPhase(1, &mPhase);
       vldPhase.SetRange(MIN_Phase, MAX_Phase);
-      mPhaseT = S.Id(ID_Phase).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 15);
+      mPhaseT = S.Id(ID_Phase).AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
       mPhaseT->SetValidator(vldPhase);
 
       S.SetStyle(wxSL_HORIZONTAL);
@@ -286,7 +286,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       IntegerValidator<int> vldDepth(&mDepth);
       vldDepth.SetRange(MIN_Depth, MAX_Depth);
-      mDepthT = S.Id(ID_Depth).AddTextBox(_("Depth:"), wxT(""), 15);
+      mDepthT = S.Id(ID_Depth).AddTextBox(_("Dept&h:"), wxT(""), 15);
       mDepthT->SetValidator(vldDepth);
 
       S.SetStyle(wxSL_HORIZONTAL);
@@ -296,7 +296,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       IntegerValidator<int> vldFeedback(&mFeedback);
       vldFeedback.SetRange(MIN_Feedback, MAX_Feedback);
-      mFeedbackT = S.Id(ID_Feedback).AddTextBox(_("Feedback (%):"), wxT(""), 15);
+      mFeedbackT = S.Id(ID_Feedback).AddTextBox(_("Feedbac&k (%):"), wxT(""), 15);
       mFeedbackT->SetValidator(vldFeedback);
 
       S.SetStyle(wxSL_HORIZONTAL);
@@ -307,7 +307,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
 
       FloatingPointValidator<double> vldoutgain(1, &mOutGain);
       vldoutgain.SetRange(MIN_OutGain, MAX_OutGain);
-      mOutGainT = S.Id(ID_OutGain).AddTextBox(_("Output gain (dB):"), wxT(""), 12);
+      mOutGainT = S.Id(ID_OutGain).AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
       mOutGainT->SetValidator(vldoutgain);
 
       S.SetStyle(wxSL_HORIZONTAL);

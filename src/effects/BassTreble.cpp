@@ -215,7 +215,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          // Bass control
          FloatingPointValidator<double> vldBass(1, &mBass);
          vldBass.SetRange(MIN_Bass, MAX_Bass);
-         mBassT = S.Id(ID_Bass).AddTextBox(_("&Bass (dB):"), wxT(""), 10);
+         mBassT = S.Id(ID_Bass).AddTextBox(_("Ba&ss (dB):"), wxT(""), 10);
          mBassT->SetName(_("Bass (dB):"));
          mBassT->SetValidator(vldBass);
 
@@ -258,7 +258,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxCENTER);
       {
          // Link checkbox
-         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("Link Volume control to Tone controls"),
+         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("&Link Volume control to Tone controls"),
                                           DEF_Link ? wxT("true") : wxT("false"));
       }
       S.EndMultiColumn();
