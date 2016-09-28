@@ -2932,7 +2932,7 @@ void AudacityProject::NextWindow()
    // navigation among top level windows stops because the keystrokes don't
    // go to the CommandManager.
    if (dynamic_cast<wxDialog*>(w)) {
-      w->NavigateIn();
+      w->SetFocus();
    }
 #endif
 }
@@ -2984,7 +2984,7 @@ void AudacityProject::PrevWindow()
    // navigation among top level windows stops because the keystrokes don't
    // go to the CommandManager.
    if (dynamic_cast<wxDialog*>(w)) {
-      w->NavigateIn();
+      w->SetFocus();
    }
 #endif
 }

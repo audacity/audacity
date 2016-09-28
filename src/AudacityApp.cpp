@@ -1142,7 +1142,6 @@ int AudacityApp::FilterEvent(wxEvent & event)
       {
          const auto window = ((wxWindow *)e.GetEventObject());
          window->SetFocus();
-         window->NavigateIn();
       }
    }
 #endif
