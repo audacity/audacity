@@ -5529,6 +5529,9 @@ wxString AudacityProject::GetHoursMinsString(int iMinutes)
    sHours = wxPLURAL("hour", "hours", iHours);
    sMins = wxPLURAL("minute", "minutes", iMins);
 
+   // String below if a time in hours and minutes such as:
+   // 7 hours and 14 minutes or
+   // 0 hours and 1 minute
    sFormatted.Printf(_("%d %s and %d %s."), iHours, sHours, iMins, sMins);
    return sFormatted;
 }
