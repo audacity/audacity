@@ -2616,7 +2616,6 @@
 		28A520530C12BE0300BF6811 /* pa_ringbuffer.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_ringbuffer.c; sourceTree = "<group>"; tabWidth = 3; };
 		28A520540C12BE0300BF6811 /* pa_ringbuffer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_ringbuffer.h; sourceTree = "<group>"; tabWidth = 3; };
 		28AA28130F267A2D008AED9E /* beat.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = beat.ny; path = "../plug-ins/beat.ny"; sourceTree = SOURCE_ROOT; };
-		28AA28140F267A2D008AED9E /* clicktrack.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = clicktrack.ny; path = "../plug-ins/clicktrack.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28150F267A2D008AED9E /* clipfix.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = clipfix.ny; path = "../plug-ins/clipfix.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28180F267A2D008AED9E /* delay.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = delay.ny; path = "../plug-ins/delay.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28190F267A2D008AED9E /* equalabel.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = equalabel.ny; path = "../plug-ins/equalabel.ny"; sourceTree = SOURCE_ROOT; };
@@ -2658,6 +2657,8 @@
 		28CCDD040F93A0B20081F2FC /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D000A31A32920C00367B21 /* DeviceChange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceChange.cpp; sourceTree = "<group>"; };
 		28D000A41A32920C00367B21 /* DeviceChange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceChange.h; sourceTree = "<group>"; };
+		28D34C7F1D9F52E200D4FB61 /* rhythmtrack.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = rhythmtrack.ny; path = "../plug-ins/rhythmtrack.ny"; sourceTree = SOURCE_ROOT; };
+		28D34C801D9F52E200D4FB61 /* vocalrediso.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vocalrediso.ny; path = "../plug-ins/vocalrediso.ny"; sourceTree = SOURCE_ROOT; };
 		28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = AppCommandEvent.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28D53FFB0FD1912A00FA7C75 /* AppCommandEvent.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AppCommandEvent.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D53FFC0FD1912A00FA7C75 /* BatchEvalCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = BatchEvalCommand.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5292,7 +5293,6 @@
 			children = (
 				28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */,
 				28AA28130F267A2D008AED9E /* beat.ny */,
-				28AA28140F267A2D008AED9E /* clicktrack.ny */,
 				28AA28150F267A2D008AED9E /* clipfix.ny */,
 				2860736A1B1ED77100850872 /* crossfadeclips.ny */,
 				28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */,
@@ -5303,6 +5303,7 @@
 				28AA281B0F267A2D008AED9E /* lowpass.ny */,
 				28ED7B701A1C77B0008A01D9 /* notch.ny */,
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
+				28D34C7F1D9F52E200D4FB61 /* rhythmtrack.ny */,
 				28AA281D0F267A2D008AED9E /* rissetdrum.ny */,
 				28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */,
 				28AA281E0F267A2D008AED9E /* SilenceMarker.ny */,
@@ -5313,6 +5314,7 @@
 				28ED7B791A1C77BF008A01D9 /* StudioFadeOut.ny */,
 				28AA281F0F267A2D008AED9E /* tremolo.ny */,
 				28AA28200F267A2D008AED9E /* vocalremover.ny */,
+				28D34C801D9F52E200D4FB61 /* vocalrediso.ny */,
 				28AA28210F267A2D008AED9E /* vocoder.ny */,
 			);
 			name = "plug-ins";
