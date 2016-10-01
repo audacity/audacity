@@ -111,6 +111,10 @@ class NyqBench:public wxFrame
 
    virtual bool Validate();
 
+   void ShowNyqBench();
+
+   static NyqBench *GetBench();
+
  private:
    void PopulateOrExchange(ShuttleGui & S);
 
@@ -213,12 +217,6 @@ class NyqBench:public wxFrame
    wxRect mLastSize;
 
    DECLARE_EVENT_TABLE();
-};
-
-class ModNyqBenchCommandFunctor:public CommandFunctor
-{
- public:
-   virtual void operator()(int index = 0, const wxEvent *e = NULL);
 };
 
 #endif

@@ -581,6 +581,16 @@ wxMenu * CommandManager::CurrentMenu() const
    return tmpCurrentSubMenu;
 }
 
+void CommandManager::SetCurrentMenu(wxMenu * menu)
+{
+   mCurrentMenu.reset(menu);
+}
+
+void CommandManager::ClearCurrentMenu()
+{
+   mCurrentMenu.release();
+}
+
 ///
 /// Add a menu item to the current menu.  When the user selects it, the
 /// given functor will be called

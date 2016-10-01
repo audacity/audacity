@@ -198,6 +198,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void Enable(const wxString &name, bool enabled);
    void Check(const wxString &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);
+   void SetCurrentMenu(wxMenu * menu);
+   void ClearCurrentMenu();
 
    //
    // Modifying accelerators
