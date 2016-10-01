@@ -783,17 +783,22 @@ bool SpecCache::CalculateOneSpectrum
       (settings.algorithm == SpectrogramSettings::algReassignment);
    const size_t windowSize = settings.WindowSize();
 
-   sampleCount start;
+   sampleCount from;
+
+   // xx may be for a column that is out of the visible bounds, but only
+   // when we are calculating reassignment contributions that may cross into
+   // the visible area.
+
    if (xx < 0)
-      start = sampleCount(
+      from = sampleCount(
          where[0].as_double() + xx * (rate / pixelsPerSecond)
       );
    else if (xx > len)
-      start = sampleCount(
+      from = sampleCount(
          where[len].as_double() + (xx - len) * (rate / pixelsPerSecond)
       );
    else
-      start = where[xx];
+      from = where[xx];
 
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
@@ -802,7 +807,7 @@ bool SpecCache::CalculateOneSpectrum
    const size_t fftLen = windowSize * zeroPaddingFactor;
    const auto half = fftLen / 2;
 
-   if (start <= 0 || start >= numSamples) {
+   if (from < 0 || from >= numSamples) {
       if (xx >= 0 && xx < len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
          float *const results = &out[half * xx];
@@ -820,21 +825,21 @@ bool SpecCache::CalculateOneSpectrum
       {
          auto myLen = windowSize;
          // Take a window of the track centered at this sample.
-         start -= windowSize >> 1;
-         if (start < 0) {
+         from -= windowSize >> 1;
+         if (from < 0) {
             // Near the start of the clip, pad left with zeroes as needed.
-            // Start is at least -windowSize / 2
-            for (auto ii = start; ii < 0; ++ii)
+            // from is at least -windowSize / 2
+            for (auto ii = from; ii < 0; ++ii)
                *adj++ = 0;
-            myLen += start.as_long_long(); // add a negative
-            start = 0;
+            myLen += from.as_long_long(); // add a negative
+            from = 0;
             copy = true;
          }
 
-         if (start + myLen > numSamples) {
+         if (from + myLen >= numSamples) {
             // Near the end of the clip, pad right with zeroes as needed.
             // newlen is bounded by myLen:
-            auto newlen = ( numSamples - start ).as_size_t();
+            auto newlen = ( numSamples - from ).as_size_t();
             for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
                adj[ii] = 0;
             myLen = newlen;
@@ -844,7 +849,7 @@ bool SpecCache::CalculateOneSpectrum
          if (myLen > 0) {
             useBuffer = (float*)(waveTrackCache.Get(
                floatSample, sampleCount(
-                  floor(0.5 + start.as_double() + offset * rate)
+                  floor(0.5 + from.as_double() + offset * rate)
                ),
                myLen)
             );
@@ -858,6 +863,8 @@ bool SpecCache::CalculateOneSpectrum
          useBuffer = scratch;
 
       if (autocorrelation) {
+         // not reassignment, xx is surely within bounds.
+         wxASSERT(xx >= 0);
          float *const results = &out[half * xx];
          // This function does not mutate useBuffer
          ComputeSpectrum(useBuffer, windowSize, windowSize,
@@ -941,20 +948,22 @@ bool SpecCache::CalculateOneSpectrum
                {
                   result = true;
 
-                  // Can this be negative?
-                  int index = (int)half * correctedX + bin;
+                  // This is non-negative, because bin and correctedX are
+                  auto ind = (int)half * correctedX + bin;
 #ifdef _OPENMP
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
                   // about 5% slower vs allowing it to race.
                   #pragma omp atomic update
 #endif
-                  out[index] += power;
+                  out[ind] += power;
                }
             }
          }
       }
       else {
+         // not reassignment, xx is surely within bounds.
+         wxASSERT(xx >= 0);
          float *const results = &out[half * xx];
 
          // Do the FFT.  Note that useBuffer is multiplied by the window,
