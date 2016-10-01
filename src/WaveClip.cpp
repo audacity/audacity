@@ -570,8 +570,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          // For what range of pixels can data be copied?
          copyBegin = std::min<size_t>(numPixels, std::max(0, -oldX0));
          copyEnd = std::min<size_t>(numPixels,
-            std::max(0,
-               (int)copyBegin + (int)oldCache->len - std::max(0, oldX0))
+            std::max(0, (int)oldCache->len - std::max(0, oldX0))
          );
       }
       if (!(copyEnd > copyBegin))
@@ -1174,7 +1173,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // For what range of pixels can data be copied?
       copyBegin = std::min((int)numPixels, std::max(0, -oldX0));
       copyEnd = std::min((int)numPixels,
-         copyBegin + (int)oldCache->len - std::max(0, oldX0)
+         (int)oldCache->len - std::max(0, oldX0)
       );
    }
 
