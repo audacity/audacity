@@ -112,6 +112,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    std::unique_ptr<wxMenuBar> AddMenuBar(const wxString & sMenu);
 
+   // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
+   // or else BeginMenu followed by EndMenu.  Don't mix them.
    void BeginMenu(const wxString & tName);
    void EndMenu();
 
@@ -198,6 +200,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void Enable(const wxString &name, bool enabled);
    void Check(const wxString &name, bool checked);
    void Modify(const wxString &name, const wxString &newLabel);
+
+   // You may either called SetCurrentMenu later followed by ClearCurrentMenu,
+   // or else BeginMenu followed by EndMenu.  Don't mix them.
    void SetCurrentMenu(wxMenu * menu);
    void ClearCurrentMenu();
 
@@ -318,7 +323,8 @@ private:
    bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
 
    wxString mCurrentMenuName;
-   std::unique_ptr<wxMenu> mCurrentMenu;
+   std::unique_ptr<wxMenu> uCurrentMenu;
+   wxMenu *mCurrentMenu {};
 
    CommandFlag mDefaultFlags;
    CommandMask mDefaultMask;

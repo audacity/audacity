@@ -502,7 +502,8 @@ wxMenuBar * CommandManager::CurrentMenuBar() const
 ///
 void CommandManager::BeginMenu(const wxString & tName)
 {
-   mCurrentMenu = std::make_unique<wxMenu>();
+   uCurrentMenu = std::make_unique<wxMenu>();
+   mCurrentMenu = uCurrentMenu.get();
    mCurrentMenuName = tName;
 }
 
@@ -515,7 +516,9 @@ void CommandManager::EndMenu()
    // Add the menu to the menubar after all menu items have been
    // added to the menu to allow OSX to rearrange special menu
    // items like Preferences, About, and Quit.
-   CurrentMenuBar()->Append(mCurrentMenu.release(), mCurrentMenuName);
+   wxASSERT(uCurrentMenu);
+   CurrentMenuBar()->Append(uCurrentMenu.release(), mCurrentMenuName);
+   mCurrentMenu = nullptr;
    mCurrentMenuName = COMMAND;
 }
 
@@ -575,7 +578,7 @@ wxMenu * CommandManager::CurrentMenu() const
 
    if(!tmpCurrentSubMenu)
    {
-      return mCurrentMenu.get();
+      return mCurrentMenu;
    }
 
    return tmpCurrentSubMenu;
@@ -583,12 +586,22 @@ wxMenu * CommandManager::CurrentMenu() const
 
 void CommandManager::SetCurrentMenu(wxMenu * menu)
 {
-   mCurrentMenu.reset(menu);
+   // uCurrentMenu ought to be null in correct usage
+   wxASSERT(!uCurrentMenu);
+   // Make sure of it anyway
+   uCurrentMenu.reset();
+
+   mCurrentMenu = menu;
 }
 
 void CommandManager::ClearCurrentMenu()
 {
-   mCurrentMenu.release();
+   // uCurrentMenu ought to be null in correct usage
+   wxASSERT(!uCurrentMenu);
+   // Make sure of it anyway
+   uCurrentMenu.reset();
+
+   mCurrentMenu = nullptr;
 }
 
 ///
