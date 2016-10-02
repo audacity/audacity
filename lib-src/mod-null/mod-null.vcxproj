@@ -54,7 +54,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;../../include;../../win;../../src;../../src/include/win32;../../src/include;../../lib-src/libsndfile/win32;../../lib-src/libsndfile/src;../../lib-src/portaudio-v19/include;../../lib-src/portmixer/include;../../lib-src/portsmf;../../lib-src/libnyquist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILDING_MOD_NULL;WXUSINGDLL;__WXMSW__;__WXDEBUG__;WIN32;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -78,7 +78,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;../../include;../../win;../../src;../../src/include/win32;../../src/include;../../lib-src/libsndfile/win32;../../lib-src/libsndfile/src;../../lib-src/portaudio-v19/include;../../lib-src/portmixer/include;../../lib-src/portsmf;../../lib-src/libnyquist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILDING_MOD_NULL;WXUSINGDLL;__WXMSW__;WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>wxDEBUG_LEVEL=0;WXUSINGDLL;__WXMSW__;WIN32;NDEBUG;STRICT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
@@ -86,13 +86,14 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>audacity.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)modules\$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_dll;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>..\..\win\$(ConfigurationName)\modules\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>../../win/$(Configuration);$(WXWIN)\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
