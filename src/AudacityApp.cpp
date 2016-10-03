@@ -744,7 +744,8 @@ void AudacityApp::MacNewFile()
 #define kAudacityAppTimerID 0
 
 BEGIN_EVENT_TABLE(AudacityApp, wxApp)
-   EVT_QUERY_END_SESSION(AudacityApp::OnEndSession)
+   EVT_QUERY_END_SESSION(AudacityApp::OnQueryEndSession)
+   EVT_END_SESSION(AudacityApp::OnEndSession)
 
    EVT_TIMER(kAudacityAppTimerID, AudacityApp::OnTimer)
 #ifdef __WXMAC__
@@ -1972,6 +1973,20 @@ void AudacityApp::FindFilesInPathList(const wxString & pattern,
       ff = pathList[i] + wxFILE_SEP_PATH + pattern;
       wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
+}
+
+void AudacityApp::OnQueryEndSession(wxCloseEvent & event)
+{
+   bool mustVeto = false;
+
+#ifdef __WXMAC__
+   mustVeto = wxDialog::OSXHasModalDialogsOpen();
+#endif
+
+   if ( mustVeto )
+      event.Veto(true);
+   else
+      OnEndSession(event);
 }
 
 void AudacityApp::OnEndSession(wxCloseEvent & event)

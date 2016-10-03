@@ -205,6 +205,7 @@ class AudacityApp final : public wxApp {
    void OnMenuPreferences(wxCommandEvent & event);
    void OnMenuExit(wxCommandEvent & event);
 
+   void OnQueryEndSession(wxCloseEvent & event);
    void OnEndSession(wxCloseEvent & event);
 
    // Most Recently Used File support (for all platforms).

@@ -41,6 +41,7 @@ http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
    patch -p0 -i <path to Audacity source>/mac/wxMac_additions/pinch-spread.patch .
    patch -p0 -i <path to Audacity source>/mac/wxMac_additions/focusrings.patch .
    patch -p0 -i <path to Audacity source>/mac/wxMac_additions/wxMac-3.0.2-wxaccessible.patch .
+   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/tooldock-quit.patch .
 
 10) And finally build/install wxWidgets:
 
