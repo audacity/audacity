@@ -291,6 +291,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // AS: Selection handling
    void SelectTrack(Track *track, bool selected, bool updateLastPicked = true);
    void SelectRangeOfTracks(Track *sTrack, Track *eTrack);
+   size_t GetSelectedTrackCount();
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
 

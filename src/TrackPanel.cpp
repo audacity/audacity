@@ -1871,6 +1871,16 @@ void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked
    }
 }
 
+size_t TrackPanel::GetSelectedTrackCount(){
+   size_t count = 0;
+
+   TrackListIterator iter(GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      count +=  t->GetSelected() ? 1:0;
+   }
+   return count;
+}
+
 void TrackPanel::SelectRangeOfTracks(Track *sTrack, Track *eTrack)
 {
    if (eTrack) {
@@ -1907,18 +1917,18 @@ void TrackPanel::ChangeSelectionOnShiftClick(Track * pTrack){
    TrackListIterator iter(GetTracks());
    for (Track *t = iter.First(); t; t = iter.Next()) {
       const bool isSelected = t->GetSelected();
-      // If our track is after the first, extend from the first.
-      if( t == pTrack ){
-         pExtendFrom = pFirst;
-      }
       // Record first and last selected.
       if( isSelected ){
          if( !pFirst )
             pFirst = t;
          pLast = t;
       }
+      // If our track is at or after the first, extend from the first.
+      if( t == pTrack ){
+         pExtendFrom = pFirst;
+      }
    }
-   // Our track was the first or earlier.  Extend from the last.
+   // Our track was earlier than the first.  Extend from the last.
    if( !pExtendFrom )
       pExtendFrom = pLast;
 
@@ -1976,11 +1986,13 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       if( bShiftDown )
          ChangeSelectionOnShiftClick( pTrack );
       if( bCtrlDown ){
-         //bool bIsSelected = pTrack->GetSelected();
-         bool bIsSelected = false;
+         bool bIsSelected = pTrack->GetSelected();
+         //bool bIsSelected = true;
          // could set bIsSelected true here, but toggling is more technically correct.
          // if we want to match behaviour in Track Control Panel.
-         SelectTrack( pTrack, !bIsSelected, false );
+         // Don't toggle away the last selected track.
+         if( !bIsSelected || GetSelectedTrackCount() > 1 )
+            SelectTrack( pTrack, !bIsSelected, false );
       }
 
       double value;
@@ -2070,7 +2082,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
             return;
          }
-      else
+         else
 #endif
          {
             // Not shift-down, choose boundary only within snapping
@@ -2821,7 +2833,8 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    // Handle which tracks are selected
    Track *sTrack = pTrack;
    Track *eTrack = FindTrack(x, y, false, false, NULL);
-   SelectRangeOfTracks(sTrack, eTrack);
+   if( !event.ControlDown() )
+      SelectRangeOfTracks(sTrack, eTrack);
 
 #ifdef USE_MIDI
    if (mStretching) {
