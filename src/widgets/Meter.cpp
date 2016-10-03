@@ -369,7 +369,7 @@ Meter::~Meter()
 
    // LLL:  This prevents a crash during termination if monitoring
    //       is active.
-   if (gAudioIO->IsMonitoring())
+   if (gAudioIO && gAudioIO->IsMonitoring())
       gAudioIO->StopStream();
 }
 
