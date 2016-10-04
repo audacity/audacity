@@ -1914,29 +1914,36 @@ void TrackPanel::ChangeSelectionOnShiftClick(Track * pTrack){
    // We will either extend from the first or from the last.
    Track* pExtendFrom= nullptr;
 
-   TrackListIterator iter(GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      const bool isSelected = t->GetSelected();
-      // Record first and last selected.
-      if( isSelected ){
-         if( !pFirst )
-            pFirst = t;
-         pLast = t;
-      }
-      // If our track is at or after the first, extend from the first.
-      if( t == pTrack ){
-         pExtendFrom = pFirst;
-      }
+   if( mLastPickedTrack ){
+      pExtendFrom = mLastPickedTrack;
    }
-   // Our track was earlier than the first.  Extend from the last.
-   if( !pExtendFrom )
-      pExtendFrom = pLast;
+   else
+   {
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         const bool isSelected = t->GetSelected();
+         // Record first and last selected.
+         if( isSelected ){
+            if( !pFirst )
+               pFirst = t;
+            pLast = t;
+         }
+         // If our track is at or after the first, extend from the first.
+         if( t == pTrack ){
+            pExtendFrom = pFirst;
+         }
+      }
+      // Our track was earlier than the first.  Extend from the last.
+      if( !pExtendFrom )
+         pExtendFrom = pLast;
+   }
 
    SelectNone();
    if( pExtendFrom )
       SelectRangeOfTracks(pTrack, pExtendFrom);
    else
       SelectTrack( pTrack, true );
+   mLastPickedTrack = pExtendFrom;
 }
 
 /// This method gets called when we're handling selection
@@ -1986,13 +1993,13 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       if( bShiftDown )
          ChangeSelectionOnShiftClick( pTrack );
       if( bCtrlDown ){
-         bool bIsSelected = pTrack->GetSelected();
-         //bool bIsSelected = true;
-         // could set bIsSelected true here, but toggling is more technically correct.
-         // if we want to match behaviour in Track Control Panel.
+         //Commented out bIsSelected toggles, as in Track Control Panel.
+         //bool bIsSelected = pTrack->GetSelected();
+         //Actual bIsSelected will always add.
+         bool bIsSelected = false;
          // Don't toggle away the last selected track.
          if( !bIsSelected || GetSelectedTrackCount() > 1 )
-            SelectTrack( pTrack, !bIsSelected, false );
+            SelectTrack( pTrack, !bIsSelected, true );
       }
 
       double value;
