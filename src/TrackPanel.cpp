@@ -1851,6 +1851,13 @@ void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked
 {
    bool wasCorrect = (selected == pTrack->GetSelected());
 
+   mTracks->Select(pTrack, selected);
+   if (updateLastPicked)
+      mLastPickedTrack = pTrack;
+
+//Thw older code below avoids an anchor on an unselected track.
+
+   /*
    if (selected) {
       // This handles the case of linked tracks, selecting all channels
       mTracks->Select(pTrack, true);
@@ -1862,6 +1869,7 @@ void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked
       if (updateLastPicked && pTrack == mLastPickedTrack)
          mLastPickedTrack = nullptr;
    }
+*/
 
    // Update mixer board, but only as needed so it does not flicker.
    if (!wasCorrect) {
@@ -2000,6 +2008,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          // Don't toggle away the last selected track.
          if( !bIsSelected || GetSelectedTrackCount() > 1 )
             SelectTrack( pTrack, !bIsSelected, true );
+         mLastPickedTrack = pTrack;
       }
 
       double value;
@@ -5067,7 +5076,7 @@ void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl) {
-      SelectTrack(t, !t->GetSelected(), false);
+      SelectTrack(t, !t->GetSelected(), true);
       Refresh(false);
    }
    else {
