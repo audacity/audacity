@@ -67,6 +67,7 @@ public:
    static LabelStruct ImportSubRip(wxTextFile &file, int &index);
 
    void Export(wxTextFile &file) const;
+   void ExportSubRip(wxTextFile &file, int sindex) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -190,7 +191,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
    void Import(wxTextFile & f);
-   void Export(wxTextFile & f) const;
+   void Export(wxTextFile & f, int &sindex) const;
 
    void Unselect();
 

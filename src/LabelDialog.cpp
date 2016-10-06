@@ -643,8 +643,8 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    fName = FileSelector(_("Export Labels As:"),
       wxEmptyString,
       fName.c_str(),
-      wxT("txt"),
-      wxT("*.txt"),
+      wxT(".txt|.srt"),
+      _("Text files (*.txt)|*.txt|SubRip subtitles (*.srt)|*.srt"),
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       this);
 
@@ -690,7 +690,8 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Export them and clean
-   lt->Export(f);
+   int sindex = 1;
+   lt->Export(f, sindex);
 
 #ifdef __WXMAC__
    f.Write(wxTextFileType_Mac);

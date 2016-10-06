@@ -3683,8 +3683,8 @@ void AudacityProject::OnExportLabels()
    fName = FileSelector(_("Export Labels As:"),
                         wxEmptyString,
                         fName,
-                        wxT("txt"),
-                        wxT("*.txt"),
+                        wxT(".txt|.srt"),
+			_("Text files (*.txt)|*.txt|SubRip subtitles (*.srt)|*.srt"),
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                         this);
 
@@ -3715,10 +3715,11 @@ void AudacityProject::OnExportLabels()
       return;
    }
 
+   int sindex = 1;
    t = iter.First();
    while (t) {
       if (t->GetKind() == Track::Label)
-         ((LabelTrack *) t)->Export(f);
+         ((LabelTrack *) t)->Export(f, sindex);
 
       t = iter.Next();
    }

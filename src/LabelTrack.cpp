@@ -1392,6 +1392,26 @@ void LabelStruct::Export(wxTextFile &file) const
    // Additional lines in future formats should also start with '\'.
 }
 
+static wxString DoubleToSubRipTimestamp(double secs)
+{
+   wxDateTime dt { (time_t)secs };
+   dt.SetMillisecond(wxRound(secs * 1000) % 1000);
+   return dt.Format(wxT("%H:%M:%S,%l"), wxDateTime::UTC);
+}
+
+void LabelStruct::ExportSubRip(wxTextFile &file, int sindex) const
+{
+   wxStringTokenizer toker { title, wxT("|") };
+   wxString t0 = DoubleToSubRipTimestamp(getT0());
+   wxString t1 = DoubleToSubRipTimestamp(getT1());
+
+   file.AddLine(wxString::Format(wxT("%i"), sindex));
+   file.AddLine(t0 + wxT(" --> ") + t1);
+   while (toker.HasMoreTokens())
+       file.AddLine(toker.GetNextToken());
+   file.AddLine(wxEmptyString);
+}
+
 auto LabelStruct::RegionRelation(
       double reg_t0, double reg_t1, const LabelTrack * WXUNUSED(parent)) const
 -> TimeRelations
@@ -2219,11 +2239,15 @@ bool LabelTrack::IsSelected() const
 }
 
 /// Export labels including label start and end-times.
-void LabelTrack::Export(wxTextFile & f) const
+void LabelTrack::Export(wxTextFile & f, int &sindex) const
 {
+   bool isSubRip = f.GetName().EndsWith(wxT(".srt"));
    // PRL: to do: export other selection fields
    for (auto &labelStruct: mLabels)
-      labelStruct.Export(f);
+      if (isSubRip)
+         labelStruct.ExportSubRip(f, sindex++);
+      else
+         labelStruct.Export(f);
 }
 
 /// Import labels, handling files with or without end-times.
