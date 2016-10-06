@@ -1289,6 +1289,84 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
    return LabelStruct{ sr, title };
 }
 
+static double SubRipTimestampToDouble(wxString &ts)
+{
+   wxString::const_iterator end;
+   wxDateTime dt;
+   double retval;
+
+   if (!dt.ParseFormat(ts, wxT("%H:%M:%S,%l"), &end) || end != ts.end())
+      return -1;
+
+   retval  = dt.GetHour() * 3600;
+   retval += dt.GetMinute() * 60;
+   retval += dt.GetSecond();
+   retval += dt.GetMillisecond() / 1000.0;
+
+   return retval;
+}
+
+LabelStruct LabelStruct::ImportSubRip(wxTextFile &file, int &index)
+{
+   wxArrayString subtitles;
+   SelectedRegion sr;
+   wxString line;
+   long sindex;
+
+   enum {
+      SUBRIP_STATE_INDEX,
+      SUBRIP_STATE_TIMECODES,
+      SUBRIP_STATE_SUBTITLE,
+   } state = SUBRIP_STATE_INDEX;
+
+   while (index < file.GetLineCount()) {
+
+      line = file.GetLine(index++);
+
+      switch (state) {
+
+      case SUBRIP_STATE_INDEX:
+         if (line.ToLong(&sindex))
+            // Ignore the index, only make sure it is an integer
+            state = SUBRIP_STATE_TIMECODES;
+         else
+            throw BadFormatException{};
+         break;
+
+      case SUBRIP_STATE_TIMECODES:
+         {
+            wxStringTokenizer toker { line, wxT(" ") };
+            if (toker.CountTokens() != 3)
+               throw BadFormatException{};
+            auto token = toker.GetNextToken();
+            double t0 = SubRipTimestampToDouble(token);
+            if (t0 < 0)
+               throw BadFormatException{};
+            token = toker.GetNextToken();
+            if (wxStrcmp(token, wxT("-->")))
+               throw BadFormatException{};
+            token = toker.GetNextToken();
+            double t1 = SubRipTimestampToDouble(token);
+            if (t1 < 0)
+               throw BadFormatException{};
+            sr.setTimes(t0, t1);
+            state = SUBRIP_STATE_SUBTITLE;
+         }
+         break;
+
+      case SUBRIP_STATE_SUBTITLE:
+         if (!line.empty())
+            subtitles.Add(line);
+         else
+            goto done;
+      }
+
+   }
+
+done:
+   return LabelStruct { sr, wxJoin(subtitles, wxChar('|')) };
+}
+
 void LabelStruct::Export(wxTextFile &file) const
 {
    file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
@@ -2151,6 +2229,7 @@ void LabelTrack::Export(wxTextFile & f) const
 /// Import labels, handling files with or without end-times.
 void LabelTrack::Import(wxTextFile & in)
 {
+   bool isSubRip = !wxStrcmp(in.GetFirstLine(), wxT("1"));
    int lines = in.GetLineCount();
 
    mLabels.clear();
@@ -2162,7 +2241,8 @@ void LabelTrack::Import(wxTextFile & in)
    for (int index = 0; index < lines;) {
       try {
          // Let LabelStruct::Import advance index
-         LabelStruct l { LabelStruct::Import(in, index) };
+         LabelStruct l { isSubRip ? LabelStruct::ImportSubRip(in, index)
+                                  : LabelStruct::Import(in, index) };
          mLabels.push_back(l);
       }
       catch(const LabelStruct::BadFormatException&) {}

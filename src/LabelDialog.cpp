@@ -592,8 +592,8 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
        FileSelector(_("Select a text file containing labels..."),
                     path,     // Path
                     wxT(""),       // Name
-                    wxT(".txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files|*"),
+                    wxT(".txt|.srt"),   // Extension
+                    _("Text files (*.txt)|*.txt|SubRip subtitles (*.srt)|*.srt|All files|*"),
                     wxRESIZE_BORDER, // Flags
                     this);    // Parent
 

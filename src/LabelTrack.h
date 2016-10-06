@@ -64,6 +64,7 @@ public:
 
    struct BadFormatException {};
    static LabelStruct Import(wxTextFile &file, int &index);
+   static LabelStruct ImportSubRip(wxTextFile &file, int &index);
 
    void Export(wxTextFile &file) const;
 
