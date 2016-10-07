@@ -1363,9 +1363,22 @@ void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
       SetCursor(event.ShiftDown() ? *mZoomOutCursor : *mZoomInCursor);
    }
 #endif
+   else if (event.m_x >= GetVRulerOffset() ){
+      // In VRuler but probably in a label track, and clicks don't do anything here, so no tip.
+      // Use a space for the tip, otherwsie we get he default message.
+      // TODO: Maybe the code for label tracks SHOULD treat the VRuler as part of the TrackInfo?
+      tip = wxT(" ");
+      SetCursor( *mArrowCursor );
+   }
+   else if( GetTrackCount() > 1 ){
+      // Set a status message if over TrackInfo.
+      //tip = _("Drag the track vertically to change the order of the tracks.");
+      tip = _("Ctrl-Click to select or deselect track. Drag up or down to change track order.");
+      SetCursor( *mArrowCursor );
+   }
    else {
       // Set a status message if over TrackInfo.
-      tip = _("Drag the track vertically to change the order of the tracks.");
+      tip = _("Ctrl-Click to select or deselect track.");
       SetCursor(*mArrowCursor);
    }
 }
@@ -1547,6 +1560,8 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    }
 
    const bool bShiftDown = event.ShiftDown();
+   const bool bCtrlDown = event.ControlDown();
+   const bool bModifierDown = bShiftDown || bCtrlDown;
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
@@ -1562,7 +1577,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    // choose boundaries only in snapping tolerance,
    // and may choose center.
    SelectionBoundary boundary =
-        ChooseBoundary(event, t, rect, !bShiftDown, !bShiftDown);
+        ChooseBoundary(event, t, rect, !bModifierDown, !bModifierDown);
 
 #ifdef USE_MIDI
    // The MIDI HitTest will only succeed if we are on a midi track, so 
@@ -1877,6 +1892,11 @@ void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked
       if (pMixerBoard && (pTrack->GetKind() == Track::Wave))
          pMixerBoard->RefreshTrackCluster(static_cast<WaveTrack*>(pTrack));
    }
+}
+
+size_t TrackPanel::GetTrackCount(){
+   auto tracks = GetTracks();
+   return (size_t)tracks->GetCount();
 }
 
 size_t TrackPanel::GetSelectedTrackCount(){
