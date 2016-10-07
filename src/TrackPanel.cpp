@@ -1894,17 +1894,34 @@ void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked
    }
 }
 
+// Counts tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetTrackCount(){
-   auto tracks = GetTracks();
-   return (size_t)tracks->GetCount();
+   size_t count = 0;
+
+   TrackListIterator iter(GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      count +=  1;
+      if( t->GetLinked() ){
+         t = iter.Next();
+         if( !t )
+            break;
+      }
+   }
+   return count;
 }
 
+// Counts selected tracks, counting stereo tracks as one track.
 size_t TrackPanel::GetSelectedTrackCount(){
    size_t count = 0;
 
    TrackListIterator iter(GetTracks());
    for (Track *t = iter.First(); t; t = iter.Next()) {
       count +=  t->GetSelected() ? 1:0;
+      if( t->GetLinked() ){
+         t = iter.Next();
+         if( !t )
+            break;
+      }
    }
    return count;
 }
