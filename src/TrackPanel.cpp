@@ -1347,6 +1347,12 @@ bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMo
    return false;
 }
 
+#if defined(__WXMAC__)
+#define CTRL_CLICK _("Command-Click")
+#else
+#define CTRL_CLICK _("Ctrl-Click")
+#endif
+
 /// When in the "label" (TrackInfo or vertical ruler), we can either vertical zoom or re-order tracks.
 /// Dont't change cursor/tip to zoom if display is not waveform (either linear of dB) or Spectrum
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
@@ -1373,12 +1379,16 @@ void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
    else if( GetTrackCount() > 1 ){
       // Set a status message if over TrackInfo.
       //tip = _("Drag the track vertically to change the order of the tracks.");
-      tip = _("Ctrl-Click to select or deselect track. Drag up or down to change track order.");
+      // i18n-hint: %s is replaced by (translation of) 'Ctrl-Click' on windows, 'Command-Click' on Mac
+      tip = wxString::Format( _("%s to select or deselect track. Drag up or down to change track order."),
+         CTRL_CLICK );
       SetCursor( *mArrowCursor );
    }
    else {
       // Set a status message if over TrackInfo.
-      tip = _("Ctrl-Click to select or deselect track.");
+      // i18n-hint: %s is replaced by (translation of) 'Ctrl-Click' on windows, 'Command-Click' on Mac
+      tip = wxString::Format( _("%s to select or deselect track."),
+         CTRL_CLICK );
       SetCursor(*mArrowCursor);
    }
 }
