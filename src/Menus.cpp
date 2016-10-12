@@ -660,7 +660,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
       c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
-      c->AddItem(wxT("ExpandAllTracks"), _("E&xpand All Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
+      c->AddItem(wxT("ExpandAllTracks"), _("E&xpand Collapsed Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
 
       c->AddSeparator();
       c->AddCheck(wxT("ShowClipping"), _("&Show Clipping"), FN(OnShowClipping),
