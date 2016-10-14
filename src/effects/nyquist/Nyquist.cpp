@@ -506,7 +506,7 @@ bool NyquistEffect::Process()
       {
          list += wxT("\"") + EscapeString(paths[i]) + wxT("\" ");
       }
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.RemoveLast().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list.RemoveLast().c_str());
 
 
       // Date and time:
@@ -517,7 +517,7 @@ bool NyquistEffect::Process()
       // enumerated constants
       wxDateTime::Month month = now.GetMonth();
       wxDateTime::WeekDay day = now.GetWeekDay();
-      
+
       // Date/time as a list: year, day of year, hour, minute, seconds
       mProps += wxString::Format(wxT("(setf *SYSTEM-TIME* (list %d %d %d %d %d))\n"),
                                  year, doy, now.GetHour(), now.GetMinute(), now.GetSecond());
@@ -532,6 +532,10 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
 
+      // TODO: Document: Number of open projects
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), gAudacityProjects.size());
+      // TODO: Document. NOTE: unnamed project returns an empty string.
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetName().c_str());
 
       TrackListIterator all(project->GetTracks());
       Track *t;
@@ -852,11 +856,13 @@ bool NyquistEffect::ProcessOne()
       wxString type;
       wxString view;
       wxString bitFormat;
+      wxString spectralEditp;
 
       switch (mCurTrack[0]->GetKind())
       {
          case Track::Wave:
             type = wxT("wave");
+            spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
                case WaveTrack::Waveform:
@@ -890,6 +896,9 @@ bool NyquistEffect::ProcessOne()
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
+
+      //TODO: Document NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
+      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp.c_str());
 
       double startTime = 0.0;
       double endTime = 0.0;
@@ -934,11 +943,14 @@ bool NyquistEffect::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat.c_str());
 
       float maxPeak = 0.0;
-      wxString clips;
+      wxString clips, rmsString;
       for (int i = 0; i < mCurNumChannels; i++) {
          auto ca = mCurTrack[i]->SortedClipArray();
+         
          // A list of clips for mono, or an array of lists for multi-channel.
-         if (mCurNumChannels > 1) clips += wxT("(list ");
+         if (mCurNumChannels > 1) {
+            clips += wxT("(list ");
+         }
          // Each clip is a list (start-time, end-time)
          for (const auto clip: ca) {
             clips += wxString::Format(wxT("(list (float %s) (float %s))"),
@@ -950,13 +962,29 @@ bool NyquistEffect::ProcessOne()
          float min, max;
          mCurTrack[i]->GetMinMax(&min, &max, mT0, mT1);
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
+
+         float rms = 0.0;
+         mCurTrack[i]->GetRMS(&rms, mT0, mT1);
+         if (!std::isinf(rms) && !std::isnan(rms)) {
+            rmsString += wxString::Format(wxT("(float %s) "), Internat::ToString(rms).c_str());
+         } else {
+            rmsString += wxT("nil ");
+         }
       }
       // A list of clips for mono, or an array of lists for multi-channel.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
                               (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
                               clips.c_str());
-      cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
-                              Internat::ToString(maxPeak).c_str());
+      // TODO: Document, PEAK is nil if NaN or INF.
+      // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
+      if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK)\n"),
+                                 Internat::ToString(maxPeak).c_str());
+      }
+      // TODO: Document, RMS is linear RMS per channel.
+      (mCurNumChannels > 1)?
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'RMS)\n"), rmsString) :
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'RMS)\n"), rmsString);
    }
 
    if (GetType() == EffectTypeGenerate) {
@@ -1611,7 +1639,7 @@ void NyquistEffect::Parse(const wxString &line)
          }
 
          if (ctrl.high < ctrl.low) {
-            ctrl.high = ctrl.low + 1;
+            ctrl.high = ctrl.low;
          }
 
          if (ctrl.val < ctrl.low) {
@@ -2265,7 +2293,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
       item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
-      // TODO use ShowInfoDialog() instead.
+      // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
       item = safenew wxTextCtrl(this, -1, message,
          wxDefaultPosition, wxSize(400, 200),
