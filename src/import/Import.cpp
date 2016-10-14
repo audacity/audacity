@@ -669,7 +669,7 @@ bool Importer::Import(const wxString &fName,
       }
 
       // we were not able to recognize the file type
-      errorMessage.Printf(_("Audacity did not recognize the type of the file '%s'.\nIf it is uncompressed, try importing it using \"Import Raw\"."),fName.c_str());
+      errorMessage.Printf(_("Audacity did not recognize the type of the file '%s'.\nTry installing FFmpeg. For uncompressed files, also try File > Import > Raw Data."),fName.c_str());
    }
    else
    {

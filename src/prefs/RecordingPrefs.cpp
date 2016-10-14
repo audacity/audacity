@@ -77,15 +77,15 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/AudioIO/Duplex"),
                     true);
 #if defined(__WXMAC__)
-      S.TieCheckBox(_("&Hardware Playthrough: Listen while recording or monitoring new track"),
+      S.TieCheckBox(_("&Hardware Playthrough: Listen to input while recording or monitoring"),
                     wxT("/AudioIO/Playthrough"),
                     false);
 #endif
-      S.TieCheckBox(_("&Software Playthrough: Listen while recording or monitoring new track"),
+      S.TieCheckBox(_("&Software Playthrough: Listen to input while recording or monitoring"),
                     wxT("/AudioIO/SWPlaythrough"),
                     false);
 #if !defined(__WXMAC__)
-      S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording \"stereo mix\")"));
+      S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
 #endif
    }
    S.EndStatic();
