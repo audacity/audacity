@@ -2406,6 +2406,12 @@ void TrackPanel::UpdateAccessibility()
       mAx->Updated();
 }
 
+void TrackPanel::MessageForScreenReader(const wxString& message)
+{
+   if (mAx)
+      mAx->MessageForScreenReader(message);
+}
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 namespace {
    

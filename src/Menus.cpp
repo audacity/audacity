@@ -1251,6 +1251,11 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
 
+   c->AddCommand(wxT("SelToNextLabel"), _("Selection to next label"), FN(OnSelToNextLabel), wxT("Alt+Right"),
+      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
+   c->AddCommand(wxT("SelToPrevLabel"), _("Selection to previous label"), FN(OnSelToPrevLabel), wxT("Alt+Left"),
+      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
+
 #ifdef __WXMAC__
    /* i8n-hint: Shrink all project windows to icons on the Macintosh tooldock */
    c->AddCommand(wxT("MacMinimizeAll"), _("Minimize all projects"),
@@ -2654,6 +2659,72 @@ void AudacityProject::OnSelToEnd()
 {
    SkipEnd(true);
    ModifyState(false);
+}
+
+void AudacityProject::OnSelToNextLabel()
+{
+   OnSelToLabel(true);
+}
+
+void AudacityProject::OnSelToPrevLabel()
+{
+   OnSelToLabel(false);
+}
+
+void AudacityProject::OnSelToLabel(bool next)
+{
+   // Find the number of label tracks, and ptr to last track found
+   Track* track = nullptr;
+   int nLabelTrack = 0;
+   TrackListOfKindIterator iter(Track::Label, &*mTracks);
+   for (Track* t = iter.First(); t; t = iter.Next()) {
+      nLabelTrack++;
+      track = t;
+   }
+
+   if (nLabelTrack == 0 ) {
+      mTrackPanel->MessageForScreenReader(_("no label track"));
+   }
+   else if (nLabelTrack > 1) {         // find first label track, if any, starting at the focused track
+      track = mTrackPanel->GetFocusedTrack();
+      while (track && track->GetKind() != Track::Label) {
+         track = mTracks->GetNext(track, true);
+         if (!track) {
+          mTrackPanel->MessageForScreenReader(_("no label track at or below focused track"));
+         }
+      }
+   }
+
+   // If there is a single label track, or there is a label track at or below the focused track
+   if (track) {
+      LabelTrack* lt = static_cast<LabelTrack*>(track);
+      int i;
+      if (next)
+         i = lt->FindNextLabel(GetSelection());
+      else
+         i = lt->FindPrevLabel(GetSelection());
+
+      if (i >= 0) {
+         const LabelStruct* label = lt->GetLabel(i);
+         if (IsAudioActive()) {
+            OnPlayStop();     // stop
+            GetViewInfo().selectedRegion = label->selectedRegion;
+            RedrawProject();
+            OnPlayStop();     // play
+         }
+         else {
+            GetViewInfo().selectedRegion = label->selectedRegion;
+            RedrawProject();
+         }
+
+         wxString message;
+         message.Printf(wxT("%s %d of %d"), label->title, i + 1, lt->GetNumLabels() );
+         mTrackPanel->MessageForScreenReader(message);
+      }
+      else {
+         mTrackPanel->MessageForScreenReader(_("no labels in label track"));
+      }
+   }
 }
 
 void AudacityProject::OnCursorUp()

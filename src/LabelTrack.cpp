@@ -105,7 +105,8 @@ LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
    mMouseOverLabelRight(-1),
    mRestoreFocus(-1),
    mClipLen(0.0),
-   mIsAdjustingLabel(false)
+   mIsAdjustingLabel(false),
+   miLastLabel(-1)
 {
    SetDefaultName(_("Label Track"));
    SetName(GetDefaultName());
@@ -2848,4 +2849,56 @@ wxString LabelTrack::GetTextOfLabels(double t0, double t1) const
    }
 
    return retVal;
+}
+
+int LabelTrack::FindNextLabel(const SelectedRegion& currentRegion)
+{
+   int i = -1;
+
+   if (!mLabels.empty()) {
+      int len = (int) mLabels.size();
+      if (miLastLabel >= 0 && miLastLabel + 1 < len
+         && currentRegion.t0() == mLabels[miLastLabel].getT0()
+         && currentRegion.t0() == mLabels[miLastLabel + 1].getT0() ) {
+         i = miLastLabel + 1;
+      }
+      else {
+         i = 0;
+         if (currentRegion.t0() < mLabels[len - 1].getT0()) {
+            while (i < len &&
+                  mLabels[i].getT0() <= currentRegion.t0()) {
+               i++;
+            }
+         }
+      }
+   }
+
+   miLastLabel = i;
+   return i;
+}
+
+ int LabelTrack::FindPrevLabel(const SelectedRegion& currentRegion)
+{
+   int i = -1;
+
+   if (!mLabels.empty()) {
+      int len = (int) mLabels.size();
+      if (miLastLabel > 0 && miLastLabel < len
+         && currentRegion.t0() == mLabels[miLastLabel].getT0()
+         && currentRegion.t0() == mLabels[miLastLabel - 1].getT0() ) {
+         i = miLastLabel - 1;
+      }
+      else {
+         i = len - 1;
+         if (currentRegion.t0() > mLabels[0].getT0()) {
+            while (i >=0  &&
+                  mLabels[i].getT0() >= currentRegion.t0()) {
+               i--;
+            }
+         }
+      }
+   }
+
+   miLastLabel = i;
+   return i;
 }

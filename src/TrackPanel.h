@@ -308,6 +308,7 @@ protected:
 
 public:
    virtual void UpdateAccessibility();
+   void MessageForScreenReader(const wxString& message);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 public:
