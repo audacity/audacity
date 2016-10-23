@@ -2979,16 +2979,8 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
 
 void AdornedRulerPanel::DragSelection()
 {
-   if (mPlayRegionStart < mPlayRegionEnd) {
-      mProject->SetSel0(mPlayRegionStart);
-      mProject->SetSel1(mPlayRegionEnd);
-   }
-   else {
-      mProject->SetSel0(mPlayRegionEnd);
-      mProject->SetSel1(mPlayRegionStart);
-   }
-   mProject->GetTrackPanel()->DisplaySelection();
-   mProject->GetTrackPanel()->Refresh(false);
+   mViewInfo->selectedRegion.setT0(mPlayRegionStart, false);
+   mViewInfo->selectedRegion.setT1(mPlayRegionEnd, true);
 }
 
 void AdornedRulerPanel::HandleSnapping()
