@@ -761,7 +761,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
       c->AddItem(wxT("RecordBelow"), _("Record Below"), FN(OnRecordBelow), wxT("Shift+R"));
       // I decided to duplicate this between play and record, rather than put it at the top level.
-      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
+      // However I must not set the short cut here, as setting it twice disables it!
+      // TODO: find a way that it is OK to have the same shortcut for a repeated function.
+      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause));//, wxT("P"));
       c->EndSubMenu();
 
       // Scrubbing sub-menu
