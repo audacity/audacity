@@ -191,6 +191,13 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 
 #define WXINTL_NO_GETTEXT_MACRO
 
+#ifdef wxPLURAL
+#undef wxPLURAL
+#endif
+
+#define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
+
+
 #ifdef _
 #undef _
 #endif
