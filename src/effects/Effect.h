@@ -104,15 +104,15 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    int GetMidiOutCount() override;
 
    sampleCount GetLatency() override;
-   sampleCount GetTailSize() override;
+   size_t GetTailSize() override;
 
    void SetSampleRate(double rate) override;
-   sampleCount SetBlockSize(sampleCount maxBlockSize) override;
+   size_t SetBlockSize(size_t maxBlockSize) override;
 
    bool IsReady() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) override;
+   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
 
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -120,10 +120,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
    bool RealtimeProcessStart() override;
-   sampleCount RealtimeProcess(int group,
+   size_t RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
-                                       sampleCount numSamples) override;
+                                       size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
@@ -243,11 +243,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // Realtime Effect Processing
    /* not virtual */ bool RealtimeAddProcessor(int group, unsigned chans, float rate);
-   /* not virtual */ sampleCount RealtimeProcess(int group,
+   /* not virtual */ size_t RealtimeProcess(int group,
                                unsigned chans,
                                float **inbuf,
                                float **outbuf,
-                               sampleCount numSamples);
+                               size_t numSamples);
    /* not virtual */ bool IsRealtimeActive();
 
    virtual bool IsHidden();
@@ -510,8 +510,8 @@ private:
    float **mInBufPos;
    float **mOutBufPos;
 
-   sampleCount mBufferSize;
-   sampleCount mBlockSize;
+   size_t mBufferSize;
+   size_t mBlockSize;
    unsigned mNumChannels;
 
    wxArrayInt mGroupProcessor;
@@ -564,7 +564,7 @@ private:
    int mType;
    int mAdditionalButtons;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 //
@@ -656,7 +656,7 @@ private:
 
    bool mDismissed{};
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class EffectPresetsDialog final : public wxDialogWrapper
@@ -684,7 +684,7 @@ private:
    wxArrayString mUserPresets;
    wxString mSelection;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 // Utility functions

@@ -1948,9 +1948,6 @@
     <copy Include="..\..\..\plug-ins\beat.ny">
       <Filter>plug-ins</Filter>
     </copy>
-    <copy Include="..\..\..\plug-ins\clicktrack.ny">
-      <Filter>plug-ins</Filter>
-    </copy>
     <copy Include="..\..\..\plug-ins\clipfix.ny">
       <Filter>plug-ins</Filter>
     </copy>
@@ -2015,6 +2012,9 @@
       <Filter>plug-ins</Filter>
     </copy>
     <copy Include="..\..\..\plug-ins\vocalrediso.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\rhythmtrack.ny">
       <Filter>plug-ins</Filter>
     </copy>
   </ItemGroup>

@@ -37,7 +37,7 @@ char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
 
    /// Create a disk file and write summary and sample data to it
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,unsigned int decodeType):
+                     size_t aliasLen, int aliasChannel,unsigned int decodeType):
    SimpleBlockFile{ std::move(baseFileName),
                     NULL, aliasLen, floatSample, true, true },
    //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
@@ -54,7 +54,7 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNam
 
 /// Create the memory structure to refer to the given block file
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
+                     size_t aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable):
    SimpleBlockFile{ std::move(existingFile), aliasLen, min, max, rms },
 
@@ -92,7 +92,7 @@ auto ODDecodeBlockFile::GetSpaceUsage() const -> DiskByteCount
 
 
 /// Gets extreme values for the specified region
-void ODDecodeBlockFile::GetMinMax(sampleCount start, sampleCount len,
+void ODDecodeBlockFile::GetMinMax(size_t start, size_t len,
                           float *outMin, float *outMax, float *outRMS) const
 {
    if(IsSummaryAvailable())
@@ -127,7 +127,7 @@ void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) c
 }
 
 /// Returns the 256 byte summary data block
-bool ODDecodeBlockFile::Read256(float *buffer, sampleCount start, sampleCount len)
+bool ODDecodeBlockFile::Read256(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
    {
@@ -142,7 +142,7 @@ bool ODDecodeBlockFile::Read256(float *buffer, sampleCount start, sampleCount le
 }
 
 /// Returns the 64K summary data block
-bool ODDecodeBlockFile::Read64K(float *buffer, sampleCount start, sampleCount len)
+bool ODDecodeBlockFile::Read64K(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
    {
@@ -209,7 +209,7 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
       LockRead();
       xmlFile.WriteAttr(wxT("audiofile"), mAudioFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"),
-                        static_cast<long long>( mAliasStart ));
+                        mAliasStart.as_long_long());
       xmlFile.WriteAttr(wxT("aliaslen"), mLen);
       xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
       xmlFile.WriteAttr(wxT("decodetype"), (size_t)mType);
@@ -228,7 +228,8 @@ BlockFilePtr ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
 {
    wxFileNameWrapper summaryFileName;
    wxFileNameWrapper audioFileName;
-   sampleCount aliasStart=0, aliasLen=0;
+   sampleCount aliasStart = 0;
+   size_t aliasLen = 0;
    int aliasChannel=0;
    long nValue;
    long long nnValue;
@@ -397,7 +398,7 @@ auto ODDecodeBlockFile::GetFileName() const -> GetFileNameResult
 /// @param buffer A buffer containing the sample data to be analyzed
 /// @param len    The length of the sample data
 /// @param format The format of the sample data.
-void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
+void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, size_t len,
                              sampleFormat format, ArrayOf<char> &cleanup)
 {
    cleanup.reinit(mSummaryInfo.totalSummaryBytes);
@@ -442,19 +443,19 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
 /// @param format The format to convert the data into
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
-int ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                sampleCount start, sampleCount len) const
+size_t ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
+                                size_t start, size_t len) const
 {
-   int ret;
+   size_t ret;
    LockRead();
    if(IsSummaryAvailable())
-      ret= SimpleBlockFile::ReadData(data,format,start,len);
+      ret = SimpleBlockFile::ReadData(data,format,start,len);
    else
    {
       //we should do an ODRequest to start processing the data here, and wait till it finishes. and just do a SimpleBlockFIle
       //ReadData.
       ClearSamples(data, format, 0, len);
-      ret= len;
+      ret = len;
    }
    UnlockRead();
    return ret;

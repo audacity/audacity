@@ -1,4 +1,4 @@
-From b54ac99a7ed793d924b4df334c2d8c61ed5929cc Mon Sep 17 00:00:00 2001
+From 5335be70342fa635304bdbf7839ecb8c99e5333e Mon Sep 17 00:00:00 2001
 From: Paul Licameli <paul.licameli@audacityteam.org>
 Date: Thu, 28 Jul 2016 14:36:27 -0400
 Subject: [PATCH] Implement parts of NSObject(NSAccessibility) informal
@@ -36,8 +36,8 @@ Implement wxAccessible default actions
 ---
  include/wx/access.h     |   14 +
  include/wx/chkconf.h    |    2 +-
- src/osx/cocoa/window.mm | 1847 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1862 insertions(+), 1 deletion(-)
+ src/osx/cocoa/window.mm | 1854 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1869 insertions(+), 1 deletion(-)
 
 diff --git a/include/wx/access.h b/include/wx/access.h
 index 70cbaf1..3cdbd7c 100644
@@ -78,7 +78,7 @@ index 47fa8ee..a1c6857 100644
  #       error "wxUSE_ACCESSIBILITY is currently only supported under wxMSW"
  #   else
 diff --git a/src/osx/cocoa/window.mm b/src/osx/cocoa/window.mm
-index 881d0e9..df8f12f 100644
+index 881d0e9..5cf7c23 100644
 --- src/osx/cocoa/window.mm
 +++ src/osx/cocoa/window.mm
 @@ -18,6 +18,7 @@
@@ -120,7 +120,7 @@ index 881d0e9..df8f12f 100644
  //
  // event handlers
  //
-@@ -984,8 +1002,1404 @@ BOOL wxOSX_performDragOperation( id self, SEL _cmd, id <NSDraggingInfo> sender )
+@@ -984,8 +1002,1411 @@ BOOL wxOSX_performDragOperation( id self, SEL _cmd, id <NSDraggingInfo> sender )
      return impl->performDragOperation(sender, self, _cmd) ? YES:NO ;
  }
  
@@ -816,19 +816,26 @@ index 881d0e9..df8f12f 100644
 +      virtual bool IsPresent
 +      (id element, wxAccessible &accessible, int childID) const
 +      {
-+         return true;
++         return false;
 +      }
 +
 +      virtual id Get
 +      (id element, wxAccessible &accessible, int childID) const
 +      {
-+         id newElement;
-+         while(NULL != (newElement =
-+             [element accessibilityAttributeValue:
-+              NSAccessibilityParentAttribute]
-+         ))
-+            element = newElement;
 +         return element;
++         /*
++         id prevElement = element, newElement;
++         do try {
++            newElement =
++               [element accessibilityAttributeValue: NSAccessibilityParentAttribute];
++         }
++         catch(...) {
++            return prevElement;
++         }
++         while (newElement != NULL &&
++                (prevElement = element, element = newElement));
++         return element;
++          */
 +      }
 +   } swxNSAccessibilityTopLevelUIAttribute;
 +   
@@ -1525,7 +1532,7 @@ index 881d0e9..df8f12f 100644
  void wxOSX_mouseEvent(NSView* self, SEL _cmd, NSEvent *event)
  {
      wxWidgetCocoaImpl* impl = (wxWidgetCocoaImpl* ) wxWidgetImpl::FindFromWXWidget( self );
-@@ -1771,6 +3185,435 @@ void wxWidgetCocoaImpl::controlTextDidChange()
+@@ -1771,6 +3192,435 @@ void wxWidgetCocoaImpl::controlTextDidChange()
  
  #endif
  
@@ -1961,7 +1968,7 @@ index 881d0e9..df8f12f 100644
  void wxOSXCocoaClassAddWXMethods(Class c)
  {
  
-@@ -1779,6 +3622,8 @@ void wxOSXCocoaClassAddWXMethods(Class c)
+@@ -1779,6 +3629,8 @@ void wxOSXCocoaClassAddWXMethods(Class c)
      {
  #endif
  
@@ -1970,7 +1977,7 @@ index 881d0e9..df8f12f 100644
      wxOSX_CLASS_ADD_METHOD(c, @selector(mouseDown:), (IMP) wxOSX_mouseEvent, "v@:@" )
      wxOSX_CLASS_ADD_METHOD(c, @selector(rightMouseDown:), (IMP) wxOSX_mouseEvent, "v@:@" )
      wxOSX_CLASS_ADD_METHOD(c, @selector(otherMouseDown:), (IMP) wxOSX_mouseEvent, "v@:@" )
-@@ -1832,6 +3677,8 @@ void wxOSXCocoaClassAddWXMethods(Class c)
+@@ -1832,6 +3684,8 @@ void wxOSXCocoaClassAddWXMethods(Class c)
      wxOSX_CLASS_ADD_METHOD(c, @selector(performDragOperation:), (IMP) wxOSX_performDragOperation, "c@:@" )
  #endif
  

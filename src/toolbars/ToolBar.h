@@ -234,8 +234,8 @@ class ToolBar /* not final */ : public wxPanelWrapper
 
  public:
 
-   DECLARE_CLASS(ToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(ToolBar)
+   DECLARE_EVENT_TABLE()
 
    friend class ToolBarResizer;
 };

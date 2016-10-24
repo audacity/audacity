@@ -23,7 +23,6 @@ const static wxChar *kShippedEffects[] =
 {
    wxT("adjustable-fade.ny"),
    wxT("beat.ny"),
-   wxT("clicktrack.ny"),
    wxT("clipfix.ny"),
    wxT("crossfadeclips.ny"),
    wxT("crossfadetracks.ny"),
@@ -34,6 +33,7 @@ const static wxChar *kShippedEffects[] =
    wxT("lowpass.ny"),
    wxT("notch.ny"),
    wxT("pluck.ny"),
+   wxT("rhythmtrack.ny"),
    wxT("rissetdrum.ny"),
    wxT("sample-data-export.ny"),
    wxT("SilenceMarker.ny"),

@@ -587,7 +587,7 @@ void EffectManager::RealtimeProcessStart()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-sampleCount EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers, sampleCount numSamples)
+size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples)
 {
    // Protect ourselves from the main thread
    mRealtimeLock.Enter();

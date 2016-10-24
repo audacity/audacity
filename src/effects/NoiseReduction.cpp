@@ -270,7 +270,7 @@ private:
 
    void StartNewTrack();
    void ProcessSamples(Statistics &statistics,
-      WaveTrack *outputTrack, sampleCount len, float *buffer);
+      WaveTrack *outputTrack, size_t len, float *buffer);
    void FillFirstHistoryWindow();
    void ApplyFreqSmoothing(FloatVector &gains);
    void GatherStatistics(Statistics &statistics);
@@ -736,7 +736,7 @@ EffectNoiseReduction::Worker::Worker
 
 , mSpectrumSize(1 + mWindowSize / 2)
 , mFreqSmoothingScratch(mSpectrumSize)
-, mFreqSmoothingBins(int(settings.mFreqSmoothingBands))
+, mFreqSmoothingBins((int)(settings.mFreqSmoothingBands))
 , mBinLow(0)
 , mBinHigh(mSpectrumSize)
 
@@ -903,7 +903,7 @@ void EffectNoiseReduction::Worker::StartNewTrack()
       mOutStepCount = -(int)(mHistoryLen - 1)
          // ... and then must pass over the padded windows,
          // before the first full window:
-         - (mStepsPerWindow - 1);
+         - (int)(mStepsPerWindow - 1);
    }
 
    mInSampleCount = 0;
@@ -911,10 +911,10 @@ void EffectNoiseReduction::Worker::StartNewTrack()
 
 void EffectNoiseReduction::Worker::ProcessSamples
 (Statistics &statistics, WaveTrack *outputTrack,
- sampleCount len, float *buffer)
+ size_t len, float *buffer)
 {
    while (len && mOutStepCount * mStepSize < mInSampleCount) {
-      auto avail = std::min(len, sampleCount(mWindowSize - mInWavePos));
+      auto avail = std::min(len, mWindowSize - mInWavePos);
       memmove(&mInWaveBuffer[mInWavePos], buffer, avail * sizeof(float));
       buffer += avail;
       len -= avail;
@@ -1202,7 +1202,7 @@ void EffectNoiseReduction::Worker::ReduceNoise
    }
 
 
-   if (mOutStepCount >= -(mStepsPerWindow - 1)) {
+   if (mOutStepCount >= -(int)(mStepsPerWindow - 1)) {
       Record &record = *mQueue[mHistoryLen - 1];  // end of the queue
       const auto last = mSpectrumSize - 1;
 
@@ -1312,7 +1312,9 @@ bool EffectNoiseReduction::Worker::ProcessOne
 
       // Update the Progress meter, let user cancel
       bLoopSuccess = 
-         !effect.TrackProgress(count, (samplePos - start) / (double)len);
+         !effect.TrackProgress(count,
+                               ( samplePos - start ).as_double() /
+                               len.as_double() );
    }
 
    if (bLoopSuccess) {
@@ -1413,7 +1415,7 @@ struct ControlInfo {
    wxString Text(double value) const
    {
       if (formatAsInt)
-         return wxString::Format(format, int(value));
+         return wxString::Format(format, (int)(value));
       else
          return wxString::Format(format, value);
    }

@@ -92,7 +92,8 @@ bool EffectStereoToMono::Process()
          mLeftTrack->GetSelected() &&
          mLeftTrack->GetLinked()) {
 
-         mRightTrack = (WaveTrack *)iter.Next();
+         // Assume linked track is wave
+         mRightTrack = static_cast<WaveTrack*>(iter.Next());
 
          if ((mLeftTrack->GetRate() == mRightTrack->GetRate())) {
             auto leftTrackStart = mLeftTrack->TimeToLongSamples(mLeftTrack->GetStartTime());
@@ -153,7 +154,7 @@ bool EffectStereoToMono::ProcessOne(int count)
          leftBuffer[i] = curMonoFrame;
       }
       bResult &= mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
-      if (TrackProgress(count, 2.*((double)index / (double)(mEnd - mStart))))
+      if (TrackProgress(count, 2.*(index.as_double() / (mEnd - mStart).as_double())))
          return false;
    }
 

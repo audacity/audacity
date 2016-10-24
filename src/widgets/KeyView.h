@@ -162,7 +162,7 @@ private:
    KeyViewAx *mAx;
 #endif
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #if wxUSE_ACCESSIBILITY

@@ -66,7 +66,7 @@ protected:
    // Postcondition: data[0..block) filled with generated samples
    virtual void GenerateBlock(float *data,
                               const WaveTrack &track,
-                              sampleCount block) = 0;
+                              size_t block) = 0;
 
    // Generate the track, one block at a time, & adding the results to tmp
    bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack) override;

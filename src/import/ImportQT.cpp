@@ -360,8 +360,9 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          numSamples += numFrames;
    
-         updateResult = mProgress->Update((wxULongLong_t)numSamples,
-                                          (wxULongLong_t)totSamples);
+         updateResult = mProgress->Update(
+            numSamples.as_long_long(),
+            totSamples.as_long_long() );
    
          if (numFrames == 0 || flags & kQTMovieAudioExtractionComplete) {
             break;
@@ -391,7 +392,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       }
    } while (false);
 
-done:
+// done:
 
    if (maer) {
       MovieAudioExtractionEnd(maer);
@@ -440,7 +441,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
 
    for (int i = 0; i < WXSIZEOF(names); i++) {
       QTMetaDataItem item = kQTMetaDataItemUninitialized;
-      OSType key = names[i].key;
+      // OSType key = names[i].key;
 
       err = QTMetaDataGetNextItem(metaDataRef,
                                   kQTMetaDataStorageFormatWildcard,

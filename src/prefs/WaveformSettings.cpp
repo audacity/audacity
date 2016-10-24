@@ -73,7 +73,7 @@ WaveformSettings& WaveformSettings::defaults()
 bool WaveformSettings::Validate(bool /* quiet */)
 {
    scaleType = ScaleType(
-      std::max(0, std::min(int(stNumScaleTypes) - 1, int(scaleType)))
+      std::max(0, std::min((int)(stNumScaleTypes) - 1, (int)(scaleType)))
    );
 
    ConvertToEnumeratedDBRange();
@@ -125,9 +125,9 @@ void WaveformSettings::ConvertToActualDBRange()
    wxArrayString codes;
    GUIPrefs::GetRangeChoices(NULL, &codes);
    long value = 0;
-   codes[std::max(0, std::min(int(codes.size()) - 1, dBRange))]
+   codes[std::max(0, std::min((int)(codes.size()) - 1, dBRange))]
       .ToLong(&value);
-   dBRange = int(value);
+   dBRange = (int)(value);
 }
 
 void WaveformSettings::NextLowerDBRange()

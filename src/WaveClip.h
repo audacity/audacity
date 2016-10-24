@@ -119,7 +119,7 @@ public:
 
 class SpecPxCache {
 public:
-   SpecPxCache(int cacheLen)
+   SpecPxCache(size_t cacheLen)
    {
       len = cacheLen;
       values = new float[len];
@@ -134,7 +134,7 @@ public:
       delete[] values;
    }
 
-   sampleCount  len;
+   size_t  len;
    float       *values;
    bool         valid;
 
@@ -250,9 +250,9 @@ public:
    bool AfterClip(double t) const;
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len) const;
+                   sampleCount start, size_t len) const;
    bool SetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len);
+                   sampleCount start, size_t len);
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
@@ -295,16 +295,16 @@ public:
 
    /// You must call Flush after the last Append
    bool Append(samplePtr buffer, sampleFormat format,
-               sampleCount len, unsigned int stride=1,
+               size_t len, unsigned int stride=1,
                XMLWriter* blockFileLog = NULL);
    /// Flush must be called after last Append
    bool Flush();
 
    bool AppendAlias(const wxString &fName, sampleCount start,
-                    sampleCount len, int channel,bool useOD);
+                    size_t len, int channel,bool useOD);
 
    bool AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType);
+                            size_t len, int channel, int decodeType);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cutted audio to the clipboard)
@@ -389,7 +389,7 @@ protected:
    mutable ODLock       mWaveCacheMutex;
    mutable std::unique_ptr<SpecCache> mSpecCache;
    SampleBuffer  mAppendBuffer;
-   sampleCount   mAppendBufferLen;
+   size_t        mAppendBufferLen;
 
    // Cut Lines are nothing more than ordinary wave clips, with the
    // offset relative to the start of the clip.

@@ -68,8 +68,8 @@ class MixerToolBar final : public ToolBar {
 
  public:
 
-   DECLARE_CLASS(MixerToolBar);
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS(MixerToolBar)
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

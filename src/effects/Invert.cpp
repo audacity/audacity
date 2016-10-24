@@ -64,7 +64,7 @@ unsigned EffectInvert::GetAudioOutCount()
    return 1;
 }
 
-sampleCount EffectInvert::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectInvert::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

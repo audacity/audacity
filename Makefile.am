@@ -60,7 +60,6 @@ nobase_dist_pkgdata_DATA = \
    nyquist/rawwaves/sinewave.raw \
    plug-ins/adjustable-fade.ny \
    plug-ins/beat.ny \
-   plug-ins/clicktrack.ny \
    plug-ins/clipfix.ny \
    plug-ins/crossfadeclips.ny \
    plug-ins/crossfadetracks.ny \
@@ -71,6 +70,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/lowpass.ny \
    plug-ins/notch.ny \
    plug-ins/pluck.ny \
+   plug-ins/rhythmtrack.ny \
    plug-ins/rissetdrum.ny \
    plug-ins/sample-data-export.ny \
    plug-ins/SilenceMarker.ny \

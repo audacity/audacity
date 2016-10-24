@@ -33,6 +33,7 @@ simplifies construction of menu items.
 #include "Audacity.h"
 #include "Project.h"
 
+#include <cfloat>
 #include <iterator>
 #include <limits>
 #include <math.h>
@@ -651,7 +652,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("FitInWindow"), _("&Fit to Width"), FN(OnZoomFit), wxT("Ctrl+F"));
       c->AddItem(wxT("FitV"), _("Fit to &Height"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
       c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
-      c->AddItem(wxT("ExpandAllTracks"), _("E&xpand All Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
+      c->AddItem(wxT("ExpandAllTracks"), _("E&xpand Collapsed Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
       c->EndSubMenu();
 
 
@@ -1295,6 +1296,11 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
+
+   c->AddCommand(wxT("SelToNextLabel"), _("Selection to next label"), FN(OnSelToNextLabel), wxT("Alt+Right"),
+      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
+   c->AddCommand(wxT("SelToPrevLabel"), _("Selection to previous label"), FN(OnSelToPrevLabel), wxT("Alt+Left"),
+      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
 
 #ifdef __WXMAC__
    /* i8n-hint: Shrink all project windows to icons on the Macintosh tooldock */
@@ -2701,6 +2707,72 @@ void AudacityProject::OnSelToEnd()
    ModifyState(false);
 }
 
+void AudacityProject::OnSelToNextLabel()
+{
+   OnSelToLabel(true);
+}
+
+void AudacityProject::OnSelToPrevLabel()
+{
+   OnSelToLabel(false);
+}
+
+void AudacityProject::OnSelToLabel(bool next)
+{
+   // Find the number of label tracks, and ptr to last track found
+   Track* track = nullptr;
+   int nLabelTrack = 0;
+   TrackListOfKindIterator iter(Track::Label, &*mTracks);
+   for (Track* t = iter.First(); t; t = iter.Next()) {
+      nLabelTrack++;
+      track = t;
+   }
+
+   if (nLabelTrack == 0 ) {
+      mTrackPanel->MessageForScreenReader(_("no label track"));
+   }
+   else if (nLabelTrack > 1) {         // find first label track, if any, starting at the focused track
+      track = mTrackPanel->GetFocusedTrack();
+      while (track && track->GetKind() != Track::Label) {
+         track = mTracks->GetNext(track, true);
+         if (!track) {
+          mTrackPanel->MessageForScreenReader(_("no label track at or below focused track"));
+         }
+      }
+   }
+
+   // If there is a single label track, or there is a label track at or below the focused track
+   if (track) {
+      LabelTrack* lt = static_cast<LabelTrack*>(track);
+      int i;
+      if (next)
+         i = lt->FindNextLabel(GetSelection());
+      else
+         i = lt->FindPrevLabel(GetSelection());
+
+      if (i >= 0) {
+         const LabelStruct* label = lt->GetLabel(i);
+         if (IsAudioActive()) {
+            OnPlayStop();     // stop
+            GetViewInfo().selectedRegion = label->selectedRegion;
+            RedrawProject();
+            OnPlayStop();     // play
+         }
+         else {
+            GetViewInfo().selectedRegion = label->selectedRegion;
+            RedrawProject();
+         }
+
+         wxString message;
+         message.Printf(wxT("%s %d of %d"), label->title, i + 1, lt->GetNumLabels() );
+         mTrackPanel->MessageForScreenReader(message);
+      }
+      else {
+         mTrackPanel->MessageForScreenReader(_("no labels in label track"));
+      }
+   }
+}
+
 void AudacityProject::OnCursorUp()
 {
    mTrackPanel->OnPrevTrack( false );
@@ -2970,13 +3042,14 @@ void AudacityProject::NextWindow()
    // (Really only works on Windows)
    w->Raise();
 
-#ifdef __WXMAC__
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
    // bug 868
    // Simulate a TAB key press before continuing, else the cycle of
    // navigation among top level windows stops because the keystrokes don't
    // go to the CommandManager.
    if (dynamic_cast<wxDialog*>(w)) {
-      w->NavigateIn();
+      w->SetFocus();
    }
 #endif
 }
@@ -3021,13 +3094,14 @@ void AudacityProject::PrevWindow()
    // (Really only works on Windows)
    w->Raise();
 
-#ifdef __WXMAC__
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
    // bug 868
    // Simulate a TAB key press before continuing, else the cycle of
    // navigation among top level windows stops because the keystrokes don't
    // go to the CommandManager.
    if (dynamic_cast<wxDialog*>(w)) {
-      w->NavigateIn();
+      w->SetFocus();
    }
 #endif
 }
@@ -3040,11 +3114,11 @@ void AudacityProject::OnTrackPan()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
    if (slider->ShowDialog()) {
-      SetTrackPan(track, slider);
+      SetTrackPan(wt, slider);
    }
 }
 
@@ -3054,11 +3128,11 @@ void AudacityProject::OnTrackPanLeft()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
    slider->Decrease(1);
-   SetTrackPan(track, slider);
+   SetTrackPan(wt, slider);
 }
 
 void AudacityProject::OnTrackPanRight()
@@ -3067,11 +3141,11 @@ void AudacityProject::OnTrackPanRight()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
    slider->Increase(1);
-   SetTrackPan(track, slider);
+   SetTrackPan(wt, slider);
 }
 
 void AudacityProject::OnTrackGain()
@@ -3081,11 +3155,11 @@ void AudacityProject::OnTrackGain()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
    if (slider->ShowDialog()) {
-      SetTrackGain(track, slider);
+      SetTrackGain(wt, slider);
    }
 }
 
@@ -3095,11 +3169,11 @@ void AudacityProject::OnTrackGainInc()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
    slider->Increase(1);
-   SetTrackGain(track, slider);
+   SetTrackGain(wt, slider);
 }
 
 void AudacityProject::OnTrackGainDec()
@@ -3108,11 +3182,11 @@ void AudacityProject::OnTrackGainDec()
    if (!track || (track->GetKind() != Track::Wave)) {
       return;
    }
+   const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider
-      (static_cast<WaveTrack*>(track));
+   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
    slider->Decrease(1);
-   SetTrackGain(track, slider);
+   SetTrackGain(wt, slider);
 }
 
 void AudacityProject::OnTrackMenu()
@@ -4182,13 +4256,13 @@ void AudacityProject::OnPaste()
    TrackListIterator clipIter(msClipboard.get());
 
    Track *n = iter.First();
-   Track *c = clipIter.First();
+   const Track *c = clipIter.First();
    if (c == NULL)
       return;
    Track *ff = NULL;
-   Track *tmpSrc = NULL;
-   Track *tmpC = NULL;
-   Track *prev = NULL;
+   const Track *tmpSrc = NULL;
+   const Track *tmpC = NULL;
+   const Track *prev = NULL;
 
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
@@ -5941,7 +6015,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    wxString action;
    wxString shortAction;
    double offset;
-   double minOffset = 1000000000.0;
+   double minOffset = DBL_MAX;
    double maxEndOffset = 0.0;
    double leftOffset = 0.0;
    bool bRightChannel = false;
@@ -6241,7 +6315,7 @@ class ASAProgress final : public SAProgress {
          work = (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] +
                 (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * f;
       }
-      int updateResult = mProgress->Update(int(work), int(mTotalWork));
+      int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
       return (updateResult == eProgressSuccess);
    }
    bool set_matrix_progress(int cells) override {
@@ -6250,7 +6324,7 @@ class ASAProgress final : public SAProgress {
              (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] +
              (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1];
       work += mCellCount * MATRIX_WORK_UNIT;
-      int updateResult = mProgress->Update(int(work), int(mTotalWork));
+      int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
       return (updateResult == eProgressSuccess);
    }
    bool set_smoothing_progress(int i) override {
@@ -6260,7 +6334,7 @@ class ASAProgress final : public SAProgress {
              (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1] +
              MATRIX_WORK_UNIT * mFrames[0] * mFrames[1];
       work += i * wxMax(mFrames[0], mFrames[1]) * SMOOTHING_WORK_UNIT;
-      int updateResult = mProgress->Update(int(work), int(mTotalWork));
+      int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
       return (updateResult == eProgressSuccess);
    }
 };
@@ -6269,7 +6343,7 @@ class ASAProgress final : public SAProgress {
 long mixer_process(void *mixer, float **buffer, long n)
 {
    Mixer *mix = (Mixer *) mixer;
-   long frame_count = mix->Process(n);
+   long frame_count = mix->Process(std::max(0L, n));
    *buffer = (float *) mix->GetBuffer();
    return frame_count;
 }
@@ -6354,7 +6428,7 @@ void AudacityProject::OnScoreAlign()
          0.0,                     // double startTime
          endTime,                 // double stopTime
          2,                       // int numOutChannels
-         44100,                   // int outBufferSize
+         44100u,                   // size_t outBufferSize
          true,                    // bool outInterleaved
          mRate,                   // double outRate
          floatSample,             // sampleFormat outFormat
@@ -7121,7 +7195,7 @@ void AudacityProject::SeekLeftOrRight
                ? GridMove(t1, multiplier)
                : quietStepIsPixels
                   ? mViewInfo.OffsetTimeByPixels(
-                        t1, int(multiplier * quietSeekStepPositive))
+                        t1, (int)(multiplier * quietSeekStepPositive))
                   : t1 +  multiplier * quietSeekStepPositive
          ));
 
@@ -7136,7 +7210,7 @@ void AudacityProject::SeekLeftOrRight
                ? GridMove(t0, multiplier)
                : quietStepIsPixels
                   ? mViewInfo.OffsetTimeByPixels(
-                     t0, int(multiplier * quietSeekStepPositive))
+                     t0, (int)(multiplier * quietSeekStepPositive))
                   : t0 + multiplier * quietSeekStepPositive
          ));
 
@@ -7166,7 +7240,7 @@ void AudacityProject::SeekLeftOrRight
       if (audioStepIsPixels) {
          const double streamTime = gAudioIO->GetStreamTime();
          const double newTime =
-            mViewInfo.OffsetTimeByPixels(streamTime, int(audioSeekStepPositive));
+            mViewInfo.OffsetTimeByPixels(streamTime, (int)(audioSeekStepPositive));
          seconds = newTime - streamTime;
       }
       else
@@ -7188,7 +7262,7 @@ void AudacityProject::SeekLeftOrRight
                ? GridMove(t0, multiplier)
                : quietStepIsPixels
                   ? mViewInfo.OffsetTimeByPixels(
-                        t0, int(multiplier * quietSeekStepPositive))
+                        t0, (int)(multiplier * quietSeekStepPositive))
                   : t0 + multiplier * quietSeekStepPositive
          ));
 
@@ -7204,7 +7278,7 @@ void AudacityProject::SeekLeftOrRight
                ? GridMove(t1, multiplier)
                : quietStepIsPixels
                   ? mViewInfo.OffsetTimeByPixels(
-                        t1, int(multiplier * quietSeekStepPositive))
+                        t1, (int)(multiplier * quietSeekStepPositive))
                   : t1 + multiplier * quietSeekStepPositive
          ));
 
@@ -7231,7 +7305,7 @@ void AudacityProject::SeekLeftOrRight
                   ? GridMove(t0, multiplier)
                   : quietStepIsPixels
                      ? mViewInfo.OffsetTimeByPixels(
-                          t0, int(multiplier * quietSeekStepPositive))
+                          t0, (int)(multiplier * quietSeekStepPositive))
                      : t0 + multiplier * quietSeekStepPositive)),
             false // do not swap selection boundaries
          );

@@ -8,12 +8,12 @@ Updated September 27, 2006
 LADSPA_plugins-win is a project to port Steve Harris's LADSPA plugins 
 (http://plugin.org.uk/) to Windows OS as DLLs. 
 
-LADSPA_plugins-win is a part of Audacity (http://audacity.sourceforge.net) 
+LADSPA_plugins-win is a part of Audacity (http://www.audacityteam.org) 
 and is licensed under the Audacity license, which is the GNU GPL. See 
-http://audacity.sourceforge.net/about/license or audacity\LICENSE.txt.
+http://www.audacityteam.org/about/license/ or audacity\LICENSE.txt.
 
 The primary goal is to port these plugins for use in the Windows version of 
-Audacity (http://audacity.sourceforge.net/), but the plugins should work in 
+Audacity (http://www.audacityteam.org), but the plugins should work in 
 any LADSPA host on Windows (if there are any others).
 
 
@@ -39,7 +39,7 @@ REQUIREMENTS FOR BUILDING THE PLUGINS:
 * Microsoft Visual Studio 2005. 
 
 * audacity\win\LADSPA_plugins-win directory from, e.g., 
-	http://audacity.sourceforge.net/download/beta_source
+	http://www.audacityteam.org/download/plug-ins/
 
 * Latest plugin distro from http://plugin.org.uk.
 

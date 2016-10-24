@@ -195,7 +195,7 @@ int ExportOGG::Export(AudacityProject *project,
 
    // Encoding setup
    vorbis_info_init(&info);
-   vorbis_encode_init_vbr(&info, numChannels, int(rate + 0.5), quality);
+   vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality);
 
    // Retrieve tags
    if (!FillComment(project, &comment, metadata)) {

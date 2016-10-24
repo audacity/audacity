@@ -128,7 +128,7 @@ bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-sampleCount EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -160,10 +160,10 @@ bool EffectBassTreble::RealtimeFinalize()
    return true;
 }
 
-sampleCount EffectBassTreble::RealtimeProcess(int group,
+size_t EffectBassTreble::RealtimeProcess(int group,
                                               float **inbuf,
                                               float **outbuf,
-                                              sampleCount numSamples)
+                                              size_t numSamples)
 {
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
 }
@@ -215,7 +215,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          // Bass control
          FloatingPointValidator<double> vldBass(1, &mBass);
          vldBass.SetRange(MIN_Bass, MAX_Bass);
-         mBassT = S.Id(ID_Bass).AddTextBox(_("&Bass (dB):"), wxT(""), 10);
+         mBassT = S.Id(ID_Bass).AddTextBox(_("Ba&ss (dB):"), wxT(""), 10);
          mBassT->SetName(_("Bass (dB):"));
          mBassT->SetValidator(vldBass);
 
@@ -258,7 +258,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2, wxCENTER);
       {
          // Link checkbox
-         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("Link Volume control to Tone controls"),
+         mLinkCheckBox = S.Id(ID_Link).AddCheckBox(_("&Link Volume control to Tone controls"),
                                           DEF_Link ? wxT("true") : wxT("false"));
       }
       S.EndMultiColumn();
@@ -335,10 +335,10 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 // EffectClientInterface implementation
 
 
-sampleCount EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
+size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
                                               float **inBlock,
                                               float **outBlock,
-                                              sampleCount blockLen)
+                                              size_t blockLen)
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

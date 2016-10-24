@@ -51,7 +51,7 @@ class DevicePrefs final : public PrefsPanel
    wxChoice *mRecord;
    wxChoice *mChannels;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class DevicePrefsFactory final : public PrefsPanelFactory

@@ -1087,9 +1087,9 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
    {
-      mTrackRects[ i ].x = ( int )( mBoxWidth * 2 + radius - radius *
+      mTrackRects[ i ].x = (int)( mBoxWidth * 2 + radius - radius *
          cos( totAngle / 2.0 - angle * ( i + 1 ) ) - mBoxWidth + 0.5 );
-      mTrackRects[ i ].y = ( int )( mHeight * 0.5 - radius *
+      mTrackRects[ i ].y = (int)( mHeight * 0.5 - radius *
             sin( totAngle * 0.5 - angle * ( i + 1.0 ) ) -
             0.5 * mTrackHeight + 0.5 );
 
@@ -1115,9 +1115,9 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    for( int i = 0; i < mMixerSpec->GetNumChannels(); i++ )
    {
-      mChannelRects[ i ].x = ( int )( mBoxWidth * 4 - radius  + radius *
+      mChannelRects[ i ].x = (int)( mBoxWidth * 4 - radius  + radius *
          cos( totAngle * 0.5 - angle * ( i + 1 ) ) + 0.5 );
-      mChannelRects[ i ].y = ( int )( mHeight * 0.5 - radius *
+      mChannelRects[ i ].y = (int)( mHeight * 0.5 - radius *
             sin( totAngle * 0.5 - angle * ( i + 1 ) ) -
             0.5 * mChannelHeight + 0.5 );
 

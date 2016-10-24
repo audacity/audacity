@@ -59,7 +59,7 @@ private:
    float mTime_resolution;  //seconds
    double m_t1;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

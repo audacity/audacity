@@ -121,7 +121,7 @@ class ExpandingToolBar final : public wxPanelWrapper
 
    static int msNoAutoExpandStack;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class ExpandingToolBarEvtHandler;
    std::vector< movable_ptr< ExpandingToolBarEvtHandler > > mHandlers;
@@ -130,7 +130,7 @@ class ExpandingToolBar final : public wxPanelWrapper
 class ToolBarGrabber final : public wxPanelWrapper
 {
  public:
-   DECLARE_DYNAMIC_CLASS(ToolBarGrabber);
+   DECLARE_DYNAMIC_CLASS(ToolBarGrabber)
 
    ToolBarGrabber(wxWindow *parent,
                   wxWindowID id,
@@ -147,7 +147,7 @@ class ToolBarGrabber final : public wxPanelWrapper
    //ImageRoll         mImageRoll[2];
    ExpandingToolBar *mOwnerToolBar;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class ToolBarDialog final : public wxDialogWrapper

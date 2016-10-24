@@ -31,7 +31,7 @@ private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class BatchPrefsFactory final : public PrefsPanelFactory

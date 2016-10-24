@@ -27,10 +27,41 @@ click from the menu into the actaul function to be called.
 
 #include <wx/wx.h>
 #include "ModNullCallback.h"
-#include "../../src/Audacity.h"
-#include "../../src/ShuttleGui.h"
-#include "../../src/Project.h"
-#include "../../src/LoadModules.h"
+#include "Audacity.h"
+#include "ModuleManager.h"
+#include "ShuttleGui.h"
+#include "Project.h"
+#include "LoadModules.h"
+
+#if defined(__WXMSW__)
+#include <wx/init.h>
+#  if defined(__WXDEBUG__)
+#     define D "d"
+#  else
+#     define D ""
+#  endif
+#  if wxCHECK_VERSION(3, 1, 0)
+#     define V "31"
+#  elif wxCHECK_VERSION(3, 0, 0)
+#     define V "30"
+#  else
+#     define V "28"
+#  endif
+
+#  pragma comment(lib, "wxbase" V "u" D)
+#  pragma comment(lib, "wxbase" V "u" D "_net")
+#  pragma comment(lib, "wxmsw"  V "u" D "_adv")
+#  pragma comment(lib, "wxmsw"  V "u" D "_core")
+#  pragma comment(lib, "wxmsw"  V "u" D "_html")
+#  pragma comment(lib, "wxpng"        D)
+#  pragma comment(lib, "wxzlib"       D)
+#  pragma comment(lib, "wxjpeg"       D)
+#  pragma comment(lib, "wxtiff"       D)
+
+#  undef V
+#  undef D
+
+#endif //(__WXMSW__)
 
 /*
 There are several functions that can be used in a GUI module.
@@ -61,36 +92,6 @@ public:
    void OnFuncSecond();
 };
 
-typedef void (ModNullCallback::*ModNullCommandFunction)();
-
-class ModNullCommandFunctor:public CommandFunctor
-{
-public:
-   ModNullCommandFunctor(ModNullCallback *pData,
-      ModNullCommandFunction pFunction);
-   virtual void operator()(int index = 0);
-public:
-   ModNullCallback * mpData;
-   ModNullCommandFunction mpFunction;
-};
-
-ModNullCommandFunctor::ModNullCommandFunctor(ModNullCallback *pData,
-      ModNullCommandFunction pFunction)
-{
-   mpData = pData;
-   mpFunction = pFunction;
-}
-
-// The dispatching function.
-void ModNullCommandFunctor::operator()(int index )
-{
-   (mpData->*(mpFunction))();
-}
-                              
-#define ModNullFN(X) new ModNullCommandFunctor(pModNullCallback, \
-   (ModNullCommandFunction)(&ModNullCallback::X)) 
-
-
 void ModNullCallback::OnFuncFirst()
 {
    int k=32;
@@ -100,15 +101,17 @@ void ModNullCallback::OnFuncSecond()
 {
    int k=42;
 }
-
 ModNullCallback * pModNullCallback=NULL;
+
+#define ModNullFN(X) FNT(ModNullCallback, pModNullCallback, &ModNullCallback:: X)
 
 extern "C" {
 
 // GetVersionString
 // REQUIRED for the module to be accepted by Audacity.
 // Without it Audacity will see a version number mismatch.
-MOD_NULL_DLL_API wxChar * GetVersionString()
+extern DLL_API const wxChar * GetVersionString(); 
+const wxChar * GetVersionString()
 {
    // Make sure that this version of the module requires the version 
    // of Audacity it is built with. 
@@ -118,7 +121,8 @@ MOD_NULL_DLL_API wxChar * GetVersionString()
 }
 
 // This is the function that connects us to Audacity.
-int MOD_NULL_DLL_API ModuleDispatch(ModuleDispatchTypes type)
+extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
+int ModuleDispatch(ModuleDispatchTypes type)
 {
    switch (type)
    {
@@ -137,14 +141,15 @@ int MOD_NULL_DLL_API ModuleDispatch(ModuleDispatchTypes type)
          wxMenu * pMenu = pBar->GetMenu( 7 );  // Menu 7 is the Analyze Menu.
          CommandManager * c = p->GetCommandManager();
 
-         c->SetToMenu( pMenu );
+         c->SetCurrentMenu( pMenu );
          c->AddSeparator();
          // We add two new commands into the Analyze menu.
          c->AddItem( _T("A New Command..."), _T("1st Experimental Command"),
             ModNullFN( OnFuncFirst ) );
          c->AddItem( _T("Another New Command..."), _T("2nd Experimental Command"),
             ModNullFN( OnFuncSecond ) );
-      }
+         c->ClearCurrentMenu();
+   }
       break;
    default:
       break;

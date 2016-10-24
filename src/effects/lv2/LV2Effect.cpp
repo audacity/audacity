@@ -87,7 +87,7 @@ private:
    const LV2Port & mCtrl;
    float mLastValue;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
@@ -182,7 +182,7 @@ private:
    bool mUseLatency;
    bool mUseGUI;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
@@ -745,7 +745,7 @@ void LV2Effect::SetSampleRate(double rate)
    }
 }
 
-sampleCount LV2Effect::SetBlockSize(sampleCount maxBlockSize)
+size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = (int) maxBlockSize;
 
@@ -774,13 +774,13 @@ sampleCount LV2Effect::GetLatency()
    if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)
    {
       mLatencyDone = true;
-      return mLatency;
+      return sampleCount( mLatency );
    }
 
    return 0;
 }
 
-sampleCount LV2Effect::GetTailSize()
+size_t LV2Effect::GetTailSize()
 {
    return 0;
 }
@@ -818,7 +818,7 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-sampleCount LV2Effect::ProcessBlock(float **inbuf, float **outbuf, sampleCount size)
+size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 {
    for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
    {
@@ -905,10 +905,10 @@ bool LV2Effect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount LV2Effect::RealtimeProcess(int group,
+size_t LV2Effect::RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
-                                       sampleCount numSamples)
+                                       size_t numSamples)
 {
    wxASSERT(group >= 0 && group < (int) mSlaves.GetCount());
    wxASSERT(numSamples <= mBlockSize);

@@ -49,10 +49,10 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    /// Constructs a PCMAliasBlockFile, writing the summary to disk
    ODPCMAliasBlockFile(wxFileNameWrapper &&baseFileName,
                         wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
-                        sampleCount aliasLen, int aliasChannel);
+                        size_t aliasLen, int aliasChannel);
    ODPCMAliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
                         wxFileNameWrapper &&aliasedFileName, sampleCount aliasStart,
-                        sampleCount aliasLen, int aliasChannel,
+                        size_t aliasLen, int aliasChannel,
                         float min, float max, float rms, bool summaryAvailable);
    virtual ~ODPCMAliasBlockFile();
 
@@ -65,14 +65,14 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    //Calls that rely on summary files need to be overidden
    DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   void GetMinMax(sampleCount start, sampleCount len,
+   void GetMinMax(size_t start, size_t len,
                           float *outMin, float *outMax, float *outRMS) const override;
    /// Gets extreme values for the entire block
    void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
    /// Returns the 256 byte summary data block
-   bool Read256(float *buffer, sampleCount start, sampleCount len) override;
+   bool Read256(float *buffer, size_t start, size_t len) override;
    /// Returns the 64K summary data block
-   bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
+   bool Read64K(float *buffer, size_t start, size_t len) override;
 
    ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
@@ -117,8 +117,8 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
 
    /// Reads the specified data from the aliased file using libsndfile
-   int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const override;
+   size_t ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const override;
 
    /// Read the summary into a buffer
    bool ReadSummary(void *data) override;
@@ -139,7 +139,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 
 protected:
    void WriteSummary() override;
-   void *CalcSummary(samplePtr buffer, sampleCount len,
+   void *CalcSummary(samplePtr buffer, size_t len,
       sampleFormat format, ArrayOf<char> &cleanup) override;
 
   private:

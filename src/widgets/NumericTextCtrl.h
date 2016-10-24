@@ -142,7 +142,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    friend class NumericTextCtrlAx;
 
  public:
-   DECLARE_DYNAMIC_CLASS(NumericTextCtrl);
+   DECLARE_DYNAMIC_CLASS(NumericTextCtrl)
 
    NumericTextCtrl(NumericConverter::Type type,
                    wxWindow *parent,

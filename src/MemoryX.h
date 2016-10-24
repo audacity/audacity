@@ -47,7 +47,9 @@ namespace std {
       {
          // Break compilation if Y* does not convert to X*
          // I should figure out the right use of enable_if instead
-         static_assert((static_cast<X*>((Y*){}), true),
+         // Note: YPtr avoids bogus compiler warning for C99 compound literals
+         using YPtr = Y*;
+         static_assert((static_cast<X*>(YPtr{}), true),
                        "Pointer types not convertible");
       }
       

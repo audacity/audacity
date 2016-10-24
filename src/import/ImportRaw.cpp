@@ -278,8 +278,10 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
             framescompleted += block;
          }
          
-         updateResult = progress.Update((wxULongLong_t)framescompleted,
-                                        (wxULongLong_t)totalFrames);
+         updateResult = progress.Update(
+            framescompleted.as_long_long(),
+            totalFrames.as_long_long()
+         );
          if (updateResult != eProgressSuccess)
             break;
          

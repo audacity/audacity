@@ -1757,7 +1757,7 @@ bool ASlider::s_AcceptsFocus{ false };
 
 auto ASlider::TemporarilyAllowFocus() -> TempAllowFocus {
    s_AcceptsFocus = true;
-   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 // This compensates for a but in wxWidgets 3.0.2 for mac:

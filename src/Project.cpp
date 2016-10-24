@@ -181,9 +181,9 @@ ODLock &AudacityProject::AllProjectDeleteMutex()
 };
 
 #if defined(__WXMAC__)
-const int sbarSpaceWidth = 15;
-const int sbarControlWidth = 16;
-const int sbarExtraLen = 1;
+// const int sbarSpaceWidth = 15;
+// const int sbarControlWidth = 16;
+// const int sbarExtraLen = 1;
 const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #elif defined(__WXMSW__)
 const int sbarSpaceWidth = 16;
@@ -414,7 +414,7 @@ public:
 
    bool OnDrop(wxCoord x, wxCoord y) override
    {
-      bool foundSupported = false;
+      // bool foundSupported = false;
 #if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;
@@ -1385,7 +1385,7 @@ void AudacityProject::SetProjectTitle( int number)
    if( number >= 0 ){
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
       name = wxString::Format( _TS("[Project %02i] Audacity \"%s\""), number+1 ,
-         name.IsEmpty() ? "<untitled>" : name.c_str() );
+         name.IsEmpty() ? "<untitled>" : (const char *)name.c_str() );
    }
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if( name.IsEmpty() )
@@ -1738,7 +1738,7 @@ void AudacityProject::SetHorizontalThumb(double scrollto)
    const int pos =
       std::min(max,
          std::max(0,
-            int(floor(0.5 + unscaled * mViewInfo.sbarScale))));
+            (int)(floor(0.5 + unscaled * mViewInfo.sbarScale))));
    mHsbar->SetThumbPosition(pos);
    mViewInfo.sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
    mViewInfo.sbarH = std::max(mViewInfo.sbarH,
@@ -1919,7 +1919,7 @@ void AudacityProject::FixScrollbars()
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
       const int offset =
-         int(floor(0.5 + mViewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
+         (int)(floor(0.5 + mViewInfo.sbarScale * PixelWidthBeforeTime(0.0)));
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
@@ -2024,11 +2024,10 @@ void AudacityProject::HandleResize()
 // How many projects that do not have a name yet?
 int AudacityProject::CountUnnamed()
 {
-   int i;
-   int j=0;
-   for(i=0;i<gAudacityProjects.size();i++){
-      if(gAudacityProjects[i])
-         if( gAudacityProjects[i]->GetName().IsEmpty() )
+   int j = 0;
+   for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
+      if ( gAudacityProjects[i] )
+         if ( gAudacityProjects[i]->GetName().IsEmpty() )
             j++;
    }
    return j;
@@ -2036,10 +2035,9 @@ int AudacityProject::CountUnnamed()
 
 void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
 {
-   int i;
-   for(i=0;i<gAudacityProjects.size();i++){
-      if(gAudacityProjects[i]){
-         if( !gAudacityProjects[i]->mIconized ){
+   for ( size_t i = 0; i < gAudacityProjects.size(); i++) {
+      if ( gAudacityProjects[i] ) {
+         if ( !gAudacityProjects[i]->mIconized ) {
             AudacityProject * p;
             p = gAudacityProjects[i].get();
             p->SetProjectTitle( bShowProjectNumbers ? p->GetProjectNumber() : -1 );
@@ -2462,7 +2460,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          TitleRestorer Restorer( this );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
          wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
-         wxString Message = _("Save changes before closing?");
+         wxString Message = _("Save project before closing?");
          if( !bHasTracks )
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
@@ -4660,43 +4658,12 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = mDirManager->GetFreeDiskSpace();
       if (freeSpace >= 0) {
-         wxString msg;
-         double recTime;
-         int recMins;
-         // JKC: Bug 50: Use preferences to get actual sample format.
-         // However there is a slight performance impact due to Bug 1436
-         // So have left the old code in that gets the size (in RAM) but 
-         // #ifdeffed out.
-#if 1
-         sampleFormat oCaptureFormat = (sampleFormat)
-               gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
-#else
-         sampleFormat oCaptureFormat = gAudioIO->GetCaptureFormat();
-#endif
-         double bytesOnDiskPerSample = SAMPLE_SIZE_DISK(oCaptureFormat);
-         recTime = freeSpace.GetHi() * 4294967296.0 + freeSpace.GetLo();
-         recTime /= bytesOnDiskPerSample;
-         // note size on disk (=3 for 24-bit) not in memory (=4 for 24-bit)
-         recTime /= gAudioIO->GetNumCaptureChannels();
-         recTime /= GetRate();
-         recMins = (int)(recTime / 60.0);
+         wxString sMessage;
 
-         if (recMins >= 120)
-            msg.Printf(_("Disk space remains for recording %d hours and %d minutes."),
-                       recMins/60, recMins%60);
-         else if (recMins >= 60)
-            msg.Printf(_("Disk space remains for recording 1 hour and %d minutes."),
-                       recMins-60);
-         else if (recMins > 3)
-            msg.Printf(_("Disk space remains for recording %d minutes."),
-                       recMins);
-         else if (recTime >= 2)
-            msg.Printf(_("Disk space remains for recording %d seconds."),
-                       (int)recTime);
-         else
-            msg.Printf(_("Out of disk space"));
+         int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
+         sMessage.Printf(_("Disk space remains for recording %s"), GetHoursMinsString(iRecordingMins));
 
-         mStatusBar->SetStatusText(msg, mainStatusBarField);
+         mStatusBar->SetStatusText(sMessage, mainStatusBarField);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -4861,7 +4828,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       {
          WaveTrack *wt = ( WaveTrack* )n;
          Track::Holder merged;
-         for( int i = ( int )regions.size() - 1; i >= 0; i-- )
+         for( int i = (int)regions.size() - 1; i >= 0; i-- )
          {
             const Region &region = regions.at(i);
             auto dest = ( wt->*action )( region.start, region.end );
@@ -5237,38 +5204,36 @@ void AudacityProject::DoTrackSolo(Track *t, bool exclusive)
    mTrackPanel->Refresh(false);
 }
 
-void AudacityProject::SetTrackGain(Track * track, LWSlider * slider)
+void AudacityProject::SetTrackGain(WaveTrack * wt, LWSlider * slider)
 {
-   wxASSERT(track);
-   if (track->GetKind() != Track::Wave)
-      return;
+   wxASSERT(wt);
    float newValue = slider->Get();
 
-   WaveTrack *const link = static_cast<WaveTrack*>(mTracks->GetLink(track));
-   static_cast<WaveTrack*>(track)->SetGain(newValue);
+   // Assume linked track is wave or null
+   const auto link = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   wt->SetGain(newValue);
    if (link)
       link->SetGain(newValue);
 
    PushState(_("Adjusted gain"), _("Gain"), UndoPush::CONSOLIDATE);
 
-   GetTrackPanel()->RefreshTrack(track);
+   GetTrackPanel()->RefreshTrack(wt);
 }
 
-void AudacityProject::SetTrackPan(Track * track, LWSlider * slider)
+void AudacityProject::SetTrackPan(WaveTrack * wt, LWSlider * slider)
 {
-   wxASSERT(track);
-   if (track->GetKind() != Track::Wave)
-      return;
+   wxASSERT(wt);
    float newValue = slider->Get();
 
-   WaveTrack *const link = static_cast<WaveTrack*>(mTracks->GetLink(track));
-   static_cast<WaveTrack*>(track)->SetPan(newValue);
+   // Assume linked track is wave or null
+   const auto link = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   wt->SetPan(newValue);
    if (link)
       link->SetPan(newValue);
 
    PushState(_("Adjusted Pan"), _("Pan"), UndoPush::CONSOLIDATE);
 
-   GetTrackPanel()->RefreshTrack(track);
+   GetTrackPanel()->RefreshTrack(wt);
 }
 
 /// Removes the specified track.  Called from HandleClosing.
@@ -5536,7 +5501,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    return bSuccess;
 }
 
-// MY: Does the project have any tracks?
+// Does the project have any tracks?
 bool AudacityProject::ProjectHasTracks() {
    // These two lines test for an 'empty' project.
    // of course it could still have a history at this stage.
@@ -5545,20 +5510,44 @@ bool AudacityProject::ProjectHasTracks() {
    return bHasTracks;
 }
 
-// MY: This routine will give an estimate of how many
+wxString AudacityProject::GetHoursMinsString(int iMinutes)
+{
+
+   wxString sFormatted = wxEmptyString;
+   wxString sHours = wxEmptyString;
+   wxString sMins = wxEmptyString;
+
+   if (iMinutes < 1) {
+      // Less than a minute...
+      sFormatted = _("Less than 1 minute");
+      return sFormatted;
+   }
+
+   // Calculate
+   int iHours = iMinutes / 60;
+   int iMins = iMinutes % 60;
+
+   // Use wxPLURAL to get strings
+   sHours = wxPLURAL("hour", "hours", iHours);
+   sMins = wxPLURAL("minute", "minutes", iMins);
+
+   /* i18n-hint: A time in hours and minutes. Only translate the "and". */
+   sFormatted.Printf(_("%d %s and %d %s."), iHours, sHours, iMins, sMins);
+   return sFormatted;
+}
+
+// This routine will give an estimate of how many
 // minutes of recording time we have available.
-// This is called from TimerRecordDialog::OnOK() to allow
-// the user to resolve a potential disk space issue before
-// Timer Recording starts.
 // The calculations made are based on the user's current
 // preferences.
-int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
+int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
 
    // Obtain the current settings
    sampleFormat oCaptureFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
-   long lCaptureChannels;
-   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+   if (lCaptureChannels == 0) {
+      gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
+   }
 
    // Find out how much free space we have on disk
    wxLongLong lFreeSpace = mDirManager->GetFreeDiskSpace();
@@ -5575,7 +5564,7 @@ int AudacityProject::GetEstimatedRecordingMinsLeftOnDisk() {
    dRecTime /= GetRate();
 
    // Convert to minutes before returning
-   int iRecMins = (int)(dRecTime / 60.0);
+   int iRecMins = (int)round(dRecTime / 60.0);
    return iRecMins;
 }
 

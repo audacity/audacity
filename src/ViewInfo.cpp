@@ -177,7 +177,7 @@ bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
    if (!wxStrcmp(attr, wxT("vpos"))) {
       long longVpos;
       wxString(value).ToLong(&longVpos);
-      vpos = int(longVpos);
+      vpos = (int)(longVpos);
       return true;
    }
 

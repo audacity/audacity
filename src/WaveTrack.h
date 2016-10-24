@@ -201,20 +201,20 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
     * one is created.
     */
    bool Append(samplePtr buffer, sampleFormat format,
-               sampleCount len, unsigned int stride=1,
+               size_t len, unsigned int stride=1,
                XMLWriter* blockFileLog=NULL);
    /// Flush must be called after last Append
    bool Flush();
 
    bool AppendAlias(const wxString &fName, sampleCount start,
-                    sampleCount len, int channel,bool useOD);
+                    size_t len, int channel,bool useOD);
 
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
    //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
    bool AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType);
+                            size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
    unsigned int GetODFlags();
@@ -236,9 +236,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len, fillFormat fill=fillZero) const;
+                   sampleCount start, size_t len, fillFormat fill=fillZero) const;
    bool Set(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len);
+                   sampleCount start, size_t len);
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
    bool GetMinMax(float *min, float *max,
@@ -262,11 +262,14 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Getting information about the track's internal block sizes
    // and alignment for efficiency
    //
-   
+
+   // This returns a possibly large or negative value
    sampleCount GetBlockStart(sampleCount t) const;
-   sampleCount GetBestBlockSize(sampleCount t) const;
-   sampleCount GetMaxBlockSize() const;
-   sampleCount GetIdealBlockSize();
+
+   // These return a nonnegative number of samples meant to size a memory buffer
+   size_t GetBestBlockSize(sampleCount t) const;
+   size_t GetMaxBlockSize() const;
+   size_t GetIdealBlockSize();
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -617,7 +620,7 @@ public:
    // Returns null on failure
    // Returned pointer may be invalidated if Get is called again
    // Do not DELETE[] the pointer
-   constSamplePtr Get(sampleFormat format, sampleCount start, sampleCount len);
+   constSamplePtr Get(sampleFormat format, sampleCount start, size_t len);
 
 private:
    void Free();
@@ -633,7 +636,7 @@ private:
    };
 
    const WaveTrack *mPTrack;
-   sampleCount mBufferSize;
+   size_t mBufferSize;
    Buffer mBuffers[2];
    GrowableSampleBuffer mOverlapBuffer;
    int mNValidBuffers;

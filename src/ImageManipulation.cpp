@@ -91,7 +91,7 @@ std::unique_ptr<wxImage> ChangeImageColour(wxImage * srcImage,
       c = (c + 1) % 3;
    }
 
-   return std::move(dstImage);
+   return dstImage;
 }
 
 /// Takes a background image, foreground image, and mask
@@ -157,7 +157,7 @@ std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground
                 (fg[3 * (y * fgWidth + x) + c] * value)) / 255;
       }
    }
-   return std::move(dstImage);
+   return dstImage;
 }
 
 /// Takes a background image, foreground image, and mask
@@ -253,7 +253,7 @@ std::unique_ptr<wxImage> CreateBackground(int width, int height, wxColour colour
       *ip++ = srcVal[2];
    }
 
-   return std::move(i);
+   return i;
 }
 
 // Creates an image with the Mac OS X Aqua stripes, to be used
@@ -272,7 +272,7 @@ std::unique_ptr<wxImage> CreateAquaBackground(int width, int height, int offset)
          *ip++ = v;
    }
 
-   return std::move(image);
+   return image;
 }
 
 std::unique_ptr<wxImage> CreateSysBackground

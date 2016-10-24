@@ -569,7 +569,8 @@ void FreqWindow::GetAudio()
                mDataLen = 10485760;
             }
             else
-               mDataLen = dataLen;
+               // dataLen is not more than 10 * 2 ^ 20
+               mDataLen = dataLen.as_size_t();
             mData = new float[mDataLen];
             track->Get((samplePtr)mData, floatSample, start, mDataLen);
          }
@@ -754,7 +755,7 @@ void FreqWindow::DrawPlot()
 
       float ynorm = (y - yMin) / yTotal;
 
-      int lineheight = int (ynorm * (r.height - 1));
+      int lineheight = (int)(ynorm * (r.height - 1));
 
       if (lineheight > r.height - 2)
          lineheight = r.height - 2;
@@ -893,9 +894,9 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
 
       int px;
       if (mLogAxis)
-         px = int (log(bestpeak / xMin) / log(xStep));
+         px = (int)(log(bestpeak / xMin) / log(xStep));
       else
-         px = int ((bestpeak - xMin) * width / (xMax - xMin));
+         px = (int)((bestpeak - xMin) * width / (xMax - xMin));
 
       dc.SetPen(wxPen(wxColour(160,160,160), 1, wxSOLID));
       AColor::Line(dc, r.x + 1 + px, r.y, r.x + 1 + px, r.y + r.height);
@@ -925,8 +926,8 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
-         cursor.Printf(_("%d Hz (%s) = %d dB"), int (xPos + 0.5), xp, int (value + 0.5));
-         peak.Printf(_("%d Hz (%s) = %.1f dB"), int (bestpeak + 0.5), pp, bestValue);
+         cursor.Printf(_("%d Hz (%s) = %d dB"), (int)(xPos + 0.5), xp, (int)(value + 0.5));
+         peak.Printf(_("%d Hz (%s) = %.1f dB"), (int)(bestpeak + 0.5), pp, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
          xpitch = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
@@ -935,9 +936,9 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          cursor.Printf(_("%.4f sec (%d Hz) (%s) = %f"),
-                     xPos, int (1.0 / xPos + 0.5), xp, value);
+                     xPos, (int)(1.0 / xPos + 0.5), xp, value);
          peak.Printf(_("%.4f sec (%d Hz) (%s) = %.3f"),
-                     bestpeak, int (1.0 / bestpeak + 0.5), pp, bestValue);
+                     bestpeak, (int)(1.0 / bestpeak + 0.5), pp, bestValue);
       }
       mCursorText->SetValue(cursor);
       mPeakText->SetValue(peak);
@@ -1316,8 +1317,8 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    }
 
    float mYMin = 1000000, mYMax = -1000000;
-   switch (alg) {
    double scale;
+   switch (alg) {
    case Spectrum:
       // Convert to decibels
       mYMin = 1000000.;
@@ -1446,7 +1447,7 @@ float SpectrumAnalyst::GetProcessedValue(float freq0, float freq1) const
 
    if (binwidth < 1.0) {
       float binmid = (bin0 + bin1) / 2.0;
-      int ibin = int (binmid) - 1;
+      int ibin = (int)(binmid) - 1;
       if (ibin < 1)
          ibin = 1;
       if (ibin >= GetProcessedSize() - 3)
@@ -1463,14 +1464,14 @@ float SpectrumAnalyst::GetProcessedValue(float freq0, float freq1) const
       if (bin1 >= GetProcessedSize())
          bin1 = GetProcessedSize() - 1;
 
-      if (int (bin1) > int (bin0))
-         value += mProcessed[int (bin0)] * (int (bin0) + 1 - bin0);
-      bin0 = 1 + int (bin0);
-      while (bin0 < int (bin1)) {
-         value += mProcessed[int (bin0)];
+      if ((int)(bin1) > (int)(bin0))
+         value += mProcessed[(int)(bin0)] * ((int)(bin0) + 1 - bin0);
+      bin0 = 1 + (int)(bin0);
+      while (bin0 < (int)(bin1)) {
+         value += mProcessed[(int)(bin0)];
          bin0 += 1.0;
       }
-      value += mProcessed[int (bin1)] * (bin1 - int (bin1));
+      value += mProcessed[(int)(bin1)] * (bin1 - (int)(bin1));
 
       value /= binwidth;
    }

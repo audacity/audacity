@@ -124,15 +124,15 @@ public:
    virtual int GetMidiOutCount() = 0;
 
    virtual void SetSampleRate(double rate) = 0;
-   virtual sampleCount SetBlockSize(sampleCount maxBlockSize) = 0;
+   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
    virtual sampleCount GetLatency() = 0;
-   virtual sampleCount GetTailSize() = 0;
+   virtual size_t GetTailSize() = 0;
 
    virtual bool IsReady() = 0;
    virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
    virtual bool ProcessFinalize() = 0;
-   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) = 0;
+   virtual size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) = 0;
 
    virtual bool RealtimeInitialize() = 0;
    virtual bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) = 0;
@@ -140,7 +140,7 @@ public:
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() = 0;
    virtual bool RealtimeProcessStart() = 0;
-   virtual sampleCount RealtimeProcess(int group, float **inBuf, float **outBuf, sampleCount numSamples) = 0;
+   virtual size_t RealtimeProcess(int group, float **inBuf, float **outBuf, size_t numSamples) = 0;
    virtual bool RealtimeProcessEnd() = 0;
 
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false) = 0;

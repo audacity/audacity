@@ -648,7 +648,7 @@ void AColor::PreComputeGradient() {
                         {float(1.00), float(1.00), float(1.00)}     // white
                      };
 
-                     int left = int (value * gsteps);
+                     int left = (int)(value * gsteps);
                      int right = (left == gsteps ? gsteps : left + 1);
 
                      float rweight = (value * gsteps) - left;

@@ -430,13 +430,12 @@ class ToolDock::LayoutVisitor
 {
 public:
    virtual void ModifySize
-   (ToolBar *ct,
-    const wxRect &rect,
-    ToolBarConfiguration::Position prevPosition,
-    ToolBarConfiguration::Position position,
-    wxSize &sz)
+   (ToolBar *,
+    const wxRect &,
+    ToolBarConfiguration::Position,
+    ToolBarConfiguration::Position,
+    wxSize &)
    {
-      ct; rect; prevPosition; position; sz;
    }
 
    virtual void Visit
@@ -445,9 +444,8 @@ public:
    virtual bool ShouldVisitSpaces() = 0;
 
    virtual void FinalRect
-   (const wxRect &rect, ToolBarConfiguration::Position finalPosition)
+   (const wxRect &, ToolBarConfiguration::Position)
    {
-      rect; finalPosition;
    }
 };
 
@@ -834,7 +832,7 @@ void ToolDock::Updated()
 //
 void ToolDock::OnGrabber( GrabberEvent & event )
 {
-   auto pos = event.GetPosition();
+   // auto pos = event.GetPosition();
    if (!event.IsEscaping()) {
       ToolBar *t = mBars[ event.GetId() ];
 

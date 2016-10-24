@@ -400,13 +400,21 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             iter->get()->AppendAlias(mFilename, i, blockLen, c,useOD);
 
          if (++updateCounter == 50) {
-            updateResult = mProgress->Update(i, fileTotalFrames);
+            updateResult = mProgress->Update(
+               i.as_long_long(),
+               fileTotalFrames.as_long_long()
+            );
             updateCounter = 0;
             if (updateResult != eProgressSuccess)
                break;
          }
       }
-      updateResult = mProgress->Update(fileTotalFrames, fileTotalFrames);
+
+      // One last update for completion
+      updateResult = mProgress->Update(
+         fileTotalFrames.as_long_long(),
+         fileTotalFrames.as_long_long()
+      );
 
       if(useOD)
       {
@@ -447,7 +455,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       wxASSERT(mInfo.channels >= 0);
       while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
       {
-         maxBlock >>= 1;
+         maxBlock /= 2;
          if (maxBlock < 1)
             return eProgressFailed;
       }
@@ -485,8 +493,10 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             framescompleted += block;
          }
 
-         updateResult = mProgress->Update((long long unsigned)framescompleted,
-                                        (long long unsigned)fileTotalFrames);
+         updateResult = mProgress->Update(
+            framescompleted.as_long_long(),
+            fileTotalFrames.as_long_long()
+         );
          if (updateResult != eProgressSuccess)
             break;
 

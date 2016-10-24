@@ -39,6 +39,7 @@ movable_ptr<ODTask> ODComputeSummaryTask::Clone() const
 {
    auto clone = make_movable<ODComputeSummaryTask>();
    clone->mDemandSample = GetDemandSample();
+   // This std::move is needed to "upcast" the pointer type
    return std::move(clone);
 }
 
@@ -203,7 +204,9 @@ void ODComputeSummaryTask::Update()
                   const auto odpcmaFile =
                      std::static_pointer_cast<ODPCMAliasBlockFile>(file);
                   odpcmaFile->SetStart(block.start);
-                  odpcmaFile->SetClipOffset(clip->GetStartTime()*clip->GetRate());
+                  odpcmaFile->SetClipOffset(sampleCount(
+                     clip->GetStartTime()*clip->GetRate()
+                  ));
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
                   while(insertCursor<(int)tempBlocks.size()&&

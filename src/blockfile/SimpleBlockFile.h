@@ -49,12 +49,12 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
 
    /// Create a disk file and write summary and sample data to it
    SimpleBlockFile(wxFileNameWrapper &&baseFileName,
-                   samplePtr sampleData, sampleCount sampleLen,
+                   samplePtr sampleData, size_t sampleLen,
                    sampleFormat format,
                    bool allowDeferredWrite = false,
                    bool bypassCache = false );
    /// Create the memory structure to refer to the given block file
-   SimpleBlockFile(wxFileNameWrapper &&existingFile, sampleCount len,
+   SimpleBlockFile(wxFileNameWrapper &&existingFile, size_t len,
                    float min, float max, float rms);
 
    virtual ~SimpleBlockFile();
@@ -64,8 +64,8 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    /// Read the summary section of the disk file
    bool ReadSummary(void *data) override;
    /// Read the data section of the disk file
-   int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const override;
+   size_t ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const override;
 
    /// Create a NEW block file identical to this one
    BlockFilePtr Copy(wxFileNameWrapper &&newFileName) override;
@@ -85,7 +85,7 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
 
  protected:
 
-   bool WriteSimpleBlockFile(samplePtr sampleData, sampleCount sampleLen,
+   bool WriteSimpleBlockFile(samplePtr sampleData, size_t sampleLen,
                              sampleFormat format, void* summaryData);
    static bool GetCache();
    void ReadIntoCache();

@@ -21,6 +21,8 @@
 #include "sbsms.h"
 using namespace _sbsms_;
 
+class LabelTrack;
+
 class EffectSBSMS /* not final */ : public Effect
 {
 public:
@@ -37,7 +39,7 @@ protected:
    wxString GetName() override { return mProxyEffectName; };
 
 private:
-   bool ProcessLabelTrack(Track *track);
+   bool ProcessLabelTrack(LabelTrack *track);
    double rateStart, rateEnd, pitchStart, pitchEnd;
    bool bLinkRatePitch, bRateReferenceInput, bPitchReferenceInput;
    SlideType rateSlideType;

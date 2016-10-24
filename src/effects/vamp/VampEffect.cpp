@@ -329,7 +329,7 @@ bool VampEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
             if (qs != 0.0)
             {
-               val = int((val - lower) / qs + 0.5) * qs + lower;
+               val = (int)((val - lower) / qs + 0.5) * qs + lower;
             }
          }
 
@@ -524,7 +524,7 @@ bool VampEffect::Process()
          // UNSAFE_SAMPLE_COUNT_TRUNCATION
          // Truncation in case of very long tracks!
          Vamp::RealTime timestamp = Vamp::RealTime::frame2RealTime(
-            (long) static_cast<long long>( ls ),
+            long( ls.as_long_long() ),
             (int)(mRate + 0.5)
          );
 
@@ -545,14 +545,18 @@ bool VampEffect::Process()
 
          if (channels > 1)
          {
-            if (TrackGroupProgress(count, (ls - lstart) / double(originalLen)))
+            if (TrackGroupProgress(count,
+                  (ls - lstart).as_double() /
+                  originalLen.as_double() ))
             {
                return false;
             }
          }
          else
          {
-            if (TrackProgress(count, (ls - lstart) / double(originalLen)))
+            if (TrackProgress(count,
+                  (ls - lstart).as_double() /
+                  originalLen.as_double() ))
             {
                return false;
             }
@@ -840,7 +844,7 @@ void VampEffect::UpdateFromPlugin()
 
             if (qs != 0.0)
             {
-               value = int((value - lower) / qs + 0.5) * qs + lower;
+               value = (int)((value - lower) / qs + 0.5) * qs + lower;
             }
          }
 
@@ -887,7 +891,7 @@ void VampEffect::OnSlider(wxCommandEvent & evt)
 
       if (qs != 0.0)
       {
-         val = int(val / qs + 0.5) * qs;
+         val = (int)(val / qs + 0.5) * qs;
       }
    }
 
@@ -916,7 +920,7 @@ void VampEffect::OnTextCtrl(wxCommandEvent & evt)
 
       if (qs != 0.0)
       {
-         val = int((val - lower) / qs + 0.5) * qs + lower;
+         val = (int)((val - lower) / qs + 0.5) * qs + lower;
       }
    }
 

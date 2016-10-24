@@ -33,6 +33,7 @@
 *//*******************************************************************/
 
 #include <algorithm>
+#include <cfloat>
 
 #include "../Audacity.h"
 #include "../Experimental.h"
@@ -643,7 +644,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
             myOptions.cutPreviewGapStart = t0;
             myOptions.cutPreviewGapLen = t1 - t0;
             token = gAudioIO->StartStream(
-               mCutPreviewTracks->GetWaveTrackArray(false),
+               mCutPreviewTracks->GetWaveTrackConstArray(false),
                WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
                NoteTrackArray(),
@@ -665,7 +666,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
             timetrack = t->GetTimeTrack();
          }
          */
-         token = gAudioIO->StartStream(t->GetWaveTrackArray(false),
+         token = gAudioIO->StartStream(t->GetWaveTrackConstArray(false),
                                        WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
                                        t->GetNoteTrackArray(false),
@@ -895,11 +896,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       double t0 = p->GetSel0();
       double t1 = p->GetSel1();
       if (t1 == t0)
-         t1 = 1000000000.0;     // record for a long, long time (tens of years)
+         t1 = DBL_MAX;     // record for a long, long time
 
       /* TODO: set up stereo tracks if that is how the user has set up
        * their preferences, and choose sample format based on prefs */
-      WaveTrackArray newRecordingTracks, playbackTracks;
+      WaveTrackArray newRecordingTracks;
+      WaveTrackConstArray playbackTracks;
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray midiTracks;
 #endif
@@ -907,13 +909,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
 
       if(duplex){
-         playbackTracks = trackList->GetWaveTrackArray(false);
+         playbackTracks = trackList->GetWaveTrackConstArray(false);
 #ifdef EXPERIMENTAL_MIDI_OUT
          midiTracks = trackList->GetNoteTrackArray(false);
 #endif
      }
       else {
-         playbackTracks = WaveTrackArray();
+         playbackTracks = WaveTrackConstArray();
 #ifdef EXPERIMENTAL_MIDI_OUT
          midiTracks = NoteTrackArray();
 #endif
@@ -987,7 +989,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
          }
 
-         t1 = 1000000000.0;     // record for a long, long time (tens of years)
+         t1 = DBL_MAX;     // record for a long, long time
       }
       else {
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;

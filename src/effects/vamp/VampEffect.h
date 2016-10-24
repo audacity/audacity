@@ -108,7 +108,7 @@ private:
    wxChoice **mChoices;
    wxChoice *mProgram;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

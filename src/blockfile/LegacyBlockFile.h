@@ -40,8 +40,8 @@ class LegacyBlockFile final : public BlockFile {
    /// Create the memory structure to refer to the given block file
    LegacyBlockFile(wxFileNameWrapper &&existingFile,
                    sampleFormat format,
-                   sampleCount summaryLen,
-                   sampleCount len,
+                   size_t summaryLen,
+                   size_t len,
                    bool noRMS);
    virtual ~LegacyBlockFile();
 
@@ -50,8 +50,8 @@ class LegacyBlockFile final : public BlockFile {
    /// Read the summary section of the disk file
    bool ReadSummary(void *data) override;
    /// Read the data section of the disk file
-   int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const override;
+   size_t ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const override;
 
    /// Create a NEW block file identical to this one
    BlockFilePtr Copy(wxFileNameWrapper &&newFileName) override;
@@ -61,7 +61,7 @@ class LegacyBlockFile final : public BlockFile {
    void Recover() override;
 
    static BlockFilePtr BuildFromXML(const wxString &dir, const wxChar **attrs,
-                                  sampleCount len,
+                                  size_t len,
                                   sampleFormat format);
 
  protected:

@@ -34,7 +34,7 @@ protected:
    virtual bool NewTrackSimpleMono() = 0;
 
    // Override this method to actually process audio
-   virtual bool ProcessSimpleMono(float *buffer, sampleCount len) = 0;
+   virtual bool ProcessSimpleMono(float *buffer, size_t len) = 0;
 
 protected:
    // Other useful information

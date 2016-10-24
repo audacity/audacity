@@ -38,8 +38,6 @@ class wxChoice;
 class FreqWindow;
 class FreqGauge;
 
-class TrackList;
-
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQWINDOW_RECALC, -1);
 
 class SpectrumAnalyst
@@ -120,7 +118,7 @@ private:
 private:
     FreqWindow *freqWindow;
 
-    DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
 
 class FreqWindow final : public wxDialogWrapper
@@ -215,7 +213,7 @@ private:
 
    std::unique_ptr<SpectrumAnalyst> mAnalyst;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class FreqPlot;
 };

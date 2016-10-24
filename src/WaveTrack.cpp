@@ -210,7 +210,7 @@ WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
    if (viewMode < 0) {
       int oldMode;
       gPrefs->Read(wxT("/GUI/DefaultViewMode"), &oldMode,
-         int(WaveTrack::Waveform));
+         (int)(WaveTrack::Waveform));
       viewMode = WaveTrack::ConvertLegacyDisplayValue(oldMode);
    }
 
@@ -533,7 +533,7 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
    if (!Clear(t0, t1))
       return{};
 
-   return std::move(tmp);
+   return tmp;
 }
 
 Track::Holder WaveTrack::SplitCut(double t0, double t1)
@@ -548,7 +548,7 @@ Track::Holder WaveTrack::SplitCut(double t0, double t1)
    if (!SplitDelete(t0, t1))
       return{};
 
-   return std::move(tmp);
+   return tmp;
 }
 
 #if 0
@@ -564,7 +564,7 @@ Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
    if (!ClearAndAddCutLine(t0, t1))
       return {};
 
-   return std::move(tmp);
+   return tmp;
 }
 #endif
 
@@ -706,7 +706,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1) const
       }
    }
 
-   return std::move(result);
+   return result;
 }
 
 Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
@@ -1484,8 +1484,10 @@ bool WaveTrack::Disjoin(double t0, double t1)
                   if( seqEnd - seqStart + 1 > minSamples )
                   {
                      regions.push_back(Region(
-                        seqStart / GetRate() + clip->GetStartTime(),
-                        seqEnd / GetRate() + clip->GetStartTime()));
+                        seqStart.as_double() / GetRate()
+                                              + clip->GetStartTime(),
+                        seqEnd.as_double() / GetRate()
+                                              + clip->GetStartTime()));
                   }
                   seqStart = -1;
                }
@@ -1561,7 +1563,7 @@ bool WaveTrack::Join(double t0, double t1)
 }
 
 bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
-                       sampleCount len, unsigned int stride /* = 1 */,
+                       size_t len, unsigned int stride /* = 1 */,
                        XMLWriter *blockFileLog /* = NULL */)
 {
    return RightmostOrNewClip()->Append(buffer, format, len, stride,
@@ -1569,14 +1571,14 @@ bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
 }
 
 bool WaveTrack::AppendAlias(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel,bool useOD)
+                            size_t len, int channel,bool useOD)
 {
    return RightmostOrNewClip()->AppendAlias(fName, start, len, channel, useOD);
 }
 
 
 bool WaveTrack::AppendCoded(const wxString &fName, sampleCount start,
-                            sampleCount len, int channel, int decodeType)
+                            size_t len, int channel, int decodeType)
 {
    return RightmostOrNewClip()->AppendCoded(fName, start, len, channel, decodeType);
 }
@@ -1606,7 +1608,7 @@ sampleCount WaveTrack::GetBlockStart(sampleCount s) const
    return -1;
 }
 
-sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
+size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 {
    auto bestBlockSize = GetMaxBlockSize();
 
@@ -1624,7 +1626,7 @@ sampleCount WaveTrack::GetBestBlockSize(sampleCount s) const
    return bestBlockSize;
 }
 
-sampleCount WaveTrack::GetMaxBlockSize() const
+size_t WaveTrack::GetMaxBlockSize() const
 {
    decltype(GetMaxBlockSize()) maxblocksize = 0;
    for (const auto &clip : mClips)
@@ -1644,7 +1646,7 @@ sampleCount WaveTrack::GetMaxBlockSize() const
    return maxblocksize;
 }
 
-sampleCount WaveTrack::GetIdealBlockSize()
+size_t WaveTrack::GetIdealBlockSize()
 {
    return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
 }
@@ -1851,12 +1853,12 @@ bool WaveTrack::Unlock() const
 
 AUDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
 {
-   return floor(t0 * mRate + 0.5);
+   return sampleCount( floor(t0 * mRate + 0.5) );
 }
 
 double WaveTrack::LongSamplesToTime(sampleCount pos) const
 {
-   return ((double)pos) / mRate;
+   return pos.as_double() / mRate;
 }
 
 double WaveTrack::GetStartTime() const
@@ -1976,21 +1978,22 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
          {
             clip->TimeToSamplesClip(wxMax(t0, clip->GetStartTime()), &clipStart);
             clip->TimeToSamplesClip(wxMin(t1, clip->GetEndTime()), &clipEnd);
-            sumsq += cliprms * cliprms * (clipEnd - clipStart);
+            sumsq += cliprms * cliprms * (clipEnd - clipStart).as_float();
             length += (clipEnd - clipStart);
-         } else
+         }
+         else
          {
             result = false;
          }
       }
    }
-   *rms = length > 0.0 ? sqrt(sumsq / length) : 0.0;
+   *rms = length > 0 ? sqrt(sumsq / length.as_double()) : 0.0;
 
    return result;
 }
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, sampleCount len, fillFormat fill ) const
+                    sampleCount start, size_t len, fillFormat fill ) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
@@ -2039,11 +2042,24 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
          {
             inclipDelta = -startDelta; // make positive value
             samplesToCopy -= inclipDelta;
+            // samplesToCopy is now either len or
+            //    (clipEnd - clipStart) - (start - clipStart)
+            //    == clipEnd - start > 0
+            // samplesToCopy is not more than len
+            //
             startDelta = 0;
+            // startDelta is zero
+         }
+         else {
+            // startDelta is nonnegative and less than than len
+            // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->GetSamples((samplePtr)(((char*)buffer)+startDelta*SAMPLE_SIZE(format)),
-                               format, inclipDelta, samplesToCopy))
+         if (!clip->GetSamples(
+               (samplePtr)(((char*)buffer) +
+                           startDelta.as_size_t() *
+                           SAMPLE_SIZE(format)),
+               format, inclipDelta, samplesToCopy.as_size_t() ))
          {
             wxASSERT(false); // should always work
             return false;
@@ -2055,7 +2071,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 }
 
 bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
-                    sampleCount start, sampleCount len)
+                    sampleCount start, size_t len)
 {
    bool result = true;
 
@@ -2075,11 +2091,24 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
          {
             inclipDelta = -startDelta; // make positive value
             samplesToCopy -= inclipDelta;
+            // samplesToCopy is now either len or
+            //    (clipEnd - clipStart) - (start - clipStart)
+            //    == clipEnd - start > 0
+            // samplesToCopy is not more than len
+            //
             startDelta = 0;
+            // startDelta is zero
+         }
+         else {
+            // startDelta is nonnegative and less than than len
+            // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->SetSamples((samplePtr)(((char*)buffer)+startDelta*SAMPLE_SIZE(format)),
-                               format, inclipDelta, samplesToCopy))
+         if (!clip->SetSamples(
+               (samplePtr)(((char*)buffer) +
+                           startDelta.as_size_t() *
+                           SAMPLE_SIZE(format)),
+               format, inclipDelta, samplesToCopy.as_size_t() ))
          {
             wxASSERT(false); // should always work
             return false;
@@ -2125,10 +2154,13 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
 
          if (rt0 < dClipStartTime)
          {
+            // This is not more than the number of samples in
+            // (endTime - startTime) which is bufferLen:
             auto nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
-            rbuf += nDiff;
-            wxASSERT(nDiff <= rlen);
-            rlen -= nDiff;
+            auto snDiff = nDiff.as_size_t();
+            rbuf += snDiff;
+            wxASSERT(snDiff <= rlen);
+            rlen -= snDiff;
             rt0 = dClipStartTime;
          }
 
@@ -2366,7 +2398,7 @@ bool WaveTrack::SplitAt(double t)
 
          //offset the NEW clip by the splitpoint (noting that it is already offset to c->GetStartTime())
          sampleCount here = llrint(floor(((t - c->GetStartTime()) * mRate) + 0.5));
-         newClip->Offset((double)here/(double)mRate);
+         newClip->Offset(here.as_double()/(double)mRate);
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
          mClips.push_back(std::move(newClip)); // transfer ownership
@@ -2616,7 +2648,7 @@ void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
 }
 
 constSamplePtr WaveTrackCache::Get(sampleFormat format,
-   sampleCount start, sampleCount len)
+   sampleCount start, size_t len)
 {
    if (format == floatSample && len > 0) {
       const auto end = start + len;
@@ -2719,30 +2751,45 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       if (initLen > 0) {
          // This might be fetching zeroes between clips
          mOverlapBuffer.Resize(len, format);
-         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, initLen))
+         // initLen is not more than len:
+         auto sinitLen = initLen.as_size_t();
+         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen))
             return 0;
-         remaining -= initLen;
+         wxASSERT( sinitLen <= remaining );
+         remaining -= sinitLen;
          start += initLen;
-         buffer = mOverlapBuffer.ptr() + initLen * SAMPLE_SIZE(format);
+         buffer = mOverlapBuffer.ptr() + sinitLen * SAMPLE_SIZE(format);
       }
 
       // Now satisfy the request from the buffers
       for (int ii = 0; ii < mNValidBuffers && remaining > 0; ++ii) {
          const auto starti = start - mBuffers[ii].start;
+         // Treatment of initLen above establishes this loop invariant,
+         // and statements below preserve it:
+         wxASSERT(starti >= 0);
+
+         // This may be negative
          const auto leni =
             std::min( sampleCount( remaining ), mBuffers[ii].len - starti );
          if (initLen <= 0 && leni == len) {
             // All is contiguous already.  We can completely avoid copying
-            return samplePtr(mBuffers[ii].data + starti);
+            // leni is nonnegative, therefore start falls within mBuffers[ii],
+            // so starti is bounded between 0 and buffer length
+            return samplePtr(mBuffers[ii].data + starti.as_size_t() );
          }
          else if (leni > 0) {
+            // leni is nonnegative, therefore start falls within mBuffers[ii]
+            // But we can't satisfy all from one buffer, so copy
             if (buffer == 0) {
                mOverlapBuffer.Resize(len, format);
                buffer = mOverlapBuffer.ptr();
             }
-            const size_t size = sizeof(float) * leni;
-            memcpy(buffer, mBuffers[ii].data + starti, size);
-            remaining -= leni;
+            // leni is positive and not more than remaining
+            const size_t size = sizeof(float) * leni.as_size_t();
+            // starti is less than mBuffers[ii].len and nonnegative
+            memcpy(buffer, mBuffers[ii].data + starti.as_size_t(), size);
+            wxASSERT( leni <= remaining );
+            remaining -= leni.as_size_t();
             start += leni;
             buffer += size;
          }

@@ -202,7 +202,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
          }
 
          double v = mEnv[i].GetVal();
-         int x = int(position);
+         int x = (int)(position);
          int y, y2;
 
          y = GetWaveYPos(v, zoomMin, zoomMax, r.height, dB,
@@ -361,7 +361,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
       const wxInt64 position = zoomInfo.TimeToPosition(time);
       if (position >= 0 && position < r.width) {
 
-         int x = int (position);
+         int x = (int)(position);
          int y[4];
          int numControlPoints;
 
@@ -1012,7 +1012,7 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
    // Optimizations for the usual pattern of repeated calls with
    // small increases of t.
    {
-      if (mSearchGuess >= 0 && mSearchGuess < int(mEnv.size()) - 1) {
+      if (mSearchGuess >= 0 && mSearchGuess < (int)(mEnv.size()) - 1) {
          if (t >= mEnv[mSearchGuess].GetT() &&
             t < mEnv[1 + mSearchGuess].GetT()) {
             Lo = mSearchGuess;
@@ -1022,7 +1022,7 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
       }
 
       ++mSearchGuess;
-      if (mSearchGuess >= 0 && mSearchGuess < int(mEnv.size()) - 1) {
+      if (mSearchGuess >= 0 && mSearchGuess < (int)(mEnv.size()) - 1) {
          if (t >= mEnv[mSearchGuess].GetT() &&
             t < mEnv[1 + mSearchGuess].GetT()) {
             Lo = mSearchGuess;

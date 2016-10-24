@@ -122,8 +122,8 @@ class ToolManager final : public wxEvtHandler
 
  public:
 
-   DECLARE_CLASS( ToolManager );
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS( ToolManager )
+   DECLARE_EVENT_TABLE()
 };
 
 
@@ -181,8 +181,8 @@ private:
 
 public:
 
-   DECLARE_CLASS( ToolFrame );
-   DECLARE_EVENT_TABLE();
+   DECLARE_CLASS( ToolFrame )
+   DECLARE_EVENT_TABLE()
 };
 
 

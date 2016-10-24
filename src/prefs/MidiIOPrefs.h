@@ -59,7 +59,7 @@ class MidiIOPrefs final : public PrefsPanel
 #endif
 //   wxChoice *mChannels;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class MidiIOPrefsFactory final : public PrefsPanelFactory

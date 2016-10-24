@@ -38,7 +38,7 @@ CrossFader::~CrossFader()
 
 
 bool CrossFader::GetSamples(samplePtr buffer, sampleFormat format,
-                            sampleCount start, sampleCount len)
+                            sampleCount start, size_t len)
 {
    switch (mType)
    {
@@ -57,10 +57,12 @@ bool CrossFader::GetSamples(samplePtr buffer, sampleFormat format,
 
 }
 
-bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, sampleCount len)
+bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, size_t len)
 {
 
-   std::cout << "Crossfading from " << start << " to " << len+start << std::endl;
+   std::cout << "Crossfading from " << start.as_long_long()
+      << " to " << ( len + start ).as_long_long()
+      << std::endl;
 
    // start refers to the position in the wave.
 
@@ -103,13 +105,23 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       //it will be no longer than  the clip itself.
       clipLength[i] = tmpclip->GetNumSamples()-clipStart[i];
 
-      std::cout << "X:" <<  " " << clipLength[i] << "  " << tmpclip->GetStartSample() <<  " ";
+      std::cout << "X:" <<  " "
+         << clipLength[i].as_long_long()
+         << "  "
+         << tmpclip->GetStartSample().as_long_long()
+         <<  " ";
       //if the buffer ends before the clip does, adjust the length
       if(clipStart[i] + len   < clipLength[i])
       {
          clipLength[i] = len  +  clipStart[i];
       }
-      std::cout << clipStart[i] << " " << clipLength[i] << " " << clipLength[i] - clipStart[i] <<  std::endl;
+      std::cout
+         << clipStart[i].as_long_long()
+         << " "
+         << clipLength[i].as_long_long()
+         << " "
+         << ( clipLength[i] - clipStart[i] ).as_long_long()
+         <<  std::endl;
    }
    std::cout << "-------------\n";
 
@@ -143,7 +155,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
             {
                // UNSAFE_SAMPLE_COUNT_TRUNCATION
                // -- but class CrossFader is not used as of this writing
-               f += shortSeq[i][j+ clipStart[i]];
+               f += shortSeq[ i ][ j+ clipStart[i].as_long_long() ];
                clips++;
             }
 
@@ -193,7 +205,7 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
             {
                // UNSAFE_SAMPLE_COUNT_TRUNCATION
                // -- but class CrossFader is not used as of this writing
-               f+= intSeq[i][j+clipStart[i]];
+               f+= intSeq[ i ][ j + clipStart[ i ].as_long_long() ];
                clips++;
             }
 
@@ -242,10 +254,11 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
                // -- hey wait, you never even tried to initialize floatSeq,
                // not even with bad casts!!!
                // Subscripts out of bounds, bombs away!!!
-               f += floatSeq[i][j + clipStart[i]];
+               f += floatSeq[ i ][ ( j + clipStart[ i ] ).as_long_long() ];
                clips++;
             }
-            cout << f << " "<< i << " "<< floatSeq[i][j+clipStart[i]] << "|";
+            cout << f << " "<< i << " "
+               << floatSeq[ i ][ j + clipStart[ i ].as_long_long() ] << "|";
          }
          if(clips == 0)
             *dest = 0.0f;
