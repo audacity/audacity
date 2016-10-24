@@ -162,11 +162,6 @@ extern "C"
    // and ask if it has anything for the menus.
    int ModuleDispatch(ModuleDispatchTypes type){
       switch (type){
-         case AppInitialized:{
-            wxASSERT(gBench == NULL);
-            gBench = new NyqBench(NULL);
-         }
-         break;
          case AppQuiting: {
             wxASSERT(gBench != NULL);
             if (gBench) {
@@ -187,13 +182,14 @@ extern "C"
             wxMenu * pMenu = pBar->GetMenu( 2 );  // Menu 2 is the View Menu.
             wxASSERT( pMenu != NULL );
 
-            c->SetToMenu( pMenu );
+            c->SetCurrentMenu(pMenu);
             c->AddSeparator();
-            // c->BeginMenu(_("T&ools"));
             c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
             c->AddItem(wxT("NyqBench"),
                        _("&Nyquist Workbench..."),
-                       new ModNyqBenchCommandFunctor());
+                       FNT(NyqBench, NyqBench::GetBench(), &NyqBench::ShowNyqBench));
+
+            c->ClearCurrentMenu();
          }
          break;
          default:
@@ -591,18 +587,6 @@ void NyqRedirector::AppendText()
 }
 
 //----------------------------------------------------------------------------
-// ModNyqBenchCommandFunctor
-// Connects Audacity menu item to an action in this dll.
-// Only one action implemented so far.
-//----------------------------------------------------------------------------
-void ModNyqBenchCommandFunctor::operator()(int index, const wxEvent *e)
-{
-   if (gBench) {
-      gBench->Show();
-   }
-}
-
-//----------------------------------------------------------------------------
 // NyqBench
 //----------------------------------------------------------------------------
 
@@ -702,6 +686,16 @@ BEGIN_EVENT_TABLE(NyqBench, wxFrame)
    EVT_UPDATE_UI(ID_SCRIPT, NyqBench::OnScriptUpdate)
    EVT_UPDATE_UI(ID_OUTPUT, NyqBench::OnOutputUpdate)
 END_EVENT_TABLE()
+
+/*static*/ NyqBench *NyqBench::GetBench()
+{
+   if (gBench == nullptr)
+   {
+      gBench = new NyqBench(NULL);
+   }
+
+   return gBench;
+}
 
 NyqBench::NyqBench(wxWindow * parent)
 :  wxFrame(NULL,
@@ -1768,4 +1762,13 @@ void NyqBench::LoadFile()
    }
 
 //   mScript->LoadFile(mPath.GetFullPath());
+}
+
+//----------------------------------------------------------------------------
+// Connects Audacity menu item to an action in this dll.
+// Only one action implemented so far.
+//----------------------------------------------------------------------------
+void NyqBench::ShowNyqBench()
+{
+   Show();
 }

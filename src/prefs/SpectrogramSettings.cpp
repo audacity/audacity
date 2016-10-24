@@ -237,10 +237,10 @@ bool SpectrogramSettings::Validate(bool quiet)
       std::max(0, std::min(NumWindowFuncs() - 1, windowType));
    scaleType =
       ScaleType(std::max(0,
-         std::min(int(SpectrogramSettings::stNumScaleTypes) - 1,
-            int(scaleType))));
+         std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
+            (int)(scaleType))));
    algorithm = Algorithm(
-      std::max(0, std::min(int(algNumAlgorithms) - 1, int(algorithm)))
+      std::max(0, std::min((int)(algNumAlgorithms) - 1, (int)(algorithm)))
    );
    ConvertToEnumeratedWindowSizes();
    ConvertToActualWindowSizes();

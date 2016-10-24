@@ -104,7 +104,7 @@ private:
 
    wxArrayString mDbChoices;
 
-   sampleCount mBlendFrameCount;
+   size_t mBlendFrameCount;
 
    wxChoice *mTruncDbChoice;
    wxChoice *mActionChoice;
@@ -113,7 +113,7 @@ private:
    wxTextCtrl *mSilenceCompressPercentT;
    wxCheckBox *mIndependent;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

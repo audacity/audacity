@@ -103,7 +103,8 @@ bool EffectRepair::Process()
 
          const auto s0 = track->TimeToLongSamples(t0);
          const auto s1 = track->TimeToLongSamples(t1);
-         const auto repairStart = (repair0 - s0);
+         // The difference is at most 2 * 128:
+         const auto repairStart = (repair0 - s0).as_size_t();
          const auto len = s1 - s0;
 
          if (s0 == repair0 && s1 == repair1) {
@@ -113,8 +114,12 @@ bool EffectRepair::Process()
             break;
          }
 
-         if (!ProcessOne(count, track,
-                         s0, len, repairStart, repairLen)) {
+         if (!ProcessOne(count, track, s0,
+                         // len is at most 5 * 128.
+                         len.as_size_t(),
+                         repairStart,
+                         // repairLen is at most 128.
+                         repairLen.as_size_t() )) {
             bGoodResult = false;
             break;
          }
@@ -130,8 +135,8 @@ bool EffectRepair::Process()
 
 bool EffectRepair::ProcessOne(int count, WaveTrack * track,
                               sampleCount start,
-                              sampleCount len,
-                              sampleCount repairStart, sampleCount repairLen)
+                              size_t len,
+                              size_t repairStart, size_t repairLen)
 {
    float *buffer = new float[len];
    track->Get((samplePtr) buffer, floatSample, start, len);

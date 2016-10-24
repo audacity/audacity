@@ -232,6 +232,9 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    // Returns tab-separated text of all labels completely within given region
    wxString GetTextOfLabels(double t0, double t1) const;
 
+   int FindNextLabel(const SelectedRegion& currentSelection);
+   int FindPrevLabel(const SelectedRegion& currentSelection);
+
  public:
    void SortLabels();
    //These two are used by a TrackPanel KLUDGE, which is why they are public.
@@ -267,6 +270,8 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    // Set in copied label tracks
    double mClipLen;
+
+   int miLastLabel;                 // used by FindNextLabel and FindPrevLabel
 
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
    void ComputeTextPosition(const wxRect & r, int index) const;

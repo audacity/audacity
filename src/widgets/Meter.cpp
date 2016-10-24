@@ -369,7 +369,7 @@ Meter::~Meter()
 
    // LLL:  This prevents a crash during termination if monitoring
    //       is active.
-   if (gAudioIO->IsMonitoring())
+   if (gAudioIO && gAudioIO->IsMonitoring())
       gAudioIO->StopStream();
 }
 
@@ -953,7 +953,7 @@ void Meter::UpdateDisplay(unsigned numChannels, int numFrames, float *sampleData
 //                           // Need to make these double-indexed arrays if we handle more than 2 channels.
 //                           float* maxLeft, float* rmsLeft,
 //                           float* maxRight, float* rmsRight,
-//                           const sampleCount kSampleCount)
+//                           const size_t kSampleCount)
 //{
 //   int i, j;
 //   int num = intmin(numChannels, mNumBars);
@@ -2091,7 +2091,7 @@ bool Meter::s_AcceptsFocus{ false };
 
 auto Meter::TemporarilyAllowFocus() -> TempAllowFocus {
    s_AcceptsFocus = true;
-   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 // This compensates for a but in wxWidgets 3.0.2 for mac:

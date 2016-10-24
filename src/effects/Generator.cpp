@@ -133,7 +133,9 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
       i += block;
 
       // Update the progress meter
-      if (TrackProgress(ntrack, (double)i / numSamples))
+      if (TrackProgress(ntrack,
+                        i.as_double() /
+                        numSamples.as_double()))
          bGoodResult = false;
    }
    delete[] data;

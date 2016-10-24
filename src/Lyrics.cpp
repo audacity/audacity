@@ -421,7 +421,7 @@ void Lyrics::Update(double t)
 {
    if (t < 0.0)
    {
-      // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -1000000000 if !IsStreamActive().
+      // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -DBL_MAX if !IsStreamActive().
       // In that case, use the selection start time.
       AudacityProject* pProj = GetActiveProject();
       mT = pProj->GetSel0();

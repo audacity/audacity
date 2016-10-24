@@ -43,10 +43,10 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    /// Create a disk file and write summary and sample data to it
    ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel, unsigned int decodeType);
+                     size_t aliasLen, int aliasChannel, unsigned int decodeType);
    /// Create the memory structure to refer to the given block file
    ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel, unsigned int decodeType,
+                     size_t aliasLen, int aliasChannel, unsigned int decodeType,
                    float min, float max, float rms, bool dataAvailable);
 
    virtual ~ODDecodeBlockFile();
@@ -62,14 +62,14 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    //Calls that rely on summary files need to be overidden
    DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   void GetMinMax(sampleCount start, sampleCount len,
+   void GetMinMax(size_t start, size_t len,
                           float *outMin, float *outMax, float *outRMS) const override;
    /// Gets extreme values for the entire block
    void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
    /// Returns the 256 byte summary data block
-   bool Read256(float *buffer, sampleCount start, sampleCount len) override;
+   bool Read256(float *buffer, size_t start, size_t len) override;
    /// Returns the 64K summary data block
-   bool Read64K(float *buffer, sampleCount start, sampleCount len) override;
+   bool Read64K(float *buffer, size_t start, size_t len) override;
 
    /// returns true before decoding is complete, because it is linked to the encoded file until then.
    /// returns false afterwards.
@@ -108,8 +108,8 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
 
    /// Reads the specified data from the aliased file using libsndfile
-   int ReadData(samplePtr data, sampleFormat format,
-                        sampleCount start, sampleCount len) const override;
+   size_t ReadData(samplePtr data, sampleFormat format,
+                        size_t start, size_t len) const override;
 
    /// Read the summary into a buffer
    bool ReadSummary(void *data) override;
@@ -155,7 +155,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
   protected:
 
 //   void WriteSimpleBlockFile() override;
-   void *CalcSummary(samplePtr buffer, sampleCount len,
+   void *CalcSummary(samplePtr buffer, size_t len,
                              sampleFormat format, ArrayOf<char> &cleanup) override;
    //The on demand type.
    unsigned int mType;

@@ -23,9 +23,9 @@
 LegacyAliasBlockFile::LegacyAliasBlockFile(wxFileNameWrapper &&fileName,
                                            wxFileNameWrapper &&aliasedFileName,
                                            sampleCount aliasStart,
-                                           sampleCount aliasLen,
+                                           size_t aliasLen,
                                            int aliasChannel,
-                                           sampleCount summaryLen,
+                                           size_t summaryLen,
                                            bool noRMS)
 : PCMAliasBlockFile{ std::move(fileName), std::move(aliasedFileName), aliasStart, aliasLen,
                      aliasChannel, 0.0, 0.0, 0.0 }
@@ -69,7 +69,7 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("name"), mFileName.GetFullName());
    xmlFile.WriteAttr(wxT("aliaspath"), mAliasedFileName.GetFullPath());
    xmlFile.WriteAttr(wxT("aliasstart"),
-                     static_cast<long long>( mAliasStart ));
+                     mAliasStart.as_long_long() );
    xmlFile.WriteAttr(wxT("aliaslen"), mLen);
    xmlFile.WriteAttr(wxT("aliaschannel"), mAliasChannel);
    xmlFile.WriteAttr(wxT("summarylen"), mSummaryInfo.totalSummaryBytes);

@@ -219,6 +219,9 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_CUESHEET:	// convert this to labels?
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
+
+      case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
+
       break;
    }
 }
@@ -332,6 +335,7 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(const wxString &filenam
       return nullptr;
    }
 
+   // This std::move is needed to "upcast" the pointer type
    return std::move(handle);
 }
 
@@ -498,7 +502,10 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
          for (int c = 0; c < mNumChannels; ++c, ++iter)
             iter->get()->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFLAC);
 
-         mUpdateResult = mProgress->Update(i, fileTotalFrames);
+         mUpdateResult = mProgress->Update(
+            i.as_long_long(),
+            fileTotalFrames.as_long_long()
+         );
          if (mUpdateResult != eProgressSuccess)
             break;
       }

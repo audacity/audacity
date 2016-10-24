@@ -210,7 +210,7 @@ private:
 
    wxSimplebook *mBook;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 //----------------------------------------------------------------------------

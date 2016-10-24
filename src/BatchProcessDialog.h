@@ -110,7 +110,7 @@ private:
    int mSelectedCommand;
    bool mChanged;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

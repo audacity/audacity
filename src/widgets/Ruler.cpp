@@ -1114,7 +1114,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       if (mMin * mMax < 0.0) {
          int mid;
          if (zoomInfo != NULL)
-            mid = int(zoomInfo->TimeToPosition(0.0, mLeftOffset));
+            mid = (int)(zoomInfo->TimeToPosition(0.0, mLeftOffset));
          else
             mid = (int)(mLength*(mMin / (mMin - mMax)) + 0.5);
          const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
@@ -1240,8 +1240,8 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
       for (i = 0; i <= steps; i++) {
          // PRL:  Bug1038.  Don't label 1.6, rounded, as a duplicate tick for "2"
          if (!(mFormat == IntFormat && decade < 10.0)) {
-            for (int f = start; f != int(end); f += mstep) {
-               if (int(f / 10) != f / 10.0f) {
+            for (int f = start; f != (int)(end); f += mstep) {
+               if ((int)(f / 10) != f / 10.0f) {
                   val = decade * f / 10;
                   if (val >= rMin && val < rMax) {
                      const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
@@ -1683,8 +1683,8 @@ inline int IndicatorWidthForHeight(int height)
 
 inline int IndicatorBigHeight()
 {
-   return std::max(int(ScrubHeight - TopMargin),
-                   int(IndicatorMediumWidth));
+   return std::max((int)(ScrubHeight - TopMargin),
+                   (int)(IndicatorMediumWidth));
 }
 
 inline int IndicatorBigWidth()
@@ -2139,13 +2139,14 @@ namespace {
          return _("Move to Scrub");
 #else
       wxMouseState State = wxGetMouseState();
-      if( State.LeftIsDown() )
+      if( State.LeftIsDown() ) {
          // Since mouse is down, mention dragging first.
          // IsScrubbing is true if Scrubbing OR seeking.
          if( scrubber.IsOneShotSeeking() )
             return _("Drag to Seek.  Release to stop seeking.");
          else 
             return _("Drag to Seek.  Release and move to Scrub.");
+      }
       // Since mouse is up, mention moving first.
       return _("Move to Scrub. Drag to Seek.");
 #endif
@@ -2278,7 +2279,7 @@ void AdornedRulerPanel::UpdateRects()
 
    if (mShowScrubbing) {
       mScrubZone = mInner;
-      auto scrubHeight = std::min(mScrubZone.height, int(ScrubHeight));
+      auto scrubHeight = std::min(mScrubZone.height, (int)(ScrubHeight));
 
       int topHeight;
 #ifdef SCRUB_ABOVE
@@ -2980,16 +2981,8 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
 
 void AdornedRulerPanel::DragSelection()
 {
-   if (mPlayRegionStart < mPlayRegionEnd) {
-      mProject->SetSel0(mPlayRegionStart);
-      mProject->SetSel1(mPlayRegionEnd);
-   }
-   else {
-      mProject->SetSel0(mPlayRegionEnd);
-      mProject->SetSel1(mPlayRegionStart);
-   }
-   mProject->GetTrackPanel()->DisplaySelection();
-   mProject->GetTrackPanel()->Refresh(false);
+   mViewInfo->selectedRegion.setT0(mPlayRegionStart, false);
+   mViewInfo->selectedRegion.setT1(mPlayRegionEnd, true);
 }
 
 void AdornedRulerPanel::HandleSnapping()
@@ -3366,7 +3359,7 @@ bool AdornedRulerPanel::s_AcceptsFocus{ false };
 
 auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
    s_AcceptsFocus = true;
-   return std::move(TempAllowFocus{ &s_AcceptsFocus });
+   return TempAllowFocus{ &s_AcceptsFocus };
 }
 
 void AdornedRulerPanel::SetFocusFromKbd()

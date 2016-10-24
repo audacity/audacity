@@ -288,7 +288,7 @@ const UndoState &UndoManager::SetStateTo
 
    current = n;
 
-   if (current == int(stack.size()-1)) {
+   if (current == (int)(stack.size()-1)) {
       *selectedRegion = stack[current]->state.selectedRegion;
    }
    else {

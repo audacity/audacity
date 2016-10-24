@@ -119,7 +119,7 @@ public:
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
    ///returns negative value for failure, 0 or positive value for success.
-   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
+   virtual int Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, size_t len, unsigned int channel) = 0;
 
    const wxString &GetFileName(){return mFName;}
 

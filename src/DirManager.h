@@ -63,21 +63,21 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    BlockFilePtr
       NewSimpleBlockFile(samplePtr sampleData,
-                                 sampleCount sampleLen,
+                                 size_t sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite = false);
 
    BlockFilePtr
       NewAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
-                                 sampleCount aliasLen, int aliasChannel);
+                                 size_t aliasLen, int aliasChannel);
 
    BlockFilePtr
       NewODAliasBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
-                                 sampleCount aliasLen, int aliasChannel);
+                                 size_t aliasLen, int aliasChannel);
 
    BlockFilePtr
       NewODDecodeBlockFile( const wxString &aliasedFile, sampleCount aliasStart,
-                                 sampleCount aliasLen, int aliasChannel, int decodeType);
+                                 size_t aliasLen, int aliasChannel, int decodeType);
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
    bool ContainsBlockFile(const BlockFile *b) const;
@@ -108,10 +108,10 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
       mLoadingTargetIdx = idx;
    }
    void SetLoadingFormat(sampleFormat format) { mLoadingFormat = format; }
-   void SetLoadingBlockLength(sampleCount len) { mLoadingBlockLen = len; }
+   void SetLoadingBlockLength(size_t len) { mLoadingBlockLen = len; }
 
    // Note: following affects only the loading of block files when opening a project
-   void SetLoadingMaxSamples(sampleCount max) { mMaxSamples = max; }
+   void SetLoadingMaxSamples(size_t max) { mMaxSamples = max; }
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
@@ -204,9 +204,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    BlockArray *mLoadingTarget;
    unsigned mLoadingTargetIdx;
    sampleFormat mLoadingFormat;
-   sampleCount mLoadingBlockLen;
+   size_t mLoadingBlockLen;
 
-   sampleCount mMaxSamples; // max samples per block
+   size_t mMaxSamples; // max samples per block
 
    unsigned long mLastBlockFileDestructionCount { 0 };
 

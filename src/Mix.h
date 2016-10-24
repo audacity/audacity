@@ -95,7 +95,7 @@ class AUDACITY_DLL_API Mixer {
    Mixer(const WaveTrackConstArray &inputTracks,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
-         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality = true, MixerSpec *mixerSpec = NULL);
 
@@ -115,7 +115,7 @@ class AUDACITY_DLL_API Mixer {
    /// a buffer which can be retrieved by calling GetBuffer().
    /// Returns number of output samples, or 0, if there are no
    /// more samples that must be processed.
-   sampleCount Process(sampleCount maxSamples);
+   size_t Process(size_t maxSamples);
 
    /// Restart processing at beginning of buffer next time
    /// Process() is called.
@@ -141,10 +141,10 @@ class AUDACITY_DLL_API Mixer {
  private:
 
    void Clear();
-   sampleCount MixSameRate(int *channelFlags, WaveTrackCache &cache,
+   size_t MixSameRate(int *channelFlags, WaveTrackCache &cache,
                            sampleCount *pos);
 
-   sampleCount MixVariableRates(int *channelFlags, WaveTrackCache &cache,
+   size_t MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
                                 Resample * pResample);
@@ -167,16 +167,16 @@ class AUDACITY_DLL_API Mixer {
    float          **mSampleQueue;
    int             *mQueueStart;
    int             *mQueueLen;
-   int              mQueueMaxLen;
-   int              mProcessLen;
+   size_t           mQueueMaxLen;
+   size_t           mProcessLen;
    MixerSpec        *mMixerSpec;
 
    // Output
-   int              mMaxOut;
+   size_t              mMaxOut;
    unsigned         mNumChannels;
    unsigned         mNumBuffers;
-   int              mBufferSize;
-   int              mInterleavedBufferSize;
+   size_t              mBufferSize;
+   size_t              mInterleavedBufferSize;
    sampleFormat     mFormat;
    bool             mInterleaved;
    SampleBuffer    *mBuffer;

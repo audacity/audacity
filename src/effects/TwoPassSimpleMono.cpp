@@ -105,7 +105,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
    auto maxblock = track->GetMaxBlockSize();
 
    //Initiate a processing buffer.  This buffer will (most likely)
@@ -165,9 +165,13 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
 
       //Update the Progress meter
       if (mSecondPassDisabled)
-         ret = TotalProgress((mCurTrackNum + (s-start)/len) / GetNumWaveTracks());
+         ret = TotalProgress(
+            (mCurTrackNum + (s-start).as_double()/len) /
+            GetNumWaveTracks());
       else
-         ret = TotalProgress((mCurTrackNum + (s-start)/len + GetNumWaveTracks()*mPass)/ (GetNumWaveTracks()*2));
+         ret = TotalProgress(
+            (mCurTrackNum + (s-start).as_double()/len + GetNumWaveTracks()*mPass) /
+            (GetNumWaveTracks()*2));
       if (ret) {
          delete[]buffer1;
          delete[]buffer2;

@@ -35,7 +35,7 @@ class DirectoriesPrefs final : public PrefsPanel
    wxStaticText *mFreeSpace;
    wxTextCtrl *mTempDir;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 class DirectoriesPrefsFactory final : public PrefsPanelFactory

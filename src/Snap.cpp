@@ -112,7 +112,9 @@ void SnapManager::Reinit()
    TrackListIterator iter(mTracks);
    for (Track *track = iter.First();  track; track = iter.Next())
    {
-      if (mTrackExclusions && mTrackExclusions->Index(track) != wxNOT_FOUND)
+      if (mTrackExclusions &&
+          mTrackExclusions->end() !=
+          std::find(mTrackExclusions->begin(), mTrackExclusions->end(), track))
       {
          continue;
       }
@@ -134,7 +136,7 @@ void SnapManager::Reinit()
       }
       else if (track->GetKind() == Track::Wave)
       {
-         WaveTrack *waveTrack = static_cast<WaveTrack *>(track);
+         auto waveTrack = static_cast<const WaveTrack *>(track);
          for (const auto &clip: waveTrack->GetClips())
          {
             if (mClipExclusions)
@@ -174,7 +176,7 @@ void SnapManager::Reinit()
 }
 
 // Adds to mSnapPoints, filtering by TimeConverter
-void SnapManager::CondListAdd(double t, Track *track)
+void SnapManager::CondListAdd(double t, const Track *track)
 {
    if (mSnapToTime)
    {

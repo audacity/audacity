@@ -388,8 +388,8 @@ private:
    bool mIsWE;
 
    Ruler mRuler;
-   ViewInfo *const mViewInfo;
    AudacityProject *const mProject;
+   ViewInfo *const mViewInfo;
    TrackList *mTracks;
 
    wxRect mOuter;

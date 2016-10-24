@@ -25,22 +25,18 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "TimeWarper.h"
 #include "../NoteTrack.h"
 
-bool EffectSoundTouch::ProcessLabelTrack(Track *track)
+bool EffectSoundTouch::ProcessLabelTrack(LabelTrack *lt)
 {
 //   SetTimeWarper(std::make_unique<RegionTimeWarper>(mCurT0, mCurT1,
  //           std::make_unique<LinearTimeWarper>(mCurT0, mCurT0,
    //            mCurT1, mCurT0 + (mCurT1-mCurT0)*mFactor)));
-   LabelTrack *lt = (LabelTrack*)track;
-   if (lt == NULL) return false;
    lt->WarpLabels(*GetTimeWarper());
    return true;
 }
 
 #ifdef USE_MIDI
-bool EffectSoundTouch::ProcessNoteTrack(Track *track)
+bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt)
 {
-   NoteTrack *nt = (NoteTrack *) track;
-   if (nt == NULL) return false;
    nt->WarpAndTransposeNotes(mCurT0, mCurT1, *GetTimeWarper(), mSemitones);
    return true;
 }
@@ -74,7 +70,7 @@ bool EffectSoundTouch::Process()
       if (t->GetKind() == Track::Label &&
             (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
-         if (!ProcessLabelTrack(t))
+         if (!ProcessLabelTrack(static_cast<LabelTrack*>(t)))
          {
             bGoodResult = false;
             break;
@@ -84,7 +80,7 @@ bool EffectSoundTouch::Process()
       else if (t->GetKind() == Track::Note &&
                (t->GetSelected() || (mustSync && t->IsSyncLockSelected())))
       {
-         if (!ProcessNoteTrack(t))
+         if (!ProcessNoteTrack(static_cast<NoteTrack*>(t)))
          {
             bGoodResult = false;
             break;
@@ -108,7 +104,8 @@ bool EffectSoundTouch::Process()
 
             if (leftTrack->GetLinked()) {
                double t;
-               WaveTrack* rightTrack = (WaveTrack*)(iter.Next());
+               // Assume linked track is wave
+               WaveTrack* rightTrack = static_cast<WaveTrack*>(iter.Next());
 
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();
@@ -181,7 +178,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -214,7 +211,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(mCurTrackNum, (s - start) / len))
+      if (TrackProgress(mCurTrackNum, (s - start).as_double() / len))
          return false;
    }
 
@@ -259,7 +256,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   double len = (end - start).as_double();
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
@@ -307,7 +304,7 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
       //Update the Progress meter
       // mCurTrackNum is left track. Include right track.
       int nWhichTrack = mCurTrackNum;
-      double frac = (sourceSampleCount - start) / len;
+      double frac = (sourceSampleCount - start).as_double() / len;
       if (frac < 0.5)
          frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once.
       else

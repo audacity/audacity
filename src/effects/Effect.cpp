@@ -335,7 +335,7 @@ void Effect::SetSampleRate(double rate)
    mSampleRate = rate;
 }
 
-sampleCount Effect::SetBlockSize(sampleCount maxBlockSize)
+size_t Effect::SetBlockSize(size_t maxBlockSize)
 {
    if (mClient)
    {
@@ -357,7 +357,7 @@ sampleCount Effect::GetLatency()
    return 0;
 }
 
-sampleCount Effect::GetTailSize()
+size_t Effect::GetTailSize()
 {
    if (mClient)
    {
@@ -397,7 +397,7 @@ bool Effect::ProcessFinalize()
    return true;
 }
 
-sampleCount Effect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t Effect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    if (mClient)
    {
@@ -494,10 +494,10 @@ bool Effect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount Effect::RealtimeProcess(int group,
+size_t Effect::RealtimeProcess(int group,
                                     float **inbuf,
                                     float **outbuf,
-                                    sampleCount numSamples)
+                                    size_t numSamples)
 {
    if (mClient)
    {
@@ -1346,7 +1346,8 @@ bool Effect::ProcessPass()
       rightStart = 0;
       if (left->GetLinked() && mNumAudioIn > 1)
       {
-         right = (WaveTrack *) iter.Next();
+         // Assume linked track is wave
+         right = static_cast<WaveTrack *>(iter.Next());
          if (!isGenerator)
          {
             GetSamples(right, &rightStart, &len);
@@ -1565,7 +1566,7 @@ bool Effect::ProcessTrack(int count,
          genDur = mDuration;
       }
 
-      genLength = left->GetRate() * genDur;
+      genLength = sampleCount( left->GetRate() * genDur );
       delayRemaining = genLength;
       cleared = true;
 
@@ -1609,7 +1610,8 @@ bool Effect::ProcessTrack(int count,
          if (curBlockSize > inputRemaining)
          {
             // We've reached the last block...set current block size to what's left 
-            curBlockSize = inputRemaining;
+            // inputRemaining is positive and bounded by a size_t
+            curBlockSize = inputRemaining.as_size_t();
             inputRemaining = 0;
 
             // Clear the remainder of the buffers so that a full block can be passed
@@ -1708,10 +1710,12 @@ bool Effect::ProcessTrack(int count,
          // so overlay them by shifting the remaining output samples.
          else if (curDelay > 0)
          {
-            curBlockSize -= curDelay;
+            // curDelay is bounded by curBlockSize:
+            auto delay = curDelay.as_size_t();
+            curBlockSize -= delay;
             for (int i = 0; i < chans; i++)
             {
-               memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, sizeof(float) * curBlockSize);
+               memmove(mOutBufPos[i], mOutBufPos[i] + delay, sizeof(float) * curBlockSize);
             }
             curDelay = 0;
          }
@@ -1771,7 +1775,9 @@ bool Effect::ProcessTrack(int count,
 
       if (mNumChannels > 1)
       {
-         if (TrackGroupProgress(count, (inLeftPos - leftStart) / (double) (isGenerator ? genLength : len)))
+         if (TrackGroupProgress(count,
+               (inLeftPos - leftStart).as_double() /
+               (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
             break;
@@ -1779,7 +1785,9 @@ bool Effect::ProcessTrack(int count,
       }
       else
       {
-         if (TrackProgress(count, (inLeftPos - leftStart) / (double) (isGenerator ? genLength : len)))
+         if (TrackProgress(count,
+               (inLeftPos - leftStart).as_double() /
+               (isGenerator ? genLength : len).as_double()))
          {
             rc = false;
             break;
@@ -2347,11 +2355,11 @@ bool Effect::RealtimeAddProcessor(int group, unsigned chans, float rate)
 // RealtimeAddProcessor and RealtimeProcess use the same method of
 // determining the current processor group, so updates to one should
 // be reflected in the other.
-sampleCount Effect::RealtimeProcess(int group,
+size_t Effect::RealtimeProcess(int group,
                                     unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
-                                    sampleCount numSamples)
+                                    size_t numSamples)
 {
    //
    // The caller passes the number of channels to process and specifies
@@ -2579,7 +2587,7 @@ void Effect::Preview(bool dryOnly)
 
       if (success)
       {
-         WaveTrackArray playbackTracks;
+         WaveTrackConstArray playbackTracks;
          WaveTrackArray recordingTracks;
 
          SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);

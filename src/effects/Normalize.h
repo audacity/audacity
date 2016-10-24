@@ -58,9 +58,9 @@ private:
 
    bool ProcessOne(WaveTrack * t, const wxString &msg);
    void AnalyseTrack(WaveTrack * track, const wxString &msg);
-   void AnalyzeData(float *buffer, sampleCount len);
+   void AnalyzeData(float *buffer, size_t len);
    bool AnalyseDC(WaveTrack * track, const wxString &msg);
-   void ProcessData(float *buffer, sampleCount len);
+   void ProcessData(float *buffer, size_t len);
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
@@ -90,7 +90,7 @@ private:
 
    bool mCreating;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -228,7 +228,7 @@ bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channe
    return true;
 }
 
-sampleCount EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    float *ibuf = inBlock[0];
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
@@ -339,7 +339,7 @@ bool EffectScienFilter::Init()
 
    while (t)
    {
-      if (t->GetSelected() && t->GetKind() == Track::Wave)
+      if (t->GetSelected())
       {
          if (selcount == 0)
          {

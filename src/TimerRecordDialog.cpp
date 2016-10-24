@@ -301,19 +301,24 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    if (fName == wxT(""))
       return;
 
-   // MY: If project already exits then abort - we do not allow users to overwrite an existing project
-   if (wxFileExists(fName)) {
+   AudacityProject* pProject = GetActiveProject();
+
+   // If project already exists then abort - we do not allow users to overwrite an existing project
+   // unless it is the current project.
+   if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
       wxMessageDialog m(
          NULL,
-         _("The selected file name could not be used\nfor Timer Recording because it would overwrite another project.\nPlease try again and select an original name."),
+         _("The selected file name could not be used\nfor Timer Recording because it \
+would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Timer Recording Project"),
          wxOK|wxICON_ERROR);
       m.ShowModal();
       return;
    }
 
-   // MY: Set this boolean to false so we now do a SaveAs at the end of the recording
-   m_bProjectAlreadySaved = false;
+   // Set this boolean to false so we now do a SaveAs at the end of the recording
+   // unless we're saving the current project.
+   m_bProjectAlreadySaved = pProject->GetFileName() == fName? true : false;
 
    m_fnAutoSaveFile = fName;
    m_fnAutoSaveFile.SetExt(wxT("aup"));
@@ -349,43 +354,6 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
    HelpSystem::ShowHelpDialog(this, wxT("Timer_Record"), true);
-}
-
-wxString TimerRecordDialog::GetHoursMinsString(int iMinutes) {
-   
-   wxString sFormatted = "";
-   wxString sHours = "";
-   wxString sMins = "";
-
-   if (iMinutes < 1) {
-      // Less than a minute...
-      sFormatted = _("Less than 1 minute");
-      return sFormatted;
-   }
-
-   // Calculate
-   int iHours = iMinutes / 60;
-   int iMins = iMinutes % 60;
-
-   // Format the hours
-   if (iHours == 1) {
-      sHours = _("1 hour and ");
-   }
-   else if (iHours > 1) {
-      sHours.Printf(_("%d hours and"), iHours);
-   }
-
-   // Format the minutes
-   if (iMins == 1) {
-      sMins = _("1 minute");
-   }
-   else if (iMins > 1) {
-      sMins.Printf(_("%d minutes"), iMins);
-   }
-
-   // Build the string
-   sFormatted.Printf("%s %s", sHours, sMins);
-   return sFormatted;
 }
 
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
@@ -435,9 +403,9 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
       // Format the strings
       wxString sRemainingTime = "";
-      sRemainingTime = GetHoursMinsString(iMinsLeft);
+      sRemainingTime = pProject->GetHoursMinsString(iMinsLeft);
       wxString sPlannedTime = "";
-      sPlannedTime = GetHoursMinsString(iMinsRecording);
+      sPlannedTime = pProject->GetHoursMinsString(iMinsRecording);
 
       // Create the message string
       wxString sMessage = "";
@@ -550,19 +518,26 @@ int TimerRecordDialog::RunWaitDialog()
       bool bIsRecording = true;
 
       wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
-      wxString strMsg;
-      strMsg.Printf(_("Recording start:\t\t\t%s\n") +
-         _("Duration:\t\t\t%s\n") +
-         _("Recording end:\t\t\t%s\n\n") +
-         _("Automatic Save enabled:\t\t%s\n") +
-         _("Automatic Export enabled:\t\t%s\n") +
-         _("Action after Timer Recording:\t%s"),
-         GetDisplayDate(m_DateTime_Start).c_str(),
-         m_TimeSpan_Duration.Format(),
-         GetDisplayDate(m_DateTime_End).c_str(),
-         (m_bAutoSaveEnabled ? _("Yes") : _("No")),
-         (m_bAutoExportEnabled ? _("Yes") : _("No")),
-         sPostAction);
+
+      // Two column layout. Line spacing must match for both columns.
+      // First column
+      wxString strMsg = wxString::Format(_("Recording start:\n") +
+                                         _("Duration:\n") +
+                                         _("Recording end:\n\n") +
+                                         _("Automatic Save enabled:\n") +
+                                         _("Automatic Export enabled:\n") +
+                                         _("Action after Timer Recording:"));
+
+      strMsg += ProgressDialog::ColoumnSplitMarker;
+
+      // Second column
+      strMsg += wxString::Format(wxT("%s\n%s\n%s\n\n%s\n%s\n%s"),
+                                       GetDisplayDate(m_DateTime_Start).c_str(),
+                                       m_TimeSpan_Duration.Format(),
+                                       GetDisplayDate(m_DateTime_End).c_str(),
+                                       (m_bAutoSaveEnabled ? _("Yes") : _("No")),
+                                       (m_bAutoExportEnabled ? _("Yes") : _("No")),
+                                       sPostAction);
 
       TimerProgressDialog
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
@@ -833,7 +808,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                safenew wxDatePickerCtrl(this, // wxWindow *parent,
                ID_DATEPICKER_END, // wxWindowID id,
                m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
-            // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
+            // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+            //                            long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, 
+            //                            const wxValidator& validator = wxDefaultValidator,
+            //                            const wxString& name = "datectrl")
             m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
             m_pDatePickerCtrl_End->SetName(_("End Date"));
 #if wxUSE_ACCESSIBILITY
@@ -1019,21 +997,25 @@ int TimerRecordDialog::WaitForStart()
    // MY: The Waiting For Start dialog now shows what actions will occur after recording has completed
    wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
 
-   /* i18n-hint: Time specifications like "Sunday 28th October 2007 15:16:17 GMT"
-   * but hopefully translated by wxwidgets will be inserted into this */
-   wxString strMsg;
-   strMsg.Printf(_("Waiting to start recording at:\t%s\n") +
-      _("Recording duration:\t\t%s\n") +
-      _("Scheduled to stop at:\t\t%s\n\n") +
-      _("Automatic Save enabled:\t\t%s\n") +
-      _("Automatic Export enabled:\t\t%s\n") +
-      _("Action after Timer Recording:\t%s"),
-      GetDisplayDate(m_DateTime_Start).c_str(),
-      m_TimeSpan_Duration.Format(),
-      GetDisplayDate(m_DateTime_End).c_str(),
-      (m_bAutoSaveEnabled ? _("Yes") : _("No")),
-      (m_bAutoExportEnabled ? _("Yes") : _("No")),
-      sPostAction);
+   // Two column layout. Line spacing must match for both columns.
+   // First column
+   wxString strMsg = wxString::Format(_("Waiting to start recording at:\n") +
+                                      _("Recording duration:\n") +
+                                      _("Scheduled to stop at:\n\n") +
+                                      _("Automatic Save enabled:\n") +
+                                      _("Automatic Export enabled:\n") +
+                                      _("Action after Timer Recording:"));
+
+   strMsg += ProgressDialog::ColoumnSplitMarker;
+
+   // Second column
+   strMsg += wxString::Format(wxT("%s\n%s\n%s\n\n%s\n%s\n%s"),
+                                    GetDisplayDate(m_DateTime_Start).c_str(),
+                                    m_TimeSpan_Duration.Format(),
+                                    GetDisplayDate(m_DateTime_End).c_str(),
+                                    (m_bAutoSaveEnabled ? _("Yes") : _("No")),
+                                    (m_bAutoExportEnabled ? _("Yes") : _("No")),
+                                    sPostAction);
 
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
@@ -1060,15 +1042,20 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
    wxString sCountdownLabel;
    sCountdownLabel.Printf("%s in:", sAction);
 
-   // Build a clearer message...
-   wxString sMessage;
-   sMessage.Printf(_("Timer Recording completed.\n\n") +
-      _("Recording Saved:\t\t\t%s\n") +
-      _("Recording Exported:\t\t%s\n") +
-      _("Action after Timer Recording:\t%s"),
-      ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")),
-      ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")),
-      sAction);
+   // Two column layout. Line spacing must match for both columns.
+   // First column
+   wxString strMsg = wxString::Format(_("Timer Recording completed.\n\n") +
+                                      _("Recording Saved:\n") +
+                                      _("Recording Exported:\n") +
+                                      _("Action after Timer Recording:"));
+
+   strMsg += ProgressDialog::ColoumnSplitMarker;
+
+   // Second column
+   strMsg +=  wxString::Format(wxT("\n\n%s\n%s\n%s"),
+                                    ((eCompletedActions & TR_ACTION_SAVED) ? _("Yes") : _("No")),
+                                    ((eCompletedActions & TR_ACTION_EXPORTED) ? _("Yes") : _("No")),
+                                    sAction);
 
    wxDateTime dtNow = wxDateTime::UNow();
    wxTimeSpan tsWait = wxTimeSpan(0, 1, 0, 0);
@@ -1076,7 +1063,7 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
 
    TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
                           _("Audacity Timer Record - Waiting"),
-                          sMessage,
+                          strMsg,
                           pdlgHideStopButton | pdlgHideElapsedTime,
                           sCountdownLabel);
 

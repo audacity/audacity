@@ -333,6 +333,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
       return nullptr;
    }
 
+   // This std::move is needed to "upcast" the pointer type
    return std::move(handle);
 }
 
@@ -614,8 +615,14 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
                // This only works well for single streams since we assume
                // each stream is of the same duration and channels
-               res = mProgress->Update(i+sampleDuration*c+ sampleDuration*sc->m_stream->codec->channels*s,
-                                       sampleDuration*sc->m_stream->codec->channels*mNumStreams);
+               res = mProgress->Update(
+                  (i+sampleDuration * c +
+                      sampleDuration*sc->m_stream->codec->channels * s
+                  ).as_long_long(),
+                  (sampleDuration *
+                      sc->m_stream->codec->channels * mNumStreams
+                  ).as_long_long()
+               );
                if (res != eProgressSuccess)
                   break;
             }

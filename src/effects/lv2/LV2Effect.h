@@ -129,15 +129,15 @@ public:
    int GetMidiOutCount() override;
 
    void SetSampleRate(double rate) override;
-   sampleCount SetBlockSize(sampleCount maxBlockSize) override;
+   size_t SetBlockSize(size_t maxBlockSize) override;
 
    sampleCount GetLatency() override;
-   sampleCount GetTailSize() override;
+   size_t GetTailSize() override;
 
    bool IsReady() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size) override;
+   size_t ProcessBlock(float **inbuf, float **outbuf, size_t size) override;
 
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -145,10 +145,10 @@ public:
    bool RealtimeSuspend() override;
    bool RealtimeResume() override;
    bool RealtimeProcessStart() override;
-   sampleCount RealtimeProcess(int group,
+   size_t RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
-                                       sampleCount numSamples) override;
+                                       size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false) override;
@@ -248,7 +248,7 @@ private:
    // Declare the static URI nodes
    #undef URI
    #define URI(n, u) static LilvNode *n;
-   URILIST;
+   URILIST
 
    const LilvPlugin *mPlug;
 
@@ -276,7 +276,7 @@ private:
 
    float **mMasterIn;
    float **mMasterOut;
-   sampleCount mNumSamples;
+   size_t mNumSamples;
 
    double mLength;
 
@@ -321,7 +321,7 @@ private:
    wxArrayString mFactoryPresetNames;
    wxArrayString mFactoryPresetUris;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class LV2EffectSettingsDialog;
    friend class LV2EffectsModule;

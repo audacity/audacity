@@ -405,7 +405,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != nChunks * chunkSize) {
       Printf(wxT("Expected len %d, track len %lld.\n"), nChunks * chunkSize,
-             (long long) t->GetClipByIndex(0)->GetSequence()->GetNumSamples());
+             t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
       goto fail;
    }
 
@@ -426,7 +426,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf(wxT("Cut (%d, %d) failed.\n"), (x0 * chunkSize),
                 (x0 + xlen) * chunkSize);
          Printf(wxT("Expected len %d, track len %lld.\n"), nChunks * chunkSize,
-                (long long) t->GetClipByIndex(0)->GetSequence()->GetNumSamples());
+                t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
          goto fail;
       }
 
@@ -443,7 +443,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != nChunks * chunkSize) {
          Printf(wxT("Trial %d\n"), z);
          Printf(wxT("Expected len %d, track len %lld.\n"), nChunks * chunkSize,
-                (long long) t->GetClipByIndex(0)->GetSequence()->GetNumSamples());
+                t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
          goto fail;
       }
       // Copy

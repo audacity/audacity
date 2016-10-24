@@ -1192,7 +1192,7 @@ void AudioUnitEffect::SetSampleRate(double rate)
    mSampleRate = rate;
 }
 
-sampleCount AudioUnitEffect::SetBlockSize(sampleCount maxBlockSize)
+size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
 {
    return mBlockSize;
 }
@@ -1213,13 +1213,13 @@ sampleCount AudioUnitEffect::GetLatency()
                            &latency,
                            &dataSize);  
 
-      return latency * mSampleRate;
+      return sampleCount( latency * mSampleRate );
    }
 
    return 0;
 }
 
-sampleCount AudioUnitEffect::GetTailSize()
+size_t AudioUnitEffect::GetTailSize()
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
@@ -1306,7 +1306,7 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-sampleCount AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
    for (int i = 0; i < mAudioIns; i++)
    {
@@ -1431,10 +1431,10 @@ bool AudioUnitEffect::RealtimeProcessStart()
    return true;
 }
 
-sampleCount AudioUnitEffect::RealtimeProcess(int group,
+size_t AudioUnitEffect::RealtimeProcess(int group,
                                              float **inbuf,
                                              float **outbuf,
-                                             sampleCount numSamples)
+                                             size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
 
@@ -1753,7 +1753,7 @@ void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
 
 bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 {
-   OSStatus result;
+   // OSStatus result;
 
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
@@ -1948,17 +1948,35 @@ bool AudioUnitEffect::SetRateAndChannels()
       mUnitInitialized = false;
    }
 
-   AudioStreamBasicDescription streamFormat = {0};
+   AudioStreamBasicDescription streamFormat {
+      // Float64 mSampleRate;
+      mSampleRate,
 
-   streamFormat.mSampleRate = mSampleRate;
-   streamFormat.mFormatID = kAudioFormatLinearPCM;
-   streamFormat.mFormatFlags = kAudioFormatFlagsNativeFloatPacked |
-                               kAudioFormatFlagIsNonInterleaved;
-   streamFormat.mBitsPerChannel = sizeof(float) * 8;
-   streamFormat.mChannelsPerFrame = mAudioIns;
-   streamFormat.mFramesPerPacket = 1;
-   streamFormat.mBytesPerFrame = sizeof(float);
-   streamFormat.mBytesPerPacket = sizeof(float);
+      // UInt32  mFormatID;
+      kAudioFormatLinearPCM,
+
+      // UInt32  mFormatFlags;
+      (kAudioFormatFlagsNativeFloatPacked |
+          kAudioFormatFlagIsNonInterleaved),
+
+      // UInt32  mBytesPerPacket;
+      sizeof(float),
+
+      // UInt32  mFramesPerPacket;
+      1,
+
+      // UInt32  mBytesPerFrame;
+      sizeof(float),
+
+      // UInt32  mChannelsPerFrame;
+      mAudioIns,
+
+      // UInt32  mBitsPerChannel;
+      sizeof(float) * 8,
+
+      // UInt32  mReserved;
+      0
+   };
 
    result = AudioUnitSetProperty(mUnit,
                                  kAudioUnitProperty_SampleRate,

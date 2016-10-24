@@ -793,7 +793,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    if (theValue < 0)
       t_frac = -1;
    else
-      t_frac = (theValue - t_int);
+      t_frac = (theValue - t_int.as_double() );
    unsigned int i;
    int tenMins;
    int mins;
@@ -849,7 +849,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
          if (t_int >= 0) {
             // UNSAFE_SAMPLE_COUNT_TRUNCATION
             // truncation danger!
-            value = (static_cast<long long>( t_int ) / mFields[i].base);
+            value = (t_int.as_long_long() / mFields[i].base);
             if (mFields[i].range > 0)
                value = value % mFields[i].range;
          }
@@ -891,7 +891,7 @@ void NumericConverter::ControlsToValue()
 
    t /= mScalingFactor;
    if(mNtscDrop) {
-      int t_int = int(t + .000000001);
+      int t_int = (int)(t + .000000001);
       double t_frac = (t - t_int);
       int tenMins = t_int/600;
       double frames = tenMins*17982;

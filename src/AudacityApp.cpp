@@ -744,7 +744,8 @@ void AudacityApp::MacNewFile()
 #define kAudacityAppTimerID 0
 
 BEGIN_EVENT_TABLE(AudacityApp, wxApp)
-   EVT_QUERY_END_SESSION(AudacityApp::OnEndSession)
+   EVT_QUERY_END_SESSION(AudacityApp::OnQueryEndSession)
+   EVT_END_SESSION(AudacityApp::OnEndSession)
 
    EVT_TIMER(kAudacityAppTimerID, AudacityApp::OnTimer)
 #ifdef __WXMAC__
@@ -1130,7 +1131,8 @@ int AudacityApp::FilterEvent(wxEvent & event)
    }
 #endif
 
-#ifdef __WXMAC__
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
    if (event.GetEventType() == wxEVT_ACTIVATE)
    {
       wxActivateEvent & e = static_cast<wxActivateEvent &>(event);
@@ -1141,7 +1143,6 @@ int AudacityApp::FilterEvent(wxEvent & event)
       {
          const auto window = ((wxWindow *)e.GetEventObject());
          window->SetFocus();
-         window->NavigateIn();
       }
    }
 #endif
@@ -1310,7 +1311,7 @@ bool AudacityApp::OnInit()
 
    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
    // wrong because it would get cleared out on a reboot.
-   defaultTempDir.Printf(wxT("%s/Library/Application\ Support/audacity/SessionData"),
+   defaultTempDir.Printf(wxT("%s/Library/Application Support/audacity/SessionData"),
       tmpDirLoc.c_str());
 
    //defaultTempDir.Printf(wxT("%s/audacity-%s"),
@@ -1928,7 +1929,7 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
 
    // Run the parser
    if (parser->Parse() == 0)
-      return std::move(parser);
+      return parser;
 
    return{};
 }
@@ -1979,6 +1980,20 @@ void AudacityApp::FindFilesInPathList(const wxString & pattern,
       ff = pathList[i] + wxFILE_SEP_PATH + pattern;
       wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
+}
+
+void AudacityApp::OnQueryEndSession(wxCloseEvent & event)
+{
+   bool mustVeto = false;
+
+#ifdef __WXMAC__
+   mustVeto = wxDialog::OSXHasModalDialogsOpen();
+#endif
+
+   if ( mustVeto )
+      event.Veto(true);
+   else
+      OnEndSession(event);
 }
 
 void AudacityApp::OnEndSession(wxCloseEvent & event)

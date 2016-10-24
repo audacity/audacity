@@ -39,6 +39,7 @@ movable_ptr<ODTask> ODDecodeFlacTask::Clone() const
    clone->mDemandSample = GetDemandSample();
 
    //the decoders and blockfiles should not be copied.  They are created as the task runs.
+   // This std::move is needed to "upcast" the pointer type
    return std::move(clone);
 }
 
@@ -79,6 +80,9 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_CUESHEET:	// convert this to labels?
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
+
+      case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
+
       break;
    }
 }
@@ -167,7 +171,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
    ///this->ReadData(sampleData, floatSample, 0, mLen);
    ///This class should call ReadHeader() first, so it knows the length, and can prepare
    ///the file object if it needs to.
-int ODFlacDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)
+int ODFlacDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCount start, size_t len, unsigned int channel)
 {
 
    //we need to lock this so the target stays fixed over the seek/write callback.
@@ -189,7 +193,11 @@ int ODFlacDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCoun
 
    mTargetChannel=channel;
 
-   if(!mFile->seek_absolute(start))
+   // Third party library has its own type alias, check it
+   static_assert(sizeof(sampleCount::type) <=
+                 sizeof(FLAC__int64),
+                 "Type FLAC__int64 is too narrow to hold a sampleCount");
+   if(!mFile->seek_absolute(static_cast<FLAC__int64>( start.as_long_long() )))
    {
       mFlacFileLock.Unlock();
       return -1;

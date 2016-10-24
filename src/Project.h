@@ -292,7 +292,9 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    bool ProjectHasTracks();
 
    // Routine to estimate how many minutes of recording time are left on disk
-   int GetEstimatedRecordingMinsLeftOnDisk();
+   int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
+   // Converts number of minutes to human readable format
+   wxString GetHoursMinsString(int iMinutes);
 
 #include "Menus.h"
 
@@ -372,8 +374,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    void DoTrackMute(Track *pTrack, bool exclusive);
    void DoTrackSolo(Track *pTrack, bool exclusive);
-   void SetTrackGain(Track * track, LWSlider * slider);
-   void SetTrackPan(Track * track, LWSlider * slider);
+   void SetTrackGain(WaveTrack * track, LWSlider * slider);
+   void SetTrackPan(WaveTrack * track, LWSlider * slider);
 
    void RemoveTrack(Track * toRemove);
 

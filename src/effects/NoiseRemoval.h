@@ -90,7 +90,7 @@ private:
 
    void Initialize();
    void StartNewTrack();
-   void ProcessSamples(sampleCount len, float *buffer);
+   void ProcessSamples(size_t len, float *buffer);
    void FillFirstHistoryWindow();
    void ApplyFreqSmoothing(float *spec);
    void GetProfile();

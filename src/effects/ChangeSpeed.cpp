@@ -231,7 +231,7 @@ bool EffectChangeSpeed::Process()
       if (t->GetKind() == Track::Label) {
          if (t->GetSelected() || t->IsSyncLockSelected())
          {
-            if (!ProcessLabelTrack(t)) {
+            if (!ProcessLabelTrack(static_cast<LabelTrack*>(t))) {
                bGoodResult = false;
                break;
             }
@@ -453,13 +453,11 @@ bool EffectChangeSpeed::TransferDataFromWindow()
 
 // Labels are time-scaled linearly inside the affected region, and labels after
 // the region are shifted along according to how the region size changed.
-bool EffectChangeSpeed::ProcessLabelTrack(Track *t)
+bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 {
    SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
                      std::make_unique<LinearTimeWarper>(mT0, mT0,
                          mT1, mT0 + (mT1-mT0)*mFactor)));
-   LabelTrack *lt = (LabelTrack*)t;
-   if (lt == NULL) return false;
    lt->WarpLabels(*GetTimeWarper());
    return true;
 }
@@ -481,7 +479,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later
-   double len = (double)(end - start);
+   auto len = (end - start).as_double();
 
    // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
@@ -489,8 +487,8 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    float * inBuffer = new float[inBufferSize];
 
-   auto outBufferSize =
-      (sampleCount)((mFactor * inBufferSize) + 10);
+   // mFactor is at most 100-fold so this shouldn't overflow size_t
+   auto outBufferSize = size_t( mFactor * inBufferSize + 10 );
    float * outBuffer = new float[outBufferSize];
 
    // Set up the resampling stuff for this track.
@@ -526,7 +524,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       samplePos += results.first;
 
       // Update the Progress meter
-      if (TrackProgress(mCurTrackNum, (samplePos - start) / len)) {
+      if (TrackProgress(mCurTrackNum, (samplePos - start).as_double() / len)) {
          bResult = false;
          break;
       }

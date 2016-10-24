@@ -170,6 +170,10 @@ void OnSetRightSelection();
 void OnSelToStart();
 void OnSelToEnd();
 
+void OnSelToNextLabel();
+void OnSelToPrevLabel();
+void OnSelToLabel(bool next);
+
 void OnZeroCrossing();
 
 void OnLockPlayRegion();

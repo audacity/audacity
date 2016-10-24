@@ -361,7 +361,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       const float fScale = 0.5f;// smaller size.
       wxImage RescaledImage(logo.ConvertToImage());
       // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
-      RescaledImage.Rescale(int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale));
+      RescaledImage.Rescale((int)(LOGOWITHNAME_WIDTH * fScale), (int)(LOGOWITHNAME_HEIGHT *fScale));
       wxBitmap RescaledBitmap(RescaledImage);
 
       icon =
@@ -371,7 +371,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
          //v theTheme.Bitmap(bmpAudacityLogoWithName),
          RescaledBitmap,
          wxDefaultPosition,
-         wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
+         wxSize((int)(LOGOWITHNAME_WIDTH*fScale), (int)(LOGOWITHNAME_HEIGHT*fScale)));
    }
    S.Prop(0).AddWindow( icon );
 

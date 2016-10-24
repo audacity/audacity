@@ -42,14 +42,14 @@ class CrossFader
   void ClearClips();
   //Produces samples according to crossfading rules.
   bool  GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len);
+                   sampleCount start, size_t len);
 
  protected:
   WaveClipHolders mClips;
 
  private:
 
-  bool CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, sampleCount len);
+  bool CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, size_t len);
 
   FadeType mType;
 

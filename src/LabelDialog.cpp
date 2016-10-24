@@ -418,7 +418,7 @@ void LabelDialog::FindAllLabels()
    // Add labels from all label tracks
    for (t = iter.First(); t; t = iter.Next()) {
       if (t->GetKind() == Track::Label)
-         AddLabels(static_cast<LabelTrack *>(t));
+         AddLabels(static_cast<const LabelTrack *>(t));
    }
 
    FindInitialRow();
@@ -429,7 +429,7 @@ void LabelDialog::FindAllLabels()
    }
 }
 
-void LabelDialog::AddLabels(LabelTrack *t)
+void LabelDialog::AddLabels(const LabelTrack *t)
 {
    wxString lab;
    int tndx = 0;

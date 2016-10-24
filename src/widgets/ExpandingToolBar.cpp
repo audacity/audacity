@@ -309,7 +309,7 @@ protected:
    wxWindow *mWindow;
    wxEvtHandler *mInheritedEvtHandler;
 
-   DECLARE_NO_COPY_CLASS(ExpandingToolBarEvtHandler);
+   DECLARE_NO_COPY_CLASS(ExpandingToolBarEvtHandler)
 };
 
 void ExpandingToolBar::RecursivelyPushEventHandlers(wxWindow *win)

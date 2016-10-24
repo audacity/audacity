@@ -4868,8 +4868,8 @@ msgstr ""
 msgid "Ma&ke Stereo Track"
 msgstr ""
 
-#: src/TrackPanel.cpp:698
-msgid "R&ight Channel"
+#: src/TrackPanel.cpp:698 src/TrackPanel.cpp:630
+msgid "&Right Channel"
 msgstr ""
 
 #: src/TrackPanel.cpp:699
@@ -4880,8 +4880,8 @@ msgstr ""
 msgid "&Mono"
 msgstr ""
 
-#: src/TrackPanel.cpp:714
-msgid "Split Stereo to &Mono"
+#: src/TrackPanel.cpp:714 src/TrackPanel.cpp:633
+msgid "Split Stereo to Mo&no"
 msgstr ""
 
 #: src/TrackPanel.cpp:715

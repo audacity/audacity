@@ -465,9 +465,9 @@ void SelectionBar::ValuesToControls()
    {  // mRightTime is the length.
       // Be sure to take into account the sub-sample offset.
       // See TimeToLongSamples and LongSamplesToTime but here at the project rate.
-      double t = (sampleCount)floor(mEnd * mRate + 0.5);
-      t -= (sampleCount)floor(mStart * mRate + 0.5);
-      t /= mRate;
+      auto samples = (sampleCount)floor(mEnd * mRate + 0.5);
+      samples -= (sampleCount)floor(mStart * mRate + 0.5);
+      auto t = samples.as_double() / mRate;
       mRightTime->SetValue(t);
    }
 

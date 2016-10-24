@@ -108,7 +108,7 @@ public:
    void RealtimeSuspend();
    void RealtimeResume();
    void RealtimeProcessStart();
-   sampleCount RealtimeProcess(int group, unsigned chans, float **buffers, sampleCount numSamples);
+   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
    void RealtimeProcessEnd();
    int GetRealtimeLatency();
 

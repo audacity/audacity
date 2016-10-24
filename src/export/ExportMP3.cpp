@@ -589,7 +589,7 @@ public:
    FindDialog(wxWindow *parent, wxString path, wxString name, wxString type)
    :  wxDialogWrapper(parent, wxID_ANY,
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
-   wxString(_("Locate Lame")))
+   wxString(_("Locate LAME")))
    {
       SetName(GetTitle());
       ShuttleGui S(this, eIsCreating);
@@ -634,7 +634,7 @@ public:
             }
             S.Id(ID_BROWSE).AddButton(_("Browse..."), wxALIGN_RIGHT);
             /* i18n-hint: There is a  button to the right of the arrow.*/
-            S.AddVariableText(_("To get a free copy of Lame, click here -->"), true);
+            S.AddVariableText(_("To get a free copy of LAME, click here -->"), true);
             /* i18n-hint: (verb)*/
             S.Id(ID_DLOAD).AddButton(_("Download"), wxALIGN_RIGHT);
          }

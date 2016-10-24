@@ -70,7 +70,7 @@ class ImageRoll
 class ImageRollPanel final : public wxPanelWrapper
 {
  public:
-   DECLARE_DYNAMIC_CLASS(ImageRollPanel);
+   DECLARE_DYNAMIC_CLASS(ImageRollPanel)
 
    ImageRollPanel(wxWindow *parent,
                   wxWindowID id,
@@ -89,7 +89,7 @@ class ImageRollPanel final : public wxPanelWrapper
 
    wxRasterOperationMode mLogicalFunction;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
 };
 

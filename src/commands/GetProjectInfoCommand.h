@@ -44,16 +44,16 @@ private:
    int SendFocusedTrackIndex(CommandExecutionContext context);
 
 // Function pointer to get a particular (Boolean only) Track parameter
-   typedef bool (GetProjectInfoCommand::*Getter)(Track *track) const;
+   typedef bool (GetProjectInfoCommand::*Getter)(const Track *track) const;
 
 // Uses the Function pointer to set a particular parameter within a loop of otherwise duplicate code
    void SendTracksInfo(TrackList *projTracks, Getter);
 
 // Functions pointed to for getting track parameters
-   bool testSelected(Track * track) const;
-   bool testLinked(Track * track) const;
-   bool testSolo(Track * track) const;
-   bool testMute(Track * track) const;
+   bool testSelected(const Track * track) const;
+   bool testLinked(const Track * track) const;
+   bool testSolo(const Track * track) const;
+   bool testMute(const Track * track) const;
 };
 
 

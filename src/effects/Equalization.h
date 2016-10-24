@@ -272,7 +272,7 @@ private:
    wxBoxSizer *szrM;
 #endif
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 
    friend class EqualizationPanel;
    friend class EditCurvesDialog;
@@ -324,7 +324,7 @@ private:
 //   double mLoFreq;
 //   double mHiFreq;
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 // EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'

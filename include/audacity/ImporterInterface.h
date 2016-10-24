@@ -99,10 +99,10 @@ public:
                           ChannelName *channelMap) = 0;
 
    // Accepts interleaved samples from the client.
-   virtual bool PutSamples(int stream, sampleCount numSamples, samplePtr inBuffer) = 0;
+   virtual bool PutSamples(int stream, size_t numSamples, samplePtr inBuffer) = 0;
 
    // Accepts non-interleaved samples from the client.
-   virtual bool PutSamples(int stream, int channel, sampleCount numSamples, samplePtr inBuffer) = 0;
+   virtual bool PutSamples(int stream, int channel, size_t numSamples, samplePtr inBuffer) = 0;
    
    // The client will call this as the import progresses.
    virtual bool UpdateProgress(float current, float total) = 0;

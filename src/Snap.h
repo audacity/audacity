@@ -25,6 +25,7 @@ class Track;
 class TrackArray;
 class TrackClipArray;
 class WaveClip;
+class WaveTrack;
 class TrackList;
 class ZoomInfo;
 
@@ -42,7 +43,7 @@ public:
 
    Track *track;
    Track *origTrack;
-   Track *dstTrack;
+   WaveTrack *dstTrack;
    WaveClip *clip;
    movable_ptr<WaveClip> holder;
 };
@@ -62,13 +63,13 @@ class SnapPoint
 {
 public:
    explicit
-   SnapPoint(double t_ = 0.0, Track *track_ = nullptr)
+   SnapPoint(double t_ = 0.0, const Track *track_ = nullptr)
       : t(t_), track(track_)
    {
    }
 
    double t;
-   Track *track;
+   const Track *track;
 };
 
 using SnapPointArray = std::vector < SnapPoint > ;
@@ -103,7 +104,7 @@ public:
 private:
 
    void Reinit();
-   void CondListAdd(double t, Track *track);
+   void CondListAdd(double t, const Track *track);
    double Get(size_t index);
    wxInt64 PixelDiff(double t, size_t index);
    size_t Find(double t, size_t i0, size_t i1);

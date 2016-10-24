@@ -65,7 +65,7 @@ private:
    HIViewRef mHIView;
 #endif
 
-   DECLARE_EVENT_TABLE();
+   DECLARE_EVENT_TABLE()
 };
 
 #endif
