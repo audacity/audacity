@@ -1870,6 +1870,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
          if (mSelIndex >= 0 && mSelIndex < (int)mLabels.size()) {
             LabelStruct &newLabel = mLabels[mSelIndex];
             mCurrentCursorPos = newLabel.title.Length();
+            mInitialCursorPos = mCurrentCursorPos;
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
             newSel = newLabel.selectedRegion;
          }
@@ -1921,6 +1922,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             if (mSelIndex >= 0 && mSelIndex < len) {
                const auto &labelStruct = mLabels[mSelIndex];
                mCurrentCursorPos = labelStruct.title.Length();
+               mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
             }
