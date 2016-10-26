@@ -920,6 +920,9 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIOBusyFlag);
       c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
 
+      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
+                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+
       c->AddSeparator();
 
       //////////////////////////////////////////////////////////////////////////
@@ -1911,6 +1914,8 @@ void AudacityProject::ModifyToolbarMenus()
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
    SetSyncLock(active);
    mCommandManager.Check(wxT("SyncLock"), active);
+   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"),&active, true);
+   mCommandManager.Check(wxT("TypeToCreateLabel"), active);
 }
 
 // checkActive is a temporary hack that should be removed as soon as we
@@ -6692,6 +6697,15 @@ void AudacityProject::DoEditLabels(LabelTrack *lt, int index)
 void AudacityProject::OnEditLabels()
 {
    DoEditLabels();
+}
+
+void AudacityProject::OnToggleTypeToCreateLabel()
+{
+   bool typeToCreateLabel;
+   gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, true);
+   gPrefs->Write(wxT("/GUI/TypeToCreateLabel"), !typeToCreateLabel);
+   gPrefs->Flush();
+   ModifyAllProjectToolbarMenus();
 }
 
 void AudacityProject::OnApplyChain()

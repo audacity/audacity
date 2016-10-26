@@ -1687,7 +1687,9 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
       }
    }
    else {
-      if (IsGoodLabelFirstKey(event)) {
+      bool typeToCreateLabel;
+      gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, true);
+      if (IsGoodLabelFirstKey(event) && typeToCreateLabel) {
          AudacityProject * pProj = GetActiveProject();
 
          // If we're playing, don't capture if the selection is the same as the
