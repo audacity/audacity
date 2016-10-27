@@ -1976,6 +1976,10 @@ void AudacityProject::UpdateMenus(bool /*checkActive*/)
       {
          mCommandManager.Enable(wxT("SplitCut"), false);
 
+         // FIXME: This Can't be right. We can only
+         // FIXME: get here if no tracks selected, so
+         // FIXME: there can't be a Wave track selected.
+         // wxASSERT(!(flags & WaveTracksSelectedFlag));
          if (!(flags & WaveTracksSelectedFlag))
          {
             mCommandManager.Enable(wxT("Split"), false);

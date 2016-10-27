@@ -240,30 +240,34 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    AudacityProject *p = GetActiveProject();
    if (!p) return;
 
-   bool busy = gAudioIO->IsBusy();
    int id = event.GetId();
-
+   // FIXME: Some "SelectAllIfNone()" do not work as expected
+   // due to bugs elsewhere (see: AudacityProject::UpdateMenus() )
    switch (id) {
       case ETBCutID:
-         if (!busy) p->OnCut();
+         p->SelectAllIfNone();
+         p->OnCut();
          break;
       case ETBCopyID:
-         if (!busy) p->OnCopy();
+         p->SelectAllIfNone();
+         p->OnCopy();
          break;
       case ETBPasteID:
-         if (!busy) p->OnPaste();
+         p->OnPaste();
          break;
       case ETBTrimID:
-         if (!busy) p->OnTrim();
+         p->SelectAllIfNone();
+         p->OnTrim();
          break;
       case ETBSilenceID:
-         if (!busy) p->OnSilence();
+         p->SelectAllIfNone();
+         p->OnSilence();
          break;
       case ETBUndoID:
-         if (!busy) p->OnUndo();
+         p->OnUndo();
          break;
       case ETBRedoID:
-         if (!busy) p->OnRedo();
+         p->OnRedo();
          break;
 #ifdef EXPERIMENTAL_SYNC_LOCK
       case ETBSyncLockID:
@@ -301,40 +305,28 @@ void EditToolBar::OnButton(wxCommandEvent &event)
 
 void EditToolBar::EnableDisableButtons()
 {
-   AudacityProject *p = GetActiveProject();
-   if (!p) return;
+   CommandManager* cm = GetActiveProject()->GetCommandManager();
+   if (!cm) return;
 
-   // Is anything selected?
-   bool selection = false;
-   TrackListIterator iter(p->GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next())
-      if (t->GetSelected()) {
-         selection = true;
-         break;
-      }
-   selection &= (p->GetSel0() < p->GetSel1());
+   mButtons[ETBCutID]->SetEnabled(cm->GetEnabled("Cut"));
+   mButtons[ETBCopyID]->SetEnabled(cm->GetEnabled("Copy"));
+   mButtons[ETBTrimID]->SetEnabled(cm->GetEnabled("Trim"));
+   mButtons[ETBSilenceID]->SetEnabled(cm->GetEnabled("Silence"));
 
-   mButtons[ETBCutID]->SetEnabled(selection);
-   mButtons[ETBCopyID]->SetEnabled(selection);
-   mButtons[ETBTrimID]->SetEnabled(selection);
-   mButtons[ETBSilenceID]->SetEnabled(selection);
+   mButtons[ETBUndoID]->SetEnabled(cm->GetEnabled("Undo"));
+   mButtons[ETBRedoID]->SetEnabled(cm->GetEnabled("Redo"));
 
-   mButtons[ETBUndoID]->SetEnabled(p->GetUndoManager()->UndoAvailable());
-   mButtons[ETBRedoID]->SetEnabled(p->GetUndoManager()->RedoAvailable());
-
-   bool tracks = (!p->GetTracks()->IsEmpty());
-
-   mButtons[ETBZoomInID]->SetEnabled(tracks && (p->ZoomInAvailable()));
-   mButtons[ETBZoomOutID]->SetEnabled(tracks && (p->ZoomOutAvailable()) );
+   mButtons[ETBZoomInID]->SetEnabled(cm->GetEnabled("ZoomIn"));
+   mButtons[ETBZoomOutID]->SetEnabled(cm->GetEnabled("ZoomOut"));
 
    #if 0 // Disabled for version 1.2.0 since it doesn't work quite right...
-   mButtons[ETBZoomToggleID]->SetEnabled(tracks);
+   mButtons[ETBZoomToggleID]->SetEnabled(true);
    #endif
 
-   mButtons[ETBZoomSelID]->SetEnabled(selection);
-   mButtons[ETBZoomFitID]->SetEnabled(tracks);
+   mButtons[ETBZoomSelID]->SetEnabled(cm->GetEnabled("ZoomSel"));
+   mButtons[ETBZoomFitID]->SetEnabled(cm->GetEnabled("FitInWindow"));
 
-   mButtons[ETBPasteID]->SetEnabled(p->Clipboard());
+   mButtons[ETBPasteID]->SetEnabled(cm->GetEnabled("Paste"));
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
    bool bSyncLockTracks;
