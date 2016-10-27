@@ -455,7 +455,9 @@ void AudacityProject::CreateMenusAndCommands()
       /* i18n-hint: (verb) Do a special kind of cut*/
       c->AddItem(wxT("SplitCut"), _("Spl&it Cut"), FN(OnSplitCut), wxT("Ctrl+Alt+X"));
       /* i18n-hint: (verb) Do a special kind of DELETE*/
-      c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"));
+      c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"),
+         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
 
       c->AddSeparator();
 
@@ -1972,25 +1974,20 @@ void AudacityProject::UpdateMenus(bool /*checkActive*/)
    // been enabled, since we changed the flags.  Here we manually disable them.
    if (mSelectAllOnNone)
    {
-      if (!(flags & TracksSelectedFlag))
+      if (!(flags & TimeSelectedFlag) | !(flags & TracksSelectedFlag))
       {
          mCommandManager.Enable(wxT("SplitCut"), false);
-
-         // FIXME: This Can't be right. We can only
-         // FIXME: get here if no tracks selected, so
-         // FIXME: there can't be a Wave track selected.
-         // wxASSERT(!(flags & WaveTracksSelectedFlag));
-         if (!(flags & WaveTracksSelectedFlag))
-         {
-            mCommandManager.Enable(wxT("Split"), false);
-         }
-         if (!(flags & TimeSelectedFlag))
-         {
-            mCommandManager.Enable(wxT("ExportSel"), false);
-            mCommandManager.Enable(wxT("SplitNew"), false);
-            mCommandManager.Enable(wxT("Trim"), false);
-            mCommandManager.Enable(wxT("SplitDelete"), false);
-         }
+      }
+      if (!(flags & WaveTracksSelectedFlag))
+      {
+         mCommandManager.Enable(wxT("Split"), false);
+      }
+      if (!(flags & TimeSelectedFlag) | !(flags & WaveTracksSelectedFlag))
+      {
+         mCommandManager.Enable(wxT("ExportSel"), false);
+         mCommandManager.Enable(wxT("SplitNew"), false);
+         mCommandManager.Enable(wxT("Trim"), false);
+         mCommandManager.Enable(wxT("SplitDelete"), false);
       }
    }
 
