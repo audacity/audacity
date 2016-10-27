@@ -1869,16 +1869,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                mSelIndex++;
          }
 
-         if (mSelIndex >= 0 && mSelIndex < (int)mLabels.size()) {
+         mSelIndex = (mSelIndex + (int)mLabels.size()) % (int)mLabels.size();    // wrap round if necessary
+         {
             LabelStruct &newLabel = mLabels[mSelIndex];
             mCurrentCursorPos = newLabel.title.Length();
             mInitialCursorPos = mCurrentCursorPos;
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
             newSel = newLabel.selectedRegion;
-         }
-         else {
-            newSel = SelectedRegion{};
-            mSelIndex = -1;
          }
          break;
 
