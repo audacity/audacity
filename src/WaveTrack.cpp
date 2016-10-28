@@ -350,6 +350,12 @@ void WaveTrack::SetSpectrumBounds(float min, float max) const
    mSpectrumMax = max;
 }
 
+int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
+{
+   return rect.GetTop() +
+      (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
+}
+
 Track::Holder WaveTrack::Duplicate() const
 {
    return Track::Holder{ safenew WaveTrack{ *this } };

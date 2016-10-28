@@ -5861,14 +5861,26 @@ void TrackPanel::HandleWheelRotationInVRuler
                else
                   settings.NextHigherDBRange();
             }
-            const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
-            max = std::min(extreme, max * olddBRange / newdBRange);
-            min = std::max(-extreme, min * olddBRange / newdBRange);
-            wt->SetLastdBRange();
-            wt->SetDisplayBounds(min, max);
-            if (partner) {
-               partner->SetLastdBRange();
-               partner->SetDisplayBounds(min, max);
+
+            // Is y coordinate within the rectangle half-height centered about
+            // the zero level?
+            const auto zeroLevel = wt->ZeroLevelYCoordinate(rect);
+            const bool fixedMagnification =
+               (4 * std::abs(event.GetY() - zeroLevel) < rect.GetHeight());
+
+            if (fixedMagnification) {
+               // Vary the db limit without changing
+               // magnification; that is, peaks and troughs move up and down
+               // rigidly, as parts of the wave near zero are exposed or hidden.
+               const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
+               max = std::min(extreme, max * olddBRange / newdBRange);
+               min = std::max(-extreme, min * olddBRange / newdBRange);
+               wt->SetLastdBRange();
+               wt->SetDisplayBounds(min, max);
+               if (partner) {
+                  partner->SetLastdBRange();
+                  partner->SetDisplayBounds(min, max);
+               }
             }
          }
       }

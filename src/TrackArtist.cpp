@@ -1028,6 +1028,7 @@ void TrackArtist::DrawNegativeOffsetTrackArrows(wxDC &dc, const wxRect &rect)
 void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect &rect,
                                          const double env[],
                                          float zoomMin, float zoomMax,
+                                         int zeroLevelYCoordinate,
                                          bool dB, float dBRange,
                                          double t0, double t1,
                                          const ZoomInfo &zoomInfo,
@@ -1134,11 +1135,11 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
 
    //OK, the display bounds are between min and max, which
    //is spread across rect.height.  Draw the line at the proper place.
-
-   if (zoomMin < 0 && zoomMax > 0) {
-      int half = (int)((zoomMax / (zoomMax - zoomMin)) * h);
+   if (zeroLevelYCoordinate >= rect.GetTop() &&
+       zeroLevelYCoordinate <= rect.GetBottom()) {
       dc.SetPen(*wxBLACK_PEN);
-      AColor::Line(dc, rect.x, rect.y + half, rect.x + rect.width, rect.y + half);
+      AColor::Line(dc, rect.x, zeroLevelYCoordinate,
+                   rect.x + rect.width, zeroLevelYCoordinate);
    }
 }
 
@@ -1788,6 +1789,7 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
       DrawWaveformBackground(dc, leftOffset, mid,
          env,
          zoomMin, zoomMax,
+         track->ZeroLevelYCoordinate(mid),
          dB, dBRange,
          t0, t1, zoomInfo, drawEnvelope,
          !track->GetSelected());
