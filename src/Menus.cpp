@@ -1256,9 +1256,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
 
-   c->AddCommand(wxT("SelToNextLabel"), _("Selection to next label"), FN(OnSelToNextLabel), wxT("Alt+Right"),
+   c->AddCommand(wxT("MoveToNextLabel"), _("Move to Next Label"), FN(OnMoveToNextLabel), wxT("Alt+Right"),
       CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
-   c->AddCommand(wxT("SelToPrevLabel"), _("Selection to previous label"), FN(OnSelToPrevLabel), wxT("Alt+Left"),
+   c->AddCommand(wxT("MoveToPrevLabel"), _("Move to Previous Label"), FN(OnMoveToPrevLabel), wxT("Alt+Left"),
       CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
 
 #ifdef __WXMAC__
@@ -2667,17 +2667,17 @@ void AudacityProject::OnSelToEnd()
    ModifyState(false);
 }
 
-void AudacityProject::OnSelToNextLabel()
+void AudacityProject::OnMoveToNextLabel()
 {
-   OnSelToLabel(true);
+   OnMoveToLabel(true);
 }
 
-void AudacityProject::OnSelToPrevLabel()
+void AudacityProject::OnMoveToPrevLabel()
 {
-   OnSelToLabel(false);
+   OnMoveToLabel(false);
 }
 
-void AudacityProject::OnSelToLabel(bool next)
+void AudacityProject::OnMoveToLabel(bool next)
 {
    // Find the number of label tracks, and ptr to last track found
    Track* track = nullptr;

@@ -170,9 +170,9 @@ void OnSetRightSelection();
 void OnSelToStart();
 void OnSelToEnd();
 
-void OnSelToNextLabel();
-void OnSelToPrevLabel();
-void OnSelToLabel(bool next);
+void OnMoveToNextLabel();
+void OnMoveToPrevLabel();
+void OnMoveToLabel(bool next);
 
 void OnZeroCrossing();
 
