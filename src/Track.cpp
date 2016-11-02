@@ -292,6 +292,26 @@ Track *Track::GetLink() const
    return nullptr;
 }
 
+namespace {
+   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
+   {
+      return nullptr != track_cast< const AudioTrack * >( pTrack );
+   }
+
+   bool IsGoodNextSyncLockTrack(const Track *t, bool inLabelSection)
+   {
+      if (!t)
+         return false;
+      const bool isLabel = ( nullptr != track_cast<const LabelTrack*>(t) );
+      if (inLabelSection)
+         return isLabel;
+      else if (isLabel)
+         return true;
+      else
+         return IsSyncLockableNonLabelTrack( t );
+   }
+}
+
 bool Track::IsSyncLockSelected() const
 {
 #ifdef EXPERIMENTAL_SYNC_LOCK
@@ -382,6 +402,21 @@ bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
 
    return AudioTrack::HandleXMLAttribute(attr, value);
 }
+
+bool Track::Any() const
+   { return true; }
+
+bool Track::IsSelected() const
+   { return GetSelected(); }
+
+bool Track::IsSelectedOrSyncLockSelected() const
+   { return GetSelected() || IsSyncLockSelected(); }
+
+bool Track::IsLeader() const
+   { return !GetLink() || GetLinked(); }
+
+bool Track::IsSelectedLeader() const
+   { return IsSelected() && IsLeader(); }
 
 // TrackListIterator
 TrackListIterator::TrackListIterator(TrackList * val, TrackNodePointer p)
@@ -652,13 +687,6 @@ SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 {
 }
 
-namespace {
-   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
-   {
-      return nullptr != dynamic_cast< const AudioTrack * >( pTrack );
-   }
-}
-
 Track *SyncLockedTracksIterator::StartWith(Track * member)
 {
    Track *t = NULL;
@@ -765,8 +793,48 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
          break;
       t = Next(skiplinked);
    }
-
+   
    return t;
+}
+
+std::pair<Track *, Track *> TrackList::FindSyncLockGroup(Track *pMember) const
+{
+   if (!pMember)
+      return { nullptr, nullptr };
+
+   // A non-trivial sync-locked group is a maximal sub-sequence of the tracks
+   // consisting of any positive number of audio tracks followed by zero or
+   // more label tracks.
+
+   // Step back through any label tracks.
+   auto member = pMember;
+   while (member && ( nullptr != track_cast<const LabelTrack*>(member) )) {
+      member = GetPrev(member);
+   }
+
+   // Step back through the wave and note tracks before the label tracks.
+   Track *first = nullptr;
+   while (member && IsSyncLockableNonLabelTrack(member)) {
+      first = member;
+      member = GetPrev(member);
+   }
+
+   if (!first)
+      // Can't meet the criteria described above.  In that case,
+      // consider the track to be the sole member of a group.
+      return { pMember, pMember };
+
+   Track *last = first;
+   bool inLabels = false;
+
+   while (const auto next = GetNext(last)) {
+      if ( ! IsGoodNextSyncLockTrack(next, inLabels) )
+         break;
+      last = next;
+      inLabels = (nullptr != track_cast<const LabelTrack*>(last) );
+   }
+
+   return { first, last };
 }
 
 
@@ -875,6 +943,34 @@ void TrackList::ResizingEvent(TrackNodePointer node)
    e->mpTrack = *node.first;
    // wxWidgets will own the event object
    QueueEvent(e.release());
+}
+
+auto TrackList::EmptyRange() const
+   -> TrackIterRange< Track >
+{
+   auto it = const_cast<TrackList*>(this)->getEnd();
+   return {
+      { it, it, it, &Track::Any },
+      { it, it, it, &Track::Any }
+   };
+}
+
+auto TrackList::SyncLockGroup( Track *pTrack )
+   -> TrackIterRange< Track >
+{
+   auto pList = pTrack->GetOwner();
+   auto tracks =
+      pList->FindSyncLockGroup( const_cast<Track*>( pTrack ) );
+   return pList->Any().StartingWith(tracks.first).EndingAfter(tracks.second);
+}
+
+auto TrackList::FindLeader( Track *pTrack )
+   -> TrackIter< Track >
+{
+   auto iter = Find(pTrack);
+   while( *iter && ! ( *iter )->IsLeader() )
+      --iter;
+   return iter.Filter( &Track::IsLeader );
 }
 
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)

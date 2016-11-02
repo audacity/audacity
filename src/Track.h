@@ -321,7 +321,9 @@ public:
 
    Track *GetLink() const;
 
- private:
+private:
+   std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
+
    TrackNodePointer GetNode() const;
    void SetOwner
       (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
@@ -454,6 +456,15 @@ public:
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected() const;
 
+   // An always-true predicate useful for defining iterators
+   bool Any() const;
+
+   // Frequently useful operands for + and -
+   bool IsSelected() const;
+   bool IsSelectedOrSyncLockSelected() const;
+   bool IsLeader() const;
+   bool IsSelectedLeader() const;
+
 protected:
    std::shared_ptr<Track> FindTrack() override;
 
@@ -543,6 +554,247 @@ template<typename T>
    else
       return nullptr;
 }
+
+// new track iterators can eliminate the need to cast the result
+template <
+   typename TrackType // Track or a subclass, maybe const-qualified
+> class TrackIter
+   : public std::iterator<
+      std::bidirectional_iterator_tag, TrackType *const
+   >
+{
+public:
+   // Type of predicate taking pointer to const TrackType
+   // TODO C++14:  simplify away ::type
+   using FunctionType = std::function< bool(
+      typename std::add_pointer<
+         typename std::add_const<
+            typename std::remove_pointer<
+               TrackType
+            >::type
+         >::type
+      >::type
+   ) >;
+
+   template<typename Predicate = FunctionType>
+   TrackIter( TrackNodePointer begin, TrackNodePointer iter,
+              TrackNodePointer end, const Predicate &pred = {} )
+      : mBegin( begin ), mIter( iter ), mEnd( end ), mPred( pred )
+   {
+      // Establish the class invariant
+      if (this->mIter != this->mEnd && !this->valid())
+         this->operator ++ ();
+   }
+
+   // Return an iterator that replaces the predicate, advancing to the first
+   // position at or after the old position that satisfies the new predicate,
+   // or to the end.
+   template < typename Predicate2 >
+      TrackIter Filter( const Predicate2 &pred2 ) const
+   {
+      return { this->mBegin, this->mIter, this->mEnd, pred2 };
+   }
+
+   // Return an iterator that refines the subclass (and not removing const),
+   // advancing to the first position at or after the old position that
+   // satisfies the type constraint, or to the end
+   template < typename TrackType2 >
+      auto Filter() const
+         -> typename std::enable_if<
+            std::is_base_of< TrackType, TrackType2 >::value &&
+               (!std::is_const<TrackType>::value ||
+                 std::is_const<TrackType2>::value),
+            TrackIter< TrackType2 >
+         >::type
+   {
+      return { this->mBegin, this->mIter, this->mEnd, this->mPred };
+   }
+
+   const FunctionType &GetPredicate() const
+   { return this->mPred; }
+
+   // Unlike with STL iterators, this class gives well defined behavior when
+   // you increment an end iterator: you get the same.
+   TrackIter &operator ++ ()
+   {
+      // Maintain the class invariant
+      if (this->mIter != this->mEnd) do
+         ++this->mIter.first;
+      while (this->mIter != this->mEnd && !this->valid() );
+      return *this;
+   }
+
+   TrackIter operator ++ (int)
+   {
+      TrackIter result { *this };
+      this-> operator ++ ();
+      return result;
+   }
+
+   // Unlike with STL iterators, this class gives well defined behavior when
+   // you decrement past the beginning of a range: you wrap and get an end
+   // iterator.
+   TrackIter &operator -- ()
+   {
+      // Maintain the class invariant
+      do {
+         if (this->mIter == this->mBegin)
+            // Go circularly
+            this->mIter = this->mEnd;
+         else
+            --this->mIter.first;
+      } while (this->mIter != this->mEnd && !this->valid() );
+      return *this;
+   }
+
+   TrackIter operator -- (int)
+   {
+      TrackIter result { *this };
+      this->operator -- ();
+      return result;
+   }
+
+   // Unlike with STL iterators, this class gives well defined behavior when
+   // you dereference an end iterator: you get a null pointer.
+   TrackType *operator * () const
+   {
+      if (this->mIter == this->mEnd)
+         return nullptr;
+      else
+         // Other methods guarantee that the cast is correct
+         // (provided no operations on the TrackList invalidated
+         // underlying iterators or replaced the tracks there)
+         return static_cast< TrackType * >( &**this->mIter.first );
+   }
+
+   // This might be called operator + ,
+   // but that might wrongly suggest constant time when the iterator is not
+   // random access.
+   TrackIter advance( long amount ) const
+   {
+      auto copy = *this;
+      std::advance( copy, amount );
+      return copy;
+   }
+
+   friend inline bool operator == (TrackIter a, TrackIter b)
+   {
+      // Assume the predicate is not stateful.  Just compare the iterators.
+      return
+         a.mIter == b.mIter
+         // Assume this too:
+         // && a.mBegin == b.mBegin && a.mEnd == b.mEnd
+      ;
+   }
+
+   friend inline bool operator != (TrackIter a, TrackIter b)
+   {
+      return !(a == b);
+   }
+
+private:
+   bool valid() const
+   {
+      // assume mIter != mEnd
+      const auto pTrack = track_cast< TrackType * >( &**this->mIter.first );
+      if (!pTrack)
+         return false;
+      return !this->mPred || this->mPred( pTrack );
+   }
+
+   // The class invariant is that mIter == mEnd, or else, mIter != mEnd and
+   // **mIter is of the appropriate subclass and mPred(&**mIter) is true.
+   TrackNodePointer mBegin, mIter, mEnd;
+   FunctionType mPred;
+};
+
+template <
+   typename TrackType // Track or a subclass, maybe const-qualified
+> struct TrackIterRange
+   : public IteratorRange< TrackIter< TrackType > >
+{
+   TrackIterRange
+      ( const TrackIter< TrackType > &begin,
+        const TrackIter< TrackType > &end )
+         : IteratorRange< TrackIter< TrackType > >
+            ( begin, end )
+   {}
+
+   // Conjoin the filter predicate with another predicate
+   // Read + as "and"
+   template< typename Predicate2 >
+      TrackIterRange operator + ( const Predicate2 &pred2 ) const
+   {
+      const auto &pred1 = this->first.GetPredicate();
+      using Function = typename TrackIter<TrackType>::FunctionType;
+      const auto &newPred = pred1
+         ? Function{ [=] (typename Function::argument_type track) {
+            return pred1(track) && pred2(track);
+         } }
+         : Function{ pred2 };
+      return {
+         this->first.Filter( newPred ),
+         this->second.Filter( newPred )
+      };
+   }
+
+   // Specify the added conjunct as a pointer to member function
+   template< typename R, typename C >
+      TrackIterRange operator + ( R ( C ::* pmf ) () const ) const
+   {
+      return this->operator + ( std::mem_fn( pmf ) );
+   }
+
+   // Conjoin the filter predicate with the negation of another predicate
+   // Read - as "and not"
+   template< typename Predicate2 >
+      TrackIterRange operator - ( const Predicate2 &pred2 ) const
+   {
+      using ArgumentType =
+         typename TrackIterRange::iterator::FunctionType::argument_type;
+      auto neg = [=] (ArgumentType track) { return !pred2( track ); };
+      return this->operator + ( neg );
+   }
+
+   // Specify the negated conjunct as a pointer to member function
+   template< typename R, typename C >
+      TrackIterRange operator - ( R ( C ::* pmf ) () const ) const
+   {
+      return this->operator + ( std::not1( std::mem_fn( pmf ) ) );
+   }
+
+   template< typename TrackType2 >
+      TrackIterRange< TrackType2 > Filter() const
+   {
+      return {
+         this-> first.template Filter< TrackType2 >(),
+         this->second.template Filter< TrackType2 >()
+      };
+   }
+
+   TrackIterRange StartingWith( const Track *pTrack ) const
+   {
+      return {
+         this->find( pTrack ),
+         this->second
+      };
+   }
+
+   TrackIterRange EndingAfter( const Track *pTrack ) const
+   {
+      return {
+         this->first,
+         this->reversal().find( pTrack ).base()
+      };
+   }
+
+   // Exclude one given track
+   TrackIterRange Excluding ( const TrackType *pExcluded ) const
+   {
+      return this->operator - (
+         [=](const Track *pTrack){ return pExcluded == pTrack; } );
+   }
+};
 
 class AUDACITY_DLL_API TrackListIterator /* not final */
 : public std::iterator< std::forward_iterator_tag, Track *const >
@@ -789,6 +1041,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // Destructor
    virtual ~TrackList();
 
+   // Iteration
+
    // Hide the inherited begin() and end()
    using iterator = TrackListIterator;
    using const_iterator = TrackListConstIterator;
@@ -800,6 +1054,161 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    const_iterator end() const { return {}; }
    const_iterator cbegin() const { return begin(); }
    const_iterator cend() const { return end(); }
+
+   // Turn a pointer into an iterator (constant time).
+   template < typename TrackType = Track >
+      auto Find(Track *pTrack)
+         -> TrackIter< TrackType >
+   {
+      if (!pTrack || pTrack->GetOwner().get() != this)
+         return EndIterator<TrackType>();
+      else
+         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
+   }
+
+   // Turn a pointer into an iterator (constant time).
+   template < typename TrackType = const Track >
+      auto Find(const Track *pTrack) const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIter< TrackType >
+         >::type
+   {
+      if (!pTrack || pTrack->GetOwner().get() != this)
+         return EndIterator<TrackType>();
+      else
+         return MakeTrackIterator<TrackType>( pTrack->GetNode() );
+   }
+
+   // If the track is not an audio track, or not one of a group of channels,
+   // return the track itself; else return the first channel of its group --
+   // in either case as an iterator that will only visit other leader tracks.
+   // (Generalizing away from the assumption of at most stereo)
+   TrackIter< Track > FindLeader( Track *pTrack );
+
+   TrackIter< const Track >
+      FindLeader( const Track *pTrack ) const
+   {
+      return const_cast<TrackList*>(this)->
+         FindLeader( const_cast<Track*>(pTrack) ).Filter< const Track >();
+   }
+
+
+   template < typename TrackType = Track >
+      auto Any()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >();
+   }
+
+   template < typename TrackType = const Track >
+      auto Any() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >();
+   }
+
+   // Abbreviating some frequently used cases
+   template < typename TrackType = Track >
+      auto Selected()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >( &Track::IsSelected );
+   }
+
+   template < typename TrackType = const Track >
+      auto Selected() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >( &Track::IsSelected );
+   }
+
+
+   template < typename TrackType = Track >
+      auto Leaders()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >( &Track::IsLeader );
+   }
+
+   template < typename TrackType = const Track >
+      auto Leaders() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >( &Track::IsLeader );
+   }
+
+
+   template < typename TrackType = Track >
+      auto SelectedLeaders()
+         -> TrackIterRange< TrackType >
+   {
+      return Tracks< TrackType >( &Track::IsSelectedLeader );
+   }
+
+   template < typename TrackType = const Track >
+      auto SelectedLeaders() const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      return Tracks< TrackType >( &Track::IsSelectedLeader );
+   }
+
+
+   template<typename TrackType>
+      static auto SingletonRange( TrackType *pTrack )
+         -> TrackIterRange< TrackType >
+   {
+      return pTrack->GetOwner()->template Any<TrackType>()
+         .StartingWith( pTrack ).EndingAfter( pTrack );
+   }
+
+
+   static TrackIterRange< Track >
+      SyncLockGroup( Track *pTrack );
+
+   static TrackIterRange< const Track >
+      SyncLockGroup( const Track *pTrack )
+   {
+      return SyncLockGroup(const_cast<Track*>(pTrack)).Filter<const Track>();
+   }
+
+private:
+   template< typename TrackType, typename InTrackType >
+      static TrackIterRange< TrackType >
+         Channels_( TrackIter< InTrackType > iter1 )
+   {
+      // Assume iterator filters leader tracks
+      if (*iter1) {
+         return {
+            iter1.Filter( &Track::Any )
+               .template Filter<TrackType>(),
+            (++iter1).Filter( &Track::Any )
+               .template Filter<TrackType>()
+         };
+      }
+      else
+         // empty range
+         return {
+            iter1.template Filter<TrackType>(),
+            iter1.template Filter<TrackType>()
+         };
+   }
+
+public:
+   // Find an iterator range of channels including the given track.
+   template< typename TrackType >
+      static auto Channels( TrackType *pTrack )
+         -> TrackIterRange< TrackType >
+   {
+      return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
+   }
 
    friend class Track;
    friend class TrackListIterator;
@@ -903,6 +1312,57 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 #endif
 
 private:
+
+   // Visit all tracks satisfying a predicate, mutative access
+   template <
+      typename TrackType = Track,
+      typename Pred =
+         typename TrackIterRange< TrackType >::iterator::FunctionType
+   >
+      auto Tracks( const Pred &pred = {} )
+         -> TrackIterRange< TrackType >
+   {
+      auto b = getBegin(), e = getEnd();
+      return { { b, b, e, pred }, { b, e, e, pred } };
+   }
+
+   // Visit all tracks satisfying a predicate, const access
+   template <
+      typename TrackType = const Track,
+      typename Pred =
+         typename TrackIterRange< TrackType >::iterator::FunctionType
+   >
+      auto Tracks( const Pred &pred = {} ) const
+         -> typename std::enable_if< std::is_const<TrackType>::value,
+            TrackIterRange< TrackType >
+         >::type
+   {
+      auto b = const_cast<TrackList*>(this)->getBegin();
+      auto e = const_cast<TrackList*>(this)->getEnd();
+      return { { b, b, e, pred }, { b, e, e, pred } };
+   }
+
+   std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember) const;
+
+   template < typename TrackType >
+      TrackIter< TrackType >
+         MakeTrackIterator( TrackNodePointer iter ) const
+   {
+      auto b = const_cast<TrackList*>(this)->getBegin();
+      auto e = const_cast<TrackList*>(this)->getEnd();
+      return { b, iter, e };
+   }
+
+   template < typename TrackType >
+      TrackIter< TrackType >
+         EndIterator() const
+   {
+      auto e = const_cast<TrackList*>(this)->getEnd();
+      return { e, e, e };
+   }
+
+   TrackIterRange< Track > EmptyRange() const;
+
    bool isNull(TrackNodePointer p) const
    { return (p.second == this && p.first == ListOfTracks::end())
       || (p.second == &mPendingUpdates && p.first == mPendingUpdates.end()); }
