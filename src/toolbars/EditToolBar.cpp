@@ -305,7 +305,9 @@ void EditToolBar::OnButton(wxCommandEvent &event)
 
 void EditToolBar::EnableDisableButtons()
 {
-   CommandManager* cm = GetActiveProject()->GetCommandManager();
+   AudacityProject *p = GetActiveProject();
+   if (!p) return;
+   CommandManager* cm = p->GetCommandManager();
    if (!cm) return;
 
    mButtons[ETBCutID]->SetEnabled(cm->GetEnabled("Cut"));
