@@ -1725,9 +1725,21 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    }
 
    else if (keyCode == WXK_TAB) {
+#if defined(__WXMSW__)
+      // Using Navigate() on Windows, rather than the following code causes
+      // bug 1542
+      wxWindow* parent = GetParent();
+      wxNavigationKeyEvent nevent;
+      nevent.SetWindowChange(event.ControlDown());
+      nevent.SetDirection(!event.ShiftDown());
+      nevent.SetEventObject(parent);
+      nevent.SetCurrentFocus(parent);
+      GetParent()->GetEventHandler()->ProcessEvent(nevent);
+#else
       Navigate(event.ShiftDown()
                ? wxNavigationKeyEvent::IsBackward
                : wxNavigationKeyEvent::IsForward);
+#endif
    }
 
    else if (keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER) {
