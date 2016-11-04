@@ -578,11 +578,26 @@ SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 {
 }
 
+namespace {
+   bool IsSyncLockableNonLabelTrack( const Track *pTrack )
+   {
+      if ( pTrack->GetKind() == Track::Wave )
+         return true;
+#ifdef USE_MIDI
+      else if ( pTrack->GetKind() == Track::Note )
+         return true;
+#endif
+      else
+         return false;
+   }
+}
+
 Track *SyncLockedTracksIterator::StartWith(Track * member)
 {
    Track *t = NULL;
 
-   // A sync-locked group consists of any positive number of wave tracks followed by any
+   // A sync-locked group consists of any positive number of wave (or note)
+   // tracks followed by any
    // non-negative number of label tracks. Step back through any label tracks,
    // and then through the wave tracks above them.
 
@@ -590,11 +605,7 @@ Track *SyncLockedTracksIterator::StartWith(Track * member)
       member = l->GetPrev(member);
    }
 
-   while (member && (member->GetKind() == Track::Wave
-#ifdef USE_MIDI
-                  || member->GetKind() == Track::Note
-#endif
-                    )) {
+   while (member && IsSyncLockableNonLabelTrack(member)) {
       t = member;
       member = l->GetPrev(member);
    }
@@ -609,33 +620,38 @@ Track *SyncLockedTracksIterator::StartWith(Track * member)
    return t;
 }
 
+bool SyncLockedTracksIterator::IsGoodNextTrack(const Track *t) const
+{
+   if (!t)
+      return false;
+
+   const bool isLabel = ( t->GetKind() == Track::Label );
+   const bool isSyncLockable = IsSyncLockableNonLabelTrack( t );
+
+   if ( !( isLabel || isSyncLockable ) ) {
+      return false;
+   }
+
+   if (mInLabelSection && !isLabel) {
+      return false;
+   }
+
+   return true;
+}
+
 Track *SyncLockedTracksIterator::Next(bool skiplinked)
 {
    Track *t = TrackListIterator::Next(skiplinked);
 
-   //
-   // Ways to end a sync-locked group
-   //
-
-   // End of tracks
    if (!t)
       return NULL;
 
-   // In the label section, encounter a non-label track
-   if (mInLabelSection && t->GetKind() != Track::Label) {
+   if ( ! IsGoodNextTrack(t) ) {
       l->setNull(cur);
       return NULL;
    }
-// This code block stops a group when a NoteTrack is encountered
-#ifndef USE_MIDI
-   // Encounter a non-wave non-label track
-   if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label) {
-      l->setNull(cur);
-      return NULL;
-   }
-#endif
-   // Otherwise, check if we're in the label section
-   mInLabelSection = (t->GetKind() == Track::Label);
+
+   mInLabelSection = ( t->GetKind() == Track::Label );
 
    return t;
 }
@@ -652,20 +668,20 @@ Track *SyncLockedTracksIterator::Prev(bool skiplinked)
    if (!t)
       return NULL;
 
-   // In wave section, encounter a label track
-   if (!mInLabelSection && t->GetKind() == Track::Label) {
+   const bool isLabel = ( t->GetKind() == Track::Label );
+   const bool isSyncLockable = IsSyncLockableNonLabelTrack( t );
+
+   if ( !( isLabel || isSyncLockable ) ) {
       l->setNull(cur);
       return NULL;
    }
-#ifndef USE_MIDI
-   // Encounter a non-wave non-label track
-   if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label) {
+
+   if ( !mInLabelSection && isLabel ) {
       l->setNull(cur);
       return NULL;
    }
-#endif
-   // Otherwise, check if we're in the label section
-   mInLabelSection = (t->GetKind() == Track::Label);
+
+   mInLabelSection = isLabel;
 
    return t;
 }
@@ -677,18 +693,9 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 
    Track *t = cur->get();
 
-   while (l->GetNext(t)) {
-      // Check if this is the last track in the sync-locked group.
-      int nextKind = l->GetNext(t)->GetKind();
-      if (mInLabelSection && nextKind != Track::Label)
+   while (const auto next = l->GetNext(t, skiplinked)) {
+      if ( ! IsGoodNextTrack(next) )
          break;
-      if (nextKind != Track::Label && nextKind != Track::Wave
-#ifdef USE_MIDI
-          && nextKind != Track::Note
-#endif
-          )
-         break;
-
       t = Next(skiplinked);
    }
 

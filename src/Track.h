@@ -382,6 +382,7 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
    Track *Last(bool skiplinked = false) override;
 
  private:
+   bool IsGoodNextTrack(const Track *t) const;
    bool mInLabelSection;
 };
 
