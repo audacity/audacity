@@ -3578,11 +3578,8 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
          wxBell();
          if( mCircularTrackNavigation )
          {
-            TrackListIterator iter( tracks );
-            for( Track *d = iter.First(); d; d = iter.Next( true ) )
-            {
-               p = d;
-            }
+            auto range = tracks->Leaders();
+            p = * range.rbegin(); // null if range is empty
             trackPanel->SetFocusedTrack( p );   // Wrap to the first track
             trackPanel->EnsureVisible( p );
             project.ModifyState(false);
@@ -7206,13 +7203,11 @@ int MenuCommandHandler::FindClips
 
    // first search the tracks individually
 
-   TrackListIterator iter(tracks);
-   Track* track = iter.First();
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
    int trackNum = 1;
-   while (track) {
+   for (auto track : tracks->Leaders()) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
          bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
@@ -7239,7 +7234,6 @@ int MenuCommandHandler::FindClips
       }
 
       trackNum++;
-      track = iter.Next(true);
    }
 
 
@@ -8465,13 +8459,11 @@ int MenuCommandHandler::FindClipBoundaries
 
    // first search the tracks individually
 
-   TrackListIterator iter(tracks);
-   Track* track = iter.First();
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
    int trackNum = 1;
-   while (track) {
+   for (auto track : tracks->Leaders()) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
          auto waveTrack = static_cast<const WaveTrack*>(track);
          bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
@@ -8498,7 +8490,6 @@ int MenuCommandHandler::FindClipBoundaries
       }
 
       trackNum++;
-      track = iter.Next(true);
    }
 
 
