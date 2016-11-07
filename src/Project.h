@@ -341,6 +341,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    // Other commands
    static TrackList *GetClipboardTracks();
+   static void ClearClipboard();
    static void DeleteClipboard();
 
    int GetProjectNumber(){ return mProjectNo;};
@@ -528,7 +529,6 @@ public:
  private:
 
    void OnCapture(wxCommandEvent & evt);
-   void ClearClipboard();
    void InitialState();
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects

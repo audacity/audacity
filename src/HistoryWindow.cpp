@@ -42,7 +42,8 @@ enum {
    ID_AVAIL = 1000,
    ID_TOTAL,
    ID_LEVELS,
-   ID_DISCARD
+   ID_DISCARD,
+   ID_DISCARD_CLIPBOARD
 };
 
 BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
@@ -50,6 +51,7 @@ BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
    EVT_CLOSE(HistoryWindow::OnCloseWindow)
    EVT_LIST_ITEM_SELECTED(wxID_ANY, HistoryWindow::OnItemSelected)
    EVT_BUTTON(ID_DISCARD, HistoryWindow::OnDiscard)
+   EVT_BUTTON(ID_DISCARD_CLIPBOARD, HistoryWindow::OnDiscardClipboard)
 END_EVENT_TABLE()
 
 HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
@@ -112,6 +114,10 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
             S.AddWindow(mLevels);
             /* i18n-hint: (verb)*/
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
+
+            mClipboard = S.AddTextBox(_("Clipboard space used"), wxT("0"), 10);
+            mClipboard->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+            S.Id(ID_DISCARD_CLIPBOARD).AddButton(_("Discard"));
          }
          S.EndMultiColumn();
       }
@@ -198,6 +204,10 @@ void HistoryWindow::DoUpdate()
 
    mTotal->SetValue(Internat::FormatSize(total));
 
+   auto clipboardUsage = mManager->GetClipboardSpaceUsage();
+   mClipboard->SetValue(Internat::FormatSize(clipboardUsage));
+   FindWindowById(ID_DISCARD_CLIPBOARD)->Enable(clipboardUsage > 0);
+
    mList->EnsureVisible(mSelected);
 
    mList->SetItemState(mSelected,
@@ -245,6 +255,12 @@ void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
    while(--i >= 0)
       mList->DeleteItem(i);
 
+   DoUpdate();
+}
+
+void HistoryWindow::OnDiscardClipboard(wxCommandEvent & WXUNUSED(event))
+{
+   AudacityProject::ClearClipboard();
    DoUpdate();
 }
 

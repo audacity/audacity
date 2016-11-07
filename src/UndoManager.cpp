@@ -27,6 +27,7 @@ UndoManager
 #include "BlockFile.h"
 #include "Diags.h"
 #include "Internat.h"
+#include "Project.h"
 #include "Sequence.h"
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
@@ -69,11 +70,50 @@ UndoManager::~UndoManager()
    ClearStates();
 }
 
+namespace {
+   SpaceArray::value_type
+   CalculateUsage(TrackList *tracks, Set *prev, Set *cur)
+   {
+      SpaceArray::value_type result = 0;
+
+      //TIMER_START( "CalculateSpaceUsage", space_calc );
+      TrackListOfKindIterator iter(Track::Wave);
+      WaveTrack *wt = (WaveTrack *) iter.First(tracks);
+      while (wt)
+      {
+         // Scan all clips within current track
+         for(const auto &clip : wt->GetAllClips())
+         {
+            // Scan all blockfiles within current clip
+            BlockArray *blocks = clip->GetSequenceBlockArray();
+            for (const auto &block : *blocks)
+            {
+               const auto &file = block.f;
+
+               // Accumulate space used by the file if the file didn't exist
+               // in the previous level
+               if (!prev || !cur ||
+                   (prev->count( &*file ) == 0 && cur->count( &*file ) == 0))
+               {
+                  unsigned long long usage{ file->GetSpaceUsage() };
+                  result += usage;
+               }
+
+               // Add file to current set
+               if (cur)
+                  cur->insert( &*file );
+            }
+         }
+
+         wt = (WaveTrack *) iter.Next();
+      }
+
+      return result;
+   }
+}
+
 void UndoManager::CalculateSpaceUsage()
 {
-   //TIMER_START( "CalculateSpaceUsage", space_calc );
-   TrackListOfKindIterator iter(Track::Wave);
-
    space.clear();
    space.resize(stack.size(), 0);
 
@@ -90,34 +130,12 @@ void UndoManager::CalculateSpaceUsage()
       cur->clear();
 
       // Scan all tracks at current level
-      WaveTrack *wt = (WaveTrack *) iter.First(stack[i]->state.tracks.get());
-      while (wt)
-      {
-         // Scan all clips within current track
-         for(const auto &clip : wt->GetAllClips())
-         {
-            // Scan all blockfiles within current clip
-            BlockArray *blocks = clip->GetSequenceBlockArray();
-            for (const auto &block : *blocks)
-            {
-               const auto &file = block.f;
-
-               // Accumulate space used by the file if the file didn't exist
-               // in the previous level
-               if (prev->count( &*file ) == 0 && cur->count( &*file ) == 0)
-               {
-                  unsigned long long usage{ file->GetSpaceUsage() };
-                   space[i] += usage;
-               }
-               
-               // Add file to current set
-               cur->insert( &*file );
-            }
-         }
-
-         wt = (WaveTrack *) iter.Next();
-      }
+      auto tracks = stack[i]->state.tracks.get();
+      space[i] = CalculateUsage(tracks, prev, cur);
    }
+
+   mClipboardSpaceUsage = CalculateUsage
+      (AudacityProject::GetClipboardTracks(), nullptr, nullptr);
 
    //TIMER_STOP( space_calc );
 }
