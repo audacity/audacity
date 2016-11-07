@@ -103,6 +103,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool GetWaveDisplay(float *min, float *max, float *rms, int* bl,
                        size_t len, const sampleCount *where) const;
 
+   // Return non-null, or else throw!
    std::unique_ptr<Sequence> Copy(sampleCount s0, sampleCount s1) const;
    void Paste(sampleCount s0, const Sequence *src);
 

@@ -133,8 +133,7 @@ auto ODPCMAliasBlockFile::GetMinMaxRMS(
    else
    {
       if (mayThrow)
-         //throw NotYetAvailableException{ GetAliasedFileName() }
-         ;
+         throw NotYetAvailableException{ GetAliasedFileName() };
 
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
@@ -156,8 +155,7 @@ auto ODPCMAliasBlockFile::GetMinMaxRMS(bool mayThrow) const -> MinMaxRMS
    else
    {
       if (mayThrow)
-         //throw NotYetAvailableException{ GetAliasedFileName() }
-         ;
+         throw NotYetAvailableException{ GetAliasedFileName() };
 
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
@@ -415,9 +413,8 @@ void ODPCMAliasBlockFile::WriteSummary()
       //and wxLog calls are not thread safe.
       printf("Unable to write summary data to file: %s", fileNameChar.get());
 
-      // throw FileException{
-         // FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
-      return;
+      throw FileException{
+         FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
    }
 
    ArrayOf<char> cleanup;

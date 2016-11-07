@@ -616,8 +616,7 @@ size_t BlockFile::CommonReadData(
 
    if ( framesRead < len ) {
       if (mayThrow)
-         //throw FileException{ FileException::Cause::Read, fileName }
-         ;
+         throw FileException{ FileException::Cause::Read, fileName };
       ClearSamples(data, format, framesRead, len - framesRead);
    }
 
