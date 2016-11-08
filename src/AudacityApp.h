@@ -63,6 +63,7 @@ class AudacityApp final : public wxApp {
    bool OnInit(void) override;
    int OnExit(void) override;
    void OnFatalException() override;
+   bool OnExceptionInMainLoop() override;
 
    int FilterEvent(wxEvent & event);
 
