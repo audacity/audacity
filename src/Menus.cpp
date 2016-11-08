@@ -5181,6 +5181,9 @@ void AudacityProject::OnSelectCursorSavedCursor()
    if (mCursorPositionHasBeenSaved) {
       mViewInfo.selectedRegion.setT0(std::min(mViewInfo.selectedRegion.t0(), mCursorPositionSaved));
       mViewInfo.selectedRegion.setT1(std::max(mViewInfo.selectedRegion.t1(), mCursorPositionSaved));
+
+      ModifyState(false);
+      mTrackPanel->Refresh(false);
    }
 }
 
