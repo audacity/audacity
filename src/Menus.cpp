@@ -558,6 +558,9 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
       c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
+      c->AddItem(wxT("SelCursorSavedCursor"), _("Cursor to Saved &Cursor Position"), FN(OnSelectCursorSavedCursor),
+         wxT(""), TracksExistFlag, TracksExistFlag);
+
 
       c->AddSeparator();
 
@@ -600,6 +603,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SelRestore"), _("Regio&n Restore"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
+      c->AddItem(wxT("SaveCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionSave),
+         WaveTracksExistFlag,
+         WaveTracksExistFlag);
 
       c->AddSeparator();
 
@@ -5170,6 +5176,14 @@ void AudacityProject::OnSelectStartCursor()
    mTrackPanel->Refresh(false);
 }
 
+void AudacityProject::OnSelectCursorSavedCursor()
+{
+   if (mCursorPositionHasBeenSaved) {
+      mViewInfo.selectedRegion.setT0(std::min(mViewInfo.selectedRegion.t0(), mCursorPositionSaved));
+      mViewInfo.selectedRegion.setT1(std::max(mViewInfo.selectedRegion.t1(), mCursorPositionSaved));
+   }
+}
+
 void AudacityProject::OnSelectSyncLockSel()
 {
    bool selected = false;
@@ -5884,6 +5898,12 @@ void AudacityProject::OnMixAndRenderToNewTrack()
 void AudacityProject::OnSelectionSave()
 {
    mRegionSave =  mViewInfo.selectedRegion;
+}
+
+void AudacityProject::OnCursorPositionSave()
+{
+   mCursorPositionSaved = mViewInfo.selectedRegion.t0();
+   mCursorPositionHasBeenSaved = true;
 }
 
 void AudacityProject::OnSelectionRestore()
