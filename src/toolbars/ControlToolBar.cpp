@@ -442,8 +442,8 @@ void ControlToolBar::EnableDisableButtons()
       !playing
    );
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
-   mRewind->SetEnabled(!playing && !recording);
-   mFF->SetEnabled(tracks && !playing && !recording);
+   mRewind->SetEnabled(IsPauseDown() || (!playing && !recording));
+   mFF->SetEnabled(tracks && (IsPauseDown() || (!playing && !recording)));
 
    //auto pProject = GetActiveProject();
    mPause->SetEnabled(CanStopAudioStream());
@@ -1158,6 +1158,7 @@ void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
 
    AudacityProject *p = GetActiveProject();
    if (p) {
+      p->StopIfPaused();
       p->Rewind(mRewind->WasShiftDown());
    }
 }
@@ -1170,6 +1171,7 @@ void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
    AudacityProject *p = GetActiveProject();
 
    if (p) {
+      p->StopIfPaused();
       p->SkipEnd(mFF->WasShiftDown());
    }
 }

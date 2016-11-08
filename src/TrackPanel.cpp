@@ -4734,6 +4734,8 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
    else if (event.LeftUp()) {
       mTrackInfo.DrawCloseBox(&dc, rect, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
+         AudacityProject *p = GetProject();
+         p->StopIfPaused();
          if (!IsUnsafe())
             GetProject()->RemoveTrack(t);
       }
