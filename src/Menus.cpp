@@ -5188,8 +5188,9 @@ void AudacityProject::OnSelectStartCursor()
 void AudacityProject::OnSelectCursorSavedCursor()
 {
    if (mCursorPositionHasBeenSaved) {
-      mViewInfo.selectedRegion.setT0(std::min(mViewInfo.selectedRegion.t0(), mCursorPositionSaved));
-      mViewInfo.selectedRegion.setT1(std::max(mViewInfo.selectedRegion.t1(), mCursorPositionSaved));
+      double cursorPositionCurrent = IsAudioActive() ? gAudioIO->GetStreamTime() : mViewInfo.selectedRegion.t0();
+      mViewInfo.selectedRegion.setT0(std::min(cursorPositionCurrent, mCursorPositionSaved));
+      mViewInfo.selectedRegion.setT1(std::max(cursorPositionCurrent, mCursorPositionSaved));
 
       ModifyState(false);
       mTrackPanel->Refresh(false);
@@ -5914,7 +5915,7 @@ void AudacityProject::OnSelectionSave()
 
 void AudacityProject::OnCursorPositionSave()
 {
-   mCursorPositionSaved = mViewInfo.selectedRegion.t0();
+   mCursorPositionSaved = IsAudioActive() ? gAudioIO->GetStreamTime() : mViewInfo.selectedRegion.t0();
    mCursorPositionHasBeenSaved = true;
 }
 
