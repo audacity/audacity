@@ -4109,6 +4109,9 @@ void AudacityProject::OnCut()
    RedrawProject();
 
    mViewInfo.selectedRegion.collapseToT0();
+
+   if (mHistoryWindow)
+      mHistoryWindow->UpdateDisplay();
 }
 
 
@@ -4151,6 +4154,9 @@ void AudacityProject::OnSplitCut()
    PushState(_("Split-cut to the clipboard"), _("Split Cut"));
 
    RedrawProject();
+
+   if (mHistoryWindow)
+      mHistoryWindow->UpdateDisplay();
 }
 
 
@@ -4195,6 +4201,9 @@ void AudacityProject::OnCopy()
 
    //Make sure the menus/toolbar states get updated
    mTrackPanel->Refresh(false);
+
+   if (mHistoryWindow)
+      mHistoryWindow->UpdateDisplay();
 }
 
 void AudacityProject::OnPaste()
@@ -4212,7 +4221,7 @@ void AudacityProject::OnPaste()
    double t1 = mViewInfo.selectedRegion.t1();
 
    TrackListIterator iter(GetTracks());
-   TrackListIterator clipIter(msClipboard.get());
+   TrackListConstIterator clipIter(msClipboard.get());
 
    Track *n = iter.First();
    const Track *c = clipIter.First();
@@ -4457,8 +4466,8 @@ bool AudacityProject::HandlePasteNothingSelected()
       return false;
    else
    {
-      TrackListIterator iterClip(msClipboard.get());
-      Track* pClip = iterClip.First();
+      TrackListConstIterator iterClip(msClipboard.get());
+      auto pClip = iterClip.First();
       if (!pClip)
          return true; // nothing to paste
 

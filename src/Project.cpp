@@ -4861,6 +4861,9 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
    msClipT0 = regions.front().start;
    msClipT1 = regions.back().end;
+
+   if (mHistoryWindow)
+      mHistoryWindow->UpdateDisplay();
 }
 
 
