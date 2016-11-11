@@ -55,7 +55,7 @@ BEGIN_EVENT_TABLE(HistoryWindow, wxDialogWrapper)
 END_EVENT_TABLE()
 
 HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
-   wxDialogWrapper((wxWindow*)parent, wxID_ANY, wxString(_("Undo History")),
+   wxDialogWrapper((wxWindow*)parent, wxID_ANY, wxString(_("History")),
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
