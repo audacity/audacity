@@ -18,5 +18,5 @@ before_install:
 language:
     - cpp
 script:
-    - aclocal --install -I m4 && automake && ./configure --prefix=/app && make
+    - aclocal --install -I m4 && automake && ./configure --prefix=/app && make && sudo make install
     - bash -ex scripts/appimage.sh
