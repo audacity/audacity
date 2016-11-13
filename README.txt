@@ -1,3 +1,4 @@
+# Audacity [![Build Status](https://travis-ci.org/audacity/audacity.svg?branch=master)]
 
 Audacity(R): A Free, Cross-Platform Digital Audio Editor
   WWW: http://audacityteam.org/
