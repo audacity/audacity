@@ -140,7 +140,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("&Select then act on entire project, if no region selected"),
+      S.TieCheckBox(_("&Select then act on entire project, if no audio selected"),
                     wxT("/GUI/SelectAllOnNone"),
                     true);
       /* i18n-hint: cut-lines are a lines indicating where to cut.*/
