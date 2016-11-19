@@ -759,7 +759,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       /* i18n-hint: (verb) Start or Stop audio playback*/
       c->AddItem(wxT("PlayStop"), _("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"));
-      c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("Shift+A"));
+      c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("X"));
       c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"),
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag,
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag);
