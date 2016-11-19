@@ -909,15 +909,15 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0,
+      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
 #endif
 
-      c->AddItem(wxT("AddLabel"), _("Add Label At &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
+      c->AddItem(wxT("AddLabel"), _("Add Label at &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
-      c->AddItem(wxT("AddLabelPlaying"), _("Add Label At &Playback Position"),
+      c->AddItem(wxT("AddLabelPlaying"), _("Add Label at &Playback Position"),
          FN(OnAddLabelPlaying),
 #ifdef __WXMAC__
          wxT("Ctrl+."),
