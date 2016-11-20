@@ -6,9 +6,10 @@
 
   Joshua Haberman
 
-  Handles importing MPEG-4 audio files, including AAC and Apple Lossless,
-  on Mac OS X.  Could be modified to support QuickTime importing on
-  Windows, too.
+  On OS X, handles import of MPEG-4 audio including AAC and Apple 
+  Lossless, import of audio from MPEG-4 video files, and import of
+  AIF(F)/AIFC files (AIF(F) might contain content libsndfile can't 
+  handle). Could be modified to support QuickTime import on Windows.
 
 **********************************************************************/
 
@@ -20,9 +21,13 @@
 
 static const wxChar *exts[] =
 {
+   wxT("aif"),
+   wxT("aifc"),
+   wxT("aiff"),
    wxT("mov"),
    wxT("aac"),
-   wxT("m4a")
+   wxT("m4a"),
+   wxT("mp4")
 };
 
 #ifndef USE_QUICKTIME
