@@ -558,7 +558,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
       c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
-      c->AddItem(wxT("SelCursorSavedCursor"), _("Cursor to Saved &Cursor Position"), FN(OnSelectCursorSavedCursor),
+      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Stored &Cursor Position"), FN(OnSelectCursorStoredCursor),
          wxT(""), TracksExistFlag, TracksExistFlag);
 
 
@@ -603,7 +603,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SelRestore"), _("Regio&n Restore"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
-      c->AddItem(wxT("SaveCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionSave),
+      c->AddItem(wxT("StoreCursorPosition"), _("Store Cursor Pos&ition"), FN(OnCursorPositionStore),
          WaveTracksExistFlag,
          WaveTracksExistFlag);
 
@@ -5185,12 +5185,12 @@ void AudacityProject::OnSelectStartCursor()
    mTrackPanel->Refresh(false);
 }
 
-void AudacityProject::OnSelectCursorSavedCursor()
+void AudacityProject::OnSelectCursorStoredCursor()
 {
-   if (mCursorPositionHasBeenSaved) {
+   if (mCursorPositionHasBeenStored) {
       double cursorPositionCurrent = IsAudioActive() ? gAudioIO->GetStreamTime() : mViewInfo.selectedRegion.t0();
-      mViewInfo.selectedRegion.setTimes(std::min(cursorPositionCurrent, mCursorPositionSaved),
-         std::max(cursorPositionCurrent, mCursorPositionSaved));
+      mViewInfo.selectedRegion.setTimes(std::min(cursorPositionCurrent, mCursorPositionStored),
+         std::max(cursorPositionCurrent, mCursorPositionStored));
 
       ModifyState(false);
       mTrackPanel->Refresh(false);
@@ -5913,10 +5913,10 @@ void AudacityProject::OnSelectionSave()
    mRegionSave =  mViewInfo.selectedRegion;
 }
 
-void AudacityProject::OnCursorPositionSave()
+void AudacityProject::OnCursorPositionStore()
 {
-   mCursorPositionSaved = IsAudioActive() ? gAudioIO->GetStreamTime() : mViewInfo.selectedRegion.t0();
-   mCursorPositionHasBeenSaved = true;
+   mCursorPositionStored = IsAudioActive() ? gAudioIO->GetStreamTime() : mViewInfo.selectedRegion.t0();
+   mCursorPositionHasBeenStored = true;
 }
 
 void AudacityProject::OnSelectionRestore()

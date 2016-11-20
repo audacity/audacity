@@ -270,7 +270,7 @@ void OnNextLowerPeakFrequency();
 #endif
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
-void OnSelectCursorSavedCursor();
+void OnSelectCursorStoredCursor();
 void OnSelectSyncLockSel();
 void OnSelectAllTracks();
 
@@ -347,12 +347,12 @@ void HandleMixAndRender(bool toNewTrack);
 
 private:
    SelectedRegion mRegionSave{};
-   bool mCursorPositionHasBeenSaved{false};
-   double mCursorPositionSaved;
+   bool mCursorPositionHasBeenStored{false};
+   double mCursorPositionStored;
 public:
 void OnSelectionSave();
 void OnSelectionRestore();
-void OnCursorPositionSave();
+void OnCursorPositionStore();
 
 void OnCursorTrackStart();
 void OnCursorTrackEnd();
