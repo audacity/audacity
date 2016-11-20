@@ -1262,9 +1262,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
 
-   c->AddCommand(wxT("MoveToNextLabel"), _("Move to Next Label"), FN(OnMoveToNextLabel), wxT("Alt+Right"),
+   c->AddCommand(wxT("MoveToNextLabel"), _("Move to Next Label"), FN(OnMoveToNextLabel),
       CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
-   c->AddCommand(wxT("MoveToPrevLabel"), _("Move to Previous Label"), FN(OnMoveToPrevLabel), wxT("Alt+Left"),
+   c->AddCommand(wxT("MoveToPrevLabel"), _("Move to Previous Label"), FN(OnMoveToPrevLabel),
       CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
 
 #ifdef __WXMAC__
