@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-11-20 18:10+0000\n"
-"PO-Revision-Date: 2016-08-22 18:29+0200\n"
+"POT-Creation-Date: 2016-11-20 20:52+0000\n"
+"PO-Revision-Date: 2016-10-18 19:24+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.10\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
@@ -128,7 +128,7 @@ msgstr "Encabeix &verticalment"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:773
 msgid "Split &Horizontally"
-msgstr ""
+msgstr "Encabeix &horitzontalment"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:775
 msgid "Show S&cript"
@@ -152,7 +152,7 @@ msgstr "Barres d'eines"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
 msgid "&Go\tF5"
-msgstr "&Ves\tF5"
+msgstr "&Vés\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:786
 msgid "&Stop\tF6"
@@ -845,7 +845,7 @@ msgid ""
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
-"Si feu funcionar simultàniament dues còpies d'Audacity us\n"
+"Si executeu simultàniament dues còpies d'Audacity, us\n"
 "podeu trobar amb pèrdua de dades, o que falli el sistema.\n"
 "\n"
 
@@ -1088,7 +1088,7 @@ msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
 msgstr ""
-"Alguns projectes no es van desar bé la darrera vegada que es va utilitzar "
+"Alguns projectes no es van desar bé l’última vegada que es va executar "
 "Audacity.\n"
 "Per sort, els projectes següents poden ser recuperats de manera automàtica:"
 
@@ -1104,7 +1104,7 @@ msgstr "Nom"
 #: src/AutoRecovery.cpp:92
 msgid "After recovery, save the project to save the changes to disk."
 msgstr ""
-"Un cop recuperat, deseu el projecte per tal de guardar els canvis al disc."
+"Un cop recuperat, deseu el projecte per tal de desar els canvis al disc."
 
 #: src/AutoRecovery.cpp:96
 msgid "Quit Audacity"
@@ -1375,7 +1375,7 @@ msgid ""
 "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
 msgstr ""
-"Si copieu aquests fitxers dins del vostre projecte eliminareu aquesta "
+"Si copieu aquests fitxers dins del vostre projecte, eliminareu aquesta "
 "dependència.\n"
 "Això és més segur, però requereix més espai de disc."
 
@@ -1452,7 +1452,7 @@ msgid ""
 "If you proceed, your project will not be saved to disk. Is this what you "
 "want?"
 msgstr ""
-"Si ho feu, el vostre projecte no es guardarà al disc. És això el que voleu?"
+"Si ho feu, el vostre projecte no es desarà al disc. És això el que voleu?"
 
 #: src/Dependencies.cpp:546
 msgid ""
@@ -1468,7 +1468,7 @@ msgstr ""
 "\n"
 "Si modifiqueu el projecte fent que tingui dependències externes de fitxers, "
 "deixarà de ser \"autocontingut\". En aquest estat, si el deseu sense copiar-"
-"hi tots els fitxers externs podríeu perdre dades."
+"hi tots els fitxers externs, podríeu perdre dades."
 
 #: src/Dependencies.cpp:551
 msgid "Dependency Check"
@@ -1615,7 +1615,7 @@ msgstr ""
 "Observeu que en la segona opció el so \n"
 "no pot ser un silenci. \n"
 "\n"
-"Si escolliu la tercera opció es desarà el \n"
+"Si escolliu la tercera opció, es desarà el \n"
 "projecte en el seu estat actual, a no ser que escolliu \"Tanca \n"
 "el projecte immediatament\" en posteriors avisos d'error."
 
@@ -1699,7 +1699,7 @@ msgstr ""
 "podreu intentar localitzar i restablir els fitxers desapareguts \n"
 "a la seva ubicació prèvia. \n"
 "\n"
-"Si escolliu la segona opció tingueu en compte que \n"
+"Si escolliu la segona opció, tingueu en compte que \n"
 "l'ona de so podria no mostrar el silenci."
 
 #: src/DirManager.cpp:1626
@@ -3403,7 +3403,7 @@ msgstr "Mou el focus a la primera pista"
 
 #: src/Menus.cpp:1182
 msgid "Move Focus to Last Track"
-msgstr "Mou el focus a la darrera pista"
+msgstr "Mou el focus a l’última pista"
 
 #: src/Menus.cpp:1185
 msgid "Move Focus to Previous and Select"
@@ -4541,8 +4541,8 @@ msgstr ""
 "\n"
 "Si l'heu desat, el projecte no tindrà cap pista.\n"
 "\n"
-"Per guardar les pistes que teníeu anteriorment obertes\n"
-"feu Cancel·la, Edita > Desfés fins que totes les pistes\n"
+"Per desar les pistes que teníeu anteriorment obertes:\n"
+"Cancel·la, Edita > Desfés fins que totes les pistes\n"
 "estiguin obertes, i després Fitxer > Desa el projecte."
 
 #: src/Project.cpp:2729
@@ -4704,7 +4704,7 @@ msgstr ""
 "Actualment el vostre projecte està buit.\n"
 "Si el deseu, el projecte no tindrà cap pista.\n"
 "\n"
-"Per guardar les pistes que teníeu anteriorment obertes:\n"
+"Per desar les pistes que teníeu anteriorment obertes:\n"
 "Feu clic a 'No', Edita > Desfés fins que totes les pistes\n"
 "estiguin obertes, i després Fitxer > Desa el projecte.\n"
 "\n"
@@ -5787,7 +5787,7 @@ msgstr "Edita, Preferències..."
 #: src/TrackPanel.cpp:1545
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-msgstr "Mode multi-eina: Feu %s per veure les preferències de ratolí i teclat."
+msgstr "Mode multieina: Feu %s per veure les preferències de ratolí i teclat."
 
 #: src/TrackPanel.cpp:1578
 msgid "Click and drag to set frequency bandwidth."
@@ -6215,7 +6215,7 @@ msgid ""
 "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
-"Hi ha hagut un problema amb la darrera acció. Si creieu que és degut\n"
+"Hi ha hagut un problema amb l’última acció. Si creieu que és degut\n"
 "a un error del programa, expliqueu-nos exactament com ha ocorregut."
 
 #: src/commands/CommandManager.cpp:1083
@@ -7373,8 +7373,8 @@ msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
 "keypad on telephones"
 msgstr ""
-"Genera tons duals multi freqüència (DTMF) com els que produeixen els "
-"telèfons de tecles"
+"Genera tons duals multifreqüència (DTMF) com els que produeixen els telèfons "
+"de tecles"
 
 #: src/effects/DtmfGen.cpp:307
 msgid "DTMF sequence:"
@@ -9529,7 +9529,7 @@ msgstr ""
 #: src/effects/ladspa/LadspaEffect.cpp:378 src/effects/lv2/LV2Effect.cpp:219
 #: src/effects/VST/VSTEffect.cpp:774
 msgid "audio to Audacity. When not compensating for this delay, you will "
-msgstr "l'àudio a Audacity. Si no compenseu aquest retard observareu "
+msgstr "l'àudio a Audacity. Si no compenseu aquest retard, observareu "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:371
 #: src/effects/ladspa/LadspaEffect.cpp:379 src/effects/lv2/LV2Effect.cpp:220
@@ -9877,7 +9877,7 @@ msgstr "Efectes VST"
 
 #: src/effects/VST/VSTEffect.cpp:319
 msgid "Adds the ability to use VST effects in Audacity."
-msgstr "Afegeix la capacitat d'utilitzar efectes VST amb Audacity:"
+msgstr "Afegeix la capacitat d'utilitzar efectes VST amb Audacity."
 
 #: src/effects/VST/VSTEffect.cpp:486
 #, c-format
@@ -9910,7 +9910,7 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp:752
 msgid "on each iteration. Smaller values will cause slower processing and "
 msgstr ""
-"en cada iteració. Si indiqueu valors petits s'alentirà el processament i "
+"en cada iteració. Si indiqueu valors petits, s’alentirà el processament i "
 
 #: src/effects/VST/VSTEffect.cpp:753
 msgid "some effects require 8192 samples or less to work properly. However "
@@ -10285,8 +10285,8 @@ msgstr "FFmpeg : ERROR - Queden massa dades."
 #: src/export/ExportFFmpeg.cpp:730
 msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
 msgstr ""
-"FFmpeg : ERROR - No s'ha pogut escriure la darrera trama d'àudio al fitxer "
-"de sortida."
+"FFmpeg : ERROR - No s'ha pogut escriure l’última trama d'àudio al fitxer de "
+"sortida."
 
 #: src/export/ExportFFmpeg.cpp:780
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
@@ -10805,7 +10805,7 @@ msgstr "No podeu eliminar un valor predefinit que no tingui nom"
 #: src/export/ExportFFmpegDialogs.cpp:1745
 #, c-format
 msgid "Delete preset '%s'?"
-msgstr "Voleu eliminar la el valor predefinit '%s'?"
+msgstr "Voleu eliminar el valor predefinit '%s'?"
 
 #: src/export/ExportFFmpegDialogs.cpp:1764
 msgid "You can't save a preset without name"
@@ -11048,7 +11048,7 @@ msgid ""
 msgstr ""
 "Esteu enllaçant amb lame_enc.dll v%d.%d. Aquesta versió no és compatible amb "
 "Audacity %d.%d.%d.\n"
-"Si us plau, descarregueu la darrera versió de la biblioteca LAME MP3."
+"Si us plau, descarregueu l’última versió de la biblioteca LAME MP3."
 
 #: src/export/ExportMP3.cpp:1446
 msgid ""
@@ -11566,7 +11566,7 @@ msgid ""
 "Data."
 msgstr ""
 "Audacity no reconeix el tipus del fitxer '%s'.\n"
-"Si conté so no comprimit proveu d'importar-lo amb l'opció \"Importa dades "
+"Si conté so no comprimit, proveu d'importar-lo amb l'opció \"Importa dades "
 "crues\"."
 
 #: src/import/Import.cpp:687
@@ -11738,32 +11738,32 @@ msgstr "No m'a&visis més i utilitza sempre aquesta elecció"
 msgid "Importing %s"
 msgstr "S'està important %s"
 
-#: src/import/ImportQT.cpp:19
+#: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "Fitxers QuickTime"
 
-#: src/import/ImportQT.cpp:252
+#: src/import/ImportQT.cpp:257
 msgid "Unable to start QuickTime extraction"
 msgstr "No s'ha pogut iniciar l'extracció des del QuickTime"
 
-#: src/import/ImportQT.cpp:262
+#: src/import/ImportQT.cpp:267
 msgid "Unable to set QuickTime render quality"
 msgstr "No s'ha pogut establir la qualitat de presentació del QuickTime"
 
-#: src/import/ImportQT.cpp:272
+#: src/import/ImportQT.cpp:277
 msgid "Unable to set QuickTime discrete channels property"
 msgstr ""
 "No s'ha pogut establir la propietat de nombre discret de canals del QuickTime"
 
-#: src/import/ImportQT.cpp:283
+#: src/import/ImportQT.cpp:288
 msgid "Unable to get QuickTime sample size property"
 msgstr "No s'ha pogut llegir la propietat de mida de les mostres del QuickTime"
 
-#: src/import/ImportQT.cpp:294
+#: src/import/ImportQT.cpp:299
 msgid "Unable to retrieve stream description"
 msgstr "No s'ha pogut obtenir la descripció del flux de dades"
 
-#: src/import/ImportQT.cpp:353
+#: src/import/ImportQT.cpp:358
 msgid "Unable to get fill buffer"
 msgstr "No s'ha pogut obtenir una memòria intermèdia d'ompliment"
 
@@ -11786,7 +11786,7 @@ msgstr "Ordre de bits no significatiu (endianness)"
 #. know the correct technical word.
 #: src/import/ImportRaw.cpp:372
 msgid "Little-endian"
-msgstr "El bit menor darrera (little-endian)"
+msgstr "El bit menor darrere (little-endian)"
 
 #  i18n-hint: Refers to byte-order.  Don't translate this if you don't
 #  know the correct technical word.
@@ -11794,7 +11794,7 @@ msgstr "El bit menor darrera (little-endian)"
 #. know the correct technical word.
 #: src/import/ImportRaw.cpp:375
 msgid "Big-endian"
-msgstr "El bit major darrera (big-endian)"
+msgstr "El bit major darrere (big-endian)"
 
 #. i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
 #. know the correct technical word.
@@ -11959,7 +11959,7 @@ msgid ""
 "be cached in memory and will be written to disk."
 msgstr ""
 "Si la memòria disponible del sistema cau per sota d'aquest valor, el so ja "
-"no es guardarà a\n"
+"no es desarà\n"
 "a la memòria cau, sinó que s'escriurà directament al disc."
 
 #: src/prefs/DirectoriesPrefs.cpp:138
@@ -12054,7 +12054,7 @@ msgstr "Comprova si hi ha connectors actualitzats quan s'iniciï Audacity"
 
 #: src/prefs/EffectsPrefs.cpp:145
 msgid "Rescan plugins next time Audacity is started"
-msgstr "Torna a escanejar els efectes la próxima vegada que Audacity s'iniciï"
+msgstr "Torna a escanejar els efectes la següent vegada que Audacity s'iniciï"
 
 #: src/prefs/EffectsPrefs.cpp:153
 msgid "Instruction Set"
@@ -12391,7 +12391,7 @@ msgstr ""
 "\n"
 "\t'%s'\n"
 "\n"
-"Feu clic a D'Acord per assignar la drecera a\n"
+"Feu clic a D’acord per assignar la drecera a\n"
 "\n"
 "\t'%s'\n"
 "\n"
@@ -14828,7 +14828,7 @@ msgstr "S'ha produït un error en escriure al fitxer"
 #~ msgstr "Desplaça el clip en el temps, o mou-lo amunt o avall entre pistes"
 
 #~ msgid "Zoom in or out on Mouse Pointer"
-#~ msgstr "Amplia o redueix allò assenyalat pel punter del ratolí"
+#~ msgstr "Amplia o redueix el zoom amb el punter del ratolí"
 
 #~ msgid ") / Loop Play ("
 #~ msgstr ") / Reprodueix en bucle ("
@@ -14852,7 +14852,7 @@ msgstr "S'ha produït un error en escriure al fitxer"
 #~ "+Doble clic per netejar lliscant, Clic+arrossegar per fullejar"
 
 #~ msgid "Multi-Tool Mode"
-#~ msgstr "Mode multi-eina"
+#~ msgstr "Mode multieina"
 
 #~ msgid "Preferences..."
 #~ msgstr "Preferències..."
