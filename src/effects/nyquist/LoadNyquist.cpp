@@ -36,6 +36,7 @@ const static wxChar *kShippedEffects[] =
    wxT("rhythmtrack.ny"),
    wxT("rissetdrum.ny"),
    wxT("sample-data-export.ny"),
+   wxT("sample-data-import.ny"),
    wxT("SilenceMarker.ny"),
    wxT("SoundFinder.ny"),
    wxT("SpectralEditMulti.ny"),
