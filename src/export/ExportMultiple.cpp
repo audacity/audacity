@@ -999,11 +999,11 @@ wxString ExportMultiple::MakeFileName(const wxString &input)
       wxString excluded = ::wxJoin( Internat::GetExcludedCharacters(), wxChar(' ') );
       // TODO: For Russian langauge we should have separate cases for 2 and more than 2 letters.
       if( excluded.Length() > 1 ){
-         // i18ln-hint: The second %s gives some letters that can't be used.
+         // i18n-hint: The second %s gives some letters that can't be used.
          msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input.c_str(),
             excluded.c_str());
       } else {
-         // i18ln-hint: The second %s gives a letter that can't be used.
+         // i18n-hint: The second %s gives a letter that can't be used.
          msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\nUse..."), input.c_str(),
             excluded.c_str());
       }
