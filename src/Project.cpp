@@ -91,6 +91,7 @@ scroll information.  It also has some status flags.
 #endif
 #endif
 
+#include "AudacityException.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
 #include "AutoRecovery.h"
@@ -446,19 +447,25 @@ public:
 
    bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames) override
    {
-      //sort by OD non OD.  load Non OD first so user can start editing asap.
-      wxArrayString sortednames(filenames);
+      // Experiment shows that this function can be reached while there is no
+      // catch block above in wxWidgets.  So stop all exceptions here.
+      return GuardedCall< bool > ( [&] {
+         //sort by OD non OD.  load Non OD first so user can start editing asap.
+         wxArrayString sortednames(filenames);
 
-      ODManager::Pauser pauser;
+         ODManager::Pauser pauser;
 
-      sortednames.Sort(CompareNoCaseFileName);
-      for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
+         sortednames.Sort(CompareNoCaseFileName);
 
-         mProject->Import(sortednames[i]);
-      }
-      mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+         for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
 
-      return true;
+            mProject->Import(sortednames[i]);
+         }
+
+         mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+
+         return true;
+      } );
    }
 
 private:
@@ -487,7 +494,14 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    WaveTrackArray trackArray;
-   mProject->Import(strAttr, &trackArray);
+
+   // Guard this call so that C++ exceptions don't propagate through
+   // the expat library
+   GuardedCall< void >(
+      [&] { mProject->Import(strAttr, &trackArray); },
+      [&] (AudacityException*) { trackArray.clear(); }
+   );
+
    if (trackArray.empty())
       return false;
 

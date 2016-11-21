@@ -39,6 +39,7 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 
+#include "../AudacityException.h"
 #include "../Prefs.h"
 #include "Import.h"
 #include "ImportPlugin.h"
@@ -480,59 +481,61 @@ enum mad_flow output_cb(void *_data,
                         struct mad_header const * WXUNUSED(header),
                         struct mad_pcm *pcm)
 {
-   int samplerate;
-   struct private_data *data = (struct private_data *)_data;
+   // Don't C++ exceptions propagate through mad
+   return GuardedCall< mad_flow > ( [&] {
+      int samplerate;
+      struct private_data *data = (struct private_data *)_data;
 
-   samplerate= pcm->samplerate;
-   auto channels  = pcm->channels;
-   const auto samples   = pcm->length;
+      samplerate= pcm->samplerate;
+      auto channels  = pcm->channels;
+      const auto samples   = pcm->length;
 
-   /* If this is the first run, we need to create the WaveTracks that
-    * will hold the data.  We do this now because now is the first
-    * moment when we know how many channels there are. */
+      /* If this is the first run, we need to create the WaveTracks that
+       * will hold the data.  We do this now because now is the first
+       * moment when we know how many channels there are. */
 
-   if(data->channels.empty()) {
-      data->channels.resize(channels);
+      if(data->channels.empty()) {
+         data->channels.resize(channels);
 
-      sampleFormat format = (sampleFormat) gPrefs->
-         Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+         sampleFormat format = (sampleFormat) gPrefs->
+            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
-      for(auto &channel: data->channels) {
-         channel = data->trackFactory->NewWaveTrack(format, samplerate);
-         channel->SetChannel(Track::MonoChannel);
+         for(auto &channel: data->channels) {
+            channel = data->trackFactory->NewWaveTrack(format, samplerate);
+            channel->SetChannel(Track::MonoChannel);
+         }
+
+         /* special case: 2 channels is understood to be stereo */
+         if(channels == 2) {
+            data->channels.begin()->get()->SetChannel(Track::LeftChannel);
+            data->channels.rbegin()->get()->SetChannel(Track::RightChannel);
+            data->channels.begin()->get()->SetLinked(true);
+         }
+         data->numChannels = channels;
+      }
+      else {
+         // This is not the first run, protect us from libmad glitching
+         // on the number of channels
+         channels = data->numChannels;
       }
 
-      /* special case: 2 channels is understood to be stereo */
-      if(channels == 2) {
-         data->channels.begin()->get()->SetChannel(Track::LeftChannel);
-         data->channels.rbegin()->get()->SetChannel(Track::RightChannel);
-         data->channels.begin()->get()->SetLinked(true);
-      }
-      data->numChannels = channels;
-   }
-   else {
-      // This is not the first run, protect us from libmad glitching
-      // on the number of channels
-      channels = data->numChannels;
-   }
+      /* TODO: get rid of this by adding fixed-point support to SampleFormat.
+       * For now, we allocate temporary float buffers to convert the fixed
+       * point samples into something we can feed to the WaveTrack.  Allocating
+       * big blocks of data like this isn't a great idea, but it's temporary.
+       */
+      FloatBuffers channelBuffers{ channels, samples };
+      for(size_t smpl = 0; smpl < samples; smpl++)
+         for(int chn = 0; chn < channels; chn++)
+            channelBuffers[chn][smpl] = scale(pcm->samples[chn][smpl]);
 
-   /* TODO: get rid of this by adding fixed-point support to SampleFormat.
-    * For now, we allocate temporary float buffers to convert the fixed
-    * point samples into something we can feed to the WaveTrack.  Allocating
-    * big blocks of data like this isn't a great idea, but it's temporary.
-    */
-   FloatBuffers channelBuffers{ channels, samples };
-
-   for (size_t smpl = 0; smpl < samples; smpl++)
       for(int chn = 0; chn < channels; chn++)
-         channelBuffers[chn][smpl] = scale(pcm->samples[chn][smpl]);
+         data->channels[chn]->Append((samplePtr)channelBuffers[chn].get(),
+                                     floatSample,
+                                     samples);
 
-   for (int chn = 0; chn < channels; chn++)
-      data->channels[chn]->Append((samplePtr)channelBuffers[chn].get(),
-                                  floatSample,
-                                  samples);
-
-   return MAD_FLOW_CONTINUE;
+         return MAD_FLOW_CONTINUE;
+   }, MakeSimpleGuard(MAD_FLOW_BREAK) );
 }
 
 enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stream),

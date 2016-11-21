@@ -46,6 +46,7 @@ Licensed under the GNU General Public License v2 or later
 #endif
 
 // all the includes live here by default
+#include "../AudacityException.h"
 #include "../SampleFormat.h"
 #include "../Tags.h"
 #include "../Internat.h"
@@ -489,20 +490,23 @@ inline void GstSampleUnref(GstSample *p) { gst_sample_unref(p); } // I can't use
 static GstFlowReturn
 GStreamerNewSample(GstAppSink *appsink, gpointer data)
 {
-   GStreamerImportFileHandle *handle = (GStreamerImportFileHandle *)data;
-   static GMutex mutex;
+   // Don't let C++ exceptions propagate through GStreamer
+   return GuardedCall< GstFlowReturn > ( [&] {
+      GStreamerImportFileHandle *handle = (GStreamerImportFileHandle *)data;
+      static GMutex mutex;
 
-   // Get the sample
-   std::unique_ptr < GstSample, Deleter< GstSample, GstSampleUnref> >
-      sample{ gst_app_sink_pull_sample(appsink) };
+      // Get the sample
+      std::unique_ptr < GstSample, Deleter< GstSample, GstSampleUnref> >
+         sample{ gst_app_sink_pull_sample(appsink) };
 
-   // We must single thread here to prevent concurrent use of the
-   // Audacity track functions.
-   g_mutex_locker locker{ mutex };
+      // We must single thread here to prevent concurrent use of the
+      // Audacity track functions.
+      g_mutex_locker locker{ mutex };
 
-   handle->OnNewSample(GETCTX(appsink), sample.get());
+      handle->OnNewSample(GETCTX(appsink), sample.get());
 
-   return GST_FLOW_OK;
+      return GST_FLOW_OK;
+   }, MakeSimpleGuard(GST_FLOW_ERROR) );
 }
 
 // ----------------------------------------------------------------------------

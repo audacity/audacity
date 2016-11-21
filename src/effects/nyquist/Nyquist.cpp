@@ -45,6 +45,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 
 #include "../../AudacityApp.h"
+#include "../../AudacityException.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
@@ -1832,23 +1833,26 @@ int NyquistEffect::StaticPutCallback(float *buffer, int channel,
 int NyquistEffect::PutCallback(float *buffer, int channel,
                                long start, long len, long totlen)
 {
-   if (channel == 0) {
-      double progress = mScale*((float)(start+len)/totlen);
+   // Don't let C++ exceptions propagate through the Nyquist library
+   return GuardedCall<int>( [&] {
+      if (channel == 0) {
+         double progress = mScale*((float)(start+len)/totlen);
 
-      if (progress > mProgressOut) {
-         mProgressOut = progress;
+         if (progress > mProgressOut) {
+            mProgressOut = progress;
+         }
+
+         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+            return -1;
+         }
       }
 
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
-         return -1;
+      if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
+         return 0;  // success
       }
-   }
 
-   if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
-      return 0;  // success
-   }
-
-   return -1; // failure
+      return -1; // failure
+   }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
 }
 
 void NyquistEffect::StaticOutputCallback(int c, void *This)
