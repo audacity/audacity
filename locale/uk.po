@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-11-20 18:10+0000\n"
-"PO-Revision-Date: 2016-11-20 22:49+0200\n"
+"POT-Creation-Date: 2016-11-21 10:44+0000\n"
+"PO-Revision-Date: 2016-06-20 21:21+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
@@ -6647,7 +6647,7 @@ msgid "Noise Floor:"
 msgstr "Нижній поріг шуму:"
 
 #: src/effects/Compressor.cpp:241 src/effects/Distortion.cpp:81
-#: src/effects/Distortion.cpp:126
+#: src/effects/Distortion.cpp:128
 msgid "Noise Floor"
 msgstr "Нижній поріг шуму"
 
@@ -7045,11 +7045,11 @@ msgstr "Блокування DC"
 msgid "Threshold dB"
 msgstr "Поріг у дБ"
 
-#: src/effects/Distortion.cpp:82 src/effects/Distortion.cpp:127
+#: src/effects/Distortion.cpp:82 src/effects/Distortion.cpp:129
 msgid "Parameter 1"
 msgstr "Параметр 1"
 
-#: src/effects/Distortion.cpp:83 src/effects/Distortion.cpp:128
+#: src/effects/Distortion.cpp:83 src/effects/Distortion.cpp:130
 msgid "Parameter 2"
 msgstr "Параметр 2"
 
@@ -7057,198 +7057,198 @@ msgstr "Параметр 2"
 msgid "Repeats"
 msgstr "Повторення"
 
-#: src/effects/Distortion.cpp:101
+#: src/effects/Distortion.cpp:102
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
 msgstr "Жорстке обрізання -12 дБ, 80% підсилення"
 
-#: src/effects/Distortion.cpp:102
+#: src/effects/Distortion.cpp:104
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
 msgstr "М’яке обрізання -12 дБ, 80% підсилення"
 
-#: src/effects/Distortion.cpp:103
+#: src/effects/Distortion.cpp:105
 msgid "Fuzz Box"
 msgstr "Нечіткий блок"
 
-#: src/effects/Distortion.cpp:104
+#: src/effects/Distortion.cpp:106
 msgid "Walkie-talkie"
 msgstr "Портативна рація"
 
-#: src/effects/Distortion.cpp:105
+#: src/effects/Distortion.cpp:107
 msgid "Blues drive sustain"
 msgstr "Утримання блюзового драйву"
 
-#: src/effects/Distortion.cpp:106
+#: src/effects/Distortion.cpp:108
 msgid "Light Crunch Overdrive"
 msgstr "Легке перевантаження з рипінням"
 
-#: src/effects/Distortion.cpp:107
+#: src/effects/Distortion.cpp:109
 msgid "Heavy Overdrive"
 msgstr "Важке перевантаження"
 
-#: src/effects/Distortion.cpp:108
+#: src/effects/Distortion.cpp:110
 msgid "3rd Harmonic (Perfect Fifth)"
 msgstr "3-тя гармоніка (чиста квінта)"
 
-#: src/effects/Distortion.cpp:109
+#: src/effects/Distortion.cpp:111
 msgid "Valve Overdrive"
 msgstr "Стулкове перевантаження"
 
-#: src/effects/Distortion.cpp:110
+#: src/effects/Distortion.cpp:112
 msgid "2nd Harmonic (Octave)"
 msgstr "2-га гармоніка (октава)"
 
-#: src/effects/Distortion.cpp:111
+#: src/effects/Distortion.cpp:113
 msgid "Gated Expansion Distortion"
 msgstr "Викривлення шлюзовим розширенням"
 
-#: src/effects/Distortion.cpp:112
+#: src/effects/Distortion.cpp:114
 msgid "Leveller, Light, -70dB noise floor"
 msgstr "Вирівнювач, легко, з порогом шуму -70 дБ"
 
-#: src/effects/Distortion.cpp:113
+#: src/effects/Distortion.cpp:115
 msgid "Leveller, Moderate, -70dB noise floor"
 msgstr "Вирівнювач, посередньо, з порогом шуму -70 дБ"
 
-#: src/effects/Distortion.cpp:114
+#: src/effects/Distortion.cpp:116
 msgid "Leveller, Heavy, -70dB noise floor"
 msgstr "Вирівнювач, жорстко, з порогом шуму -70 дБ"
 
-#: src/effects/Distortion.cpp:115
+#: src/effects/Distortion.cpp:117
 msgid "Leveller, Heavier, -70dB noise floor"
 msgstr "Вирівнювач, ще жорсткіше, з порогом шуму -70 дБ"
 
-#: src/effects/Distortion.cpp:116
+#: src/effects/Distortion.cpp:118
 msgid "Leveller, Heaviest, -70dB noise floor"
 msgstr "Вирівнювач, найжорсткіше, з порогом шуму -70 дБ"
 
-#: src/effects/Distortion.cpp:117
+#: src/effects/Distortion.cpp:119
 msgid "Half-wave Rectifier"
 msgstr "Напівміст"
 
-#: src/effects/Distortion.cpp:118
+#: src/effects/Distortion.cpp:120
 msgid "Full-wave Rectifier"
 msgstr "Повний міст (модуль)"
 
-#: src/effects/Distortion.cpp:119
+#: src/effects/Distortion.cpp:121
 msgid "Full-wave Rectifier (DC blocked)"
 msgstr "Повний міст (модуль) (з фіксуванням сталої)"
 
-#: src/effects/Distortion.cpp:120
+#: src/effects/Distortion.cpp:122
 msgid "Percussion Limiter"
 msgstr "Обмежувач перкусії"
 
-#: src/effects/Distortion.cpp:125
+#: src/effects/Distortion.cpp:127
 msgid "Upper Threshold"
 msgstr "Верхнє порогове значення"
 
-#: src/effects/Distortion.cpp:129
+#: src/effects/Distortion.cpp:131
 msgid "Number of repeats"
 msgstr "Кількість повторень"
 
-#: src/effects/Distortion.cpp:190
+#: src/effects/Distortion.cpp:192
 msgid "Waveshaping distortion effect"
 msgstr "Ефекти викривлення форми сигналу"
 
-#: src/effects/Distortion.cpp:342
+#: src/effects/Distortion.cpp:344
 msgid "Distortion type:"
 msgstr "Тип викривлення:"
 
-#: src/effects/Distortion.cpp:346
+#: src/effects/Distortion.cpp:348
 msgid "DC blocking filter"
 msgstr "Фільтр блокування сталої складової"
 
-#: src/effects/Distortion.cpp:353
+#: src/effects/Distortion.cpp:355
 msgid "Threshold controls"
 msgstr "Керування пороговими значеннями"
 
-#: src/effects/Distortion.cpp:393
+#: src/effects/Distortion.cpp:395
 msgid "Parameter controls"
 msgstr "Керування параметрами"
 
-#: src/effects/Distortion.cpp:672
+#: src/effects/Distortion.cpp:674
 msgid "Clipping level"
 msgstr "Рівень зрізання"
 
-#: src/effects/Distortion.cpp:674
+#: src/effects/Distortion.cpp:676
 msgid "Drive"
 msgstr "Драйв"
 
-#: src/effects/Distortion.cpp:675 src/effects/Distortion.cpp:689
+#: src/effects/Distortion.cpp:677 src/effects/Distortion.cpp:691
 msgid "Make-up Gain"
 msgstr "Підсилення"
 
-#: src/effects/Distortion.cpp:686
+#: src/effects/Distortion.cpp:688
 msgid "Clipping threshold"
 msgstr "Поріг обрізання"
 
-#: src/effects/Distortion.cpp:688
+#: src/effects/Distortion.cpp:690
 msgid "Hardness"
 msgstr "Жорсткість"
 
-#: src/effects/Distortion.cpp:702 src/effects/Distortion.cpp:716
-#: src/effects/Distortion.cpp:730 src/effects/Distortion.cpp:744
-#: src/effects/Distortion.cpp:758 src/effects/Distortion.cpp:772
-#: src/effects/Distortion.cpp:800
+#: src/effects/Distortion.cpp:704 src/effects/Distortion.cpp:718
+#: src/effects/Distortion.cpp:732 src/effects/Distortion.cpp:746
+#: src/effects/Distortion.cpp:760 src/effects/Distortion.cpp:774
+#: src/effects/Distortion.cpp:802
 msgid "Distortion amount"
 msgstr "Потужність викривлення"
 
-#: src/effects/Distortion.cpp:703 src/effects/Distortion.cpp:717
-#: src/effects/Distortion.cpp:731 src/effects/Distortion.cpp:745
-#: src/effects/Distortion.cpp:773
+#: src/effects/Distortion.cpp:705 src/effects/Distortion.cpp:719
+#: src/effects/Distortion.cpp:733 src/effects/Distortion.cpp:747
+#: src/effects/Distortion.cpp:775
 msgid "Output level"
 msgstr "Рівень виведення"
 
-#: src/effects/Distortion.cpp:746
+#: src/effects/Distortion.cpp:748
 msgid "Repeat processing"
 msgstr "Повторити обробку"
 
-#: src/effects/Distortion.cpp:759
+#: src/effects/Distortion.cpp:761
 msgid "Harmonic brightness"
 msgstr "Гармонійна яскравість"
 
-#: src/effects/Distortion.cpp:786
+#: src/effects/Distortion.cpp:788
 msgid "Levelling fine adjustment"
 msgstr "Коригування параметрів вирівнювання"
 
-#: src/effects/Distortion.cpp:788
+#: src/effects/Distortion.cpp:790
 msgid "Degree of Levelling"
 msgstr "Ступінь вирівнювання"
 
-#: src/effects/Distortion.cpp:812
+#: src/effects/Distortion.cpp:814
 msgid "dB Limit"
 msgstr "Обмежувач у дБ"
 
-#: src/effects/Distortion.cpp:814
+#: src/effects/Distortion.cpp:816
 msgid "Wet level"
 msgstr "Рівень теплого"
 
-#: src/effects/Distortion.cpp:815
+#: src/effects/Distortion.cpp:817
 msgid "Residual level"
 msgstr "Залишковий рівень"
 
-#: src/effects/Distortion.cpp:831
+#: src/effects/Distortion.cpp:833
 msgid " (Not Used):"
 msgstr " (не використовується):"
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:836
+#: src/effects/Distortion.cpp:838
 msgid " (-100 to 0 dB):"
 msgstr " (від -100 до 0 дБ):"
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:851
+#: src/effects/Distortion.cpp:853
 msgid " (-80 to -20 dB):"
 msgstr " (від -80 до -20 дБ):"
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:862 src/effects/Distortion.cpp:873
+#: src/effects/Distortion.cpp:864 src/effects/Distortion.cpp:875
 msgid " (0 to 100):"
 msgstr " (від 0 до 100):"
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:884
+#: src/effects/Distortion.cpp:886
 msgid " (0 to 5):"
 msgstr " (від 0 до 5):"
 
@@ -11182,6 +11182,7 @@ msgstr ""
 msgid "untitled"
 msgstr "без назви"
 
+#. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp:1003
 #, c-format
 msgid ""
@@ -11192,6 +11193,7 @@ msgstr ""
 "бути: %s\n"
 "Використовується…"
 
+#. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp:1007
 #, c-format
 msgid ""
@@ -11641,32 +11643,32 @@ msgstr "Більше не &попереджати, використовуват�
 msgid "Importing %s"
 msgstr "Імпортування %s"
 
-#: src/import/ImportQT.cpp:19
+#: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "Файли QuickTime"
 
-#: src/import/ImportQT.cpp:252
+#: src/import/ImportQT.cpp:257
 msgid "Unable to start QuickTime extraction"
 msgstr "Не вдалося почати видобування QuickTime"
 
-#: src/import/ImportQT.cpp:262
+#: src/import/ImportQT.cpp:267
 msgid "Unable to set QuickTime render quality"
 msgstr "Не вдалося встановити рівень якості відтворення QuickTime"
 
-#: src/import/ImportQT.cpp:272
+#: src/import/ImportQT.cpp:277
 msgid "Unable to set QuickTime discrete channels property"
 msgstr ""
 "Не вдалося встановити значення властивості дискретних каналів QuickTime"
 
-#: src/import/ImportQT.cpp:283
+#: src/import/ImportQT.cpp:288
 msgid "Unable to get QuickTime sample size property"
 msgstr "Не вдалося визначити властивість розміру семплу QuickTime"
 
-#: src/import/ImportQT.cpp:294
+#: src/import/ImportQT.cpp:299
 msgid "Unable to retrieve stream description"
 msgstr "Не вдається отримати опис потоку даних"
 
-#: src/import/ImportQT.cpp:353
+#: src/import/ImportQT.cpp:358
 msgid "Unable to get fill buffer"
 msgstr "Не вдалося отримати стан заповнення буфера"
 

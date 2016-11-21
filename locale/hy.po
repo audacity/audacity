@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-11-20 18:10+0000\n"
+"POT-Creation-Date: 2016-11-21 10:44+0000\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -6766,7 +6766,7 @@ msgid "Noise Floor:"
 msgstr "Աղմուկի ծածկ՝"
 
 #: src/effects/Compressor.cpp:241 src/effects/Distortion.cpp:81
-#: src/effects/Distortion.cpp:126
+#: src/effects/Distortion.cpp:128
 msgid "Noise Floor"
 msgstr "Աղմուկի ծածկ"
 
@@ -7180,12 +7180,12 @@ msgstr ""
 msgid "Threshold dB"
 msgstr "Շեմը %d դԲ"
 
-#: src/effects/Distortion.cpp:82 src/effects/Distortion.cpp:127
+#: src/effects/Distortion.cpp:82 src/effects/Distortion.cpp:129
 #, fuzzy
 msgid "Parameter 1"
 msgstr "Կարգավորել"
 
-#: src/effects/Distortion.cpp:83 src/effects/Distortion.cpp:128
+#: src/effects/Distortion.cpp:83 src/effects/Distortion.cpp:130
 #, fuzzy
 msgid "Parameter 2"
 msgstr "Կարգավորել"
@@ -7195,212 +7195,212 @@ msgstr "Կարգավորել"
 msgid "Repeats"
 msgstr "Կրկնել"
 
-#: src/effects/Distortion.cpp:101
-#, c-format
+#: src/effects/Distortion.cpp:102
+#, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
 msgstr ""
 
-#: src/effects/Distortion.cpp:102
-#, c-format
+#: src/effects/Distortion.cpp:104
+#, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
 msgstr ""
 
-#: src/effects/Distortion.cpp:103
+#: src/effects/Distortion.cpp:105
 msgid "Fuzz Box"
 msgstr ""
 
-#: src/effects/Distortion.cpp:104
+#: src/effects/Distortion.cpp:106
 msgid "Walkie-talkie"
 msgstr ""
 
-#: src/effects/Distortion.cpp:105
+#: src/effects/Distortion.cpp:107
 msgid "Blues drive sustain"
 msgstr ""
 
-#: src/effects/Distortion.cpp:106
+#: src/effects/Distortion.cpp:108
 msgid "Light Crunch Overdrive"
 msgstr ""
 
-#: src/effects/Distortion.cpp:107
+#: src/effects/Distortion.cpp:109
 msgid "Heavy Overdrive"
 msgstr ""
 
-#: src/effects/Distortion.cpp:108
+#: src/effects/Distortion.cpp:110
 msgid "3rd Harmonic (Perfect Fifth)"
 msgstr ""
 
-#: src/effects/Distortion.cpp:109
+#: src/effects/Distortion.cpp:111
 msgid "Valve Overdrive"
 msgstr ""
 
-#: src/effects/Distortion.cpp:110
+#: src/effects/Distortion.cpp:112
 msgid "2nd Harmonic (Octave)"
 msgstr ""
 
-#: src/effects/Distortion.cpp:111
+#: src/effects/Distortion.cpp:113
 msgid "Gated Expansion Distortion"
 msgstr ""
 
-#: src/effects/Distortion.cpp:112
+#: src/effects/Distortion.cpp:114
 msgid "Leveller, Light, -70dB noise floor"
 msgstr ""
 
-#: src/effects/Distortion.cpp:113
+#: src/effects/Distortion.cpp:115
 msgid "Leveller, Moderate, -70dB noise floor"
 msgstr ""
 
-#: src/effects/Distortion.cpp:114
+#: src/effects/Distortion.cpp:116
 msgid "Leveller, Heavy, -70dB noise floor"
 msgstr ""
 
-#: src/effects/Distortion.cpp:115
+#: src/effects/Distortion.cpp:117
 msgid "Leveller, Heavier, -70dB noise floor"
 msgstr ""
 
-#: src/effects/Distortion.cpp:116
+#: src/effects/Distortion.cpp:118
 msgid "Leveller, Heaviest, -70dB noise floor"
 msgstr ""
 
-#: src/effects/Distortion.cpp:117
+#: src/effects/Distortion.cpp:119
 msgid "Half-wave Rectifier"
 msgstr ""
 
-#: src/effects/Distortion.cpp:118
+#: src/effects/Distortion.cpp:120
 msgid "Full-wave Rectifier"
 msgstr ""
 
-#: src/effects/Distortion.cpp:119
+#: src/effects/Distortion.cpp:121
 msgid "Full-wave Rectifier (DC blocked)"
 msgstr ""
 
-#: src/effects/Distortion.cpp:120
+#: src/effects/Distortion.cpp:122
 msgid "Percussion Limiter"
 msgstr ""
 
-#: src/effects/Distortion.cpp:125
+#: src/effects/Distortion.cpp:127
 #, fuzzy
 msgid "Upper Threshold"
 msgstr "Շեմ"
 
-#: src/effects/Distortion.cpp:129
+#: src/effects/Distortion.cpp:131
 #, fuzzy
 msgid "Number of repeats"
 msgstr "Ժամաքանակ կրկնելու՝"
 
-#: src/effects/Distortion.cpp:190
+#: src/effects/Distortion.cpp:192
 msgid "Waveshaping distortion effect"
 msgstr ""
 
-#: src/effects/Distortion.cpp:342
+#: src/effects/Distortion.cpp:344
 #, fuzzy
 msgid "Distortion type:"
 msgstr "Այլակերպում"
 
-#: src/effects/Distortion.cpp:346
+#: src/effects/Distortion.cpp:348
 msgid "DC blocking filter"
 msgstr ""
 
-#: src/effects/Distortion.cpp:353
+#: src/effects/Distortion.cpp:355
 #, fuzzy
 msgid "Threshold controls"
 msgstr "Շեմ"
 
-#: src/effects/Distortion.cpp:393
+#: src/effects/Distortion.cpp:395
 #, fuzzy
 msgid "Parameter controls"
 msgstr "Կարգավորել"
 
-#: src/effects/Distortion.cpp:672
+#: src/effects/Distortion.cpp:674
 #, fuzzy
 msgid "Clipping level"
 msgstr "Կտրում"
 
-#: src/effects/Distortion.cpp:674
+#: src/effects/Distortion.cpp:676
 msgid "Drive"
 msgstr ""
 
-#: src/effects/Distortion.cpp:675 src/effects/Distortion.cpp:689
+#: src/effects/Distortion.cpp:677 src/effects/Distortion.cpp:691
 msgid "Make-up Gain"
 msgstr ""
 
-#: src/effects/Distortion.cpp:686
+#: src/effects/Distortion.cpp:688
 #, fuzzy
 msgid "Clipping threshold"
 msgstr "Աղմուկի շեմը՝"
 
-#: src/effects/Distortion.cpp:688
+#: src/effects/Distortion.cpp:690
 msgid "Hardness"
 msgstr ""
 
-#: src/effects/Distortion.cpp:702 src/effects/Distortion.cpp:716
-#: src/effects/Distortion.cpp:730 src/effects/Distortion.cpp:744
-#: src/effects/Distortion.cpp:758 src/effects/Distortion.cpp:772
-#: src/effects/Distortion.cpp:800
+#: src/effects/Distortion.cpp:704 src/effects/Distortion.cpp:718
+#: src/effects/Distortion.cpp:732 src/effects/Distortion.cpp:746
+#: src/effects/Distortion.cpp:760 src/effects/Distortion.cpp:774
+#: src/effects/Distortion.cpp:802
 #, fuzzy
 msgid "Distortion amount"
 msgstr "Այլակերպում"
 
-#: src/effects/Distortion.cpp:703 src/effects/Distortion.cpp:717
-#: src/effects/Distortion.cpp:731 src/effects/Distortion.cpp:745
-#: src/effects/Distortion.cpp:773
+#: src/effects/Distortion.cpp:705 src/effects/Distortion.cpp:719
+#: src/effects/Distortion.cpp:733 src/effects/Distortion.cpp:747
+#: src/effects/Distortion.cpp:775
 #, fuzzy
 msgid "Output level"
 msgstr "Էֆեկտի կարգավորումներ"
 
-#: src/effects/Distortion.cpp:746
+#: src/effects/Distortion.cpp:748
 #, fuzzy
 msgid "Repeat processing"
 msgstr "նվազեցնել մշակման ժամանակը:"
 
-#: src/effects/Distortion.cpp:759
+#: src/effects/Distortion.cpp:761
 msgid "Harmonic brightness"
 msgstr ""
 
-#: src/effects/Distortion.cpp:786
+#: src/effects/Distortion.cpp:788
 msgid "Levelling fine adjustment"
 msgstr ""
 
-#: src/effects/Distortion.cpp:788
+#: src/effects/Distortion.cpp:790
 #, fuzzy
 msgid "Degree of Levelling"
 msgstr "Փուլավորման աստիչան՝"
 
-#: src/effects/Distortion.cpp:812
+#: src/effects/Distortion.cpp:814
 #, fuzzy
 msgid "dB Limit"
 msgstr "Սահմանափակիչ"
 
-#: src/effects/Distortion.cpp:814
+#: src/effects/Distortion.cpp:816
 #, fuzzy
 msgid "Wet level"
 msgstr "2 փուլ"
 
-#: src/effects/Distortion.cpp:815
+#: src/effects/Distortion.cpp:817
 msgid "Residual level"
 msgstr ""
 
-#: src/effects/Distortion.cpp:831
+#: src/effects/Distortion.cpp:833
 msgid " (Not Used):"
 msgstr ""
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:836
+#: src/effects/Distortion.cpp:838
 msgid " (-100 to 0 dB):"
 msgstr ""
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:851
+#: src/effects/Distortion.cpp:853
 msgid " (-80 to -20 dB):"
 msgstr ""
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:862 src/effects/Distortion.cpp:873
+#: src/effects/Distortion.cpp:864 src/effects/Distortion.cpp:875
 #, fuzzy
 msgid " (0 to 100):"
 msgstr "(%) [-50 ից 100]:"
 
 #. i18n-hint: Control range.
-#: src/effects/Distortion.cpp:884
+#: src/effects/Distortion.cpp:886
 msgid " (0 to 5):"
 msgstr ""
 
@@ -11439,6 +11439,7 @@ msgstr ""
 msgid "untitled"
 msgstr "անվերնագիր"
 
+#. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp:1003
 #, c-format
 msgid ""
@@ -11449,6 +11450,7 @@ msgstr ""
 "օգտագործել որևէ՝ %s\n"
 "Օգտվել..."
 
+#. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp:1007
 #, fuzzy, c-format
 msgid ""
@@ -11886,31 +11888,31 @@ msgstr "Չզգուշացնել կրկին և միշտ օգտագործել իմ 
 msgid "Importing %s"
 msgstr "Ներմուծվում են՝ %s"
 
-#: src/import/ImportQT.cpp:19
+#: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime ֆայլեր"
 
-#: src/import/ImportQT.cpp:252
+#: src/import/ImportQT.cpp:257
 msgid "Unable to start QuickTime extraction"
 msgstr "Անհնար է սկսել QuickTime բացում"
 
-#: src/import/ImportQT.cpp:262
+#: src/import/ImportQT.cpp:267
 msgid "Unable to set QuickTime render quality"
 msgstr "Անհնար է նշել QuickTime պատրաստման որակ"
 
-#: src/import/ImportQT.cpp:272
+#: src/import/ImportQT.cpp:277
 msgid "Unable to set QuickTime discrete channels property"
 msgstr "Անհնար է նշել QuickTime դիսկրետ ալիքները արդյունավետ"
 
-#: src/import/ImportQT.cpp:283
+#: src/import/ImportQT.cpp:288
 msgid "Unable to get QuickTime sample size property"
 msgstr "Անհնար է ստանալ QuickTime նմուշի չափը արդյունավետ"
 
-#: src/import/ImportQT.cpp:294
+#: src/import/ImportQT.cpp:299
 msgid "Unable to retrieve stream description"
 msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
 
-#: src/import/ImportQT.cpp:353
+#: src/import/ImportQT.cpp:358
 msgid "Unable to get fill buffer"
 msgstr "Անհնար է ստանալ բուֆերի լրացումը"
 
