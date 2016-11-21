@@ -72,6 +72,7 @@ and use it for toolbar and window layouts too.
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"
+#include "AColor.h"
 
 #include <wx/arrimpl.cpp>
 
