@@ -12,8 +12,6 @@
 #include "../Audacity.h"
 #include "Contrast.h"
 
-#include "../AudacityApp.h"
-
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"

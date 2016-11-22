@@ -174,6 +174,9 @@ void QuitAudacity();
 #define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
 #define LINEAR_TO_DB(x) (20.0 * log10(x))
 
+#define MAX_AUDIO (1. - 1./(1<<15))
+#define JUST_BELOW_MAX_AUDIO (1. - 1./(1<<14))
+
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) wxT(s)
 // Marks string for substitution only.

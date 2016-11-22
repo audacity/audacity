@@ -15,6 +15,7 @@
 #include "../Experimental.h"
 
 #include "CommandFunctors.h"
+#include "CommandFlag.h"
 
 #include "../MemoryX.h"
 #include <vector>
@@ -23,7 +24,6 @@
 #include <wx/menu.h>
 #include <wx/hashmap.h>
 
-#include "../AudacityApp.h"
 #include "../xml/XMLTagHandler.h"
 
 #include "audacity/Types.h"

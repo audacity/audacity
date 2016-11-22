@@ -144,7 +144,6 @@ audio tracks.
 
 #include "Audacity.h"
 #include "TrackArtist.h"
-#include "AudacityApp.h"
 #include "float_cast.h"
 
 #include <math.h>

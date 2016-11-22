@@ -77,7 +77,6 @@
 #include <wx/valtext.h>
 
 
-#include "../AudacityApp.h"
 #include "../PlatformCompatibility.h"
 
 EffectNoiseRemoval::EffectNoiseRemoval()

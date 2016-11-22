@@ -62,6 +62,7 @@
 #include "../Audacity.h"
 #include "ExportMP3.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 
 #include <wx/choice.h>

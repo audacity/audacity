@@ -79,13 +79,13 @@ CommandManager.  It holds the callback for one command.
 #include "CommandManager.h"
 
 #include <wx/defs.h>
+#include <wx/eventfilter.h>
 #include <wx/hash.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/tokenzr.h>
 
-#include "../AudacityApp.h"
 #include "../Prefs.h"
 #include "../Project.h"
 

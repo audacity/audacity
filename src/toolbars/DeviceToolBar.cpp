@@ -30,8 +30,6 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "../AudacityApp.h"
-
 #include "ToolDock.h"
 #include "../TrackPanel.h"
 

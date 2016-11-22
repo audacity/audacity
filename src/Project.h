@@ -53,6 +53,7 @@ class wxBoxSizer;
 class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;
+class wxTimerEvent;
 
 class AudacityProject;
 class AutoSaveFile;

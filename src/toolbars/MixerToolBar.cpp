@@ -31,7 +31,6 @@
 
 #include "MixerToolBar.h"
 
-#include "../AudacityApp.h"
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"

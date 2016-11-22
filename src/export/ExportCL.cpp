@@ -15,6 +15,7 @@
 #include "ExportCL.h"
 #include "../Project.h"
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/log.h>

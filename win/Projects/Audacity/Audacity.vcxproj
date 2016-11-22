@@ -421,6 +421,7 @@
     <ClInclude Include="..\..\..\src\BatchProcessDialog.h" />
     <ClInclude Include="..\..\..\src\Benchmark.h" />
     <ClInclude Include="..\..\..\src\BlockFile.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
     <ClInclude Include="..\..\..\src\DeviceChange.h" />

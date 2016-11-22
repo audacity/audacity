@@ -21,7 +21,6 @@
 
 #include "../Audacity.h"
 #include "ImportPCM.h"
-#include "../AudacityApp.h"
 #include "../Internat.h"
 #include "../Tags.h"
 

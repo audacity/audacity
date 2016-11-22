@@ -26,10 +26,12 @@
 #include "AButton.h"
 #include "../AColor.h"
 
+#include <wx/app.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>
 #include <wx/image.h>
+#include <wx/timer.h>
 
 //This is needed for tooltips
 #include "../Project.h"

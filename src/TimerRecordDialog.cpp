@@ -23,6 +23,7 @@
 #include "FileNames.h"
 
 #include <wx/defs.h>
+#include <wx/dir.h>
 #include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/progdlg.h>

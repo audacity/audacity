@@ -35,7 +35,6 @@
 
 #include "audacity/EffectInterface.h"
 
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"

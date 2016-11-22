@@ -40,9 +40,9 @@
 
 #include "../Audacity.h"
 #include "Meter.h"
-#include "../AudacityApp.h"
 
 #include <algorithm>
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>

@@ -1798,6 +1798,9 @@
     <ClInclude Include="..\..\..\src\import\ImportForwards.h">
       <Filter>src\import</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandFlag.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">

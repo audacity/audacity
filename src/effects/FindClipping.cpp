@@ -26,7 +26,6 @@
 
 #include <wx/intl.h>
 
-#include "../AudacityApp.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
