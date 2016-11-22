@@ -101,6 +101,8 @@ audacity_SOURCES = \
 	Audacity.h \
 	AudacityApp.cpp \
 	AudacityApp.h \
+	AudacityException.cpp \
+	AudacityException.h \
 	AudacityLogger.cpp \
 	AudacityLogger.h \
 	AudioIO.cpp \
