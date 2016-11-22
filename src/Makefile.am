@@ -133,6 +133,8 @@ audacity_SOURCES = \
 	FFmpeg.h \
 	FFT.cpp \
 	FFT.h \
+	FileException.cpp \
+	FileException.h \
 	FileIO.cpp \
 	FileIO.h \
 	FileNames.cpp \

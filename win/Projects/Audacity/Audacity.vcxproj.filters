@@ -893,6 +893,9 @@
     <ClCompile Include="..\..\..\src\InconsistencyException.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\FileException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1811,6 +1814,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\InconsistencyException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FileException.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
