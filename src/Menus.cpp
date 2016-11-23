@@ -2726,6 +2726,7 @@ void AudacityProject::OnMoveToLabel(bool next)
          }
          else {
             GetViewInfo().selectedRegion = label->selectedRegion;
+            mTrackPanel->ScrollIntoView(GetViewInfo().selectedRegion.t0());
             RedrawProject();
          }
 
