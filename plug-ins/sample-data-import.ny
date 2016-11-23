@@ -27,11 +27,10 @@
 ;; be separated by spaces, tabs or line-breaks.
 ;; The file name must have a '.txt' file extension.
 ;;
-;; *** WARNING ***
-;; Nyquist is not able to safely determine character
-;; encoding. Attempting to import data from a file that
-;; is not plain ASCII text is NOT SUPPORTED and may
-;; cause Audacity to crash.
+;; *** ATTENTION ***
+;; The file to be imported must contain
+;; plain ASCII text only.
+;; Files other than plain ASCII text are NOT SUPPORTED.
 ;; ***************
 ;; 
 ;; Depending on the computer file system, the file name
@@ -138,10 +137,15 @@
                           '~a~a~a' could not be opened.~%~
                           Check that file exists."
                           path *file-separator* fname)))
-      ; File opened OK, so close it and return 'true'
-      (t  (close fstream)
+      ; File opened OK, so check for normal ASCII, then close it and return 'true'
+      (t  (do ((j 0 (1+ j))(b (read-byte fstream)(read-byte fstream)))
+              ((or (> j 100000)(not b)))
+            (when (> b 127)
+              (throw 'err (format nil "Error:~%~
+                The file must contain only plain ASCII text.~%~
+                (Invalid byte '~a' at byte number: ~a)" b (1+ j) ))))
+          (close fstream)
           t))))
-
 
 ;; ':new' creates a new class 'streamreader'
 ;; 'filestream' and 'chanel' are its instance variables.
