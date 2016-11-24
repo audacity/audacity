@@ -243,6 +243,11 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
    void OpenFile(const wxString &fileName, bool addtohistory = true);
+
+private:
+   void EnqueueODTasks();
+
+public:
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
@@ -511,7 +516,8 @@ public:
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
+   void WriteXML(
+      XMLWriter &xmlFile, bool bWantSaveCompressed) /* not override */;
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
@@ -702,7 +708,6 @@ private:
    // Dependencies have been imported and a warning should be shown on save
    bool mImportedDependencies{ false };
 
-   bool mWantSaveCompressed{ false };
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    // Last effect applied to this project

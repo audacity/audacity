@@ -2866,6 +2866,11 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    selectedFiles.Sort(CompareNoCaseFileName);
    ODManager::Pauser pauser;
 
+   auto cleanup = finally( [] {
+      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
+      gPrefs->Flush();
+   } );
+
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       const wxString &fileName = selectedFiles[ff];
 
@@ -2895,9 +2900,6 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       // and it's okay to open a NEW project inside this window.
       proj->OpenFile(fileName);
    }
-
-   gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-   gPrefs->Flush();
 }
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.
@@ -2977,6 +2979,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          wxMessageBox(_("Could not open file: ") + fileName,
             _("Error opening file"),
             wxOK | wxCENTRE, this);
+         return;
       }
       int numRead = ff.Read(buf, 15);
       if (numRead != 15) {
@@ -3045,6 +3048,12 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    XMLFileReader xmlFile;
 
    bool bParseSuccess = xmlFile.Parse(this, fileName);
+
+   // Clean up now unused recording recovery handler if any
+   mRecordingRecoveryHandler.reset();
+
+   bool err = false;
+
    if (bParseSuccess) {
       // By making a duplicate set of pointers to the existing blocks
       // on disk, we add one to their reference count, guaranteeing
@@ -3052,7 +3061,6 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       // the version saved on disk will be preserved until the
       // user selects Save().
 
-      bool err = false;
       Track *t;
       TrackListIterator iter(GetTracks());
       mLastSavedTracks = std::make_unique<TrackList>();
@@ -3123,7 +3131,31 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       if (addtohistory) {
          wxGetApp().AddFileToHistory(fileName);
       }
+   }
 
+   // Use a finally block here, because there are calls to Save() below which
+   // might throw.
+   bool closed = false;
+   auto cleanup = finally( [&] {
+      //release the flag.
+      ODManager::UnmarkLoadedODFlag();
+
+      if (! closed ) {
+         // Shouldn't need it any more.
+         mImportXMLTagHandler.reset();
+
+         if ( bParseSuccess ) {
+            GetDirManager()->FillBlockfilesCache();
+            EnqueueODTasks();
+         }
+
+         // For an unknown reason, OSX requires that the project window be
+         // raised if a recovery took place.
+         CallAfter( [this] { Raise(); } );
+      }
+   } );
+   
+   if (bParseSuccess) {
       bool saved = false;
 
       if (mIsRecovered)
@@ -3162,12 +3194,15 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                SetProjectTitle();
                mTrackPanel->Refresh(true);
                */
+            closed = true;
             this->OnClose();
+            return;
          }
          else if (status & FSCKstatus_CHANGED)
          {
             // Mark the wave tracks as changed and redraw.
-            t = iter.First();
+            TrackListIterator iter(GetTracks());
+            Track *t = iter.First();
             while (t) {
                if (t->GetKind() == Track::Wave)
                {
@@ -3193,12 +3228,9 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             // We processed an <import> tag, so save it as a normal project,
             // with no <import> tags.
             this->Save();
-
-         // Shouldn't need it any more.
-         mImportXMLTagHandler.reset();
       }
-
-   } else {
+   }
+   else {
       // Vaughan, 2011-10-30:
       // See first topic at http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c16.
       // Calling mTracks->Clear() with deleteTracks true results in data loss.
@@ -3224,15 +3256,10 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                    _("Error Opening Project"),
                    wxOK | wxCENTRE, this);
    }
+}
 
-   // Clean up now unused recording recovery handler if any
-   mRecordingRecoveryHandler.reset();
-
-   if (!bParseSuccess)
-      return; // No need to do further processing if parse failed.
-
-   GetDirManager()->FillBlockfilesCache();
-
+void AudacityProject::EnqueueODTasks()
+{
    //check the ODManager to see if we should add the tracks to the ODManager.
    //this flag would have been set in the HandleXML calls from above, if there were
    //OD***Blocks.
@@ -3290,14 +3317,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       }
       for(unsigned int i=0;i<newTasks.size();i++)
          ODManager::Instance()->AddNewTask(std::move(newTasks[i]));
-
-         //release the flag.
-      ODManager::UnmarkLoadedODFlag();
    }
-
-   // For an unknown reason, OSX requires that the project window be
-   // raised if a recovery took place.
-   Raise();
 }
 
 bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -3570,7 +3590,7 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile) const
    xmlFile.Write(wxT(">\n"));
 }
 
-void AudacityProject::WriteXML(XMLWriter &xmlFile)
+void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
 // may throw
 {
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
@@ -3621,7 +3641,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    t = iter.First();
    unsigned int ndx = 0;
    while (t) {
-      if ((t->GetKind() == Track::Wave) && mWantSaveCompressed)
+      if ((t->GetKind() == Track::Wave) && bWantSaveCompressed)
       {
          //vvv This should probably be a method, WaveTrack::WriteCompressedTrackXML().
          xmlFile.StartTag(wxT("import"));
@@ -3760,8 +3780,19 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       if (wxFileExists(safetyFileName))
          wxRemoveFile(safetyFileName);
 
-      wxRename(mFileName, safetyFileName);
+      if ( !wxRenameFile(mFileName, safetyFileName) ) {
+         wxMessageBox(_("Could not create safety file: ") + safetyFileName,
+                      _("Error"), wxICON_STOP, this);
+         return false;
+      }
    }
+   auto cleanup = finally( [&] {
+      if (safetyFileName != wxT("")) {
+         if (wxFileExists(mFileName))
+            wxRemove(mFileName);
+         wxRename(safetyFileName, mFileName);
+      }
+   } );
 
    if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
       // Write the tracks.
@@ -3773,12 +3804,9 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       wxString projName = wxFileNameFromPath(project) + wxT("_data");
       wxString projPath = wxPathOnly(project);
 
-      mWantSaveCompressed = bWantSaveCompressed;
       bool success = false;
 
       if( !wxDir::Exists( projPath ) ){
-         if (safetyFileName != wxT(""))
-            wxRename(safetyFileName, mFileName);
          wxMessageBox(wxString::Format(
             _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
             projPath.c_str()),
@@ -3823,8 +3851,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
 
       if (!success) {
-         if (safetyFileName != wxT(""))
-            wxRename(safetyFileName, mFileName);
          wxMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
                                        project.c_str()),
                       _("Error Saving Project"),
@@ -3838,7 +3864,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
 
       WriteXMLHeader(saveFile);
-      WriteXML(saveFile);
+      WriteXML(saveFile, bWantSaveCompressed);
       mStrOtherNamesArray.Clear();
 
       saveFile.Commit();
@@ -3849,9 +3875,9 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
    if (!success)
       return false;
 
-   if (bWantSaveCompressed)
-      mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.
-   else
+   // SAVE HAS SUCCEEDED -- following are further no-fail commit operations.
+
+   if ( !bWantSaveCompressed )
    {
       // Now that we have saved the file, we can DELETE the auto-saved version
       DeleteCurrentAutoSaveFile();
@@ -3868,7 +3894,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          mIsRecovered = false;
          mRecoveryAutoSaveDataDir = wxT("");
          SetProjectTitle();
-      } else if (fromSaveAs)
+      }
+      else if (fromSaveAs)
       {
          // On save as, always remove orphaned blockfiles that may be left over
          // because the user is trying to overwrite another project
@@ -3899,7 +3926,9 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
    // the .bak file (because it now does not fit our block files anymore
    // anyway).
    if (safetyFileName != wxT(""))
-      wxRemoveFile(safetyFileName);
+      wxRemoveFile(safetyFileName),
+      // cancel the cleanup:
+      safetyFileName = wxT("");
 
    mStatusBar->SetStatusText(wxString::Format(_("Saved %s"),
                                               mFileName.c_str()), mainStatusBarField);
@@ -4177,19 +4206,25 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    }
 
    mFileName = newFileName;
+   bool success = false;
+   auto cleanup = finally( [&] {
+      if (!success || bWantSaveCompressed)
+         // Restore file name on error
+         mFileName = oldFileName;
+   } );
+
    //Don't change the title, unless we succeed.
    //SetProjectTitle();
 
-   bool success = Save(false, true, bWantSaveCompressed);
+   success = Save(false, true, bWantSaveCompressed);
 
    if (success && addToHistory) {
       wxGetApp().AddFileToHistory(mFileName);
    }
    if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
    {
-      // Restore file name on error
-      mFileName = oldFileName;
-   } else {
+   }
+   else {
       mbLoadedFromAup = true;
       SetProjectTitle();
    }
@@ -4281,8 +4316,14 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
    wxString oldFileName = mFileName;
    mFileName = fName;
+   bool success = false;
+   auto cleanup = finally( [&] {
+      if (!success || bWantSaveCompressed)
+         // Restore file name on error
+         mFileName = oldFileName;
+   } );
 
-   bool success = Save(false, true, bWantSaveCompressed);
+   success = Save(false, true, bWantSaveCompressed);
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
@@ -4294,9 +4335,8 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    }
    if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
    {
-      // Reset file name on error
-      mFileName = oldFileName;
-   } else {
+   }
+   else {
       mbLoadedFromAup = true;
       SetProjectTitle();
    }
@@ -5103,7 +5143,7 @@ void AudacityProject::AutoSave()
 
       AutoSaveFile buffer;
       WriteXMLHeader(buffer);
-      WriteXML(buffer);
+      WriteXML(buffer, false);
       mStrOtherNamesArray.Clear();
 
       wxFFile saveFile;
@@ -5563,7 +5603,7 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    wxString sNewFileName = fnFile.GetFullPath();
 
    // MY: To allow SaveAs from Timer Recording we need to check what
-   // the value of mFileName is befoer we change it.
+   // the value of mFileName is before we change it.
    wxString sOldFilename = "";
    if (IsProjectSaved()) {
       sOldFilename = mFileName;
@@ -5577,16 +5617,19 @@ bool AudacityProject::SaveFromTimerRecording(wxFileName fnFile) {
    }
 
    mFileName = sNewFileName;
+   bool bSuccess = false;
+   auto cleanup = finally( [&] {
+      if (!bSuccess)
+         // Restore file name on error
+         mFileName = sOldFilename;
+   } );
 
-   bool bSuccess = Save(false, true, false);
+   bSuccess = Save(false, true, false);
 
    if (bSuccess) {
       wxGetApp().AddFileToHistory(mFileName);
       mbLoadedFromAup = true;
       SetProjectTitle();
-   } else  {
-      // Restore file name on error
-      mFileName = sOldFilename;
    }
 
    return bSuccess;
