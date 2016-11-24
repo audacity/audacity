@@ -724,6 +724,7 @@
     <copy Include="..\..\..\plug-ins\pluck.ny" />
     <copy Include="..\..\..\plug-ins\rissetdrum.ny" />
     <copy Include="..\..\..\plug-ins\sample-data-export.ny" />
+    <copy Include="..\..\..\plug-ins\sample-data-import.ny" />
     <copy Include="..\..\..\plug-ins\SilenceMarker.ny" />
     <copy Include="..\..\..\plug-ins\SoundFinder.ny" />
     <copy Include="..\..\..\plug-ins\SpectralEditMulti.ny" />
