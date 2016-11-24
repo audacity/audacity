@@ -3056,7 +3056,7 @@ msgstr "&Van stereo naar mono"
 
 #: src/Menus.cpp:839
 msgid "Mi&x and Render"
-msgstr "Mi&xen en doorrekenen"
+msgstr "Mi&xen en renderen"
 
 #: src/Menus.cpp:842
 msgid "Mix and Render to Ne&w Track"
