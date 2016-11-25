@@ -597,10 +597,10 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->AddItem(wxT("SelSave"), _("Re&gion Save"), FN(OnSelectionSave),
+      c->AddItem(wxT("SelSave"), _("Store Re&gion"), FN(OnSelectionSave),
          WaveTracksSelectedFlag,
          WaveTracksSelectedFlag);
-      c->AddItem(wxT("SelRestore"), _("Regio&n Restore"), FN(OnSelectionRestore),
+      c->AddItem(wxT("SelRestore"), _("Retrieve Regio&n"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
       c->AddItem(wxT("StoreCursorPosition"), _("Store Cursor Pos&ition"), FN(OnCursorPositionStore),
