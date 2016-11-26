@@ -654,20 +654,17 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          newClip->RemoveAllCutLines();
          newClip->Offset(-t0);
       }
-      else
-      if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
+      else if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
          // Clip is affected by command
          //printf("copy: clip %i is affected by command\n", (int)clip);
 
-         auto newClip = make_movable<WaveClip>(*clip, mDirManager);
+         const double clip_t0 = std::max(t0, clip->GetStartTime());
+         const double clip_t1 = std::min(t1, clip->GetEndTime());
+
+         auto newClip = make_movable<WaveClip>
+            (*clip, mDirManager, clip_t0, clip_t1);
          newClip->RemoveAllCutLines();
-         double clip_t0 = t0;
-         double clip_t1 = t1;
-         if (clip_t0 < clip->GetStartTime())
-            clip_t0 = clip->GetStartTime();
-         if (clip_t1 > clip->GetEndTime())
-            clip_t1 = clip->GetEndTime();
 
          //printf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
@@ -675,21 +672,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          if (newClip->GetOffset() < 0)
             newClip->SetOffset(0);
 
-         //printf("copy: clip offset is now %f\n", newClip->GetOffset());
-
-         if (!newClip->CreateFromCopy(clip_t0, clip_t1, clip.get()))
-         {
-            //printf("paste: CreateFromCopy(%f, %f, %i) returns false, quitting\n",
-            //   clip_t0, clip_t1, (int)clip);
-            // JKC: July 2007, previously we did 'return false' here which
-            // could leave *dest undefined.
-            // I think this is dealing with clips that don't have any sequence content
-            // i.e. we don't copy cut lines and such - anyone like to explain more?
-         }
-         else
-         {
-            newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
-         }
+         newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
       }
    }
 

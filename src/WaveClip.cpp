@@ -302,16 +302,14 @@ static void ComputeSpectrumUsingRealFFTf
 
 WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate)
 {
-   mOffset = 0;
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
+
    mEnvelope = std::make_unique<Envelope>();
+
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
-   mAppendBufferLen = 0;
-   mDirty = 0;
-   mIsPlaceholder = false;
 }
 
 WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager)
@@ -323,10 +321,12 @@ WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &proj
    mOffset = orig.mOffset;
    mRate = orig.mRate;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
+
    mEnvelope = std::make_unique<Envelope>();
    mEnvelope->Paste(0.0, orig.mEnvelope.get());
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen((orig.mSequence->GetNumSamples().as_double()) / orig.mRate);
+
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
@@ -334,10 +334,37 @@ WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &proj
    for (const auto &clip: orig.mCutLines)
       mCutLines.push_back(make_movable<WaveClip>(*clip, projDirManager));
 
-   mAppendBufferLen = 0;
-   mDirty = 0;
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
+
+WaveClip::WaveClip(const WaveClip& orig,
+                   const std::shared_ptr<DirManager> &projDirManager,
+                   double t0, double t1)
+{
+   // Copy only a range of the other WaveClip
+
+   mOffset = orig.mOffset;
+   mRate = orig.mRate;
+
+   mWaveCache = std::make_unique<WaveCache>();
+   mSpecCache = std::make_unique<SpecCache>();
+   mSpecPxCache = std::make_unique<SpecPxCache>(1);
+
+   mIsPlaceholder = orig.GetIsPlaceholder();
+
+   sampleCount s0, s1;
+
+   orig.TimeToSamplesClip(t0, &s0);
+   orig.TimeToSamplesClip(t1, &s1);
+
+   mSequence = orig.mSequence->Copy(s0, s1);
+
+   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope->CopyFrom(orig.mEnvelope.get(),
+                       mOffset + s0.as_double()/mRate,
+                       mOffset + s1.as_double()/mRate);
+}
+
 
 WaveClip::~WaveClip()
 {
@@ -1480,30 +1507,6 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("waveclip"));
 }
 
-bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
-{
-   sampleCount s0, s1;
-
-   other->TimeToSamplesClip(t0, &s0);
-   other->TimeToSamplesClip(t1, &s1);
-
-   std::unique_ptr<Sequence> oldSequence = std::move(mSequence);
-   if (!other->mSequence->Copy(s0, s1, mSequence))
-   {
-      mSequence = std::move(oldSequence);
-      return false;
-   }
-
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->CopyFrom(other->mEnvelope.get(),
-      mOffset + s0.as_double()/mRate,
-      mOffset + s1.as_double()/mRate);
-
-   MarkChanged();
-
-   return true;
-}
-
 bool WaveClip::Paste(double t0, const WaveClip* other)
 {
    const bool clipNeedsResampling = other->mRate != mRate;
@@ -1638,18 +1641,11 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    if (t0 > GetEndTime() || t1 < GetStartTime())
       return true; // time out of bounds
 
-   auto newClip = make_movable<WaveClip>
-      (mSequence->GetDirManager(), mSequence->GetSampleFormat(), mRate);
-   double clip_t0 = t0;
-   double clip_t1 = t1;
-   if (clip_t0 < GetStartTime())
-      clip_t0 = GetStartTime();
-   if (clip_t1 > GetEndTime())
-      clip_t1 = GetEndTime();
+   const double clip_t0 = std::max( t0, GetStartTime() );
+   const double clip_t1 = std::min( t1, GetEndTime() );
 
-   newClip->SetOffset(this->mOffset);
-   if (!newClip->CreateFromCopy(clip_t0, clip_t1, this))
-      return false;
+   auto newClip = make_movable<WaveClip>
+      (*this, mSequence->GetDirManager(), clip_t0, clip_t1);
    newClip->SetOffset(clip_t0-mOffset);
 
    // Sort out cutlines that belong to the NEW cutline

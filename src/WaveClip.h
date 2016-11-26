@@ -217,6 +217,11 @@ public:
    // from one project to another
    WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager);
 
+   // Copy only a range from the given WaveClip
+   WaveClip(const WaveClip& orig,
+            const std::shared_ptr<DirManager> &projDirManager,
+            double t0, double t1);
+
    virtual ~WaveClip();
 
    void ConvertToSampleFormat(sampleFormat format);
@@ -265,9 +270,6 @@ public:
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
    void MarkChanged() { mDirty++; }
-
-   /// Create clip from copy, discarding previous information in the clip
-   bool CreateFromCopy(double t0, double t1, const WaveClip* other);
 
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */
@@ -367,35 +369,35 @@ public:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   // Cache of values to colour pixels of Spectrogram - used by TrackArtist
-   mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
-
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }
    void SetIsPlaceholder(bool val) { mIsPlaceholder = val; }
 
-protected:
-   mutable wxRect mDisplayRect;
+public:
+   // Cache of values to colour pixels of Spectrogram - used by TrackArtist
+   mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
 
-   double mOffset;
+protected:
+   mutable wxRect mDisplayRect {};
+
+   double mOffset { 0 };
    int mRate;
-   int mDirty;
-   bool mIsCutLine;
+   int mDirty { 0 };
    std::unique_ptr<Sequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
 
    mutable std::unique_ptr<WaveCache> mWaveCache;
-   mutable ODLock       mWaveCacheMutex;
+   mutable ODLock       mWaveCacheMutex {};
    mutable std::unique_ptr<SpecCache> mSpecCache;
-   SampleBuffer  mAppendBuffer;
-   size_t        mAppendBufferLen;
+   SampleBuffer  mAppendBuffer {};
+   size_t        mAppendBufferLen { 0 };
 
    // Cut Lines are nothing more than ordinary wave clips, with the
    // offset relative to the start of the clip.
-   WaveClipHolders mCutLines;
+   WaveClipHolders mCutLines {};
 
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
-   bool mIsPlaceholder;
+   bool mIsPlaceholder { false };
 };
 
 #endif
