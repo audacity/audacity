@@ -215,11 +215,14 @@ public:
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
    // from one project to another
-   WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager);
+   WaveClip(const WaveClip& orig,
+            const std::shared_ptr<DirManager> &projDirManager,
+            bool copyCutlines);
 
    // Copy only a range from the given WaveClip
    WaveClip(const WaveClip& orig,
             const std::shared_ptr<DirManager> &projDirManager,
+            bool copyCutlines,
             double t0, double t1);
 
    virtual ~WaveClip();
@@ -341,7 +344,6 @@ public:
 
    /// Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);
-   void RemoveAllCutLines();
 
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);

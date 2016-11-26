@@ -132,7 +132,8 @@ WaveTrack::WaveTrack(const WaveTrack &orig):
    Init(orig);
 
    for (const auto &clip : orig.mClips)
-      mClips.push_back(make_movable<WaveClip>(*clip, mDirManager));
+      mClips.push_back
+         ( make_movable<WaveClip>( *clip, mDirManager, true ) );
 }
 
 // Copy the track metadata but not the contents.
@@ -641,6 +642,10 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
    newTrack->Init(*this);
 
+   // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know, but
+   // that was the old behavior.  But this function is also used by the
+   // Duplicate command and I changed its behavior in that case.
+
    for (const auto &clip : mClips)
    {
       if (t0 <= clip->GetStartTime() && t1 >= clip->GetEndTime())
@@ -649,9 +654,8 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          //printf("copy: clip %i is in copy region\n", (int)clip);
 
          newTrack->mClips.push_back
-            (make_movable<WaveClip>(*clip, mDirManager));
+            (make_movable<WaveClip>(*clip, mDirManager, ! forClipboard));
          WaveClip *const newClip = newTrack->mClips.back().get();
-         newClip->RemoveAllCutLines();
          newClip->Offset(-t0);
       }
       else if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
@@ -663,8 +667,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          const double clip_t1 = std::min(t1, clip->GetEndTime());
 
          auto newClip = make_movable<WaveClip>
-            (*clip, mDirManager, clip_t0, clip_t1);
-         newClip->RemoveAllCutLines();
+            (*clip, mDirManager, ! forClipboard, clip_t0, clip_t1);
 
          //printf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
@@ -1055,7 +1058,8 @@ bool WaveTrack::HandleClear(double t0, double t1,
          {
             if (!clip->ClearAndAddCutLine(t0,t1))
                return false;
-         } else
+         }
+         else
          {
             if (split) {
                // Three cases:
@@ -1074,11 +1078,13 @@ bool WaveTrack::HandleClear(double t0, double t1,
                   // NEW clips out of the left and right halves...
 
                   // left
-                  clipsToAdd.push_back(make_movable<WaveClip>(*clip, mDirManager));
+                  clipsToAdd.push_back
+                     ( make_movable<WaveClip>( *clip, mDirManager, true ) );
                   clipsToAdd.back()->Clear(t0, clip->GetEndTime());
 
                   // right
-                  clipsToAdd.push_back(make_movable<WaveClip>(*clip, mDirManager));
+                  clipsToAdd.push_back
+                     ( make_movable<WaveClip>( *clip, mDirManager, true ) );
                   WaveClip *const right = clipsToAdd.back().get();
                   right->Clear(clip->GetStartTime(), t1);
                   right->Offset(t1 - clip->GetStartTime());
@@ -1335,7 +1341,8 @@ bool WaveTrack::Paste(double t0, const Track *src)
       // AWD Oct. 2009: Don't actually paste in placeholder clips
       if (!clip->GetIsPlaceholder())
       {
-         auto newClip = make_movable<WaveClip>(*clip, mDirManager);
+         auto newClip =
+            make_movable<WaveClip>( *clip, mDirManager, true );
          newClip->Resample(mRate);
          newClip->Offset(t0);
          newClip->MarkChanged();
@@ -2363,7 +2370,7 @@ bool WaveTrack::SplitAt(double t)
          if(t - 1.0/c->GetRate() >= c->GetOffset())
             c->GetEnvelope()->Insert(t - c->GetOffset() - 1.0/c->GetRate(), val);  // frame end points
          c->GetEnvelope()->Insert(t - c->GetOffset(), val);
-         auto newClip = make_movable<WaveClip>(*c, mDirManager);
+         auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          if (!c->Clear(t, c->GetEndTime()))
          {
             return false;

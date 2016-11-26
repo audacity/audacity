@@ -300,7 +300,8 @@ static void ComputeSpectrumUsingRealFFTf
    }
 }
 
-WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate)
+WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
+                   sampleFormat format, int rate)
 {
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
@@ -312,7 +313,9 @@ WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleForm
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
 }
 
-WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager)
+WaveClip::WaveClip(const WaveClip& orig,
+                   const std::shared_ptr<DirManager> &projDirManager,
+                   bool copyCutlines)
 {
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
@@ -331,14 +334,17 @@ WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &proj
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
 
-   for (const auto &clip: orig.mCutLines)
-      mCutLines.push_back(make_movable<WaveClip>(*clip, projDirManager));
+   if ( copyCutlines )
+      for (const auto &clip: orig.mCutLines)
+         mCutLines.push_back
+            ( make_movable<WaveClip>( *clip, projDirManager, true ) );
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
 
 WaveClip::WaveClip(const WaveClip& orig,
                    const std::shared_ptr<DirManager> &projDirManager,
+                   bool copyCutlines,
                    double t0, double t1)
 {
    // Copy only a range of the other WaveClip
@@ -363,6 +369,21 @@ WaveClip::WaveClip(const WaveClip& orig,
    mEnvelope->CopyFrom(orig.mEnvelope.get(),
                        mOffset + s0.as_double()/mRate,
                        mOffset + s1.as_double()/mRate);
+
+   if ( copyCutlines )
+      // Copy cutline clips that fall in the range
+      for (const auto &ppClip : orig.mCutLines)
+      {
+         const WaveClip* clip = ppClip.get();
+         double cutlinePosition = orig.mOffset + clip->GetOffset();
+         if (cutlinePosition >= t0 && cutlinePosition <= t1)
+         {
+            auto newCutLine =
+               make_movable< WaveClip >( *clip, projDirManager, true );
+            newCutLine->SetOffset( cutlinePosition - t0 );
+            mCutLines.push_back(std::move(newCutLine));
+         }
+      }
 }
 
 
@@ -1518,7 +1539,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
       newClip =
-         std::make_unique<WaveClip>(*other, mSequence->GetDirManager());
+         std::make_unique<WaveClip>(*other, mSequence->GetDirManager(), true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
          if (!newClip->Resample(mRate))
@@ -1548,7 +1569,11 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
       for (const auto &cutline: pastedClip->mCutLines)
       {
          mCutLines.push_back(
-            make_movable<WaveClip>(*cutline, mSequence->GetDirManager()));
+            make_movable<WaveClip>
+               ( *cutline, mSequence->GetDirManager(),
+                 // Recursively copy cutlines of cutlines.  They don't need
+                 // their offsets adjusted.
+                 true));
          mCutLines.back()->Offset(t0 - mOffset);
       }
 
@@ -1645,21 +1670,19 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    const double clip_t1 = std::min( t1, GetEndTime() );
 
    auto newClip = make_movable<WaveClip>
-      (*this, mSequence->GetDirManager(), clip_t0, clip_t1);
+      (*this, mSequence->GetDirManager(), true, clip_t0, clip_t1);
+
    newClip->SetOffset(clip_t0-mOffset);
 
-   // Sort out cutlines that belong to the NEW cutline
+   // Remove cutlines from this clip that were in the selection, shift
+   // left those that were after the selection
    // May DELETE as we iterate, so don't use range-for
    for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
       WaveClip* clip = it->get();
       double cutlinePosition = mOffset + clip->GetOffset();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
-      {
-         clip->SetOffset(cutlinePosition - newClip->GetOffset() - mOffset);
-         newClip->mCutLines.push_back(std::move(*it)); // transfer ownership!!
          it = mCutLines.erase(it);
-      }
       else
       {
          if (cutlinePosition >= t1)
@@ -1752,11 +1775,6 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
    }
 
    return false;
-}
-
-void WaveClip::RemoveAllCutLines()
-{
-   mCutLines.clear();
 }
 
 void WaveClip::OffsetCutLines(double t0, double len)
