@@ -95,12 +95,14 @@ extern "C" {
 struct private_data {
    wxFile *file;            /* the file containing the mp3 data we're feeding the encoder */
    unsigned char *inputBuffer;
+   int inputBufferFill;     /* amount of data in inputBuffer */
    TrackFactory *trackFactory;
    TrackHolders channels;
    ProgressDialog *progress;
    unsigned numChannels;
    int updateResult;
    bool id3checked;
+   bool eof;      /* having supplied both underlying file and guard pad data */
 };
 
 class MP3ImportPlugin final : public ImportPlugin
@@ -216,11 +218,13 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
    mPrivateData.file        = mFile.get();
    mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
+   mPrivateData.inputBufferFill = 0;
    mPrivateData.progress    = mProgress.get();
    mPrivateData.updateResult= eProgressSuccess;
    mPrivateData.id3checked  = false;
    mPrivateData.numChannels = 0;
    mPrivateData.trackFactory= trackFactory;
+   mPrivateData.eof         = false;
 
    mad_decoder_init(&mDecoder, &mPrivateData, input_cb, 0, 0, output_cb, error_cb, 0);
 
@@ -404,7 +408,10 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
    if(data->updateResult != eProgressSuccess)
       return MAD_FLOW_STOP;
 
-   if(data->file->Eof()) {
+   if (data->eof) {
+      /* different from data->File->Eof(), this means the underlying
+         file has reached eof *and* we have subsequently supplied the
+         final padding zeros */
       return MAD_FLOW_STOP;
    }
 
@@ -431,19 +438,40 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
     *  mad_stream_buffer()"
     *           -- Rob Leslie, on the mad-dev mailing list */
 
-   unsigned int unconsumedBytes;
-   if(stream->next_frame) {
-      unconsumedBytes = data->inputBuffer + INPUT_BUFFER_SIZE - stream->next_frame;
+   int unconsumedBytes;
+   if (stream->next_frame) {
+      /* we must use inputBufferFill instead of INPUT_BUFFER_SIZE here
+         because the final buffer of the file may be only partially
+         filled, and we would otherwise be providing too much input
+         after eof */
+      unconsumedBytes = data->inputBuffer + data->inputBufferFill
+	  - stream->next_frame;
       memmove(data->inputBuffer, stream->next_frame, unconsumedBytes);
    }
    else
       unconsumedBytes = 0;
 
+   if (data->file->Eof() &&
+       (unconsumedBytes + MAD_BUFFER_GUARD < INPUT_BUFFER_SIZE)) {
+       
+      /* supply the requisite MAD_BUFFER_GUARD zero bytes to ensure
+         the final frame gets decoded properly, then finish */
+       
+      memset(data->inputBuffer + unconsumedBytes, 0, MAD_BUFFER_GUARD);
+      mad_stream_buffer
+          (stream, data->inputBuffer, MAD_BUFFER_GUARD + unconsumedBytes);
+      
+      data->eof = true; /* so on next call, we will tell mad to stop */
+      
+      return MAD_FLOW_CONTINUE;
+   }
 
    off_t read = data->file->Read(data->inputBuffer + unconsumedBytes,
                                  INPUT_BUFFER_SIZE - unconsumedBytes);
 
    mad_stream_buffer(stream, data->inputBuffer, read + unconsumedBytes);
+
+   data->inputBufferFill = int(read + unconsumedBytes);
 
    return MAD_FLOW_CONTINUE;
 }
