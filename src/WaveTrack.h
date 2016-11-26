@@ -167,8 +167,14 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    //
 
    Track::Holder Cut(double t0, double t1) override;
-   Track::Holder Copy(double t0, double t1) const override;
+
+   // If forClipboard is true,
+   // and there is no clip at the end time of the selection, then the result
+   // will contain a "placeholder" clip whose only purpose is to make
+   // GetEndTime() correct.  This clip is not re-copied when pasting.
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
    Track::Holder CopyNonconst(double t0, double t1) /* not override */;
+
    bool Clear(double t0, double t1) override;
    bool Paste(double t0, const Track *src) override;
    bool ClearAndPaste(double t0, double t1,

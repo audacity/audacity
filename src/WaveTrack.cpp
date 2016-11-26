@@ -630,7 +630,7 @@ bool WaveTrack::Trim (double t0, double t1)
 
 
 
-Track::Holder WaveTrack::Copy(double t0, double t1) const
+Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 <= t0)
       return{};
@@ -695,7 +695,10 @@ Track::Holder WaveTrack::Copy(double t0, double t1) const
 
    // AWD, Oct 2009: If the selection ends in whitespace, create a placeholder
    // clip representing that whitespace
-   if (newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
+   // PRL:  Only if we want the track for pasting into other tracks.  Not if it
+   // goes directly into a project as in the Duplicate command.
+   if (forClipboard &&
+       newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
    {
       auto placeholder = make_movable<WaveClip>(mDirManager,
             newTrack->GetSampleFormat(),
