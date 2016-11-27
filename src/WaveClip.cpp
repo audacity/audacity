@@ -1611,18 +1611,16 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    TimeToSamplesClip(t0, &s0);
 
    // Assume STRONG-GUARANTEE from Sequence::Paste
-   if (mSequence->Paste(s0, pastedClip->mSequence.get()))
-   {
-      // Assume NOFAIL-GUARANTEE in the remaining
-      MarkChanged();
-      mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
-      mEnvelope->RemoveUnneededPoints();
-      OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
+   mSequence->Paste(s0, pastedClip->mSequence.get());
 
-      for (auto &holder : newCutlines)
-         mCutLines.push_back(std::move(holder));
+   // Assume NOFAIL-GUARANTEE in the remaining
+   MarkChanged();
+   mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
+   mEnvelope->RemoveUnneededPoints();
+   OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
-   }
+   for (auto &holder : newCutlines)
+      mCutLines.push_back(std::move(holder));
 }
 
 void WaveClip::InsertSilence(double t, double len)
