@@ -161,6 +161,7 @@
     <ClCompile Include="..\..\..\src\import\ImportGStreamer.cpp" />
     <ClCompile Include="..\..\..\src\import\MultiFormatReader.cpp" />
     <ClCompile Include="..\..\..\src\import\SpecPowerMeter.cpp" />
+    <ClCompile Include="..\..\..\src\InconsistencyException.cpp" />
     <ClCompile Include="..\..\..\src\Internat.cpp" />
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp" />
     <ClCompile Include="..\..\..\src\LabelDialog.cpp" />
@@ -439,6 +440,7 @@
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
+    <ClInclude Include="..\..\..\src\InconsistencyException.h" />
     <ClInclude Include="..\..\..\src\MemoryX.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\NumberScale.h" />

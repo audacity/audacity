@@ -890,6 +890,9 @@
     <ClCompile Include="..\..\..\src\AudacityException.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\InconsistencyException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1805,6 +1808,9 @@
       <Filter>src\commands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\AudacityException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\InconsistencyException.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

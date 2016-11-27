@@ -146,6 +146,8 @@ audacity_SOURCES = \
 	HistoryWindow.h \
 	ImageManipulation.cpp \
 	ImageManipulation.h \
+	InconsistencyException.cpp \
+	InconsistencyException.h \
 	InterpolateAudio.cpp \
 	InterpolateAudio.h \
 	LabelDialog.cpp \
