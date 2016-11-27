@@ -129,7 +129,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void AppendBlockFile(const BlockFilePtr &blockFile);
 
    bool SetSilence(sampleCount s0, sampleCount len);
-   bool InsertSilence(sampleCount s0, sampleCount len);
+   void InsertSilence(sampleCount s0, sampleCount len);
 
    const std::shared_ptr<DirManager> &GetDirManager() { return mDirManager; }
 

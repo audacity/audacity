@@ -657,14 +657,16 @@ bool Sequence::SetSilence(sampleCount s0, sampleCount len)
    return Set(NULL, mSampleFormat, s0, len);
 }
 
-bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
+void Sequence::InsertSilence(sampleCount s0, sampleCount len)
+// STRONG-GUARANTEE
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + (len.as_double())))
-      return false;
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    if (len <= 0)
-      return true;
+      return;
 
    // Create a NEW track containing as much silence as we
    // need to insert, and then call Paste to do the insertion.
@@ -700,9 +702,8 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    sTrack.mNumSamples = pos;
 
+   // use STRONG-GUARANTEE
    Paste(s0, &sTrack);
-
-   return true;
 }
 
 bool Sequence::AppendAlias(const wxString &fullPath,

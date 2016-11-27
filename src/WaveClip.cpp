@@ -1631,11 +1631,7 @@ void WaveClip::InsertSilence(double t, double len)
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
    // use STRONG-GUARANTEE
-   if (!GetSequence()->InsertSilence(s0, slen))
-   {
-      wxASSERT(false);
-      return;
-   }
+   GetSequence()->InsertSilence(s0, slen);
 
    // use NOFAIL-GUARANTEE
    OffsetCutLines(t, len);
