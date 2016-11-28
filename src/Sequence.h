@@ -263,19 +263,38 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool Get(int b, samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len, bool mayThrow) const;
 
- public:
+public:
 
    //
-   // Public methods intended for debugging only
+   // Public methods
    //
 
-   // This function makes sure that the track isn't messed up
+   // This function throws if the track is messed up
    // because of inconsistent block starts & lengths
-   bool ConsistencyCheck(const wxChar *whereStr) const;
+   void ConsistencyCheck (const wxChar *whereStr, bool mayThrow = true) const;
 
    // This function prints information to stdout about the blocks in the
    // tracks and indicates if there are inconsistencies.
-   void DebugPrintf(wxString *dest) const;
+   static void DebugPrintf
+      (const BlockArray &block, sampleCount numSamples, wxString *dest);
+
+private:
+   static void ConsistencyCheck
+      (const BlockArray &block, size_t from,
+       sampleCount numSamples, const wxChar *whereStr,
+       bool mayThrow = true);
+
+   // The next two are used in methods that give a strong guarantee.
+   // They either throw because final consistency check fails, or swap the
+   // changed contents into place.
+
+   void CommitChangesIfConsistent
+      (BlockArray &newBlock, sampleCount numSamples, const wxChar *whereStr);
+
+   void AppendBlocksIfConsistent
+      (BlockArray &additionalBlocks, bool replaceLast,
+       sampleCount numSamples, const wxChar *whereStr);
+
 };
 
 #endif // __AUDACITY_SEQUENCE__
