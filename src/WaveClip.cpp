@@ -1277,6 +1277,9 @@ bool WaveClip::GetRMS(float *rms, double t0,
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format)
 {
+   // Note:  it is not necessary to do this recursively to cutlines.
+   // They get converted as needed when they are expanded.
+
    bool bChanged;
    bool bResult = mSequence->ConvertToSampleFormat(format, &bChanged);
    if (bResult && bChanged)
@@ -1799,6 +1802,9 @@ void WaveClip::SetRate(int rate)
 
 bool WaveClip::Resample(int rate, ProgressDialog *progress)
 {
+   // Note:  it is not necessary to do this recursively to cutlines.
+   // They get resampled as needed when they are expanded.
+
    if (rate == mRate)
       return true; // Nothing to do
 
