@@ -1342,11 +1342,9 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format)
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get converted as needed when they are expanded.
 
-   bool bChanged;
-   bool bResult = mSequence->ConvertToSampleFormat(format, &bChanged);
-   if (bResult && bChanged)
+   auto bChanged = mSequence->ConvertToSampleFormat(format);
+   if (bChanged)
       MarkChanged();
-   wxASSERT(bResult); // TODO: Throw an actual error.
 }
 
 void WaveClip::UpdateEnvelopeTrackLen()

@@ -162,8 +162,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
 
    sampleFormat GetSampleFormat() const;
-   // bool SetSampleFormat(sampleFormat format);
-   bool ConvertToSampleFormat(sampleFormat format, bool* pbChanged);
+
+   // Return true iff there is a change
+   bool ConvertToSampleFormat(sampleFormat format);
 
    //
    // Retrieving summary info

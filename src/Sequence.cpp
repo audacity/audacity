@@ -129,19 +129,16 @@ bool Sequence::SetSampleFormat(sampleFormat format)
 }
 */
 
-bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
+bool Sequence::ConvertToSampleFormat(sampleFormat format)
+// STRONG-GUARANTEE
 {
-   wxASSERT(pbChanged);
-   *pbChanged = false;
-
-   // Caller should check this no-change case before calling; we ignore it here.
    if (format == mSampleFormat)
-      return true;
+      // no change
+      return false;
 
    if (mBlock.size() == 0)
    {
       mSampleFormat = format;
-      *pbChanged = true;
       return true;
    }
 
@@ -153,25 +150,32 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    mMinSamples = sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2;
    mMaxSamples = mMinSamples * 2;
 
-   BlockArray newBlockArray;
-   // Use the ratio of old to NEW mMaxSamples to make a reasonable guess at allocation.
-   newBlockArray.reserve(1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
+   bool bSuccess = false;
+   auto cleanup = finally( [&] {
+      if (!bSuccess) {
+         // Conversion failed. Revert these member vars.
+         mSampleFormat = oldFormat;
+         mMaxSamples = oldMaxSamples;
+         mMinSamples = oldMinSamples;
+      }
+   } );
 
-   bool bSuccess = true;
+   BlockArray newBlockArray;
+   // Use the ratio of old to NEW mMaxSamples to make a reasonable guess
+   // at allocation.
+   newBlockArray.reserve
+      (1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
+
    {
       SampleBuffer bufferOld(oldMaxSamples, oldFormat);
       SampleBuffer bufferNew(oldMaxSamples, format);
 
-      for (size_t i = 0, nn = mBlock.size(); i < nn && bSuccess; i++)
+      for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
       {
          SeqBlock &oldSeqBlock = mBlock[i];
          const auto &oldBlockFile = oldSeqBlock.f;
-
          const auto len = oldBlockFile->GetLength();
-
-         bSuccess = (oldBlockFile->ReadData(bufferOld.ptr(), oldFormat, 0, len) > 0);
-         if (!bSuccess)
-            break;
+         Read(bufferOld.ptr(), oldFormat, oldSeqBlock, 0, len, true);
 
          CopySamples(bufferOld.ptr(), oldFormat, bufferNew.ptr(), format, len);
 
@@ -189,42 +193,20 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          const unsigned prevSize = newBlockArray.size();
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                   newBlockArray, blockstart, bufferNew.ptr(), len);
-         bSuccess = (newBlockArray.size() > prevSize);
-         if (bSuccess)
-            *pbChanged = true;
       }
    }
 
-   if (bSuccess)
-   {
-      // Invalidate all the old, non-aliased block files.
-      // Aliased files will be converted at save, per comment above.
+   // Invalidate all the old, non-aliased block files.
+   // Aliased files will be converted at save, per comment above.
 
-      // Replace with NEW blocks.
-      mBlock.swap(newBlockArray);
-   }
-   else
-   {
-      /* vvvvv We *should do the following, but TrackPanel::OnFormatChange() doesn't actually check the conversion results,
-         it just assumes the conversion was successful.
-         TODO: Uncomment this section when TrackPanel::OnFormatChange() is upgraded to check the results.
+   // Commit the changes to block file array
+   CommitChangesIfConsistent
+      (newBlockArray, mNumSamples, wxT("Sequence::ConvertToSampleFormat()"));
 
-         PRL:  I don't understand why the comment above justifies leaving the sequence in an inconsistent state.
-         If this function must fail, better to leave it as a no-op on this sequence.  I am uncommenting the
-         lines below, and adding one to revert mMinSamples too.
-         */
+   // Commit the other changes
+   bSuccess = true;
 
-      // Conversion failed. Revert these member vars.
-      mSampleFormat = oldFormat;
-      mMaxSamples = oldMaxSamples;
-      mMinSamples = oldMinSamples;
-
-      *pbChanged = false;  // Revert overall change flag, in case we had some partial success in the loop.
-   }
-
-   ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
-
-   return bSuccess;
+   return true;
 }
 
 std::pair<float, float> Sequence::GetMinMax(
