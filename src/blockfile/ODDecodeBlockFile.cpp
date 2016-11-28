@@ -164,7 +164,7 @@ BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
    BlockFilePtr newBlockFile;
 
    //mAliasedFile can change so we lock readdatamutex, which is responsible for it.
-   LockRead();
+   auto locker = LockForRead();
    if(IsSummaryAvailable())
    {
       //create a simpleblockfile, because once it has the summary it is a simpleblockfile for all intents an purposes
@@ -181,8 +181,6 @@ BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
       //It can do this by checking for IsDataAvailable()==false.
    }
 
-   UnlockRead();
-
    return newBlockFile;
 }
 
@@ -194,7 +192,7 @@ BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 // may throw
 {
-   LockRead();
+   auto locker = LockForRead();
    if(IsSummaryAvailable())
    {
       SimpleBlockFile::SaveXML(xmlFile);
@@ -202,12 +200,12 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
    else
    {
       xmlFile.StartTag(wxT("oddecodeblockfile"));
-       //unlock to prevent deadlock and resume lock after.
-      UnlockRead();
-      mFileNameMutex.Lock();
-      xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
-      mFileNameMutex.Unlock();
-      LockRead();
+      {
+         //unlock to prevent deadlock and resume lock after.
+         auto suspension = locker.Suspend();
+         ODLocker locker2{ &mFileNameMutex };
+         xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
+      }
       xmlFile.WriteAttr(wxT("audiofile"), mAudioFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"),
                         mAliasStart.as_long_long());
@@ -217,7 +215,6 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 
       xmlFile.EndTag(wxT("oddecodeblockfile"));
    }
-   UnlockRead();
 }
 
 /// Constructs a ODDecodeBlockFile from the xml output of WriteXML.
@@ -435,17 +432,16 @@ size_t ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
                                 size_t start, size_t len) const
 {
    size_t ret;
-   LockRead();
+   auto locker = LockForRead();
    if(IsSummaryAvailable())
       ret = SimpleBlockFile::ReadData(data,format,start,len);
    else
    {
-      //we should do an ODRequest to start processing the data here, and wait till it finishes. and just do a SimpleBlockFIle
+      //we should do an ODRequest to start processing the data here, and wait till it finishes. and just do a SimpleBlockFile
       //ReadData.
       ClearSamples(data, format, 0, len);
       ret = len;
    }
-   UnlockRead();
    return ret;
 }
 

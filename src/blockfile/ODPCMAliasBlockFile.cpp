@@ -196,7 +196,7 @@ BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
    BlockFilePtr newBlockFile;
 
    //mAliasedFile can change so we lock readdatamutex, which is responsible for it.
-   LockRead();
+   auto locker = LockForRead();
    //If the file has been written AND it has been saved, we create a PCM alias blockfile because for
    //all intents and purposes, it is the same.
    //However, if it hasn't been saved yet, we shouldn't create one because the default behavior of the
@@ -218,8 +218,6 @@ BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
       //The client code will need to schedule this blockfile for OD summarizing if it is going to a NEW track.
    }
 
-   UnlockRead();
-
    return newBlockFile;
 }
 
@@ -232,7 +230,7 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 // may throw
 {
    //we lock this so that mAliasedFileName doesn't change.
-   LockRead();
+   auto locker = LockForRead();
    if(IsSummaryAvailable())
    {
       PCMAliasBlockFile::SaveXML(xmlFile);
@@ -243,11 +241,11 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
       xmlFile.StartTag(wxT("odpcmaliasblockfile"));
 
       //unlock to prevent deadlock and resume lock after.
-      UnlockRead();
-      mFileNameMutex.Lock();
-      xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
-      mFileNameMutex.Unlock();
-      LockRead();
+      {
+         auto suspension = locker.Suspend();
+         ODLocker locker2 { &mFileNameMutex };
+         xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
+      }
 
       xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"),
@@ -257,8 +255,6 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
       xmlFile.EndTag(wxT("odpcmaliasblockfile"));
    }
-
-   UnlockRead();
 }
 
 /// Constructs a ODPCMAliasBlockFile from the xml output of WriteXML.
@@ -488,20 +484,16 @@ size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
                                 size_t start, size_t len) const
 {
 
-   LockRead();
+   auto locker = LockForRead();
 
    if(!mAliasedFileName.IsOk()){ // intentionally silenced
       memset(data,0,SAMPLE_SIZE(format)*len);
-      UnlockRead();
       return len;
    }
 
-   auto result = CommonReadData(
+   return CommonReadData(
       mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
       data, format, start, len);
-
-   UnlockRead();
-   return result;
 }
 
 /// Read the summary of this alias block from disk.  Since the audio data

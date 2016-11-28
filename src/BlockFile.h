@@ -163,10 +163,42 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // not balanced by unlocking calls.
    virtual void CloseLock(){Lock();}
 
+ protected:
    /// Prevents a read on other threads.  The basic blockfile runs on only one thread, so does nothing.
    virtual void LockRead() const {}
    /// Allows reading on other threads.
    virtual void UnlockRead() const {}
+
+   struct ReadLocker { void operator () ( const BlockFile *p ) const {
+      if (p) p->LockRead(); } };
+   struct ReadUnlocker { void operator () ( const BlockFile *p ) const {
+      if (p) p->UnlockRead(); } };
+   using ReadLockBase =
+      movable_ptr_with_deleter< const BlockFile, ReadUnlocker >;
+
+ public:
+   class ReadLock : public ReadLockBase
+   {
+      friend BlockFile;
+      ReadLock ( const BlockFile *p, const BlockFile::ReadUnlocker &u )
+         : ReadLockBase { p, u } {}
+   public:
+#ifdef __AUDACITY_OLD_STD__
+      ReadLock (const ReadLock &that) : ReadLockBase( that ) {}
+      ReadLock &operator= (const ReadLock &that)
+      {
+         *((ReadLockBase*)this) = that;
+      }
+#endif
+      ReadLock(ReadLock&&that) : ReadLockBase{ std::move(that) } {}
+      using Suspension = std::unique_ptr< const BlockFile, ReadLocker >;
+      Suspension Suspend() const
+      { if (get()) get()->UnlockRead();
+        return Suspension{ get(), ReadLocker{} }; }
+   };
+
+   // RAII wrapper about the read locking functions
+   ReadLock LockForRead() const { LockRead(); return { this, ReadUnlocker{} }; }
 
  private:
 
