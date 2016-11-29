@@ -185,7 +185,8 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          // Using Blockify will handle the cases where len > the NEW mMaxSamples. Previous code did not.
          const auto blockstart = oldSeqBlock.start;
          const unsigned prevSize = newBlockArray.size();
-         Blockify(newBlockArray, blockstart, bufferNew.ptr(), len);
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+                  newBlockArray, blockstart, bufferNew.ptr(), len);
          bSuccess = (newBlockArray.size() > prevSize);
          if (bSuccess)
             *pbChanged = true;
@@ -425,7 +426,8 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 
    // If there are blocks in the middle, copy the blockfiles directly
    for (int bb = b0 + 1; bb < b1; ++bb)
-      dest->AppendBlock(mBlock[bb]); // Increase ref count or duplicate file
+      AppendBlock(*dest->mDirManager, dest->mBlock, dest->mNumSamples, mBlock[bb]);
+      // Increase ref count or duplicate file
 
    // Do the last block
    if (b1 > b0) {
@@ -440,7 +442,8 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       }
       else
          // Special case, copy exactly
-         dest->AppendBlock(block); // Increase ref count or duplicate file
+         AppendBlock(*dest->mDirManager, dest->mBlock, dest->mNumSamples, block);
+         // Increase ref count or duplicate file
    }
 
    if (! ConsistencyCheck(wxT("Sequence::Copy()")))
@@ -507,7 +510,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       // minimum size
 
       for (unsigned int i = 0; i < srcNumBlocks; i++)
-         AppendBlock(srcBlock[i]); // Increase ref count or duplicate file
+         AppendBlock(*mDirManager, mBlock, mNumSamples, srcBlock[i]);
+         // Increase ref count or duplicate file
 
       return ConsistencyCheck(wxT("Paste branch one"));
    }
@@ -583,7 +587,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
            splitBlock, splitPoint,
            splitLen - splitPoint);
 
-      Blockify(newBlock, splitBlock.start, sumBuffer.ptr(), sum);
+      Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+               newBlock, splitBlock.start, sumBuffer.ptr(), sum);
    } else {
 
       // The final case is that we're inserting at least five blocks.
@@ -609,7 +614,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       src->Get(0, sampleBuffer.ptr() + splitPoint*sampleSize,
          mSampleFormat, 0, srcFirstTwoLen);
 
-      Blockify(newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
+      Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+               newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
 
       for (i = 2; i < srcNumBlocks - 2; i++) {
          const SeqBlock &block = srcBlock[i];
@@ -628,7 +634,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       Read(sampleBuffer.ptr() + srcLastTwoLen * sampleSize, mSampleFormat,
            splitBlock, splitPoint, rightSplit);
 
-      Blockify(newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
+      Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+               newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
    }
 
    // Copy remaining blocks to NEW block array and
@@ -734,14 +741,16 @@ bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
    return true;
 }
 
-bool Sequence::AppendBlock(const SeqBlock &b)
+bool Sequence::AppendBlock
+   (DirManager &mDirManager,
+    BlockArray &mBlock, sampleCount &mNumSamples, const SeqBlock &b)
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)b.f->GetLength())))
       return false;
 
    SeqBlock newBlock(
-      mDirManager->CopyBlockFile(b.f), // Bump ref count if not locked, else copy
+      mDirManager.CopyBlockFile(b.f), // Bump ref count if not locked, else copy
       mNumSamples
    );
    if (!newBlock.f) {
@@ -1592,7 +1601,9 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
+void Sequence::Blockify
+   (DirManager &mDirManager, size_t mMaxSamples, sampleFormat mSampleFormat,
+    BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
 {
    if (len <= 0)
       return;
@@ -1607,7 +1618,7 @@ void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, s
       int newLen = ((i + 1) * len / num) - offset;
       samplePtr bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
 
-      b.f = mDirManager->NewSimpleBlockFile(bufStart, newLen, mSampleFormat);
+      b.f = mDirManager.NewSimpleBlockFile(bufStart, newLen, mSampleFormat);
 
       list.push_back(b);
    }
@@ -1713,7 +1724,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
               preBlock, 0, preBufferLen);
 
          newBlock.erase(newBlock.end() - 1);
-         Blockify(newBlock, prepreBlock.start, scratch.ptr(), sum);
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+                  newBlock, prepreBlock.start, scratch.ptr(), sum);
       }
    }
    else {
@@ -1757,7 +1769,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          Read(scratch.ptr() + (postBufferLen * sampleSize), mSampleFormat,
               postpostBlock, 0, postpostLen);
 
-         Blockify(newBlock, start, scratch.ptr(), sum);
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+                  newBlock, start, scratch.ptr(), sum);
          b1++;
       }
    }

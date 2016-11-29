@@ -246,13 +246,20 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
-   bool AppendBlock(const SeqBlock &b);
+   static bool AppendBlock
+      (DirManager &dirManager,
+       BlockArray &blocks, sampleCount &numSamples, const SeqBlock &b);
 
    bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
              size_t blockRelativeStart, size_t len) const;
 
-   void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
+   // Accumulate NEW block files onto the end of a block array.
+   // Does not change this sequence.  The intent is to use
+   // CommitChangesIfConsistent later.
+   static void Blockify
+      (DirManager &dirManager, size_t maxSamples, sampleFormat format,
+       BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
 
    bool Get(int b, samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len) const;
