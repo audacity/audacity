@@ -109,7 +109,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    size_t GetIdealAppendLen() const;
    bool Append(samplePtr buffer, sampleFormat format, size_t len,
                XMLWriter* blockFileLog=NULL);
-   bool Delete(sampleCount start, sampleCount len);
+   void Delete(sampleCount start, sampleCount len);
    bool AppendAlias(const wxString &fullPath,
                     sampleCount start,
                     size_t len, int channel, bool useOD);

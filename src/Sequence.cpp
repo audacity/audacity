@@ -1622,12 +1622,15 @@ void Sequence::Blockify
    }
 }
 
-bool Sequence::Delete(sampleCount start, sampleCount len)
+void Sequence::Delete(sampleCount start, sampleCount len)
+// STRONG-GUARANTEE
 {
    if (len == 0)
-      return true;
+      return;
+
    if (len < 0 || start < 0 || start >= mNumSamples)
-      return false;
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
    //On-demand threads iterate over the mBlocks and the GUI thread deletes them, so for now put a mutex here over
@@ -1641,9 +1644,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
-   // Special case: if the samples to DELETE are all within a single
-   // block and the resulting length is not too small, perform the
-   // deletion within this block:
    SeqBlock *pBlock;
    decltype(pBlock->f->GetLength()) length;
 
@@ -1652,7 +1652,11 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    // The maximum size that will ever be needed
    const auto scratchSize = mMaxSamples + mMinSamples;
 
-   if (b0 == b1 && (length = (pBlock = &mBlock[b0])->f->GetLength()) - len >= mMinSamples) {
+   // Special case: if the samples to DELETE are all within a single
+   // block and the resulting length is not too small, perform the
+   // deletion within this block:
+   if (b0 == b1 &&
+       (length = (pBlock = &mBlock[b0])->f->GetLength()) - len >= mMinSamples) {
       SeqBlock &b = *pBlock;
       // start is within block
       auto pos = ( start - b.start ).as_size_t();
@@ -1670,18 +1674,25 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
            // is not more than the length of the block
            ( pos + len ).as_size_t(), newLen - pos, true);
 
-      b = SeqBlock(
-         mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat),
-         b.start
-      );
+      auto newFile =
+          mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat);
+
+      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // if we modify only one block in place.
+
+      // use NOFAIL-GUARANTEE in remaining steps
+
+      b.f = newFile;
 
       for (unsigned int j = b0 + 1; j < numBlocks; j++)
          mBlock[j].start -= len;
 
       mNumSamples -= len;
 
-      ConsistencyCheck(wxT("Delete - branch one"));
-      return true;
+      // This consistency check won't throw, it asserts.
+      // Proof that we kept consistency is not hard.
+      ConsistencyCheck(wxT("Delete - branch one"), false);
+      return;
    }
 
    // Create a NEW array of blocks
@@ -1782,14 +1793,8 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    for (i = b1 + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock[i].Plus(-len));
 
-   // Substitute our NEW array for the old one
-   mBlock.swap(newBlock);
-
-   // Update total number of samples and do a consistency check.
-   mNumSamples -= len;
-
-   ConsistencyCheck(wxT("Delete - branch two"));
-   return true;
+   CommitChangesIfConsistent
+      (newBlock, mNumSamples - len, wxT("Delete - branch two"));
 }
 
 void Sequence::ConsistencyCheck(const wxChar *whereStr, bool mayThrow) const
