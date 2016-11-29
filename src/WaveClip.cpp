@@ -413,7 +413,7 @@ void WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
 // STRONG-GUARANTEE
 {
    // use STRONG-GUARANTEE
-   mSequence->Set(buffer, format, start, len);
+   mSequence->SetSamples(buffer, format, start, len);
 
    // use NOFAIL-GUARANTEE
    MarkChanged();

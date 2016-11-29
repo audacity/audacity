@@ -90,7 +90,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
-   bool Set(samplePtr buffer, sampleFormat format,
+   void SetSamples(samplePtr buffer, sampleFormat format,
             sampleCount start, sampleCount len);
 
    // where is input, assumed to be nondecreasing, and its size is len + 1.
@@ -128,7 +128,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // loaded from an XML file via DirManager::HandleXMLTag
    void AppendBlockFile(const BlockFilePtr &blockFile);
 
-   bool SetSilence(sampleCount s0, sampleCount len);
+   void SetSilence(sampleCount s0, sampleCount len);
    void InsertSilence(sampleCount s0, sampleCount len);
 
    const std::shared_ptr<DirManager> &GetDirManager() { return mDirManager; }

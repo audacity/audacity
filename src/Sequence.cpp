@@ -634,9 +634,10 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       (newBlock, mNumSamples + addedLen, wxT("Paste branch three"));
 }
 
-bool Sequence::SetSilence(sampleCount s0, sampleCount len)
+void Sequence::SetSilence(sampleCount s0, sampleCount len)
+// STRONG-GUARANTEE
 {
-   return Set(NULL, mSampleFormat, s0, len);
+   SetSamples(NULL, mSampleFormat, s0, len);
 }
 
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
@@ -1169,12 +1170,14 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
 }
 
 // Pass NULL to set silence
-bool Sequence::Set(samplePtr buffer, sampleFormat format,
+void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
+// STRONG-GUARANTEE
 {
    if (start < 0 || start >= mNumSamples ||
-       start+len > mNumSamples)
-      return false;
+       start + len > mNumSamples)
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    SampleBuffer scratch(mMaxSamples, mSampleFormat);
 
@@ -1185,9 +1188,12 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
    }
 
    int b = FindBlock(start);
+   BlockArray newBlock;
+   std::copy( mBlock.begin(), mBlock.begin() + b, std::back_inserter(newBlock) );
 
    while (len != 0) {
-      SeqBlock &block = mBlock[b];
+      newBlock.push_back( mBlock[b] );
+      SeqBlock &block = newBlock.back();
       // start is within block
       const auto bstart = ( start - block.start ).as_size_t();
       const auto fileLength = block.f->GetLength();
@@ -1242,8 +1248,9 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
       b++;
    }
 
-   ConsistencyCheck(wxT("Set"));
-   return true;
+   std::copy( mBlock.begin() + b, mBlock.end(), std::back_inserter(newBlock) );
+
+   CommitChangesIfConsistent( newBlock, mNumSamples, wxT("SetSamples") );
 }
 
 namespace {
