@@ -62,6 +62,7 @@ BlockFilePtr LegacyAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 }
 
 void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("legacyblockfile"));
 

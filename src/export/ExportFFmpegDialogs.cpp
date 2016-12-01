@@ -828,6 +828,7 @@ XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
 }
 
 void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.Write(wxT("<?xml "));
    xmlFile.Write(wxT("version=\"1.0\" "));
@@ -847,6 +848,7 @@ void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
 }
 
 void FFmpegPresets::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("ffmpeg_presets"));
    xmlFile.WriteAttr(wxT("version"),wxT("1.0"));

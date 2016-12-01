@@ -3579,6 +3579,7 @@ void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
 {
+   // may throw
    mClient->ExportPresets();
 
    return;

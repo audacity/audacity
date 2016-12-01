@@ -1820,6 +1820,7 @@ void VSTEffect::ExportPresets()
    }
    else if (ext.CmpNoCase(wxT("xml")) == 0)
    {
+      // may throw
       SaveXML(fn);
    }
    else
@@ -3559,6 +3560,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
 
 // Throws exceptions rather than giving error return.
 void VSTEffect::SaveXML(const wxFileName & fn)
+// may throw
 {
    XMLFileWriter xmlFile;
 

@@ -404,6 +404,7 @@ size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
 }
 
 void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("simpleblockfile"));
 

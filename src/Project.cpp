@@ -3541,6 +3541,7 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile) const
 }
 
 void AudacityProject::WriteXML(XMLWriter &xmlFile)
+// may throw
 {
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...

@@ -83,6 +83,7 @@ public:
 };
 
 static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
+// may throw
 {
    wxString line;
    wxString kind;

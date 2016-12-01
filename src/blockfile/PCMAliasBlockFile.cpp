@@ -101,6 +101,7 @@ BlockFilePtr PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 }
 
 void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("pcmaliasblockfile"));
 

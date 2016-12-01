@@ -551,6 +551,7 @@ XMLTagHandler *Tags::HandleXMLChild(const wxChar *tag)
 }
 
 void Tags::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("tags"));
 

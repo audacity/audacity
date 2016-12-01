@@ -66,6 +66,7 @@ XMLWriter::~XMLWriter()
 }
 
 void XMLWriter::StartTag(const wxString &name)
+// may throw
 {
    int i;
 
@@ -88,6 +89,7 @@ void XMLWriter::StartTag(const wxString &name)
 }
 
 void XMLWriter::EndTag(const wxString &name)
+// may throw
 {
    int i;
 
@@ -117,6 +119,7 @@ void XMLWriter::EndTag(const wxString &name)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, const wxString &value)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
       name.c_str(),
@@ -124,11 +127,13 @@ void XMLWriter::WriteAttr(const wxString &name, const wxString &value)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, const wxChar *value)
+// may throw from Write()
 {
    WriteAttr(name, wxString(value));
 }
 
 void XMLWriter::WriteAttr(const wxString &name, int value)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%d\""),
       name.c_str(),
@@ -136,6 +141,7 @@ void XMLWriter::WriteAttr(const wxString &name, int value)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, bool value)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%d\""),
       name.c_str(),
@@ -143,6 +149,7 @@ void XMLWriter::WriteAttr(const wxString &name, bool value)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, long value)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%ld\""),
       name.c_str(),
@@ -150,6 +157,7 @@ void XMLWriter::WriteAttr(const wxString &name, long value)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, long long value)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%lld\""),
       name.c_str(),
@@ -157,6 +165,7 @@ void XMLWriter::WriteAttr(const wxString &name, long long value)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, size_t value)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%lld\""),
       name.c_str(),
@@ -164,6 +173,7 @@ void XMLWriter::WriteAttr(const wxString &name, size_t value)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, float value, int digits)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
       name.c_str(),
@@ -171,6 +181,7 @@ void XMLWriter::WriteAttr(const wxString &name, float value, int digits)
 }
 
 void XMLWriter::WriteAttr(const wxString &name, double value, int digits)
+// may throw from Write()
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
       name.c_str(),
@@ -178,6 +189,7 @@ void XMLWriter::WriteAttr(const wxString &name, double value, int digits)
 }
 
 void XMLWriter::WriteData(const wxString &value)
+// may throw from Write()
 {
    int i;
 
@@ -189,6 +201,7 @@ void XMLWriter::WriteData(const wxString &value)
 }
 
 void XMLWriter::WriteSubTree(const wxString &value)
+// may throw from Write()
 {
    if (mInTag) {
       Write(wxT(">\n"));
@@ -270,6 +283,7 @@ void XMLFileWriter::Open(const wxString &name, const wxString &mode)
 }
 
 void XMLFileWriter::Close()
+// may throw
 {
    while (mTagstack.GetCount()) {
       EndTag(mTagstack[0]);

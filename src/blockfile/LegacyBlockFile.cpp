@@ -197,6 +197,7 @@ size_t LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
 }
 
 void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("legacyblockfile"));
 
