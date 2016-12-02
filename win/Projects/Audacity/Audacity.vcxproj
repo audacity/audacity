@@ -225,6 +225,7 @@
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
     <ClCompile Include="..\..\..\src\UndoManager.cpp" />
+    <ClCompile Include="..\..\..\src\UserException.cpp" />
     <ClCompile Include="..\..\..\src\ViewInfo.cpp" />
     <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
     <ClCompile Include="..\..\..\src\WaveClip.cpp" />
@@ -464,6 +465,7 @@
     <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
+    <ClInclude Include="..\..\..\src\UserException.h" />
     <ClInclude Include="..\..\..\src\WaveTrackLocation.h" />
     <ClInclude Include="..\..\..\src\widgets\BackedPanel.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />

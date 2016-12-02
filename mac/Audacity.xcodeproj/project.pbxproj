@@ -1206,6 +1206,7 @@
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
 		5E02BFF21D1164DF00EB7578 /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E02BFF01D1164DF00EB7578 /* Distortion.cpp */; };
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
+		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
 		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
@@ -2982,6 +2983,8 @@
 		5E02BFF11D1164DF00EB7578 /* Distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distortion.h; sourceTree = "<group>"; };
 		5E07842C1DEE6B8600CA76EA /* FileException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileException.cpp; sourceTree = "<group>"; };
 		5E07842D1DEE6B8600CA76EA /* FileException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileException.h; sourceTree = "<group>"; };
+		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
+		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
 		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
@@ -3919,6 +3922,7 @@
 				1790B0EC09883BFD008A330A /* TrackPanel.cpp */,
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
+				5E07842F1DF1E4F400CA76EA /* UserException.cpp */,
 				28C8211C1B5C661E00B53328 /* ViewInfo.cpp */,
 				1790B0F709883BFD008A330A /* VoiceKey.cpp */,
 				1790B0F909883BFD008A330A /* WaveClip.cpp */,
@@ -4019,6 +4023,7 @@
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
+				5E0784301DF1E4F400CA76EA /* UserException.h */,
 				1790B0F609883BFD008A330A /* ViewInfo.h */,
 				1790B0F809883BFD008A330A /* VoiceKey.h */,
 				1790B0FA09883BFD008A330A /* WaveClip.h */,
@@ -7368,6 +7373,7 @@
 				1790B13F09883BFD008A330A /* LadspaEffect.cpp in Sources */,
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
+				5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */,
 				1790B14309883BFD008A330A /* Noise.cpp in Sources */,
 				1790B14409883BFD008A330A /* NoiseRemoval.cpp in Sources */,
 				1790B14509883BFD008A330A /* Normalize.cpp in Sources */,

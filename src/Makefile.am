@@ -245,6 +245,8 @@ audacity_SOURCES = \
 	TranslatableStringArray.h \
 	UndoManager.cpp \
 	UndoManager.h \
+	UserException.cpp \
+	UserException.h \
 	ViewInfo.cpp \
 	ViewInfo.h \
 	VoiceKey.cpp \
