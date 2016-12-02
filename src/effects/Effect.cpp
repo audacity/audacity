@@ -3580,6 +3580,7 @@ void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
 {
    // may throw
+   // exceptions are handled in AudacityApp::OnExceptionInMainLoop
    mClient->ExportPresets();
 
    return;

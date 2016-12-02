@@ -115,8 +115,6 @@ private:
    wxMemoryOutputStream mBuffer;
    wxMemoryOutputStream mDict;
    NameMap mNames;
-   IdMap mIds;
-   IdMapArray mIdStack;
    size_t mAllocSize;
 };
 

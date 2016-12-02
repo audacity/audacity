@@ -265,58 +265,107 @@ wxString XMLWriter::XMLEsc(const wxString & s)
 ///
 /// XMLFileWriter class
 ///
-XMLFileWriter::XMLFileWriter()
+XMLFileWriter::XMLFileWriter
+   ( const wxString &outputPath, const wxString &caption, bool keepBackup )
+   : mOutputPath{ outputPath }
+   , mCaption{ caption }
+   , mKeepBackup{ keepBackup }
+// may throw
 {
-}
+   auto tempPath = wxFileName::CreateTempFileName( outputPath );
+   if (!wxFFile::Open(tempPath, wxT("wb")) || !IsOpened())
+      ThrowException( tempPath, mCaption );
 
-XMLFileWriter::~XMLFileWriter()
-{
-   if (IsOpened()) {
-      Close();
+   if (mKeepBackup) {
+      int index = 0;
+      wxString backupName;
+
+      do {
+         wxFileName outputFn{ mOutputPath };
+         index++;
+         mBackupName =
+         outputFn.GetPath() + wxFILE_SEP_PATH +
+         outputFn.GetName() + wxT("_bak") +
+         wxString::Format(wxT("%d"), index) + wxT(".") +
+         outputFn.GetExt();
+      } while( ::wxFileExists( mBackupName ) );
+
+      // Open the backup file to be sure we can write it and reserve it
+      // until committing
+      if (! mBackupFile.Open( mBackupName, "wb" ) || ! mBackupFile.IsOpened() )
+         ThrowException( mBackupName, mCaption );
    }
 }
 
-void XMLFileWriter::Open(const wxString &name, const wxString &mode)
+
+XMLFileWriter::~XMLFileWriter()
 {
-   if (!wxFFile::Open(name, mode))
-      throw XMLFileWriterException(_("Error Opening File"));
+   // Don't let a destructor throw!
+   GuardedCall< void >( [&] {
+      if (IsOpened()) {
+         // Was not committed
+         auto fileName = GetName();
+         CloseWithoutEndingTags();
+         ::wxRemoveFile( fileName );
+      }
+   } );
 }
 
-void XMLFileWriter::Close()
+void XMLFileWriter::Commit()
 // may throw
 {
    while (mTagstack.GetCount()) {
       EndTag(mTagstack[0]);
    }
 
+   auto tempPath = GetName();
    CloseWithoutEndingTags();
+
+   if (mKeepBackup) {
+      if (! mBackupFile.Close() ||
+          ! wxRenameFile( mOutputPath, mBackupName ) )
+         ThrowException( mBackupName, mCaption );
+   }
+   else {
+      if ( ! wxRemoveFile( mOutputPath ) )
+         ThrowException( mOutputPath, mCaption );
+   }
+
+   // Now we have vacated the file at the output path and are committed.
+   // But not completely finished with steps of the commit operation.
+   // If this step fails, we haven't lost the successfully written data,
+   // but just failed to put it in the right place.
+   if (! wxRenameFile( tempPath, mOutputPath ) )
+      throw FileException{
+         FileException::Cause::Rename, tempPath, mCaption, mOutputPath
+      };
 }
 
 void XMLFileWriter::CloseWithoutEndingTags()
+// may throw
 {
    // Before closing, we first flush it, because if Flush() fails because of a
    // "disk full" condition, we can still at least try to close the file.
    if (!wxFFile::Flush())
    {
       wxFFile::Close();
-      /* i18n-hint: 'flushing' means writing any remaining queued up changes
-       * to disk that have not yet been written.*/
-      throw XMLFileWriterException(_("Error Flushing File"));
+      ThrowException( GetName(), mCaption );
    }
 
    // Note that this should never fail if flushing worked.
    if (!wxFFile::Close())
-      throw XMLFileWriterException(_("Error Closing File"));
+      ThrowException( GetName(), mCaption );
 }
 
 void XMLFileWriter::Write(const wxString &data)
+// may throw
 {
-   if (!wxFFile::Write(data, wxConvUTF8))
+   if (!wxFFile::Write(data, wxConvUTF8) || Error())
    {
       // When writing fails, we try to close the file before throwing the
       // exception, so it can at least be deleted.
       wxFFile::Close();
-      throw XMLFileWriterException(_("Error Writing to File"));
+      ThrowException( GetName(), mCaption );
    }
 }
 

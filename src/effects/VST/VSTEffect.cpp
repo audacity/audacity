@@ -3562,10 +3562,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
 void VSTEffect::SaveXML(const wxFileName & fn)
 // may throw
 {
-   XMLFileWriter xmlFile;
-
-   // Create/Open the file
-   xmlFile.Open(fn.GetFullPath(), wxT("wb"));
+   XMLFileWriter xmlFile{ fn.GetFullPath(), _("Error Saving Effect Presets") };
 
    xmlFile.StartTag(wxT("vstprogrampersistence"));
    xmlFile.WriteAttr(wxT("version"), wxT("2"));
@@ -3616,10 +3613,7 @@ void VSTEffect::SaveXML(const wxFileName & fn)
 
    xmlFile.EndTag(wxT("vstprogrampersistence"));
 
-   // Close the file
-   xmlFile.Close();
-
-   return;
+   xmlFile.Commit();
 }
 
 bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)

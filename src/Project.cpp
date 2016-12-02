@@ -3803,37 +3803,21 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
    }
 
-   // Write the AUP file.
-   XMLFileWriter saveFile;
-
-   try
-   {
-      saveFile.Open(mFileName, wxT("wb"));
+   auto success = GuardedCall< bool >( [&] {
+      // Write the AUP file.
+      XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
 
       WriteXMLHeader(saveFile);
       WriteXML(saveFile);
       mStrOtherNamesArray.Clear();
 
-      saveFile.Close();
-   }
-   catch (const XMLFileWriterException &exception)
-   {
-      wxMessageBox(wxString::Format(
-         _("Couldn't write to file \"%s\": %s"),
-         mFileName.c_str(), exception.GetMessage().c_str()),
-         _("Error Saving Project"), wxICON_ERROR);
+      saveFile.Commit();
 
-      // When XMLWriter throws an exception, it tries to close it before,
-      // so we can at least try to DELETE the incomplete file and move the
-      // backup file over.
-      if (safetyFileName != wxT(""))
-      {
-         wxRemove(mFileName);
-         wxRename(safetyFileName, mFileName);
-      }
+      return true;
+   } );
 
+   if (!success)
       return false;
-   }
 
    if (bWantSaveCompressed)
       mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.
@@ -5103,7 +5087,9 @@ void AudacityProject::AutoSave()
    wxString fn = wxFileName(FileNames::AutoSaveDir(),
       projName + wxString(wxT(" - ")) + CreateUniqueName()).GetFullPath();
 
-   try
+   // PRL:  I found a try-catch and rewrote it,
+   // but this guard is unnecessary because AutoSaveFile does not throw
+   bool success = GuardedCall< bool >( [&]
    {
       VarSetter<bool> setter(&mAutoSaving, true, false);
 
@@ -5114,18 +5100,11 @@ void AudacityProject::AutoSave()
 
       wxFFile saveFile;
       saveFile.Open(fn + wxT(".tmp"), wxT("wb"));
-      buffer.Write(saveFile);
-      saveFile.Close();
-   }
-   catch (const XMLFileWriterException &exception)
-   {
-      wxMessageBox(wxString::Format(
-         _("Couldn't write to file \"%s\": %s"),
-         (fn + wxT(".tmp")).c_str(), exception.GetMessage().c_str()),
-         _("Error Writing Autosave File"), wxICON_ERROR, this);
+      return buffer.Write(saveFile);
+   } );
 
+   if (!success)
       return;
-   }
 
    // Now that we have a NEW auto-save file, DELETE the old one
    DeleteCurrentAutoSaveFile();
