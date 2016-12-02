@@ -1403,13 +1403,10 @@ void WaveClip::Append(samplePtr buffer, sampleFormat format,
 
    for(;;) {
       if (mAppendBufferLen >= blockSize) {
-         bool success =
-            // flush some previously appended contents
-            // use STRONG-GUARANTEE
-            mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
-                              blockFileLog);
-         if (!success)
-            return;
+         // flush some previously appended contents
+         // use STRONG-GUARANTEE
+         mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
+                           blockFileLog);
 
          // use NOFAIL-GUARANTEE for rest of this "if"
          memmove(mAppendBuffer.ptr(),
@@ -1444,14 +1441,11 @@ void WaveClip::AppendAlias(const wxString &fName, sampleCount start,
 // STRONG-GUARANTEE
 {
    // use STRONG-GUARANTEE
-   bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
+   mSequence->AppendAlias(fName, start, len, channel,useOD);
 
    // use NOFAIL-GUARANTEE
-   if (result)
-   {
-      UpdateEnvelopeTrackLen();
-      MarkChanged();
-   }
+   UpdateEnvelopeTrackLen();
+   MarkChanged();
 }
 
 void WaveClip::AppendCoded(const wxString &fName, sampleCount start,
@@ -1459,14 +1453,11 @@ void WaveClip::AppendCoded(const wxString &fName, sampleCount start,
 // STRONG-GUARANTEE
 {
    // use STRONG-GUARANTEE
-   bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);
+   mSequence->AppendCoded(fName, start, len, channel, decodeType);
 
    // use NOFAIL-GUARANTEE
-if (result)
-   {
-      UpdateEnvelopeTrackLen();
-      MarkChanged();
-   }
+   UpdateEnvelopeTrackLen();
+   MarkChanged();
 }
 
 void WaveClip::Flush()
@@ -1479,7 +1470,6 @@ void WaveClip::Flush()
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
-   bool success = true;
    if (mAppendBufferLen > 0) {
 
       auto cleanup = finally( [&] {
@@ -1492,7 +1482,8 @@ void WaveClip::Flush()
          MarkChanged();
       } );
 
-      success = mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(), mAppendBufferLen);
+      mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(),
+         mAppendBufferLen);
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
@@ -1904,12 +1895,8 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
          break;
       }
 
-      if (!newSequence->Append((samplePtr)outBuffer.get(), floatSample,
-                               outGenerated))
-      {
-         error = true;
-         break;
-      }
+      newSequence->Append((samplePtr)outBuffer.get(), floatSample,
+                          outGenerated);
 
       if (progress)
       {

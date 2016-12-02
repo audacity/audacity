@@ -107,14 +107,14 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   bool Append(samplePtr buffer, sampleFormat format, size_t len,
+   void Append(samplePtr buffer, sampleFormat format, size_t len,
                XMLWriter* blockFileLog=NULL);
    void Delete(sampleCount start, sampleCount len);
-   bool AppendAlias(const wxString &fullPath,
+   void AppendAlias(const wxString &fullPath,
                     sampleCount start,
                     size_t len, int channel, bool useOD);
 
-   bool AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
