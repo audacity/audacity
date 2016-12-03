@@ -2672,19 +2672,21 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       ClearPlayRegion();
    }
 
-   StartQPPlay(evt.ShiftDown(), evt.ControlDown());
-
    mMouseEventState = mesNone;
    mIsDragging = false;
    mLeftDownClick = -1;
 
-   if (mPlayRegionLock) {
-      // Restore Locked Play region
-      SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-      mProject->OnLockPlayRegion();
-      // and release local lock
-      mPlayRegionLock = false;
-   }
+   auto cleanup = finally( [&] {
+      if (mPlayRegionLock) {
+         // Restore Locked Play region
+         SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
+         mProject->OnLockPlayRegion();
+         // and release local lock
+         mPlayRegionLock = false;
+      }
+   } );
+
+   StartQPPlay(evt.ShiftDown(), evt.ControlDown());
 }
 
 void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
@@ -2732,18 +2734,20 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
          options.timeTrack = NULL;
 
       ControlToolBar::PlayAppearance appearance =
-      cutPreview ? ControlToolBar::PlayAppearance::CutPreview
-      : options.playLooped ? ControlToolBar::PlayAppearance::Looped
-      : ControlToolBar::PlayAppearance::Straight;
+         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
+         : options.playLooped ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
+
+      mPlayRegionStart = start;
+      mPlayRegionEnd = end;
+      Refresh();
+
       ctb->PlayPlayRegion((SelectedRegion(start, end)),
                           options, PlayMode::normalPlay,
                           appearance,
                           false,
                           true);
 
-      mPlayRegionStart = start;
-      mPlayRegionEnd = end;
-      Refresh();
    }
 }
 
