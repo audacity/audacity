@@ -873,6 +873,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       }
    }
 
+   const auto tolerance = 2.0 / GetRate();
+
    // Now, clear the selection
    if (HandleClear(t0, t1, false, false)) {
 
@@ -894,7 +896,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                for (const auto clip : clips) {
                   // Merge this clip and the previous clip if the end time
                   // falls within it and this isn't the first clip in the track.
-                  if (fabs(t1 - clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE) {
+                  if (fabs(t1 - clip->GetStartTime()) < tolerance) {
                      if (prev) {
                         bool bResult = MergeClips(GetClipIndex(prev), GetClipIndex(clip));
                         wxASSERT(bResult); // TO DO: Actually handle this.
@@ -920,7 +922,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                      wxUnusedVar(bResult);
                      break;
                   }
-                  if (fabs(t0 - clip->GetEndTime()) < WAVETRACK_MERGE_POINT_TOLERANCE)
+                  if (fabs(t0 - clip->GetEndTime()) < tolerance)
                      // Merge this clip and the next clip if the start time
                      // falls within it and this isn't the last clip in the track.
                      prev = clip;
