@@ -2414,6 +2414,11 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       return;
    }
 
+   // TODO: consider postponing these steps until after the possible veto
+   // below:  closing the two analysis dialogs, and stopping audio streams.
+   // Streams can be for play, recording, or monitoring.  But maybe it still
+   // makes sense to stop any recording before putting up the dialog.
+
    if (mFreqWindow) {
       mFreqWindow->Destroy();
       mFreqWindow = NULL;
@@ -2472,6 +2477,18 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
          }
       }
    }
+
+#ifdef __WXMAC__
+   // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
+   // closing a project that was made full-screen (as by clicking the green dot
+   // or command+/; not merely "maximized" as by clicking the title bar or
+   // Zoom in the Window menu) leaves the screen black.
+   // Fix it by un-full-screening.
+   // (But is there a different way to do this? What do other applications do?
+   //  I don't see full screen windows of Safari shrinking, but I do see
+   //  momentary blackness.)
+   ShowFullScreen(false);
+#endif
 
    ModuleManager::Get().Dispatch(ProjectClosing);
 
