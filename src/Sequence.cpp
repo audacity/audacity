@@ -157,8 +157,8 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
 
    bool bSuccess = true;
    {
-      SampleBuffer bufferOld(mMaxSamples, oldFormat);
-      SampleBuffer bufferNew(mMaxSamples, format);
+      SampleBuffer bufferOld(oldMaxSamples, oldFormat);
+      SampleBuffer bufferNew(oldMaxSamples, format);
 
       for (size_t i = 0, nn = mBlock.size(); i < nn && bSuccess; i++)
       {
