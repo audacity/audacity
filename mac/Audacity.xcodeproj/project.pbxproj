@@ -1433,7 +1433,7 @@
 		2892CE28131AFB1900E1E17D /* Install miscellany */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
-			dstPath = /Audacity;
+			dstPath = /Audacity/Audacity.app/Contents;
 			dstSubfolderSpec = 0;
 			files = (
 				28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */,
@@ -6775,7 +6775,7 @@
 			);
 			name = "Copy nyquist";
 			outputPaths = (
-				"$(TARGET_BUILD_DIR)/nyquist",
+				"$(TARGET_BUILD_DIR)/Audacity.app/Contents/nyquist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -6791,7 +6791,7 @@
 			);
 			name = "Copy plug-ins";
 			outputPaths = (
-				"$(TARGET_BUILD_DIR)/plug-ins",
+				"$(TARGET_BUILD_DIR)/Audacity.app/Contents/plug-ins",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
