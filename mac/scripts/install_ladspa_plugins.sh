@@ -102,7 +102,7 @@ case "${ACTION}" in
    ;;
 
    install)
-      TARGET_BUILD_DIR="${DSTROOT}/Audacity/Audacity.app/Contents/plug-ins"
+      TARGET_BUILD_DIR="${DSTROOT}/Audacity.app/Contents/plug-ins"
       installAction
    ;;
 

@@ -1433,7 +1433,7 @@
 		2892CE28131AFB1900E1E17D /* Install miscellany */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
-			dstPath = /Audacity/Audacity.app/Contents;
+			dstPath = /Audacity.app/Contents;
 			dstSubfolderSpec = 0;
 			files = (
 				28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */,
@@ -8082,7 +8082,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Audacity;
+				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
@@ -8334,7 +8334,7 @@
 					CC_HASVISIBILITY,
 				);
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
@@ -8412,7 +8412,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Audacity;
+				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
@@ -8664,7 +8664,7 @@
 					CC_HASVISIBILITY,
 				);
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
@@ -8807,7 +8807,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
@@ -8837,7 +8837,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
