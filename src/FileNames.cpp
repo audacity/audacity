@@ -97,9 +97,10 @@ wxString FileNames::DataDir()
       // the prefs are stored in the user data dir provided by the OS.
       wxFileName exePath(PlatformCompatibility::GetExecutablePath());
 #if defined(__WXMAC__)
-      // This removes (for instance) "Audacity.app/Contents/MacOSX"
-      exePath.RemoveLastDir();
-      exePath.RemoveLastDir();
+      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      //exePath.RemoveLastDir();
+      //exePath.RemoveLastDir();
+      // just remove the MacOSX part.
       exePath.RemoveLastDir();
 #endif
       wxFileName portablePrefsPath(exePath.GetPath(), wxT("Portable Settings"));
@@ -129,9 +130,10 @@ wxString FileNames::HtmlHelpDir()
 {
 #if defined(__WXMAC__)
    wxFileName exePath(PlatformCompatibility::GetExecutablePath());
-      // This removes (for instance) "Audacity.app/Contents/MacOSX"
-      exePath.RemoveLastDir();
-      exePath.RemoveLastDir();
+      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      //exePath.RemoveLastDir();
+      //exePath.RemoveLastDir();
+      // just remove the MacOSX part.
       exePath.RemoveLastDir();
 
    return wxFileName( exePath.GetPath()+wxT("/help/manual"), wxEmptyString ).GetFullPath();
@@ -182,9 +184,10 @@ wxString FileNames::BaseDir()
 #if defined(__WXMAC__)
    baseDir = PlatformCompatibility::GetExecutablePath();
 
-   // This removes (for instance) "Audacity.app/Contents/MacOSX/"
-   baseDir.RemoveLastDir();
-   baseDir.RemoveLastDir();
+   // Path ends for example in "Audacity.app/Contents/MacOSX"
+   //baseDir.RemoveLastDir();
+   //baseDir.RemoveLastDir();
+   // just remove the MacOSX part.
    baseDir.RemoveLastDir();
 #elif defined(__WXMSW__)
    // Don't use wxStandardPaths::Get().GetDataDir() since it removes
