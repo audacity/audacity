@@ -759,6 +759,46 @@ Final_action<F> finally (F f)
 }
 
 /*
+ * Set a variable temporarily in a scope
+ */
+template< typename T >
+struct RestoreValue {
+   T oldValue;
+   void operator () ( T *p ) const { if (p) *p = oldValue; }
+};
+
+template< typename T >
+class ValueRestorer : public std::unique_ptr< T, RestoreValue<T> >
+{
+   using std::unique_ptr< T, RestoreValue<T> >::reset; // make private
+   // But release() remains public and can be useful to commit a changed value
+public:
+   explicit ValueRestorer( T &var )
+      : std::unique_ptr< T, RestoreValue<T> >( &var, { var } )
+   {}
+   explicit ValueRestorer( T &var, const T& newValue )
+      : std::unique_ptr< T, RestoreValue<T> >( &var, { var } )
+   { var = newValue; }
+   ValueRestorer(ValueRestorer &&that)
+      : std::unique_ptr < T, RestoreValue<T> > ( std::move(that) ) {};
+   ValueRestorer & operator= (ValueRestorer &&that)
+   {
+      if (this != &that)
+         std::unique_ptr < T, RestoreValue<T> >::operator=(std::move(that));
+      return *this;
+   }
+};
+
+// inline functions provide convenient parameter type deduction
+template< typename T >
+ValueRestorer< T > valueRestorer( T& var )
+{ return ValueRestorer< T >{ var }; }
+
+template< typename T >
+ValueRestorer< T > valueRestorer( T& var, const T& newValue )
+{ return ValueRestorer< T >{ var, newValue }; }
+
+/*
  * A convenience for use with range-for
  */
 template <typename Iterator>
