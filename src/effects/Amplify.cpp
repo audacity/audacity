@@ -179,13 +179,10 @@ bool EffectAmplify::Init()
 
 void EffectAmplify::Preview(bool dryOnly)
 {
-   double ratio = mRatio;
-   double peak = mPeak;
+   auto cleanup1 = valueRestorer( mRatio );
+   auto cleanup2 = valueRestorer( mPeak );
 
    Effect::Preview(dryOnly);
-
-   mRatio = ratio;
-   mPeak = peak;
 }
 
 void EffectAmplify::PopulateOrExchange(ShuttleGui & S)

@@ -1092,9 +1092,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          for(size_t j = mM - 1; j < wcopy; j++)
             buffer[i+j] = thisWindow[j];
 
-         float *tempP = thisWindow;
-         thisWindow = lastWindow;
-         lastWindow = tempP;
+         std::swap( thisWindow, lastWindow );
       }  //next i, lump of this block
 
       output->Append((samplePtr)buffer.get(), floatSample, block);

@@ -103,10 +103,9 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
       track->Get((samplePtr) buffer.get(), floatSample, s, block);
 
       //Process the buffer.  If it fails, clean up and exit.
-      if (!ProcessSimpleMono(buffer.get(), block)) {
+      if (!ProcessSimpleMono(buffer.get(), block))
          //Return false because the effect failed.
          return false;
-      }
 
       //Processing succeeded. copy the newly-changed samples back
       //onto the track.
@@ -118,9 +117,8 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
       //Update the Progress meter
       if (TrackProgress(mCurTrackNum,
                         (s - start).as_double() /
-                        len)) {
+                        len))
          return false;
-      }
    }
 
    //Return true because the effect processing succeeded.

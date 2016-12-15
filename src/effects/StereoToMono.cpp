@@ -125,9 +125,13 @@ bool EffectStereoToMono::Process()
       count++;
    }
 
-   mOutTrack.reset();
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
+}
+
+void EffectStereoToMono::End()
+{
+   mOutTrack.reset();
 }
 
 bool EffectStereoToMono::ProcessOne(int count)

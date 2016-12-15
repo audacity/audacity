@@ -224,7 +224,6 @@ bool EffectNoiseRemoval::Process()
          auto len = end - start;
 
          if (!ProcessOne(count, track, start, len)) {
-            Cleanup();
             bGoodResult = false;
             break;
          }
@@ -238,8 +237,6 @@ bool EffectNoiseRemoval::Process()
       mDoProfile = false;
    }
 
-   if (bGoodResult)
-      Cleanup();
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
@@ -305,7 +302,7 @@ void EffectNoiseRemoval::Initialize()
    }
 }
 
-void EffectNoiseRemoval::Cleanup()
+void EffectNoiseRemoval::End()
 {
    hFFT.reset();
 
@@ -322,6 +319,8 @@ void EffectNoiseRemoval::Cleanup()
    mInWaveBuffer.reset();
    mWindow.reset();
    mOutOverlapBuffer.reset();
+
+   mOutputTrack.reset();
 }
 
 void EffectNoiseRemoval::StartNewTrack()
@@ -579,9 +578,6 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
          bool bResult = track->ClearAndPaste(t0, t0 + tLen, mOutputTrack.get(), true, false);
          wxASSERT(bResult); // TO DO: Actually handle this.
       }
-
-      // Delete the outputTrack now that its data is inserted in place
-      mOutputTrack.reset();
    }
 
    return bLoopSuccess;
@@ -688,14 +684,16 @@ void NoiseRemovalDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    m_pEffect->mFreqSmoothingHz =  mFreq;
    m_pEffect->mAttackDecayTime =  mTime;
 
-   m_pEffect->Preview();
+   auto cleanup = finally( [&] {
+      m_pEffect->mSensitivity = oldSensitivity;
+      m_pEffect->mNoiseGain = oldGain;
+      m_pEffect->mFreqSmoothingHz =  oldFreq;
+      m_pEffect->mAttackDecayTime =  oldTime;
+      m_pEffect->mbLeaveNoise = oldLeaveNoise;
+      m_pEffect->mDoProfile = oldDoProfile;
+   } );
 
-   m_pEffect->mSensitivity = oldSensitivity;
-   m_pEffect->mNoiseGain = oldGain;
-   m_pEffect->mFreqSmoothingHz =  oldFreq;
-   m_pEffect->mAttackDecayTime =  oldTime;
-   m_pEffect->mbLeaveNoise = oldLeaveNoise;
-   m_pEffect->mDoProfile = oldDoProfile;
+   m_pEffect->Preview();
 }
 
 void NoiseRemovalDialog::OnRemoveNoise( wxCommandEvent & WXUNUSED(event))
