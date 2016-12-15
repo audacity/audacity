@@ -266,6 +266,10 @@ void LabelTrack::WarpLabels(const TimeWarper &warper) {
          warper.Warp(labelStruct.getT0()),
          warper.Warp(labelStruct.getT1()));
    }
+
+   // This should not be needed, assuming the warper is nondecreasing, but
+   // let's not assume too much.
+   SortLabels();
 }
 
 void LabelTrack::ResetFlags()
