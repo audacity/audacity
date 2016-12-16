@@ -293,7 +293,8 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         project->OnEffect(mEffects[i]->GetID(), true);
+         project->OnEffect(mEffects[i]->GetID(),
+                           AudacityProject::OnEffectFlags::kConfigured);
 
          mPowerState[i] = false;
 
