@@ -484,7 +484,6 @@ protected:
  // Used only by the base Effect class
  //
 private:
-   wxWindow *mParent;
    TrackList *mTracks; // the complete list of all tracks
 
    bool mIsBatch;

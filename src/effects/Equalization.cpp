@@ -570,14 +570,10 @@ bool EffectEqualization::PopulateUI(wxWindow *parent)
 
 bool EffectEqualization::CloseUI()
 {
-   mUIParent->RemoveEventHandler(this);
-
-   mUIParent = NULL;
-
    mCurve = NULL;
    mPanel = NULL;
 
-   return true;
+   return Effect::CloseUI();
 }
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)

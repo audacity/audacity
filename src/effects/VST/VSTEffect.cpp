@@ -1544,9 +1544,13 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if ( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    //   mProcessLevel = 1;      // in GUI thread
 
@@ -1569,12 +1573,12 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    if (SupportsRealtime() && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }

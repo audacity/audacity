@@ -88,8 +88,6 @@ WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
 
 Effect::Effect()
 {
-   mParent = NULL;
-
    mClient = NULL;
 
    mTracks = NULL;
@@ -520,7 +518,8 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
 
    if (mUIDialog)
    {
-      mUIDialog->Close(true);
+      if ( mUIDialog->Close(true) )
+         mUIDialog = nullptr;
       return false;
    }
 
@@ -529,8 +528,9 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
       return mClient->ShowInterface(parent, forceModal);
    }
 
-   mParent = parent;
-
+   // mUIDialog is null
+   auto cleanup = valueRestorer( mUIDialog );
+   
    mUIDialog = CreateUI(parent, this);
    if (!mUIDialog)
    {
@@ -544,14 +544,13 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    if (SupportsRealtime() && !forceModal)
    {
       mUIDialog->Show();
+      cleanup.release();
 
       // Return false to bypass effect processing
       return false;
    }
 
    bool res = mUIDialog->ShowModal() != 0;
-   mUIDialog = NULL;
-   mParent = NULL;
 
    return res;
 }
@@ -1131,7 +1130,6 @@ bool Effect::DoEffect(wxWindow *parent,
 
    mFactory = factory;
    mProjectRate = projectRate;
-   mParent = parent;
    mTracks = list;
    
    bool isSelection = false;
