@@ -810,7 +810,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               const Track *src, // What to paste
                               bool preserve, // Whether to reinsert splits/cuts
                               bool merge, // Whether to remove 'extra' splits
-                              TimeWarper *effectWarper // How does time change
+                              const TimeWarper *effectWarper // How does time change
                               )
 {
    double dur = wxMin(t1 - t0, src->GetEndTime());
@@ -824,12 +824,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
    // If provided time warper was NULL, use a default one that does nothing
    IdentityTimeWarper localWarper;
-   TimeWarper *warper = NULL;
-   if (effectWarper != NULL) {
-      warper = effectWarper;
-   } else {
-      warper = &localWarper;
-   }
+   const TimeWarper *warper = (effectWarper ? effectWarper : &localWarper);
 
    // Align to a sample
    t0 = LongSamplesToTime(TimeToLongSamples(t0));

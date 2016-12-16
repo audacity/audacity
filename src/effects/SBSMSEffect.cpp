@@ -187,9 +187,9 @@ std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double durati
 // it are shifted along appropriately.
 bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
 {
-   auto warper = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
-   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1, std::move(warper)));
-   lt->WarpLabels(*GetTimeWarper());
+   auto warper1 = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
+   RegionTimeWarper warper{ mT0, mT1, std::move(warper1) };
+   lt->WarpLabels(warper);
    return true;
 }
 
@@ -372,7 +372,6 @@ bool EffectSBSMS::Process()
                maxDuration = duration;
 
             auto warper = createTimeWarper(mCurT0,mCurT1,maxDuration,rateStart,rateEnd,rateSlideType);
-            SetTimeWarper(std::move(warper));
 
             rb.outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
                                                         leftTrack->GetRate());
@@ -419,7 +418,7 @@ bool EffectSBSMS::Process()
 
             bool bResult =
                leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
-                                          true, false, GetTimeWarper());
+                                          true, false, warper.get());
             wxASSERT(bResult); // TO DO: Actually handle this.
             wxUnusedVar(bResult);
 
@@ -427,7 +426,7 @@ bool EffectSBSMS::Process()
             {
                bResult =
                   rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
-                                             true, false, GetTimeWarper());
+                                             true, false, warper.get());
                wxASSERT(bResult); // TO DO: Actually handle this.
             }
          }

@@ -175,7 +175,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
                               const Track *src,
                               bool preserve = true,
                               bool merge = true,
-                              TimeWarper *effectWarper = NULL) /* not override */;
+                              const TimeWarper *effectWarper = NULL) /* not override */;
 
    bool Silence(double t0, double t1) override;
    bool InsertSilence(double t, double len) override;

@@ -46,7 +46,6 @@ class ShuttleGui;
 class AudacityProject;
 class LabelTrack;
 class SelectedRegion;
-class TimeWarper;
 class EffectUIHost;
 class Track;
 class TrackList;
@@ -330,9 +329,6 @@ protected:
    void GetSamples(
       const WaveTrack *track, sampleCount *start, sampleCount *len);
 
-   void SetTimeWarper(std::unique_ptr<TimeWarper> &&warper);
-   TimeWarper *GetTimeWarper();
-
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
    // To allow pre-mixing before Preview, set linearEffectFlag to true.
@@ -446,7 +442,6 @@ protected:
    double         mF0;
    double         mF1;
 #endif
-   std::unique_ptr<TimeWarper> mWarper;
    wxArrayString  mPresetNames;
    wxArrayString  mPresetValues;
    int            mPass;
