@@ -745,7 +745,7 @@ using Destroy_ptr = std::unique_ptr<T, Destroyer<T>>;
 // Construct this from any copyable function object, such as a lambda
 template <typename F>
 struct Final_action {
-   Final_action(F f) : clean{ f } {}
+   Final_action(F f) : clean( f ) {}
    ~Final_action() { clean(); }
    F clean;
 };
