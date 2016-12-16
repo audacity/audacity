@@ -3628,6 +3628,27 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    WaveTrack *newTrack{};
    wxWindow *focus = wxWindow::FindFocus();
 
+   bool success = false;
+   auto cleanup = finally( [&] {
+
+      if (!success) {
+         if (newTrack) {
+            mTracks->Remove(newTrack);
+            mTrackPanel->Refresh(false);
+         }
+
+         // For now, we're limiting realtime preview to a single effect, so
+         // make sure the menus reflect that fact that one may have just been
+         // opened.
+         UpdateMenus(false);
+      }
+
+      if (focus != NULL) {
+         focus->SetFocus();
+      }
+
+   } );
+
    //double prevEndTime = mTracks->GetEndTime();
    int count = 0;
    bool clean = true;
@@ -3650,24 +3671,13 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 
    EffectManager & em = EffectManager::Get();
 
-   bool success = em.DoEffect(ID, this, mRate,
+   success = em.DoEffect(ID, this, mRate,
                                GetTracks(), GetTrackFactory(),
                                &mViewInfo.selectedRegion,
                                (flags & OnEffectFlags::kConfigured) == 0);
 
-   if (!success) {
-      if (newTrack) {
-         mTracks->Remove(newTrack);
-         mTrackPanel->Refresh(false);
-      }
-
-      // For now, we're limiting realtime preview to a single effect, so
-      // make sure the menus reflect that fact that one may have just been
-      // opened.
-      UpdateMenus(false);
-
+   if (!success)
       return false;
-   }
 
    if (em.GetSkipStateFlag())
       flags = flags | OnEffectFlags::kSkipState;
@@ -3681,7 +3691,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 
    if (!(flags & OnEffectFlags::kDontRepeatLast))
    {
-      // Only remember a successful effect, don't rmemeber insert,
+      // Only remember a successful effect, don't remember insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
          wxString shortDesc = em.GetEffectName(ID);
@@ -3705,9 +3715,6 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
          //  mTrackPanel->Refresh(false);
    }
    RedrawProject();
-   if (focus != NULL) {
-      focus->SetFocus();
-   }
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
 
    mTrackPanel->Refresh(false);
