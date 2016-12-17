@@ -408,6 +408,9 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
 {
+   // privatize this, make you use Swap instead:
+   using ListOfTracks::swap;
+
  public:
    // Create an empty TrackList
    TrackList();

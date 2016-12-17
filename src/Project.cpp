@@ -4917,6 +4917,9 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       }
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    //Apply action on wavetracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Cut' which collapse the track area.
@@ -4961,9 +4964,12 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                         regions.at(i + 1).start - region.end);
          }
          if( merged )
-            msClipboard->Add( std::move(merged) );
+            newClipboard.Add( std::move(merged) );
       }
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
 
    msClipT0 = regions.front().start;
    msClipT1 = regions.back().end;

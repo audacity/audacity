@@ -4149,6 +4149,9 @@ void AudacityProject::OnCut()
    }
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
@@ -4164,10 +4167,16 @@ void AudacityProject::OnCut()
                     mViewInfo.selectedRegion.t1());
 
          if (dest)
-            FinishCopy(n, std::move(dest), *msClipboard);
+            FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
+
+   // Proceed to change the project.  If this throws, the project will be
+   // rolled back by the top level handler.
 
    n = iter.First();
    while (n) {
@@ -4220,6 +4229,9 @@ void AudacityProject::OnSplitCut()
    Track *n = iter.First();
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    while (n) {
       if (n->GetSelected()) {
          Track::Holder dest;
@@ -4237,10 +4249,13 @@ void AudacityProject::OnSplitCut()
                        mViewInfo.selectedRegion.t1());
          }
          if (dest)
-            FinishCopy(n, std::move(dest), *msClipboard);
+            FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
 
    msClipT0 = mViewInfo.selectedRegion.t0();
    msClipT1 = mViewInfo.selectedRegion.t1();
@@ -4275,16 +4290,22 @@ void AudacityProject::OnCopy()
    }
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1());
          if (dest)
-            FinishCopy(n, std::move(dest), *msClipboard);
+            FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
 
    msClipT0 = mViewInfo.selectedRegion.t0();
    msClipT1 = mViewInfo.selectedRegion.t1();
