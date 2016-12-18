@@ -136,9 +136,9 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       mixRight = trackFactory->NewWaveTrack(format, rate);
       if (oneinput) {
          if (usefulIter.First()->GetLink() != NULL)   // we have linked track
-            mixLeft->SetName(usefulIter.First()->GetLink()->GetName()); /* set name to match input track's right channel!*/
+            mixRight->SetName(usefulIter.First()->GetLink()->GetName()); /* set name to match input track's right channel!*/
          else
-            mixLeft->SetName(usefulIter.First()->GetName());   /* set name to that of sole input channel */
+            mixRight->SetName(usefulIter.First()->GetName());   /* set name to that of sole input channel */
       }
       else
          mixRight->SetName(_("Mix"));
