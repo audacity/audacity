@@ -3158,6 +3158,18 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       // Vaughan, 2011-10-30:
       // See first topic at http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c16.
       // Calling mTracks->Clear() with deleteTracks true results in data loss.
+
+      // PRL 2014-12-19:
+      // I made many changes for wave track memory management, but only now
+      // read the above comment.  I may have invalidated the fix above (which
+      // may have spared the files at the expense of leaked memory).  But
+      // here is a better way to accomplish the intent, doing like what happens
+      // when the project closes:
+      TrackListOfKindIterator iter(Track::Wave, mTracks.get() );
+      for ( Track *pTrack = iter.First(); pTrack; pTrack = iter.Next() ) {
+         static_cast< WaveTrack* >(pTrack)->CloseLock();
+      }
+
       mTracks->Clear(); //mTracks->Clear(true);
 
       mFileName = wxT("");
