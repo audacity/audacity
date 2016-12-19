@@ -1367,7 +1367,7 @@ bool AudacityApp::OnInit()
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
-   auto parser = ParseCommandLine();
+   std::shared_ptr< wxCmdLineParser > parser{ ParseCommandLine().release() };
    if (!parser)
    {
       // Either user requested help or a parsing error occured
@@ -1506,38 +1506,41 @@ bool AudacityApp::OnInit()
 
    Importer::Get().Initialize();
 
-   //
-   // Auto-recovery
-   //
-   bool didRecoverAnything = false;
-   if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
-   {
-      // Important: Prevent deleting any temporary files!
-      DirManager::SetDontDeleteTempFiles();
-      QuitAudacity(true);
-      return false;
-   }
-
-   //
-   // Remainder of command line parsing, but only if we didn't recover
-   //
-   if (!didRecoverAnything)
-   {
-      if (parser->Found(wxT("t")))
+   // Bug1561: delay the recovery dialog, to avoid crashes.
+   CallAfter( [=] () mutable {
+      //
+      // Auto-recovery
+      //
+      bool didRecoverAnything = false;
+      if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
       {
-         RunBenchmark(NULL);
+         // Important: Prevent deleting any temporary files!
+         DirManager::SetDontDeleteTempFiles();
+         QuitAudacity(true);
          return false;
       }
 
-// As of wx3, there's no need to process the filename arguments as they
-// will be sent view the MacOpenFile() method.
-#if !defined(__WXMAC__)
-      for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+      //
+      // Remainder of command line parsing, but only if we didn't recover
+      //
+      if (!didRecoverAnything)
       {
-         MRUOpen(parser->GetParam(i));
-      }
+         if (parser->Found(wxT("t")))
+         {
+            RunBenchmark(NULL);
+            return false;
+         }
+
+         // As of wx3, there's no need to process the filename arguments as they
+         // will be sent view the MacOpenFile() method.
+#if !defined(__WXMAC__)
+         for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+         {
+            MRUOpen(parser->GetParam(i));
+         }
 #endif
-   }
+      }
+   } );
 
    gInited = true;
 
