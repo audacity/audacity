@@ -3124,6 +3124,8 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          wxGetApp().AddFileToHistory(fileName);
       }
 
+      bool saved = false;
+
       if (mIsRecovered)
       {
          // This project has been recovered, so write a NEW auto-save file
@@ -3182,9 +3184,20 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             //    this->PushState(_("Project checker repaired file"), _("Project Repair"));
 
             if (status & FSCKstatus_SAVE_AUP)
-               this->Save();
+               this->Save(), saved = true;
          }
       }
+
+      if (mImportXMLTagHandler) {
+         if (!saved)
+            // We processed an <import> tag, so save it as a normal project,
+            // with no <import> tags.
+            this->Save();
+
+         // Shouldn't need it any more.
+         mImportXMLTagHandler.reset();
+      }
+
    } else {
       // Vaughan, 2011-10-30:
       // See first topic at http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c16.
@@ -4298,14 +4311,6 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
 void AudacityProject::InitialState()
 {
-   if (mImportXMLTagHandler) {
-      // We processed an <import> tag, so save it as a normal project, with no <import> tags.
-      this->Save();
-
-      // Shouldn't need it any more.
-      mImportXMLTagHandler.reset();
-   }
-
    GetUndoManager()->ClearStates();
 
    GetUndoManager()->PushState(GetTracks(), mViewInfo.selectedRegion, mTags,
