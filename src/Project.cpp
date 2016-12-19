@@ -3220,13 +3220,13 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             {
                movable_ptr<ODTask> newTask;
 #ifdef EXPERIMENTAL_OD_FLAC
-               if(!(createdODTasks&ODTask::eODFLAC) && odFlags & ODTask::eODFLAC) {
+               if(!(createdODTasks&ODTask::eODFLAC) && (odFlags & ODTask::eODFLAC)) {
                   newTask = make_movable<ODDecodeFlacTask>();
-                  createdODTasks= createdODTasks | ODTask::eODFLAC;
+                  createdODTasks = createdODTasks | ODTask::eODFLAC;
                }
                else
 #endif
-               if(!(createdODTasks&ODTask::eODPCMSummary) && odFlags & ODTask::eODPCMSummary) {
+               if(!(createdODTasks&ODTask::eODPCMSummary) && (odFlags & ODTask::eODPCMSummary)) {
                   newTask = make_movable<ODComputeSummaryTask>();
                   createdODTasks= createdODTasks | ODTask::eODPCMSummary;
                }
