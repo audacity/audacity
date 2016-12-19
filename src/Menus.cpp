@@ -7167,6 +7167,7 @@ void AudacityProject::OnResample()
    }
 
    int ndx = 0;
+   auto flags = UndoPush::AUTOSAVE;
    for (Track *t = iter.First(); t; t = iter.Next())
    {
       wxString msg;
@@ -7175,12 +7176,24 @@ void AudacityProject::OnResample()
 
       ProgressDialog progress(_("Resample"), msg);
 
-      if (t->GetSelected() && t->GetKind() == Track::Wave)
+      if (t->GetSelected() && t->GetKind() == Track::Wave) {
+         // The resampling of a track may be stopped by the user.  This might
+         // leave a track with multiple clips in a partially resampled state.
+         // But the thrown exception will cause rollback in the application
+         // level handler.
+
          if (!((WaveTrack*)t)->Resample(newRate, &progress))
             break;
+
+         // Each time a track is successfully, completely resampled,
+         // commit that to the undo stack.  The second and later times,
+         // consolidate.
+
+         PushState(_("Resampled audio track(s)"), _("Resample Track"), flags);
+         flags = flags | UndoPush::CONSOLIDATE;
+      }
    }
 
-   PushState(_("Resampled audio track(s)"), _("Resample Track"));
    RedrawProject();
 
    // Need to reset
