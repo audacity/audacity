@@ -914,13 +914,12 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
       //size_t numProjects = gAudacityProjects.size();
-      AudacityProject *offendingProject {};
+      AProjectHolder offendingProject;
       wxString missingFileName;
 
       {
          ODLocker locker { &m_LastMissingBlockFileLock };
-         offendingProject =
-            AProjectHolder{ m_LastMissingBlockFileProject }.get();
+         offendingProject = m_LastMissingBlockFileProject.lock();
          missingFileName = m_LastMissingBlockFilePath;
       }
 
@@ -944,7 +943,7 @@ locations of the missing files."), missingFileName.c_str());
          if (offendingProject->GetMissingAliasFileDialog()) {
             offendingProject->GetMissingAliasFileDialog()->Raise();
          } else {
-            ShowAliasMissingDialog(offendingProject, _("Files Missing"),
+            ShowAliasMissingDialog(offendingProject.get(), _("Files Missing"),
                                    errorMessage, wxT(""), true);
          }
       }
