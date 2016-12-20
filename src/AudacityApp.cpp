@@ -849,6 +849,11 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
    return(true);
 }
 
+bool AudacityApp::SafeMRUOpen(const wxString &fullPathStr)
+{
+   return GuardedCall< bool >( [&]{ return MRUOpen( fullPathStr ); } );
+}
+
 void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 {
    mRecentFiles->Clear();
@@ -866,13 +871,16 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    // because we don't want to RemoveFileFromHistory() just because it already exists,
    // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
    // that method does not return the bad result.
+   // PRL: Don't call SafeMRUOpen
+   // -- if open fails for some exceptional reason of resource exhaustion that
+   // the user can correct, leave the file in history.
    if (!AudacityProject::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       mRecentFiles->RemoveFileFromHistory(n);
 }
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-   // Filenames are queued when Audacity receives the a few of the
+   // Filenames are queued when Audacity receives a few of the
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
    if (gInited) {
@@ -901,7 +909,9 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
             // LL:  In all but one case an appropriate message is already displayed.  The
             //      instance that a message is NOT displayed is when a failure to write
             //      to the config file has occurred.
-            if (!MRUOpen(name)) {
+            // PRL: Catch any exceptions, don't try this file again, continue to
+            // other files.
+            if (!SafeMRUOpen(name)) {
                wxFAIL_MSG(wxT("MRUOpen failed"));
             }
          }
@@ -1615,7 +1625,9 @@ bool AudacityApp::OnInit()
 #if !defined(__WXMAC__)
          for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
          {
-            MRUOpen(parser->GetParam(i));
+            // PRL: Catch any exceptions, don't try this file again, continue to
+            // other files.
+            SafeMRUOpen(parser->GetParam(i));
          }
 #endif
       }

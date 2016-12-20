@@ -87,6 +87,8 @@ class AudacityApp final : public wxApp {
    void OnMRUFile(wxCommandEvent &event);
    // Backend for above - returns true for success, false for failure
    bool MRUOpen(const wxString &fileName);
+   // A wrapper of the above that does not throw
+   bool SafeMRUOpen(const wxString &fileName);
 
    void OnReceiveCommand(AppCommandEvent &event);
 
