@@ -5865,26 +5865,36 @@ void AudacityProject::OnImportMIDI()
       gPrefs->Write(wxT("/DefaultOpenPath"), path);
       gPrefs->Flush();
 
-      DoImportMIDI(fileName);
+      AudacityProject::DoImportMIDI(this, fileName);
    }
 }
 
-void AudacityProject::DoImportMIDI(const wxString &fileName)
+AudacityProject *AudacityProject::DoImportMIDI(
+   AudacityProject *pProject, const wxString &fileName)
 {
-   auto newTrack = GetTrackFactory()->NewNoteTrack();
+   AudacityProject *pNewProject {};
+   if ( !pProject )
+      pProject = pNewProject = CreateNewAudacityProject();
+   auto cleanup = finally( [&] { if ( pNewProject ) pNewProject->Close(true); } );
+
+   auto newTrack = pProject->GetTrackFactory()->NewNoteTrack();
 
    if (::ImportMIDI(fileName, newTrack.get())) {
 
-      SelectNone();
-      auto pTrack = mTracks->Add(std::move(newTrack));
+      pProject->SelectNone();
+      auto pTrack = pProject->mTracks->Add(std::move(newTrack));
       pTrack->SetSelected(true);
 
-      PushState(wxString::Format(_("Imported MIDI from '%s'"),
+      pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName.c_str()), _("Import MIDI"));
 
-      RedrawProject();
-      mTrackPanel->EnsureVisible(pTrack);
+      pProject->RedrawProject();
+      pProject->mTrackPanel->EnsureVisible(pTrack);
+      pNewProject = nullptr;
+      return pProject;
    }
+   else
+      return nullptr;
 }
 #endif // USE_MIDI
 

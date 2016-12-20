@@ -307,9 +307,12 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       doDurationAndScrollOffset();
 
       if (windowCalledOnce)
-      {
-         mProject = CreateNewAudacityProject();
-      }
+         // Cause a project to be created with the next import
+         mProject = nullptr;
+      else
+         // Apply any offset and duration directives of the first "window" line
+         // to the previously open project, not a new one.
+         ;
 
       windowCalledOnce = true;
 
@@ -388,7 +391,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
       {
-         mProject->DoImportMIDI(targetfile);
+         mProject = AudacityProject::DoImportMIDI(mProject, targetfile);
       }
 
       // If not a midi, open audio file
@@ -399,9 +402,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
           * audio file. TODO: Some sort of message here? */
 
 #endif // USE_MIDI
-      {
-         mProject->OpenFile(targetfile);
-      }
+         mProject = AudacityProject::OpenProject( mProject, targetfile );
 
       // Set tok to right after filename
       temptok2.SetString(targettoken);
@@ -427,7 +428,11 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             double offset;
 
             // handle an "offset" specifier
-            if (Internat::CompatibleToDouble(tokenholder, &offset))
+            if (!mProject)
+               // there was an import error,
+               // presumably with its own error message
+               ;
+            else if (Internat::CompatibleToDouble(tokenholder, &offset))
             {
                Track *t;
                TrackListIterator iter(mProject->GetTracks());
@@ -489,6 +494,9 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
 void LOFImportFileHandle::doDurationAndScrollOffset()
 {
+   if (!mProject)
+      return;
+
    bool doSomething = callDurationFactor || callScrollOffset;
    if (callDurationFactor)
    {

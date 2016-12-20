@@ -2891,14 +2891,13 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       // there are no tracks, but there's an Undo history, etc, then
       // bad things can happen, including data files moving to the NEW
       // project directory, etc.
-      if (!proj || proj->mDirty || !proj->mTracks->IsEmpty()) {
-         // Open in a NEW window
-         proj = CreateNewAudacityProject();
-      }
+      if ( proj && ( proj->mDirty || !proj->mTracks->IsEmpty() ) )
+         proj = nullptr;
+
       // This project is clean; it's never been touched.  Therefore
       // all relevant member variables are in their initial state,
       // and it's okay to open a NEW project inside this window.
-      proj->OpenFile(fileName);
+      proj = AudacityProject::OpenProject( proj, fileName );
    }
 }
 
@@ -2926,6 +2925,18 @@ bool AudacityProject::WarnOfLegacyFile( )
    return (action != wxNO);
 }
 
+
+AudacityProject *AudacityProject::OpenProject(
+   AudacityProject *pProject, const wxString &fileNameArg, bool addtohistory)
+{
+   AudacityProject *pNewProject = nullptr;
+   if ( ! pProject )
+      pProject = pNewProject = CreateNewAudacityProject();
+   auto cleanup = finally( [&] { if( pNewProject ) pNewProject->Close(true); } );
+   pProject->OpenFile( fileNameArg, addtohistory );
+   pNewProject = nullptr;
+   return pProject;
+}
 
 // FIXME:? TRAP_ERR This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().

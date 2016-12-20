@@ -242,6 +242,14 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
          const wxString &extrafilter = wxEmptyString);
    static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
+
+   // Return the given project if that is not NULL, else create a project.
+   // Then open the given project path.
+   // But if an exception escapes this function, create no new project.
+   static AudacityProject *OpenProject(
+      AudacityProject *pProject,
+      const wxString &fileNameArg, bool addtohistory = true);
+
    void OpenFile(const wxString &fileName, bool addtohistory = true);
 
 private:
