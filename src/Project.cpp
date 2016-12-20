@@ -452,17 +452,16 @@ public:
       return GuardedCall< bool > ( [&] {
          //sort by OD non OD.  load Non OD first so user can start editing asap.
          wxArrayString sortednames(filenames);
+         sortednames.Sort(CompareNoCaseFileName);
 
          ODManager::Pauser pauser;
 
-         sortednames.Sort(CompareNoCaseFileName);
+         auto cleanup = finally( [&] {
+            mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+         } );
 
-         for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
-
-            mProject->Import(sortednames[i]);
-         }
-
-         mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+         for (const auto &name : sortednames)
+            mProject->Import(name);
 
          return true;
       } );
@@ -4081,55 +4080,33 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
    TrackHolders newTracks;
    wxString errorMessage = wxEmptyString;
 
-   // Backup Tags, before the import.  Be prepared to roll back changes.
-   struct TempTags {
-      TempTags(std::shared_ptr<Tags> & pTags_)
-         : pTags(pTags_)
-      {
-         oldTags = pTags;
-         if (oldTags)
-            pTags = oldTags->Duplicate();
-      }
+   {
+      // Backup Tags, before the import.  Be prepared to roll back changes.
+      auto cleanup = valueRestorer( mTags,
+                                   mTags ? mTags->Duplicate() : decltype(mTags){} );
 
-      ~TempTags()
-      {
-         if (oldTags) {
-            // roll back
-            pTags = oldTags;
-         }
-      }
-
-      void Commit()
-      {
-         oldTags.reset();
-      }
-
-      std::shared_ptr<Tags> & pTags;
-      std::shared_ptr<Tags> oldTags;
-   };
-   TempTags tempTags(mTags);
-
-   bool success = Importer::Get().Import(fileName,
+      bool success = Importer::Get().Import(fileName,
                                             GetTrackFactory(),
                                             newTracks,
                                             mTags.get(),
                                             errorMessage);
 
-   if (!errorMessage.IsEmpty()) {
-// Version that goes to internet...
-//      ShowErrorDialog(this, _("Error Importing"),
-//                 errorMessage, wxT("http://audacity.sourceforge.net/help/faq?s=files&i=wma-proprietary"));
-// Version that looks locally for the text.
-      ShowErrorDialog(this, _("Error Importing"),
-                 errorMessage, wxT("innerlink:wma-proprietary"));
+      if (!errorMessage.IsEmpty()) {
+         // Version that goes to internet...
+         //      ShowErrorDialog(this, _("Error Importing"),
+         //                 errorMessage, wxT("http://audacity.sourceforge.net/help/faq?s=files&i=wma-proprietary"));
+         // Version that looks locally for the text.
+         ShowErrorDialog(this, _("Error Importing"),
+                         errorMessage, wxT("innerlink:wma-proprietary"));
+      }
+      if (!success)
+         return false;
+      
+      wxGetApp().AddFileToHistory(fileName);
+      
+      // no more errors, commit
+      cleanup.release();
    }
-   if (!success)
-      return false;
-
-   wxGetApp().AddFileToHistory(fileName);
-
-   // no more errors
-   tempTags.Commit();
 
    // for LOF ("list of files") files, do not import the file as if it
    // were an audio file itself

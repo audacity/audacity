@@ -5767,12 +5767,23 @@ void AudacityProject::OnImport()
       return;
    }
 
+   // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
+   // to false.  Should it also be set to true on other paths that reach
+   // AudacityProject::Import ?
    gPrefs->Write(wxT("/NewImportingSession"), true);
 
    //sort selected files by OD status.  Load non OD first so user can edit asap.
    //first sort selectedFiles.
    selectedFiles.Sort(CompareNoCaseFileName);
    ODManager::Pauser pauser;
+
+   auto cleanup = finally( [&] {
+      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
+
+      gPrefs->Flush();
+
+      HandleResize(); // Adjust scrollers for NEW track sizes.
+   } );
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       wxString fileName = selectedFiles[ff];
@@ -5782,12 +5793,6 @@ void AudacityProject::OnImport()
 
       Import(fileName);
    }
-
-   gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-
-   gPrefs->Flush();
-
-   HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 
 void AudacityProject::OnImportLabels()
