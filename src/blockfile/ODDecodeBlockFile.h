@@ -32,6 +32,7 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #include "../ondemand/ODTaskThread.h"
 #include "../DirManager.h"
 #include "../ondemand/ODDecodeTask.h"
+#include <wx/atomic.h>
 #include <wx/thread.h>
 
 /// An AliasBlockFile that references uncompressed data in an existing file
@@ -166,8 +167,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    ///The original file the audio came from.
    wxFileNameWrapper mAudioFileName;
 
-   mutable ODLock    mDataAvailableMutex;
-   bool mDataAvailable;
+   wxAtomicInt mDataAvailable{ 0 };
    bool mDataBeingComputed;
 
    ODFileDecoder* mDecoder;
