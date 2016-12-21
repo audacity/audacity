@@ -113,9 +113,6 @@ private:
    int mNumLabels;
    int mNumWaveTracks;
 
-   // PRL:  This is never populated anywhere?
-   std::vector<Track*> mSelected;
-
    int mFilterIndex;          /**< The index in the drop-down list of export
                                 formats (mFormat) of the selected export format.
                                 This list includes all possible

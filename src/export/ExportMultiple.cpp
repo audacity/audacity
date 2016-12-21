@@ -933,7 +933,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    }
 
    // Restore the selection states
-   for (auto pTrack : mSelected)
+   for (auto pTrack : selected)
       pTrack->SetSelected(true);
 
    return ok ;
