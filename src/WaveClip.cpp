@@ -901,7 +901,9 @@ bool SpecCache::CalculateOneSpectrum
                floatSample, sampleCount(
                   floor(0.5 + from.as_double() + offset * rate)
                ),
-               myLen)
+               myLen,
+               // Don't throw in this drawing operation
+               false)
             );
 
             if (copy) {

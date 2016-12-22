@@ -648,7 +648,8 @@ public:
    // Returns null on failure
    // Returned pointer may be invalidated if Get is called again
    // Do not DELETE[] the pointer
-   constSamplePtr Get(sampleFormat format, sampleCount start, size_t len);
+   constSamplePtr Get(
+      sampleFormat format, sampleCount start, size_t len, bool mayThrow);
 
 private:
    void Free();

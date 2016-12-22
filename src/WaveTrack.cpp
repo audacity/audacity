@@ -2621,7 +2621,7 @@ void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
 }
 
 constSamplePtr WaveTrackCache::Get(sampleFormat format,
-   sampleCount start, size_t len)
+   sampleCount start, size_t len, bool mayThrow)
 {
    if (format == floatSample && len > 0) {
       const auto end = start + len;
@@ -2671,7 +2671,9 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          if (start0 >= 0) {
             const auto len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
-            if (!mPTrack->Get(samplePtr(mBuffers[0].data.get()), floatSample, start0, len0))
+            if (!mPTrack->Get(
+                  samplePtr(mBuffers[0].data.get()), floatSample, start0, len0,
+                  fillZero, mayThrow))
                return 0;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;

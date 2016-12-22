@@ -246,6 +246,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inpu
 {
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
+                  // Throw, to stop exporting, if read fails:
+                  true,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
