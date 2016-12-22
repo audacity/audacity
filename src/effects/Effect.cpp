@@ -680,7 +680,8 @@ bool Effect::HideUI()
 
 bool Effect::CloseUI()
 {
-   mUIParent->RemoveEventHandler(this);
+   if (mUIParent)
+      mUIParent->RemoveEventHandler(this);
 
    mUIParent = NULL;
    mUIDialog = NULL;
