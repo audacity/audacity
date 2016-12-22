@@ -121,7 +121,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
                         size_t start, size_t len) const override;
 
    /// Read the summary into a buffer
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
 
    ///sets the file name the summary info will be saved in.  threadsafe.
    void SetFileName(wxFileNameWrapper &&name) override;

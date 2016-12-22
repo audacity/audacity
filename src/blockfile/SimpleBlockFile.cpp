@@ -321,9 +321,8 @@ void SimpleBlockFile::FillCache()
    }
 
    // Read summary data into cache
-   mCache.summaryData.reinit(mSummaryInfo.totalSummaryBytes);
-   if (!ReadSummary(mCache.summaryData.get()))
-      memset(mCache.summaryData.get(), 0, mSummaryInfo.totalSummaryBytes);
+   // Fills with zeroes in case of failure:
+   ReadSummary(mCache.summaryData);
 
    // Cache is active but already on disk
    mCache.active = true;
@@ -336,12 +335,12 @@ void SimpleBlockFile::FillCache()
 ///
 /// @param *data The buffer to write the data to.  It must be at least
 /// mSummaryinfo.totalSummaryBytes long.
-bool SimpleBlockFile::ReadSummary(void *data)
+bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
 {
-   if (mCache.active)
-   {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
+   if (mCache.active) {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
-      memcpy(data, mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
+      memcpy(data.get(), mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
       return true;
    }
    else
@@ -357,23 +356,24 @@ bool SimpleBlockFile::ReadSummary(void *data)
          // FIXME: TRAP_ERR no report to user of absent summary files?
          // filled with zero instead.
          if (!file.IsOpened()){
-            memset(data, 0, mSummaryInfo.totalSummaryBytes);
+            memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
             mSilentLog = TRUE;
-            return true;
+            return false;
          }
       }
-      mSilentLog=FALSE;
+      mSilentLog = FALSE;
 
       // The offset is just past the au header
-      // FIXME: Seek in summary file could fail.
-      if( !file.Seek(sizeof(auHeader)) )
+      if( !file.Seek(sizeof(auHeader)) ||
+          file.Read(data.get(), mSummaryInfo.totalSummaryBytes) !=
+             mSummaryInfo.totalSummaryBytes ) {
+         memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
          return false;
+      }
 
-      auto read = file.Read(data, mSummaryInfo.totalSummaryBytes);
+      FixSummary(data.get());
 
-      FixSummary(data);
-
-      return (read == mSummaryInfo.totalSummaryBytes);
+      return true;
    }
 }
 
