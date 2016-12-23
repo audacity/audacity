@@ -1388,7 +1388,7 @@ bool Effect::ProcessPass()
          // Get rid of any previous buffers
          if (mInBuffer)
          {
-            for (int i = 0; i < mNumAudioIn; i++)
+            for (size_t i = 0; i < mNumAudioIn; i++)
             {
                if (mInBuffer[i])
                {
@@ -1403,15 +1403,15 @@ bool Effect::ProcessPass()
          // the same number of channels.
          mInBufPos = new float *[mNumAudioIn];
          mInBuffer = new float *[mNumAudioIn];
-         for (int i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < mNumAudioIn; i++)
          {
             mInBuffer[i] = new float[mBufferSize];
          }
 
          // We won't be using more than the first 2 buffers, so clear the rest (if any)
-         for (int i = 2; i < mNumAudioIn; i++)
+         for (size_t i = 2; i < mNumAudioIn; i++)
          {
-            for (int j = 0; j < mBufferSize; j++)
+            for (size_t j = 0; j < mBufferSize; j++)
             {
                mInBuffer[i][j] = 0.0;
             }
@@ -1420,7 +1420,7 @@ bool Effect::ProcessPass()
          // Get rid of any previous buffers
          if (mOutBuffer)
          {
-            for (int i = 0; i < mNumAudioOut; i++)
+            for (size_t i = 0; i < mNumAudioOut; i++)
             {
                if (mOutBuffer[i])
                {
@@ -1435,7 +1435,7 @@ bool Effect::ProcessPass()
          // the same number of channels.
          mOutBufPos = new float *[mNumAudioOut];
          mOutBuffer = new float *[mNumAudioOut];
-         for (int i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < mNumAudioOut; i++)
          {
             // Output buffers get an extra mBlockSize worth to give extra room if
             // the plugin adds latency
@@ -1444,13 +1444,13 @@ bool Effect::ProcessPass()
       }
 
       // (Re)Set the input buffer positions
-      for (int i = 0; i < mNumAudioIn; i++)
+      for (size_t i = 0; i < mNumAudioIn; i++)
       {
          mInBufPos[i] = mInBuffer[i];
       }
 
       // (Re)Set the output buffer positions
-      for (int i = 0; i < mNumAudioOut; i++)
+      for (size_t i = 0; i < mNumAudioOut; i++)
       {
          mOutBufPos[i] = mOutBuffer[i];
       }
@@ -1458,7 +1458,7 @@ bool Effect::ProcessPass()
       // Clear unused input buffers
       if (!right && !clear && mNumAudioIn > 1)
       {
-         for (int j = 0; j < mBufferSize; j++)
+         for (size_t j = 0; j < mBufferSize; j++)
          {
             mInBuffer[1][j] = 0.0;
          }
@@ -1477,7 +1477,7 @@ bool Effect::ProcessPass()
 
    if (mOutBuffer)
    {
-      for (int i = 0; i < mNumAudioOut; i++)
+      for (size_t i = 0; i < mNumAudioOut; i++)
       {
          delete [] mOutBuffer[i];
       }
@@ -1489,7 +1489,7 @@ bool Effect::ProcessPass()
 
    if (mInBuffer)
    {
-      for (int i = 0; i < mNumAudioIn; i++)
+      for (size_t i = 0; i < mNumAudioIn; i++)
       {
          delete [] mInBuffer[i];
       }
@@ -1599,7 +1599,7 @@ bool Effect::ProcessTrack(int count,
             }
 
             // Reset the input buffer positions
-            for (int i = 0; i < mNumChannels; i++)
+            for (size_t i = 0; i < mNumChannels; i++)
             {
                mInBufPos[i] = mInBuffer[i];
             }
@@ -1617,7 +1617,7 @@ bool Effect::ProcessTrack(int count,
             // Clear the remainder of the buffers so that a full block can be passed
             // to the effect
             auto cnt = mBlockSize - curBlockSize;
-            for (int i = 0; i < mNumChannels; i++)
+            for (size_t i = 0; i < mNumChannels; i++)
             {
                for (decltype(cnt) j = 0 ; j < cnt; j++)
                {
@@ -1646,12 +1646,12 @@ bool Effect::ProcessTrack(int count,
          if (!cleared)
          {
             // Reset the input buffer positions
-            for (int i = 0; i < mNumChannels; i++)
+            for (size_t i = 0; i < mNumChannels; i++)
             {
                mInBufPos[i] = mInBuffer[i];
 
                // And clear
-               for (int j = 0; j < mBlockSize; j++)
+               for (size_t j = 0; j < mBlockSize; j++)
                {
                   mInBuffer[i][j] = 0.0;
                }
@@ -1676,7 +1676,7 @@ bool Effect::ProcessTrack(int count,
       // Bump to next input buffer position
       if (inputRemaining != 0)
       {
-         for (int i = 0; i < mNumChannels; i++)
+         for (size_t i = 0; i < mNumChannels; i++)
          {
             mInBufPos[i] += curBlockSize;
          }
@@ -1713,7 +1713,7 @@ bool Effect::ProcessTrack(int count,
             // curDelay is bounded by curBlockSize:
             auto delay = curDelay.as_size_t();
             curBlockSize -= delay;
-            for (int i = 0; i < chans; i++)
+            for (size_t i = 0; i < chans; i++)
             {
                memmove(mOutBufPos[i], mOutBufPos[i] + delay, sizeof(float) * curBlockSize);
             }
@@ -1728,7 +1728,7 @@ bool Effect::ProcessTrack(int count,
       if (outputBufferCnt < mBufferSize)
       {
          // Bump to next output buffer position
-         for (int i = 0; i < chans; i++)
+         for (size_t i = 0; i < chans; i++)
          {
             mOutBufPos[i] += curBlockSize;
          }
@@ -1762,7 +1762,7 @@ bool Effect::ProcessTrack(int count,
          }
 
          // Reset the output buffer positions
-         for (int i = 0; i < chans; i++)
+         for (size_t i = 0; i < chans; i++)
          {
             mOutBufPos[i] = mOutBuffer[i];
          }
@@ -2377,8 +2377,8 @@ size_t Effect::RealtimeProcess(int group,
    auto ichans = chans;
    auto ochans = chans;
    auto gchans = chans;
-   int indx = 0;
-   int ondx = 0;
+   unsigned indx = 0;
+   unsigned ondx = 0;
 
    int processor = mGroupProcessor[group];
 
@@ -2390,7 +2390,7 @@ size_t Effect::RealtimeProcess(int group,
       // client's needs are met.
       if (ichans < mNumAudioIn)
       {
-         for (int i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < mNumAudioIn; i++)
          {
             if (indx == ichans)
             {
@@ -2408,7 +2408,7 @@ size_t Effect::RealtimeProcess(int group,
       else if (ichans >= mNumAudioIn)
       {
          gchans = 0;
-         for (int i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
+         for (size_t i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
          {
             clientIn[i] = inbuf[indx++];
          }
@@ -2419,7 +2419,7 @@ size_t Effect::RealtimeProcess(int group,
       // the client's needs with dummy buffers.  These will just get tossed.
       if (ochans < mNumAudioOut)
       {
-         for (int i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < mNumAudioOut; i++)
          {
             if (i < ochans)
             {
@@ -2439,7 +2439,7 @@ size_t Effect::RealtimeProcess(int group,
       // of the input/output channels.
       else if (ochans >= mNumAudioOut)
       {
-         for (int i = 0; i < mNumAudioOut; i++, ochans--)
+         for (size_t i = 0; i < mNumAudioOut; i++, ochans--)
          {
             clientOut[i] = outbuf[ondx++];
          }
@@ -2452,12 +2452,12 @@ size_t Effect::RealtimeProcess(int group,
          auto cnt = std::min(numSamples - block, mBlockSize);
          len += RealtimeProcess(processor, clientIn, clientOut, cnt);
 
-         for (int i = 0 ; i < mNumAudioIn; i++)
+         for (size_t i = 0 ; i < mNumAudioIn; i++)
          {
             clientIn[i] += cnt;
          }
 
-         for (int i = 0 ; i < mNumAudioOut; i++)
+         for (size_t i = 0 ; i < mNumAudioOut; i++)
          {
             clientOut[i] += cnt;
          }

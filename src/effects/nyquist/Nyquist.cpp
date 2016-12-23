@@ -1184,7 +1184,7 @@ bool NyquistEffect::ProcessOne()
       return false;
    }
 
-   auto outChannels = nyx_get_audio_num_channels();
+   int outChannels = nyx_get_audio_num_channels();
    if (outChannels > mCurNumChannels) {
       wxMessageBox(_("Nyquist returned too many audio channels.\n"),
                    wxT("Nyquist"),
