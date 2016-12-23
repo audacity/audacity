@@ -48,16 +48,13 @@ void ODDecodeTask::DoSomeInternal()
 
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
-      const auto &bf = mBlockFiles[0];
+      const auto bf = mBlockFiles[0].lock();
 
       int ret = 1;
 
-      //first check to see if the ref count is at least 2.  It should have one
-      //from when we added it to this instance's mBlockFiles array, and one from
-      //the Wavetrack/sequence.  If it doesn't it has been deleted and we should forget it.
-      if(bf.use_count()>=2)
+      if(bf)
       {
-         //OD TODO: somehow pass the bf a reference to the decoder that manages it's file.
+         //OD TODO: somehow pass the bf a reference to the decoder that manages its file.
          //we need to ensure that the filename won't change or be moved.  We do this by calling LockRead(),
          //which the dirmanager::EnsureSafeFilename also does.
          bf->LockRead();
@@ -77,6 +74,7 @@ void ODDecodeTask::DoSomeInternal()
       }
       else
       {
+         // The block file disappeared.
          //the waveform in the wavetrack now is shorter, so we need to update mMaxBlockFiles
          //because now there is less work to do.
          mMaxBlockFiles--;
@@ -123,7 +121,7 @@ bool ODDecodeTask::SeekingAllowed()
 ///by default creates the order of the wavetrack to load.
 void ODDecodeTask::Update()
 {
-   std::vector< std::shared_ptr< ODDecodeBlockFile > > tempBlocks;
+   std::vector< std::weak_ptr< ODDecodeBlockFile > > tempBlocks;
 
    mWaveTrackMutex.Lock();
 
@@ -162,12 +160,16 @@ void ODDecodeTask::Update()
                   ));
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
-                  while(insertCursor<(int)tempBlocks.size()&&
-                     tempBlocks[insertCursor]->GetStart() + tempBlocks[insertCursor]->GetClipOffset() <
-                        oddbFile->GetStart() + oddbFile->GetClipOffset())
-                     insertCursor++;
+                  {
+                     std::shared_ptr< ODDecodeBlockFile > ptr;
+                     while(insertCursor < (int)tempBlocks.size() &&
+                           (!(ptr = tempBlocks[insertCursor].lock()) ||
+                            ptr->GetStart() + ptr->GetClipOffset() <
+                            oddbFile->GetStart() + oddbFile->GetClipOffset()))
+                        insertCursor++;
+                  }
 
-                  tempBlocks.insert(tempBlocks.begin()+insertCursor++, oddbFile);
+                  tempBlocks.insert(tempBlocks.begin() + insertCursor++, oddbFile);
                }
             }
 
@@ -185,7 +187,7 @@ void ODDecodeTask::Update()
 
 ///Orders the input as either On-Demand or default layered order.
 void ODDecodeTask::OrderBlockFiles
-   (std::vector< std::shared_ptr< ODDecodeBlockFile > > &unorderedBlocks)
+   (std::vector< std::weak_ptr< ODDecodeBlockFile > > &unorderedBlocks)
 {
    mBlockFiles.clear();
    //TODO:order the blockfiles into our queue in a fancy convenient way.  (this could be user-prefs)
@@ -194,28 +196,30 @@ void ODDecodeTask::OrderBlockFiles
 
    //find the startpoint
    auto processStartSample = GetDemandSample();
-   for(int i= ((int)unorderedBlocks.size())-1;i>= 0;i--)
+   std::shared_ptr< ODDecodeBlockFile > firstBlock;
+   for(auto i = unorderedBlocks.size(); i--; )
    {
-      //check to see if the refcount is at least two before we add it to the list.
-      //There should be one Ref() from the one added by this ODTask, and one from the track.
-      //If there isn't, then the block was deleted for some reason and we should ignore it.
-      if(unorderedBlocks[i].use_count() >= 2)
+      auto ptr = unorderedBlocks[i].lock();
+      if(ptr)
       {
          //test if the blockfiles are near the task cursor.  we use the last mBlockFiles[0] as our point of reference
          //and add ones that are closer.
          //since the order is linear right to left, this will add blocks so that the ones on the right side of the target
          //are processed first, with the ones closer being processed earlier.  Then the ones on the left side get processed.
          if(mBlockFiles.size() &&
-            unorderedBlocks[i]->GetGlobalEnd() >= processStartSample &&
-                ( mBlockFiles[0]->GetGlobalEnd() < processStartSample ||
-                  unorderedBlocks[i]->GetGlobalStart() <= mBlockFiles[0]->GetGlobalStart()) )
+            ptr->GetGlobalEnd() >= processStartSample &&
+                ( firstBlock->GetGlobalEnd() < processStartSample ||
+                  ptr->GetGlobalStart() <= firstBlock->GetGlobalStart()) )
          {
             //insert at the front of the list if we get blockfiles that are after the demand sample
-            mBlockFiles.insert(mBlockFiles.begin()+0,unorderedBlocks[i]);
+            firstBlock = ptr;
+            mBlockFiles.insert(mBlockFiles.begin(), unorderedBlocks[i]);
          }
          else
          {
             //otherwise no priority
+            if ( !firstBlock )
+               firstBlock = ptr;
             mBlockFiles.push_back(unorderedBlocks[i]);
          }
          if(mMaxBlockFiles< (int) mBlockFiles.size())
@@ -223,6 +227,7 @@ void ODDecodeTask::OrderBlockFiles
       }
       else
       {
+         // The block file disappeared.
       }
    }
 

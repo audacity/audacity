@@ -86,10 +86,10 @@ protected:
 
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles
-      (std::vector< std::shared_ptr< ODDecodeBlockFile > > &unorderedBlocks);
+      (std::vector< std::weak_ptr< ODDecodeBlockFile > > &unorderedBlocks);
 
 
-   std::vector<std::shared_ptr<ODDecodeBlockFile>> mBlockFiles;
+   std::vector<std::weak_ptr<ODDecodeBlockFile>> mBlockFiles;
    std::vector<movable_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;
