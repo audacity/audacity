@@ -45,7 +45,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 
 #include "../../AudacityApp.h"
-#include "../../AudacityException.h"
+#include "../../FileException.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
@@ -834,6 +834,9 @@ bool NyquistEffect::TransferDataFromWindow()
 
 bool NyquistEffect::ProcessOne()
 {
+   mError = false;
+   mFailedFileName.Clear();
+
    nyx_rval rval;
 
    wxString cmd;
@@ -1236,10 +1239,22 @@ bool NyquistEffect::ProcessOne()
 
    int success = nyx_get_audio(StaticPutCallback, (void *)this);
 
+   // See if GetCallback found read errors
+   if (mFailedFileName.IsOk())
+      // re-construct an exception
+      // I wish I had std::exception_ptr instead
+      // and could re-throw any AudacityException
+      throw FileException{
+         FileException::Cause::Read, mFailedFileName };
+   else if (mError)
+      // what, then?
+      success = false;
+
    if (!success) {
       for(i = 0; i < outChannels; i++) {
          mOutputTrack[i].reset();
       }
+
       return false;
    }
 
@@ -1790,11 +1805,19 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
                                 mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
       mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
-      if (!mCurTrack[ch]->Get(mCurBuffer[ch].ptr(), floatSample,
-                              mCurBufferStart[ch], mCurBufferLen[ch])) {
-
-         wxPrintf(wxT("GET error\n"));
-
+      try {
+         mCurTrack[ch]->Get(
+            mCurBuffer[ch].ptr(), floatSample,
+            mCurBufferStart[ch], mCurBufferLen[ch]);
+      }
+      catch ( const FileException& e ) {
+         if ( e.cause == FileException::Cause::Read )
+            mFailedFileName = e.fileName;
+         mError = true;
+         return -1;
+      }
+      catch ( ... ) {
+         mError = true;
          return -1;
       }
    }
