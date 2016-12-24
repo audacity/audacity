@@ -173,7 +173,7 @@ public:
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -203,7 +203,7 @@ ExportMP2::ExportMP2()
    SetDescription(_("MP2 Files"),0);
 }
 
-int ExportMP2::Export(AudacityProject *project,
+ProgressResult ExportMP2::Export(AudacityProject *project,
    unsigned channels, const wxString &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
    int WXUNUSED(subformat))
@@ -228,7 +228,7 @@ int ExportMP2::Export(AudacityProject *project,
       wxMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
          _("Error"), wxICON_STOP);
       twolame_close(&encodeOptions);
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Put ID3 tags at beginning of file
@@ -239,7 +239,7 @@ int ExportMP2::Export(AudacityProject *project,
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
       twolame_close(&encodeOptions);
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    char *id3buffer = NULL;
@@ -260,7 +260,7 @@ int ExportMP2::Export(AudacityProject *project,
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    {
       auto mixer = CreateMixer(waveTracks,
          tracks->GetTimeTrack(),
@@ -273,7 +273,7 @@ int ExportMP2::Export(AudacityProject *project,
          wxString::Format(_("Exporting selected audio at %ld kbps"), bitrate) :
          wxString::Format(_("Exporting entire file at %ld kbps"), bitrate));
 
-      while (updateResult == eProgressSuccess) {
+      while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);
 
          if (pcmNumSamples == 0)

@@ -54,7 +54,7 @@ private:
     * labels that define them (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   int ExportMultipleByLabel(bool byName, const wxString &prefix, bool addNumber);
+   ProgressResult ExportMultipleByLabel(bool byName, const wxString &prefix, bool addNumber);
 
    /** \brief Export each track in the project to a separate file
     *
@@ -62,7 +62,7 @@ private:
     * (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   int ExportMultipleByTrack(bool byName, const wxString &prefix, bool addNumber);
+   ProgressResult ExportMultipleByTrack(bool byName, const wxString &prefix, bool addNumber);
 
    /** Export one file of an export multiple set
     *
@@ -74,7 +74,7 @@ private:
     * @param t1 End time for export
     * @param tags Metadata to include in the file (if possible).
     */
-   int DoExport(unsigned channels,
+   ProgressResult DoExport(unsigned channels,
                  const wxFileName &name,
                  bool selectedOnly,
                  double t0,

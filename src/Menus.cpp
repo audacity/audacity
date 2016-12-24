@@ -6316,7 +6316,7 @@ class ASAProgress final : public SAProgress {
                 (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * f;
       }
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
    bool set_matrix_progress(int cells) override {
       mCellCount += cells;
@@ -6325,7 +6325,7 @@ class ASAProgress final : public SAProgress {
              (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1];
       work += mCellCount * MATRIX_WORK_UNIT;
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
    bool set_smoothing_progress(int i) override {
       iterations = i;
@@ -6335,7 +6335,7 @@ class ASAProgress final : public SAProgress {
              MATRIX_WORK_UNIT * mFrames[0] * mFrames[1];
       work += i * wxMax(mFrames[0], mFrames[1]) * SMOOTHING_WORK_UNIT;
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
 };
 

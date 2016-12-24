@@ -1843,11 +1843,11 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       if (progress)
       {
-         int updateResult = progress->Update(
+         auto updateResult = progress->Update(
             pos.as_long_long(),
             numSamples.as_long_long()
          );
-         error = (updateResult != eProgressSuccess);
+         error = (updateResult != ProgressResult::Success);
          if (error)
          {
             break;

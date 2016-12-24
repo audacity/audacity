@@ -93,7 +93,7 @@ public:
 
    wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -324,7 +324,7 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
    return oldCopyPref;
 }
 
-int PCMImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                                 TrackHolders &outTracks,
                                 Tags *tags)
 {
@@ -336,7 +336,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    wxString copyEdit = AskCopyOrEdit();
 
    if (copyEdit == wxT("cancel"))
-      return eProgressCancelled;
+      return ProgressResult::Cancelled;
 
    // Fall back to "copy" if it doesn't match anything else, since it is safer
    bool doEdit = false;
@@ -372,7 +372,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
-   int updateResult = false;
+   auto updateResult = ProgressResult::Cancelled;
 
    // If the format is not seekable, we must use 'copy' mode,
    // because 'edit' mode depends on the ability to seek to an
@@ -405,7 +405,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                fileTotalFrames.as_long_long()
             );
             updateCounter = 0;
-            if (updateResult != eProgressSuccess)
+            if (updateResult != ProgressResult::Success)
                break;
          }
       }
@@ -443,13 +443,13 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // PRL:  guard against excessive memory buffer allocation in case of many channels
       using type = decltype(maxBlockSize);
       if (mInfo.channels < 1)
-         return eProgressFailed;
+         return ProgressResult::Failed;
       auto maxBlock = std::min(maxBlockSize,
          std::numeric_limits<type>::max() /
             (mInfo.channels * SAMPLE_SIZE(mFormat))
       );
       if (maxBlock < 1)
-         return eProgressFailed;
+         return ProgressResult::Failed;
 
       SampleBuffer srcbuffer;
       wxASSERT(mInfo.channels >= 0);
@@ -457,7 +457,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       {
          maxBlock /= 2;
          if (maxBlock < 1)
-            return eProgressFailed;
+            return ProgressResult::Failed;
       }
 
       SampleBuffer buffer(maxBlock, mFormat);
@@ -497,13 +497,13 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             framescompleted.as_long_long(),
             fileTotalFrames.as_long_long()
          );
-         if (updateResult != eProgressSuccess)
+         if (updateResult != ProgressResult::Success)
             break;
 
       } while (block > 0);
    }
 
-   if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
+   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled) {
       return updateResult;
    }
 

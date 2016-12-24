@@ -182,7 +182,7 @@ public:
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -212,7 +212,7 @@ ExportFLAC::ExportFLAC()
    SetDescription(_("FLAC Files"),0);
 }
 
-int ExportFLAC::Export(AudacityProject *project,
+ProgressResult ExportFLAC::Export(AudacityProject *project,
                         unsigned numChannels,
                         const wxString &fName,
                         bool selectionOnly,
@@ -226,7 +226,7 @@ int ExportFLAC::Export(AudacityProject *project,
    const TrackList *tracks = project->GetTracks();
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    int levelPref;
    gPrefs->Read(wxT("/FileFormats/FLACLevel"), &levelPref, 5);
@@ -244,7 +244,7 @@ int ExportFLAC::Export(AudacityProject *project,
 
    // See note in GetMetadata() about a bug in libflac++ 1.1.2
    if (!GetMetadata(project, metadata)) {
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    if (mMetadata) {
@@ -286,7 +286,7 @@ int ExportFLAC::Export(AudacityProject *project,
    wxFFile f;     // will be closed when it goes out of scope
    if (!f.Open(fName, wxT("w+b"))) {
       wxMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName.c_str()));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Even though there is an init() method that takes a filename, use the one that
@@ -295,7 +295,7 @@ int ExportFLAC::Export(AudacityProject *project,
    int status = encoder.init(f.fp());
    if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
       wxMessageBox(wxString::Format(_("FLAC encoder failed to initialize\nStatus: %d"), status));
-      return false;
+      return ProgressResult::Cancelled;
    }
 #endif
 
@@ -323,7 +323,7 @@ int ExportFLAC::Export(AudacityProject *project,
          _("Exporting the selected audio as FLAC") :
          _("Exporting the entire project as FLAC"));
 
-      while (updateResult == eProgressSuccess) {
+      while (updateResult == ProgressResult::Success) {
          auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
          if (samplesThisRun == 0) { //stop encoding
             break;

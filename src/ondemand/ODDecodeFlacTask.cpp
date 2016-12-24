@@ -153,7 +153,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
 
 //   mDecoder->mUpdateResult = mDecoder->mProgress->Update((wxULongLong_t) mDecoder->mSamplesDone, mDecoder->mNumSamples != 0 ? (wxULongLong_t)mDecoder->mNumSamples : 1);
 /*
-   if (mDecoder->mUpdateResult != eProgressSuccess)
+   if (mDecoder->mUpdateResult != ProgressResult::Success)
    {
       return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
    }

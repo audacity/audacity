@@ -284,7 +284,7 @@ public:
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format);
 
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -306,7 +306,7 @@ ExportCL::ExportCL()
    SetDescription(_("(external program)"),0);
 }
 
-int ExportCL::Export(AudacityProject *project,
+ProgressResult ExportCL::Export(AudacityProject *project,
                       unsigned channels,
                       const wxString &fName,
                       bool selectionOnly,
@@ -368,7 +368,7 @@ int ExportCL::Export(AudacityProject *project,
       process.Detach();
       process.CloseOutput();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Turn off logging to prevent broken pipe messages
@@ -432,7 +432,7 @@ int ExportCL::Export(AudacityProject *project,
 
    size_t numBytes = 0;
    samplePtr mixed = NULL;
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    {
       // Prepare the progress display
@@ -442,7 +442,7 @@ int ExportCL::Export(AudacityProject *project,
          _("Exporting the entire project using command-line encoder"));
 
       // Start piping the mixed data to the command
-      while (updateResult == eProgressSuccess && process.IsActive() && os->IsOk()) {
+      while (updateResult == ProgressResult::Success && process.IsActive() && os->IsOk()) {
          // Capture any stdout and stderr from the command
          Drain(process.GetInputStream(), &output);
          Drain(process.GetErrorStream(), &output);

@@ -822,14 +822,12 @@ bool Exporter::CheckMix()
 
 bool Exporter::ExportTracks()
 {
-   int success;
-
    // Keep original in case of failure
    if (mActualName != mFilename) {
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   success = mPlugins[mFormat]->Export(mProject,
+   auto success = mPlugins[mFormat]->Export(mProject,
                                        mChannels,
                                        mActualName.GetFullPath(),
                                        mSelectedOnly,
@@ -841,7 +839,7 @@ bool Exporter::ExportTracks()
 
    if (mActualName != mFilename) {
       // Remove backup
-      if (success == eProgressSuccess || success == eProgressStopped) {
+      if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
          ::wxRemoveFile(mFilename.GetFullPath());
       }
       else {
@@ -851,7 +849,7 @@ bool Exporter::ExportTracks()
       }
    }
 
-   return (success == eProgressSuccess || success == eProgressStopped);
+   return (success == ProgressResult::Success || success == ProgressResult::Stopped);
 }
 
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)

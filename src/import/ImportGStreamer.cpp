@@ -1088,7 +1088,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    {
       wxMessageBox(wxT("File doesn't contain any audio streams."),
                    wxT("GStreamer Importer"));
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    // Get the ball rolling...
@@ -1097,7 +1097,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    {
       wxMessageBox(wxT("Unable to import file, state change failed."),
                    wxT("GStreamer Importer"));
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    // Get the duration of the stream
@@ -1106,8 +1106,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
 
    // Handle bus messages and update progress while files is importing
    bool success = true;
-   int updateResult = eProgressSuccess;
-   while (ProcessBusMessage(success) && success && updateResult == eProgressSuccess)
+   int updateResult = ProgressResult::Success;
+   while (ProcessBusMessage(success) && success && updateResult == ProgressResult::Success)
    {
       gint64 position;
 
@@ -1123,7 +1123,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    gst_element_set_state(mPipeline.get(), GST_STATE_NULL);
 
    // Something bad happened
-   if (!success || updateResult == eProgressFailed || updateResult == eProgressCancelled)
+   if (!success || updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
    {
       return updateResult;
    }

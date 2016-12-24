@@ -125,7 +125,7 @@ public:
 
    wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -232,7 +232,7 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
                                 Tags * WXUNUSED(tags))
 {
    outTracks.clear();
@@ -242,7 +242,7 @@ int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHold
    if(mTextFile->Eof())
    {
       mTextFile->Close();
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    wxString line = mTextFile->GetFirstLine();
@@ -262,9 +262,9 @@ int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHold
 
    // exited ok
    if(mTextFile->Close())
-      return eProgressSuccess;
+      return ProgressResult::Success;
 
-   return eProgressFailed;
+   return ProgressResult::Failed;
 }
 
 static int CountNumTracks(AudacityProject *proj)

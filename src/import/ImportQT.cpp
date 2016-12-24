@@ -157,7 +157,7 @@ class QTImportFileHandle final : public ImportFileHandle
    {
    }
 
-   int Import(TrackFactory *trackFactory,
+   ProgressResult Import(TrackFactory *trackFactory,
               TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -229,7 +229,7 @@ auto QTImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int QTImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                TrackHolders &outTracks,
                                Tags *tags)
 {
@@ -237,7 +237,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
 
    OSErr err = noErr;
    MovieAudioExtractionRef maer = NULL;
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    auto totSamples =
       (sampleCount) GetMovieDuration(mMovie); // convert from TimeValue
    decltype(totSamples) numSamples = 0;
@@ -372,9 +372,9 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          if (numFrames == 0 || flags & kQTMovieAudioExtractionComplete) {
             break;
          }
-      } while (updateResult == eProgressSuccess);
+      } while (updateResult == ProgressResult::Success);
    
-      res = (updateResult == eProgressSuccess && err == noErr);
+      res = (updateResult == ProgressResult::Success && err == noErr);
    
       if (res) {
          for (const auto &channel: channels) {
@@ -403,7 +403,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       MovieAudioExtractionEnd(maer);
    }
 
-   return (res ? eProgressSuccess : eProgressFailed);
+   return (res ? ProgressResult::Success : ProgressResult::Failed);
 }
 
 static const struct

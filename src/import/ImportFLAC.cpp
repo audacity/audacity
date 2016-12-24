@@ -154,7 +154,7 @@ public:
 
    wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -178,7 +178,7 @@ private:
    FLAC__uint64          mNumSamples;
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
-   int                   mUpdateResult;
+   ProgressResult        mUpdateResult;
    TrackHolders          mChannels;
    movable_ptr<ODDecodeFlacTask> mDecoderTask;
 };
@@ -277,7 +277,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
    mFile->mSamplesDone += frame->header.blocksize;
 
    mFile->mUpdateResult = mFile->mProgress->Update((wxULongLong_t) mFile->mSamplesDone, mFile->mNumSamples != 0 ? (wxULongLong_t)mFile->mNumSamples : 1);
-   if (mFile->mUpdateResult != eProgressSuccess)
+   if (mFile->mUpdateResult != ProgressResult::Success)
    {
       return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
    }
@@ -345,7 +345,7 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
 :  ImportFileHandle(name),
    mSamplesDone(0),
    mStreamInfoDone(false),
-   mUpdateResult(eProgressSuccess)
+   mUpdateResult(ProgressResult::Success)
 {
    mFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
@@ -439,7 +439,7 @@ auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 
-int FLACImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
                                  TrackHolders &outTracks,
                                  Tags *tags)
 {
@@ -507,7 +507,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
             i.as_long_long(),
             fileTotalFrames.as_long_long()
          );
-         if (mUpdateResult != eProgressSuccess)
+         if (mUpdateResult != ProgressResult::Success)
             break;
       }
 
@@ -529,7 +529,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 //END OD
 
 
-   if (mUpdateResult == eProgressFailed || mUpdateResult == eProgressCancelled) {
+   if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled) {
       return mUpdateResult;
    }
 
