@@ -3914,6 +3914,23 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          pWaveTrack = (WaveTrack*)pTrack;
          pSavedTrackList.Add(mTrackFactory->DuplicateWaveTrack(*pWaveTrack));
       }
+      auto cleanup = finally( [&] {
+         // Restore the saved track states and clean up.
+         TrackListIterator savedTrackIter(&pSavedTrackList);
+         Track *pSavedTrack;
+         for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
+              ((pTrack != NULL) && (pSavedTrack != NULL));
+              pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
+         {
+            pWaveTrack = (WaveTrack*)pTrack;
+            pWaveTrack->SetSelected(pSavedTrack->GetSelected());
+            pWaveTrack->SetMute(pSavedTrack->GetMute());
+            pWaveTrack->SetSolo(pSavedTrack->GetSolo());
+
+            pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
+            pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
+         }
+      } );
 
       if (numWaveTracks == 0)
          // Nothing to save compressed => success. Delete the copies and go.
@@ -3923,6 +3940,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
       {
          pWaveTrack = (WaveTrack*)pTrack;
+
          pWaveTrack->SetSelected(false);
          pWaveTrack->SetMute(false);
          pWaveTrack->SetSolo(false);
@@ -3966,22 +3984,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
             if (pRightTrack)
                pRightTrack->SetSelected(false);
          }
-      }
-
-      // Restore the saved track states and clean up.
-      TrackListIterator savedTrackIter(&pSavedTrackList);
-      Track *pSavedTrack;
-      for (pTrack = iter.First(), pSavedTrack = savedTrackIter.First();
-            ((pTrack != NULL) && (pSavedTrack != NULL));
-            pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
-      {
-         pWaveTrack = (WaveTrack*)pTrack;
-         pWaveTrack->SetSelected(pSavedTrack->GetSelected());
-         pWaveTrack->SetMute(pSavedTrack->GetMute());
-         pWaveTrack->SetSolo(pSavedTrack->GetSolo());
-
-         pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
-         pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
       }
 
       return bSuccess;
