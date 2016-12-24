@@ -217,6 +217,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    twolame_options *encodeOptions;
    encodeOptions = twolame_init();
+   auto cleanup = finally( [&] { twolame_close(&encodeOptions); } );
 
    twolame_set_in_samplerate(encodeOptions, (int)(rate + 0.5));
    twolame_set_out_samplerate(encodeOptions, (int)(rate + 0.5));
@@ -227,7 +228,6 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    {
       wxMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
          _("Error"), wxICON_STOP);
-      twolame_close(&encodeOptions);
       return ProgressResult::Cancelled;
    }
 
@@ -238,7 +238,6 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
-      twolame_close(&encodeOptions);
       return ProgressResult::Cancelled;
    }
 
@@ -288,6 +287,11 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
             mp2Buffer.get(),
             mp2BufferSize);
 
+         if (mp2BufferNumBytes < 0) {
+            updateResult = ProgressResult::Cancelled;
+            break;
+         }
+
          outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
@@ -302,14 +306,10 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (mp2BufferNumBytes > 0)
       outFile.Write(mp2Buffer.get(), mp2BufferNumBytes);
 
-   twolame_close(&encodeOptions);
-
    /* Write ID3 tag if it was supposed to be at the end of the file */
 
    if (id3len && endOfFile)
       outFile.Write(id3buffer.get(), id3len);
-
-   /* Close file */
 
    outFile.Close();
 
@@ -328,7 +328,9 @@ struct id3_tag_deleter {
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
 // returns buffer len; caller frees
-int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
+int ExportMP2::AddTags(
+   AudacityProject * WXUNUSED(project), ArrayOf< char > &buffer,
+   bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };

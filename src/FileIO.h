@@ -26,6 +26,8 @@ class FileIO
 
  public:
    FileIO(const wxString & name, FileIOMode mode);
+
+   // Calls Close()
    ~FileIO();
 
    bool IsOpened();
