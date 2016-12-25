@@ -134,6 +134,7 @@
     <ClCompile Include="..\..\..\src\BatchProcessDialog.cpp" />
     <ClCompile Include="..\..\..\src\Benchmark.cpp" />
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />
     <ClCompile Include="..\..\..\src\Dependencies.cpp" />
     <ClCompile Include="..\..\..\src\DeviceChange.cpp" />
@@ -426,6 +427,7 @@
     <ClInclude Include="..\..\..\src\BatchProcessDialog.h" />
     <ClInclude Include="..\..\..\src\Benchmark.h" />
     <ClInclude Include="..\..\..\src\BlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />

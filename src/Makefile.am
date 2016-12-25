@@ -32,6 +32,8 @@ libaudacity_la_SOURCES = \
 	blockfile/LegacyAliasBlockFile.h \
 	blockfile/LegacyBlockFile.cpp \
 	blockfile/LegacyBlockFile.h \
+	blockfile/NotYetAvailableException.cpp \
+	blockfile/NotYetAvailableException.h \
 	blockfile/ODDecodeBlockFile.cpp \
 	blockfile/ODDecodeBlockFile.h \
 	blockfile/ODPCMAliasBlockFile.cpp \
