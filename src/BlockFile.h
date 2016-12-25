@@ -117,11 +117,13 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Returns TRUE if this BlockFile is locked
    virtual bool IsLocked();
 
+   struct MinMaxRMS { float min, max, RMS; };
+
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const;
+   virtual MinMaxRMS GetMinMaxRMS(size_t start, size_t len,
+                          bool mayThrow = true) const;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS) const;
+   virtual MinMaxRMS GetMinMaxRMS(bool mayThrow = true) const;
    /// Returns the 256 byte summary data block
    virtual bool Read256(float *buffer, size_t start, size_t len);
    /// Returns the 64K summary data block

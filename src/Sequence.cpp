@@ -225,13 +225,17 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    return bSuccess;
 }
 
-bool Sequence::GetMinMax(sampleCount start, sampleCount len,
-                         float * outMin, float * outMax) const
+std::pair<float, float> Sequence::GetMinMax(
+   sampleCount start, sampleCount len, bool mayThrow) const
 {
    if (len == 0 || mBlock.size() == 0) {
-      *outMin = float(0.0);   // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
-      *outMax = float(0.0);   // -FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
-      return true;
+      return {
+         0.f,
+         // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
+
+         0.f
+         // -FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
+      };
    }
 
    float min = FLT_MAX;
@@ -245,13 +249,12 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    // already in memory.
 
    for (unsigned b = block0 + 1; b < block1; ++b) {
-      float blockMin, blockMax, blockRMS;
-      mBlock[b].f->GetMinMax(&blockMin, &blockMax, &blockRMS);
+      auto results = mBlock[b].f->GetMinMaxRMS(mayThrow);
 
-      if (blockMin < min)
-         min = blockMin;
-      if (blockMax > max)
-         max = blockMax;
+      if (results.min < min)
+         min = results.min;
+      if (results.max > max)
+         max = results.max;
    }
 
    // Now we take the first and last blocks into account, noting that the
@@ -259,12 +262,11 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    // of either of these blocks is within min...max, then we can ignore them.
    // If not, we need read some samples and summaries from disk.
    {
-      float block0Min, block0Max, block0RMS;
       const SeqBlock &theBlock = mBlock[block0];
       const auto &theFile = theBlock.f;
-      theFile->GetMinMax(&block0Min, &block0Max, &block0RMS);
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
-      if (block0Min < min || block0Max > max) {
+      if (results.min < min || results.max > max) {
          // start lies within theBlock:
          auto s0 = ( start - theBlock.start ).as_size_t();
          const auto maxl0 = (
@@ -274,54 +276,43 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
          wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
          const auto l0 = limitSampleBufferSize ( maxl0, len );
 
-         float partialMin, partialMax, partialRMS;
-         theFile->GetMinMax(s0, l0,
-            &partialMin, &partialMax, &partialRMS);
-         if (partialMin < min)
-            min = partialMin;
-         if (partialMax > max)
-            max = partialMax;
+         results = theFile->GetMinMaxRMS(s0, l0, mayThrow);
+         if (results.min < min)
+            min = results.min;
+         if (results.max > max)
+            max = results.max;
       }
    }
 
    if (block1 > block0)
    {
-      float block1Min, block1Max, block1RMS;
       const SeqBlock &theBlock = mBlock[block1];
       const auto &theFile = theBlock.f;
-      theFile->GetMinMax(&block1Min, &block1Max, &block1RMS);
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
-      if (block1Min < min || block1Max > max) {
+      if (results.min < min || results.max > max) {
 
          // start + len - 1 lies in theBlock:
          const auto l0 = ( start + len - theBlock.start ).as_size_t();
          wxASSERT(l0 <= mMaxSamples); // Vaughan, 2011-10-19
 
-         float partialMin, partialMax, partialRMS;
-         theFile->GetMinMax(0, l0,
-            &partialMin, &partialMax, &partialRMS);
-         if (partialMin < min)
-            min = partialMin;
-         if (partialMax > max)
-            max = partialMax;
+         results = theFile->GetMinMaxRMS(0, l0, mayThrow);
+         if (results.min < min)
+            min = results.min;
+         if (results.max > max)
+            max = results.max;
       }
    }
 
-   *outMin = min;
-   *outMax = max;
-
-   return true;
+   return { min, max };
 }
 
-bool Sequence::GetRMS(sampleCount start, sampleCount len,
-                         float * outRMS) const
+float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 {
    // len is the number of samples that we want the rms of.
    // it may be longer than a block, and the code is carefully set up to handle that.
-   if (len == 0 || mBlock.size() == 0) {
-      *outRMS = float(0.0);
-      return true;
-   }
+   if (len == 0 || mBlock.size() == 0)
+      return 0.f;
 
    double sumsq = 0.0;
    sampleCount length = 0; // this is the cumulative length of the bits we have the ms of so far, and should end up == len
@@ -333,12 +324,12 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // this is very fast because we have the rms of every entire block
    // already in memory.
    for (unsigned b = block0 + 1; b < block1; b++) {
-      float blockMin, blockMax, blockRMS;
       const SeqBlock &theBlock = mBlock[b];
       const auto &theFile = theBlock.f;
-      theFile->GetMinMax(&blockMin, &blockMax, &blockRMS);
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
       const auto fileLen = theFile->GetLength();
+      const auto blockRMS = results.RMS;
       sumsq += blockRMS * blockRMS * fileLen;
       length += fileLen;
    }
@@ -357,9 +348,8 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
       const auto l0 = limitSampleBufferSize( maxl0, len );
 
-      float partialMin, partialMax, partialRMS;
-      theFile->GetMinMax(s0, l0, &partialMin, &partialMax, &partialRMS);
-
+      auto results = theFile->GetMinMaxRMS(s0, l0, mayThrow);
+      const auto partialRMS = results.RMS;
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
    }
@@ -372,8 +362,8 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       const auto l0 = ( start + len - theBlock.start ).as_size_t();
       wxASSERT(l0 <= mMaxSamples); // PRL: I think Vaughan missed this
 
-      float partialMin, partialMax, partialRMS;
-      theFile->GetMinMax(0, l0, &partialMin, &partialMax, &partialRMS);
+      auto results = theFile->GetMinMaxRMS(0, l0, mayThrow);
+      const auto partialRMS = results.RMS;
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
    }
@@ -381,9 +371,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // PRL: catch bugs like 1320:
    wxASSERT(length == len);
 
-   *outRMS = sqrt(sumsq / length.as_double() );
-
-   return true;
+   return sqrt(sumsq / length.as_double() );
 }
 
 std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const

@@ -257,9 +257,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
                    sampleCount start, size_t len);
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
-   bool GetMinMax(float *min, float *max,
-                  double t0, double t1) const;
-   bool GetRMS(float *rms, double t0, double t1) const;
+   std::pair<float, float> GetMinMax(
+      double t0, double t1, bool mayThrow = true) const;
+   float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //
    // MM: We now have more than one sequence and envelope per track, so

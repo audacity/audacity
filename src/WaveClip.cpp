@@ -36,6 +36,8 @@
 #include "WaveTrack.h"
 #include "FFT.h"
 #include "Profiler.h"
+#include "InconsistencyException.h"
+#include "UserException.h"
 
 #include "prefs/SpectrogramSettings.h"
 
@@ -1284,43 +1286,48 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    return true;
 }
 
-bool WaveClip::GetMinMax(float *min, float *max,
-                          double t0, double t1) const
+std::pair<float, float> WaveClip::GetMinMax(
+   double t0, double t1, bool mayThrow) const
 {
-   *min = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
-   *max = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      return {
+         0.f,  // harmless, but unused since Sequence::GetMinMax does not use these values
+         0.f   // harmless, but unused since Sequence::GetMinMax does not use these values
+      };
+   }
 
    if (t0 == t1)
-      return true;
+      return{ 0.f, 0.f };
 
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   return mSequence->GetMinMax(s0, s1-s0, min, max);
+   return mSequence->GetMinMax(s0, s1-s0, mayThrow);
 }
 
-bool WaveClip::GetRMS(float *rms, double t0,
-                          double t1)
+float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
 {
-   *rms = float(0.0);
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      return 0.f;
+   }
 
    if (t0 == t1)
-      return true;
+      return 0.f;
 
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   return mSequence->GetRMS(s0, s1-s0, rms);
+   return mSequence->GetRMS(s0, s1-s0, mayThrow);
 }
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format)

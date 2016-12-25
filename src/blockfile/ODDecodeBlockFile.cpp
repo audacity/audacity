@@ -29,6 +29,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 #include "../FileFormats.h"
 #include "../Internat.h"
+#include "NotYetAvailableException.h"
 
 const int bheaderTagLen = 20;
 char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
@@ -91,37 +92,45 @@ auto ODDecodeBlockFile::GetSpaceUsage() const -> DiskByteCount
 
 
 /// Gets extreme values for the specified region
-void ODDecodeBlockFile::GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const
+auto ODDecodeBlockFile::GetMinMaxRMS(
+   size_t start, size_t len, bool mayThrow) const -> MinMaxRMS
 {
    if(IsSummaryAvailable())
    {
-      SimpleBlockFile::GetMinMax(start,len,outMin,outMax,outRMS);
+      return SimpleBlockFile::GetMinMaxRMS(start, len, mayThrow);
    }
    else
    {
+      if (mayThrow)
+         // throw NotYetAvailableException{ mAudioFileName }
+         ;
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0;
-      *outMax = 1.0;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -1.0f, 1.0f, 0.707f //sin with amp of 1 rms
+      };
    }
 }
 
 /// Gets extreme values for the entire block
-void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
+auto ODDecodeBlockFile::GetMinMaxRMS(bool mayThrow) const -> MinMaxRMS
 {
   if(IsSummaryAvailable())
    {
-      SimpleBlockFile::GetMinMax(outMin,outMax,outRMS);
+      return SimpleBlockFile::GetMinMaxRMS(mayThrow);
    }
    else
    {
+      if (mayThrow)
+         // throw NotYetAvailableException{ mAudioFileName }
+         ;
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0;
-      *outMax = 1.0;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -1.0f, 1.0f, 0.707f //sin with amp of 1 rms
+      };
    }
 }
 

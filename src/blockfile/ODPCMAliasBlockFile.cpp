@@ -36,6 +36,8 @@ The summary is eventually computed and written to a file in a background thread.
 #include "../ondemand/ODManager.h"
 #include "../AudioIO.h"
 
+#include "NotYetAvailableException.h"
+
 //#include <errno.h>
 
 extern AudioIO *gAudioIO;
@@ -121,37 +123,49 @@ void ODPCMAliasBlockFile::Unlock()
 
 
 /// Gets extreme values for the specified region
-void ODPCMAliasBlockFile::GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const
+auto ODPCMAliasBlockFile::GetMinMaxRMS(
+   size_t start, size_t len, bool mayThrow) const -> MinMaxRMS
 {
    if(IsSummaryAvailable())
    {
-      PCMAliasBlockFile::GetMinMax(start,len,outMin,outMax,outRMS);
+      return PCMAliasBlockFile::GetMinMaxRMS(start, len, mayThrow);
    }
    else
    {
+      if (mayThrow)
+         //throw NotYetAvailableException{ GetAliasedFileName() }
+         ;
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
-      *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -JUST_BELOW_MAX_AUDIO,
+         JUST_BELOW_MAX_AUDIO,
+         0.707f //sin with amp of 1 rms
+      };
    }
 }
 
 /// Gets extreme values for the entire block
-void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
+auto ODPCMAliasBlockFile::GetMinMaxRMS(bool mayThrow) const -> MinMaxRMS
 {
   if(IsSummaryAvailable())
    {
-      PCMAliasBlockFile::GetMinMax(outMin,outMax,outRMS);
+      return PCMAliasBlockFile::GetMinMaxRMS(mayThrow);
    }
    else
    {
+      if (mayThrow)
+         //throw NotYetAvailableException{ GetAliasedFileName() }
+         ;
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
-      *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -JUST_BELOW_MAX_AUDIO,
+         JUST_BELOW_MAX_AUDIO,
+         0.707f //sin with amp of 1 rms
+      };
    }
 }
 

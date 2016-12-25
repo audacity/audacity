@@ -371,14 +371,8 @@ void BlockFile::FixSummary(void *data)
 ///
 /// @param start The offset in this block where the region should begin
 /// @param len   The number of samples to include in the region
-/// @param *outMin A pointer to where the minimum value for this region
-///                should be stored
-/// @param *outMax A pointer to where the maximum value for this region
-///                should be stored
-/// @param *outRMS A pointer to where the maximum RMS value for this
-///                region should be stored.
-void BlockFile::GetMinMax(size_t start, size_t len,
-                  float *outMin, float *outMax, float *outRMS) const
+auto BlockFile::GetMinMaxRMS(size_t start, size_t len, bool mayThrow)
+   const -> MinMaxRMS
 {
    // TODO: actually use summaries
    SampleBuffer blockData(len, floatSample);
@@ -399,26 +393,16 @@ void BlockFile::GetMinMax(size_t start, size_t len,
       sumsq += (sample*sample);
    }
 
-   *outMin = min;
-   *outMax = max;
-   *outRMS = sqrt(sumsq/len);
+   return { min, max, (float)sqrt(sumsq/len) };
 }
 
 /// Retrieves the minimum, maximum, and maximum RMS of this entire
 /// block.  This is faster than the other GetMinMax function since
 /// these values are already computed.
-///
-/// @param *outMin A pointer to where the minimum value for this block
-///                should be stored
-/// @param *outMax A pointer to where the maximum value for this block
-///                should be stored
-/// @param *outRMS A pointer to where the maximum RMS value for this
-///                block should be stored.
-void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
+auto BlockFile::GetMinMaxRMS(bool)
+   const -> MinMaxRMS
 {
-   *outMin = mMin;
-   *outMax = mMax;
-   *outRMS = mRMS;
+   return { mMin, mMax, mRMS };
 }
 
 /// Retrieves a portion of the 256-byte summary buffer from this BlockFile.  This

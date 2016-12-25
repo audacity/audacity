@@ -169,10 +169,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Retrieving summary info
    //
 
-   bool GetMinMax(sampleCount start, sampleCount len,
-                  float * min, float * max) const;
-   bool GetRMS(sampleCount start, sampleCount len,
-                  float * outRMS) const;
+   std::pair<float, float> GetMinMax(
+      sampleCount start, sampleCount len, bool mayThrow) const;
+   float GetRMS(sampleCount start, sampleCount len, bool mayThrow) const;
 
    //
    // Getting block size and alignment information
