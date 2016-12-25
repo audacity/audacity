@@ -376,7 +376,8 @@ auto BlockFile::GetMinMaxRMS(size_t start, size_t len, bool mayThrow)
 {
    // TODO: actually use summaries
    SampleBuffer blockData(len, floatSample);
-   this->ReadData(blockData.ptr(), floatSample, start, len);
+
+   this->ReadData(blockData.ptr(), floatSample, start, len, mayThrow);
 
    float min = FLT_MAX;
    float max = -FLT_MAX;
@@ -485,6 +486,7 @@ bool BlockFile::Read64K(float *buffer,
 }
 
 size_t BlockFile::CommonReadData(
+   bool mayThrow,
    const wxFileName &fileName, bool &mSilentLog,
    const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
    samplePtr data, sampleFormat format, size_t start, size_t len,
@@ -534,80 +536,89 @@ size_t BlockFile::CommonReadData(
          // libsndfile can't (under Windows).
          sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
       }
-      // FIXME: TRAP_ERR failure of wxFile open incompletely handled in BlockFile::CommonReadData.
 
       if (!sf) {
 
          memset(data, 0, SAMPLE_SIZE(format)*len);
-
-         mSilentLog = TRUE;
 
          if (pAliasFile) {
             // Set a marker to display an error message for the silence
             if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
                wxGetApp().MarkAliasedFilesMissingWarning(pAliasFile);
          }
-
-         return len;
       }
    }
-   mSilentLog=FALSE;
-
-   SFCall<sf_count_t>(
-      sf_seek, sf.get(), ( origin + start ).as_long_long(), SEEK_SET);
-
-   auto channels = info.channels;
-   wxASSERT(channels >= 1);
-   wxASSERT(channel < channels);
+   mSilentLog = !sf;
 
    size_t framesRead = 0;
+   if (sf) {
+      auto seek_result = SFCall<sf_count_t>(
+         sf_seek, sf.get(), ( origin + start ).as_long_long(), SEEK_SET);
 
-   if (channels == 1 &&
-       format == int16Sample &&
-       sf_subtype_is_integer(info.format)) {
-      // If both the src and dest formats are integer formats,
-      // read integers directly from the file, comversions not needed
-      framesRead = SFCall<sf_count_t>(
-         sf_readf_short, sf.get(), (short *)data, len);
-   }
-   else if (channels == 1 &&
-            format == int24Sample &&
-            sf_subtype_is_integer(info.format)) {
-      framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
+      if (seek_result < 0)
+         // error
+         ;
+      else {
+         auto channels = info.channels;
+         wxASSERT(channels >= 1);
+         wxASSERT(channel < channels);
 
-      // libsndfile gave us the 3 byte sample in the 3 most
-      // significant bytes -- we want it in the 3 least
-      // significant bytes.
-      int *intPtr = (int *)data;
-      for( int i = 0; i < framesRead; i++ )
-         intPtr[i] = intPtr[i] >> 8;
+         if (channels == 1 &&
+             format == int16Sample &&
+             sf_subtype_is_integer(info.format)) {
+            // If both the src and dest formats are integer formats,
+            // read integers directly from the file, comversions not needed
+            framesRead = SFCall<sf_count_t>(
+               sf_readf_short, sf.get(), (short *)data, len);
+         }
+         else if (channels == 1 &&
+                  format == int24Sample &&
+                  sf_subtype_is_integer(info.format)) {
+            framesRead = SFCall<sf_count_t>(
+               sf_readf_int, sf.get(), (int *)data, len);
+
+            // libsndfile gave us the 3 byte sample in the 3 most
+            // significant bytes -- we want it in the 3 least
+            // significant bytes.
+            int *intPtr = (int *)data;
+            for( int i = 0; i < framesRead; i++ )
+               intPtr[i] = intPtr[i] >> 8;
+         }
+         else if (format == int16Sample &&
+                  !sf_subtype_more_than_16_bits(info.format)) {
+            // Special case: if the file is in 16-bit (or less) format,
+            // and the calling method wants 16-bit data, go ahead and
+            // read 16-bit data directly.  This is a pretty common
+            // case, as most audio files are 16-bit.
+            SampleBuffer buffer(len * channels, int16Sample);
+            framesRead = SFCall<sf_count_t>(
+               sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
+            for (int i = 0; i < framesRead; i++)
+               ((short *)data)[i] =
+               ((short *)buffer.ptr())[(channels * i) + channel];
+         }
+         else {
+            // Otherwise, let libsndfile handle the conversion and
+            // scaling, and pass us normalized data as floats.  We can
+            // then convert to whatever format we want.
+            SampleBuffer buffer(len * channels, floatSample);
+            framesRead = SFCall<sf_count_t>(
+               sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
+            auto bufferPtr = (samplePtr)((float *)buffer.ptr() + channel);
+            CopySamples(bufferPtr, floatSample,
+                        (samplePtr)data, format,
+                        framesRead,
+                        true /* high quality by default */,
+                        channels /* source stride */);
+         }
+      }
    }
-   else if (format == int16Sample &&
-            !sf_subtype_more_than_16_bits(info.format)) {
-      // Special case: if the file is in 16-bit (or less) format,
-      // and the calling method wants 16-bit data, go ahead and
-      // read 16-bit data directly.  This is a pretty common
-      // case, as most audio files are 16-bit.
-      SampleBuffer buffer(len * channels, int16Sample);
-      framesRead = SFCall<sf_count_t>(
-         sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
-      for (int i = 0; i < framesRead; i++)
-         ((short *)data)[i] =
-         ((short *)buffer.ptr())[(channels * i) + channel];
-   }
-   else {
-      // Otherwise, let libsndfile handle the conversion and
-      // scaling, and pass us normalized data as floats.  We can
-      // then convert to whatever format we want.
-      SampleBuffer buffer(len * channels, floatSample);
-      framesRead = SFCall<sf_count_t>(
-         sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-      auto bufferPtr = (samplePtr)((float *)buffer.ptr() + channel);
-      CopySamples(bufferPtr, floatSample,
-                  (samplePtr)data, format,
-                  framesRead,
-                  true /* high quality by default */,
-                  channels /* source stride */);
+
+   if ( framesRead < len ) {
+      if (mayThrow)
+         //throw FileException{ FileException::Cause::Read, fileName }
+         ;
+      ClearSamples(data, format, framesRead, len - framesRead);
    }
 
    return framesRead;

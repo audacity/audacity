@@ -194,10 +194,10 @@ bool LegacyBlockFile::ReadSummary(ArrayOf<char> &data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 size_t LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              size_t start, size_t len) const
+                              size_t start, size_t len, bool mayThrow) const
 {
    sf_count_t origin = (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
-   return CommonReadData(
+   return CommonReadData( mayThrow,
       mFileName, mSilentLog, nullptr, origin, 0, data, format, start, len,
       &mFormat, mLen
    );

@@ -414,7 +414,7 @@ void ODPCMAliasBlockFile::WriteSummary()
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
    SampleBuffer sampleData(mLen, floatSample);
-   this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
+   this->ReadData(sampleData.ptr(), floatSample, 0, mLen, true);
 
    ArrayOf<char> cleanup;
    void *summaryData = CalcSummary(sampleData.ptr(), mLen,
@@ -495,7 +495,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                size_t start, size_t len) const
+                                size_t start, size_t len, bool mayThrow) const
 {
 
    auto locker = LockForRead();
@@ -505,7 +505,7 @@ size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       return len;
    }
 
-   return CommonReadData(
+   return CommonReadData( mayThrow,
       mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
       data, format, start, len);
 }

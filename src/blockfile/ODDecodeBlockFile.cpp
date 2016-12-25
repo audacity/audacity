@@ -438,20 +438,22 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, size_t len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 size_t ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                size_t start, size_t len) const
+                                size_t start, size_t len, bool mayThrow) const
 {
-   size_t ret;
    auto locker = LockForRead();
    if(IsSummaryAvailable())
-      ret = SimpleBlockFile::ReadData(data,format,start,len);
+      return SimpleBlockFile::ReadData(data, format, start, len, mayThrow);
    else
    {
+      if (mayThrow)
+         //throw NotYetAvailableException{ mFileName }
+         ;
+
       //we should do an ODRequest to start processing the data here, and wait till it finishes. and just do a SimpleBlockFile
       //ReadData.
       ClearSamples(data, format, 0, len);
-      ret = len;
+      return 0;
    }
-   return ret;
 }
 
 /// Read the summary of this alias block from disk.  Since the audio data

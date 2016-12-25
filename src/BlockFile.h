@@ -67,8 +67,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // Reading
 
    /// Retrieves audio data from this BlockFile
+   /// Returns the number of samples really read, not more than len
+   /// If fewer can be read than len, throws an exception if mayThrow is true,
+   /// otherwise fills the remainder of data with zeroes.
    virtual size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const = 0;
+                        size_t start, size_t len, bool mayThrow = true)
+      const = 0;
 
    // Other Properties
 
@@ -223,6 +227,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual void FixSummary(void *data);
 
    static size_t CommonReadData(
+      bool mayThrow,
       const wxFileName &fileName, bool &mSilentLog,
       const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
       samplePtr data, sampleFormat format, size_t start, size_t len,

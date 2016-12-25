@@ -75,14 +75,14 @@ PCMAliasBlockFile::~PCMAliasBlockFile()
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 size_t PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                size_t start, size_t len) const
+                                size_t start, size_t len, bool mayThrow) const
 {
    if(!mAliasedFileName.IsOk()){ // intentionally silenced
       memset(data, 0, SAMPLE_SIZE(format) * len);
       return len;
    }
 
-   return CommonReadData(
+   return CommonReadData( mayThrow,
       mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
       data, format, start, len);
 }

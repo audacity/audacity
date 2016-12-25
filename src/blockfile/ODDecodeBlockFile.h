@@ -109,7 +109,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    /// Reads the specified data from the aliased file using libsndfile
    size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const override;
+                        size_t start, size_t len, bool mayThrow) const override;
 
    /// Read the summary into a buffer
    bool ReadSummary(ArrayOf<char> &data) override;
