@@ -5093,7 +5093,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       // DM: If it's a NoteTrack, it has special controls
       else if (t->GetKind() == Track::Note)
       {
-         wxRect midiRect;
 #ifdef EXPERIMENTAL_MIDI_OUT
          // this is an awful hack: make a NEW rectangle at an offset because
          // MuteSoloFunc thinks buttons are located below some text, e.g.
@@ -5112,13 +5111,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
             event, event.m_x, event.m_y))
             return;
 #endif
-         mTrackInfo.GetTrackControlsRect(rect, midiRect);
-         if (midiRect.Contains(event.m_x, event.m_y) &&
-            ((NoteTrack *)t)->LabelClick(midiRect, event.m_x, event.m_y,
-            event.Button(wxMOUSE_BTN_RIGHT))) {
-            Refresh(false);
-            return;
-         }
       }
 #endif // USE_MIDI
 
