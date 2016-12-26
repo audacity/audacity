@@ -185,7 +185,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    sampleFormat mFormat;
 
    sampleCount mAliasStart;//where in the encoded audio file this block corresponds to.
-   int         mAliasChannel;//The channel number in the encoded file..
+   const int         mAliasChannel;//The channel number in the encoded file..
 
 };
 

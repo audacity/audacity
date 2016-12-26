@@ -490,81 +490,18 @@ size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    LockRead();
 
-   SF_INFO info;
-
    if(!mAliasedFileName.IsOk()){ // intentionally silenced
       memset(data,0,SAMPLE_SIZE(format)*len);
       UnlockRead();
       return len;
    }
 
-   memset(&info, 0, sizeof(info));
-
-   wxString aliasPath = mAliasedFileName.GetFullPath();
-
-   wxFile f;   // will be closed when it goes out of scope
-   SFFile sf;
-
-   if (f.Exists(aliasPath) && f.Open(aliasPath)) {
-      // Even though there is an sf_open() that takes a filename, use the one that
-      // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-      // libsndfile can't (under Windows).
-      sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-   }
-   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in ODPCMAliasBlockFile::ReadData.
-
-
-   if (!sf) {
-
-      memset(data,0,SAMPLE_SIZE(format)*len);
-
-      mSilentAliasLog = TRUE;
-      // Set a marker to display an error message
-      if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
-         wxGetApp().MarkAliasedFilesMissingWarning(this);
-
-      UnlockRead();
-      return len;
-   }
-
-   mSilentAliasLog=FALSE;
-
-   // Third party library has its own type alias, check it
-   static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
-                 "Type sf_count_t is too narrow to hold a sampleCount");
-   SFCall<sf_count_t>(sf_seek, sf.get(),
-                      ( mAliasStart + start ).as_long_long(), SEEK_SET);
-
-   wxASSERT(info.channels >= 0);
-   SampleBuffer buffer(len * info.channels, floatSample);
-
-   size_t framesRead = 0;
-
-   if (format == int16Sample &&
-       !sf_subtype_more_than_16_bits(info.format)) {
-      // Special case: if the file is in 16-bit (or less) format,
-      // and the calling method wants 16-bit data, go ahead and
-      // read 16-bit data directly.  This is a pretty common
-      // case, as most audio files are 16-bit.
-      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
-
-      for (int i = 0; i < framesRead; i++)
-         ((short *)data)[i] =
-            ((short *)buffer.ptr())[(info.channels * i) + mAliasChannel];
-   }
-   else {
-      // Otherwise, let libsndfile handle the conversion and
-      // scaling, and pass us normalized data as floats.  We can
-      // then convert to whatever format we want.
-      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-      float *bufferPtr = &((float *)buffer.ptr())[mAliasChannel];
-      CopySamples((samplePtr)bufferPtr, floatSample,
-                  (samplePtr)data, format,
-                  framesRead, true, info.channels);
-   }
+   auto result = CommonReadData(
+      mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
+      data, format, start, len);
 
    UnlockRead();
-   return framesRead;
+   return result;
 }
 
 /// Read the summary of this alias block from disk.  Since the audio data
