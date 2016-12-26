@@ -680,6 +680,13 @@ AliasBlockFile::AliasBlockFile(wxFileNameWrapper &&existingSummaryFileName,
 /// summarize.
 void AliasBlockFile::WriteSummary()
 {
+   // To build the summary data, call ReadData (implemented by the
+   // derived classes) to get the sample data
+   // Call this first, so that in case of exceptions from ReadData, there is
+   // no new output file
+   SampleBuffer sampleData(mLen, floatSample);
+   this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
+
    // Now checked carefully in the DirManager
    //wxASSERT( !wxFileExists(FILENAME(mFileName.GetFullPath())));
 
@@ -696,11 +703,6 @@ void AliasBlockFile::WriteSummary()
       // If we can't write, there's nothing to do.
       return;
    }
-
-   // To build the summary data, call ReadData (implemented by the
-   // derived classes) to get the sample data
-   SampleBuffer sampleData(mLen, floatSample);
-   this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
 
    ArrayOf<char> cleanup;
    void *summaryData = BlockFile::CalcSummary(sampleData.ptr(), mLen,

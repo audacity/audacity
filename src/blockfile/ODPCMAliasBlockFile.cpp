@@ -380,41 +380,45 @@ auto ODPCMAliasBlockFile::GetFileName() const -> GetFileNameResult
 /// Write the summary to disk, using the derived ReadData() to get the data
 void ODPCMAliasBlockFile::WriteSummary()
 {
-   //the mFileName path may change, for example, when the project is saved.
-   //(it moves from /tmp/ to wherever it is saved to.
-   mFileNameMutex.Lock();
-
-   //wxFFile is not thread-safe - if any error occurs in opening the file,
-   // it posts a wxlog message which WILL crash
-   // Audacity because it goes into the wx GUI.
-   // For this reason I left the wxFFile method commented out. (mchinen)
-   //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
-
-   // ...and we use fopen instead.
-   FILE* summaryFile{};
-   wxString sFullPath = mFileName.GetFullPath();
-   {
-      ArrayOf < char > fileNameChar{ strlen(sFullPath.mb_str(wxConvFile)) + 1 };
-      strcpy(fileNameChar.get(), sFullPath.mb_str(wxConvFile));
-      summaryFile = fopen(fileNameChar.get(), "wb");
-
-      mFileNameMutex.Unlock();
-
-      // JKC ANSWER-ME: Whay is IsOpened() commented out?
-      if (!summaryFile){//.IsOpened() ){
-
-         // Never silence the Log w.r.t write errors; they always count
-         //however, this is going to be called from a non-main thread,
-         //and wxLog calls are not thread safe.
-         printf("Unable to write summary data to file: %s", fileNameChar.get());
-         return;
-      }
-   }
-
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
+   // Call this first, so that in case of exceptions from ReadData, there is
+   // no new output file
    SampleBuffer sampleData(mLen, floatSample);
    this->ReadData(sampleData.ptr(), floatSample, 0, mLen, true);
+
+   ArrayOf< char > fileNameChar;
+   FILE *summaryFile{};
+   {
+      //the mFileName path may change, for example, when the project is saved.
+      //(it moves from /tmp/ to wherever it is saved to.
+      ODLocker locker { &mFileNameMutex };
+
+      //wxFFile is not thread-safe - if any error occurs in opening the file,
+      // it posts a wxlog message which WILL crash
+      // Audacity because it goes into the wx GUI.
+      // For this reason I left the wxFFile method commented out. (mchinen)
+      //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
+
+      // ...and we use fopen instead.
+      wxString sFullPath = mFileName.GetFullPath();
+      fileNameChar.reinit( strlen(sFullPath.mb_str(wxConvFile)) + 1 );
+      strcpy(fileNameChar.get(), sFullPath.mb_str(wxConvFile));
+      summaryFile = fopen(fileNameChar.get(), "wb");
+   }
+
+   // JKC ANSWER-ME: Whay is IsOpened() commented out?
+   if (!summaryFile){//.IsOpened() ){
+
+      // Never silence the Log w.r.t write errors; they always count
+      //however, this is going to be called from a non-main thread,
+      //and wxLog calls are not thread safe.
+      printf("Unable to write summary data to file: %s", fileNameChar.get());
+
+      // throw FileException{
+         // FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
+      return;
+   }
 
    ArrayOf<char> cleanup;
    void *summaryData = CalcSummary(sampleData.ptr(), mLen,
