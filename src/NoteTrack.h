@@ -70,6 +70,9 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
                               const TimeWarper &warper, double semitones);
 
    int DrawLabelControls(wxDC & dc, wxRect & r);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   bool LabelClick(wxRect & r, int x, int y, bool right);
+#endif
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
    Alg_seq* GetSequence();
@@ -164,11 +167,6 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void StartVScroll();
    void VScroll(int start, int end);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   wxRect GetGainPlacementRect() const { return mGainPlacementRect; }
-   void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
-#endif
-
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) override;
@@ -211,7 +209,6 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    int mPitchHeight;
    int mVisibleChannels; // bit set of visible channels
    int mLastMidiPosition;
-   wxRect mGainPlacementRect;
 };
 
 #endif // USE_MIDI

@@ -331,6 +331,40 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
    return box.GetBottom();
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
+{
+   int wid = 23;
+   int ht = 16;
+
+   if (r.height < ht * 4)
+      return false;
+
+   int x = r.x + (r.width / 2 - wid * 2);
+   int y = r.y + 1;
+   // after adding Mute and Solo buttons, mapping is broken, so hack in the offset
+   y += 12;
+
+   int col = (mx - x) / wid;
+   int row = (my - y) / ht;
+
+   if (row < 0 || row >= 4 || col < 0 || col >= 4)
+      return false;
+
+   int channel = row * 4 + col;
+
+   if (right) {
+      if (mVisibleChannels == CHANNEL_BIT(channel))
+         mVisibleChannels = ALL_CHANNELS;
+      else
+         mVisibleChannels = CHANNEL_BIT(channel);
+   } else
+      ToggleVisibleChan(channel);
+
+   return true;
+}
+#endif
+
 void NoteTrack::SetSequence(std::unique_ptr<Alg_seq> &&seq)
 {
    mSeq = std::move(seq);
