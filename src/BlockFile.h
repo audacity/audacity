@@ -149,6 +149,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    //summary only), write out a placeholder of silence data (missing
    //.au) or mark the blockfile to deal some other way without spewing
    //errors.
+   // May throw exceptions for i/o errors.
    virtual void Recover() = 0;
    /// if we've detected an on-disk problem, the user opted to
    //continue and the error persists, don't keep reporting it.  The

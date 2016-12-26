@@ -88,6 +88,7 @@
 #endif
 
 #include "AudacityApp.h"
+#include "AudacityException.h"
 #include "BlockFile.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
@@ -1609,10 +1610,8 @@ _("Project check of \"%s\" folder \
             wxASSERT(b);
             if (b) {
                auto ab = static_cast< AliasBlockFile * > ( &*b );
-               if (action == 1)
-                  // Silence error logging for this block in this session.
-                  ab->SilenceAliasLog();
-               else if (action == 2)
+
+               if (action == 2)
                {
                   // silence the blockfiles by yanking the filename
                   // This is done, eventually, in PCMAliasBlockFile::ReadData()
@@ -1621,9 +1620,22 @@ _("Project check of \"%s\" folder \
                   wxFileNameWrapper dummy;
                   dummy.Clear();
                   ab->ChangeAliasedFileName(std::move(dummy));
-                  ab->Recover();
+
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] { ab->Recover(); },
+                     [&] (AudacityException*) { action = 1; }
+                  );
+
                   nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
                }
+
+               if (action == 1)
+                  // Silence error logging for this block in this session.
+                  ab->SilenceAliasLog();
             }
             ++iter;
          }
@@ -1673,11 +1685,22 @@ _("Project check of \"%s\" folder \
             BlockFilePtr b = iter->second.lock();
             wxASSERT(b);
             if (b) {
-               if(action==0){
+               if(action==0) {
                   //regenerate from data
-                  b->Recover();
-                  nResult |= FSCKstatus_CHANGED;
-               }else if (action==1){
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] {
+                        b->Recover();
+                        nResult |= FSCKstatus_CHANGED;
+                     },
+                     [&] (AudacityException*) { action = 1; }
+                  );
+               }
+
+               if (action==1){
                   // Silence error logging for this block in this session.
                   b->SilenceLog();
                }
@@ -1737,11 +1760,22 @@ _("Project check of \"%s\" folder \
             if (b) {
                if (action == 2)
                {
-                  //regenerate with zeroes
-                  b->Recover();
-                  nResult = FSCKstatus_CHANGED;
+                  //regenerate from data
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] {
+                        //regenerate with zeroes
+                        b->Recover();
+                        nResult |= FSCKstatus_CHANGED;
+                     },
+                     [&] (AudacityException*) { action = 1; }
+                  );
                }
-               else if (action == 1)
+
+               if (action == 1)
                   b->SilenceLog();
             }
             ++iter;
