@@ -1517,7 +1517,6 @@ bool AudacityApp::OnInit()
          // Important: Prevent deleting any temporary files!
          DirManager::SetDontDeleteTempFiles();
          QuitAudacity(true);
-         return false;
       }
 
       //
@@ -1528,7 +1527,7 @@ bool AudacityApp::OnInit()
          if (parser->Found(wxT("t")))
          {
             RunBenchmark(NULL);
-            return false;
+            QuitAudacity(true);
          }
 
          // As of wx3, there's no need to process the filename arguments as they
