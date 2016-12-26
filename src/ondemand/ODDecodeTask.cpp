@@ -42,13 +42,13 @@ void ODDecodeTask::DoSomeInternal()
    }
 
    ODFileDecoder* decoder;
-   sampleCount blockStartSample = 0;
-   sampleCount blockEndSample = 0;
-   bool success =false;
 
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
       const auto bf = mBlockFiles[0].lock();
+      sampleCount blockStartSample = 0;
+      sampleCount blockEndSample = 0;
+      bool success =false;
 
       int ret = 1;
 
@@ -63,6 +63,7 @@ void ODDecodeTask::DoSomeInternal()
          if(!decoder->IsInitialized())
             decoder->Init();
          bf->SetODFileDecoder(decoder);
+         // Does not throw:
          ret = bf->DoWriteBlockFile();
          bf->UnlockRead();
 
@@ -74,24 +75,31 @@ void ODDecodeTask::DoSomeInternal()
       }
       else
       {
+         success = true;
          // The block file disappeared.
          //the waveform in the wavetrack now is shorter, so we need to update mMaxBlockFiles
          //because now there is less work to do.
          mMaxBlockFiles--;
       }
 
-      //Release the refcount we placed on it if we are successful
-      if(ret >= 0 ) {
+      if (success)
+      {
          //take it out of the array - we are done with it.
          mBlockFiles.erase(mBlockFiles.begin());
+      }
+      else
+         // The task does not make progress
+         ;
 
+      //Release the refcount we placed on it if we are successful
+      if( bf && success ) {
          //upddate the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
          //because this loop runs a number of times equal to the number of tracks, they probably are getting processed in
          //the next iteration at the same sample window.
          mWaveTrackMutex.Lock();
          for(size_t i=0;i<mWaveTracks.size();i++)
          {
-            if(success && mWaveTracks[i])
+            if(mWaveTracks[i])
                mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
          }
          mWaveTrackMutex.Unlock();
