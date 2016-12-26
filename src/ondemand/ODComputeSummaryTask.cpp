@@ -64,32 +64,42 @@ void ODComputeSummaryTask::DoSomeInternal()
       return;
    }
 
-   sampleCount blockStartSample = 0;
-   sampleCount blockEndSample = 0;
-   bool success =false;
-
    mBlockFilesMutex.Lock();
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
+      bool success = false;
       const auto bf = mBlockFiles[0].lock();
+
+      sampleCount blockStartSample = 0;
+      sampleCount blockEndSample = 0;
 
       if(bf)
       {
-         bf->DoWriteSummary();
+         // WriteSummary might throw, but this is a worker thread, so stop
+         // the exceptions here!
          success = true;
+         try { bf->DoWriteSummary(); }
+         catch(...) { success = false; }
          blockStartSample = bf->GetStart();
          blockEndSample = blockStartSample + bf->GetLength();
       }
       else
       {
+         success = true;
          // The block file disappeared.
          //the waveform in the wavetrack now is shorter, so we need to update mMaxBlockFiles
          //because now there is less work to do.
          mMaxBlockFiles--;
       }
 
-      //take it out of the array - we are done with it.
-      mBlockFiles.erase(mBlockFiles.begin());
+      if (success)
+      {
+         //take it out of the array - we are done with it.
+         mBlockFiles.erase(mBlockFiles.begin());
+      }
+      else
+         // The task does not make progress
+         ;
 
       //This is a bit of a convenience in case someone tries to terminate the task by closing the trackpanel or window.
       //ODComputeSummaryTask::Terminate() uses this lock to remove everything, and we don't want it to wait since the UI is being blocked.
@@ -97,16 +107,18 @@ void ODComputeSummaryTask::DoSomeInternal()
       wxThread::This()->Yield();
       mBlockFilesMutex.Lock();
 
-      //upddate the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
+      //update the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
       //because this loop runs a number of times equal to the number of tracks, they probably are getting processed in
       //the next iteration at the same sample window.
-      mWaveTrackMutex.Lock();
-      for(size_t i=0;i<mWaveTracks.size();i++)
-      {
-         if(success && mWaveTracks[i])
-            mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+      if (success && bf) {
+         mWaveTrackMutex.Lock();
+         for(size_t i=0;i<mWaveTracks.size();i++)
+         {
+            if(success && mWaveTracks[i])
+               mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+         }
+         mWaveTrackMutex.Unlock();
       }
-      mWaveTrackMutex.Unlock();
    }
 
    mBlockFilesMutex.Unlock();
