@@ -343,6 +343,12 @@ enum {
    OnZoomInVerticalID,
    OnZoomOutVerticalID,
    OnZoomFitVerticalID,
+
+   OnShowAllChannelsID,
+   OnHideAllChannelsID,
+   // Reserve 16 ids for midi channels
+   OnFirstToggleChannelID,
+   OnLastToggleChannelID = OnFirstToggleChannelID + 15
 };
 
 BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
@@ -385,6 +391,9 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MENU(OnZoomInVerticalID, TrackPanel::OnZoomInVertical)
     EVT_MENU(OnZoomOutVerticalID, TrackPanel::OnZoomOutVertical)
     EVT_MENU(OnZoomFitVerticalID, TrackPanel::OnZoomFitVertical)
+
+    EVT_MENU_RANGE(OnShowAllChannelsID, OnHideAllChannelsID, TrackPanel::OnToggleAllChannels)
+    EVT_MENU_RANGE(OnFirstToggleChannelID, OnLastToggleChannelID, TrackPanel::OnToggleChannel)
 
     EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
 END_EVENT_TABLE()
@@ -612,6 +621,14 @@ void TrackPanel::BuildMenus(void)
    formatMenu->AppendRadioItem(On24BitID, GetSampleFormatStr(int24Sample));
    formatMenu->AppendRadioItem(OnFloatID, GetSampleFormatStr(floatSample));
 
+   auto midiChanMenu = std::make_unique<wxMenu>();
+   midiChanMenu->Append(OnShowAllChannelsID, _("&Show All"));
+   midiChanMenu->Append(OnHideAllChannelsID, _("&Hide All"));
+   midiChanMenu->AppendSeparator();
+   for (int i = 0; i < 16; i++) {
+      midiChanMenu->AppendCheckItem(OnFirstToggleChannelID + i, wxString::Format(_("Channel %d"), i));
+   }
+
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = std::make_unique<wxMenu>();
    BuildCommonDropMenuItems(mWaveTrackMenu.get());   // does name, up/down etc
@@ -643,6 +660,8 @@ void TrackPanel::BuildMenus(void)
    BuildCommonDropMenuItems(mNoteTrackMenu.get());   // does name, up/down etc
    mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
    mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
+   mNoteTrackMenu->AppendSeparator();
+   mNoteTrackMenu->Append(0, _("Show/Hide &Channels"), (mMidiChanMenu = midiChanMenu.release()));
 
    /* build the pop-down menu used on label tracks */
    mLabelTrackMenu = std::make_unique<wxMenu>();
@@ -711,7 +730,7 @@ void TrackPanel::DeleteMenus(void)
    // Note that the submenus (mRateMenu, ...)
    // are deleted by their parent
 
-   mRateMenu = mFormatMenu = nullptr;
+   mRateMenu = mFormatMenu = mMidiChanMenu = nullptr;
 
    mWaveTrackMenu.reset();
    mNoteTrackMenu.reset();
@@ -7795,8 +7814,20 @@ void TrackPanel::OnTrackMenu(Track *t)
    }
 
 #if defined(USE_MIDI)
-   if (t->GetKind() == Track::Note)
+   if (t->GetKind() == Track::Note) {
       theMenu = mNoteTrackMenu.get();
+      NoteTrack *track = (NoteTrack *)t;
+
+      auto & channelList = mMidiChanMenu->GetMenuItems();
+
+      for (auto item : channelList) {
+         auto id = item->GetId();
+         if (id >= OnFirstToggleChannelID && id <= OnLastToggleChannelID) {
+            auto channel = id - OnFirstToggleChannelID;
+            theMenu->Check( id, track->IsVisibleChan(channel) );
+         }
+      }
+   }
 #endif
 
    if (t->GetKind() == Track::Label){
@@ -8709,6 +8740,42 @@ void TrackPanel::OnChangeOctave(wxCommandEvent & event)
    t->SetBottomNote(t->GetBottomNote() + ((bDown) ? -12 : 12));
 
    MakeParentModifyState(true);
+   Refresh(false);
+#endif
+}
+
+void TrackPanel::OnToggleAllChannels(wxCommandEvent & event)
+{
+#if defined(USE_MIDI)
+   wxASSERT(event.GetId() == OnShowAllChannelsID
+            || event.GetId() == OnHideAllChannelsID);
+   wxASSERT(mPopupMenuTarget->GetKind() == Track::Note);
+   NoteTrack *t = (NoteTrack *) mPopupMenuTarget;
+
+   bool show = (OnShowAllChannelsID == event.GetId());
+   for (int i = 0; i < 16; i++) {
+      if (show) {
+         t->SetVisibleChan(i);
+      } else {
+         t->ClearVisibleChan(i);
+      }
+   }
+
+   Refresh(false);
+#endif
+}
+
+void TrackPanel::OnToggleChannel(wxCommandEvent & event)
+{
+#if defined(USE_MIDI)
+   wxASSERT(event.GetId() >= OnFirstToggleChannelID
+            && event.GetId() <= OnLastToggleChannelID);
+   wxASSERT(mPopupMenuTarget->GetKind() == Track::Note);
+   NoteTrack *t = (NoteTrack *) mPopupMenuTarget;
+
+   int channel = (event.GetId() - OnFirstToggleChannelID);  // 0 - 15
+   t->ToggleVisibleChan(channel);
+
    Refresh(false);
 #endif
 }

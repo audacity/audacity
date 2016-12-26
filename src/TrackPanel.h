@@ -477,6 +477,9 @@ protected:
    virtual void SplitStereo(bool stereo);
    virtual void OnMergeStereo(wxCommandEvent &event);
 
+   virtual void OnToggleAllChannels(wxCommandEvent &event);
+   virtual void OnToggleChannel(wxCommandEvent &event);
+
    // Find track info by coordinate
    virtual Track *FindTrack(int mouseX, int mouseY, bool label, bool link,
                      wxRect * trackRect = NULL);
@@ -780,7 +783,7 @@ protected:
 
    // These sub-menus are owned by parent menus,
    // so not unique_ptrs
-   wxMenu *mRateMenu{}, *mFormatMenu{};
+   wxMenu *mRateMenu{}, *mFormatMenu{}, *mMidiChanMenu{};
 
    Track *mPopupMenuTarget {};
 
