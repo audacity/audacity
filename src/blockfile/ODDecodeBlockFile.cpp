@@ -156,8 +156,8 @@ bool ODDecodeBlockFile::Read64K(float *buffer, size_t start, size_t len)
 }
 
 /// If the summary has been computed,
-/// Construct a NEW PCMAliasBlockFile based on this one.
-/// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
+/// Construct a NEW SimpleBlockFile based on this one.
+/// otherwise construct an ODDecodeBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
 BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
@@ -219,8 +219,8 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
    UnlockRead();
 }
 
-/// Constructs a ODPCMAliasBlockFile from the xml output of WriteXML.
-/// Also schedules the ODPCMAliasBlockFile for OD loading.
+/// Constructs a ODDecodeBlockFile from the xml output of WriteXML.
+/// Also schedules the ODDecodeBlockFile for OD loading.
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
