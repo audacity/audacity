@@ -524,9 +524,9 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 AudacityProject *CreateNewAudacityProject()
 {
-   bool bMaximized;
    wxRect wndRect;
-   bool bIconized;
+   bool bMaximized = false;
+   bool bIconized = false;
    GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
    // Create and show a NEW project
@@ -677,6 +677,16 @@ int ScreenContaining( wxRect & r ){
    return -1;
 }
 
+// true IFF TL and BR corners are on a connected display.
+// Does not need to check all four.  We just need to check that 
+// the window probably is straddling screens in a sensible way.
+// If the user wants to use mixed landscape and portrait, they can.
+bool CornersOnScreen( wxRect & r ){
+   if( wxDisplay::GetFromPoint( r.GetTopLeft()  ) == wxNOT_FOUND) return false;
+   if( wxDisplay::GetFromPoint( r.GetBottomRight()  ) == wxNOT_FOUND) return false;
+   return true;
+}
+
 // BG: Calculate where to place the next window (could be the first window)
 // BG: Does not store X and Y in prefs. This is intentional.
 //
@@ -726,6 +736,31 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 #endif
 
+   // IF projects empty, THEN it's the first window.
+   // It lands where the config says it should, and can straddle screen.
+   if (gAudacityProjects.empty()) {
+      if (*pMaximized || *pIconized) {
+         *nextRect = normalRect;
+      }
+      else {
+         *nextRect = windowRect;
+      }
+      // Resize, for example if one monitor that was on is now off.
+      if (!CornersOnScreen( wxRect(*nextRect).Deflate( 32, 32 ))) {
+         *nextRect = defaultRect;
+      }
+      if (!IsWindowAccessible(nextRect)) {
+         *nextRect = defaultRect;
+      }
+      // Do not trim the first project window down.
+      // All corners are on screen (or almost so), and 
+      // the rect may straddle screens.
+      return;
+   }
+
+
+   // ELSE a subsequent new window.  It will NOT straddle screens.
+
    // We don't mind being 32 pixels off the screen in any direction.
    // Make sure initial sizes (pretty much) fit within the display bounds
    // We used to trim the sizes which could result in ridiculously small windows.
@@ -739,41 +774,32 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       windowRect = defaultRect;
    }
 
-   if (gAudacityProjects.empty()) {
-      if (*pMaximized || *pIconized) {
-         *nextRect = normalRect;
+   bool validWindowSize = false;
+   AudacityProject * validProject = NULL;
+   size_t numProjects = gAudacityProjects.size();
+   for (int i = numProjects; i > 0 ; i--) {
+      if (!gAudacityProjects[i-1]->IsIconized()) {
+            validWindowSize = true;
+            validProject = gAudacityProjects[i-1].get();
+            break;
       }
-      else {
-         *nextRect = windowRect;
-      }
-      if (!IsWindowAccessible(nextRect)) {
+   }
+   if (validWindowSize) {
+      *nextRect = validProject->GetRect();
+      *pMaximized = validProject->IsMaximized();
+      *pIconized = validProject->IsIconized();
+      // Do not straddle screens.
+      if (ScreenContaining( wxRect(*nextRect).Deflate( 32, 32 ) )<0) {
          *nextRect = defaultRect;
       }
    }
    else {
-      bool validWindowSize = false;
-      AudacityProject * validProject = NULL;
-      size_t numProjects = gAudacityProjects.size();
-      for (int i = numProjects; i > 0 ; i--) {
-         if (!gAudacityProjects[i-1]->IsIconized()) {
-             validWindowSize = true;
-             validProject = gAudacityProjects[i-1].get();
-             break;
-         }
-      }
-      if (validWindowSize) {
-         *nextRect = validProject->GetRect();
-         *pMaximized = validProject->IsMaximized();
-         *pIconized = validProject->IsIconized();
-      }
-      else {
-         *nextRect = normalRect;
-      }
-
-      //Placement depends on the increments
-      nextRect->x += inc;
-      nextRect->y += inc;
+      *nextRect = normalRect;
    }
+
+   //Placement depends on the increments
+   nextRect->x += inc;
+   nextRect->y += inc;
 
    // defaultrect is a rectangle on the first screen.  It's the right fallback to 
    // use most of the time if things are not working out right with sizing.
