@@ -4,7 +4,7 @@ from an earlier version of Xcode.
 
 In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and Xcode 8.1 will
 be used.  Fuller instructions that cover 
-   * Using other Xcodes (e.g. to build on platforms prior to OS X 10.11.5)
+   * Using other xcodes
    * Optional signing of DMGs
    * Applying wxWidgets patches one by one
 can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
@@ -48,6 +48,11 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 You should now be able to build Audacity using either the Xcode application or 
 the Xcodebuild command line tool. 
 
+* Change directory to <path to Audacity source>/mac
+  Optionally, if you have built before, clean with:
+
+  xcodebuild clean
+
 * Using xcodebuild, build Audacity and create DMG and ZIP bundles in 
   /private/tmp by typing the following in the terminal:
 
@@ -71,3 +76,4 @@ And install:
    cd gexttext-latest
    ./configure
    sudo make install
+   
