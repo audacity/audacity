@@ -775,12 +775,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    region.setF0(mF0);
    region.setF1(mF1);
 #endif
-   return effect.DoEffect(parent,
-                          mProjectRate,
-                          mTracks,
-                          mFactory,
-                          &region,
-                          true);
+   return Delegate(effect, parent, &region, true);
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)

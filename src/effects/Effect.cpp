@@ -1224,6 +1224,13 @@ bool Effect::DoEffect(wxWindow *parent,
    return returnVal;
 }
 
+bool Effect::Delegate( Effect &delegate,
+   wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt)
+{
+   return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
+      selectedRegion, shouldPrompt );
+}
+
 // All legacy effects should have this overridden
 bool Effect::Init()
 {

@@ -182,7 +182,7 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
    // Start with the whole selection silent
    silences.push_back(Region(mT0, mT1));
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
    int whichTrack = 0;
 
    for (Track *t = iter.First(); t; t = iter.Next()) {
@@ -272,13 +272,13 @@ bool EffectTruncSilence::ProcessIndependently()
 
    // Check if it's permissible
    {
-      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+      SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
       for (Track *track = iter.First(); track;
          track = iter.Next(true) // skip linked tracks
       ) {
          if (syncLock) {
             Track *const link = track->GetLink();
-            SyncLockedTracksIterator syncIter(mTracks);
+            SyncLockedTracksIterator syncIter(inputTracks());
             for (Track *track2 = syncIter.StartWith(track); track2; track2 = syncIter.Next()) {
                if (track2->GetKind() == Track::Wave &&
                   !(track2 == track || track2 == link) &&
@@ -348,8 +348,8 @@ bool EffectTruncSilence::ProcessAll()
    // This list should always be kept in order.
    RegionList silences;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-   if (FindSilences(silences, mTracks, iter.First(), iter.Last())) {
+   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
+   if (FindSilences(silences, inputTracks(), iter.First(), iter.Last())) {
       TrackListIterator iterOut(mOutputTracks.get());
       double totalCutLen = 0.0;
       Track *const first = iterOut.First();

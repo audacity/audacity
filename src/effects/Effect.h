@@ -241,6 +241,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                  TrackFactory *factory, SelectedRegion *selectedRegion,
                  bool shouldPrompt = true);
 
+   bool Delegate( Effect &delegate,
+      wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt);
+
    // Realtime Effect Processing
    /* not virtual */ bool RealtimeAddProcessor(int group, unsigned chans, float rate);
    /* not virtual */ size_t RealtimeProcess(int group,
@@ -435,7 +438,7 @@ protected:
                                // be created with this rate...
    double         mSampleRate;
    TrackFactory   *mFactory;
-   TrackList      *mTracks;      // the complete list of all tracks
+   TrackList *inputTracks() const { return mTracks; }
    std::unique_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
@@ -480,9 +483,9 @@ protected:
  //
 private:
    wxWindow *mParent;
+   TrackList *mTracks; // the complete list of all tracks
 
    bool mIsBatch;
-
    bool mIsLinearEffect;
    bool mPreviewWithNotSelected;
    bool mPreviewFullSelection;
