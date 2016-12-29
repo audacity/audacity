@@ -5290,7 +5290,7 @@ void AudacityProject::SetTrackGain(WaveTrack * wt, LWSlider * slider)
    float newValue = slider->Get();
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack*>(wt->GetLink());
    wt->SetGain(newValue);
    if (link)
       link->SetGain(newValue);
@@ -5306,7 +5306,7 @@ void AudacityProject::SetTrackPan(WaveTrack * wt, LWSlider * slider)
    float newValue = slider->Get();
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack*>(wt->GetLink());
    wt->SetPan(newValue);
    if (link)
       link->SetPan(newValue);

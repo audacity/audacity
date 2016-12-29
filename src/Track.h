@@ -454,10 +454,6 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    /** Select a track, and if it is linked to another track, select it, too. */
    void Select(Track * t, bool selected = true);
 
-   /** If this track is linked to another track (the track immediately before or
-   * after it), return its partner. Otherwise return null. */
-   Track *GetLink(Track * t) const;
-
    Track *GetPrev(Track * t, bool linked = false) const;
 
    /** Return a track in the list that comes after Track t

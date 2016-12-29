@@ -3491,7 +3491,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
-         Track *partner = mTracks->GetLink(vt);
+         Track *partner = vt->GetLink();
          WaveTrack *wt;
          if (mCapturedClip &&
              // Assume linked track is wave or null
@@ -3681,7 +3681,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
    else {
       mCapturedTrack->Offset(-mHSlideAmount);
-      Track* link = mTracks->GetLink(mCapturedTrack);
+      Track* link = mCapturedTrack->GetLink();
       if (link)
          link->Offset(-mHSlideAmount);
    }
@@ -3931,7 +3931,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
       mCapturedTrack->Offset(mHSlideAmount);
-      Track* link = mTracks->GetLink(mCapturedTrack);
+      Track* link = mCapturedTrack->GetLink();
       if (link)
          link->Offset(mHSlideAmount);
    }
@@ -4209,7 +4209,7 @@ void TrackPanel::HandleWaveTrackVZoom
  bool fixedMousePoint)
 {
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack *>(tracks->GetLink(track));
+   const auto partner = static_cast<WaveTrack *>(track->GetLink());
    int height = track->GetHeight() - (kTopMargin + kBottomMargin);
    int ypos = rect.y + kBorderThickness;
 
@@ -4881,8 +4881,8 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
    else if (event.LeftUp()) {
       if (buttonRect.Contains(event.m_x, event.m_y)) {
          t->SetMinimized(!t->GetMinimized());
-         if (mTracks->GetLink(t))
-            mTracks->GetLink(t)->SetMinimized(t->GetMinimized());
+         if (t->GetLink())
+            t->GetLink()->SetMinimized(t->GetMinimized());
          MakeParentRedrawScrollbars();
          MakeParentModifyState(true);
       }
@@ -4926,7 +4926,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
      const auto wt = static_cast<WaveTrack*>(capturedTrack);
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack *>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack *>(wt->GetLink());
 
    if (pan) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -6265,7 +6265,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
             {
                // Assume linked track is wave or null
                const auto linked =
-                  static_cast<WaveTrack*>(mTracks->GetLink(track));
+                  static_cast<WaveTrack*>(track->GetLink());
                if (linked) {
                   // Expand the cutline in the opposite channel if it is present.
 
@@ -6294,7 +6294,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
 
             // Assume linked track is wave or null
             const auto linked =
-               static_cast<WaveTrack*>(mTracks->GetLink(track));
+               static_cast<WaveTrack*>(track->GetLink());
             if (linked) {
                // Don't assume correspondence of merge points across channels!
                int idx = FindMergeLine(linked, pos);
@@ -6315,7 +6315,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
          track->RemoveCutLine(mCapturedTrackLocation.pos);
          // Assume linked track is wave or null
          const auto linked =
-            static_cast<WaveTrack*>(mTracks->GetLink(track));
+            static_cast<WaveTrack*>(track->GetLink());
          if (linked)
             linked->RemoveCutLine(mCapturedTrackLocation.pos);
          MakeParentPushState(_("Removed Cut Line"), _("Remove") );
@@ -8271,7 +8271,7 @@ void TrackPanel::SetRate(WaveTrack * wt, double rate)
 {
    wt->SetRate(rate);
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto partner = static_cast<WaveTrack*>(wt->GetLink());
    if (partner)
       partner->SetRate(rate);
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
@@ -8316,7 +8316,7 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
    wxASSERT(bResult); // TO DO: Actually handle this.
    // Assume linked track is wave or null
    const auto partner =
-      static_cast<WaveTrack*>(mTracks->GetLink(mPopupMenuTarget));
+      static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
    if (partner)
    {
       bResult = partner->ConvertToSampleFormat(newFormat);
