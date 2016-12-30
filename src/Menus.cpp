@@ -8113,29 +8113,15 @@ void MenuCommandHandler::HandleMixAndRender
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
 
-      TrackListIterator iter(tracks);
-      Track *t = iter.First();
-      int selectedCount = 0;
+      auto trackRange = tracks->Selected< WaveTrack >();
+      auto selectedCount = (trackRange + &Track::IsLeader).size();
       wxString firstName;
-
-      while (t) {
-         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
-            if (selectedCount==0)
-               firstName = t->GetName();
-
-            // Add one to the count if it's an unlinked track, or if it's the first
-            // in a stereo pair
-            if (t->GetLinked() || !t->GetLink())
-                selectedCount++;
-
-            if (!toNewTrack) {
-               t = iter.RemoveCurrent();
-            } else {
-               t = iter.Next();
-            };
-         }
-         else
-            t = iter.Next();
+      if (selectedCount > 0)
+         firstName = (*trackRange.begin())->GetName();
+      if (!toNewTrack)  {
+         // Beware iterator invalidation!
+         for (auto &it = trackRange.first, &end = trackRange.second; it != end;)
+            tracks->Remove( *it++ );
       }
 
       // Add NEW tracks
@@ -9671,34 +9657,31 @@ void MenuCommandHandler::OnRemoveTracks(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
    auto mixerBoard = project.GetMixerBoard();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
-   Track *f = NULL;
-   Track *l = NULL;
+   std::vector<Track*> toRemove;
+   for (auto track : tracks->Selected())
+      toRemove.push_back(track);
 
-   while (t) {
-      if (t->GetSelected()) {
-         auto playable = dynamic_cast<PlayableTrack*>(t);
-         if (mixerBoard && playable)
-            mixerBoard->RemoveTrackCluster(playable);
-         if (!f)
-            f = l;         // Capture the track preceeding the first removed track
-         t = iter.RemoveCurrent();
-      }
-      else {
-         l = t;
-         t = iter.Next();
-      }
+   // Capture the track preceding the first removed track
+   Track *f{};
+   if (!toRemove.empty()) {
+      auto found = tracks->Find(toRemove[0]);
+      f = *--found;
    }
 
-   // All tracks but the last were removed...try to use the last track
-   if (!f)
-      f = l;
+   if (mixerBoard)
+      for (auto track : tracks->Selected<PlayableTrack>())
+         mixerBoard->RemoveTrackCluster(track);
 
-   // Try to use the first track after the removal or, if none,
-   // the track preceeding the removal
+   for (auto track : toRemove)
+      tracks->Remove(track);
+
+   if (!f)
+      // try to use the last track
+      f = *tracks->Any().rbegin();
    if (f) {
-      t = tracks->GetNext(f, true);
+      // Try to use the first track after the removal
+      auto found = tracks->FindLeader(f);
+      auto t = *++found;
       if (t)
          f = t;
    }

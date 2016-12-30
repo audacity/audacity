@@ -1099,8 +1099,6 @@ class AUDACITY_DLL_API TrackListIterator /* not final */
    virtual Track *Prev();
    virtual Track *Last();
 
-   Track *RemoveCurrent(); // deletes track, returns next
-
    // Provide minimal STL forward-iterator idiom:
 
    // unlike Next, this is non-mutating.

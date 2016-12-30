@@ -523,23 +523,6 @@ Track *TrackListIterator::operator *() const
       return cur.first->get();
 }
 
-Track *TrackListIterator::RemoveCurrent()
-{
-   if ( !l || l->isNull( cur ) )
-      return nullptr;
-
-   cur = l->Remove( cur.first->get() );
-
-   #ifdef DEBUG_TLI // if we are debugging this bit
-   wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid after deletion of track."));   // check that cur is in the list
-   #endif
-
-   if ( !l->isNull( cur ) )
-      return cur.first->get();
-
-   return nullptr;
-}
-
 bool TrackListIterator::operator == (const TrackListIterator &other) const
 {
    // Order these steps so as not to use operator == on default-constructed
