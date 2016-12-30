@@ -5784,9 +5784,10 @@ void AudacityProject::RemoveTrack(Track * toRemove)
    bool toRemoveWasFocused = mTrackPanel->GetFocusedTrack() == toRemove;
    Track* newFocus{};
    if (toRemoveWasFocused) {
-      newFocus = mTracks->GetNext(toRemove, true);
+      auto iterNext = mTracks->FindLeader(toRemove), iterPrev = iterNext;
+      newFocus = *++iterNext;
       if (!newFocus) {
-         newFocus = mTracks->GetPrev(toRemove, true);
+         newFocus = *--iterPrev;
       }
    }
 

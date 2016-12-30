@@ -1526,13 +1526,6 @@ public:
    /** Select a track, and if it is linked to another track, select it, too. */
    void Select(Track * t, bool selected = true);
 
-   Track *GetPrev(Track * t, bool linked = false) const;
-
-   /** Return a track in the list that comes after Track t
-     * @param t a track in the list
-     * @param linked if true, skips over linked tracks, if false returns the next track even if it is a linked track
-    **/
-   Track *GetNext(Track * t, bool linked = false) const;
    int GetGroupHeight(const Track * t) const;
 
    bool CanMoveUp(Track * t) const;
@@ -1623,6 +1616,9 @@ private:
       return { { b, b, e, pred }, { b, e, e, pred } };
    }
 
+   Track *GetPrev(Track * t, bool linked = false) const;
+   Track *GetNext(Track * t, bool linked = false) const;
+   
    std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember) const;
 
    template < typename TrackType >

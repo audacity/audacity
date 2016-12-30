@@ -3443,11 +3443,9 @@ void MenuCommandHandler::OnMoveToLabel(AudacityProject &project, bool next)
    }
    else if (nLabelTrack > 1) {         // find first label track, if any, starting at the focused track
       track = trackPanel->GetFocusedTrack();
-      while (track && track->GetKind() != Track::Label) {
-         track = tracks->GetNext(track, true);
-         if (!track) {
-          trackPanel->MessageForScreenReader(_("no label track at or below focused track"));
-         }
+      track = *tracks->Find(track).Filter<LabelTrack>();
+      if (!track) {
+       trackPanel->MessageForScreenReader(_("no label track at or below focused track"));
       }
    }
 
@@ -3513,7 +3511,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
    bool pSelected = false;
    if( shift )
    {
-      p = tracks->GetPrev( t, true ); // Get previous track
+      p = * -- tracks->FindLeader( t ); // Get previous track
       if( p == NULL )   // On first track
       {
          // JKC: wxBell() is probably for accessibility, so a blind
@@ -3537,7 +3535,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       {
          selectionState.SelectTrack
             ( *tracks, *t, false, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3546,7 +3544,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       {
          selectionState.SelectTrack
             ( *tracks, *p, true, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3555,7 +3553,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       {
          selectionState.SelectTrack
             ( *tracks, *p, false, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3564,25 +3562,25 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       {
          selectionState.SelectTrack
             ( *tracks, *t, true, false, mixerBoard );
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
-         project.ModifyState(false);
+          project.ModifyState(false);
          return;
       }
    }
    else
    {
-      p = tracks->GetPrev( t, true ); // Get next track
-      if( p == NULL )   // On last track so stay there?
+      p = * -- tracks->FindLeader( t ); // Get previous track
+      if( p == NULL )   // On first track so stay there?
       {
          wxBell();
          if( mCircularTrackNavigation )
          {
             auto range = tracks->Leaders();
             p = * range.rbegin(); // null if range is empty
-            trackPanel->SetFocusedTrack( p );   // Wrap to the first track
+            trackPanel->SetFocusedTrack( p );   // Wrap to the last track
             trackPanel->EnsureVisible( p );
-            project.ModifyState(false);
+             project.ModifyState(false);
             return;
          }
          else
@@ -3593,7 +3591,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       }
       else
       {
-         trackPanel->SetFocusedTrack( p );   // move focus to next track down
+         trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
          return;
@@ -3628,7 +3626,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
 
    if( shift )
    {
-      n = tracks->GetNext( t, true ); // Get next track
+      n = * ++ tracks->FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
@@ -3684,7 +3682,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
    }
    else
    {
-      n = tracks->GetNext( t, true ); // Get next track
+      n = * ++ tracks->FindLeader( t ); // Get next track
       if( n == NULL )   // On last track so stay there
       {
          wxBell();
