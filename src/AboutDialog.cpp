@@ -53,16 +53,13 @@ void AboutDialog::CreateCreditsList()
    // The Audacity Team: developers and support
    AddCredit(wxString(wxT("Gale Andrews, ")) + _("quality assurance"), roleTeamMember);
    AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleTeamMember);
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
    AddCredit(wxString(wxT("Steve Daulton")), roleTeamMember);
-   AddCredit(wxString(wxT("Benjamin Drung, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Vaughan Johnson, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Greg Kozikowski, ")) + _("documentation and support"), roleTeamMember);
    AddCredit(wxString(wxT("Paul Licameli, ")) + _("developer"), roleTeamMember);
-   AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Peter Sampson")), roleTeamMember);
    AddCredit(wxString(wxT("Martyn Shaw, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Bill Wharrie, ")) + _("documentation and support"), roleTeamMember);
@@ -70,11 +67,14 @@ void AboutDialog::CreateCreditsList()
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
+   AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Matt Brubeck, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Michael Chinen, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Al Dimond, ")) + _("developer"), roleEmeritusTeam);
+   AddCredit(wxString(wxT("Benjamin Drung, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Joshua Haberman, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Ruslan Ijbulatov, ")) + _("developer"), roleEmeritusTeam);
+   AddCredit(wxString(wxT("Leland Lucius, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Dominic Mazzoni, "))+_("co-founder and developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Markus Meyer, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Monty Montgomery, ")) + _("developer"), roleEmeritusTeam);
@@ -126,8 +126,14 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
 
+#if 1
    // Translators
-
+   // This list is not current, so should it be commented out?
+   // Also translators get a translation credit in Audacity about box by a special
+   // mechanism that shows it when their translation is being used - unlike
+   // on the website credits.
+   // Translators who are currently helping have queried our showing this inaccurate list,
+   // and in all languages.
    AddCredit(wxT("Mikhail Balabanov (bg)"), roleTranslators);
    AddCredit(wxT("Francesc Busquets (ca)"), roleTranslators);
    AddCredit(wxT("Pau Crespo (ca)"), roleTranslators);
@@ -172,7 +178,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("XiaoXi Liu (zh_CN)"), roleTranslators);
    AddCredit(wxT("Chido (zh_TW)"), roleTranslators);
    AddCredit(wxT("Panming Zhong (zh_TW)"), roleTranslators);
-
+#endif
    // Libraries
 
    AddCredit(wxT("[[http://www.jclark.com/xml/expat.html|expat]]"), roleLibrary);
