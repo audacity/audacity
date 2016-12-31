@@ -12,7 +12,7 @@ libnyquist currently only exists as part of Audacity.  For
 information on using libnyquist as an embedded audio processor
 within another application, contact the Audacity developers:
 
-  http://audacity.sourceforge.net
+  https://lists.sourceforge.net/lists/listinfo/audacity-devel 
 
 For information about Nyquist as a standalone, interactive audio
 programming language, see the Nyquist website:
