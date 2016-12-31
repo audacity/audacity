@@ -90,7 +90,8 @@ private:
    bool ProcessIndependently();
    bool ProcessAll();
    bool FindSilences
-      (RegionList &silences, TrackList *list, Track *firstTrack, Track *lastTrack);
+      (RegionList &silences, const TrackList *list,
+       const Track *firstTrack, const Track *lastTrack);
    bool DoRemoval
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);

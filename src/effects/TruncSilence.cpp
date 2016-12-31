@@ -243,12 +243,9 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
    // Start with the whole selection silent
    silences.push_back(Region(mT0, mT1));
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
    int whichTrack = 0;
 
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      WaveTrack *const wt = static_cast<WaveTrack *>(t);
-
+   for (auto wt : inputTracks()->Selected< const WaveTrack >()) {
       RegionList trackSilences;
 
       auto index = wt->TimeToLongSamples(mT0);
@@ -334,17 +331,17 @@ bool EffectTruncSilence::ProcessIndependently()
 
    // Check if it's permissible
    {
-      for (auto track : inputTracks()->SelectedLeaders< WaveTrack >() ) {
+      for (auto track : inputTracks()->SelectedLeaders< const WaveTrack >() ) {
          if (syncLock) {
-            Track *const link = track->GetLink();
-            SyncLockedTracksIterator syncIter(inputTracks());
-            for (Track *track2 = syncIter.StartWith(track); track2; track2 = syncIter.Next()) {
-               if (track2->GetKind() == Track::Wave &&
-                  !(track2 == track || track2 == link) &&
-                  track2->GetSelected()) {
-                  ::Effect::MessageBox(_("When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."));
-                  return false;
-               }
+            auto channels = TrackList::Channels(track);
+            auto otherTracks =
+               TrackList::SyncLockGroup(track).Filter<const WaveTrack>()
+                  + &Track::IsSelected
+                  - [&](const Track *pTrack){
+                        return channels.contains(pTrack); };
+            if (otherTracks) {
+               ::Effect::MessageBox(_("When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."));
+               return false;
             }
          }
 
@@ -405,8 +402,9 @@ bool EffectTruncSilence::ProcessAll()
    // This list should always be kept in order.
    RegionList silences;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-   if (FindSilences(silences, inputTracks(), iter.First(), iter.Last())) {
+   auto trackRange0 = inputTracks()->Selected< const WaveTrack >();
+   if (FindSilences(
+         silences, inputTracks(), *trackRange0.begin(), *trackRange0.rbegin())) {
       TrackListIterator iterOut(mOutputTracks.get());
       double totalCutLen = 0.0;
       Track *const first = iterOut.First();
@@ -420,20 +418,18 @@ bool EffectTruncSilence::ProcessAll()
 }
 
 bool EffectTruncSilence::FindSilences
-   (RegionList &silences, TrackList *list, Track *firstTrack, Track *lastTrack)
+   (RegionList &silences, const TrackList *list,
+    const Track *firstTrack, const Track *lastTrack)
 {
    // Start with the whole selection silent
    silences.push_back(Region(mT0, mT1));
 
    // Remove non-silent regions in each track
-   SelectedTrackListOfKindIterator iter(Track::Wave, list);
    int whichTrack = 0;
-   bool lastSeen = false;
-   for (Track *t = iter.StartWith(firstTrack); !lastSeen && t; t = iter.Next())
+   for (auto wt :
+           list->Selected< const WaveTrack >()
+               .StartingWith( firstTrack ).EndingAfter( lastTrack ) )
    {
-      lastSeen = (t == lastTrack);
-      WaveTrack *const wt = static_cast<WaveTrack *>(t);
-
       // Smallest silent region to detect in frames
       auto minSilenceFrames =
          sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());

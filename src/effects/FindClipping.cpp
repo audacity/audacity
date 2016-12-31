@@ -108,26 +108,20 @@ bool EffectFindClipping::Process()
    Maybe<ModifiedAnalysisTrack> modifiedTrack;
    const wxString name{ _("Clipping") };
 
-   LabelTrack *lt = NULL;
-   TrackListOfKindIterator iter(Track::Label, inputTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      if (t->GetName() == name) {
-         lt = (LabelTrack *)t;
-         break;
-      }
-   }
+   auto clt = *inputTracks()->Any< const LabelTrack >().find_if(
+      [&]( const Track *track ){ return track->GetName() == name; } );
 
-   if (!lt)
+   LabelTrack *lt{};
+   if (!clt)
       addedTrack = (AddAnalysisTrack(name)), lt = addedTrack->get();
    else
-      modifiedTrack.create(ModifyAnalysisTrack(lt, name)), lt = modifiedTrack->get();
+      modifiedTrack.create(ModifyAnalysisTrack(clt, name)),
+      lt = modifiedTrack->get();
 
    int count = 0;
 
    // JC: Only process selected tracks.
-   SelectedTrackListOfKindIterator waves(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) waves.First();
-   while (t) {
+   for (auto t : inputTracks()->Selected< const WaveTrack >()) {
       double trackStart = t->GetStartTime();
       double trackEnd = t->GetEndTime();
       double t0 = mT0 < trackStart ? trackStart : mT0;
@@ -144,7 +138,6 @@ bool EffectFindClipping::Process()
       }
 
       count++;
-      t = (WaveTrack *) waves.Next();
    }
 
    // No cancellation, so commit the addition of the track.

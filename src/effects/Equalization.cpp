@@ -588,8 +588,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    LoadCurves();
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   const auto t = *inputTracks()->Any< const WaveTrack >().first;
    mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
    mLoFreq = loFreqI;
 

@@ -459,7 +459,7 @@ protected:
    double         mSampleRate;
    SelectedRegion *mpSelectedRegion{};
    TrackFactory   *mFactory;
-   TrackList *inputTracks() const { return mTracks; }
+   const TrackList *inputTracks() const { return mTracks; }
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;

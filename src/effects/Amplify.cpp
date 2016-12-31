@@ -180,11 +180,9 @@ bool EffectAmplify::Init()
 {
    mPeak = 0.0;
 
-   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
-
-   for (Track *t = iter.First(); t; t = iter.Next())
+   for (auto t : inputTracks()->Selected< const WaveTrack >())
    {
-      auto pair = ((WaveTrack *)t)->GetMinMax(mT0, mT1); // may throw
+      auto pair = t->GetMinMax(mT0, mT1); // may throw
       const float min = pair.first, max = pair.second;
       float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
 

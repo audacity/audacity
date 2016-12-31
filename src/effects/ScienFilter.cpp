@@ -336,30 +336,26 @@ bool EffectScienFilter::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   TrackListOfKindIterator iter(Track::Wave, inputTracks());
-   WaveTrack *t = (WaveTrack *) iter.First();
+   auto trackRange = inputTracks()->Selected< const WaveTrack >();
+   auto t = *trackRange.begin();
 
    mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
 
-   while (t)
+   for (auto t : trackRange)
    {
-      if (t->GetSelected())
+      if (selcount == 0)
       {
-         if (selcount == 0)
-         {
-            rate = t->GetRate();
-         }
-         else
-         {
-            if (t->GetRate() != rate)
-            {
-               Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
-               return false;
-            }
-         }
-         selcount++;
+         rate = t->GetRate();
       }
-      t = (WaveTrack *) iter.Next();
+      else
+      {
+         if (t->GetRate() != rate)
+         {
+            Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
+            return false;
+         }
+      }
+      selcount++;
    }
 
    return true;

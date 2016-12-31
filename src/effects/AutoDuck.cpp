@@ -209,13 +209,10 @@ bool EffectAutoDuck::Init()
 {
    mControlTrack = NULL;
 
-   TrackListIterator iter(inputTracks());
-   Track *t = iter.First();
-
    bool lastWasSelectedWaveTrack = false;
    const WaveTrack *controlTrackCandidate = NULL;
 
-   while(t)
+   for (auto t : inputTracks()->Any())
    {
       if (lastWasSelectedWaveTrack && !t->GetSelected()) {
          // This could be the control track, so remember it
