@@ -104,7 +104,6 @@ Effect::Effect()
    mClient = NULL;
 
    mTracks = NULL;
-   mOutputTracksType = Track::None;
    mT0 = 0.0;
    mT1 = 0.0;
    mDuration = 0.0;
@@ -1311,7 +1310,7 @@ bool Effect::InitPass2()
 
 bool Effect::Process()
 {
-   CopyInputTracks(Track::All);
+   CopyInputTracks(true);
    bool bGoodResult = true;
 
    // It's possible that the number of channels the effect expects changed based on
@@ -2050,37 +2049,32 @@ void Effect::GetSamples(
 //
 // private methods
 //
-// Use these two methods to copy the input tracks to mOutputTracks, if
+// Use this method to copy the input tracks to mOutputTracks, if
 // doing the processing on them, and replacing the originals only on success (and not cancel).
 // Copy the group tracks that have tracks selected
-void Effect::CopyInputTracks()
-{
-   CopyInputTracks(Track::Wave);
-}
-
-void Effect::CopyInputTracks(TrackKind trackType)
+// If not all sync-locked selected, then only selected wave tracks.
+void Effect::CopyInputTracks(bool allSyncLockSelected)
 {
    // Reset map
    mIMap.clear();
    mOMap.clear();
 
    mOutputTracks = TrackList::Create();
-   mOutputTracksType = trackType;
 
-   //iterate over tracks of type trackType (All types if Track::All)
-   TrackListOfKindIterator aIt(trackType, mTracks);
+   auto trackRange = mTracks->Any() +
+      [&] (const Track *pTrack) {
+         return allSyncLockSelected
+         ? pTrack->IsSelectedOrSyncLockSelected()
+         : track_cast<const WaveTrack*>( pTrack ) && pTrack->GetSelected();
+      };
+
    t2bHash added;
 
-   for (Track *aTrack = aIt.First(); aTrack; aTrack = aIt.Next())
+   for (auto aTrack : trackRange)
    {
-      // Include selected tracks, plus sync-lock selected tracks for Track::All.
-      if (aTrack->GetSelected() ||
-            (trackType == Track::All && aTrack->IsSyncLockSelected()))
-      {
-         Track *o = mOutputTracks->Add(aTrack->Duplicate());
-         mIMap.push_back(aTrack);
-         mOMap.push_back(o);
-      }
+      Track *o = mOutputTracks->Add(aTrack->Duplicate());
+      mIMap.push_back(aTrack);
+      mOMap.push_back(o);
    }
 }
 
@@ -2192,8 +2186,6 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       mIMap.clear();
       mOMap.clear();
 
-      mOutputTracksType = Track::None;
-
       //TODO:undo the non-gui ODTask transfer
       return;
    }
@@ -2265,7 +2257,6 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    // The output list is no longer needed
    mOutputTracks.reset();
-   mOutputTracksType = Track::None;
    nEffectsDone++;
 }
 

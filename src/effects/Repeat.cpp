@@ -106,8 +106,8 @@ bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
 bool EffectRepeat::Process()
 {
    // Set up mOutputTracks.
-   // This effect needs Track::All for sync-lock grouping.
-   CopyInputTracks(Track::All);
+   // This effect needs all for sync-lock grouping.
+   CopyInputTracks(true);
 
    int nTrack = 0;
    bool bGoodResult = true;

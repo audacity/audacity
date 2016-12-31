@@ -356,7 +356,7 @@ bool EffectTruncSilence::ProcessIndependently()
    // Now do the work
 
    // Copy tracks
-   CopyInputTracks(Track::All);
+   CopyInputTracks(true);
    double newT1 = 0.0;
 
    {
@@ -396,7 +396,7 @@ bool EffectTruncSilence::ProcessIndependently()
 bool EffectTruncSilence::ProcessAll()
 {
    // Copy tracks
-   CopyInputTracks(Track::All);
+   CopyInputTracks(true);
 
    // Master list of silent regions.
    // This list should always be kept in order.

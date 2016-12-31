@@ -643,10 +643,9 @@ bool NyquistEffect::Process()
 
    // We must copy all the tracks, because Paste needs label tracks to ensure
    // correct sync-lock group behavior when the timeline is affected; then we just want
-   // to operate on the selected wave tracks.
-   // Also need to set up mOutputTracks for channel count.
-   if( !bOnePassTool )
-      CopyInputTracks(Track::All);
+   // to operate on the selected wave tracks
+   if ( !bOnePassTool )
+      CopyInputTracks(true);
 
    SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks.get());
    for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
@@ -791,7 +790,7 @@ bool NyquistEffect::Process()
    }
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks.get());
-   mCurTrack[0] = (WaveTrack *)iter.First();
+   mCurTrack[0] = (WaveTrack *) iter.First();
 
    // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have

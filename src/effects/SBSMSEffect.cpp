@@ -215,8 +215,8 @@ bool EffectSBSMS::Process()
    bool bGoodResult = true;
 
    //Iterate over each track
-   //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
-   this->CopyInputTracks(Track::All); // Set up mOutputTracks.
+   //all needed because this effect needs to introduce silence in the group tracks to keep sync
+   this->CopyInputTracks(true); // Set up mOutputTracks.
    mCurTrackNum = 0;
 
    double maxDuration = 0.0;

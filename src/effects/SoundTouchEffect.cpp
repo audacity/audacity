@@ -82,8 +82,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
    }
 
    //Iterate over each track
-   // Needs Track::All for sync-lock grouping.
-   this->CopyInputTracks(Track::All);
+   // Needs all for sync-lock grouping.
+   this->CopyInputTracks(true);
    bool bGoodResult = true;
 
    mCurTrackNum = 0;

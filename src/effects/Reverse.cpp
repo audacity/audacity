@@ -64,8 +64,8 @@ bool EffectReverse::IsInteractive()
 
 bool EffectReverse::Process()
 {
-   //Track::All is needed because Reverse should move the labels too
-   this->CopyInputTracks(Track::All); // Set up mOutputTracks.
+   //all needed because Reverse should move the labels too
+   this->CopyInputTracks(true); // Set up mOutputTracks.
    bool bGoodResult = true;
    int count = 0;
 

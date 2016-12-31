@@ -224,9 +224,9 @@ bool EffectChangeSpeed::Process()
    // Similar to EffectSoundTouch::Process()
 
    // Iterate over each track.
-   // Track::All is needed because this effect needs to introduce
+   // All needed because this effect needs to introduce
    // silence in the sync-lock group tracks to keep sync
-   CopyInputTracks(Track::All); // Set up mOutputTracks.
+   CopyInputTracks(true); // Set up mOutputTracks.
    bool bGoodResult = true;
 
    mCurTrackNum = 0;

@@ -347,7 +347,8 @@ bool EffectEqualization48x::TrackCompare()
 
       // Include selected tracks, plus sync-lock selected tracks for Track::All.
       if (aTrack->GetSelected() ||
-         (mEffectEqualization->mOutputTracksType == Track::All && aTrack->IsSyncLockSelected()))
+         (// mEffectEqualization->mOutputTracksType == TrackKind::All &&
+          aTrack->IsSyncLockSelected()))
       {
          auto o = aTrack->Duplicate();
          SecondIMap.push_back(aTrack);
