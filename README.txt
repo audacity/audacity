@@ -8,7 +8,7 @@ bug reports and patches at:
 Personal support with Audacity is not provided by e-mail, but on our Forum:
   http://forum.audacityteam.org/ .
 
-Audacity is copyright (c) 1999-2015 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2017 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
@@ -249,7 +249,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.1.2 requires wxWidgets 3.0.x, 
+First you must download wxWidgets. Audacity 2.1.3 requires wxWidgets 3.0.x, 
 preferably 3.0.2, which can be obtained from:
 
    http://www.wxWidgets.org/ .
