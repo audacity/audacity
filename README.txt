@@ -61,20 +61,20 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 Changes and Improvements:
    
  * Interface:  
-   * (MacOS) some support for magic mouse / trackpad, pinch and expand zoom 
-     gesture.
+   * (MacOS) Support for horizontal scroll on Magic Mouse / Trackpad and for
+     Trackpad pinch/expand zoom gesture.
    * Pinned option on waveform so waveform moves and recording/playing head
      stays still.
-   * New features in Timer Record.
+   * Timer Record options to save/export/exit after recording.
    * Scrub Ruler and optional Scrub Toolbar.
-   * New shortcuts ALT+RIGHT and ALT+LEFT for working with labels.
+   * New shortcuts ALT+RIGHT and ALT+LEFT (move to labels without editing). 
    
  * Effects:
-   * Efeects no longer greyed out during playback or recording.  
-   * New Distortion effect (replaces Leveller)
-   * SBMSS (higher quality but slower) option on Change Tempo / Change Pitch 
+   * Effects no longer grayed out when paused.
+   * New Distortion effect (replaces Leveller).
+   * SBSMS (higher quality but slower) option on Change Tempo / Change Pitch 
      effects.
-   * New Rhythm Track generator (replaces Click Track) 
+   * New Rhythm Track generator (replaces Click Track). 
    * New Generator for Sample Data Import.
    
  * Other Changes:   
@@ -83,7 +83,7 @@ Changes and Improvements:
    
 Bug fixes:
 
- Over 60 bugs fixed, including 5 long standing bugs (bug numbers below 100)
+ Over 60 bugs fixed, including five longstanding bugs.
  
 -------------------------------------------------------------------------------
 
