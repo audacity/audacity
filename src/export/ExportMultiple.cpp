@@ -770,7 +770,6 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    bool tagsPrompt = mProject->GetShowId3Dialog();
    Track *tr, *tr2;
    int l = 0;     // track counter
-   int numTracks = 0;
    int ok = eProgressSuccess;
    wxArrayString otherNames;
    std::vector<Track*> selected; /**< Array of pointers to the tracks which were
@@ -795,10 +794,6 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       if (tr->GetSelected()) {
          selected.push_back(tr);
          tr->SetSelected(false);
-      }
-
-      if (!tr->GetLinked()) {
-         numTracks++;
       }
    }
 
