@@ -1299,7 +1299,7 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath, audacityPathList);
    // If Audacity is a "bundle" package, then the root directory is
    // the great-great-grandparent of the directory containing the executable.
-   AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
+   //AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
 
    // These allow for searching the "bundle"
    AddUniquePathToPathList(progPath + wxT("/../"), audacityPathList);
@@ -1592,6 +1592,9 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
 // We now disallow temp directory name that puts it where cleaner apps will
 // try to clean out the files.  
 bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
+   if( Name.IsEmpty() )
+      return false;
+
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
    // use Long Path to expand out any abbreviated long substrings.
@@ -1616,6 +1619,22 @@ bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
    return !(NameCanonical.StartsWith( BadPath ));
 }
 
+// Ensures directory is created and puts the name into result.
+// result is unchanged if unsuccessful.
+void SetToExtantDirectory( wxString & result, const wxString & dir ){
+   // don't allow path of "".
+   if( dir.IsEmpty() )
+      return;
+   if( wxDirExists( dir ) ){
+      result = dir;
+      return;
+   }
+   // Use '/' so that this works on Mac and Windows alike.
+   wxFileName name( dir + "/junkname.cfg" );
+   if( name.Mkdir( wxS_DIR_DEFAULT , wxPATH_MKDIR_FULL ) )
+      result = dir;
+}
+
 bool AudacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
@@ -1635,23 +1654,13 @@ bool AudacityApp::InitTempDir()
    wxLogNull logNo;
 
    // Try temp dir that was stored in prefs first
-   if( !IsTempDirectoryNameOK( tempFromPrefs ) ){
-      ;// Bad name?  Don't try and use it.
-   } else if (tempFromPrefs != wxT("")) {
-      if (wxDirExists(tempFromPrefs))
-         temp = tempFromPrefs;
-      else if (wxMkdir(tempFromPrefs, 0755))
-         temp = tempFromPrefs;
-   }
+   if( IsTempDirectoryNameOK( tempFromPrefs ) )
+      SetToExtantDirectory( temp, tempFromPrefs );
 
    // If that didn't work, try the default location
 
-   if (temp==wxT("") && tempDefaultLoc != wxT("")) {
-      if (wxDirExists(tempDefaultLoc))
-         temp = tempDefaultLoc;
-      else if (wxMkdir(tempDefaultLoc, 0755))
-         temp = tempDefaultLoc;
-   }
+   if (temp==wxT(""))
+      SetToExtantDirectory( temp, tempDefaultLoc );
 
    // Check temp directory ownership on *nix systems only
    #ifdef __UNIX__
