@@ -1695,27 +1695,30 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
       }
       else if (!mFoundType && line.Length() > 0)
       {
-         mFoundType = true;
-
          if (line[0] == wxT('(') ||
             (line[0] == wxT('#') && line.Length() > 1 && line[1] == wxT('|')))
          {
             mIsSal = false;
+            mFoundType = true;
          }
          else if (line.Upper().Find(wxT("RETURN")) != wxNOT_FOUND)
          {
             mIsSal = true;
+            mFoundType = true;
          }
-         else if (mIsPrompt)
-         {
-            wxMessageBox(_("Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n\treturn s * 0.1\nfor SAL, or begin with an open parenthesis such as\n\t(mult s 0.1)\n for LISP."), _("Error in Nyquist code"), wxOK | wxCENTRE);
-            return false;
-         }
-         // Just throw it at Nyquist to see what happens
       }
-
       // preserve comments so that SAL effects compile with proper line numbers
       mCmd += line + wxT("\n");
+   }
+   if (!mFoundType && mIsPrompt)
+   {
+      wxMessageBox(_("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
+For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
+or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
+                   _("Error in Nyquist code"),
+                   wxOK | wxCENTRE);
+      return false;
+      // Else just throw it at Nyquist to see what happens
    }
 
    return true;
