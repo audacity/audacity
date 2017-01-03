@@ -47,12 +47,9 @@ UIHandle::Result GainSliderHandle::SetValue
    auto pTrack = GetWaveTrack();
 
    if (pTrack) {
-      pTrack->SetGain(newValue);
-
-      // Assume linked track is wave or null
-      const auto link = static_cast<WaveTrack*>(mpTrack.lock()->GetLink());
-      if (link)
-         link->SetGain(newValue);
+      for (auto channel :
+           TrackList::Channels(pTrack.get()))
+         channel->SetGain(newValue);
 
       MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
       if (pMixerBoard)
@@ -131,12 +128,9 @@ UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newV
    auto pTrack = GetWaveTrack();
 
    if (pTrack) {
-      pTrack->SetPan(newValue);
-
-      // Assume linked track is wave or null
-      const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
-      if (link)
-         link->SetPan(newValue);
+      for (auto channel :
+           TrackList::Channels(pTrack.get()))
+         channel->SetPan(newValue);
 
       MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
       if (pMixerBoard)

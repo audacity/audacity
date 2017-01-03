@@ -34,9 +34,9 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    auto pTrack = mpTrack.lock();
    if (pTrack)
    {
-      pTrack->SetMinimized(!pTrack->GetMinimized());
-      if (pTrack->GetLink())
-         pTrack->GetLink()->SetMinimized(pTrack->GetMinimized());
+      bool wasMinimized = pTrack->GetMinimized();
+      for (auto channel : TrackList::Channels(pTrack.get()))
+         channel->SetMinimized(!wasMinimized);
       pProject->ModifyState(true);
 
       // Redraw all tracks when any one of them expands or contracts

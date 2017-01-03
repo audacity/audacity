@@ -1846,14 +1846,12 @@ void TrackPanel::UpdateTrackVRuler(const Track *t)
    wxRect rect(GetVRulerOffset(),
             kTopMargin,
             GetVRulerWidth(),
-            t->GetHeight() - (kTopMargin + kBottomMargin));
+            0);
 
-   mTrackArtist->UpdateVRuler(t, rect);
-   const Track *l = t->GetLink();
-   if (l)
-   {
-      rect.height = l->GetHeight() - (kTopMargin + kBottomMargin);
-      mTrackArtist->UpdateVRuler(l, rect);
+
+   for (auto channel : TrackList::Channels(t)) {
+      rect.height = channel->GetHeight() - (kTopMargin + kBottomMargin);
+      mTrackArtist->UpdateVRuler(channel, rect);
    }
 }
 
@@ -2079,30 +2077,29 @@ wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
       return { 0, 0, 0, 0 };
    }
 
-   wxRect rect{
-      0,
-      target->GetY() - mViewInfo->vpos,
-      GetSize().GetWidth(),
-      target->GetHeight()
-   };
-
    // PRL:  I think the following very old comment misused the term "race
    // condition" for a bug that happened with only a single thread.  I think the
    // real problem referred to, was that this function could be reached, via
    // TrackPanelAx callbacks, during low-level operations while the TrackList
-   // was not in a consistent state.  Therefore GetLinked() did not imply
-   // that GetLink() was not null.
+   // was not in a consistent state.
    // Now the problem is fixed by delaying the handling of events generated
-   // by TrackList.
+   // by TrackList.  And besides that, we use Channels() instead of looking
+   // directly at the links.
 
    // Old comment:
    // The check for a null linked track is necessary because there's
    // a possible race condition between the time the 2 linked tracks
    // are added and when wxAccessible methods are called.  This is
    // most evident when using Jaws.
-   if (target->GetLinked() && target->GetLink()) {
-      rect.height += target->GetLink()->GetHeight();
-   }
+   auto height = TrackList::Channels( target ).sum( &Track::GetHeight );
+
+   wxRect rect{
+      0,
+      target->GetY() - mViewInfo->vpos,
+      GetSize().GetWidth(),
+      height
+   };
+
 
    rect.x += kLeftMargin;
    if (label)
@@ -2150,8 +2147,7 @@ void TrackPanel::SetFocusedCell()
 void TrackPanel::SetFocusedTrack( Track *t )
 {
    // Make sure we always have the first linked track of a stereo track
-   if (t && !t->GetLinked() && t->GetLink())
-      t = (WaveTrack*)t->GetLink();
+   t = *GetTracks()->FindLeader(t);
 
    auto cell = mAx->SetFocus( Track::Pointer( t ) ).get();
 
@@ -2656,7 +2652,7 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
    }
    if ( mpTrack ) {
       if ( mType == CellType::Label &&
-           mpTrack->GetLink() && !mpTrack->GetLinked() )
+           !mpTrack->IsLeader() )
          // Visit label of stereo track only once
          ++mType;
       switch ( mType ) {
@@ -2722,10 +2718,10 @@ void TrackPanelCellIterator::UpdateRect()
             mRect.x = kLeftMargin;
             mRect.width = kTrackInfoWidth - mRect.x;
             mRect.y += kTopMargin;
+            mRect.height =
+               TrackList::Channels(mpTrack.get())
+                  .sum( &Track::GetHeight );
             mRect.height -= (kBottomMargin + kTopMargin);
-            auto partner = mpTrack->GetLink();
-            if ( partner && mpTrack->GetLinked() )
-               mRect.height += partner->GetHeight();
             break;
          }
          case CellType::VRuler:
@@ -2741,11 +2737,12 @@ void TrackPanelCellIterator::UpdateRect()
             // The resizer region encompasses the bottom margin proper to this
             // track, plus the top margin of the next track (or, an equally
             // tall zone below, in case there is no next track)
-            auto partner = mpTrack->GetLink();
-            if ( partner && mpTrack->GetLinked() )
-               mRect.x = kTrackInfoWidth;
-            else
+            if ( mpTrack.get() ==
+                *TrackList::Channels(mpTrack.get()).rbegin() )
+               // Last channel has a resizer extending farther leftward
                mRect.x = kLeftMargin;
+            else
+               mRect.x = kTrackInfoWidth;
             mRect.width -= (mRect.x + kRightMargin);
             mRect.y += (mRect.height - kBottomMargin);
             mRect.height = (kBottomMargin + kTopMargin);

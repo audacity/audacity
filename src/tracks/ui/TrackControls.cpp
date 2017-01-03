@@ -209,11 +209,8 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
       if (bResult) 
       {
          wxString newName = Command.mName;
-         pTrack->SetName(newName);
-         // if we have a linked channel this name should change as well
-         // (otherwise sort by name and time will crash).
-         if (pTrack->GetLinked())
-            pTrack->GetLink()->SetName(newName);
+         for (auto channel : TrackList::Channels(pTrack))
+            channel->SetName(newName);
 
          MixerBoard *const pMixerBoard = proj->GetMixerBoard();
          auto pt = dynamic_cast<PlayableTrack*>(pTrack);
