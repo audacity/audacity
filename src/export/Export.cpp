@@ -518,7 +518,15 @@ bool Exporter::GetFilename()
    }
    maskString.RemoveLast();
 
-   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()));
+//Bug 1304: Set a default path if none was given.  For Export.
+#ifdef __WIN32__
+   wxFileName tmpFile;
+   tmpFile.AssignHomeDir();
+   wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
+   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), tmpDirLoc + "\\Documents"));
+#else
+   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), wxT("~/Documents")));
+#endif
    mFilename.SetName(mProject->GetName());
    while (true) {
       // Must reset each iteration

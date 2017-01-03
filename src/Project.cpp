@@ -4182,6 +4182,15 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    TitleRestorer Restorer(this); // RAII
 
    wxFileName filename(mFileName);
+   // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
+   if( filename.GetFullPath().IsEmpty() ){
+      filename.AssignHomeDir();
+#ifdef __WIN32__
+      filename.SetPath(filename.GetPath() + "\\Documents");
+#else
+      filename.SetPath(filename.GetPath() + "/Documents");
+#endif
+   }
 
    wxString sDialogTitle;
    if (bWantSaveCompressed)
