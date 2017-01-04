@@ -1194,11 +1194,10 @@ bool AudacityApp::OnInit()
    wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 1);
 #endif
 
-#ifdef AUDACITY_NAME
-   wxString appName = wxT(AUDACITY_NAME);
-#else
+   // Don't use AUDACITY_NAME here.
+   // We want Audacity with a capital 'A'
    wxString appName = wxT("Audacity");
-#endif
+
 
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
