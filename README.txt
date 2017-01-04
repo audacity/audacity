@@ -61,7 +61,7 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 Changes and Improvements:
    
  * Interface:  
-   * (MacOS) Support for horizontal scroll on Magic Mouse / Trackpad and for
+   * (macOS) Support for horizontal scroll on Magic Mouse / Trackpad and for
      Trackpad pinch/expand zoom gesture.
    * Pinned option on waveform so waveform moves and recording/playing head
      stays still.
