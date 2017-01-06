@@ -235,9 +235,9 @@ class AUDACITY_DLL_API NoteTrack final
          mVisibleChannels = CHANNEL_BIT(c);
    }
 
-   TrackKind GetKind() const override { return TrackKind::Note; }
-
  private:
+
+   TrackKind GetKind() const override { return TrackKind::Note; }
 
    void AddToDuration( double delta );
 

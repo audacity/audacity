@@ -640,11 +640,9 @@ private:
    // Protected methods
    //
 
-public:
-   // to do: privatize this
-   TrackKind GetKind() const override { return TrackKind::Wave; }
-
 private:
+
+   TrackKind GetKind() const override { return TrackKind::Wave; }
 
    //
    // Private variables

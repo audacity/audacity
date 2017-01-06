@@ -411,10 +411,9 @@ public:
    // May assume precondition: t0 <= t1
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
-   // to do: privatize this
+private:
    virtual TrackKind GetKind() const { return TrackKind::None; }
 
-private:
    template<typename T>
       friend typename std::enable_if< std::is_pointer<T>::value, T >::type
          track_cast(Track *track);
