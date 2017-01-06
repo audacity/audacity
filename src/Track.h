@@ -70,6 +70,18 @@ inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
 { return !(a == b); }
 
+enum class TrackKind
+{
+   None,
+   Wave,
+#if defined(USE_MIDI)
+   Note,
+#endif
+   Label,
+   Time,
+   All
+};
+
 class ViewInfo;
 
 // This is an in-session identifier of track objects across undo states
@@ -248,18 +260,6 @@ public:
 
  public:
 
-   enum TrackKindEnum
-   {
-      None,
-      Wave,
-#if defined(USE_MIDI)
-      Note,
-#endif
-      Label,
-      Time,
-      All
-   };
-
    enum : unsigned { DefaultHeight = 150 };
 
    Track(const std::shared_ptr<DirManager> &projDirManager);
@@ -335,7 +335,19 @@ public:
    // May assume precondition: t0 <= t1
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
-   virtual int GetKind() const { return None; }
+   // to do: privatize this
+   virtual TrackKind GetKind() const { return TrackKind::None; }
+
+   // to do: remove these
+   static const TrackKind Label = TrackKind::Label;
+#ifdef USE_MIDI
+   static const TrackKind Note = TrackKind::Note;
+#endif
+   static const TrackKind Wave = TrackKind::Wave;
+   static const TrackKind Time = TrackKind::Time;
+   static const TrackKind All = TrackKind::All;
+   static const TrackKind None = TrackKind::None;
+
 
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
@@ -529,14 +541,14 @@ class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListI
 class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackListCondIterator
 {
  public:
-   TrackListOfKindIterator(int kind, TrackList * val = NULL);
+   TrackListOfKindIterator(TrackKind kind, TrackList * val = nullptr);
    virtual ~TrackListOfKindIterator() {}
 
  protected:
    virtual bool Condition(Track *t) override;
 
  private:
-   int kind;
+   TrackKind kind;
 };
 
 //
@@ -547,7 +559,7 @@ class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackLis
 class AUDACITY_DLL_API SelectedTrackListOfKindIterator final : public TrackListOfKindIterator
 {
  public:
-    SelectedTrackListOfKindIterator(int kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
+   SelectedTrackListOfKindIterator(TrackKind kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
    virtual ~SelectedTrackListOfKindIterator() {}
 
  protected:

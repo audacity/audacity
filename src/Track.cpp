@@ -601,7 +601,7 @@ Track *TrackListCondIterator::Last(bool skiplinked)
 }
 
 // TrackListOfKindIterator
-TrackListOfKindIterator::TrackListOfKindIterator(int kind, TrackList * val)
+TrackListOfKindIterator::TrackListOfKindIterator(TrackKind kind, TrackList * val)
 :  TrackListCondIterator(val)
 {
    this->kind = kind;

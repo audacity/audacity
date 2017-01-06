@@ -2060,7 +2060,7 @@ void Effect::CopyInputTracks()
    CopyInputTracks(Track::Wave);
 }
 
-void Effect::CopyInputTracks(int trackType)
+void Effect::CopyInputTracks(TrackKind trackType)
 {
    // Reset map
    mIMap.clear();
