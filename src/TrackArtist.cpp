@@ -430,7 +430,7 @@ void TrackArtist::DrawTracks(TrackList * tracks,
             rr.y += mInsetTop;
             rr.width -= (mInsetLeft + mInsetRight);
             rr.height -= (mInsetTop + mInsetBottom);
-            DrawTrack(t, dc, rr, zoomInfo,
+            DrawTrack(t, dc, rr, selectedRegion, zoomInfo,
                       drawEnvelope, bigPoints, drawSliders, hasSolo);
          }
       }
@@ -1224,7 +1224,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       r1[x0] = GetWaveYPos(-rms[x0] * env[x0]*gain, zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
-      r2[x0] = GetWaveYPos(rms[xx0 * env[x0]*gain, zoomMin, zoomMax,
+      r2[x0] = GetWaveYPos(rms[x0] * env[x0]*gain, zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
 #else
       r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,

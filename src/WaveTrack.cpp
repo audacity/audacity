@@ -402,7 +402,7 @@ bool WaveTrack::SetPan(float newPan)
    else
       mPan = newPan;
 
-   if(mDisplay == WaveTrack::WaveformDisplay && mChannel == Track::MonoChannel && (p == 0.0f && newPan != 0.0f || p != 0.0f && newPan == 0.0f) && mMonoAsVirtualStereo)
+   if(mDisplay == WaveTrack::Waveform && mChannel == Track::MonoChannel && (p == 0.0f && newPan != 0.0f || p != 0.0f && newPan == 0.0f) && mMonoAsVirtualStereo)
    {
       panZero=true;
       if(!mPan){
@@ -458,7 +458,7 @@ int WaveTrack::GetMinimizedHeight() const
       return 20;
    }
 
-   if(GetChannel() == MonoChannel && GetPan() != 0 && mMonoAsVirtualStereo &&  mDisplay == WaveformDisplay)
+   if(GetChannel() == MonoChannel && GetPan() != 0 && mMonoAsVirtualStereo &&  mDisplay == Waveform)
       return 20;
    else
       return 40;

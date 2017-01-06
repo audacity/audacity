@@ -34,9 +34,19 @@ class TimeWarper;
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-#define MONO_WAVE_PAN(T) (T != NULL && T->GetChannel() == Track::MonoChannel && T->GetKind() == Track::Wave && ((WaveTrack *)T)->GetPan() != 0 && WaveTrack::mMonoAsVirtualStereo && ((WaveTrack *)T)->GetDisplay() == WaveTrack::WaveformDisplay)
+#define MONO_WAVE_PAN(T) \
+   (T != NULL && \
+    T->GetChannel() == Track::MonoChannel && \
+    T->GetKind() == Track::Wave && \
+    ((const WaveTrack *)T)->GetPan() != 0 && \
+    WaveTrack::mMonoAsVirtualStereo && \
+    ((const WaveTrack *)T)->GetDisplay() == WaveTrack::Waveform)
 
-#define MONO_PAN  (mPan != 0.0 && mChannel == MonoChannel && mDisplay == WaveformDisplay && mMonoAsVirtualStereo)
+#define MONO_PAN \
+   (mPan != 0.0 && \
+    mChannel == MonoChannel && \
+    mDisplay == Waveform && \
+    mMonoAsVirtualStereo)
 #endif
 
 /// \brief Structure to hold region of a wavetrack and a comparison function
