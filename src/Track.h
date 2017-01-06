@@ -34,6 +34,8 @@
 class wxTextFile;
 class DirManager;
 class Track;
+class AudioTrack;
+class PlayableTrack;
 class LabelTrack;
 class TimeTrack;
 class TrackControls;
@@ -79,8 +81,82 @@ enum class TrackKind
 #endif
    Label,
    Time,
+   Audio,
+   Playable,
    All
 };
+
+// Compile-time function on enum values.
+// It knows all inheritance relations among Track subclasses
+// even where the track types are only forward declared.
+constexpr bool CompatibleTrackKinds( TrackKind desired, TrackKind actual )
+{
+   return
+      (desired == actual)
+      ||
+      (desired == TrackKind::All)
+      ||
+      (desired == TrackKind::Audio    && actual == TrackKind::Wave)
+#ifdef USE_MIDI
+      ||
+      (desired == TrackKind::Audio    && actual == TrackKind::Note)
+#endif
+      ||
+      (desired == TrackKind::Playable && actual == TrackKind::Wave)
+#ifdef EXPERIMENTAL_MIDI_OUT
+      ||
+      (desired == TrackKind::Playable && actual == TrackKind::Note)
+#endif
+   ;
+}
+
+// This bit of metaprogramming lets track_cast work even when the track
+// subclasses are visible only as incomplete types
+namespace TrackTyper {
+   template<typename, TrackKind> struct Pair;
+   using List = std::tuple<
+     Pair<Track,         TrackKind::All>,
+     Pair<AudioTrack,    TrackKind::Audio>,
+     Pair<PlayableTrack, TrackKind::Playable>,
+     Pair<LabelTrack,    TrackKind::Label>,
+     Pair<NoteTrack,     TrackKind::Note>,
+     Pair<TimeTrack,     TrackKind::Time>,
+     Pair<WaveTrack,     TrackKind::Wave>
+     // New classes can be added easily to this list
+   >;
+   template<typename...> struct Lookup;
+   template<typename TrackType, TrackKind Here, typename... Rest>
+      struct Lookup< TrackType, std::tuple< Pair<TrackType, Here>, Rest... > > {
+         static constexpr TrackKind value() {
+            return Here;
+         }
+      };
+   template<typename TrackType, typename NotHere, typename... Rest>
+      struct Lookup< TrackType, std::tuple< NotHere, Rest... > > {
+         static constexpr TrackKind value() {
+            return Lookup< TrackType, std::tuple< Rest... > >::value();
+         }
+      };
+};
+
+template<typename TrackType> constexpr TrackKind track_kind ()
+{
+   using namespace TrackTyper;
+   return Lookup< typename std::remove_const<TrackType>::type, List >::value();
+}
+
+// forward declarations, so we can make them friends
+template<typename T>
+   typename std::enable_if< std::is_pointer<T>::value, T >::type
+      track_cast(Track *track);
+
+template<typename T>
+   typename std::enable_if<
+      std::is_pointer<T>::value &&
+         std::is_const< typename std::remove_pointer< T >::type >::value,
+      T
+   >::type
+      track_cast(const Track *track);
 
 class ViewInfo;
 
@@ -348,6 +424,22 @@ public:
    static const TrackKind All = TrackKind::All;
    static const TrackKind None = TrackKind::None;
 
+private:
+   template<typename T>
+      friend typename std::enable_if< std::is_pointer<T>::value, T >::type
+         track_cast(Track *track);
+   template<typename T>
+      friend typename std::enable_if<
+         std::is_pointer<T>::value &&
+            std::is_const< typename std::remove_pointer< T >::type >::value,
+         T
+      >::type
+         track_cast(const Track *track);
+   friend class TrackListOfKindIterator;
+
+public:
+   bool SameKindAs(const Track &track) const
+      { return GetKind() == track.GetKind(); }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
@@ -418,6 +510,39 @@ protected:
    bool                mMute { false };
    bool                mSolo { false };
 };
+
+// Functions to encapsulate the checked down-casting of track pointers,
+// eliminating possibility of error -- and not quietly casting away const
+// typical usage:
+// if (auto wt = track_cast<WaveTrack*>(track)) { ... }
+template<typename T>
+   inline typename std::enable_if< std::is_pointer<T>::value, T >::type
+      track_cast(Track *track)
+{
+   using BareType = typename std::remove_pointer< T >::type;
+   if (track &&
+       CompatibleTrackKinds( track_kind<BareType>(), track->GetKind() ))
+      return reinterpret_cast<T>(track);
+   else
+      return nullptr;
+}
+
+// Overload for const pointers can cast only to other const pointer types
+template<typename T>
+   inline typename std::enable_if<
+      std::is_pointer<T>::value &&
+         std::is_const< typename std::remove_pointer< T >::type >::value,
+      T
+   >::type
+      track_cast(const Track *track)
+{
+   using BareType = typename std::remove_pointer< T >::type;
+   if (track &&
+       CompatibleTrackKinds( track_kind<BareType>(), track->GetKind() ))
+      return reinterpret_cast<T>(track);
+   else
+      return nullptr;
+}
 
 class AUDACITY_DLL_API TrackListIterator /* not final */
 : public std::iterator< std::forward_iterator_tag, Track *const >
