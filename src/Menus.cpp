@@ -3534,7 +3534,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, false, false, mixerBoard );
+            ( *t, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
@@ -3543,7 +3543,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *p, true, false, mixerBoard );
+            ( *p, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
@@ -3552,7 +3552,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( !tSelected && pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *p, false, false, mixerBoard );
+            ( *p, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
          project.ModifyState(false);
@@ -3561,7 +3561,7 @@ void MenuCommandHandler::OnPrevTrack( AudacityProject &project, bool shift )
       if( !tSelected && !pSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, true, false, mixerBoard );
+            ( *t, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( p );   // move focus to next track up
          trackPanel->EnsureVisible( p );
           project.ModifyState(false);
@@ -3646,7 +3646,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, false, false, mixerBoard );
+            ( *t, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3655,7 +3655,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *n, true, false, mixerBoard );
+            ( *n, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3664,7 +3664,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( !tSelected && nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *n, false, false, mixerBoard );
+            ( *n, false, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3673,7 +3673,7 @@ void MenuCommandHandler::OnNextTrack( AudacityProject &project, bool shift )
       if( !tSelected && !nSelected )
       {
          selectionState.SelectTrack
-            ( *tracks, *t, true, false, mixerBoard );
+            ( *t, true, false, mixerBoard );
          trackPanel->SetFocusedTrack( n );   // move focus to next track down
          trackPanel->EnsureVisible( n );
          project.ModifyState(false);
@@ -3780,7 +3780,6 @@ void MenuCommandHandler::OnToggle(const CommandContext &context)
 {
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
-   auto tracks = project.GetTracks();
    auto &selectionState = project.GetSelectionState();
    auto mixerBoard = project.GetMixerBoard();
 
@@ -3791,7 +3790,7 @@ void MenuCommandHandler::OnToggle(const CommandContext &context)
       return;
 
    selectionState.SelectTrack
-      ( *tracks, *t, !t->GetSelected(), true, mixerBoard );
+      ( *t, !t->GetSelected(), true, mixerBoard );
    trackPanel->EnsureVisible( t );
    project.ModifyState(false);
 

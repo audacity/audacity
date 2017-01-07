@@ -1078,26 +1078,6 @@ void TrackList::Clear(bool sendEvent)
       DeletionEvent();
 }
 
-void TrackList::Select(Track * t, bool selected /* = true */ )
-{
-   if (t) {
-      const auto node = t->GetNode();
-      if ( !isNull( node ) ) {
-         t->SetSelected( selected );
-         if ( t->GetLinked() ) {
-            auto next = getNext( node );
-            if ( !isNull( next ) )
-               (*next.first)->SetSelected( selected );
-         }
-         else {
-            auto prev = getPrev( node );
-            if ( !isNull( prev ) && (*prev.first)->GetLinked() )
-               (*prev.first)->SetSelected( selected );
-         }
-      }
-   }
-}
-
 /// Return a track in the list that comes after Track t
 Track *TrackList::GetNext(Track * t, bool linked) const
 {

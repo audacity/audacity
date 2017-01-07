@@ -54,12 +54,14 @@ void SelectionState::SelectTrackLength
 }
 
 void SelectionState::SelectTrack
-( TrackList &tracks, Track &track, bool selected, bool updateLastPicked,
+( Track &track, bool selected, bool updateLastPicked,
   MixerBoard *pMixerBoard )
 {
    bool wasCorrect = (selected == track.GetSelected());
 
-   tracks.Select( &track, selected );
+   for (auto channel : TrackList::Channels(&track))
+      channel->SetSelected(selected);
+
    if (updateLastPicked)
       mLastPickedTrack = Track::Pointer( &track );
 
@@ -98,7 +100,7 @@ void SelectionState::SelectRangeOfTracks
    TrackListIterator iter( &tracks );
    sTrack = iter.StartWith( sTrack );
    do {
-      SelectTrack( tracks, *sTrack, true, false, pMixerBoard );
+      SelectTrack( *sTrack, true, false, pMixerBoard );
       if ( sTrack == eTrack ) {
          break;
       }
@@ -112,7 +114,7 @@ void SelectionState::SelectNone( TrackList &tracks, MixerBoard *pMixerBoard )
    TrackListIterator iter( &tracks );
    Track *track = iter.First();
    while ( track ) {
-      SelectTrack( tracks, *track, false, false, pMixerBoard );
+      SelectTrack( *track, false, false, pMixerBoard );
       track = iter.Next();
    }
 }
@@ -155,7 +157,7 @@ void SelectionState::ChangeSelectionOnShiftClick
    if( pExtendFrom )
       SelectRangeOfTracks( tracks, track, *pExtendFrom, pMixerBoard );
    else
-      SelectTrack( tracks, track, true, true, pMixerBoard );
+      SelectTrack( track, true, true, pMixerBoard );
    mLastPickedTrack = pExtendFrom;
 }
 
@@ -166,13 +168,13 @@ void SelectionState::HandleListSelection
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl)
-      SelectTrack( tracks, track, !track.GetSelected(), true, pMixerBoard );
+      SelectTrack( track, !track.GetSelected(), true, pMixerBoard );
    else {
       if (shift && mLastPickedTrack.lock())
          ChangeSelectionOnShiftClick( tracks, track, pMixerBoard );
       else {
          SelectNone( tracks, pMixerBoard );
-         SelectTrack( tracks, track, true, true, pMixerBoard );
+         SelectTrack( track, true, true, pMixerBoard );
          SelectTrackLength( tracks, viewInfo, track, syncLocked );
       }
 

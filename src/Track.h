@@ -1523,9 +1523,6 @@ public:
    /// Make the list empty
    void Clear(bool sendEvent = true);
 
-   /** Select a track, and if it is linked to another track, select it, too. */
-   void Select(Track * t, bool selected = true);
-
    int GetGroupHeight(const Track * t) const;
 
    bool CanMoveUp(Track * t) const;

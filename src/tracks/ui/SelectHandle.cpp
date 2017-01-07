@@ -563,7 +563,7 @@ UIHandle::Result SelectHandle::Click
       selectionState.SelectNone( *trackList, pProject->GetMixerBoard() );
 
       selectionState.SelectTrack
-         ( *trackList, *pTrack, true, true, pProject->GetMixerBoard() );
+         ( *pTrack, true, true, pProject->GetMixerBoard() );
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength
@@ -617,7 +617,7 @@ UIHandle::Result SelectHandle::Click
          // Don't toggle away the last selected track.
          if( !bIsSelected || trackPanel->GetSelectedTrackCount() > 1 )
             selectionState.SelectTrack
-               ( *trackList, *pTrack, !bIsSelected, true, pMixerBoard );
+               ( *pTrack, !bIsSelected, true, pMixerBoard );
       }
 
       double value;
@@ -773,7 +773,7 @@ UIHandle::Result SelectHandle::Click
 #endif
       StartSelection(pProject);
       selectionState.SelectTrack
-         ( *trackList, *pTrack, true, true, pMixerBoard );
+         ( *pTrack, true, true, pMixerBoard );
       trackPanel->SetFocusedTrack(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
       if (pTrack->GetKind() == Track::Wave) {
