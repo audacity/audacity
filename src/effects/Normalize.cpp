@@ -194,7 +194,9 @@ bool EffectNormalize::Process()
          else
             msg = topMsg + _("Analyzing first track of stereo pair: ") + trackName;
          float offset, min, max;
-         AnalyseTrack(track, msg, curTrackNum, offset, min, max);
+         if (! ( bGoodResult =
+                 AnalyseTrack(track, msg, curTrackNum, offset, min, max) ) )
+             break;
          if(!track->GetLinked() || mStereoInd) {
             // mono or 'stereo tracks independently'
             float extent = wxMax(fabs(max), fabs(min));
@@ -220,7 +222,9 @@ bool EffectNormalize::Process()
             track = (WaveTrack *) iter.Next();  // get the next one
             msg = topMsg + _("Analyzing second track of stereo pair: ") + trackName;
             float offset2, min2, max2;
-            AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2);
+            if ( ! ( bGoodResult =
+                     AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2) ) )
+                break;
             float extent = wxMax(fabs(min), fabs(max));
             extent = wxMax(extent, fabs(min2));
             extent = wxMax(extent, fabs(max2));
@@ -325,7 +329,7 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-void EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
+bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
                                    int curTrackNum,
                                    float &offset, float &min, float &max)
 {
@@ -334,7 +338,9 @@ void EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
       // TODO: should we restrict the flags to just the relevant block files (for selections)
       while (track->GetODFlags()) {
          // update the gui
-         mProgress->Update(0, wxT("Waiting for waveform to finish computing..."));
+         if (ProgressResult::Cancelled == mProgress->Update(
+            0, wxT("Waiting for waveform to finish computing...")) )
+            return false;
          wxMilliSleep(100);
       }
 
@@ -344,11 +350,13 @@ void EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
    }
 
    if(mDC) {
-      AnalyseDC(track, msg, curTrackNum, offset);
+      auto rc = AnalyseDC(track, msg, curTrackNum, offset);
       min += offset;
       max += offset;
+      return rc;
    } else {
       offset = 0.0;
+      return true;
    }
 }
 
