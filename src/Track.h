@@ -443,6 +443,269 @@ public:
    bool SameKindAs(const Track &track) const
       { return GetKind() == track.GetKind(); }
 
+   template < typename R = void >
+   using Continuation = std::function< R() >;
+   using Fallthrough = Continuation<>;
+   
+private:
+
+   // Variadic template specialized below
+   template< typename ...Params >
+   struct Executor;
+
+   // This specialization grounds the recursion.
+   template< typename R, typename ConcreteType >
+   struct Executor< R, ConcreteType >
+   {
+      enum : unsigned { SetUsed = 0 };
+      // No functions matched, so do nothing.
+      R operator () (const void *) { return R{}; }
+   };
+
+   // And another specialization is needed for void return.
+   template< typename ConcreteType >
+   struct Executor< void, ConcreteType >
+   {
+      enum : unsigned { SetUsed = 0 };
+      // No functions matched, so do nothing.
+      void operator () (const void *) { }
+   };
+
+   // This struct groups some helpers needed to define the recursive cases of
+   // Executor.
+   struct Dispatcher {
+      // This implements the specialization of Executor
+      // for the first recursive case.
+      template< typename R, typename ConcreteType,
+                typename Function, typename ...Functions >
+      struct inapplicable
+      {
+         using Tail = Executor< R, ConcreteType, Functions... >;
+         enum : unsigned { SetUsed = Tail::SetUsed << 1 };
+
+         // Ignore the first, inapplicable function and try others.
+         R operator ()
+            (const Track *pTrack,
+             const Function &, const Functions &...functions)
+         { return Tail{}( pTrack, functions... ); }
+      };
+
+      // This implements the specialization of Executor
+      // for the second recursive case.
+      template< typename R, typename BaseClass, typename ConcreteType,
+                typename Function, typename ...Functions >
+      struct applicable1
+      {
+         enum : unsigned { SetUsed = 1u };
+
+         // Ignore the remaining functions and call the first only.
+         R operator ()
+            (const Track *pTrack,
+             const Function &function, const Functions &...)
+         { return function( (BaseClass *)pTrack ); }
+      };
+
+      // This implements the specialization of Executor
+      // for the third recursive case.
+      template< typename R, typename BaseClass, typename ConcreteType,
+                typename Function, typename ...Functions >
+      struct applicable2
+      {
+         using Tail = Executor< R, ConcreteType, Functions... >;
+         enum : unsigned { SetUsed = (Tail::SetUsed << 1) | 1u };
+
+         // Call the first function, which may request dispatch to the further
+         // functions by invoking a continuation.
+         R operator ()
+            (const Track *pTrack, const Function &function,
+             const Functions &...functions)
+         {
+            auto continuation = Continuation<R>{ [&] {
+               return Tail{}( pTrack, functions... );
+            } };
+            return function( (BaseClass *)pTrack, continuation );
+         }
+      };
+
+      // This variadic template chooses among the implementations above.
+      template< typename ... > struct Switch;
+
+      // Ground the recursion.
+      template< typename R, typename ConcreteType >
+      struct Switch< R, ConcreteType >
+      {
+         // No BaseClass of ConcreteType is acceptable to Function.
+         template< typename Function, typename ...Functions >
+            static auto test()
+               -> inapplicable< R, ConcreteType, Function, Functions... >;
+      };
+
+      // Recursive case.
+      template< typename R, typename ConcreteType,
+                typename BaseClass, typename ...BaseClasses >
+      struct Switch< R, ConcreteType, BaseClass, BaseClasses... >
+      {
+         using Retry = Switch< R, ConcreteType, BaseClasses... >;
+
+         // If ConcreteType is not compatible with BaseClass, or if
+         // Function does not accept BaseClass, try other BaseClasses.
+         template< typename Function, typename ...Functions >
+            static auto test( const void * )
+               -> decltype( Retry::template test< Function, Functions... >() );
+
+         // If BaseClass is a base of ConcreteType and Function can take it,
+         // then overload resolution chooses this.
+         // If not, then the sfinae rule makes this overload unavailable.
+         template< typename Function, typename ...Functions >
+            static auto test( std::true_type * )
+               -> decltype(
+                  (void) std::declval<Function>()
+                     ( (BaseClass*)nullptr ),
+                  applicable1< R, BaseClass, ConcreteType,
+                               Function, Functions... >{}
+               );
+
+         // If BaseClass is a base of ConcreteType and Function can take it,
+         // with a second argument for a continuation,
+         // then overload resolution chooses this.
+         // If not, then the sfinae rule makes this overload unavailable.
+         template< typename Function, typename ...Functions >
+            static auto test( std::true_type * )
+               -> decltype(
+                  (void) std::declval<Function>()
+                     ( (BaseClass*)nullptr,
+                       std::declval< Continuation<R> >() ),
+                  applicable2< R, BaseClass, ConcreteType,
+                               Function, Functions... >{}
+               );
+
+         static constexpr bool Compatible = CompatibleTrackKinds(
+            track_kind<BaseClass>(), track_kind<ConcreteType>() );
+         template< typename Function, typename ...Functions >
+            static auto test()
+               -> decltype(
+                  test< Function, Functions... >(
+                     (std::integral_constant<bool, Compatible>*)nullptr) );
+      };
+   };
+
+   // This specialization is the recursive case for non-const tracks.
+   template< typename R, typename ConcreteType,
+             typename Function, typename ...Functions >
+   struct Executor< R, ConcreteType, Function, Functions... >
+      : decltype(
+         Dispatcher::Switch< R, ConcreteType,
+            Track, AudioTrack, PlayableTrack,
+            WaveTrack, LabelTrack, TimeTrack,
+            NoteTrack >
+               ::template test<Function, Functions... >())
+   {};
+
+   // This specialization is the recursive case for const tracks.
+   template< typename R, typename ConcreteType,
+             typename Function, typename ...Functions >
+   struct Executor< R, const ConcreteType, Function, Functions... >
+      : decltype(
+         Dispatcher::Switch< R, ConcreteType,
+            const Track, const AudioTrack, const PlayableTrack,
+            const WaveTrack, const LabelTrack, const TimeTrack,
+            const NoteTrack >
+               ::template test<Function, Functions... >())
+   {};
+
+public:
+
+   // A variadic function taking any number of function objects, each taking
+   // a pointer to Track or a subclass, maybe const-qualified, and maybe a
+   // second argument which is a fall-through continuation.
+   // Each of the function objects (and supplied continuations) returns R.
+   // Call the first in the sequence that accepts the actual type of the track.
+   // If no function accepts the track, do nothing and return R{}
+   // if R is not void.
+   // If one of the functions invokes the call-through, then the next following
+   // applicable funtion is called.
+   template< typename R = void, typename ...Functions >
+   R TypeSwitch(const Functions &...functions)
+   {
+      using WaveExecutor =
+         Executor< R, WaveTrack,  Functions... >;
+      using NoteExecutor =
+         Executor< R, NoteTrack,  Functions... >;
+      using LabelExecutor =
+         Executor< R, LabelTrack, Functions... >;
+      using TimeExecutor =
+         Executor< R, TimeTrack,  Functions... >;
+      using DefaultExecutor =
+         Executor< R, Track >;
+      enum { All = sizeof...( functions ) };
+
+      static_assert(
+         (1u << All) - 1u ==
+            (WaveExecutor::SetUsed |
+             NoteExecutor::SetUsed |
+             LabelExecutor::SetUsed |
+             TimeExecutor::SetUsed),
+         "Uncallable case in Track::TypeSwitch"
+      );
+
+      switch (GetKind()) {
+         case TrackKind::Wave:
+            return WaveExecutor{} (this,  functions...);
+#if defined(USE_MIDI)
+         case TrackKind::Note:
+            return NoteExecutor{} (this,  functions...);
+#endif
+         case TrackKind::Label:
+            return LabelExecutor{}(this, functions...);
+         case TrackKind::Time:
+            return TimeExecutor{} (this,  functions...);
+         default:
+            return DefaultExecutor{} (this);
+      }
+   }
+
+   // This is the overload of TypeSwitch (see above) for const tracks, taking
+   // callable arguments that only accept arguments that are pointers to const
+   template< typename R = void, typename ...Functions >
+   R TypeSwitch(const Functions &...functions) const
+   {
+      using WaveExecutor =
+         Executor< R, const WaveTrack,  Functions... >;
+      using NoteExecutor =
+         Executor< R, const NoteTrack,  Functions... >;
+      using LabelExecutor =
+         Executor< R, const LabelTrack, Functions... >;
+      using TimeExecutor =
+         Executor< R, const TimeTrack,  Functions... >;
+      using DefaultExecutor =
+         Executor< R, const Track >;
+      enum { All = sizeof...( functions ) };
+
+      static_assert(
+         (1u << All) - 1u ==
+            (WaveExecutor::SetUsed |
+             NoteExecutor::SetUsed |
+             LabelExecutor::SetUsed |
+             TimeExecutor::SetUsed),
+         "Uncallable case in Track::TypeSwitch"
+      );
+
+      switch (GetKind()) {
+         case TrackKind::Wave:
+            return WaveExecutor{} (this,  functions...);
+#if defined(USE_MIDI)
+         case TrackKind::Note:
+            return NoteExecutor{} (this,  functions...);
+#endif
+         case TrackKind::Label:
+            return LabelExecutor{}(this, functions...);
+         case TrackKind::Time:
+            return TimeExecutor{} (this,  functions...);
+         default:
+            return DefaultExecutor{} (this);
+      }
+   }
+
    // XMLTagHandler callback methods -- NEW virtual for writing
    virtual void WriteXML(XMLWriter &xmlFile) const = 0;
 
@@ -793,6 +1056,26 @@ template <
    {
       return this->operator - (
          [=](const Track *pTrack){ return pExcluded == pTrack; } );
+   }
+
+   // See Track::TypeSwitch
+   template< typename ...Functions >
+   void Visit(const Functions &...functions)
+   {
+      for (auto track : *this)
+         track->TypeSwitch(functions...);
+   }
+
+   // See Track::TypeSwitch
+   // Visit until flag is false, or no more tracks
+   template< typename Flag, typename ...Functions >
+   void VisitWhile(Flag &flag, const Functions &...functions)
+   {
+      if ( flag ) for (auto track : *this) {
+         track->TypeSwitch(functions...);
+         if (!flag)
+            break;
+      }
    }
 };
 
