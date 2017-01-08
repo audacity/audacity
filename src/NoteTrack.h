@@ -50,7 +50,17 @@ class wxRect;
 class DirManager;
 class Alg_seq;   // from "allegro.h"
 
-class AUDACITY_DLL_API NoteTrack final : public Track {
+using NoteTrackBase =
+#ifdef EXPERIMENTAL_MIDI_OUT
+   PlayableTrack
+#else
+   AudioTrack
+#endif
+   ;
+
+class AUDACITY_DLL_API NoteTrack final
+   : public NoteTrackBase
+{
  public:
    friend class TrackArtist;
 

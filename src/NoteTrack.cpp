@@ -103,8 +103,8 @@ NoteTrack::Holder TrackFactory::NewNoteTrack()
    return std::make_unique<NoteTrack>(mDirManager);
 }
 
-NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager):
-Track(projDirManager)
+NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
+   : NoteTrackBase(projDirManager)
 {
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
