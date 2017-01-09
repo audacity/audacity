@@ -129,16 +129,11 @@ void Track::SetOwner
 int Track::GetMinimizedHeight() const
 {
    auto height = TrackInfo::MinimumTrackHeight();
-
-   if (GetLink()) {
-      auto halfHeight = height / 2;
-      if (GetLinked())
-         return halfHeight;
-      else
-         return height - halfHeight;
-   }
-
-   return height;
+   auto channels = TrackList::Channels(this);
+   auto nChannels = channels.size();
+   auto begin = channels.begin();
+   auto index = std::distance(begin, std::find(begin, channels.end(), this));
+   return (height * (index + 1) / nChannels) - (height * index / nChannels);
 }
 
 int Track::GetIndex() const
@@ -320,18 +315,19 @@ bool Track::IsSyncLockSelected() const
       return false;
 
    auto pList = mList.lock();
-   SyncLockedTracksIterator git(pList.get());
-   Track *t = git.StartWith(const_cast<Track*>(this));
+   if (!pList)
+      return false;
+   auto trackRange = TrackList::SyncLockGroup(this);
 
-   if (!t) {
+   if (trackRange.size() <= 1) {
       // Not in a sync-locked group.
-      return ((this->GetKind() == Track::Wave) || (this->GetKind() == Track::Label)) && GetSelected();
+      // Return true iff selected and of a sync-lockable type.
+      return (IsSyncLockableNonLabelTrack(this) ||
+              track_cast<const LabelTrack*>(this)) && GetSelected();
    }
 
-   for (; t; t = git.Next()) {
-      if (t->GetSelected())
-         return true;
-   }
+   // Return true iff any track in the group is selected.
+   return *(trackRange + &Track::IsSelected).begin();
 #endif
 
    return false;
@@ -1138,13 +1134,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
 /// For stereo track combined height of both channels.
 int TrackList::GetGroupHeight(const Track * t) const
 {
-   int height = t->GetHeight();
-
-   t = t->GetLink();
-   if (t) {
-      height += t->GetHeight();
-   }
-   return height;
+   return Channels(t).sum( &Track::GetHeight );
 }
 
 bool TrackList::CanMoveUp(Track * t) const
@@ -1268,13 +1258,7 @@ size_t TrackList::size() const
 
 TimeTrack *TrackList::GetTimeTrack()
 {
-   auto iter = std::find_if(begin(), end(),
-      [] ( Track *t ) { return t->GetKind() == Track::Time; }
-   );
-   if (iter == end())
-      return nullptr;
-   else
-      return static_cast<TimeTrack*>(*iter);
+   return *Any<TimeTrack>().begin();
 }
 
 const TimeTrack *TrackList::GetTimeTrack() const
@@ -1289,23 +1273,13 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
    int numRight = 0;
    //int numMono = 0;
    /* track iteration kit */
-   const Track *tr;
-   TrackListConstIterator iter;
 
-   for (tr = iter.First(this); tr != NULL; tr = iter.Next()) {
-
-      // Want only unmuted wave tracks.
-      auto wt = static_cast<const WaveTrack *>(tr);
-      if ((tr->GetKind() != Track::Wave) ||
-          wt->GetMute())
-         continue;
-
-      // do we only want selected ones?
-      if (selectionOnly && !(tr->GetSelected())) {
-         //want selected but this one is not
-         continue;
-      }
-
+   // Want only unmuted wave tracks.
+   for (auto tr :
+         Any< const WaveTrack >()
+            + (selectionOnly ? &Track::IsSelected : &Track::Any)
+            - &WaveTrack::GetMute
+   ) {
       // Found a left channel
       if (tr->GetChannel() == Track::LeftChannel) {
          numLeft++;
@@ -1318,7 +1292,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
 
       // Found a mono channel, but it may be panned
       else if (tr->GetChannel() == Track::MonoChannel) {
-         float pan = ((WaveTrack*)tr)->GetPan();
+         float pan = tr->GetPan();
 
          // Figure out what kind of channel it should be
          if (pan == -1.0) {   // panned hard left
@@ -1346,51 +1320,43 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
 }
 
 namespace {
-   template<typename Array>
-   Array GetWaveTracks(TrackListIterator p, const TrackListIterator end,
+   template<typename Array, typename TrackRange>
+   Array GetTypedTracks(const TrackRange &trackRange,
                        bool selectionOnly, bool includeMuted)
    {
-      Array waveTrackArray;
+      Array array;
 
-      for (; p != end; ++p) {
-         const auto &track = *p;
-         auto wt = static_cast<const WaveTrack *>(&*track);
-         if (track->GetKind() == Track::Wave &&
-            (includeMuted || !wt->GetMute()) &&
-            (track->GetSelected() || !selectionOnly)) {
-            waveTrackArray.push_back( Track::Pointer< WaveTrack >( track ) );
-         }
-      }
+      using Type = typename
+         std::remove_reference< decltype( *array[0] ) >::type;
+      auto subRange =
+         trackRange.template Filter<Type>();
+      if ( selectionOnly )
+         subRange = subRange + &Track::IsSelected;
+      if ( ! includeMuted )
+         subRange = subRange - &Type::GetMute;
+      std::transform(
+         subRange.begin(), subRange.end(), std::back_inserter( array ),
+         []( Type *t ){ return Track::Pointer<Type>( t ); }
+      );
 
-      return waveTrackArray;
+      return array;
    }
 }
 
 WaveTrackArray TrackList::GetWaveTrackArray(bool selectionOnly, bool includeMuted)
 {
-   return GetWaveTracks<WaveTrackArray>(begin(), end(), selectionOnly, includeMuted);
+   return GetTypedTracks<WaveTrackArray>(Any(), selectionOnly, includeMuted);
 }
 
 WaveTrackConstArray TrackList::GetWaveTrackConstArray(bool selectionOnly, bool includeMuted) const
 {
-   auto list = const_cast<TrackList*>(this);
-   return GetWaveTracks<WaveTrackConstArray>(
-      list->begin(), list->end(), selectionOnly, includeMuted);
+   return GetTypedTracks<WaveTrackConstArray>(Any(), selectionOnly, includeMuted);
 }
 
 #if defined(USE_MIDI)
 NoteTrackConstArray TrackList::GetNoteTrackConstArray(bool selectionOnly) const
 {
-   NoteTrackConstArray noteTrackArray;
-
-   for(const auto &track : *this) {
-      if (track->GetKind() == Track::Note &&
-         (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.push_back( Track::Pointer<const NoteTrack>(track) );
-      }
-   }
-
-   return noteTrackArray;
+   return GetTypedTracks<NoteTrackConstArray>(Any(), selectionOnly, true);
 }
 #endif
 
@@ -1408,12 +1374,11 @@ int TrackList::GetHeight() const
 
 namespace {
    // Abstract the common pattern of the following three member functions
-   double doubleMin(double a, double b) { return std::min(a, b); }
-   double doubleMax(double a, double b) { return std::max(a, b); }
    inline double Accumulate
       (const TrackList &list,
        double (Track::*memfn)() const,
-       double (*combine)(double, double))
+       double ident,
+       const double &(*combine)(const double&, const double&))
    {
       // Default the answer to zero for empty list
       if (list.empty()) {
@@ -1421,28 +1386,23 @@ namespace {
       }
 
       // Otherwise accumulate minimum or maximum of track values
-      auto iter = list.begin();
-      double acc = (**iter++.*memfn)();
-      return std::accumulate(iter, list.end(), acc,
-         [=](double acc, const Track *pTrack) {
-            return combine(acc, (*pTrack.*memfn)());
-      });
+      return list.Any().accumulate(ident, combine, memfn);
    }
 }
 
 double TrackList::GetMinOffset() const
 {
-   return Accumulate(*this, &Track::GetOffset, doubleMin);
+   return Accumulate(*this, &Track::GetOffset, DBL_MAX, std::min);
 }
 
 double TrackList::GetStartTime() const
 {
-   return Accumulate(*this, &Track::GetStartTime, doubleMin);
+   return Accumulate(*this, &Track::GetStartTime, DBL_MAX, std::min);
 }
 
 double TrackList::GetEndTime() const
 {
-   return Accumulate(*this, &Track::GetEndTime, doubleMax);
+   return Accumulate(*this, &Track::GetEndTime, -DBL_MAX, std::max);
 }
 
 std::shared_ptr<Track>
