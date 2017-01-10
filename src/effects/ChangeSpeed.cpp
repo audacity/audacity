@@ -299,7 +299,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(4, wxCENTER);
       {
          FloatingPointValidator<double> vldMultiplier(3, &mMultiplier, NUM_VAL_THREE_TRAILING_ZEROES);
-         vldMultiplier.SetRange(MIN_Percentage / 100.0, MAX_Percentage / 100.0);
+         vldMultiplier.SetRange(MIN_Percentage / 100.0, ((MAX_Percentage / 100.0) + 1));
          mpTextCtrl_Multiplier =
             S.Id(ID_Multiplier).AddTextBox(_("Speed Multiplier:"), wxT(""), 12);
          mpTextCtrl_Multiplier->SetValidator(vldMultiplier);
@@ -652,6 +652,8 @@ void EffectChangeSpeed::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(evt))
       return;
 
    mToLength = mpToLengthCtrl->GetValue();
+   // Division by (double) 0.0 is not an error and we want to show "infinite" in
+   // text controls, so take care that we handle infinite values when they occur.
    m_PercentChange = ((mFromLength * 100.0) / mToLength) - 100.0;
    UpdateUI();
 
@@ -698,8 +700,11 @@ void EffectChangeSpeed::Update_Slider_PercentChange()
       // Un-warp values above zero to actually go up to kSliderMax.
       unwarped = pow(m_PercentChange, (1.0 / kSliderWarp));
 
-   // Add 0.5 to unwarped so trunc -> round.
-   mpSlider_PercentChange->SetValue((int)(unwarped + 0.5));
+   // Caution: m_PercentChange could be infinite.
+   int unwarpedi = (int)(unwarped + 0.5);
+   unwarpedi = std::min<int>(std::max<int>(unwarpedi, (int)kSliderMax), (int)MAX_Percentage);
+
+   mpSlider_PercentChange->SetValue(unwarpedi);
 }
 
 void EffectChangeSpeed::Update_Vinyl()
@@ -707,7 +712,9 @@ void EffectChangeSpeed::Update_Vinyl()
 {
    // Match Vinyl rpm when within 0.01% of a standard ratio.
    // Ratios calculated as: ((toRPM / fromRPM) - 1) * 100 * 100
-   int ratio = wxRound(m_PercentChange * 100);
+
+   // Caution: m_PercentChange could be infinite
+   int ratio = (int)((m_PercentChange * 100) + 0.5);
 
    switch (ratio)
    {
