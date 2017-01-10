@@ -479,8 +479,13 @@ protected:
    virtual void OnMergeStereo(wxCommandEvent &event);
 
    // Find track info by coordinate
-   virtual Track *FindTrack(int mouseX, int mouseY, bool label, bool link,
-                     wxRect * trackRect = NULL);
+   enum class CellType { Label, Track, VRuler };
+   struct FoundCell {
+      Track *pTrack;
+      CellType type;
+      wxRect rect;
+   };
+   virtual FoundCell FindCell(int mouseX, int mouseY);
 
    virtual wxRect FindTrackRect(Track * target, bool label);
 
