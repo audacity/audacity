@@ -4232,23 +4232,35 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
    bool initiallyEmpty = mTracks->empty();
    double newRate = 0;
    wxString trackNameBase = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast('.');
-   bool isLinked = false;
    int i = -1;
-   for (auto &uNewTrack : newTracks) {
-      ++i;
 
+   // Must add all tracks first (before using Track::IsLeader)
+   for (auto &uNewTrack : newTracks) {
       auto newTrack = mTracks->Add(std::move(uNewTrack));
       results.push_back(Track::Pointer(newTrack));
+   }
+   newTracks.clear();
+      
+   // Now name them
+
+   // Add numbers to track names only if there is more than one (mono or stereo)
+   // track (not necessarily, more than one channel)
+   const bool useSuffix =
+      make_iterator_range( results.begin() + 1, results.end() )
+         .any_of( []( decltype(*results.begin()) &pTrack )
+            { return pTrack->IsLeader(); } );
+
+   for (const auto &newTrack : results) {
+      if ( newTrack->IsLeader() )
+         // Count groups only
+         ++i;
+
       newTrack->SetSelected(true);
-      //we need to check link status based on the first channel only.
-      if(0==i)
-         isLinked = newTrack->GetLinked();
-      if (numTracks > 2 || (numTracks > 1 && !isLinked) ) {
+
+      if ( useSuffix )
          newTrack->SetName(trackNameBase + wxString::Format(wxT(" %d" ), i + 1));
-      }
-      else {
+      else
          newTrack->SetName(trackNameBase);
-      }
 
       newTrack->TypeSwitch( [&](WaveTrack *wt) {
          if (newRate == 0)
@@ -4298,8 +4310,6 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
    // Moved this call to higher levels to prevent flicker redrawing everything on each file.
    //   HandleResize();
-
-   newTracks.clear();
 
    return results;
 }
