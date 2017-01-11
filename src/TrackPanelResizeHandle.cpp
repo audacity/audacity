@@ -26,6 +26,8 @@ Paul Licameli split from TrackPanel.cpp
 
 HitTestPreview TrackPanelResizeHandle::HitPreview(bool bLinked)
 {
+   // TODO: more-than-two-channels-message
+
    static wxCursor resizeCursor{ wxCURSOR_SIZENS };
 
    /// When in the resize area we can adjust size or relative size.
@@ -59,40 +61,34 @@ UIHandle::Result TrackPanelResizeHandle::Click
 }
 
 TrackPanelResizeHandle::TrackPanelResizeHandle
-( const std::shared_ptr<Track> &track, int y, const AudacityProject *pProject )
+( const std::shared_ptr<Track> &track, int y )
    : mpTrack{ track }
    , mMouseClickY( y )
 {
-   auto tracks = pProject->GetTracks();
-   auto prev = * -- tracks->Find(track.get());
-   auto next = * ++ tracks->Find(track.get());
+   // TODO: more-than-two-channels
 
    //STM:  Determine whether we should rescale one or two tracks
-   if (prev && prev->GetLink() == track.get()) {
-      // mpTrack is the lower track
-      mInitialTrackHeight = track->GetHeight();
-      mInitialActualHeight = track->GetActualHeight();
-      mInitialMinimized = track->GetMinimized();
-      mInitialUpperTrackHeight = prev->GetHeight();
-      mInitialUpperActualHeight = prev->GetActualHeight();
-      mMode = IsResizingBelowLinkedTracks;
+   auto channels = TrackList::Channels(track.get());
+   auto last = *channels.rbegin();
+   mInitialTrackHeight = last->GetHeight();
+   mInitialActualHeight = last->GetActualHeight();
+   mInitialMinimized = last->GetMinimized();
+
+   if (channels.size() > 1) {
+      auto first = *channels.begin();
+
+      mInitialUpperTrackHeight = first->GetHeight();
+      mInitialUpperActualHeight = first->GetActualHeight();
+
+      if (track.get() == *channels.rbegin())
+         // capturedTrack is the lowest track
+         mMode = IsResizingBelowLinkedTracks;
+      else
+         // capturedTrack is not the lowest track
+         mMode = IsResizingBetweenLinkedTracks;
    }
-   else if (next && track->GetLink() == next) {
-      // mpTrack is the upper track
-      mInitialTrackHeight = next->GetHeight();
-      mInitialActualHeight = next->GetActualHeight();
-      mInitialMinimized = next->GetMinimized();
-      mInitialUpperTrackHeight = track->GetHeight();
-      mInitialUpperActualHeight = track->GetActualHeight();
-      mMode = IsResizingBetweenLinkedTracks;
-   }
-   else {
-      // DM: Save the initial mouse location and the initial height
-      mInitialTrackHeight = track->GetHeight();
-      mInitialActualHeight = track->GetActualHeight();
-      mInitialMinimized = track->GetMinimized();
+   else
       mMode = IsResizing;
-   }
 }
 
 UIHandle::Result TrackPanelResizeHandle::Drag
@@ -113,23 +109,24 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    // This used to be in HandleResizeClick(), but simply clicking
    // on a resize border would switch the minimized state.
    if (pTrack->GetMinimized()) {
-      Track *link = pTrack->GetLink();
+      auto channels = TrackList::Channels( pTrack.get() );
+      for (auto channel : channels) {
+         channel->SetHeight(channel->GetHeight());
+         channel->SetMinimized(false);
+      }
 
-      pTrack->SetHeight(pTrack->GetHeight());
-      pTrack->SetMinimized(false);
-
-      if (link) {
-         link->SetHeight(link->GetHeight());
-         link->SetMinimized(false);
+      if (channels.size() > 1) {
          // Initial values must be reset since they weren't based on the
          // minimized heights.
-         mInitialUpperTrackHeight = link->GetHeight();
-         mInitialTrackHeight = pTrack->GetHeight();
+         mInitialUpperTrackHeight = (*channels.begin())->GetHeight();
+         mInitialTrackHeight = (*channels.rbegin())->GetHeight();
       }
    }
 
    // Common pieces of code for MONO_WAVE_PAN and otherwise.
    auto doResizeBelow = [&] (Track *prev, bool WXUNUSED(vStereo)) {
+      // TODO: more-than-two-channels
+      
       double proportion = static_cast < double >(mInitialTrackHeight)
       / (mInitialTrackHeight + mInitialUpperTrackHeight);
 
@@ -150,6 +147,8 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    };
 
    auto doResizeBetween = [&] (Track *next, bool WXUNUSED(vStereo)) {
+      // TODO: more-than-two-channels
+
       int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
       int newTrackHeight = mInitialTrackHeight - delta;
 
