@@ -663,12 +663,36 @@ IMPLEMENT_WX_THEME_SUPPORT
 
 int main(int argc, char *argv[])
 {
-   if (getenv("DYLD_LIBRARY_PATH")) {
-      extern char **environ;
+   bool doCrash = false;
 
-      unsetenv("DYLD_LIBRARY_PATH");
+#ifdef FIX_BUG1567
+   doCrash = AudacityApp::IsSierraOrLater();
+#endif
+
+   bool doExec = !doCrash && getenv("DYLD_LIBRARY_PATH");
+   unsetenv("DYLD_LIBRARY_PATH");
+
+   extern char **environ;
+   
+#ifdef FIX_BUG1567
+   const char *var_name = "_NO_CRASH";
+   if ( doCrash && !( getenv( var_name ) ) ) {
+      setenv(var_name, "1", TRUE);
+      // Bizarre fix for Bug1567
+      // Crashing one Audacity and immediately starting another avoids intermittent
+      // failures to load libraries on Sierra
+      if ( fork() )
+         // The original process crashes at once
+         raise(SIGTERM);
+
+      // Child process can't proceed until doing this:
       execve(argv[0], argv, environ);
    }
+   else
+#else
+      if (doExec)
+         execve(argv[0], argv, environ);
+#endif
 
    wxDISABLE_DEBUG_SUPPORT();
 
@@ -1424,6 +1448,12 @@ bool AudacityApp::OnInit()
          wxSTAY_ON_TOP);
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
+
+#ifdef FIX_BUG1567
+      // Without this, splash screen may be hidden under other programs.
+      if (IsSierraOrLater())
+         MacActivateApp();
+#endif
 
       // ANSWER-ME: Why is YieldFor needed at all?
       //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
