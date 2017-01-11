@@ -2051,25 +2051,6 @@ void AudacityProject::FixScrollbars()
          GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
-std::shared_ptr<Track> AudacityProject::GetFirstVisible()
-{
-   std::shared_ptr<Track> pTrack;
-   if (GetTracks()) {
-      TrackListIterator iter(GetTracks());
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         int y = t->GetY();
-         int h = t->GetHeight();
-         if (y + h - 1 >= mViewInfo.vpos) {
-            // At least the bottom row of pixels is not scrolled away above
-            pTrack = Track::Pointer(t);
-            break;
-         }
-      }
-   }
-
-   return pTrack;
-}
-
 void AudacityProject::UpdateLayout()
 {
    if (!mTrackPanel)

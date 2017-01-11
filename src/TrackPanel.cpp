@@ -1156,8 +1156,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
 
    // The track artist actually draws the stuff inside each track
-   auto first = GetProject()->GetFirstVisible();
-   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
+   mTrackArtist->DrawTracks(context, GetTracks(),
                             region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
