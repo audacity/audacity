@@ -4912,9 +4912,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
             auto dest = ( wt->*action )( region.start, region.end );
             if( dest )
             {
-               dest->SetChannel( wt->GetChannel() );
-               dest->SetLinked( wt->GetLinked() );
-               dest->SetName( wt->GetName() );
+               FinishCopy( wt, dest.get() );
                if( !merged )
                   merged = std::move(dest);
                else
