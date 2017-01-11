@@ -1157,11 +1157,10 @@ bool TrackList::CanMoveDown(Track * t) const
    return GetNext(t, true) != NULL;
 }
 
-// This is used when you want to swap the track or pair of
-// tracks in s1 with the track or pair of tracks in s2.
+// This is used when you want to swap the channel group starting
+// at s1 with that starting at s2.
 // The complication is that the tracks are stored in a single
-// linked list, and pairs of tracks are marked only by a flag
-// in one of the tracks.
+// linked list.
 void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 {
    // if a null pointer is passed in, we want to know about it
@@ -1169,60 +1168,52 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    wxASSERT(!isNull(s2));
 
    // Deal with first track in each team
-   Track *link;
-   link = (*s1.first)->GetLink();
-   bool linked1 = link != nullptr;
-   if (linked1 && !(*s1.first)->GetLinked()) {
-      s1 = link->GetNode();
-   }
-
-   link = (*s2.first)->GetLink();
-   bool linked2 = link != nullptr;
-   if (linked2 && !(*s2.first)->GetLinked()) {
-      s2 = link->GetNode();
-   }
+   s1 = ( * FindLeader( s1.first->get() ) )->GetNode();
+   s2 = ( * FindLeader( s2.first->get() ) )->GetNode();
 
    // Safety check...
    if (s1 == s2)
       return;
 
    // Be sure s1 is the earlier iterator
-   if ((*s1.first)->GetIndex() >= (*s2.first)->GetIndex()) {
+   if ((*s1.first)->GetIndex() >= (*s2.first)->GetIndex())
       std::swap(s1, s2);
-      std::swap(linked1, linked2);
-   }
 
-   // Remove tracks
-   ListOfTracks::value_type save11 = std::move(*s1.first), save12{};
-   s1.first = erase(s1.first);
-   if (linked1) {
-      wxASSERT(s1 != s2);
-      save12 = std::move(*s1.first), s1.first = erase(s1.first);
-   }
+   // For saving the removed tracks
+   using Saved = std::vector< ListOfTracks::value_type >;
+   Saved saved1, saved2;
+
+   auto doSave = [&] ( Saved &saved, TrackNodePointer &s ) {
+      size_t nn = Channels( s.first->get() ).size();
+      saved.resize( nn );
+      // Save them in backwards order
+      while( nn-- )
+         saved[nn] = std::move( *s.first ), s.first = erase(s.first);
+   };
+
+   doSave( saved1, s1 );
+   // The two ranges are assumed to be disjoint but might abut
    const bool same = (s1 == s2);
-
-   ListOfTracks::value_type save21 = std::move(*s2.first), save22{};
-   s2.first = erase(s2.first);
-   if (linked2)
-      save22 = std::move(*s2.first), s2.first = erase(s2.first);
-
+   doSave( saved2, s2 );
    if (same)
-      // We invalidated s1!
+      // Careful, we invalidated s1 in the second doSave!
       s1 = s2;
 
    // Reinsert them
-   Track *pTrack;
-   if (save22)
-      pTrack = save22.get(),
-      pTrack->SetOwner(mSelf, s1 = { insert(s1.first, std::move(save22)), this });
-   pTrack = save21.get(),
-   pTrack->SetOwner(mSelf, s1 = { insert(s1.first, std::move(save21)), this });
-
-   if (save12)
-      pTrack = save12.get(),
-      pTrack->SetOwner(mSelf, s2 = { insert(s2.first, std::move(save12)), this });
-   pTrack = save11.get(),
-   pTrack->SetOwner(mSelf, s2 = { insert(s2.first, std::move(save11)), this });
+   auto doInsert = [&] ( Saved &saved, TrackNodePointer &s ) {
+      Track *pTrack;
+      for (auto & pointer : saved)
+         pTrack = pointer.get(),
+         // Insert before s, and reassign s to point at the new node before
+         // old s; which is why we saved pointers in backwards order
+         pTrack->SetOwner(mSelf,
+                          s = { insert(s.first, std::move(pointer)), this } );
+   };
+   // This does not invalidate s2 even when it equals s1:
+   doInsert( saved2, s1 );
+   // Even if s2 was same as s1, this correctly inserts the saved1 range
+   // after the saved2 range, when done after:
+   doInsert( saved1, s2 );
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
