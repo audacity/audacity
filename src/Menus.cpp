@@ -5710,6 +5710,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
    bool bPastedSomething = false;
 
    auto pC = clipTrackRange.begin();
+   size_t nnChannels, ncChannels;
    while (*pN && *pC) {
       auto n = *pN;
       auto c = *pC;
@@ -5764,15 +5765,34 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
                _("Pasting one type of track into another is not allowed.")
             };
 
-         // When trying to copy from stereo to mono track, show error and exit
-         // TODO: Automatically offer user to mix down to mono (unfortunately
-         //       this is not easy to implement
-         if (c->GetLinked() && !n->GetLinked())
-            // Throw, so that any previous changes to the project in this loop
-            // are discarded.
-            throw SimpleMessageBoxException{
-               _("Copying stereo audio into a mono track is not allowed.")
-            };
+         // We should need this check only each time we visit the leading
+         // channel
+         if ( n->IsLeader() ) {
+            wxASSERT( c->IsLeader() ); // the iteration logic should ensure this
+
+            auto cChannels = TrackList::Channels(c);
+            ncChannels = cChannels.size();
+            auto nChannels = TrackList::Channels(n);
+            nnChannels = nChannels.size();
+
+            // When trying to copy from stereo to mono track, show error and exit
+            // TODO: Automatically offer user to mix down to mono (unfortunately
+            //       this is not easy to implement
+            if (ncChannels > nnChannels)
+            {
+               if (ncChannels > 2) {
+                  // TODO: more-than-two-channels-message
+                  // Re-word the error message
+               }
+               // else
+
+               // Throw, so that any previous changes to the project in this loop
+               // are discarded.
+               throw SimpleMessageBoxException{
+                  _("Copying stereo audio into a mono track is not allowed.")
+               };
+            }
+         }
 
          if (!ff)
             ff = n;
@@ -5807,11 +5827,17 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             }
          );
 
+         --nnChannels;
+         --ncChannels;
+
          // When copying from mono to stereo track, paste the wave form
          // to both channels
-         if (n->GetLinked() && !c->GetLinked())
+         // TODO: more-than-two-channels
+         // This will replicate the last pasted channel as many times as needed
+         while (nnChannels > 0 && ncChannels == 0)
          {
             n = * ++ pN;
+            --nnChannels;
 
             n->TypeSwitch(
                [&](WaveTrack *wn){
@@ -5827,7 +5853,7 @@ void MenuCommandHandler::OnPaste(const CommandContext &context)
             );
          }
 
-         if (bAdvanceClipboard){
+         if (bAdvanceClipboard) {
             prevClip = c;
             c = * ++ pC;
          }
