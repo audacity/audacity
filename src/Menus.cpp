@@ -1702,6 +1702,8 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
    // and returns them in a bitfield.  Note that if none of the flags
    // have changed, it's not necessary to even check for updates.
    auto flags = AlwaysEnabledFlag;
+   // static variable, used to remember flags for next time.
+   static auto lastFlags = flags;
 
    if (auto focus = wxWindow::FindFocus()) {
       while (focus && focus->GetParent())
@@ -1710,8 +1712,13 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
          flags |= NotMinimizedFlag;
    }
 
-   if ( checkActive && !IsActive() )
+   // quick 'short-circuit' return.
+   if ( checkActive && !IsActive() ){
+      // short cirucit return should preserve flags that have not been calculated.
+      flags = (lastFlags & ~NotMinimizedFlag) | flags;
+      lastFlags = flags;
       return flags;
+   }
 
    if (!gAudioIO->IsAudioTokenActive(GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
@@ -1842,6 +1849,7 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
 
+   lastFlags = flags;
    return flags;
 }
 
@@ -1976,6 +1984,7 @@ void AudacityProject::UpdateMenus(bool checkActive)
    if (flags == mLastFlags)
       return;
    mLastFlags = flags;
+   wxLogDebug("Flags %016lX", (unsigned long) flags );
 
    mCommandManager.EnableUsingFlags(flags2 , NoFlagsSpecifed);
 
