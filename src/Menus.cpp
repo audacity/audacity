@@ -1695,13 +1695,23 @@ CommandFlag AudacityProject::GetFocusedFrame()
    return AlwaysEnabledFlag;
 }
 
-CommandFlag AudacityProject::GetUpdateFlags()
+CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
 {
    // This method determines all of the flags that determine whether
    // certain menu items and commands should be enabled or disabled,
    // and returns them in a bitfield.  Note that if none of the flags
    // have changed, it's not necessary to even check for updates.
    auto flags = AlwaysEnabledFlag;
+
+   if (auto focus = wxWindow::FindFocus()) {
+      while (focus && focus->GetParent())
+         focus = focus->GetParent();
+      if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
+         flags |= NotMinimizedFlag;
+   }
+
+   if ( checkActive && !IsActive() )
+      return flags;
 
    if (!gAudioIO->IsAudioTokenActive(GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
@@ -1791,8 +1801,11 @@ CommandFlag AudacityProject::GetUpdateFlags()
    if (ZoomOutAvailable() && (flags & TracksExistFlag))
       flags |= ZoomOutAvailableFlag;
 
-   if ((flags & LabelTracksExistFlag) && LabelTrack::IsTextClipSupported())
-      flags |= TextClipFlag;
+   // TextClipFlag is currently unused (Jan 2017, 2.1.3 alpha)
+   // and LabelTrack::IsTextClipSupported() is quite slow on Linux,
+   // so disable for now (See bug 1575).
+   // if ((flags & LabelTracksExistFlag) && LabelTrack::IsTextClipSupported())
+   //    flags |= TextClipFlag;
 
    flags |= GetFocusedFrame();
 
@@ -1828,13 +1841,6 @@ CommandFlag AudacityProject::GetUpdateFlags()
    ControlToolBar *bar = GetControlToolBar();
    if (bar->ControlToolBar::CanStopAudioStream())
       flags |= CanStopAudioStreamFlag;
-
-   if (auto focus = wxWindow::FindFocus()) {
-      while (focus && focus->GetParent())
-         focus = focus->GetParent();
-      if (focus && !static_cast<wxTopLevelWindow*>(focus)->IsIconized())
-         flags |= NotMinimizedFlag;
-   }
 
    return flags;
 }
@@ -1928,7 +1934,7 @@ void AudacityProject::ModifyToolbarMenus()
 
 // checkActive is a temporary hack that should be removed as soon as we
 // get multiple effect preview working
-void AudacityProject::UpdateMenus(bool /*checkActive*/)
+void AudacityProject::UpdateMenus(bool checkActive)
 {
    //ANSWER-ME: Why UpdateMenus only does active project?
    //JKC: Is this test fixing a bug when multiple projects are open?
@@ -1936,10 +1942,7 @@ void AudacityProject::UpdateMenus(bool /*checkActive*/)
    if (this != GetActiveProject())
       return;
 
-   //if (checkActive && !IsActive())
-     // return;
-
-   auto flags = GetUpdateFlags();
+   auto flags = GetUpdateFlags(checkActive);
    auto flags2 = flags;
 
    // We can enable some extra items if we have select-all-on-none.

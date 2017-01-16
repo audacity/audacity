@@ -38,7 +38,10 @@ void ModifyToolbarMenus();
 void ModifyAllProjectToolbarMenus();
 
 CommandFlag GetFocusedFrame();
-CommandFlag GetUpdateFlags();
+
+// If checkActive, do not do complete flags testing on an
+// inactive project as it is needlessly expensive.
+CommandFlag GetUpdateFlags(bool checkActive = false);
 
 double NearestZeroCrossing(double t0);
 

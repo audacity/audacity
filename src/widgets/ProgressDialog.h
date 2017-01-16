@@ -90,6 +90,7 @@ protected:
 
    wxLongLong_t mStartTime;
    wxLongLong_t mLastUpdate;
+   wxLongLong_t mYieldTimer;
    int mLastValue; // gauge value, range = [0,1000]
 
    bool mCancel;
