@@ -798,7 +798,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
+      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
 #endif
       c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
@@ -2503,7 +2503,7 @@ void AudacityProject::OnToggleSWPlaythrough()
 }
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
+void AudacityProject::OnToggleAutomatedInputLevelAdjustment()
 {
    bool AVEnabled;
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
