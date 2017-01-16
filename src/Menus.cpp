@@ -1984,7 +1984,6 @@ void AudacityProject::UpdateMenus(bool checkActive)
    if (flags == mLastFlags)
       return;
    mLastFlags = flags;
-   wxLogDebug("Flags %016lX", (unsigned long) flags );
 
    mCommandManager.EnableUsingFlags(flags2 , NoFlagsSpecifed);
 
