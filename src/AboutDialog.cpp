@@ -52,7 +52,6 @@ void AboutDialog::CreateCreditsList()
 {
    // The Audacity Team: developers and support
    AddCredit(wxString(wxT("Gale Andrews, ")) + _("quality assurance"), roleTeamMember);
-   AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
@@ -67,6 +66,7 @@ void AboutDialog::CreateCreditsList()
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
+   AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleEmeritusTeam); 
    AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Matt Brubeck, ")) + _("developer"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Michael Chinen, ")) + _("developer"), roleEmeritusTeam);
@@ -335,7 +335,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       GetCreditsByRole(roleThanks) +
 
       wxT("<p><br>") + _("<b>Audacity<sup>&reg;</sup></b> software is copyright")+
-      wxT("&copy; 1999-2016 Audacity Team.<br>") +
+      wxT("&copy; 1999-2017 Audacity Team.<br>") +
       _("The name <b>Audacity<sup>&reg;</sup></b> is a registered trademark of Dominic Mazzoni.") +
       wxT("<p><br>")+_("Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
       wxT("</center>"));
