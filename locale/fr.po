@@ -72,24 +72,24 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:746
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Annuler\tCtrl+Z"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:747
 msgid "&Redo\tCtrl+Y"
-msgstr ""
+msgstr "&Refaire\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:749
-msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgid "&Cut\tCtrl+X"
+msgstr "&Couper\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:750
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Copier\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:751
 #, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "Co&ller"
+msgstr "&Coller"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "Cle&ar\tCtrl+L"
