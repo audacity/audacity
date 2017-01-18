@@ -1566,7 +1566,7 @@ bool Effect::ProcessTrack(int count,
          genDur = mDuration;
       }
 
-      genLength = sampleCount( left->GetRate() * genDur );
+      genLength = sampleCount((left->GetRate() * genDur) + 0.5);  // round to nearest sample
       delayRemaining = genLength;
       cleared = true;
 
