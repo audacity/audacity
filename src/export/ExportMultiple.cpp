@@ -237,6 +237,17 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       }
    }
 
+
+   // Bug 1304: Set the default file path.  It's used if none stored in config.
+   wxFileName filename("foo");
+   filename.AssignHomeDir();
+#ifdef __WIN32__
+   filename.SetPath(filename.GetPath() + "\\Documents");
+#else
+   filename.SetPath(filename.GetPath() + "/Documents");
+#endif
+   wxString DefaultPath = filename.GetPath();
+
    if (mPluginIndex == -1)
    {
       mPluginIndex = 0;
@@ -255,7 +266,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             mDir = S.Id(DirID)
                .TieTextBox(_("Folder:"),
                            wxT("/Export/MultiplePath"),
-                           gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()),
+                           gPrefs->Read(wxT("/Export/Path"), DefaultPath ),
                            64);
             S.Id(ChooseID).AddButton(_("Choose..."));
             S.Id(CreateID).AddButton(_("Create"));
