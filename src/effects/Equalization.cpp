@@ -3185,6 +3185,7 @@ wxDialogWrapper(parent, wxID_ANY, _("Manage Curves List"),
    }
 
    Populate();
+   SetMinSize(GetSize());
 }
 
 EditCurvesDialog::~EditCurvesDialog()
