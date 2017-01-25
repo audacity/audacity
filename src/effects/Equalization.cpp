@@ -1466,9 +1466,8 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    EQCurveArray userCurves = mCurves;
    mCurves.Clear();
    // We only wamt to look for the shipped EQDefaultCurves.xml
-   wxFileName fn = wxFileName(wxStandardPaths::Get().GetResourcesDir(),
-                              wxT("EQDefaultCurves.xml"));
-   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),wxStandardPaths::Get().GetResourcesDir().c_str());
+   wxFileName fn = wxFileName(FileNames::ResourcesDir(), wxT("EQDefaultCurves.xml"));
+   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),fn.GetFullPath().c_str());
    XMLFileReader reader;
 
    if(!reader.Parse(this, fn.GetFullPath())) {
@@ -1577,9 +1576,7 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
    if( !fileName.FileExists() )
    {  // Default file not found in the data dir.  Fall back to Resources dir.
       // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
-      static wxString resourcesDir;
-      resourcesDir = wxStandardPaths::Get().GetResourcesDir();
-      fileName = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
+      fileName = wxFileName( FileNames::ResourcesDir(), wxT("EQDefaultCurves.xml") );
    }
    if( !fileName.FileExists() )
    {
