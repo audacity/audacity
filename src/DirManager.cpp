@@ -163,7 +163,7 @@ static int RecursivelyEnumerate(wxString dirPath,
       wxString name;
 
       if (bFiles){
-         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES);
+         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES | wxDIR_HIDDEN);
          while ( cont ){
             wxString filepath = dirPath + wxFILE_SEP_PATH + name;
 
