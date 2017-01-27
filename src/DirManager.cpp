@@ -303,7 +303,21 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
          if (!bFiles)
             ::wxRemoveFile(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
 #endif
-         ::wxRmdir(file);
+
+         if (! ::wxRmdir(file) ) {
+            wxDir dir(file);
+            if(dir.IsOpened()) {
+               wxLogMessage(file + wxString(" still contains:"));
+               wxString name;
+               auto cont = dir.GetFirst(&name);
+               while ( cont ) {
+                  wxLogMessage(file + wxString(wxFILE_SEP_PATH) + name );
+                  cont = dir.GetNext(&name);
+               }
+            }
+            else
+               wxLogMessage(wxString("Can't enumerate directory ") + file);
+         }
       }
       if (progress)
          progress->Update(i + bias, count);
