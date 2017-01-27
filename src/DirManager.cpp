@@ -284,7 +284,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
    return nCount;
 }
 
-static void RecursivelyRemove(wxArrayString& filePathArray, int count,
+static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
                               bool bFiles, bool bDirs,
                               const wxChar* message = NULL)
 {
@@ -293,14 +293,20 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count,
    if (message)
       progress.create( _("Progress"), message );
 
-   for (int i = 0; i < count; i++) {
+   auto nn = filePathArray.size();
+   for (int i = 0; i < nn; i++) {
       const wxChar *file = filePathArray[i].c_str();
       if (bFiles)
          ::wxRemoveFile(file);
-      if (bDirs)
-         ::wxRmdir(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
+      if (bDirs) {
+#ifdef __WXMSW__
+         if (!bFiles)
+            ::wxRemoveFile(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
+#endif
+         ::wxRmdir(file);
+      }
       if (progress)
-         progress->Update(i, count);
+         progress->Update(i + bias, count);
    }
 }
 
@@ -382,16 +388,24 @@ void DirManager::CleanTempDir()
    if (dontDeleteTempFiles)
       return; // do nothing
 
-   wxArrayString filePathArray;
+   wxArrayString filePathArray, dirPathArray;
 
    // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
-   int count =
-      RecursivelyEnumerate(globaltemp, filePathArray, wxT("project*"), true, true) - 1;
+   int countFiles =
+      RecursivelyEnumerate(globaltemp, filePathArray, wxT("project*"), true, false);
+   int countDirs =
+      RecursivelyEnumerate(globaltemp, dirPathArray, wxT("project*"), false, true) - 1;
+   // Remove the globaltemp itself from the array
+   dirPathArray.resize(countDirs);
+
+   auto count = countFiles + countDirs;
    if (count == 0)
       return;
 
-   RecursivelyRemove(filePathArray, count, true, true, _("Cleaning up temporary files"));
+   auto msg = _("Cleaning up temporary files");
+   RecursivelyRemove(filePathArray, count, 0, true, false, msg);
+   RecursivelyRemove(dirPathArray, count, countFiles, false, true, msg);
 }
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
@@ -521,7 +535,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
 
       if (count > 0)
-         RecursivelyRemove(dirlist, count, false, true, _("Cleaning up cache directories"));
+         RecursivelyRemove(dirlist, count, 0, false, true, _("Cleaning up cache directories"));
    }
    return true;
 }
