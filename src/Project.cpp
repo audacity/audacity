@@ -2626,15 +2626,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //     have been deleted before this.
    mDirManager.reset();
 
-#ifdef FIX_BUG1567
-   // PRL: part of Bug1567:
-   // This sleep after destroying the block files may avoid problems on macOS
-   // Sierra and later, when quitting a project (but not the program) without
-   // saving the file.
-   if (AudacityApp::IsSierraOrLater())
-      ::wxMilliSleep(1000);
-#endif
-
    AProjectHolder pSelf;
    {
       ODLocker locker{ &AudacityProject::AllProjectDeleteMutex() };
