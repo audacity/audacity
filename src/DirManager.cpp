@@ -399,6 +399,13 @@ DirManager::~DirManager()
 // static
 void DirManager::CleanTempDir()
 {
+   CleanDir(globaltemp, wxT("project*"), _("Cleaning up temporary files"));
+}
+
+// static
+void DirManager::CleanDir(
+   const wxString &path, const wxString &dirSpec, const wxString &msg)
+{
    if (dontDeleteTempFiles)
       return; // do nothing
 
@@ -407,9 +414,9 @@ void DirManager::CleanTempDir()
    // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
    int countFiles =
-      RecursivelyEnumerate(globaltemp, filePathArray, wxT("project*"), true, false);
+      RecursivelyEnumerate(path, filePathArray, dirSpec, true, false);
    int countDirs =
-      RecursivelyEnumerate(globaltemp, dirPathArray, wxT("project*"), false, true) - 1;
+      RecursivelyEnumerate(path, dirPathArray, dirSpec, false, true) - 1;
    // Remove the globaltemp itself from the array
    dirPathArray.resize(countDirs);
 
@@ -417,7 +424,6 @@ void DirManager::CleanTempDir()
    if (count == 0)
       return;
 
-   auto msg = _("Cleaning up temporary files");
    RecursivelyRemove(filePathArray, count, 0, true, false, msg);
    RecursivelyRemove(dirPathArray, count, countFiles, false, true, msg);
 }
@@ -541,15 +547,11 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // recurse depth-first and rmdir every directory seen in old and
       // NEW; rmdir will fail on non-empty dirs.
 
-      wxArrayString dirlist;
-      const int count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
+      CleanDir(cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"));
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
-
-      if (count > 0)
-         RecursivelyRemove(dirlist, count, 0, false, true, _("Cleaning up cache directories"));
    }
    return true;
 }
