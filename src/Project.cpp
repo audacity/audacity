@@ -4180,15 +4180,16 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
 bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
    TitleRestorer Restorer(this); // RAII
-
+   bool bHasPath = true;
    wxFileName filename(mFileName);
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
    if( filename.GetFullPath().IsEmpty() ){
+      bHasPath = false;
       filename.AssignHomeDir();
 #ifdef __WIN32__
-      filename.SetPath(filename.GetPath() + "\\Documents");
+      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "\\Documents"));
 #else
-      filename.SetPath(filename.GetPath() + "/Documents");
+      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "/Documents"));
 #endif
    }
 
@@ -4260,6 +4261,11 @@ For an audio file that will open in other apps, use 'Export'.\n"),
 
    if (success) {
       wxGetApp().AddFileToHistory(mFileName);
+      if( !bHasPath )
+      {
+         gPrefs->Write( wxT("/SaveAs/Path"), filename.GetPath());
+         gPrefs->Flush();
+      }
    }
    if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project.
    {
