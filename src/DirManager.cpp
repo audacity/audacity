@@ -404,7 +404,8 @@ void DirManager::CleanTempDir()
 
 // static
 void DirManager::CleanDir(
-   const wxString &path, const wxString &dirSpec, const wxString &msg)
+   const wxString &path, const wxString &dirSpec, const wxString &msg,
+   bool removeTop)
 {
    if (dontDeleteTempFiles)
       return; // do nothing
@@ -416,9 +417,12 @@ void DirManager::CleanDir(
    int countFiles =
       RecursivelyEnumerate(path, filePathArray, dirSpec, true, false);
    int countDirs =
-      RecursivelyEnumerate(path, dirPathArray, dirSpec, false, true) - 1;
-   // Remove the globaltemp itself from the array
-   dirPathArray.resize(countDirs);
+      RecursivelyEnumerate(path, dirPathArray, dirSpec, false, true);
+   if (!removeTop) {
+      // Remove the globaltemp itself from the array
+      --countDirs;
+      dirPathArray.resize(countDirs);
+   }
 
    auto count = countFiles + countDirs;
    if (count == 0)
@@ -547,7 +551,8 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // recurse depth-first and rmdir every directory seen in old and
       // NEW; rmdir will fail on non-empty dirs.
 
-      CleanDir(cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"));
+      CleanDir(
+         cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"), true);
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
