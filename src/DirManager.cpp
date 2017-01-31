@@ -546,10 +546,16 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // nothing because SetProject is called before there are any
    // blockfiles.  Cleanup code trigger is the same
    if (trueTotal > 0) {
-      // Clean up after ourselves; look for empty directories in the old
-      // and NEW project directories.  The easiest way to do this is to
-      // recurse depth-first and rmdir every directory seen in old and
-      // NEW; rmdir will fail on non-empty dirs.
+      // Clean up after ourselves; boldly remove all files and directories
+      // in the tree.  (Unlike what the earlier version of this comment said.)
+      // Because this is a relocation of the project, not the case of closing
+      // a persistent project.
+
+      // You may think the loops above guarantee that all files we put in the
+      // folders have been moved away already, but:
+      // to fix bug1567 on Mac, we need to find the extraneous .DS_Store files
+      // that we didn't put there, but that Finder may insert into the folders,
+      // and mercilessly remove them too.
 
       CleanDir(
          cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"), true);
