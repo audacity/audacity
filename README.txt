@@ -76,11 +76,14 @@ Changes and Improvements:
      effects.
    * New Rhythm Track generator (replaces Click Track). 
    * New Generator for Sample Data Import.
+   * Nyquist effects now significantly faster.
    
  * Other Changes:   
    * Upgraded the PortAudio library to v19 rev r1966.  This gives Audacity 
      Windows 10 support.
-   
+   * (macOS) Audacity 2.1.3 provides partial support for Sierra. Details at 
+     http://wiki.audacityteam.org/wiki/Partial_Support_for_Mac_Sierra_in_2.1.3
+
 Bug fixes:
 
  Over 60 bugs fixed, including five longstanding bugs.
