@@ -601,13 +601,14 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
 }
 
 bool ModuleManager::IsPluginValid(const PluginID & providerID,
-                                  const wxString & path)
+                                  const wxString & path,
+                                  bool bFast)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
    {
       return false;
    }
 
-   return mDynModules[providerID]->IsPluginValid(path);
+   return mDynModules[providerID]->IsPluginValid(path, bFast);
 }
 

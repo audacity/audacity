@@ -226,7 +226,7 @@ public:
    wxArrayString FindPlugins(PluginManagerInterface & pm) override;
    bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path) override;
 
-   bool IsPluginValid(const wxString & path) override;
+   bool IsPluginValid(const wxString & path, bool bFast) override;
 
    IdentInterface *CreateInstance(const wxString & path) override;
    void DeleteInstance(IdentInterface *instance) override;

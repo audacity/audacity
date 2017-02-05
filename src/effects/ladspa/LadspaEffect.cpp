@@ -255,8 +255,10 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    return index > 0;
 }
 
-bool LadspaEffectsModule::IsPluginValid(const wxString & path)
+bool LadspaEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
+   if( bFast )
+      return true;
    wxString realPath = path.BeforeFirst(wxT(';'));
    return wxFileName::FileExists(realPath);
 }

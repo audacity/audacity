@@ -104,7 +104,7 @@ public:
    void DeleteInstance(const PluginID & provider, IdentInterface *instance);
 
    bool IsProviderValid(const PluginID & provider, const wxString & path);
-   bool IsPluginValid(const PluginID & provider, const wxString & path);
+   bool IsPluginValid(const PluginID & provider, const wxString & path, bool bFast);
 
 private:
    // I'm a singleton class

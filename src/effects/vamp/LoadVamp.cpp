@@ -216,10 +216,12 @@ bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStri
    return false;
 }
 
-bool VampEffectsModule::IsPluginValid(const wxString & path)
+bool VampEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
    int output;
    bool hasParameters;
+   if( bFast )
+      return true;
 
    auto vp = FindPlugin(path, output, hasParameters);
    return bool(vp);

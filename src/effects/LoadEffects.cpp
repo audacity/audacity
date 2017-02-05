@@ -321,8 +321,10 @@ bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxS
    return false;
 }
 
-bool BuiltinEffectsModule::IsPluginValid(const wxString & path)
+bool BuiltinEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
+   // bFast is unused as checking in the list is fast.
+   bFast;
    return mNames.Index(path) != wxNOT_FOUND;
 }
 
