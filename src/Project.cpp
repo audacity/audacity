@@ -4187,7 +4187,11 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
       bHasPath = false;
       filename.AssignHomeDir();
 #ifdef __WIN32__
-      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "\\Documents"));
+      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "\\Documents\\Audacity"));
+      // The path might not exist.
+      // There is no error if the path could not be created.  That's OK.
+      // The dialog that Audacity offers will allow the user to select a valid directory.
+      filename.Mkdir(0755, wxPATH_MKDIR_FULL);
 #else
       filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "/Documents"));
 #endif

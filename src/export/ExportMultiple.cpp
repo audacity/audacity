@@ -242,7 +242,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    wxFileName filename("foo");
    filename.AssignHomeDir();
 #ifdef __WIN32__
-   filename.SetPath(filename.GetPath() + "\\Documents");
+   filename.SetPath(filename.GetPath() + "\\Documents\\Audacity");
 #else
    filename.SetPath(filename.GetPath() + "/Documents");
 #endif
