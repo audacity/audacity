@@ -191,8 +191,10 @@ bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const w
 }
 
 bool AudioUnitEffectsModule::IsPluginValid(
-   const wxString & path, bool /* bFast */)
+   const wxString & path, bool bFast)
 {
+   if( bFast )
+      return true;
    wxString name;
    return FindAudioUnit(path, name) != NULL;
 }
