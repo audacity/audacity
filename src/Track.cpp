@@ -877,6 +877,7 @@ template Track *TrackList::Add<NoteTrack>(std::unique_ptr<NoteTrack> &&);
 #endif
 template Track *TrackList::Add<WaveTrack>(std::unique_ptr<WaveTrack> &&);
 template Track *TrackList::Add<LabelTrack>(std::unique_ptr<LabelTrack> &&);
+template Track *TrackList::Add<Track>(std::unique_ptr<Track> &&);
 
 template<typename TrackKind>
 Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
