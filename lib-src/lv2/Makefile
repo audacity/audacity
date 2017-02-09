@@ -1,17 +1,21 @@
-include srcdir.mk
+include config.mk
 
 all:
-	./build --srcdir=$(srcdir)
+	./build --srcdir=$(srcdir) --host=$(host)
 
 check:
 
 clean:
-	rm -rf include lv2/build serd/build sord/build sratom/build lilv/build suil/build
+	rm -rf config.mk include lv2/build serd/build sord/build sratom/build lilv/build suil/build
 	rm -f liblv2.a
 
 distclean: clean
 	rm -rf lv2/.waf-* serd/.waf-* sord/.waf-* sratom/.waf-* lilv/.waf-* suil/.waf-*
 	rm -rf lv2/.lock-* serd/.lock-* sord/.lock-* sratom/.lock-* lilv/.lock-* suil/.lock-*
+
+config.mk:
+	@echo "Run ./configure first"
+	@exit 1
 
 EXTRA_DIST = \
 	./Makefile \

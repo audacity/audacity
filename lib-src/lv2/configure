@@ -7,12 +7,10 @@ do
    if [[ "$1" =~ --srcdir=.* ]]
    then
       srcdir=${1#*=}
-      break
    fi
    if [[ "$1" =~ --host=.* ]]
    then
       host=${1#*=}
-      break
    fi
    shift
 done
@@ -43,6 +41,7 @@ function waf
       export CXX="$host-g++"
       export AR="$host-ar"
       export PKGCONFIG="$host-pkg-config"
+
 
       # cross pkg-config won't look at PKG_CONFIG_PATH, but rather
       # PKG_CONFIG_PATH_<host with underscores>
@@ -89,7 +88,8 @@ mkdir -p include
 
 [ ! -e Makefile ] && ln -s "${srcdir}/Makefile"
 [ ! -e build ] && ln -s "${srcdir}/build"
-echo >srcdir.mk "srcdir = ${srcdir}"
+echo >config.mk "srcdir = ${srcdir}"
+echo >>config.mk   "host = ${host}"
 
 waf lv2    --no-plugins
 waf serd   --static --no-shared --no-utils
