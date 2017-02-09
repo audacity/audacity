@@ -3,10 +3,13 @@ AC_INIT(vamp-plugin-sdk, 2.5, cannam@all-day-breakfast.com)
 
 AC_CONFIG_SRCDIR(vamp/vamp.h)
 AC_PROG_CXX
+AC_PROG_RANLIB
+AC_CHECK_TOOL([AR], [ar], [:])
+AC_CHECK_TOOL([PKG_CONFIG], [pkg-config], [:])
 AC_HEADER_STDC
 AC_C_BIGENDIAN
 
-if pkg-config --modversion vamp-sdk >/dev/null 2>&1; then
+if ${PKG_CONFIG} --modversion vamp-sdk >/dev/null 2>&1; then
   echo "WARNING: A version of the Vamp plugin SDK is already installed."
   echo "         Expect worries and sorrows if you install a new version"
   echo "         without removing the old one first.  (Continuing)"

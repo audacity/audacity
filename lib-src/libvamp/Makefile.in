@@ -47,8 +47,8 @@ CXXFLAGS	= -I. -I$(srcdir) @CXXFLAGS@ @SNDFILE_CFLAGS@
 
 # ar, ranlib
 #
-AR		= ar
-RANLIB		= ranlib
+AR		= @AR@ 
+RANLIB		= @RANLIB@ 
 
 # Libraries required for the plugins.
 #
