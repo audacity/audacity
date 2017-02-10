@@ -893,9 +893,9 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
             vruler->SetRange(maxFreq, minFreq);
             vruler->SetUnits(wxT(""));
             vruler->SetLog(true);
-            NumberScale scale
-               (wt->GetSpectrogramSettings().GetScale
-                  (minFreq, maxFreq, wt->GetRate(), false).Reversal());
+            NumberScale scale(
+               wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
+                  .Reversal() );
             vruler->SetNumberScale(&scale);
          }
          break;
@@ -2194,15 +2194,17 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    // the desired fft bin(s) for display on that row
    float *bins = (float*)alloca(sizeof(*bins)*(hiddenMid.height + 1));
    {
-      const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+      const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
 
       NumberScale::Iterator it = numberScale.begin(mid.height);
-      float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+      float nextBin = std::max( 0.0f, std::min( float(half - 1),
+         settings.findBin( *it, binUnit ) ) );
 
       int yy;
       for (yy = 0; yy < hiddenMid.height; ++yy) {
          bins[yy] = nextBin;
-         nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+         nextBin = std::max( 0.0f, std::min( float(half - 1),
+            settings.findBin( *++it, binUnit ) ) );
       }
       bins[yy] = nextBin;
    }
@@ -2407,10 +2409,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       } // each xx
    } // updating cache
 
-   float selBinLo = freqLo / binUnit;
-   float selBinHi = freqHi / binUnit;
-   float selBinCenter =
-      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi)) / binUnit;
+   float selBinLo = settings.findBin( freqLo, binUnit);
+   float selBinHi = settings.findBin( freqHi, binUnit);
+   float selBinCenter = (freqLo < 0 || freqHi < 0)
+      ? -1
+      : settings.findBin( sqrt(freqLo * freqHi), binUnit );
 
    const bool isSpectral = settings.SpectralSelectionEnabled();
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());

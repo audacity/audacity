@@ -1183,7 +1183,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
 
       NumberScale numberScale(mpNumberScale
          ? *mpNumberScale
-         : NumberScale(nstLogarithmic, mMin, mMax, 1.0f)
+         : NumberScale(nstLogarithmic, mMin, mMax)
       );
 
       mDigits=2; //TODO: implement dynamic digit computation

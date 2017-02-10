@@ -2988,7 +2988,7 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
    float minFreq, maxFreq;
    wt->GetSpectrumBounds(&minFreq, &maxFreq);
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
+   const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
    return numberScale.PositionToValue(1.0 - p);
 }
@@ -3004,7 +3004,7 @@ wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
    float minFreq, maxFreq;
    wt->GetSpectrumBounds(&minFreq, &maxFreq);
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
+   const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
    const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
@@ -4232,7 +4232,7 @@ void TrackPanel::HandleWaveTrackVZoom
 
    if (spectral) {
       track->GetSpectrumBounds(&min, &max);
-      scale = (settings.GetScale(min, max, rate, false));
+      scale = settings.GetScale( min, max );
       const auto fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
 
@@ -5865,7 +5865,7 @@ void TrackPanel::HandleWheelRotationInVRuler
             wt->GetSpectrumBounds(&bottom, &top);
             const double rate = wt->GetRate();
             const float bound = rate / 2;
-            const NumberScale numberScale(settings.GetScale(bottom, top, rate, false));
+            const NumberScale numberScale( settings.GetScale( bottom, top ) );
             float newTop =
                std::min(bound, numberScale.PositionToValue(1.0f + delta));
             const float newBottom =

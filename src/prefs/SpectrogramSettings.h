@@ -85,9 +85,12 @@ public:
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
 
+   // Need to be told what the bin unit is, as this structure does not know
+   // the rate
+   float findBin( float frequency, float binUnit ) const;
+
    // If "bins" is false, units are Hz
-   NumberScale GetScale
-      (float minFreq, float maxFreq, double rate, bool bins) const;
+   NumberScale GetScale( float minFreq, float maxFreq ) const;
 
    int minFreq;
    int maxFreq;

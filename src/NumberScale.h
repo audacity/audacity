@@ -32,54 +32,47 @@ class NumberScale
 {
 public:
    NumberScale()
-      : mType(nstLinear), mValue0(0), mValue1(1), mUnit(1)
+      : mType(nstLinear), mValue0(0), mValue1(1)
    {}
 
-   NumberScale(NumberScaleType type,
-      float value0, float value1, float unit)
+   NumberScale(NumberScaleType type, float value0, float value1)
       : mType(type)
    {
       switch (mType) {
       case nstLinear:
       {
-         mValue0 = value0 / unit;
-         mValue1 = value1 / unit;
-         mUnit = 1.0;
+         mValue0 = value0;
+         mValue1 = value1;
       }
       break;
       case nstLogarithmic:
       {
-         mValue0 = logf(value0 / unit);
-         mValue1 = logf(value1 / unit);
-         mUnit = 1.0;
+         mValue0 = logf(value0);
+         mValue1 = logf(value1);
       }
       break;
       case nstMel:
       {
          mValue0 = hzToMel(value0);
          mValue1 = hzToMel(value1);
-         mUnit = unit;
       }
       break;
       case nstBark:
       {
          mValue0 = hzToBark(value0);
          mValue1 = hzToBark(value1);
-         mUnit = unit;
       }
       break;
       case nstErb:
       {
          mValue0 = hzToErb(value0);
          mValue1 = hzToErb(value1);
-         mUnit = unit;
       }
       break;
       case nstPeriod:
       {
          mValue0 = hzToPeriod(value0);
          mValue1 = hzToPeriod(value1);
-         mUnit = unit;
       }
       break;
       default:
@@ -98,8 +91,7 @@ public:
    {
       return mType == other.mType
          && mValue0 == other.mValue0
-         && mValue1 == other.mValue1
-         && mUnit == other.mUnit;
+         && mValue1 == other.mValue1;
    }
 
    bool operator != (const NumberScale &other) const
@@ -169,13 +161,13 @@ public:
       case nstLogarithmic:
          return exp(mValue0 + pp * (mValue1 - mValue0));
       case nstMel:
-         return melToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
+         return melToHz(mValue0 + pp * (mValue1 - mValue0));
       case nstBark:
-         return barkToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
+         return barkToHz(mValue0 + pp * (mValue1 - mValue0));
       case nstErb:
-         return erbToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
+         return erbToHz(mValue0 + pp * (mValue1 - mValue0));
       case nstPeriod:
-         return periodToHz(mValue0 + pp * (mValue1 - mValue0)) / mUnit;
+         return periodToHz(mValue0 + pp * (mValue1 - mValue0));
       }
    }
 
@@ -184,8 +176,8 @@ public:
    class Iterator
    {
    public:
-      Iterator(NumberScaleType type, float step, float value, float unit)
-         : mType(type), mStep(step), mValue(value), mUnit(unit)
+      Iterator(NumberScaleType type, float step, float value)
+         : mType(type), mStep(step), mValue(value)
       {
       }
 
@@ -198,13 +190,13 @@ public:
          case nstLogarithmic:
             return mValue;
          case nstMel:
-            return melToHz(mValue) / mUnit;
+            return melToHz(mValue);
          case nstBark:
-            return barkToHz(mValue) / mUnit;
+            return barkToHz(mValue);
          case nstErb:
-            return erbToHz(mValue) / mUnit;
+            return erbToHz(mValue);
          case nstPeriod:
-            return periodToHz(mValue) / mUnit;
+            return periodToHz(mValue);
          }
       }
 
@@ -231,7 +223,6 @@ public:
       const NumberScaleType mType;
       const float mStep;
       float mValue;
-      float mUnit;
    };
 
    Iterator begin(float nPositions) const
@@ -247,12 +238,12 @@ public:
          return Iterator
             (mType,
              nPositions == 1 ? 0 : (mValue1 - mValue0) / (nPositions - 1),
-             mValue0, mUnit);
+             mValue0);
       case nstLogarithmic:
          return Iterator
             (mType,
              nPositions == 1 ? 1 : exp((mValue1 - mValue0) / (nPositions - 1)),
-             exp(mValue0), mUnit);
+             exp(mValue0));
       }
    }
 
@@ -267,13 +258,13 @@ public:
       case nstLogarithmic:
          return ((log(val) - mValue0) / (mValue1 - mValue0));
       case nstMel:
-         return ((hzToMel(val * mUnit) - mValue0) / (mValue1 - mValue0));
+         return ((hzToMel(val) - mValue0) / (mValue1 - mValue0));
       case nstBark:
-         return ((hzToBark(val * mUnit) - mValue0) / (mValue1 - mValue0));
+         return ((hzToBark(val) - mValue0) / (mValue1 - mValue0));
       case nstErb:
-         return ((hzToErb(val * mUnit) - mValue0) / (mValue1 - mValue0));
+         return ((hzToErb(val) - mValue0) / (mValue1 - mValue0));
       case nstPeriod:
-         return ((hzToPeriod(val * mUnit) - mValue0) / (mValue1 - mValue0));
+         return ((hzToPeriod(val) - mValue0) / (mValue1 - mValue0));
       }
    }
 
@@ -281,7 +272,6 @@ private:
    NumberScaleType mType;
    float mValue0;
    float mValue1;
-   float mUnit;
 };
 
 #endif

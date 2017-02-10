@@ -475,6 +475,15 @@ void SpectrogramSettings::ConvertToActualWindowSizes()
 #endif
 }
 
+float SpectrogramSettings::findBin( float frequency, float binUnit ) const
+{
+   float linearBin = frequency / binUnit;
+   if (linearBin < 0)
+      return -1;
+   else
+      return linearBin;
+}
+
 size_t SpectrogramSettings::GetFFTLength() const
 {
    return windowSize
@@ -484,11 +493,9 @@ size_t SpectrogramSettings::GetFFTLength() const
    ;
 }
 
-NumberScale SpectrogramSettings::GetScale
-(float minFreq, float maxFreq, double rate, bool bins) const
+NumberScale SpectrogramSettings::GetScale( float minFreq, float maxFreq ) const
 {
    NumberScaleType type = nstLinear;
-   const auto half = GetFFTLength() / 2;
 
    // Don't assume the correspondence of the enums will remain direct in the future.
    // Do this switch.
@@ -509,8 +516,7 @@ NumberScale SpectrogramSettings::GetScale
       type = nstPeriod; break;
    }
 
-   return NumberScale(type, minFreq, maxFreq,
-      bins ? rate / (2 * half) : 1.0f);
+   return NumberScale(type, minFreq, maxFreq);
 }
 
 bool SpectrogramSettings::SpectralSelectionEnabled() const
