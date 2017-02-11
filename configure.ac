@@ -236,6 +236,20 @@ dnl Solaris builds, by defining HAVE_ALLOCA_H
 AC_CHECK_HEADERS_ONCE(alloca.h)
 
 
+dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
+if test "${ax_cv_c_compiler_vendor}" = "gnu"; then
+
+    dnl GCC < 4.9 has known bugs (#1397) and can't be used
+    AX_GCC_VERSION_ATLEAST(4,9,0,[gcc_ok=yes], [gcc_ok=no])
+    if test x$gcc_ok = xno; then
+        AC_MSG_ERROR([Audacity requires at least GCC 4.9])
+    fi
+
+    CXXFLAGS="${CXXFLAGS} --std=gnu++11"
+else
+    CXXFLAGS="${CXXFLAGS} --std=c++11"
+fi
+
 dnl --------------------------------------------------------------------------
 dnl We would like warnings enabled on the builds, but different compilers need
 dnl different options for these. This bit tries to work out what flags we
