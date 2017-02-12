@@ -2155,8 +2155,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    const bool &fftFindNotes = settings.fftFindNotes;
-   const bool &findNotesMinA = settings.findNotesMinA;
-   const bool &numberOfMaxima = settings.numberOfMaxima;
+   const double &findNotesMinA = settings.findNotesMinA;
+   const int &numberOfMaxima = settings.numberOfMaxima;
    const bool &findNotesQuantize = settings.findNotesQuantize;
 #endif
 #ifdef EXPERIMENTAL_FFT_Y_GRID
@@ -2267,6 +2267,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #endif
 
 #ifdef EXPERIMENTAL_FIND_NOTES
+      float log2 = logf( 2.0f ),
+         lmin = logf( minFreq ), lmax = logf( maxFreq ), scale = lmax - lmin,
          lmins = lmin,
          lmaxs = lmax
          ;
@@ -2290,6 +2292,71 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #pragma omp parallel for
 #endif
       for (int xx = 0; xx < hiddenMid.width; ++xx) {
+#ifdef EXPERIMENTAL_FIND_NOTES
+         int maximas = 0;
+         const int x0 = half * xx;
+         if (fftFindNotes) {
+            for (int i = maxTableSize - 1; i >= 0; i--)
+               indexes[i] = -1;
+
+            // Build a table of (most) values, put the index in it.
+            for (int i = (int)(i0); i < (int)(i1); i++) {
+               float freqi = freq[x0 + (int)(i)];
+               int value = (int)((freqi + gain + range) / range*(maxTableSize - 1));
+               if (value < 0)
+                  value = 0;
+               if (value >= maxTableSize)
+                  value = maxTableSize - 1;
+               indexes[value] = i;
+            }
+            // Build from the indices an array of maxima.
+            for (int i = maxTableSize - 1; i >= 0; i--) {
+               int index = indexes[i];
+               if (index >= 0) {
+                  float freqi = freq[x0 + index];
+                  if (freqi < findNotesMinA)
+                     break;
+
+                  bool ok = true;
+                  for (int m = 0; m < maximas; m++) {
+                     // Avoid to store very close maxima.
+                     float maxm = maxima[m];
+                     if (maxm / index < minDistance && index / maxm < minDistance) {
+                        ok = false;
+                        break;
+                     }
+                  }
+                  if (ok) {
+                     maxima[maximas++] = index;
+                     if (maximas >= numberOfMaxima)
+                        break;
+                  }
+               }
+            }
+
+// The f2pix helper macro converts a frequency into a pixel coordinate.
+#define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*hiddenMid.height
+
+            // Possibly quantize the maxima frequencies and create the pixel block limits.
+            for (int i = 0; i < maximas; i++) {
+               int index = maxima[i];
+               float f = float(index)*bin2f;
+               if (findNotesQuantize)
+               {
+                  f = expf((int)(log(f / 440) / log2 * 12 - 0.5) / 12.0f*log2) * 440;
+                  maxima[i] = f*f2bin;
+               }
+               float f0 = expf((log(f / 440) / log2 * 24 - 1) / 24.0f*log2) * 440;
+               maxima0[i] = f2pix(f0);
+               float f1 = expf((log(f / 440) / log2 * 24 + 1) / 24.0f*log2) * 440;
+               maxima1[i] = f2pix(f1);
+            }
+         }
+
+         int it = 0;
+         bool inMaximum = false;
+#endif //EXPERIMENTAL_FIND_NOTES
+
          for (int yy = 0; yy < hiddenMid.height; ++yy) {
             const float bin     = bins[yy];
             const float nextBin = bins[yy+1];
@@ -2300,72 +2367,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
             }
             else {
-               // Do we need this legacy experiment still?
-#ifdef EXPERIMENTAL_FIND_NOTES
-               int maximas = 0;
-               const int x0 = half * x;
-               if (fftFindNotes) {
-                  for (int i = maxTableSize - 1; i >= 0; i--)
-                     indexes[i] = -1;
-
-                  // Build a table of (most) values, put the index in it.
-                  for (int i = (int)(i0); i < (int)(i1); i++) {
-                     float freqi = freq[x0 + (int)(i)];
-                     int value = (int)((freqi + gain + range) / range*(maxTableSize - 1));
-                     if (value < 0)
-                        value = 0;
-                     if (value >= maxTableSize)
-                        value = maxTableSize - 1;
-                     indexes[value] = i;
-                  }
-                  // Build from the indices an array of maxima.
-                  for (int i = maxTableSize - 1; i >= 0; i--) {
-                     int index = indexes[i];
-                     if (index >= 0) {
-                        float freqi = freq[x0 + index];
-                        if (freqi < findNotesMinA)
-                           break;
-
-                        bool ok = true;
-                        for (int m = 0; m < maximas; m++) {
-                           // Avoid to store very close maxima.
-                           float maxm = maxima[m];
-                           if (maxm / index < minDistance && index / maxm < minDistance) {
-                              ok = false;
-                              break;
-                           }
-                        }
-                        if (ok) {
-                           maxima[maximas++] = index;
-                           if (maximas >= numberOfMaxima)
-                              break;
-                        }
-                     }
-                  }
-
-// The f2pix helper macro converts a frequency into a pixel coordinate.
-#define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*hiddenMid.height
-
-                  // Possibly quantize the maxima frequencies and create the pixel block limits.
-                  for (int i = 0; i < maximas; i++) {
-                     int index = maxima[i];
-                     float f = float(index)*bin2f;
-                     if (findNotesQuantize)
-                     {
-                        f = expf((int)(log(f / 440) / log2 * 12 - 0.5) / 12.0f*log2) * 440;
-                        maxima[i] = f*f2bin;
-                     }
-                     float f0 = expf((log(f / 440) / log2 * 24 - 1) / 24.0f*log2) * 440;
-                     maxima0[i] = f2pix(f0);
-                     float f1 = expf((log(f / 440) / log2 * 24 + 1) / 24.0f*log2) * 440;
-                     maxima1[i] = f2pix(f1);
-                  }
-               }
-               int it = 0;
-               int oldBin0 = -1;
-               bool inMaximum = false;
-#endif //EXPERIMENTAL_FIND_NOTES
-
                float value;
 
 #ifdef EXPERIMENTAL_FIND_NOTES
