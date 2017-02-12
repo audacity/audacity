@@ -270,10 +270,10 @@ Installation of other libraries is optional, see:
 If you install libraries using a package management system like Apt or RPM,
 you need to install the "dev" (development) packages for each library.
 
-To compile on Linux, Mac OS X and other Unix systems, execute these 
+To compile on Linux and other Unix systems and using gnu tools, execute these 
 commands:
 
-  ./configure
+  ./configure CXXFLAGS="-std=gnu++11"
   make
   make install  # as root
 
