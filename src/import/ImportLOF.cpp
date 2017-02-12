@@ -379,7 +379,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
          }
       }
 
-      #ifdef USE_MIDI
+#ifdef USE_MIDI
       // If file is a midi
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
@@ -389,12 +389,13 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
       // If not a midi, open audio file
       else
-      {
-      #else // !USE_MIDI
+
+#else // !USE_MIDI
          /* if we don't have midi support, go straight on to opening as an
           * audio file. TODO: Some sort of message here? */
+
+#endif // USE_MIDI
       {
-      #endif // USE_MIDI
          mProject->OpenFile(targetfile);
       }
 

@@ -6030,10 +6030,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       // We only want Wave and Note tracks here.
 #if defined(USE_MIDI)
       if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                               (t->GetKind() == Track::Note))) {
+                               (t->GetKind() == Track::Note)))
 #else
-      if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+      if (t->GetSelected() && (t->GetKind() == Track::Wave))
 #endif
+      {
          offset = t->GetOffset();
          if (t->GetLinked()) {   // Left channel of stereo track.
             leftOffset = offset;
@@ -6115,10 +6116,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
          // Only align Wave and Note tracks end to end.
 #if defined(USE_MIDI)
          if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                                  (t->GetKind() == Track::Note))) {
+                                  (t->GetKind() == Track::Note)))
 #else
-         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+         if (t->GetSelected() && (t->GetKind() == Track::Wave))
 #endif
+         {
             t->SetOffset(newPos);   // Move the track
 
             if (t->GetLinked()) {   // Left channel of stereo track.

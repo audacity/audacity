@@ -3458,25 +3458,25 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       clickTime > mViewInfo->selectedRegion.t0() &&
       clickTime < mViewInfo->selectedRegion.t1());
 
-   if ((vt->GetKind() == Track::Wave
+   WaveTrack *wt = vt->GetKind() == Track::Wave
+      ? static_cast<WaveTrack*>(vt) : nullptr;
+
+   if ((wt
 #ifdef USE_MIDI
         || vt->GetKind() == Track::Note
 #endif
        ) && !event.ShiftDown())
    {
 #ifdef USE_MIDI
-      if (vt->GetKind() == Track::Wave) {
+      if (!wt)
+         mCapturedClip = NULL;
+      else
 #endif
-         WaveTrack* wt = (WaveTrack*)vt;
+      {
          mCapturedClip = wt->GetClipAtX(event.m_x);
          if (mCapturedClip == NULL)
             return;
-#ifdef USE_MIDI
       }
-      else {
-         mCapturedClip = NULL;
-      }
-#endif
       // The captured clip is the focus, but we need to create a list
       // of all clips that have to move, also...
 
