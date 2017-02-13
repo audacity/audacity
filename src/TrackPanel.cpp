@@ -4734,6 +4734,8 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
    else if (event.LeftUp()) {
       mTrackInfo.DrawCloseBox(&dc, rect, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
+         AudacityProject *p = GetProject();
+         p->StopIfPaused();
          if (!IsUnsafe())
             GetProject()->RemoveTrack(t);
       }
@@ -5861,14 +5863,26 @@ void TrackPanel::HandleWheelRotationInVRuler
                else
                   settings.NextHigherDBRange();
             }
-            const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
-            max = std::min(extreme, max * olddBRange / newdBRange);
-            min = std::max(-extreme, min * olddBRange / newdBRange);
-            wt->SetLastdBRange();
-            wt->SetDisplayBounds(min, max);
-            if (partner) {
-               partner->SetLastdBRange();
-               partner->SetDisplayBounds(min, max);
+
+            // Is y coordinate within the rectangle half-height centered about
+            // the zero level?
+            const auto zeroLevel = wt->ZeroLevelYCoordinate(rect);
+            const bool fixedMagnification =
+               (4 * std::abs(event.GetY() - zeroLevel) < rect.GetHeight());
+
+            if (fixedMagnification) {
+               // Vary the db limit without changing
+               // magnification; that is, peaks and troughs move up and down
+               // rigidly, as parts of the wave near zero are exposed or hidden.
+               const float extreme = (LINEAR_TO_DB(2) + newdBRange) / newdBRange;
+               max = std::min(extreme, max * olddBRange / newdBRange);
+               min = std::max(-extreme, min * olddBRange / newdBRange);
+               wt->SetLastdBRange();
+               wt->SetDisplayBounds(min, max);
+               if (partner) {
+                  partner->SetLastdBRange();
+                  partner->SetDisplayBounds(min, max);
+               }
             }
          }
       }
@@ -7729,13 +7743,15 @@ void TrackPanel::OnTrackMenu(Track *t)
          (next && isMono && !next->GetLinked() &&
           next->GetKind() == Track::Wave);
 
-      theMenu->Enable(OnSwapChannelsID, t->GetLinked());
-      theMenu->Enable(OnMergeStereoID, canMakeStereo);
-      theMenu->Enable(OnSplitStereoID, t->GetLinked());
+      // Unsafe to change channels during real-time preview (bug 1560)
+      bool unsafe = EffectManager::Get().RealtimeIsActive() && IsUnsafe();
+      theMenu->Enable(OnSwapChannelsID, t->GetLinked() && !unsafe);
+      theMenu->Enable(OnMergeStereoID, canMakeStereo && !unsafe);
+      theMenu->Enable(OnSplitStereoID, t->GetLinked() && !unsafe);
 
 // Several menu items no longer needed....
 #if 0
-      theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
+      theMenu->Enable(OnSplitStereoMonoID, t->GetLinked() && !unsafe);
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
       // + Setting unchecked items to false is to get round a linux bug
@@ -7778,7 +7794,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       SetMenuCheck(*mRateMenu, IdOfRate((int) track->GetRate()));
       SetMenuCheck(*mFormatMenu, IdOfFormat(track->GetSampleFormat()));
 
-      bool unsafe = IsUnsafe();
+      unsafe = IsUnsafe();
       for (int i = OnRate8ID; i <= OnFloatID; i++) {
          theMenu->Enable(i, !unsafe);
       }

@@ -204,7 +204,7 @@
         (if (= messages 0)
             (format nil "~aData written to:~%~a~a~a" 
                     (normhead) path fileseparator filename)
-            (s-rest 0)))
+            nil))
       ;; mono or alternate
       (progn
         (print-text s)
@@ -212,7 +212,7 @@
         (if (= messages 0)
             (format nil "~aData written to:~%~a~a~a"
                     (normhead) path fileseparator filename)
-            (s-rest 0)))))
+            nil))))
 
 
 ;;; File destination processing
@@ -490,7 +490,7 @@ ul {
 (defun html-foot ()
 "</table>
 <p id=\"footer\">Produced with <span>Sample Data Export</span> for
-<a href=\"http://audacity.sourceforge.net/\">Audacity</a> by Steve
+<a href=\"http://www.audacityteam.org/\">Audacity</a> by Steve
 Daulton (<a href=
 \"http://www.easyspacepro.com\">www.easyspacepro.com</a>)</p>
 </body>
@@ -538,7 +538,7 @@ Daulton (<a href=
     (if (= messages 0)
         (format nil "~aData written to:~%~a~a~a"
                (normhead) path fileseparator filename)
-        (s-rest 0)))
+        nil))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;       END OF HTML          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -579,7 +579,7 @@ Daulton (<a href=
 (if (> (length err) 0)
   ;; output error message if enabled
   (if (= messages 2)
-    (s-rest 0)                              ; return nul sound
+    nil                                     ; return nil
     (format nil "Error.~%~a" err))          ; return errors
   ;; else print to file
   (progn

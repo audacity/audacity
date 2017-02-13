@@ -1,4 +1,3 @@
-
 DarkAudacity: A Free, Cross-Platform Digital Audio Editor
   WWW: http://www.darkaudacity.com/
 
@@ -9,7 +8,7 @@ I welcome feedback on DarkAudacity, suggestions for new or improved features,
 bug reports and patches at:
   james@audacityteam.org .
 
-Audacity is copyright (c) 1999-2016 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2017 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
@@ -100,7 +99,6 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
    
 Bug fixes:
-
  * 82 bugs we knew about in 2.1.2 addressed, 66 closed, 16 had some residual 
    problems after the fixes.  These issues included a dramatic slowdown when 
    using Lyrics Window with lots of lyrics (fully fixed), and labels 
@@ -111,7 +109,7 @@ Bug fixes:
    features, and usually were in those features, or came to light as a result 
    of code review (mostly code review by Paul).
 
-   
+ 
 -------------------------------------------------------------------------------
 
 3. Known Issues in 2.1.3x:
@@ -296,10 +294,10 @@ Installation of other libraries is optional, see:
 If you install libraries using a package management system like Apt or RPM,
 you need to install the "dev" (development) packages for each library.
 
-To compile on Linux, Mac OS X and other Unix systems, execute these 
+To compile on Linux and other Unix systems and using gnu tools, execute these 
 commands:
 
-  ./configure
+  ./configure CXXFLAGS="-std=gnu++11"
   make
   make install  # as root
 

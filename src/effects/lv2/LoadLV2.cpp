@@ -260,8 +260,10 @@ bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
    return true;
 }
 
-bool LV2EffectsModule::IsPluginValid(const wxString & path)
+bool LV2EffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
+   if( bFast )
+      return true;
    return GetPlugin(path) != NULL;
 }
 

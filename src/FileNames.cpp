@@ -84,6 +84,21 @@ wxString FileNames::AutoSaveDir()
    return FileNames::MkDir(autoSaveDir.GetFullPath());
 }
 
+// The APP name has upercase first letter (so that Quit Audacity is correctly
+// capitalised on Mac, but we want lower case APP name in paths.
+// This function does that substitution, IF the last component of
+// the path is 'Audacity'.
+wxString FileNames::LowerCaseAppNameInPath( const wxString & dirIn){
+   wxString dir = dirIn;
+   // BUG 1577 Capitalisation of Audacity in path...
+   if( dir.EndsWith( "Audacity" ) )
+   {
+      int nChars = dir.Length() - wxString( "Audacity" ).Length();
+      dir = dir.Left( nChars ) + "audacity";
+   }
+   return dir;
+}
+
 wxString FileNames::DataDir()
 {
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
@@ -97,9 +112,10 @@ wxString FileNames::DataDir()
       // the prefs are stored in the user data dir provided by the OS.
       wxFileName exePath(PlatformCompatibility::GetExecutablePath());
 #if defined(__WXMAC__)
-      // This removes (for instance) "Audacity.app/Contents/MacOSX"
-      exePath.RemoveLastDir();
-      exePath.RemoveLastDir();
+      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      //exePath.RemoveLastDir();
+      //exePath.RemoveLastDir();
+      // just remove the MacOSX part.
       exePath.RemoveLastDir();
 #endif
       wxFileName portablePrefsPath(exePath.GetPath(), wxT("Portable Settings"));
@@ -111,37 +127,38 @@ wxString FileNames::DataDir()
       } else
       {
          // Use OS-provided user data dir folder
-         wxString dataDir;
+         wxString dataDir( LowerCaseAppNameInPath( wxStandardPaths::Get().GetUserDataDir() ));
 #if defined( __WXGTK__ )
-         dataDir = wxStandardPaths::Get().GetUserDataDir() + wxT("-data");
-#else
-         dataDir = wxStandardPaths::Get().GetUserDataDir();
+         dataDir = dataDir + wxT("-data");
 #endif
-
          gDataDir = FileNames::MkDir(dataDir);
       }
    }
-
    return gDataDir;
+}
+
+wxString FileNames::ResourcesDir(){
+   wxString resourcesDir( LowerCaseAppNameInPath( wxStandardPaths::Get().GetResourcesDir() ));
+   return resourcesDir;
 }
 
 wxString FileNames::HtmlHelpDir()
 {
 #if defined(__WXMAC__)
    wxFileName exePath(PlatformCompatibility::GetExecutablePath());
-      // This removes (for instance) "Audacity.app/Contents/MacOSX"
-      exePath.RemoveLastDir();
-      exePath.RemoveLastDir();
+      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      //exePath.RemoveLastDir();
+      //exePath.RemoveLastDir();
+      // just remove the MacOSX part.
       exePath.RemoveLastDir();
 
+   //for mac this puts us within the .app: Audacity.app/Contents/SharedSupport/
    return wxFileName( exePath.GetPath()+wxT("/help/manual"), wxEmptyString ).GetFullPath();
 #else
    //linux goes into /*prefix*/share/audacity/
-   //windows goes into the dir containing the .exe
-   wxString exeDir = wxStandardPaths::Get().GetDataDir();
-
-   //for mac this puts us within the .app: Audacity.app/Contents/SharedSupport/
-   return wxFileName( exeDir+wxT("/help/manual"), wxEmptyString ).GetFullPath();
+   //windows (probably) goes into the dir containing the .exe
+   wxString dataDir = FileNames::LowerCaseAppNameInPath( wxStandardPaths::Get().GetDataDir());
+   return wxFileName( dataDir+wxT("/help/manual"), wxEmptyString ).GetFullPath();
 #endif
 }
 
@@ -182,9 +199,10 @@ wxString FileNames::BaseDir()
 #if defined(__WXMAC__)
    baseDir = PlatformCompatibility::GetExecutablePath();
 
-   // This removes (for instance) "Audacity.app/Contents/MacOSX/"
-   baseDir.RemoveLastDir();
-   baseDir.RemoveLastDir();
+   // Path ends for example in "Audacity.app/Contents/MacOSX"
+   //baseDir.RemoveLastDir();
+   //baseDir.RemoveLastDir();
+   // just remove the MacOSX part.
    baseDir.RemoveLastDir();
 #elif defined(__WXMSW__)
    // Don't use wxStandardPaths::Get().GetDataDir() since it removes
@@ -192,7 +210,7 @@ wxString FileNames::BaseDir()
    baseDir = PlatformCompatibility::GetExecutablePath();
 #else
    // Linux goes into /*prefix*/share/audacity/
-   baseDir = wxStandardPaths::Get().GetDataDir();
+   baseDir = FileNames::LowerCaseAppNameInPath(wxStandardPaths::Get().GetDataDir());
 #endif
 
    return baseDir.GetPath();

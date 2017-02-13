@@ -98,7 +98,9 @@ FactoryPresets[] =
    //                                           Table    DCBlock  threshold   floor       Param1   Param2   Repeats
    // Defaults:                                   0       false   -6.0       -70.0(off)     50.0     50.0     1
    //
+   // xgettext:no-c-format
    { XO("Hard clip -12dB, 80% make-up gain"),     { 0,        0,      -12.0,      -70.0,      0.0,     80.0,    0 } },
+   // xgettext:no-c-format
    { XO("Soft clip -12dB, 80% make-up gain"),     { 1,        0,      -12.0,      -70.0,      50.0,    80.0,    0 } },
    { XO("Fuzz Box"),                              { 1,        0,      -30.0,      -70.0,      80.0,    80.0,    0 } },
    { XO("Walkie-talkie"),                         { 1,        0,      -50.0,      -70.0,      60.0,    80.0,    0 } },

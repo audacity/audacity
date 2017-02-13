@@ -34,7 +34,7 @@ dnl Require autoconf >= 2.59
 AC_PREREQ([2.59])
 
 dnl Init autoconf
-AC_INIT([audacity], [2.1.2])
+AC_INIT([audacity], [2.1.3])
 dnl Check for existence of Audacity.h
 AC_CONFIG_SRCDIR([src/Audacity.h])
 AC_CONFIG_AUX_DIR([autotools])
@@ -359,6 +359,9 @@ AUDACITY_CHECKLIB_LV2
 AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_PORTSMF
 AUDACITY_CHECKLIB_WIDGETEXTRA
+
+FFMPEG_ARGUMENT=local
+LIBFLAC_ARGUMENT=local
 
 dnl Decide what libraries to build with, and whether to use system or local libraries
 dnl Set variables based on choices.

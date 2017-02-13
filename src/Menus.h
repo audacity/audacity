@@ -38,7 +38,10 @@ void ModifyToolbarMenus();
 void ModifyAllProjectToolbarMenus();
 
 CommandFlag GetFocusedFrame();
-CommandFlag GetUpdateFlags();
+
+// If checkActive, do not do complete flags testing on an
+// inactive project as it is needlessly expensive.
+CommandFlag GetUpdateFlags(bool checkActive = false);
 
 double NearestZeroCrossing(double t0);
 
@@ -170,9 +173,9 @@ void OnSetRightSelection();
 void OnSelToStart();
 void OnSelToEnd();
 
-void OnSelToNextLabel();
-void OnSelToPrevLabel();
-void OnSelToLabel(bool next);
+void OnMoveToNextLabel();
+void OnMoveToPrevLabel();
+void OnMoveToLabel(bool next);
 
 void OnZeroCrossing();
 
@@ -274,6 +277,7 @@ void OnNextLowerPeakFrequency();
 #endif
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
+void OnSelectCursorStoredCursor();
 void OnSelectSyncLockSel();
 void OnSelectAllTracks();
 
@@ -350,9 +354,12 @@ void HandleMixAndRender(bool toNewTrack);
 
 private:
    SelectedRegion mRegionSave{};
+   bool mCursorPositionHasBeenStored{false};
+   double mCursorPositionStored;
 public:
 void OnSelectionSave();
 void OnSelectionRestore();
+void OnCursorPositionStore();
 
 void OnCursorTrackStart();
 void OnCursorTrackEnd();
@@ -381,6 +388,7 @@ void OnAddLabel();
 void OnAddLabelPlaying();
 void DoEditLabels(LabelTrack *lt = nullptr, int index = -1);
 void OnEditLabels();
+void OnToggleTypeToCreateLabel();
 
         // Effect Menu
 

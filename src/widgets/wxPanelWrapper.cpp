@@ -17,7 +17,10 @@ void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
    // due to the switch to wxWidgets 3.0.2
    if (event.GetKeyCode() == WXK_TAB) {
       auto focus = wxWindow::FindFocus();
-      if (dynamic_cast<wxGrid*>(focus)) {
+      if (dynamic_cast<wxGrid*>(focus)
+         || (focus &&
+             focus->GetParent() &&
+             dynamic_cast<wxGrid*>(focus->GetParent()->GetParent()))) {
          // Let wxGrid do its own TAB key handling
          event.Skip();
          return;

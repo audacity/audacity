@@ -108,6 +108,7 @@ class AUDACITY_DLL_API UndoManager {
    unsigned int GetCurrentState();
 
    void GetShortDescription(unsigned int n, wxString *desc);
+   // Return value must first be calculated by CalculateSpaceUsage():
    wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
    void SetLongDescription(unsigned int n, const wxString &desc);
 
@@ -120,6 +121,12 @@ class AUDACITY_DLL_API UndoManager {
 
    bool UnsavedChanges();
    void StateSaved();
+
+   // Return value must first be calculated by CalculateSpaceUsage():
+   // The clipboard is global, not specific to this project, but it is
+   // convenient to combine the space usage calculations in one class:
+   wxLongLong_t GetClipboardSpaceUsage() const
+   { return mClipboardSpaceUsage; }
 
    void CalculateSpaceUsage();
 
@@ -139,6 +146,7 @@ class AUDACITY_DLL_API UndoManager {
    int consolidationCount;
 
    SpaceArray space;
+   unsigned long long mClipboardSpaceUsage {};
 
    bool mODChanges;
    ODLock mODChangesMutex;//mODChanges is accessed from many threads.

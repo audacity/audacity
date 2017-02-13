@@ -28,12 +28,14 @@ public:
    // originally an ExportMultiple method. Append suffix if newName appears in otherNames.
    static void MakeNameUnique(wxArrayString &otherNames, wxFileName &newName);
 
+   static wxString LowerCaseAppNameInPath( const wxString & dirIn);
    /** \brief Audacity user data directory
     *
     * Where audacity keeps it's settings and other user data squirreled away,
     * by default ~/.audacity-data/ on Unix, Application Data/Audacity on
     * windows system */
    static wxString DataDir();
+   static wxString ResourcesDir();
    static wxString AutoSaveDir();
    static wxString HtmlHelpDir();
    static wxString HtmlHelpIndexFile(bool quick);

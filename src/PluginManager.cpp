@@ -1447,8 +1447,10 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    // Add the "Audacity" plug-ins directory
    wxFileName ff = PlatformCompatibility::GetExecutablePath();
 #if defined(__WXMAC__)
-   ff.RemoveLastDir();
-   ff.RemoveLastDir();
+   // Path ends for example in "Audacity.app/Contents/MacOSX"
+   //ff.RemoveLastDir();
+   //ff.RemoveLastDir();
+   // just remove the MacOSX part.
    ff.RemoveLastDir();
 #endif
    ff.AppendDir(wxT("plug-ins"));
@@ -1695,6 +1697,9 @@ void PluginManager::Initialize()
    // And finally check for updates
 #ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
    CheckForUpdates();
+#else
+   const bool kFast = true;
+   CheckForUpdates( kFast );
 #endif
 }
 
@@ -2103,7 +2108,10 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
    return;
 }
 
-void PluginManager::CheckForUpdates()
+// If bFast is true, do not do a full check.  Just check the ones
+// that are quick to check.  Currently (Feb 2017) just Nyquist
+// and built-ins.
+void PluginManager::CheckForUpdates(bool bFast)
 {
    // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
@@ -2146,9 +2154,13 @@ void PluginManager::CheckForUpdates()
          continue;
       }
 
-      if (plugType == PluginTypeModule)
+      if ( (plugType == PluginTypeModule)  )
       {
-         if (!mm.IsProviderValid(plugID, plugPath))
+         if( bFast ) 
+         {
+            // Skip modules, when doing a fast refresh/check.
+         } 
+         else if (!mm.IsProviderValid(plugID, plugPath))
          {
             plug.SetEnabled(false);
             plug.SetValid(false);
@@ -2176,7 +2188,7 @@ void PluginManager::CheckForUpdates()
       }
       else if (plugType != PluginTypeNone && plugType != PluginTypeStub)
       {
-         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath));
+         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath, bFast));
          if (!plug.IsValid())
          {
             plug.SetEnabled(false);

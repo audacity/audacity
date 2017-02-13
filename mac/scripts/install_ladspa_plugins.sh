@@ -97,17 +97,17 @@ function installAction
 
 case "${ACTION}" in
    "" | build)
-      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/plug-ins"
+      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/Audacity.app/Contents/plug-ins"
       buildAction
    ;;
 
    install)
-      TARGET_BUILD_DIR="${DSTROOT}/Audacity/plug-ins"
+      TARGET_BUILD_DIR="${DSTROOT}/Audacity.app/Contents/plug-ins"
       installAction
    ;;
 
    clean)
-      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/plug-ins"
+      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/Audacity.app/Contents/plug-ins"
       cleanAction
    ;;
 esac

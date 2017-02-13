@@ -663,12 +663,36 @@ IMPLEMENT_WX_THEME_SUPPORT
 
 int main(int argc, char *argv[])
 {
-   if (getenv("DYLD_LIBRARY_PATH")) {
-      extern char **environ;
+   bool doCrash = false;
 
-      unsetenv("DYLD_LIBRARY_PATH");
+#ifdef FIX_BUG1567
+   doCrash = AudacityApp::IsSierraOrLater();
+#endif
+
+   bool doExec = !doCrash && getenv("DYLD_LIBRARY_PATH");
+   unsetenv("DYLD_LIBRARY_PATH");
+
+   extern char **environ;
+   
+#ifdef FIX_BUG1567
+   const char *var_name = "_NO_CRASH";
+   if ( doCrash && !( getenv( var_name ) ) ) {
+      setenv(var_name, "1", TRUE);
+      // Bizarre fix for Bug1567
+      // Crashing one Audacity and immediately starting another avoids intermittent
+      // failures to load libraries on Sierra
+      if ( fork() )
+         // The original process crashes at once
+         raise(SIGTERM);
+
+      // Child process can't proceed until doing this:
       execve(argv[0], argv, environ);
    }
+   else
+#else
+      if (doExec)
+         execve(argv[0], argv, environ);
+#endif
 
    wxDISABLE_DEBUG_SUPPORT();
 
@@ -1143,6 +1167,9 @@ int AudacityApp::FilterEvent(wxEvent & event)
       {
          const auto window = ((wxWindow *)e.GetEventObject());
          window->SetFocus();
+#if defined(__WXMAC__)
+         window->NavigateIn();
+#endif
       }
    }
 #endif
@@ -1191,14 +1218,12 @@ bool AudacityApp::OnInit()
    wxSystemOptions::SetOption(wxMAC_WINDOW_PLAIN_TRANSITION, 1);
 #endif
 
-#ifdef AUDACITY_NAME
-   wxString appName = wxT(AUDACITY_NAME);
-#else 
-   #ifndef EXPERIMENTAL_DA
-      wxString appName = wxT("Audacity");
-   #else
-      wxString appName = wxT("DarkAudacity");
-   #endif
+   // Don't use AUDACITY_NAME here.
+   // We want Audacity with a capital 'A'
+#ifndef EXPERIMENTAL_DA
+   wxString appName = wxT("Audacity");
+#else
+   wxString appName = wxT("DarkAudacity");
 #endif
 
    wxTheApp->SetAppName(appName);
@@ -1303,7 +1328,7 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath, audacityPathList);
    // If Audacity is a "bundle" package, then the root directory is
    // the great-great-grandparent of the directory containing the executable.
-   AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
+   //AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
 
    // These allow for searching the "bundle"
    AddUniquePathToPathList(progPath + wxT("/../"), audacityPathList);
@@ -1371,7 +1396,7 @@ bool AudacityApp::OnInit()
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
-   auto parser = ParseCommandLine();
+   std::shared_ptr< wxCmdLineParser > parser{ ParseCommandLine().release() };
    if (!parser)
    {
       // Either user requested help or a parsing error occured
@@ -1429,6 +1454,12 @@ bool AudacityApp::OnInit()
          wxSTAY_ON_TOP);
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
+
+#ifdef FIX_BUG1567
+      // Without this, splash screen may be hidden under other programs.
+      if (IsSierraOrLater())
+         MacActivateApp();
+#endif
 
       // ANSWER-ME: Why is YieldFor needed at all?
       //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
@@ -1510,38 +1541,40 @@ bool AudacityApp::OnInit()
 
    Importer::Get().Initialize();
 
-   //
-   // Auto-recovery
-   //
-   bool didRecoverAnything = false;
-   if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
-   {
-      // Important: Prevent deleting any temporary files!
-      DirManager::SetDontDeleteTempFiles();
-      QuitAudacity(true);
-      return false;
-   }
-
-   //
-   // Remainder of command line parsing, but only if we didn't recover
-   //
-   if (!didRecoverAnything)
-   {
-      if (parser->Found(wxT("t")))
+   // Bug1561: delay the recovery dialog, to avoid crashes.
+   CallAfter( [=] () mutable {
+      //
+      // Auto-recovery
+      //
+      bool didRecoverAnything = false;
+      if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
       {
-         RunBenchmark(NULL);
-         return false;
+         // Important: Prevent deleting any temporary files!
+         DirManager::SetDontDeleteTempFiles();
+         QuitAudacity(true);
       }
 
-// As of wx3, there's no need to process the filename arguments as they
-// will be sent view the MacOpenFile() method.
+      //
+      // Remainder of command line parsing, but only if we didn't recover
+      //
+      if (!didRecoverAnything)
+      {
+         if (parser->Found(wxT("t")))
+         {
+            RunBenchmark(NULL);
+            QuitAudacity(true);
+         }
+
+         // As of wx3, there's no need to process the filename arguments as they
+         // will be sent view the MacOpenFile() method.
 #if !defined(__WXMAC__)
-      for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
-      {
-         MRUOpen(parser->GetParam(i));
-      }
+         for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+         {
+            MRUOpen(parser->GetParam(i));
+         }
 #endif
-   }
+      }
+   } );
 
    gInited = true;
 
@@ -1594,6 +1627,9 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
 // We now disallow temp directory name that puts it where cleaner apps will
 // try to clean out the files.  
 bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
+   if( Name.IsEmpty() )
+      return false;
+
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
    // use Long Path to expand out any abbreviated long substrings.
@@ -1618,6 +1654,22 @@ bool AudacityApp::IsTempDirectoryNameOK( const wxString & Name ){
    return !(NameCanonical.StartsWith( BadPath ));
 }
 
+// Ensures directory is created and puts the name into result.
+// result is unchanged if unsuccessful.
+void SetToExtantDirectory( wxString & result, const wxString & dir ){
+   // don't allow path of "".
+   if( dir.IsEmpty() )
+      return;
+   if( wxDirExists( dir ) ){
+      result = dir;
+      return;
+   }
+   // Use '/' so that this works on Mac and Windows alike.
+   wxFileName name( dir + "/junkname.cfg" );
+   if( name.Mkdir( wxS_DIR_DEFAULT , wxPATH_MKDIR_FULL ) )
+      result = dir;
+}
+
 bool AudacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
@@ -1637,23 +1689,13 @@ bool AudacityApp::InitTempDir()
    wxLogNull logNo;
 
    // Try temp dir that was stored in prefs first
-   if( !IsTempDirectoryNameOK( tempFromPrefs ) ){
-      ;// Bad name?  Don't try and use it.
-   } else if (tempFromPrefs != wxT("")) {
-      if (wxDirExists(tempFromPrefs))
-         temp = tempFromPrefs;
-      else if (wxMkdir(tempFromPrefs, 0755))
-         temp = tempFromPrefs;
-   }
+   if( IsTempDirectoryNameOK( tempFromPrefs ) )
+      SetToExtantDirectory( temp, tempFromPrefs );
 
    // If that didn't work, try the default location
 
-   if (temp==wxT("") && tempDefaultLoc != wxT("")) {
-      if (wxDirExists(tempDefaultLoc))
-         temp = tempDefaultLoc;
-      else if (wxMkdir(tempDefaultLoc, 0755))
-         temp = tempDefaultLoc;
-   }
+   if (temp==wxT(""))
+      SetToExtantDirectory( temp, tempDefaultLoc );
 
    // Check temp directory ownership on *nix systems only
    #ifdef __UNIX__

@@ -1975,6 +1975,9 @@
     <copy Include="..\..\..\plug-ins\sample-data-export.ny">
       <Filter>plug-ins</Filter>
     </copy>
+    <copy Include="..\..\..\plug-ins\sample-data-import.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
     <copy Include="..\..\..\plug-ins\SilenceMarker.ny">
       <Filter>plug-ins</Filter>
     </copy>

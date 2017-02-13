@@ -861,7 +861,6 @@
 		289D127A1B44D57F00B5B6AA /* VSTControlOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 289D12791B44D57F00B5B6AA /* VSTControlOSX.mm */; };
 		289E750A1006D0BD00CEF79B /* MixerBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289E75081006D0BD00CEF79B /* MixerBoard.cpp */; };
 		289F9C7E0AC671BB00797DC1 /* DeviceToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */; };
-		289FC6051B5EE9A400D1B13F /* hy.po in Resources */ = {isa = PBXBuildFile; fileRef = 28ECC1911A66CC5000EECC53 /* hy.po */; };
 		28A4E2AC0F60319300E9E7F2 /* fftext.c in Sources */ = {isa = PBXBuildFile; fileRef = 28A4E2A40F60319300E9E7F2 /* fftext.c */; };
 		28A4E2AD0F60319300E9E7F2 /* fftext.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A4E2A50F60319300E9E7F2 /* fftext.h */; };
 		28A4E2AE0F60319300E9E7F2 /* fftlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 28A4E2A60F60319300E9E7F2 /* fftlib.c */; };
@@ -916,8 +915,6 @@
 		28CA9E801AE60C53005C0BFE /* trackpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707180EF9C51D007D4FFD /* trackpoint.cpp */; };
 		28CA9E811AE60C53005C0BFE /* trackpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707190EF9C51D007D4FFD /* trackpoint.h */; };
 		28CA9E821AE60C53005C0BFE /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27071B0EF9C51D007D4FFD /* utils.h */; };
-		28CBD65F1B9F7DF7003AC5EE /* pt_PT.po in Resources */ = {isa = PBXBuildFile; fileRef = 28CBD65D1B9F7DF7003AC5EE /* pt_PT.po */; };
-		28CBD6601B9F7DF7003AC5EE /* zh_CN.po in Resources */ = {isa = PBXBuildFile; fileRef = 28CBD65E1B9F7DF7003AC5EE /* zh_CN.po */; };
 		28CC03A81AD386CF00826380 /* phasevocoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A01AD386CF00826380 /* phasevocoder.c */; };
 		28CC03A91AD386CF00826380 /* phasevocoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A11AD386CF00826380 /* phasevocoder.h */; };
 		28CC03AA1AD386CF00826380 /* pvshell.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A21AD386CF00826380 /* pvshell.c */; };
@@ -997,7 +994,6 @@
 		28E67FEE0A3A2B150021D89F /* libFLAC++.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEC1E09A2F2DD00188F3B /* libFLAC++.a */; };
 		28E67FEF0A3A2B160021D89F /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEBEA09A2F16200188F3B /* libFLAC.a */; };
 		28E67FF00A3A2B190021D89F /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E67F5F0A3A160D0021D89F /* libportaudio.a */; };
-		28EA4A091B7B162500723B3E /* Build.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28EA4A081B7B162500723B3E /* Build.txt */; };
 		28EA56630D9753B000C8D1B6 /* bitreader.c in Sources */ = {isa = PBXBuildFile; fileRef = 28EA56600D9753B000C8D1B6 /* bitreader.c */; };
 		28EA56640D9753B000C8D1B6 /* bitwriter.c in Sources */ = {isa = PBXBuildFile; fileRef = 28EA56610D9753B000C8D1B6 /* bitwriter.c */; };
 		28EA56650D9753B000C8D1B6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 28EA56620D9753B000C8D1B6 /* window.c */; };
@@ -1437,7 +1433,7 @@
 		2892CE28131AFB1900E1E17D /* Install miscellany */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
-			dstPath = /Audacity;
+			dstPath = /Audacity.app/Contents;
 			dstSubfolderSpec = 0;
 			files = (
 				28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */,
@@ -2981,7 +2977,7 @@
 		28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAutomationParameters.h; path = ../include/audacity/EffectAutomationParameters.h; sourceTree = SOURCE_ROOT; };
 		5E02BFF01D1164DF00EB7578 /* Distortion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distortion.cpp; sourceTree = "<group>"; };
 		5E02BFF11D1164DF00EB7578 /* Distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Distortion.h; sourceTree = "<group>"; };
-		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenusMac.cpp; sourceTree = "<group>"; };
+		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
@@ -3015,6 +3011,7 @@
 		8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EQDefaultCurves.xml; path = ../presets/EQDefaultCurves.xml; sourceTree = SOURCE_ROOT; };
 		8484F31213086237002DF7F0 /* DeviceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		8484F31313086237002DF7F0 /* DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = DeviceManager.h; sourceTree = "<group>"; tabWidth = 3; };
+		AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-import.ny"; path = "../../Audacity/plug-ins/sample-data-import.ny"; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1140E50AD5700CC4BD3 /* comp_chroma.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = comp_chroma.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5306,6 +5303,7 @@
 				28D34C7F1D9F52E200D4FB61 /* rhythmtrack.ny */,
 				28AA281D0F267A2D008AED9E /* rissetdrum.ny */,
 				28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */,
+				AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */,
 				28AA281E0F267A2D008AED9E /* SilenceMarker.ny */,
 				28ED7B751A1C77BF008A01D9 /* SoundFinder.ny */,
 				28ED7B761A1C77BF008A01D9 /* SpectralEditMulti.ny */,
@@ -6754,15 +6752,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
-				28CBD65F1B9F7DF7003AC5EE /* pt_PT.po in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
 				174F73D3098D516D009CD6E0 /* AudacityMP3.icns in Resources */,
 				174F73D4098D516D009CD6E0 /* AudacityOGG.icns in Resources */,
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
-				28CBD6601B9F7DF7003AC5EE /* zh_CN.po in Resources */,
-				289FC6051B5EE9A400D1B13F /* hy.po in Resources */,
-				28EA4A091B7B162500723B3E /* Build.txt in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
 			);
@@ -6781,7 +6775,7 @@
 			);
 			name = "Copy nyquist";
 			outputPaths = (
-				"$(TARGET_BUILD_DIR)/nyquist",
+				"$(TARGET_BUILD_DIR)/Audacity.app/Contents/nyquist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -6797,7 +6791,7 @@
 			);
 			name = "Copy plug-ins";
 			outputPaths = (
-				"$(TARGET_BUILD_DIR)/plug-ins",
+				"$(TARGET_BUILD_DIR)/Audacity.app/Contents/plug-ins",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -8088,7 +8082,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Audacity;
+				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
@@ -8134,6 +8128,7 @@
 					"-lFLAC++",
 					"-lFLAC",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
@@ -8339,7 +8334,7 @@
 					CC_HASVISIBILITY,
 				);
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
@@ -8417,7 +8412,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = /Audacity;
+				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
@@ -8463,6 +8458,7 @@
 					"-lFLAC++",
 					"-lFLAC",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.audacityteam.audacity;
 				PRODUCT_NAME = Audacity;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
@@ -8668,7 +8664,7 @@
 					CC_HASVISIBILITY,
 				);
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
@@ -8811,7 +8807,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";
@@ -8841,7 +8837,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				INSTALL_PATH = /Audacity/modules;
+				INSTALL_PATH = /modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "$(WX_CFLAGS)";

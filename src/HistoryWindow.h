@@ -42,11 +42,13 @@ class HistoryWindow final : public wxDialogWrapper {
    void OnChar(wxKeyEvent & event);
    void OnItemSelected(wxListEvent & event);
    void OnDiscard(wxCommandEvent & event);
+   void OnDiscardClipboard(wxCommandEvent & event);
 
    AudacityProject   *mProject;
    UndoManager       *mManager;
    wxListCtrl        *mList;
    wxTextCtrl        *mTotal;
+   wxTextCtrl        *mClipboard;
    wxTextCtrl        *mAvail;
    wxSpinCtrl        *mLevels;
    wxButton          *mDiscard;

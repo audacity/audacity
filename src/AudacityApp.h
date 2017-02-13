@@ -286,6 +286,17 @@ class AudacityApp final : public wxApp {
    void GenerateCrashReport(wxDebugReport::Context ctx);
 #endif
 
+#ifdef __WXMAC__
+
+   #if ! defined(__WXDEBUG__)
+   #define FIX_BUG1567
+   #endif
+
+   void MacActivateApp();
+   static bool IsSierraOrLater();
+
+#endif
+
  private:
    std::unique_ptr<CommandHandler> mCmdHandler;
    std::unique_ptr<FileHistory> mRecentFiles;

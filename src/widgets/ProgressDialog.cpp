@@ -1234,6 +1234,7 @@ bool ProgressDialog::Create(const wxString & title,
 
    mStartTime = wxGetLocalTimeMillis().GetValue();
    mLastUpdate = mStartTime;
+   mYieldTimer = mStartTime;
    mCancel = false;
    mStop = false;
 
@@ -1346,7 +1347,13 @@ int ProgressDialog::Update(int value, const wxString & message)
    //      (and probably other things).  I do not yet know why this happens and
    //      I'm not too keen on having timer events processed here, but you do
    //      what you have to do.
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
+
+   // Nyquist effects call Update on every callback, but YieldFor is
+   // quite slow on Linux / Mac, so don't call too frequently. (bug 1575)
+   if ((now - mYieldTimer > 50) || (value == 1000)) {
+      wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
+      mYieldTimer = now;
+   }
 
    return eProgressSuccess;
 }

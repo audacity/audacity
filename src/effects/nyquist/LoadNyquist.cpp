@@ -36,6 +36,7 @@ const static wxChar *kShippedEffects[] =
    wxT("rhythmtrack.ny"),
    wxT("rissetdrum.ny"),
    wxT("sample-data-export.ny"),
+   wxT("sample-data-import.ny"),
    wxT("SilenceMarker.ny"),
    wxT("SoundFinder.ny"),
    wxT("SpectralEditMulti.ny"),
@@ -215,8 +216,11 @@ bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxS
    return false;
 }
 
-bool NyquistEffectsModule::IsPluginValid(const wxString & path)
+bool NyquistEffectsModule::IsPluginValid(const wxString & path, bool bFast)
 {
+   // Ignores bFast parameter, since checking file exists is fast enough for
+   // the small number of Nyquist plug-ins that we have.
+   bFast;
    if (path == NYQUIST_PROMPT_ID)
    {
       return true;

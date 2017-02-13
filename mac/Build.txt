@@ -2,13 +2,14 @@ At this time, the newest SDK version that Audacity can build with is 10.6.
 To build Audacity using Xcode 5.1 or newer, you need to extract the 10.6 SDK
 from an earlier version of Xcode.
 
-In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and Xcode 5.1.1 will
-be used.  Xcode 6.1.1, 6.3, 6.4.1, and 7.1 have also been verified to work. 
-Xcode 7.2 and later require a custom build setting to accept the 10.6 SDK, or 
-to edit src\MemoryX.h in the Audacity code. See this topic:
-http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
+In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and Xcode 8.1 will
+be used.  Fuller instructions that cover 
+   * Using other Xcodes
+   * Optional signing of DMGs
+   * Applying wxWidgets patches one by one
+can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Mac
 
-1) Download Xcode 5.1.1 or greater and install it to /Applications.
+1) Download Xcode 8.1 and install it to /Applications.
 2) Download Xcode 4.3.3 (it includes the 10.6 and 10.7 SDK's despite 
    the downloads page says it only has the 10.7 SDK).
 3) Open the DMG in Finder.
@@ -21,36 +22,43 @@ http://forum.audacityteam.org/viewtopic.php?p=303835#p303835 .
 
    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
 
+7) Change the MinimumSDKVersion key value in 
+   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist 
+   to 10.6
+
    Xcode is now ready.
 
-7) Download wxWidgets 3.0.2 fron the wxWidgets project: 
-   http://sourceforge.net/projects/wxwindows/files/3.0.2/wxWidgets-3.0.2.tar.bz2 .
+8) Download audacity patched wxWidgets 3.0.2 zip from the audacity copy of the 
+   wxWidgets project: 
+      https://github.com/audacity/wxWidgets/tree/audacity-fixes
+
+   it's the green "clone or download" button on the right.
 
    Don't be tempted to use Widgets already installed by a package manager such 
-   as Homebrew because this may cause problems.              
+   as Homebrew because this will cause problems.              
 
-8) Once the download is complete, untar it (your browser may do this itelf):
+9) Once the download is complete, unzip it:
 
-   tar xf wxWidgets-3.0.2.tar.bz2 .
+   unzip wxWidgets-audacity-fixes.zip
 
-9) Apply the following fixes to wxWidgets:
-
-   cd wxWidgets-3.0.2
-   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/wxMac-3.0.2-fixes.patch .
-   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/eventloops.patch .
-   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/pinch-spread.patch .
-   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/focusrings.patch .
-   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/wxMac-3.0.2-wxaccessible.patch .
-   patch -p0 -i <path to Audacity source>/mac/wxMac_additions/tooldock-quit.patch .
-
-10) And finally build/install wxWidgets:
+10) Change directory to the folder wxWidgets was extracted to then build/install 
+    wxWidgets:
 
    sudo <path to Audacity source>/mac/build_wxwidgets .
 
 You should now be able to build Audacity using either the Xcode application or 
 the Xcodebuild command line tool. 
 
-* Using xcodebuild, build Audacity and create DMG and ZIP bundles in 
+* Change directory to <path to Audacity source>/mac
+* Optionally, if you have built before, clean the Debug build with:
+
+  xcodebuild clean
+
+* If you have built the Release build, clean with:
+
+  xcodebuild clean -configuration Release  
+  
+* Build Audacity and create DMG and ZIP bundles in 
   /private/tmp by typing the following in the terminal:
 
   xcodebuild -configuration Release install   

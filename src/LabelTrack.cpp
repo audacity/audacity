@@ -1687,7 +1687,9 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
       }
    }
    else {
-      if (IsGoodLabelFirstKey(event)) {
+      bool typeToCreateLabel;
+      gPrefs->Read(wxT("/GUI/TypeToCreateLabel"), &typeToCreateLabel, true);
+      if (IsGoodLabelFirstKey(event) && typeToCreateLabel) {
          AudacityProject * pProj = GetActiveProject();
 
          // If we're playing, don't capture if the selection is the same as the
@@ -1867,15 +1869,13 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
                mSelIndex++;
          }
 
-         if (mSelIndex >= 0 && mSelIndex < (int)mLabels.size()) {
+         mSelIndex = (mSelIndex + (int)mLabels.size()) % (int)mLabels.size();    // wrap round if necessary
+         {
             LabelStruct &newLabel = mLabels[mSelIndex];
             mCurrentCursorPos = newLabel.title.Length();
+            mInitialCursorPos = mCurrentCursorPos;
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
             newSel = newLabel.selectedRegion;
-         }
-         else {
-            newSel = SelectedRegion{};
-            mSelIndex = -1;
          }
          break;
 
@@ -1921,6 +1921,7 @@ bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
             if (mSelIndex >= 0 && mSelIndex < len) {
                const auto &labelStruct = mLabels[mSelIndex];
                mCurrentCursorPos = labelStruct.title.Length();
+               mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
             }

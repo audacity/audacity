@@ -27,6 +27,7 @@ UndoManager
 #include "BlockFile.h"
 #include "Diags.h"
 #include "Internat.h"
+#include "Project.h"
 #include "Sequence.h"
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
@@ -69,28 +70,15 @@ UndoManager::~UndoManager()
    ClearStates();
 }
 
-void UndoManager::CalculateSpaceUsage()
-{
-   //TIMER_START( "CalculateSpaceUsage", space_calc );
-   TrackListOfKindIterator iter(Track::Wave);
-
-   space.clear();
-   space.resize(stack.size(), 0);
-
-   Set s1, s2;
-   Set *prev = &s1;
-   Set *cur = &s2;
-
-   for (size_t i = 0, cnt = stack.size(); i < cnt; i++)
+namespace {
+   SpaceArray::value_type
+   CalculateUsage(TrackList *tracks, Set *seen)
    {
-      // Swap map pointers
-      std::swap(cur, prev);
+      SpaceArray::value_type result = 0;
 
-      // And clean out the NEW current map
-      cur->clear();
-
-      // Scan all tracks at current level
-      WaveTrack *wt = (WaveTrack *) iter.First(stack[i]->state.tracks.get());
+      //TIMER_START( "CalculateSpaceUsage", space_calc );
+      TrackListOfKindIterator iter(Track::Wave);
+      WaveTrack *wt = (WaveTrack *) iter.First(tracks);
       while (wt)
       {
          // Scan all clips within current track
@@ -102,22 +90,57 @@ void UndoManager::CalculateSpaceUsage()
             {
                const auto &file = block.f;
 
-               // Accumulate space used by the file if the file didn't exist
-               // in the previous level
-               if (prev->count( &*file ) == 0 && cur->count( &*file ) == 0)
+               // Accumulate space used by the file if the file was not
+               // yet seen
+               if ( !seen || (seen->count( &*file ) == 0 ) )
                {
                   unsigned long long usage{ file->GetSpaceUsage() };
-                   space[i] += usage;
+                  result += usage;
                }
-               
+
                // Add file to current set
-               cur->insert( &*file );
+               if (seen)
+                  seen->insert( &*file );
             }
          }
 
          wt = (WaveTrack *) iter.Next();
       }
+
+      return result;
    }
+}
+
+void UndoManager::CalculateSpaceUsage()
+{
+   space.clear();
+   space.resize(stack.size(), 0);
+
+   Set seen;
+
+   // After copies and pastes, a block file may be used in more than
+   // one place in one undo history state, and it may be used in more than
+   // one undo history state.  It might even be used in two states, but not
+   // in another state that is between them -- as when you have state A,
+   // then make a cut to get state B, but then paste it back into state C.
+
+   // So be sure to count each block file once only, in the last undo item that
+   // contains it.
+
+   // Why the last and not the first? Because the user of the History dialog
+   // may delete undo states, oldest first.  To reclaim disk space you must
+   // delete all states containing the block file.  So the block file's
+   // contribution to space usage should be counted only in that latest state.
+
+   for (size_t nn = stack.size(); nn--;)
+   {
+      // Scan all tracks at current level
+      auto tracks = stack[nn]->state.tracks.get();
+      space[nn] = CalculateUsage(tracks, &seen);
+   }
+
+   mClipboardSpaceUsage = CalculateUsage
+      (AudacityProject::GetClipboardTracks(), nullptr);
 
    //TIMER_STOP( space_calc );
 }

@@ -140,11 +140,11 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("&Select all audio in project, if none selected"),
+      S.TieCheckBox(_("&Select then act on entire project, if no audio selected"),
                     wxT("/GUI/SelectAllOnNone"),
                     true);
       /* i18n-hint: cut-lines are a lines indicating where to cut.*/
-      S.TieCheckBox(_("Enable cu&t lines"),
+      S.TieCheckBox(_("Enable cut &lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
       S.TieCheckBox(_("Enable &dragging of left and right selection edges"),
@@ -155,6 +155,9 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                     false);
       S.TieCheckBox(_("Editing a clip can &move other clips"),
                     wxT("/GUI/EditClipCanMove"),
+                    true);
+      S.TieCheckBox(_("&Type to create a label"),
+                    wxT("/GUI/TypeToCreateLabel"),
                     true);
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
       S.TieCheckBox(_("Enable scrolling left of &zero"),

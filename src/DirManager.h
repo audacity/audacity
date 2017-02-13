@@ -122,6 +122,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // dir is not cleaned at start up anymore. But it is cleaned when the
    // program is exited normally.
    static void CleanTempDir();
+   static void CleanDir(
+      const wxString &path, const wxString &dirSpec, const wxString &msg,
+      bool removeTop = false);
 
    // Check the project for errors and possibly prompt user
    // bForceError: Always show log error alert even if no errors are found here.

@@ -163,7 +163,7 @@ static int RecursivelyEnumerate(wxString dirPath,
       wxString name;
 
       if (bFiles){
-         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES);
+         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES | wxDIR_HIDDEN);
          while ( cont ){
             wxString filepath = dirPath + wxFILE_SEP_PATH + name;
 
@@ -284,7 +284,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
    return nCount;
 }
 
-static void RecursivelyRemove(wxArrayString& filePathArray, int count,
+static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
                               bool bFiles, bool bDirs,
                               const wxChar* message = NULL)
 {
@@ -293,14 +293,34 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count,
    if (message)
       progress.create( _("Progress"), message );
 
-   for (int i = 0; i < count; i++) {
+   auto nn = filePathArray.size();
+   for (int i = 0; i < nn; i++) {
       const wxChar *file = filePathArray[i].c_str();
       if (bFiles)
          ::wxRemoveFile(file);
-      if (bDirs)
-         ::wxRmdir(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
+      if (bDirs) {
+#ifdef __WXMSW__
+         if (!bFiles)
+            ::wxRemoveFile(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
+#endif
+
+         if (! ::wxRmdir(file) ) {
+            wxDir dir(file);
+            if(dir.IsOpened()) {
+               wxLogMessage(file + wxString(" still contains:"));
+               wxString name;
+               auto cont = dir.GetFirst(&name);
+               while ( cont ) {
+                  wxLogMessage(file + wxString(wxFILE_SEP_PATH) + name );
+                  cont = dir.GetNext(&name);
+               }
+            }
+            else
+               wxLogMessage(wxString("Can't enumerate directory ") + file);
+         }
+      }
       if (progress)
-         progress->Update(i, count);
+         progress->Update(i + bias, count);
    }
 }
 
@@ -379,19 +399,37 @@ DirManager::~DirManager()
 // static
 void DirManager::CleanTempDir()
 {
+   CleanDir(globaltemp, wxT("project*"), _("Cleaning up temporary files"));
+}
+
+// static
+void DirManager::CleanDir(
+   const wxString &path, const wxString &dirSpec, const wxString &msg,
+   bool removeTop)
+{
    if (dontDeleteTempFiles)
       return; // do nothing
 
-   wxArrayString filePathArray;
+   wxArrayString filePathArray, dirPathArray;
 
    // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
-   int count =
-      RecursivelyEnumerate(globaltemp, filePathArray, wxT("project*"), true, true) - 1;
+   int countFiles =
+      RecursivelyEnumerate(path, filePathArray, dirSpec, true, false);
+   int countDirs =
+      RecursivelyEnumerate(path, dirPathArray, dirSpec, false, true);
+   if (!removeTop) {
+      // Remove the globaltemp itself from the array
+      --countDirs;
+      dirPathArray.resize(countDirs);
+   }
+
+   auto count = countFiles + countDirs;
    if (count == 0)
       return;
 
-   RecursivelyRemove(filePathArray, count, true, true, _("Cleaning up temporary files"));
+   RecursivelyRemove(filePathArray, count, 0, true, false, msg);
+   RecursivelyRemove(dirPathArray, count, countFiles, false, true, msg);
 }
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
@@ -508,20 +546,23 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // nothing because SetProject is called before there are any
    // blockfiles.  Cleanup code trigger is the same
    if (trueTotal > 0) {
-      // Clean up after ourselves; look for empty directories in the old
-      // and NEW project directories.  The easiest way to do this is to
-      // recurse depth-first and rmdir every directory seen in old and
-      // NEW; rmdir will fail on non-empty dirs.
+      // Clean up after ourselves; boldly remove all files and directories
+      // in the tree.  (Unlike what the earlier version of this comment said.)
+      // Because this is a relocation of the project, not the case of closing
+      // a persistent project.
 
-      wxArrayString dirlist;
-      const int count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
+      // You may think the loops above guarantee that all files we put in the
+      // folders have been moved away already, but:
+      // to fix bug1567 on Mac, we need to find the extraneous .DS_Store files
+      // that we didn't put there, but that Finder may insert into the folders,
+      // and mercilessly remove them too.
+
+      CleanDir(
+         cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"), true);
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
       //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
-
-      if (count > 0)
-         RecursivelyRemove(dirlist, count, false, true, _("Cleaning up cache directories"));
    }
    return true;
 }

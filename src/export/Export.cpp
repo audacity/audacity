@@ -518,7 +518,19 @@ bool Exporter::GetFilename()
    }
    maskString.RemoveLast();
 
-   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()));
+//Bug 1304: Set a default path if none was given.  For Export.
+#ifdef __WIN32__
+   wxFileName tmpFile;
+   tmpFile.AssignHomeDir();
+   wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
+   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), tmpDirLoc + "\\Documents\\Audacity"));
+   // The path might not exist.
+   // There is no error if the path could not be created.  That's OK.
+   // The dialog that Audacity offers will allow the user to select a valid directory.
+   mFilename.Mkdir(0755, wxPATH_MKDIR_FULL);
+#else
+   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), wxT("~/Documents")));
+#endif
    mFilename.SetName(mProject->GetName());
    while (true) {
       // Must reset each iteration

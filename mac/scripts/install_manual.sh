@@ -43,17 +43,17 @@ function installAction
 
 case "${ACTION}" in
    "" | build)
-      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/help/manual"
+      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/Audacity.app/Contents/help/manual"
       buildAction
    ;;
 
    install)
-      TARGET_BUILD_DIR="${DSTROOT}/Audacity/help/manual"
+      TARGET_BUILD_DIR="${DSTROOT}/Audacity.app/Contents/help/manual"
       installAction
    ;;
 
    clean)
-      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/help/manual"
+      TARGET_BUILD_DIR="${TARGET_BUILD_DIR}/Audacity.app/Contents/help/manual"
       cleanAction
    ;;
 esac

@@ -73,6 +73,7 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/rhythmtrack.ny \
    plug-ins/rissetdrum.ny \
    plug-ins/sample-data-export.ny \
+   plug-ins/sample-data-import.ny \
    plug-ins/SilenceMarker.ny \
    plug-ins/SoundFinder.ny \
    plug-ins/SpectralEditMulti.ny \
