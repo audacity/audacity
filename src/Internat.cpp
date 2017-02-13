@@ -57,6 +57,12 @@ const wxString& GetCustomSubstitution(const wxString& str2)
    str3.Replace( " an DarkAudacity", " a DarkAudacity" );
    return wxTranslations::GetUntranslatedString(str3);
 }
+#else 
+const wxString& GetCustomSubstitution(const wxString& str1)
+{
+   return str1 ;
+}
+#endif
 
 // In any translated string, we can replace the name 'Audacity' by 'DarkAudacity'
 // without requiring translators to see extra strings for the two versions.
@@ -65,7 +71,6 @@ const wxString& GetCustomTranslation(const wxString& str1)
    const wxString& str2 = wxGetTranslation( str1 );
    return GetCustomSubstitution( str2 );
 }
-#endif
 
 
 void Internat::Init()

@@ -325,7 +325,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
       c->BeginSubMenu( _("Save Other") );
-#ifdef EXPERIMENTAL_DARK_AUDACITY
+#ifdef EXPERIMENTAL_DA
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
@@ -593,7 +593,11 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag, TracksExistFlag);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+#ifdef EXPERIMENTAL_DA
       c->AddItem(wxT("SelSyncLockTracks"), _("In All Time-Locked Tracks"),
+#else
+      c->AddItem(wxT("SelSyncLockTracks"), _("In All Sync-Locked Tracks"),
+#endif
          FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
          TracksSelectedFlag | IsSyncLockedFlag,
          TracksSelectedFlag | IsSyncLockedFlag);

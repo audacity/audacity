@@ -148,10 +148,12 @@ void EditToolBar::Populate()
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-//   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
-//               _("Time-Lock Tracks"), true);
+#ifndef EXPERIMENTAL_DA
+   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
+               _("Sync-Lock Tracks"), true);
 
-//   AddSeparator();
+   AddSeparator();
+#endif
 #endif
 
    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
@@ -212,7 +214,9 @@ void EditToolBar::RegenerateTooltips()
       { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-//      { ETBSyncLockID, wxT("SyncLock"),    XO("Time-Lock Tracks")  },
+#ifndef EXPERIMENTAL_DA
+      { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
+#endif
 #endif
 
       { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
