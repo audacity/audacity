@@ -66,11 +66,7 @@ public:
       , windowSize(windowSize_)
       , zeroPaddingFactor(zeroPaddingFactor_)
       , frequencyGain(frequencyGain_)
-
-      // len columns, and so many rows, column-major.
-      // Don't take column literally -- this isn't pixel data yet, it's the
-      // raw data to be mapped onto the display.
-      , freq(len * ((windowSize * zeroPaddingFactor) / 2))
+      , freq{}
 
       // Sample counts corresponding to the columns, and to one past the end.
       , where(len + 1)
@@ -96,6 +92,8 @@ public:
        const std::vector<float> &gainFactors,
        float* __restrict scratch,
        float* __restrict out) const;
+
+   void Allocate(const SpectrogramSettings &settings);
 
    void Populate
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
@@ -276,7 +274,8 @@ public:
    bool GetWaveDisplay(WaveDisplay &display,
                        double t0, double pixelsPerSecond, bool &isLoadingOD) const;
    bool GetSpectrogram(WaveTrackCache &cache,
-                       const float *& spectrogram, const sampleCount *& where,
+                       const float *& spectrogram,
+                       const sampleCount *& where,
                        size_t numPixels,
                        double t0, double pixelsPerSecond) const;
    bool GetMinMax(float *min, float *max, double t0, double t1) const;

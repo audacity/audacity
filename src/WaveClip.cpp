@@ -802,16 +802,16 @@ bool SpecCache::CalculateOneSpectrum
 
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
-   const size_t zeroPaddingFactor = (autocorrelation ? 1 : settings.ZeroPaddingFactor());
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
    const size_t padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
    const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
+   auto nBins = settings.NBins();
 
    if (from < 0 || from >= numSamples) {
       if (xx >= 0 && xx < len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
-         float *const results = &out[half * xx];
-         std::fill(results, results + half, 0.0f);
+         float *const results = &out[nBins * xx];
+         std::fill(results, results + nBins, 0.0f);
       }
    }
    else {
@@ -865,7 +865,7 @@ bool SpecCache::CalculateOneSpectrum
       if (autocorrelation) {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
-         float *const results = &out[half * xx];
+         float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
          ComputeSpectrum(useBuffer, windowSize, windowSize,
             rate, results,
@@ -949,7 +949,7 @@ bool SpecCache::CalculateOneSpectrum
                   result = true;
 
                   // This is non-negative, because bin and correctedX are
-                  auto ind = (int)half * correctedX + bin;
+                  auto ind = (int)nBins * correctedX + bin;
 #ifdef _OPENMP
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
@@ -964,7 +964,7 @@ bool SpecCache::CalculateOneSpectrum
       else {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
-         float *const results = &out[half * xx];
+         float *const results = &out[nBins * xx];
 
          // Do the FFT.  Note that useBuffer is multiplied by the window,
          // and the window is initialized with leading and trailing zeroes
@@ -976,7 +976,7 @@ bool SpecCache::CalculateOneSpectrum
             (useBuffer, settings.hFFT, settings.window, fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependant gain factor
-            for (size_t ii = 0; ii < half; ++ii)
+            for (size_t ii = 0; ii < nBins; ++ii)
                results[ii] += gainFactors[ii];
          }
       }
@@ -985,13 +985,23 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
+void SpecCache::Allocate(const SpectrogramSettings &settings)
+{
+   settings.CacheWindows();
+
+   // len columns, and so many rows, column-major.
+   // Don't take column literally -- this isn't pixel data yet, it's the
+   // raw data to be mapped onto the display.
+   freq.resize(len * settings.NBins());
+}
+
 void SpecCache::Populate
    (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
     int copyBegin, int copyEnd, size_t numPixels,
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
-   settings.CacheWindows();
+   Allocate( settings );
 
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
@@ -1000,7 +1010,7 @@ void SpecCache::Populate
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
 #else
    const size_t zeroPaddingFactor = 1;
 #endif
@@ -1008,7 +1018,7 @@ void SpecCache::Populate
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
+   const auto nBins = settings.NBins();
 
    const size_t bufferSize = fftLen;
    const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
@@ -1098,9 +1108,9 @@ void SpecCache::Populate
          #pragma omp parallel for
 #endif
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
-            float *const results = &freq[half * xx];
+            float *const results = &freq[nBins * xx];
             const HFFT hFFT = settings.hFFT;
-            for (size_t ii = 0; ii < hFFT->Points; ++ii) {
+            for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
                   power = -160.0;
@@ -1109,7 +1119,7 @@ void SpecCache::Populate
             }
             if (!gainFactors.empty()) {
                // Apply a frequency-dependant gain factor
-               for (size_t ii = 0; ii < half; ++ii)
+               for (size_t ii = 0; ii < nBins; ++ii)
                   results[ii] += gainFactors[ii];
             }
          }
@@ -1118,7 +1128,8 @@ void SpecCache::Populate
 }
 
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
-                              const float *& spectrogram, const sampleCount *& where,
+                              const float *& spectrogram,
+                              const sampleCount *& where,
                               size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
@@ -1126,21 +1137,14 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   const bool autocorrelation =
-      settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
    const int &windowType = settings.windowType;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
 #else
    const size_t zeroPaddingFactor = 1;
 #endif
-
-   // FFT length may be longer than the window of samples that affect results
-   // because of zero padding done for increased frequency resolution
-   const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
 
    bool match =
       mSpecCache &&
@@ -1202,13 +1206,16 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // with the current one, re-use as much of the cache as
    // possible
    if (oldCache) {
-      memcpy(&mSpecCache->freq[half * copyBegin],
-         &oldCache->freq[half * (copyBegin + oldX0)],
-         half * (copyEnd - copyBegin) * sizeof(float));
+      mSpecCache->Allocate(settings);
+      auto nBins = settings.NBins();
+      memcpy(&mSpecCache->freq[nBins * copyBegin],
+         &oldCache->freq[nBins * (copyBegin + oldX0)],
+         nBins * (copyEnd - copyBegin) * sizeof(float));
    }
 
    BEGIN_TASK_PROFILING("Populate");
 
+   auto nBins = settings.NBins();
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
        mSequence->GetNumSamples(),

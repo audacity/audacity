@@ -430,7 +430,7 @@ void SpectrogramSettings::CacheWindows() const
 
       double scale;
       const auto fftLen = WindowSize() * ZeroPaddingFactor();
-      const auto padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+      const auto padding = (WindowSize() * (zeroPaddingFactor - 1)) / 2;
 
       if (hFFT != NULL)
          EndFFT(hFFT);
@@ -491,6 +491,12 @@ size_t SpectrogramSettings::GetFFTLength() const
       * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
 #endif
    ;
+}
+
+size_t SpectrogramSettings::NBins() const
+{
+   // Omit the Nyquist frequency bin
+   return GetFFTLength() / 2;
 }
 
 NumberScale SpectrogramSettings::GetScale( float minFreq, float maxFreq ) const
