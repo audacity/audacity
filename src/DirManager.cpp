@@ -434,6 +434,7 @@ void DirManager::CleanDir(
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
 {
+   bool copying = false;
    wxString oldPath = this->projPath;
    wxString oldName = this->projName;
    wxString oldFull = projFull;
@@ -495,7 +496,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          BlockFilePtr b = iter->second.lock();
          if (b) {
             if (b->IsLocked())
-               success = CopyToNewProjectDirectory( &*b );
+               success = CopyToNewProjectDirectory( &*b ), copying = true;
             else{
                success = MoveToNewProjectDirectory( &*b );
             }
@@ -545,7 +546,10 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // loading a project; in this latter case, the movement code does
    // nothing because SetProject is called before there are any
    // blockfiles.  Cleanup code trigger is the same
-   if (trueTotal > 0) {
+
+   // Do the cleanup of the temporary directory only if not saving-as, which we
+   // detect by having done copies rather than moves.
+   if (!copying && trueTotal > 0) {
       // Clean up after ourselves; boldly remove all files and directories
       // in the tree.  (Unlike what the earlier version of this comment said.)
       // Because this is a relocation of the project, not the case of closing

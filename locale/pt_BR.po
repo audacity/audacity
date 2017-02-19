@@ -203,7 +203,7 @@ msgstr "Aviso"
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1098
 #: src/effects/nyquist/Nyquist.cpp:2163
 msgid "Save Nyquist script"
-msgstr "Salvar scrip Nyquist "
+msgstr "Salvar script Nyquist "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1197
 msgid "Find dialog"
@@ -223,7 +223,7 @@ msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1419
 msgid "(C) 2009 by Leland Lucius"
-msgstr ""
+msgstr "(C) 2009 por Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1420
 msgid ""
@@ -250,7 +250,7 @@ msgstr "Sem-título"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1645
 msgid "Nyquist Effect Workbench - "
-msgstr "Efeitos Nyquist"
+msgstr "Efeitos Nyquist - "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1709 src/PluginManager.cpp:492
 #: src/prefs/ModulePrefs.cpp:102
@@ -442,24 +442,24 @@ msgstr "garantia de qualidade"
 #: src/AboutDialog.cpp:126 src/AboutDialog.cpp:127
 #, fuzzy
 msgid "developer"
-msgstr "Envelope"
+msgstr "desenvolvedor"
 
 #: src/AboutDialog.cpp:56
 msgid "documentation and support, French"
-msgstr ""
+msgstr "documentação e suporte, Francês"
 
 #: src/AboutDialog.cpp:57
 msgid "system administration"
-msgstr ""
+msgstr "administração do sistema"
 
 #: src/AboutDialog.cpp:59 src/AboutDialog.cpp:78
 msgid "co-founder and developer"
-msgstr ""
+msgstr "cofundador e desenvolvedor"
 
 #: src/AboutDialog.cpp:63 src/AboutDialog.cpp:68 src/AboutDialog.cpp:82
 #: src/AboutDialog.cpp:83
 msgid "documentation and support"
-msgstr ""
+msgstr "documentação e suporte"
 
 #: src/AboutDialog.cpp:88
 msgid "accessibility advisor"
@@ -467,11 +467,11 @@ msgstr ""
 
 #: src/AboutDialog.cpp:107
 msgid "graphic artist"
-msgstr ""
+msgstr "artista gráfico"
 
 #: src/AboutDialog.cpp:114
 msgid "composer"
-msgstr ""
+msgstr "compositor"
 
 #: src/AboutDialog.cpp:117
 #, fuzzy

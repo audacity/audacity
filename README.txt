@@ -313,7 +313,7 @@ and header dependencies:
 To compile on Windows using MSVC++, please follow the instructions in
 win\compile.txt in the source code. 
 
-To compile using Xcode on Mac OS X, see the instructions in mac/compile.txt.
+To compile using Xcode on Mac OS X, see the instructions in mac/Build.txt.
 
 For more information on compilation, please visit:
 
