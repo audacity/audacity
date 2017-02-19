@@ -26,8 +26,10 @@
 
 // If building with GNU compiler, then must be 4.9 or later.
 // TODO: This would be much nicer as a standalone test in configure.ac
-#if !defined(__APPLE__) && defined __GNUC__ && ( __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9))
-#error insufficient compiler
+#if !defined(__APPLE__) && !defined(__clang__) && \
+    defined __GNUC__ && ( __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9))
+
+    #error Audacity requires at least GCC 4.9
 #endif
 
 
