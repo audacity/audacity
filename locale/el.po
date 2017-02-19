@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-11-21 10:44+0000\n"
-"PO-Revision-Date: 2017-01-27 15:18+0300\n"
+"PO-Revision-Date: 2017-02-13 23:56+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -2931,7 +2931,7 @@ msgstr "Γραμμή εργαλείων &μεταγραφής"
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
 #: src/Menus.cpp:738
 msgid "&Transport Toolbar"
-msgstr "Γραμμή εργαλείων &κίνησης"
+msgstr "Γραμμή εργαλείων &μεταφοράς"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler
 #: src/Menus.cpp:740
@@ -2947,7 +2947,7 @@ msgstr "Επαναφορά &γραμμών εργαλείων"
 #. play, record, pause etc.
 #: src/Menus.cpp:757
 msgid "T&ransport"
-msgstr "Αν&απαραγωγή"
+msgstr "&Μεταφορά"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp:761
@@ -4970,7 +4970,7 @@ msgstr "Εργαλεία"
 #: src/Screenshot.cpp:387 src/toolbars/ControlToolBar.cpp:100
 #: src/toolbars/ControlToolBar.cpp:284
 msgid "Transport"
-msgstr "Κίνηση"
+msgstr "Μεταφορά"
 
 #: src/Screenshot.cpp:393 src/toolbars/MixerToolBar.cpp:59
 #: src/toolbars/MixerToolBar.cpp:195
@@ -12118,7 +12118,7 @@ msgstr "Εμφάνιση"
 
 #: src/prefs/GUIPrefs.cpp:107
 msgid "&Ergonomic order of Transport Toolbar buttons"
-msgstr "&Εργονομική διάταξη των κουμπιών της γραμμής εργαλείων κίνησης"
+msgstr "&Εργονομική διάταξη των κουμπιών της γραμμής εργαλείων μεταφοράς"
 
 #: src/prefs/GUIPrefs.cpp:110
 msgid "S&how 'How to Get Help' dialog box at program start up"
@@ -13180,7 +13180,7 @@ msgstr ""
 "Πατήστε \"Φόρτωση κρυφής μνήμης θέματος\" για να φορτώσετε τις αλλαγμένες "
 "εικόνες και τα χρώματα πίσω στο Audacity.\n"
 "\n"
-"(Μόνο η γραμμή εργαλείων κίνησης και τα χρώματα στο κομμάτι ήχου "
+"(Μόνο η γραμμή εργαλείων μεταφοράς και τα χρώματα στο κομμάτι ήχου "
 "επηρεάζονται προς το παρόν, αν και\n"
 "το αρχείο εικόνας εμφανίζει επίσης άλλα εικονίδια.)"
 
