@@ -81,6 +81,9 @@ Changes and Improvements:
  * Other Changes:   
    * Upgraded the PortAudio library to v19 rev r1966.  This gives Audacity 
      Windows 10 support.
+   * Audacity.app (on mac) now contains effects and some other resources 
+     inside it rather than those resources being alongside it.  So installation
+     to /Applications/ is cleaner.
    * (macOS) Audacity 2.1.3 provides partial support for Sierra. Details at 
      http://wiki.audacityteam.org/wiki/Partial_Support_for_Mac_Sierra_in_2.1.3
 
@@ -289,7 +292,7 @@ and header dependencies:
 To compile on Windows using MSVC++, please follow the instructions in
 win\compile.txt in the source code. 
 
-To compile using Xcode on Mac OS X, see the instructions in mac/compile.txt.
+To compile using Xcode on Mac OS X, see the instructions in mac/Build.txt.
 
 For more information on compilation, please visit:
 
