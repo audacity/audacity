@@ -82,7 +82,7 @@ Changes and Improvements:
    * Upgraded the PortAudio library to v19 rev r1966.  This gives Audacity 
      Windows 10 support.
    * (macOS) Audacity.app now has its resources inside it rather than in a
-     serparate folder, so installation to /Applications/ is cleaner.
+     separate folder, so installation to /Applications/ is cleaner.
    * (macOS) Audacity 2.1.3 provides partial support for Sierra. Details at 
      http://wiki.audacityteam.org/wiki/Partial_Support_for_Mac_Sierra_in_2.1.3
 
