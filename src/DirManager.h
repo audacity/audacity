@@ -123,7 +123,10 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // program is exited normally.
    static void CleanTempDir();
    static void CleanDir(
-      const wxString &path, const wxString &dirSpec, const wxString &msg,
+      const wxString &path, 
+      const wxString &dirSpec, 
+      const wxString &fileSpec, 
+      const wxString &msg,
       bool removeTop = false);
 
    // Check the project for errors and possibly prompt user
