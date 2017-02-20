@@ -147,6 +147,9 @@ wxMemorySize GetFreeMemory()
 // subdirs of subdirs. Files in the passed-in directory will not be
 // enumerated.  Also, the passed-in directory is the last entry added
 // to the list.
+// JKC: Using flag wxDIR_NO_FOLLOW to NOT follow symbolic links.
+// Directories and files inside a project should never be symbolic 
+// links, so if we find one, do not follow it.
 static int RecursivelyEnumerate(wxString dirPath,
                                   wxArrayString& filePathArray,  // output: all files in dirPath tree
                                   wxString dirspec,
@@ -163,7 +166,7 @@ static int RecursivelyEnumerate(wxString dirPath,
       wxString name;
 
       if (bFiles){
-         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES | wxDIR_HIDDEN);
+         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
          while ( cont ){
             wxString filepath = dirPath + wxFILE_SEP_PATH + name;
 
@@ -178,7 +181,7 @@ static int RecursivelyEnumerate(wxString dirPath,
          }
       }
 
-      cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS);
+      cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS | wxDIR_NO_FOLLOW);
       while ( cont ){
          wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
          count += RecursivelyEnumerate(
@@ -412,12 +415,13 @@ void DirManager::CleanDir(
 
    wxArrayString filePathArray, dirPathArray;
 
-   // Subtract 1 because we don't want to DELETE the global temp directory,
-   // which this will find and list last.
    int countFiles =
       RecursivelyEnumerate(path, filePathArray, dirSpec, true, false);
    int countDirs =
       RecursivelyEnumerate(path, dirPathArray, dirSpec, false, true);
+
+   // Subtract 1 because we don't want to DELETE the global temp directory,
+   // which this will find and list last.
    if (!removeTop) {
       // Remove the globaltemp itself from the array
       --countDirs;
@@ -559,7 +563,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // folders have been moved away already, but:
       // to fix bug1567 on Mac, we need to find the extraneous .DS_Store files
       // that we didn't put there, but that Finder may insert into the folders,
-      // and mercilessly remove them too.
+      // and mercilessly remove them, in addition to removing the directories.
 
       CleanDir(
          cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"), true);
