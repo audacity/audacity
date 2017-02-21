@@ -128,8 +128,8 @@ void UndoManager::CalculateSpaceUsage()
    // contains it.
 
    // Why the last and not the first? Because the user of the History dialog
-   // may delete undo states, oldest first.  To reclaim disk space you must
-   // delete all states containing the block file.  So the block file's
+   // may DELETE undo states, oldest first.  To reclaim disk space you must
+   // DELETE all states containing the block file.  So the block file's
    // contribution to space usage should be counted only in that latest state.
 
    for (size_t nn = stack.size(); nn--;)

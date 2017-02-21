@@ -654,7 +654,7 @@ void AUControl::CarbonViewResized()
    // Set the dialog size
    w->SetSize(size);
 
-   // And finally set the new max/min
+   // And finally set the NEW max/min
    w->SetSizeHints(size, size);
 
    mLastMin = wxSize(rect.size.width, rect.size.height);

@@ -1068,7 +1068,7 @@ void ProgressDialog::Init()
 #endif
 }
 
-// Add a new text column each time this is called.
+// Add a NEW text column each time this is called.
 void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText, bool bFirstColumn) {
 
    // Assuming that we don't want empty columns, bail out if there is no text.
