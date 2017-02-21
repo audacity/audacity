@@ -646,6 +646,13 @@ private:
       Buffer() : data(0), start(0), len(0) {}
       void Free() { delete[] data; data = 0; start = 0; len = 0; }
       sampleCount end() const { return start + len; }
+
+      void swap ( Buffer &other )
+      {
+         std::swap( data, other.data );
+         std::swap( start, other.start );
+         std::swap( len, other.len );
+      }
    };
 
    const WaveTrack *mPTrack;
