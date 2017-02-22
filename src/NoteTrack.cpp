@@ -137,7 +137,7 @@ Track::Holder NoteTrack::Duplicate() const
    // project object.
    if (mSeq) {
       SonifyBeginSerialize();
-      assert(!mSerializationBuffer);
+      wxASSERT(!mSerializationBuffer);
       // serialize from this to duplicate's mSerializationBuffer
       void *buffer;
       mSeq->serialize(&buffer,
@@ -146,13 +146,13 @@ Track::Holder NoteTrack::Duplicate() const
       SonifyEndSerialize();
    } else if (mSerializationBuffer) {
       SonifyBeginUnserialize();
-      assert(!mSeq);
+      wxASSERT(!mSeq);
       std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer.get(),
                                                       mSerializationLength) };
-      assert(alg_track->get_type() == 's');
+      wxASSERT(alg_track->get_type() == 's');
       duplicate->mSeq.reset(static_cast<Alg_seq*>(alg_track.release()));
       SonifyEndUnserialize();
-   } else assert(false); // bug if neither mSeq nor mSerializationBuffer
+   } else wxFAIL_MSG("neither mSeq nor mSerializationBuffer were present"); // bug if neither mSeq nor mSerializationBuffer
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetPitchHeight(mPitchHeight);
@@ -826,7 +826,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
       holder = Duplicate();
       saveme = static_cast<NoteTrack*>(holder.get());
-      assert(saveme->mSeq);
+      wxASSERT(saveme->mSeq);
    }
    saveme->mSeq->write(data, true);
    xmlFile.StartTag(wxT("notetrack"));

@@ -1175,7 +1175,7 @@ void MixerBoard::RemoveTrackCluster(const WaveTrack* pTrack)
    // Sanity check: if there is still a MixerTrackCluster with pTrack, then
    // we deleted the first but should have deleted the last:
    FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   assert(pMixerTrackCluster == NULL);
+   wxASSERT(pMixerTrackCluster == NULL);
 #endif
 }
 

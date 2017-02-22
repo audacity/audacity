@@ -6527,7 +6527,7 @@ void AudacityProject::OnScoreAlign()
    if (alignedNoteTrack->GetSequence() == NULL) {
       holder = alignedNoteTrack->Duplicate();
       alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
-      assert(alignedNoteTrack->GetSequence());
+      wxASSERT(alignedNoteTrack->GetSequence());
    }
    // Remove offset from NoteTrack because audio is
    // mixed starting at zero and incorporating clip offsets.
