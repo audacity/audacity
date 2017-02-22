@@ -475,9 +475,6 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
    // Start playing
    if (playRegionStart >= 0) {
 //      playRegionEnd = playRegionStart + (playRegionEnd-playRegionStart)* 100.0/mPlaySpeed;
-#ifdef EXPERIMENTAL_MIDI_OUT
-      gAudioIO->SetMidiPlaySpeed(mPlaySpeed);
-#endif
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       options.playLooped = looped;
       options.timeTrack = mTimeTrack.get();
