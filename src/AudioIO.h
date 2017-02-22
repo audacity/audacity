@@ -642,7 +642,7 @@ private:
 
    friend void InitAudioIO();
 
-   TimeTrack *mTimeTrack;
+   const TimeTrack *mTimeTrack;
 
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;

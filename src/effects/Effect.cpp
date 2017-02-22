@@ -1999,7 +1999,8 @@ bool Effect::TrackGroupProgress(int whichGroup, double frac, const wxString &msg
    return (updateResult != eProgressSuccess);
 }
 
-void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
+void Effect::GetSamples(
+   const WaveTrack *track, sampleCount *start, sampleCount *len)
 {
    double trackStart = track->GetStartTime();
    double trackEnd = track->GetEndTime();

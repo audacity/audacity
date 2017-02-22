@@ -169,12 +169,12 @@ public:
    ///\return true if successful, false otherwise
    bool Init();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Called by Import.cpp
    ///\return number of readable audio streams in the file
-   wxInt32 GetStreamCount();
+   wxInt32 GetStreamCount() override;
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
@@ -183,7 +183,7 @@ public:
    ///! Called by Import.cpp
    ///\param index - index of the stream in mStreamInfo and mStreams arrays
    ///\param use - true if this stream should be imported, false otherwise
-   void SetStreamUsage(wxInt32 index, bool use);
+   void SetStreamUsage(wxInt32 index, bool use) override;
 
    ///! Imports audio
    ///\return import status (see Import.cpp)

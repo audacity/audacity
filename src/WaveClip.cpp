@@ -1452,7 +1452,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
       return NULL;
 }
 
-void WaveClip::WriteXML(XMLWriter &xmlFile)
+void WaveClip::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("waveclip"));
    xmlFile.WriteAttr(wxT("offset"), mOffset, 8);

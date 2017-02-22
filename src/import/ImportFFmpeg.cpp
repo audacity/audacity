@@ -203,7 +203,7 @@ public:
    bool InitCodecs();
 
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Imports audio
@@ -240,7 +240,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return number of readable streams in the file
-   wxInt32 GetStreamCount()
+   wxInt32 GetStreamCount() override
    {
       return mNumStreams;
    }
@@ -255,7 +255,7 @@ public:
    ///! Called by Import.cpp
    ///\param StreamID - index of the stream in mStreamInfo and mScs arrays
    ///\param Use - true if this stream should be imported, false otherwise
-   void SetStreamUsage(wxInt32 StreamID, bool Use)
+   void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
       if (StreamID < mNumStreams)
          mScs->get()[StreamID]->m_use = Use;

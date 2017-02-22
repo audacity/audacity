@@ -3511,7 +3511,7 @@ XMLTagHandler *AudacityProject::HandleXMLChild(const wxChar *tag)
    return NULL;
 }
 
-void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile)
+void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile) const
 {
    xmlFile.Write(wxT("<?xml "));
    xmlFile.Write(wxT("version=\"1.0\" "));
@@ -3570,9 +3570,9 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
 
    mTags->WriteXML(xmlFile);
 
-   Track *t;
+   const Track *t;
    WaveTrack* pWaveTrack;
-   TrackListIterator iter(GetTracks());
+   TrackListConstIterator iter(GetTracks());
    t = iter.First();
    unsigned int ndx = 0;
    while (t) {
@@ -3617,7 +3617,6 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
 
       t = iter.Next();
    }
-   mStrOtherNamesArray.Clear();
 
    if (!mAutoSaving)
    {
@@ -3798,6 +3797,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       WriteXMLHeader(saveFile);
       WriteXML(saveFile);
+      mStrOtherNamesArray.Clear();
 
       saveFile.Close();
    }
@@ -4677,6 +4677,14 @@ ToolsToolBar *AudacityProject::GetToolsToolBar()
            NULL);
 }
 
+const ToolsToolBar *AudacityProject::GetToolsToolBar() const
+{
+   return (ToolsToolBar *)
+      (mToolManager ?
+      mToolManager->GetToolBar(ToolsBarID) :
+      NULL);
+}
+
 TranscriptionToolBar *AudacityProject::GetTranscriptionToolBar()
 {
    return (TranscriptionToolBar *)
@@ -5080,6 +5088,7 @@ void AudacityProject::AutoSave()
       AutoSaveFile buffer;
       WriteXMLHeader(buffer);
       WriteXML(buffer);
+      mStrOtherNamesArray.Clear();
 
       wxFFile saveFile;
       saveFile.Open(fn + wxT(".tmp"), wxT("wb"));

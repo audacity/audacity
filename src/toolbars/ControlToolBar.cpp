@@ -1183,7 +1183,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
    AudacityProject *p = GetActiveProject();
    if (p) {
       // Find first selected track (stereo or mono) and duplicate it
-      Track *track1 = NULL, *track2 = NULL;
+      const Track *track1 = NULL, *track2 = NULL;
       TrackListIterator it(p->GetTracks());
       for (Track *t = it.First(); t; t = it.Next())
       {

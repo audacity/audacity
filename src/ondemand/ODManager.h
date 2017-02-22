@@ -98,7 +98,7 @@ class ODManager final
    static bool IsInstanceCreated();
 
    ///fills in the status bar message for a given track
-   void FillTipForWaveTrack( WaveTrack * t, wxString &tip );
+   void FillTipForWaveTrack( const WaveTrack * t, wxString &tip );
 
    ///Gets the total percent complete for all tasks combined.
    float GetOverallPercentComplete();

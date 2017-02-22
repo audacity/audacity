@@ -122,12 +122,12 @@ public:
    }
    ~OggImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount()
+   wxInt32 GetStreamCount() override
    {
       if (mVorbisFile)
          return mVorbisFile->links;
@@ -140,7 +140,7 @@ public:
       return mStreamInfo;
    }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use)
+   void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
       if (mVorbisFile)
       {

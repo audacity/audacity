@@ -59,7 +59,7 @@ Profiler::~Profiler()
 }
 
 ///start the task timer.
-void Profiler::Begin(char* fileName, int lineNum, char* taskDescription)
+void Profiler::Begin(const char* fileName, int lineNum, const char* taskDescription)
 {
    mTasksMutex.Lock();
    GetOrCreateTaskProfile(fileName,lineNum)->Begin(fileName,lineNum,taskDescription);
@@ -67,7 +67,7 @@ void Profiler::Begin(char* fileName, int lineNum, char* taskDescription)
 }
 
 ///end the task timer.
-void Profiler::End(char* fileName, int lineNum, char* taskDescription)
+void Profiler::End(const char* fileName, int lineNum, const char* taskDescription)
 {
    mTasksMutex.Lock();
    TaskProfile* tp;
@@ -87,7 +87,7 @@ Profiler* Profiler::Instance()
 }
 
 ///find a taskProfile for the given task, otherwise create
-TaskProfile* Profiler::GetOrCreateTaskProfile(char* fileName, int lineNum)
+TaskProfile* Profiler::GetOrCreateTaskProfile(const char* fileName, int lineNum)
 {
    for(int i=0;i<(int)mTasks.size();i++)
    {
@@ -100,7 +100,7 @@ TaskProfile* Profiler::GetOrCreateTaskProfile(char* fileName, int lineNum)
    return mTasks.back().get();
 }
 
-TaskProfile* Profiler::GetTaskProfileByDescription(char* description)
+TaskProfile* Profiler::GetTaskProfileByDescription(const char* description)
 {
    for(int i=0;i<(int)mTasks.size();i++)
    {
@@ -131,7 +131,7 @@ TaskProfile::~TaskProfile()
 }
 
 ///start the task timer.
-void TaskProfile::Begin(char* fileName, int lineNum, char* taskDescription)
+void TaskProfile::Begin(const char* fileName, int lineNum, const char* taskDescription)
 {
    if(!mFileName)
    {
@@ -147,7 +147,7 @@ void TaskProfile::Begin(char* fileName, int lineNum, char* taskDescription)
 }
 
 ///end the task timer.
-void TaskProfile::End(char* WXUNUSED(fileName), int WXUNUSED(lineNum), char* WXUNUSED(taskDescription))
+void TaskProfile::End(const char* WXUNUSED(fileName), int WXUNUSED(lineNum), const char* WXUNUSED(taskDescription))
 {
    mCumTime += clock() - mLastTime;
    mNumHits++;

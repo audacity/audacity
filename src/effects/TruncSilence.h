@@ -63,7 +63,7 @@ public:
    // amount of input for previewing.
    bool Analyze(RegionList &silenceList,
                         RegionList &trackSilences,
-                        WaveTrack* wt,
+                        const WaveTrack *wt,
                         sampleCount* silentFrame,
                         sampleCount* index,
                         int whichTrack,

@@ -78,9 +78,9 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 
    int GetVisibleChannels();
 
-   Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup);
-   bool ExportMIDI(const wxString &f);
-   bool ExportAllegro(const wxString &f);
+   Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const;
+   bool ExportMIDI(const wxString &f) const;
+   bool ExportAllegro(const wxString &f) const;
 
 /* REQUIRES PORTMIDI */
 //   int GetLastMidiPosition() const { return mLastMidiPosition; }
@@ -102,7 +102,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void SetGain(float gain) { mGain = gain; }
 #endif
 
-   double NearestBeatTime(double time, double *beat);
+   double NearestBeatTime(double time, double *beat) const;
    bool StretchRegion(double b0, double b1, double dur);
 
    int GetBottomNote() const { return mBottomNote; }
@@ -172,7 +172,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) override;
+   void WriteXML(XMLWriter &xmlFile) const override;
 
    // channels are numbered as integers 0-15, visible channels
    // (mVisibleChannels) is a bit set. Channels are displayed as

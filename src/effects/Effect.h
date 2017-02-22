@@ -324,7 +324,8 @@ protected:
    int GetNumWaveGroups() { return mNumGroups; }
 
    // Calculates the start time and selection length in samples
-   void GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len);
+   void GetSamples(
+      const WaveTrack *track, sampleCount *start, sampleCount *len);
 
    void SetTimeWarper(std::unique_ptr<TimeWarper> &&warper);
    TimeWarper *GetTimeWarper();

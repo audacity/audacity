@@ -564,7 +564,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
    return true;
 }
 
-double NoteTrack::NearestBeatTime(double time, double *beat)
+double NoteTrack::NearestBeatTime(double time, double *beat) const
 {
    wxASSERT(mSeq);
    // Alg_seq knows nothing about offset, so remove offset time
@@ -601,7 +601,7 @@ namespace
    }
 }
 
-Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
+Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const
 {
    cleanup.reset();
    double offset = GetOffset();
@@ -615,10 +615,16 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
    cleanup.reset( mSeq->copy(start, mSeq->get_dur() - start, false) );
    auto seq = cleanup.get();
    if (offset > 0) {
-      // swap cleanup and mSeq so that Shift operates on the NEW copy
-      swap(mSeq, cleanup);
-      Shift(offset);
-      swap(mSeq, cleanup);  // undo the swap
+      {
+         // Cheat a little
+         NoteTrack *pMutable = const_cast< NoteTrack * >(this);
+
+         // swap cleanup and mSeq so that Shift operates on the NEW copy
+         swap(pMutable->mSeq, cleanup);
+         auto cleanup2 = finally( [&] { swap(pMutable->mSeq, cleanup); } );
+
+         pMutable->Shift(offset);
+      }
 #ifdef OLD_CODE
       // now shift events by offset. This must be done with an integer
       // number of measures, so first, find the beats-per-measure
@@ -720,7 +726,7 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
 }
 
 
-bool NoteTrack::ExportMIDI(const wxString &f)
+bool NoteTrack::ExportMIDI(const wxString &f) const
 {
    std::unique_ptr<Alg_seq> cleanup;
    auto seq = MakeExportableSeq(cleanup);
@@ -728,7 +734,7 @@ bool NoteTrack::ExportMIDI(const wxString &f)
    return rslt;
 }
 
-bool NoteTrack::ExportAllegro(const wxString &f)
+bool NoteTrack::ExportAllegro(const wxString &f) const
 {
    double offset = GetOffset();
    bool in_seconds;
@@ -800,7 +806,7 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
    return NULL;
 }
 
-void NoteTrack::WriteXML(XMLWriter &xmlFile)
+void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 {
    std::ostringstream data;
    // Normally, Duplicate is called in pairs -- once to put NoteTrack
@@ -818,7 +824,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    // and perform WriteXML, we may need to restore NoteTracks from binary
    // blobs to regular data structures (with an Alg_seq member).
    Track::Holder holder;
-   NoteTrack *saveme = this;
+   const NoteTrack *saveme = this;
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
       holder = Duplicate();
       saveme = static_cast<NoteTrack*>(holder.get());

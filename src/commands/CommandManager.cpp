@@ -1359,9 +1359,11 @@ wxString CommandManager::GetCategoryFromName(const wxString &name)
    return entry->labelTop;
 }
 
-wxString CommandManager::GetKeyFromName(const wxString &name)
+wxString CommandManager::GetKeyFromName(const wxString &name) const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
+   CommandListEntry *entry =
+      // May create a NULL entry
+      const_cast<CommandManager*>(this)->mCommandNameHash[name];
    if (!entry)
       return wxT("");
 
@@ -1426,7 +1428,7 @@ XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
    return this;
 }
 
-void CommandManager::WriteXML(XMLWriter &xmlFile)
+void CommandManager::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("audacitykeyboard"));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);

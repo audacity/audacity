@@ -1363,7 +1363,7 @@ bool TrackPanel::SetCursorByActivity( )
    return false;
 }
 
-bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
+bool TrackPanel::SetCursorForCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event)
 {
    if (IsOverCutline(track, rect, event)) {
       bool unsafe = IsUnsafe();
@@ -1550,7 +1550,7 @@ void TrackPanel::HandleCenterFrequencyClick
 // we hover over, most notably when hovering over the selction boundaries.
 // Determine and set the cursor and tip accordingly.
 void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
-        const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode,
+        const wxMouseEvent & event, const wxRect &rect, bool bMultiToolMode,
         wxString &tip, const wxCursor ** ppCursor )
 {
    // Do not set the default cursor here and re-set later, that causes
@@ -6234,7 +6234,7 @@ namespace {
    }
 }
 
-bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &rect, wxMouseEvent &event)
 {
    // FIXME: Disable this and return true when CutLines aren't showing?
    // (Don't use gPrefs-> for the fix as registry access is slow).
@@ -6355,7 +6355,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
    return false;
 }
 
-bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
+bool TrackPanel::IsOverCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event)
 {
    for (auto loc: track->GetCachedLocations())
    {
@@ -6381,7 +6381,7 @@ bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEve
 
 
 /// Event has happened on a track and it has been determined to be a label track.
-bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, wxMouseEvent & event)
 {
    if (!event.ButtonDown())
       return false;
@@ -6708,7 +6708,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
 
 
 #ifdef USE_MIDI
-bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event)
 {
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
@@ -6732,7 +6732,7 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent &
 
 /// method that tells us if the mouse event landed on an
 /// envelope boundary.
-bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6800,7 +6800,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent 
 
 /// method that tells us if the mouse event landed on an
 /// editable sample
-bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestSamples(Track *track, const wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6851,7 +6851,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent &
 
 /// method that tells us if the mouse event landed on a
 /// time-slider that allows us to time shift the sequence.
-bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), const wxRect &rect, const wxMouseEvent & event)
 {
    // Perhaps we should delegate this to TrackArtist as only TrackArtist
    // knows what the real sizes are??
@@ -7339,7 +7339,7 @@ void TrackPanel::UpdateVRuler(Track *t)
    UpdateVRulerSize();
 }
 
-void TrackPanel::UpdateTrackVRuler(Track *t)
+void TrackPanel::UpdateTrackVRuler(const Track *t)
 {
    wxASSERT(t);
    if (!t)
@@ -7351,7 +7351,7 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
             t->GetHeight() - (kTopMargin + kBottomMargin));
 
    mTrackArtist->UpdateVRuler(t, rect);
-   Track *l = t->GetLink();
+   const Track *l = t->GetLink();
    if (l)
    {
       rect.height = l->GetHeight() - (kTopMargin + kBottomMargin);

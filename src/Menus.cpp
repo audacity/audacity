@@ -5121,7 +5121,7 @@ void AudacityProject::OnToggleSpectralSelection()
 void AudacityProject::DoNextPeakFrequency(bool up)
 {
    // Find the first selected wave track that is in a spectrogram view.
-   WaveTrack *pTrack = 0;
+   const WaveTrack *pTrack {};
    SelectedTrackListOfKindIterator iter(Track::Wave, GetTracks());
    for (Track *t = iter.First(); t; t = iter.Next()) {
       WaveTrack *const wt = static_cast<WaveTrack*>(t);

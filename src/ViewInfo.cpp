@@ -161,7 +161,7 @@ void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, do
          beforeWidth / zoom));
 }
 
-void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile)
+void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
 {
    selectedRegion.WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
    xmlFile.WriteAttr(wxT("vpos"), vpos);

@@ -123,12 +123,12 @@ public:
    LOFImportFileHandle(const wxString & name, std::unique_ptr<wxTextFile> &&file);
    ~LOFImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
    int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount(){ return 1; }
+   wxInt32 GetStreamCount() override { return 1; }
 
    const wxArrayString &GetStreamInfo() override
    {
@@ -136,7 +136,8 @@ public:
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+   {}
 
 private:
    // Takes a line of text in lof file and interprets it and opens files

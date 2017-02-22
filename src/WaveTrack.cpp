@@ -63,7 +63,7 @@ using std::max;
 bool WaveTrack::mMonoAsVirtualStereo;
 #endif
 
-WaveTrack::Holder TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
+WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
    return std::unique_ptr<WaveTrack>
    { static_cast<WaveTrack*>(orig.Duplicate().release()) };
@@ -507,7 +507,7 @@ bool WaveTrack::ConvertToSampleFormat(sampleFormat format)
    return true;
 }
 
-bool WaveTrack::IsEmpty(double t0, double t1)
+bool WaveTrack::IsEmpty(double t0, double t1) const
 {
    //printf("Searching for overlap in %.6f...%.6f\n", t0, t1);
    for (const auto &clip : mClips)
@@ -1592,7 +1592,7 @@ bool WaveTrack::AppendCoded(const wxString &fName, sampleCount start,
 }
 
 ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-unsigned int WaveTrack::GetODFlags()
+unsigned int WaveTrack::GetODFlags() const
 {
    unsigned int ret = 0;
    for (const auto &clip : mClips)
@@ -1789,7 +1789,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
       return NULL;
 }
 
-void WaveTrack::WriteXML(XMLWriter &xmlFile)
+void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("wavetrack"));
    if (mAutoSaveIdent)
@@ -1958,7 +1958,7 @@ bool WaveTrack::GetMinMax(float *min, float *max,
    return result;
 }
 
-bool WaveTrack::GetRMS(float *rms, double t0, double t1)
+bool WaveTrack::GetRMS(float *rms, double t0, double t1) const
 {
    *rms = float(0.0);
 
