@@ -868,7 +868,7 @@ int Envelope::Move(double when, double value)
 }
 
 
-int Envelope::GetNumberOfPoints() const
+size_t Envelope::GetNumberOfPoints() const
 {
    return mEnv.size();
 }

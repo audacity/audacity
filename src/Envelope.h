@@ -179,7 +179,7 @@ class Envelope final : public XMLTagHandler {
    void Insert(int point, const EnvPoint &p);
 
    /** \brief Return number of points */
-   int GetNumberOfPoints() const;
+   size_t GetNumberOfPoints() const;
 
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
