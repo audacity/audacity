@@ -2,13 +2,14 @@
 #
 #: src/TimerRecordDialog.cpp:886 src/tracks/ui/Scrubbing.cpp:247
 # Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016.
+# Francisco Vila <paconet@gmx.es>, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-11-21 10:44+0000\n"
 "PO-Revision-Date: 2016-11-22 17:44+0100\n"
-"Last-Translator: Antonio Paniagua Navarro <aplist@gmail.com>\n"
+"Last-Translator: Francisco Vila <paconet@gmx.es>\n"
 "Language-Team: Spanish <audacity-translation@lists.sourceforge.net>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -3776,7 +3777,7 @@ msgstr "Pistas seleccionadas silenciadas durante %.2f segundos en %.2f"
 
 #: src/Menus.cpp:4764 src/effects/Silence.h:22
 msgid "Silence"
-msgstr "Silenciar"
+msgstr "Silencio"
 
 #: src/Menus.cpp:4794
 msgid "Duplicated"
