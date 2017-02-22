@@ -69,8 +69,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
-   int DrawLabelControls(wxDC & dc, wxRect & r);
-   bool LabelClick(wxRect & r, int x, int y, bool right);
+   int DrawLabelControls(wxDC & dc, const wxRect &r);
+   bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
    Alg_seq* GetSequence();

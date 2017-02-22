@@ -239,7 +239,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
 
 
 
-int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
+int NoteTrack::DrawLabelControls(wxDC & dc, const wxRect &r)
 {
    int wid = 23;
    int ht = 16;
@@ -328,7 +328,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
    return box.GetBottom();
 }
 
-bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
+bool NoteTrack::LabelClick(const wxRect &r, int mx, int my, bool right)
 {
    int wid = 23;
    int ht = 16;
