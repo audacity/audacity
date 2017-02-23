@@ -373,28 +373,29 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    int trials = numEdits;
 
-   short *small1 = new short[nChunks];
-   short *block = new short[chunkSize];
+   using Shorts = ArrayOf < short > ;
+   Shorts small1{ nChunks };
+   Shorts block{ chunkSize };
 
    Printf(wxT("Preparing...\n"));
 
    wxTheApp->Yield();
    FlushPrint();
 
-   int i, b, v;
+   int v;
    int bad;
    int z;
    long elapsed;
    wxString tempStr;
    wxStopWatch timer;
 
-   for (i = 0; i < nChunks; i++) {
+   for (size_t i = 0; i < nChunks; i++) {
       v = short(rand());
       small1[i] = v;
-      for (b = 0; b < chunkSize; b++)
+      for (size_t b = 0; b < chunkSize; b++)
          block[b] = v;
 
-      t->Append((samplePtr)block, int16Sample, chunkSize);
+      t->Append((samplePtr)block.get(), int16Sample, chunkSize);
    }
    t->Flush();
 
@@ -486,10 +487,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    bad = 0;
    timer.Start();
-   for (i = 0; i < nChunks; i++) {
+   for (size_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block, int16Sample, i * chunkSize, chunkSize);
-      for (b = 0; b < chunkSize; b++)
+      t->Get((samplePtr)block.get(), int16Sample, i * chunkSize, chunkSize);
+      for (size_t b = 0; b < chunkSize; b++)
          if (block[b] != v) {
             bad++;
             if (bad < 10)
@@ -512,10 +513,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    timer.Start();
 
-   for (i = 0; i < nChunks; i++) {
+   for (size_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block, int16Sample, i * chunkSize, chunkSize);
-      for (b = 0; b < chunkSize; b++)
+      t->Get((samplePtr)block.get(), int16Sample, i * chunkSize, chunkSize);
+      for (size_t b = 0; b < chunkSize; b++)
          if (block[b] != v)
             bad++;
    }
@@ -534,8 +535,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    Printf(wxT("TEST FAILED!!!\n"));
 
  success:
-   delete[]small1;
-   delete[]block;
 
    dd.reset();
 
