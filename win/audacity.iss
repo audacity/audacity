@@ -182,9 +182,10 @@ Type: dirifempty; Name: "{app}\Modules"
 ; Get rid of gverb that we no longer ship
 Type: files; Name: "{app}\Plug-Ins\gverb_1216.dll"
 
-; Get rid of old crossfade* plugins that we no longer ship
+; Get rid of old nyquist plugins that we no longer ship
 Type: files; Name: "{app}\Plug-Ins\crossfadein.ny"
 Type: files; Name: "{app}\Plug-Ins\crossfadeout.ny"
+Type: files; Name: "{app}\Plug-Ins\clicktrack.ny"
                                             
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
