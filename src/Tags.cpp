@@ -1365,6 +1365,9 @@ void TagsEditor::DoCancel(bool escKey)
       // To avoid memory leak, don't forget DecRef()!
       editor->DecRef();
       mGrid->HideCellEditControl();
+#if defined(__WXMSW__)
+      return;
+#endif
    }
 
    auto focus = wxWindow::FindFocus();

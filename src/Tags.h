@@ -142,7 +142,9 @@ class TagsEditor final : public wxDialogWrapper
 
    virtual ~TagsEditor();
 
+#if !defined(__WXMSW__)
    bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }
+#endif
 
    void PopulateOrExchange(ShuttleGui & S);
 
