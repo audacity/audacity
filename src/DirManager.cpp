@@ -514,6 +514,12 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       {
          BlockFilePtr b = iter->second.lock();
          if (b) {
+            // FIXME: TRAP_ERR
+            // JKC: The 'success' variable and recovery strategy looks 
+            // broken/bogus to me.  Would need to be using &= to catch 
+            // failure in one of the copies/moves.  Besides which,
+            // our temporary files are going to be deleted when we exit 
+            // anyway, if saving from temporary to named project.
             if (b->IsLocked())
                success = CopyToNewProjectDirectory( &*b ), copying = true;
             else{
