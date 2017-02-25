@@ -171,6 +171,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual double GetMostRecentXPos();
 
+   virtual void OnIdle(wxIdleEvent & event);
    virtual void OnTimer(wxTimerEvent& event);
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}

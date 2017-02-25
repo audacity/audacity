@@ -516,7 +516,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTimeCount = 0;
    mTimer.parent = this;
-   mTimer.Start(kTimerInterval, FALSE);
+   // Timer is started after the window is visible
+   GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
 
    //Initialize a member variable pointing to the current
    //drawing track.
@@ -902,6 +903,24 @@ AudacityProject * TrackPanel::GetProject() const
    pWind = pWind->GetParent(); //Project
    wxASSERT( pWind );
    return (AudacityProject*)pWind;
+}
+
+void TrackPanel::OnIdle(wxIdleEvent& event)
+{
+   // The window must be ready when the timer fires (#1401)
+   if (IsShownOnScreen())
+   {
+      mTimer.Start(kTimerInterval, FALSE);
+
+      // Timer is started, we don't need the event anymore
+      GetProject()->Unbind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
+   }
+   else
+   {
+      // Get another idle event, wx only guarantees we get one
+      // event after "some other normal events occur"
+      event.RequestMore();
+   }
 }
 
 /// AS: This gets called on our wx timer events.
