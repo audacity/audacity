@@ -121,7 +121,7 @@ bool ExportOGGOptions::TransferDataFromWindow()
 // ExportOGG
 //----------------------------------------------------------------------------
 
-#define SAMPLES_PER_RUN 8192
+#define SAMPLES_PER_RUN 8192u
 
 class ExportOGG final : public ExportPlugin
 {

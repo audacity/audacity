@@ -173,6 +173,14 @@ static struct
 
 //----------------------------------------------------------------------------
 
+struct FLAC__StreamMetadataDeleter {
+   void operator () (FLAC__StreamMetadata *p) const
+   { if (p) ::FLAC__metadata_object_delete(p); }
+};
+using FLAC__StreamMetadataHandle = std::unique_ptr<
+   FLAC__StreamMetadata, FLAC__StreamMetadataDeleter
+>;
+
 class ExportFLAC final : public ExportPlugin
 {
 public:
@@ -196,7 +204,7 @@ private:
 
    bool GetMetadata(AudacityProject *project, const Tags *tags);
 
-   FLAC__StreamMetadata *mMetadata;
+   FLAC__StreamMetadataHandle mMetadata;
 };
 
 //----------------------------------------------------------------------------
@@ -248,7 +256,10 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    }
 
    if (mMetadata) {
-      encoder.set_metadata(&mMetadata, 1);
+      // set_metadata expects an array of pointers to metadata and a size.
+      // The size is 1.
+      FLAC__StreamMetadata *p = mMetadata.get();
+      encoder.set_metadata(&p, 1);
    }
 
    sampleFormat format;
@@ -299,9 +310,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    }
 #endif
 
-   if (mMetadata) {
-      ::FLAC__metadata_object_delete(mMetadata);
-   }
+   mMetadata.reset();
 
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
@@ -367,7 +376,7 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
    if (tags == NULL)
       tags = project->GetTags();
 
-   mMetadata = ::FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT);
+   mMetadata.reset(::FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT));
 
    wxString n;
    for (const auto &pair : tags->GetRange()) {
@@ -378,7 +387,7 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
       }
       FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
                                                  v.mb_str(wxConvUTF8));
-      ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata,
+      ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
                                                            entry.get_entry(),
                                                            true);
    }

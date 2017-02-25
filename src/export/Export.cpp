@@ -240,7 +240,7 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
-         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
