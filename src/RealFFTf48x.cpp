@@ -51,6 +51,7 @@
 *  along with this program; if not, write to the Free Software
 *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#include "Audacity.h"
 #include "Experimental.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
@@ -376,7 +377,7 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
             *(A++) = *(B++) + 2 * v2;
          }
          A = B;
-         B + =ButterfliesPerGroup * 2;
+         B += ButterfliesPerGroup * 2;
          sptr += 2;
       }
       ButterfliesPerGroup >>= 1;
