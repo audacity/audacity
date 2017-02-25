@@ -48,7 +48,7 @@
 \brief An array of these created by the Ruler is used to determine
 what and where text annotations to the numbers on the Ruler get drawn.
 
-\todo Check whether Ruler is costing too much time in malloc/free of
+\todo Check whether Ruler is costing too much time in allocation/free of
 array of Ruler::Label.
 
 *//******************************************************************/

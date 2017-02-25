@@ -34,6 +34,8 @@
 *                   and BitReversed tables so they don't need to be reallocated
 *                   and recomputed on every call.
 *                 - Added Reorder* functions to undo the bit-reversal
+*              Modified 15 April 2016 Paul Licameli
+*                 - C++11 smart pointers
 *
 *  Copyright (C) 2009  Philip VanBaren
 *

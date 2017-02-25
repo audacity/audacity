@@ -43,10 +43,7 @@ extern FFmpegLibs *FFmpegLibsInst();
 //struct for caching the decoded samples to be used over multiple blockfiles
 struct FFMpegDecodeCache
 {
-   FFMpegDecodeCache() {}
-   ~FFMpegDecodeCache() { free(samplePtr); }
-
-   uint8_t* samplePtr{};//interleaved samples
+   ArrayOf<uint8_t> samplePtr;//interleaved samples
    sampleCount start;
    size_t         len;
    unsigned    numChannels;
@@ -391,6 +388,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
          if(actualDecodeStart>start && firstpass) {
             // find the number of samples for the leading silence
+
             // UNSAFE_SAMPLE_COUNT_TRUNCATION
             // -- but used only experimentally as of this writing
             // Is there a proof size_t will not overflow size_t?
@@ -402,7 +400,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
 
             //put it in the cache so the other channels can use it.
             // wxASSERT(sc->m_stream->codec->channels > 0);
-            cache->numChannels = sc->m_stream->codec->channels;
+            cache->numChannels = std::max<unsigned>(0, sc->m_stream->codec->channels);
             cache->len = amt;
             cache->start=start;
             // 8 bit and 16 bit audio output from ffmpeg means
@@ -413,9 +411,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             else
                cache->samplefmt = AV_SAMPLE_FMT_FLT;
 
-            cache->samplePtr = (uint8_t*) malloc(amt * cache->numChannels * SAMPLE_SIZE(format));
-
-            memset(cache->samplePtr, 0, amt * cache->numChannels * SAMPLE_SIZE(format));
+            cache->samplePtr.reinit(amt * cache->numChannels * SAMPLE_SIZE(format), true);
 
             InsertCache(std::move(cache));
          }
@@ -538,27 +534,27 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
             {
                case AV_SAMPLE_FMT_U8:
                   //printf("u8 in %lu out %lu cachelen %lu outLen %lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((int16_t *)outBuf)[outIndex] = (int16_t) (((uint8_t*)mDecodeCache[i]->samplePtr)[inIndex] - 0x80) << 8;
+                  ((int16_t *)outBuf)[outIndex] = (int16_t) (((uint8_t*)mDecodeCache[i]->samplePtr.get())[inIndex] - 0x80) << 8;
                break;
 
                case AV_SAMPLE_FMT_S16:
                   //printf("u16 in %lu out %lu cachelen %lu outLen % lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((int16_t *)outBuf)[outIndex] = ((int16_t*)mDecodeCache[i]->samplePtr)[inIndex];
+                  ((int16_t *)outBuf)[outIndex] = ((int16_t*)mDecodeCache[i]->samplePtr.get())[inIndex];
                break;
 
                case AV_SAMPLE_FMT_S32:
                   //printf("s32 in %lu out %lu cachelen %lu outLen %lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr)[inIndex] * (1.0 / (1u << 31));
+                  ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr.get())[inIndex] * (1.0 / (1u << 31));
                break;
 
                case AV_SAMPLE_FMT_FLT:
                   //printf("f in %lu out %lu cachelen %lu outLen %lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((float *)outBuf)[outIndex] = (float) ((float*)mDecodeCache[i]->samplePtr)[inIndex];
+                  ((float *)outBuf)[outIndex] = (float) ((float*)mDecodeCache[i]->samplePtr.get())[inIndex];
                break;
 
                case AV_SAMPLE_FMT_DBL:
                   //printf("dbl in %lu out %lu cachelen %lu outLen %lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((float *)outBuf)[outIndex] = (float) ((double*)mDecodeCache[i]->samplePtr)[inIndex];
+                  ((float *)outBuf)[outIndex] = (float) ((double*)mDecodeCache[i]->samplePtr.get())[inIndex];
                break;
 
                default:
@@ -614,13 +610,13 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       auto cache = make_movable<FFMpegDecodeCache>();
       //len is number of samples per channel
       // wxASSERT(sc->m_stream->codec->channels > 0);
-      cache->numChannels = sc->m_stream->codec->channels;
+      cache->numChannels = std::max<unsigned>(0, sc->m_stream->codec->channels);
 
       cache->len = (sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize) / cache->numChannels;
       cache->start = mCurrentPos;
-      cache->samplePtr = (uint8_t*) malloc(sc->m_decodedAudioSamplesValidSiz);
+      cache->samplePtr.reinit(sc->m_decodedAudioSamplesValidSiz);
       cache->samplefmt = sc->m_samplefmt;
-      memcpy(cache->samplePtr, sc->m_decodedAudioSamples.get(), sc->m_decodedAudioSamplesValidSiz);
+      memcpy(cache->samplePtr.get(), sc->m_decodedAudioSamples.get(), sc->m_decodedAudioSamplesValidSiz);
 
       InsertCache(std::move(cache));
    }

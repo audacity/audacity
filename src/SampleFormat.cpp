@@ -74,16 +74,6 @@ const wxChar *GetSampleFormatStr(sampleFormat format)
    return wxT("Unknown format"); // compiler food
 }
 
-AUDACITY_DLL_API samplePtr NewSamples(size_t count, sampleFormat format)
-{
-   return (samplePtr)malloc(count * SAMPLE_SIZE(format));
-}
-
-AUDACITY_DLL_API void DeleteSamples(samplePtr p)
-{
-   free(p);
-}
-
 // TODO: Risky?  Assumes 0.0f is represented by 0x00000000;
 void ClearSamples(samplePtr src, sampleFormat format,
                   size_t start, size_t len)
