@@ -18,6 +18,8 @@
 #include <wx/bitmap.h>
 #include "widgets/wxPanelWrapper.h"
 
+extern const wxString VerCheckArgs();
+
 class ShuttleGui;
 
 struct AboutDialogCreditItem {

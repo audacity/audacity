@@ -417,6 +417,7 @@ void OnAbout();
 void OnQuickHelp();
 void OnManual();
 void OnCheckForUpdates();
+void MayCheckForUpdates();
 void OnShowLog();
 void OnHelpWelcome();
 void OnBenchmark();
