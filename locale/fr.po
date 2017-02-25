@@ -84,12 +84,12 @@ msgstr "&Couper\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:750
 msgid "&Copy\tCtrl+C"
-msgstr "&Copier\tCtrl+C"
+msgstr "Co&pier\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:751
 #, fuzzy
 msgid "&Paste\tCtrl+V"
-msgstr "&Coller"
+msgstr "Co&ller"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:752
 msgid "Cle&ar\tCtrl+L"
