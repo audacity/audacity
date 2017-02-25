@@ -594,7 +594,7 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
       samplePos += blockSize;
 
       // Update the Progress meter
-      if (TrackProgress(count, (samplePos - start) / (double)len)) {
+      if (TrackProgress(count, (samplePos - start).as_double() / len.as_double())) {
          bLoopSuccess = false;
          break;
       }
