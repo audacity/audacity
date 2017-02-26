@@ -438,12 +438,19 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += _("Build Information");
    informationStr += wxT("</center></h2>\n");
    // Only for debug builds, for now.
-#if __WXDEBUG__
+
+//The version we intend to use for live Audacity.
+#define VER_CHECK_URL "[[http://www.audacityteam.org/download/?"
+//For testing of our scriptlet.
+//#define VER_CHECK_URL "[[http://www.audacityteam.org/slug/?"
+//For testing locally
+//#define VER_CHECK_URL "[[http://localhost:63342/WorkingDocs/demos/download.html?"
+
    informationStr += wxT("<center>");
-   informationStr += wxString("[[http://www.audacityteam.org/download/?") + VerCheckArgs() + "|" +
+   informationStr += wxString(VER_CHECK_URL) + VerCheckArgs() + "|" +
       _("Check Online") + "]]";
    informationStr += wxT("</center>\n");
-#endif
+
    // top level heading
    informationStr += wxT("<h3>");
    informationStr += _("File Format Support");
