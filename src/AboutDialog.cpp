@@ -69,9 +69,9 @@ const wxString VerCheckArgs(){
    
    wxString result = wxString("from_ver=") + AUDACITY_VERSION_STRING;
 #ifdef REV_LONG
-   wxString timeStr = wxString( __DATE__ ) + wxString( __TIME__ );
-   result += wxString("&ComitId=")+wxString(REV_LONG).Left(6) + "&Time=" + timeStr;
+   result += wxString("&ComitId=")+wxString(REV_LONG).Left(6);
 #endif
+   result += wxString("&Time=") + wxString( __DATE__ ) + wxString( __TIME__ );
    result.Replace(" ","");
    return result;
 }
