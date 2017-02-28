@@ -66,7 +66,6 @@ extern wxString FormatHtmlText( const wxString & Text );
 
 // Function to give the xtra arguments to put on the version check string.
 const wxString VerCheckArgs(){
-   
    wxString result = wxString("from_ver=") + AUDACITY_VERSION_STRING;
 #ifdef REV_LONG
    result += wxString("&CommitId=")+wxString(REV_LONG).Left(6);
@@ -75,6 +74,28 @@ const wxString VerCheckArgs(){
    result.Replace(" ","");
    return result;
 }
+
+// Url with Version check args attached.
+const wxString VerCheckUrl(){
+   //The version we intend to use for live Audacity.
+#define VER_CHECK_URL "http://www.audacityteam.org/download/?"
+//For testing of our scriptlet.
+//#define VER_CHECK_URL "http://www.audacityteam.org/slug/?"
+//For testing locally
+//#define VER_CHECK_URL "http://localhost:63342/WorkingDocs/demos/download.html?"
+
+   return wxString( wxT(VER_CHECK_URL)) +VerCheckArgs();
+}
+
+// Text of htperlink to check versions.
+const wxString VerCheckHtml(){
+
+   wxString result = "<center>[[";
+   result += VerCheckUrl() + "|" + _("Check Online");
+   result += "]]</center>\n";
+   return result;
+}
+
 
 void AboutDialog::CreateCreditsList()
 {
@@ -437,20 +458,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr = wxT("<h2><center>");
    informationStr += _("Build Information");
    informationStr += wxT("</center></h2>\n");
-   // Only for debug builds, for now.
-
-//The version we intend to use for live Audacity.
-#define VER_CHECK_URL "[[http://www.audacityteam.org/download/?"
-//For testing of our scriptlet.
-//#define VER_CHECK_URL "[[http://www.audacityteam.org/slug/?"
-//For testing locally
-//#define VER_CHECK_URL "[[http://localhost:63342/WorkingDocs/demos/download.html?"
-
-   informationStr += wxT("<center>");
-   informationStr += wxString(VER_CHECK_URL) + VerCheckArgs() + "|" +
-      _("Check Online") + "]]";
-   informationStr += wxT("</center>\n");
-
+   informationStr += VerCheckHtml();
    // top level heading
    informationStr += wxT("<h3>");
    informationStr += _("File Format Support");

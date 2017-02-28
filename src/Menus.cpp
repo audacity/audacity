@@ -6848,8 +6848,7 @@ void AudacityProject::OnManual()
 
 void AudacityProject::OnCheckForUpdates()
 {
-   wxString Args = VerCheckArgs();
-   ::OpenInDefaultBrowser( wxString( wxT("http://audacityteam.org/download/?")) + Args);
+   ::OpenInDefaultBrowser( VerCheckUrl());
 }
 
 // Only does the update checks if it's an ALPHA build and not disabled by preferences.

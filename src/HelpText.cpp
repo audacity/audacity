@@ -18,6 +18,7 @@
 #include "Audacity.h"
 #include "HelpText.h"
 #include "FileNames.h"
+#include "AboutDialog.h"
 
 
 
@@ -193,6 +194,13 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) + 
+#if IS_ALPHA
+         wxT("<hr><center><h3>") + _("Get the Official Released Version of Audacity") + wxT("</h3></center>") +
+         VerCheckHtml() +
+         _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.") + " " +
+         _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")+
+         _("You can help us get Audacity ready for release by joining our [[http://www.audacityteam.org/community/|community]].<hr><br><br>")+
+#endif
          wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 
          _("These are our support methods:") + wxT("<p><ul><li>") +
