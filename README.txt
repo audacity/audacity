@@ -275,7 +275,7 @@ you need to install the "dev" (development) packages for each library.
 To compile on Linux and other Unix systems and using gnu tools, execute these 
 commands:
 
-  ./configure CXXFLAGS="-std=gnu++11"
+  ./configure
   make
   make install  # as root
 
