@@ -9,7 +9,7 @@
 ******************************************************************//**
 
 \class NyquistEffect
-\brief An Effect that calls up a Nyquist (XLISP) plug in, i.e. many possible
+\brief An Effect that calls up a Nyquist (XLISP) plug-in, i.e. many possible
 effects from this one class.
 
 *//****************************************************************//**
@@ -506,7 +506,10 @@ bool NyquistEffect::Process()
       {
          list += wxT("\"") + EscapeString(paths[i]) + wxT("\" ");
       }
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list.RemoveLast().c_str());
+      list = list.RemoveLast();
+      // TODO:Document: "PLUGIN" is deprecated as of Audacity 2.1.3. Use "PLUG-IN" instead.
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list.c_str());
 
 
       // Date and time:
@@ -1008,7 +1011,7 @@ bool NyquistEffect::ProcessOne()
                           curLen, mCurTrack[0]->GetRate());
    }
 
-   // Restore the Nyquist sixteenth note symbol for Generate plugins.
+   // Restore the Nyquist sixteenth note symbol for Generate plug-ins.
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490.
    if (GetType() == EffectTypeGenerate) {
       cmd += wxT("(setf s 0.25)\n");
@@ -1427,7 +1430,7 @@ void NyquistEffect::Parse(const wxString &line)
    }
 
    // Consistency decission is for "plug-in" as the correct spelling
-   // "plugin" is allowed as an undocumented convenience.
+   // "plugin" (deprecated) is allowed as an undocumented convenience.
    if (len == 2 && tokens[0] == wxT("nyquist") &&
       (tokens[1] == wxT("plug-in") || tokens[1] == wxT("plugin"))) {
       mOK = true;
@@ -1604,7 +1607,7 @@ void NyquistEffect::Parse(const wxString &line)
          else
          {
             wxString str;
-            str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\nControl not created."),
+            str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
                        tokens[3].c_str(), mFileName.GetFullPath().c_str());
 
             // Too disturbing to show alert before Audacity frame is up.
