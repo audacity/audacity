@@ -355,6 +355,7 @@ ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
 
    // Init
    mManager = manager;
+   memset(mBars, 0, sizeof(mBars)); // otherwise uninitialized
 
    // Use for testing gaps
    // SetOwnBackgroundColour( wxColour( 255, 0, 0 ) );

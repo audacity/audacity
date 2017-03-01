@@ -1959,6 +1959,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mCursorDefault = wxCursor(wxCURSOR_DEFAULT);
    mCursorHand = wxCursor(wxCURSOR_HAND);
    mCursorSizeWE = wxCursor(wxCURSOR_SIZEWE);
+   mIsWE = false;
 
    mLeftOffset = 0;
    mIndTime = -1;
