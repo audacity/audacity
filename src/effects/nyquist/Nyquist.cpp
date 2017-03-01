@@ -945,11 +945,12 @@ bool NyquistEffect::ProcessOne()
       }
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat.c_str());
 
-      float maxPeak = 0.0;
-      wxString clips, rmsString;
+      float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
+      wxString clips, peakString, rmsString;
       for (int i = 0; i < mCurNumChannels; i++) {
          auto ca = mCurTrack[i]->SortedClipArray();
-         
+         float maxPeak = 0.0;
+
          // A list of clips for mono, or an array of lists for multi-channel.
          if (mCurNumChannels > 1) {
             clips += wxT("(list ");
@@ -965,6 +966,15 @@ bool NyquistEffect::ProcessOne()
          float min, max;
          mCurTrack[i]->GetMinMax(&min, &max, mT0, mT1);
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
+         maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
+
+         // TODO: Document, PEAK is nil if NaN or INF.
+         // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
+         if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
+            peakString += wxString::Format(wxT("(float %s) "), Internat::ToString(maxPeak).c_str());
+         } else {
+            peakString += wxT("nil");
+         }
 
          float rms = 0.0;
          mCurTrack[i]->GetRMS(&rms, mT0, mT1);
@@ -978,12 +988,19 @@ bool NyquistEffect::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
                               (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
                               clips.c_str());
-      // TODO: Document, PEAK is nil if NaN or INF.
-      // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
-      if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
-         cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK)\n"),
-                                 Internat::ToString(maxPeak).c_str());
+
+      // TODO: Document, PEAK is linear PEAK per channel.
+      (mCurNumChannels > 1)?
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'PEAK)\n"), peakString);
+
+      // TODO: Documen, PEAK-LEVEL is deprecated as of 2.1.3.
+      // TODO: Document, PEAK-LEVEL is nil if NaN or INF.
+      if (!std::isinf(maxPeakLevel) && !std::isnan(maxPeakLevel) && (maxPeakLevel < FLT_MAX)) {
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
+                                 Internat::ToString(maxPeakLevel).c_str());
       }
+
       // TODO: Document, RMS is linear RMS per channel.
       (mCurNumChannels > 1)?
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'RMS)\n"), rmsString) :
