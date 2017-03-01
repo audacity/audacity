@@ -548,7 +548,7 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
 
                case AV_SAMPLE_FMT_S32:
                   //printf("s32 in %lu out %lu cachelen %lu outLen %lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr)[inIndex] * (1.0 / (1 << 31));
+                  ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr.get())[inIndex] * (1.0 / (1u << 31));
                break;
 
                case AV_SAMPLE_FMT_FLT:

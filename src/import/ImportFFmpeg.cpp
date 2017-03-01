@@ -765,7 +765,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
 
                case AV_SAMPLE_FMT_S32:
                case AV_SAMPLE_FMT_S32P:
-                  ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1 << 31));
+                  ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1u << 31));
                break;
 
                case AV_SAMPLE_FMT_FLT:
