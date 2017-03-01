@@ -265,7 +265,7 @@ mStreamIndex(streamIndex)
        sc->m_stream->start_time > 0) {
       stream_delay = sc->m_stream->start_time;
    }
-   mCurrentPos = double(stream_delay) / AV_TIME_BASE;
+   mCurrentPos = sampleCount{ double(stream_delay) / AV_TIME_BASE };
 
    //TODO: add a ref counter to scs?  This will be necessary if we want to allow copy and paste of not-yet decoded
    //ODDecodeBlockFiles that point to FFmpeg files.
@@ -340,7 +340,7 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
             //printf("attempting seek to %llu, attempts %d\n", targetts, numAttempts);
             if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
                //find out the dts we've seekd to.
-               sampleCount actualDecodeStart = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
+               sampleCount actualDecodeStart { 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den) };      //this is mostly safe because den is usually 1 or low number but check for high values.
 
                mCurrentPos = actualDecodeStart;
                seeking = true;
@@ -375,8 +375,8 @@ int ODFFmpegDecoder::Decode(SampleBuffer & data, sampleFormat & format, sampleCo
          // for some formats
          // The only other case for inserting silence is for initial offset and ImportFFmpeg.cpp does this for us
          if (seeking) {
-            actualDecodeStart = 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt->dts
-                                        * ((double)sc->m_stream->time_base.num / sc->m_stream->time_base.den));
+            actualDecodeStart = sampleCount{ 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt->dts
+                                        * ((double)sc->m_stream->time_base.num / sc->m_stream->time_base.den)) };
             //this is mostly safe because den is usually 1 or low number but check for high values.
 
             //hack to get rounding to work to neareset frame size since dts isn't exact
@@ -548,7 +548,7 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleFormat outFormat,
 
                case AV_SAMPLE_FMT_S32:
                   //printf("s32 in %lu out %lu cachelen %lu outLen %lu\n", inIndex, outIndex, mDecodeCache[i]->len, len);
-                  ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr.get())[inIndex] * (1.0 / (1u << 31));
+                  ((float *)outBuf)[outIndex] = (float) ((int32_t*)mDecodeCache[i]->samplePtr)[inIndex] * (1.0 / (1u << 31));
                break;
 
                case AV_SAMPLE_FMT_FLT:
