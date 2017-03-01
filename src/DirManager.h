@@ -41,6 +41,14 @@ WX_DECLARE_HASH_MAP(wxString, std::weak_ptr<BlockFile>, wxStringHash,
 
 wxMemorySize GetFreeMemory();
 
+enum {
+   kCleanTopDirToo = 1,        // The top directory can be excluded from clean.
+   kCleanDirsOnlyIfEmpty = 2,  // Otherwise non empty dirs may be removed.
+   kCleanFiles = 4,            // Remove files
+   kCleanDirs = 8              // Remove dirs.
+};
+
+
 class PROFILE_DLL_API DirManager final : public XMLTagHandler {
  public:
 
@@ -127,7 +135,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
       const wxString &dirSpec, 
       const wxString &fileSpec, 
       const wxString &msg,
-      bool removeTop = false);
+      int flags = 0);
 
    // Check the project for errors and possibly prompt user
    // bForceError: Always show log error alert even if no errors are found here.

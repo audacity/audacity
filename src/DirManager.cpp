@@ -297,10 +297,13 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
 }
 
 static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
-                              bool bFiles, bool bDirs,
-                              const wxChar* message = NULL)
+                              int flags, const wxChar* message = NULL)
 {
+   bool bFiles= (flags & kCleanFiles) != 0;
+   bool bDirs = (flags & kCleanDirs) != 0;
+   bool bDirsMustBeEmpty = (flags & kCleanDirsOnlyIfEmpty) != 0;
    Maybe<ProgressDialog> progress{};
+
 
    if (message)
       progress.create( _("Progress"), message );
@@ -311,6 +314,16 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs) {
+         // continue will go to the next item, and skip
+         // attempting to delete the directory.
+         if( bDirsMustBeEmpty ){
+            wxDir dir( file );
+            if( dir.HasFiles() )
+               continue;
+            if( dir.HasSubDirs() )
+               continue;
+         }
+
 #ifdef __WXMSW__
          if (!bFiles)
             ::wxRemoveFile(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
@@ -404,6 +417,8 @@ DirManager::~DirManager()
    if (numDirManagers == 0) {
       CleanTempDir();
       //::wxRmdir(temp);
+   } else if( projFull.IsEmpty() && !mytemp.IsEmpty()) {
+      CleanDir(mytemp, wxEmptyString, ".DS_Store", _("Cleaning project temporary files"), kCleanTopDirToo | kCleanDirsOnlyIfEmpty );
    }
 }
 
@@ -414,6 +429,8 @@ DirManager::~DirManager()
 // project but just something else called project.
 void DirManager::CleanTempDir()
 {
+   // with default flags (none) this does not clean the top directory, and may remove non-empty 
+   // directories.
    CleanDir(globaltemp, wxT("project*"), wxEmptyString, _("Cleaning up temporary files"));
 }
 
@@ -423,7 +440,7 @@ void DirManager::CleanDir(
    const wxString &dirSpec, 
    const wxString &fileSpec, 
    const wxString &msg,
-   bool removeTop)
+   int flags)
 {
    if (dontDeleteTempFiles)
       return; // do nothing
@@ -437,8 +454,8 @@ void DirManager::CleanDir(
 
    // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
-   if (!removeTop) {
-      // Remove the globaltemp itself from the array
+   if ((flags & kCleanTopDirToo)==0) {
+      // Remove the globaltemp itself from the array so that it is not deleted.
       --countDirs;
       dirPathArray.resize(countDirs);
    }
@@ -447,8 +464,8 @@ void DirManager::CleanDir(
    if (count == 0)
       return;
 
-   RecursivelyRemove(filePathArray, count, 0, true, false, msg);
-   RecursivelyRemove(dirPathArray, count, countFiles, false, true, msg);
+   RecursivelyRemove(filePathArray, count, 0, flags | kCleanFiles, msg);
+   RecursivelyRemove(dirPathArray, count, countFiles, flags | kCleanDirs, msg);
 }
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
@@ -591,7 +608,8 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          wxEmptyString, // EmptyString => ALL directories.
          // If the next line were wxEmptyString, ALL files would be removed.
          ".DS_Store",   // Other project files should already have been removed.
-         _("Cleaning up cache directories"), true);
+         _("Cleaning up cache directories"), 
+         kCleanTopDirToo);
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
