@@ -192,7 +192,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       /// TO-DO: Make the links to help here use the widgets/HelpSystem mechanism
 	  /// so that they are consistent
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
-      return WrapText(
+      wxString result = 
          wxString(wxT("")) + 
 #if IS_ALPHA
          wxT("<hr><center><h3>") + _("Get the Official Released Version of Audacity") + wxT("</h3></center>") +
@@ -207,8 +207,14 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          _(" [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://manual.audacityteam.org/quick_help.html|view online]]") + wxT("</li><li>") +
          _(" [[file:index.html|Manual]] - if not installed locally, [[http://manual.audacityteam.org/|view online]]") + wxT("</li><li>") +
          _(" [[http://forum.audacityteam.org/|Forum]] - ask your question directly, online.") + wxT("</li></ul></p><p>") + wxT("<b>") + 
-         _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>")
-      );
+         _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>");
+
+#if IS_ALPHA
+      result.Replace( "//manual.audacityteam.org/quick_help.html","//alphamanual.audacityteam.org/man/Quick_Help" );
+      result.Replace( "//manual.audacityteam.org/","//alphamanual.audacityteam.org/man/" );
+#endif
+
+      return WrapText( result );
    }
    if(Key==wxT("wma-proprietary"))
    {
