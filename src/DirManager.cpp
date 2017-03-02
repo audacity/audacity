@@ -318,6 +318,8 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
          // attempting to delete the directory.
          if( bDirsMustBeEmpty ){
             wxDir dir( file );
+            if( !dir.IsOpened() )
+               continue;
             if( dir.HasFiles() )
                continue;
             if( dir.HasSubDirs() )
