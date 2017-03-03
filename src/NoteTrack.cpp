@@ -110,7 +110,6 @@ Track(projDirManager)
    SetName(GetDefaultName());
 
    mSeq = NULL;
-   mSerializationBuffer = NULL;
    mSerializationLength = 0;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -125,9 +124,6 @@ Track(projDirManager)
 
 NoteTrack::~NoteTrack()
 {
-   if (mSerializationBuffer) {
-      delete [] mSerializationBuffer;
-   }
 }
 
 Track::Holder NoteTrack::Duplicate() const
@@ -143,13 +139,15 @@ Track::Holder NoteTrack::Duplicate() const
       SonifyBeginSerialize();
       assert(!mSerializationBuffer);
       // serialize from this to duplicate's mSerializationBuffer
-      mSeq->serialize((void**)&duplicate->mSerializationBuffer,
+      void *buffer;
+      mSeq->serialize(&buffer,
                       &duplicate->mSerializationLength);
+      duplicate->mSerializationBuffer.reset( (char*)buffer );
       SonifyEndSerialize();
    } else if (mSerializationBuffer) {
       SonifyBeginUnserialize();
       assert(!mSeq);
-      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer,
+      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer.get(),
                                                       mSerializationLength) };
       assert(alg_track->get_type() == 's');
       duplicate->mSeq.reset(static_cast<Alg_seq*>(alg_track.release()));
@@ -198,9 +196,8 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       const auto nt = static_cast<NoteTrack*>(unt.get());
       wxASSERT(!mSeq && nt->mSeq && !nt->mSerializationBuffer);
       // swap mSeq and Buffer between this and nt
-      nt->mSerializationBuffer = mSerializationBuffer;
+      nt->mSerializationBuffer = std::move(mSerializationBuffer);
       nt->mSerializationLength = mSerializationLength;
-      mSerializationBuffer = NULL;
       mSerializationLength = 0;
       mSeq = std::move(nt->mSeq);
    }

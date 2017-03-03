@@ -198,7 +198,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    // mSeq variable. (TrackArtist should check to make sure this
    // flip-flop from mSeq to mSerializationBuffer happened an
    // even number of times, otherwise mSeq will be NULL).
-   mutable char *mSerializationBuffer; // NULL means no buffer
+   mutable std::unique_ptr<char[]> mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
 
 #ifdef EXPERIMENTAL_MIDI_OUT

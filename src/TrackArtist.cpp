@@ -2829,12 +2829,11 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
       // JKC: Previously this indirected via seq->, a NULL pointer.
       // This was actually OK, since unserialize is a static function.
       // Alg_seq:: is clearer.
-      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(track->mSerializationBuffer,
+      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(track->mSerializationBuffer.get(),
             track->mSerializationLength) };
       assert(alg_track->get_type() == 's');
       const_cast<NoteTrack*>(track)->mSeq.reset(seq = static_cast<Alg_seq*>(alg_track.release()));
-      free(track->mSerializationBuffer);
-      track->mSerializationBuffer = NULL;
+      track->mSerializationBuffer.reset();
    }
    assert(seq);
    int visibleChannels = track->mVisibleChannels;
