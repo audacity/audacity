@@ -1451,7 +1451,21 @@ wxString MP3Exporter::GetLibraryTypeString()
 
 wxString MP3Exporter::GetLibraryPath()
 {
-   return wxT("/usr/local/lib/audacity");
+   wxString path;
+
+   path = wxT("/Library/Application Support/audacity/libs");
+   if (wxFileExists(path + wxT("/") + GetLibraryName()))
+   {
+        return path;
+   }
+
+   path = wxT("/usr/local/lib/audacity");
+   if (wxFileExists(path + wxT("/") + GetLibraryName()))
+   {
+        return path;
+   }
+    
+   return wxT("/Library/Application Support/audacity/libs");
 }
 
 wxString MP3Exporter::GetLibraryName()
