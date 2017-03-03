@@ -444,8 +444,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | CutCopyAvailableFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Paste"), _("&Paste"), FN(OnPaste), wxT("Ctrl+V"),
-         AudioIONotBusyFlag | TracksExistFlag,
-         AudioIONotBusyFlag | TracksExistFlag);
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Duplicate"), _("Duplic&ate"), FN(OnDuplicate), wxT("Ctrl+D"));
 
