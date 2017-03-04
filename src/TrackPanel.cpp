@@ -3479,89 +3479,18 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          if (mCapturedClip == NULL)
             return;
       }
-      // The captured clip is the focus, but we need to create a list
-      // of all clips that have to move, also...
 
-      mCapturedClipArray.clear();
-
-      // First, if click was in selection, capture selected clips; otherwise
-      // just the clicked-on clip
-      if (mCapturedClipIsSelection) {
-         TrackListIterator iter(GetTracks());
-         for (Track *t = iter.First(); t; t = iter.Next()) {
-            if (t->GetSelected()) {
-               AddClipsToCaptured(t, true);
-               if (t->GetKind() != Track::Wave)
-                  mTrackExclusions.push_back(t);
-            }
-         }
-      }
-      else {
-         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
-
-         // Check for stereo partner
-         Track *partner = vt->GetLink();
-         WaveTrack *wt;
-         if (mCapturedClip &&
-             // Assume linked track is wave or null
-             nullptr != (wt = static_cast<WaveTrack*>(partner))) {
-            WaveClip *const clip =
-               FindClipAtTime(wt,
-                  mViewInfo->PositionToTime(event.m_x, GetLeftOffset()));
-            if (clip)
-               mCapturedClipArray.push_back(TrackClip(partner, clip));
-         }
-      }
-
-      // Now, if sync-lock is enabled, capture any clip that's linked to a
-      // captured clip.
-      if (GetProject()->IsSyncLocked()) {
-         // AWD: mCapturedClipArray expands as the loop runs, so newly-added
-         // clips are considered (the effect is like recursion and terminates
-         // because AddClipsToCaptured doesn't add duplicate clips); to remove
-         // this behavior just store the array size beforehand.
-         for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-            // Capture based on tracks that have clips -- that means we
-            // don't capture based on links to label tracks for now (until
-            // we can treat individual labels as clips)
-            if (mCapturedClipArray[i].clip) {
-               // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(GetTracks());
-               for (Track *t = git.StartWith(mCapturedClipArray[i].track);
-                     t; t = git.Next() )
-               {
-                  AddClipsToCaptured(t,
-                        mCapturedClipArray[i].clip->GetStartTime(),
-                        mCapturedClipArray[i].clip->GetEndTime() );
-                  if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.push_back(t);
-               }
-            }
-#ifdef USE_MIDI
-            // Capture additional clips from NoteTracks
-            Track *nt = mCapturedClipArray[i].track;
-            if (nt->GetKind() == Track::Note) {
-               // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(GetTracks());
-               for (Track *t = git.StartWith(nt); t; t = git.Next())
-               {
-                  AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
-                  if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.push_back(t);
-               }
-            }
-#endif
-         }
-      }
+      mCapturedTrack = vt;
+      CreateListOfCapturedClips(clickTime);
 
    } else {
       mCapturedClip = NULL;
       mCapturedClipArray.clear();
+      mCapturedTrack = vt;
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
 
-   mCapturedTrack = vt;
    mCapturedRect = rect;
 
    mMouseClickX = event.m_x;
@@ -3585,6 +3514,83 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    }
 
    mMouseCapture = IsSliding;
+}
+
+void TrackPanel::CreateListOfCapturedClips(double clickTime)
+{
+// The captured clip is the focus, but we need to create a list
+   // of all clips that have to move, also...
+
+   mCapturedClipArray.clear();
+
+   // First, if click was in selection, capture selected clips; otherwise
+   // just the clicked-on clip
+   if (mCapturedClipIsSelection) {
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         if (t->GetSelected()) {
+            AddClipsToCaptured(t, true);
+            if (t->GetKind() != Track::Wave)
+               mTrackExclusions.push_back(t);
+         }
+      }
+   }
+   else {
+      mCapturedClipArray.push_back(TrackClip(mCapturedTrack, mCapturedClip));
+
+      // Check for stereo partner
+      Track *partner = mCapturedTrack->GetLink();
+      WaveTrack *wt;
+      if (mCapturedClip &&
+            // Assume linked track is wave or null
+            nullptr != (wt = static_cast<WaveTrack*>(partner))) {
+         WaveClip *const clip = FindClipAtTime(wt, clickTime);
+
+         if (clip)
+            mCapturedClipArray.push_back(TrackClip(partner, clip));
+      }
+   }
+
+   // Now, if sync-lock is enabled, capture any clip that's linked to a
+   // captured clip.
+   if (GetProject()->IsSyncLocked()) {
+      // AWD: mCapturedClipArray expands as the loop runs, so newly-added
+      // clips are considered (the effect is like recursion and terminates
+      // because AddClipsToCaptured doesn't add duplicate clips); to remove
+      // this behavior just store the array size beforehand.
+      for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
+         // Capture based on tracks that have clips -- that means we
+         // don't capture based on links to label tracks for now (until
+         // we can treat individual labels as clips)
+         if (mCapturedClipArray[i].clip) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git(GetTracks());
+            for (Track *t = git.StartWith(mCapturedClipArray[i].track);
+                  t; t = git.Next() )
+            {
+               AddClipsToCaptured(t,
+                     mCapturedClipArray[i].clip->GetStartTime(),
+                     mCapturedClipArray[i].clip->GetEndTime() );
+               if (t->GetKind() != Track::Wave)
+                  mTrackExclusions.push_back(t);
+            }
+         }
+#ifdef USE_MIDI
+         // Capture additional clips from NoteTracks
+         Track *nt = mCapturedClipArray[i].track;
+         if (nt->GetKind() == Track::Note) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git(GetTracks());
+            for (Track *t = git.StartWith(nt); t; t = git.Next())
+            {
+               AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+               if (t->GetKind() != Track::Wave)
+                  mTrackExclusions.push_back(t);
+            }
+         }
+#endif
+      }
+   }
 }
 
 // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
@@ -3877,6 +3883,24 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    mHSlideAmount = desiredSlideAmount;
 
+   DoSlideHorizontal();
+
+
+   if (mCapturedClipIsSelection) {
+      // Slide the selection, too
+      mViewInfo->selectedRegion.move(mHSlideAmount);
+   }
+
+   if (slidVertically) {
+      // NEW origin
+      mHSlideAmount = 0;
+   }
+
+   Refresh(false);
+}
+
+void TrackPanel::DoSlideHorizontal()
+{
 #ifdef USE_MIDI
    if (mCapturedClipArray.size())
 #else
@@ -3947,18 +3971,55 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       if (link)
          link->Offset(mHSlideAmount);
    }
+}
 
-   if (mCapturedClipIsSelection) {
-      // Slide the selection, too
-      mViewInfo->selectedRegion.move(mHSlideAmount);
+void TrackPanel::OnClipMove(bool right)
+{
+   auto track = GetFocusedTrack();
+
+
+   // just dealing with clips in wave tracks for the moment. Note tracks??
+   if (track && track->GetKind() == Track::Wave) {
+      auto wt = static_cast<WaveTrack*>(track);
+      mCapturedClip = wt->GetClipAtTime(mViewInfo->selectedRegion.t0());
+      if (mCapturedClip == nullptr)
+         return;
+      
+      mCapturedTrack = track;
+      mCapturedClipIsSelection = track->GetSelected() && !mViewInfo->selectedRegion.isPoint();
+      mTrackExclusions.clear();
+
+      CreateListOfCapturedClips(mViewInfo->selectedRegion.t0());
+
+      double desiredSlideAmount = mViewInfo->OffsetTimeByPixels(0.0, 1);
+
+      // set it to a sample point, and minimum of 1 sample point
+      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
+      nSamples = std::max(nSamples, 1.0);
+      desiredSlideAmount = nSamples / wt->GetRate();
+
+      if (!right)
+         desiredSlideAmount *= -1;
+      mHSlideAmount = desiredSlideAmount;
+      DoSlideHorizontal();
+
+      // update t0 and t1. There is the possibility that the updated
+      // t0 may no longer be within the clip due to rounding errors,
+      // so t0 is adjusted so that it is.
+      double newT0 = mViewInfo->selectedRegion.t0() + mHSlideAmount;
+      if (newT0 < mCapturedClip->GetStartTime())
+         newT0 = mCapturedClip->GetStartTime();
+      if (newT0 > mCapturedClip->GetEndTime())
+         newT0 = mCapturedClip->GetEndTime();
+      double diff = mViewInfo->selectedRegion.t1() - mViewInfo->selectedRegion.t0();
+      mViewInfo->selectedRegion.setTimes(newT0, newT0 + diff);
+
+      ScrollIntoView(mViewInfo->selectedRegion.t0());
+      Refresh(false);
+
+      if (mHSlideAmount == 0.0)
+         MessageForScreenReader( _("clip not moved"));
    }
-
-   if (slidVertically) {
-      // NEW origin
-      mHSlideAmount = 0;
-   }
-
-   Refresh(false);
 }
 
 

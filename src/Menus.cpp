@@ -1276,6 +1276,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
    c->AddCommand(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
 
+   c->AddCommand(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT(""));
+   c->AddCommand(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
+
    c->AddCommand(wxT("SelExtLeft"), _("Selection Extend Left"), FN(OnSelExtendLeft), wxT("Shift+Left\twantKeyup\tallowDup"));
    c->AddCommand(wxT("SelExtRight"), _("Selection Extend Right"), FN(OnSelExtendRight), wxT("Shift+Right\twantKeyup\tallowDup"));
 
@@ -2928,6 +2931,16 @@ void AudacityProject::OnSelContractLeft(const wxEvent * evt)
 void AudacityProject::OnSelContractRight(const wxEvent * evt)
 {
    OnCursorLeft( true, true, evt->GetEventType() == wxEVT_KEY_UP );
+}
+
+void AudacityProject::OnClipLeft()
+{
+   mTrackPanel->OnClipMove(false);
+}
+
+void AudacityProject::OnClipRight()
+{
+   mTrackPanel->OnClipMove(true);
 }
 
 //this pops up a dialog which allows the left selection to be set.
