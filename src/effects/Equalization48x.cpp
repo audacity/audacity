@@ -44,7 +44,11 @@
 #endif
 
 #include <stdlib.h>
+
+#ifdef __WXMSW__
 #include <malloc.h>
+#endif
+
 #include <stdio.h>
 #include <math.h>
 #include <emmintrin.h>
@@ -182,10 +186,11 @@ bool EffectEqualization48x::AllocateBuffersWorkers(int nThreads)
    mWindowSize=mEffectEqualization->windowSize;
    wxASSERT(mFilterSize < mWindowSize);
    mBlockSize=mWindowSize-mFilterSize; // 12,384
-   mThreaded = (nThreads > 0 );
+   auto threadCount = wxThread::GetCPUCount();
+   mThreaded = (nThreads > 0 && threadCount > 0);
    if(mThreaded)
-   {  
-      mThreadCount=wxThread::GetCPUCount();
+   {
+      mThreadCount = threadCount;
       mWorkerDataCount=mThreadCount+2; // 2 extra slots (maybe double later)
    } else {
       mWorkerDataCount=1;
@@ -294,7 +299,7 @@ bool EffectEqualization48x::Process(EffectEqualization* effectEqualization)
    if(sMathPath)  // !!! Filter MUST BE QUAD WORD ALIGNED !!!!
       mEffectEqualization->mM=(mEffectEqualization->mM&(~15))+1;
    AllocateBuffersWorkers(sMathPath&MATH_FUNCTION_THREADED);
-   SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, mEffectEqualization->mOutputTracks.get());
    WaveTrack *track = (WaveTrack *) iter.First();
    int count = 0;
    while (track) {
@@ -418,8 +423,8 @@ bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCoun
    auto originalLen = len;
    auto currentSample = start;
 
-   while(len) {
-      auto curretLength = std::min(len, trackBlockSize);
+   while(len > 0) {
+      auto curretLength = limitSampleBufferSize(trackBlockSize, len);
       t->Get((samplePtr)buffer1, floatSample, currentSample, curretLength);
       t2->Get((samplePtr)buffer2, floatSample, currentSample, curretLength);
       for(decltype(curretLength) i=0;i<curretLength;i++)
@@ -574,7 +579,7 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    return true;
 }
 
-bool EffectEqualization48x::ProcessBuffer(fft_type *sourceBuffer, fft_type *destBuffer, sampleCount bufferLength)
+bool EffectEqualization48x::ProcessBuffer(fft_type *sourceBuffer, fft_type *destBuffer, size_t bufferLength)
 {
    BufferInfo bufferInfo;
    bufferInfo.mContiguousBufferSize=bufferLength;
@@ -589,12 +594,12 @@ bool EffectEqualization48x::ProcessBuffer1x(BufferInfo *bufferInfo)
    int bufferCount=bufferInfo->mContiguousBufferSize?1:4;
    for(int bufferIndex=0;bufferIndex<bufferCount;bufferIndex++)
    {
-      int bufferLength=bufferInfo->mBufferLength;
+      auto bufferLength=bufferInfo->mBufferLength;
       if(bufferInfo->mContiguousBufferSize)
          bufferLength=bufferInfo->mContiguousBufferSize;
 
-      sampleCount blockCount=bufferLength/mBlockSize;
-      sampleCount lastBlockSize=bufferLength%mBlockSize;
+      auto blockCount=bufferLength/mBlockSize;
+      auto lastBlockSize=bufferLength%mBlockSize;
       if(lastBlockSize)
          blockCount++;
 
@@ -602,7 +607,7 @@ bool EffectEqualization48x::ProcessBuffer1x(BufferInfo *bufferInfo)
       float *scratchBuffer=&workBuffer[mWindowSize*2];  // all scratch buffers are at the end
       float *sourceBuffer=bufferInfo->mBufferSouce[bufferIndex];
       float *destBuffer=bufferInfo->mBufferDest[bufferIndex];
-      for(int runx=0;runx<blockCount;runx++) 
+      for(size_t runx=0;runx<blockCount;runx++)
       {
          float *currentBuffer=&workBuffer[mWindowSize*(runx&1)]; 
          for(int i=0;i<mBlockSize;i++)
@@ -641,12 +646,12 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
 
    mEffectEqualization->TrackProgress(count, 0.0);
    int subBufferSize=mBufferCount==8?(mSubBufferSize>>1):mSubBufferSize; // half the buffers if avx is active
-   int bigRuns=len/(subBufferSize-mBlockSize);
+   auto bigRuns=len/(subBufferSize-mBlockSize);
    int trackBlocksPerBig=subBufferSize/trackBlockSize;
    int trackLeftovers=subBufferSize-trackBlocksPerBig*trackBlockSize;
-   int singleProcessLength;
-   if(!bigRuns)
-      singleProcessLength=len;
+   size_t singleProcessLength;
+   if(bigRuns == 0)
+      singleProcessLength = len.as_size_t();
    else 
       singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
    auto currentSample=start;
@@ -665,7 +670,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
       currentSample-=mBlockSize+(mFilterSize>>1);
 
       ProcessBuffer1x(mBufferInfo);
-      bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigRun)/(double)bigRuns);
+      bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigRun)/bigRuns.as_double());
       if( bBreakLoop )
          break;
       output->Append((samplePtr)&mBigBuffer[(bigRun?mBlockSize:0)+(mFilterSize>>1)], floatSample, subBufferSize-((bigRun?mBlockSize:0)+(mFilterSize>>1)));
@@ -673,7 +678,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
    if(singleProcessLength && !bBreakLoop) {
       t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
       ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      output->Append((samplePtr)&mBigBuffer[bigRuns?mBlockSize:0], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      output->Append((samplePtr)&mBigBuffer[bigRuns > 0 ? mBlockSize : 0], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
    }
    output->Flush();
    if(!bBreakLoop)
@@ -730,7 +735,7 @@ bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
    if(bufferInfo->mBufferLength%mBlockSize)
       return false;
 
-   sampleCount blockCount=bufferInfo->mBufferLength/mBlockSize;
+   auto blockCount=bufferInfo->mBufferLength/mBlockSize;
 
    __m128 *readBlocks[4]; // some temps so we dont destroy the vars in the struct
    __m128 *writeBlocks[4];
@@ -742,7 +747,7 @@ bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
    __m128 *swizzledBuffer128=(__m128 *)bufferInfo->mScratchBuffer;
    __m128 *scratchBuffer=&swizzledBuffer128[mWindowSize*2];
 
-   for(int run4x=0;run4x<blockCount;run4x++) 
+   for(size_t run4x=0;run4x<blockCount;run4x++)
    {
       // swizzle the data to the swizzle buffer
       __m128 *currentSwizzledBlock=&swizzledBuffer128[mWindowSize*(run4x&1)]; 
@@ -825,10 +830,10 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    auto output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
    mEffectEqualization->TrackProgress(count, 0.0);
-   int bigRuns=len/(subBufferSize-mBlockSize);
+   auto bigRuns = len/(subBufferSize-mBlockSize);
    int trackBlocksPerBig=subBufferSize/trackBlockSize;
    int trackLeftovers=subBufferSize-trackBlocksPerBig*trackBlockSize;
-   int singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
+   size_t singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
    auto currentSample=start;
 
    bool bBreakLoop = false;
@@ -846,7 +851,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
       currentSample-=mBlockSize+(mFilterSize>>1);
 
       ProcessBuffer4x(mBufferInfo);
-      bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigRun)/(double)bigRuns);
+      bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigRun)/bigRuns.as_double());
       if( bBreakLoop )
          break;
       output->Append((samplePtr)&mBigBuffer[(bigRun?mBlockSize:0)+(mFilterSize>>1)], floatSample, subBufferSize-((bigRun?mBlockSize:0)+(mFilterSize>>1)));
@@ -854,7 +859,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
    if(singleProcessLength && !bBreakLoop) {
       t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
       ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      output->Append((samplePtr)&mBigBuffer[bigRuns?mBlockSize:0], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      output->Append((samplePtr)&mBigBuffer[bigRuns > 0 ? mBlockSize : 0], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
 //      output->Append((samplePtr)&mBigBuffer[bigRuns?mBlockSize:0], floatSample, singleProcessLength);
    }
    output->Flush();
@@ -910,16 +915,16 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
 
    auto trackBlockSize = t->GetMaxBlockSize();
    mEffectEqualization->TrackProgress(count, 0.0);
-   int bigRuns=len/(subBufferSize-mBlockSize);
+   auto bigRuns = len/(subBufferSize-mBlockSize);
    int trackBlocksPerBig=subBufferSize/trackBlockSize;
    int trackLeftovers=subBufferSize-trackBlocksPerBig*trackBlockSize;
-   int singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
+   size_t singleProcessLength=(mFilterSize>>1)*bigRuns + len%(bigRuns*(subBufferSize-mBlockSize));
    auto currentSample=start;
 
    int bigBlocksRead=mWorkerDataCount, bigBlocksWritten=0;
 
    // fill the first workerDataCount buffers we checked above and there is at least this data
-   int maxPreFill=bigRuns<mWorkerDataCount?bigRuns:mWorkerDataCount;
+   auto maxPreFill = bigRuns < mWorkerDataCount ? bigRuns : mWorkerDataCount;
    for(int i=0;i<maxPreFill;i++)
    {
       // fill the buffer
@@ -937,7 +942,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
    int currentIndex=0;
    bool bBreakLoop = false;
    while(bigBlocksWritten<bigRuns && !bBreakLoop) {
-      bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigBlocksWritten)/(double)bigRuns);
+      bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigBlocksWritten)/bigRuns.as_double());
       if( bBreakLoop )
          break;
       mDataMutex.Lock(); // Get in line for data
@@ -1028,7 +1033,7 @@ bool EffectEqualization48x::ProcessBuffer8x(BufferInfo *bufferInfo)
    if(bufferInfo->mBufferLength%mBlockSize || mBufferCount!=8)
       return false;
 
-   sampleCount blockCount=bufferInfo->mBufferLength/mBlockSize;
+   auto blockCount=bufferInfo->mBufferLength/mBlockSize;
 
    __m128 *readBlocks[8]; // some temps so we dont destroy the vars in the struct
    __m128 *writeBlocks[8];

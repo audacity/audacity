@@ -725,7 +725,7 @@ void TrackPanel::DeleteMenus(void)
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
 void TrackPanel::UpdateVirtualStereoOrder()
 {
-   TrackListOfKindIterator iter(TrackKind::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, GetTracks());
    Track *t;
    int temp;
 
@@ -1232,8 +1232,13 @@ bool TrackPanel::HandleEscapeKey(bool down)
       Track *const next = mTracks->GetNext(mCapturedTrack);
       mCapturedTrack->SetHeight(mInitialUpperActualHeight);
       mCapturedTrack->SetMinimized(mInitialMinimized);
-      next->SetHeight(mInitialActualHeight);
-      next->SetMinimized(mInitialMinimized);
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if( !MONO_WAVE_PAN(mCapturedTrack) )
+#endif
+      {
+         next->SetHeight(mInitialActualHeight);
+         next->SetMinimized(mInitialMinimized);
+      }
    }
       break;
    case IsResizingBelowLinkedTracks:
@@ -1241,8 +1246,13 @@ bool TrackPanel::HandleEscapeKey(bool down)
       Track *const prev = mTracks->GetPrev(mCapturedTrack);
       mCapturedTrack->SetHeight(mInitialActualHeight);
       mCapturedTrack->SetMinimized(mInitialMinimized);
-      prev->SetHeight(mInitialUpperActualHeight);
-      prev->SetMinimized(mInitialMinimized);
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if( !MONO_WAVE_PAN(mCapturedTrack) )
+#endif
+      {
+         prev->SetHeight(mInitialUpperActualHeight);
+         prev->SetMinimized(mInitialMinimized);
+      }
    }
       break;
    default:
@@ -5397,77 +5407,58 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    // To do: escape key
-   if(MONO_WAVE_PAN(t)){
+   if(MONO_WAVE_PAN(track)){
       //STM:  Determine whether we should rescale one or two tracks
-      if (t->GetVirtualStereo()) {
+      if (track->GetVirtualStereo()) {
          // mCapturedTrack is the lower track
-         mInitialTrackHeight = t->GetHeight(true);
-         mInitialUpperTrackHeight = t->GetHeight();
-         SetCapturedTrack(t, IsResizingBelowLinkedTracks);
+         mInitialTrackHeight = track->GetHeight(true);
+         mInitialActualHeight = mInitialUpperActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
+         mInitialUpperTrackHeight = track->GetHeight();
+         SetCapturedTrack(track, IsResizingBelowLinkedTracks);
       }
       else {
          // mCapturedTrack is the upper track
-         mInitialTrackHeight = t->GetHeight(true);
-         mInitialUpperTrackHeight = t->GetHeight();
-         SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
+         mInitialTrackHeight = track->GetHeight(true);
+         mInitialActualHeight = mInitialUpperActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
+         mInitialUpperTrackHeight = track->GetHeight();
+         SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
       }
-   }else{
-      Track *prev = mTracks->GetPrev(t);
-      Track *next = mTracks->GetNext(t);
+   }
+   else
+#endif
+   {
+      Track *prev = mTracks->GetPrev(track);
+      Track *next = mTracks->GetNext(track);
 
       //STM:  Determine whether we should rescale one or two tracks
-      if (prev && prev->GetLink() == t) {
+      if (prev && prev->GetLink() == track) {
          // mCapturedTrack is the lower track
-         mInitialTrackHeight = t->GetHeight();
-         mInitialMinimized = t->GetMinimized();
+         mInitialTrackHeight = track->GetHeight();
+         mInitialActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
          mInitialUpperTrackHeight = prev->GetHeight();
-         SetCapturedTrack(t, IsResizingBelowLinkedTracks);
+         mInitialUpperActualHeight = prev->GetActualHeight();
+         SetCapturedTrack(track, IsResizingBelowLinkedTracks);
       }
-      else if (next && t->GetLink() == next) {
+      else if (next && track->GetLink() == next) {
          // mCapturedTrack is the upper track
          mInitialTrackHeight = next->GetHeight();
+         mInitialActualHeight = next->GetActualHeight();
          mInitialMinimized = next->GetMinimized();
-         mInitialUpperTrackHeight = t->GetHeight();
-         SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
+         mInitialUpperTrackHeight = track->GetHeight();
+         mInitialUpperActualHeight = track->GetActualHeight();
+         SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
       }
       else {
          // DM: Save the initial mouse location and the initial height
-         mInitialTrackHeight = t->GetHeight();
-         mInitialMinimized = t->GetMinimized();
-         SetCapturedTrack(t, IsResizing);
+         mInitialTrackHeight = track->GetHeight();
+         mInitialActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
+         SetCapturedTrack(track, IsResizing);
       }
    }
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
-   Track *prev = mTracks->GetPrev(track);
-   Track *next = mTracks->GetNext(track);
-
-   //STM:  Determine whether we should rescale one or two tracks
-   if (prev && prev->GetLink() == track) {
-      // mCapturedTrack is the lower track
-      mInitialTrackHeight = track->GetHeight();
-      mInitialActualHeight = track->GetActualHeight();
-      mInitialMinimized = track->GetMinimized();
-      mInitialUpperTrackHeight = prev->GetHeight();
-      mInitialUpperActualHeight = prev->GetActualHeight();
-      SetCapturedTrack(track, IsResizingBelowLinkedTracks);
-   }
-   else if (next && track->GetLink() == next) {
-      // mCapturedTrack is the upper track
-      mInitialTrackHeight = next->GetHeight();
-      mInitialActualHeight = next->GetActualHeight();
-      mInitialMinimized = next->GetMinimized();
-      mInitialUpperTrackHeight = track->GetHeight();
-      mInitialUpperActualHeight = track->GetActualHeight();
-      SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
-   }
-   else {
-      // DM: Save the initial mouse location and the initial height
-      mInitialTrackHeight = track->GetHeight();
-      mInitialActualHeight = track->GetActualHeight();
-      mInitialMinimized = track->GetMinimized();
-      SetCapturedTrack(track, IsResizing);
-   }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
 
 ///  This happens when the button is released from a drag.
@@ -5519,177 +5510,127 @@ void TrackPanel::HandleResizeDrag(wxMouseEvent & event)
 #endif
    }
 
+   // Common pieces of code for MONO_WAVE_PAN and otherwise.
+   auto doResizeBelow = [&] (Track *prev, bool vStereo) {
+      double proportion = static_cast < double >(mInitialTrackHeight)
+      / (mInitialTrackHeight + mInitialUpperTrackHeight);
+
+      int newTrackHeight = static_cast < int >
+      (mInitialTrackHeight + delta * proportion);
+
+      int newUpperTrackHeight = static_cast < int >
+      (mInitialUpperTrackHeight + delta * (1.0 - proportion));
+
+      //make sure neither track is smaller than its minimum height
+      if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
+         newTrackHeight = mCapturedTrack->GetMinimizedHeight();
+      if (newUpperTrackHeight < prev->GetMinimizedHeight())
+         newUpperTrackHeight = prev->GetMinimizedHeight();
+
+      mCapturedTrack->SetHeight(newTrackHeight
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+                                , vStereo
+#endif
+                                );
+      prev->SetHeight(newUpperTrackHeight);
+   };
+
+   auto doResizeBetween = [&] (Track *next, bool vStereo) {
+      int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
+      int newTrackHeight = mInitialTrackHeight - delta;
+
+      // make sure neither track is smaller than its minimum height
+      if (newTrackHeight < next->GetMinimizedHeight()) {
+         newTrackHeight = next->GetMinimizedHeight();
+         newUpperTrackHeight =
+         mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
+      }
+      if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
+         newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
+         newTrackHeight =
+         mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
+      }
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if (vStereo) {
+         float temp = 1.0f;
+         if(newUpperTrackHeight != 0.0f)
+            temp = (float)newUpperTrackHeight/(float)(newUpperTrackHeight + newTrackHeight);
+         mCapturedTrack->SetVirtualTrackPercentage(temp);
+      }
+#endif
+
+      mCapturedTrack->SetHeight(newUpperTrackHeight);
+      next->SetHeight(newTrackHeight
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+                      , vStereo
+#endif
+      );
+   };
+
+   auto doResize = [&] {
+      int newTrackHeight = mInitialTrackHeight + delta;
+      if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
+         newTrackHeight = mCapturedTrack->GetMinimizedHeight();
+      mCapturedTrack->SetHeight(newTrackHeight);
+   };
+
    //STM: We may be dragging one or two (stereo) tracks.
    // If two, resize proportionally if we are dragging the lower track, and
    // adjust compensatively if we are dragging the upper track.
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   switch( mMouseCapture )
-   {
-   case IsResizingBelowLinkedTracks:
+   if(MONO_WAVE_PAN(mCapturedTrack)) {
+      switch( mMouseCapture )
       {
-         if(MONO_WAVE_PAN(mCapturedTrack)){
-            double proportion = static_cast < double >(mInitialTrackHeight)
-                / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-            int newTrackHeight = static_cast < int >
-                (mInitialTrackHeight + delta * proportion);
-
-            int newUpperTrackHeight = static_cast < int >
-                (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-            //make sure neither track is smaller than its minimum height
-            if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-               newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-            if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight())
-               newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-
-            mCapturedTrack->SetHeight(newTrackHeight,true);
-            mCapturedTrack->SetHeight(newUpperTrackHeight);
-         }
-         else{
-            Track *prev = mTracks->GetPrev(mCapturedTrack);
-
-            double proportion = static_cast < double >(mInitialTrackHeight)
-                / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-            int newTrackHeight = static_cast < int >
-                (mInitialTrackHeight + delta * proportion);
-
-            int newUpperTrackHeight = static_cast < int >
-                (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-            //make sure neither track is smaller than its minimum height
-            if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-               newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-            if (newUpperTrackHeight < prev->GetMinimizedHeight())
-               newUpperTrackHeight = prev->GetMinimizedHeight();
-
-            mCapturedTrack->SetHeight(newTrackHeight);
-            prev->SetHeight(newUpperTrackHeight);
-         }
-         break;
-      }
-   case IsResizingBetweenLinkedTracks:
-      {
-         if(MONO_WAVE_PAN(mCapturedTrack)){
-            int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-            int newTrackHeight = mInitialTrackHeight - delta;
-
-            // make sure neither track is smaller than its minimum height
-            if (newTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-               newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-               newUpperTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-            }
-            if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-               newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-               newTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-            }
-            float temp = 1.0f;
-            if(newUpperTrackHeight != 0.0f)
-               temp = (float)newUpperTrackHeight/(float)(newUpperTrackHeight + newTrackHeight);
-
-            mCapturedTrack->SetVirtualTrackPercentage(temp);
-            mCapturedTrack->SetHeight(newUpperTrackHeight);
-            mCapturedTrack->SetHeight(newTrackHeight,true);
-         }
-         else{
-            Track *next = mTracks->GetNext(mCapturedTrack);
-            int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-            int newTrackHeight = mInitialTrackHeight - delta;
-
-            // make sure neither track is smaller than its minimum height
-            if (newTrackHeight < next->GetMinimizedHeight()) {
-               newTrackHeight = next->GetMinimizedHeight();
-               newUpperTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
-            }
-            if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-               newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-               newTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-            }
-
-            mCapturedTrack->SetHeight(newUpperTrackHeight);
-            next->SetHeight(newTrackHeight);
+         case IsResizingBelowLinkedTracks:
+         {
+            doResizeBelow( mCapturedTrack, true );
             break;
          }
-         break;
+         case IsResizingBetweenLinkedTracks:
+         {
+            doResizeBetween( mCapturedTrack, true );
+            break;
+         }
+         case IsResizing:
+         {
+            // Should imply !MONO_WAVE_PAN(mCapturedTrack),
+            // so impossible, but anyway:
+            doResize();
+            break;
+         }
+         default:
+            // don't refresh in this case.
+            return;
       }
-   case IsResizing:
-      {
-         int newTrackHeight = mInitialTrackHeight + delta;
-         if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-            newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         mCapturedTrack->SetHeight(newTrackHeight);
-         break;
-      }
-   default:
-      // don't refresh in this case.
-      return;
    }
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
-   switch( mMouseCapture )
+   else
+#endif
    {
-   case IsResizingBelowLinkedTracks:
+      switch( mMouseCapture )
       {
-         Track *prev = mTracks->GetPrev(mCapturedTrack);
-
-         double proportion = static_cast < double >(mInitialTrackHeight)
-             / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-         int newTrackHeight = static_cast < int >
-             (mInitialTrackHeight + delta * proportion);
-
-         int newUpperTrackHeight = static_cast < int >
-             (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-         //make sure neither track is smaller than its minimum height
-         if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-            newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         if (newUpperTrackHeight < prev->GetMinimizedHeight())
-            newUpperTrackHeight = prev->GetMinimizedHeight();
-
-         mCapturedTrack->SetHeight(newTrackHeight);
-         prev->SetHeight(newUpperTrackHeight);
-         break;
-      }
-   case IsResizingBetweenLinkedTracks:
-      {
-         Track *next = mTracks->GetNext(mCapturedTrack);
-         int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-         int newTrackHeight = mInitialTrackHeight - delta;
-
-         // make sure neither track is smaller than its minimum height
-         if (newTrackHeight < next->GetMinimizedHeight()) {
-            newTrackHeight = next->GetMinimizedHeight();
-            newUpperTrackHeight =
-                mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
+         case IsResizingBelowLinkedTracks:
+         {
+            Track *prev = mTracks->GetPrev(mCapturedTrack);
+            doResizeBelow(prev, false);
+            break;
          }
-         if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-            newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-            newTrackHeight =
-                mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
+         case IsResizingBetweenLinkedTracks:
+         {
+            Track *next = mTracks->GetNext(mCapturedTrack);
+            doResizeBetween(next, false);
+            break;
          }
-
-         mCapturedTrack->SetHeight(newUpperTrackHeight);
-         next->SetHeight(newTrackHeight);
-         break;
+         case IsResizing:
+         {
+            doResize();
+            break;
+         }
+         default:
+            // don't refresh in this case.
+            return;
       }
-   case IsResizing:
-      {
-         int newTrackHeight = mInitialTrackHeight + delta;
-         if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-            newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         mCapturedTrack->SetHeight(newTrackHeight);
-         break;
-      }
-   default:
-      // don't refresh in this case.
-      return;
    }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
    Refresh(false);
 }
 
@@ -7346,15 +7287,11 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
    dc->DrawRectangle(side);
 
    // Area between tracks of stereo group
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (t->GetLinked() || MONO_WAVE_PAN(t)) {
-      side = rect;
-      side.y += t->GetHeight() - 1;
-      side.height = kTopInset + 1;
-      dc->DrawRectangle(side);
-   }
-#else
-   if (t->GetLinked()) {
+       || MONO_WAVE_PAN(t)
+#endif
+       ) {
       // Paint the channel separator over (what would be) the shadow of the top
       // channel, and the top inset of the bottom channel
       side = rect;
@@ -7362,7 +7299,6 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
       side.height = kTopInset + kShadowThickness;
       dc->DrawRectangle(side);
    }
-#endif
 }
 
 /// Draw a three-level highlight gradient around the focused track.
@@ -7984,14 +7920,11 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
 
    // The lines at bottom of 1st track and top of second track of stereo group
    // Possibly replace with DrawRectangle to add left border.
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (t->GetLinked() || MONO_WAVE_PAN(t)) {
-      int h1 = rect.y + t->GetHeight() - kTopInset;
-      AColor::Line(*dc, vrul, h1 - 2, rect.x + rect.width - 1, h1 - 2);
-      AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
-   }
-#else
-   if (t->GetLinked()) {
+       || MONO_WAVE_PAN(t)
+#endif
+       ) {
       // The given rect has had the top inset subtracted
       int h1 = rect.y + t->GetHeight() - kTopInset;
       // h1 is the top coordinate of the second tracks' rectangle
@@ -7999,7 +7932,6 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
       AColor::Line(*dc, vrul, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
       AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
    }
-#endif
 }
 
 void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
@@ -8030,13 +7962,12 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
 wxString TrackPanel::TrackSubText(WaveTrack * t)
 {
    wxString s = wxString::Format(wxT("%dHz"), (int) (t->GetRate() + 0.5));
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (t->GetLinked() && t->GetChannel() != Track::MonoChannel)
-      s = _("Stereo, ") + s;
-#else
-   if (t->GetLinked())
-      s = _("Stereo, ") + s;
+       && t->GetChannel() != Track::MonoChannel
 #endif
+   )
+      s = _("Stereo, ") + s;
    else {
       if (t->GetChannel() == Track::MonoChannel)
          s = _("Mono, ") + s;
@@ -8329,9 +8260,9 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
             : WaveformSettings::stLogarithmic;
    }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if (wt->GetDisplay() == WaveTrack::WaveformDisplay) {
+      if (wt->GetDisplay() == WaveTrack::Waveform) {
          wt->SetVirtualState(false);
-      }else if (id == WaveTrack::WaveformDisplay) {
+      }else if (id == WaveTrack::Waveform) {
          wt->SetVirtualState(true);
       }
 #endif

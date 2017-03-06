@@ -3887,7 +3887,7 @@ void AudioIO::FillMidiBuffers()
          break;
       }
    int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
-   for(t = 0; t < numMidiPlaybackTracks; t++ )
+   for(unsigned t = 0; t < numMidiPlaybackTracks; t++ )
       if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
          break;
@@ -4360,7 +4360,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
          int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
-         for( t = 0; t < numMidiPlaybackTracks; t++ )
+         for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
             if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #endif

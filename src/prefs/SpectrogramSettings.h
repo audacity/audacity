@@ -138,8 +138,8 @@ public:
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    bool fftFindNotes;
-   bool findNotesMinA;
-   bool numberOfMaxima;
+   double findNotesMinA;
+   int numberOfMaxima;
    bool findNotesQuantize;
 #endif //EXPERIMENTAL_FIND_NOTES
 

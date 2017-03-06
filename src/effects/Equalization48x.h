@@ -44,11 +44,11 @@ public:
    BufferInfo() { mBufferLength=0; mBufferStatus=BufferEmpty; mContiguousBufferSize=0; };
    float* mBufferSouce[__MAXBUFFERCOUNT];
    float* mBufferDest[__MAXBUFFERCOUNT];
-   int mBufferLength;
+   size_t mBufferLength;
    size_t mFftWindowSize;
    size_t mFftFilterSize;
    float* mScratchBuffer;
-   int mContiguousBufferSize;
+   size_t mContiguousBufferSize;
    EQBufferStatus mBufferStatus;
 };
 
@@ -127,7 +127,7 @@ private:
 
    bool ProcessTail(WaveTrack * t, WaveTrack * output, sampleCount start, sampleCount len);
 
-   bool ProcessBuffer(fft_type *sourceBuffer, fft_type *destBuffer, sampleCount bufferLength);
+   bool ProcessBuffer(fft_type *sourceBuffer, fft_type *destBuffer, size_t bufferLength);
    bool ProcessBuffer1x(BufferInfo *bufferInfo);
    bool ProcessOne1x(int count, WaveTrack * t, sampleCount start, sampleCount len);
    void Filter1x(size_t len, float *buffer, float *scratchBuffer);
@@ -145,15 +145,15 @@ private:
 #endif
    
    EffectEqualization* mEffectEqualization;
-   int mThreadCount;
+   size_t mThreadCount;
    size_t mFilterSize;
    size_t mBlockSize;
    size_t  mWindowSize;
    int mBufferCount;
-   int mWorkerDataCount;
-   int mBlocksPerBuffer;
-   int mScratchBufferSize;
-   int mSubBufferSize;
+   size_t mWorkerDataCount;
+   size_t mBlocksPerBuffer;
+   size_t mScratchBufferSize;
+   size_t mSubBufferSize;
    float *mBigBuffer;
    BufferInfo* mBufferInfo;
    wxMutex mDataMutex;
