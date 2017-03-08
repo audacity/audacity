@@ -1308,6 +1308,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
 
 void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &rect,
                                         float zoomMin, float zoomMax,
+                                        int zeroLevelYCoordinate,
                                         bool dB, float dBRange,
                                         const WaveClip *clip,
                                         const ZoomInfo &zoomInfo,
@@ -1363,11 +1364,12 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    }
 
    // Draw lines
-   for (decltype(slen) s = 0; s < slen - 1; s++) {
+   for (decltype(slen) s = 0; s < slen; s++) {
       AColor::Line(dc,
                    rect.x + xpos[s], rect.y + ypos[s],
-                   rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
+                   rect.x + xpos[s], zeroLevelYCoordinate);
    }
+
 
    if (showPoints)
    {
@@ -1807,17 +1809,17 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
    FindWavePortions(portions, rect, zoomInfo, params);
    const unsigned nPortions = portions.size();
 
-   // Require at least 1/2 pixel per sample for drawing individual samples.
-   const double threshold1 = 0.5 * rate;
-   // Require at least 3 pixels per sample for drawing the draggable points.
-   const double threshold2 = 3 * rate;
+   // Require at least 4 pixels per sample for drawing individual samples.
+   const double threshold1 = 4 * rate;
+   // Require at least 4 pixels per sample for drawing the draggable points.
+   const double threshold2 = 4 * rate;
 
    {
       bool showIndividualSamples = false;
       for (unsigned ii = 0; !showIndividualSamples && ii < nPortions; ++ii) {
          const WavePortion &portion = portions[ii];
          showIndividualSamples =
-            !portion.inFisheye && portion.averageZoom > threshold1;
+            !portion.inFisheye && portion.averageZoom >= threshold1;
       }
 
       if (!showIndividualSamples) {
@@ -1839,8 +1841,8 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
 
    for (unsigned ii = 0; ii < nPortions; ++ii) {
       WavePortion &portion = portions[ii];
-      const bool showIndividualSamples = portion.averageZoom > threshold1;
-      const bool showPoints = portion.averageZoom > threshold2;
+      const bool showIndividualSamples = portion.averageZoom >= threshold1;
+      const bool showPoints = portion.averageZoom >= threshold2;
       wxRect& rect = portion.rect;
       rect.Intersect(mid);
       wxASSERT(rect.width >= 0);
@@ -1917,6 +1919,7 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
          }
          else
             DrawIndividualSamples(dc, leftOffset, rect, zoomMin, zoomMax,
+               track->ZeroLevelYCoordinate(mid),
                dB, dBRange,
                clip, zoomInfo,
                bigPoints, showPoints, muted);

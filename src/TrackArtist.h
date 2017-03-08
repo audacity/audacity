@@ -157,6 +157,7 @@ class AUDACITY_DLL_API TrackArtist {
    );
    void DrawIndividualSamples(wxDC & dc, int leftOffset, const wxRect & rect,
                               float zoomMin, float zoomMax,
+                              int zeroLevelYCoordinate,
                               bool dB, float dBRange,
                               const WaveClip *clip,
                               const ZoomInfo &zoomInfo,
