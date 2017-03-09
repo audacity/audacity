@@ -241,12 +241,10 @@ EffectEqualization::EffectEqualization()
 
    mLogEnvelope = std::make_unique<Envelope>();
    mLogEnvelope->SetInterpolateDB(false);
-   mLogEnvelope->Mirror(false);
    mLogEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
 
    mLinEnvelope = std::make_unique<Envelope>();
    mLinEnvelope->SetInterpolateDB(false);
-   mLinEnvelope->Mirror(false);
    mLinEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
 
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
@@ -2365,7 +2363,6 @@ void EffectEqualization::ErrMin(void)
    int j=0;
    Envelope testEnvelope;
    testEnvelope.SetInterpolateDB(false);
-   testEnvelope.Mirror(false);
    testEnvelope.SetRange(-120.0, 60.0);
    testEnvelope.Flatten(0.);
    testEnvelope.SetTrackLen(1.0);
@@ -2893,8 +2890,8 @@ EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *paren
    mWidth = 0;
    mHeight = 0;
 
+   mEditor = std::make_unique<EnvelopeEditor>(*mEffect->mEnvelope, false);
    mEffect->mEnvelope->Flatten(0.);
-   mEffect->mEnvelope->Mirror(false);
    mEffect->mEnvelope->SetTrackLen(1.0);
 
    ForceRecalc();
@@ -3103,7 +3100,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    if( mEffect->mDraw->GetValue() )
    {
       mEffect->mEnvelope->DrawPoints(memDC, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
-                                     mEffect->mdBMin, mEffect->mdBMax);
+                                     mEffect->mdBMin, mEffect->mdBMax, false);
    }
 
    dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
@@ -3121,7 +3118,7 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
       CaptureMouse();
    }
 
-   if (mEffect->mEnvelope->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
+   if (mEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
       false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax))
    {

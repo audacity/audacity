@@ -45,7 +45,6 @@
 
 #include "NoiseRemoval.h"
 
-#include "../Envelope.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"

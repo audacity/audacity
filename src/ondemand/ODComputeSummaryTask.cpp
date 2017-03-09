@@ -31,7 +31,6 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 ODComputeSummaryTask::ODComputeSummaryTask()
 {
    mMaxBlockFiles = 0;
-   mComputedBlockFiles = 0;
    mHasUpdateRan=false;
 }
 
@@ -83,7 +82,6 @@ void ODComputeSummaryTask::DoSomeInternal()
          success = true;
          blockStartSample = bf->GetStart();
          blockEndSample = blockStartSample + bf->GetLength();
-         mComputedBlockFiles++;
       }
       else
       {

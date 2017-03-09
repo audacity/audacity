@@ -3213,8 +3213,13 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
+   if (event.ButtonDown()) {
+      mEnvelopeEditor = std::make_unique<EnvelopeEditor>(*pspeedenvelope, false);
+      mEnvelopeEditorRight.reset();
+   }
    bool needUpdate =
-      pspeedenvelope->MouseEvent(
+      mEnvelopeEditor &&
+      mEnvelopeEditor->MouseEvent(
          event, envRect,
          *mViewInfo,
          ptimetrack->GetDisplayLog(), dBRange, lower, upper);
@@ -3250,7 +3255,13 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
       wxRect envRect = mCapturedRect;
       float zoomMin, zoomMax;
       pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-      needUpdate = penvelope->MouseEvent(
+      if (event.ButtonDown()) {
+         mEnvelopeEditor = std::make_unique<EnvelopeEditor>(*penvelope, true);
+         mEnvelopeEditorRight.reset();
+      }
+      needUpdate =
+         mEnvelopeEditor &&
+         mEnvelopeEditor->MouseEvent(
          event, envRect,
          *mViewInfo,
          dB, dBRange, zoomMin, zoomMax);
@@ -3260,30 +3271,23 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
       // Assume linked track is wave or null
       const auto link = static_cast<WaveTrack *>(mCapturedTrack->GetLink());
       if (link) {
-         Envelope *e2 = link->GetEnvelopeAtX(event.GetX());
-         // There isn't necessarily an envelope there; no guarantee a
-         // linked track has the same WaveClip structure...
-         bool updateNeeded = false;
-         if (e2) {
+         if (event.ButtonDown()) {
+            Envelope *e2 = link->GetEnvelopeAtX(event.GetX());
+            if (e2)
+               mEnvelopeEditorRight = std::make_unique<EnvelopeEditor>(*e2, true);
+            else {
+               // There isn't necessarily an envelope there; no guarantee a
+               // linked track has the same WaveClip structure...
+            }
+         }
+         if (mEnvelopeEditorRight) {
             wxRect envRect = mCapturedRect;
             float zoomMin, zoomMax;
             pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-            updateNeeded = e2->MouseEvent(event, envRect,
-                                          *mViewInfo, dB, dBRange,
-                                          zoomMin, zoomMax);
-            needUpdate |= updateNeeded;
-         }
-         if(!e2 || !updateNeeded)   // no envelope found at this x point, or found but not updated
-         {
-            if( (e2 = link->GetActiveEnvelope()) != 0 )  // search for any active DragPoint
-            {
-               wxRect envRect = mCapturedRect;
-               float zoomMin, zoomMax;
-               pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-               needUpdate |= e2->MouseEvent(event, envRect,
-                                            *mViewInfo, dB, dBRange,
-                                            zoomMin, zoomMax);
-            }
+            needUpdate|= mEnvelopeEditorRight->MouseEvent(event, envRect,
+                                         *mViewInfo,
+                                         dB, dBRange,
+                                         zoomMin, zoomMax);
          }
       }
 

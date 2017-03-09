@@ -27,7 +27,6 @@ updating the ODDecodeBlockFile and the GUI of the newly available data.
 ODDecodeTask::ODDecodeTask()
 {
    mMaxBlockFiles = 0;
-   mComputedBlockFiles = 0;
 }
 
 
@@ -74,7 +73,6 @@ void ODDecodeTask::DoSomeInternal()
             success = true;
             blockStartSample = bf->GetStart();
             blockEndSample = blockStartSample + bf->GetLength();
-            mComputedBlockFiles++;
          }
       }
       else

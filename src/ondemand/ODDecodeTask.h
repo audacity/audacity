@@ -93,7 +93,6 @@ protected:
    std::vector<movable_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;
-   int mComputedBlockFiles;
 
 };
 

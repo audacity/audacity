@@ -46,6 +46,7 @@
 
 
 class Envelope;
+class EnvelopeEditor;
 class EqualizationPanel;
 
 //
@@ -308,6 +309,7 @@ public:
 private:
    wxWindow *mParent;
    EffectEqualization *mEffect;
+   std::unique_ptr<EnvelopeEditor> mEditor;
 
    bool mRecalcRequired;
 

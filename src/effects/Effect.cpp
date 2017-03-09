@@ -91,8 +91,6 @@ Effect::Effect()
 
    mClient = NULL;
 
-   mWarper = NULL;
-
    mTracks = NULL;
    mOutputTracksType = Track::None;
    mT0 = 0.0;
@@ -2034,18 +2032,6 @@ void Effect::GetSamples(
       *start = 0;
       *len  = 0;
    }
-}
-
-void Effect::SetTimeWarper(std::unique_ptr<TimeWarper> &&warper)
-{
-   wxASSERT(warper);
-   mWarper = std::move(warper);
-}
-
-TimeWarper *Effect::GetTimeWarper()
-{
-   wxASSERT(mWarper);
-   return mWarper.get();
 }
 
 //

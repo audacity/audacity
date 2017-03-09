@@ -48,7 +48,6 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetInterpolateDB(true);
    mEnvelope->Flatten(1.0);
-   mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
 
@@ -75,7 +74,6 @@ TimeTrack::TimeTrack(const TimeTrack &orig):
    mEnvelope->SetTrackLen(DBL_MAX);
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
    mEnvelope->Flatten(1.0);
-   mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
    mEnvelope->Paste(0.0, orig.mEnvelope.get());

@@ -194,7 +194,7 @@ bool EffectChangePitch::Process()
 #endif
    {
       mSoundTouch = std::make_unique<SoundTouch>();
-      SetTimeWarper(std::make_unique<IdentityTimeWarper>());
+      IdentityTimeWarper warper;
       mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
 #ifdef USE_MIDI
       // Pitch shifting note tracks is currently only supported by SoundTouchEffect
@@ -209,7 +209,7 @@ bool EffectChangePitch::Process()
       // eliminate the next line:
       mSemitones = m_dSemitonesChange;
 #endif
-      return EffectSoundTouch::Process();
+      return EffectSoundTouch::ProcessWithTimeWarper(warper);
    }
 }
 
