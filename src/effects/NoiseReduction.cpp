@@ -640,7 +640,6 @@ bool EffectNoiseReduction::Process()
 
 EffectNoiseReduction::Worker::~Worker()
 {
-   EndFFT(hFFT);
 }
 
 bool EffectNoiseReduction::Worker::Process
@@ -727,7 +726,7 @@ EffectNoiseReduction::Worker::Worker
 , mSampleRate(sampleRate)
 
 , mWindowSize(settings.WindowSize())
-, hFFT(InitializeFFT(mWindowSize))
+, hFFT(GetFFT(mWindowSize))
 , mFFTBuffer(mWindowSize)
 , mInWaveBuffer(mWindowSize)
 , mOutOverlapBuffer(mWindowSize)
@@ -945,7 +944,7 @@ void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
          mFFTBuffer[ii] = mInWaveBuffer[ii] * mInWindow[ii];
    else
       memmove(&mFFTBuffer[0], &mInWaveBuffer[0], mWindowSize * sizeof(float));
-   RealFFTf(&mFFTBuffer[0], hFFT);
+   RealFFTf(&mFFTBuffer[0], hFFT.get());
 
    Record &record = *mQueue[0];
 
@@ -1243,7 +1242,7 @@ void EffectNoiseReduction::Worker::ReduceNoise
       }
 
       // Invert the FFT into the output buffer
-      InverseRealFFTf(&mFFTBuffer[0], hFFT);
+      InverseRealFFTf(&mFFTBuffer[0], hFFT.get());
 
       // Overlap-add
       if (mOutWindow.size() > 0) {

@@ -316,11 +316,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
    mDialog = NULL;
 
-   mURIMap = NULL;
-   mNumURIMap = 0;
-   mOptions = NULL;
-   mNumOptions = 0;
-
    mIdleFeature = NULL;
    mOptionsInterface = NULL;
 
@@ -329,19 +324,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
 LV2Effect::~LV2Effect()
 {
-   if (mURIMap)
-   {
-      for (int i = 0; i < mNumURIMap; i++)
-      {
-         free(mURIMap[i]);
-      }
-      free(mURIMap);
-   }
-
-   if (mOptions)
-   {
-      free(mOptions);
-   }
 }
 
 // ============================================================================
@@ -675,7 +657,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    AddFeature(LV2_UI_PREFIX "makeResident", NULL);
    AddFeature(LV2_UI__noUserResize, NULL);
    AddFeature(LV2_BUF_SIZE__boundedBlockLength, NULL);
-   AddFeature(LV2_OPTIONS__options, mOptions);
+   AddFeature(LV2_OPTIONS__options, mOptions.data());
    AddFeature(LV2_URI_MAP_URI, &mUriMapFeature);
    AddFeature(LV2_URID__map, &mURIDMapFeature);
    AddFeature(LV2_URID__unmap, &mURIDUnmapFeature);
@@ -1302,10 +1284,9 @@ bool LV2Effect::SaveParameters(const wxString & group)
 
 size_t LV2Effect::AddOption(const char *key, uint32_t size, const char *type, void *value)
 {
-   int ndx = mNumOptions;
+   int ndx = mOptions.size();
 
-   mNumOptions += 1;
-   mOptions = (LV2_Options_Option *) realloc(mOptions, mNumOptions * sizeof(LV2_Options_Option));
+   mOptions.resize(1 + mOptions.size());
    memset(&mOptions[ndx], 0, sizeof(mOptions[ndx]));
 
    if (key != NULL)
@@ -1323,26 +1304,24 @@ size_t LV2Effect::AddOption(const char *key, uint32_t size, const char *type, vo
 
 LV2_Feature *LV2Effect::AddFeature(const char *uri, void *data)
 {
-   mFeatures.resize(mFeatures.size() + 1);
-
-   auto &pFeature = mFeatures.back();
+   size_t ndx = mFeatures.size();
+   mFeatures.resize(1 + mFeatures.size());
 
    if (uri != NULL)
    {
-      pFeature = make_movable<LV2_Feature>();
-      pFeature->URI = uri;
-      pFeature->data = data;
+      mFeatures[ndx].reset( safenew LV2_Feature );
+      mFeatures[ndx]->URI = uri;
+      mFeatures[ndx]->data = data;
    }
 
-   mFeaturePtrs.push_back(pFeature.get());
-   return pFeature.get();
+   return mFeatures[ndx].get();
 }
 
 LilvInstance *LV2Effect::InitInstance(float sampleRate)
 {
-   LilvInstance *handle = lilv_plugin_instantiate(mPlug,
-                                                  sampleRate,
-                                                  mFeaturePtrs.data());
+   LilvInstance *handle = lilv_plugin_instantiate(
+      mPlug, sampleRate,
+      reinterpret_cast<const LV2_Feature *const *>(mFeatures.data()));
    if (!handle)
    {
       return NULL;
@@ -1478,7 +1457,7 @@ bool LV2Effect::BuildFancy()
          lilv_node_as_uri(uiType),
          lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui))),
          lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_binary_uri(ui))),
-         mFeaturePtrs.data());
+         reinterpret_cast<const LV2_Feature *const *>(mFeatures.data()));
 
       lilv_uis_free(uis);
 
@@ -2033,19 +2012,19 @@ LV2_URID LV2Effect::urid_map(LV2_URID_Map_Handle handle, const char *uri)
 
 LV2_URID LV2Effect::URID_Map(const char *uri)
 {
-   for (int i = 0; i < mNumURIMap; i++)
+   size_t ndx = mURIMap.size();
+   for (int i = 0; i < ndx; i++)
    {
-      if (strcmp(mURIMap[i], uri) == 0)
+      if (strcmp(mURIMap[i].get(), uri) == 0)
       {
          return i + 1;
       }
    }
 
-   mNumURIMap += 1;
-   mURIMap = (char **) realloc(mURIMap, mNumURIMap * sizeof(char*));
-   mURIMap[mNumURIMap - 1] = strdup(uri);
+   mURIMap.resize(1 + mURIMap.size());
+   mURIMap[ndx].reset( strdup(uri) );
 
-   return mNumURIMap;
+   return ndx + 1;
 }
 
 // static callback
@@ -2056,9 +2035,9 @@ const char *LV2Effect::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
 
 const char *LV2Effect::URID_Unmap(LV2_URID urid)
 {
-   if (urid > 0 && urid <= (LV2_URID) mNumURIMap)
+   if (urid > 0 && urid <= (LV2_URID) mURIMap.size())
    {
-      return mURIMap[urid - 1];
+      return mURIMap[urid - 1].get();
    }
 
    return NULL;

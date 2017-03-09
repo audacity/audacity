@@ -324,6 +324,11 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
    return oldCopyPref;
 }
 
+struct id3_tag_deleter {
+   void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
+};
+using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+
 ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                                 TrackHolders &outTracks,
                                 Tags *tags)
@@ -584,14 +589,17 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                continue;
             }
 
-            id3_byte_t *buffer = (id3_byte_t *)malloc(len);
-            if (!buffer) {
-               break;
-            }
 
-            f.Read(buffer, len);
-            struct id3_tag *tp = id3_tag_parse(buffer, len);
-            free(buffer);
+            id3_tag_holder tp;
+            {
+               ArrayOf<id3_byte_t> buffer{ len };
+               if (!buffer) {
+                  break;
+               }
+
+               f.Read(buffer.get(), len);
+               tp.reset( id3_tag_parse(buffer.get(), len) );
+            }
 
             if (!tp) {
                break;
@@ -662,9 +670,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                else if (frame->nfields == 3) {
                   ustr = id3_field_getstring(&frame->fields[1]);
                   if (ustr) {
-                     char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-                     n = UTF8CTOWX(str);
-                     free(str);
+                     MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                     n = UTF8CTOWX(str.get());
                   }
 
                   ustr = id3_field_getstring(&frame->fields[2]);
@@ -674,9 +681,8 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                }
 
                if (ustr) {
-                  char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-                  v = UTF8CTOWX(str);
-                  free(str);
+                  MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                  v = UTF8CTOWX(str.get());
                }
 
                if (!n.IsEmpty() && !v.IsEmpty()) {
@@ -692,7 +698,6 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                }
             }
 
-            id3_tag_delete(tp);
             break;
          }
 

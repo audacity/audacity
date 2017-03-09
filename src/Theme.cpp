@@ -347,7 +347,9 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 
 //   unsigned char *src = Img1.GetData();
    unsigned char *mk = Img2.GetData();
-   unsigned char *alpha = (unsigned char*)malloc( nBytes );
+   //wxImage::setAlpha requires memory allocated with malloc, not new
+   MallocString<unsigned char> alpha{
+      static_cast<unsigned char*>(malloc( nBytes )) };
 
    // Extract alpha channel from second XPM.
    for(i=0;i<nBytes;i++)
@@ -356,7 +358,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
       mk+=3;
    }
 
-   Img1.SetAlpha( alpha);
+   Img1.SetAlpha( alpha.release() );
 
    //dmazzoni: the top line does not work on wxGTK
    //wxBitmap Result( Img1, 32 );

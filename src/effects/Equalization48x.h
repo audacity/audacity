@@ -32,6 +32,11 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 #define MATH_FUNCTION_AVX 16
 #define MATH_FUNCTION_SEGMENTED_CODE 32
 
+struct free_simd {
+   void operator () (void*) const;
+};
+using simd_floats = std::unique_ptr< float[], free_simd >;
+
 // added by Andrew Hallendorff intrinsics processing
 enum EQBufferStatus
 {
@@ -156,7 +161,7 @@ private:
    size_t mBlocksPerBuffer;
    size_t mScratchBufferSize;
    size_t mSubBufferSize;
-   float *mBigBuffer;
+   simd_floats mBigBuffer;
    ArrayOf<BufferInfo> mBufferInfo;
    wxMutex mDataMutex;
    ArrayOf<EQWorker> mEQWorkers;

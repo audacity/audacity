@@ -348,10 +348,7 @@ SpectrogramSettings::~SpectrogramSettings()
 
 void SpectrogramSettings::DestroyWindows()
 {
-   if (hFFT != NULL) {
-      EndFFT(hFFT);
-      hFFT = NULL;
-   }
+   hFFT.reset();
    window.reset();
    dWindow.reset();
    tWindow.reset();
@@ -420,9 +417,7 @@ void SpectrogramSettings::CacheWindows() const
       const auto fftLen = WindowSize() * ZeroPaddingFactor();
       const auto padding = (WindowSize() * (zeroPaddingFactor - 1)) / 2;
 
-      if (hFFT != NULL)
-         EndFFT(hFFT);
-      hFFT = InitializeFFT(fftLen);
+      hFFT = GetFFT(fftLen);
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
       if (algorithm == algReassignment) {
          RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);

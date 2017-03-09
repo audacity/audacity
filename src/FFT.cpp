@@ -113,8 +113,6 @@ void InitFFT()
 void DeinitFFT()
 {
    gFFTBitTable.reset();
-   // Deallocate any unused RealFFTf tables
-   CleanupFFT();
 }
 
 static inline size_t FastReverseBits(size_t i, size_t NumBits)
@@ -230,14 +228,14 @@ void FFT(size_t NumSamples,
 
 void RealFFT(size_t NumSamples, const float *RealIn, float *RealOut, float *ImagOut)
 {
-   HFFT hFFT = GetFFT(NumSamples);
+   auto hFFT = GetFFT(NumSamples);
    Floats pFFT{ NumSamples };
    // Copy the data into the processing buffer
    for(size_t i = 0; i < NumSamples; i++)
       pFFT[i] = RealIn[i];
 
    // Perform the FFT
-   RealFFTf(pFFT.get(), hFFT);
+   RealFFTf(pFFT.get(), hFFT.get());
 
    // Copy the data into the real and imaginary outputs
    for (size_t i = 1; i<(NumSamples / 2); i++) {
@@ -253,8 +251,6 @@ void RealFFT(size_t NumSamples, const float *RealIn, float *RealOut, float *Imag
       RealOut[i] =  RealOut[NumSamples-i];
       ImagOut[i] = -ImagOut[NumSamples-i];
    }
-
-   ReleaseFFT(hFFT);
 }
 
 /*
@@ -271,7 +267,7 @@ void RealFFT(size_t NumSamples, const float *RealIn, float *RealOut, float *Imag
 void InverseRealFFT(size_t NumSamples, const float *RealIn, const float *ImagIn,
 		    float *RealOut)
 {
-   HFFT hFFT = GetFFT(NumSamples);
+   auto hFFT = GetFFT(NumSamples);
    Floats pFFT{ NumSamples };
    // Copy the data into the processing buffer
    for (size_t i = 0; i < (NumSamples / 2); i++)
@@ -287,12 +283,10 @@ void InverseRealFFT(size_t NumSamples, const float *RealIn, const float *ImagIn,
    pFFT[1] = RealIn[NumSamples / 2];
 
    // Perform the FFT
-   InverseRealFFTf(pFFT.get(), hFFT);
+   InverseRealFFTf(pFFT.get(), hFFT.get());
 
    // Copy the data to the (purely real) output buffer
-   ReorderToTime(hFFT, pFFT.get(), RealOut);
-
-   ReleaseFFT(hFFT);
+   ReorderToTime(hFFT.get(), pFFT.get(), RealOut);
 }
 
 /*
@@ -308,14 +302,14 @@ void InverseRealFFT(size_t NumSamples, const float *RealIn, const float *ImagIn,
 
 void PowerSpectrum(size_t NumSamples, const float *In, float *Out)
 {
-   HFFT hFFT = GetFFT(NumSamples);
+   auto hFFT = GetFFT(NumSamples);
    Floats pFFT{ NumSamples };
    // Copy the data into the processing buffer
    for (size_t i = 0; i<NumSamples; i++)
       pFFT[i] = In[i];
 
    // Perform the FFT
-   RealFFTf(pFFT.get(), hFFT);
+   RealFFTf(pFFT.get(), hFFT.get());
 
    // Copy the data into the real and imaginary outputs
    for (size_t i = 1; i<NumSamples / 2; i++) {
@@ -325,7 +319,6 @@ void PowerSpectrum(size_t NumSamples, const float *In, float *Out)
    // Handle the (real-only) DC and Fs/2 bins
    Out[0] = pFFT[0]*pFFT[0];
    Out[NumSamples / 2] = pFFT[1]*pFFT[1];
-   ReleaseFFT(hFFT);
 }
 
 /*

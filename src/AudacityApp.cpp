@@ -521,7 +521,7 @@ class GnomeShutdown
  public:
    GnomeShutdown()
    {
-      mArgv[0] = strdup("Audacity");
+      mArgv[0].reset(strdup("Audacity"));
 
       mGnomeui = dlopen("libgnomeui-2.so.0", RTLD_NOW);
       if (!mGnomeui) {
@@ -550,11 +550,11 @@ class GnomeShutdown
          return;
       }
 
-      gnome_program_init(mArgv[0],
+      gnome_program_init(mArgv[0].get(),
                          "1.0",
                          libgnomeui_module_info_get(),
                          1,
-                         mArgv,
+                         reinterpret_cast<char**>(mArgv),
                          NULL);
 
       mClient = gnome_master_client();
@@ -568,13 +568,11 @@ class GnomeShutdown
    virtual ~GnomeShutdown()
    {
       // Do not dlclose() the libraries here lest you want segfaults...
-
-      free(mArgv[0]);
    }
 
  private:
 
-   char *mArgv[1];
+   MallocString<> mArgv[1];
    void *mGnomeui;
    void *mGnome;
    GnomeClient *mClient;

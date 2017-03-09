@@ -356,9 +356,8 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       else if (frame->nfields == 3) {
          ustr = id3_field_getstring(&frame->fields[1]);
          if (ustr) {
-            char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-            n = UTF8CTOWX(str);
-            free(str);
+            MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+            n = UTF8CTOWX(str.get());
          }
 
          ustr = id3_field_getstring(&frame->fields[2]);
@@ -368,9 +367,8 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       }
 
       if (ustr) {
-         char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-         v = UTF8CTOWX(str);
-         free(str);
+         MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+         v = UTF8CTOWX(str.get());
       }
 
       if (!n.IsEmpty() && !v.IsEmpty()) {

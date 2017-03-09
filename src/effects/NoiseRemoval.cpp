@@ -288,7 +288,7 @@ void EffectNoiseRemoval::Initialize()
    mImagFFTs.reinit(mHistoryLen, mSpectrumSize);
 
    // Initialize the FFT
-   hFFT = InitializeFFT(mWindowSize);
+   hFFT = GetFFT(mWindowSize);
 
    mFFTBuffer.reinit(mWindowSize);
    mInWaveBuffer.reinit(mWindowSize);
@@ -307,7 +307,7 @@ void EffectNoiseRemoval::Initialize()
 
 void EffectNoiseRemoval::Cleanup()
 {
-   EndFFT(hFFT);
+   hFFT.reset();
 
    if (mDoProfile) {
       ApplyFreqSmoothing(mNoiseThreshold.get());
@@ -374,8 +374,8 @@ void EffectNoiseRemoval::FillFirstHistoryWindow()
 {
    for(size_t i = 0; i < mWindowSize; i++)
       mFFTBuffer[i] = mInWaveBuffer[i];
-   RealFFTf(mFFTBuffer.get(), hFFT);
-   for(size_t i = 1; i < (mSpectrumSize-1); i++) {
+   RealFFTf(mFFTBuffer.get(), hFFT.get());
+   for(size_t i = 1; i + 1 < mSpectrumSize; i++) {
       mRealFFTs[0][i] = mFFTBuffer[hFFT->BitReversed[i]  ];
       mImagFFTs[0][i] = mFFTBuffer[hFFT->BitReversed[i]+1];
       mSpectrums[0][i] = mRealFFTs[0][i]*mRealFFTs[0][i] + mImagFFTs[0][i]*mImagFFTs[0][i];
@@ -502,7 +502,7 @@ void EffectNoiseRemoval::RemoveNoise()
    mFFTBuffer[1] = mRealFFTs[out][mSpectrumSize-1] * mGains[out][mSpectrumSize-1];
 
    // Invert the FFT into the output buffer
-   InverseRealFFTf(mFFTBuffer.get(), hFFT);
+   InverseRealFFTf(mFFTBuffer.get(), hFFT.get());
 
    // Overlap-add
    for(size_t j = 0; j < (mSpectrumSize-1); j++) {

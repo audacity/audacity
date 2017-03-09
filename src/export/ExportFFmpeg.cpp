@@ -857,7 +857,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    if (!ret)
       return ProgressResult::Cancelled;
 
-   int pcmBufferSize = 1024;
+   size_t pcmBufferSize = 1024;
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
    auto mixer = CreateMixer(waveTracks,

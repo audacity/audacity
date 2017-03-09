@@ -13,6 +13,7 @@ Paul Licameli
 
 #include "../Experimental.h"
 #include "../SampleFormat.h"
+#include "../RealFFTf.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 
@@ -153,7 +154,7 @@ public:
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum
-   mutable FFTParam      *hFFT{};
+   mutable HFFT           hFFT;
    mutable Floats         window;
 
    // Two other windows for computing reassigned spectrogram

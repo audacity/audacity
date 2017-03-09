@@ -110,7 +110,7 @@ class ODLock {
 
 private:
    friend class ODCondition; //needs friendship for wait()
-   pthread_mutex_t mutex ;
+   pthread_mutex_t mutex;
 };
 
 class ODCondition

@@ -78,8 +78,8 @@ FactoryPresets[] =
 struct Reverb_priv_t
 {
    reverb_t reverb;
-   float *dry;
-   float *wet[2];
+   float *dry {};
+   float *wet[2] { {}, {} };
 };
 
 //
@@ -171,7 +171,7 @@ bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
       mNumChans = 2;
    }
 
-   mP = (Reverb_priv_t *) calloc(sizeof(*mP), mNumChans);
+   mP.reinit(mNumChans, true);
 
    for (int i = 0; i < mNumChans; i++)
    {
@@ -194,12 +194,7 @@ bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
 
 bool EffectReverb::ProcessFinalize()
 {
-   for (int i = 0; i < mNumChans; i++)
-   {
-      reverb_delete(&mP[i].reverb);
-   }
-
-   free(mP);
+   mP.reset();
 
    return true;
 }

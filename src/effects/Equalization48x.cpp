@@ -158,7 +158,7 @@ void * malloc_simd(const size_t size)
 #endif
 }
 
-void free_simd(void* mem)
+void free_simd::operator() (void* mem) const
 {
 #if defined WIN32           // WIN32
     _aligned_free(mem);
@@ -169,7 +169,7 @@ void free_simd(void* mem)
 
 EffectEqualization48x::EffectEqualization48x():
          mThreadCount(0),mFilterSize(0),mWindowSize(0),mBlockSize(0),mWorkerDataCount(0),mBlocksPerBuffer(20),
-         mScratchBufferSize(0),mSubBufferSize(0),mBigBuffer(NULL),mThreaded(false),
+         mScratchBufferSize(0),mSubBufferSize(0),mThreaded(false),
          mBenching(false),mBufferCount(0)
 {
 }
@@ -211,7 +211,7 @@ bool EffectEqualization48x::AllocateBuffersWorkers(int nThreads)
 
    mScratchBufferSize=mWindowSize*3*sizeof(float)*mBufferCount; // 3 window size blocks of instruction size
    mSubBufferSize=mBlockSize*(mBufferCount*(mBlocksPerBuffer-1)); // we are going to do a full block overlap
-   mBigBuffer=(float *)malloc_simd(sizeof(float)*(mSubBufferSize+mFilterSize+mScratchBufferSize)*mWorkerDataCount); // we run over by filtersize
+   mBigBuffer.reset( (float *)malloc_simd(sizeof(float) * (mSubBufferSize + mFilterSize + mScratchBufferSize) * mWorkerDataCount) ); // we run over by filtersize
    // fill the bufferInfo
    mBufferInfo.reinit(mWorkerDataCount);
    for(int i=0;i<mWorkerDataCount;i++) {
@@ -250,8 +250,7 @@ bool EffectEqualization48x::FreeBuffersWorkers()
       mWorkerDataCount=0; 
    }
    mBufferInfo.reset();
-   free_simd(mBigBuffer);
-   mBigBuffer=NULL;
+   mBigBuffer.reset();
    return true;
 }
 
@@ -672,8 +671,8 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
       output->Append((samplePtr)&mBigBuffer[(bigRun?mBlockSize:0)+(mFilterSize>>1)], floatSample, subBufferSize-((bigRun?mBlockSize:0)+(mFilterSize>>1)));
    }
    if(singleProcessLength && !bBreakLoop) {
-      t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      t->Get((samplePtr)mBigBuffer.get(), floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      ProcessBuffer(mBigBuffer.get(), mBigBuffer.get(), singleProcessLength+mBlockSize+(mFilterSize>>1));
       output->Append((samplePtr)&mBigBuffer[bigRuns > 0 ? mBlockSize : 0], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
    }
    output->Flush();
@@ -688,7 +687,7 @@ void EffectEqualization48x::Filter1x(size_t len,
    int i;
    float real, imag;
    // Apply FFT
-   RealFFTf1x(buffer, mEffectEqualization->hFFT);
+   RealFFTf1x(buffer, mEffectEqualization->hFFT.get());
 
    // Apply filter
    // DC component is purely real
@@ -721,8 +720,8 @@ void EffectEqualization48x::Filter1x(size_t len,
    scratchBuffer[1] = buffer[1] * filterFuncR;
 
    // Inverse FFT and normalization
-   InverseRealFFTf1x(scratchBuffer, mEffectEqualization->hFFT);
-   ReorderToTime1x(mEffectEqualization->hFFT, scratchBuffer, buffer);
+   InverseRealFFTf1x(scratchBuffer, mEffectEqualization->hFFT.get());
+   ReorderToTime1x(mEffectEqualization->hFFT.get(), scratchBuffer, buffer);
 }
 
 bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
@@ -853,8 +852,8 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
       output->Append((samplePtr)&mBigBuffer[(bigRun?mBlockSize:0)+(mFilterSize>>1)], floatSample, subBufferSize-((bigRun?mBlockSize:0)+(mFilterSize>>1)));
    }
    if(singleProcessLength && !bBreakLoop) {
-      t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      t->Get((samplePtr)mBigBuffer.get(), floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      ProcessBuffer(mBigBuffer.get(), mBigBuffer.get(), singleProcessLength+mBlockSize+(mFilterSize>>1));
       output->Append((samplePtr)&mBigBuffer[bigRuns > 0 ? mBlockSize : 0], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
 //      output->Append((samplePtr)&mBigBuffer[bigRuns?mBlockSize:0], floatSample, singleProcessLength);
    }
@@ -965,8 +964,8 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
       mDataMutex.Unlock(); // Get back in line for data
    }
    if(singleProcessLength && !bBreakLoop) {
-      t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      t->Get((samplePtr)mBigBuffer.get(), floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      ProcessBuffer(mBigBuffer.get(), mBigBuffer.get(), singleProcessLength+mBlockSize+(mFilterSize>>1));
       output->Append((samplePtr)&mBigBuffer[mBlockSize], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
    }
    output->Flush();
@@ -981,7 +980,7 @@ void EffectEqualization48x::Filter4x(size_t len,
    int i;
    __m128 real128, imag128;
    // Apply FFT
-   RealFFTf4x(buffer, mEffectEqualization->hFFT);
+   RealFFTf4x(buffer, mEffectEqualization->hFFT.get());
 
    // Apply filter
    // DC component is purely real
@@ -1015,8 +1014,8 @@ void EffectEqualization48x::Filter4x(size_t len,
    localFFTBuffer[1] = _mm_mul_ps(localBuffer[1], filterFuncR);
 
    // Inverse FFT and normalization
-   InverseRealFFTf4x(scratchBuffer, mEffectEqualization->hFFT);
-   ReorderToTime4x(mEffectEqualization->hFFT, scratchBuffer, buffer);
+   InverseRealFFTf4x(scratchBuffer, mEffectEqualization->hFFT.get());
+   ReorderToTime4x(mEffectEqualization->hFFT.get(), scratchBuffer, buffer);
 }
 
 #ifdef __AVX_ENABLED
@@ -1183,8 +1182,8 @@ bool EffectEqualization48x::ProcessOne8x(int count, WaveTrack * t,
       output->Append((samplePtr)&mBigBuffer[(bigRun?mBlockSize:0)+(mFilterSize>>1)], floatSample, mSubBufferSize-((bigRun?mBlockSize:0)+(mFilterSize>>1)));
    }
    if(singleProcessLength && !bBreakLoop) {
-      t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      t->Get((samplePtr)mBigBuffer.get(), floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      ProcessBuffer(mBigBuffer.get(), mBigBuffer.get(), singleProcessLength+mBlockSize+(mFilterSize>>1));
       output->Append((samplePtr)&mBigBuffer[mBlockSize], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
    }
    output->Flush();
@@ -1262,8 +1261,8 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
       mDataMutex.Unlock(); // Get back in line for data
    }
    if(singleProcessLength && !bBreakLoop) {
-      t->Get((samplePtr)mBigBuffer, floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
-      ProcessBuffer(mBigBuffer, mBigBuffer, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      t->Get((samplePtr)mBigBuffer.get(), floatSample, currentSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
+      ProcessBuffer(mBigBuffer.get(), mBigBuffer.get(), singleProcessLength+mBlockSize+(mFilterSize>>1));
       output->Append((samplePtr)&mBigBuffer[mBlockSize], floatSample, singleProcessLength+mBlockSize+(mFilterSize>>1));
    }
    output->Flush();

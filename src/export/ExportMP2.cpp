@@ -185,7 +185,7 @@ public:
 
 private:
 
-   int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, const Tags *tags);
+   int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -242,15 +242,15 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       return ProgressResult::Cancelled;
    }
 
-   char *id3buffer = NULL;
+   ArrayOf<char> id3buffer;
    int id3len;
    bool endOfFile;
-   id3len = AddTags(project, &id3buffer, &endOfFile, metadata);
+   id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile)
-      outFile.Write(id3buffer, id3len);
+      outFile.Write(id3buffer.get(), id3len);
 
    // Values taken from the twolame simple encoder sample
-   const int pcmBufferSize = 9216 / 2; // number of samples
+   const size_t pcmBufferSize = 9216 / 2; // number of samples
    const size_t mp2BufferSize = 16384u; // bytes
 
    // We allocate a buffer which is twice as big as the
@@ -307,11 +307,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    /* Write ID3 tag if it was supposed to be at the end of the file */
 
    if (id3len && endOfFile)
-      outFile.Write(id3buffer, id3len);
-
-   if (id3buffer) {
-   free(id3buffer);
-   }
+      outFile.Write(id3buffer.get(), id3len);
 
    /* Close file */
 
@@ -326,11 +322,16 @@ wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
    return safenew ExportMP2Options(parent, format);
 }
 
+struct id3_tag_deleter {
+   void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
+};
+using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+
 // returns buffer len; caller frees
-int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, const Tags *tags)
+int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
-   struct id3_tag *tp = id3_tag_new();
+   id3_tag_holder tp { id3_tag_new() };
 
    for (const auto &pair : tags->GetRange()) {
       const auto &n = pair.first;
@@ -349,7 +350,7 @@ int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool 
       else if (n.CmpNoCase(TAG_YEAR) == 0) {
          // LLL:  Some apps do not like the newer frame ID (ID3_FRAME_YEAR),
          //       so we add old one as well.
-         AddFrame(tp, n, v, "TYER");
+         AddFrame(tp.get(), n, v, "TYER");
          name = ID3_FRAME_YEAR;
       }
       else if (n.CmpNoCase(TAG_GENRE) == 0) {
@@ -362,7 +363,7 @@ int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool 
          name = ID3_FRAME_TRACK;
       }
 
-      AddFrame(tp, n, v, name);
+      AddFrame(tp.get(), n, v, name);
    }
 
    tp->options &= (~ID3_TAG_OPTION_COMPRESSION); // No compression
@@ -378,11 +379,10 @@ int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool 
 
    id3_length_t len;
 
-   len = id3_tag_render(tp, 0);
-   *buffer = (char *)malloc(len);
-   len = id3_tag_render(tp, (id3_byte_t *)*buffer);
+   len = id3_tag_render(tp.get(), 0);
+   buffer.reinit(len);
+   len = id3_tag_render(tp.get(), (id3_byte_t *)buffer.get());
 
-   id3_tag_delete(tp);
 
    return len;
 #else //ifdef USE_LIBID3TAG
@@ -402,8 +402,8 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
    }
 
-   id3_ucs4_t *ucs4 =
-      id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
+   MallocString<id3_ucs4_t> ucs4 {
+      id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8)) };
 
    if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
       // A hack to get around iTunes not recognizing the comment.  The
@@ -413,21 +413,19 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       // way of clearing the field, so do it directly.
       id3_field *f = id3_frame_field(frame, 1);
       memset(f->immediate.value, 0, sizeof(f->immediate.value));
-      id3_field_setfullstring(id3_frame_field(frame, 3), ucs4);
+      id3_field_setfullstring(id3_frame_field(frame, 3), ucs4.get());
    }
    else if (strcmp(name, "TXXX") == 0) {
-      id3_field_setstring(id3_frame_field(frame, 2), ucs4);
-      free(ucs4);
+      id3_field_setstring(id3_frame_field(frame, 2), ucs4.get());
 
-      ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
+      ucs4.reset(id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8)));
 
-      id3_field_setstring(id3_frame_field(frame, 1), ucs4);
+      id3_field_setstring(id3_frame_field(frame, 1), ucs4.get());
    }
    else {
-      id3_field_setstrings(id3_frame_field(frame, 1), 1, &ucs4);
+      auto addr = ucs4.get();
+      id3_field_setstrings(id3_frame_field(frame, 1), 1, &addr);
    }
-
-   free(ucs4);
 
    id3_tag_attachframe(tp, frame);
 }

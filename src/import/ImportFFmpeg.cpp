@@ -732,13 +732,10 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
    }
 
    // Allocate the buffer to store audio.
-   int insamples = sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize;
-   int nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
-   uint8_t **tmp = (uint8_t **) malloc(sizeof(uint8_t *) * nChannels);
-   for (int chn = 0; chn < nChannels; chn++)
-   {
-      tmp[chn] = (uint8_t *) malloc(sc->m_osamplesize * (insamples / nChannels));
-   }
+   auto insamples = sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize;
+   size_t nChannels = std::min(sc->m_stream->codec->channels, sc->m_initialchannels);
+
+   ArraysOf<uint8_t> tmp{ nChannels, sc->m_osamplesize * (insamples / nChannels) };
 
    // Separate the channels and convert input sample format to 16-bit
    uint8_t *in = sc->m_decodedAudioSamples.get();
@@ -754,36 +751,31 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
             {
                case AV_SAMPLE_FMT_U8:
                case AV_SAMPLE_FMT_U8P:
-                  ((int16_t *)tmp[chn])[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
+                  ((int16_t *)tmp[chn].get())[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
                break;
 
                case AV_SAMPLE_FMT_S16:
                case AV_SAMPLE_FMT_S16P:
-                  ((int16_t *)tmp[chn])[index] = (int16_t) *(int16_t *)in;
+                  ((int16_t *)tmp[chn].get())[index] = (int16_t) *(int16_t *)in;
                break;
 
                case AV_SAMPLE_FMT_S32:
                case AV_SAMPLE_FMT_S32P:
-                  ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1u << 31));
+                  ((float *)tmp[chn].get())[index] = (float) *(int32_t *)in * (1.0 / (1u << 31));
                break;
 
                case AV_SAMPLE_FMT_FLT:
                case AV_SAMPLE_FMT_FLTP:
-                  ((float *)tmp[chn])[index] = (float) *(float *)in;
+                  ((float *)tmp[chn].get())[index] = (float) *(float *)in;
                break;
 
                case AV_SAMPLE_FMT_DBL:
                case AV_SAMPLE_FMT_DBLP:
-                  ((float *)tmp[chn])[index] = (float) *(double *)in;
+                  ((float *)tmp[chn].get())[index] = (float) *(double *)in;
                break;
 
                default:
                   wxLogError(wxT("Stream %d has unrecognized sample format %d."), streamid, sc->m_samplefmt);
-                  for (int chn=0; chn < nChannels; chn++)
-                  {
-                     free(tmp[chn]);
-                  }
-                  free(tmp);
                   return ProgressResult::Success;
                break;
             }
@@ -798,11 +790,8 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
    auto iter2 = iter->begin();
    for (int chn=0; chn < nChannels; ++iter2, ++chn)
    {
-      iter2->get()->Append((samplePtr)tmp[chn],sc->m_osamplefmt,index);
-      free(tmp[chn]);
+      iter2->get()->Append((samplePtr)tmp[chn].get(), sc->m_osamplefmt, index);
    }
-
-   free(tmp);
 
    // Try to update the progress indicator (and see if user wants to cancel)
    auto updateResult = ProgressResult::Success;
