@@ -854,12 +854,16 @@ bool SpecCache::CalculateOneSpectrum
                myLen)
             );
 
-            if (copy)
-               memcpy(adj, useBuffer, myLen * sizeof(float));
+            if (copy) {
+               if (useBuffer)
+                  memcpy(adj, useBuffer, myLen * sizeof(float));
+               else
+                  memset(adj, 0, myLen * sizeof(float));
+            }
          }
       }
 
-      if (copy)
+      if (copy || !useBuffer)
          useBuffer = scratch;
 
       if (autocorrelation) {

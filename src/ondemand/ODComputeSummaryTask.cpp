@@ -71,12 +71,9 @@ void ODComputeSummaryTask::DoSomeInternal()
    mBlockFilesMutex.Lock();
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
-      const auto &bf = mBlockFiles[0];
+      const auto bf = mBlockFiles[0].lock();
 
-      //first check to see if the ref count is at least 2.  It should have one
-      //from when we added it to this instance's mBlockFiles array, and one from
-      //the Wavetrack/sequence.  If it doesn't it has been deleted and we should forget it.
-      if(bf.use_count() >= 2)
+      if(bf)
       {
          bf->DoWriteSummary();
          success = true;
@@ -85,6 +82,7 @@ void ODComputeSummaryTask::DoSomeInternal()
       }
       else
       {
+         // The block file disappeared.
          //the waveform in the wavetrack now is shorter, so we need to update mMaxBlockFiles
          //because now there is less work to do.
          mMaxBlockFiles--;
@@ -164,7 +162,7 @@ void ODComputeSummaryTask::CalculatePercentComplete()
 ///by default left to right, or frome the point the user has clicked.
 void ODComputeSummaryTask::Update()
 {
-   std::vector< std::shared_ptr< ODPCMAliasBlockFile > > tempBlocks;
+   std::vector< std::weak_ptr< ODPCMAliasBlockFile > > tempBlocks;
 
    mWaveTrackMutex.Lock();
 
@@ -207,10 +205,14 @@ void ODComputeSummaryTask::Update()
                   ));
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
-                  while(insertCursor<(int)tempBlocks.size()&&
-                     tempBlocks[insertCursor]->GetStart() + tempBlocks[insertCursor]->GetClipOffset() <
-                        odpcmaFile->GetStart() + odpcmaFile->GetClipOffset())
-                     insertCursor++;
+                  {
+                     std::shared_ptr< ODPCMAliasBlockFile > ptr;
+                     while(insertCursor < (int)tempBlocks.size() &&
+                           (!(ptr = tempBlocks[insertCursor].lock()) ||
+                            ptr->GetStart() + ptr->GetClipOffset() <
+                            odpcmaFile->GetStart() + odpcmaFile->GetClipOffset()))
+                        insertCursor++;
+                  }
 
                   tempBlocks.insert(tempBlocks.begin() + insertCursor++, odpcmaFile);
                }
@@ -232,7 +234,7 @@ void ODComputeSummaryTask::Update()
 
 ///Computes the summary calculation queue order of the blockfiles
 void ODComputeSummaryTask::OrderBlockFiles
-   (std::vector< std::shared_ptr< ODPCMAliasBlockFile > > &unorderedBlocks)
+   (std::vector< std::weak_ptr< ODPCMAliasBlockFile > > &unorderedBlocks)
 {
    mBlockFiles.clear();
    //Order the blockfiles into our queue in a fancy convenient way.  (this could be user-prefs)
@@ -242,27 +244,29 @@ void ODComputeSummaryTask::OrderBlockFiles
 
    //find the startpoint
    auto processStartSample = GetDemandSample();
-   for(int i= ((int)unorderedBlocks.size())-1;i>= 0;i--)
+   std::shared_ptr< ODPCMAliasBlockFile > firstBlock;
+   for(auto i = unorderedBlocks.size(); i--;)
    {
-      //check to see if the refcount is at least two before we add it to the list.
-      //There should be one Ref() from the one added by this ODTask, and one from the track.
-      //If there isn't, then the block was deleted for some reason and we should ignore it.
-      if(unorderedBlocks[i].use_count() >= 2)
+      auto ptr = unorderedBlocks[i].lock();
+      if(ptr)
       {
          //test if the blockfiles are near the task cursor.  we use the last mBlockFiles[0] as our point of reference
          //and add ones that are closer.
-         if(mBlockFiles.size() &&
-            unorderedBlocks[i]->GetGlobalEnd() >= processStartSample &&
-                ( mBlockFiles[0]->GetGlobalEnd() < processStartSample ||
-                  unorderedBlocks[i]->GetGlobalStart() <= mBlockFiles[0]->GetGlobalStart())
+         if(firstBlock &&
+            ptr->GetGlobalEnd() >= processStartSample &&
+                ( firstBlock->GetGlobalEnd() < processStartSample ||
+                  ptr->GetGlobalStart() <= firstBlock->GetGlobalStart())
             )
          {
             //insert at the front of the list if we get blockfiles that are after the demand sample
-            mBlockFiles.insert(mBlockFiles.begin()+0,unorderedBlocks[i]);
+            firstBlock = ptr;
+            mBlockFiles.insert(mBlockFiles.begin(), unorderedBlocks[i]);
          }
          else
          {
             //otherwise no priority
+            if ( !firstBlock )
+               firstBlock = ptr;
             mBlockFiles.push_back(unorderedBlocks[i]);
          }
          if(mMaxBlockFiles< (int) mBlockFiles.size())
@@ -270,7 +274,8 @@ void ODComputeSummaryTask::OrderBlockFiles
       }
       else
       {
-         //Otherwise, let it be deleted and forget about it.
+         // The block file disappeared.
+         // Let it be deleted and forget about it.
       }
    }
 }

@@ -731,7 +731,7 @@ void LV2Effect::SetSampleRate(double rate)
    {
       LV2_Options_Option options[2];         // 2 for empty terminating option
       memset(&options, 0, sizeof(options));
-      memcpy(&options, mSampleRateOption, sizeof(*mSampleRateOption));
+      memcpy(&options, &mOptions[mSampleRateOption], sizeof(mOptions[0]));
 
       if (mMaster)
       {
@@ -753,7 +753,7 @@ size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
    {
       LV2_Options_Option options[2];         // 2 for empty terminating option
       memset(&options, 0, sizeof(options));
-      memcpy(&options, mBlockSizeOption, sizeof(*mBlockSizeOption));
+      memcpy(&options, &mOptions[mBlockSizeOption], sizeof(mOptions[0]));
 
       if (mMaster)
       {
@@ -1342,7 +1342,7 @@ bool LV2Effect::SaveParameters(const wxString & group)
    return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
 }
 
-LV2_Options_Option *LV2Effect::AddOption(const char *key, uint32_t size, const char *type, void *value)
+size_t LV2Effect::AddOption(const char *key, uint32_t size, const char *type, void *value)
 {
    int ndx = mNumOptions;
 
@@ -1360,7 +1360,7 @@ LV2_Options_Option *LV2Effect::AddOption(const char *key, uint32_t size, const c
       mOptions[ndx].value = value;
    }
 
-   return &mOptions[ndx];
+   return ndx;
 }
 
 LV2_Feature *LV2Effect::AddFeature(const char *uri, void *data)

@@ -204,7 +204,7 @@ private:
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
 
-   LV2_Options_Option *AddOption(const char *key, uint32_t size, const char *type, void *value);
+   size_t AddOption(const char *key, uint32_t size, const char *type, void *value);
    LV2_Feature *AddFeature(const char *uri, void *data);
 
    bool BuildFancy();
@@ -295,8 +295,8 @@ private:
    LV2UI_Resize mUIResizeFeature;
    LV2_Extension_Data_Feature mExtDataFeature;
    
-   LV2_Options_Option *mBlockSizeOption;
-   LV2_Options_Option *mSampleRateOption;
+   size_t mBlockSizeOption;
+   size_t mSampleRateOption;
 
    LV2_Options_Interface *mOptionsInterface;
    LV2_Options_Option *mOptions;

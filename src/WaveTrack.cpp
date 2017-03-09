@@ -2661,9 +2661,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          // Request starts in the second buffer and extends past it.
          // Discard the first buffer.
          // (But don't deallocate the buffer space.)
-         float *save = mBuffers[0].data;
-         mBuffers[0] = mBuffers[1];
-         mBuffers[1].data = save;
+         mBuffers[0] .swap ( mBuffers[1] );
          fillSecond = true;
          mNValidBuffers = 1;
       }
@@ -2678,9 +2676,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          // refill the first.
          // (This case might be useful when marching backwards through
          // the track, as with scrubbing.)
-         float *save = mBuffers[1].data;
-         mBuffers[1] = mBuffers[0];
-         mBuffers[0].data = save;
+         mBuffers[0] .swap ( mBuffers[1] );
          fillFirst = true;
          fillSecond = false;
          // Cache is not in a consistent state yet
