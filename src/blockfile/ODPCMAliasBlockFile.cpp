@@ -224,7 +224,7 @@ BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 
 /// Writes the xml as a PCMAliasBlockFile if we can (if we have a summary file)
 /// Otherwise writes XML as a subset of attributes with 'odpcmaliasblockfile as the start tag.
-/// Most notably, the summaryfile attribute refers to a file that does not yet, so when the project file is read back in
+/// Most notably, the summaryfile attribute refers to a file that does not yet exist, so when the project file is read back in
 /// and this object reconstructed, it needs to avoid trying to open it as well as schedule itself for OD loading
 void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 {

@@ -17,7 +17,7 @@
 #include "../BlockFile.h"
 
 void ComputeLegacySummaryInfo(const wxFileName &fileName,
-                              int summaryLen,
+                              size_t summaryLen,
                               sampleFormat format,
                               SummaryInfo *info,
                               bool noRMS,bool Silent,

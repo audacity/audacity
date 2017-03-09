@@ -261,6 +261,7 @@ audacity_SOURCES = \
 	commands/CommandBuilder.h \
 	commands/CommandDirectory.cpp \
 	commands/CommandDirectory.h \
+	commands/CommandFlag.h \
 	commands/CommandFunctors.h \
 	commands/CommandHandler.cpp \
 	commands/CommandHandler.h \

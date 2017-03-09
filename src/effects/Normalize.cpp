@@ -333,7 +333,7 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-void EffectNormalize::AnalyseTrack(WaveTrack * track, const wxString &msg)
+void EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg)
 {
    if(mGain) {
       // Since we need complete summary data, we need to block until the OD tasks are done for this track
@@ -361,7 +361,7 @@ void EffectNormalize::AnalyseTrack(WaveTrack * track, const wxString &msg)
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
 //and executes AnalyzeData on it...
 // sets mOffset
-bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
+bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg)
 {
    bool rc = true;
 

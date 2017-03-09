@@ -827,7 +827,7 @@ XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
    return NULL;
 }
 
-void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile)
+void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
 {
    xmlFile.Write(wxT("<?xml "));
    xmlFile.Write(wxT("version=\"1.0\" "));
@@ -846,14 +846,14 @@ void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile)
    xmlFile.Write(wxT(">\n"));
 }
 
-void FFmpegPresets::WriteXML(XMLWriter &xmlFile)
+void FFmpegPresets::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("ffmpeg_presets"));
    xmlFile.WriteAttr(wxT("version"),wxT("1.0"));
-   FFmpegPresetMap::iterator iter;
+   FFmpegPresetMap::const_iterator iter;
    for (iter = mPresets.begin(); iter != mPresets.end(); ++iter)
    {
-      FFmpegPreset *preset = &iter->second;
+      auto preset = &iter->second;
       xmlFile.StartTag(wxT("preset"));
       xmlFile.WriteAttr(wxT("name"),preset->mPresetName);
       for (long i = FEFirstID + 1; i < FELastID; i++)

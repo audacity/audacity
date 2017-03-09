@@ -600,7 +600,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
    LoadCurves();
 
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *t = (WaveTrack *) iter.First();
    mHiFreq = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;
    mLoFreq = loFreqI;
@@ -2071,7 +2071,7 @@ XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
 //
 // Write all of the curves to the XML file
 //
-void EffectEqualization::WriteXML(XMLWriter &xmlFile)
+void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
 {
    // Start our heirarchy
    xmlFile.StartTag( wxT( "equalizationeffect" ) );

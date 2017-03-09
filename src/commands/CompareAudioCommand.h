@@ -34,8 +34,8 @@ class CompareAudioCommand final : public CommandImplementation
 {
 private:
    double mT0, mT1;
-   WaveTrack *mTrack0;
-   WaveTrack *mTrack1;
+   const WaveTrack *mTrack0;
+   const WaveTrack *mTrack1;
 
    // Update member variables with project selection data (and validate)
    bool GetSelection(AudacityProject &proj);

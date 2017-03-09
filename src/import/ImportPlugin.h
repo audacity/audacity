@@ -155,7 +155,7 @@ public:
    // do the actual import, creating whatever tracks are necessary with
    // the TrackFactory and calling the progress callback every iteration
    // through the importing loop
-   virtual int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   virtual ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
                       Tags *tags) = 0;
 
    // Return number of elements in stream list

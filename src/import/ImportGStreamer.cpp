@@ -169,12 +169,12 @@ public:
    ///\return true if successful, false otherwise
    bool Init();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Called by Import.cpp
    ///\return number of readable audio streams in the file
-   wxInt32 GetStreamCount();
+   wxInt32 GetStreamCount() override;
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
@@ -183,7 +183,7 @@ public:
    ///! Called by Import.cpp
    ///\param index - index of the stream in mStreamInfo and mStreams arrays
    ///\param use - true if this stream should be imported, false otherwise
-   void SetStreamUsage(wxInt32 index, bool use);
+   void SetStreamUsage(wxInt32 index, bool use) override;
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
@@ -1088,7 +1088,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    {
       wxMessageBox(wxT("File doesn't contain any audio streams."),
                    wxT("GStreamer Importer"));
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    // Get the ball rolling...
@@ -1097,7 +1097,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    {
       wxMessageBox(wxT("Unable to import file, state change failed."),
                    wxT("GStreamer Importer"));
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    // Get the duration of the stream
@@ -1106,8 +1106,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
 
    // Handle bus messages and update progress while files is importing
    bool success = true;
-   int updateResult = eProgressSuccess;
-   while (ProcessBusMessage(success) && success && updateResult == eProgressSuccess)
+   int updateResult = ProgressResult::Success;
+   while (ProcessBusMessage(success) && success && updateResult == ProgressResult::Success)
    {
       gint64 position;
 
@@ -1123,7 +1123,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    gst_element_set_state(mPipeline.get(), GST_STATE_NULL);
 
    // Something bad happened
-   if (!success || updateResult == eProgressFailed || updateResult == eProgressCancelled)
+   if (!success || updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
    {
       return updateResult;
    }

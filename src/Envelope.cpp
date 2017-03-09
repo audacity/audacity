@@ -331,7 +331,7 @@ float Envelope::ValueOfPixel( int y, int height, bool upper,
 /// a given time value:
 /// We have an upper and lower envelope line.
 /// Also we may be showing an inner envelope (at 0.5 the range).
-bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
+bool Envelope::HandleMouseButtonDown(const wxMouseEvent & event, wxRect & r,
                                      const ZoomInfo &zoomInfo,
                                      bool dB, double dBRange,
                                      float zoomMin, float zoomMax)
@@ -476,7 +476,7 @@ void Envelope::MarkDragPointForDeletion()
    mEnv[mDragPoint].SetVal(mEnv[iNeighbourPoint].GetVal());
 }
 
-void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
+void Envelope::MoveDraggedPoint( const wxMouseEvent & event, wxRect & r,
                                  const ZoomInfo &zoomInfo, bool dB, double dBRange,
                                  float zoomMin, float zoomMax)
 {
@@ -511,7 +511,7 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
 
 }
 
-bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
+bool Envelope::HandleDragging( const wxMouseEvent & event, wxRect & r,
                                const ZoomInfo &zoomInfo, bool dB, double dBRange,
                                float zoomMin, float zoomMax)
 {
@@ -559,7 +559,7 @@ void Envelope::Insert(int point, const EnvPoint &p)
 }
 
 // Returns true if parent needs to be redrawn
-bool Envelope::MouseEvent(wxMouseEvent & event, wxRect & r,
+bool Envelope::MouseEvent(const wxMouseEvent & event, wxRect & r,
                           const ZoomInfo &zoomInfo, bool dB, double dBRange,
                           float zoomMin, float zoomMax)
 {
@@ -868,7 +868,7 @@ int Envelope::Move(double when, double value)
 }
 
 
-int Envelope::GetNumberOfPoints() const
+size_t Envelope::GetNumberOfPoints() const
 {
    return mEnv.size();
 }

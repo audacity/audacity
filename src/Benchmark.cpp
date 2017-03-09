@@ -18,6 +18,7 @@ of the BlockFile system.
 #include "Audacity.h"
 #include "Benchmark.h"
 
+#include <wx/app.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>

@@ -206,7 +206,7 @@ XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
   return NULL;
 }
 
-void TimeTrack::WriteXML(XMLWriter &xmlFile)
+void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("timetrack"));
 

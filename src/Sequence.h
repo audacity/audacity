@@ -73,6 +73,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // from one project to another...
    Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &projDirManager);
 
+   // Sequence cannot be copied without specifying a DirManager
+   Sequence(const Sequence&) PROHIBITED;
+   Sequence& operator= (const Sequence&) PROHIBITED;
+
    ~Sequence();
 
    //
@@ -136,7 +140,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    void HandleXMLEndTag(const wxChar *tag) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
+   void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    bool GetErrorOpening() { return mErrorOpening; }
 

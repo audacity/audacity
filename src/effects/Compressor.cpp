@@ -367,7 +367,7 @@ bool EffectCompressor::InitPass1()
 
    // Find the maximum block length required for any track
    size_t maxlen = 0;
-   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *track = (WaveTrack *) iter.First();
    while (track) {
       maxlen = std::max(maxlen, track->GetMaxBlockSize());

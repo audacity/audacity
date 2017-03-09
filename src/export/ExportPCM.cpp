@@ -313,7 +313,7 @@ public:
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -384,7 +384,7 @@ ExportPCM::ExportPCM()
  * @param subformat Control whether we are doing a "preset" export to a popular
  * file type, or giving the user full control over libsndfile.
  */
-int ExportPCM::Export(AudacityProject *project,
+ProgressResult ExportPCM::Export(AudacityProject *project,
                        unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -407,7 +407,7 @@ int ExportPCM::Export(AudacityProject *project,
       sf_format = kFormats[subformat].format;
    }
 
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    {
       wxFile f;   // will be closed when it goes out of scope
       SFFile       sf; // wraps f
@@ -436,7 +436,7 @@ int ExportPCM::Export(AudacityProject *project,
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
          wxMessageBox(_("Cannot export audio in this format."));
-         return false;
+         return ProgressResult::Cancelled;
       }
 
       if (f.Open(fName, wxFile::write)) {
@@ -451,7 +451,7 @@ int ExportPCM::Export(AudacityProject *project,
       if (!sf) {
          wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
                                        fName.c_str()));
-         return false;
+         return ProgressResult::Cancelled;
       }
       // Retrieve tags if not given a set
       if (metadata == NULL)
@@ -462,7 +462,7 @@ int ExportPCM::Export(AudacityProject *project,
       if ((sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAV &&
           (sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAVEX) {
          if (!AddStrings(project, sf.get(), metadata, sf_format)) {
-            return false;
+            return ProgressResult::Cancelled;
          }
       }
 
@@ -491,7 +491,7 @@ int ExportPCM::Export(AudacityProject *project,
                                  wxString::Format(_("Exporting the entire project as %s"),
                                                   formatStr.c_str()));
 
-         while (updateResult == eProgressSuccess) {
+         while (updateResult == ProgressResult::Success) {
             sf_count_t samplesWritten;
             auto numSamples = mixer->Process(maxBlockLen);
 
@@ -526,7 +526,7 @@ int ExportPCM::Export(AudacityProject *project,
       if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
           (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
          if (!AddStrings(project, sf.get(), metadata, sf_format)) {
-            return false;
+            return ProgressResult::Cancelled;
          }
       }
    }

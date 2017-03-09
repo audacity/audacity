@@ -2261,7 +2261,7 @@ XMLTagHandler *LabelTrack::HandleXMLChild(const wxChar *tag)
       return NULL;
 }
 
-void LabelTrack::WriteXML(XMLWriter &xmlFile)
+void LabelTrack::WriteXML(XMLWriter &xmlFile) const
 {
    int len = mLabels.size();
 

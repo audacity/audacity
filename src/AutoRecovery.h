@@ -50,7 +50,6 @@ public:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
    // This class only knows reading tags
-   // void WriteXML(XMLWriter & WXUNUSED(xmlFile)) /* not override */ { wxASSERT(false); }
 
 private:
 

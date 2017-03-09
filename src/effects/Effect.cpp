@@ -1224,6 +1224,13 @@ bool Effect::DoEffect(wxWindow *parent,
    return returnVal;
 }
 
+bool Effect::Delegate( Effect &delegate,
+   wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt)
+{
+   return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
+      selectedRegion, shouldPrompt );
+}
+
 // All legacy effects should have this overridden
 bool Effect::Init()
 {
@@ -1977,29 +1984,30 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
 
 bool Effect::TotalProgress(double frac)
 {
-   int updateResult = (mProgress ?
+   auto updateResult = (mProgress ?
       mProgress->Update(frac) :
-      eProgressSuccess);
-   return (updateResult != eProgressSuccess);
+      ProgressResult::Success);
+   return (updateResult != ProgressResult::Success);
 }
 
 bool Effect::TrackProgress(int whichTrack, double frac, const wxString &msg)
 {
-   int updateResult = (mProgress ?
+   auto updateResult = (mProgress ?
       mProgress->Update(whichTrack + frac, (double) mNumTracks, msg) :
-      eProgressSuccess);
-   return (updateResult != eProgressSuccess);
+      ProgressResult::Success);
+   return (updateResult != ProgressResult::Success);
 }
 
 bool Effect::TrackGroupProgress(int whichGroup, double frac, const wxString &msg)
 {
-   int updateResult = (mProgress ?
+   auto updateResult = (mProgress ?
       mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :
-      eProgressSuccess);
-   return (updateResult != eProgressSuccess);
+      ProgressResult::Success);
+   return (updateResult != ProgressResult::Success);
 }
 
-void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
+void Effect::GetSamples(
+   const WaveTrack *track, sampleCount *start, sampleCount *len)
 {
    double trackStart = track->GetStartTime();
    double trackEnd = track->GetEndTime();
@@ -2613,7 +2621,7 @@ void Effect::Preview(bool dryOnly)
                                mT0, t1, options);
 
          if (token) {
-            int previewing = eProgressSuccess;
+            auto previewing = ProgressResult::Success;
             // The progress dialog must be deleted before stopping the stream
             // to allow events to flow to the app during StopStream processing.
             // The progress dialog blocks these events.
@@ -2621,7 +2629,7 @@ void Effect::Preview(bool dryOnly)
                ProgressDialog progress
                (GetName(), _("Previewing"), pdlgHideCancelButton);
 
-               while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+               while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                   ::wxMilliSleep(100);
                   previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
                }

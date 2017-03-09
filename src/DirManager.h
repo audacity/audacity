@@ -121,9 +121,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Note: following affects only the loading of block files when opening a project
    void SetLoadingMaxSamples(size_t max) { mMaxSamples = max; }
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
-   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) override
+      { return NULL; }
    bool AssignFile(wxFileNameWrapper &filename, const wxString &value, bool check);
 
    // Clean the temp dir. Note that now where we have auto recovery the temp

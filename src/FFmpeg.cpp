@@ -19,7 +19,6 @@ License: GPL v2.  See License.txt.
 
 #include "Audacity.h"   // for config*.h
 #include "FFmpeg.h"
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "widgets/HelpSystem.h"

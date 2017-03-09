@@ -188,7 +188,7 @@ bool EffectChangePitch::Process()
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
 
-      return proxy.DoEffect(mUIParent, mProjectRate, mTracks, mFactory, &region, false);
+      return Delegate(proxy, mUIParent, &region, false);
    }
    else
 #endif
@@ -397,7 +397,7 @@ void EffectChangePitch::DeduceFrequencies()
 {
    // As a neat trick, attempt to get the frequency of the note at the
    // beginning of the selection.
-   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   SelectedTrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *track = (WaveTrack *) iter.First();
    if (track) {
       double rate = track->GetRate();

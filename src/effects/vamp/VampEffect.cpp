@@ -342,7 +342,7 @@ bool VampEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool VampEffect::Init()
 {
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *left = (WaveTrack *)iter.First();
 
    mRate = 0.0;
@@ -393,7 +393,7 @@ bool VampEffect::Process()
       return false;
    }
 
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
 
    int count = 0;
 

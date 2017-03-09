@@ -23,6 +23,7 @@ for each problem encountered, since there can be many orphans.
 
 #include "MultiDialog.h"
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
@@ -160,7 +161,7 @@ int ShowMultiDialog(const wxString &message,
    const wxString &title,
    const wxChar **buttons, const wxString &boxMsg, bool log)
 {
-   wxWindow * pParent = wxGetApp().GetTopWindow();
+   wxWindow * pParent = wxTheApp->GetTopWindow();
 
    // We want a parent we can display over, so don't make it a parent if top
    // window is a STAY_ON_TOP.

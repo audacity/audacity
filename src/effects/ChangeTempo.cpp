@@ -175,7 +175,7 @@ bool EffectChangeTempo::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
-      success = proxy.DoEffect(mUIParent, mProjectRate, mTracks, mFactory, &region, false);
+      success = Delegate(proxy, mUIParent, &region, false);
    }
    else
 #endif

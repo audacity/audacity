@@ -132,7 +132,7 @@ public:
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -158,7 +158,7 @@ ExportOGG::ExportOGG()
    SetDescription(_("Ogg Vorbis Files"),0);
 }
 
-int ExportOGG::Export(AudacityProject *project,
+ProgressResult ExportOGG::Export(AudacityProject *project,
                        unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -173,14 +173,14 @@ int ExportOGG::Export(AudacityProject *project,
    double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    int       eos = 0;
 
    FileIO outFile(fName, FileIO::Output);
 
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // All the Ogg and Vorbis encoding data
@@ -199,7 +199,7 @@ int ExportOGG::Export(AudacityProject *project,
 
    // Retrieve tags
    if (!FillComment(project, &comment, metadata)) {
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Set up analysis state and auxiliary encoding storage
@@ -253,7 +253,7 @@ int ExportOGG::Export(AudacityProject *project,
          _("Exporting the selected audio as Ogg Vorbis") :
          _("Exporting the entire project as Ogg Vorbis"));
 
-      while (updateResult == eProgressSuccess && !eos) {
+      while (updateResult == ProgressResult::Success && !eos) {
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
          auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
 

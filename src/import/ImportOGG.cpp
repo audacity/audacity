@@ -122,12 +122,12 @@ public:
    }
    ~OggImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount()
+   wxInt32 GetStreamCount() override
    {
       if (mVorbisFile)
          return mVorbisFile->links;
@@ -140,7 +140,7 @@ public:
       return mStreamInfo;
    }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use)
+   void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
       if (mVorbisFile)
       {
@@ -229,7 +229,7 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
                                 Tags *tags)
 {
    outTracks.clear();
@@ -300,7 +300,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
       endian = 1;  // big endian
 
    /* number of samples currently in each channel's buffer */
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    long bytesRead = 0;
    long samplesRead = 0;
    int bitstream = 0;
@@ -361,15 +361,15 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
           samplesSinceLastCallback -= SAMPLES_PER_CALLBACK;
 
       }
-   } while (updateResult == eProgressSuccess && bytesRead != 0);
+   } while (updateResult == ProgressResult::Success && bytesRead != 0);
 
    delete[]mainBuffer;
 
-   int res = updateResult;
+   auto res = updateResult;
    if (bytesRead < 0)
-     res = eProgressFailed;
+     res = ProgressResult::Failed;
 
-   if (res == eProgressFailed || res == eProgressCancelled) {
+   if (res == ProgressResult::Failed || res == ProgressResult::Cancelled) {
       return res;
    }
 

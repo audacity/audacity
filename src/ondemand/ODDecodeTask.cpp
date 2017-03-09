@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  ODComputeSummaryTask.cpp
+  ODDecodeTask
 
   Created by Michael Chinen (mchinen) on 8/10/08.
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
@@ -10,9 +10,9 @@
 
 ******************************************************************//**
 
-\class ODComputeSummaryTask
-\brief Computes the summary data for a PCM (WAV) file and writes it to disk,
-updating the ODPCMAliasBlockFile and the GUI of the newly available data.
+\class ODDecodeTask
+\brief Decodes files and writes block files in .au format,
+updating the ODDecodeBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
@@ -23,7 +23,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 #include "../WaveTrack.h"
 #include <wx/wx.h>
 
-///Creates a NEW task that computes summaries for a wavetrack that needs to be specified through SetWaveTrack()
+///Creates a NEW task that decodes files
 ODDecodeTask::ODDecodeTask()
 {
    mMaxBlockFiles = 0;
@@ -150,7 +150,7 @@ void ODDecodeTask::Update()
             insertCursor =0;//OD TODO:see if this works, removed from inner loop (bfore was n*n)
             for (i = 0; i<(int)blocks->size(); i++)
             {
-               //since we have more than one ODBlockFile, we will need type flags to cast.
+               //since we have more than one ODDecodeBlockFile, we will need type flags to cast.
                SeqBlock &block = (*blocks)[i];
                const auto &file = block.f;
                std::shared_ptr<ODDecodeBlockFile> oddbFile;
@@ -242,7 +242,7 @@ void ODDecodeTask::DemandTrackUpdate(WaveTrack* track, double seconds)
 }
 
 
-///there could be the ODBlockFiles of several FLACs in one track (after copy and pasting)
+///there could be the ODDecodeBlockFiles of several FLACs in one track (after copy and pasting)
 ///so we keep a list of decoders that keep track of the file names, etc, and check the blocks against them.
 ///Blocks that have IsDataAvailable()==false are blockfiles to be decoded.  if BlockFile::GetDecodeType()==ODDecodeTask::GetODType() then
 ///this decoder should handle it.  Decoders are accessible with the methods below.  These aren't thread-safe and should only

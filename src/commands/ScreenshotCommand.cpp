@@ -17,7 +17,6 @@ project window.
 
 #include "ScreenshotCommand.h"
 #include "CommandTargets.h"
-#include "../AudacityApp.h"
 #include "../Project.h"
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
@@ -143,11 +142,11 @@ wxRect ScreenshotCommand::GetBackgroundRect()
 static void Yield()
 {
    int cnt;
-   for (cnt = 10; cnt && !wxGetApp().Yield(true); cnt--) {
+   for (cnt = 10; cnt && !wxTheApp->Yield(true); cnt--) {
       wxMilliSleep(10);
    }
    wxMilliSleep(200);
-   for (cnt = 10; cnt && !wxGetApp().Yield(true); cnt--) {
+   for (cnt = 10; cnt && !wxTheApp->Yield(true); cnt--) {
       wxMilliSleep(10);
    }
 }

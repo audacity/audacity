@@ -166,12 +166,12 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    ::wxSafeYield();
 
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    {
       ProgressDialog progress(_("Mix and Render"),
          _("Mixing and rendering tracks"));
 
-      while (updateResult == eProgressSuccess) {
+      while (updateResult == ProgressResult::Success) {
          auto blockLen = mixer.Process(maxBlockLen);
 
          if (blockLen == 0)
@@ -196,7 +196,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    mixLeft->Flush();
    if (!mono)
       mixRight->Flush();
-   if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
+   if (updateResult == ProgressResult::Cancelled || updateResult == ProgressResult::Failed)
    {
       return;
    }

@@ -330,7 +330,7 @@ void OnTogglePinnedHead();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   void OnToogleAutomatedInputLevelAdjustment();
+   void OnToggleAutomatedInputLevelAdjustment();
 #endif
 void OnRescanDevices();
 

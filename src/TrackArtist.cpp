@@ -144,7 +144,6 @@ audio tracks.
 
 #include "Audacity.h"
 #include "TrackArtist.h"
-#include "AudacityApp.h"
 #include "float_cast.h"
 
 #include <math.h>
@@ -2195,17 +2194,17 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    // the desired fft bin(s) for display on that row
    float *bins = (float*)alloca(sizeof(*bins)*(hiddenMid.height + 1));
    {
-       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+      const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
 
-       NumberScale::Iterator it = numberScale.begin(mid.height);
-       float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+      NumberScale::Iterator it = numberScale.begin(mid.height);
+      float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
 
-       int yy;
-       for (yy = 0; yy < hiddenMid.height; ++yy) {
-          bins[yy] = nextBin;
-          nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
-       }
-       bins[yy] = nextBin;
+      int yy;
+      for (yy = 0; yy < hiddenMid.height; ++yy) {
+         bins[yy] = nextBin;
+         nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+      }
+      bins[yy] = nextBin;
    }
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID

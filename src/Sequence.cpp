@@ -1024,7 +1024,7 @@ XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
 }
 
 // Throws exceptions rather than reporting errors.
-void Sequence::WriteXML(XMLWriter &xmlFile)
+void Sequence::WriteXML(XMLWriter &xmlFile) const
 {
    unsigned int b;
 
@@ -1035,7 +1035,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
-      SeqBlock &bb = mBlock[b];
+      const SeqBlock &bb = mBlock[b];
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
       // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,

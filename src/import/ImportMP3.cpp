@@ -100,7 +100,7 @@ struct private_data {
    TrackHolders channels;
    ProgressDialog *progress;
    unsigned numChannels;
-   int updateResult;
+   ProgressResult updateResult;
    bool id3checked;
    bool eof;      /* having supplied both underlying file and guard pad data */
 };
@@ -131,12 +131,12 @@ public:
 
    ~MP3ImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount(){ return 1; }
+   wxInt32 GetStreamCount() override { return 1; }
 
    const wxArrayString &GetStreamInfo() override
    {
@@ -144,7 +144,8 @@ public:
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+   {}
 
 private:
    void ImportID3(Tags *tags);
@@ -207,7 +208,7 @@ auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
                                 Tags *tags)
 {
    outTracks.clear();
@@ -220,7 +221,7 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
    mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
    mPrivateData.inputBufferFill = 0;
    mPrivateData.progress    = mProgress.get();
-   mPrivateData.updateResult= eProgressSuccess;
+   mPrivateData.updateResult= ProgressResult::Success;
    mPrivateData.id3checked  = false;
    mPrivateData.numChannels = 0;
    mPrivateData.trackFactory= trackFactory;
@@ -232,8 +233,8 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
    bool res = (mad_decoder_run(&mDecoder, MAD_DECODER_MODE_SYNC) == 0) &&
               (mPrivateData.numChannels > 0) &&
-              !(mPrivateData.updateResult == eProgressCancelled) &&
-              !(mPrivateData.updateResult == eProgressFailed);
+              !(mPrivateData.updateResult == ProgressResult::Cancelled) &&
+              !(mPrivateData.updateResult == ProgressResult::Failed);
 
    mad_decoder_finish(&mDecoder);
 
@@ -405,7 +406,7 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
    data->updateResult = data->progress->Update((wxULongLong_t)data->file->Tell(),
                                              (wxULongLong_t)data->file->Length() != 0 ?
                                              (wxULongLong_t)data->file->Length() : 1);
-   if(data->updateResult != eProgressSuccess)
+   if(data->updateResult != ProgressResult::Success)
       return MAD_FLOW_STOP;
 
    if (data->eof) {

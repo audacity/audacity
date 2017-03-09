@@ -43,7 +43,7 @@ public:
    double GetVal() const { return mVal; }
    inline void SetVal(double val);
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override
    {
       if (!wxStrcmp(tag, wxT("controlpoint"))) {
          while (*attrs) {
@@ -60,7 +60,7 @@ public:
          return false;
    }
 
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) override
    {
       return NULL;
    }
@@ -112,13 +112,13 @@ class Envelope final : public XMLTagHandler {
 
    // Event Handlers
    // Each ofthese returns true if parents needs to be redrawn
-   bool MouseEvent(wxMouseEvent & event, wxRect & r,
+   bool MouseEvent(const wxMouseEvent & event, wxRect & r,
                    const ZoomInfo &zoomInfo, bool dB, double dBRange,
                    float zoomMin, float zoomMax);
-   bool HandleMouseButtonDown( wxMouseEvent & event, wxRect & r,
+   bool HandleMouseButtonDown( const wxMouseEvent & event, wxRect & r,
                                const ZoomInfo &zoomInfo, bool dB, double dBRange,
                                float zoomMin, float zoomMax);
-   bool HandleDragging( wxMouseEvent & event, wxRect & r,
+   bool HandleDragging( const wxMouseEvent & event, wxRect & r,
                         const ZoomInfo &zoomInfo, bool dB, double dBRange,
                         float zoomMin, float zoomMax);
    bool HandleMouseButtonUp();
@@ -179,7 +179,7 @@ class Envelope final : public XMLTagHandler {
    void Insert(int point, const EnvPoint &p);
 
    /** \brief Return number of points */
-   int GetNumberOfPoints() const;
+   size_t GetNumberOfPoints() const;
 
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
@@ -200,7 +200,7 @@ private:
                        float zoomMin, float zoomMax);
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
-   void MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
+   void MoveDraggedPoint( const wxMouseEvent & event, wxRect & r,
                                const ZoomInfo &zoomInfo, bool dB, double dBRange,
                                float zoomMin, float zoomMax);
 

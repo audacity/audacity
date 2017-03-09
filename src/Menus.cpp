@@ -798,7 +798,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
+      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
 #endif
       c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
@@ -2503,7 +2503,7 @@ void AudacityProject::OnToggleSWPlaythrough()
 }
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
+void AudacityProject::OnToggleAutomatedInputLevelAdjustment()
 {
    bool AVEnabled;
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
@@ -5121,7 +5121,7 @@ void AudacityProject::OnToggleSpectralSelection()
 void AudacityProject::DoNextPeakFrequency(bool up)
 {
    // Find the first selected wave track that is in a spectrogram view.
-   WaveTrack *pTrack = 0;
+   const WaveTrack *pTrack {};
    SelectedTrackListOfKindIterator iter(Track::Wave, GetTracks());
    for (Track *t = iter.First(); t; t = iter.Next()) {
       WaveTrack *const wt = static_cast<WaveTrack*>(t);
@@ -6030,10 +6030,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       // We only want Wave and Note tracks here.
 #if defined(USE_MIDI)
       if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                               (t->GetKind() == Track::Note))) {
+                               (t->GetKind() == Track::Note)))
 #else
-      if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+      if (t->GetSelected() && (t->GetKind() == Track::Wave))
 #endif
+      {
          offset = t->GetOffset();
          if (t->GetLinked()) {   // Left channel of stereo track.
             leftOffset = offset;
@@ -6115,10 +6116,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
          // Only align Wave and Note tracks end to end.
 #if defined(USE_MIDI)
          if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                                  (t->GetKind() == Track::Note))) {
+                                  (t->GetKind() == Track::Note)))
 #else
-         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+         if (t->GetSelected() && (t->GetKind() == Track::Wave))
 #endif
+         {
             t->SetOffset(newPos);   // Move the track
 
             if (t->GetLinked()) {   // Left channel of stereo track.
@@ -6314,7 +6316,7 @@ class ASAProgress final : public SAProgress {
                 (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * f;
       }
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
    bool set_matrix_progress(int cells) override {
       mCellCount += cells;
@@ -6323,7 +6325,7 @@ class ASAProgress final : public SAProgress {
              (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1];
       work += mCellCount * MATRIX_WORK_UNIT;
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
    bool set_smoothing_progress(int i) override {
       iterations = i;
@@ -6333,7 +6335,7 @@ class ASAProgress final : public SAProgress {
              MATRIX_WORK_UNIT * mFrames[0] * mFrames[1];
       work += i * wxMax(mFrames[0], mFrames[1]) * SMOOTHING_WORK_UNIT;
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
 };
 

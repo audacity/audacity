@@ -149,7 +149,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void SetVirtualState(bool state, bool half=false);
 #endif
-   sampleFormat GetSampleFormat() { return mFormat; }
+   sampleFormat GetSampleFormat() const { return mFormat; }
    bool ConvertToSampleFormat(sampleFormat format);
 
    const SpectrogramSettings &GetSpectrogramSettings() const;
@@ -201,7 +201,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
     * @return true if no clips in the track overlap the specified time range,
     * false otherwise.
     */
-   bool IsEmpty(double t0, double t1);
+   bool IsEmpty(double t0, double t1) const;
 
    /** @brief Append the sample data to the WaveTrack. You must call Flush()
     * after the last Append.
@@ -227,7 +227,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags();
+   unsigned int GetODFlags() const;
 
    ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
    void ClearWaveCaches();
@@ -253,7 +253,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
                          double t0) const;
    bool GetMinMax(float *min, float *max,
                   double t0, double t1) const;
-   bool GetRMS(float *rms, double t0, double t1);
+   bool GetRMS(float *rms, double t0, double t1) const;
 
    //
    // MM: We now have more than one sequence and envelope per track, so
@@ -288,7 +288,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    void HandleXMLEndTag(const wxChar *tag) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) override;
+   void WriteXML(XMLWriter &xmlFile) const override;
 
    // Returns true if an error occurred while reading from XML
    bool GetErrorOpening() override;

@@ -33,6 +33,7 @@ class MixerSpec;
 class TimeTrack;
 class Mixer;
 class WaveTrackConstArray;
+enum class ProgressResult : unsigned;
 
 class AUDACITY_DLL_API FormatInfo
 {
@@ -108,7 +109,7 @@ public:
     * libsndfile export plug-in, but with subformat set to 0, 1, and 2
     * respectively.
     */
-   virtual int Export(AudacityProject *project,
+   virtual ProgressResult Export(AudacityProject *project,
                        unsigned channels,
                        const wxString &fName,
                        bool selectedOnly,

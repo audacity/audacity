@@ -332,7 +332,7 @@ bool EffectScienFilter::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *t = (WaveTrack *) iter.First();
 
    mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;

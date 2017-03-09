@@ -185,7 +185,7 @@ public:
    // various other drawing code can use the exact same value.
    double mRecentStreamTime;
 
-   void WriteXMLAttributes(XMLWriter &xmlFile);
+   void WriteXMLAttributes(XMLWriter &xmlFile) const;
    bool ReadXMLAttribute(const wxChar *attr, const wxChar *value);
 
    // Receive track panel timer notifications

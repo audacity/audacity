@@ -62,6 +62,7 @@
 #include "../Audacity.h"
 #include "ExportMP3.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 
 #include <wx/choice.h>
@@ -1601,7 +1602,7 @@ public:
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -1661,7 +1662,7 @@ int ExportMP3::SetNumExportChannels()
 }
 
 
-int ExportMP3::Export(AudacityProject *project,
+ProgressResult ExportMP3::Export(AudacityProject *project,
                        unsigned channels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -1692,7 +1693,7 @@ int ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    if (!exporter.ValidLibraryLoaded()) {
@@ -1700,7 +1701,7 @@ int ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
@@ -1763,7 +1764,7 @@ int ExportMP3::Export(AudacityProject *project,
       (rate < lowrate) || (rate > highrate)) {
       rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
-         return false;
+         return ProgressResult::Cancelled;
       }
    }
 
@@ -1781,7 +1782,7 @@ int ExportMP3::Export(AudacityProject *project,
    auto inSamples = exporter.InitializeStream(channels, rate);
    if (((int)inSamples) < 0) {
       wxMessageBox(_("Unable to initialize MP3 stream"));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Put ID3 tags at beginning of file
@@ -1792,7 +1793,7 @@ int ExportMP3::Export(AudacityProject *project,
    wxFFile outFile(fName, wxT("w+b"));
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    char *id3buffer = NULL;
@@ -1804,7 +1805,7 @@ int ExportMP3::Export(AudacityProject *project,
    }
 
    wxFileOffset pos = outFile.Tell();
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    long bytes;
 
    int bufferSize = exporter.GetOutBufferSize();
@@ -1842,7 +1843,7 @@ int ExportMP3::Export(AudacityProject *project,
 
       ProgressDialog progress(wxFileName(fName).GetName(), title);
 
-      while (updateResult == eProgressSuccess) {
+      while (updateResult == ProgressResult::Success) {
          auto blockLen = mixer->Process(inSamples);
 
          if (blockLen == 0) {

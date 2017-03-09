@@ -58,6 +58,7 @@ array of Ruler::Label.
 
 #include <math.h>
 
+#include <wx/app.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>

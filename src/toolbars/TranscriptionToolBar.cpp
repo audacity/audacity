@@ -31,7 +31,6 @@
 #include "../Envelope.h"
 
 #include "ControlToolBar.h"
-#include "../AudacityApp.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../Experimental.h"

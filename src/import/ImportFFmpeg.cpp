@@ -203,12 +203,12 @@ public:
    bool InitCodecs();
 
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
       Tags *tags) override;
 
    ///! Reads next audio frame
@@ -223,8 +223,7 @@ public:
 
    ///! Writes decoded data into WaveTracks. Called by DecodeFrame
    ///\param sc - stream context
-   ///\return 0 on success, 1 on error or interruption
-   int WriteData(streamContext *sc);
+   ProgressResult WriteData(streamContext *sc);
 
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
@@ -240,7 +239,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return number of readable streams in the file
-   wxInt32 GetStreamCount()
+   wxInt32 GetStreamCount() override
    {
       return mNumStreams;
    }
@@ -255,7 +254,7 @@ public:
    ///! Called by Import.cpp
    ///\param StreamID - index of the stream in mStreamInfo and mScs arrays
    ///\param Use - true if this stream should be imported, false otherwise
-   void SetStreamUsage(wxInt32 StreamID, bool Use)
+   void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
       if (StreamID < mNumStreams)
          mScs->get()[StreamID]->m_use = Use;
@@ -467,7 +466,7 @@ auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
               TrackHolders &outTracks,
               Tags *tags)
 {
@@ -572,7 +571,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    }
    // This is the heart of the importing process
    // The result of Import() to be returend. It will be something other than zero if user canceled or some error appears.
-   int res = eProgressSuccess;
+   auto res = ProgressResult::Success;
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
    mUsingOD = false;
@@ -623,27 +622,27 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
                       sc->m_stream->codec->channels * mNumStreams
                   ).as_long_long()
                );
-               if (res != eProgressSuccess)
+               if (res != ProgressResult::Success)
                   break;
             }
          }
          tasks.push_back(std::move(odTask));
       }
       //Now we add the tasks and let them run, or DELETE them if the user cancelled
-      if (res == eProgressSuccess)
+      if (res == ProgressResult::Success)
          for (int i = 0; i < (int)tasks.size(); i++)
             ODManager::Instance()->AddNewTask(std::move(tasks[i]));
    } else {
 #endif
 
    // Read next frame.
-   for (streamContext *sc; (sc = ReadNextFrame()) != NULL && (res == eProgressSuccess);)
+   for (streamContext *sc; (sc = ReadNextFrame()) != NULL && (res == ProgressResult::Success);)
    {
       // ReadNextFrame returns 1 if stream is not to be imported
       if (sc != (streamContext*)1)
       {
          // Decode frame until it is not possible to decode any further
-         while (sc->m_pktRemainingSiz > 0 && (res == eProgressSuccess || res == eProgressStopped))
+         while (sc->m_pktRemainingSiz > 0 && (res == ProgressResult::Success || res == ProgressResult::Stopped))
          {
             if (DecodeFrame(sc,false) < 0)
                break;
@@ -659,7 +658,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    }
 
    // Flush the decoders.
-   if ((mNumStreams != 0) && (res == eProgressSuccess || res == eProgressStopped))
+   if ((mNumStreams != 0) && (res == ProgressResult::Success || res == ProgressResult::Stopped))
    {
       for (int i = 0; i < mNumStreams; i++)
       {
@@ -678,7 +677,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 #endif   //EXPERIMENTAL_OD_FFMPEG
 
    // Something bad happened - destroy everything!
-   if (res == eProgressCancelled || res == eProgressFailed)
+   if (res == ProgressResult::Cancelled || res == ProgressResult::Failed)
       return res;
    //else if (res == 2), we just stop the decoding as if the file has ended
 
@@ -712,7 +711,7 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
    return import_ffmpeg_decode_frame(sc, flushing);
 }
 
-int FFmpegImportFileHandle::WriteData(streamContext *sc)
+ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
 {
    // Find the stream index in mScs array
    int streamid = -1;
@@ -729,7 +728,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Stream is not found. This should not really happen
    if (streamid == -1)
    {
-      return 1;
+      return ProgressResult::Success;
    }
 
    // Allocate the buffer to store audio.
@@ -785,7 +784,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
                      free(tmp[chn]);
                   }
                   free(tmp);
-                  return 1;
+                  return ProgressResult::Success;
                break;
             }
          }
@@ -806,7 +805,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    free(tmp);
 
    // Try to update the progress indicator (and see if user wants to cancel)
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    int64_t filesize = avio_size(mFormatContext->pb);
    // PTS (presentation time) is the proper way of getting current position
    if (sc->m_pkt->pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
