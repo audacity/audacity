@@ -4789,8 +4789,9 @@ void AudacityProject::OnDuplicate()
 
    while (n) {
       if (n->GetSelected()) {
+         // Make copies not for clipboard but for direct addition to the project
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
-                 mViewInfo.selectedRegion.t1());
+                 mViewInfo.selectedRegion.t1(), false);
          if (dest) {
             dest->Init(*n);
             dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));

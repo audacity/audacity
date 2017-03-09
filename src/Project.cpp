@@ -4905,6 +4905,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
       if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ) )
       {
          WaveTrack *wt = ( WaveTrack* )n;
+         // This track accumulates the needed clips, right to left:
          Track::Holder merged;
          for( int i = (int)regions.size() - 1; i >= 0; i-- )
          {
@@ -4923,6 +4924,11 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                      merged->Offset(
                         regions.at(i + 1).start - region.end);
 
+                  // dest may have a placeholder clip at the end that is
+                  // removed when pasting, which is okay because we proceed
+                  // right to left.  Any placeholder already in merged is kept.
+                  // Only the rightmost placeholder is important in the final
+                  // result.
                   bool bResult = merged->Paste( 0.0 , dest.get() );
                   wxASSERT(bResult); // TO DO: Actually handle this.
                   wxUnusedVar(bResult);

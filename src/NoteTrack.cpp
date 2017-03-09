@@ -454,7 +454,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    return std::move(newTrack);
 }
 
-Track::Holder NoteTrack::Copy(double t0, double t1) const
+Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 <= t0)
       return{};

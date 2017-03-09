@@ -91,7 +91,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 
    // High-level editing
    Track::Holder Cut  (double t0, double t1) override;
-   Track::Holder Copy (double t0, double t1) const override;
+   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
    bool Trim (double t0, double t1) /* not override */;
    bool Clear(double t0, double t1) override;
    bool Paste(double t, const Track *src) override;

@@ -385,12 +385,10 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    return true;
 }
 
-bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const
+std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 {
-   dest.reset();
-
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
-      return false;
+      return {};
 
    int numBlocks = mBlock.size();
 
@@ -402,7 +400,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
    wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
-   dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
+   auto dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
    dest->mBlock.reserve(b1 - b0 + 1);
 
    SampleBuffer buffer(mMaxSamples, mSampleFormat);
@@ -445,7 +443,10 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
          dest->AppendBlock(block); // Increase ref count or duplicate file
    }
 
-   return ConsistencyCheck(wxT("Sequence::Copy()"));
+   if (! ConsistencyCheck(wxT("Sequence::Copy()")))
+      return {};
+
+   return dest;
 }
 
 namespace {

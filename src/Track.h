@@ -216,7 +216,11 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
 
    // Create a NEW track and don't modify this track (or return null for failure)
-   virtual Holder Copy(double WXUNUSED(t0), double WXUNUSED(t1)) const { return{}; }
+   // Note that subclasses may want to distinguish tracks stored in a clipboard
+   // from those stored in a project
+   virtual Holder Copy
+      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const
+   { return{}; }
 
    // Return true for success
    virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}

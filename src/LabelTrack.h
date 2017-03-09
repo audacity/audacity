@@ -155,11 +155,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 #endif
 
    Track::Holder Cut  (double t0, double t1) override;
-   // JKC Do not add the const modifier to Copy(), Clear()
-   // or Paste() because then it
-   // is no longer recognised as a virtual function matching the
-   // one in Track.
-   Track::Holder Copy (double t0, double t1) const override;
+   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
    bool Clear(double t0, double t1) override;
    bool Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);

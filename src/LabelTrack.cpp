@@ -2361,7 +2361,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 }
 #endif
 
-Track::Holder LabelTrack::Copy(double t0, double t1) const
+Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_unique<LabelTrack>(GetDirManager());
    const auto lt = static_cast<LabelTrack*>(tmp.get());
