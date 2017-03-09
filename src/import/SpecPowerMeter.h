@@ -12,14 +12,15 @@
 #define __AUDACITY_SPECPOWERMETER_H_
 
 #include <cstddef>
+#include "../SampleFormat.h"
 
 class SpecPowerMeter
 {
    const size_t mSigLen;
    
-   float* mSigI;
-   float* mSigFR;
-   float* mSigFI;
+   Floats mSigI;
+   Floats mSigFR;
+   Floats mSigFI;
 
    float CalcBinPower(float* sig_f_r, float* sig_f_i, int loBin, int hiBin);
    int Freq2Bin(float fc);

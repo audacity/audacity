@@ -69,7 +69,6 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 {
    SetName(GetTitle());
 
-   wxString *buttonLabels;
    wxBoxSizer *mainSizer;
    {
       auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
@@ -92,10 +91,9 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             vSizer->Add(iconAndTextSizer.release(), 0, wxALIGN_LEFT | wxALL, 5);
          }
 
-
-         int count = 0;
+         size_t count = 0;
          while (buttons[count])count++;
-         buttonLabels = new wxString[count];
+         ArrayOf<wxString> buttonLabels{ count };
 
          count = 0;
          while (buttons[count]){
@@ -106,7 +104,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
          mRadioBox = safenew wxRadioBox(this, -1,
             boxMsg,
             wxDefaultPosition, wxDefaultSize,
-            count, buttonLabels,
+            count, buttonLabels.get(),
             1, wxRA_SPECIFY_COLS);
          mRadioBox->SetName(boxMsg);
          mRadioBox->SetSelection(0);
@@ -143,7 +141,6 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
-   delete[] buttonLabels;
 }
 
 void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))

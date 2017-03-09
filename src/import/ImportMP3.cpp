@@ -86,7 +86,7 @@ extern "C" {
 
 #include "../WaveTrack.h"
 
-#define INPUT_BUFFER_SIZE 65535
+#define INPUT_BUFFER_SIZE 65535u
 #define PROGRESS_SCALING_FACTOR 100000
 
 /* this is a private structure we can use for whatever we like, and it will get
@@ -94,7 +94,7 @@ extern "C" {
  * things. */
 struct private_data {
    wxFile *file;            /* the file containing the mp3 data we're feeding the encoder */
-   unsigned char *inputBuffer;
+   ArrayOf<unsigned char> inputBuffer{ INPUT_BUFFER_SIZE };
    int inputBufferFill;     /* amount of data in inputBuffer */
    TrackFactory *trackFactory;
    TrackHolders channels;
@@ -152,7 +152,6 @@ private:
 
    std::unique_ptr<wxFile> mFile;
    void *mUserData;
-   struct private_data mPrivateData;
    mad_decoder mDecoder;
 };
 
@@ -217,33 +216,31 @@ ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
    /* Prepare decoder data, initialize decoder */
 
-   mPrivateData.file        = mFile.get();
-   mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
-   mPrivateData.inputBufferFill = 0;
-   mPrivateData.progress    = mProgress.get();
-   mPrivateData.updateResult= ProgressResult::Success;
-   mPrivateData.id3checked  = false;
-   mPrivateData.numChannels = 0;
-   mPrivateData.trackFactory= trackFactory;
-   mPrivateData.eof         = false;
+   private_data privateData;
+   privateData.file        = mFile.get();
+   privateData.inputBufferFill = 0;
+   privateData.progress    = mProgress.get();
+   privateData.updateResult= ProgressResult::Success;
+   privateData.id3checked  = false;
+   privateData.numChannels = 0;
+   privateData.trackFactory= trackFactory;
+   privateData.eof         = false;
 
-   mad_decoder_init(&mDecoder, &mPrivateData, input_cb, 0, 0, output_cb, error_cb, 0);
+   mad_decoder_init(&mDecoder, &privateData, input_cb, 0, 0, output_cb, error_cb, 0);
 
    /* and send the decoder on its way! */
 
    bool res = (mad_decoder_run(&mDecoder, MAD_DECODER_MODE_SYNC) == 0) &&
-              (mPrivateData.numChannels > 0) &&
-              !(mPrivateData.updateResult == ProgressResult::Cancelled) &&
-              !(mPrivateData.updateResult == ProgressResult::Failed);
+              (privateData.numChannels > 0) &&
+              !(privateData.updateResult == ProgressResult::Cancelled) &&
+              !(privateData.updateResult == ProgressResult::Failed);
 
    mad_decoder_finish(&mDecoder);
-
-   delete[] mPrivateData.inputBuffer;
 
    if (!res) {
       /* failure */
       /* printf("failure\n"); */
-      return (mPrivateData.updateResult);
+      return (privateData.updateResult);
    }
 
    /* success */
@@ -251,15 +248,15 @@ ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
       /* copy the WaveTrack pointers into the Track pointer list that
        * we are expected to fill */
-   for(const auto &channel : mPrivateData.channels) {
+   for(const auto &channel : privateData.channels) {
       channel->Flush();
    }
-   outTracks.swap(mPrivateData.channels);
+   outTracks.swap(privateData.channels);
 
    /* Read in any metadata */
    ImportID3(tags);
 
-   return mPrivateData.updateResult;
+   return privateData.updateResult;
 }
 
 MP3ImportFileHandle::~MP3ImportFileHandle()
@@ -418,8 +415,8 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
 
 #ifdef USE_LIBID3TAG
    if (!data->id3checked) {
-      data->file->Read(data->inputBuffer, ID3_TAG_QUERYSIZE);
-      int len = id3_tag_query(data->inputBuffer, ID3_TAG_QUERYSIZE);
+      data->file->Read(data->inputBuffer.get(), ID3_TAG_QUERYSIZE);
+      int len = id3_tag_query(data->inputBuffer.get(), ID3_TAG_QUERYSIZE);
       if (len > 0) {
          data->file->Seek(len, wxFromStart);
       }
@@ -440,14 +437,15 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
     *           -- Rob Leslie, on the mad-dev mailing list */
 
    int unconsumedBytes;
-   if (stream->next_frame) {
+   if(stream->next_frame ) {
       /* we must use inputBufferFill instead of INPUT_BUFFER_SIZE here
          because the final buffer of the file may be only partially
          filled, and we would otherwise be providing too much input
          after eof */
-      unconsumedBytes = data->inputBuffer + data->inputBufferFill
-	  - stream->next_frame;
-      memmove(data->inputBuffer, stream->next_frame, unconsumedBytes);
+      unconsumedBytes = data->inputBuffer.get() + data->inputBufferFill
+         - stream->next_frame;
+      if (unconsumedBytes > 0)
+         memmove(data->inputBuffer.get(), stream->next_frame, unconsumedBytes);
    }
    else
       unconsumedBytes = 0;
@@ -458,19 +456,19 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
       /* supply the requisite MAD_BUFFER_GUARD zero bytes to ensure
          the final frame gets decoded properly, then finish */
        
-      memset(data->inputBuffer + unconsumedBytes, 0, MAD_BUFFER_GUARD);
+      memset(data->inputBuffer.get() + unconsumedBytes, 0, MAD_BUFFER_GUARD);
       mad_stream_buffer
-          (stream, data->inputBuffer, MAD_BUFFER_GUARD + unconsumedBytes);
+          (stream, data->inputBuffer.get(), MAD_BUFFER_GUARD + unconsumedBytes);
       
       data->eof = true; /* so on next call, we will tell mad to stop */
       
       return MAD_FLOW_CONTINUE;
    }
 
-   off_t read = data->file->Read(data->inputBuffer + unconsumedBytes,
+   off_t read = data->file->Read(data->inputBuffer.get() + unconsumedBytes,
                                  INPUT_BUFFER_SIZE - unconsumedBytes);
 
-   mad_stream_buffer(stream, data->inputBuffer, read + unconsumedBytes);
+   mad_stream_buffer(stream, data->inputBuffer.get(), read + unconsumedBytes);
 
    data->inputBufferFill = int(read + unconsumedBytes);
 
@@ -486,7 +484,6 @@ enum mad_flow output_cb(void *_data,
 {
    int samplerate;
    struct private_data *data = (struct private_data *)_data;
-   int smpl;
 
    samplerate= pcm->samplerate;
    auto channels  = pcm->channels;
@@ -526,23 +523,16 @@ enum mad_flow output_cb(void *_data,
     * point samples into something we can feed to the WaveTrack.  Allocating
     * big blocks of data like this isn't a great idea, but it's temporary.
     */
-   float **channelBuffers = new float* [channels];
-   for(int chn = 0; chn < channels; chn++)
-      channelBuffers[chn] = new float [samples];
+   FloatBuffers channelBuffers{ channels, samples };
 
-   for(smpl = 0; smpl < samples; smpl++)
+   for (size_t smpl = 0; smpl < samples; smpl++)
       for(int chn = 0; chn < channels; chn++)
          channelBuffers[chn][smpl] = scale(pcm->samples[chn][smpl]);
 
-   auto iter = data->channels.begin();
-   for (int chn = 0; chn < channels; ++iter, ++chn)
-      iter->get()->Append((samplePtr)channelBuffers[chn],
+   for (int chn = 0; chn < channels; chn++)
+      data->channels[chn]->Append((samplePtr)channelBuffers[chn].get(),
                                   floatSample,
                                   samples);
-
-   for(int chn = 0; chn < channels; chn++)
-      delete[] channelBuffers[chn];
-   delete[] channelBuffers;
 
    return MAD_FLOW_CONTINUE;
 }

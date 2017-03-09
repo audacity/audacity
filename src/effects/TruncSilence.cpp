@@ -500,13 +500,13 @@ bool EffectTruncSilence::DoRemoval
             }
 
             // Perform cross-fade in memory
-            float *buf1 = new float[blendFrames];
-            float *buf2 = new float[blendFrames];
+            Floats buf1{ blendFrames };
+            Floats buf2{ blendFrames };
             auto t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
             auto t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
 
-            wt->Get((samplePtr)buf1, floatSample, t1, blendFrames);
-            wt->Get((samplePtr)buf2, floatSample, t2, blendFrames);
+            wt->Get((samplePtr)buf1.get(), floatSample, t1, blendFrames);
+            wt->Get((samplePtr)buf2.get(), floatSample, t2, blendFrames);
 
             for (decltype(blendFrames) i = 0; i < blendFrames; ++i)
             {
@@ -518,10 +518,7 @@ bool EffectTruncSilence::DoRemoval
             wt->Clear(cutStart, cutEnd);
 
             // Write cross-faded data
-            wt->Set((samplePtr)buf1, floatSample, t1, blendFrames);
-
-            delete [] buf1;
-            delete [] buf2;
+            wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames);
          }
          else
             // Non-wave tracks: just do a sync-lock adjust
@@ -560,7 +557,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    RegionList::iterator rit(silenceList.begin());
 
    // Allocate buffer
-   float *buffer = new float[blockLen];
+   Floats buffer{ blockLen };
 
    // Loop through current track
    while (*index < end) {
@@ -579,10 +576,8 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                              (*index - start).as_double() /
                              (end - start).as_double()) /
                              (double)GetNumWaveTracks());
-         if (cancelled) {
-            delete [] buffer;
+         if (cancelled)
             return false;
-         }
       }
 
       // Optimization: if not in a silent region skip ahead to the next one
@@ -630,7 +625,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       auto count = limitSampleBufferSize( blockLen, end - *index );
 
       // Fill buffer
-      wt->Get((samplePtr)(buffer), floatSample, *index, count);
+      wt->Get((samplePtr)(buffer.get()), floatSample, *index, count);
 
       // Look for silenceList in current block
       for (decltype(count) i = 0; i < count; ++i) {
@@ -680,7 +675,6 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       // Next block
       *index += count;
    }
-   delete [] buffer;
 
    if (inputLength) {
       *inputLength = std::min<double>(*inputLength, *minInputLength);

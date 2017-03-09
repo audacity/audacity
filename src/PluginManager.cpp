@@ -2794,9 +2794,8 @@ wxString PluginManager::ConvertID(const PluginID & ID)
    if (ID.StartsWith(wxT("base64:")))
    {
       wxString id = ID.Mid(7);
-      char *buf = new char[id.Length() / 4 * 3];
-      id =  wxString::FromUTF8(buf, b64decode(id, buf));
-      delete [] buf;
+      ArrayOf<char> buf{ id.Length() / 4 * 3 };
+      id =  wxString::FromUTF8(buf.get(), b64decode(id, buf.get()));
       return id;
    }
 

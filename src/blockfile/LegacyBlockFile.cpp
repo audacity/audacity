@@ -68,7 +68,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
    // 64K summary data
    //
 
-   float *summary = new float[info->frames64K * fields];
+   Floats summary{ info->frames64K * fields };
    SampleBuffer data(info->frames64K * fields,
       info->format);
 
@@ -100,7 +100,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
    int count = read / info->bytesPerFrame;
 
    CopySamples(data.ptr(), info->format,
-               (samplePtr)summary, floatSample, count);
+               (samplePtr)summary.get(), floatSample, count);
 
    (*min) = FLT_MAX;
    (*max) = FLT_MIN;
@@ -118,8 +118,6 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
       (*rms) = sqrt(sumsq / count);
    else
       (*rms) = 0;
-
-   delete[] summary;
 }
 
 /// Construct a LegacyBlockFile memory structure that will point to an

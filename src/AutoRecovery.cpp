@@ -641,9 +641,8 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
    if (left == 0)
    {
       size_t origPos = buf->GetIntPosition();
-      char *temp = new char[mAllocSize];
-      buf->Write(temp, mAllocSize);
-      delete[] temp;
+      ArrayOf<char> temp{ mAllocSize };
+      buf->Write(temp.get(), mAllocSize);
       buf->SetIntPosition(origPos);
    }
 }
@@ -739,54 +738,54 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       return true;
    }
 
-   len = file.Length() - len;
-   char *buf = new char[len];
-
-   if (file.Read(buf, len) != len)
-   {
-      delete[] buf;
-      return false;
-   }
-
-   wxMemoryInputStream in(buf, len);
-
-   file.Close();
-
-   // Decode to a temporary file to preserve the orignal.
-   wxString tempName = fn.CreateTempFileName(fnPath);
-   bool opened = false;
-
    XMLFileWriter out;
-
-   // JKC: ANSWER-ME: Is the try catch actually doing anything?
-   // If it is useful, why are we not using it everywhere?
-   // If it isn't useful, why are we doing it here?
-   try
+   wxString tempName;
+   len = file.Length() - len;
    {
-      out.Open(tempName, wxT("wb"));
-      opened = out.IsOpened();
-   }
-   catch (const XMLFileWriterException&)
-   {
-   }
+      using Chars = ArrayOf < char >;
+      using WxChars = ArrayOf < wxChar >;
+      Chars buf{ len };
 
-   if (!opened)
-   {
-      delete[] buf;
-
-      wxRemoveFile(tempName);
-
-      return false;
-   }
-
-   mIds.clear();
-
-   while (!in.Eof() && !out.Error())
-   {
-      short id;
-
-      switch (in.GetC())
+      if (file.Read(buf.get(), len) != len)
       {
+         return false;
+      }
+
+      wxMemoryInputStream in(buf.get(), len);
+
+      file.Close();
+
+      // Decode to a temporary file to preserve the original.
+      tempName = fn.CreateTempFileName(fnPath);
+      bool opened = false;
+
+      // JKC: ANSWER-ME: Is the try catch actually doing anything?
+      // If it is useful, why are we not using it everywhere?
+      // If it isn't useful, why are we doing it here?
+     try
+      {
+         out.Open(tempName, wxT("wb"));
+         opened = out.IsOpened();
+      }
+      catch (const XMLFileWriterException&)
+      {
+      }
+
+      if (!opened)
+      {
+         wxRemoveFile(tempName);
+
+         return false;
+      }
+
+      mIds.clear();
+
+      while (!in.Eof() && !out.Error())
+      {
+         short id;
+
+         switch (in.GetC())
+         {
          case FT_Push:
          {
             mIdStack.Add(mIds);
@@ -807,11 +806,10 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
             in.Read(&id, sizeof(id));
             in.Read(&len, sizeof(len));
-            wxChar *name = new wxChar[len / sizeof(wxChar)];
-            in.Read(name, len);
+            WxChars name{ len / sizeof(wxChar) };
+            in.Read(name.get(), len);
 
-            mIds[id] = wxString(name, len / sizeof(wxChar));
-            delete[] name;
+            mIds[id] = wxString(name.get(), len / sizeof(wxChar));
          }
          break;
 
@@ -837,11 +835,10 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
             in.Read(&id, sizeof(id));
             in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
-            in.Read(val, len);
+            WxChars val{ len / sizeof(wxChar) };
+            in.Read(val.get(), len);
 
-            out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
-            delete[] val;
+            out.WriteAttr(mIds[id], wxString(val.get(), len / sizeof(wxChar)));
          }
          break;
 
@@ -931,11 +928,10 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             int len;
 
             in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
-            in.Read(val, len);
+            WxChars val{ len / sizeof(wxChar) };
+            in.Read(val.get(), len);
 
-            out.WriteData(wxString(val, len / sizeof(wxChar)));
-            delete[] val;
+            out.WriteData(wxString(val.get(), len / sizeof(wxChar)));
          }
          break;
 
@@ -944,21 +940,19 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             int len;
 
             in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
-            in.Read(val, len);
+            WxChars val{ len / sizeof(wxChar) };
+            in.Read(val.get(), len);
 
-            out.Write(wxString(val, len / sizeof(wxChar)));
-            delete[] val;
+            out.Write(wxString(val.get(), len / sizeof(wxChar)));
          }
          break;
 
          default:
             wxASSERT(true);
-         break;
+            break;
+         }
       }
    }
-
-   delete[] buf;
 
    bool error = out.Error();
  

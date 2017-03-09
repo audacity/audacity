@@ -19,6 +19,7 @@
 #include "FFT.h"
 
 #include "Experimental.h"
+#include "SampleFormat.h"
 
 bool ComputeSpectrum(const float * data, size_t width,
                      size_t windowSize,
@@ -31,15 +32,15 @@ bool ComputeSpectrum(const float * data, size_t width,
    if (!data || !output)
       return true;
 
-   float *processed = new float[windowSize];
+   Floats processed{ windowSize };
 
    for (size_t i = 0; i < windowSize; i++)
       processed[i] = float(0.0);
    auto half = windowSize / 2;
 
-   float *in = new float[windowSize];
-   float *out = new float[windowSize];
-   float *out2 = new float[windowSize];
+   Floats in{ windowSize };
+   Floats out{ windowSize };
+   Floats out2{ windowSize };
 
    size_t start = 0;
    unsigned windows = 0;
@@ -47,11 +48,11 @@ bool ComputeSpectrum(const float * data, size_t width,
       for (size_t i = 0; i < windowSize; i++)
          in[i] = data[start + i];
 
-      WindowFunc(windowFunc, windowSize, in);
+      WindowFunc(windowFunc, windowSize, in.get());
 
       if (autocorrelation) {
          // Take FFT
-         RealFFT(windowSize, in, out, out2);
+         RealFFT(windowSize, in.get(), out.get(), out2.get());
          // Compute power
          for (size_t i = 0; i < windowSize; i++)
             in[i] = (out[i] * out[i]) + (out2[i] * out2[i]);
@@ -63,10 +64,10 @@ bool ComputeSpectrum(const float * data, size_t width,
             in[i] = powf(in[i], 1.0f / 3.0f);
 
          // Take FFT
-         RealFFT(windowSize, in, out, out2);
+         RealFFT(windowSize, in.get(), out.get(), out2.get());
       }
       else
-         PowerSpectrum(windowSize, in, out);
+         PowerSpectrum(windowSize, in.get(), out.get());
 
       // Take real part of result
       for (size_t i = 0; i < half; i++)
@@ -120,10 +121,6 @@ bool ComputeSpectrum(const float * data, size_t width,
 
    for(size_t i = 0; i < half; i++)
       output[i] = processed[i];
-   delete[]in;
-   delete[]out;
-   delete[]out2;
-   delete[]processed;
 
    return true;
 }

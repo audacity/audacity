@@ -379,24 +379,25 @@ void ODPCMAliasBlockFile::WriteSummary()
    //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
 
    // ...and we use fopen instead.
+   FILE* summaryFile{};
    wxString sFullPath = mFileName.GetFullPath();
-   char* fileNameChar = new char[strlen(sFullPath.mb_str(wxConvFile)) + 1];
-   strcpy(fileNameChar, sFullPath.mb_str(wxConvFile));
-   FILE* summaryFile = fopen(fileNameChar, "wb");
+   {
+      ArrayOf < char > fileNameChar{ strlen(sFullPath.mb_str(wxConvFile)) + 1 };
+      strcpy(fileNameChar.get(), sFullPath.mb_str(wxConvFile));
+      summaryFile = fopen(fileNameChar.get(), "wb");
 
-   mFileNameMutex.Unlock();
+      mFileNameMutex.Unlock();
 
-   // JKC ANSWER-ME: Whay is IsOpened() commented out?
-   if( !summaryFile){//.IsOpened() ){
+      // JKC ANSWER-ME: Whay is IsOpened() commented out?
+      if (!summaryFile){//.IsOpened() ){
 
-      // Never silence the Log w.r.t write errors; they always count
-      //however, this is going to be called from a non-main thread,
-      //and wxLog calls are not thread safe.
-      printf("Unable to write summary data to file: %s", fileNameChar);
-      delete [] fileNameChar;
-      return;
+         // Never silence the Log w.r.t write errors; they always count
+         //however, this is going to be called from a non-main thread,
+         //and wxLog calls are not thread safe.
+         printf("Unable to write summary data to file: %s", fileNameChar.get());
+         return;
+      }
    }
-   delete [] fileNameChar;
 
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
@@ -449,6 +450,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
    float *summary64K = (float *)(localFullSummary + mSummaryInfo.offset64K);
    float *summary256 = (float *)(localFullSummary + mSummaryInfo.offset256);
 
+   Floats floats;
    float *fbuffer;
 
    //mchinen: think we can hack this - don't allocate and copy if we don't need to.,
@@ -458,18 +460,14 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
    }
    else
    {
-      fbuffer = new float[len];
+      floats.reinit(len);
+      fbuffer = floats.get();
       CopySamples(buffer, format,
                (samplePtr)fbuffer, floatSample, len);
    }
 
    BlockFile::CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
 
-   //if we've used the float sample..
-   if(format!=floatSample)
-   {
-      delete[] fbuffer;
-   }
    return localFullSummary;
 }
 

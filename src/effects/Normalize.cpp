@@ -384,7 +384,7 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   float *buffer = new float[track->GetMaxBlockSize()];
+   Floats buffer{ track->GetMaxBlockSize() };
 
    mSum = 0.0; // dc offset inits
    mCount = 0;
@@ -401,10 +401,10 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer, floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block);
 
       //Process the buffer.
-      AnalyzeData(buffer, block);
+      AnalyzeData(buffer.get(), block);
 
       //Increment s one blockfull of samples
       s += block;
@@ -416,9 +416,6 @@ bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
          break;
       }
    }
-
-   //Clean up the buffer
-   delete[] buffer;
 
    offset = -mSum / mCount.as_double();  // calculate actual offset (amount that needs to be added on)
 
@@ -446,7 +443,7 @@ bool EffectNormalize::ProcessOne(
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   float *buffer = new float[track->GetMaxBlockSize()];
+   Floats buffer{ track->GetMaxBlockSize() };
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
@@ -460,13 +457,13 @@ bool EffectNormalize::ProcessOne(
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer, floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block);
 
       //Process the buffer.
-      ProcessData(buffer, block, offset);
+      ProcessData(buffer.get(), block, offset);
 
       //Copy the newly-changed samples back onto the track.
-      track->Set((samplePtr) buffer, floatSample, s, block);
+      track->Set((samplePtr) buffer.get(), floatSample, s, block);
 
       //Increment s one blockfull of samples
       s += block;
@@ -478,8 +475,6 @@ bool EffectNormalize::ProcessOne(
          break;
       }
    }
-   //Clean up the buffer
-   delete[] buffer;
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;

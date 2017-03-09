@@ -16,6 +16,7 @@
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
+#include "../MemoryX.h"
 #include <wx/access.h>
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
@@ -162,7 +163,7 @@ EffectRack::~EffectRack()
 {
    gPrefs->DeleteGroup(wxT("/EffectsRack"));
 
-   for (size_t i = 0, cnt = mEffects.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
    {
       if (mFavState[i])
       {
@@ -177,7 +178,7 @@ EffectRack::~EffectRack()
 
 void EffectRack::Add(Effect *effect, bool active, bool favorite)
 {
-   if (mEffects.Index(effect) != wxNOT_FOUND)
+   if (mEffects.end() != std::find(mEffects.begin(), mEffects.end(), effect))
    {
       return;
    }
@@ -254,7 +255,7 @@ void EffectRack::Add(Effect *effect, bool active, bool favorite)
    Fit();
    Update();
 
-   mEffects.Add(effect);
+   mEffects.push_back(effect);
    mNumEffects++;
 
    if (!mTimer.IsRunning())
@@ -289,7 +290,7 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
    AudacityProject *project = GetActiveProject();
    
-   for (size_t i = 0, cnt = mEffects.GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
    {
       if (mPowerState[i])
       {
@@ -408,11 +409,11 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
       return;
    }
 
-   mEffects.RemoveAt(index);
+   mEffects.erase(mEffects.begin() + index);
    mPowerState.RemoveAt(index);
    mFavState.RemoveAt(index);
 
-   if (mEffects.GetCount() == 0)
+   if (mEffects.size() == 0)
    {
       if (mTimer.IsRunning())
       {
@@ -489,8 +490,8 @@ int EffectRack::GetEffectIndex(wxWindow *win)
 void EffectRack::MoveRowUp(int row)
 {
    Effect *effect = mEffects[row];
-   mEffects.RemoveAt(row);
-   mEffects.Insert(effect, row - 1);
+   mEffects.erase(mEffects.begin() + row);
+   mEffects.insert(mEffects.begin() + row - 1, effect);
 
    int state = mPowerState[row];
    mPowerState.RemoveAt(row);
@@ -525,11 +526,11 @@ void EffectRack::UpdateActive()
 
    if (!mBypassing)
    {
-      for (size_t i = 0, cnt = mEffects.GetCount(); i < cnt; i++)
+      for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
       {
          if (mPowerState[i])
          {
-            mActive.Add(mEffects[i]);
+            mActive.push_back(mEffects[i]);
          }
       }
    }

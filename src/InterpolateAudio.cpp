@@ -15,6 +15,7 @@
 
 #include "InterpolateAudio.h"
 #include "Matrix.h"
+#include "SampleFormat.h"
 
 static inline int imin(int x, int y)
 {
@@ -78,11 +79,10 @@ static void LinearInterpolateAudio(float *buffer, int len,
 
 // Here's the main interpolate function, using
 // Least Squares AutoRegression (LSAR):
-void InterpolateAudio(float *buffer, int len,
-                      int firstBad, int numBad)
+void InterpolateAudio(float *buffer, const size_t len,
+                      size_t firstBad, size_t numBad)
 {
-   int N = len;
-   int i, row, col;
+   const auto N = len;
 
    wxASSERT(len > 0 &&
             firstBad >= 0 &&
@@ -97,26 +97,27 @@ void InterpolateAudio(float *buffer, int len,
       // performs poorly when interpolating to the left.  If
       // we're asked to interpolate the left side of a buffer,
       // we just reverse the problem and try it that way.
-      float *buffer2 = new float[len];
-      for(i=0; i<len; i++)
+      Floats buffer2{ len };
+      for(size_t i=0; i<len; i++)
          buffer2[len-1-i] = buffer[i];
-      InterpolateAudio(buffer2, len, len-numBad, numBad);
-      for(i=0; i<len; i++)
+      InterpolateAudio(buffer2.get(), len, len-numBad, numBad);
+      for(size_t i=0; i<len; i++)
          buffer[len-1-i] = buffer2[i];
-      delete[] buffer2;
       return;
    }
 
    Vector s(len, buffer);
 
    // Choose P, the order of the autoregression equation
-   int P = imin(numBad * 3, 50);
-   P = imin(P, imax(firstBad - 1, len - (firstBad + numBad) - 1));
+   const int IP =
+      imin(imin(numBad * 3, 50), imax(firstBad - 1, len - (firstBad + numBad) - 1));
 
-   if (P < 3) {
+   if (IP < 3 || IP >= N) {
       LinearInterpolateAudio(buffer, len, firstBad, numBad);
       return;
    }
+
+   size_t P(IP);
 
    // Add a tiny amount of random noise to the input signal -
    // this sounds like a bad idea, but the amount we're adding
@@ -124,7 +125,7 @@ void InterpolateAudio(float *buffer, int len,
    // effective way to avoid nearly-singular matrices.  If users
    // run it more than once they get slightly different results;
    // this is sometimes even advantageous.
-   for(i=0; i<N; i++)
+   for(size_t i=0; i<N; i++)
       s[i] += (rand()-(RAND_MAX/2))/(RAND_MAX*10000.0);
 
    // Solve for the best autoregression coefficients
@@ -133,10 +134,10 @@ void InterpolateAudio(float *buffer, int len,
    Matrix X(P, P);
    Vector b(P);
 
-   for(i=0; i<len-P; i++)
+   for(size_t i = 0; i + P < len; i++)
       if (i+P < firstBad || i >= (firstBad + numBad))
-         for(row=0; row<P; row++) {
-            for(col=0; col<P; col++)
+         for(size_t row=0; row<P; row++) {
+            for(size_t col=0; col<P; col++)
                X[row][col] += (s[i+row] * s[i+col]);
             b[row] += s[i+P] * s[i+row];
          }
@@ -151,14 +152,14 @@ void InterpolateAudio(float *buffer, int len,
    }
 
    // This vector now contains the autoregression coefficients
-   Vector a = Xinv * b;
+   const Vector &a = Xinv * b;
 
    // Create a matrix (a "Toeplitz" matrix, as it turns out)
    // which encodes the autoregressive relationship between
    // elements of the sequence.
    Matrix A(N-P, N);
-   for(row=0; row<N-P; row++) {
-      for(col=0; col<P; col++)
+   for(size_t row=0; row<N-P; row++) {
+      for(size_t col=0; col<P; col++)
          A[row][row+col] = -a[col];
       A[row][row+P] = 1;
    }
@@ -175,10 +176,10 @@ void InterpolateAudio(float *buffer, int len,
                                  firstBad+numBad, N-(firstBad+numBad));
    Matrix Ak = MatrixConcatenateCols(A_left, A_right);
 
-   Vector s_left = VectorSubset(s, 0, firstBad);
-   Vector s_right = VectorSubset(s, firstBad+numBad,
+   const Vector &s_left = VectorSubset(s, 0, firstBad);
+   const Vector &s_right = VectorSubset(s, firstBad+numBad,
                                  N-(firstBad+numBad));
-   Vector sk = VectorConcatenate(s_left, s_right);
+   const Vector &sk = VectorConcatenate(s_left, s_right);
 
    // Do some linear algebra to find the best possible
    // values that fill in the "bad" area
@@ -195,9 +196,9 @@ void InterpolateAudio(float *buffer, int len,
    Matrix X4 = MatrixMultiply(X3, Ak);
    // This vector contains our best guess as to the
    // unknown values
-   Vector su = X4 * sk;
+   const Vector &su = X4 * sk;
 
    // Put the results into the return buffer
-   for(i=0; i<numBad; i++)
+   for(size_t i=0; i<numBad; i++)
       buffer[firstBad+i] = (float)su[i];
 }

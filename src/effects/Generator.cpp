@@ -121,16 +121,16 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
    bool bGoodResult = true;
    numSamples = track.TimeToLongSamples(GetDuration());
    decltype(numSamples) i = 0;
-   float *data = new float[tmp->GetMaxBlockSize()];
+   Floats data{ tmp->GetMaxBlockSize() };
 
    while ((i < numSamples) && bGoodResult) {
       const auto block =
          limitSampleBufferSize( tmp->GetBestBlockSize(i), numSamples - i );
 
-      GenerateBlock(data, track, block);
+      GenerateBlock(data.get(), track, block);
 
       // Add the generated data to the temporary track
-      tmp->Append((samplePtr)data, floatSample, block);
+      tmp->Append((samplePtr)data.get(), floatSample, block);
       i += block;
 
       // Update the progress meter
@@ -139,6 +139,5 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
                         numSamples.as_double()))
          bGoodResult = false;
    }
-   delete[] data;
    return bGoodResult;
 }

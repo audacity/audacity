@@ -1808,8 +1808,8 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    auto updateResult = ProgressResult::Success;
    long bytes;
 
-   int bufferSize = exporter.GetOutBufferSize();
-   unsigned char *buffer = new unsigned char[bufferSize];
+   size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
+   ArrayOf<unsigned char> buffer{ bufferSize };
    wxASSERT(buffer);
 
    const WaveTrackConstArray waveTracks =
@@ -1854,18 +1854,18 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
          if (blockLen < inSamples) {
             if (channels > 1) {
-               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer);
+               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer.get());
             }
             else {
-               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer);
+               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer.get());
             }
          }
          else {
             if (channels > 1) {
-               bytes = exporter.EncodeBuffer(mixed, buffer);
+               bytes = exporter.EncodeBuffer(mixed, buffer.get());
             }
             else {
-               bytes = exporter.EncodeBufferMono(mixed, buffer);
+               bytes = exporter.EncodeBufferMono(mixed, buffer.get());
             }
          }
 
@@ -1876,16 +1876,16 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         outFile.Write(buffer, bytes);
+         outFile.Write(buffer.get(), bytes);
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 
-   bytes = exporter.FinishStream(buffer);
+   bytes = exporter.FinishStream(buffer.get());
 
    if (bytes) {
-      outFile.Write(buffer, bytes);
+      outFile.Write(buffer.get(), bytes);
    }
 
    // Write ID3 tag if it was supposed to be at the end of the file
@@ -1907,8 +1907,6 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
    // Close the file
    outFile.Close();
-
-   delete [] buffer;
 
    return updateResult;
 }

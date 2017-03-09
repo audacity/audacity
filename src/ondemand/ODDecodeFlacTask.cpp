@@ -124,7 +124,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
 
    mDecoder->mDecodeBufferWritePosition+=bytesToCopy;
 /*
-   short *tmp=new short[frame->header.blocksize];
+   ArrayOf<short> tmp{ frame->header.blocksize };
 
    for (unsigned int chn=0; chn<mDecoder->mNumChannels; chn++) {
       if (frame->header.bits_per_sample == 16) {
@@ -132,7 +132,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
             tmp[s]=buffer[chn][s];
          }
 
-         mDecoder->mChannels[chn]->Append((samplePtr)tmp,
+         mDecoder->mChannels[chn]->Append((samplePtr)tmp.get(),
                   int16Sample,
                   frame->header.blocksize);
       }
@@ -142,8 +142,6 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
                   frame->header.blocksize);
       }
    }
-
-   delete [] tmp;
 */
 
    mDecoder->mSamplesDone += frame->header.blocksize;

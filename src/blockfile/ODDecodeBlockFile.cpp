@@ -369,9 +369,8 @@ void ODDecodeBlockFile::SetFileName(wxFileNameWrapper &&name)
    mFileName=std::move(name);
 /* mchinen oct 9 2009 don't think we need the char* but leaving it in for now just as a reminder that we might
    if wxFileName isn't threadsafe.
-   delete [] mFileNameChar;
-   mFileNameChar = new char[strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1];
-   strcpy(mFileNameChar,mFileName.GetFullPath().mb_str(wxConvUTF8)); */
+   mFileNameChar.reinit(strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1);
+   strcpy(mFileNameChar.get(), mFileName.GetFullPath().mb_str(wxConvUTF8)); */
    mFileNameMutex.Unlock();
 }
 
@@ -409,6 +408,7 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, size_t len,
    float *summary64K = (float *)(localFullSummary + mSummaryInfo.offset64K);
    float *summary256 = (float *)(localFullSummary + mSummaryInfo.offset256);
 
+   Floats floats;
    float *fbuffer;
 
    //mchinen: think we can hack this - don't allocate and copy if we don't need to.,
@@ -418,18 +418,14 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, size_t len,
    }
    else
    {
-      fbuffer = new float[len];
+      floats.reinit(len);
+      fbuffer = floats.get();
       CopySamples(buffer, format,
                (samplePtr)fbuffer, floatSample, len);
    }
 
    BlockFile::CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
 
-   //if we've used the float sample..
-   if(format!=floatSample)
-   {
-      delete[] fbuffer;
-   }
    return localFullSummary;
 }
 

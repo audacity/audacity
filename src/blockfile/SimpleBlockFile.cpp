@@ -124,13 +124,13 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
       mCache.needWrite = true;
       mCache.format = format;
       const auto sampleDataSize = sampleLen * SAMPLE_SIZE(format);
-      mCache.sampleData = new char[sampleDataSize];
-      memcpy(mCache.sampleData, sampleData, sampleDataSize);
+      mCache.sampleData.reinit(sampleDataSize);
+      memcpy(mCache.sampleData.get(), sampleData, sampleDataSize);
       ArrayOf<char> cleanup;
       void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
-         format, cleanup);
-      mCache.summaryData = new char[mSummaryInfo.totalSummaryBytes];
-      memcpy(mCache.summaryData, summaryData,
+                                                format, cleanup);
+      mCache.summaryData.reinit(mSummaryInfo.totalSummaryBytes);
+      memcpy(mCache.summaryData.get(), summaryData,
              mSummaryInfo.totalSummaryBytes);
     }
 }
@@ -155,11 +155,6 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, size_t len,
 
 SimpleBlockFile::~SimpleBlockFile()
 {
-   if (mCache.active)
-   {
-      delete[] mCache.sampleData;
-      delete[] (char *)mCache.summaryData;
-   }
 }
 
 bool SimpleBlockFile::WriteSimpleBlockFile(
@@ -317,18 +312,18 @@ void SimpleBlockFile::FillCache()
    file.Close();
 
    // Read samples into cache
-   mCache.sampleData = new char[mLen * SAMPLE_SIZE(mCache.format)];
-   if (ReadData(mCache.sampleData, mCache.format, 0, mLen) != mLen)
+   mCache.sampleData.reinit(mLen * SAMPLE_SIZE(mCache.format));
+   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen) != mLen)
    {
       // Could not read all samples
-      delete mCache.sampleData;
+      mCache.sampleData.reset();
       return;
    }
 
    // Read summary data into cache
-   mCache.summaryData = new char[mSummaryInfo.totalSummaryBytes];
-   if (!ReadSummary(mCache.summaryData))
-      memset(mCache.summaryData, 0, mSummaryInfo.totalSummaryBytes);
+   mCache.summaryData.reinit(mSummaryInfo.totalSummaryBytes);
+   if (!ReadSummary(mCache.summaryData.get()))
+      memset(mCache.summaryData.get(), 0, mSummaryInfo.totalSummaryBytes);
 
    // Cache is active but already on disk
    mCache.active = true;
@@ -346,7 +341,7 @@ bool SimpleBlockFile::ReadSummary(void *data)
    if (mCache.active)
    {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
-      memcpy(data, mCache.summaryData, mSummaryInfo.totalSummaryBytes);
+      memcpy(data, mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
       return true;
    }
    else
@@ -398,7 +393,7 @@ size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
 
       len = std::min(len, std::max(start, mLen) - start);
       CopySamples(
-         (samplePtr)(((char*)mCache.sampleData) +
+         (samplePtr)(mCache.sampleData.get() +
             start * SAMPLE_SIZE(mCache.format)),
          mCache.format, data, format, len);
       return len;
@@ -540,7 +535,6 @@ auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 
 void SimpleBlockFile::Recover(){
    wxFFile file(mFileName.GetFullPath(), wxT("wb"));
-   //int i;
 
    if( !file.IsOpened() ){
       // Can't do anything else.
@@ -572,8 +566,8 @@ void SimpleBlockFile::WriteCacheToDisk()
    if (!GetNeedWriteCacheToDisk())
       return;
 
-   if (WriteSimpleBlockFile(mCache.sampleData, mLen, mCache.format,
-                            mCache.summaryData))
+   if (WriteSimpleBlockFile(mCache.sampleData.get(), mLen, mCache.format,
+                            mCache.summaryData.get()))
       mCache.needWrite = false;
 }
 

@@ -87,7 +87,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxTextCtrl *mRateText;
 
    int         mNumEncodings;
-   int        *mEncodingSubtype;
+   ArrayOf<int> mEncodingSubtype;
 
    DECLARE_EVENT_TABLE()
 };
@@ -340,7 +340,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
    num = sf_num_encodings();
    mNumEncodings = 0;
-   mEncodingSubtype = new int[num];
+   mEncodingSubtype.reinit(static_cast<size_t>(num));
 
    selection = 0;
    for (i=0; i<num; i++) {
@@ -464,7 +464,6 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
 ImportRawDialog::~ImportRawDialog()
 {
-   delete[] mEncodingSubtype;
 }
 
 void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))

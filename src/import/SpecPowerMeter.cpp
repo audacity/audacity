@@ -26,23 +26,14 @@ measurements in subbands or in the entire signal band.
 
 SpecPowerMeter::SpecPowerMeter(size_t sigLen)
   : mSigLen(sigLen)
+  , mSigI{ sigLen, true }
+  , mSigFR{ sigLen }
+  , mSigFI{ sigLen }
 {
-
-   // Init buffers
-   mSigI = new float[sigLen];
-   mSigFR = new float[sigLen];
-   mSigFI = new float[sigLen];
-   for (int n = 0; n < sigLen; n++)
-   {
-      mSigI[n] = 0.0f;
-   }
 }
 
 SpecPowerMeter::~SpecPowerMeter()
 {
-   delete[] mSigI;
-   delete[] mSigFR;
-   delete[] mSigFI;
 }
 
 float SpecPowerMeter::CalcPower(float* sig, float fc, float bw)
@@ -59,10 +50,10 @@ float SpecPowerMeter::CalcPower(float* sig, float fc, float bw)
    }
    
    // Calc the FFT
-   FFT(mSigLen, 0, sig, mSigI, mSigFR, mSigFI);
+   FFT(mSigLen, 0, sig, mSigI.get(), mSigFR.get(), mSigFI.get());
    
    // Calc the in-band power
-   pwr = CalcBinPower(mSigFR, mSigFI, loBin, hiBin);
+   pwr = CalcBinPower(mSigFR.get(), mSigFI.get(), loBin, hiBin);
    
    return pwr;     
 }

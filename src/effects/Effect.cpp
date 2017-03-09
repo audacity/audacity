@@ -114,11 +114,6 @@ Effect::Effect()
    mNumAudioIn = 0;
    mNumAudioOut = 0;
 
-   mInBuffer = NULL;
-   mOutBuffer = NULL;
-   mInBufPos = NULL;
-   mOutBufPos = NULL;
-
    mBufferSize = 0;
    mBlockSize = 0;
    mNumChannels = 0;
@@ -1290,8 +1285,8 @@ bool Effect::ProcessPass()
    bool editClipCanMove;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 
-   mInBuffer = NULL;
-   mOutBuffer = NULL;
+   mInBuffer.reset();
+   mOutBuffer.reset();
 
    ChannelName map[3];
 
@@ -1391,28 +1386,10 @@ bool Effect::ProcessPass()
       // If the buffer size has changed, then (re)allocate the buffers
       if (prevBufferSize != mBufferSize)
       {
-         // Get rid of any previous buffers
-         if (mInBuffer)
-         {
-            for (size_t i = 0; i < mNumAudioIn; i++)
-            {
-               if (mInBuffer[i])
-               {
-                  delete [] mInBuffer[i];
-               }
-            }
-            delete [] mInBuffer;
-            delete [] mInBufPos;
-         }
-
          // Always create the number of input buffers the client expects even if we don't have
          // the same number of channels.
-         mInBufPos = new float *[mNumAudioIn];
-         mInBuffer = new float *[mNumAudioIn];
-         for (size_t i = 0; i < mNumAudioIn; i++)
-         {
-            mInBuffer[i] = new float[mBufferSize];
-         }
+         mInBufPos.reinit( mNumAudioIn );
+         mInBuffer.reinit( mNumAudioIn, mBufferSize );
 
          // We won't be using more than the first 2 buffers, so clear the rest (if any)
          for (size_t i = 2; i < mNumAudioIn; i++)
@@ -1423,42 +1400,24 @@ bool Effect::ProcessPass()
             }
          }
 
-         // Get rid of any previous buffers
-         if (mOutBuffer)
-         {
-            for (size_t i = 0; i < mNumAudioOut; i++)
-            {
-               if (mOutBuffer[i])
-               {
-                  delete [] mOutBuffer[i];
-               }
-            }
-            delete [] mOutBuffer;
-            delete [] mOutBufPos;
-         }
-
          // Always create the number of output buffers the client expects even if we don't have
          // the same number of channels.
-         mOutBufPos = new float *[mNumAudioOut];
-         mOutBuffer = new float *[mNumAudioOut];
-         for (size_t i = 0; i < mNumAudioOut; i++)
-         {
-            // Output buffers get an extra mBlockSize worth to give extra room if
-            // the plugin adds latency
-            mOutBuffer[i] = new float[mBufferSize + mBlockSize];
-         }
+         mOutBufPos.reinit( mNumAudioOut );
+         // Output buffers get an extra mBlockSize worth to give extra room if
+         // the plugin adds latency
+         mOutBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
       }
 
       // (Re)Set the input buffer positions
       for (size_t i = 0; i < mNumAudioIn; i++)
       {
-         mInBufPos[i] = mInBuffer[i];
+         mInBufPos[i] = mInBuffer[i].get();
       }
 
       // (Re)Set the output buffer positions
       for (size_t i = 0; i < mNumAudioOut; i++)
       {
-         mOutBufPos[i] = mOutBuffer[i];
+         mOutBufPos[i] = mOutBuffer[i].get();
       }
 
       // Clear unused input buffers
@@ -1481,29 +1440,10 @@ bool Effect::ProcessPass()
       count++;
    }
 
-   if (mOutBuffer)
-   {
-      for (size_t i = 0; i < mNumAudioOut; i++)
-      {
-         delete [] mOutBuffer[i];
-      }
-      delete [] mOutBuffer;
-      delete [] mOutBufPos;
-      mOutBuffer = NULL;
-      mOutBufPos = NULL;
-   }
-
-   if (mInBuffer)
-   {
-      for (size_t i = 0; i < mNumAudioIn; i++)
-      {
-         delete [] mInBuffer[i];
-      }
-      delete [] mInBuffer;
-      delete [] mInBufPos;
-      mInBuffer = NULL;
-      mInBufPos = NULL;
-   }
+   mOutBuffer.reset();
+   mOutBufPos.reset();
+   mInBuffer.reset();
+   mInBufPos.reset();
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
    {
@@ -1598,16 +1538,16 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) mInBuffer[0], floatSample, inLeftPos, inputBufferCnt);
+            left->Get((samplePtr) mInBuffer[0].get(), floatSample, inLeftPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) mInBuffer[1], floatSample, inRightPos, inputBufferCnt);
+               right->Get((samplePtr) mInBuffer[1].get(), floatSample, inRightPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
             for (size_t i = 0; i < mNumChannels; i++)
             {
-               mInBufPos[i] = mInBuffer[i];
+               mInBufPos[i] = mInBuffer[i].get();
             }
          }
 
@@ -1654,7 +1594,7 @@ bool Effect::ProcessTrack(int count,
             // Reset the input buffer positions
             for (size_t i = 0; i < mNumChannels; i++)
             {
-               mInBufPos[i] = mInBuffer[i];
+               mInBufPos[i] = mInBuffer[i].get();
 
                // And clear
                for (size_t j = 0; j < mBlockSize; j++)
@@ -1670,7 +1610,7 @@ bool Effect::ProcessTrack(int count,
       decltype(curBlockSize) processed;
       try
       {
-         processed = ProcessBlock(mInBufPos, mOutBufPos, curBlockSize);
+         processed = ProcessBlock(mInBufPos.get(), mOutBufPos.get(), curBlockSize);
       }
       catch(...)
       {
@@ -1745,32 +1685,32 @@ bool Effect::ProcessTrack(int count,
          if (isProcessor)
          {
             // Write them out
-            left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
+            left->Set((samplePtr) mOutBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
             if (right)
             {
                if (chans >= 2)
                {
-                  right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) mOutBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
                }
                else
                {
-                  right->Set((samplePtr) mOutBuffer[0], floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) mOutBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
                }
             }
          }
          else if (isGenerator)
          {
-            genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
+            genLeft->Append((samplePtr) mOutBuffer[0].get(), floatSample, outputBufferCnt);
             if (genRight)
             {
-               genRight->Append((samplePtr) mOutBuffer[1], floatSample, outputBufferCnt);
+               genRight->Append((samplePtr) mOutBuffer[1].get(), floatSample, outputBufferCnt);
             }
          }
 
          // Reset the output buffer positions
          for (size_t i = 0; i < chans; i++)
          {
-            mOutBufPos[i] = mOutBuffer[i];
+            mOutBufPos[i] = mOutBuffer[i].get();
          }
 
          // Bump to the next track position
@@ -1806,25 +1746,25 @@ bool Effect::ProcessTrack(int count,
    {
       if (isProcessor)
       {
-         left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
+         left->Set((samplePtr) mOutBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
          if (right)
          {
             if (chans >= 2)
             {
-               right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) mOutBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
             }
             else
             {
-               right->Set((samplePtr) mOutBuffer[0], floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) mOutBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
             }
          }
       }
       else if (isGenerator)
       {
-         genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
+         genLeft->Append((samplePtr) mOutBuffer[0].get(), floatSample, outputBufferCnt);
          if (genRight)
          {
-            genRight->Append((samplePtr) mOutBuffer[1], floatSample, outputBufferCnt);
+            genRight->Append((samplePtr) mOutBuffer[1].get(), floatSample, outputBufferCnt);
          }
       }
    }

@@ -118,22 +118,17 @@ public:
 class SpecPxCache {
 public:
    SpecPxCache(size_t cacheLen)
+      : len{ cacheLen }
+      , values{ len }
    {
-      len = cacheLen;
-      values = new float[len];
       valid = false;
       scaleType = 0;
       range = gain = -1;
       minFreq = maxFreq = -1;
    }
 
-   ~SpecPxCache()
-   {
-      delete[] values;
-   }
-
    size_t  len;
-   float       *values;
+   Floats values;
    bool         valid;
 
    int scaleType;

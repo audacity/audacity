@@ -169,7 +169,7 @@ void free_simd(void* mem)
 
 EffectEqualization48x::EffectEqualization48x():
          mThreadCount(0),mFilterSize(0),mWindowSize(0),mBlockSize(0),mWorkerDataCount(0),mBlocksPerBuffer(20),
-         mScratchBufferSize(0),mSubBufferSize(0),mBigBuffer(NULL),mBufferInfo(NULL),mEQWorkers(0),mThreaded(false),
+         mScratchBufferSize(0),mSubBufferSize(0),mBigBuffer(NULL),mThreaded(false),
          mBenching(false),mBufferCount(0)
 {
 }
@@ -213,7 +213,7 @@ bool EffectEqualization48x::AllocateBuffersWorkers(int nThreads)
    mSubBufferSize=mBlockSize*(mBufferCount*(mBlocksPerBuffer-1)); // we are going to do a full block overlap
    mBigBuffer=(float *)malloc_simd(sizeof(float)*(mSubBufferSize+mFilterSize+mScratchBufferSize)*mWorkerDataCount); // we run over by filtersize
    // fill the bufferInfo
-   mBufferInfo = new BufferInfo[mWorkerDataCount];
+   mBufferInfo.reinit(mWorkerDataCount);
    for(int i=0;i<mWorkerDataCount;i++) {
       mBufferInfo[i].mFftWindowSize=mWindowSize;
       mBufferInfo[i].mFftFilterSize=mFilterSize;
@@ -226,9 +226,9 @@ bool EffectEqualization48x::AllocateBuffersWorkers(int nThreads)
    if(mThreadCount) {
       // start the workers
       mDataMutex.IsOk();
-      mEQWorkers=new EQWorker[mThreadCount];
+      mEQWorkers.reinit(mThreadCount);
       for(int i=0;i<mThreadCount;i++) {
-         mEQWorkers[i].SetData( mBufferInfo, mWorkerDataCount, &mDataMutex, this);
+         mEQWorkers[i].SetData( mBufferInfo.get(), mWorkerDataCount, &mDataMutex, this);
          mEQWorkers[i].Create();
          mEQWorkers[i].Run();
       }
@@ -245,13 +245,11 @@ bool EffectEqualization48x::FreeBuffersWorkers()
       for(int i=0;i<mThreadCount;i++) {
          mEQWorkers[i].Wait();
       }
-      delete[] mEQWorkers; // kill the workers ( go directly to jail)
-      mEQWorkers= NULL;
+      mEQWorkers.reset(); // kill the workers ( go directly to jail)
       mThreadCount=0;
       mWorkerDataCount=0; 
    }
-   delete [] mBufferInfo;
-   mBufferInfo = NULL;
+   mBufferInfo.reset();
    free_simd(mBigBuffer);
    mBigBuffer=NULL;
    return true;
@@ -415,8 +413,8 @@ bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCoun
 
    auto trackBlockSize = t->GetMaxBlockSize();
 
-   float *buffer1 = new float[trackBlockSize];
-   float *buffer2 = new float[trackBlockSize];
+   Floats buffer1{ trackBlockSize };
+   Floats buffer2{ trackBlockSize };
 
    AudacityProject *p = GetActiveProject();
    auto output=p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
@@ -425,16 +423,14 @@ bool EffectEqualization48x::DeltaTrack(WaveTrack * t, WaveTrack * t2, sampleCoun
 
    while(len > 0) {
       auto curretLength = limitSampleBufferSize(trackBlockSize, len);
-      t->Get((samplePtr)buffer1, floatSample, currentSample, curretLength);
-      t2->Get((samplePtr)buffer2, floatSample, currentSample, curretLength);
+      t->Get((samplePtr)buffer1.get(), floatSample, currentSample, curretLength);
+      t2->Get((samplePtr)buffer2.get(), floatSample, currentSample, curretLength);
       for(decltype(curretLength) i=0;i<curretLength;i++)
          buffer1[i]-=buffer2[i];
-      output->Append((samplePtr)buffer1, floatSample, curretLength);
+      output->Append((samplePtr)buffer1.get(), floatSample, curretLength);
       currentSample+=curretLength;
       len-=curretLength;
    }
-   delete[] buffer1;
-   delete[] buffer2;
    output->Flush();
    len=originalLen;
    ProcessTail(t, output.get(), start, len);
@@ -669,7 +665,7 @@ bool EffectEqualization48x::ProcessOne1x(int count, WaveTrack * t,
       }
       currentSample-=mBlockSize+(mFilterSize>>1);
 
-      ProcessBuffer1x(mBufferInfo);
+      ProcessBuffer1x(mBufferInfo.get());
       bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigRun)/bigRuns.as_double());
       if( bBreakLoop )
          break;
@@ -850,7 +846,7 @@ bool EffectEqualization48x::ProcessOne4x(int count, WaveTrack * t,
       }
       currentSample-=mBlockSize+(mFilterSize>>1);
 
-      ProcessBuffer4x(mBufferInfo);
+      ProcessBuffer4x(mBufferInfo.get());
       bBreakLoop=mEffectEqualization->TrackProgress(count, (double)(bigRun)/bigRuns.as_double());
       if( bBreakLoop )
          break;

@@ -315,15 +315,11 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mLatency = 0.0;
 
    mDialog = NULL;
-   mSliders = NULL;
-   mFields = NULL;
 
    mURIMap = NULL;
    mNumURIMap = 0;
    mOptions = NULL;
    mNumOptions = 0;
-   mFeatures = NULL;
-   mNumFeatures = 0;
 
    mIdleFeature = NULL;
    mOptionsInterface = NULL;
@@ -340,15 +336,6 @@ LV2Effect::~LV2Effect()
          free(mURIMap[i]);
       }
       free(mURIMap);
-   }
-
-   if (mFeatures)
-   {
-      for (int i = 0; mFeatures[i] != NULL; i++)
-      {
-         delete mFeatures[i];
-      }
-      free(mFeatures);
    }
 
    if (mOptions)
@@ -460,10 +447,10 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
 {
    mHost = host;
 
-   int numPorts = lilv_plugin_get_num_ports(mPlug);
+   auto numPorts = lilv_plugin_get_num_ports(mPlug);
 
    // Fail if we don't grok the port types
-   for (int i = 0; i < numPorts; i++)
+   for (size_t i = 0; i < numPorts; i++)
    {
       const LilvPort *port = lilv_plugin_get_port_by_index(mPlug, i);
 
@@ -474,175 +461,173 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       }
    }
 
-   // Allocate buffers for the port indices and the default control values
-   float *minimumVals = new float [numPorts];
-   float *maximumVals = new float [numPorts];
-   float *defaultValues = new float [numPorts];
-
-   // Retrieve the port ranges for all ports (some values may be NaN)
-   lilv_plugin_get_port_ranges_float(mPlug,
-                                     minimumVals,
-                                     maximumVals,
-                                     defaultValues);
-
-   // Get info about all ports
-   for (int i = 0; i < numPorts; i++)
    {
-      const LilvPort *port = lilv_plugin_get_port_by_index(mPlug, i);
-      int index = lilv_port_get_index(mPlug, port);
+      // Allocate buffers for the port indices and the default control values
+      Floats minimumVals{ numPorts };
+      Floats maximumVals{ numPorts };
+      Floats defaultValues{ numPorts };
 
-      // Quick check for audio ports
-      if (lilv_port_is_a(mPlug, port, gAudio))
+      // Retrieve the port ranges for all ports (some values may be NaN)
+      lilv_plugin_get_port_ranges_float(mPlug,
+         minimumVals.get(),
+         maximumVals.get(),
+         defaultValues.get());
+
+      // Get info about all ports
+      for (size_t i = 0; i < numPorts; i++)
       {
+         const LilvPort *port = lilv_plugin_get_port_by_index(mPlug, i);
+         int index = lilv_port_get_index(mPlug, port);
+
+         // Quick check for audio ports
+         if (lilv_port_is_a(mPlug, port, gAudio))
+         {
+            if (lilv_port_is_a(mPlug, port, gInput))
+            {
+               mAudioInputs.Add(index);
+            }
+            else if (lilv_port_is_a(mPlug, port, gOutput))
+            {
+               mAudioOutputs.Add(index);
+            }
+            continue;
+         }
+
+         // Only control ports from this point
+         if (!lilv_port_is_a(mPlug, port, gControl))
+         {
+            continue;
+         }
+
+         LV2Port ctrl;
+         ctrl.mIndex = index;
+
+         // Get the port name
+         ctrl.mSymbol = LilvString(lilv_port_get_symbol(mPlug, port));
+         LilvNode *tmpName = lilv_port_get_name(mPlug, port);
+         ctrl.mName = LilvString(tmpName);
+         lilv_node_free(tmpName);
+
+         // Get any unit descriptor
+         LilvNode *unit = lilv_port_get(mPlug, port, gUnit);
+         if (unit)
+         {
+            ctrl.mUnits = LilvString(lilv_world_get(gWorld, unit, gUnitSymbol, NULL));
+         }
+
+         // Get the group to which this port belongs or default to the main group
+         ctrl.mGroup = wxEmptyString;
+         LilvNode *group = lilv_port_get(mPlug, port, gGroup);
+         if (group)
+         {
+            ctrl.mGroup = LilvString(lilv_world_get(gWorld, group, gLabel, NULL));
+            if (ctrl.mGroup.IsEmpty())
+            {
+               ctrl.mGroup = LilvString(lilv_world_get(gWorld, group, gName, NULL));
+            }
+
+            if (ctrl.mGroup.IsEmpty())
+            {
+               ctrl.mGroup = LilvString(group);
+            }
+         }
+
+         // Add it if not previously done
+         if (mGroups.Index(ctrl.mGroup) == wxNOT_FOUND)
+         {
+            mGroups.Add(ctrl.mGroup);
+         }
+
+         // Get the scale points
+         LilvScalePoints *points = lilv_port_get_scale_points(mPlug, port);
+         LILV_FOREACH(scale_points, j, points)
+         {
+            const LilvScalePoint *point = lilv_scale_points_get(points, j);
+
+            ctrl.mScaleValues.Add(lilv_node_as_float(lilv_scale_point_get_value(point)));
+            ctrl.mScaleLabels.Add(LilvString(lilv_scale_point_get_label(point)));
+         }
+         lilv_scale_points_free(points);
+
+         // Collect the value and range info
+         ctrl.mHasLo = !std::isnan(minimumVals[i]);
+         ctrl.mHasHi = !std::isnan(maximumVals[i]);
+         ctrl.mMin = ctrl.mHasLo ? minimumVals[i] : 0.0;
+         ctrl.mMax = ctrl.mHasHi ? maximumVals[i] : 1.0;
+         ctrl.mLo = ctrl.mMin;
+         ctrl.mHi = ctrl.mMax;
+         ctrl.mDef = !std::isnan(defaultValues[i]) ?
+            defaultValues[i] :
+            ctrl.mHasLo ?
+            ctrl.mLo :
+            ctrl.mHasHi ?
+            ctrl.mHi :
+            0.0;
+         ctrl.mVal = ctrl.mDef;
+
+         // Figure out the type of port we have
          if (lilv_port_is_a(mPlug, port, gInput))
          {
-            mAudioInputs.Add(index);
-         }
-         else if (lilv_port_is_a(mPlug, port, gOutput))
-         {
-            mAudioOutputs.Add(index);
-         }
-         continue;
-      }
+            ctrl.mInput = true;
+            if (lilv_port_has_property(mPlug, port, gToggled))
+            {
+               ctrl.mToggle = true;
+            }
+            else if (lilv_port_has_property(mPlug, port, gEnumeration))
+            {
+               ctrl.mEnumeration = true;
+            }
+            else if (lilv_port_has_property(mPlug, port, gInteger))
+            {
+               ctrl.mInteger = true;
+            }
+            else if (lilv_port_has_property(mPlug, port, gSampleRate))
+            {
+               ctrl.mSampleRate = true;
+            }
 
-      // Only control ports from this point
-      if (!lilv_port_is_a(mPlug, port, gControl))
-      {
-         continue;
-      }
+            // Trigger properties can be combined with other types, but it
+            // seems mostly to be combined with toggle.  So, we turn the
+            // checkbox into a button.
+            if (lilv_port_has_property(mPlug, port, gTrigger))
+            {
+               ctrl.mTrigger = true;
+            }
 
-      LV2Port ctrl;
-      ctrl.mIndex = index;
+            // We'll make the slider logarithmic
+            if (lilv_port_has_property(mPlug, port, gLogarithmic))
+            {
+               ctrl.mLogarithmic = true;
+            }
 
-      // Get the port name
-      ctrl.mSymbol = LilvString(lilv_port_get_symbol(mPlug, port));
-      LilvNode *tmpName = lilv_port_get_name(mPlug, port);
-      ctrl.mName = LilvString(tmpName);
-      lilv_node_free(tmpName);
+            if (lilv_port_has_property(mPlug, port, gEnumeration))
+            {
+               ctrl.mEnumeration = true;
+            }
 
-      // Get any unit descriptor
-      LilvNode *unit = lilv_port_get(mPlug, port, gUnit);
-      if (unit)
-      {
-         ctrl.mUnits = LilvString(lilv_world_get(gWorld, unit, gUnitSymbol, NULL));
-      }
-
-      // Get the group to which this port belongs or default to the main group
-      ctrl.mGroup = wxEmptyString;
-      LilvNode *group = lilv_port_get(mPlug, port, gGroup);
-      if (group)
-      {
-         ctrl.mGroup = LilvString(lilv_world_get(gWorld, group, gLabel, NULL));
-         if (ctrl.mGroup.IsEmpty())
-         {
-            ctrl.mGroup = LilvString(lilv_world_get(gWorld, group, gName, NULL));
-         }
-
-         if (ctrl.mGroup.IsEmpty())
-         {
-            ctrl.mGroup = LilvString(group);
-         }
-      }
-
-      // Add it if not previously done
-      if (mGroups.Index(ctrl.mGroup) == wxNOT_FOUND)
-      {
-         mGroups.Add(ctrl.mGroup);
-      }
-
-      // Get the scale points
-      LilvScalePoints *points = lilv_port_get_scale_points(mPlug, port);
-      LILV_FOREACH(scale_points, j, points)
-      {
-         const LilvScalePoint *point = lilv_scale_points_get(points, j);
-
-         ctrl.mScaleValues.Add(lilv_node_as_float(lilv_scale_point_get_value(point)));
-         ctrl.mScaleLabels.Add(LilvString(lilv_scale_point_get_label(point)));
-      }
-      lilv_scale_points_free(points);
-
-      // Collect the value and range info
-      ctrl.mHasLo = !std::isnan(minimumVals[i]);
-      ctrl.mHasHi = !std::isnan(maximumVals[i]);
-      ctrl.mMin = ctrl.mHasLo ? minimumVals[i] : 0.0;
-      ctrl.mMax = ctrl.mHasHi ? maximumVals[i] : 1.0;
-      ctrl.mLo = ctrl.mMin;
-      ctrl.mHi = ctrl.mMax;
-      ctrl.mDef = !std::isnan(defaultValues[i]) ?
-                  defaultValues[i] :
-                     ctrl.mHasLo ?
-                     ctrl.mLo :
-                        ctrl.mHasHi ?
-                        ctrl.mHi :
-                           0.0;
-      ctrl.mVal = ctrl.mDef;
-
-      // Figure out the type of port we have
-      if (lilv_port_is_a(mPlug, port, gInput))
-      {
-         ctrl.mInput = true;
-         if (lilv_port_has_property(mPlug, port, gToggled))
-         {
-            ctrl.mToggle = true;
-         }
-         else if (lilv_port_has_property(mPlug, port, gEnumeration))
-         {
-            ctrl.mEnumeration = true;
-         }
-         else if (lilv_port_has_property(mPlug, port, gInteger))
-         {
-            ctrl.mInteger = true;
-         }
-         else if (lilv_port_has_property(mPlug, port, gSampleRate))
-         {
-            ctrl.mSampleRate = true;
-         }
-
-         // Trigger properties can be combined with other types, but it
-         // seems mostly to be combined with toggle.  So, we turn the
-         // checkbox into a button.
-         if (lilv_port_has_property(mPlug, port, gTrigger))
-         {
-            ctrl.mTrigger = true;
-         }
-
-         // We'll make the slider logarithmic
-         if (lilv_port_has_property(mPlug, port, gLogarithmic))
-         {
-            ctrl.mLogarithmic = true;
-         }
-
-         if (lilv_port_has_property(mPlug, port, gEnumeration))
-         {
-            ctrl.mEnumeration = true;
-         }
-
-         mControlsMap[ctrl.mIndex] = mControls.GetCount();
-         mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
-         mControls.Add(ctrl);
-      }
-      else if (lilv_port_is_a(mPlug, port, gOutput))
-      {
-         ctrl.mInput = false;
-         if (lilv_port_has_property(mPlug, port, gLatency))
-         {
-            mLatencyPort = i;
-         }
-         else
-         {
+            mControlsMap[ctrl.mIndex] = mControls.GetCount();
             mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
             mControls.Add(ctrl);
          }
-      }
-      else
-      {
-         // Just ignore it for now
+         else if (lilv_port_is_a(mPlug, port, gOutput))
+         {
+            ctrl.mInput = false;
+            if (lilv_port_has_property(mPlug, port, gLatency))
+            {
+               mLatencyPort = i;
+            }
+            else
+            {
+               mGroupMap[ctrl.mGroup].Add(mControls.GetCount());
+               mControls.Add(ctrl);
+            }
+         }
+         else
+         {
+            // Just ignore it for now
+         }
       }
    }
-
-   delete [] minimumVals;
-   delete [] maximumVals;
-   delete [] defaultValues;
 
    // mHost will be null during registration
    if (mHost)
@@ -747,7 +732,7 @@ void LV2Effect::SetSampleRate(double rate)
 
 size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
 {
-   mBlockSize = (int) maxBlockSize;
+   mBlockSize = maxBlockSize;
 
    if (mOptionsInterface && mOptionsInterface->set)
    {
@@ -837,19 +822,13 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 
 bool LV2Effect::RealtimeInitialize()
 {
-   mMasterIn = new float *[mAudioInputs.GetCount()];
+   mMasterIn.reinit( mAudioInputs.GetCount(), mBlockSize );
    for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
-   {
-      mMasterIn[p] = new float[mBlockSize];
-      lilv_instance_connect_port(mMaster, mAudioInputs[p], mMasterIn[p]);
-   }
+      lilv_instance_connect_port(mMaster, mAudioInputs[p], mMasterIn[p].get());
 
-   mMasterOut = new float *[mAudioOutputs.GetCount()];
+   mMasterOut.reinit( mAudioOutputs.GetCount(), mBlockSize );
    for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
-   {
-      mMasterOut[p] = new float[mBlockSize];
-      lilv_instance_connect_port(mMaster, mAudioOutputs[p], mMasterOut[p]);
-   }
+      lilv_instance_connect_port(mMaster, mAudioOutputs[p], mMasterOut[p].get());
 
    lilv_instance_activate(mMaster);
 
@@ -868,17 +847,9 @@ bool LV2Effect::RealtimeFinalize()
 
    lilv_instance_deactivate(mMaster);
 
-   for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
-   {
-      delete [] mMasterIn[p];
-   }
-   delete [] mMasterIn;
-   
-   for (size_t p = 0, cnt = mAudioOutputs.GetCount(); p < cnt; p++)
-   {
-      delete [] mMasterOut[p];
-   }
-   delete [] mMasterOut;
+   mMasterIn.reset();
+
+   mMasterOut.reset();
 
    return true;
 }
@@ -896,9 +867,7 @@ bool LV2Effect::RealtimeResume()
 bool LV2Effect::RealtimeProcessStart()
 {
    for (size_t p = 0, cnt = mAudioInputs.GetCount(); p < cnt; p++)
-   {
-      memset(mMasterIn[p], 0, mBlockSize * sizeof(float));
-   }
+      memset(mMasterIn[p].get(), 0, mBlockSize * sizeof(float));
 
    mNumSamples = 0;
 
@@ -1072,8 +1041,6 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
 
    mParent->PushEventHandler(this);
 
-   mSliders = NULL;
-   mFields = NULL;
    mSuilHost = NULL;
    mSuilInstance = NULL;
 
@@ -1145,17 +1112,8 @@ bool LV2Effect::CloseUI()
 
    mParent->RemoveEventHandler(this);
 
-   if (mSliders)
-   {
-      delete [] mSliders;
-      mSliders = NULL;
-   }
-
-   if (mFields)
-   {
-      delete [] mFields;
-      mFields = NULL;
-   }
+   mSliders.reset();
+   mFields.reset();
 
    if (mSuilInstance)
    {
@@ -1365,27 +1323,26 @@ size_t LV2Effect::AddOption(const char *key, uint32_t size, const char *type, vo
 
 LV2_Feature *LV2Effect::AddFeature(const char *uri, void *data)
 {
-   int ndx = mNumFeatures;
+   mFeatures.resize(mFeatures.size() + 1);
 
-   mNumFeatures += 1;
-   mFeatures = (LV2_Feature **) realloc(mFeatures, mNumFeatures * sizeof(LV2_Feature *));
-   mFeatures[ndx] = NULL;
+   auto &pFeature = mFeatures.back();
 
    if (uri != NULL)
    {
-      mFeatures[ndx] = new LV2_Feature;
-      mFeatures[ndx]->URI = uri;
-      mFeatures[ndx]->data = data;
+      pFeature = make_movable<LV2_Feature>();
+      pFeature->URI = uri;
+      pFeature->data = data;
    }
 
-   return mFeatures[ndx];
+   mFeaturePtrs.push_back(pFeature.get());
+   return pFeature.get();
 }
 
 LilvInstance *LV2Effect::InitInstance(float sampleRate)
 {
    LilvInstance *handle = lilv_plugin_instantiate(mPlug,
                                                   sampleRate,
-                                                  mFeatures);
+                                                  mFeaturePtrs.data());
    if (!handle)
    {
       return NULL;
@@ -1521,7 +1478,7 @@ bool LV2Effect::BuildFancy()
          lilv_node_as_uri(uiType),
          lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui))),
          lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_binary_uri(ui))),
-         mFeatures);
+         mFeaturePtrs.data());
 
       lilv_uis_free(uis);
 
@@ -1586,9 +1543,9 @@ bool LV2Effect::BuildPlain()
    int numCols = 5;
 
    // Allocate memory for the user parameter controls
-   int ctrlcnt = (int) mControls.GetCount();
-   mSliders = new wxSlider *[ctrlcnt];
-   mFields = new wxTextCtrl *[ctrlcnt];
+   auto ctrlcnt = mControls.GetCount();
+   mSliders.reinit(ctrlcnt);
+   mFields.reinit(ctrlcnt);
 
    wxSizer *innerSizer;
 

@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
 #include "../Experimental.h"
+#include "../SampleFormat.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 
@@ -153,10 +154,10 @@ public:
 
    // Variables used for computing the spectrum
    mutable FFTParam      *hFFT{};
-   mutable float         *window{};
+   mutable Floats         window;
 
    // Two other windows for computing reassigned spectrogram
-   mutable float         *tWindow{}; // Window times time parameter
-   mutable float         *dWindow{}; // Derivative of window
+   mutable Floats         tWindow; // Window times time parameter
+   mutable Floats         dWindow; // Derivative of window
 };
 #endif

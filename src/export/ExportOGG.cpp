@@ -263,7 +263,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          }
          else {
 
-            for (int i = 0; i < numChannels; i++) {
+            for (size_t i = 0; i < numChannels; i++) {
                float *temp = (float *)mixer->GetBuffer(i);
                memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
             }

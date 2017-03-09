@@ -99,8 +99,9 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
 
    // Initialize buffers for track data to be analyzed
    auto buffSize = std::min(mTrack0->GetMaxBlockSize(), mTrack1->GetMaxBlockSize());
-   float *buff0 = new float[buffSize];
-   float *buff1 = new float[buffSize];
+
+   Floats buff0{ buffSize };
+   Floats buff1{ buffSize };
 
    // Compare tracks block by block
    auto s0 = mTrack0->TimeToLongSamples(mT0);
@@ -113,8 +114,8 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
       auto block = limitSampleBufferSize(
          mTrack0->GetBestBlockSize(position), s1 - position
       );
-      mTrack0->Get((samplePtr)buff0, floatSample, position, block);
-      mTrack1->Get((samplePtr)buff1, floatSample, position, block);
+      mTrack0->Get((samplePtr)buff0.get(), floatSample, position, block);
+      mTrack1->Get((samplePtr)buff1.get(), floatSample, position, block);
 
       for (decltype(block) buffPos = 0; buffPos < block; ++buffPos)
       {
@@ -130,9 +131,6 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
          length.as_double()
       );
    }
-
-   delete [] buff0;
-   delete [] buff1;
 
    // Output the results
    double errorSeconds = mTrack0->LongSamplesToTime(errorCount);

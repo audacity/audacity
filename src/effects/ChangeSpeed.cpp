@@ -485,11 +485,11 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // the length of the selection being processed.
    auto inBufferSize = track->GetMaxBlockSize();
 
-   float * inBuffer = new float[inBufferSize];
+   Floats inBuffer{ inBufferSize };
 
    // mFactor is at most 100-fold so this shouldn't overflow size_t
    auto outBufferSize = size_t( mFactor * inBufferSize + 10 );
-   float * outBuffer = new float[outBufferSize];
+   Floats outBuffer{ outBufferSize };
 
    // Set up the resampling stuff for this track.
    Resample resample(true, mFactor, mFactor); // constant rate resampling
@@ -506,18 +506,18 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) inBuffer, floatSample, samplePos, blockSize);
+      track->Get((samplePtr) inBuffer.get(), floatSample, samplePos, blockSize);
 
       const auto results = resample.Process(mFactor,
-                                    inBuffer,
+                                    inBuffer.get(),
                                     blockSize,
                                     ((samplePos + blockSize) >= end),
-                                    outBuffer,
+                                    outBuffer.get(),
                                     outBufferSize);
       const auto outgen = results.second;
 
       if (outgen > 0)
-         outputTrack->Append((samplePtr)outBuffer, floatSample,
+         outputTrack->Append((samplePtr)outBuffer.get(), floatSample,
                              outgen);
 
       // Increment samplePos
@@ -532,10 +532,6 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    // Flush the output WaveTrack (since it's buffered, too)
    outputTrack->Flush();
-
-   // Clean up the buffers
-   delete [] inBuffer;
-   delete [] outBuffer;
 
    // Take the output track and insert it in place of the original
    // sample data

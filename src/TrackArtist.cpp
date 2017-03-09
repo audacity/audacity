@@ -1159,13 +1159,13 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
    int lasth2 = std::numeric_limits<int>::min();
    int h1;
    int h2;
-   int *r1 = new int[rect.width];
-   int *r2 = new int[rect.width];
-   int *clipped = NULL;
+   ArrayOf<int> r1{ size_t(rect.width) };
+   ArrayOf<int> r2{ size_t(rect.width) };
+   ArrayOf<int> clipped;
    int clipcnt = 0;
 
    if (mShowClipping) {
-      clipped = new int[rect.width];
+      clipped.reinit( size_t(rect.width) );
    }
 
    long pixAnimOffset = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10)) +
@@ -1296,13 +1296,6 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect & rect, const double env[
          AColor::Line(dc, xx, rect.y, xx, rect.y + rect.height);
       }
    }
-
-   if (mShowClipping) {
-      delete[] clipped;
-   }
-
-   delete [] r1;
-   delete [] r2;
 }
 
 void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &rect,
@@ -1330,16 +1323,16 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    if (slen <= 0)
       return;
 
-   float *buffer = new float[slen];
-   clip->GetSamples((samplePtr)buffer, floatSample, s0, slen);
+   Floats buffer{ size_t(slen) };
+   clip->GetSamples((samplePtr)buffer.get(), floatSample, s0, slen);
 
-   int *xpos = new int[slen];
-   int *ypos = new int[slen];
-   int *clipped = NULL;
+   ArrayOf<int> xpos{ size_t(slen) };
+   ArrayOf<int> ypos{ size_t(slen) };
+   ArrayOf<int> clipped;
    int clipcnt = 0;
 
    if (mShowClipping)
-      clipped = new int[slen];
+      clipped.reinit( size_t(slen) );
 
    dc.SetPen(muted ? muteSamplePen : samplePen);
 
@@ -1394,14 +1387,6 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
          AColor::Line(dc, rect.x + s, rect.y, rect.x + s, rect.y + rect.height);
       }
    }
-
-   if (mShowClipping) {
-      delete [] clipped;
-   }
-
-   delete[]buffer;
-   delete[]xpos;
-   delete[]ypos;
 }
 
 void TrackArtist::DrawEnvelope(wxDC &dc, const wxRect &rect, const double env[],
@@ -2216,8 +2201,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       scale2 = (lmax - lmin) / log2,
       lmin2 = lmin / log2;
 
-   bool *yGrid;
-   yGrid = new bool[mid.height];
+   ArrayOf<bool> yGrid{size_t(mid.height)};
    for (int yy = 0; yy < mid.height; ++yy) {
       float n = (float(yy) / mid.height*scale2 - lmin2) * 12;
       float n2 = (float(yy + 1) / mid.height*scale2 - lmin2) * 12;
@@ -2286,8 +2270,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          i0 = expf(lmin) / binUnit,
          i1 = expf(scale + lmin) / binUnit,
          minColor = 0.0f;
-      const int maxTableSize = 1024;
-      int *indexes = new int[maxTableSize];
+      const size_t maxTableSize = 1024;
+      ArrayOf<int> indexes{ maxTableSize };
 #endif //EXPERIMENTAL_FIND_NOTES
 
 #ifdef _OPENMP
@@ -2525,10 +2509,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    memDC.SelectObject(converted);
 
    dc.Blit(mid.x, mid.y, mid.width, mid.height, &memDC, 0, 0, wxCOPY, FALSE);
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   delete[] yGrid;
-#endif //EXPERIMENTAL_FFT_Y_GRID
 }
 
 #ifdef USE_MIDI

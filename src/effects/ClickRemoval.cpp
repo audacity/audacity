@@ -214,13 +214,13 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 
    bool bResult = true;
    decltype(len) s = 0;
-   float *buffer = new float[idealBlockLen];
-   float *datawindow = new float[windowSize];
+   Floats buffer{ idealBlockLen };
+   Floats datawindow{ windowSize };
    while ((len - s) > windowSize / 2)
    {
       auto block = limitSampleBufferSize( idealBlockLen, len - s );
 
-      track->Get((samplePtr) buffer, floatSample, start + s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, start + s, block);
 
       for (decltype(block) i = 0; i + windowSize / 2 < block; i += windowSize / 2)
       {
@@ -231,14 +231,14 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
          for(auto j = wcopy; j < windowSize; j++)
             datawindow[j] = 0;
 
-         mbDidSomething |= RemoveClicks(windowSize, datawindow);
+         mbDidSomething |= RemoveClicks(windowSize, datawindow.get());
 
          for(decltype(wcopy) j = 0; j < wcopy; j++)
            buffer[i+j] = datawindow[j];
       }
 
       if (mbDidSomething) // RemoveClicks() actually did something.
-         track->Set((samplePtr) buffer, floatSample, start + s, block);
+         track->Set((samplePtr) buffer.get(), floatSample, start + s, block);
 
       s += block;
 
@@ -249,13 +249,10 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
       }
    }
 
-   delete[] buffer;
-   delete[] datawindow;
-
    return bResult;
 }
 
-bool EffectClickRemoval::RemoveClicks(int len, float *buffer)
+bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
 {
    bool bResult = false; // This effect usually does nothing.
    int i;
@@ -265,8 +262,8 @@ bool EffectClickRemoval::RemoveClicks(int len, float *buffer)
    float msw;
    int ww;
    int s2 = sep/2;
-   float *ms_seq = new float[len];
-   float *b2 = new float[len];
+   Floats ms_seq{ len };
+   Floats b2{ len };
 
    for( i=0; i<len; i++)
       b2[i] = buffer[i]*buffer[i];
@@ -322,8 +319,6 @@ bool EffectClickRemoval::RemoveClicks(int len, float *buffer)
          }
       }
    }
-   delete[] ms_seq;
-   delete[] b2;
    return bResult;
 }
 

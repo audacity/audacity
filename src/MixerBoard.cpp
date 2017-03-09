@@ -568,12 +568,12 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // stored in blockfiles, rather than calculating them, but for now, changing it to use the
    // original Meter::UpdateDisplay(). New code is below the previous (now commented out).
    //
-   //const int kFramesPerBuffer = 4;
+   //const size_t kFramesPerBuffer = 4;
    //float min; // dummy, since it's not shown in meters
-   //float* maxLeft = new float[kFramesPerBuffer];
-   //float* rmsLeft = new float[kFramesPerBuffer];
-   //float* maxRight = new float[kFramesPerBuffer];
-   //float* rmsRight = new float[kFramesPerBuffer];
+   //Floats maxLeft{kFramesPerBuffer};
+   //Floats rmsLeft{kFramesPerBuffer};
+   //Floats maxRight{kFramesPerBuffer};
+   //Floats rmsRight{kFramesPerBuffer};
    //
    //#ifdef EXPERIMENTAL_MIDI_OUT
    //   bool bSuccess = (mLeftTrack != NULL);
@@ -628,10 +628,6 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //      mLeftTrack->TimeToLongSamples(t1 - t0));
    //}
    //
-   //delete[] maxLeft;
-   //delete[] rmsLeft;
-   //delete[] maxRight;
-   //delete[] rmsRight;
 
    auto startSample = (sampleCount)((mLeftTrack->GetRate() * t0) + 0.5);
    auto scnFrames = (sampleCount)((mLeftTrack->GetRate() * (t1 - t0)) + 0.5);
@@ -640,22 +636,22 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // in about 1/20 second (ticks of TrackPanel timer), so this won't overflow
    auto nFrames = scnFrames.as_size_t();
 
-   float* meterFloatsArray = NULL;
-   float* tempFloatsArray = new float[nFrames];
-   bool bSuccess = mLeftTrack->Get((samplePtr)tempFloatsArray, floatSample, startSample, nFrames);
+   Floats tempFloatsArray{ size_t(nFrames) };
+   decltype(tempFloatsArray) meterFloatsArray;
+   bool bSuccess = mLeftTrack->Get((samplePtr)tempFloatsArray.get(), floatSample, startSample, nFrames);
    if (bSuccess)
    {
       // We always pass a stereo sample array to the meter, as it shows 2 channels.
       // Mono shows same in both meters.
       // Since we're not mixing, need to duplicate same signal for "right" channel in mono case.
-      meterFloatsArray = new float[2 * nFrames];
+      meterFloatsArray = Floats{ 2 * nFrames };
 
       // Interleave for stereo. Left/mono first.
       for (int index = 0; index < nFrames; index++)
          meterFloatsArray[2 * index] = tempFloatsArray[index];
 
       if (mRightTrack)
-         bSuccess = mRightTrack->Get((samplePtr)tempFloatsArray, floatSample, startSample, nFrames);
+         bSuccess = mRightTrack->Get((samplePtr)tempFloatsArray.get(), floatSample, startSample, nFrames);
 
       if (bSuccess)
          // Interleave right channel, or duplicate same signal for "right" channel in mono case.
@@ -686,13 +682,10 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
          else if (meterFloatsArray[index] > 1.0)
             meterFloatsArray[index] = 1.0;
 
-      mMeter->UpdateDisplay(2, nFrames, meterFloatsArray);
+      mMeter->UpdateDisplay(2, nFrames, meterFloatsArray.get());
    }
    else
       this->ResetMeter(false);
-
-   delete[] meterFloatsArray;
-   delete[] tempFloatsArray;
 }
 
 // private

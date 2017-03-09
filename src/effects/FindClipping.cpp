@@ -95,7 +95,6 @@ bool EffectFindClipping::Process()
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
    Maybe<ModifiedAnalysisTrack> modifiedTrack;
-   //Track *original = NULL;
    const wxString name{ _("Clipping") };
 
    LabelTrack *lt = NULL;
@@ -158,19 +157,19 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
       return true;
    }
 
-   float *buffer;
+   Floats buffer;
    try {
       if (blockSize < mStart)
          // overflow
          throw std::bad_alloc{};
-      buffer = new float[blockSize];
+      buffer.reinit(blockSize);
    }
    catch( const std::bad_alloc & ) {
       wxMessageBox(_("Requested value exceeds memory capacity."));
       return false;
    }
 
-   float *ptr = buffer;
+   float *ptr = buffer.get();
 
    decltype(len) s = 0, startrun = 0, stoprun = 0, samps = 0;
    decltype(blockSize) block = 0;
@@ -187,8 +186,8 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
 
          block = limitSampleBufferSize( blockSize, len - s );
 
-         wt->Get((samplePtr)buffer, floatSample, start + s, block);
-         ptr = buffer;
+         wt->Get((samplePtr)buffer.get(), floatSample, start + s, block);
+         ptr = buffer.get();
       }
 
       float v = fabs(*ptr++);
@@ -225,8 +224,6 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
       s++;
       block--;
    }
-
-   delete [] buffer;
 
    return bGoodResult;
 }

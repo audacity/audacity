@@ -555,13 +555,13 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    std::unique_ptr<AudioThread> mMidiThread;
 #endif
-   Resample          **mResample;
-   RingBuffer        **mCaptureBuffers;
+   ArrayOf<std::unique_ptr<Resample>> mResample;
+   ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
-   RingBuffer        **mPlaybackBuffers;
+   ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    ConstWaveTrackArray mPlaybackTracks;
 
-   Mixer             **mPlaybackMixers;
+   ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
    volatile int        mStreamToken;
    static int          mNextStreamToken;
    double              mFactor;

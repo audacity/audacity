@@ -26,6 +26,8 @@
 #ifndef __AUDACITY_MATRIX__
 #define __AUDACITY_MATRIX__
 
+#include "SampleFormat.h"
+
 class Matrix;
 
 class Vector
@@ -33,63 +35,61 @@ class Vector
  public:
    Vector();
    Vector(const Vector& copyFrom);
-   Vector(int len, double *data=NULL, bool copy=true);
-   Vector(int len, float *data);
+   Vector(unsigned len, double *data=NULL);
+   Vector(unsigned len, float *data);
    Vector& operator=(const Vector &other);
-   virtual ~Vector();
+   ~Vector();
 
-   inline double& operator[](int i) { return mData[i]; }
-   inline double operator[](int i) const { return mData[i]; }
-   inline int Len() const { return mN; }
+   void Reinit(unsigned len);
+   void Swap(Vector &that);
+
+   inline double& operator[](unsigned i) { return mData[i]; }
+   inline double operator[](unsigned i) const { return mData[i]; }
+   inline unsigned Len() const { return mN; }
 
    double Sum() const;
 
  private:
-   void CopyFrom(const Vector &other);
-
-   int mN;
-   double *mData;
-   bool mCopy;
+   unsigned mN{ 0 };
+   Doubles mData;
 };
 
 class Matrix
 {
  public:
    Matrix(const Matrix& copyFrom);
-   Matrix(int rows, int cols, double **data=NULL);
-   virtual ~Matrix();
+   Matrix(unsigned rows, unsigned cols, double **data=NULL);
+   ~Matrix();
 
    Matrix& operator=(const Matrix& other);
 
-   inline Vector& operator[](int i) { return *mRowVec[i]; }
-   inline Vector& operator[](int i) const { return *mRowVec[i]; }
-   inline int Rows() const { return mRows; }
-   inline int Cols() const { return mCols; }
+   inline Vector& operator[](unsigned i) { return mRowVec[i]; }
+   inline Vector& operator[](unsigned i) const { return mRowVec[i]; }
+   inline unsigned Rows() const { return mRows; }
+   inline unsigned Cols() const { return mCols; }
 
-   void SwapRows(int i, int j);
-
-   double Sum() const;
+   void SwapRows(unsigned i, unsigned j);
 
  private:
    void CopyFrom(const Matrix& other);
 
-   int mRows;
-   int mCols;
-   Vector **mRowVec;
+   unsigned mRows;
+   unsigned mCols;
+   ArrayOf<Vector> mRowVec;
 };
 
 bool InvertMatrix(const Matrix& input, Matrix& Minv);
 
 Matrix TransposeMatrix(const Matrix& M);
 
-Matrix IdentityMatrix(int N);
+Matrix IdentityMatrix(unsigned N);
 
 Vector operator+(const Vector &left, const Vector &right);
 Vector operator-(const Vector &left, const Vector &right);
 Vector operator*(const Vector &left, const Vector &right);
 Vector operator*(const Vector &left, double right);
 
-Vector VectorSubset(const Vector &other, int start, int len);
+Vector VectorSubset(const Vector &other, unsigned start, unsigned len);
 Vector VectorConcatenate(const Vector& left, const Vector& right);
 
 Vector operator*(const Vector &left, const Matrix &right);
@@ -103,7 +103,8 @@ Matrix ScalarMultiply(const Matrix &left, const Matrix &right);
 Matrix MatrixMultiply(const Matrix &left, const Matrix &right);
 
 Matrix MatrixSubset(const Matrix &M,
-                    int startRow, int numRows, int startCol, int numCols);
+                    unsigned startRow, unsigned numRows,
+                    unsigned startCol, unsigned numCols);
 
 Matrix MatrixConcatenateCols(const Matrix& left, const Matrix& right);
 

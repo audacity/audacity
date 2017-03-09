@@ -996,23 +996,20 @@ ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec,
       wxArrayString trackNames,wxWindow *parent, wxWindowID id,
       const wxPoint& pos, const wxSize& size):
    wxPanelWrapper(parent, id, pos, size)
+   , mMixerSpec{mixerSpec}
+   , mChannelRects{ mMixerSpec->GetMaxNumChannels() }
+   , mTrackRects{ mMixerSpec->GetNumTracks() }
 {
    mBitmap = NULL;
    mWidth = 0;
    mHeight = 0;
-   mMixerSpec = mixerSpec;
    mSelectedTrack = mSelectedChannel = -1;
-
-   mTrackRects = new wxRect[ mMixerSpec->GetNumTracks() ];
-   mChannelRects = new wxRect[ mMixerSpec->GetMaxNumChannels() ];
 
    mTrackNames = trackNames;
 }
 
 ExportMixerPanel::~ExportMixerPanel()
 {
-   delete[] mTrackRects;
-   delete[] mChannelRects;
 }
 
 //set the font on memDC such that text can fit in specified width and height
