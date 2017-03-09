@@ -171,7 +171,7 @@ static int RecursivelyEnumerate(wxString dirPath,
    if(dir.IsOpened()){
       wxString name;
 
-      // Don't delete files from a selective top level, e.g. if handed "projects*" as the 
+      // Don't DELETE files from a selective top level, e.g. if handed "projects*" as the
       // directory specifier.
       if (bFiles && dirspec.IsEmpty() ){
          cont= dir.GetFirst(&name, filespec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
@@ -426,7 +426,7 @@ DirManager::~DirManager()
 
 
 // static
-// This is quite a dangerous function.  In the temp dir it will delete every directory
+// This is quite a dangerous function.  In the temp dir it will DELETE every directory
 // recursively, that has 'project*' as the name - EVEN if it happens not to be an Audacity
 // project but just something else called project.
 void DirManager::CleanTempDir()

@@ -759,7 +759,7 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 
 
-   // ELSE a subsequent new window.  It will NOT straddle screens.
+   // ELSE a subsequent NEW window.  It will NOT straddle screens.
 
    // We don't mind being 32 pixels off the screen in any direction.
    // Make sure initial sizes (pretty much) fit within the display bounds

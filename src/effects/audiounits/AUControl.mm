@@ -21,6 +21,7 @@
       
 **********************************************************************/
 
+#include "../../Audacity.h"
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioComponent.h>
 #include <AudioUnit/AudioUnitProperties.h>
@@ -32,6 +33,7 @@
 #endif
 
 #include "AUControl.h"
+#include "../../MemoryX.h"
 
 @interface AUView : NSView
 {
@@ -173,7 +175,8 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
       return false;
    }
 
-   SetPeer(new AUControlImpl(this, mAUView));
+   // wxWidgets takes ownership so safenew
+   SetPeer(safenew AUControlImpl(this, mAUView));
 
    if (mHIView)
    {
@@ -651,7 +654,7 @@ void AUControl::CarbonViewResized()
    // Set the dialog size
    w->SetSize(size);
 
-   // And finally set the new max/min
+   // And finally set the NEW max/min
    w->SetSizeHints(size, size);
 
    mLastMin = wxSize(rect.size.width, rect.size.height);

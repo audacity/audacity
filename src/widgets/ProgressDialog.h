@@ -78,7 +78,7 @@ public:
    ProgressResult Update(int current, int total, const wxString & message = wxEmptyString);
    void SetMessage(const wxString & message);
 
-   // 'ETB' character to indicate a new column in the message text.
+   // 'ETB' character to indicate a NEW column in the message text.
    static const wxChar ColoumnSplitMarker = (char)23;
 
 protected:

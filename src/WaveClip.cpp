@@ -1090,16 +1090,16 @@ void SpecCache::Populate
       // Storage for mutable per-thread data.
       // private clause ensures one copy per thread
       struct ThreadLocalStorage {
-         ThreadLocalStorage()  { cache = nullptr; }
-         ~ThreadLocalStorage() { delete cache; }
+         ThreadLocalStorage()  { }
+         ~ThreadLocalStorage() { }
 
          void init(WaveTrackCache &waveTrackCache, size_t scratchSize) {
             if (!cache) {
-               cache = new WaveTrackCache(waveTrackCache.GetTrack());
+               cache = std::make_unique<WaveTrackCache>(waveTrackCache.GetTrack());
                scratch.resize(scratchSize);
             }
          }
-         WaveTrackCache* cache;
+         std::unique_ptr<WaveTrackCache> cache;
          std::vector<float> scratch;
       } tls;
 
