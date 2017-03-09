@@ -4036,6 +4036,24 @@ void AudacityProject::OnRedo()
    ModifyUndoMenuItems();
 }
 
+void AudacityProject::FinishCopy
+   (const Track *n, Track *dest)
+{
+   if (dest) {
+      dest->SetChannel(n->GetChannel());
+      dest->SetLinked(n->GetLinked());
+      dest->SetName(n->GetName());
+   }
+}
+
+void AudacityProject::FinishCopy
+   (const Track *n, Track::Holder &&dest, TrackList &list)
+{
+   FinishCopy( n, dest.get() );
+   if (dest)
+      list.Add(std::move(dest));
+}
+
 void AudacityProject::OnCut()
 {
    TrackListIterator iter(GetTracks());
@@ -4072,12 +4090,8 @@ void AudacityProject::OnCut()
             dest = n->Copy(mViewInfo.selectedRegion.t0(),
                     mViewInfo.selectedRegion.t1());
 
-         if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
-            msClipboard->Add(std::move(dest));
-         }
+         if (dest)
+            FinishCopy(n, std::move(dest), *msClipboard);
       }
       n = iter.Next();
    }
@@ -4149,12 +4163,8 @@ void AudacityProject::OnSplitCut()
             n->Silence(mViewInfo.selectedRegion.t0(),
                        mViewInfo.selectedRegion.t1());
          }
-         if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
-            msClipboard->Add(std::move(dest));
-         }
+         if (dest)
+            FinishCopy(n, std::move(dest), *msClipboard);
       }
       n = iter.Next();
    }
@@ -4197,12 +4207,8 @@ void AudacityProject::OnCopy()
       if (n->GetSelected()) {
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1());
-         if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
-            msClipboard->Add(std::move(dest));
-         }
+         if (dest)
+            FinishCopy(n, std::move(dest), *msClipboard);
       }
       n = iter.Next();
    }
@@ -4483,13 +4489,13 @@ bool AudacityProject::HandlePasteNothingSelected()
       if (!pClip)
          return true; // nothing to paste
 
-      Track::Holder pNewTrack;
       Track* pFirstNewTrack = NULL;
       while (pClip) {
          Maybe<WaveTrack::Locker> locker;
          if ((msClipProject != this) && (pClip->GetKind() == Track::Wave))
             locker.create(static_cast<const WaveTrack*>(pClip));
 
+         Track::Holder pNewTrack;
          switch (pClip->GetKind()) {
          case Track::Wave:
             {
@@ -4514,10 +4520,6 @@ bool AudacityProject::HandlePasteNothingSelected()
          }
          wxASSERT(pClip);
 
-         pNewTrack->SetLinked(pClip->GetLinked());
-         pNewTrack->SetChannel(pClip->GetChannel());
-         pNewTrack->SetName(pClip->GetName());
-
          bool bResult = pNewTrack->Paste(0.0, pClip);
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
@@ -4526,7 +4528,7 @@ bool AudacityProject::HandlePasteNothingSelected()
             pFirstNewTrack = pNewTrack.get();
 
          pNewTrack->SetSelected(true);
-         mTracks->Add(std::move(pNewTrack));
+         FinishCopy(pClip, std::move(pNewTrack), *mTracks);
 
          pClip = iterClip.Next();
       }
@@ -5066,11 +5068,8 @@ void AudacityProject::OnSplitNew()
          }
 #endif
          if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
             dest->SetOffset(wxMax(newt0, offset));
-            mTracks->Add(std::move(dest));
+            FinishCopy(n, std::move(dest), *mTracks);
          }
       }
 

@@ -982,15 +982,6 @@ void TrackList::Select(Track * t, bool selected /* = true */ )
    }
 }
 
-Track *TrackList::GetLink(Track * t) const
-{
-   if (t) {
-      return t->GetLink();
-   }
-
-   return NULL;
-}
-
 /// Return a track in the list that comes after Track t
 Track *TrackList::GetNext(Track * t, bool linked) const
 {

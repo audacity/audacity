@@ -229,6 +229,11 @@ public:
 void OnUndo();
 void OnRedo();
 
+private:
+static void FinishCopy(const Track *n, Track *dest);
+static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
+
+public:
 void OnCut();
 void OnSplitCut();
 void OnCopy();

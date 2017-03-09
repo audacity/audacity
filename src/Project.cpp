@@ -4912,9 +4912,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
             auto dest = ( wt->*action )( region.start, region.end );
             if( dest )
             {
-               dest->SetChannel( wt->GetChannel() );
-               dest->SetLinked( wt->GetLinked() );
-               dest->SetName( wt->GetName() );
+               FinishCopy( wt, dest.get() );
                if( !merged )
                   merged = std::move(dest);
                else
@@ -5292,7 +5290,7 @@ void AudacityProject::SetTrackGain(WaveTrack * wt, LWSlider * slider)
    float newValue = slider->Get();
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack*>(wt->GetLink());
    wt->SetGain(newValue);
    if (link)
       link->SetGain(newValue);
@@ -5308,7 +5306,7 @@ void AudacityProject::SetTrackPan(WaveTrack * wt, LWSlider * slider)
    float newValue = slider->Get();
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack*>(wt->GetLink());
    wt->SetPan(newValue);
    if (link)
       link->SetPan(newValue);

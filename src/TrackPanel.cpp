@@ -227,10 +227,10 @@ but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindTrack() for label returns a rectangle up to and including the One Pixel column,
+FindCell() for label or vruler returns a rectangle up to and including the One Pixel column,
 but OMITS left and top insets
 
-FindTrack() for !label returns a rectangle with x == GetLeftOffset(), and INCLUDES
+FindCell() for track returns a rectangle with x == GetLeftOffset(), and INCLUDES
 right and top insets
 
 +--------------- ... ------ ... --------------------- ...       ... -------------+
@@ -1723,10 +1723,9 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
 
    // (2) If we are not over a track at all, set the cursor to Arrow and
    //     clear the StatusBar,
-   wxRect labelRect, trackRect;
-   Track *const label = FindTrack(event.m_x, event.m_y, true, true, &labelRect);
-   Track *const nonlabel = FindTrack(event.m_x, event.m_y, false, false, &trackRect);
-   Track *const track = label ? label : nonlabel;
+   const auto foundCell = FindCell( event.m_x, event.m_y );
+   auto &track = foundCell.pTrack;
+   auto &trackRect = foundCell.rect;
 
    if (!track) {
       SetCursor(*mArrowCursor);
@@ -1745,16 +1744,17 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    wxString tip;
 
    // Are we within the vertical resize area?
-   if (nonlabel
-      ? within(event.m_y, trackRect.y + trackRect.height, TRACK_RESIZE_REGION)
-      : within(event.m_y, labelRect.y + labelRect.height, TRACK_RESIZE_REGION))
+   if (within(event.m_y, trackRect.GetBottom(), TRACK_RESIZE_REGION))
    {
-      SetCursorAndTipWhenInVResizeArea(nonlabel && track->GetLinked(), tip);
+      SetCursorAndTipWhenInVResizeArea(
+         track->GetLinked() && foundCell.type != CellType::Label, tip);
       // tip may still be NULL at this point, in which case we go on looking.
    }
 
-   if ((tip == wxString()) && label) {
-      SetCursorAndTipWhenInLabel( label, event, tip );
+   if ((tip == wxString()) &&
+       (foundCell.type == CellType::Label ||
+        foundCell.type == CellType::VRuler)) {
+      SetCursorAndTipWhenInLabel( track, event, tip );
    }
 
    // Otherwise, we must be over a track of some kind
@@ -1768,9 +1768,8 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    }
 
    if ((tip == wxString()) &&
-      nonlabel &&
-      nonlabel->GetKind() == Track::Wave &&
-      SetCursorForCutline(static_cast<WaveTrack*>(nonlabel), trackRect, event))
+      track->GetKind() == Track::Wave &&
+      SetCursorForCutline(static_cast<WaveTrack*>(track), trackRect, event))
       return;
 
    if( tip == wxString() )
@@ -1818,8 +1817,9 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
 /// dragging over a waveform.
 void TrackPanel::HandleSelect(wxMouseEvent & event)
 {
-   wxRect rect;
-   Track *t = FindTrack(event.m_x, event.m_y, false, false, &rect);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &t = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
    // AS: Ok, did the user just click the mouse, release the mouse,
    //  or drag?
@@ -1849,9 +1849,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 
    } else if (event.LeftDClick() && !event.ShiftDown()) {
       if (!mCapturedTrack) {
-         wxRect rect;
-         mCapturedTrack =
-            FindTrack(event.m_x, event.m_y, false, false, &rect);
+         mCapturedTrack = t;
          if (!mCapturedTrack)
             return;
       }
@@ -2894,12 +2892,6 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    wxRect rect      = mCapturedRect;
    Track *pTrack = mCapturedTrack;
 
-   if (!pTrack) {
-      pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
-      rect.y += kTopMargin;
-      rect.height -= kTopMargin + kBottomMargin;
-   }
-
    // Also fuhggeddaboudit if not in a track.
    if (!pTrack)
       return;
@@ -2928,7 +2920,7 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 
    // Handle which tracks are selected
    Track *sTrack = pTrack;
-   Track *eTrack = FindTrack(x, y, false, false, NULL);
+   Track *eTrack = FindCell(x, y).pTrack;
    if( !event.ControlDown() )
       SelectRangeOfTracks(sTrack, eTrack);
 
@@ -2988,7 +2980,7 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
    float minFreq, maxFreq;
    wt->GetSpectrumBounds(&minFreq, &maxFreq);
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
+   const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
    return numberScale.PositionToValue(1.0 - p);
 }
@@ -3004,7 +2996,7 @@ wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
    float minFreq, maxFreq;
    wt->GetSpectrumBounds(&minFreq, &maxFreq);
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
+   const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
    const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
@@ -3165,10 +3157,11 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
 void TrackPanel::HandleEnvelope(wxMouseEvent & event)
 {
    if (event.LeftDown()) {
-      wxRect rect;
-      Track *pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      auto &pTrack = foundCell.pTrack;
+      auto &rect = foundCell.rect;
 
-      if (!pTrack)
+      if (!pTrack || foundCell.type != CellType::Track)
          return;
 
       SetCapturedTrack(pTrack, IsEnveloping);
@@ -3437,16 +3430,16 @@ namespace {
 /// Prepare for sliding.
 void TrackPanel::StartSlide(wxMouseEvent & event)
 {
-   wxRect rect;
-
    mHSlideAmount = 0.0;
    mDidSlideVertically = false;
 
    mTrackExclusions.clear();
 
-   Track *vt = FindTrack(event.m_x, event.m_y, false, false, &rect);
-   if (!vt)
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &vt = foundCell.pTrack;
+   if (!vt || foundCell.type != CellType::Track)
       return;
+   auto &rect = foundCell.rect;
 
    ToolsToolBar * ttb = mListener->TP_GetToolsToolBar();
    bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
@@ -3498,7 +3491,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
-         Track *partner = mTracks->GetLink(vt);
+         Track *partner = vt->GetLink();
          WaveTrack *wt;
          if (mCapturedClip &&
              // Assume linked track is wave or null
@@ -3657,16 +3650,17 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // find which track the mouse is currently in (mouseTrack) -
    // this may not be the same as the one we started in...
-   Track *mouseTrack = FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (mouseTrack == NULL) {
-      // Allow sliding if the pointer is not over any track, but only if x is
+
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   if (foundCell.type != CellType::Track)
+      // Allow sliding only if x is
       // within the bounds of the tracks area.
-      int width;
-      GetTracksUsableArea(&width, NULL);
-      if (event.m_x >= GetLeftOffset() && event.m_x < GetLeftOffset() + width)
-         mouseTrack = mCapturedTrack;
-      else
-         return;
+      return;
+
+   auto mouseTrack = foundCell.pTrack;
+   if (mouseTrack == nullptr) {
+      // Allow sliding if the pointer is not over any track.
+      mouseTrack = mCapturedTrack;
    }
 
    // Start by undoing the current slide amount; everything
@@ -3687,7 +3681,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
    else {
       mCapturedTrack->Offset(-mHSlideAmount);
-      Track* link = mTracks->GetLink(mCapturedTrack);
+      Track* link = mCapturedTrack->GetLink();
       if (link)
          link->Offset(-mHSlideAmount);
    }
@@ -3937,7 +3931,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
       mCapturedTrack->Offset(mHSlideAmount);
-      Track* link = mTracks->GetLink(mCapturedTrack);
+      Track* link = mCapturedTrack->GetLink();
       if (link)
          link->Offset(mHSlideAmount);
    }
@@ -3987,9 +3981,10 @@ void TrackPanel::HandleZoomClick(wxMouseEvent & event)
    if (mCapturedTrack)
       return;
 
-   mCapturedTrack = FindTrack(event.m_x, event.m_y, false, false,
-                              &mCapturedRect);
-   if (!mCapturedTrack)
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   mCapturedTrack = foundCell.pTrack;
+   mCapturedRect = foundCell.rect;
+   if (foundCell.type != CellType::Track || !(mCapturedTrack = foundCell.pTrack))
       return;
 
    SetCapturedTrack(mCapturedTrack, IsZooming);
@@ -4106,9 +4101,10 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
 {
    if (mCapturedTrack)
       return;
-   mCapturedTrack = FindTrack(event.m_x, event.m_y, true, false,
-                              &mCapturedRect);
-   if (!mCapturedTrack)
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   mCapturedTrack = foundCell.pTrack;
+   mCapturedRect = foundCell.rect;
+   if (foundCell.type != CellType::VRuler || !(mCapturedTrack = foundCell.pTrack))
       return;
 
    if (mCapturedTrack->GetKind() == Track::Wave
@@ -4213,7 +4209,7 @@ void TrackPanel::HandleWaveTrackVZoom
  bool fixedMousePoint)
 {
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack *>(tracks->GetLink(track));
+   const auto partner = static_cast<WaveTrack *>(track->GetLink());
    int height = track->GetHeight() - (kTopMargin + kBottomMargin);
    int ypos = rect.y + kBorderThickness;
 
@@ -4232,7 +4228,7 @@ void TrackPanel::HandleWaveTrackVZoom
 
    if (spectral) {
       track->GetSpectrumBounds(&min, &max);
-      scale = (settings.GetScale(min, max, rate, false));
+      scale = settings.GetScale( min, max );
       const auto fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
 
@@ -4458,10 +4454,11 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, const WaveTrack *
 
    bool showPoints;
    {
-      wxRect rect;
-      FindTrack(event.m_x, event.m_y, false, false, &rect);
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      if ( foundCell.type != CellType::Track )
+         return false;
       const double rate = wt->GetRate();
-      const double time = mViewInfo->PositionToTime(event.m_x, rect.x);
+      const double time = mViewInfo->PositionToTime(event.m_x, foundCell.rect.x);
       int width;
       GetTracksUsableArea(&width, NULL);
       showPoints = SampleResolutionTest(*mViewInfo, wt, time, rate, width);
@@ -4509,14 +4506,14 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double dBRange, do
 /// Someone has just clicked the mouse.  What do we do?
 void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 {
-   //declare a rectangle to determine clicking position
-   wxRect rect;
-
    //Get the track the mouse is over, and save it away for future events
    mDrawingTrack = NULL;
-   Track *const t = FindTrack(event.m_x, event.m_y, false, false, &rect);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &t = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
-   if (!t || (t->GetKind() != Track::Wave))
+   if (!t || (t->GetKind() != Track::Wave)
+       || foundCell.type != CellType::Track)
       return;
    const auto wt = static_cast<WaveTrack *>(t);
    if( !IsSampleEditingPossible( event, wt ) )
@@ -4884,8 +4881,8 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
    else if (event.LeftUp()) {
       if (buttonRect.Contains(event.m_x, event.m_y)) {
          t->SetMinimized(!t->GetMinimized());
-         if (mTracks->GetLink(t))
-            mTracks->GetLink(t)->SetMinimized(t->GetMinimized());
+         if (t->GetLink())
+            t->GetLink()->SetMinimized(t->GetMinimized());
          MakeParentRedrawScrollbars();
          MakeParentModifyState(true);
       }
@@ -4929,7 +4926,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
      const auto wt = static_cast<WaveTrack*>(capturedTrack);
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack *>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack *>(wt->GetLink());
 
    if (pan) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -5062,9 +5059,9 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 
    bool unsafe = IsUnsafe();
 
-   wxRect rect;
-
-   Track *t = FindTrack(event.m_x, event.m_y, true, true, &rect);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &t = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
    // LL: Check close box
    if (isleft && CloseFunc(t, rect, event.m_x, event.m_y))
@@ -5384,20 +5381,14 @@ bool TrackPanel::PopupFunc(Track * t, wxRect rect, int x, int y)
 ///  update the track size.
 void TrackPanel::HandleResizeClick( wxMouseEvent & event )
 {
-   wxRect rTrack;
-   wxRect rLabel;
-
+   // Get here only if the click was near the bottom of the cell rectangle.
    // DM: Figure out what track is about to be resized
-   Track *track = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto track = foundCell.pTrack;
 
-   if (!track) {
-      // This will only return unlinked tracks or left channels of stereo tracks
-      // or NULL:
-      track = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
-      // If stereo, get the right channel.
-      if (track && track->GetLinked())
-         track = track->GetLink();
-   }
+   if (foundCell.type == CellType::Label && track && track->GetLinked())
+      // Click was at the bottom of a stereo track.
+      track = track->GetLink();
 
    if (!track) {
       return;
@@ -5695,9 +5686,10 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 
    // Special case of pointer in the vertical ruler
    if (event.ShiftDown() || event.CmdDown()) {
-      wxRect rect;
-      Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
-      if (pTrack && event.m_x >= GetVRulerOffset()) {
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      auto &pTrack = foundCell.pTrack;
+      auto &rect = foundCell.rect;
+      if (pTrack && foundCell.type == CellType::VRuler) {
          HandleWheelRotationInVRuler(event, steps, pTrack, rect);
          // Always stop propagation even if the ruler didn't change.  The ruler
          // is a narrow enough target.
@@ -5865,7 +5857,7 @@ void TrackPanel::HandleWheelRotationInVRuler
             wt->GetSpectrumBounds(&bottom, &top);
             const double rate = wt->GetRate();
             const float bound = rate / 2;
-            const NumberScale numberScale(settings.GetScale(bottom, top, rate, false));
+            const NumberScale numberScale( settings.GetScale( bottom, top ) );
             float newTop =
                std::min(bound, numberScale.PositionToValue(1.0f + delta));
             const float newBottom =
@@ -6213,8 +6205,11 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    if (event.ButtonUp()) {
       wxRect rect;
 
-      Track *t = FindTrack(event.m_x, event.m_y, false, false, &rect);
-      if (t)
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      auto t = foundCell.pTrack;
+      if (t
+          && foundCell.type == CellType::Track
+      )
          EnsureVisible(t);
    }
 }
@@ -6270,7 +6265,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
             {
                // Assume linked track is wave or null
                const auto linked =
-                  static_cast<WaveTrack*>(mTracks->GetLink(track));
+                  static_cast<WaveTrack*>(track->GetLink());
                if (linked) {
                   // Expand the cutline in the opposite channel if it is present.
 
@@ -6299,7 +6294,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
 
             // Assume linked track is wave or null
             const auto linked =
-               static_cast<WaveTrack*>(mTracks->GetLink(track));
+               static_cast<WaveTrack*>(track->GetLink());
             if (linked) {
                // Don't assume correspondence of merge points across channels!
                int idx = FindMergeLine(linked, pos);
@@ -6320,7 +6315,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
          track->RemoveCutLine(mCapturedTrackLocation.pos);
          // Assume linked track is wave or null
          const auto linked =
-            static_cast<WaveTrack*>(mTracks->GetLink(track));
+            static_cast<WaveTrack*>(track->GetLink());
          if (linked)
             linked->RemoveCutLine(mCapturedTrackLocation.pos);
          MakeParentPushState(_("Removed Cut Line"), _("Remove") );
@@ -6544,21 +6539,16 @@ void TrackPanel::HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event
 //  from the other OnMouseEvent code.
 void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 {
-   Track * pTrack;
-   Track * pControlTrack;
-   wxRect rTrack;
-   wxRect rLabel;
+   const auto foundCell = FindCell( event.m_x, event.m_y );
+   auto &pTrack = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
    bool unsafe = IsUnsafe();
 
-   pControlTrack = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
-   pTrack = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
-
    //call HandleResize if I'm over the border area
    if (event.LeftDown() &&
-          (within(event.m_y, rTrack.y + rTrack.height, TRACK_RESIZE_REGION)
-        || within(event.m_y, rLabel.y + rLabel.height,
-                  TRACK_RESIZE_REGION))) {
+       pTrack &&
+          (within(event.m_y, rect.GetBottom(), TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
       return;
@@ -6566,43 +6556,45 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 
    // AS: If the user clicked outside all tracks, make nothing
    //  selected.
-   if ((event.ButtonDown() || event.ButtonDClick()) &&
-       !(pTrack || pControlTrack)) {
+   if ((event.ButtonDown() || event.ButtonDClick()) && !pTrack) {
       SelectNone();
       Refresh(false);
       return;
    }
 
-   //Determine if user clicked on the track's left-hand label
-   if (!mCapturedTrack && event.m_x < GetLeftOffset()) {
-      if (event.m_x >= GetVRulerOffset()) {
+   //Determine if user clicked on the track's left-hand label or ruler
+   if (!mCapturedTrack) {
+      if (foundCell.type == CellType::VRuler) {
          if( !event.Dragging() ) // JKC: Only want the mouse down event.
             HandleVZoom(event);
          HandleCursor(event);
+         return;
       }
-      else {
+      else if (foundCell.type == CellType::Label) {
          HandleLabelClick(event);
          HandleCursor(event);
+         return;
       }
-      return;
    }
 
    //Determine if user clicked on a label track.
    //If so, use MouseDown handler for the label track.
-   if (pTrack && (pTrack->GetKind() == Track::Label))
+   if (pTrack && foundCell.type == CellType::Track &&
+       (pTrack->GetKind() == Track::Label))
    {
-      if (HandleLabelTrackClick((LabelTrack *)pTrack, rTrack, event))
+      if (HandleLabelTrackClick((LabelTrack *)pTrack, rect, event))
          return;
    }
 
    bool handled = false;
 
-   if (pTrack && (pTrack->GetKind() == Track::Wave) &&
+   if (pTrack && foundCell.type == CellType::Track &&
+       (pTrack->GetKind() == Track::Wave) &&
       (mMouseCapture == IsUncaptured || mMouseCapture == WasOverCutLine))
-      handled = HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rTrack, event);
+      handled = HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rect, event);
 
    ToolsToolBar * pTtb = mListener->TP_GetToolsToolBar();
-   if( !handled && pTtb != NULL )
+   if( !handled && pTtb != NULL && foundCell.type == CellType::Track )
    {
       int toolToUse = DetermineToolToUse(pTtb, event);
 
@@ -6665,10 +6657,10 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
       return currentTool;
 
    // So now we have to find out what we are near to..
-   wxRect rect;
-
-   Track *pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
-   if( !pTrack )
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &pTrack = foundCell.pTrack;
+   auto &rect = foundCell.rect;
+   if( !pTrack|| foundCell.type != CellType::Track )
       return currentTool;
 
    int trackKind = pTrack->GetKind();
@@ -8279,7 +8271,7 @@ void TrackPanel::SetRate(WaveTrack * wt, double rate)
 {
    wt->SetRate(rate);
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto partner = static_cast<WaveTrack*>(wt->GetLink());
    if (partner)
       partner->SetRate(rate);
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
@@ -8324,7 +8316,7 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
    wxASSERT(bResult); // TO DO: Actually handle this.
    // Assume linked track is wave or null
    const auto partner =
-      static_cast<WaveTrack*>(mTracks->GetLink(mPopupMenuTarget));
+      static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
    if (partner)
    {
       bResult = partner->ConvertToSampleFormat(newFormat);
@@ -8790,91 +8782,101 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 /// Determines which track is under the mouse
 ///  @param mouseX - mouse X position.
 ///  @param mouseY - mouse Y position.
-///  @param label  - true iff the X Y position is relative to side-panel with the labels in it.
-///  @param link - true iff we should consider a hit in any linked track as a hit.
-///  @param *trackRect - returns track rectangle.
-Track *TrackPanel::FindTrack(int mouseX, int mouseY, bool label, bool link,
-                              wxRect * trackRect)
+TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 {
-   // If label is true, resulting rectangle OMITS left and top insets.
-   // If label is false, resulting rectangle INCLUDES right and top insets.
-
    wxRect rect;
    rect.x = 0;
    rect.y = -mViewInfo->vpos;
    rect.y += kTopInset;
    GetSize(&rect.width, &rect.height);
 
-   if (label) {
-      rect.width = GetLeftOffset();
-   } else {
-      rect.x = GetLeftOffset();
-      rect.width -= GetLeftOffset();
+   // The type of cell that may be found is determined by the x coordinate.
+   CellType type = CellType::Track;
+   if (mouseX >= 0 && mouseX < rect.width) {
+      if (mouseX < GetVRulerOffset())
+         type = CellType::Label,
+         rect.width = GetVRulerOffset();
+      else if (mouseX < GetLeftOffset())
+         type = CellType::VRuler,
+         rect.x = GetVRulerOffset(),
+         rect.width = GetLeftOffset() - GetVRulerOffset();
+      else
+         type = CellType::Track,
+         rect.x = GetLeftOffset(),
+         rect.width -= GetLeftOffset();
    }
+
+   auto output = [&](Track *pTrack) -> FoundCell {
+      // If label or vruler, resulting rectangle OMITS left and top insets.
+      // If track, resulting rectangle INCLUDES right and top insets.
+      if (pTrack) {
+         rect.y -= kTopInset;
+         switch (type) {
+            case CellType::Label:
+               rect.x += kLeftInset;
+               rect.width -= kLeftInset;
+               rect.y += kTopInset;
+               rect.height -= kTopInset;
+               break;
+            case CellType::VRuler:
+               rect.y += kTopInset;
+               rect.height -= kTopInset;
+               break;
+            case CellType::Track:
+            default:
+               break;
+         }
+         return { pTrack, type, rect };
+      }
+      else
+         return { nullptr, type, {} };
+   };
 
    VisibleTrackIterator iter(GetProject());
    for (Track * t = iter.First(); t; t = iter.Next()) {
       rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
       rect.height = t->GetHeight();
 
-      if (link && t->GetLink()) {
-         Track *l = t->GetLink();
-         int h = l->GetHeight();
-         if (!t->GetLinked()) {
-            t = l;
-            rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
+      if (type == CellType::Label) {
+         if (t->GetLink()) {
+            Track *l = t->GetLink();
+            int h = l->GetHeight();
+            if (!t->GetLinked()) {
+               t = l;
+               rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
+            }
+            rect.height += h;
          }
-         rect.height += h;
-      }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      else if(link && MONO_WAVE_PAN(t))
-      {
-         rect.height += t->GetHeight(true);
-      }
+         else if( MONO_WAVE_PAN(t) )
+            rect.height += t->GetHeight(true);
 #endif
+      }
+
       //Determine whether the mouse is inside
       //the current rectangle.  If so, recalculate
       //the proper dimensions and return.
       if (rect.Contains(mouseX, mouseY)) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+         // PRL:  Is it good to have a side effect in a hit-testing routine?
          t->SetVirtualStereo(false);
 #endif
-         if (trackRect) {
-            rect.y -= kTopInset;
-            if (label) {
-               rect.x += kLeftInset;
-               rect.width -= kLeftInset;
-               rect.y += kTopInset;
-               rect.height -= kTopInset;
-            }
-            *trackRect = rect;
-         }
-
-         return t;
+         return output(t);
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(!link && MONO_WAVE_PAN(t)){
+      if(type != CellType::Label && MONO_WAVE_PAN(t)){
          rect.y = t->GetY(true) - mViewInfo->vpos + kTopInset;
          rect.height = t->GetHeight(true);
          if (rect.Contains(mouseX, mouseY)) {
+            // PRL:  Is it good to have a side effect in a hit-testing routine?
             t->SetVirtualStereo(true);
-            if (trackRect) {
-               rect.y -= kTopInset;
-               if (label) {
-                  rect.x += kLeftInset;
-                  rect.width -= kLeftInset;
-                  rect.y += kTopInset;
-                  rect.height -= kTopInset;
-               }
-               *trackRect = rect;
-            }
-            return t;
+            return output(t);
          }
       }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
    }
 
-   return NULL;
+   return { nullptr, type, {} };
 }
 
 /// This finds the rectangle of a given track, either the

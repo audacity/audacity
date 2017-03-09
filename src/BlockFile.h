@@ -44,6 +44,7 @@ class SummaryInfo {
 
 
 class BlockFile;
+class AliasBlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
 template< typename Result, typename... Args >
@@ -185,6 +186,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// on a different platform
    virtual void FixSummary(void *data);
 
+   static size_t CommonReadData(
+      const wxFileName &fileName, bool &mSilentLog,
+      const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
+      samplePtr data, sampleFormat format, size_t start, size_t len,
+      const sampleFormat *pLegacyFormat = nullptr, size_t legacyLen = 0);
+
  private:
    int mLockCount;
 
@@ -247,7 +254,7 @@ class AliasBlockFile /* not final */ : public BlockFile
 
    wxFileNameWrapper mAliasedFileName;
    sampleCount mAliasStart;
-   int         mAliasChannel;
+   const int         mAliasChannel;
    mutable bool        mSilentAliasLog;
 };
 

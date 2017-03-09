@@ -402,76 +402,9 @@ size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
          mCache.format, data, format, len);
       return len;
    }
-   else {
-      //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
-
-      SF_INFO info;
-      wxFile f;   // will be closed when it goes out of scope
-      SFFile sf;
-      {
-         Maybe<wxLogNull> silence{};
-         if (mSilentLog)
-            silence.create();
-
-         memset(&info, 0, sizeof(info));
-
-         if (f.Open(mFileName.GetFullPath())) {
-            // Even though there is an sf_open() that takes a filename, use the one that
-            // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-            // libsndfile can't (under Windows).
-            sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-         }
-         // FIXME: TRAP_ERR failure of wxFile open incompletely handled in SimpleBlockFile::ReadData.
-         // FIXME: Too much cut and paste code between the different block file types.
-
-
-         if (!sf) {
-
-            memset(data, 0, SAMPLE_SIZE(format)*len);
-
-            mSilentLog = TRUE;
-
-            return len;
-         }
-      }
-      mSilentLog=FALSE;
-
-      SFCall<sf_count_t>(sf_seek, sf.get(), start, SEEK_SET);
-      SampleBuffer buffer(len, floatSample);
-
-      size_t framesRead = 0;
-
-      // If both the src and dest formats are integer formats,
-      // read integers from the file (otherwise we would be
-      // converting to float and back, which is unneccesary)
-      if (format == int16Sample &&
-          sf_subtype_is_integer(info.format)) {
-         framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)data, len);
-      }
-      else
-      if (format == int24Sample &&
-          sf_subtype_is_integer(info.format))
-      {
-         framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
-
-         // libsndfile gave us the 3 byte sample in the 3 most
-         // significant bytes -- we want it in the 3 least
-         // significant bytes.
-         int *intPtr = (int *)data;
-         for( int i = 0; i < framesRead; i++ )
-            intPtr[i] = intPtr[i] >> 8;
-      }
-      else {
-         // Otherwise, let libsndfile handle the conversion and
-         // scaling, and pass us normalized data as floats.  We can
-         // then convert to whatever format we want.
-         framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-         CopySamples(buffer.ptr(), floatSample,
-                     (samplePtr)data, format, framesRead);
-      }
-
-      return framesRead;
-   }
+   else
+      return CommonReadData(
+         mFileName, mSilentLog, nullptr, 0, 0, data, format, start, len);
 }
 
 void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)

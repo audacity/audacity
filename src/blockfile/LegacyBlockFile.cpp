@@ -191,90 +191,11 @@ bool LegacyBlockFile::ReadSummary(void *data)
 size_t LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
                               size_t start, size_t len) const
 {
-   SF_INFO info;
-
-   memset(&info, 0, sizeof(info));
-
-   switch(mFormat) {
-   case int16Sample:
-      info.format =
-         SF_FORMAT_RAW | SF_FORMAT_PCM_16 | SF_ENDIAN_CPU;
-      break;
-   default:
-   case floatSample:
-      info.format =
-         SF_FORMAT_RAW | SF_FORMAT_FLOAT | SF_ENDIAN_CPU;
-      break;
-   case int24Sample:
-      info.format = SF_FORMAT_RAW | SF_FORMAT_PCM_32 | SF_ENDIAN_CPU;
-      break;
-   }
-   info.samplerate = 44100; // Doesn't matter
-   info.channels = 1;
-   info.frames = mLen + (mSummaryInfo.totalSummaryBytes /
-                         SAMPLE_SIZE(mFormat));
-
-   wxFile f;   // will be closed when it goes out of scope
-   SFFile sf;
-
-   if (f.Open(mFileName.GetFullPath())) {
-      // Even though there is an sf_open() that takes a filename, use the one that
-      // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-      // libsndfile can't (under Windows).
-      sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-   }
-   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in LegacyBlockfile::ReadData.
-
-   {
-      Maybe<wxLogNull> silence{};
-      if (mSilentLog)
-         silence.create();
-
-      if (!sf){
-
-         memset(data, 0, SAMPLE_SIZE(format)*len);
-
-         mSilentLog = TRUE;
-
-         return len;
-      }
-   }
-   mSilentLog=FALSE;
-
-   sf_count_t seekstart = start +
-         (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
-   SFCall<sf_count_t>(sf_seek, sf.get(), seekstart , SEEK_SET);
-
-   SampleBuffer buffer(len, floatSample);
-   size_t framesRead = 0;
-
-   // If both the src and dest formats are integer formats,
-   // read integers from the file (otherwise we would be
-   // converting to float and back, which is unneccesary)
-   if (format == int16Sample &&
-       sf_subtype_is_integer(info.format)) {
-      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)data, len);
-   }
-   else if (format == int24Sample &&
-             sf_subtype_is_integer(info.format)) {
-      framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
-
-         // libsndfile gave us the 3 byte sample in the 3 most
-      // significant bytes -- we want it in the 3 least
-      // significant bytes.
-      int *intPtr = (int *)data;
-      for( int i = 0; i < framesRead; i++ )
-         intPtr[i] = intPtr[i] >> 8;
-   } else {
-      // Otherwise, let libsndfile handle the conversion and
-      // scaling, and pass us normalized data as floats.  We can
-      // then convert to whatever format we want.
-      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-      CopySamples(buffer.ptr(), floatSample,
-                  (samplePtr)data, format, framesRead);
-   }
-
-   return framesRead;
+   sf_count_t origin = (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
+   return CommonReadData(
+      mFileName, mSilentLog, nullptr, origin, 0, data, format, start, len,
+      &mFormat, mLen
+   );
 }
 
 void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)

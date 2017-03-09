@@ -893,9 +893,9 @@ void TrackArtist::UpdateVRuler(const Track *t, wxRect & rect)
             vruler->SetRange(maxFreq, minFreq);
             vruler->SetUnits(wxT(""));
             vruler->SetLog(true);
-            NumberScale scale
-               (wt->GetSpectrogramSettings().GetScale
-                  (minFreq, maxFreq, wt->GetRate(), false).Reversal());
+            NumberScale scale(
+               wt->GetSpectrogramSettings().GetScale( minFreq, maxFreq )
+                  .Reversal() );
             vruler->SetNumberScale(&scale);
          }
          break;
@@ -2022,7 +2022,7 @@ void TrackArtist::DrawSpectrum(const WaveTrack *track,
 }
 
 static inline float findValue
-(const float *spectrum, float bin0, float bin1, unsigned half,
+(const float *spectrum, float bin0, float bin1, unsigned nBins,
  bool autocorrelation, int gain, int range)
 {
    float value;
@@ -2042,7 +2042,7 @@ static inline float findValue
          bin0 += 1.0;
       }
       // Do not reference past end of freq array.
-      if ((int)(bin1) >= (int)half) {
+      if ((int)(bin1) >= (int)nBins) {
          bin1 -= 1.0;
       }
 
@@ -2054,18 +2054,18 @@ static inline float findValue
    // See Bug971
    int index, limitIndex;
    if (autocorrelation) {
-      // bin = 2 * half / (half - 1 - array_index);
+      // bin = 2 * nBins / (nBins - 1 - array_index);
       // Solve for index
-      index = std::max(0.0f, std::min(float(half - 1),
-         (half - 1) - (2 * half) / (std::max(1.0f, bin0))
+      index = std::max(0.0f, std::min(float(nBins - 1),
+         (nBins - 1) - (2 * nBins) / (std::max(1.0f, bin0))
       ));
-      limitIndex = std::max(0.0f, std::min(float(half - 1),
-         (half - 1) - (2 * half) / (std::max(1.0f, bin1))
+      limitIndex = std::max(0.0f, std::min(float(nBins - 1),
+         (nBins - 1) - (2 * nBins) / (std::max(1.0f, bin1))
       ));
    }
    else {
-      index = std::min<int>(half - 1, (int)(floor(0.5 + bin0)));
-      limitIndex = std::min<int>(half, (int)(floor(0.5 + bin1)));
+      index = std::min<int>(nBins - 1, (int)(floor(0.5 + bin0)));
+      limitIndex = std::min<int>(nBins, (int)(floor(0.5 + bin1)));
    }
    value = spectrum[index];
    while (++index < limitIndex)
@@ -2184,6 +2184,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                                      (size_t)hiddenMid.width,
          t0, pps);
    }
+   auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
    track->GetSpectrumBounds(&minFreq, &maxFreq);
@@ -2194,15 +2195,17 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    // the desired fft bin(s) for display on that row
    float *bins = (float*)alloca(sizeof(*bins)*(hiddenMid.height + 1));
    {
-      const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, true));
+      const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
 
       NumberScale::Iterator it = numberScale.begin(mid.height);
-      float nextBin = std::max(0.0f, std::min(float(half - 1), *it));
+      float nextBin = std::max( 0.0f, std::min( float(nBins - 1),
+         settings.findBin( *it, binUnit ) ) );
 
       int yy;
       for (yy = 0; yy < hiddenMid.height; ++yy) {
          bins[yy] = nextBin;
-         nextBin = std::max(0.0f, std::min(float(half - 1), *++it));
+         nextBin = std::max( 0.0f, std::min( float(nBins - 1),
+            settings.findBin( *++it, binUnit ) ) );
       }
       bins[yy] = nextBin;
    }
@@ -2293,7 +2296,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       for (int xx = 0; xx < hiddenMid.width; ++xx) {
 #ifdef EXPERIMENTAL_FIND_NOTES
          int maximas = 0;
-         const int x0 = half * xx;
+         const int x0 = nBins * xx;
          if (fftFindNotes) {
             for (int i = maxTableSize - 1; i >= 0; i--)
                indexes[i] = -1;
@@ -2362,7 +2365,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 
             if (settings.scaleType != SpectrogramSettings::stLogarithmic) {
                const float value = findValue
-                  (freq + half * xx, bin, nextBin, half, autocorrelation, gain, range);
+                  (freq + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
                clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
             }
             else {
@@ -2378,7 +2381,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                      if (inMaximum) {
                         float i1 = maxima1[it];
                         if (yy + 1 <= i1) {
-                           value = findValue(freq + x0, bin, nextBin, half, autocorrelation, gain, range);
+                           value = findValue(freq + x0, bin, nextBin, nBins, autocorrelation, gain, range);
                            if (value < findNotesMinA)
                               value = minColor;
                         }
@@ -2399,7 +2402,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #endif //EXPERIMENTAL_FIND_NOTES
                {
                   value = findValue
-                     (freq + half * xx, bin, nextBin, half, autocorrelation, gain, range);
+                     (freq + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
                }
                clip->mSpecPxCache->values[xx * hiddenMid.height + yy] = value;
             } // logF
@@ -2407,10 +2410,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       } // each xx
    } // updating cache
 
-   float selBinLo = freqLo / binUnit;
-   float selBinHi = freqHi / binUnit;
-   float selBinCenter =
-      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi)) / binUnit;
+   float selBinLo = settings.findBin( freqLo, binUnit);
+   float selBinHi = settings.findBin( freqHi, binUnit);
+   float selBinCenter = (freqLo < 0 || freqHi < 0)
+      ? -1
+      : settings.findBin( sqrt(freqLo * freqHi), binUnit );
 
    const bool isSpectral = settings.SpectralSelectionEnabled();
    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
@@ -2421,7 +2425,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       ? 0
       : std::min(mid.width, (int)(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
    const size_t numPixels = std::max(0, end - begin);
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
    SpecCache specCache
       (numPixels, settings.algorithm, -1,
        t0, settings.windowType,
@@ -2461,7 +2465,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
           uncached = 0;
       }
       else {
-          int specIndex = (xx - fisheyeLeft) * half;
+          int specIndex = (xx - fisheyeLeft) * nBins;
           wxASSERT(specIndex >= 0 && specIndex < specCache.freq.size());
           uncached = &specCache.freq[specIndex];
       }
@@ -2493,7 +2497,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
 
          const float value = uncached
-            ? findValue(uncached, bin, nextBin, half, autocorrelation, gain, range)
+            ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
 
          unsigned char rv, gv, bv;
