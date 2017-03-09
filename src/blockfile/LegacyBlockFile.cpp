@@ -159,7 +159,7 @@ LegacyBlockFile::~LegacyBlockFile()
 bool LegacyBlockFile::ReadSummary(void *data)
 {
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
-   int read;
+   size_t read;
    {
       Maybe<wxLogNull> silence{};
       if (mSilentLog)
@@ -167,14 +167,14 @@ bool LegacyBlockFile::ReadSummary(void *data)
 
       if (!summaryFile.IsOpened()){
 
-         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+         memset(data, 0, mSummaryInfo.totalSummaryBytes);
 
          mSilentLog = TRUE;
 
          return true;
       }
 
-      read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+      read = summaryFile.Read(data, mSummaryInfo.totalSummaryBytes);
    }
    mSilentLog=FALSE;
 

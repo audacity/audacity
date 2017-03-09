@@ -392,7 +392,7 @@ bool FFmpegImportFileHandle::InitCodecs()
 {
    // Allocate the array of pointers to hold stream contexts pointers
    // Some of the allocated space may be unused (corresponds to video, subtitle, or undecodeable audio streams)
-   mScs = std::make_shared<Scs>(mFormatContext->nb_streams);
+   mScs = std::make_shared<Scs>(size_t{mFormatContext->nb_streams});
    // Fill the stream contexts
    for (unsigned int i = 0; i < mFormatContext->nb_streams; i++)
    {

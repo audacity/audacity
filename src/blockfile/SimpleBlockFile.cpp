@@ -131,7 +131,7 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
          format, cleanup);
       mCache.summaryData = new char[mSummaryInfo.totalSummaryBytes];
       memcpy(mCache.summaryData, summaryData,
-             (size_t)mSummaryInfo.totalSummaryBytes);
+             mSummaryInfo.totalSummaryBytes);
     }
 }
 
@@ -346,9 +346,10 @@ bool SimpleBlockFile::ReadSummary(void *data)
    if (mCache.active)
    {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
-      memcpy(data, mCache.summaryData, (size_t)mSummaryInfo.totalSummaryBytes);
+      memcpy(data, mCache.summaryData, mSummaryInfo.totalSummaryBytes);
       return true;
-   } else
+   }
+   else
    {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Reading summary from disk.");
 
@@ -361,7 +362,7 @@ bool SimpleBlockFile::ReadSummary(void *data)
          // FIXME: TRAP_ERR no report to user of absent summary files?
          // filled with zero instead.
          if (!file.IsOpened()){
-            memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+            memset(data, 0, mSummaryInfo.totalSummaryBytes);
             mSilentLog = TRUE;
             return true;
          }
@@ -373,7 +374,7 @@ bool SimpleBlockFile::ReadSummary(void *data)
       if( !file.Seek(sizeof(auHeader)) )
          return false;
 
-      int read = (int)file.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+      auto read = file.Read(data, mSummaryInfo.totalSummaryBytes);
 
       FixSummary(data);
 

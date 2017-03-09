@@ -26,7 +26,7 @@ SilentBlockFile::~SilentBlockFile()
 
 bool SilentBlockFile::ReadSummary(void *data)
 {
-   memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+   memset(data, 0, mSummaryInfo.totalSummaryBytes);
    return true;
 }
 

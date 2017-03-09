@@ -501,8 +501,8 @@ private:
 
    // For client driver
    EffectClientInterface *mClient;
-   unsigned mNumAudioIn;
-   unsigned mNumAudioOut;
+   size_t mNumAudioIn;
+   size_t mNumAudioOut;
 
    float **mInBuffer;
    float **mOutBuffer;

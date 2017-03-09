@@ -12,6 +12,7 @@
 #define __AUDACITY_SAMPLE_FORMAT__
 
 #include "Audacity.h"
+#include "MemoryX.h"
 #include <wx/defs.h>
 
 #include "audacity/Types.h"
@@ -150,5 +151,11 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 //
 
 void      InitDitherers();
+
+// These are so commonly done for processing samples in floating point form in memory,
+// let's have abbeviations.
+using Floats = ArrayOf<float>;
+using FloatBuffers = ArraysOf<float>;
+using Doubles = ArrayOf<double>;
 
 #endif
