@@ -374,9 +374,6 @@ AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_PORTSMF
 AUDACITY_CHECKLIB_WIDGETEXTRA
 
-FFMPEG_ARGUMENT=local
-LIBFLAC_ARGUMENT=local
-
 dnl Decide what libraries to build with, and whether to use system or local libraries
 dnl Set variables based on choices.
 
