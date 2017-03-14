@@ -2715,7 +2715,7 @@ void VSTEffect::BuildFancy()
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
-   auto control = std::make_unique<VSTControl>();
+   auto control = Destroy_ptr<VSTControl>{ safenew VSTControl };
    if (!control)
    {
       return;

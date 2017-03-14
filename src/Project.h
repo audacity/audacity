@@ -630,8 +630,8 @@ private:
    MixerBoard* mMixerBoard{};
    MixerBoardFrame* mMixerBoardFrame{};
 
-   FreqWindow *mFreqWindow{};
-   ContrastDialog *mContrastDialog{};
+   Destroy_ptr<FreqWindow> mFreqWindow;
+   Destroy_ptr<ContrastDialog> mContrastDialog;
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog{};

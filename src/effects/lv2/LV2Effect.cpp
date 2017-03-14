@@ -1398,7 +1398,9 @@ bool LV2Effect::BuildFancy()
    // Use a panel to host the plugins GUI
    // container is owned by mParent, but we may destroy it if there are
    // any errors before completing the build of UI.
-   auto container = std::make_unique<wxPanelWrapper>(mParent, wxID_ANY);
+   auto container = Destroy_ptr<wxPanelWrapper>{
+      safenew wxPanelWrapper{ mParent, wxID_ANY}
+   };
    if (!container)
    {
       lilv_uis_free(uis);

@@ -5609,7 +5609,8 @@ void AudacityProject::OnPlotSpectrum()
       where.x = 150;
       where.y = 150;
 
-      mFreqWindow = safenew FreqWindow(this, -1, _("Frequency Analysis"), where);
+      mFreqWindow.reset( safenew FreqWindow(
+         this, -1, _("Frequency Analysis"), where ) );
    }
 
    mFreqWindow->Show(true);
@@ -5626,7 +5627,8 @@ void AudacityProject::OnContrast()
       where.x = 150;
       where.y = 150;
 
-      mContrastDialog = safenew ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
+      mContrastDialog.reset( safenew ContrastDialog(
+         this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where ) );
    }
 
    mContrastDialog->CentreOnParent();

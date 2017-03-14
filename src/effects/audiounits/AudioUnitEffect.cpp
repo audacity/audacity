@@ -1729,7 +1729,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    }
    else
    {
-      auto pControl = std::make_unique<AUControl>();
+      auto pControl = Destroy_ptr<AUControl>( safenew AUControl );
       if (!pControl)
       {
          return false;

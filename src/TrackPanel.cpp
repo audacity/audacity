@@ -447,7 +447,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       // wxWidgets owns the accessible object
       SetAccessible(mAx = pAx.release());
 #else
-      // wxWidgets doesn not own the object, but we need to retain it
+      // wxWidgets does not own the object, but we need to retain it
       mAx = std::move(pAx);
 #endif
    }

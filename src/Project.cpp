@@ -2482,15 +2482,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // Streams can be for play, recording, or monitoring.  But maybe it still
    // makes sense to stop any recording before putting up the dialog.
 
-   if (mFreqWindow) {
-      mFreqWindow->Destroy();
-      mFreqWindow = NULL;
-   }
-
-   if (mContrastDialog) {
-      mContrastDialog->Destroy();
-      mContrastDialog = NULL;
-   }
+   mFreqWindow.reset();
+   mContrastDialog.reset();
 
    // Check to see if we were playing or recording
    // audio, and if so, make sure Audio I/O is completely finished.
