@@ -20,6 +20,7 @@ ApplyAndSendResponse, and CommandImplementation classes
 #include <wx/variant.h>
 #include <wx/arrstr.h>
 
+#include "../AudacityException.h"
 #include "Validators.h"
 #include "CommandType.h"
 #include "CommandMisc.h"
@@ -71,7 +72,9 @@ bool DecoratedCommand::SetParameter(const wxString &paramName,
 
 bool ApplyAndSendResponse::Apply(CommandExecutionContext context)
 {
-   bool result = mCommand->Apply(context);
+   auto result = GuardedCall<bool>(
+      [&] { return mCommand->Apply(context); }
+   );
    wxString response = GetName();
    // These three strings are deliberately not localised.
    // They are used in script responses and always happen in English.
