@@ -481,10 +481,14 @@ bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
    bool rc;
    long prevBitRate = gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), 128);
    gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), bitrate);
+
+   auto cleanup = finally( [&] {
+      gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
+      gPrefs->Flush();
+   } );
+
    // Use Mp3Stereo to control if export is to a stereo or mono file
    rc = mExporter.Process(project, numChannels, wxT("MP3"), Name, false, 0.0, endTime);
-   gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
-   gPrefs->Flush();
    return rc;
 }
 
