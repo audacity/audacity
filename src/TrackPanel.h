@@ -92,7 +92,7 @@ private:
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
    void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect) const ;
+   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect, bool captured) const ;
 #endif
    void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect, bool captured) const;
 
@@ -105,6 +105,9 @@ private:
    void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton) const;
    void GetGainRect(const wxRect & rect, wxRect &dest) const;
    void GetPanRect(const wxRect & rect, wxRect &dest) const;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   void GetVelocityRect(const wxRect & rect, wxRect &dest) const;
+#endif
    void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
 
@@ -113,7 +116,7 @@ public:
    LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   LWSlider *GainSlider(int index) const;
+   LWSlider * VelocitySlider(NoteTrack *t, bool captured = false) const;
 #endif
 
 private:
@@ -123,6 +126,10 @@ private:
    wxFont mFont;
    std::unique_ptr<LWSlider>
       mGainCaptured, mPanCaptured, mGain, mPan;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   std::unique_ptr<LWSlider>
+      mVelocityCaptured, mVelocity;
+#endif
 
    friend class TrackPanel;
 };
@@ -433,6 +440,10 @@ protected:
                  int x, int y);
    virtual bool PanFunc(Track * t, wxRect rect, wxMouseEvent &event,
                 int x, int y);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   virtual bool VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
+                 int x, int y);
+#endif
 
 
    virtual void MakeParentRedrawScrollbars();
@@ -477,6 +488,9 @@ protected:
    virtual void OnSplitStereoMono(wxCommandEvent &event);
    virtual void SplitStereo(bool stereo);
    virtual void OnMergeStereo(wxCommandEvent &event);
+
+   virtual void OnToggleAllChannels(wxCommandEvent &event);
+   virtual void OnToggleChannel(wxCommandEvent &event);
 
    // Find track info by coordinate
    virtual Track *FindTrack(int mouseX, int mouseY, bool label, bool link,
@@ -781,7 +795,7 @@ protected:
 
    // These sub-menus are owned by parent menus,
    // so not unique_ptrs
-   wxMenu *mRateMenu{}, *mFormatMenu{};
+   wxMenu *mRateMenu{}, *mFormatMenu{}, *mMidiChanMenu{};
 
    Track *mPopupMenuTarget {};
 

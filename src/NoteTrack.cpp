@@ -331,6 +331,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
    return box.GetBottom();
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
 bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
 {
    int wid = 23;
@@ -362,6 +363,7 @@ bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
 
    return true;
 }
+#endif
 
 void NoteTrack::SetSequence(std::unique_ptr<Alg_seq> &&seq)
 {
