@@ -205,7 +205,7 @@ private:
    int               mVersion;
    NyqControlArray   mControls;
 
-   int               mCurNumChannels;  // See bug 1566
+   unsigned          mCurNumChannels;
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
    sampleCount       mCurLen;

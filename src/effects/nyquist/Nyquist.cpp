@@ -942,7 +942,7 @@ bool NyquistEffect::ProcessOne()
 
       float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
       wxString clips, peakString, rmsString;
-      for (int i = 0; i < mCurNumChannels; i++) {
+      for (size_t i = 0; i < mCurNumChannels; i++) {
          auto ca = mCurTrack[i]->SortedClipArray();
          float maxPeak = 0.0;
 
@@ -1019,7 +1019,7 @@ bool NyquistEffect::ProcessOne()
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
       nyx_set_input_audio(StaticGetCallback, (void *)this,
-                          mCurNumChannels,
+                          (int)mCurNumChannels,
                           curLen, mCurTrack[0]->GetRate());
    }
 
@@ -1200,7 +1200,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    int outChannels = nyx_get_audio_num_channels();
-   if (outChannels > mCurNumChannels) {
+   if (outChannels > (int)mCurNumChannels) {
       wxMessageBox(_("Nyquist returned too many audio channels.\n"),
                    wxT("Nyquist"),
                    wxOK | wxCENTRE, mUIParent);
@@ -1225,7 +1225,7 @@ bool NyquistEffect::ProcessOne()
    for (i = 0; i < outChannels; i++) {
       sampleFormat format = mCurTrack[i]->GetSampleFormat();
 
-      if (outChannels == mCurNumChannels) {
+      if (outChannels == (int)mCurNumChannels) {
          rate = mCurTrack[i]->GetRate();
       }
 
@@ -1261,7 +1261,7 @@ bool NyquistEffect::ProcessOne()
    for (i = 0; i < mCurNumChannels; i++) {
       WaveTrack *out;
 
-      if (outChannels == mCurNumChannels) {
+      if (outChannels == (int)mCurNumChannels) {
          out = mOutputTrack[i].get();
       }
       else {
