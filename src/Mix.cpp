@@ -456,7 +456,10 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          if (getLen > 0) {
             if (backwards) {
                auto results = cache.Get(floatSample, *pos - (getLen - 1), getLen);
-               memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+               if (results)
+                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+               else
+                  memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
                track->GetEnvelopeValues(mEnvValues,
                                         getLen,
@@ -465,7 +468,10 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
             }
             else {
                auto results = cache.Get(floatSample, *pos, getLen);
-               memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+               if (results)
+                  memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
+               else
+                  memset(&queue[*queueLen], 0, sizeof(float) * getLen);
 
                track->GetEnvelopeValues(mEnvValues,
                                         getLen,
@@ -571,7 +577,10 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
 
    if (backwards) {
       auto results = cache.Get(floatSample, *pos - (slen - 1), slen);
-      memcpy(mFloatBuffer, results, sizeof(float) * slen);
+      if (results)
+         memcpy(mFloatBuffer, results, sizeof(float) * slen);
+      else
+         memset(mFloatBuffer, 0, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues, slen, t - (slen - 1) / mRate);
       for(decltype(slen) i = 0; i < slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
@@ -581,7 +590,10 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
    }
    else {
       auto results = cache.Get(floatSample, *pos, slen);
-      memcpy(mFloatBuffer, results, sizeof(float) * slen);
+      if (results)
+         memcpy(mFloatBuffer, results, sizeof(float) * slen);
+      else
+         memset(mFloatBuffer, 0, sizeof(float) * slen);
       track->GetEnvelopeValues(mEnvValues, slen, t);
       for(decltype(slen) i = 0; i < slen; i++)
          mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
