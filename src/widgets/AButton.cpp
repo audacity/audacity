@@ -563,7 +563,9 @@ void AButton::Click()
 {
    wxCommandEvent event(wxEVT_COMMAND_BUTTON_CLICKED, GetId());
    event.SetEventObject(this);
-   GetEventHandler()->ProcessEvent(event);
+   // Be sure to use SafelyProcessEvent so that exceptions do not propagate
+   // out of DoDefaultAction
+   GetEventHandler()->SafelyProcessEvent(event);
 }
 
 void AButton::SetShift(bool shift)

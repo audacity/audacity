@@ -39,6 +39,7 @@ greater use in future.
 
 #include "audacity/ConfigInterface.h"
 
+#include "../AudacityException.h"
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
@@ -1612,8 +1613,18 @@ bool Effect::ProcessTrack(int count,
       {
          processed = ProcessBlock(mInBufPos.get(), mOutBufPos.get(), curBlockSize);
       }
+      catch( const AudacityException &e )
+      {
+         // PRL: Bug 437:
+         // Pass this along to our application-level handler
+         throw;
+      }
       catch(...)
       {
+         // PRL:
+         // Exceptions for other reasons, maybe in third-party code...
+         // Continue treating them as we used to, but I wonder if these
+         // should now be treated the same way.
          return false;
       }
       wxASSERT(processed == curBlockSize);
