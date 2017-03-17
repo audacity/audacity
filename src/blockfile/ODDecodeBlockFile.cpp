@@ -47,7 +47,6 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNam
    mAliasChannel(aliasChannel)
 {
    mDecoder = NULL;
-   mDataAvailable=false;
    mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
@@ -59,11 +58,11 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNam
    SimpleBlockFile{ std::move(existingFile), aliasLen, min, max, rms },
 
    mType(decodeType),
+   mDataAvailable( dataAvailable ),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
    mDecoder = NULL;
-   mDataAvailable=dataAvailable;
    mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
@@ -304,11 +303,7 @@ bool ODDecodeBlockFile::IsSummaryAvailable() const
 
 bool ODDecodeBlockFile::IsDataAvailable() const
 {
-   bool retval;
-   mDataAvailableMutex.Lock();
-   retval= mDataAvailable;
-   mDataAvailableMutex.Unlock();
-   return retval;
+   return mDataAvailable;
 }
 
 /// Write the summary to disk, using the derived ReadData() to get the data
@@ -321,43 +316,38 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
    // derived classes) to get the sample data
    SampleBuffer sampleData;// = NewSamples(mLen, floatSample);
    int ret;
-   //use the decoder here.
-   mDecoderMutex.Lock();
 
-   if(!mDecoder)
    {
-      mDecoderMutex.Unlock();
-      return -1;
+      //use the decoder here.
+      ODLocker locker{ &mDecoderMutex };
+
+      if(!mDecoder)
+         return -1;
+
+      //sampleData and mFormat are set by the decoder.
+      ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
+
+      if(ret < 0) {
+         printf("ODDecodeBlockFile Decode failure\n");
+         return ret; //failure
+      }
    }
 
-
-   //sampleData and mFormat are set by the decoder.
-   ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
-
-   mDecoderMutex.Unlock();
-   if(ret < 0) {
-      printf("ODDecodeBlockFile Decode failure\n");
-      return ret; //failure
+   {
+      //the summary is also calculated here.
+      ODLocker locker{ &mFileNameMutex };
+      //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
+      bool bSuccess =
+         WriteSimpleBlockFile(
+                              sampleData.ptr(),
+                              mLen,
+                              mFormat,
+                              NULL);
+      if ( !bSuccess )
+         return -1;
    }
 
-   //the summary is also calculated here.
-   mFileNameMutex.Lock();
-   //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
-   bool bSuccess =
-      WriteSimpleBlockFile(
-         sampleData.ptr(),
-         mLen,
-         mFormat,
-         NULL);
-   wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
-   wxUnusedVar(bSuccess);
-
-   mFileNameMutex.Unlock();
-
-
-   mDataAvailableMutex.Lock();
-   mDataAvailable=true;
-   mDataAvailableMutex.Unlock();
+   wxAtomicInc( mDataAvailable );
 
    return ret;
 }

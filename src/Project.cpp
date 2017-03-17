@@ -4412,6 +4412,9 @@ void AudacityProject::PopState(const UndoState &state)
                computeTask = make_movable<ODComputeSummaryTask>();
                odUsed=true;
             }
+            // PRL:  Is it correct to add all tracks to one task, even if they
+            // are not partnered channels?  Rather than
+            // make one task for each?
             computeTask->AddWaveTrack((WaveTrack*)copyTrack);
          }
       }
