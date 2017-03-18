@@ -43,6 +43,7 @@
 #include <wx/frame.h>
 #include <wx/intl.h>
 #include <wx/dcclient.h>
+#include <wx/timer.h>
 
 #include "import/ImportRaw.h" // defines TrackHolders
 
