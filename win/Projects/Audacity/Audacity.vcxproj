@@ -121,6 +121,7 @@
     <ClCompile Include="..\..\..\src\AboutDialog.cpp" />
     <ClCompile Include="..\..\..\src\AColor.cpp" />
     <ClCompile Include="..\..\..\src\AudacityApp.cpp" />
+    <ClCompile Include="..\..\..\src\AudacityException.cpp" />
     <ClCompile Include="..\..\..\src\AudacityHeaders.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -133,6 +134,7 @@
     <ClCompile Include="..\..\..\src\BatchProcessDialog.cpp" />
     <ClCompile Include="..\..\..\src\Benchmark.cpp" />
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp" />
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />
     <ClCompile Include="..\..\..\src\Dependencies.cpp" />
     <ClCompile Include="..\..\..\src\DeviceChange.cpp" />
@@ -149,6 +151,7 @@
     <ClCompile Include="..\..\..\src\Envelope.cpp" />
     <ClCompile Include="..\..\..\src\FFmpeg.cpp" />
     <ClCompile Include="..\..\..\src\FFT.cpp" />
+    <ClCompile Include="..\..\..\src\FileException.cpp" />
     <ClCompile Include="..\..\..\src\FileFormats.cpp" />
     <ClCompile Include="..\..\..\src\FileIO.cpp" />
     <ClCompile Include="..\..\..\src\FileNames.cpp" />
@@ -160,6 +163,7 @@
     <ClCompile Include="..\..\..\src\import\ImportGStreamer.cpp" />
     <ClCompile Include="..\..\..\src\import\MultiFormatReader.cpp" />
     <ClCompile Include="..\..\..\src\import\SpecPowerMeter.cpp" />
+    <ClCompile Include="..\..\..\src\InconsistencyException.cpp" />
     <ClCompile Include="..\..\..\src\Internat.cpp" />
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp" />
     <ClCompile Include="..\..\..\src\LabelDialog.cpp" />
@@ -222,6 +226,7 @@
     <ClCompile Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.cpp" />
     <ClCompile Include="..\..\..\src\tracks\ui\Scrubbing.cpp" />
     <ClCompile Include="..\..\..\src\UndoManager.cpp" />
+    <ClCompile Include="..\..\..\src\UserException.cpp" />
     <ClCompile Include="..\..\..\src\ViewInfo.cpp" />
     <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
     <ClCompile Include="..\..\..\src\WaveClip.cpp" />
@@ -411,6 +416,7 @@
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
     <ClInclude Include="..\..\..\src\Audacity.h" />
     <ClInclude Include="..\..\..\src\AudacityApp.h" />
+    <ClInclude Include="..\..\..\src\AudacityException.h" />
     <ClInclude Include="..\..\..\src\AudacityHeaders.h" />
     <ClInclude Include="..\..\..\src\AudacityLogger.h" />
     <ClInclude Include="..\..\..\src\AudioIO.h" />
@@ -421,6 +427,7 @@
     <ClInclude Include="..\..\..\src\BatchProcessDialog.h" />
     <ClInclude Include="..\..\..\src\Benchmark.h" />
     <ClInclude Include="..\..\..\src\BlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFlag.h" />
     <ClInclude Include="..\..\..\src\commands\CommandFunctors.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
@@ -432,11 +439,13 @@
     <ClInclude Include="..\..\..\src\effects\NoiseReduction.h" />
     <ClInclude Include="..\..\..\src\effects\Phaser.h" />
     <ClInclude Include="..\..\..\src\effects\VST\VSTControlMSW.h" />
+    <ClInclude Include="..\..\..\src\FileException.h" />
     <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
     <ClInclude Include="..\..\..\src\import\ImportForwards.h" />
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
+    <ClInclude Include="..\..\..\src\InconsistencyException.h" />
     <ClInclude Include="..\..\..\src\MemoryX.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\NumberScale.h" />
@@ -458,6 +467,7 @@
     <ClInclude Include="..\..\..\src\tracks\ui\PlayIndicatorOverlay.h" />
     <ClInclude Include="..\..\..\src\tracks\ui\Scrubbing.h" />
     <ClInclude Include="..\..\..\src\TranslatableStringArray.h" />
+    <ClInclude Include="..\..\..\src\UserException.h" />
     <ClInclude Include="..\..\..\src\WaveTrackLocation.h" />
     <ClInclude Include="..\..\..\src\widgets\BackedPanel.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />

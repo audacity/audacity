@@ -45,6 +45,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 
 #include "../../AudacityApp.h"
+#include "../../FileException.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
@@ -833,6 +834,9 @@ bool NyquistEffect::TransferDataFromWindow()
 
 bool NyquistEffect::ProcessOne()
 {
+   mError = false;
+   mFailedFileName.Clear();
+
    nyx_rval rval;
 
    wxString cmd;
@@ -1235,10 +1239,22 @@ bool NyquistEffect::ProcessOne()
 
    int success = nyx_get_audio(StaticPutCallback, (void *)this);
 
+   // See if GetCallback found read errors
+   if (mFailedFileName.IsOk())
+      // re-construct an exception
+      // I wish I had std::exception_ptr instead
+      // and could re-throw any AudacityException
+      throw FileException{
+         FileException::Cause::Read, mFailedFileName };
+   else if (mError)
+      // what, then?
+      success = false;
+
    if (!success) {
       for(i = 0; i < outChannels; i++) {
          mOutputTrack[i].reset();
       }
+
       return false;
    }
 
@@ -1789,11 +1805,19 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
                                 mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
       mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
-      if (!mCurTrack[ch]->Get(mCurBuffer[ch].ptr(), floatSample,
-                              mCurBufferStart[ch], mCurBufferLen[ch])) {
-
-         wxPrintf(wxT("GET error\n"));
-
+      try {
+         mCurTrack[ch]->Get(
+            mCurBuffer[ch].ptr(), floatSample,
+            mCurBufferStart[ch], mCurBufferLen[ch]);
+      }
+      catch ( const FileException& e ) {
+         if ( e.cause == FileException::Cause::Read )
+            mFailedFileName = e.fileName;
+         mError = true;
+         return -1;
+      }
+      catch ( ... ) {
+         mError = true;
          return -1;
       }
    }
@@ -1832,23 +1856,26 @@ int NyquistEffect::StaticPutCallback(float *buffer, int channel,
 int NyquistEffect::PutCallback(float *buffer, int channel,
                                long start, long len, long totlen)
 {
-   if (channel == 0) {
-      double progress = mScale*((float)(start+len)/totlen);
+   // Don't let C++ exceptions propagate through the Nyquist library
+   return GuardedCall<int>( [&] {
+      if (channel == 0) {
+         double progress = mScale*((float)(start+len)/totlen);
 
-      if (progress > mProgressOut) {
-         mProgressOut = progress;
+         if (progress > mProgressOut) {
+            mProgressOut = progress;
+         }
+
+         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+            return -1;
+         }
       }
 
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
-         return -1;
+      if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
+         return 0;  // success
       }
-   }
 
-   if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
-      return 0;  // success
-   }
-
-   return -1; // failure
+      return -1; // failure
+   }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
 }
 
 void NyquistEffect::StaticOutputCallback(int c, void *This)

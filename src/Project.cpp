@@ -91,6 +91,7 @@ scroll information.  It also has some status flags.
 #endif
 #endif
 
+#include "AudacityException.h"
 #include "FreqWindow.h"
 #include "effects/Contrast.h"
 #include "AutoRecovery.h"
@@ -446,19 +447,25 @@ public:
 
    bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames) override
    {
-      //sort by OD non OD.  load Non OD first so user can start editing asap.
-      wxArrayString sortednames(filenames);
+      // Experiment shows that this function can be reached while there is no
+      // catch block above in wxWidgets.  So stop all exceptions here.
+      return GuardedCall< bool > ( [&] {
+         //sort by OD non OD.  load Non OD first so user can start editing asap.
+         wxArrayString sortednames(filenames);
 
-      ODManager::Pauser pauser;
+         ODManager::Pauser pauser;
 
-      sortednames.Sort(CompareNoCaseFileName);
-      for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
+         sortednames.Sort(CompareNoCaseFileName);
 
-         mProject->Import(sortednames[i]);
-      }
-      mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+         for (unsigned int i = 0; i < sortednames.GetCount(); i++) {
 
-      return true;
+            mProject->Import(sortednames[i]);
+         }
+
+         mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
+
+         return true;
+      } );
    }
 
 private:
@@ -487,7 +494,14 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    WaveTrackArray trackArray;
-   mProject->Import(strAttr, &trackArray);
+
+   // Guard this call so that C++ exceptions don't propagate through
+   // the expat library
+   GuardedCall< void >(
+      [&] { mProject->Import(strAttr, &trackArray); },
+      [&] (AudacityException*) { trackArray.clear(); }
+   );
+
    if (trackArray.empty())
       return false;
 
@@ -2495,7 +2509,9 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
                                    wxYES_NO | wxCANCEL | wxICON_QUESTION,
                                    this);
 
-         if (result == wxCANCEL || (result == wxYES && !Save())) {
+         if (result == wxCANCEL || (result == wxYES &&
+              !GuardedCall<bool>( [&]{ return Save(); } )
+         )) {
             event.Veto();
             return;
          }
@@ -3525,6 +3541,7 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile) const
 }
 
 void AudacityProject::WriteXML(XMLWriter &xmlFile)
+// may throw
 {
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
@@ -3786,37 +3803,21 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
    }
 
-   // Write the AUP file.
-   XMLFileWriter saveFile;
-
-   try
-   {
-      saveFile.Open(mFileName, wxT("wb"));
+   auto success = GuardedCall< bool >( [&] {
+      // Write the AUP file.
+      XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
 
       WriteXMLHeader(saveFile);
       WriteXML(saveFile);
       mStrOtherNamesArray.Clear();
 
-      saveFile.Close();
-   }
-   catch (const XMLFileWriterException &exception)
-   {
-      wxMessageBox(wxString::Format(
-         _("Couldn't write to file \"%s\": %s"),
-         mFileName.c_str(), exception.GetMessage().c_str()),
-         _("Error Saving Project"), wxICON_ERROR);
+      saveFile.Commit();
 
-      // When XMLWriter throws an exception, it tries to close it before,
-      // so we can at least try to DELETE the incomplete file and move the
-      // backup file over.
-      if (safetyFileName != wxT(""))
-      {
-         wxRemove(mFileName);
-         wxRename(safetyFileName, mFileName);
-      }
+      return true;
+   } );
 
+   if (!success)
       return false;
-   }
 
    if (bWantSaveCompressed)
       mWantSaveCompressed = false; // Don't want this mode for AudacityProject::WriteXML() any more.
@@ -5086,7 +5087,9 @@ void AudacityProject::AutoSave()
    wxString fn = wxFileName(FileNames::AutoSaveDir(),
       projName + wxString(wxT(" - ")) + CreateUniqueName()).GetFullPath();
 
-   try
+   // PRL:  I found a try-catch and rewrote it,
+   // but this guard is unnecessary because AutoSaveFile does not throw
+   bool success = GuardedCall< bool >( [&]
    {
       VarSetter<bool> setter(&mAutoSaving, true, false);
 
@@ -5097,18 +5100,11 @@ void AudacityProject::AutoSave()
 
       wxFFile saveFile;
       saveFile.Open(fn + wxT(".tmp"), wxT("wb"));
-      buffer.Write(saveFile);
-      saveFile.Close();
-   }
-   catch (const XMLFileWriterException &exception)
-   {
-      wxMessageBox(wxString::Format(
-         _("Couldn't write to file \"%s\": %s"),
-         (fn + wxT(".tmp")).c_str(), exception.GetMessage().c_str()),
-         _("Error Writing Autosave File"), wxICON_ERROR, this);
+      return buffer.Write(saveFile);
+   } );
 
+   if (!success)
       return;
-   }
 
    // Now that we have a NEW auto-save file, DELETE the old one
    DeleteCurrentAutoSaveFile();

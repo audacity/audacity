@@ -376,20 +376,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/DefaultExportPath"), path);
    gPrefs->Flush();
 
-   XMLFileWriter prefFile;
-
-   try
-   {
-      prefFile.Open(file, wxT("wb"));
+   GuardedCall< void >( [&] {
+      XMLFileWriter prefFile{ file, _("Error Exporting Keyboard Shortcuts") };
       mManager->WriteXML(prefFile);
-      prefFile.Close();
-   }
-   catch (const XMLFileWriterException &)
-   {
-      wxMessageBox(_("Couldn't write to file: ") + file,
-                   _("Error Exporting Keyboard Shortcuts"),
-                   wxOK | wxCENTRE, this);
-   }
+      prefFile.Commit();
+   } );
 }
 
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
@@ -957,20 +948,11 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/DefaultExportPath"), path);
    gPrefs->Flush();
 
-   XMLFileWriter prefFile;
-
-   try
-   {
-      prefFile.Open(file, wxT("wb"));
+   GuardedCall< void >( [&] {
+      XMLFileWriter prefFile{ file, _("Error Exporting Keyboard Shortcuts") };
       mManager->WriteXML(prefFile);
-      prefFile.Close();
-   }
-   catch (const XMLFileWriterException &)
-   {
-      wxMessageBox(_("Couldn't write to file: ") + file,
-                   _("Error Exporting Keyboard Shortcuts"),
-                   wxOK | wxCENTRE, this);
-   }
+      prefFile.Commit();
+   } );
 }
 
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))

@@ -19,6 +19,7 @@
 
 #include "MemoryX.h"
 #include <vector>
+#include <wx/atomic.h>
 
 #ifdef USE_MIDI
 
@@ -692,6 +693,14 @@ private:
    bool mSilentScrub;
    sampleCount mScrubDuration;
 #endif
+
+   // A flag tested and set in one thread, cleared in another.  Perhaps
+   // this guarantee of atomicity is more cautious than necessary.
+   wxAtomicInt mRecordingException {};
+   void SetRecordingException()
+      { wxAtomicInc( mRecordingException ); }
+   void ClearRecordingException()
+      { if (mRecordingException) wxAtomicDec( mRecordingException ); }
 };
 
 #endif

@@ -237,6 +237,9 @@ private:
    wxTextCtrl *mCommandText;
    wxCheckBox *mVersionCheckBox;
 
+   bool              mError{ false };
+   wxFileName        mFailedFileName;
+
    DECLARE_EVENT_TABLE()
 
    friend class NyquistEffectsModule;

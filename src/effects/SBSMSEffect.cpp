@@ -22,6 +22,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "../WaveTrack.h"
 #include "../Project.h"
 #include "TimeWarper.h"
+#include "../FileException.h"
 
 enum {
   SBSMSOutBlockSize = 512
@@ -62,6 +63,9 @@ public:
    std::unique_ptr<SBSMSQuality> quality;
    std::unique_ptr<WaveTrack> outputLeftTrack;
    std::unique_ptr<WaveTrack> outputRightTrack;
+
+   wxFileName failedFileName;
+   bool error{ false };
 };
 
 class SBSMSEffectInterface final : public SBSMSInterfaceSliding {
@@ -95,8 +99,28 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    );
 
    // Get the samples from the tracks and put them in the buffers.
-   r->leftTrack->Get((samplePtr)(r->leftBuffer.get()), floatSample, r->offset, blockSize);
-   r->rightTrack->Get((samplePtr)(r->rightBuffer.get()), floatSample, r->offset, blockSize);
+   // I don't know if we can safely propagate errors through sbsms, and it
+   // does not seem to let us report error codes, so use this roundabout to
+   // stop the effect early.
+   // This would be easier with std::exception_ptr but we don't have that yet.
+   try {
+      r->leftTrack->Get(
+         (samplePtr)(r->leftBuffer.get()), floatSample, r->offset, blockSize);
+      r->rightTrack->Get(
+         (samplePtr)(r->rightBuffer.get()), floatSample, r->offset, blockSize);
+   }
+   catch ( const FileException& e ) {
+      if ( e.cause == FileException::Cause::Read )
+         r->failedFileName = e.fileName;
+      data->size = 0;
+      r->error = true;
+      return 0;
+   }
+   catch ( ... ) {
+      data->size = 0;
+      r->error = true;
+      return 0;
+   }
 
    // convert to sbsms audio format
    for(decltype(blockSize) i=0; i<blockSize; i++) {
@@ -216,7 +240,7 @@ bool EffectSBSMS::Process()
    mTotalStretch = rateSlide.getTotalStretch();
 
    t = iter.First();
-   while (t != NULL) {
+   while (bGoodResult && t != NULL) {
       if (t->GetKind() == Track::Label &&
             (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
@@ -403,22 +427,34 @@ bool EffectSBSMS::Process()
                if (TrackProgress(nWhichTrack, frac))
                   return false;
             }
-            rb.outputLeftTrack->Flush();
-            if(rightTrack)
-               rb.outputRightTrack->Flush();
+            if (rb.failedFileName.IsOk())
+               // re-construct an exception
+               // I wish I had std::exception_ptr instead
+               // and could re-throw any AudacityException
+               throw FileException{
+                  FileException::Cause::Read, rb.failedFileName };
+            else if (rb.error)
+               // well, what?
+               bGoodResult = false;
 
-            bool bResult =
+            if (bGoodResult) {
+               rb.outputLeftTrack->Flush();
+               if(rightTrack)
+                  rb.outputRightTrack->Flush();
+
+               bool bResult =
                leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
-                                          true, false, warper.get());
-            wxASSERT(bResult); // TO DO: Actually handle this.
-            wxUnusedVar(bResult);
-
-            if(rightTrack)
-            {
-               bResult =
-                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
-                                             true, false, warper.get());
+                                        true, false, warper.get());
                wxASSERT(bResult); // TO DO: Actually handle this.
+               wxUnusedVar(bResult);
+
+               if(rightTrack)
+               {
+                  bResult =
+                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
+                                            true, false, warper.get());
+                  wxASSERT(bResult); // TO DO: Actually handle this.
+               }
             }
          }
          mCurTrackNum++;

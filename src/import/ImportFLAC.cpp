@@ -37,6 +37,7 @@
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
 
+#include "../AudacityException.h"
 #include "Import.h"
 #include "ImportPlugin.h"
 
@@ -252,35 +253,38 @@ void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus WXUNUSED(status))
 FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *frame,
                                                           const FLAC__int32 * const buffer[])
 {
-   ArrayOf<short> tmp{ frame->header.blocksize };
+   // Don't let C++ exceptions propagate through libflac
+   return GuardedCall< FLAC__StreamDecoderWriteStatus > ( [&] {
+      auto tmp = ArrayOf< short >{ frame->header.blocksize };
 
-   auto iter = mFile->mChannels.begin();
-   for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
-      if (frame->header.bits_per_sample == 16) {
-         for (unsigned int s=0; s<frame->header.blocksize; s++) {
-            tmp[s]=buffer[chn][s];
+      auto iter = mFile->mChannels.begin();
+      for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
+         if (frame->header.bits_per_sample == 16) {
+            for (unsigned int s=0; s<frame->header.blocksize; s++) {
+               tmp[s]=buffer[chn][s];
+            }
+
+            iter->get()->Append((samplePtr)tmp.get(),
+                     int16Sample,
+                     frame->header.blocksize);
          }
-
-         iter->get()->Append((samplePtr)tmp.get(),
-                  int16Sample,
-                  frame->header.blocksize);
+         else {
+            iter->get()->Append((samplePtr)buffer[chn],
+                     int24Sample,
+                     frame->header.blocksize);
+         }
       }
-      else {
-         iter->get()->Append((samplePtr)buffer[chn],
-                  int24Sample,
-                  frame->header.blocksize);
+
+      mFile->mSamplesDone += frame->header.blocksize;
+
+      mFile->mUpdateResult = mFile->mProgress->Update((wxULongLong_t) mFile->mSamplesDone, mFile->mNumSamples != 0 ? (wxULongLong_t)mFile->mNumSamples : 1);
+      if (mFile->mUpdateResult != ProgressResult::Success)
+      {
+         return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
       }
-   }
 
-   mFile->mSamplesDone += frame->header.blocksize;
-
-   mFile->mUpdateResult = mFile->mProgress->Update((wxULongLong_t) mFile->mSamplesDone, mFile->mNumSamples != 0 ? (wxULongLong_t)mFile->mNumSamples : 1);
-   if (mFile->mUpdateResult != ProgressResult::Success)
-   {
-      return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
-   }
-
-   return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+      return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+   }, MakeSimpleGuard(FLAC__STREAM_DECODER_WRITE_STATUS_ABORT) );
 }
 
 

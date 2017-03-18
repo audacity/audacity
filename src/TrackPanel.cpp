@@ -6064,6 +6064,7 @@ void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 /// on our current state, we forward the mouse events to
 /// various interested parties.
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
+try
 {
 #if defined(__WXMAC__) && defined(EVT_MAGNIFY)
    // PRL:
@@ -6210,6 +6211,22 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       )
          EnsureVisible(t);
    }
+}
+catch( ... )
+{
+   // Abort any dragging, as if by hitting Esc
+   if ( HandleEscapeKey( true ) )
+      ;
+   else {
+      // Ensure these steps, if escape handling did nothing
+      SetCapturedTrack(NULL, IsUncaptured);
+      if (HasCapture())
+         ReleaseMouse();
+      wxMouseEvent dummy;
+      HandleCursor(dummy);
+      Refresh(false);
+   }
+   throw;
 }
 
 namespace {

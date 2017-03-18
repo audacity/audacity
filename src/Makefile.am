@@ -32,6 +32,8 @@ libaudacity_la_SOURCES = \
 	blockfile/LegacyAliasBlockFile.h \
 	blockfile/LegacyBlockFile.cpp \
 	blockfile/LegacyBlockFile.h \
+	blockfile/NotYetAvailableException.cpp \
+	blockfile/NotYetAvailableException.h \
 	blockfile/ODDecodeBlockFile.cpp \
 	blockfile/ODDecodeBlockFile.h \
 	blockfile/ODPCMAliasBlockFile.cpp \
@@ -101,6 +103,8 @@ audacity_SOURCES = \
 	Audacity.h \
 	AudacityApp.cpp \
 	AudacityApp.h \
+	AudacityException.cpp \
+	AudacityException.h \
 	AudacityLogger.cpp \
 	AudacityLogger.h \
 	AudioIO.cpp \
@@ -131,6 +135,8 @@ audacity_SOURCES = \
 	FFmpeg.h \
 	FFT.cpp \
 	FFT.h \
+	FileException.cpp \
+	FileException.h \
 	FileIO.cpp \
 	FileIO.h \
 	FileNames.cpp \
@@ -144,6 +150,8 @@ audacity_SOURCES = \
 	HistoryWindow.h \
 	ImageManipulation.cpp \
 	ImageManipulation.h \
+	InconsistencyException.cpp \
+	InconsistencyException.h \
 	InterpolateAudio.cpp \
 	InterpolateAudio.h \
 	LabelDialog.cpp \
@@ -239,6 +247,8 @@ audacity_SOURCES = \
 	TranslatableStringArray.h \
 	UndoManager.cpp \
 	UndoManager.h \
+	UserException.cpp \
+	UserException.h \
 	ViewInfo.cpp \
 	ViewInfo.h \
 	VoiceKey.cpp \

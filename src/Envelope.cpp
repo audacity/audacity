@@ -352,6 +352,7 @@ XMLTagHandler *Envelope::HandleXMLChild(const wxChar *tag)
 }
 
 void Envelope::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    unsigned int ctrlPt;
 

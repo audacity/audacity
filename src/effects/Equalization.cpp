@@ -1601,27 +1601,16 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
    else
       fn = fileName;
 
-   // Create/Open the file
-   XMLFileWriter eqFile;
-   const wxString fullPath{ fn.GetFullPath() };
-
-   try
-   {
-      eqFile.Open( fullPath, wxT("wb") );
+   GuardedCall< void >( [&] {
+      // Create/Open the file
+      const wxString fullPath{ fn.GetFullPath() };
+      XMLFileWriter eqFile{ fullPath, _("Error Saving Equalization Curves") };
 
       // Write the curves
       WriteXML( eqFile );
 
-      // Close the file
-      eqFile.Close();
-   }
-   catch (const XMLFileWriterException &exception)
-   {
-      wxMessageBox(wxString::Format(
-         _("Couldn't write to file \"%s\": %s"),
-         fullPath.c_str(), exception.GetMessage().c_str()),
-         _("Error Saving Equalization Curves"), wxICON_ERROR, mUIParent);
-   }
+      eqFile.Commit();
+   } );
 }
 
 //
@@ -2044,6 +2033,7 @@ XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
 // Write all of the curves to the XML file
 //
 void EffectEqualization::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    // Start our heirarchy
    xmlFile.StartTag( wxT( "equalizationeffect" ) );
