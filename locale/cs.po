@@ -4749,7 +4749,7 @@ msgstr "Smazat"
 #: src/Project.cpp:4660
 #, c-format
 msgid "Disk space remains for recording %s"
-msgstr "Místo na disku dostačuje pro nahrávání %d"
+msgstr "Místo na disku dostačuje pro nahrávání %s"
 
 #: src/Project.cpp:4682
 msgid "On-demand import and waveform calculation complete."
