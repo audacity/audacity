@@ -110,6 +110,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/ax_compiler_vendor.m4 \
 	$(top_srcdir)/m4/ax_cxx_check_flag.m4 \
 	$(top_srcdir)/m4/ax_cxxcpp_check_flag.m4 \
+	$(top_srcdir)/m4/ax_gcc_version_atleast.m4 \
 	$(top_srcdir)/m4/ax_ld_check_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
