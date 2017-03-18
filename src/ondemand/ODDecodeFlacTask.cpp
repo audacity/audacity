@@ -81,7 +81,8 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
 
-      case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
+      // FIXME: not declared when compiling on Ubuntu.
+      //case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
 
       break;
    }
