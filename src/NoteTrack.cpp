@@ -804,6 +804,7 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
 }
 
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    std::ostringstream data;
    // Normally, Duplicate is called in pairs -- once to put NoteTrack

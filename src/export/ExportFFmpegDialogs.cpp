@@ -491,12 +491,15 @@ FFmpegPresets::FFmpegPresets()
 
 FFmpegPresets::~FFmpegPresets()
 {
-   XMLFileWriter writer;
-   // FIXME: TRAP_ERR Catch XMLFileWriterException
-   wxFileName xmlFileName(FileNames::DataDir(), wxT("ffmpeg_presets.xml"));
-   writer.Open(xmlFileName.GetFullPath(),wxT("wb"));
-   WriteXMLHeader(writer);
-   WriteXML(writer);
+   // We're in a destructor!  Don't let exceptions out!
+   GuardedCall< void >( [&] {
+      wxFileName xmlFileName{ FileNames::DataDir(), wxT("ffmpeg_presets.xml") };
+      XMLFileWriter writer{
+         xmlFileName.GetFullPath(), _("Error Saving FFmpeg Presets") };
+      WriteXMLHeader(writer);
+      WriteXML(writer);
+      writer.Commit();
+   } );
 }
 
 void FFmpegPresets::ImportPresets(wxString &filename)
@@ -515,11 +518,12 @@ void FFmpegPresets::ImportPresets(wxString &filename)
 
 void FFmpegPresets::ExportPresets(wxString &filename)
 {
-   XMLFileWriter writer;
-   // FIXME: TRAP_ERR Catch XMLFileWriterException
-   writer.Open(filename,wxT("wb"));
-   WriteXMLHeader(writer);
-   WriteXML(writer);
+   GuardedCall< void >( [&] {
+      XMLFileWriter writer{ filename, _("Error Saving FFmpeg Presets") };
+      WriteXMLHeader(writer);
+      WriteXML(writer);
+      writer.Commit();
+   } );
 }
 
 void FFmpegPresets::GetPresetList(wxArrayString &list)
@@ -828,6 +832,7 @@ XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
 }
 
 void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.Write(wxT("<?xml "));
    xmlFile.Write(wxT("version=\"1.0\" "));
@@ -847,6 +852,7 @@ void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
 }
 
 void FFmpegPresets::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("ffmpeg_presets"));
    xmlFile.WriteAttr(wxT("version"),wxT("1.0"));

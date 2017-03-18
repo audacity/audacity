@@ -191,6 +191,7 @@ BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 /// Most notably, the summaryfile attribute refers to a file that does not yet, so when the project file is read back in
 /// and this object reconstructed, it needs to avoid trying to open it as well as schedule itself for OD loading
 void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    LockRead();
    if(IsSummaryAvailable())

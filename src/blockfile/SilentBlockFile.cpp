@@ -39,6 +39,7 @@ size_t SilentBlockFile::ReadData(samplePtr data, sampleFormat format,
 }
 
 void SilentBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("silentblockfile"));
 

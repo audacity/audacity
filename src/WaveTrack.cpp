@@ -1777,6 +1777,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
 }
 
 void WaveTrack::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("wavetrack"));
    if (mAutoSaveIdent)
