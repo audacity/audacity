@@ -921,6 +921,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
      mbLoadedFromAup( false )
 {
+
+#ifdef EXPERIMENTAL_DA2
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
    // if you move to the menu bar, the first field of the menu bar is cleared, which
@@ -979,6 +983,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetAutoLayout(true);
+#ifdef EXPERIMENTAL_DA2
+   mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
 
    //
    // Create the ToolDock
@@ -1031,6 +1038,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // being painted in background colour and not scroller background
    // colour, so suppress this for now.
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
+#endif
+
+#ifdef EXPERIMENTAL_DA2
+   pPage->SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
 
    {
@@ -1215,7 +1226,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    //Initialize the last selection adjustment time.
    mLastSelectionAdjustment = ::wxGetLocalTimeMillis();
-
+#ifdef EXPERIMENTAL_DA2
+   ClearBackground();// For wxGTK.
+#endif
 }
 
 AudacityProject::~AudacityProject()
@@ -1243,6 +1256,13 @@ AudacityProject::~AudacityProject()
                      this);
 }
 
+void AudacityProject::ResetColours()
+{
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+   ClearBackground();// For wxGTK.
+}
+
+
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
 {
    AudioIOStartStreamOptions options { GetRate() };
@@ -1257,7 +1277,12 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
-   gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("InBrowser") );
+// DA 2.1.3x did not ship with a manual, so default for DA is internet.
+#ifdef EXPERIMENTAL_DA
+   gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("FromInternet") );
+#else
+   gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("Local") );
+#endif
    gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &mSelectAllOnNone, true);
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
