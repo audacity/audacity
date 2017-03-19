@@ -3732,8 +3732,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 #else
       {
          trySnap = true;
-         desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) /
-            mouseTrack->GetRate();  // set it to a sample point
+         if (mouseTrack->GetKind() == Track::Wave) {
+            WaveTrack *mtw = (WaveTrack *)mouseTrack;
+            desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) /
+               mtw->GetRate();  // set it to a sample point
+         }
          if (mSnapManager && mCapturedClip) {
             clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
             clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;

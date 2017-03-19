@@ -353,12 +353,14 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                   this is a Time track.*/
                name->Append( wxT(" ") + wxString(_("Time Track")));
             }
+#ifdef USE_MIDI
             else if (t->GetKind() == Track::Note)
             {
                /* i18n-hint: This is for screen reader software and indicates that
                   this is a Note track.*/
                name->Append( wxT(" ") + wxString(_("Note Track")));
             }
+#endif
 
             // LLL: Remove these during "refactor"
             if( t->GetMute() )
