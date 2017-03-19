@@ -922,7 +922,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mbLoadedFromAup( false )
 {
 
+#ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
    // if you move to the menu bar, the first field of the menu bar is cleared, which
@@ -981,7 +983,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
    mTopPanel->SetAutoLayout(true);
+#ifdef EXPERIMENTAL_DA2
    mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
 
    //
    // Create the ToolDock
@@ -1036,7 +1040,10 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
 #endif
 
+#ifdef EXPERIMENTAL_DA2
    pPage->SetBackgroundColour(theTheme.Colour( clrMedium ));
+#endif
+
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add(mToolManager->GetTopDock(), 0, wxEXPAND | wxALIGN_TOP);
@@ -1219,7 +1226,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    //Initialize the last selection adjustment time.
    mLastSelectionAdjustment = ::wxGetLocalTimeMillis();
+#ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
+#endif
 }
 
 AudacityProject::~AudacityProject()
@@ -1268,6 +1277,7 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
+// DA 2.1.3x did not ship with a manual, so default for DA is internet.
 #ifdef EXPERIMENTAL_DA
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("FromInternet") );
 #else

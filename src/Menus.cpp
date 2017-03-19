@@ -325,7 +325,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
       c->BeginSubMenu( _("Save Other") );
-#ifdef EXPERIMENTAL_DA
+//#ifdef EXPERIMENTAL_DA
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
@@ -338,7 +338,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ExportOgg"), _("Export as &OGG"), FN(OnExportOgg), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
-#endif
+//#endif
 
       c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExportAudio), wxT("Ctrl+Shift+E"),
          AudioIONotBusyFlag | WaveTracksExistFlag,
@@ -556,6 +556,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("DisjoinLabels"), _("Detac&h at Silences"), FN(OnDisjoinLabels), wxT("Alt+Shift+J"));
 
       c->AddSeparator();
+
+      // New in Audacity 2.1.3
+      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
+                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+
       c->EndSubMenu();
 
       /////////////////////////////////////////////////////////////////////////////
@@ -968,11 +973,6 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 #endif
-
-      // New in Audacity 2.1.3
-      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
-                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-
 
       //////////////////////////////////////////////////////////////////////////
 
