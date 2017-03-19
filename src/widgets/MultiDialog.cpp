@@ -23,6 +23,7 @@ for each problem encountered, since there can be many orphans.
 
 #include "MultiDialog.h"
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
@@ -68,7 +69,6 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 {
    SetName(GetTitle());
 
-   wxString *buttonLabels;
    wxBoxSizer *mainSizer;
    {
       auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
@@ -91,10 +91,9 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             vSizer->Add(iconAndTextSizer.release(), 0, wxALIGN_LEFT | wxALL, 5);
          }
 
-
-         int count = 0;
+         size_t count = 0;
          while (buttons[count])count++;
-         buttonLabels = new wxString[count];
+         ArrayOf<wxString> buttonLabels{ count };
 
          count = 0;
          while (buttons[count]){
@@ -105,7 +104,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
          mRadioBox = safenew wxRadioBox(this, -1,
             boxMsg,
             wxDefaultPosition, wxDefaultSize,
-            count, buttonLabels,
+            count, buttonLabels.get(),
             1, wxRA_SPECIFY_COLS);
          mRadioBox->SetName(boxMsg);
          mRadioBox->SetSelection(0);
@@ -142,7 +141,6 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
-   delete[] buttonLabels;
 }
 
 void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
@@ -160,7 +158,7 @@ int ShowMultiDialog(const wxString &message,
    const wxString &title,
    const wxChar **buttons, const wxString &boxMsg, bool log)
 {
-   wxWindow * pParent = wxGetApp().GetTopWindow();
+   wxWindow * pParent = wxTheApp->GetTopWindow();
 
    // We want a parent we can display over, so don't make it a parent if top
    // window is a STAY_ON_TOP.

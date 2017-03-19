@@ -107,7 +107,7 @@ void SpectrumPrefs::Populate(size_t windowSize)
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   ShuttleGui S(this, eIsCreating);
+   ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
 }
@@ -265,18 +265,18 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             mFindNotesMinA =
                S.TieNumericTextBox(_("Minimum Amplitude (dB):"),
-               mTempSettings.fftFindNotes,
+               mTempSettings.findNotesMinA,
                8);
 
             mFindNotesN =
                S.TieNumericTextBox(_("Max. Number of Notes (1..128):"),
-               mTempSettings.findNotesMinA,
+               mTempSettings.numberOfMaxima,
                8);
          }
          S.EndTwoColumn();
 
          S.TieCheckBox(_("&Find Notes"),
-            mTempSettings.numberOfMaxima);
+            mTempSettings.fftFindNotes);
 
          S.TieCheckBox(_("&Quantize Notes"),
             mTempSettings.findNotesQuantize);
@@ -353,7 +353,7 @@ bool SpectrumPrefs::Validate()
    }
 #endif //EXPERIMENTAL_FIND_NOTES
 
-   ShuttleGui S(this, eIsGettingFromDialog);
+   ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
    // Delegate range checking to SpectrogramSettings class
@@ -376,7 +376,7 @@ bool SpectrumPrefs::Apply()
             static_cast<WaveTrack*>(mWt->GetLink())
           : nullptr;
 
-   ShuttleGui S(this, eIsGettingFromDialog);
+   ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
 

@@ -1068,7 +1068,7 @@ void ProgressDialog::Init()
 #endif
 }
 
-// Add a new text column each time this is called.
+// Add a NEW text column each time this is called.
 void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer, const wxString & sText, bool bFirstColumn) {
 
    // Assuming that we don't want empty columns, bail out if there is no text.
@@ -1268,16 +1268,16 @@ bool ProgressDialog::Create(const wxString & title,
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(int value, const wxString & message)
+ProgressResult ProgressDialog::Update(int value, const wxString & message)
 {
    if (mCancel)
    {
       // for compatibility with old Update, that returned false on cancel
-      return eProgressCancelled;
+      return ProgressResult::Cancelled;
    }
    else if (mStop)
    {
-      return eProgressStopped;
+      return ProgressResult::Stopped;
    }
 
    wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
@@ -1285,7 +1285,7 @@ int ProgressDialog::Update(int value, const wxString & message)
 
    if (elapsed < 500)
    {
-      return eProgressSuccess;
+      return ProgressResult::Success;
    }
 
    if (mIsTransparent)
@@ -1355,13 +1355,13 @@ int ProgressDialog::Update(int value, const wxString & message)
       mYieldTimer = now;
    }
 
-   return eProgressSuccess;
+   return ProgressResult::Success;
 }
 
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(double current, const wxString & message)
+ProgressResult ProgressDialog::Update(double current, const wxString & message)
 {
    return Update((int)(current * 1000), message);
 }
@@ -1369,7 +1369,7 @@ int ProgressDialog::Update(double current, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxString & message)
+ProgressResult ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1384,7 +1384,7 @@ int ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxS
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & message)
+ProgressResult ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & message)
 {
    if (total.GetValue() != 0)
    {
@@ -1399,7 +1399,7 @@ int ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString 
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString & message)
+ProgressResult ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1414,7 +1414,7 @@ int ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxStr
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(int current, int total, const wxString & message)
+ProgressResult ProgressDialog::Update(int current, int total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1429,7 +1429,7 @@ int ProgressDialog::Update(int current, int total, const wxString & message)
 //
 // Update the time and, optionally, the message
 //
-int ProgressDialog::Update(double current, double total, const wxString & message)
+ProgressResult ProgressDialog::Update(double current, double total, const wxString & message)
 {
    if (total != 0)
    {
@@ -1597,16 +1597,16 @@ TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
    mDuration = duration;
 }
 
-int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
+ProgressResult TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
 {
    if (mCancel)
    {
       // for compatibility with old Update, that returned false on cancel
-      return eProgressCancelled;
+      return ProgressResult::Cancelled;
    }
    else if (mStop)
    {
-      return eProgressStopped;
+      return ProgressResult::Stopped;
    }
 
    wxLongLong_t now = wxGetLocalTimeMillis().GetValue();
@@ -1614,7 +1614,7 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
 
    if (elapsed < 500)
    {
-      return eProgressSuccess;
+      return ProgressResult::Success;
    }
 
    if (mIsTransparent)
@@ -1678,14 +1678,14 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT | wxEVT_CATEGORY_TIMER);
 
    // MY: Added this after the YieldFor to check we haven't changed the outcome based on buttons pressed...
-   int iReturn = eProgressSuccess;
+   auto iReturn = ProgressResult::Success;
    if (mCancel)
    {
-      iReturn = eProgressCancelled;
+      iReturn = ProgressResult::Cancelled;
    }
    else if (mStop)
    {
-      iReturn = eProgressStopped;
+      iReturn = ProgressResult::Stopped;
    }
    return iReturn;
 }

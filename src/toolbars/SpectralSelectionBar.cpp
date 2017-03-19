@@ -51,7 +51,6 @@ with changes in the SpectralSelectionBar.
 #include "SpectralSelectionBarListener.h"
 #include "SpectralSelectionBar.h"
 
-#include "../AudacityApp.h"
 #include "../Prefs.h"
 #include "../SelectedRegion.h"
 #include "../widgets/NumericTextCtrl.h"

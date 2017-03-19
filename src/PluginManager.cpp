@@ -35,7 +35,6 @@
 
 #include "audacity/EffectInterface.h"
 
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
@@ -981,8 +980,8 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
          {
             last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
-            int status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
-            if (!status)
+            auto status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
+            if (status == ProgressResult::Cancelled)
             {
                break;
             }
@@ -2795,9 +2794,8 @@ wxString PluginManager::ConvertID(const PluginID & ID)
    if (ID.StartsWith(wxT("base64:")))
    {
       wxString id = ID.Mid(7);
-      char *buf = new char[id.Length() / 4 * 3];
-      id =  wxString::FromUTF8(buf, b64decode(id, buf));
-      delete [] buf;
+      ArrayOf<char> buf{ id.Length() / 4 * 3 };
+      id =  wxString::FromUTF8(buf.get(), b64decode(id, buf.get()));
       return id;
    }
 

@@ -34,6 +34,8 @@
 *                   and BitReversed tables so they don't need to be reallocated
 *                   and recomputed on every call.
 *                 - Added Reorder* functions to undo the bit-reversal
+*              Modified 15 April 2016 Paul Licameli
+*                 - C++11 smart pointers
 *
 *  Copyright (C) 2009  Philip VanBaren
 *
@@ -51,6 +53,7 @@
 *  along with this program; if not, write to the Free Software
 *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#include "Audacity.h"
 #include "Experimental.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
@@ -93,9 +96,9 @@ void TableUsage(int iMask)
 SinCosTable::SinCosTable() :
 mSinCosTablePow(13)
 {
-   int tableSize=1<<mSinCosTablePow;
-   mSinCosTable=new SinCosStruct[tableSize];
-   for(int i=0;i<tableSize;i++) {
+   size_t tableSize=1<<mSinCosTablePow;
+   mSinCosTable.reinit(tableSize);
+   for(size_t i=0;i<tableSize;i++) {
       mSinCosTable[i].mSin=(float)-sin(((float)i)*M_PI/tableSize);
       mSinCosTable[i].mCos=(float)-cos(((float)i)*M_PI/tableSize);
    }
@@ -145,7 +148,7 @@ int SmallRB(int bits, int numberBits)
 };
 
 /* wrapper funcitons. If passed -1 function choice will be made locally */
-void RealFFTf1x(fft_type *buffer, HFFT h, int functionType)
+void RealFFTf1x(fft_type *buffer, FFTParam *h, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -166,7 +169,7 @@ void RealFFTf1x(fft_type *buffer, HFFT h, int functionType)
    };
 }
 
-void InverseRealFFTf1x(fft_type *buffer, HFFT h, int functionType)
+void InverseRealFFTf1x(fft_type *buffer, FFTParam *h, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -187,7 +190,7 @@ void InverseRealFFTf1x(fft_type *buffer, HFFT h, int functionType)
    };
 }
 
-void ReorderToTime1x(HFFT hFFT, fft_type *buffer, fft_type *TimeOut, int functionType)
+void ReorderToTime1x(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -208,7 +211,7 @@ void ReorderToTime1x(HFFT hFFT, fft_type *buffer, fft_type *TimeOut, int functio
    };
 }
 
-void ReorderToFreq1x(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut, int functionType)
+void ReorderToFreq1x(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -229,7 +232,7 @@ void ReorderToFreq1x(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *I
    };
 }
 
-void RealFFTf4x( fft_type *buffer, HFFT h, int functionType)
+void RealFFTf4x( fft_type *buffer, FFTParam *h, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -250,7 +253,7 @@ void RealFFTf4x( fft_type *buffer, HFFT h, int functionType)
    };
 }
 
-void InverseRealFFTf4x( fft_type *buffer, HFFT h, int functionType)
+void InverseRealFFTf4x( fft_type *buffer, FFTParam *h, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -271,7 +274,7 @@ void InverseRealFFTf4x( fft_type *buffer, HFFT h, int functionType)
    };
 }
 
-void ReorderToTime4x(HFFT hFFT, fft_type *buffer, fft_type *TimeOut, int functionType)
+void ReorderToTime4x(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -292,7 +295,7 @@ void ReorderToTime4x(HFFT hFFT, fft_type *buffer, fft_type *TimeOut, int functio
    };
 }
 
-void ReorderToFreq4x(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut, int functionType)
+void ReorderToFreq4x(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut, int functionType)
 {
    switch(functionType) {
    case FFT_SinCosTableVBR16:
@@ -317,7 +320,7 @@ void ReorderToFreq4x(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *I
 #ifdef REAL_SINCOSBRTABLE
 
 /*
-*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*  Forward FFT routine.  Must call GetFFT(fftlen) first!
 *
 *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
 *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
@@ -334,7 +337,7 @@ void ReorderToFreq4x(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *I
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
+void RealFFTf1xSinCosBRTable(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *sptr;
@@ -359,7 +362,7 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    {
       A = buffer;
       B = buffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable;
+      sptr = h->SinTable.get();
 
       while(A < endptr1)
       {
@@ -376,14 +379,14 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
             *(A++) = *(B++) + 2 * v2;
          }
          A = B;
-         B + =ButterfliesPerGroup * 2;
+         B += ButterfliesPerGroup * 2;
          sptr += 2;
       }
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
-   br1 = h->BitReversed + 1;
-   br2 = h->BitReversed + h->Points - 1;
+   br1 = h->BitReversed.get() + 1;
+   br2 = h->BitReversed.get() + h->Points - 1;
 
    while(br1 < br2)
    {
@@ -424,7 +427,7 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -436,7 +439,7 @@ void RealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
+void InverseRealFFTf1xSinCosBRTable(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *sptr;
@@ -450,7 +453,7 @@ void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    /* Massage input to get the input for a real output sequence. */
    A = buffer + 2;
    B = buffer + h->Points * 2 - 2;
-   br1 = h->BitReversed + 1;
+   br1 = h->BitReversed.get() + 1;
    while(A < B)
    {
       sin=h->SinTable[*br1];
@@ -496,7 +499,7 @@ void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    {
       A = buffer;
       B = buffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable;
+      sptr = h->SinTable.get();
 
       while(A < endptr1)
       {
@@ -519,7 +522,7 @@ void InverseRealFFTf1xSinCosBRTable(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq1xSinCosBRTable(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
    for(size_t i = 1; i < hFFT->Points; i++) {
@@ -532,7 +535,7 @@ void ReorderToFreq1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut
    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime1xSinCosBRTable(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
    for(size_t i = 0; i < hFFT->Points; i++) {
@@ -542,7 +545,7 @@ void ReorderToTime1xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut
 }
 
 // 4x processing simd
-void RealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
+void RealFFTf4xSinCosBRTable(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -570,7 +573,7 @@ void RealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    {
       A = localBuffer;
       B = &localBuffer[ButterfliesPerGroup * 2];
-      sptr = h->SinTable;
+      sptr = h->SinTable.get();
       while(A < endptr1)
       {
          sin = _mm_set1_ps(*(sptr++));
@@ -636,7 +639,7 @@ void RealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -648,7 +651,7 @@ void RealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
+void InverseRealFFTf4xSinCosBRTable(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -716,7 +719,7 @@ void InverseRealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    {
       A = localBuffer;
       B = localBuffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable;
+      sptr = h->SinTable.get();
       while(A < endptr1)
       {
          sin = _mm_set1_ps(*(sptr++));
@@ -738,7 +741,7 @@ void InverseRealFFTf4xSinCosBRTable(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq4xSinCosBRTable(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    __m128 *localBuffer=(__m128 *)buffer;
    __m128 *localRealOut=(__m128 *)RealOut;
@@ -757,7 +760,7 @@ void ReorderToFreq4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *RealOut
    localImagOut[hFFT->Points] = _mm_set1_ps(0.0);
 }
 
-void ReorderToTime4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime4xSinCosBRTable(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    __m128 *localBuffer=(__m128 *)buffer;
    __m128 *localTimeOut=(__m128 *)TimeOut;
@@ -776,7 +779,7 @@ void ReorderToTime4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut
 #ifdef REAL_SINCOSTABLE_VBR16
 
 /*
-*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*  Forward FFT routine.  Must call GetFFT(fftlen) first!
 *
 *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
 *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
@@ -793,7 +796,7 @@ void ReorderToTime4xSinCosBRTable(HFFT hFFT, fft_type *buffer, fft_type *TimeOut
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
+void RealFFTf1xSinCosTableVBR16(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
@@ -879,7 +882,7 @@ void RealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -891,7 +894,7 @@ void RealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
+void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
@@ -906,7 +909,7 @@ void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
    /* Massage input to get the input for a real output sequence. */
    A = buffer + 2;
    B = buffer + h->Points * 2 - 2;
-   br1 = h->BitReversed + 1;
+   br1 = h->BitReversed.get() + 1;
    br1Index = 1; //h->BitReversed + 1;
    while(A < B)
    {
@@ -979,7 +982,7 @@ void InverseRealFFTf1xSinCosTableVBR16(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToTime1xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime1xSinCosTableVBR16(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
    for(size_t i = 0;i < hFFT->Points; i++) {
@@ -990,7 +993,7 @@ void ReorderToTime1xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *Time
    }
 }
 
-void ReorderToFreq1xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq1xSinCosTableVBR16(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
    for(size_t i = 1; i < hFFT->Points; i++) {
@@ -1006,7 +1009,7 @@ void ReorderToFreq1xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *Real
 }
 
 // 4x processing simd
-void RealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
+void RealFFTf4xSinCosTableVBR16(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -1104,7 +1107,7 @@ void RealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -1116,7 +1119,7 @@ void RealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
+void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -1209,7 +1212,7 @@ void InverseRealFFTf4xSinCosTableVBR16(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToTime4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime4xSinCosTableVBR16(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    __m128 *localBuffer = (__m128 *)buffer;
    __m128 *localTimeOut = (__m128 *)TimeOut;
@@ -1222,7 +1225,7 @@ void ReorderToTime4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *Time
    }
 }
 
-void ReorderToFreq4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq4xSinCosTableVBR16(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    __m128 *localBuffer = (__m128 *)buffer;
    __m128 *localRealOut = (__m128 *)RealOut;
@@ -1246,7 +1249,7 @@ void ReorderToFreq4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *Real
 #ifdef REAL_SINCOSTABLE_BR16
 
 /*
-*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*  Forward FFT routine.  Must call GetFFT(fftlen) first!
 *
 *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
 *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
@@ -1263,7 +1266,7 @@ void ReorderToFreq4xSinCosTableVBR16(HFFT hFFT, fft_type *buffer, fft_type *Real
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
+void RealFFTf1xSinCosTableBR16(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1, *endptr2;
@@ -1353,7 +1356,7 @@ void RealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -1365,7 +1368,7 @@ void RealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
+void InverseRealFFTf1xSinCosTableBR16(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
@@ -1452,7 +1455,7 @@ void InverseRealFFTf1xSinCosTableBR16(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq1xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq1xSinCosTableBR16(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    int bitReverseShift=16-hFFT->pow2Bits;
    // Copy the data into the real and imaginary outputs
@@ -1469,7 +1472,7 @@ void ReorderToFreq1xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealO
    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime1xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime1xSinCosTableBR16(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    int bitReverseShift=16-hFFT->pow2Bits;
    // Copy the data into the real outputs
@@ -1483,7 +1486,7 @@ void ReorderToTime1xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeO
 }
 
 // 4x processing simd
-void RealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
+void RealFFTf4xSinCosTableBR16(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -1585,7 +1588,7 @@ void RealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -1597,7 +1600,7 @@ void RealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
+void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -1691,7 +1694,7 @@ void InverseRealFFTf4xSinCosTableBR16(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToTime4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime4xSinCosTableBR16(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    __m128 *localBuffer = (__m128 *)buffer;
    __m128 *localTimeOut = (__m128 *)TimeOut;
@@ -1707,7 +1710,7 @@ void ReorderToTime4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeO
    }
 }
 
-void ReorderToFreq4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq4xSinCosTableBR16(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    __m128 *localBuffer = (__m128 *)buffer;
    __m128 *localRealOut = (__m128 *)RealOut;
@@ -1733,7 +1736,7 @@ void ReorderToFreq4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealO
 #ifdef FAST_MATH_BR24
 
 /*
-*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*  Forward FFT routine.  Must call GetFFT(fftlen) first!
 *
 *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
 *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
@@ -1750,7 +1753,7 @@ void ReorderToFreq4xSinCosTableBR16(HFFT hFFT, fft_type *buffer, fft_type *RealO
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
+void RealFFTf1xFastMathBR24(fft_type *buffer, FFTParam *h)
 {
    fft_type *A, *B;
    fft_type *endptr1, *endptr2;
@@ -1885,7 +1888,7 @@ void RealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -1897,7 +1900,7 @@ void RealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
+void InverseRealFFTf1xFastMathBR24(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
@@ -2018,7 +2021,7 @@ void InverseRealFFTf1xFastMathBR24(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq1xFastMathBR24(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    int bitReverseShift = 24 - hFFT->pow2Bits;
    // Copy the data into the real and imaginary outputs
@@ -2036,7 +2039,7 @@ void ReorderToFreq1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime1xFastMathBR24(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    int bitReverseShift = 24 - hFFT->pow2Bits;
    // Copy the data into the real outputs
@@ -2049,7 +2052,7 @@ void ReorderToTime1xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
    }
 }
 
-void RealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
+void RealFFTf4xFastMathBR24(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -2185,7 +2188,7 @@ void RealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -2197,7 +2200,7 @@ void RealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
+void InverseRealFFTf4xFastMathBR24(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -2324,7 +2327,7 @@ void InverseRealFFTf4xFastMathBR24(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq4xFastMathBR24(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    __m128 *localBuffer = (__m128 *)buffer;
    __m128 *localRealOut = (__m128 *)RealOut;
@@ -2346,7 +2349,7 @@ void ReorderToFreq4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
    localImagOut[hFFT->Points] = _mm_set1_ps(0.0);
 }
 
-void ReorderToTime4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime4xFastMathBR24(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    __m128 *localBuffer = (__m128 *)buffer;
    __m128 *localTimeOut = (__m128 *)TimeOut;
@@ -2368,7 +2371,7 @@ void ReorderToTime4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 #ifdef FAST_MATH_BR16
 
 /*
-*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*  Forward FFT routine.  Must call GetFFT(fftlen) first!
 *
 *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
 *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
@@ -2385,7 +2388,7 @@ void ReorderToTime4xFastMathBR24(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
+void RealFFTf1xFastMathBR16(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
@@ -2516,7 +2519,7 @@ void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -2528,7 +2531,7 @@ void RealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
+void InverseRealFFTf1xFastMathBR16(fft_type *buffer, FFTParam *h)
 {
    fft_type *A,*B;
    fft_type *endptr1,*endptr2;
@@ -2649,7 +2652,7 @@ void InverseRealFFTf1xFastMathBR16(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq1xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq1xFastMathBR16(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    int bitReverseShift = 16 - hFFT->pow2Bits;
    // Copy the data into the real and imaginary outputs
@@ -2666,7 +2669,7 @@ void ReorderToFreq1xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime1xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime1xFastMathBR16(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    int bitReverseShift=16-hFFT->pow2Bits;
    // Copy the data into the real outputs
@@ -2679,7 +2682,7 @@ void ReorderToTime1xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
    }
 }
 
-void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
+void RealFFTf4xFastMathBR16(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer = (__m128 *)buffer;
@@ -2815,7 +2818,7 @@ void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -2827,7 +2830,7 @@ void RealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
+void InverseRealFFTf4xFastMathBR16(fft_type *buffer, FFTParam *h)
 {
 
    __m128 *localBuffer=(__m128 *)buffer;
@@ -2954,7 +2957,7 @@ void InverseRealFFTf4xFastMathBR16(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq4xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq4xFastMathBR16(FFTParam *hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    __m128 *localBuffer=(__m128 *)buffer;
    __m128 *localRealOut=(__m128 *)RealOut;
@@ -2976,7 +2979,7 @@ void ReorderToFreq4xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *RealOut,
    localImagOut[hFFT->Points] = _mm_set1_ps(0.0);
 }
 
-void ReorderToTime4xFastMathBR16(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime4xFastMathBR16(FFTParam *hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    __m128 *localBuffer=(__m128 *)buffer;
    __m128 *localTimeOut=(__m128 *)TimeOut;

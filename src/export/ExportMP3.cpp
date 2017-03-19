@@ -62,6 +62,7 @@
 #include "../Audacity.h"
 #include "ExportMP3.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 
 #include <wx/choice.h>
@@ -1451,7 +1452,21 @@ wxString MP3Exporter::GetLibraryTypeString()
 
 wxString MP3Exporter::GetLibraryPath()
 {
-   return wxT("/usr/local/lib/audacity");
+   wxString path;
+
+   path = wxT("/Library/Application Support/audacity/libs");
+   if (wxFileExists(path + wxT("/") + GetLibraryName()))
+   {
+        return path;
+   }
+
+   path = wxT("/usr/local/lib/audacity");
+   if (wxFileExists(path + wxT("/") + GetLibraryName()))
+   {
+        return path;
+   }
+    
+   return wxT("/Library/Application Support/audacity/libs");
 }
 
 wxString MP3Exporter::GetLibraryName()
@@ -1587,7 +1602,7 @@ public:
    // Required
 
    wxWindow *OptionsCreate(wxWindow *parent, int format);
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -1602,7 +1617,7 @@ private:
    int FindValue(CHOICES *choices, int cnt, int needle, int def);
    wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
-   int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, const Tags *tags);
+   int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -1647,7 +1662,7 @@ int ExportMP3::SetNumExportChannels()
 }
 
 
-int ExportMP3::Export(AudacityProject *project,
+ProgressResult ExportMP3::Export(AudacityProject *project,
                        unsigned channels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -1678,7 +1693,7 @@ int ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    if (!exporter.ValidLibraryLoaded()) {
@@ -1686,7 +1701,7 @@ int ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
@@ -1749,7 +1764,7 @@ int ExportMP3::Export(AudacityProject *project,
       (rate < lowrate) || (rate > highrate)) {
       rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
-         return false;
+         return ProgressResult::Cancelled;
       }
    }
 
@@ -1767,7 +1782,7 @@ int ExportMP3::Export(AudacityProject *project,
    auto inSamples = exporter.InitializeStream(channels, rate);
    if (((int)inSamples) < 0) {
       wxMessageBox(_("Unable to initialize MP3 stream"));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Put ID3 tags at beginning of file
@@ -1778,23 +1793,23 @@ int ExportMP3::Export(AudacityProject *project,
    wxFFile outFile(fName, wxT("w+b"));
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
-   char *id3buffer = NULL;
+   ArrayOf<char> id3buffer;
    int id3len;
    bool endOfFile;
-   id3len = AddTags(project, &id3buffer, &endOfFile, metadata);
+   id3len = AddTags(project, id3buffer, &endOfFile, metadata);
    if (id3len && !endOfFile) {
-     outFile.Write(id3buffer, id3len);
+     outFile.Write(id3buffer.get(), id3len);
    }
 
    wxFileOffset pos = outFile.Tell();
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    long bytes;
 
-   int bufferSize = exporter.GetOutBufferSize();
-   unsigned char *buffer = new unsigned char[bufferSize];
+   size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
+   ArrayOf<unsigned char> buffer{ bufferSize };
    wxASSERT(buffer);
 
    const WaveTrackConstArray waveTracks =
@@ -1828,7 +1843,7 @@ int ExportMP3::Export(AudacityProject *project,
 
       ProgressDialog progress(wxFileName(fName).GetName(), title);
 
-      while (updateResult == eProgressSuccess) {
+      while (updateResult == ProgressResult::Success) {
          auto blockLen = mixer->Process(inSamples);
 
          if (blockLen == 0) {
@@ -1839,18 +1854,18 @@ int ExportMP3::Export(AudacityProject *project,
 
          if (blockLen < inSamples) {
             if (channels > 1) {
-               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer);
+               bytes = exporter.EncodeRemainder(mixed, blockLen, buffer.get());
             }
             else {
-               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer);
+               bytes = exporter.EncodeRemainderMono(mixed, blockLen, buffer.get());
             }
          }
          else {
             if (channels > 1) {
-               bytes = exporter.EncodeBuffer(mixed, buffer);
+               bytes = exporter.EncodeBuffer(mixed, buffer.get());
             }
             else {
-               bytes = exporter.EncodeBufferMono(mixed, buffer);
+               bytes = exporter.EncodeBufferMono(mixed, buffer.get());
             }
          }
 
@@ -1861,25 +1876,21 @@ int ExportMP3::Export(AudacityProject *project,
             break;
          }
 
-         outFile.Write(buffer, bytes);
+         outFile.Write(buffer.get(), bytes);
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 
-   bytes = exporter.FinishStream(buffer);
+   bytes = exporter.FinishStream(buffer.get());
 
    if (bytes) {
-      outFile.Write(buffer, bytes);
+      outFile.Write(buffer.get(), bytes);
    }
 
    // Write ID3 tag if it was supposed to be at the end of the file
    if (id3len && endOfFile) {
-      outFile.Write(id3buffer, id3len);
-   }
-
-   if (id3buffer) {
-      free(id3buffer);
+      outFile.Write(id3buffer.get(), id3len);
    }
 
    // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
@@ -1892,8 +1903,6 @@ int ExportMP3::Export(AudacityProject *project,
 
    // Close the file
    outFile.Close();
-
-   delete [] buffer;
 
    return updateResult;
 }
@@ -1995,11 +2004,16 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
    return wxAtoi(choice->GetStringSelection());
 }
 
+struct id3_tag_deleter {
+   void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
+};
+using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+
 // returns buffer len; caller frees
-int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *endOfFile, const Tags *tags)
+int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG
-   struct id3_tag *tp = id3_tag_new();
+   id3_tag_holder tp { id3_tag_new() };
 
    for (const auto &pair : tags->GetRange()) {
       const auto &n = pair.first;
@@ -2018,7 +2032,7 @@ int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *
       else if (n.CmpNoCase(TAG_YEAR) == 0) {
          // LLL:  Some apps do not like the newer frame ID (ID3_FRAME_YEAR),
          //       so we add old one as well.
-         AddFrame(tp, n, v, "TYER");
+         AddFrame(tp.get(), n, v, "TYER");
          name = ID3_FRAME_YEAR;
       }
       else if (n.CmpNoCase(TAG_GENRE) == 0) {
@@ -2031,7 +2045,7 @@ int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *
          name = ID3_FRAME_TRACK;
       }
 
-      AddFrame(tp, n, v, name);
+      AddFrame(tp.get(), n, v, name);
    }
 
    tp->options &= (~ID3_TAG_OPTION_COMPRESSION); // No compression
@@ -2047,11 +2061,9 @@ int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *
 
    id3_length_t len;
 
-   len = id3_tag_render(tp, 0);
-   *buffer = (char *)malloc(len);
-   len = id3_tag_render(tp, (id3_byte_t *)*buffer);
-
-   id3_tag_delete(tp);
+   len = id3_tag_render(tp.get(), 0);
+   buffer.reinit(len);
+   len = id3_tag_render(tp.get(), (id3_byte_t *)buffer.get());
 
    return len;
 #else //ifdef USE_LIBID3TAG
@@ -2071,8 +2083,8 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
    }
 
-   id3_ucs4_t *ucs4 =
-      id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
+   MallocString<id3_ucs4_t> ucs4{
+      id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8)) };
 
    if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
       // A hack to get around iTunes not recognizing the comment.  The
@@ -2081,26 +2093,24 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       // (which one???) or just clear it.  Unfortunately, there's no supported
       // way of clearing the field, so do it directly.
       struct id3_frame *frame2 = id3_frame_new(name);
-      id3_field_setfullstring(id3_frame_field(frame2, 3), ucs4);
+      id3_field_setfullstring(id3_frame_field(frame2, 3), ucs4.get());
       id3_field *f2 = id3_frame_field(frame2, 1);
       memset(f2->immediate.value, 0, sizeof(f2->immediate.value));
       id3_tag_attachframe(tp, frame2);
       // Now install a second frame with the standard default language = "XXX"
-      id3_field_setfullstring(id3_frame_field(frame, 3), ucs4);
+      id3_field_setfullstring(id3_frame_field(frame, 3), ucs4.get());
    }
    else if (strcmp(name, "TXXX") == 0) {
-      id3_field_setstring(id3_frame_field(frame, 2), ucs4);
-      free(ucs4);
+      id3_field_setstring(id3_frame_field(frame, 2), ucs4.get());
 
-      ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
+      ucs4.reset(id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8)));
 
-      id3_field_setstring(id3_frame_field(frame, 1), ucs4);
+      id3_field_setstring(id3_frame_field(frame, 1), ucs4.get());
    }
    else {
-      id3_field_setstrings(id3_frame_field(frame, 1), 1, &ucs4);
+      auto addr = ucs4.get();
+      id3_field_setstrings(id3_frame_field(frame, 1), 1, &addr);
    }
-
-   free(ucs4);
 
    id3_tag_attachframe(tp, frame);
 }

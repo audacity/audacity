@@ -15,6 +15,7 @@
 #include "../Experimental.h"
 
 #include "CommandFunctors.h"
+#include "CommandFlag.h"
 
 #include "../MemoryX.h"
 #include <vector>
@@ -23,7 +24,6 @@
 #include <wx/menu.h>
 #include <wx/hashmap.h>
 
-#include "../AudacityApp.h"
 #include "../xml/XMLTagHandler.h"
 
 #include "audacity/Types.h"
@@ -241,7 +241,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    wxString GetLabelFromName(const wxString &name);
    wxString GetPrefixedLabelFromName(const wxString &name);
    wxString GetCategoryFromName(const wxString &name);
-   wxString GetKeyFromName(const wxString &name);
+   wxString GetKeyFromName(const wxString &name) const;
    wxString GetDefaultKeyFromName(const wxString &name);
 
    bool GetEnabled(const wxString &name);
@@ -254,7 +254,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Loading/Saving
    //
 
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
+   void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
 protected:
 

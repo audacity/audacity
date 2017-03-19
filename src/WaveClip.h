@@ -66,11 +66,7 @@ public:
       , windowSize(windowSize_)
       , zeroPaddingFactor(zeroPaddingFactor_)
       , frequencyGain(frequencyGain_)
-
-      // len columns, and so many rows, column-major.
-      // Don't take column literally -- this isn't pixel data yet, it's the
-      // raw data to be mapped onto the display.
-      , freq(len * ((windowSize * zeroPaddingFactor) / 2))
+      , freq{}
 
       // Sample counts corresponding to the columns, and to one past the end.
       , where(len + 1)
@@ -97,6 +93,8 @@ public:
        float* __restrict scratch,
        float* __restrict out) const;
 
+   void Allocate(const SpectrogramSettings &settings);
+
    void Populate
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
        int copyBegin, int copyEnd, size_t numPixels,
@@ -120,22 +118,17 @@ public:
 class SpecPxCache {
 public:
    SpecPxCache(size_t cacheLen)
+      : len{ cacheLen }
+      , values{ len }
    {
-      len = cacheLen;
-      values = new float[len];
       valid = false;
       scaleType = 0;
       range = gain = -1;
       minFreq = maxFreq = -1;
    }
 
-   ~SpecPxCache()
-   {
-      delete[] values;
-   }
-
    size_t  len;
-   float       *values;
+   Floats values;
    bool         valid;
 
    int scaleType;
@@ -217,7 +210,15 @@ public:
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
    // from one project to another
-   WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager);
+   WaveClip(const WaveClip& orig,
+            const std::shared_ptr<DirManager> &projDirManager,
+            bool copyCutlines);
+
+   // Copy only a range from the given WaveClip
+   WaveClip(const WaveClip& orig,
+            const std::shared_ptr<DirManager> &projDirManager,
+            bool copyCutlines,
+            double t0, double t1);
 
    virtual ~WaveClip();
 
@@ -268,15 +269,13 @@ public:
     * has changed, like when member functions SetSamples() etc. are called. */
    void MarkChanged() { mDirty++; }
 
-   /// Create clip from copy, discarding previous information in the clip
-   bool CreateFromCopy(double t0, double t1, const WaveClip* other);
-
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
                        double t0, double pixelsPerSecond, bool &isLoadingOD) const;
    bool GetSpectrogram(WaveTrackCache &cache,
-                       const float *& spectrogram, const sampleCount *& where,
+                       const float *& spectrogram,
+                       const sampleCount *& where,
                        size_t numPixels,
                        double t0, double pixelsPerSecond) const;
    bool GetMinMax(float *min, float *max, double t0, double t1) const;
@@ -340,7 +339,6 @@ public:
 
    /// Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);
-   void RemoveAllCutLines();
 
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);
@@ -366,37 +364,37 @@ public:
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    void HandleXMLEndTag(const wxChar *tag) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
-
-   // Cache of values to colour pixels of Spectrogram - used by TrackArtist
-   mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
+   void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }
    void SetIsPlaceholder(bool val) { mIsPlaceholder = val; }
 
-protected:
-   mutable wxRect mDisplayRect;
+public:
+   // Cache of values to colour pixels of Spectrogram - used by TrackArtist
+   mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
 
-   double mOffset;
+protected:
+   mutable wxRect mDisplayRect {};
+
+   double mOffset { 0 };
    int mRate;
-   int mDirty;
-   bool mIsCutLine;
+   int mDirty { 0 };
    std::unique_ptr<Sequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
 
    mutable std::unique_ptr<WaveCache> mWaveCache;
-   mutable ODLock       mWaveCacheMutex;
+   mutable ODLock       mWaveCacheMutex {};
    mutable std::unique_ptr<SpecCache> mSpecCache;
-   SampleBuffer  mAppendBuffer;
-   size_t        mAppendBufferLen;
+   SampleBuffer  mAppendBuffer {};
+   size_t        mAppendBufferLen { 0 };
 
    // Cut Lines are nothing more than ordinary wave clips, with the
    // offset relative to the start of the clip.
-   WaveClipHolders mCutLines;
+   WaveClipHolders mCutLines {};
 
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
-   bool mIsPlaceholder;
+   bool mIsPlaceholder { false };
 };
 
 #endif

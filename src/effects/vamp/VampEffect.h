@@ -25,6 +25,7 @@
 
 #include <vamp-hostsdk/PluginLoader.h>
 
+#include "../../SampleFormat.h"
 #include "../Effect.h"
 
 class LabelTrack;
@@ -99,13 +100,13 @@ private:
 
    Vamp::Plugin::ParameterList mParameters;
 
-   float *mValues;
+   Floats mValues;
 
-   wxSlider **mSliders;
-   wxTextCtrl **mFields;
-   wxStaticText **mLabels;
-   wxCheckBox **mToggles;
-   wxChoice **mChoices;
+   ArrayOf<wxSlider *> mSliders;
+   ArrayOf<wxTextCtrl *> mFields;
+   ArrayOf<wxStaticText *> mLabels;
+   ArrayOf<wxCheckBox *> mToggles;
+   ArrayOf<wxChoice *> mChoices;
    wxChoice *mProgram;
 
    DECLARE_EVENT_TABLE()

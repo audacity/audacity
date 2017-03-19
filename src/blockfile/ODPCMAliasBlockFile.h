@@ -16,10 +16,10 @@ The summary is eventually computed and written to a file in a background thread.
 
 Load On-Demand implementation of the AliasBlockFile for PCM files.
 
-to load large files more quickly, we take skip computing the summary data and put
+to load large files more quickly, we skip computing the summary data and put
 ODPCMAliasBlockFiles in the sequence as place holders.  A background thread loads and
 computes the summary data into these classes.
-ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when NEW
+ODPCMAliasBlockFiles unlike all other BlockFiles are not immutable (for the most part,) because when NEW
 summary data is computed for an existing ODPCMAliasBlockFile we save the buffer then and write the Summary File.
 
 All BlockFile methods that treat the summary data as a buffer that exists in its BlockFile

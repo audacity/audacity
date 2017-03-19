@@ -106,7 +106,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    // This just returns a constant and can be overriden by subclasses
    // to specify a different height for the case that the track is minimized.
    virtual int GetMinimizedHeight() const;
-   int GetActualHeight() { return mHeight; };
+   int GetActualHeight() const { return mHeight; }
 
    int GetIndex() const;
    void SetIndex(int index);
@@ -124,7 +124,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    bool GetMinimized() const;
    void SetMinimized(bool isMinimized);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   float GetVirtualTrackPercentage() { return mPerY;}
+   float GetVirtualTrackPercentage() const { return mPerY;}
    void SetVirtualTrackPercentage(float val) { mPerY = val;}
    bool GetVirtualStereo() { return mVirtualStereo;}
    void SetVirtualStereo(bool vStereo) { mVirtualStereo = vStereo;}
@@ -218,7 +218,11 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
 
    // Create a NEW track and don't modify this track (or return null for failure)
-   virtual Holder Copy(double WXUNUSED(t0), double WXUNUSED(t1)) const { return{}; }
+   // Note that subclasses may want to distinguish tracks stored in a clipboard
+   // from those stored in a project
+   virtual Holder Copy
+      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const
+   { return{}; }
 
    // Return true for success
    virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
@@ -236,7 +240,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual int GetKind() const { return None; }
 
    // XMLTagHandler callback methods -- NEW virtual for writing
-   virtual void WriteXML(XMLWriter &xmlFile) = 0;
+   virtual void WriteXML(XMLWriter &xmlFile) const = 0;
 
    // Returns true if an error was encountered while trying to
    // open the track from XML
@@ -456,10 +460,6 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    /** Select a track, and if it is linked to another track, select it, too. */
    void Select(Track * t, bool selected = true);
 
-   /** If this track is linked to another track (the track immediately before or
-   * after it), return its partner. Otherwise return null. */
-   Track *GetLink(Track * t) const;
-
    Track *GetPrev(Track * t, bool linked = false) const;
 
    /** Return a track in the list that comes after Track t
@@ -546,7 +546,7 @@ class AUDACITY_DLL_API TrackFactory
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
    // LabelTrack.cpp, and TimeTrack.cpp respectively
-   std::unique_ptr<WaveTrack> DuplicateWaveTrack(WaveTrack &orig);
+   std::unique_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
    std::unique_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
    std::unique_ptr<LabelTrack> NewLabelTrack();

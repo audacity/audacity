@@ -16,7 +16,7 @@
 This is an abstract class that subclasses will have to derive the types
 from.  For any type there should only be one ODDecodeTask associated with
 a given track.
-There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
+There could be the ODDecodeBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
 robust enough to allow all the user changes such as copy/paste, DELETE, and so on.
 

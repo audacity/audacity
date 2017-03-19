@@ -53,6 +53,7 @@ class wxBoxSizer;
 class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;
+class wxTimerEvent;
 
 class AudacityProject;
 class AutoSaveFile;
@@ -143,7 +144,8 @@ class ImportXMLTagHandler final : public XMLTagHandler
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override { return NULL; }
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override
+      { return NULL; }
 
    // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
    // <import> tags are instead written by AudacityProject::WriteXML.
@@ -169,6 +171,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks.get(); }
+   const TrackList *GetTracks() const { return mTracks.get(); }
    UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
@@ -262,6 +265,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
+   const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
 
    bool GetIsEmpty();
 
@@ -299,6 +303,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 #include "Menus.h"
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
+   const CommandManager *GetCommandManager() const { return &mCommandManager; }
 
    // Keyboard capture
    static bool HasKeyboardCapture(const wxWindow *handler);
@@ -461,6 +466,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    SpectralSelectionBar *GetSpectralSelectionBar();
 #endif
    ToolsToolBar *GetToolsToolBar();
+   const ToolsToolBar *GetToolsToolBar() const;
    TranscriptionToolBar *GetTranscriptionToolBar();
 
    Meter *GetPlaybackMeter();
@@ -507,7 +513,7 @@ public:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) /* not override */;
 
-   void WriteXMLHeader(XMLWriter &xmlFile);
+   void WriteXMLHeader(XMLWriter &xmlFile) const;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
@@ -544,8 +550,8 @@ public:
    void DeleteCurrentAutoSaveFile();
 
  public:
-   bool IsSoloSimple() { return mSoloPref == wxT("Simple"); }
-   bool IsSoloNone() { return mSoloPref == wxT("None"); }
+   bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
+   bool IsSoloNone() const { return mSoloPref == wxT("None"); }
 
  private:
 

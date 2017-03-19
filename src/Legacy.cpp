@@ -44,45 +44,8 @@ On failure the old version is put back in place.
 #include "Legacy.h"
 #include "xml/XMLWriter.h"
 
-class AutoRollbackRenamer {
-public:
-   AutoRollbackRenamer(wxString oldName, wxString newName) {
-      mOldName = oldName;
-      mNewName = newName;
-      mRenameSucceeded = ::wxRenameFile(mOldName, mNewName);
-      mFinished = false;
-      mNewFile = NULL;
-   }
-   ~AutoRollbackRenamer()
-   {
-      if (mNewFile)
-         fclose(mNewFile);
-
-      if (mRenameSucceeded && !mFinished) {
-         ::wxRemoveFile(mOldName);
-         ::wxRenameFile(mNewName, mOldName);
-      }
-   }
-   bool RenameSucceeded()
-   {
-      return mRenameSucceeded;
-   }
-   void Finished()
-   {
-      mFinished = true;
-   }
-   void SetNewFile(FILE *f)
-   {
-      mNewFile = f;
-   }
-
-   wxString mOldName, mNewName;
-   bool mRenameSucceeded;
-   bool mFinished;
-   FILE *mNewFile;
-};
-
 static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
+// may throw
 {
    wxString line;
    wxString kind;
@@ -290,42 +253,15 @@ static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
 bool ConvertLegacyProjectFile(const wxFileName &filename)
 {
    wxTextFile f;
-   XMLFileWriter xmlFile;
-   int index = 0;
-   wxString backupName;
 
-   do {
-      index++;
-      fflush(stdout);
-      backupName = filename.GetPath() + wxFILE_SEP_PATH + filename.GetName() +
-         wxT("_bak") + wxString::Format(wxT("%d"), index) + wxT(".") + filename.GetExt();
-   } while(::wxFileExists(backupName));
-
-   // This will move the original file out of the way, but
-   // move it back if we exit from this function early.
-   AutoRollbackRenamer renamer(filename.GetFullPath(), backupName);
-   if (!renamer.RenameSucceeded())
-      return false;
-
-   f.Open(backupName);
+   const wxString name = filename.GetFullPath();
+   f.Open( name );
    if (!f.IsOpened())
       return false;
 
-   wxString name = filename.GetFullPath();
+   return GuardedCall< bool >( [&] {
+      XMLFileWriter xmlFile{ name, _("Error Converting Legacy Project File") };
 
-   try
-   {
-      xmlFile.Open(name, wxT("wb"));
-   }
-   catch (const XMLFileWriterException&)
-   {
-      return false;
-   }
-
-   renamer.SetNewFile(xmlFile.fp());
-
-   try
-   {
       xmlFile.Write(wxT("<?xml version=\"1.0\"?>\n"));
 
       wxString label;
@@ -359,19 +295,15 @@ bool ConvertLegacyProjectFile(const wxFileName &filename)
          label = f.GetNextLine();
       }
 
+      // Close original before Commit() tries to overwrite it.
+      f.Close();
+
       xmlFile.EndTag(wxT("audacityproject"));
-      xmlFile.Close();
-   }
-   catch (const XMLFileWriterException&)
-   {
-      // Error writing XML file (e.g. disk full)
-      return false;
-   }
+      xmlFile.Commit();
 
-   renamer.Finished();
+      ::wxMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), xmlFile.GetBackupName().c_str()),
+                     _("Opening Audacity Project"));
 
-   ::wxMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), backupName.c_str()),
-                  _("Opening Audacity Project"));
-
-   return true;
+      return true;
+   } );
 }

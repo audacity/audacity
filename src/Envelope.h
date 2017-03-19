@@ -43,7 +43,7 @@ public:
    double GetVal() const { return mVal; }
    inline void SetVal(double val);
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override
    {
       if (!wxStrcmp(tag, wxT("controlpoint"))) {
          while (*attrs) {
@@ -60,7 +60,7 @@ public:
          return false;
    }
 
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) override
    {
       return NULL;
    }
@@ -81,13 +81,14 @@ class Envelope final : public XMLTagHandler {
 
    virtual ~ Envelope();
 
+   double GetOffset() const { return mOffset; }
+   double GetTrackLen() const { return mTrackLen; }
+
    bool GetInterpolateDB() { return mDB; }
    void SetInterpolateDB(bool db) { mDB = db; }
-   void Mirror(bool mirror);
    void Rescale(double minValue, double maxValue);
 
    void Flatten(double value);
-   int GetDragPoint(void)   {return mDragPoint;}
 
    double GetMinValue() const { return mMinValue; }
    double GetMaxValue() const { return mMaxValue; }
@@ -107,21 +108,8 @@ class Envelope final : public XMLTagHandler {
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
-             bool dB, double dBRange,
-             float zoomMin, float zoomMax) const;
-
-   // Event Handlers
-   // Each ofthese returns true if parents needs to be redrawn
-   bool MouseEvent(wxMouseEvent & event, wxRect & r,
-                   const ZoomInfo &zoomInfo, bool dB, double dBRange,
-                   float zoomMin, float zoomMax);
-   bool HandleMouseButtonDown( wxMouseEvent & event, wxRect & r,
-                               const ZoomInfo &zoomInfo, bool dB, double dBRange,
-                               float zoomMin, float zoomMax);
-   bool HandleDragging( wxMouseEvent & event, wxRect & r,
-                        const ZoomInfo &zoomInfo, bool dB, double dBRange,
-                        float zoomMin, float zoomMax);
-   bool HandleMouseButtonUp();
+      bool dB, double dBRange,
+      float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
    void CollapseRegion(double t0, double t1);
@@ -179,30 +167,40 @@ class Envelope final : public XMLTagHandler {
    void Insert(int point, const EnvPoint &p);
 
    /** \brief Return number of points */
-   int GetNumberOfPoints() const;
+   size_t GetNumberOfPoints() const;
 
+private:
+   friend class EnvelopeEditor;
    /** \brief Accessor for points */
-   const EnvPoint &operator[] (int index) const
+   EnvPoint &operator[] (int index)
    {
       return mEnv[index];
    }
 
+public:
    /** \brief Returns the sets of when and value pairs */
    void GetPoints(double *bufferWhen,
-                  double *bufferValue,
-                  int bufferLen) const;
+      double *bufferValue,
+      int bufferLen) const;
+
+   // UI-related
+   // The drag point needs to display differently.
+   int GetDragPoint() const { return mDragPoint; }
+   // Choose the drag point.
+   void SetDragPoint(int dragPoint);
+   // Mark or unmark the drag point for deletion.
+   void SetDragPointValid(bool valid);
+   bool GetDragPointValid() const { return mDragPointValid; }
+   // Modify the dragged point and change its value.
+   // But consistency constraints may move it less then you ask for.
+   void MoveDragPoint(double newWhen, double value);
+   // May delete the drag point.  Restores envelope consistency.
+   void ClearDragPoint();
 
 private:
    EnvPoint *  AddPointAtEnd( double t, double val );
-   void MarkDragPointForDeletion();
-   float ValueOfPixel( int y, int height, bool upper,
-                       bool dB, double dBRange,
-                       float zoomMin, float zoomMax);
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
-   void MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
-                               const ZoomInfo &zoomInfo, bool dB, double dBRange,
-                               float zoomMin, float zoomMax);
 
    // Possibly inline functions:
    // This function resets them integral memoizers (call whenever the Envelope changes)
@@ -210,7 +208,6 @@ private:
 
    // The list of envelope control points.
    EnvArray mEnv;
-   bool mMirror;
 
    /** \brief The time at which the envelope starts, i.e. the start offset */
    double mOffset;
@@ -224,21 +221,7 @@ private:
     * before being considered the same point */
    double mTrackEpsilon;
    double mDefaultValue;
-
-   /** \brief Number of pixels contour is from the true envelope. */
-   int mContourOffset;
-
-   double mInitialVal;
-
-   // These are used in dragging.
-   int mDragPoint;
-   int mInitialY;
-   bool mUpper;
-   bool mIsDeleting;
-   int mButton;
    bool mDB;
-   bool mDirty;
-
    double mMinValue, mMaxValue;
 
    // These are memoizing variables for Integral()
@@ -246,8 +229,11 @@ private:
    double lastIntegral_t1;
    double lastIntegral_result;
 
-   mutable int mSearchGuess;
+   // UI stuff
+   bool mDragPointValid;
+   int mDragPoint;
 
+   mutable int mSearchGuess;
 };
 
 inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)
@@ -262,5 +248,49 @@ inline void EnvPoint::SetVal(double val)
    mVal = mEnvelope->ClampValue(val);
 }
 
-#endif
+// A class that holds state for the duration of dragging
+// of an envelope point.
+class EnvelopeEditor
+{
+public:
+   EnvelopeEditor(Envelope &envelope, bool mirrored);
+   ~EnvelopeEditor();
 
+   // Event Handlers
+   // Each of these returns true if the envelope needs to be redrawn
+   bool MouseEvent(const wxMouseEvent & event, wxRect & r,
+      const ZoomInfo &zoomInfo, bool dB, double dBRange,
+      float zoomMin = -1.0, float zoomMax = 1.0);
+
+private:
+   bool HandleMouseButtonDown(const wxMouseEvent & event, wxRect & r,
+      const ZoomInfo &zoomInfo, bool dB, double dBRange,
+      float zoomMin = -1.0, float zoomMax = 1.0);
+   bool HandleDragging(const wxMouseEvent & event, wxRect & r,
+      const ZoomInfo &zoomInfo, bool dB, double dBRange,
+      float zoomMin = -1.0, float zoomMax = 1.0, float eMin = 0., float eMax = 2.);
+   bool HandleMouseButtonUp();
+
+private:
+   float ValueOfPixel(int y, int height, bool upper,
+      bool dB, double dBRange,
+      float zoomMin, float zoomMax);
+   void MoveDragPoint(const wxMouseEvent & event, wxRect & r,
+      const ZoomInfo &zoomInfo, bool dB, double dBRange,
+      float zoomMin, float zoomMax);
+
+   Envelope &mEnvelope;
+   const bool mMirrored;
+
+   /** \brief Number of pixels contour is from the true envelope. */
+   int mContourOffset;
+
+   // double mInitialVal;
+
+   // int mInitialY;
+   bool mUpper;
+   int mButton;
+   bool mDirty;
+};
+
+#endif

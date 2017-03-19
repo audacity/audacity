@@ -55,6 +55,9 @@ out.
 
 #include "Internat.h"
 #include "MemoryX.h"
+#include "sndfile.h"
+#include "FileFormats.h"
+#include "AudacityApp.h"
 
 // msmeyer: Define this to add debug output via printf()
 //#define DEBUG_BLOCKFILE
@@ -190,13 +193,11 @@ void *BlockFile::CalcSummary(samplePtr buffer, size_t len,
    float *summary64K = (float *)(fullSummary.get() + mSummaryInfo.offset64K);
    float *summary256 = (float *)(fullSummary.get() + mSummaryInfo.offset256);
 
-   float *fbuffer = new float[len];
+   Floats fbuffer{ len };
    CopySamples(buffer, format,
-               (samplePtr)fbuffer, floatSample, len);
+               (samplePtr)fbuffer.get(), floatSample, len);
 
-   CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
-
-   delete[] fbuffer;
+   CalcSummaryFromBuffer(fbuffer.get(), len, summary256, summary64K);
 
    return fullSummary.get();
 }
@@ -346,7 +347,7 @@ void BlockFile::FixSummary(void *data)
 
    if (min != summary64K[0] || max != summary64K[1] || bad > 0) {
       unsigned int *buffer = (unsigned int *)data;
-      int len = mSummaryInfo.totalSummaryBytes / 4;
+      auto len = mSummaryInfo.totalSummaryBytes / 4;
 
       for(i=0; i<len; i++)
          buffer[i] = wxUINT32_SWAP_ALWAYS(buffer[i]);
@@ -433,14 +434,14 @@ bool BlockFile::Read256(float *buffer,
 {
    wxASSERT(start >= 0);
 
-   char *summary = new char[mSummaryInfo.totalSummaryBytes];
+   ArrayOf<char> summary{ mSummaryInfo.totalSummaryBytes };
    // FIXME: TRAP_ERR ReadSummary() could return fail.
-   this->ReadSummary(summary);
+   this->ReadSummary(summary.get());
 
    start = std::min( start, mSummaryInfo.frames256 );
    len = std::min( len, mSummaryInfo.frames256 - start );
 
-   CopySamples(summary + mSummaryInfo.offset256 + (start * mSummaryInfo.bytesPerFrame),
+   CopySamples(summary.get() + mSummaryInfo.offset256 + (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
                (samplePtr)buffer, floatSample, len * mSummaryInfo.fields);
 
@@ -452,8 +453,6 @@ bool BlockFile::Read256(float *buffer,
          buffer[3*i] = buffer[2*i];
       }
    }
-
-   delete[] summary;
 
    return true;
 }
@@ -472,14 +471,14 @@ bool BlockFile::Read64K(float *buffer,
 {
    wxASSERT(start >= 0);
 
-   char *summary = new char[mSummaryInfo.totalSummaryBytes];
+   ArrayOf<char> summary{ mSummaryInfo.totalSummaryBytes };
    // FIXME: TRAP_ERR ReadSummary() could return fail.
-   this->ReadSummary(summary);
+   this->ReadSummary(summary.get());
 
    start = std::min( start, mSummaryInfo.frames64K );
    len = std::min( len, mSummaryInfo.frames64K - start );
 
-   CopySamples(summary + mSummaryInfo.offset64K +
+   CopySamples(summary.get() + mSummaryInfo.offset64K +
                (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
                (samplePtr)buffer, floatSample, len*mSummaryInfo.fields);
@@ -493,9 +492,136 @@ bool BlockFile::Read64K(float *buffer,
       }
    }
 
-   delete[] summary;
-
    return true;
+}
+
+size_t BlockFile::CommonReadData(
+   const wxFileName &fileName, bool &mSilentLog,
+   const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
+   samplePtr data, sampleFormat format, size_t start, size_t len,
+   const sampleFormat *pLegacyFormat, size_t legacyLen)
+{
+   // Third party library has its own type alias, check it before
+   // adding origin + size_t
+   static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
+                 "Type sf_count_t is too narrow to hold a sampleCount");
+
+   SF_INFO info;
+   memset(&info, 0, sizeof(info));
+
+   if ( pLegacyFormat ) {
+      switch( *pLegacyFormat ) {
+         case int16Sample:
+            info.format =
+            SF_FORMAT_RAW | SF_FORMAT_PCM_16 | SF_ENDIAN_CPU;
+            break;
+         default:
+         case floatSample:
+            info.format =
+            SF_FORMAT_RAW | SF_FORMAT_FLOAT | SF_ENDIAN_CPU;
+            break;
+         case int24Sample:
+            info.format = SF_FORMAT_RAW | SF_FORMAT_PCM_32 | SF_ENDIAN_CPU;
+            break;
+      }
+      info.samplerate = 44100; // Doesn't matter
+      info.channels = 1;
+      info.frames = legacyLen + origin.as_long_long();
+   }
+
+
+   wxFile f;   // will be closed when it goes out of scope
+   SFFile sf;
+
+   {
+      Maybe<wxLogNull> silence{};
+      if (mSilentLog)
+         silence.create();
+
+      const auto fullPath = fileName.GetFullPath();
+      if (wxFile::Exists(fullPath) && f.Open(fullPath)) {
+         // Even though there is an sf_open() that takes a filename, use the one that
+         // takes a file descriptor since wxWidgets can open a file with a Unicode name and
+         // libsndfile can't (under Windows).
+         sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
+      }
+      // FIXME: TRAP_ERR failure of wxFile open incompletely handled in BlockFile::CommonReadData.
+
+      if (!sf) {
+
+         memset(data, 0, SAMPLE_SIZE(format)*len);
+
+         mSilentLog = TRUE;
+
+         if (pAliasFile) {
+            // Set a marker to display an error message for the silence
+            if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
+               wxGetApp().MarkAliasedFilesMissingWarning(pAliasFile);
+         }
+
+         return len;
+      }
+   }
+   mSilentLog=FALSE;
+
+   SFCall<sf_count_t>(
+      sf_seek, sf.get(), ( origin + start ).as_long_long(), SEEK_SET);
+
+   auto channels = info.channels;
+   wxASSERT(channels >= 1);
+   wxASSERT(channel < channels);
+
+   size_t framesRead = 0;
+
+   if (channels == 1 &&
+       format == int16Sample &&
+       sf_subtype_is_integer(info.format)) {
+      // If both the src and dest formats are integer formats,
+      // read integers directly from the file, comversions not needed
+      framesRead = SFCall<sf_count_t>(
+         sf_readf_short, sf.get(), (short *)data, len);
+   }
+   else if (channels == 1 &&
+            format == int24Sample &&
+            sf_subtype_is_integer(info.format)) {
+      framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
+
+      // libsndfile gave us the 3 byte sample in the 3 most
+      // significant bytes -- we want it in the 3 least
+      // significant bytes.
+      int *intPtr = (int *)data;
+      for( int i = 0; i < framesRead; i++ )
+         intPtr[i] = intPtr[i] >> 8;
+   }
+   else if (format == int16Sample &&
+            !sf_subtype_more_than_16_bits(info.format)) {
+      // Special case: if the file is in 16-bit (or less) format,
+      // and the calling method wants 16-bit data, go ahead and
+      // read 16-bit data directly.  This is a pretty common
+      // case, as most audio files are 16-bit.
+      SampleBuffer buffer(len * channels, int16Sample);
+      framesRead = SFCall<sf_count_t>(
+         sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
+      for (int i = 0; i < framesRead; i++)
+         ((short *)data)[i] =
+         ((short *)buffer.ptr())[(channels * i) + channel];
+   }
+   else {
+      // Otherwise, let libsndfile handle the conversion and
+      // scaling, and pass us normalized data as floats.  We can
+      // then convert to whatever format we want.
+      SampleBuffer buffer(len * channels, floatSample);
+      framesRead = SFCall<sf_count_t>(
+         sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
+      auto bufferPtr = (samplePtr)((float *)buffer.ptr() + channel);
+      CopySamples(bufferPtr, floatSample,
+                  (samplePtr)data, format,
+                  framesRead,
+                  true /* high quality by default */,
+                  channels /* source stride */);
+   }
+
+   return framesRead;
 }
 
 /// Constructs an AliasBlockFile based on the given information about
@@ -603,7 +729,7 @@ bool AliasBlockFile::ReadSummary(void *data)
       if (!summaryFile.IsOpened()){
 
          // NEW model; we need to return valid data
-         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+         memset(data, 0, mSummaryInfo.totalSummaryBytes);
 
          // we silence the logging for this operation in this object
          // after first occurrence of error; it's already reported and
@@ -616,7 +742,7 @@ bool AliasBlockFile::ReadSummary(void *data)
       else mSilentLog = FALSE; // worked properly, any future error is NEW
    }
 
-   int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+   auto read = summaryFile.Read(data, mSummaryInfo.totalSummaryBytes);
 
    FixSummary(data);
 

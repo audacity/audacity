@@ -17,6 +17,7 @@
 #include <wx/textctrl.h>
 
 #include "Effect.h"
+#include "../SampleFormat.h"
 
 class ShuttleGui;
 
@@ -58,7 +59,7 @@ private:
 private:
    double delay;
    double decay;
-   float *history;
+   Floats history;
    size_t histPos;
    size_t histLen;
 };

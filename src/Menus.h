@@ -233,6 +233,11 @@ public:
 void OnUndo();
 void OnRedo();
 
+private:
+static void FinishCopy(const Track *n, Track *dest);
+static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
+
+public:
 void OnCut();
 void OnSplitCut();
 void OnCopy();
@@ -334,7 +339,7 @@ void OnTogglePinnedHead();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   void OnToogleAutomatedInputLevelAdjustment();
+   void OnToggleAutomatedInputLevelAdjustment();
 #endif
 void OnRescanDevices();
 
@@ -421,6 +426,7 @@ void OnAbout();
 void OnQuickHelp();
 void OnManual();
 void OnCheckForUpdates();
+void MayCheckForUpdates();
 void OnShowLog();
 void OnHelpWelcome();
 void OnBenchmark();

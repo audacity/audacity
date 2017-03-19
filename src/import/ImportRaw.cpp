@@ -87,7 +87,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxTextCtrl *mRateText;
 
    int         mNumEncodings;
-   int        *mEncodingSubtype;
+   ArrayOf<int> mEncodingSubtype;
 
    DECLARE_EVENT_TABLE()
 };
@@ -102,7 +102,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    double rate = 44100.0;
    double percent = 100.0;
    TrackHolders channels;
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    {
       SF_INFO sndInfo;
@@ -255,7 +255,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
             // This is not supposed to happen, sndfile.h says result is always
             // a count, not an invalid value for error
             wxASSERT(false);
-            updateResult = eProgressFailed;
+            updateResult = ProgressResult::Failed;
             break;
          }
 
@@ -282,13 +282,13 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
             framescompleted.as_long_long(),
             totalFrames.as_long_long()
          );
-         if (updateResult != eProgressSuccess)
+         if (updateResult != ProgressResult::Success)
             break;
          
       } while (block > 0 && framescompleted < totalFrames);
    }
 
-   if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
+   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled) {
       // It's a shame we can't return proper error code
       return;
    }
@@ -340,7 +340,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
    num = sf_num_encodings();
    mNumEncodings = 0;
-   mEncodingSubtype = new int[num];
+   mEncodingSubtype.reinit(static_cast<size_t>(num));
 
    selection = 0;
    for (i=0; i<num; i++) {
@@ -464,7 +464,6 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
 ImportRawDialog::~ImportRawDialog()
 {
-   delete[] mEncodingSubtype;
 }
 
 void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))

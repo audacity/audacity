@@ -9,7 +9,7 @@
 ******************************************************************//**
 
 \class NyquistEffect
-\brief An Effect that calls up a Nyquist (XLISP) plug in, i.e. many possible
+\brief An Effect that calls up a Nyquist (XLISP) plug-in, i.e. many possible
 effects from this one class.
 
 *//****************************************************************//**
@@ -45,6 +45,7 @@ effects from this one class.
 #include <wx/numformatter.h>
 
 #include "../../AudacityApp.h"
+#include "../../FileException.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../LabelTrack.h"
@@ -506,7 +507,10 @@ bool NyquistEffect::Process()
       {
          list += wxT("\"") + EscapeString(paths[i]) + wxT("\" ");
       }
-      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.RemoveLast().c_str());
+      list = list.RemoveLast();
+      // TODO:Document: "PLUGIN" is deprecated as of Audacity 2.1.3. Use "PLUG-IN" instead.
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list.c_str());
 
 
       // Date and time:
@@ -517,7 +521,7 @@ bool NyquistEffect::Process()
       // enumerated constants
       wxDateTime::Month month = now.GetMonth();
       wxDateTime::WeekDay day = now.GetWeekDay();
-      
+
       // Date/time as a list: year, day of year, hour, minute, seconds
       mProps += wxString::Format(wxT("(setf *SYSTEM-TIME* (list %d %d %d %d %d))\n"),
                                  year, doy, now.GetHour(), now.GetMinute(), now.GetSecond());
@@ -532,6 +536,10 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
 
+      // TODO: Document: Number of open projects
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), gAudacityProjects.size());
+      // TODO: Document. NOTE: unnamed project returns an empty string.
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetName().c_str());
 
       TrackListIterator all(project->GetTracks());
       Track *t;
@@ -768,12 +776,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    region.setF0(mF0);
    region.setF1(mF1);
 #endif
-   return effect.DoEffect(parent,
-                          mProjectRate,
-                          mTracks,
-                          mFactory,
-                          &region,
-                          true);
+   return Delegate(effect, parent, &region, true);
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
@@ -831,6 +834,9 @@ bool NyquistEffect::TransferDataFromWindow()
 
 bool NyquistEffect::ProcessOne()
 {
+   mError = false;
+   mFailedFileName.Clear();
+
    nyx_rval rval;
 
    wxString cmd;
@@ -852,11 +858,13 @@ bool NyquistEffect::ProcessOne()
       wxString type;
       wxString view;
       wxString bitFormat;
+      wxString spectralEditp;
 
       switch (mCurTrack[0]->GetKind())
       {
          case Track::Wave:
             type = wxT("wave");
+            spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
                case WaveTrack::Waveform:
@@ -890,6 +898,9 @@ bool NyquistEffect::ProcessOne()
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
+
+      //TODO: Document NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
+      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp.c_str());
 
       double startTime = 0.0;
       double endTime = 0.0;
@@ -933,12 +944,16 @@ bool NyquistEffect::ProcessOne()
       }
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'FORMAT)\n"), bitFormat.c_str());
 
-      float maxPeak = 0.0;
-      wxString clips;
-      for (int i = 0; i < mCurNumChannels; i++) {
+      float maxPeakLevel = 0.0;  // Deprecated as of 2.1.3
+      wxString clips, peakString, rmsString;
+      for (size_t i = 0; i < mCurNumChannels; i++) {
          auto ca = mCurTrack[i]->SortedClipArray();
+         float maxPeak = 0.0;
+
          // A list of clips for mono, or an array of lists for multi-channel.
-         if (mCurNumChannels > 1) clips += wxT("(list ");
+         if (mCurNumChannels > 1) {
+            clips += wxT("(list ");
+         }
          // Each clip is a list (start-time, end-time)
          for (const auto clip: ca) {
             clips += wxString::Format(wxT("(list (float %s) (float %s))"),
@@ -950,13 +965,45 @@ bool NyquistEffect::ProcessOne()
          float min, max;
          mCurTrack[i]->GetMinMax(&min, &max, mT0, mT1);
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
+         maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
+
+         // TODO: Document, PEAK is nil if NaN or INF.
+         // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
+         if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
+            peakString += wxString::Format(wxT("(float %s) "), Internat::ToString(maxPeak).c_str());
+         } else {
+            peakString += wxT("nil");
+         }
+
+         float rms = 0.0;
+         mCurTrack[i]->GetRMS(&rms, mT0, mT1);
+         if (!std::isinf(rms) && !std::isnan(rms)) {
+            rmsString += wxString::Format(wxT("(float %s) "), Internat::ToString(rms).c_str());
+         } else {
+            rmsString += wxT("nil ");
+         }
       }
       // A list of clips for mono, or an array of lists for multi-channel.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
                               (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
                               clips.c_str());
-      cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
-                              Internat::ToString(maxPeak).c_str());
+
+      // TODO: Document, PEAK is linear PEAK per channel.
+      (mCurNumChannels > 1)?
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'PEAK)\n"), peakString);
+
+      // TODO: Documen, PEAK-LEVEL is deprecated as of 2.1.3.
+      // TODO: Document, PEAK-LEVEL is nil if NaN or INF.
+      if (!std::isinf(maxPeakLevel) && !std::isnan(maxPeakLevel) && (maxPeakLevel < FLT_MAX)) {
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
+                                 Internat::ToString(maxPeakLevel).c_str());
+      }
+
+      // TODO: Document, RMS is linear RMS per channel.
+      (mCurNumChannels > 1)?
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'RMS)\n"), rmsString) :
+         cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'RMS)\n"), rmsString);
    }
 
    if (GetType() == EffectTypeGenerate) {
@@ -976,11 +1023,11 @@ bool NyquistEffect::ProcessOne()
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
       nyx_set_input_audio(StaticGetCallback, (void *)this,
-                          mCurNumChannels,
+                          (int)mCurNumChannels,
                           curLen, mCurTrack[0]->GetRate());
    }
 
-   // Restore the Nyquist sixteenth note symbol for Generate plugins.
+   // Restore the Nyquist sixteenth note symbol for Generate plug-ins.
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490.
    if (GetType() == EffectTypeGenerate) {
       cmd += wxT("(setf s 0.25)\n");
@@ -1156,8 +1203,8 @@ bool NyquistEffect::ProcessOne()
       return false;
    }
 
-   auto outChannels = nyx_get_audio_num_channels();
-   if (outChannels > mCurNumChannels) {
+   int outChannels = nyx_get_audio_num_channels();
+   if (outChannels > (int)mCurNumChannels) {
       wxMessageBox(_("Nyquist returned too many audio channels.\n"),
                    wxT("Nyquist"),
                    wxOK | wxCENTRE, mUIParent);
@@ -1182,7 +1229,7 @@ bool NyquistEffect::ProcessOne()
    for (i = 0; i < outChannels; i++) {
       sampleFormat format = mCurTrack[i]->GetSampleFormat();
 
-      if (outChannels == mCurNumChannels) {
+      if (outChannels == (int)mCurNumChannels) {
          rate = mCurTrack[i]->GetRate();
       }
 
@@ -1192,10 +1239,22 @@ bool NyquistEffect::ProcessOne()
 
    int success = nyx_get_audio(StaticPutCallback, (void *)this);
 
+   // See if GetCallback found read errors
+   if (mFailedFileName.IsOk())
+      // re-construct an exception
+      // I wish I had std::exception_ptr instead
+      // and could re-throw any AudacityException
+      throw FileException{
+         FileException::Cause::Read, mFailedFileName };
+   else if (mError)
+      // what, then?
+      success = false;
+
    if (!success) {
       for(i = 0; i < outChannels; i++) {
          mOutputTrack[i].reset();
       }
+
       return false;
    }
 
@@ -1218,7 +1277,7 @@ bool NyquistEffect::ProcessOne()
    for (i = 0; i < mCurNumChannels; i++) {
       WaveTrack *out;
 
-      if (outChannels == mCurNumChannels) {
+      if (outChannels == (int)mCurNumChannels) {
          out = mOutputTrack[i].get();
       }
       else {
@@ -1399,7 +1458,7 @@ void NyquistEffect::Parse(const wxString &line)
    }
 
    // Consistency decission is for "plug-in" as the correct spelling
-   // "plugin" is allowed as an undocumented convenience.
+   // "plugin" (deprecated) is allowed as an undocumented convenience.
    if (len == 2 && tokens[0] == wxT("nyquist") &&
       (tokens[1] == wxT("plug-in") || tokens[1] == wxT("plugin"))) {
       mOK = true;
@@ -1576,7 +1635,7 @@ void NyquistEffect::Parse(const wxString &line)
          else
          {
             wxString str;
-            str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\nControl not created."),
+            str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
                        tokens[3].c_str(), mFileName.GetFullPath().c_str());
 
             // Too disturbing to show alert before Audacity frame is up.
@@ -1611,7 +1670,7 @@ void NyquistEffect::Parse(const wxString &line)
          }
 
          if (ctrl.high < ctrl.low) {
-            ctrl.high = ctrl.low + 1;
+            ctrl.high = ctrl.low;
          }
 
          if (ctrl.val < ctrl.low) {
@@ -1667,27 +1726,30 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
       }
       else if (!mFoundType && line.Length() > 0)
       {
-         mFoundType = true;
-
          if (line[0] == wxT('(') ||
             (line[0] == wxT('#') && line.Length() > 1 && line[1] == wxT('|')))
          {
             mIsSal = false;
+            mFoundType = true;
          }
          else if (line.Upper().Find(wxT("RETURN")) != wxNOT_FOUND)
          {
             mIsSal = true;
+            mFoundType = true;
          }
-         else if (mIsPrompt)
-         {
-            wxMessageBox(_("Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n\treturn s * 0.1\nfor SAL, or begin with an open parenthesis such as\n\t(mult s 0.1)\n for LISP."), _("Error in Nyquist code"), wxOK | wxCENTRE);
-            return false;
-         }
-         // Just throw it at Nyquist to see what happens
       }
-
       // preserve comments so that SAL effects compile with proper line numbers
       mCmd += line + wxT("\n");
+   }
+   if (!mFoundType && mIsPrompt)
+   {
+      wxMessageBox(_("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
+For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
+or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
+                   _("Error in Nyquist code"),
+                   wxOK | wxCENTRE);
+      return false;
+      // Else just throw it at Nyquist to see what happens
    }
 
    return true;
@@ -1743,11 +1805,19 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
                                 mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
       mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
-      if (!mCurTrack[ch]->Get(mCurBuffer[ch].ptr(), floatSample,
-                              mCurBufferStart[ch], mCurBufferLen[ch])) {
-
-         wxPrintf(wxT("GET error\n"));
-
+      try {
+         mCurTrack[ch]->Get(
+            mCurBuffer[ch].ptr(), floatSample,
+            mCurBufferStart[ch], mCurBufferLen[ch]);
+      }
+      catch ( const FileException& e ) {
+         if ( e.cause == FileException::Cause::Read )
+            mFailedFileName = e.fileName;
+         mError = true;
+         return -1;
+      }
+      catch ( ... ) {
+         mError = true;
          return -1;
       }
    }
@@ -1786,23 +1856,26 @@ int NyquistEffect::StaticPutCallback(float *buffer, int channel,
 int NyquistEffect::PutCallback(float *buffer, int channel,
                                long start, long len, long totlen)
 {
-   if (channel == 0) {
-      double progress = mScale*((float)(start+len)/totlen);
+   // Don't let C++ exceptions propagate through the Nyquist library
+   return GuardedCall<int>( [&] {
+      if (channel == 0) {
+         double progress = mScale*((float)(start+len)/totlen);
 
-      if (progress > mProgressOut) {
-         mProgressOut = progress;
+         if (progress > mProgressOut) {
+            mProgressOut = progress;
+         }
+
+         if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
+            return -1;
+         }
       }
 
-      if (TotalProgress(mProgressIn+mProgressOut+mProgressTot)) {
-         return -1;
+      if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
+         return 0;  // success
       }
-   }
 
-   if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
-      return 0;  // success
-   }
-
-   return -1; // failure
+      return -1; // failure
+   }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
 }
 
 void NyquistEffect::StaticOutputCallback(int c, void *This)
@@ -2265,7 +2338,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
       item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
-      // TODO use ShowInfoDialog() instead.
+      // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
       item = safenew wxTextCtrl(this, -1, message,
          wxDefaultPosition, wxSize(400, 200),

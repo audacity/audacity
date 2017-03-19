@@ -385,12 +385,10 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    return true;
 }
 
-bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const
+std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 {
-   dest.reset();
-
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
-      return false;
+      return {};
 
    int numBlocks = mBlock.size();
 
@@ -402,7 +400,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
    wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
-   dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
+   auto dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
    dest->mBlock.reserve(b1 - b0 + 1);
 
    SampleBuffer buffer(mMaxSamples, mSampleFormat);
@@ -445,7 +443,10 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
          dest->AppendBlock(block); // Increase ref count or duplicate file
    }
 
-   return ConsistencyCheck(wxT("Sequence::Copy()"));
+   if (! ConsistencyCheck(wxT("Sequence::Copy()")))
+      return {};
+
+   return dest;
 }
 
 namespace {
@@ -1024,7 +1025,8 @@ XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
 }
 
 // Throws exceptions rather than reporting errors.
-void Sequence::WriteXML(XMLWriter &xmlFile)
+void Sequence::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    unsigned int b;
 
@@ -1035,7 +1037,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
-      SeqBlock &bb = mBlock[b];
+      const SeqBlock &bb = mBlock[b];
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
       // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,
@@ -1307,7 +1309,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    // ... unless the mNumSamples ceiling applies, and then there are other defenses
    const auto s1 =
       std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
-   float *temp = new float[mMaxSamples];
+   Floats temp{ mMaxSamples };
 
    decltype(len) pixel = 0;
 
@@ -1399,13 +1401,13 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       default:
       case 1:
          // Read samples
-         Read((samplePtr)temp, floatSample, seqBlock, startPosition, num);
+         Read((samplePtr)temp.get(), floatSample, seqBlock, startPosition, num);
          break;
       case 256:
          // Read triples
          //check to see if summary data has been computed
          if (seqBlock.f->IsSummaryAvailable())
-            seqBlock.f->Read256(temp, startPosition, num);
+            seqBlock.f->Read256(temp.get(), startPosition, num);
          else
             //otherwise, mark the display as not yet computed
             blockStatus = -1 - b;
@@ -1414,7 +1416,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          // Read triples
          //check to see if summary data has been computed
          if (seqBlock.f->IsSummaryAvailable())
-            seqBlock.f->Read64K(temp, startPosition, num);
+            seqBlock.f->Read64K(temp.get(), startPosition, num);
          else
             //otherwise, mark the display as not yet computed
             blockStatus = -1 - b;
@@ -1430,7 +1432,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          auto midPosition = ((whereNow - start) / divisor).as_size_t();
          int diff(midPosition - filePosition);
          if (diff > 0) {
-            MinMaxSumsq values(temp, diff, divisor);
+            MinMaxSumsq values(temp.get(), diff, divisor);
             const int lastPixel = pixel - 1;
             float &lastMin = min[lastPixel];
             lastMin = std::min(lastMin, values.min);
@@ -1470,7 +1472,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          rmsDenom = (positionX - filePosition);
          wxASSERT(rmsDenom > 0);
          const float *const pv =
-            temp + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
+            temp.get() + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
          MinMaxSumsq values(pv, rmsDenom, divisor);
 
          // Assign results
@@ -1491,8 +1493,6 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    } // for each block file
 
    wxASSERT(pixel == len);
-
-   delete[] temp;
 
    return true;
 }
@@ -1545,8 +1545,9 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
             blockFileLog != NULL),
          lastBlock.start
       );
-      // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
+
       if (blockFileLog)
+         // shouldn't throw, because XMLWriter is not XMLFileWriter
          static_cast< SimpleBlockFile * >( &*newLastBlock.f )
             ->SaveXML( *blockFileLog );
 
@@ -1571,8 +1572,8 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
                                                 blockFileLog != NULL);
       }
 
-      // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
       if (blockFileLog)
+         // shouldn't throw, because XMLWriter is not XMLFileWriter
          static_cast< SimpleBlockFile * >( &*pFile )->SaveXML( *blockFileLog );
 
       mBlock.push_back(SeqBlock(pFile, mNumSamples));

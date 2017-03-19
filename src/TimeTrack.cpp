@@ -48,7 +48,6 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetInterpolateDB(true);
    mEnvelope->Flatten(1.0);
-   mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
 
@@ -75,7 +74,6 @@ TimeTrack::TimeTrack(const TimeTrack &orig):
    mEnvelope->SetTrackLen(DBL_MAX);
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
    mEnvelope->Flatten(1.0);
-   mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
    mEnvelope->Paste(0.0, orig.mEnvelope.get());
@@ -206,7 +204,8 @@ XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
   return NULL;
 }
 
-void TimeTrack::WriteXML(XMLWriter &xmlFile)
+void TimeTrack::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("timetrack"));
 
@@ -253,8 +252,8 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
    mRuler->Draw(dc, this);
 
-   double *envValues = new double[mid.width];
-   GetEnvelope()->GetValues(envValues, mid.width, 0, zoomInfo);
+   Doubles envValues{ size_t(mid.width) };
+   GetEnvelope()->GetValues(envValues.get(), mid.width, 0, zoomInfo);
 
    dc.SetPen(AColor::envelopePen);
 
@@ -269,9 +268,6 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
          int thisy = r.y + (int)y;
          AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
       }
-
-   if (envValues)
-      delete[]envValues;
 }
 
 void TimeTrack::testMe()

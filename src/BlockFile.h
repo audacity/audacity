@@ -38,12 +38,13 @@ class SummaryInfo {
    int            offset64K;
    size_t         frames256;
    int            offset256;
-   int            totalSummaryBytes;
+   size_t         totalSummaryBytes;
 };
 
 
 
 class BlockFile;
+class AliasBlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
 template< typename Result, typename... Args >
@@ -148,6 +149,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    //summary only), write out a placeholder of silence data (missing
    //.au) or mark the blockfile to deal some other way without spewing
    //errors.
+   // May throw exceptions for i/o errors.
    virtual void Recover() = 0;
    /// if we've detected an on-disk problem, the user opted to
    //continue and the error persists, don't keep reporting it.  The
@@ -184,6 +186,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Byte-swap the summary data, in case it was saved by a system
    /// on a different platform
    virtual void FixSummary(void *data);
+
+   static size_t CommonReadData(
+      const wxFileName &fileName, bool &mSilentLog,
+      const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
+      samplePtr data, sampleFormat format, size_t start, size_t len,
+      const sampleFormat *pLegacyFormat = nullptr, size_t legacyLen = 0);
 
  private:
    int mLockCount;
@@ -247,7 +255,7 @@ class AliasBlockFile /* not final */ : public BlockFile
 
    wxFileNameWrapper mAliasedFileName;
    sampleCount mAliasStart;
-   int         mAliasChannel;
+   const int         mAliasChannel;
    mutable bool        mSilentAliasLog;
 };
 

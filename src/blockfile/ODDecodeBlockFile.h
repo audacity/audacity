@@ -14,7 +14,7 @@
 \brief ODDecodeBlockFile is a special type of SimpleBlockFile that does not necessarily have summary OR audio data available
 The summary and audio is eventually computed and written to a file in a background thread.
 
-Load On-Demand implementation of the SimpleBlockFIle for audio files that need to be decoded (mp3,flac,etc..).
+Load On-Demand implementation of the SimpleBlockFile for audio files that need to be decoded (mp3,flac,etc..).
 
 Also, see ODPCMAliasBlockFile for a similar file.
 *//*******************************************************************/
@@ -32,6 +32,7 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #include "../ondemand/ODTaskThread.h"
 #include "../DirManager.h"
 #include "../ondemand/ODDecodeTask.h"
+#include <wx/atomic.h>
 #include <wx/thread.h>
 
 /// An AliasBlockFile that references uncompressed data in an existing file
@@ -76,19 +77,18 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
 
 
-   ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   ///Makes NEW ODDecodeBlockFile or SimpleBlockFile depending on summary availability
    BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
 
-   ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   ///Saves as xml ODDecodeBlockFile or SimpleBlockFile depending on summary availability
    void SaveXML(XMLWriter &xmlFile) override;
 
-   ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
+   ///Reconstructs from XML a ODDecodeBlockFile and reschedules it for OD loading
    static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);
 
    ///Writes the summary file if summary data is available
    void Recover(void) override;
 
-   ///A public interface to WriteSummary
    int DoWriteBlockFile(){return WriteODDecodeBlockFile();}
 
    int WriteODDecodeBlockFile();
@@ -167,8 +167,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    ///The original file the audio came from.
    wxFileNameWrapper mAudioFileName;
 
-   mutable ODLock    mDataAvailableMutex;
-   bool mDataAvailable;
+   wxAtomicInt mDataAvailable{ 0 };
    bool mDataBeingComputed;
 
    ODFileDecoder* mDecoder;
@@ -186,7 +185,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    sampleFormat mFormat;
 
    sampleCount mAliasStart;//where in the encoded audio file this block corresponds to.
-   int         mAliasChannel;//The channel number in the encoded file..
+   const int         mAliasChannel;//The channel number in the encoded file..
 
 };
 

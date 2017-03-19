@@ -39,6 +39,7 @@ greater use in future.
 
 #include "audacity/ConfigInterface.h"
 
+#include "../AudacityException.h"
 #include "../AudioIO.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
@@ -91,8 +92,6 @@ Effect::Effect()
 
    mClient = NULL;
 
-   mWarper = NULL;
-
    mTracks = NULL;
    mOutputTracksType = Track::None;
    mT0 = 0.0;
@@ -115,11 +114,6 @@ Effect::Effect()
 
    mNumAudioIn = 0;
    mNumAudioOut = 0;
-
-   mInBuffer = NULL;
-   mOutBuffer = NULL;
-   mInBufPos = NULL;
-   mOutBufPos = NULL;
 
    mBufferSize = 0;
    mBlockSize = 0;
@@ -682,7 +676,8 @@ bool Effect::HideUI()
 
 bool Effect::CloseUI()
 {
-   mUIParent->RemoveEventHandler(this);
+   if (mUIParent)
+      mUIParent->RemoveEventHandler(this);
 
    mUIParent = NULL;
    mUIDialog = NULL;
@@ -1224,6 +1219,13 @@ bool Effect::DoEffect(wxWindow *parent,
    return returnVal;
 }
 
+bool Effect::Delegate( Effect &delegate,
+   wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt)
+{
+   return delegate.DoEffect( parent, mProjectRate, mTracks, mFactory,
+      selectedRegion, shouldPrompt );
+}
+
 // All legacy effects should have this overridden
 bool Effect::Init()
 {
@@ -1284,8 +1286,8 @@ bool Effect::ProcessPass()
    bool editClipCanMove;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 
-   mInBuffer = NULL;
-   mOutBuffer = NULL;
+   mInBuffer.reset();
+   mOutBuffer.reset();
 
    ChannelName map[3];
 
@@ -1385,80 +1387,44 @@ bool Effect::ProcessPass()
       // If the buffer size has changed, then (re)allocate the buffers
       if (prevBufferSize != mBufferSize)
       {
-         // Get rid of any previous buffers
-         if (mInBuffer)
-         {
-            for (int i = 0; i < mNumAudioIn; i++)
-            {
-               if (mInBuffer[i])
-               {
-                  delete [] mInBuffer[i];
-               }
-            }
-            delete [] mInBuffer;
-            delete [] mInBufPos;
-         }
-
          // Always create the number of input buffers the client expects even if we don't have
          // the same number of channels.
-         mInBufPos = new float *[mNumAudioIn];
-         mInBuffer = new float *[mNumAudioIn];
-         for (int i = 0; i < mNumAudioIn; i++)
-         {
-            mInBuffer[i] = new float[mBufferSize];
-         }
+         mInBufPos.reinit( mNumAudioIn );
+         mInBuffer.reinit( mNumAudioIn, mBufferSize );
 
          // We won't be using more than the first 2 buffers, so clear the rest (if any)
-         for (int i = 2; i < mNumAudioIn; i++)
+         for (size_t i = 2; i < mNumAudioIn; i++)
          {
-            for (int j = 0; j < mBufferSize; j++)
+            for (size_t j = 0; j < mBufferSize; j++)
             {
                mInBuffer[i][j] = 0.0;
             }
          }
 
-         // Get rid of any previous buffers
-         if (mOutBuffer)
-         {
-            for (int i = 0; i < mNumAudioOut; i++)
-            {
-               if (mOutBuffer[i])
-               {
-                  delete [] mOutBuffer[i];
-               }
-            }
-            delete [] mOutBuffer;
-            delete [] mOutBufPos;
-         }
-
          // Always create the number of output buffers the client expects even if we don't have
          // the same number of channels.
-         mOutBufPos = new float *[mNumAudioOut];
-         mOutBuffer = new float *[mNumAudioOut];
-         for (int i = 0; i < mNumAudioOut; i++)
-         {
-            // Output buffers get an extra mBlockSize worth to give extra room if
-            // the plugin adds latency
-            mOutBuffer[i] = new float[mBufferSize + mBlockSize];
-         }
+         mOutBufPos.reinit( mNumAudioOut );
+         // Output buffers get an extra mBlockSize worth to give extra room if
+         // the plugin adds latency
+         mOutBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
       }
 
       // (Re)Set the input buffer positions
-      for (int i = 0; i < mNumAudioIn; i++)
+      for (size_t i = 0; i < mNumAudioIn; i++)
       {
-         mInBufPos[i] = mInBuffer[i];
+         mInBufPos[i] = mInBuffer[i].get();
       }
 
       // (Re)Set the output buffer positions
-      for (int i = 0; i < mNumAudioOut; i++)
+      for (size_t i = 0; i < mNumAudioOut; i++)
       {
-         mOutBufPos[i] = mOutBuffer[i];
+         mOutBufPos[i] = mOutBuffer[i].get();
       }
 
       // Clear unused input buffers
       if (!right && !clear && mNumAudioIn > 1)
       {
-         for (int j = 0; j < mBufferSize; j++)
+         for (size_t j = 0; j < mBufferSize; j++)
          {
             mInBuffer[1][j] = 0.0;
          }
@@ -1475,29 +1441,10 @@ bool Effect::ProcessPass()
       count++;
    }
 
-   if (mOutBuffer)
-   {
-      for (int i = 0; i < mNumAudioOut; i++)
-      {
-         delete [] mOutBuffer[i];
-      }
-      delete [] mOutBuffer;
-      delete [] mOutBufPos;
-      mOutBuffer = NULL;
-      mOutBufPos = NULL;
-   }
-
-   if (mInBuffer)
-   {
-      for (int i = 0; i < mNumAudioIn; i++)
-      {
-         delete [] mInBuffer[i];
-      }
-      delete [] mInBuffer;
-      delete [] mInBufPos;
-      mInBuffer = NULL;
-      mInBufPos = NULL;
-   }
+   mOutBuffer.reset();
+   mOutBufPos.reset();
+   mInBuffer.reset();
+   mInBufPos.reset();
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
    {
@@ -1549,7 +1496,7 @@ bool Effect::ProcessTrack(int count,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   auto chans = std::min(mNumAudioOut, mNumChannels);
+   auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
 
    std::unique_ptr<WaveTrack> genLeft, genRight;
    decltype(len) genLength = 0;
@@ -1566,7 +1513,7 @@ bool Effect::ProcessTrack(int count,
          genDur = mDuration;
       }
 
-      genLength = sampleCount( left->GetRate() * genDur );
+      genLength = sampleCount((left->GetRate() * genDur) + 0.5);  // round to nearest sample
       delayRemaining = genLength;
       cleared = true;
 
@@ -1592,16 +1539,16 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) mInBuffer[0], floatSample, inLeftPos, inputBufferCnt);
+            left->Get((samplePtr) mInBuffer[0].get(), floatSample, inLeftPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) mInBuffer[1], floatSample, inRightPos, inputBufferCnt);
+               right->Get((samplePtr) mInBuffer[1].get(), floatSample, inRightPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
-            for (int i = 0; i < mNumChannels; i++)
+            for (size_t i = 0; i < mNumChannels; i++)
             {
-               mInBufPos[i] = mInBuffer[i];
+               mInBufPos[i] = mInBuffer[i].get();
             }
          }
 
@@ -1617,7 +1564,7 @@ bool Effect::ProcessTrack(int count,
             // Clear the remainder of the buffers so that a full block can be passed
             // to the effect
             auto cnt = mBlockSize - curBlockSize;
-            for (int i = 0; i < mNumChannels; i++)
+            for (size_t i = 0; i < mNumChannels; i++)
             {
                for (decltype(cnt) j = 0 ; j < cnt; j++)
                {
@@ -1646,12 +1593,12 @@ bool Effect::ProcessTrack(int count,
          if (!cleared)
          {
             // Reset the input buffer positions
-            for (int i = 0; i < mNumChannels; i++)
+            for (size_t i = 0; i < mNumChannels; i++)
             {
-               mInBufPos[i] = mInBuffer[i];
+               mInBufPos[i] = mInBuffer[i].get();
 
                // And clear
-               for (int j = 0; j < mBlockSize; j++)
+               for (size_t j = 0; j < mBlockSize; j++)
                {
                   mInBuffer[i][j] = 0.0;
                }
@@ -1664,10 +1611,20 @@ bool Effect::ProcessTrack(int count,
       decltype(curBlockSize) processed;
       try
       {
-         processed = ProcessBlock(mInBufPos, mOutBufPos, curBlockSize);
+         processed = ProcessBlock(mInBufPos.get(), mOutBufPos.get(), curBlockSize);
+      }
+      catch( const AudacityException &e )
+      {
+         // PRL: Bug 437:
+         // Pass this along to our application-level handler
+         throw;
       }
       catch(...)
       {
+         // PRL:
+         // Exceptions for other reasons, maybe in third-party code...
+         // Continue treating them as we used to, but I wonder if these
+         // should now be treated the same way.
          return false;
       }
       wxASSERT(processed == curBlockSize);
@@ -1676,7 +1633,7 @@ bool Effect::ProcessTrack(int count,
       // Bump to next input buffer position
       if (inputRemaining != 0)
       {
-         for (int i = 0; i < mNumChannels; i++)
+         for (size_t i = 0; i < mNumChannels; i++)
          {
             mInBufPos[i] += curBlockSize;
          }
@@ -1713,7 +1670,7 @@ bool Effect::ProcessTrack(int count,
             // curDelay is bounded by curBlockSize:
             auto delay = curDelay.as_size_t();
             curBlockSize -= delay;
-            for (int i = 0; i < chans; i++)
+            for (size_t i = 0; i < chans; i++)
             {
                memmove(mOutBufPos[i], mOutBufPos[i] + delay, sizeof(float) * curBlockSize);
             }
@@ -1728,7 +1685,7 @@ bool Effect::ProcessTrack(int count,
       if (outputBufferCnt < mBufferSize)
       {
          // Bump to next output buffer position
-         for (int i = 0; i < chans; i++)
+         for (size_t i = 0; i < chans; i++)
          {
             mOutBufPos[i] += curBlockSize;
          }
@@ -1739,32 +1696,32 @@ bool Effect::ProcessTrack(int count,
          if (isProcessor)
          {
             // Write them out
-            left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
+            left->Set((samplePtr) mOutBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
             if (right)
             {
                if (chans >= 2)
                {
-                  right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) mOutBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
                }
                else
                {
-                  right->Set((samplePtr) mOutBuffer[0], floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) mOutBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
                }
             }
          }
          else if (isGenerator)
          {
-            genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
+            genLeft->Append((samplePtr) mOutBuffer[0].get(), floatSample, outputBufferCnt);
             if (genRight)
             {
-               genRight->Append((samplePtr) mOutBuffer[1], floatSample, outputBufferCnt);
+               genRight->Append((samplePtr) mOutBuffer[1].get(), floatSample, outputBufferCnt);
             }
          }
 
          // Reset the output buffer positions
-         for (int i = 0; i < chans; i++)
+         for (size_t i = 0; i < chans; i++)
          {
-            mOutBufPos[i] = mOutBuffer[i];
+            mOutBufPos[i] = mOutBuffer[i].get();
          }
 
          // Bump to the next track position
@@ -1800,25 +1757,25 @@ bool Effect::ProcessTrack(int count,
    {
       if (isProcessor)
       {
-         left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
+         left->Set((samplePtr) mOutBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
          if (right)
          {
             if (chans >= 2)
             {
-               right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) mOutBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
             }
             else
             {
-               right->Set((samplePtr) mOutBuffer[0], floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) mOutBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
             }
          }
       }
       else if (isGenerator)
       {
-         genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
+         genLeft->Append((samplePtr) mOutBuffer[0].get(), floatSample, outputBufferCnt);
          if (genRight)
          {
-            genRight->Append((samplePtr) mOutBuffer[1], floatSample, outputBufferCnt);
+            genRight->Append((samplePtr) mOutBuffer[1].get(), floatSample, outputBufferCnt);
          }
       }
    }
@@ -1977,29 +1934,30 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
 
 bool Effect::TotalProgress(double frac)
 {
-   int updateResult = (mProgress ?
+   auto updateResult = (mProgress ?
       mProgress->Update(frac) :
-      eProgressSuccess);
-   return (updateResult != eProgressSuccess);
+      ProgressResult::Success);
+   return (updateResult != ProgressResult::Success);
 }
 
 bool Effect::TrackProgress(int whichTrack, double frac, const wxString &msg)
 {
-   int updateResult = (mProgress ?
+   auto updateResult = (mProgress ?
       mProgress->Update(whichTrack + frac, (double) mNumTracks, msg) :
-      eProgressSuccess);
-   return (updateResult != eProgressSuccess);
+      ProgressResult::Success);
+   return (updateResult != ProgressResult::Success);
 }
 
 bool Effect::TrackGroupProgress(int whichGroup, double frac, const wxString &msg)
 {
-   int updateResult = (mProgress ?
+   auto updateResult = (mProgress ?
       mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :
-      eProgressSuccess);
-   return (updateResult != eProgressSuccess);
+      ProgressResult::Success);
+   return (updateResult != ProgressResult::Success);
 }
 
-void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
+void Effect::GetSamples(
+   const WaveTrack *track, sampleCount *start, sampleCount *len)
 {
    double trackStart = track->GetStartTime();
    double trackEnd = track->GetEndTime();
@@ -2026,18 +1984,6 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
       *start = 0;
       *len  = 0;
    }
-}
-
-void Effect::SetTimeWarper(std::unique_ptr<TimeWarper> &&warper)
-{
-   wxASSERT(warper);
-   mWarper = std::move(warper);
-}
-
-TimeWarper *Effect::GetTimeWarper()
-{
-   wxASSERT(mWarper);
-   return mWarper.get();
 }
 
 //
@@ -2377,8 +2323,8 @@ size_t Effect::RealtimeProcess(int group,
    auto ichans = chans;
    auto ochans = chans;
    auto gchans = chans;
-   int indx = 0;
-   int ondx = 0;
+   unsigned indx = 0;
+   unsigned ondx = 0;
 
    int processor = mGroupProcessor[group];
 
@@ -2390,7 +2336,7 @@ size_t Effect::RealtimeProcess(int group,
       // client's needs are met.
       if (ichans < mNumAudioIn)
       {
-         for (int i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < mNumAudioIn; i++)
          {
             if (indx == ichans)
             {
@@ -2408,7 +2354,7 @@ size_t Effect::RealtimeProcess(int group,
       else if (ichans >= mNumAudioIn)
       {
          gchans = 0;
-         for (int i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
+         for (size_t i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
          {
             clientIn[i] = inbuf[indx++];
          }
@@ -2419,7 +2365,7 @@ size_t Effect::RealtimeProcess(int group,
       // the client's needs with dummy buffers.  These will just get tossed.
       if (ochans < mNumAudioOut)
       {
-         for (int i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < mNumAudioOut; i++)
          {
             if (i < ochans)
             {
@@ -2439,7 +2385,7 @@ size_t Effect::RealtimeProcess(int group,
       // of the input/output channels.
       else if (ochans >= mNumAudioOut)
       {
-         for (int i = 0; i < mNumAudioOut; i++, ochans--)
+         for (size_t i = 0; i < mNumAudioOut; i++, ochans--)
          {
             clientOut[i] = outbuf[ondx++];
          }
@@ -2452,12 +2398,12 @@ size_t Effect::RealtimeProcess(int group,
          auto cnt = std::min(numSamples - block, mBlockSize);
          len += RealtimeProcess(processor, clientIn, clientOut, cnt);
 
-         for (int i = 0 ; i < mNumAudioIn; i++)
+         for (size_t i = 0 ; i < mNumAudioIn; i++)
          {
             clientIn[i] += cnt;
          }
 
-         for (int i = 0 ; i < mNumAudioOut; i++)
+         for (size_t i = 0 ; i < mNumAudioOut; i++)
          {
             clientOut[i] += cnt;
          }
@@ -2613,7 +2559,7 @@ void Effect::Preview(bool dryOnly)
                                mT0, t1, options);
 
          if (token) {
-            int previewing = eProgressSuccess;
+            auto previewing = ProgressResult::Success;
             // The progress dialog must be deleted before stopping the stream
             // to allow events to flow to the app during StopStream processing.
             // The progress dialog blocks these events.
@@ -2621,7 +2567,7 @@ void Effect::Preview(bool dryOnly)
                ProgressDialog progress
                (GetName(), _("Previewing"), pdlgHideCancelButton);
 
-               while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+               while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                   ::wxMilliSleep(100);
                   previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
                }
@@ -3633,6 +3579,8 @@ void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
 {
+   // may throw
+   // exceptions are handled in AudacityApp::OnExceptionInMainLoop
    mClient->ExportPresets();
 
    return;

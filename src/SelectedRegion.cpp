@@ -24,6 +24,7 @@ const wxChar *sDefaultF1Name = wxT("selHigh");
 void SelectedRegion::WriteXMLAttributes
 (XMLWriter &xmlFile,
  const wxChar *legacyT0Name, const wxChar *legacyT1Name) const
+// may throw
 {
    xmlFile.WriteAttr(legacyT0Name, t0(), 10);
    xmlFile.WriteAttr(legacyT1Name, t1(), 10);

@@ -41,6 +41,14 @@ WX_DECLARE_HASH_MAP(wxString, std::weak_ptr<BlockFile>, wxStringHash,
 
 wxMemorySize GetFreeMemory();
 
+enum {
+   kCleanTopDirToo = 1,        // The top directory can be excluded from clean.
+   kCleanDirsOnlyIfEmpty = 2,  // Otherwise non empty dirs may be removed.
+   kCleanFiles = 4,            // Remove files
+   kCleanDirs = 8              // Remove dirs.
+};
+
+
 class PROFILE_DLL_API DirManager final : public XMLTagHandler {
  public:
 
@@ -113,9 +121,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Note: following affects only the loading of block files when opening a project
    void SetLoadingMaxSamples(size_t max) { mMaxSamples = max; }
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
-   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) override
+      { return NULL; }
    bool AssignFile(wxFileNameWrapper &filename, const wxString &value, bool check);
 
    // Clean the temp dir. Note that now where we have auto recovery the temp
@@ -123,8 +131,11 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // program is exited normally.
    static void CleanTempDir();
    static void CleanDir(
-      const wxString &path, const wxString &dirSpec, const wxString &msg,
-      bool removeTop = false);
+      const wxString &path, 
+      const wxString &dirSpec, 
+      const wxString &fileSpec, 
+      const wxString &msg,
+      int flags = 0);
 
    // Check the project for errors and possibly prompt user
    // bForceError: Always show log error alert even if no errors are found here.

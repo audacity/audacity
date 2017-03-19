@@ -41,11 +41,13 @@
 #include "../widgets/Grid.h"
 #include "../widgets/Ruler.h"
 #include "../RealFFTf.h"
+#include "../SampleFormat.h"
 
 #define EQUALIZATION_PLUGIN_SYMBOL XO("Equalization")
 
 
 class Envelope;
+class EnvelopeEditor;
 class EqualizationPanel;
 
 //
@@ -124,7 +126,7 @@ private:
    // EffectEqualization implementation
 
    // Number of samples in an FFT window
-   enum : size_t {windowSize=16384};   //MJS - work out the optimum for this at run time?  Have a dialog box for it?
+   static const size_t windowSize = 16384u; //MJS - work out the optimum for this at run time?  Have a dialog box for it?
 
    // Low frequency of the FFT.  20Hz is the
    // low range of human hearing
@@ -152,9 +154,9 @@ private:
    bool GetDefaultFileName(wxFileName &fileName);
    
    // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXML(XMLWriter &xmlFile) const;
 
    void UpdateCurves();
    void UpdateDraw();
@@ -165,8 +167,8 @@ private:
    void EnvLinToLog(void);
    void ErrMin(void);
    void GraphicEQ(Envelope *env);
-   void spline(double x[], double y[], int n, double y2[]);
-   double splint(double x[], double y[], int n, double y2[], double xr);
+   void spline(double x[], double y[], size_t n, double y2[]);
+   double splint(double x[], double y[], size_t n, double y2[], double xr);
 
    void OnSize( wxSizeEvent & event );
    void OnErase( wxEraseEvent & event );
@@ -190,9 +192,7 @@ private:
 
 private:
    HFFT hFFT;
-   float *mFFTBuffer;
-   float *mFilterFuncR;
-   float *mFilterFuncI;
+   Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;
    size_t mM;
    wxString mCurveName;
    bool mLin;
@@ -204,7 +204,7 @@ private:
 
    double mWhens[NUM_PTS];
    double mWhenSliders[NUMBER_OF_BANDS+1];
-   int mBandsInUse;
+   size_t mBandsInUse;
    RulerPanel *mdBRuler;
    RulerPanel *mFreqRuler;
 
@@ -308,6 +308,7 @@ public:
 private:
    wxWindow *mParent;
    EffectEqualization *mEffect;
+   std::unique_ptr<EnvelopeEditor> mEditor;
 
    bool mRecalcRequired;
 
@@ -318,8 +319,7 @@ private:
 //   size_t mWindowSize;
 //   float *mFilterFuncR;
 //   float *mFilterFuncI;
-   float *mOutr;
-   float *mOuti;
+   Floats mOutr, mOuti;
 
 //   double mLoFreq;
 //   double mHiFreq;

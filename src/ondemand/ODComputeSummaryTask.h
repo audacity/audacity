@@ -65,7 +65,7 @@ protected:
 
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles
-      (std::vector< std::shared_ptr< ODPCMAliasBlockFile > > &unorderedBlocks);
+      (std::vector< std::weak_ptr< ODPCMAliasBlockFile > > &unorderedBlocks);
 
    ///tells us whether or not Update has been run at least once.
    void MarkUpdateRan();
@@ -73,9 +73,8 @@ protected:
 
    //mBlockFiles is touched on several threads- the OD terminate thread, and the task thread, so we need to mutex it.
    ODLock  mBlockFilesMutex;
-   std::vector< std::shared_ptr< ODPCMAliasBlockFile > > mBlockFiles;
+   std::vector< std::weak_ptr< ODPCMAliasBlockFile > > mBlockFiles;
    int mMaxBlockFiles;
-   int mComputedBlockFiles;
    ODLock  mHasUpdateRanMutex;
    bool mHasUpdateRan;
 };

@@ -79,7 +79,7 @@
    EFFECT( NOISEREDUCTION, EffectNoiseReduction, () )
 #else
 #define NOISEREDUCTION_EFFECT \
-   EFFECT( NOISEREMOVAL, EffectNoiseRemoval() )
+   EFFECT( NOISEREMOVAL, EffectNoiseRemoval, () )
 #endif
 
 //

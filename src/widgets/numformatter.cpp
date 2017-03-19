@@ -33,6 +33,7 @@
 
 #include <locale.h> // for setlocale and LC_ALL
 #include <cmath>
+#include <limits>
 #include <wx/log.h>
 
 // ----------------------------------------------------------------------------
@@ -140,7 +141,14 @@ wxString NumberFormatter::ToString(double val, int precision, int style)
     }
     if (std::isinf(val))
     {
-        return _("-Infinity");
+       if (val == std::numeric_limits<double>::infinity())
+       {
+          return _("Infinity");
+       }
+       else
+       {
+          return _("-Infinity");
+       }
     }
     wxString s = wxString::Format(format, val);
 

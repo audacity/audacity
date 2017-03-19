@@ -109,7 +109,8 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
          r.y = y;
          r.width = width;
          r.height = (int)(n->GetHeight(true) * scale);
-         artist.DrawTrack(n, *dc, r, &viewInfo, false, false, false, false);
+         artist.DrawTrack(
+            n, *dc, r, SelectedRegion{}, zoomInfo, false, false, false, false);
          dc->SetPen(*wxBLACK_PEN);
          AColor::Line(*dc, 0, r.y, width, r.y);
       }

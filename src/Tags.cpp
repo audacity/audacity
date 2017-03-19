@@ -550,7 +550,8 @@ XMLTagHandler *Tags::HandleXMLChild(const wxChar *tag)
    return NULL;
 }
 
-void Tags::WriteXML(XMLWriter &xmlFile)
+void Tags::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("tags"));
 
@@ -1218,12 +1219,9 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   // Create/Open the file
-   XMLFileWriter writer;
-
-   try
-   {
-      writer.Open(fn, wxT("wb"));
+   GuardedCall< void >( [&] {
+      // Create/Open the file
+      XMLFileWriter writer{ fn, _("Error Saving Tags File") };
 
       // Remember title and track in case they're read only
       wxString title = mLocal.GetTag(TAG_TITLE);
@@ -1239,29 +1237,23 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
          mLocal.SetTag(TAG_TRACK, wxEmptyString);
       }
 
+      auto cleanup = finally( [&] {
+         // Restore title
+         if (!mEditTitle) {
+            mLocal.SetTag(TAG_TITLE, title);
+         }
+
+         // Restore track
+         if (!mEditTrack) {
+            mLocal.SetTag(TAG_TRACK, track);
+         }
+      } );
+
       // Write the metadata
       mLocal.WriteXML(writer);
 
-      // Restore title
-      if (!mEditTitle) {
-         mLocal.SetTag(TAG_TITLE, title);
-      }
-
-      // Restore track
-      if (!mEditTrack) {
-         mLocal.SetTag(TAG_TRACK, track);
-      }
-
-      // Close the file
-      writer.Close();
-   }
-   catch (const XMLFileWriterException &exception)
-   {
-      wxMessageBox(wxString::Format(
-         _("Couldn't write to file \"%s\": %s"),
-         fn.c_str(), exception.GetMessage().c_str()),
-         _("Error Saving Tags File"), wxICON_ERROR, this);
-   }
+      writer.Commit();
+   } );
 }
 
 void TagsEditor::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
@@ -1365,6 +1357,9 @@ void TagsEditor::DoCancel(bool escKey)
       // To avoid memory leak, don't forget DecRef()!
       editor->DecRef();
       mGrid->HideCellEditControl();
+#if defined(__WXMSW__)
+      return;
+#endif
    }
 
    auto focus = wxWindow::FindFocus();

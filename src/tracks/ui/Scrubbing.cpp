@@ -33,6 +33,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <algorithm>
 
+#include <wx/app.h>
 #include <wx/dc.h>
 
 // Yet another experimental scrub would drag the track under a
@@ -244,7 +245,7 @@ namespace {
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
-      { wxT("ToggleScrubRuler"),            XO("Scrub Ruler"),   XO(""),
+      { wxT("ToggleScrubRuler"),            XO("Scrub Ruler"),   wxT(""),
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, true,    &Scrubber::ShowsBar,
       },

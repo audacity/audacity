@@ -19,6 +19,7 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 
 #include "ODComputeSummaryTask.h"
+#include "../AudacityException.h"
 #include "../blockfile/ODPCMAliasBlockFile.h"
 #include "../Sequence.h"
 #include "../WaveTrack.h"
@@ -31,7 +32,6 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 ODComputeSummaryTask::ODComputeSummaryTask()
 {
    mMaxBlockFiles = 0;
-   mComputedBlockFiles = 0;
    mHasUpdateRan=false;
 }
 
@@ -65,35 +65,43 @@ void ODComputeSummaryTask::DoSomeInternal()
       return;
    }
 
-   sampleCount blockStartSample = 0;
-   sampleCount blockEndSample = 0;
-   bool success =false;
-
    mBlockFilesMutex.Lock();
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)
    {
-      const auto &bf = mBlockFiles[0];
+      bool success = false;
+      const auto bf = mBlockFiles[0].lock();
 
-      //first check to see if the ref count is at least 2.  It should have one
-      //from when we added it to this instance's mBlockFiles array, and one from
-      //the Wavetrack/sequence.  If it doesn't it has been deleted and we should forget it.
-      if(bf.use_count() >= 2)
+      sampleCount blockStartSample = 0;
+      sampleCount blockEndSample = 0;
+
+      if(bf)
       {
-         bf->DoWriteSummary();
-         success = true;
+         // WriteSummary might throw, but this is a worker thread, so stop
+         // the exceptions here!
+         success = GuardedCall<bool>( [&] {
+            bf->DoWriteSummary();
+            return true;
+         } );
          blockStartSample = bf->GetStart();
          blockEndSample = blockStartSample + bf->GetLength();
-         mComputedBlockFiles++;
       }
       else
       {
+         success = true;
+         // The block file disappeared.
          //the waveform in the wavetrack now is shorter, so we need to update mMaxBlockFiles
          //because now there is less work to do.
          mMaxBlockFiles--;
       }
 
-      //take it out of the array - we are done with it.
-      mBlockFiles.erase(mBlockFiles.begin());
+      if (success)
+      {
+         //take it out of the array - we are done with it.
+         mBlockFiles.erase(mBlockFiles.begin());
+      }
+      else
+         // The task does not make progress
+         ;
 
       //This is a bit of a convenience in case someone tries to terminate the task by closing the trackpanel or window.
       //ODComputeSummaryTask::Terminate() uses this lock to remove everything, and we don't want it to wait since the UI is being blocked.
@@ -101,16 +109,18 @@ void ODComputeSummaryTask::DoSomeInternal()
       wxThread::This()->Yield();
       mBlockFilesMutex.Lock();
 
-      //upddate the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
+      //update the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
       //because this loop runs a number of times equal to the number of tracks, they probably are getting processed in
       //the next iteration at the same sample window.
-      mWaveTrackMutex.Lock();
-      for(size_t i=0;i<mWaveTracks.size();i++)
-      {
-         if(success && mWaveTracks[i])
-            mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+      if (success && bf) {
+         mWaveTrackMutex.Lock();
+         for(size_t i=0;i<mWaveTracks.size();i++)
+         {
+            if(success && mWaveTracks[i])
+               mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+         }
+         mWaveTrackMutex.Unlock();
       }
-      mWaveTrackMutex.Unlock();
    }
 
    mBlockFilesMutex.Unlock();
@@ -166,7 +176,7 @@ void ODComputeSummaryTask::CalculatePercentComplete()
 ///by default left to right, or frome the point the user has clicked.
 void ODComputeSummaryTask::Update()
 {
-   std::vector< std::shared_ptr< ODPCMAliasBlockFile > > tempBlocks;
+   std::vector< std::weak_ptr< ODPCMAliasBlockFile > > tempBlocks;
 
    mWaveTrackMutex.Lock();
 
@@ -209,10 +219,14 @@ void ODComputeSummaryTask::Update()
                   ));
 
                   //these will always be linear within a sequence-lets take advantage of this by keeping a cursor.
-                  while(insertCursor<(int)tempBlocks.size()&&
-                     tempBlocks[insertCursor]->GetStart() + tempBlocks[insertCursor]->GetClipOffset() <
-                        odpcmaFile->GetStart() + odpcmaFile->GetClipOffset())
-                     insertCursor++;
+                  {
+                     std::shared_ptr< ODPCMAliasBlockFile > ptr;
+                     while(insertCursor < (int)tempBlocks.size() &&
+                           (!(ptr = tempBlocks[insertCursor].lock()) ||
+                            ptr->GetStart() + ptr->GetClipOffset() <
+                            odpcmaFile->GetStart() + odpcmaFile->GetClipOffset()))
+                        insertCursor++;
+                  }
 
                   tempBlocks.insert(tempBlocks.begin() + insertCursor++, odpcmaFile);
                }
@@ -234,7 +248,7 @@ void ODComputeSummaryTask::Update()
 
 ///Computes the summary calculation queue order of the blockfiles
 void ODComputeSummaryTask::OrderBlockFiles
-   (std::vector< std::shared_ptr< ODPCMAliasBlockFile > > &unorderedBlocks)
+   (std::vector< std::weak_ptr< ODPCMAliasBlockFile > > &unorderedBlocks)
 {
    mBlockFiles.clear();
    //Order the blockfiles into our queue in a fancy convenient way.  (this could be user-prefs)
@@ -244,27 +258,29 @@ void ODComputeSummaryTask::OrderBlockFiles
 
    //find the startpoint
    auto processStartSample = GetDemandSample();
-   for(int i= ((int)unorderedBlocks.size())-1;i>= 0;i--)
+   std::shared_ptr< ODPCMAliasBlockFile > firstBlock;
+   for(auto i = unorderedBlocks.size(); i--;)
    {
-      //check to see if the refcount is at least two before we add it to the list.
-      //There should be one Ref() from the one added by this ODTask, and one from the track.
-      //If there isn't, then the block was deleted for some reason and we should ignore it.
-      if(unorderedBlocks[i].use_count() >= 2)
+      auto ptr = unorderedBlocks[i].lock();
+      if(ptr)
       {
          //test if the blockfiles are near the task cursor.  we use the last mBlockFiles[0] as our point of reference
          //and add ones that are closer.
-         if(mBlockFiles.size() &&
-            unorderedBlocks[i]->GetGlobalEnd() >= processStartSample &&
-                ( mBlockFiles[0]->GetGlobalEnd() < processStartSample ||
-                  unorderedBlocks[i]->GetGlobalStart() <= mBlockFiles[0]->GetGlobalStart())
+         if(firstBlock &&
+            ptr->GetGlobalEnd() >= processStartSample &&
+                ( firstBlock->GetGlobalEnd() < processStartSample ||
+                  ptr->GetGlobalStart() <= firstBlock->GetGlobalStart())
             )
          {
             //insert at the front of the list if we get blockfiles that are after the demand sample
-            mBlockFiles.insert(mBlockFiles.begin()+0,unorderedBlocks[i]);
+            firstBlock = ptr;
+            mBlockFiles.insert(mBlockFiles.begin(), unorderedBlocks[i]);
          }
          else
          {
             //otherwise no priority
+            if ( !firstBlock )
+               firstBlock = ptr;
             mBlockFiles.push_back(unorderedBlocks[i]);
          }
          if(mMaxBlockFiles< (int) mBlockFiles.size())
@@ -272,7 +288,8 @@ void ODComputeSummaryTask::OrderBlockFiles
       }
       else
       {
-         //Otherwise, let it be deleted and forget about it.
+         // The block file disappeared.
+         // Let it be deleted and forget about it.
       }
    }
 }

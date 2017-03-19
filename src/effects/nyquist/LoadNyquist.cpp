@@ -171,7 +171,7 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       RegisterPlugin(pm, NYQUIST_PROMPT_ID);
    }
 
-   for (int i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
    {
       files.Clear();
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);

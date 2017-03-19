@@ -138,13 +138,13 @@ bool EffectStereoToMono::ProcessOne(int count)
 
    auto idealBlockLen = mLeftTrack->GetMaxBlockSize() * 2;
    auto index = mStart;
-   float *leftBuffer = new float[idealBlockLen];
-   float *rightBuffer = new float[idealBlockLen];
+   Floats leftBuffer { idealBlockLen };
+   Floats rightBuffer{ idealBlockLen };
    bool bResult = true;
 
    while (index < mEnd) {
-      bResult &= mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
-      bResult &= mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
+      bResult &= mLeftTrack->Get((samplePtr)leftBuffer.get(), floatSample, index, idealBlockLen);
+      bResult &= mRightTrack->Get((samplePtr)rightBuffer.get(), floatSample, index, idealBlockLen);
       auto limit = limitSampleBufferSize( idealBlockLen, mEnd - index );
       for (decltype(limit) i = 0; i < limit; ++i) {
          index++;
@@ -153,7 +153,7 @@ bool EffectStereoToMono::ProcessOne(int count)
          curMonoFrame = (curLeftFrame + curRightFrame) / 2.0;
          leftBuffer[i] = curMonoFrame;
       }
-      bResult &= mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
+      bResult &= mOutTrack->Append((samplePtr)leftBuffer.get(), floatSample, limit);
       if (TrackProgress(count, 2.*(index.as_double() / (mEnd - mStart).as_double())))
          return false;
    }
@@ -166,9 +166,6 @@ bool EffectStereoToMono::ProcessOne(int count)
    mRightTrack->SetLinked(false);
    mLeftTrack->SetChannel(Track::MonoChannel);
    mOutputTracks->Remove(mRightTrack);
-
-   delete [] leftBuffer;
-   delete [] rightBuffer;
 
    return bResult;
 }

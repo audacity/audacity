@@ -517,11 +517,9 @@ bool Importer::Import(const wxString &fName,
          else
             inFile->SetStreamUsage(0,TRUE);
 
-         int res;
+         auto res = inFile->Import(trackFactory, tracks, tags);
 
-         res = inFile->Import(trackFactory, tracks, tags);
-
-         if (res == eProgressSuccess || res == eProgressStopped)
+         if (res == ProgressResult::Success || res == ProgressResult::Stopped)
          {
             // LOF ("list-of-files") has different semantics
             if (extension.IsSameAs(wxT("lof"), false))
@@ -538,7 +536,7 @@ bool Importer::Import(const wxString &fName,
             }
          }
 
-         if (res == eProgressCancelled || res == eProgressFailed)
+         if (res == ProgressResult::Cancelled || res == ProgressResult::Failed)
          {
             pProj->mbBusyImporting = false;
             return false;

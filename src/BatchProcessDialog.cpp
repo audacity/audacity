@@ -33,6 +33,7 @@
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 
+#include "AudacityException.h"
 #include "ShuttleGui.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -192,7 +193,8 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
    bool success;
    {
       wxWindowDisabler wd(pD);
-      success = mBatchCommands.ApplyChain();
+      success = GuardedCall< bool >(
+         [this]{ return mBatchCommands.ApplyChain(); } );
    }
 
    if (!success) {
@@ -356,15 +358,21 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       mList->SetItemImage(i, 1, 1);
       mList->EnsureVisible(i);
 
-      project->Import(files[i]);
-      project->OnSelectAll();
-      if (!mBatchCommands.ApplyChain()) {
-         break;
-      }
+      auto success = GuardedCall< bool >( [&] {
+         project->Import(files[i]);
+         project->OnSelectAll();
+         if (!mBatchCommands.ApplyChain())
+            return false;
 
-      if (!pD->IsShown() || mAbort) {
+         if (!pD->IsShown() || mAbort)
+            return false;
+
+         return true;
+      } );
+
+      if (!success)
          break;
-      }
+      
       UndoManager *um = project->GetUndoManager();
       um->ClearStates();
       project->OnSelectAll();

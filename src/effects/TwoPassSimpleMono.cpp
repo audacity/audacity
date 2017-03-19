@@ -100,7 +100,6 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
                                          sampleCount start, sampleCount end)
 {
    bool ret;
-   float *tmpfloat;
 
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -110,26 +109,22 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   float *buffer1 = new float[maxblock];
-   float *buffer2 = new float[maxblock];
+   Floats buffer1{ maxblock };
+   Floats buffer2{ maxblock };
    auto samples1 =  limitSampleBufferSize(
       std::min( maxblock, track->GetBestBlockSize(start) ), end - start );
 
    //Get the samples from the track and put them in the buffer
-   track->Get((samplePtr) buffer1, floatSample, start, samples1);
+   track->Get((samplePtr) buffer1.get(), floatSample, start, samples1);
 
    // Process the first buffer with a NULL previous buffer
    if (mPass == 0)
-      ret = TwoBufferProcessPass1(NULL, 0, buffer1, samples1);
+      ret = TwoBufferProcessPass1(NULL, 0, buffer1.get(), samples1);
    else
-      ret = TwoBufferProcessPass2(NULL, 0, buffer1, samples1);
-   if (!ret) {
-      delete[]buffer1;
-      delete[]buffer2;
-
+      ret = TwoBufferProcessPass2(NULL, 0, buffer1.get(), samples1);
+   if (!ret)
       //Return false because the effect failed.
       return false;
-   }
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
@@ -142,23 +137,20 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer2, floatSample, s, samples2);
+      track->Get((samplePtr)buffer2.get(), floatSample, s, samples2);
 
       //Process the buffer.  If it fails, clean up and exit.
       if (mPass == 0)
-         ret = TwoBufferProcessPass1(buffer1, samples1, buffer2, samples2);
+         ret = TwoBufferProcessPass1(buffer1.get(), samples1, buffer2.get(), samples2);
       else
-         ret = TwoBufferProcessPass2(buffer1, samples1, buffer2, samples2);
-      if (!ret) {
-         delete[]buffer1;
-         delete[]buffer2;
+         ret = TwoBufferProcessPass2(buffer1.get(), samples1, buffer2.get(), samples2);
+      if (!ret)
          //Return false because the effect failed.
          return false;
-      }
 
       //Processing succeeded. copy the newly-changed samples back
       //onto the track.
-      track->Set((samplePtr) buffer1, floatSample, s-samples1, samples1);
+      track->Set((samplePtr)buffer1.get(), floatSample, s - samples1, samples1);
 
       //Increment s one blockfull of samples
       s += samples2;
@@ -172,41 +164,29 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
          ret = TotalProgress(
             (mCurTrackNum + (s-start).as_double()/len + GetNumWaveTracks()*mPass) /
             (GetNumWaveTracks()*2));
-      if (ret) {
-         delete[]buffer1;
-         delete[]buffer2;
+      if (ret)
          //Return false because the effect failed.
          return false;
-      }
 
       // Rotate the buffers
-      tmpfloat = buffer1;
-      buffer1 = buffer2;
-      buffer2 = tmpfloat;
+      buffer1.swap(buffer2);
 
       std::swap(samples1, samples2);
    }
 
    // Send the last buffer with a NULL pointer for the current buffer
    if (mPass == 0)
-      ret = TwoBufferProcessPass1(buffer1, samples1, NULL, 0);
+      ret = TwoBufferProcessPass1(buffer1.get(), samples1, NULL, 0);
    else
-      ret = TwoBufferProcessPass2(buffer1, samples1, NULL, 0);
+      ret = TwoBufferProcessPass2(buffer1.get(), samples1, NULL, 0);
 
-   if (!ret) {
-      delete[]buffer1;
-      delete[]buffer2;
+   if (!ret)
       //Return false because the effect failed.
       return false;
-   }
 
    //Processing succeeded. copy the newly-changed samples back
    //onto the track.
-   track->Set((samplePtr) buffer1, floatSample, s-samples1, samples1);
-
-   //Clean up the buffer
-   delete[]buffer1;
-   delete[]buffer2;
+   track->Set((samplePtr)buffer1.get(), floatSample, s - samples1, samples1);
 
    //Return true because the effect processing succeeded.
    return true;

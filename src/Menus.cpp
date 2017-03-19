@@ -450,8 +450,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | CutCopyAvailableFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Paste"), _("&Paste"), FN(OnPaste), wxT("Ctrl+V"),
-         AudioIONotBusyFlag | ClipboardFlag,
-         AudioIONotBusyFlag | ClipboardFlag);
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Duplicate"), _("Duplic&ate"), FN(OnDuplicate), wxT("Ctrl+D"));
 
@@ -843,7 +843,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
+      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
 #endif
       c->EndSubMenu();
       c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
@@ -2558,7 +2558,7 @@ void AudacityProject::OnToggleSWPlaythrough()
 }
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
+void AudacityProject::OnToggleAutomatedInputLevelAdjustment()
 {
    bool AVEnabled;
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
@@ -3494,12 +3494,8 @@ void AudacityProject::OnPlaySpeedDec()
 double AudacityProject::NearestZeroCrossing(double t0)
 {
    // Window is 1/100th of a second.
-   int windowSize = (int)(GetRate() / 100);
-   float *dist = new float[windowSize];
-   int i, j;
-
-   for(i=0; i<windowSize; i++)
-      dist[i] = 0.0;
+   auto windowSize = size_t(std::max(1.0, GetRate() / 100));
+   Floats dist{ windowSize, true };
 
    TrackListIterator iter(GetTracks());
    Track *track = iter.First();
@@ -3509,26 +3505,26 @@ double AudacityProject::NearestZeroCrossing(double t0)
          continue;
       }
       WaveTrack *one = (WaveTrack *)track;
-      int oneWindowSize = (int)(one->GetRate() / 100);
-      float *oneDist = new float[oneWindowSize];
+      auto oneWindowSize = size_t(std::max(1.0, one->GetRate() / 100));
+      Floats oneDist{ oneWindowSize };
       auto s = one->TimeToLongSamples(t0);
       // fillTwo to ensure that missing values are treated as 2, and hence do not
       // get used as zero crossings.
-      one->Get((samplePtr)oneDist, floatSample,
-               s - oneWindowSize/2, oneWindowSize, fillTwo);
+      one->Get((samplePtr)oneDist.get(), floatSample,
+               s - (int)oneWindowSize/2, oneWindowSize, fillTwo);
 
       // Start by penalizing downward motion.  We prefer upward
       // zero crossings.
       if (oneDist[1] - oneDist[0] < 0)
          oneDist[0] = oneDist[0]*6 + (oneDist[0] > 0 ? 0.3 : -0.3);
-      for(i=1; i<oneWindowSize; i++)
+      for(size_t i=1; i<oneWindowSize; i++)
          if (oneDist[i] - oneDist[i-1] < 0)
             oneDist[i] = oneDist[i]*6 + (oneDist[i] > 0 ? 0.3 : -0.3);
 
       // Taking the absolute value -- apply a tiny LPF so square waves work.
       float newVal, oldVal = oneDist[0];
       oneDist[0] = fabs(.75 * oneDist[0] + .25 * oneDist[1]);
-      for(i=1; i<oneWindowSize-1; i++)
+      for(size_t i=1; i + 1 < oneWindowSize; i++)
       {
          newVal = fabs(.25 * oldVal + .5 * oneDist[i] + .25 * oneDist[i+1]);
          oldVal = oneDist[i];
@@ -3540,7 +3536,8 @@ double AudacityProject::NearestZeroCrossing(double t0)
       // TODO: The mixed rate zero crossing code is broken,
       // if oneWindowSize > windowSize we'll miss out some
       // samples - so they will still be zero, so we'll use them.
-      for(i=0; i<windowSize; i++) {
+      for(size_t i = 0; i < windowSize; i++) {
+         size_t j;
          if (windowSize != oneWindowSize)
             j = i * (oneWindowSize-1) / (windowSize-1);
          else
@@ -3548,26 +3545,23 @@ double AudacityProject::NearestZeroCrossing(double t0)
 
          dist[i] += oneDist[j];
          // Apply a small penalty for distance from the original endpoint
-         dist[i] += 0.1 * (abs(i - windowSize/2)) / float(windowSize/2);
+         dist[i] += 0.1 * (abs(int(i) - int(windowSize/2))) / float(windowSize/2);
       }
 
-      delete [] oneDist;
       track = iter.Next();
    }
 
    // Find minimum
    int argmin = 0;
    float min = 3.0;
-   for(i=0; i<windowSize; i++) {
+   for(size_t i=0; i<windowSize; i++) {
       if (dist[i] < min) {
          argmin = i;
          min = dist[i];
       }
    }
 
-   delete [] dist;
-
-   return t0 + (argmin - windowSize/2)/GetRate();
+   return t0 + (argmin - (int)windowSize/2)/GetRate();
 }
 
 void AudacityProject::OnZeroCrossing()
@@ -4098,6 +4092,24 @@ void AudacityProject::OnRedo()
    ModifyUndoMenuItems();
 }
 
+void AudacityProject::FinishCopy
+   (const Track *n, Track *dest)
+{
+   if (dest) {
+      dest->SetChannel(n->GetChannel());
+      dest->SetLinked(n->GetLinked());
+      dest->SetName(n->GetName());
+   }
+}
+
+void AudacityProject::FinishCopy
+   (const Track *n, Track::Holder &&dest, TrackList &list)
+{
+   FinishCopy( n, dest.get() );
+   if (dest)
+      list.Add(std::move(dest));
+}
+
 void AudacityProject::OnCut()
 {
    TrackListIterator iter(GetTracks());
@@ -4134,12 +4146,8 @@ void AudacityProject::OnCut()
             dest = n->Copy(mViewInfo.selectedRegion.t0(),
                     mViewInfo.selectedRegion.t1());
 
-         if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
-            msClipboard->Add(std::move(dest));
-         }
+         if (dest)
+            FinishCopy(n, std::move(dest), *msClipboard);
       }
       n = iter.Next();
    }
@@ -4211,12 +4219,8 @@ void AudacityProject::OnSplitCut()
             n->Silence(mViewInfo.selectedRegion.t0(),
                        mViewInfo.selectedRegion.t1());
          }
-         if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
-            msClipboard->Add(std::move(dest));
-         }
+         if (dest)
+            FinishCopy(n, std::move(dest), *msClipboard);
       }
       n = iter.Next();
    }
@@ -4259,12 +4263,8 @@ void AudacityProject::OnCopy()
       if (n->GetSelected()) {
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1());
-         if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
-            msClipboard->Add(std::move(dest));
-         }
+         if (dest)
+            FinishCopy(n, std::move(dest), *msClipboard);
       }
       n = iter.Next();
    }
@@ -4545,13 +4545,13 @@ bool AudacityProject::HandlePasteNothingSelected()
       if (!pClip)
          return true; // nothing to paste
 
-      Track::Holder pNewTrack;
       Track* pFirstNewTrack = NULL;
       while (pClip) {
          Maybe<WaveTrack::Locker> locker;
          if ((msClipProject != this) && (pClip->GetKind() == Track::Wave))
             locker.create(static_cast<const WaveTrack*>(pClip));
 
+         Track::Holder pNewTrack;
          switch (pClip->GetKind()) {
          case Track::Wave:
             {
@@ -4576,10 +4576,6 @@ bool AudacityProject::HandlePasteNothingSelected()
          }
          wxASSERT(pClip);
 
-         pNewTrack->SetLinked(pClip->GetLinked());
-         pNewTrack->SetChannel(pClip->GetChannel());
-         pNewTrack->SetName(pClip->GetName());
-
          bool bResult = pNewTrack->Paste(0.0, pClip);
          wxASSERT(bResult); // TO DO: Actually handle this.
          wxUnusedVar(bResult);
@@ -4588,7 +4584,7 @@ bool AudacityProject::HandlePasteNothingSelected()
             pFirstNewTrack = pNewTrack.get();
 
          pNewTrack->SetSelected(true);
-         mTracks->Add(std::move(pNewTrack));
+         FinishCopy(pClip, std::move(pNewTrack), *mTracks);
 
          pClip = iterClip.Next();
       }
@@ -4849,8 +4845,9 @@ void AudacityProject::OnDuplicate()
 
    while (n) {
       if (n->GetSelected()) {
+         // Make copies not for clipboard but for direct addition to the project
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
-                 mViewInfo.selectedRegion.t1());
+                 mViewInfo.selectedRegion.t1(), false);
          if (dest) {
             dest->Init(*n);
             dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
@@ -5128,11 +5125,8 @@ void AudacityProject::OnSplitNew()
          }
 #endif
          if (dest) {
-            dest->SetChannel(n->GetChannel());
-            dest->SetLinked(n->GetLinked());
-            dest->SetName(n->GetName());
             dest->SetOffset(wxMax(newt0, offset));
-            mTracks->Add(std::move(dest));
+            FinishCopy(n, std::move(dest), *mTracks);
          }
       }
 
@@ -5183,7 +5177,7 @@ void AudacityProject::OnToggleSpectralSelection()
 void AudacityProject::DoNextPeakFrequency(bool up)
 {
    // Find the first selected wave track that is in a spectrogram view.
-   WaveTrack *pTrack = 0;
+   const WaveTrack *pTrack {};
    SelectedTrackListOfKindIterator iter(Track::Wave, GetTracks());
    for (Track *t = iter.First(); t; t = iter.Next()) {
       WaveTrack *const wt = static_cast<WaveTrack*>(t);
@@ -6092,10 +6086,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       // We only want Wave and Note tracks here.
 #if defined(USE_MIDI)
       if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                               (t->GetKind() == Track::Note))) {
+                               (t->GetKind() == Track::Note)))
 #else
-      if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+      if (t->GetSelected() && (t->GetKind() == Track::Wave))
 #endif
+      {
          offset = t->GetOffset();
          if (t->GetLinked()) {   // Left channel of stereo track.
             leftOffset = offset;
@@ -6177,10 +6172,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
          // Only align Wave and Note tracks end to end.
 #if defined(USE_MIDI)
          if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                                  (t->GetKind() == Track::Note))) {
+                                  (t->GetKind() == Track::Note)))
 #else
-         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+         if (t->GetSelected() && (t->GetKind() == Track::Wave))
 #endif
+         {
             t->SetOffset(newPos);   // Move the track
 
             if (t->GetLinked()) {   // Left channel of stereo track.
@@ -6376,7 +6372,7 @@ class ASAProgress final : public SAProgress {
                 (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * f;
       }
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
    bool set_matrix_progress(int cells) override {
       mCellCount += cells;
@@ -6385,7 +6381,7 @@ class ASAProgress final : public SAProgress {
              (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1];
       work += mCellCount * MATRIX_WORK_UNIT;
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
    bool set_smoothing_progress(int i) override {
       iterations = i;
@@ -6395,7 +6391,7 @@ class ASAProgress final : public SAProgress {
              MATRIX_WORK_UNIT * mFrames[0] * mFrames[1];
       work += i * wxMax(mFrames[0], mFrames[1]) * SMOOTHING_WORK_UNIT;
       int updateResult = mProgress->Update((int)(work), (int)(mTotalWork));
-      return (updateResult == eProgressSuccess);
+      return (updateResult == ProgressResult::Success);
    }
 };
 
@@ -6910,7 +6906,15 @@ void AudacityProject::OnManual()
 
 void AudacityProject::OnCheckForUpdates()
 {
-   ::OpenInDefaultBrowser( wxString( wxT("http://audacityteam.org/download/?from_ver=")) + AUDACITY_VERSION_STRING );
+   ::OpenInDefaultBrowser( VerCheckUrl());
+}
+
+// Only does the update checks if it's an ALPHA build and not disabled by preferences.
+void AudacityProject::MayCheckForUpdates()
+{
+#if IS_ALPHA
+   OnCheckForUpdates();
+#endif
 }
 
 void AudacityProject::OnShowLog()

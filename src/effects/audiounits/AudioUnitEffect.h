@@ -182,7 +182,7 @@ private:
 
    EffectHostInterface *mHost;
    unsigned mAudioIns;
-   int mAudioOuts;
+   unsigned mAudioOuts;
    bool mInteractive;
    bool mLatencyDone;
    UInt32 mBlockSize;
@@ -194,8 +194,8 @@ private:
    AudioTimeStamp mTimeStamp;
    bool mReady;
 
-   AudioBufferList *mInputList;
-   AudioBufferList *mOutputList;
+   ArrayOf<AudioBufferList> mInputList;
+   ArrayOf<AudioBufferList> mOutputList;
 
    EffectUIHostInterface *mUIHost;
    wxWindow *mParent;
@@ -206,10 +206,9 @@ private:
    AudioUnitEffect *mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
    unsigned mNumChannels;
-   float **mMasterIn;
-   float **mMasterOut;
+   ArraysOf<float> mMasterIn, mMasterOut;
    size_t mNumSamples;
-   
+
    AUEventListenerRef mEventListenerRef;
 
    friend class AudioUnitEffectExportDialog;

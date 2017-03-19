@@ -44,9 +44,9 @@ class Profiler
    virtual ~Profiler();
 
    ///start the task timer.
-   void Begin(char* fileName, int lineNum, char* taskDescription);
+   void Begin(const char* fileName, int lineNum, const char* taskDescription);
    ///end the task timer.
-   void End(char* fileName, int lineNum, char* taskDescription);
+   void End(const char* fileName, int lineNum, const char* taskDescription);
 
    ///Gets the singleton instance
    static Profiler* Instance();
@@ -56,8 +56,8 @@ class Profiler
    Profiler(){};
 
    ///find a taskProfile for the given task, otherwise create
-   TaskProfile* GetOrCreateTaskProfile(char* fileName, int lineNum);
-   TaskProfile* GetTaskProfileByDescription(char* description);
+   TaskProfile* GetOrCreateTaskProfile(const char* fileName, int lineNum);
+   TaskProfile* GetTaskProfileByDescription(const char* description);
 
    //List of current Task to do.
    std::vector<movable_ptr<TaskProfile>> mTasks;
@@ -73,15 +73,15 @@ class Profiler
       virtual ~TaskProfile();
 
       ///start the task timer.
-      void Begin(char* fileName, int lineNum, char* taskDescription);
+      void Begin(const char* fileName, int lineNum, const char* taskDescription);
       ///end the task timer.
-      void End(char* fileName, int lineNum, char* taskDescription);
+      void End(const char* fileName, int lineNum, const char* taskDescription);
 
       double ComputeAverageRunTime();
 
-      char* mFileName;
+      ArrayOf<char> mFileName;
       int mLine;
-      char* mDescription;
+      ArrayOf<char> mDescription;
       int mNumHits;
       clock_t mCumTime;
       clock_t mLastTime;

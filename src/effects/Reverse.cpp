@@ -222,8 +222,8 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
 
    auto blockSize = track->GetMaxBlockSize();
    float tmp;
-   float *buffer1 = new float[blockSize];
-   float *buffer2 = new float[blockSize];
+   Floats buffer1{ blockSize };
+   Floats buffer2{ blockSize };
 
    auto originalLen = originalEnd - originalStart;
 
@@ -232,15 +232,15 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
          limitSampleBufferSize( track->GetBestBlockSize(first), len / 2 );
       auto second = first + (len - block);
 
-      track->Get((samplePtr)buffer1, floatSample, first, block);
-      track->Get((samplePtr)buffer2, floatSample, second, block);
+      track->Get((samplePtr)buffer1.get(), floatSample, first, block);
+      track->Get((samplePtr)buffer2.get(), floatSample, second, block);
       for (decltype(block) i = 0; i < block; i++) {
          tmp = buffer1[i];
          buffer1[i] = buffer2[block-i-1];
          buffer2[block-i-1] = tmp;
       }
-      track->Set((samplePtr)buffer1, floatSample, first, block);
-      track->Set((samplePtr)buffer2, floatSample, second, block);
+      track->Set((samplePtr)buffer1.get(), floatSample, first, block);
+      track->Set((samplePtr)buffer2.get(), floatSample, second, block);
 
       len -= 2 * block;
       first += block;
@@ -251,9 +251,6 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
          break;
       }
    }
-
-   delete[] buffer1;
-   delete[] buffer2;
 
    return rc;
 }
