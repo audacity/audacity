@@ -324,37 +324,24 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag,
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
-#ifdef USE_LIBVORBIS
-      c->AddItem(wxT("SaveCompressed"), _("Sa&ve Compressed Copy of Project..."), FN(OnSaveCompressed));
-#endif
+      c->BeginSubMenu( _("Save Other") );
 
-      c->AddItem(wxT("CheckDeps"), _("Chec&k Dependencies..."), FN(OnCheckDependencies));
-
-      c->AddSeparator();
-
-      c->AddItem(wxT("EditMetaData"), _("Edit Me&tadata Tags..."), FN(OnEditMetadata));
-
-      c->AddSeparator();
-
-      /////////////////////////////////////////////////////////////////////////////
-
-      c->BeginSubMenu(_("&Import"));
-
-      c->AddItem(wxT("ImportAudio"), _("&Audio..."), FN(OnImport), wxT("Ctrl+Shift+I"));
-      c->AddItem(wxT("ImportLabels"), _("&Labels..."), FN(OnImportLabels));
-#ifdef USE_MIDI
-      c->AddItem(wxT("ImportMIDI"), _("&MIDI..."), FN(OnImportMIDI));
-#endif // USE_MIDI
-      c->AddItem(wxT("ImportRaw"), _("&Raw Data..."), FN(OnImportRaw));
-
-      c->EndSubMenu();
-
-      c->AddSeparator();
-
-      /////////////////////////////////////////////////////////////////////////////
-
+//#ifdef EXPERIMENTAL_DA
       // Enable Export audio commands only when there are audio tracks.
-      c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExport), wxT("Ctrl+Shift+E"),
+      c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
+         AudioIONotBusyFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag | WaveTracksExistFlag);
+
+      c->AddItem(wxT("ExportWav"), _("Export as &WAV"), FN(OnExportWav), wxT(""),
+         AudioIONotBusyFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag | WaveTracksExistFlag);
+
+      c->AddItem(wxT("ExportOgg"), _("Export as &OGG"), FN(OnExportOgg), wxT(""),
+         AudioIONotBusyFlag | WaveTracksExistFlag,
+         AudioIONotBusyFlag | WaveTracksExistFlag);
+//#endif
+
+      c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExportAudio), wxT("Ctrl+Shift+E"),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
 
@@ -375,12 +362,32 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | NoteTracksSelectedFlag,
          AudioIONotBusyFlag | NoteTracksSelectedFlag);
 #endif
-
+#ifdef USE_LIBVORBIS
       c->AddSeparator();
+      c->AddItem(wxT("SaveCompressed"), _("&Save Compressed Copy of Project..."), FN(OnSaveCompressed));
+#endif
+      c->EndSubMenu();
+      c->AddSeparator();
+      c->BeginSubMenu(_("&Import"));
+
+      c->AddItem(wxT("ImportAudio"), _("&Audio..."), FN(OnImport), wxT("Ctrl+Shift+I"));
+      c->AddItem(wxT("ImportLabels"), _("&Labels..."), FN(OnImportLabels));
+#ifdef USE_MIDI
+      c->AddItem(wxT("ImportMIDI"), _("&MIDI..."), FN(OnImportMIDI));
+#endif // USE_MIDI
+      c->AddItem(wxT("ImportRaw"), _("&Raw Data..."), FN(OnImportRaw));
+
+      c->EndSubMenu();
+      c->AddSeparator();
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->BeginSubMenu(_("Chains"));
       c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
       c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
+      c->EndSubMenu();
 
       c->AddSeparator();
 
@@ -451,7 +458,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->BeginSubMenu(_("R&emove Special"));
+      c->BeginSubMenu(_("R&emove Audio"));
       /* i18n-hint: (verb) Do a special kind of cut*/
       c->AddItem(wxT("SplitCut"), _("Spl&it Cut"), FN(OnSplitCut), wxT("Ctrl+Alt+X"));
       /* i18n-hint: (verb) Do a special kind of DELETE*/
@@ -470,10 +477,6 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
          AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
       c->EndSubMenu();
-
-      c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
-         AudioIONotBusyFlag, AudioIONotBusyFlag);
-
 
       c->AddSeparator();
 
@@ -495,9 +498,30 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
+      c->AddItem(wxT("EditMetaData"), _("Me&tadata..."), FN(OnEditMetadata));
+      c->AddSeparator();
+
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("La&beled Audio"));
+      c->BeginSubMenu(_("La&bels"));
+
+      c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
+      c->AddItem(wxT("AddLabel"), _("Add Label At &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
+         AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddItem(wxT("AddLabelPlaying"), _("Add Label At &Playback Position"),
+         FN(OnAddLabelPlaying),
+#ifdef __WXMAC__
+         wxT("Ctrl+."),
+#else
+         wxT("Ctrl+M"),
+#endif
+         AudioIOBusyFlag, 
+         AudioIOBusyFlag);
+      c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
+      c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
+         AudioIONotBusyFlag, AudioIONotBusyFlag);
+      c->AddSeparator();
+
       c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag,
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag);
 
@@ -531,6 +555,12 @@ void AudacityProject::CreateMenusAndCommands()
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("JoinLabels"), _("&Join"), FN(OnJoinLabels), wxT("Alt+J"));
       c->AddItem(wxT("DisjoinLabels"), _("Detac&h at Silences"), FN(OnDisjoinLabels), wxT("Alt+Shift+J"));
+
+      c->AddSeparator();
+
+      // New in Audacity 2.1.3
+      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
+                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -569,58 +599,36 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag, TracksExistFlag);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddItem(wxT("SelSyncLockTracks"), _("In All S&ync-Locked Tracks"),
+#ifdef EXPERIMENTAL_DA
+      c->AddItem(wxT("SelSyncLockTracks"), _("In All Time-Locked Tracks"),
+#else
+      c->AddItem(wxT("SelSyncLockTracks"), _("In All Sync-Locked Tracks"),
+#endif
          FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
          TracksSelectedFlag | IsSyncLockedFlag,
          TracksSelectedFlag | IsSyncLockedFlag);
 #endif
 
-      c->EndSubMenu();
-
-      /////////////////////////////////////////////////////////////////////////////
-
-      c->AddItem(wxT("ZeroCross"), _("Find &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
-
-      /////////////////////////////////////////////////////////////////////////////
-
-      c->BeginSubMenu(_("Mo&ve Cursor"));
-
-      c->AddItem(wxT("CursSelStart"), _("to Selection Star&t"), FN(OnCursorSelStart));
-      c->AddItem(wxT("CursSelEnd"), _("to Selection En&d"), FN(OnCursorSelEnd));
-
-      c->AddItem(wxT("CursTrackStart"), _("to Track &Start"), FN(OnCursorTrackStart), wxT("J"));
-      c->AddItem(wxT("CursTrackEnd"), _("to Track &End"), FN(OnCursorTrackEnd), wxT("K"));
-
-      c->EndSubMenu();
-
-      /////////////////////////////////////////////////////////////////////////////
-
       c->AddSeparator();
-
-      c->AddItem(wxT("SelSave"), _("Store Re&gion"), FN(OnSelectionSave),
+      c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
+      c->AddSeparator();
+      // Audacity has 'Store Re&gion' here.
+      c->AddItem(wxT("SelSave"), _("Save Sele&ction"), FN(OnSelectionSave),
          WaveTracksSelectedFlag,
          WaveTracksSelectedFlag);
-      c->AddItem(wxT("SelRestore"), _("Retrieve Regio&n"), FN(OnSelectionRestore),
+      // Audacity has 'Retrieve Regio&n' here.
+      c->AddItem(wxT("SelRestore"), _("Restore Selectio&n"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
-      c->AddItem(wxT("StoreCursorPosition"), _("Store Cursor Pos&ition"), FN(OnCursorPositionStore),
-         WaveTracksExistFlag,
-         WaveTracksExistFlag);
-
-      c->AddSeparator();
+      c->EndSubMenu();
+      //Present in Audacity...
+      //c->AddItem(wxT("StoreCursorPosition"), _("Store Cursor Pos&ition"), FN(OnCursorPositionStore),
+      //   WaveTracksExistFlag,
+      //   WaveTracksExistFlag);
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Pla&y Region"));
 
-      c->AddItem(wxT("LockPlayRegion"), _("&Lock"), FN(OnLockPlayRegion),
-         PlayRegionNotLockedFlag,
-         PlayRegionNotLockedFlag);
-      c->AddItem(wxT("UnlockPlayRegion"), _("&Unlock"), FN(OnUnlockPlayRegion),
-         PlayRegionLockedFlag,
-         PlayRegionLockedFlag);
-
-      c->EndSubMenu();
 
       /////////////////////////////////////////////////////////////////////////////
 
@@ -648,6 +656,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginMenu(_("&View"));
       c->SetDefaultFlags(TracksExistFlag, TracksExistFlag);
+      c->BeginSubMenu(_("Zoom"));
 
       c->AddItem(wxT("ZoomIn"), _("Zoom &In"), FN(OnZoomIn), wxT("Ctrl+1"),
          ZoomInAvailableFlag,
@@ -657,18 +666,17 @@ void AudacityProject::CreateMenusAndCommands()
          ZoomOutAvailableFlag,
          ZoomOutAvailableFlag);
       c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
+      c->EndSubMenu();
 
       c->AddSeparator();
-      c->AddItem(wxT("FitInWindow"), _("&Fit in Window"), FN(OnZoomFit), wxT("Ctrl+F"));
-      c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
-
-      c->AddSeparator();
-      c->AddItem(wxT("GoSelStart"), _("Go to Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
-      c->AddItem(wxT("GoSelEnd"), _("Go to Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
-
-      c->AddSeparator();
+      c->BeginSubMenu(_("&Track Size"));
+      c->AddItem(wxT("FitInWindow"), _("&Fit to Width"), FN(OnZoomFit), wxT("Ctrl+F"));
+      c->AddItem(wxT("FitV"), _("Fit to &Height"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
       c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
       c->AddItem(wxT("ExpandAllTracks"), _("E&xpand Collapsed Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
+      c->EndSubMenu();
+
+
 
       c->AddSeparator();
       c->AddCheck(wxT("ShowClipping"), _("&Show Clipping"), FN(OnShowClipping),
@@ -742,7 +750,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
       /* i18n-hint: (verb)*/
-      c->AddItem(wxT("ResetToolbars"), _("Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddItem(wxT("ResetToolbars"), _("&Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -756,36 +764,79 @@ void AudacityProject::CreateMenusAndCommands()
       play, record, pause etc. */
       c->BeginMenu(_("T&ransport"));
       c->SetDefaultFlags(CanStopAudioStreamFlag, CanStopAudioStreamFlag);
-
+      c->BeginSubMenu(_("Play"));
       /* i18n-hint: (verb) Start or Stop audio playback*/
       c->AddItem(wxT("PlayStop"), _("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"));
       c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("X"));
       c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"),
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag,
          WaveTracksExistFlag | AudioIONotBusyFlag | CanStopAudioStreamFlag);
-
-      // Scrubbing sub-menu
-      GetScrubber().AddMenuItems();
-
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
-      c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
-                 AudioIONotBusyFlag, AudioIONotBusyFlag);
-      c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
-                 WaveTracksExistFlag | AudioIONotBusyFlag,
-                 WaveTracksExistFlag | AudioIONotBusyFlag);
+      c->EndSubMenu();
 
-      c->AddSeparator();
-
+      c->BeginSubMenu( _("Record"));
       c->SetDefaultFlags(AudioIONotBusyFlag | CanStopAudioStreamFlag,
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-      c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"));
+      c->AddItem(wxT("RecordBelow"), _("Record Below"), FN(OnRecordBelow), wxT("Shift+R"));
+      // I decided to duplicate this between play and record, rather than put it at the top level.
+      // However I must not set the short cut here, as setting it twice disables it!
+      // TODO: find a way that it is OK to have the same shortcut for a repeated function.
+      c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause));//, wxT("P"));
+      c->EndSubMenu();
+
+      // Scrubbing sub-menu
+      GetScrubber().AddMenuItems();
+
+      c->AddSeparator();
+      c->BeginSubMenu(_("Skip to"));
+      c->AddItem(wxT("GoSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
+      c->AddItem(wxT("GoSelEnd"), _("Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
+
+      c->AddItem(wxT("SkipStart"), _("Track Start"), FN(OnSkipStart), wxT("Home"),
+                 AudioIONotBusyFlag, AudioIONotBusyFlag);
+      c->AddItem(wxT("SkipEnd"), _("Track E&nd"), FN(OnSkipEnd), wxT("End"),
+                 WaveTracksExistFlag | AudioIONotBusyFlag,
+                 WaveTracksExistFlag | AudioIONotBusyFlag);
+      c->EndSubMenu();
 
       c->AddSeparator();
 
-      c->AddCheck(wxT("PinnedHead"), _("Pinned Recording/Playback &Head"),
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->BeginSubMenu(_("Pla&y Region"));
+
+      c->AddItem(wxT("LockPlayRegion"), _("&Lock"), FN(OnLockPlayRegion),
+         PlayRegionNotLockedFlag,
+         PlayRegionNotLockedFlag);
+      c->AddItem(wxT("UnlockPlayRegion"), _("&Unlock"), FN(OnUnlockPlayRegion),
+         PlayRegionLockedFlag,
+         PlayRegionLockedFlag);
+
+      c->EndSubMenu();
+
+      c->AddSeparator();
+
+#if 0
+      // Taken from the edit menu, where it did not belong.
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->BeginSubMenu(_("Skip to"));
+
+      c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
+      c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd));
+
+      c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"));
+      c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"));
+
+      c->EndSubMenu();
+#endif
+
+
+      c->BeginSubMenu(_("Transport Options"));
+      c->AddCheck(wxT("PinnedHead"), _("Pinned Play/Record &Head (on/off)"),
                   FN(OnTogglePinnedHead), 0,
                   // Switching of scrolling on and off is permitted even during transport
                   AlwaysEnabledFlag, AlwaysEnabledFlag);
@@ -800,6 +851,7 @@ void AudacityProject::CreateMenusAndCommands()
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
 #endif
+      c->EndSubMenu();
       c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
       c->EndMenu();
@@ -826,13 +878,14 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
+      c->BeginSubMenu(_("Mix") );
       {
          // Stereo to Mono is an oddball command that is also subject to control by the
          // plug-in manager, as if an effect.  Decide whether to show or hide it.
          const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
          const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
          if (plug && plug->IsEnabled())
-            c->AddItem(wxT("Stereo to Mono"), _("Stereo Trac&k to Mono"), FN(OnStereoToMono),
+            c->AddItem(wxT("Stereo to Mono"), _("Mix Stereo down to Mono"), FN(OnStereoToMono),
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
       }
@@ -842,6 +895,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("MixAndRenderToNewTrack"), _("Mix and Render to Ne&w Track"), FN(OnMixAndRenderToNewTrack), wxT("Ctrl+Shift+M"),
          AudioIONotBusyFlag | WaveTracksSelectedFlag,
          AudioIONotBusyFlag | WaveTracksSelectedFlag);
+      c->EndSubMenu();
+
       c->AddItem(wxT("Resample"), _("&Resample..."), FN(OnResample),
          AudioIONotBusyFlag | WaveTracksSelectedFlag,
          AudioIONotBusyFlag | WaveTracksSelectedFlag);
@@ -854,8 +909,10 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
+      c->BeginSubMenu("Mute/Unmute");
       c->AddItem(wxT("MuteAllTracks"), _("&Mute All Tracks"), FN(OnMuteAllTracks), wxT("Ctrl+U"));
       c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"));
+      c->EndSubMenu();
 
       c->AddSeparator();
 
@@ -878,16 +935,14 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginSubMenu(_("&Align Tracks"));
 
+      c->BeginSubMenu(_("Just Move Tracks"));
       c->AddItemList(wxT("Align"), alignLabelsNoSync, FN(OnAlignNoSync));
       c->AddSeparator();
       c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
-
       c->EndSubMenu();
 
-      //////////////////////////////////////////////////////////////////////////
-
       // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
-      c->BeginSubMenu(_("Move Sele&ction when Aligning"));
+      c->BeginSubMenu(_("Move Sele&ction and Tracks"));
 
       c->AddItemList(wxT("AlignMove"), alignLabels, FN(OnAlignMoveSel));
       c->SetCommandFlags(wxT("AlignMove"),
@@ -895,6 +950,11 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | TracksSelectedFlag);
 
       c->EndSubMenu();
+
+      c->EndSubMenu();
+
+      //////////////////////////////////////////////////////////////////////////
+
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
 
@@ -909,29 +969,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
+      c->AddCheck(wxT("SyncLock"), _("Time-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
 #endif
-
-      c->AddItem(wxT("AddLabel"), _("Add Label at &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
-         AlwaysEnabledFlag, AlwaysEnabledFlag);
-      c->AddItem(wxT("AddLabelPlaying"), _("Add Label at &Playback Position"),
-         FN(OnAddLabelPlaying),
-#ifdef __WXMAC__
-         wxT("Ctrl+."),
-#else
-         wxT("Ctrl+M"),
-#endif
-         AudioIOBusyFlag, 
-         AudioIOBusyFlag);
-      c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
-
-      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
-                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-
-      c->AddSeparator();
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1069,11 +1111,21 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginMenu(_("&Help"));
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
+#ifndef EXPERIMENTAL_DA
       c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
       c->AddItem(wxT("Manual"), _("&Manual"), FN(OnManual));
+#else
+      // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
+      // At the moment the video tutorials are aspirational (aka do not exist yet).
+      // Emphasise that manual is for Audacity, not DarkAudacity.
+      c->AddItem(wxT("QuickHelp"), _("&Getting Started"), FN(OnQuickHelp));
+      c->AddItem(wxT("Manual"), wxT("Audacity &Manual"), FN(OnManual));
+#endif
+
 
       c->AddSeparator();
 
+      c->BeginSubMenu( _("Tools") );
       c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
 #if IS_ALPHA
@@ -1082,9 +1134,10 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("Benchmark"), _("&Run Benchmark..."), FN(OnBenchmark));
 #endif
-
+      c->EndSubMenu();
       c->AddSeparator();
-      c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
+
+      c->BeginSubMenu(_("Diagnostics"));
       c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
@@ -1094,11 +1147,14 @@ void AudacityProject::CreateMenusAndCommands()
 #if defined(EXPERIMENTAL_CRASH_REPORT)
       c->AddItem(wxT("CrashReport"), _("&Generate Support Data..."), FN(OnCrashReport));
 #endif
+      c->AddItem(wxT("CheckDeps"), _("Chec&k Dependencies..."), FN(OnCheckDependencies));
+      c->EndSubMenu();
 
 #ifndef __WXMAC__
       c->AddSeparator();
 #endif
 
+      //c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
       c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
 
       c->EndMenu();
@@ -2371,7 +2427,7 @@ void AudacityProject::OnRecord()
    GetControlToolBar()->OnRecord(evt);
 }
 
-void AudacityProject::OnRecordAppend()
+void AudacityProject::OnRecordBelow()
 {
    wxCommandEvent evt;
    evt.SetInt(1); // 0 is default, use 1 to set shift on, 2 to clear it
@@ -3901,13 +3957,19 @@ void AudacityProject::OnExportMIDI(){
 #endif // USE_MIDI
 
 
-void AudacityProject::OnExport()
+void AudacityProject::OnExport(const wxString & Format )
 {
    Exporter e;
+   e.SetDefaultFormat( Format );
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
    e.Process(this, false, 0.0, mTracks->GetEndTime());
 }
+
+void AudacityProject::OnExportAudio(){   OnExport("");}
+void AudacityProject::OnExportMp3(){   OnExport("MP3");}
+void AudacityProject::OnExportWav(){   OnExport("WAV");}
+void AudacityProject::OnExportOgg(){   OnExport("OGG");}
 
 void AudacityProject::OnExportSelection()
 {
@@ -3944,6 +4006,7 @@ void AudacityProject::OnPreferences()
 
       p->RebuildMenuBar();
       p->RebuildOtherMenus();
+// TODO: The comment below suggests this workaround is obsolete.
 #if defined(__WXGTK__)
       // Workaround for:
       //
