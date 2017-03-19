@@ -588,7 +588,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
       c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
-      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Stored &Cursor Position"), FN(OnSelectCursorStoredCursor),
+      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Saved &Cursor Position"), FN(OnSelectCursorStoredCursor),
          wxT(""), TracksExistFlag, TracksExistFlag);
 
 
@@ -612,6 +612,15 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
       c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
       c->AddSeparator();
+
+#ifndef EXPERIMENTAL_DA
+      c->AddItem(wxT("StoreCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionStore),
+         WaveTracksExistFlag,
+         WaveTracksExistFlag);
+      // Save cursor position is used in some selctions.
+      // Maybe there should be a restore for it?
+#endif
+
       // Audacity has 'Store Re&gion' here.
       c->AddItem(wxT("SelSave"), _("Save Sele&ction"), FN(OnSelectionSave),
          WaveTracksSelectedFlag,
@@ -621,10 +630,6 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag,
          TracksExistFlag);
       c->EndSubMenu();
-      //Present in Audacity...
-      //c->AddItem(wxT("StoreCursorPosition"), _("Store Cursor Pos&ition"), FN(OnCursorPositionStore),
-      //   WaveTracksExistFlag,
-      //   WaveTracksExistFlag);
 
       /////////////////////////////////////////////////////////////////////////////
 
@@ -802,6 +807,19 @@ void AudacityProject::CreateMenusAndCommands()
                  WaveTracksExistFlag | AudioIONotBusyFlag);
       c->EndSubMenu();
 
+#ifndef EXPERIMENTAL_DA
+      // JKC: ANSWER-ME: How is this different to 'Skip To' and how is it useful?
+      c->BeginSubMenu(_("Cursor to"));
+
+      c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
+      c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd));
+
+      c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"));
+      c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"));
+
+      c->EndSubMenu();
+#endif
+
       c->AddSeparator();
 
       /////////////////////////////////////////////////////////////////////////////
@@ -818,22 +836,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
 
       c->AddSeparator();
-
-#if 0
-      // Taken from the edit menu, where it did not belong.
-      /////////////////////////////////////////////////////////////////////////////
-
-      c->BeginSubMenu(_("Skip to"));
-
-      c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
-      c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd));
-
-      c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"));
-      c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"));
-
-      c->EndSubMenu();
-#endif
-
 
       c->BeginSubMenu(_("Transport Options"));
       c->AddCheck(wxT("PinnedHead"), _("Pinned Play/Record &Head (on/off)"),
@@ -969,7 +971,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+#ifdef EXPERIMENTAL_DA
       c->AddCheck(wxT("SyncLock"), _("Time-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
+#else
+      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
+#endif
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
@@ -1154,7 +1160,9 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 #endif
 
-      //c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
+#ifndef EXPERIMENTAL_DA
+      c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
+#endif
       c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
 
       c->EndMenu();
