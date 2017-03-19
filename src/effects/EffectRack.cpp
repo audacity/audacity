@@ -289,7 +289,7 @@ void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
    AudacityProject *project = GetActiveProject();
-   
+
    for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
    {
       if (mPowerState[i])
