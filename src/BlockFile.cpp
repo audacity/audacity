@@ -424,6 +424,8 @@ void BlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
 /// data provides information about the minimum value, the maximum
 /// value, and the maximum RMS value for every group of 256 samples in the
 /// file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
+///
 ///
 /// @param *buffer The area where the summary information will be
 ///                written.  It must be at least len*3 long.
@@ -434,54 +436,17 @@ bool BlockFile::Read256(float *buffer,
 {
    wxASSERT(start >= 0);
 
-   ArrayOf<char> summary{ mSummaryInfo.totalSummaryBytes };
-   // FIXME: TRAP_ERR ReadSummary() could return fail.
-   this->ReadSummary(summary.get());
+   ArrayOf< char > summary;
+   // In case of failure, summary is filled with zeroes
+   auto result = this->ReadSummary(summary);
 
    start = std::min( start, mSummaryInfo.frames256 );
    len = std::min( len, mSummaryInfo.frames256 - start );
 
-   CopySamples(summary.get() + mSummaryInfo.offset256 + (start * mSummaryInfo.bytesPerFrame),
-               mSummaryInfo.format,
-               (samplePtr)buffer, floatSample, len * mSummaryInfo.fields);
-
-   if (mSummaryInfo.fields == 2) {
-      // No RMS info
-      for(auto i = len; i--;) {
-         buffer[3*i+2] = (fabs(buffer[2*i]) + fabs(buffer[2*i+1]))/4.0;
-         buffer[3*i+1] = buffer[2*i+1];
-         buffer[3*i] = buffer[2*i];
-      }
-   }
-
-   return true;
-}
-
-/// Retrieves a portion of the 64K summary buffer from this BlockFile.  This
-/// data provides information about the minimum value, the maximum
-/// value, and the maximum RMS value for every group of 64K samples in the
-/// file.
-///
-/// @param *buffer The area where the summary information will be
-///                written.  It must be at least len*3 long.
-/// @param start   The offset in 64K-sample increments
-/// @param len     The number of 64K-sample summary frames to read
-bool BlockFile::Read64K(float *buffer,
-                        size_t start, size_t len)
-{
-   wxASSERT(start >= 0);
-
-   ArrayOf<char> summary{ mSummaryInfo.totalSummaryBytes };
-   // FIXME: TRAP_ERR ReadSummary() could return fail.
-   this->ReadSummary(summary.get());
-
-   start = std::min( start, mSummaryInfo.frames64K );
-   len = std::min( len, mSummaryInfo.frames64K - start );
-
-   CopySamples(summary.get() + mSummaryInfo.offset64K +
+   CopySamples(summary.get() + mSummaryInfo.offset256 +
                (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
-               (samplePtr)buffer, floatSample, len*mSummaryInfo.fields);
+               (samplePtr)buffer, floatSample, len * mSummaryInfo.fields);
 
    if (mSummaryInfo.fields == 2) {
       // No RMS info; make guess
@@ -492,7 +457,46 @@ bool BlockFile::Read64K(float *buffer,
       }
    }
 
-   return true;
+   return result;
+}
+
+/// Retrieves a portion of the 64K summary buffer from this BlockFile.  This
+/// data provides information about the minimum value, the maximum
+/// value, and the maximum RMS value for every group of 64K samples in the
+/// file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
+///
+/// @param *buffer The area where the summary information will be
+///                written.  It must be at least len*3 long.
+/// @param start   The offset in 64K-sample increments
+/// @param len     The number of 64K-sample summary frames to read
+bool BlockFile::Read64K(float *buffer,
+                        size_t start, size_t len)
+{
+   wxASSERT(start >= 0);
+
+   ArrayOf< char > summary;
+   // In case of failure, summary is filled with zeroes
+   auto result = this->ReadSummary(summary);
+
+   start = std::min( start, mSummaryInfo.frames64K );
+   len = std::min( len, mSummaryInfo.frames64K - start );
+
+   CopySamples(summary.get() + mSummaryInfo.offset64K +
+               (start * mSummaryInfo.bytesPerFrame),
+               mSummaryInfo.format,
+               (samplePtr)buffer, floatSample, len * mSummaryInfo.fields);
+
+   if (mSummaryInfo.fields == 2) {
+      // No RMS info; make guess
+      for(auto i = len; i--;) {
+         buffer[3*i+2] = (fabs(buffer[2*i]) + fabs(buffer[2*i+1]))/4.0;
+         buffer[3*i+1] = buffer[2*i+1];
+         buffer[3*i] = buffer[2*i];
+      }
+   }
+
+   return result;
 }
 
 size_t BlockFile::CommonReadData(
@@ -714,11 +718,13 @@ AliasBlockFile::~AliasBlockFile()
 
 /// Read the summary of this alias block from disk.  Since the audio data
 /// is elsewhere, this consists of reading the entire summary file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer where the summary data will be stored.  It must
 ///              be at least mSummaryInfo.totalSummaryBytes long.
-bool AliasBlockFile::ReadSummary(void *data)
+bool AliasBlockFile::ReadSummary(ArrayOf<char> &data)
 {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
 
    {
@@ -729,24 +735,28 @@ bool AliasBlockFile::ReadSummary(void *data)
       if (!summaryFile.IsOpened()){
 
          // NEW model; we need to return valid data
-         memset(data, 0, mSummaryInfo.totalSummaryBytes);
+         memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
 
          // we silence the logging for this operation in this object
          // after first occurrence of error; it's already reported and
          // spewing at the user will complicate the user's ability to
          // deal
          mSilentLog = TRUE;
-         return true;
+         return false;
 
       }
       else mSilentLog = FALSE; // worked properly, any future error is NEW
    }
 
-   auto read = summaryFile.Read(data, mSummaryInfo.totalSummaryBytes);
+   auto read = summaryFile.Read(data.get(), mSummaryInfo.totalSummaryBytes);
+   if (read != mSummaryInfo.totalSummaryBytes) {
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+      return false;
+   }
 
-   FixSummary(data);
+   FixSummary(data.get());
 
-   return (read == mSummaryInfo.totalSummaryBytes);
+   return true;
 }
 
 /// Modify this block to point at a different file.  This is generally

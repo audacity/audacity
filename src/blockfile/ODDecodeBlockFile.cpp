@@ -126,6 +126,7 @@ void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) c
 }
 
 /// Returns the 256 byte summary data block
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODDecodeBlockFile::Read256(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -134,13 +135,13 @@ bool ODDecodeBlockFile::Read256(float *buffer, size_t start, size_t len)
    }
    else
    {
-      //this should not be reached (client should check IsSummaryAvailable()==true before this.
-      buffer = NULL;
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
 /// Returns the 64K summary data block
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODDecodeBlockFile::Read64K(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -149,8 +150,8 @@ bool ODDecodeBlockFile::Read64K(float *buffer, size_t start, size_t len)
    }
    else
    {
-      //this should not be reached (client should check IsSummaryAvailable()==true before this.
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
@@ -450,17 +451,19 @@ size_t ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
 
 /// Read the summary of this alias block from disk.  Since the audio data
 /// is elsewhere, this consists of reading the entire summary file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer where the summary data will be stored.  It must
 ///              be at least mSummaryInfo.totalSummaryBytes long.
-bool ODDecodeBlockFile::ReadSummary(void *data)
+bool ODDecodeBlockFile::ReadSummary(ArrayOf<char> &data)
 {
-   //I dont think we need to add a mutex here because only the main thread changes filenames and calls ReadSummarz
+   //I dont think we need to add a mutex here because only the main thread changes filenames and calls ReadSummary
    if(IsSummaryAvailable())
       return SimpleBlockFile::ReadSummary(data);
 
-   memset(data, 0, mSummaryInfo.totalSummaryBytes);
-   return true;
+   data.reinit( mSummaryInfo.totalSummaryBytes );
+   memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+   return false;
 }
 
 ///set the decoder,

@@ -181,7 +181,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
                               float *summary256, float *summary64K);
 
    /// Read the summary section of the file.  Derived classes implement.
-   virtual bool ReadSummary(void *data) = 0;
+   virtual bool ReadSummary(ArrayOf<char> &data) = 0;
 
    /// Byte-swap the summary data, in case it was saved by a system
    /// on a different platform
@@ -251,7 +251,7 @@ class AliasBlockFile /* not final */ : public BlockFile
    /// Write the summary to disk, using the derived ReadData() to get the data
    virtual void WriteSummary();
    /// Read the summary into a buffer
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
 
    wxFileNameWrapper mAliasedFileName;
    sampleCount mAliasStart;

@@ -155,7 +155,8 @@ void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
    }
 }
 
-/// Returns the 256 byte summary data block.  Clients should check to see if the summary is available before trying to read it with this call.
+/// Returns the 256 byte summary data block.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODPCMAliasBlockFile::Read256(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -165,12 +166,13 @@ bool ODPCMAliasBlockFile::Read256(float *buffer, size_t start, size_t len)
    else
    {
       //return nothing.
-      buffer = NULL;
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
-/// Returns the 64K summary data block. Clients should check to see if the summary is available before trying to read it with this call.
+/// Returns the 64K summary data block.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODPCMAliasBlockFile::Read64K(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -180,8 +182,8 @@ bool ODPCMAliasBlockFile::Read64K(float *buffer, size_t start, size_t len)
    else
    {
       //return nothing - it hasn't been calculated yet
-      buffer = NULL;
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
@@ -505,40 +507,43 @@ size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
 /// Read the summary of this alias block from disk.  Since the audio data
 /// is elsewhere, this consists of reading the entire summary file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer where the summary data will be stored.  It must
 ///              be at least mSummaryInfo.totalSummaryBytes long.
-bool ODPCMAliasBlockFile::ReadSummary(void *data)
+bool ODPCMAliasBlockFile::ReadSummary(ArrayOf<char> &data)
 {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
 
-   mFileNameMutex.Lock();
+   ODLocker locker{ &mFileNameMutex };
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
 
-   if( !summaryFile.IsOpened() ){
+   if( !summaryFile.IsOpened() ) {
 
       // NEW model; we need to return valid data
-      memset(data, 0, mSummaryInfo.totalSummaryBytes);
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
 
       // we silence the logging for this operation in this object
       // after first occurrence of error; it's already reported and
       // spewing at the user will complicate the user's ability to
       // deal
-      mSilentLog=TRUE;
+      mSilentLog = TRUE;
 
-      mFileNameMutex.Unlock();
-      return true;
-
+      return false;
    }
    else
-      mSilentLog=FALSE; // worked properly, any future error is NEW
+      mSilentLog = FALSE; // worked properly, any future error is NEW
 
-   auto read = summaryFile.Read(data, mSummaryInfo.totalSummaryBytes);
+   auto read = summaryFile.Read(data.get(), mSummaryInfo.totalSummaryBytes);
 
-   FixSummary(data);
+   if (read != mSummaryInfo.totalSummaryBytes) {
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+      return false;
+   }
+   
+   FixSummary(data.get());
 
-
-   mFileNameMutex.Unlock();
-   return (read == mSummaryInfo.totalSummaryBytes);
+   return true;
 }
 
 /// Prevents a read on other threads.
