@@ -6075,6 +6075,16 @@ try
    }
 #endif
 
+   // If a mouse event originates from a keyboard context menu event then
+   // event.GetPosition() == wxDefaultPosition. wxContextMenu events are handled in
+   // TrackPanel::OnContextMenu(), and therefore associated mouse events are ignored here.
+   // Not ignoring them was causing bug 613: the mouse events were interpreted as clicking
+   // outside the tracks.
+   if (event.GetPosition() == wxDefaultPosition && (event.RightDown() || event.RightUp())) {
+      event.Skip();
+      return;
+   }
+
    if (event.m_wheelRotation != 0)
       HandleWheelRotation(event);
 
