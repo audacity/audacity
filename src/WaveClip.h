@@ -251,7 +251,7 @@ public:
    bool AfterClip(double t) const;
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len) const;
+                   sampleCount start, size_t len, bool mayThrow = true) const;
    bool SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 

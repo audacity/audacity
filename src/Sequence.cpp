@@ -41,6 +41,8 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
+#include "AudacityException.h"
+
 #include "BlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "DirManager.h"
@@ -405,7 +407,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       blocklen =
          ( std::min(s1, block0.start + file->GetLength()) - s0 ).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
-      Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen);
+      Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen, true);
 
       dest->Append(buffer.ptr(), mSampleFormat, blocklen);
    }
@@ -425,7 +427,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       blocklen = (s1 - block.start).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
-         Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen);
+         Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen, true);
          dest->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
       else
@@ -524,12 +526,12 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       auto sAddedLen = addedLen.as_size_t();
       // s lies within block:
       auto splitPoint = ( s - block.start ).as_size_t();
-      Read(buffer.ptr(), mSampleFormat, block, 0, splitPoint);
+      Read(buffer.ptr(), mSampleFormat, block, 0, splitPoint, true);
       src->Get(0, buffer.ptr() + splitPoint*sampleSize,
-               mSampleFormat, 0, sAddedLen);
+               mSampleFormat, 0, sAddedLen, true);
       Read(buffer.ptr() + (splitPoint + sAddedLen) * sampleSize,
            mSampleFormat, block,
-           splitPoint, length - splitPoint);
+           splitPoint, length - splitPoint, true);
 
       auto file =
          mDirManager->NewSimpleBlockFile(
@@ -567,13 +569,13 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       const auto sum = splitLen + sAddedLen;
 
       SampleBuffer sumBuffer(sum, mSampleFormat);
-      Read(sumBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
+      Read(sumBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint, true);
       src->Get(0, sumBuffer.ptr() + splitPoint * sampleSize,
                mSampleFormat,
-               0, sAddedLen);
+               0, sAddedLen, true);
       Read(sumBuffer.ptr() + (splitPoint + sAddedLen) * sampleSize, mSampleFormat,
            splitBlock, splitPoint,
-           splitLen - splitPoint);
+           splitLen - splitPoint, true);
 
       Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                newBlock, splitBlock.start, sumBuffer.ptr(), sum);
@@ -598,9 +600,9 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       SampleBuffer sampleBuffer(std::max(leftLen, rightLen), mSampleFormat);
 
-      Read(sampleBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
+      Read(sampleBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint, true);
       src->Get(0, sampleBuffer.ptr() + splitPoint*sampleSize,
-         mSampleFormat, 0, srcFirstTwoLen);
+         mSampleFormat, 0, srcFirstTwoLen, true);
 
       Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
@@ -618,9 +620,9 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       auto lastStart = penultimate.start;
       src->Get(srcNumBlocks - 2, sampleBuffer.ptr(), mSampleFormat,
-               lastStart, srcLastTwoLen);
+               lastStart, srcLastTwoLen, true);
       Read(sampleBuffer.ptr() + srcLastTwoLen * sampleSize, mSampleFormat,
-           splitBlock, splitPoint, rightSplit);
+           splitBlock, splitPoint, rightSplit, true);
 
       Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
@@ -1112,43 +1114,50 @@ int Sequence::FindBlock(sampleCount pos) const
 }
 
 bool Sequence::Read(samplePtr buffer, sampleFormat format,
-                    const SeqBlock &b, size_t blockRelativeStart, size_t len)
-                    const
+                    const SeqBlock &b, size_t blockRelativeStart, size_t len,
+                    bool mayThrow)
 {
    const auto &f = b.f;
 
    wxASSERT(blockRelativeStart + len <= f->GetLength());
 
-   auto result = f->ReadData(buffer, format, blockRelativeStart, len);
+   // Either throws, or of !mayThrow, tells how many were really read
+   auto result = f->ReadData(buffer, format, blockRelativeStart, len, mayThrow);
 
    if (result != len)
    {
       wxLogWarning(wxT("Expected to read %ld samples, got %d samples."),
                    len, result);
-      ClearSamples(buffer, format, result, len-result);
+      return false;
    }
 
    return true;
 }
 
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
-   sampleCount start, size_t len) const
+   sampleCount start, size_t len, bool mayThrow) const
 {
    if (start == mNumSamples) {
       return len == 0;
    }
 
    if (start < 0 || start > mNumSamples ||
-      start + len > mNumSamples)
+       start + len > mNumSamples) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      ClearSamples( buffer, floatSample, 0, len );
       return false;
+   }
    int b = FindBlock(start);
 
-   return Get(b, buffer, format, start, len);
+   return Get(b, buffer, format, start, len, mayThrow);
 }
 
 bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
-   sampleCount start, size_t len) const
+   sampleCount start, size_t len, bool mayThrow) const
 {
+   bool result = true;
    while (len) {
       const SeqBlock &block = mBlock[b];
       // start is in block
@@ -1156,15 +1165,15 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
       // bstart is not more than block length
       const auto blen = std::min(len, block.f->GetLength() - bstart);
 
-      Read(buffer, format, block, bstart, blen);
+      if (! Read(buffer, format, block, bstart, blen, mayThrow) )
+         result = false;
 
       len -= blen;
       buffer += (blen * SAMPLE_SIZE(format));
       b++;
       start += blen;
    }
-
-   return true;
+   return result;
 }
 
 // Pass NULL to set silence
@@ -1211,7 +1220,7 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
          ;
 
       if ( bstart > 0 || blen < fileLength ) {
-         Read(scratch.ptr(), mSampleFormat, block, 0, fileLength);
+         Read(scratch.ptr(), mSampleFormat, block, 0, fileLength, true);
 
          if (useBuffer) {
             auto sampleSize = SAMPLE_SIZE(mSampleFormat);
@@ -1393,7 +1402,8 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       default:
       case 1:
          // Read samples
-         Read((samplePtr)temp.get(), floatSample, seqBlock, startPosition, num);
+         // no-throw for display operations!
+         Read((samplePtr)temp.get(), floatSample, seqBlock, startPosition, num, false);
          break;
       case 256:
          // Read triples
@@ -1526,7 +1536,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       SeqBlock &lastBlock = *pLastBlock;
       const auto addLen = std::min(mMaxSamples - length, len);
 
-      Read(buffer2.ptr(), mSampleFormat, lastBlock, 0, length);
+      Read(buffer2.ptr(), mSampleFormat, lastBlock, 0, length, true);
 
       CopySamples(buffer,
                   format,
@@ -1653,12 +1663,12 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
       scratch.Allocate(scratchSize, mSampleFormat);
 
-      Read(scratch.ptr(), mSampleFormat, b, 0, pos);
+      Read(scratch.ptr(), mSampleFormat, b, 0, pos, true);
       Read(scratch.ptr() + (pos * sampleSize), mSampleFormat,
            b,
            // ... and therefore pos + len
            // is not more than the length of the block
-           ( pos + len ).as_size_t(), newLen - pos);
+           ( pos + len ).as_size_t(), newLen - pos, true);
 
       b = SeqBlock(
          mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat),
@@ -1694,7 +1704,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       if (preBufferLen >= mMinSamples || b0 == 0) {
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
-         Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen);
+         Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen, true);
          auto pFile =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), preBufferLen, mSampleFormat);
 
@@ -1707,9 +1717,9 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
 
-         Read(scratch.ptr(), mSampleFormat, prepreBlock, 0, prepreLen);
+         Read(scratch.ptr(), mSampleFormat, prepreBlock, 0, prepreLen, true);
          Read(scratch.ptr() + prepreLen*sampleSize, mSampleFormat,
-              preBlock, 0, preBufferLen);
+              preBlock, 0, preBufferLen, true);
 
          newBlock.erase(newBlock.end() - 1);
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
@@ -1738,7 +1748,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
             scratch.Allocate(postBufferLen, mSampleFormat);
          // start + len - 1 lies within postBlock
          auto pos = (start + len - postBlock.start).as_size_t();
-         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
+         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen, true);
          auto file =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), postBufferLen, mSampleFormat);
 
@@ -1753,9 +1763,9 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
             scratch.Allocate(sum, mSampleFormat);
          // start + len - 1 lies within postBlock
          auto pos = (start + len - postBlock.start).as_size_t();
-         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
+         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen, true);
          Read(scratch.ptr() + (postBufferLen * sampleSize), mSampleFormat,
-              postpostBlock, 0, postpostLen);
+              postpostBlock, 0, postpostLen, true);
 
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                   newBlock, start, scratch.ptr(), sum);

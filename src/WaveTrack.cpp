@@ -1980,12 +1980,14 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 }
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, size_t len, fillFormat fill ) const
+                    sampleCount start, size_t len, fillFormat fill,
+                    bool mayThrow) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
    // everything to be on the safe side.
    bool doClear = true;
+   bool result = true;
    for (const auto &clip: mClips)
    {
       if (start >= clip->GetStartSample() && start+len <= clip->GetEndSample())
@@ -2046,15 +2048,12 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
                (samplePtr)(((char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
-               format, inclipDelta, samplesToCopy.as_size_t() ))
-         {
-            wxASSERT(false); // should always work
-            return false;
-         }
+               format, inclipDelta, samplesToCopy.as_size_t(), mayThrow ))
+            result = false;
       }
    }
 
-   return true;
+   return result;
 }
 
 bool WaveTrack::Set(samplePtr buffer, sampleFormat format,

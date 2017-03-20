@@ -252,7 +252,8 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len, fillFormat fill=fillZero) const;
+                   sampleCount start, size_t len,
+                   fillFormat fill = fillZero, bool mayThrow = true) const;
    bool Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
    void GetEnvelopeValues(double *buffer, size_t bufferLen,

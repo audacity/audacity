@@ -401,9 +401,9 @@ void WaveClip::SetOffset(double offset)
 }
 
 bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len) const
+                   sampleCount start, size_t len, bool mayThrow) const
 {
-   return mSequence->Get(buffer, format, start, len);
+   return mSequence->Get(buffer, format, start, len, mayThrow);
 }
 
 bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
@@ -1855,7 +1855,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       bool isLast = ((pos + inLen) == numSamples);
 
-      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen))
+      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
       {
          error = true;
          break;

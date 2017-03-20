@@ -86,7 +86,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    sampleCount GetNumSamples() const { return mNumSamples; }
 
    bool Get(samplePtr buffer, sampleFormat format,
-            sampleCount start, size_t len) const;
+            sampleCount start, size_t len, bool mayThrow) const;
 
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
@@ -249,9 +249,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
       (DirManager &dirManager,
        BlockArray &blocks, sampleCount &numSamples, const SeqBlock &b);
 
-   bool Read(samplePtr buffer, sampleFormat format,
+   static bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
-             size_t blockRelativeStart, size_t len) const;
+             size_t blockRelativeStart, size_t len, bool mayThrow);
 
    // Accumulate NEW block files onto the end of a block array.
    // Does not change this sequence.  The intent is to use
@@ -261,7 +261,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
        BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
 
    bool Get(int b, samplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len) const;
+      sampleCount start, size_t len, bool mayThrow) const;
 
  public:
 

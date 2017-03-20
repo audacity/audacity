@@ -2513,9 +2513,12 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
                                end - start ));
    const auto effectiveLength = std::max(minLength, length);
    frequencySnappingData.resize(effectiveLength, 0.0f);
+
    pTrack->Get(
       reinterpret_cast<samplePtr>(&frequencySnappingData[0]),
-      floatSample, start, length);
+      floatSample, start, length, fillZero,
+      // Don't try to cope with exceptions, just read zeroes instead.
+      false);
 
    // Use same settings as are now used for spectrogram display,
    // except, shrink the window as needed so we get some answers
@@ -6843,7 +6846,11 @@ bool TrackPanel::HitTestSamples(Track *track, const wxRect &rect, const wxMouseE
    // Just get one sample.
    float oneSample;
    auto s0 = (sampleCount)(tt * rate + 0.5);
-   wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1);
+   if ( !wavetrack->Get(
+         (samplePtr)&oneSample, floatSample, s0, 1, fillZero,
+         // Do not propagate exception but return a failure value
+         false))
+      return false;
 
    // Get y distance of envelope point from center line (in pixels).
    float zoomMin, zoomMax;
