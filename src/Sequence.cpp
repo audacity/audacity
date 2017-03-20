@@ -1134,29 +1134,6 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
    return true;
 }
 
-bool Sequence::CopyWrite(SampleBuffer &scratch,
-                         samplePtr buffer, SeqBlock &b,
-                         size_t blockRelativeStart, size_t len)
-{
-   // We don't ever write to an existing block; to support Undo,
-   // we copy the old block entirely into memory, dereference it,
-   // make the change, and then write the NEW block to disk.
-
-   const auto length = b.f->GetLength();
-   wxASSERT(length <= mMaxSamples);
-   wxASSERT(blockRelativeStart + len <= length);
-
-   auto sampleSize = SAMPLE_SIZE(mSampleFormat);
-
-   Read(scratch.ptr(), mSampleFormat, b, 0, length);
-   memcpy(scratch.ptr() +
-          blockRelativeStart * sampleSize, buffer, len*sampleSize);
-
-   b.f = mDirManager->NewSimpleBlockFile(scratch.ptr(), length, mSampleFormat);
-
-   return true;
-}
-
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, size_t len) const
 {
@@ -1218,31 +1195,49 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
       const auto fileLength = block.f->GetLength();
       const auto blen = limitSampleBufferSize( fileLength - bstart, len );
 
-      if (buffer) {
-         if (format == mSampleFormat)
-            CopyWrite(scratch, buffer, block, bstart, blen);
-         else {
-            // To do: remove the extra movement.  Can we copy-samples within CopyWrite?
-            CopySamples(buffer, format, temp.ptr(), mSampleFormat, blen);
-            CopyWrite(scratch, temp.ptr(), block, bstart, blen);
+      samplePtr useBuffer = buffer;
+      if (buffer && format != mSampleFormat)
+      {
+         // To do: remove the extra movement.
+         CopySamples(buffer, format, temp.ptr(), mSampleFormat, blen);
+         useBuffer = temp.ptr();
+      }
+
+      // We don't ever write to an existing block; to support Undo,
+      // we copy the old block entirely into memory, dereference it,
+      // make the change, and then write the NEW block to disk.
+
+      if (!(fileLength <= mMaxSamples &&
+            bstart + blen <= fileLength))
+         //THROW_INCONSISTENCY_EXCEPTION
+         wxASSERT(false)
+         ;
+
+      if ( bstart > 0 || blen < fileLength ) {
+         Read(scratch.ptr(), mSampleFormat, block, 0, fileLength);
+
+         if (useBuffer) {
+            auto sampleSize = SAMPLE_SIZE(mSampleFormat);
+            memcpy(scratch.ptr() +
+                   bstart * sampleSize, useBuffer, blen * sampleSize);
          }
-         buffer += (blen * SAMPLE_SIZE(format));
+         else
+            ClearSamples(scratch.ptr(), mSampleFormat, bstart, blen);
+
+         block.f = mDirManager->NewSimpleBlockFile(
+            scratch.ptr(), fileLength, mSampleFormat);
       }
       else {
-         // If it's a full block of silence
-         if (start == block.start &&
-             blen == fileLength) {
-
-            block.f = make_blockfile<SilentBlockFile>(blen);
-         }
-         else {
-            // Odd partial blocks of silence at start or end.
-            temp.Allocate(blen, format);
-            ClearSamples(temp.ptr(), format, 0, blen);
-            // Otherwise write silence just to the portion of the block
-            CopyWrite(scratch, temp.ptr(), block, bstart, blen);
-         }
+         // Avoid reading the disk when the replacement is total
+         if (useBuffer)
+            block.f = mDirManager->NewSimpleBlockFile(
+               useBuffer, fileLength, mSampleFormat);
+         else
+            block.f = make_blockfile<SilentBlockFile>(fileLength);
       }
+
+      if( buffer )
+         buffer += (blen * SAMPLE_SIZE(format));
 
       len -= blen;
       start += blen;

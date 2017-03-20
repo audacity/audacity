@@ -252,10 +252,6 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
              const SeqBlock &b,
              size_t blockRelativeStart, size_t len) const;
 
-   bool CopyWrite(SampleBuffer &scratch,
-                  samplePtr buffer, SeqBlock &b,
-                  size_t blockRelativeStart, size_t len);
-
    void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
 
    bool Get(int b, samplePtr buffer, sampleFormat format,
