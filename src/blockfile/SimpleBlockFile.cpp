@@ -267,6 +267,8 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    return true;
 }
 
+// This function should try to fill the cache, but just return without effect
+// (not throwing) if there is failure.
 void SimpleBlockFile::FillCache()
 {
    if (mCache.active)

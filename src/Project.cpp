@@ -3145,6 +3145,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          mImportXMLTagHandler.reset();
 
          if ( bParseSuccess ) {
+            // This is a no-fail:
             GetDirManager()->FillBlockfilesCache();
             EnqueueODTasks();
          }
@@ -4183,6 +4184,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
                OnEffectFlags::kConfigured);
    }
 
+   // This is a no-fail:
    GetDirManager()->FillBlockfilesCache();
    return true;
 }
