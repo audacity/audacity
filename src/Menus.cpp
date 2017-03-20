@@ -5169,8 +5169,8 @@ void AudacityProject::OnSelectAll()
 
 void AudacityProject::OnSelectNone()
 {
-   this->SelectNone();
    mViewInfo.selectedRegion.collapseToT0();
+   SelectNone();
    ModifyState(false);
 }
 
