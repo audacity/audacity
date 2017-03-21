@@ -368,7 +368,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
       // To identify filename and open it
       tokenholder = temptok1.GetNextToken();
-      targetfile = temptok1.GetNextToken();
+      wxString targettoken = temptok1.GetNextToken();
+      targetfile = targettoken;
 
       // If path is relative, make absolute path from LOF path
       if(!wxIsAbsolutePath(targetfile)) {
@@ -400,7 +401,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       }
 
       // Set tok to right after filename
-      temptok2.SetString(targetfile);
+      temptok2.SetString(targettoken);
       tokenplace = temptok2.CountTokens();
 
       for (int i = 0; i < tokenplace; i++)
