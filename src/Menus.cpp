@@ -3628,6 +3628,27 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    WaveTrack *newTrack{};
    wxWindow *focus = wxWindow::FindFocus();
 
+   bool success = false;
+   auto cleanup = finally( [&] {
+
+      if (!success) {
+         if (newTrack) {
+            mTracks->Remove(newTrack);
+            mTrackPanel->Refresh(false);
+         }
+
+         // For now, we're limiting realtime preview to a single effect, so
+         // make sure the menus reflect that fact that one may have just been
+         // opened.
+         UpdateMenus(false);
+      }
+
+      if (focus != NULL) {
+         focus->SetFocus();
+      }
+
+   } );
+
    //double prevEndTime = mTracks->GetEndTime();
    int count = 0;
    bool clean = true;
@@ -3650,24 +3671,13 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 
    EffectManager & em = EffectManager::Get();
 
-   bool success = em.DoEffect(ID, this, mRate,
+   success = em.DoEffect(ID, this, mRate,
                                GetTracks(), GetTrackFactory(),
                                &mViewInfo.selectedRegion,
                                (flags & OnEffectFlags::kConfigured) == 0);
 
-   if (!success) {
-      if (newTrack) {
-         mTracks->Remove(newTrack);
-         mTrackPanel->Refresh(false);
-      }
-
-      // For now, we're limiting realtime preview to a single effect, so
-      // make sure the menus reflect that fact that one may have just been
-      // opened.
-      UpdateMenus(false);
-
+   if (!success)
       return false;
-   }
 
    if (em.GetSkipStateFlag())
       flags = flags | OnEffectFlags::kSkipState;
@@ -3681,7 +3691,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
 
    if (!(flags & OnEffectFlags::kDontRepeatLast))
    {
-      // Only remember a successful effect, don't rmemeber insert,
+      // Only remember a successful effect, don't remember insert,
       // or analyze effects.
       if (type == EffectTypeProcess) {
          wxString shortDesc = em.GetEffectName(ID);
@@ -3705,9 +3715,6 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
          //  mTrackPanel->Refresh(false);
    }
    RedrawProject();
-   if (focus != NULL) {
-      focus->SetFocus();
-   }
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
 
    mTrackPanel->Refresh(false);
@@ -4149,6 +4156,9 @@ void AudacityProject::OnCut()
    }
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
@@ -4164,10 +4174,16 @@ void AudacityProject::OnCut()
                     mViewInfo.selectedRegion.t1());
 
          if (dest)
-            FinishCopy(n, std::move(dest), *msClipboard);
+            FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
+
+   // Proceed to change the project.  If this throws, the project will be
+   // rolled back by the top level handler.
 
    n = iter.First();
    while (n) {
@@ -4220,6 +4236,9 @@ void AudacityProject::OnSplitCut()
    Track *n = iter.First();
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    while (n) {
       if (n->GetSelected()) {
          Track::Holder dest;
@@ -4237,10 +4256,13 @@ void AudacityProject::OnSplitCut()
                        mViewInfo.selectedRegion.t1());
          }
          if (dest)
-            FinishCopy(n, std::move(dest), *msClipboard);
+            FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
 
    msClipT0 = mViewInfo.selectedRegion.t0();
    msClipT1 = mViewInfo.selectedRegion.t1();
@@ -4275,16 +4297,22 @@ void AudacityProject::OnCopy()
    }
 
    ClearClipboard();
+
+   TrackList newClipboard;
+
    n = iter.First();
    while (n) {
       if (n->GetSelected()) {
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1());
          if (dest)
-            FinishCopy(n, std::move(dest), *msClipboard);
+            FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
+
+   // Survived possibility of exceptions.  Commit changes to the clipboard now.
+   newClipboard.Swap(*msClipboard);
 
    msClipT0 = mViewInfo.selectedRegion.t0();
    msClipT1 = mViewInfo.selectedRegion.t1();
@@ -5609,7 +5637,8 @@ void AudacityProject::OnPlotSpectrum()
       where.x = 150;
       where.y = 150;
 
-      mFreqWindow = safenew FreqWindow(this, -1, _("Frequency Analysis"), where);
+      mFreqWindow.reset( safenew FreqWindow(
+         this, -1, _("Frequency Analysis"), where ) );
    }
 
    mFreqWindow->Show(true);
@@ -5626,7 +5655,8 @@ void AudacityProject::OnContrast()
       where.x = 150;
       where.y = 150;
 
-      mContrastDialog = safenew ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
+      mContrastDialog.reset( safenew ContrastDialog(
+         this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where ) );
    }
 
    mContrastDialog->CentreOnParent();
@@ -5744,12 +5774,23 @@ void AudacityProject::OnImport()
       return;
    }
 
+   // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
+   // to false.  Should it also be set to true on other paths that reach
+   // AudacityProject::Import ?
    gPrefs->Write(wxT("/NewImportingSession"), true);
 
    //sort selected files by OD status.  Load non OD first so user can edit asap.
    //first sort selectedFiles.
    selectedFiles.Sort(CompareNoCaseFileName);
    ODManager::Pauser pauser;
+
+   auto cleanup = finally( [&] {
+      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
+
+      gPrefs->Flush();
+
+      HandleResize(); // Adjust scrollers for NEW track sizes.
+   } );
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       wxString fileName = selectedFiles[ff];
@@ -5759,12 +5800,6 @@ void AudacityProject::OnImport()
 
       Import(fileName);
    }
-
-   gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-
-   gPrefs->Flush();
-
-   HandleResize(); // Adjust scrollers for NEW track sizes.
 }
 
 void AudacityProject::OnImportLabels()
@@ -5830,26 +5865,36 @@ void AudacityProject::OnImportMIDI()
       gPrefs->Write(wxT("/DefaultOpenPath"), path);
       gPrefs->Flush();
 
-      DoImportMIDI(fileName);
+      AudacityProject::DoImportMIDI(this, fileName);
    }
 }
 
-void AudacityProject::DoImportMIDI(const wxString &fileName)
+AudacityProject *AudacityProject::DoImportMIDI(
+   AudacityProject *pProject, const wxString &fileName)
 {
-   auto newTrack = GetTrackFactory()->NewNoteTrack();
+   AudacityProject *pNewProject {};
+   if ( !pProject )
+      pProject = pNewProject = CreateNewAudacityProject();
+   auto cleanup = finally( [&] { if ( pNewProject ) pNewProject->Close(true); } );
+
+   auto newTrack = pProject->GetTrackFactory()->NewNoteTrack();
 
    if (::ImportMIDI(fileName, newTrack.get())) {
 
-      SelectNone();
-      auto pTrack = mTracks->Add(std::move(newTrack));
+      pProject->SelectNone();
+      auto pTrack = pProject->mTracks->Add(std::move(newTrack));
       pTrack->SetSelected(true);
 
-      PushState(wxString::Format(_("Imported MIDI from '%s'"),
+      pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName.c_str()), _("Import MIDI"));
 
-      RedrawProject();
-      mTrackPanel->EnsureVisible(pTrack);
+      pProject->RedrawProject();
+      pProject->mTrackPanel->EnsureVisible(pTrack);
+      pNewProject = nullptr;
+      return pProject;
    }
+   else
+      return nullptr;
 }
 #endif // USE_MIDI
 
@@ -7165,6 +7210,7 @@ void AudacityProject::OnResample()
    }
 
    int ndx = 0;
+   auto flags = UndoPush::AUTOSAVE;
    for (Track *t = iter.First(); t; t = iter.Next())
    {
       wxString msg;
@@ -7173,12 +7219,24 @@ void AudacityProject::OnResample()
 
       ProgressDialog progress(_("Resample"), msg);
 
-      if (t->GetSelected() && t->GetKind() == Track::Wave)
+      if (t->GetSelected() && t->GetKind() == Track::Wave) {
+         // The resampling of a track may be stopped by the user.  This might
+         // leave a track with multiple clips in a partially resampled state.
+         // But the thrown exception will cause rollback in the application
+         // level handler.
+
          if (!((WaveTrack*)t)->Resample(newRate, &progress))
             break;
+
+         // Each time a track is successfully, completely resampled,
+         // commit that to the undo stack.  The second and later times,
+         // consolidate.
+
+         PushState(_("Resampled audio track(s)"), _("Resample Track"), flags);
+         flags = flags | UndoPush::CONSOLIDATE;
+      }
    }
 
-   PushState(_("Resampled audio track(s)"), _("Resample Track"));
    RedrawProject();
 
    // Need to reset

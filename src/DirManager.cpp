@@ -1405,6 +1405,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    bool needToRename = false;
    wxBusyCursor busy;
    BlockHash::iterator iter = mBlockFileHash.begin();
+   std::vector< BlockFile::ReadLock > readLocks;
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
@@ -1420,14 +1421,14 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
             needToRename = true;
 
             //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            ab->LockRead();
+            readLocks.push_back( ab->LockForRead() );
          }
          //now for encoded OD blocks  (e.g. flac)
          else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
             needToRename = true;
 
             //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            db->LockRead();
+            readLocks.push_back( db->LockForRead() );
          }
       }
       ++iter;
@@ -1443,27 +1444,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          // second earlier.)  But we'll handle this scenario
          // just in case!!!
 
-         // Put things back where they were
-         BlockHash::iterator iter = mBlockFileHash.begin();
-         while (iter != mBlockFileHash.end())
-         {
-            BlockFilePtr b = iter->second.lock();
-            if (b) {
-               auto ab = static_cast< AliasBlockFile * > ( &*b );
-               auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-               if (b->IsAlias() && (ab->GetAliasedFileName() == fName))
-                  ab->UnlockRead();
-               if (!b->IsDataAvailable() && (db->GetEncodedAudioFilename() == fName))
-                  db->UnlockRead();
-            }
-            ++iter;
-         }
-
          // Print error message and cancel the export
          wxLogSysError(_("Unable to rename '%s' to '%s'."),
                        fullPath.c_str(),
                        renamedFullPath.c_str());
+
+         // Destruction of readLocks puts things back where they were
          return false;
       }
       else
@@ -1480,14 +1466,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                if (b->IsAlias() && ab->GetAliasedFileName() == fName)
                {
                   ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
-                  ab->UnlockRead();
                   wxPrintf(_("Changed block %s to new alias name\n"),
                            b->GetFileName().name.GetFullName().c_str());
 
                }
                else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
                   db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
-                  db->UnlockRead();
                }
             }
             ++iter;

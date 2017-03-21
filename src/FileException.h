@@ -27,7 +27,12 @@ public:
 
    FileException(FileException&& that)
       : MessageBoxException(std::move(that))
+      , cause{ that.cause }
+      , fileName{ that.fileName }
+      , renameTarget{ that.renameTarget }
    {}
+
+   FileException& operator= (FileException&&) PROHIBITED;
 
    ~FileException() override;
 

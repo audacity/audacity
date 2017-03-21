@@ -1544,9 +1544,13 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if ( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    //   mProcessLevel = 1;      // in GUI thread
 
@@ -1569,12 +1573,12 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    if (SupportsRealtime() && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }
@@ -2715,7 +2719,7 @@ void VSTEffect::BuildFancy()
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
-   auto control = std::make_unique<VSTControl>();
+   auto control = Destroy_ptr<VSTControl>{ safenew VSTControl };
    if (!control)
    {
       return;

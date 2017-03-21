@@ -27,11 +27,18 @@ public:
 
    InconsistencyException(InconsistencyException&& that)
       : MessageBoxException(std::move(that))
+      , func{ that.func }
+      , file{ that.file }
+      , line{ that.line }
    {}
    InconsistencyException &operator = (InconsistencyException &&that)
    {
-      if (this != &that)
-         operator= (std::move(that));
+      if (this != &that) {
+         MessageBoxException::operator= (std::move(that));
+         func = that.func;
+         file = that.file;
+         line = that.line;
+      }
       return *this;
    }
 

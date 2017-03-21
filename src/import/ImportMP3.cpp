@@ -269,6 +269,10 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
 #ifdef USE_LIBID3TAG
    wxFile f;   // will be closed when it goes out of scope
    struct id3_file *fp = NULL;
+   auto cleanup = finally([&]{
+      if (fp)
+         id3_file_close(fp);
+   });
 
    if (f.Open(mFilename)) {
       // Use id3_file_fdopen() instead of id3_file_open since wxWidgets can open a
@@ -285,10 +289,8 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
    f.Detach();
 
    struct id3_tag *tp = id3_file_tag(fp);
-   if (!tp) {
-      id3_file_close(fp);
+   if (!tp)
       return;
-   }
 
    tags->Clear();
 
@@ -357,6 +359,7 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       else if (frame->nfields == 3) {
          ustr = id3_field_getstring(&frame->fields[1]);
          if (ustr) {
+            // Is this duplication really needed?
             MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
             n = UTF8CTOWX(str.get());
          }
@@ -368,24 +371,23 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       }
 
       if (ustr) {
+         // Is this duplication really needed?
          MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
          v = UTF8CTOWX(str.get());
       }
 
       if (!n.IsEmpty() && !v.IsEmpty()) {
          tags->SetTag(n, v);
+      }
    }
-}
 
    // Convert v1 genre to name
    if (tags->HasTag(TAG_GENRE)) {
       long g = -1;
       if (tags->GetTag(TAG_GENRE).ToLong(&g)) {
          tags->SetTag(TAG_GENRE, tags->GetGenre(g));
+      }
    }
-}
-
-   id3_file_close(fp);
 #endif // ifdef USE_LIBID3TAG
 }
 

@@ -82,7 +82,8 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    void WriteCacheToDisk() override;
 
    bool GetNeedFillCache() override { return !mCache.active; }
-   void FillCache() override;
+
+   void FillCache() /* noexcept */ override;
 
  protected:
 

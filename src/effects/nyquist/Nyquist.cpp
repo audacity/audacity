@@ -117,6 +117,8 @@ END_EVENT_TABLE()
 
 NyquistEffect::NyquistEffect(const wxString &fName)
 {
+   mOutputTrack[0] = mOutputTrack[1] = nullptr;
+
    mAction = _("Applying Nyquist Effect...");
    mInputCmd = wxEmptyString;
    mCmd = wxEmptyString;
@@ -670,6 +672,13 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
          nyx_set_os_callback(StaticOSCallback, (void *)this);
          nyx_capture_output(StaticOutputCallback, (void *)this);
 
+         auto cleanup = finally( [&] {
+            nyx_capture_output(NULL, (void *)NULL);
+            nyx_set_os_callback(NULL, (void *)NULL);
+            nyx_cleanup();
+         } );
+
+
          if (mVersion >= 4)
          {
             mPerTrackProps = wxEmptyString;
@@ -708,10 +717,6 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
          }
 
          success = ProcessOne();
-
-         nyx_capture_output(NULL, (void *)NULL);
-         nyx_set_os_callback(NULL, (void *)NULL);
-         nyx_cleanup();
 
          // Reset previous locale
          wxSetlocale(LC_NUMERIC, prevlocale);
@@ -1110,16 +1115,23 @@ bool NyquistEffect::ProcessOne()
       cmd += mCmd;
    }
 
-   int i;
-   for (i = 0; i < mCurNumChannels; i++) {
+   // Put the fetch buffers in a clean initial state
+   for (size_t i = 0; i < mCurNumChannels; i++)
       mCurBuffer[i].Free();
-   }
 
+   // Guarantee release of memory when done
+   auto cleanup = finally( [&] {
+      for (size_t i = 0; i < mCurNumChannels; i++)
+         mCurBuffer[i].Free();
+   } );
+
+   // Evaluate the expression, which may invoke the get callback, but often does
+   // not, leaving that to delayed evaluation of the output sound
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
    // Audacity has no idea how long Nyquist processing will take, but
    // can monitor audio being returned.
-   // Anything other than audio should be returmed almost instantly
+   // Anything other than audio should be returned almost instantly
    // so notify the user that process has completed (bug 558)
    if ((rval != nyx_audio) && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
       if (mCurNumChannels == 1) {
@@ -1225,19 +1237,30 @@ bool NyquistEffect::ProcessOne()
       return false;
    }
 
+   std::unique_ptr<WaveTrack> outputTrack[2];
+
    double rate = mCurTrack[0]->GetRate();
-   for (i = 0; i < outChannels; i++) {
+   for (size_t i = 0; i < outChannels; i++) {
       sampleFormat format = mCurTrack[i]->GetSampleFormat();
 
       if (outChannels == (int)mCurNumChannels) {
          rate = mCurTrack[i]->GetRate();
       }
 
-      mOutputTrack[i] = mFactory->NewWaveTrack(format, rate);
+      outputTrack[i] = mFactory->NewWaveTrack(format, rate);
+
+      // Clean the initial buffer states again for the get callbacks
+      // -- is this really needed?
       mCurBuffer[i].Free();
    }
 
-   int success = nyx_get_audio(StaticPutCallback, (void *)this);
+   // Now fully evaluate the sound
+   int success;
+   {
+      auto vr0 = valueRestorer( mOutputTrack[0], outputTrack[0].get() );
+      auto vr1 = valueRestorer( mOutputTrack[1], outputTrack[1].get() );
+      success = nyx_get_audio(StaticPutCallback, (void *)this);
+   }
 
    // See if GetCallback found read errors
    if (mFailedFileName.IsOk())
@@ -1250,38 +1273,29 @@ bool NyquistEffect::ProcessOne()
       // what, then?
       success = false;
 
-   if (!success) {
-      for(i = 0; i < outChannels; i++) {
-         mOutputTrack[i].reset();
-      }
-
+   if (!success)
       return false;
-   }
 
-   for (i = 0; i < outChannels; i++) {
-      mOutputTrack[i]->Flush();
-      mCurBuffer[i].Free();
-      mOutputTime = mOutputTrack[i]->GetEndTime();
+   for (size_t i = 0; i < outChannels; i++) {
+      outputTrack[i]->Flush();
+      mOutputTime = outputTrack[i]->GetEndTime();
 
       if (mOutputTime <= 0) {
          wxMessageBox(_("Nyquist did not return audio.\n"),
                       wxT("Nyquist"),
                       wxOK | wxCENTRE, mUIParent);
-         for (int j = 0; j < outChannels; j++) {
-            mOutputTrack[j].reset();
-         }
          return true;
       }
    }
 
-   for (i = 0; i < mCurNumChannels; i++) {
+   for (size_t i = 0; i < mCurNumChannels; i++) {
       WaveTrack *out;
 
       if (outChannels == (int)mCurNumChannels) {
-         out = mOutputTrack[i].get();
+         out = outputTrack[i].get();
       }
       else {
-         out = mOutputTrack[0].get();
+         out = outputTrack[0].get();
       }
 
       if (mMergeClips < 0) {
@@ -1310,9 +1324,6 @@ bool NyquistEffect::ProcessOne()
       mFirstInGroup = false;
    }
 
-   for (i = 0; i < outChannels; i++) {
-      mOutputTrack[i].reset();
-   }
    mProjectChanged = true;
    return true;
 }

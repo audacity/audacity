@@ -91,7 +91,22 @@ public:
    bool HasPresets(const PluginID & ID);
    wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
    wxString GetDefaultPreset(const PluginID & ID);
+
+private:
    void SetBatchProcessing(const PluginID & ID, bool start);
+   struct UnsetBatchProcessing {
+      PluginID mID;
+      void operator () (EffectManager *p) const
+         { if(p) p->SetBatchProcessing(mID, false); }
+   };
+   using BatchProcessingScope =
+      std::unique_ptr< EffectManager, UnsetBatchProcessing >;
+public:
+   // RAII for the function above
+   BatchProcessingScope SetBatchProcessing(const PluginID &ID)
+   {
+      SetBatchProcessing(ID, true); return BatchProcessingScope{ this, {ID} };
+   }
 
    /** Allow effects to disable saving the state at run time */
    void SetSkipStateFlag(bool flag);

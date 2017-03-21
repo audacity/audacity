@@ -561,7 +561,8 @@ ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
 FLACImportFileHandle::~FLACImportFileHandle()
 {
-   //don't DELETE mFile if we are using OD.
+   //don't finish *mFile if we are using OD,
+   //because it was not initialized in Init().
 #ifndef EXPERIMENTAL_OD_FLAC
    mFile->finish();
 #endif

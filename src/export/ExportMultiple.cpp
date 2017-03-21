@@ -566,21 +566,11 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
    }
 
 //   bool overwrite = mOverwrite->GetValue();
-   ProgressResult ok;
+   ProgressResult ok = ProgressResult::Failed;
    mExported.Empty();
 
-   if (mLabel->GetValue()) {
-      ok = ExportMultipleByLabel(mByName->GetValue() || mByNumberAndName->GetValue(),
-                                 mPrefix->GetValue(),
-                                 mByNumberAndName->GetValue());
-   }
-   else {
-      ok = ExportMultipleByTrack(mByName->GetValue() || mByNumberAndName->GetValue(),
-                                 mPrefix->GetValue(),
-                                 mByNumberAndName->GetValue());
-   }
-
    // Give 'em the result
+   auto cleanup = finally( [&]
    {
       wxString msg;
       msg.Printf(
@@ -598,12 +588,26 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
          FileList += mExported[i];
          FileList += '\n';
       }
-      // This results dialog is a child of this dialog.
-	  HelpSystem::ShowInfoDialog( this,
-         _("Export Multiple"),
-         msg,
-         FileList,
-         450,400);
+
+      CallAfter( [=] {
+         // This results dialog is a child of this dialog.
+         HelpSystem::ShowInfoDialog( this,
+                                    _("Export Multiple"),
+                                    msg,
+                                    FileList,
+                                    450,400);
+      } );
+   } );
+
+   if (mLabel->GetValue()) {
+      ok = ExportMultipleByLabel(mByName->GetValue() || mByNumberAndName->GetValue(),
+                                 mPrefix->GetValue(),
+                                 mByNumberAndName->GetValue());
+   }
+   else {
+      ok = ExportMultipleByTrack(mByName->GetValue() || mByNumberAndName->GetValue(),
+                                 mPrefix->GetValue(),
+                                 mByNumberAndName->GetValue());
    }
 
    if (ok == ProgressResult::Success || ok == ProgressResult::Stopped) {
@@ -797,6 +801,12 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
       }
    }
 
+   auto cleanup = finally( [&] {
+      // Restore the selection states
+      for (auto pTrack : selected)
+         pTrack->SetSelected(true);
+   } );
+
    /* Examine all tracks in turn, collecting export information */
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
@@ -932,10 +942,6 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
 
    }
 
-   // Restore the selection states
-   for (auto pTrack : selected)
-      pTrack->SetSelected(true);
-
    return ok ;
 }
 
@@ -950,8 +956,10 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
 
    wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (inName.GetFullName()).c_str());
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);
-   if (selectedOnly) wxLogDebug(wxT("Selected Region Only"));
-   else wxLogDebug(wxT("Whole Project"));
+   if (selectedOnly)
+      wxLogDebug(wxT("Selected Region Only"));
+   else
+      wxLogDebug(wxT("Whole Project"));
 
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files

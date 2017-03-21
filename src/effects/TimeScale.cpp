@@ -165,9 +165,8 @@ double EffectTimeScale::CalcPreviewInputLength(double previewLength)
 void EffectTimeScale::Preview(bool dryOnly)
 {
    previewSelectedDuration = Effect::GetDuration();
-   bPreview = true;
+   auto cleanup = valueRestorer( bPreview, true );
    Effect::Preview(dryOnly);
-   bPreview = false;
 }
 
 bool EffectTimeScale::Process()

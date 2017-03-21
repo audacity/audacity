@@ -447,7 +447,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       // wxWidgets owns the accessible object
       SetAccessible(mAx = pAx.release());
 #else
-      // wxWidgets doesn not own the object, but we need to retain it
+      // wxWidgets does not own the object, but we need to retain it
       mAx = std::move(pAx);
 #endif
    }
@@ -3329,6 +3329,20 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       DoSlide(event);
 
    if (event.LeftUp()) {
+
+      SetCapturedTrack( NULL );
+
+      mSnapManager.reset();
+
+      // Do not draw yellow lines
+      if (mSnapLeft != -1 || mSnapRight != -1) {
+         mSnapLeft = mSnapRight = -1;
+         Refresh(false);
+      }
+
+      if (!mDidSlideVertically && mHSlideAmount==0)
+         return;
+
       for (size_t i = 0; i < mCapturedClipArray.size(); i++)
       {
          TrackClip &trackClip = mCapturedClipArray[i];
@@ -3348,19 +3362,6 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
             pWaveClip->MarkChanged();
          }
       }
-
-      SetCapturedTrack( NULL );
-
-      mSnapManager.reset();
-
-      // Do not draw yellow lines
-      if (mSnapLeft != -1 || mSnapRight != -1) {
-         mSnapLeft = mSnapRight = -1;
-         Refresh(false);
-      }
-
-      if (!mDidSlideVertically && mHSlideAmount==0)
-         return;
 
       MakeParentRedrawScrollbars();
 

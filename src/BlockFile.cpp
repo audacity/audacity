@@ -116,6 +116,7 @@ unsigned long BlockFile::gBlockFileDestructionCount { 0 };
 BlockFile::~BlockFile()
 {
    if (!IsLocked() && mFileName.HasName())
+      // PRL: what should be done if this fails?
       wxRemoveFile(mFileName.GetFullPath());
 
    ++gBlockFileDestructionCount;

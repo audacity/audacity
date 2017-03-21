@@ -1656,14 +1656,11 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
       return;
 
    // Save & restore parameters around Preview, because we didn't do OK.
-   EffectNoiseReduction::Settings oldSettings(*m_pSettings);
-
+   auto cleanup = valueRestorer( *m_pSettings );
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
    m_pEffect->Preview();
-
-   *m_pSettings = oldSettings;
 }
 
 void EffectNoiseReduction::Dialog::OnReduceNoise( wxCommandEvent & WXUNUSED(event))

@@ -321,17 +321,16 @@ void XMLFileWriter::Commit()
    auto tempPath = GetName();
    CloseWithoutEndingTags();
 
-   // JKC: NOT translating error messages.  Rationale is that they should
-   // not be seen, and if they are the untranslated version is more useful to 
-   // developers.
-   if ( mKeepBackup) {
-      if (! mBackupFile.Close() || ! wxRenameFile( mOutputPath, mBackupName ) )
-         ThrowException( mBackupName, mCaption + " renaming backup");
+   if (mKeepBackup) {
+      if (! mBackupFile.Close() ||
+          ! wxRenameFile( mOutputPath, mBackupName ) )
+         ThrowException( mBackupName, mCaption );
    }
-   else if (! wxFileExists( mOutputPath ) );
-   else if (! wxRemoveFile( mOutputPath ) )
-      ThrowException( mOutputPath, mCaption + " removing old version");
-
+   else {
+      if ( wxFileName::FileExists( mOutputPath ) &&
+           ! wxRemoveFile( mOutputPath ) )
+         ThrowException( mOutputPath, mCaption );
+   }
 
    // Now we have vacated the file at the output path and are committed.
    // But not completely finished with steps of the commit operation.

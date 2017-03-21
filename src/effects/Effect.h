@@ -287,7 +287,9 @@ protected:
    virtual bool InitPass2();
    virtual int GetPass();
 
-   // clean up any temporary memory
+   // clean up any temporary memory, needed only per invocation of the
+   // effect, after either successful or failed or exception-aborted processing.
+   // Invoked inside a "finally" block so it must be no-throw.
    virtual void End();
 
    // Most effects just use the previewLength, but time-stretching/compressing
@@ -470,15 +472,18 @@ protected:
                      WaveTrack *right,
                      sampleCount leftStart,
                      sampleCount rightStart,
-                     sampleCount len);
- 
+                     sampleCount len,
+                     FloatBuffers &inBuffer,
+                     FloatBuffers &outBuffer,
+                     ArrayOf< float * > &inBufPos,
+                     ArrayOf< float *> &outBufPos);
+
  //
  // private data
  //
  // Used only by the base Effect class
  //
 private:
-   wxWindow *mParent;
    TrackList *mTracks; // the complete list of all tracks
 
    bool mIsBatch;
@@ -504,11 +509,6 @@ private:
    EffectClientInterface *mClient;
    size_t mNumAudioIn;
    size_t mNumAudioOut;
-
-   FloatBuffers mInBuffer, mOutBuffer;
-   
-   using Positions = ArrayOf < float* > ; // Array of non-owning pointers into the above
-   Positions mInBufPos, mOutBufPos;
 
    size_t mBufferSize;
    size_t mBlockSize;

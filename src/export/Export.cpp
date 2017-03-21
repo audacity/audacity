@@ -827,7 +827,22 @@ bool Exporter::ExportTracks()
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   auto success = mPlugins[mFormat]->Export(mProject,
+   bool success = false;
+
+   auto cleanup = finally( [&] {
+      if (mActualName != mFilename) {
+         // Remove backup
+         if ( success )
+            ::wxRemoveFile(mFilename.GetFullPath());
+         else {
+            // Restore original, if needed
+            ::wxRemoveFile(mActualName.GetFullPath());
+            ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
+         }
+      }
+   } );
+
+   auto result = mPlugins[mFormat]->Export(mProject,
                                        mChannels,
                                        mActualName.GetFullPath(),
                                        mSelectedOnly,
@@ -837,19 +852,10 @@ bool Exporter::ExportTracks()
                                        NULL,
                                        mSubFormat);
 
-   if (mActualName != mFilename) {
-      // Remove backup
-      if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
-         ::wxRemoveFile(mFilename.GetFullPath());
-      }
-      else {
-         // Restore original, if needed
-         ::wxRemoveFile(mActualName.GetFullPath());
-         ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
-      }
-   }
+   success =
+      result == ProgressResult::Success || result == ProgressResult::Stopped;
 
-   return (success == ProgressResult::Success || success == ProgressResult::Stopped);
+   return success;
 }
 
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
