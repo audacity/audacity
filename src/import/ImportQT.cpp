@@ -245,8 +245,13 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    UInt32 quality = kQTAudioRenderQuality_Max;
    AudioStreamBasicDescription desc;
    UInt32 maxSampleSize;
-   UInt32 bufsize;
    bool res = false;
+
+   auto cleanup = finally( [&] {
+      if (maer) {
+         MovieAudioExtractionEnd(maer);
+      }
+   } );
 
    CreateProgress();
 
@@ -301,7 +306,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
       }
    
       auto numchan = desc.mChannelsPerFrame;
-      bufsize = 5 * desc.mSampleRate;
+      const size_t bufsize = 5 * desc.mSampleRate;
    
       // determine sample format
       sampleFormat format;
@@ -320,32 +325,38 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
             break;
       }
 
-      std::unique_ptr<AudioBufferList, freer> abl
-      { static_cast<AudioBufferList *>
-         (calloc(1, offsetof(AudioBufferList, mBuffers) +
-                    (sizeof(AudioBuffer) * numchan))) };
+      // Allocate an array of pointers, whose size is not known statically,
+      // and prefixed with the AudioBufferList structure.
+      MallocPtr< AudioBufferList > abl{
+         static_cast< AudioBufferList * >(
+            calloc( 1, offsetof( AudioBufferList, mBuffers ) +
+               (sizeof(AudioBuffer) * numchan))) };
       abl->mNumberBuffers = numchan;
    
       TrackHolders channels{ numchan };
 
-      ArraysOf<unsigned char> holders{ numchan, sizeof(float) * bufsize };
-      int c;
-      for (c = 0; c < numchan; c++) {
-         abl->mBuffers[c].mNumberChannels = 1;
-         abl->mBuffers[c].mDataByteSize = sizeof(float) * bufsize;
+      const auto size = sizeof(float) * bufsize;
+      ArraysOf<unsigned char> holders{ numchan, size };
+      for (size_t c = 0; c < numchan; c++) {
+         auto &buffer = abl->mBuffers[c];
+         auto &holder = holders[c];
+         auto &channel = channels[c];
 
-         abl->mBuffers[c].mData = holders[c].get();
+         buffer.mNumberChannels = 1;
+         buffer.mDataByteSize = size;
+
+         buffer.mData = holder.get();
    
-         channels[c] = trackFactory->NewWaveTrack(format);
-         channels[c]->SetRate(desc.mSampleRate);
+         channel = trackFactory->NewWaveTrack( format );
+         channel->SetRate( desc.mSampleRate );
    
          if (numchan == 2) {
             if (c == 0) {
-               channels[c]->SetChannel(Track::LeftChannel);
-               channels[c]->SetLinked(true);
+               channel->SetChannel(Track::LeftChannel);
+               channel->SetLinked(true);
             }
             else if (c == 1) {
-               channels[c]->SetChannel(Track::RightChannel);
+               channel->SetChannel(Track::RightChannel);
             }
          }
       }
@@ -363,7 +374,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
             break;
          }
    
-         for (c = 0; c < numchan; c++) {
+         for (size_t c = 0; c < numchan; c++) {
             channels[c]->Append((char *) abl->mBuffers[c].mData, floatSample, numFrames);
          }
    
@@ -397,10 +408,6 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    } while (false);
 
 // done:
-
-   if (maer) {
-      MovieAudioExtractionEnd(maer);
-   }
 
    return (res ? ProgressResult::Success : ProgressResult::Failed);
 }
@@ -436,6 +443,12 @@ names[] =
 void QTImportFileHandle::AddMetadata(Tags *tags)
 {
    QTMetaDataRef metaDataRef = NULL;
+   auto cleanup = finally( [&] {
+      // we are done so release our metadata object
+      if ( metaDataRef )
+         QTMetaDataRelease(metaDataRef);
+   } );
+
    OSErr err;
 
    err = QTCopyMovieMetaData(mMovie, &metaDataRef);
@@ -525,9 +538,6 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
          tags->SetTag(names[i].name, v);
       }
    }
-
-   // we are done so release our metadata object
-   QTMetaDataRelease(metaDataRef);
 
    return;
 }

@@ -131,7 +131,8 @@ public:
 
    virtual bool IsReady() = 0;
    virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
-   virtual bool ProcessFinalize() = 0;
+   // This may be called during stack unwinding:
+   virtual bool ProcessFinalize() /* noexcept */ = 0;
    virtual size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) = 0;
 
    virtual bool RealtimeInitialize() = 0;

@@ -204,6 +204,7 @@ private:
 
    bool GetMetadata(AudacityProject *project, const Tags *tags);
 
+   // Should this be a stack variable instead in Export?
    FLAC__StreamMetadataHandle mMetadata;
 };
 
@@ -262,6 +263,10 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
       encoder.set_metadata(&p, 1);
    }
 
+   auto cleanup1 = finally( [&] {
+      mMetadata.reset(); // need this?
+   } );
+
    sampleFormat format;
    if (bitDepthPref == wxT("24")) {
       format = int24Sample;
@@ -312,6 +317,13 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    mMetadata.reset();
 
+   auto cleanup2 = finally( [&] {
+#ifndef LEGACY_FLAC
+      f.Detach(); // libflac closes the file
+#endif
+      encoder.finish();
+   } );
+
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
    auto mixer = CreateMixer(waveTracks,
@@ -322,38 +334,40 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
-   {
-      ProgressDialog progress(wxFileName(fName).GetName(),
-         selectionOnly ?
-         _("Exporting the selected audio as FLAC") :
-         _("Exporting the entire project as FLAC"));
+   ProgressDialog progress(wxFileName(fName).GetName(),
+                           selectionOnly ?
+                           _("Exporting the selected audio as FLAC") :
+                           _("Exporting the entire project as FLAC"));
 
-      while (updateResult == ProgressResult::Success) {
-         auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
-         if (samplesThisRun == 0) { //stop encoding
-            break;
-         }
-         else {
-            for (size_t i = 0; i < numChannels; i++) {
-               samplePtr mixed = mixer->GetBuffer(i);
-               if (format == int24Sample) {
-                  for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                     tmpsmplbuf[i][j] = ((int *)mixed)[j];
-                  }
-               }
-               else {
-                  for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                     tmpsmplbuf[i][j] = ((short *)mixed)[j];
-                  }
+   while (updateResult == ProgressResult::Success) {
+      auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
+      if (samplesThisRun == 0) { //stop encoding
+         break;
+      }
+      else {
+         for (size_t i = 0; i < numChannels; i++) {
+            samplePtr mixed = mixer->GetBuffer(i);
+            if (format == int24Sample) {
+               for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+                  tmpsmplbuf[i][j] = ((int *)mixed)[j];
                }
             }
-            encoder.process(reinterpret_cast<const FLAC__int32**>(tmpsmplbuf.get()), samplesThisRun);
+            else {
+               for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+                  tmpsmplbuf[i][j] = ((short *)mixed)[j];
+               }
+            }
          }
-         updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
+         if (! encoder.process(
+               reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
+               samplesThisRun) ) {
+            updateResult = ProgressResult::Cancelled;
+            break;
+         }
       }
-      f.Detach(); // libflac closes the file
-      encoder.finish();
    }
+   if (updateResult == ProgressResult::Success)
+      updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
 
    return updateResult;
 }

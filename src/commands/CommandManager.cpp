@@ -1127,10 +1127,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // rest of the command handling.  But, to use the common handler, we
       // enable them temporarily and then disable them again after handling.
       // LL:  Why do they need to be disabled???
-      entry->enabled = true;
-      bool ret = HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
       entry->enabled = false;
-      return ret;
+      auto cleanup = valueRestorer( entry->enabled, true );
+      return HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
    }
 
    // Any other keypresses must be destined for this project window.

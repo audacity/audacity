@@ -177,7 +177,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Write all write-cached block files to disc, if any
    void WriteCacheToDisk();
 
-   // Fill cache of blockfiles, if caching is enabled (otherwise do nothing)
+   // (Try to) fill cache of blockfiles, if caching is enabled (otherwise do
+   // nothing)
+   // A no-fail operation that does not throw
    void FillBlockfilesCache();
 
  private:

@@ -921,9 +921,13 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if ( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    mDialog = mHost->CreateUI(parent, this);
    if (!mDialog)
@@ -939,12 +943,12 @@ bool LV2Effect::ShowInterface(wxWindow *parent, bool forceModal)
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }
@@ -1398,7 +1402,9 @@ bool LV2Effect::BuildFancy()
    // Use a panel to host the plugins GUI
    // container is owned by mParent, but we may destroy it if there are
    // any errors before completing the build of UI.
-   auto container = std::make_unique<wxPanelWrapper>(mParent, wxID_ANY);
+   auto container = Destroy_ptr<wxPanelWrapper>{
+      safenew wxPanelWrapper{ mParent, wxID_ANY}
+   };
    if (!container)
    {
       lilv_uis_free(uis);

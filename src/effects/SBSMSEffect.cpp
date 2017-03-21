@@ -34,8 +34,6 @@ public:
    ResampleBuf()
    {
       processed = 0;
-      outputLeftTrack = NULL;
-      outputRightTrack = NULL;
    }
 
    ~ResampleBuf()

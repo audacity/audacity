@@ -570,14 +570,10 @@ bool EffectEqualization::PopulateUI(wxWindow *parent)
 
 bool EffectEqualization::CloseUI()
 {
-   mUIParent->RemoveEventHandler(this);
-
-   mUIParent = NULL;
-
    mCurve = NULL;
    mPanel = NULL;
 
-   return true;
+   return Effect::CloseUI();
 }
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
@@ -1096,9 +1092,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          for(size_t j = mM - 1; j < wcopy; j++)
             buffer[i+j] = thisWindow[j];
 
-         float *tempP = thisWindow;
-         thisWindow = lastWindow;
-         lastWindow = tempP;
+         std::swap( thisWindow, lastWindow );
       }  //next i, lump of this block
 
       output->Append((samplePtr)buffer.get(), floatSample, block);

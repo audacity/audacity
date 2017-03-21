@@ -57,15 +57,16 @@ void ODDecodeTask::DoSomeInternal()
          //OD TODO: somehow pass the bf a reference to the decoder that manages its file.
          //we need to ensure that the filename won't change or be moved.  We do this by calling LockRead(),
          //which the dirmanager::EnsureSafeFilename also does.
-         bf->LockRead();
-         //Get the decoder.  If the file was moved, we need to create another one and init it.
-         decoder = GetOrCreateMatchingFileDecoder( &*bf );
-         if(!decoder->IsInitialized())
-            decoder->Init();
-         bf->SetODFileDecoder(decoder);
-         // Does not throw:
-         ret = bf->DoWriteBlockFile();
-         bf->UnlockRead();
+         {
+            auto locker = bf->LockForRead();
+            //Get the decoder.  If the file was moved, we need to create another one and init it.
+            decoder = GetOrCreateMatchingFileDecoder( &*bf );
+            if(!decoder->IsInitialized())
+               decoder->Init();
+            bf->SetODFileDecoder(decoder);
+            // Does not throw:
+            ret = bf->DoWriteBlockFile();
+         }
 
          if(ret >= 0) {
             success = true;

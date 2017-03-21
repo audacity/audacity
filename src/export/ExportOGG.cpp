@@ -193,6 +193,15 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    vorbis_dsp_state dsp;
    vorbis_block     block;
 
+   auto cleanup = finally( [&] {
+      ogg_stream_clear(&stream);
+
+      vorbis_block_clear(&block);
+      vorbis_dsp_clear(&dsp);
+      vorbis_info_clear(&info);
+      vorbis_comment_clear(&comment);
+   } );
+
    // Encoding setup
    vorbis_info_init(&info);
    vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality);
@@ -257,9 +266,10 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
          auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
 
+         int err;
          if (samplesThisRun == 0) {
             // Tell the library that we wrote 0 bytes - signalling the end.
-            vorbis_analysis_wrote(&dsp, 0);
+            err = vorbis_analysis_wrote(&dsp, 0);
          }
          else {
 
@@ -269,7 +279,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
             }
 
             // tell the encoder how many samples we have
-            vorbis_analysis_wrote(&dsp, samplesThisRun);
+            err = vorbis_analysis_wrote(&dsp, samplesThisRun);
          }
 
          // I don't understand what this call does, so here is the comment
@@ -278,22 +288,23 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          //    vorbis does some data preanalysis, then divvies up blocks
          //    for more involved (potentially parallel) processing. Get
          //    a single block for encoding now
-         while (vorbis_analysis_blockout(&dsp, &block) == 1) {
+         while (!err && vorbis_analysis_blockout(&dsp, &block) == 1) {
 
             // analysis, assume we want to use bitrate management
-            vorbis_analysis(&block, NULL);
-            vorbis_bitrate_addblock(&block);
+            err = vorbis_analysis(&block, NULL);
+            if (!err)
+               err = vorbis_bitrate_addblock(&block);
 
-            while (vorbis_bitrate_flushpacket(&dsp, &packet)) {
+            while (!err && vorbis_bitrate_flushpacket(&dsp, &packet)) {
 
                // add the packet to the bitstream
-               ogg_stream_packetin(&stream, &packet);
+               err = ogg_stream_packetin(&stream, &packet);
 
                // From vorbis-tools-1.0/oggenc/encode.c:
                //   If we've gone over a page boundary, we can do actual output,
                //   so do so (for however many pages are available).
 
-               while (!eos) {
+               while (!err && !eos) {
                   int result = ogg_stream_pageout(&stream, &page);
                   if (!result) {
                      break;
@@ -309,16 +320,14 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
             }
          }
 
+         if (err) {
+            updateResult = ProgressResult::Cancelled;
+            break;
+         }
+
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   ogg_stream_clear(&stream);
-
-   vorbis_block_clear(&block);
-   vorbis_dsp_clear(&dsp);
-   vorbis_info_clear(&info);
-   vorbis_comment_clear(&comment);
 
    outFile.Close();
 
