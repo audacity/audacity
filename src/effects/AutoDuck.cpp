@@ -50,8 +50,8 @@ Param( MaximumPause,       double,  XO("MaximumPause"),     1.0,     0.0,     DB
  * Common constants
  */
 
-enum : size_t { kBufSize = 131072 };     // number of samples to process at once
-enum : size_t { kRMSWindowSize = 100 };  // samples in circular RMS window buffer
+static const size_t kBufSize = 131072u;     // number of samples to process at once
+static const size_t kRMSWindowSize = 100u;  // samples in circular RMS window buffer
 
 /*
  * A auto duck region and an array of auto duck regions
@@ -197,7 +197,7 @@ bool EffectAutoDuck::Init()
 {
    mControlTrack = NULL;
 
-   TrackListIterator iter(mTracks);
+   TrackListIterator iter(inputTracks());
    Track *t = iter.First();
 
    bool lastWasSelectedWaveTrack = false;
@@ -286,102 +286,98 @@ bool EffectAutoDuck::Process()
 
    int rmsPos = 0;
    float rmsSum = 0;
-   float *rmsWindow = new float[kRMSWindowSize];
-   for (size_t i = 0; i < kRMSWindowSize; i++)
-      rmsWindow[i] = 0;
-
-   float *buf = new float[kBufSize];
-
-   bool inDuckRegion = false;
-
-   // initialize the following two variables to prevent compiler warning
-   double duckRegionStart = 0;
-   sampleCount curSamplesPause = 0;
-
    // to make the progress bar appear more natural, we first look for all
    // duck regions and apply them all at once afterwards
    AutoDuckRegionArray regions;
-   auto pos = start;
-
-   while (pos < end)
+   bool inDuckRegion = false;
    {
-      const auto len = limitSampleBufferSize( kBufSize, end - pos );
+      Floats rmsWindow{ kRMSWindowSize, true };
 
-      mControlTrack->Get((samplePtr)buf, floatSample, pos, len);
+      Floats buf{ kBufSize };
 
-      for (auto i = pos; i < pos + len; i++)
+      // initialize the following two variables to prevent compiler warning
+      double duckRegionStart = 0;
+      sampleCount curSamplesPause = 0;
+
+      auto pos = start;
+
+      while (pos < end)
       {
-         rmsSum -= rmsWindow[rmsPos];
-         // i - pos is bounded by len:
-         auto index = ( i - pos ).as_size_t();
-         rmsWindow[rmsPos] = buf[ index ] * buf[ index ];
-         rmsSum += rmsWindow[rmsPos];
-         rmsPos = (rmsPos + 1) % kRMSWindowSize;
+         const auto len = limitSampleBufferSize( kBufSize, end - pos );
+         
+         mControlTrack->Get((samplePtr)buf.get(), floatSample, pos, len);
 
-         bool thresholdExceeded = rmsSum > threshold;
-
-         if (thresholdExceeded)
+         for (auto i = pos; i < pos + len; i++)
          {
-            // everytime the threshold is exceeded, reset our count for
-            // the number of pause samples
-            curSamplesPause = 0;
+            rmsSum -= rmsWindow[rmsPos];
+            // i - pos is bounded by len:
+            auto index = ( i - pos ).as_size_t();
+            rmsWindow[rmsPos] = buf[ index ] * buf[ index ];
+            rmsSum += rmsWindow[rmsPos];
+            rmsPos = (rmsPos + 1) % kRMSWindowSize;
 
-            if (!inDuckRegion)
+            bool thresholdExceeded = rmsSum > threshold;
+
+            if (thresholdExceeded)
             {
-               // the threshold has been exceeded for the first time, so
-               // let the duck region begin here
-               inDuckRegion = true;
-               duckRegionStart = mControlTrack->LongSamplesToTime(i);
+               // everytime the threshold is exceeded, reset our count for
+               // the number of pause samples
+               curSamplesPause = 0;
+
+               if (!inDuckRegion)
+               {
+                  // the threshold has been exceeded for the first time, so
+                  // let the duck region begin here
+                  inDuckRegion = true;
+                  duckRegionStart = mControlTrack->LongSamplesToTime(i);
+               }
+            }
+
+            if (!thresholdExceeded && inDuckRegion)
+            {
+               // the threshold has not been exceeded and we are in a duck
+               // region, but only fade in if the maximum pause has been
+               // exceeded
+               curSamplesPause += 1;
+
+               if (curSamplesPause >= minSamplesPause)
+               {
+                  // do the actual duck fade and reset all values
+                  double duckRegionEnd =
+                     mControlTrack->LongSamplesToTime(i - curSamplesPause);
+
+                  regions.Add(AutoDuckRegion(
+                     duckRegionStart - mOuterFadeDownLen,
+                     duckRegionEnd + mOuterFadeUpLen));
+
+                  inDuckRegion = false;
+               }
             }
          }
 
-         if (!thresholdExceeded && inDuckRegion)
-         {
-            // the threshold has not been exceeded and we are in a duck
-            // region, but only fade in if the maximum pause has been
-            // exceeded
-            curSamplesPause += 1;
+         pos += len;
 
-            if (curSamplesPause >= minSamplesPause)
-            {
-               // do the actual duck fade and reset all values
-               double duckRegionEnd =
-                  mControlTrack->LongSamplesToTime(i - curSamplesPause);
-
-               regions.Add(AutoDuckRegion(
-                              duckRegionStart - mOuterFadeDownLen,
-                              duckRegionEnd + mOuterFadeUpLen));
-
-               inDuckRegion = false;
-            }
-         }
-      }
-
-      pos += len;
-
-      if (TotalProgress(
+         if (TotalProgress(
             (pos - start).as_double() /
             (end - start).as_double() /
             (GetNumWaveTracks() + 1)
-      ))
+         ))
+         {
+            cancel = true;
+            break;
+         }
+      }
+
+      // apply last duck fade, if any
+      if (inDuckRegion)
       {
-         cancel = true;
-         break;
+         double duckRegionEnd =
+            mControlTrack->LongSamplesToTime(end - curSamplesPause);
+         regions.Add(AutoDuckRegion(
+            duckRegionStart - mOuterFadeDownLen,
+            duckRegionEnd + mOuterFadeUpLen));
       }
    }
-
-   // apply last duck fade, if any
-   if (inDuckRegion)
-   {
-      double duckRegionEnd =
-         mControlTrack->LongSamplesToTime(end - curSamplesPause);
-      regions.Add(AutoDuckRegion(
-                     duckRegionStart - mOuterFadeDownLen,
-                     duckRegionEnd + mOuterFadeUpLen));
-   }
-
-   delete[] buf;
-   delete[] rmsWindow;
 
    if (!cancel)
    {
@@ -518,7 +514,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
    auto start = t->TimeToLongSamples(t0);
    auto end = t->TimeToLongSamples(t1);
 
-   float *buf = new float[kBufSize];
+   Floats buf{ kBufSize };
    auto pos = start;
 
    auto fadeDownSamples = t->TimeToLongSamples(
@@ -538,7 +534,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
    {
       const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-      t->Get((samplePtr)buf, floatSample, pos, len);
+      t->Get((samplePtr)buf.get(), floatSample, pos, len);
 
       for (auto i = pos; i < pos + len; i++)
       {
@@ -557,7 +553,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
          buf[ ( i - pos ).as_size_t() ] *= DB_TO_LINEAR(gain);
       }
 
-      t->Set((samplePtr)buf, floatSample, pos, len);
+      t->Set((samplePtr)buf.get(), floatSample, pos, len);
 
       pos += len;
 
@@ -571,7 +567,6 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
       }
    }
 
-   delete[] buf;
    return cancel;
 }
 

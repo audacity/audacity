@@ -162,7 +162,7 @@ static void RemoveDependencies(AudacityProject *project,
    ProgressDialog progress
       (_("Removing Dependencies"),
       _("Copying audio data into project..."));
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    // Hash aliasedFiles based on their full paths and
    // count total number of bytes to process.
@@ -209,7 +209,7 @@ static void RemoveDependencies(AudacityProject *project,
          // Update the progress bar
          completedBytes += SAMPLE_SIZE(format) * len;
          updateResult = progress.Update(completedBytes, totalBytesToProcess);
-         if (updateResult != eProgressSuccess)
+         if (updateResult != ProgressResult::Success)
            break;
       }
    }

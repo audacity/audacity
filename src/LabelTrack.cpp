@@ -266,6 +266,10 @@ void LabelTrack::WarpLabels(const TimeWarper &warper) {
          warper.Warp(labelStruct.getT0()),
          warper.Warp(labelStruct.getT1()));
    }
+
+   // This should not be needed, assuming the warper is nondecreasing, but
+   // let's not assume too much.
+   SortLabels();
 }
 
 void LabelTrack::ResetFlags()
@@ -2261,7 +2265,8 @@ XMLTagHandler *LabelTrack::HandleXMLChild(const wxChar *tag)
       return NULL;
 }
 
-void LabelTrack::WriteXML(XMLWriter &xmlFile)
+void LabelTrack::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    int len = mLabels.size();
 
@@ -2357,7 +2362,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 }
 #endif
 
-Track::Holder LabelTrack::Copy(double t0, double t1) const
+Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_unique<LabelTrack>(GetDirManager());
    const auto lt = static_cast<LabelTrack*>(tmp.get());

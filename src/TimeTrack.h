@@ -57,7 +57,7 @@ class TimeTrack final : public Track {
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    void HandleXMLEndTag(const wxChar *tag) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) override;
+   void WriteXML(XMLWriter &xmlFile) const override;
 
    // Lock and unlock the track: you must lock the track before
    // doing a copy and paste between projects.

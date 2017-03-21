@@ -50,7 +50,6 @@ public:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
    // This class only knows reading tags
-   // void WriteXML(XMLWriter & WXUNUSED(xmlFile)) /* not override */ { wxASSERT(false); }
 
 private:
 
@@ -73,6 +72,7 @@ WX_DECLARE_STRING_HASH_MAP_WITH_DECL(short, NameMap, class AUDACITY_DLL_API);
 WX_DECLARE_HASH_MAP_WITH_DECL(short, wxString, wxIntegerHash, wxIntegerEqual, IdMap, class AUDACITY_DLL_API);
 WX_DECLARE_OBJARRAY_WITH_DECL(IdMap, IdMapArray, class AUDACITY_DLL_API);
 
+// This class's overrides do NOT throw AudacityException.
 class AUDACITY_DLL_API AutoSaveFile final : public XMLWriter
 {
 public:
@@ -115,8 +115,6 @@ private:
    wxMemoryOutputStream mBuffer;
    wxMemoryOutputStream mDict;
    NameMap mNames;
-   IdMap mIds;
-   IdMapArray mIdStack;
    size_t mAllocSize;
 };
 

@@ -24,6 +24,7 @@
 #include "KeyView.h"
 
 #include <wx/arrimpl.cpp>
+#include <wx/dc.h>
 
 // Various drawing constants
 #define KV_BITMAP_SIZE 16

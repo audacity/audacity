@@ -34,12 +34,12 @@
 // We only do alpha builds and release versions.
 // Most of the time we're in development, so IS_ALPHA should be defined
 // to 1.
-#define IS_ALPHA 0
+#define IS_ALPHA 1
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
-#define AUDACITY_RELEASE   1
-#define AUDACITY_REVISION  3
+#define AUDACITY_RELEASE   2
+#define AUDACITY_REVISION  0
 #define AUDACITY_MODLEVEL  0
 
 #if IS_ALPHA
@@ -173,6 +173,9 @@ void QuitAudacity();
 // dB - linear amplitude convesions
 #define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
 #define LINEAR_TO_DB(x) (20.0 * log10(x))
+
+#define MAX_AUDIO (1. - 1./(1<<15))
+#define JUST_BELOW_MAX_AUDIO (1. - 1./(1<<14))
 
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s) wxT(s)

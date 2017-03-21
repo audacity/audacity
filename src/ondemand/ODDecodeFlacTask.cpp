@@ -81,7 +81,8 @@ void ODFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
 
-      case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
+      // FIXME: not declared when compiling on Ubuntu.
+      //case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
 
       break;
    }
@@ -124,7 +125,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
 
    mDecoder->mDecodeBufferWritePosition+=bytesToCopy;
 /*
-   short *tmp=new short[frame->header.blocksize];
+   ArrayOf<short> tmp{ frame->header.blocksize };
 
    for (unsigned int chn=0; chn<mDecoder->mNumChannels; chn++) {
       if (frame->header.bits_per_sample == 16) {
@@ -132,7 +133,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
             tmp[s]=buffer[chn][s];
          }
 
-         mDecoder->mChannels[chn]->Append((samplePtr)tmp,
+         mDecoder->mChannels[chn]->Append((samplePtr)tmp.get(),
                   int16Sample,
                   frame->header.blocksize);
       }
@@ -142,8 +143,6 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
                   frame->header.blocksize);
       }
    }
-
-   delete [] tmp;
 */
 
    mDecoder->mSamplesDone += frame->header.blocksize;
@@ -153,7 +152,7 @@ FLAC__StreamDecoderWriteStatus ODFLACFile::write_callback(const FLAC__Frame *fra
 
 //   mDecoder->mUpdateResult = mDecoder->mProgress->Update((wxULongLong_t) mDecoder->mSamplesDone, mDecoder->mNumSamples != 0 ? (wxULongLong_t)mDecoder->mNumSamples : 1);
 /*
-   if (mDecoder->mUpdateResult != eProgressSuccess)
+   if (mDecoder->mUpdateResult != ProgressResult::Success)
    {
       return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
    }

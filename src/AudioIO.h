@@ -19,6 +19,7 @@
 
 #include "MemoryX.h"
 #include <vector>
+#include <wx/atomic.h>
 
 #ifdef USE_MIDI
 
@@ -555,13 +556,13 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    std::unique_ptr<AudioThread> mMidiThread;
 #endif
-   Resample          **mResample;
-   RingBuffer        **mCaptureBuffers;
+   ArrayOf<std::unique_ptr<Resample>> mResample;
+   ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
-   RingBuffer        **mPlaybackBuffers;
+   ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    ConstWaveTrackArray mPlaybackTracks;
 
-   Mixer             **mPlaybackMixers;
+   ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
    volatile int        mStreamToken;
    static int          mNextStreamToken;
    double              mFactor;
@@ -642,7 +643,7 @@ private:
 
    friend void InitAudioIO();
 
-   TimeTrack *mTimeTrack;
+   const TimeTrack *mTimeTrack;
 
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
@@ -692,6 +693,14 @@ private:
    bool mSilentScrub;
    sampleCount mScrubDuration;
 #endif
+
+   // A flag tested and set in one thread, cleared in another.  Perhaps
+   // this guarantee of atomicity is more cautious than necessary.
+   wxAtomicInt mRecordingException {};
+   void SetRecordingException()
+      { wxAtomicInc( mRecordingException ); }
+   void ClearRecordingException()
+      { if (mRecordingException) wxAtomicDec( mRecordingException ); }
 };
 
 #endif

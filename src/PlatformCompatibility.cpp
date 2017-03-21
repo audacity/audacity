@@ -21,7 +21,6 @@
 #include <wx/stdpaths.h>
 #include <wx/app.h>
 
-#include "AudacityApp.h"
 #include "PlatformCompatibility.h"
 
 wxString PlatformCompatibility::GetLongFileName(const wxString& shortFileName)

@@ -88,6 +88,7 @@
 #endif
 
 #include "AudacityApp.h"
+#include "AudacityException.h"
 #include "BlockFile.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
@@ -140,16 +141,25 @@ wxMemorySize GetFreeMemory()
 //
 
 // Behavior of RecursivelyEnumerate is tailored to our uses and not
-// entirely straightforward.  It recurs depth-first from the passed-
+// entirely straightforward.  We use it only for recursing into 
+// Audacity projects, but beware that it may be applied to a directory 
+// that contains other things too, for example a temp directory.
+// It recurses depth-first from the passed-
 // in directory into its subdirs according to optional dirspec
 // pattern, building a list of directories and (optionally) files
-// in the listed order.  The dirspec is not applied to
-// subdirs of subdirs. Files in the passed-in directory will not be
+// in the listed order.  
+// The dirspec is not applied to subdirs of subdirs. 
+// The filespec is applied to all files in subdirectories.
+// Files in the passed-in directory will not be
 // enumerated.  Also, the passed-in directory is the last entry added
 // to the list.
+// JKC: Using flag wxDIR_NO_FOLLOW to NOT follow symbolic links.
+// Directories and files inside a project should never be symbolic 
+// links, so if we find one, do not follow it.
 static int RecursivelyEnumerate(wxString dirPath,
                                   wxArrayString& filePathArray,  // output: all files in dirPath tree
                                   wxString dirspec,
+                                  wxString filespec,
                                   bool bFiles, bool bDirs,
                                   int progress_count = 0,
                                   int progress_bias = 0,
@@ -162,8 +172,10 @@ static int RecursivelyEnumerate(wxString dirPath,
    if(dir.IsOpened()){
       wxString name;
 
-      if (bFiles){
-         cont= dir.GetFirst(&name, dirspec, wxDIR_FILES | wxDIR_HIDDEN);
+      // Don't DELETE files from a selective top level, e.g. if handed "projects*" as the
+      // directory specifier.
+      if (bFiles && dirspec.IsEmpty() ){
+         cont= dir.GetFirst(&name, filespec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
          while ( cont ){
             wxString filepath = dirPath + wxFILE_SEP_PATH + name;
 
@@ -178,11 +190,11 @@ static int RecursivelyEnumerate(wxString dirPath,
          }
       }
 
-      cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS);
+      cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS | wxDIR_NO_FOLLOW);
       while ( cont ){
          wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
          count += RecursivelyEnumerate(
-                     subdirPath, filePathArray, wxEmptyString,
+                     subdirPath, filePathArray, wxEmptyString,filespec,
                      bFiles, bDirs,
                      progress_count, count + progress_bias,
                      progress);
@@ -201,6 +213,7 @@ static int RecursivelyEnumerate(wxString dirPath,
 static int RecursivelyEnumerateWithProgress(wxString dirPath,
                                              wxArrayString& filePathArray, // output: all files in dirPath tree
                                              wxString dirspec,
+                                             wxString filespec,
                                              bool bFiles, bool bDirs,
                                              int progress_count,
                                              const wxChar* message)
@@ -211,7 +224,7 @@ static int RecursivelyEnumerateWithProgress(wxString dirPath,
       progress.create( _("Progress"), message );
 
    int count = RecursivelyEnumerate(
-                  dirPath, filePathArray, dirspec,
+                  dirPath, filePathArray, dirspec,filespec,
                   bFiles, bDirs,
                   progress_count, 0,
                   progress.get());
@@ -285,10 +298,13 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
 }
 
 static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
-                              bool bFiles, bool bDirs,
-                              const wxChar* message = NULL)
+                              int flags, const wxChar* message = NULL)
 {
+   bool bFiles= (flags & kCleanFiles) != 0;
+   bool bDirs = (flags & kCleanDirs) != 0;
+   bool bDirsMustBeEmpty = (flags & kCleanDirsOnlyIfEmpty) != 0;
    Maybe<ProgressDialog> progress{};
+
 
    if (message)
       progress.create( _("Progress"), message );
@@ -299,6 +315,18 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs) {
+         // continue will go to the next item, and skip
+         // attempting to delete the directory.
+         if( bDirsMustBeEmpty ){
+            wxDir dir( file );
+            if( !dir.IsOpened() )
+               continue;
+            if( dir.HasFiles() )
+               continue;
+            if( dir.HasSubDirs() )
+               continue;
+         }
+
 #ifdef __WXMSW__
          if (!bFiles)
             ::wxRemoveFile(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
@@ -392,34 +420,45 @@ DirManager::~DirManager()
    if (numDirManagers == 0) {
       CleanTempDir();
       //::wxRmdir(temp);
+   } else if( projFull.IsEmpty() && !mytemp.IsEmpty()) {
+      CleanDir(mytemp, wxEmptyString, ".DS_Store", _("Cleaning project temporary files"), kCleanTopDirToo | kCleanDirsOnlyIfEmpty );
    }
 }
 
 
 // static
+// This is quite a dangerous function.  In the temp dir it will DELETE every directory
+// recursively, that has 'project*' as the name - EVEN if it happens not to be an Audacity
+// project but just something else called project.
 void DirManager::CleanTempDir()
 {
-   CleanDir(globaltemp, wxT("project*"), _("Cleaning up temporary files"));
+   // with default flags (none) this does not clean the top directory, and may remove non-empty 
+   // directories.
+   CleanDir(globaltemp, wxT("project*"), wxEmptyString, _("Cleaning up temporary files"));
 }
 
 // static
 void DirManager::CleanDir(
-   const wxString &path, const wxString &dirSpec, const wxString &msg,
-   bool removeTop)
+   const wxString &path, 
+   const wxString &dirSpec, 
+   const wxString &fileSpec, 
+   const wxString &msg,
+   int flags)
 {
    if (dontDeleteTempFiles)
       return; // do nothing
 
    wxArrayString filePathArray, dirPathArray;
 
+   int countFiles =
+      RecursivelyEnumerate(path, filePathArray, dirSpec, fileSpec, true, false);
+   int countDirs =
+      RecursivelyEnumerate(path, dirPathArray, dirSpec, fileSpec, false, true);
+
    // Subtract 1 because we don't want to DELETE the global temp directory,
    // which this will find and list last.
-   int countFiles =
-      RecursivelyEnumerate(path, filePathArray, dirSpec, true, false);
-   int countDirs =
-      RecursivelyEnumerate(path, dirPathArray, dirSpec, false, true);
-   if (!removeTop) {
-      // Remove the globaltemp itself from the array
+   if ((flags & kCleanTopDirToo)==0) {
+      // Remove the globaltemp itself from the array so that it is not deleted.
       --countDirs;
       dirPathArray.resize(countDirs);
    }
@@ -428,12 +467,13 @@ void DirManager::CleanDir(
    if (count == 0)
       return;
 
-   RecursivelyRemove(filePathArray, count, 0, true, false, msg);
-   RecursivelyRemove(dirPathArray, count, countFiles, false, true, msg);
+   RecursivelyRemove(filePathArray, count, 0, flags | kCleanFiles, msg);
+   RecursivelyRemove(dirPathArray, count, countFiles, flags | kCleanDirs, msg);
 }
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
 {
+   bool copying = false;
    wxString oldPath = this->projPath;
    wxString oldName = this->projName;
    wxString oldFull = projFull;
@@ -494,8 +534,14 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       {
          BlockFilePtr b = iter->second.lock();
          if (b) {
+            // FIXME: TRAP_ERR
+            // JKC: The 'success' variable and recovery strategy looks 
+            // broken/bogus to me.  Would need to be using &= to catch 
+            // failure in one of the copies/moves.  Besides which,
+            // our temporary files are going to be deleted when we exit 
+            // anyway, if saving from temporary to named project.
             if (b->IsLocked())
-               success = CopyToNewProjectDirectory( &*b );
+               success = CopyToNewProjectDirectory( &*b ), copying = true;
             else{
                success = MoveToNewProjectDirectory( &*b );
             }
@@ -545,7 +591,10 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    // loading a project; in this latter case, the movement code does
    // nothing because SetProject is called before there are any
    // blockfiles.  Cleanup code trigger is the same
-   if (trueTotal > 0) {
+
+   // Do the cleanup of the temporary directory only if not saving-as, which we
+   // detect by having done copies rather than moves.
+   if (!copying && trueTotal > 0) {
       // Clean up after ourselves; boldly remove all files and directories
       // in the tree.  (Unlike what the earlier version of this comment said.)
       // Because this is a relocation of the project, not the case of closing
@@ -555,10 +604,15 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       // folders have been moved away already, but:
       // to fix bug1567 on Mac, we need to find the extraneous .DS_Store files
       // that we didn't put there, but that Finder may insert into the folders,
-      // and mercilessly remove them too.
+      // and mercilessly remove them, in addition to removing the directories.
 
       CleanDir(
-         cleanupLoc1, wxEmptyString, _("Cleaning up cache directories"), true);
+         cleanupLoc1, 
+         wxEmptyString, // EmptyString => ALL directories.
+         // If the next line were wxEmptyString, ALL files would be removed.
+         ".DS_Store",   // Other project files should already have been removed.
+         _("Cleaning up cache directories"), 
+         kCleanTopDirToo);
 
       //This destroys the empty dirs of the OD block files, which are yet to come.
       //Dont know if this will make the project dirty, but I doubt it. (mchinen)
@@ -1497,7 +1551,8 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
-      wxEmptyString,
+      wxEmptyString,          // All dirs
+      wxEmptyString,          // All files
       true, false,
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
       _("Inspecting project file data"));
@@ -1555,10 +1610,8 @@ _("Project check of \"%s\" folder \
             wxASSERT(b);
             if (b) {
                auto ab = static_cast< AliasBlockFile * > ( &*b );
-               if (action == 1)
-                  // Silence error logging for this block in this session.
-                  ab->SilenceAliasLog();
-               else if (action == 2)
+
+               if (action == 2)
                {
                   // silence the blockfiles by yanking the filename
                   // This is done, eventually, in PCMAliasBlockFile::ReadData()
@@ -1567,9 +1620,22 @@ _("Project check of \"%s\" folder \
                   wxFileNameWrapper dummy;
                   dummy.Clear();
                   ab->ChangeAliasedFileName(std::move(dummy));
-                  ab->Recover();
+
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] { ab->Recover(); },
+                     [&] (AudacityException*) { action = 1; }
+                  );
+
                   nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
                }
+
+               if (action == 1)
+                  // Silence error logging for this block in this session.
+                  ab->SilenceAliasLog();
             }
             ++iter;
          }
@@ -1619,11 +1685,22 @@ _("Project check of \"%s\" folder \
             BlockFilePtr b = iter->second.lock();
             wxASSERT(b);
             if (b) {
-               if(action==0){
+               if(action==0) {
                   //regenerate from data
-                  b->Recover();
-                  nResult |= FSCKstatus_CHANGED;
-               }else if (action==1){
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] {
+                        b->Recover();
+                        nResult |= FSCKstatus_CHANGED;
+                     },
+                     [&] (AudacityException*) { action = 1; }
+                  );
+               }
+
+               if (action==1){
                   // Silence error logging for this block in this session.
                   b->SilenceLog();
                }
@@ -1683,11 +1760,22 @@ _("Project check of \"%s\" folder \
             if (b) {
                if (action == 2)
                {
-                  //regenerate with zeroes
-                  b->Recover();
-                  nResult = FSCKstatus_CHANGED;
+                  //regenerate from data
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] {
+                        //regenerate with zeroes
+                        b->Recover();
+                        nResult |= FSCKstatus_CHANGED;
+                     },
+                     [&] (AudacityException*) { action = 1; }
+                  );
                }
-               else if (action == 1)
+
+               if (action == 1)
                   b->SilenceLog();
             }
             ++iter;
@@ -1919,7 +2007,8 @@ void DirManager::RemoveOrphanBlockfiles()
    RecursivelyEnumerateWithProgress(
       dirPath,
       filePathArray,          // output: all files in project directory tree
-      wxEmptyString,
+      wxEmptyString,          // All dirs
+      wxEmptyString,          // All files
       true, false,
       mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
       _("Inspecting project file data"));

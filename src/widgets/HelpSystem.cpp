@@ -101,6 +101,10 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    LinkingHtmlWindow *html;
 
    wxASSERT(pParent); // to justify safenew
+   // JKC: ANSWER-ME: Why do we create a fake 'frame' and then put a BrowserDialog
+   // inside it, rather than have a variant of the BrowserDialog that is a
+   // frame??
+   // Bug 1412 seems to be related to the extra frame.
    auto pFrame = safenew wxFrame {
       pParent, wxID_ANY, Title, wxDefaultPosition, wxDefaultSize,
 #if defined(__WXMAC__)
@@ -120,6 +124,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    else
       pWnd = safenew BrowserDialog{ pFrame, Title };
 
+   // Bug 1412 workaround for 'extra window'.  Hide the 'fake' window.
+   pFrame->SetTransparent(0);
    ShuttleGui S( pWnd, eIsCreating );
 
    S.SetStyle( wxNO_BORDER | wxTAB_TRAVERSAL );
@@ -344,9 +350,11 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
               webHelpPage.c_str(), localHelpPage.c_str());
 
    wxASSERT(parent); // to justify safenew
+
    HelpSystem::ShowHelpDialog(
       parent, 
       localHelpPage,
       webHelpPage,
-      bModal);
+      bModal
+      );
 }

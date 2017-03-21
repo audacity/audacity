@@ -56,11 +56,15 @@ public:
 private:
    // EffectNormalize implementation
 
-   bool ProcessOne(WaveTrack * t, const wxString &msg);
-   void AnalyseTrack(WaveTrack * track, const wxString &msg);
+   bool ProcessOne(
+      WaveTrack * t, const wxString &msg, int curTrackNum, float offset);
+   bool AnalyseTrack(const WaveTrack * track, const wxString &msg,
+                     int curTrackNum,
+                     float &offset, float &min, float &max);
    void AnalyzeData(float *buffer, size_t len);
-   bool AnalyseDC(WaveTrack * track, const wxString &msg);
-   void ProcessData(float *buffer, size_t len);
+   bool AnalyseDC(const WaveTrack * track, const wxString &msg, int curTrackNum,
+                  float &offset);
+   void ProcessData(float *buffer, size_t len, float offset);
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();
@@ -71,13 +75,9 @@ private:
    bool   mDC;
    bool   mStereoInd;
 
-   int    mCurTrackNum;
    double mCurT0;
    double mCurT1;
    float  mMult;
-   float  mOffset;
-   float  mMin;
-   float  mMax;
    double mSum;
    sampleCount    mCount;
 

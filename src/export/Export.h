@@ -33,6 +33,7 @@ class MixerSpec;
 class TimeTrack;
 class Mixer;
 class WaveTrackConstArray;
+enum class ProgressResult : unsigned;
 
 class AUDACITY_DLL_API FormatInfo
 {
@@ -108,7 +109,7 @@ public:
     * libsndfile export plug-in, but with subformat set to 0, 1, and 2
     * respectively.
     */
-   virtual int Export(AudacityProject *project,
+   virtual ProgressResult Export(AudacityProject *project,
                        unsigned channels,
                        const wxString &fName,
                        bool selectedOnly,
@@ -122,7 +123,7 @@ protected:
    std::unique_ptr<Mixer> CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
-         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality = true, MixerSpec *mixerSpec = NULL);
 
@@ -233,8 +234,8 @@ private:
    int mWidth;
    int mHeight;
    MixerSpec *mMixerSpec;
-   wxRect *mChannelRects;
-   wxRect *mTrackRects;
+   ArrayOf<wxRect> mChannelRects;
+   ArrayOf<wxRect> mTrackRects;
    int mSelectedTrack, mSelectedChannel;
    wxArrayString mTrackNames;
    int mBoxWidth, mChannelHeight, mTrackHeight;

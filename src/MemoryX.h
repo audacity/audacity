@@ -36,6 +36,7 @@ namespace std {
    using std::tr1::weak_ptr;
    using std::tr1::static_pointer_cast;
    using std::tr1::remove_reference;
+   using std::tr1::is_unsigned;
 
    template<typename X> struct default_delete
    {
@@ -160,7 +161,7 @@ namespace std {
          // Skip the self-assignment test -- self-assignment should go to the non-template overload
          get_deleter()(p);
          p = that.release();
-         ((D&)*this) = move(that.get_deleter());
+         get_deleter() = move(that.get_deleter());
          return *this;
       }
       
@@ -439,11 +440,15 @@ class ArrayOf : public std::unique_ptr<X[]>
 {
 public:
    ArrayOf() {}
-   explicit ArrayOf(size_t count, bool initialize = false)
+
+   template<typename Integral>
+   explicit ArrayOf(Integral count, bool initialize = false)
    {
+      static_assert(std::is_unsigned<Integral>::value, "Unsigned arguments only");
       reinit(count, initialize);
    }
-   ArrayOf(const ArrayOf&) = delete;
+
+   ArrayOf(const ArrayOf&) PROHIBITED;
    ArrayOf(ArrayOf&& that)
       : std::unique_ptr < X[] >
          (std::move((std::unique_ptr < X[] >&)(that)))
@@ -460,11 +465,16 @@ public:
       return *this;
    }
 
-   void reinit(size_t count, bool initialize = false)
+   template< typename Integral >
+   void reinit(Integral count,
+               bool initialize = false)
    {
+      static_assert(std::is_unsigned<Integral>::value, "Unsigned arguments only");
       if (initialize)
+         // Initialize elements (usually, to zero for a numerical type)
          std::unique_ptr<X[]>::reset(safenew X[count]{});
       else
+         // Avoid the slight initialization overhead
          std::unique_ptr<X[]>::reset(safenew X[count]);
    }
 };
@@ -480,25 +490,46 @@ class ArraysOf : public ArrayOf<ArrayOf<X>>
 {
 public:
    ArraysOf() {}
-   explicit ArraysOf(size_t N)
+
+   template<typename Integral>
+   explicit ArraysOf(Integral N)
       : ArrayOf<ArrayOf<X>>( N )
    {}
-   ArraysOf(size_t N, size_t M, bool initialize = false)
-      : ArrayOf<ArrayOf<X>>( N )
+
+   template<typename Integral1, typename Integral2 >
+   ArraysOf(Integral1 N, Integral2 M, bool initialize = false)
+   : ArrayOf<ArrayOf<X>>( N )
    {
+      static_assert(std::is_unsigned<Integral1>::value, "Unsigned arguments only");
+      static_assert(std::is_unsigned<Integral2>::value, "Unsigned arguments only");
       for (size_t ii = 0; ii < N; ++ii)
          (*this)[ii] = ArrayOf<X>{ M, initialize };
    }
-   ArraysOf(const ArraysOf&) = delete;
+
+   ArraysOf(const ArraysOf&) PROHIBITED;
    ArraysOf& operator= (ArraysOf&& that)
    {
       ArrayOf<ArrayOf<X>>::operator=(std::move(that));
       return *this;
    }
 
-   using ArrayOf<ArrayOf<X>>::reinit;
-   void reinit(size_t countN, size_t countM, bool initialize = false)
+   template< typename Integral >
+   void reinit(Integral count)
    {
+      ArrayOf<ArrayOf<X>>::reinit( count );
+   }
+
+   template< typename Integral >
+   void reinit(Integral count, bool initialize)
+   {
+      ArrayOf<ArrayOf<X>>::reinit( count, initialize );
+   }
+
+   template<typename Integral1, typename Integral2 >
+   void reinit(Integral1 countN, Integral2 countM, bool initialize = false)
+   {
+      static_assert(std::is_unsigned<Integral1>::value, "Unsigned arguments only");
+      static_assert(std::is_unsigned<Integral2>::value, "Unsigned arguments only");
       reinit(countN, false);
       for (size_t ii = 0; ii < countN; ++ii)
          (*this)[ii].reinit(countM, initialize);
@@ -720,6 +751,23 @@ make_movable_with_deleter(const Deleter &d, Args&&... args)
 }
 
 /*
+ * A deleter for pointers obtained with malloc
+ */
+struct freer { void operator() (void *p) const { free(p); } };
+
+/*
+ * A useful alias for holding the result of malloc
+ */
+template< typename T >
+using MallocPtr = std::unique_ptr< T, freer >;
+
+/*
+ * A useful alias for holding the result of strup and similar
+ */
+template <typename Character = char>
+using MallocString = std::unique_ptr< Character[], freer >;
+
+/*
  * A deleter class to supply the second template parameter of unique_ptr for
  * classes like wxWindow that should be sent a message called Destroy rather
  * than be deleted directly
@@ -745,7 +793,7 @@ using Destroy_ptr = std::unique_ptr<T, Destroyer<T>>;
 // Construct this from any copyable function object, such as a lambda
 template <typename F>
 struct Final_action {
-   Final_action(F f) : clean{ f } {}
+   Final_action(F f) : clean( f ) {}
    ~Final_action() { clean(); }
    F clean;
 };
@@ -757,6 +805,46 @@ Final_action<F> finally (F f)
 {
    return Final_action<F>(f);
 }
+
+/*
+ * Set a variable temporarily in a scope
+ */
+template< typename T >
+struct RestoreValue {
+   T oldValue;
+   void operator () ( T *p ) const { if (p) *p = oldValue; }
+};
+
+template< typename T >
+class ValueRestorer : public std::unique_ptr< T, RestoreValue<T> >
+{
+   using std::unique_ptr< T, RestoreValue<T> >::reset; // make private
+   // But release() remains public and can be useful to commit a changed value
+public:
+   explicit ValueRestorer( T &var )
+      : std::unique_ptr< T, RestoreValue<T> >( &var, { var } )
+   {}
+   explicit ValueRestorer( T &var, const T& newValue )
+      : std::unique_ptr< T, RestoreValue<T> >( &var, { var } )
+   { var = newValue; }
+   ValueRestorer(ValueRestorer &&that)
+      : std::unique_ptr < T, RestoreValue<T> > ( std::move(that) ) {};
+   ValueRestorer & operator= (ValueRestorer &&that)
+   {
+      if (this != &that)
+         std::unique_ptr < T, RestoreValue<T> >::operator=(std::move(that));
+      return *this;
+   }
+};
+
+// inline functions provide convenient parameter type deduction
+template< typename T >
+ValueRestorer< T > valueRestorer( T& var )
+{ return ValueRestorer< T >{ var }; }
+
+template< typename T >
+ValueRestorer< T > valueRestorer( T& var, const T& newValue )
+{ return ValueRestorer< T >{ var, newValue }; }
 
 /*
  * A convenience for use with range-for

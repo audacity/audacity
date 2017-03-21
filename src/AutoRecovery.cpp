@@ -16,7 +16,6 @@ recover previous Audacity projects that were closed incorrectly.
 
 #include "AutoRecovery.h"
 #include "Audacity.h"
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "blockfile/SimpleBlockFile.h"
 #include "Sequence.h"
@@ -642,9 +641,8 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
    if (left == 0)
    {
       size_t origPos = buf->GetIntPosition();
-      char *temp = new char[mAllocSize];
-      buf->Write(temp, mAllocSize);
-      delete[] temp;
+      ArrayOf<char> temp{ mAllocSize };
+      buf->Write(temp.get(), mAllocSize);
       buf->SetIntPosition(origPos);
    }
 }
@@ -741,247 +739,206 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    }
 
    len = file.Length() - len;
-   char *buf = new char[len];
-
-   if (file.Read(buf, len) != len)
+   using Chars = ArrayOf < char >;
+   using WxChars = ArrayOf < wxChar >;
+   Chars buf{ len };
+   if (file.Read(buf.get(), len) != len)
    {
-      delete[] buf;
       return false;
    }
 
-   wxMemoryInputStream in(buf, len);
+   wxMemoryInputStream in(buf.get(), len);
 
    file.Close();
-
-   // Decode to a temporary file to preserve the orignal.
-   wxString tempName = fn.CreateTempFileName(fnPath);
-   bool opened = false;
-
-   XMLFileWriter out;
 
    // JKC: ANSWER-ME: Is the try catch actually doing anything?
    // If it is useful, why are we not using it everywhere?
    // If it isn't useful, why are we doing it here?
-   try
-   {
-      out.Open(tempName, wxT("wb"));
-      opened = out.IsOpened();
-   }
-   catch (const XMLFileWriterException&)
-   {
-   }
+   // PRL: Yes, now we are doing GuardedCall everywhere that XMLFileWriter is
+   // used.
+   return GuardedCall< bool >( [&] {
+      XMLFileWriter out{ fileName, _("Error Decoding File") };
 
-   if (!opened)
-   {
-      delete[] buf;
+      IdMap mIds;
+      IdMapArray mIdStack;
 
-      wxRemoveFile(tempName);
+      mIds.clear();
 
-      return false;
-   }
-
-   mIds.clear();
-
-   while (!in.Eof() && !out.Error())
-   {
-      short id;
-
-      switch (in.GetC())
+      while ( !in.Eof() )
       {
-         case FT_Push:
+         short id;
+
+         switch (in.GetC())
          {
-            mIdStack.Add(mIds);
-            mIds.clear();
+            case FT_Push:
+            {
+               mIdStack.Add(mIds);
+               mIds.clear();
+            }
+            break;
+
+            case FT_Pop:
+            {
+               mIds = mIdStack[mIdStack.GetCount() - 1];
+               mIdStack.RemoveAt(mIdStack.GetCount() - 1);
+            }
+            break;
+
+            case FT_Name:
+            {
+               short len;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&len, sizeof(len));
+               WxChars name{ len / sizeof(wxChar) };
+               in.Read(name.get(), len);
+
+               mIds[id] = wxString(name.get(), len / sizeof(wxChar));
+            }
+            break;
+
+            case FT_StartTag:
+            {
+               in.Read(&id, sizeof(id));
+
+               out.StartTag(mIds[id]);
+            }
+            break;
+
+            case FT_EndTag:
+            {
+               in.Read(&id, sizeof(id));
+
+               out.EndTag(mIds[id]);
+            }
+            break;
+
+            case FT_String:
+            {
+               int len;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&len, sizeof(len));
+               WxChars val{ len / sizeof(wxChar) };
+               in.Read(val.get(), len);
+
+               out.WriteAttr(mIds[id], wxString(val.get(), len / sizeof(wxChar)));
+            }
+            break;
+
+            case FT_Float:
+            {
+               float val;
+               int dig;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+               in.Read(&dig, sizeof(dig));
+
+               out.WriteAttr(mIds[id], val, dig);
+            }
+            break;
+
+            case FT_Double:
+            {
+               double val;
+               int dig;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+               in.Read(&dig, sizeof(dig));
+
+               out.WriteAttr(mIds[id], val, dig);
+            }
+            break;
+
+            case FT_Int:
+            {
+               int val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(mIds[id], val);
+            }
+            break;
+
+            case FT_Bool:
+            {
+               bool val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(mIds[id], val);
+            }
+            break;
+
+            case FT_Long:
+            {
+               long val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(mIds[id], val);
+            }
+            break;
+
+            case FT_LongLong:
+            {
+               long long val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(mIds[id], val);
+            }
+            break;
+
+            case FT_SizeT:
+            {
+               size_t val;
+
+               in.Read(&id, sizeof(id));
+               in.Read(&val, sizeof(val));
+
+               out.WriteAttr(mIds[id], val);
+            }
+            break;
+
+            case FT_Data:
+            {
+               int len;
+
+               in.Read(&len, sizeof(len));
+               WxChars val{ len / sizeof(wxChar) };
+               in.Read(val.get(), len);
+
+               out.WriteData(wxString(val.get(), len / sizeof(wxChar)));
+            }
+            break;
+
+            case FT_Raw:
+            {
+               int len;
+
+               in.Read(&len, sizeof(len));
+               WxChars val{ len / sizeof(wxChar) };
+               in.Read(val.get(), len);
+
+               out.Write(wxString(val.get(), len / sizeof(wxChar)));
+            }
+            break;
+
+            default:
+               wxASSERT(true);
+            break;
          }
-         break;
-
-         case FT_Pop:
-         {
-            mIds = mIdStack[mIdStack.GetCount() - 1];
-            mIdStack.RemoveAt(mIdStack.GetCount() - 1);
-         }
-         break;
-
-         case FT_Name:
-         {
-            short len;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&len, sizeof(len));
-            wxChar *name = new wxChar[len / sizeof(wxChar)];
-            in.Read(name, len);
-
-            mIds[id] = wxString(name, len / sizeof(wxChar));
-            delete[] name;
-         }
-         break;
-
-         case FT_StartTag:
-         {
-            in.Read(&id, sizeof(id));
-
-            out.StartTag(mIds[id]);
-         }
-         break;
-
-         case FT_EndTag:
-         {
-            in.Read(&id, sizeof(id));
-
-            out.EndTag(mIds[id]);
-         }
-         break;
-
-         case FT_String:
-         {
-            int len;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
-            in.Read(val, len);
-
-            out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
-            delete[] val;
-         }
-         break;
-
-         case FT_Float:
-         {
-            float val;
-            int dig;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-            in.Read(&dig, sizeof(dig));
-
-            out.WriteAttr(mIds[id], val, dig);
-         }
-         break;
-
-         case FT_Double:
-         {
-            double val;
-            int dig;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-            in.Read(&dig, sizeof(dig));
-
-            out.WriteAttr(mIds[id], val, dig);
-         }
-         break;
-
-         case FT_Int:
-         {
-            int val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(mIds[id], val);
-         }
-         break;
-
-         case FT_Bool:
-         {
-            bool val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(mIds[id], val);
-         }
-         break;
-
-         case FT_Long:
-         {
-            long val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(mIds[id], val);
-         }
-         break;
-
-         case FT_LongLong:
-         {
-            long long val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(mIds[id], val);
-         }
-         break;
-
-         case FT_SizeT:
-         {
-            size_t val;
-
-            in.Read(&id, sizeof(id));
-            in.Read(&val, sizeof(val));
-
-            out.WriteAttr(mIds[id], val);
-         }
-         break;
-
-         case FT_Data:
-         {
-            int len;
-
-            in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
-            in.Read(val, len);
-
-            out.WriteData(wxString(val, len / sizeof(wxChar)));
-            delete[] val;
-         }
-         break;
-
-         case FT_Raw:
-         {
-            int len;
-
-            in.Read(&len, sizeof(len));
-            wxChar *val = new wxChar[len / sizeof(wxChar)];
-            in.Read(val, len);
-
-            out.Write(wxString(val, len / sizeof(wxChar)));
-            delete[] val;
-         }
-         break;
-
-         default:
-            wxASSERT(true);
-         break;
       }
-   }
 
-   delete[] buf;
+      out.Commit();
 
-   bool error = out.Error();
- 
-   out.Close();
-
-   // Bail if decoding failed.
-   if (error)
-   {
-      // File successfully decoded
-      wxRemoveFile(tempName);
-
-      return false;
-   }
-
-   // Decoding was successful, so remove the original file and replace with decoded one.
-   if (wxRemoveFile(fileName))
-   {
-      if (!wxRenameFile(tempName, fileName))
-      {
-         return false;
-      }
-   }
-
-   return true;
+      return true;
+   } );
 }

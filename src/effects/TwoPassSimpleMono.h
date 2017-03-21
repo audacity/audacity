@@ -78,7 +78,7 @@ protected:
 private:
    bool ProcessOne(WaveTrack * t,
                    sampleCount start, sampleCount end);
-   bool ProcessPass();
+   bool ProcessPass() override;
 };
 
 #endif

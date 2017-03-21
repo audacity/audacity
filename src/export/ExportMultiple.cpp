@@ -566,7 +566,7 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
    }
 
 //   bool overwrite = mOverwrite->GetValue();
-   int ok;
+   ProgressResult ok;
    mExported.Empty();
 
    if (mLabel->GetValue()) {
@@ -584,10 +584,10 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
    {
       wxString msg;
       msg.Printf(
-         ok == eProgressSuccess ? _("Successfully exported the following %lld file(s).")
-           : (ok == eProgressFailed ? _("Something went wrong after exporting the following %lld file(s).")
-             : (ok == eProgressCancelled ? _("Export canceled after exporting the following %lld file(s).")
-               : (ok == eProgressStopped ? _("Export stopped after exporting the following %lld file(s).")
+         ok == ProgressResult::Success ? _("Successfully exported the following %lld file(s).")
+           : (ok == ProgressResult::Failed ? _("Something went wrong after exporting the following %lld file(s).")
+             : (ok == ProgressResult::Cancelled ? _("Export canceled after exporting the following %lld file(s).")
+               : (ok == ProgressResult::Stopped ? _("Export stopped after exporting the following %lld file(s).")
                  : _("Something went really wrong after exporting the following %lld file(s).")
                  )
                )
@@ -606,7 +606,7 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
          450,400);
    }
 
-   if (ok == eProgressSuccess || ok == eProgressStopped) {
+   if (ok == ProgressResult::Success || ok == ProgressResult::Stopped) {
       EndModal(1);
    }
 }
@@ -637,7 +637,7 @@ bool ExportMultiple::DirOk()
 }
 
 // TODO: JKC July2016: Merge labels/tracks duplicated export code.
-int ExportMultiple::ExportMultipleByLabel(bool byName,
+ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
    const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
@@ -732,7 +732,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
          setting.filetags.SetTag(TAG_TRACK, l+1);
          // let the user have a crack at editing it, exit if cancelled
          if( !setting.filetags.ShowEditDialog(mProject, _("Edit Metadata Tags"), tagsPrompt) )
-            return false;
+            return ProgressResult::Cancelled;
       }
 
       /* add the settings to the array of settings to be used for export */
@@ -741,7 +741,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
       l++;  // next label, count up one
    }
 
-   int ok = eProgressSuccess;   // did it work?
+   auto ok = ProgressResult::Success;   // did it work?
    int count = 0; // count the number of sucessful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
    /* Go round again and do the exporting (so this run is slow but
@@ -755,7 +755,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
 
       // Export it
       ok = DoExport(channels, activeSetting.destfile, false, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
-      if (ok != eProgressSuccess && ok != eProgressStopped) {
+      if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
          break;
       }
    }
@@ -763,15 +763,14 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
    return ok;
 }
 
-int ExportMultiple::ExportMultipleByTrack(bool byName,
+ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    const wxString &prefix, bool addNumber)
 {
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
    Track *tr, *tr2;
    int l = 0;     // track counter
-   int numTracks = 0;
-   int ok = eProgressSuccess;
+   auto ok = ProgressResult::Success;
    wxArrayString otherNames;
    std::vector<Track*> selected; /**< Array of pointers to the tracks which were
                                 selected when we started */
@@ -795,10 +794,6 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       if (tr->GetSelected()) {
          selected.push_back(tr);
          tr->SetSelected(false);
-      }
-
-      if (!tr->GetLinked()) {
-         numTracks++;
       }
    }
 
@@ -879,7 +874,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          setting.filetags.SetTag(TAG_TRACK, l+1);
          // let the user have a crack at editing it, exit if cancelled
          if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata Tags"), tagsPrompt))
-            return false;
+            return ProgressResult::Cancelled;
       }
       /* add the settings to the array of settings to be used for export */
       exportSettings.Add(setting);
@@ -929,7 +924,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       }
 
       // Stop if an error occurred
-      if (ok != eProgressSuccess && ok != eProgressStopped) {
+      if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
          break;
       }
       // increment export counter
@@ -938,13 +933,13 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    }
 
    // Restore the selection states
-   for (auto pTrack : mSelected)
+   for (auto pTrack : selected)
       pTrack->SetSelected(true);
 
    return ok ;
 }
 
-int ExportMultiple::DoExport(unsigned channels,
+ProgressResult ExportMultiple::DoExport(unsigned channels,
                               const wxFileName &inName,
                               bool selectedOnly,
                               double t0,
@@ -961,7 +956,7 @@ int ExportMultiple::DoExport(unsigned channels,
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
       if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
-         return false;
+         return ProgressResult::Cancelled;
       }
       name = inName;
    }
@@ -976,7 +971,7 @@ int ExportMultiple::DoExport(unsigned channels,
 
    // Call the format export routine
    const wxString fullPath{name.GetFullPath()};
-   int success = mPlugins[mPluginIndex]->Export(mProject,
+   auto success = mPlugins[mPluginIndex]->Export(mProject,
                                                 channels,
                                                 fullPath,
                                                 selectedOnly,
@@ -986,7 +981,7 @@ int ExportMultiple::DoExport(unsigned channels,
                                                 &tags,
                                                 mSubFormatIndex);
 
-   if (success == eProgressSuccess || success == eProgressStopped) {
+   if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
       mExported.Add(fullPath);
    }
 

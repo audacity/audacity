@@ -18,6 +18,7 @@ of the BlockFile system.
 #include "Audacity.h"
 #include "Benchmark.h"
 
+#include <wx/app.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
@@ -353,12 +354,12 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    srand(randSeed);
 
-   int nChunks, chunkSize;
+   size_t nChunks, chunkSize;
    //chunkSize = 7500 + (rand() % 1000);
    chunkSize = 200 + (rand() % 100);
    nChunks = (dataSize * 1048576) / (chunkSize*sizeof(short));
-   while(nChunks < 20 || chunkSize > (blockSize*1024)/4) {
-      chunkSize = (chunkSize / 2) + (rand() % 100);
+   while(nChunks < 20 || chunkSize > ((unsigned long)(blockSize)*1024)/4) {
+      chunkSize = std::max( size_t(1), (chunkSize / 2) + (rand() % 100) );
       nChunks = (dataSize * 1048576) / (chunkSize*sizeof(short));
    }
 
@@ -372,29 +373,29 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    int trials = numEdits;
 
-   short *small1 = new short[nChunks];
-   short *small2 = new short[nChunks];
-   short *block = new short[chunkSize];
+   using Shorts = ArrayOf < short > ;
+   Shorts small1{ nChunks };
+   Shorts block{ chunkSize };
 
    Printf(wxT("Preparing...\n"));
 
    wxTheApp->Yield();
    FlushPrint();
 
-   int i, b, v;
+   int v;
    int bad;
    int z;
    long elapsed;
    wxString tempStr;
    wxStopWatch timer;
 
-   for (i = 0; i < nChunks; i++) {
+   for (size_t i = 0; i < nChunks; i++) {
       v = short(rand());
       small1[i] = v;
-      for (b = 0; b < chunkSize; b++)
+      for (size_t b = 0; b < chunkSize; b++)
          block[b] = v;
 
-      t->Append((samplePtr)block, int16Sample, chunkSize);
+      t->Append((samplePtr)block.get(), int16Sample, chunkSize);
    }
    t->Flush();
 
@@ -415,8 +416,13 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    timer.Start();
    for (z = 0; z < trials; z++) {
-      int x0 = rand() % nChunks;
-      int xlen = 1 + (rand() % (nChunks - x0));
+      // First chunk to cut
+      // 0 <= x0 < nChunks
+      const size_t x0 = rand() % nChunks;
+
+      // Number of chunks to cut
+      // 1 <= xlen <= nChunks - x0
+      const size_t xlen = 1 + (rand() % (nChunks - x0));
       if (mEditDetail)
          Printf(wxT("Cut: %d - %d \n"), x0 * chunkSize, (x0 + xlen) * chunkSize);
 
@@ -430,7 +436,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          goto fail;
       }
 
-      int y0 = rand() % (nChunks - xlen);
+      // Position to paste
+      // 0 <= y0 <= nChunks - xlen
+      const size_t y0 = rand() % (nChunks - xlen + 1);
+
       if (mEditDetail)
          Printf(wxT("Paste: %d\n"), y0 * chunkSize);
 
@@ -446,18 +455,12 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
                 t->GetClipByIndex(0)->GetSequence()->GetNumSamples().as_long_long());
          goto fail;
       }
-      // Copy
-      for (i = 0; i < xlen; i++)
-         small2[i] = small1[x0 + i];
-      // Delete
-      for (i = 0; i < (nChunks - x0 - xlen); i++)
-         small1[x0 + i] = small1[x0 + xlen + i];
-      // Insert
-      for (i = 0; i < (nChunks - xlen - y0); i++)
-         small1[nChunks - i - 1] = small1[nChunks - i - 1 - xlen];
-      // Paste
-      for (i = 0; i < xlen; i++)
-         small1[y0 + i] = small2[i];
+
+      // Permute small1 correspondingly to the cut and paste
+      auto first = &small1[0];
+      if (x0 + xlen < nChunks)
+         std::rotate( first + x0, first + x0 + xlen, first + nChunks );
+      std::rotate( first + y0, first + nChunks - xlen, first + nChunks );
    }
 
    elapsed = timer.Time();
@@ -484,10 +487,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    bad = 0;
    timer.Start();
-   for (i = 0; i < nChunks; i++) {
+   for (size_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block, int16Sample, i * chunkSize, chunkSize);
-      for (b = 0; b < chunkSize; b++)
+      t->Get((samplePtr)block.get(), int16Sample, i * chunkSize, chunkSize);
+      for (size_t b = 0; b < chunkSize; b++)
          if (block[b] != v) {
             bad++;
             if (bad < 10)
@@ -510,10 +513,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    timer.Start();
 
-   for (i = 0; i < nChunks; i++) {
+   for (size_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block, int16Sample, i * chunkSize, chunkSize);
-      for (b = 0; b < chunkSize; b++)
+      t->Get((samplePtr)block.get(), int16Sample, i * chunkSize, chunkSize);
+      for (size_t b = 0; b < chunkSize; b++)
          if (block[b] != v)
             bad++;
    }
@@ -532,9 +535,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    Printf(wxT("TEST FAILED!!!\n"));
 
  success:
-   delete[]small1;
-   delete[]small2;
-   delete[]block;
 
    dd.reset();
 

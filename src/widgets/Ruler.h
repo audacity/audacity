@@ -129,8 +129,8 @@ class AUDACITY_DLL_API Ruler {
    // If this is the case, you should provide a wxString array of labels, start
    // label position, and labels step. The range eventually specified will be
    // ignored.
-   void SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, int step);
-   void SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step);
+   void SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int start, int step);
+   void SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int start, int step);
 
    void SetUseZoomInfo(int leftOffset, const ZoomInfo *zoomInfo);
 
@@ -191,8 +191,8 @@ private:
 
    int          mDigits;
 
-   int         *mUserBits;
-   int         *mBits;
+   ArrayOf<int> mUserBits;
+   ArrayOf<int> mBits;
    int          mUserBitLen;
 
    bool         mValid;
@@ -208,11 +208,11 @@ private:
    };
 
    int          mNumMajor;
-   Label       *mMajorLabels;
+   ArrayOf<Label> mMajorLabels;
    int          mNumMinor;
-   Label       *mMinorLabels;
+   ArrayOf<Label> mMinorLabels;
    int          mNumMinorMinor;
-   Label       *mMinorMinorLabels;
+   ArrayOf<Label> mMinorMinorLabels;
 
    // Returns 'zero' label coordinate (for grid drawing)
    int FindZero(Label * label, int len);

@@ -45,8 +45,57 @@ hold information about one contributor to Audacity.
 #include "AllThemeResources.h"
 
 #include "../images/AudacityLogoWithName.xpm"
+#include "RevisionIdent.h"
+
+// RevisionIdent.h may contain #defines like these ones:
+//#define REV_LONG "28864acb238cb3ca71dda190a2d93242591dd80e"
+//#define REV_TIME "Sun Apr 12 12:40:22 2015 +0100"
+
+
+#ifndef REV_TIME
+#define REV_TIME "unknown date and time"
+#endif
+
+#ifdef REV_LONG
+#define REV_IDENT wxString( "[[http://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
+#else
+#define REV_IDENT wxT("No revision identifier was provided")
+#endif
 
 extern wxString FormatHtmlText( const wxString & Text );
+
+// Function to give the xtra arguments to put on the version check string.
+const wxString VerCheckArgs(){
+   wxString result = wxString("from_ver=") + AUDACITY_VERSION_STRING;
+#ifdef REV_LONG
+   result += wxString("&CommitId=")+wxString(REV_LONG).Left(6);
+#endif
+   result += wxString("&Time=") + wxString( __DATE__ ) + wxString( __TIME__ );
+   result.Replace(" ","");
+   return result;
+}
+
+// Url with Version check args attached.
+const wxString VerCheckUrl(){
+   //The version we intend to use for live Audacity.
+#define VER_CHECK_URL "http://www.audacityteam.org/download/?"
+//For testing of our scriptlet.
+//#define VER_CHECK_URL "http://www.audacityteam.org/slug/?"
+//For testing locally
+//#define VER_CHECK_URL "http://localhost:63342/WorkingDocs/demos/download.html?"
+
+   return wxString( wxT(VER_CHECK_URL)) +VerCheckArgs();
+}
+
+// Text of htperlink to check versions.
+const wxString VerCheckHtml(){
+
+   wxString result = "<center>[[";
+   result += VerCheckUrl() + "|" + _("Check Online");
+   result += "]]</center>\n";
+   return result;
+}
+
 
 void AboutDialog::CreateCreditsList()
 {
@@ -409,6 +458,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr = wxT("<h2><center>");
    informationStr += _("Build Information");
    informationStr += wxT("</center></h2>\n");
+   informationStr += VerCheckHtml();
    // top level heading
    informationStr += wxT("<h3>");
    informationStr += _("File Format Support");
@@ -583,15 +633,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    // Current date
    AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
-
-// Uncomment the next two lines to test hyperlinks work from here.
-//   AddBuildinfoRow(&informationStr, wxT("Link Test:"), 
-//      wxT("[[https:www.audacityteam.org|Click bait]]") );
-
-   AddBuildinfoRow(&informationStr, _("Commit Id:"),
-#include "RevisionIdent.h"
-);
-
+   AddBuildinfoRow(&informationStr, _("Commit Id:"), REV_IDENT );
 #ifdef __WXDEBUG__
    AddBuildinfoRow(&informationStr, _("Build type:"), _("Debug build"));
 #else

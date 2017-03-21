@@ -73,6 +73,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // from one project to another...
    Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &projDirManager);
 
+   // Sequence cannot be copied without specifying a DirManager
+   Sequence(const Sequence&) PROHIBITED;
+   Sequence& operator= (const Sequence&) PROHIBITED;
+
    ~Sequence();
 
    //
@@ -99,7 +103,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool GetWaveDisplay(float *min, float *max, float *rms, int* bl,
                        size_t len, const sampleCount *where);
 
-   bool Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const;
+   std::unique_ptr<Sequence> Copy(sampleCount s0, sampleCount s1) const;
    bool Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
@@ -136,7 +140,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    void HandleXMLEndTag(const wxChar *tag) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
+   void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
    bool GetErrorOpening() { return mErrorOpening; }
 
@@ -242,17 +246,20 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
-   bool AppendBlock(const SeqBlock &b);
+   static bool AppendBlock
+      (DirManager &dirManager,
+       BlockArray &blocks, sampleCount &numSamples, const SeqBlock &b);
 
    bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
              size_t blockRelativeStart, size_t len) const;
 
-   bool CopyWrite(SampleBuffer &scratch,
-                  samplePtr buffer, SeqBlock &b,
-                  size_t blockRelativeStart, size_t len);
-
-   void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
+   // Accumulate NEW block files onto the end of a block array.
+   // Does not change this sequence.  The intent is to use
+   // CommitChangesIfConsistent later.
+   static void Blockify
+      (DirManager &dirManager, size_t maxSamples, sampleFormat format,
+       BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
 
    bool Get(int b, samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len) const;

@@ -1,4 +1,4 @@
-Note: Audacity is distributed under the terms of the GNU GPL.
+Note: Audacity is distributed under the terms of the GNU GPL Version 2.
 This includes everything in the source code distribution
 except code in the lib-src directory.  Code in the lib-src
 directory may be released under a different license
@@ -6,7 +6,7 @@ directory may be released under a different license
 README.txt file, and for specific details, see the license
 information inside each subdirectory of lib-src.
 
-Documentation is distributed under the Creative Commons license.
+Documentation is distributed under the Creative Commons license (CC BY 3.0)
 Please see here for that:
 http://creativecommons.org/licenses/by/3.0/legalcode
 

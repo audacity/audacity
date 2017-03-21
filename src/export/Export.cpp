@@ -240,7 +240,7 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
-         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
@@ -351,7 +351,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"), _("Exported Tags"), mProject->GetShowId3Dialog()))) {
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags"), _("Exported Tags"), mProject->GetShowId3Dialog()))) {
          return false;
       }
    }
@@ -822,14 +822,12 @@ bool Exporter::CheckMix()
 
 bool Exporter::ExportTracks()
 {
-   int success;
-
    // Keep original in case of failure
    if (mActualName != mFilename) {
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   success = mPlugins[mFormat]->Export(mProject,
+   auto success = mPlugins[mFormat]->Export(mProject,
                                        mChannels,
                                        mActualName.GetFullPath(),
                                        mSelectedOnly,
@@ -841,7 +839,7 @@ bool Exporter::ExportTracks()
 
    if (mActualName != mFilename) {
       // Remove backup
-      if (success == eProgressSuccess || success == eProgressStopped) {
+      if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
          ::wxRemoveFile(mFilename.GetFullPath());
       }
       else {
@@ -851,7 +849,7 @@ bool Exporter::ExportTracks()
       }
    }
 
-   return (success == eProgressSuccess || success == eProgressStopped);
+   return (success == ProgressResult::Success || success == ProgressResult::Stopped);
 }
 
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
@@ -976,7 +974,7 @@ bool Exporter::SetAutoExportOptions(AudacityProject *project) {
 
    // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
-      if (!(project->DoEditMetadata(_("Edit Metadata Tags for Export"),
+      if (!(project->DoEditMetadata(_("Edit Metadata Tags"),
                                     _("Exported Tags"), mProject->GetShowId3Dialog()))) {
          return false;
       }
@@ -998,23 +996,20 @@ ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec,
       wxArrayString trackNames,wxWindow *parent, wxWindowID id,
       const wxPoint& pos, const wxSize& size):
    wxPanelWrapper(parent, id, pos, size)
+   , mMixerSpec{mixerSpec}
+   , mChannelRects{ mMixerSpec->GetMaxNumChannels() }
+   , mTrackRects{ mMixerSpec->GetNumTracks() }
 {
    mBitmap = NULL;
    mWidth = 0;
    mHeight = 0;
-   mMixerSpec = mixerSpec;
    mSelectedTrack = mSelectedChannel = -1;
-
-   mTrackRects = new wxRect[ mMixerSpec->GetNumTracks() ];
-   mChannelRects = new wxRect[ mMixerSpec->GetMaxNumChannels() ];
 
    mTrackNames = trackNames;
 }
 
 ExportMixerPanel::~ExportMixerPanel()
 {
-   delete[] mTrackRects;
-   delete[] mChannelRects;
 }
 
 //set the font on memDC such that text can fit in specified width and height

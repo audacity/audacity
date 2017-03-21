@@ -138,11 +138,10 @@ bool EffectRepair::ProcessOne(int count, WaveTrack * track,
                               size_t len,
                               size_t repairStart, size_t repairLen)
 {
-   float *buffer = new float[len];
-   track->Get((samplePtr) buffer, floatSample, start, len);
-   InterpolateAudio(buffer, len, repairStart, repairLen);
+   Floats buffer{ len };
+   track->Get((samplePtr) buffer.get(), floatSample, start, len);
+   InterpolateAudio(buffer.get(), len, repairStart, repairLen);
    track->Set((samplePtr)&buffer[repairStart], floatSample,
               start + repairStart, repairLen);
-   delete[] buffer;
    return !TrackProgress(count, 1.0); // TrackProgress returns true on Cancel.
 }

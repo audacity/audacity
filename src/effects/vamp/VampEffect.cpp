@@ -81,46 +81,10 @@ VampEffect::VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
 {
    mKey = mPath.BeforeLast(wxT('/')).ToUTF8();
    mName = mPath.AfterLast(wxT('/'));
-
-   mSliders = NULL;
-   mFields = NULL;
-   mLabels = NULL;
-   mToggles = NULL;
-   mChoices = NULL;
-   mValues = NULL;
 }
 
 VampEffect::~VampEffect()
 {
-   if (mValues)
-   {
-      delete [] mValues;
-   }
-
-   if (mSliders)
-   {
-      delete [] mSliders;
-   }
-
-   if (mFields)
-   {
-      delete [] mFields;
-   }
-
-   if (mLabels)
-   {
-      delete [] mLabels;
-   }
-
-   if (mToggles)
-   {
-      delete [] mToggles;
-   }
-
-   if (mChoices)
-   {
-      delete [] mChoices;
-   }
 }
 
 // ============================================================================
@@ -342,7 +306,7 @@ bool VampEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool VampEffect::Init()
 {
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *left = (WaveTrack *)iter.First();
 
    mRate = 0.0;
@@ -393,7 +357,7 @@ bool VampEffect::Process()
       return false;
    }
 
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
 
    int count = 0;
 
@@ -486,11 +450,7 @@ bool VampEffect::Process()
       ));
       LabelTrack *ltrack = addedTracks.back()->get();
 
-      float **data = new float *[channels]; // ANSWER-ME: Vigilant Sentry marks this as memory leak, var "data" not deleted.
-      for (int c = 0; c < channels; ++c)
-      {
-         data[c] = new float[block];
-      }
+      FloatBuffers data{ channels, block };
 
       auto originalLen = len;
       auto ls = lstart;
@@ -502,12 +462,12 @@ bool VampEffect::Process()
 
          if (left)
          {
-            left->Get((samplePtr)data[0], floatSample, ls, request);
+            left->Get((samplePtr)data[0].get(), floatSample, ls, request);
          }
 
          if (right)
          {
-            right->Get((samplePtr)data[1], floatSample, rs, request);
+            right->Get((samplePtr)data[1].get(), floatSample, rs, request);
          }
 
          if (request < block)
@@ -528,7 +488,8 @@ bool VampEffect::Process()
             (int)(mRate + 0.5)
          );
 
-         Vamp::Plugin::FeatureSet features = mPlugin->process(data, timestamp);
+         Vamp::Plugin::FeatureSet features = mPlugin->process(
+            reinterpret_cast< float** >( data.get() ), timestamp);
          AddFeatures(ltrack, features);
 
          if (len > (int)step)
@@ -589,14 +550,14 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
    mParameters = mPlugin->getParameterDescriptors();
 
-   int count = mParameters.size();
+   auto count = mParameters.size();
 
-   mToggles = new wxCheckBox *[count];
-   mSliders = new wxSlider *[count];
-   mFields = new wxTextCtrl *[count];
-   mLabels = new wxStaticText *[count];
-   mChoices = new wxChoice *[count];
-   mValues = new float[count];
+   mToggles.reinit( count );
+   mSliders.reinit( count );
+   mFields.reinit( count );
+   mLabels.reinit( count );
+   mChoices.reinit( count );
+   mValues.reinit( count );
 
    S.SetStyle(wxVSCROLL | wxTAB_TRAVERSAL);
    wxScrolledWindow *scroller = S.StartScroller(2);
@@ -631,10 +592,10 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                S.AddSpace(1, 1);
             }
 
-            for (int p = 0; p < count; p++)
+            for (size_t p = 0; p < count; p++)
             {
-	            wxString tip = wxString::FromUTF8(mParameters[p].description.c_str());
-	            wxString unit = wxString::FromUTF8(mParameters[p].unit.c_str());
+               wxString tip = wxString::FromUTF8(mParameters[p].description.c_str());
+               wxString unit = wxString::FromUTF8(mParameters[p].unit.c_str());
 
                float value = mPlugin->getParameter(mParameters[p].identifier);
 

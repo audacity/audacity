@@ -273,7 +273,8 @@ protected:
 };
 
 static void ComputeSpectrumUsingRealFFTf
-   (float * __restrict buffer, HFFT hFFT, const float * __restrict window, size_t len, float * __restrict out)
+   (float * __restrict buffer, const FFTParam *hFFT,
+    const float * __restrict window, size_t len, float * __restrict out)
 {
    size_t i;
    if(len > hFFT->Points * 2)
@@ -300,21 +301,22 @@ static void ComputeSpectrumUsingRealFFTf
    }
 }
 
-WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate)
+WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
+                   sampleFormat format, int rate)
 {
-   mOffset = 0;
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
+
    mEnvelope = std::make_unique<Envelope>();
+
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
-   mAppendBufferLen = 0;
-   mDirty = 0;
-   mIsPlaceholder = false;
 }
 
-WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager)
+WaveClip::WaveClip(const WaveClip& orig,
+                   const std::shared_ptr<DirManager> &projDirManager,
+                   bool copyCutlines)
 {
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
@@ -323,21 +325,68 @@ WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &proj
    mOffset = orig.mOffset;
    mRate = orig.mRate;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
+
    mEnvelope = std::make_unique<Envelope>();
    mEnvelope->Paste(0.0, orig.mEnvelope.get());
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen((orig.mSequence->GetNumSamples().as_double()) / orig.mRate);
+
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
 
-   for (const auto &clip: orig.mCutLines)
-      mCutLines.push_back(make_movable<WaveClip>(*clip, projDirManager));
+   if ( copyCutlines )
+      for (const auto &clip: orig.mCutLines)
+         mCutLines.push_back
+            ( make_movable<WaveClip>( *clip, projDirManager, true ) );
 
-   mAppendBufferLen = 0;
-   mDirty = 0;
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
+
+WaveClip::WaveClip(const WaveClip& orig,
+                   const std::shared_ptr<DirManager> &projDirManager,
+                   bool copyCutlines,
+                   double t0, double t1)
+{
+   // Copy only a range of the other WaveClip
+
+   mOffset = orig.mOffset;
+   mRate = orig.mRate;
+
+   mWaveCache = std::make_unique<WaveCache>();
+   mSpecCache = std::make_unique<SpecCache>();
+   mSpecPxCache = std::make_unique<SpecPxCache>(1);
+
+   mIsPlaceholder = orig.GetIsPlaceholder();
+
+   sampleCount s0, s1;
+
+   orig.TimeToSamplesClip(t0, &s0);
+   orig.TimeToSamplesClip(t1, &s1);
+
+   mSequence = orig.mSequence->Copy(s0, s1);
+
+   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope->CopyFrom(orig.mEnvelope.get(),
+                       mOffset + s0.as_double()/mRate,
+                       mOffset + s1.as_double()/mRate);
+
+   if ( copyCutlines )
+      // Copy cutline clips that fall in the range
+      for (const auto &ppClip : orig.mCutLines)
+      {
+         const WaveClip* clip = ppClip.get();
+         double cutlinePosition = orig.mOffset + clip->GetOffset();
+         if (cutlinePosition >= t0 && cutlinePosition <= t1)
+         {
+            auto newCutLine =
+               make_movable< WaveClip >( *clip, projDirManager, true );
+            newCutLine->SetOffset( cutlinePosition - t0 );
+            mCutLines.push_back(std::move(newCutLine));
+         }
+      }
+}
+
 
 WaveClip::~WaveClip()
 {
@@ -643,29 +692,31 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
             if (right > left) {
-               float *b;
+               Floats b;
+               float *pb{};
                // left is nonnegative and at most mAppendBufferLen:
                auto sLeft = left.as_size_t();
                // The difference is at most mAppendBufferLen:
                size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer.ptr())[sLeft];
+                  pb = &((float *)mAppendBuffer.ptr())[sLeft];
                else {
-                  b = new float[len];
+                  b.reinit(len);
+                  pb = b.get();
                   CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
                               seqFormat,
-                              (samplePtr)b, floatSample, len);
+                              (samplePtr)pb, floatSample, len);
                }
 
                float theMax, theMin, sumsq;
                {
-                  const float val = b[0];
+                  const float val = pb[0];
                   theMax = theMin = val;
                   sumsq = val * val;
                }
                for(decltype(len) j = 1; j < len; j++) {
-                  const float val = b[j];
+                  const float val = pb[j];
                   theMax = std::max(theMax, val);
                   theMin = std::min(theMin, val);
                   sumsq += val * val;
@@ -675,9 +726,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                max[i] = theMax;
                rms[i] = (float)sqrt(sumsq / len);
                bl[i] = 1; //for now just fake it.
-
-               if (seqFormat != floatSample)
-                  delete[] b;
 
                didUpdate=true;
             }
@@ -802,16 +850,16 @@ bool SpecCache::CalculateOneSpectrum
 
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
-   const size_t zeroPaddingFactor = (autocorrelation ? 1 : settings.ZeroPaddingFactor());
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
    const size_t padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
    const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
+   auto nBins = settings.NBins();
 
    if (from < 0 || from >= numSamples) {
       if (xx >= 0 && xx < len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
-         float *const results = &out[half * xx];
-         std::fill(results, results + half, 0.0f);
+         float *const results = &out[nBins * xx];
+         std::fill(results, results + nBins, 0.0f);
       }
    }
    else {
@@ -854,18 +902,22 @@ bool SpecCache::CalculateOneSpectrum
                myLen)
             );
 
-            if (copy)
-               memcpy(adj, useBuffer, myLen * sizeof(float));
+            if (copy) {
+               if (useBuffer)
+                  memcpy(adj, useBuffer, myLen * sizeof(float));
+               else
+                  memset(adj, 0, myLen * sizeof(float));
+            }
          }
       }
 
-      if (copy)
+      if (copy || !useBuffer)
          useBuffer = scratch;
 
       if (autocorrelation) {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
-         float *const results = &out[half * xx];
+         float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
          ComputeSpectrum(useBuffer, windowSize, windowSize,
             rate, results,
@@ -873,7 +925,7 @@ bool SpecCache::CalculateOneSpectrum
       }
       else if (reassignment) {
          static const double epsilon = 1e-16;
-         const HFFT hFFT = settings.hFFT;
+         const auto hFFT = settings.hFFT.get();
 
          float *const scratch2 = scratch + fftLen;
          std::copy(scratch, scratch2, scratch2);
@@ -882,21 +934,21 @@ bool SpecCache::CalculateOneSpectrum
          std::copy(scratch, scratch2, scratch3);
 
          {
-            const float *const window = settings.window;
+            const float *const window = settings.window.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch[ii] *= window[ii];
             RealFFTf(scratch, hFFT);
          }
 
          {
-            const float *const dWindow = settings.dWindow;
+            const float *const dWindow = settings.dWindow.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch2[ii] *= dWindow[ii];
             RealFFTf(scratch2, hFFT);
          }
 
          {
-            const float *const tWindow = settings.tWindow;
+            const float *const tWindow = settings.tWindow.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch3[ii] *= tWindow[ii];
             RealFFTf(scratch3, hFFT);
@@ -949,7 +1001,7 @@ bool SpecCache::CalculateOneSpectrum
                   result = true;
 
                   // This is non-negative, because bin and correctedX are
-                  auto ind = (int)half * correctedX + bin;
+                  auto ind = (int)nBins * correctedX + bin;
 #ifdef _OPENMP
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
@@ -964,7 +1016,7 @@ bool SpecCache::CalculateOneSpectrum
       else {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
-         float *const results = &out[half * xx];
+         float *const results = &out[nBins * xx];
 
          // Do the FFT.  Note that useBuffer is multiplied by the window,
          // and the window is initialized with leading and trailing zeroes
@@ -973,10 +1025,10 @@ bool SpecCache::CalculateOneSpectrum
 
          // This function mutates useBuffer
          ComputeSpectrumUsingRealFFTf
-            (useBuffer, settings.hFFT, settings.window, fftLen, results);
+            (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependant gain factor
-            for (size_t ii = 0; ii < half; ++ii)
+            for (size_t ii = 0; ii < nBins; ++ii)
                results[ii] += gainFactors[ii];
          }
       }
@@ -985,13 +1037,23 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
+void SpecCache::Allocate(const SpectrogramSettings &settings)
+{
+   settings.CacheWindows();
+
+   // len columns, and so many rows, column-major.
+   // Don't take column literally -- this isn't pixel data yet, it's the
+   // raw data to be mapped onto the display.
+   freq.resize(len * settings.NBins());
+}
+
 void SpecCache::Populate
    (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
     int copyBegin, int copyEnd, size_t numPixels,
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
-   settings.CacheWindows();
+   Allocate( settings );
 
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
@@ -1000,7 +1062,7 @@ void SpecCache::Populate
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
 #else
    const size_t zeroPaddingFactor = 1;
 #endif
@@ -1008,7 +1070,7 @@ void SpecCache::Populate
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
+   const auto nBins = settings.NBins();
 
    const size_t bufferSize = fftLen;
    const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
@@ -1028,16 +1090,16 @@ void SpecCache::Populate
       // Storage for mutable per-thread data.
       // private clause ensures one copy per thread
       struct ThreadLocalStorage {
-         ThreadLocalStorage()  { cache = nullptr; }
-         ~ThreadLocalStorage() { delete cache; }
+         ThreadLocalStorage()  { }
+         ~ThreadLocalStorage() { }
 
          void init(WaveTrackCache &waveTrackCache, size_t scratchSize) {
             if (!cache) {
-               cache = new WaveTrackCache(waveTrackCache.GetTrack());
+               cache = std::make_unique<WaveTrackCache>(waveTrackCache.GetTrack());
                scratch.resize(scratchSize);
             }
          }
-         WaveTrackCache* cache;
+         std::unique_ptr<WaveTrackCache> cache;
          std::vector<float> scratch;
       } tls;
 
@@ -1098,9 +1160,9 @@ void SpecCache::Populate
          #pragma omp parallel for
 #endif
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
-            float *const results = &freq[half * xx];
-            const HFFT hFFT = settings.hFFT;
-            for (size_t ii = 0; ii < hFFT->Points; ++ii) {
+            float *const results = &freq[nBins * xx];
+            const auto hFFT = settings.hFFT.get();
+            for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
                   power = -160.0;
@@ -1109,7 +1171,7 @@ void SpecCache::Populate
             }
             if (!gainFactors.empty()) {
                // Apply a frequency-dependant gain factor
-               for (size_t ii = 0; ii < half; ++ii)
+               for (size_t ii = 0; ii < nBins; ++ii)
                   results[ii] += gainFactors[ii];
             }
          }
@@ -1118,7 +1180,8 @@ void SpecCache::Populate
 }
 
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
-                              const float *& spectrogram, const sampleCount *& where,
+                              const float *& spectrogram,
+                              const sampleCount *& where,
                               size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
@@ -1126,21 +1189,14 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   const bool autocorrelation =
-      settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
    const int &windowType = settings.windowType;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
 #else
    const size_t zeroPaddingFactor = 1;
 #endif
-
-   // FFT length may be longer than the window of samples that affect results
-   // because of zero padding done for increased frequency resolution
-   const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
 
    bool match =
       mSpecCache &&
@@ -1202,13 +1258,16 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // with the current one, re-use as much of the cache as
    // possible
    if (oldCache) {
-      memcpy(&mSpecCache->freq[half * copyBegin],
-         &oldCache->freq[half * (copyBegin + oldX0)],
-         half * (copyEnd - copyBegin) * sizeof(float));
+      mSpecCache->Allocate(settings);
+      auto nBins = settings.NBins();
+      memcpy(&mSpecCache->freq[nBins * copyBegin],
+         &oldCache->freq[nBins * (copyBegin + oldX0)],
+         nBins * (copyEnd - copyBegin) * sizeof(float));
    }
 
    BEGIN_TASK_PROFILING("Populate");
 
+   auto nBins = settings.NBins();
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
        mSequence->GetNumSamples(),
@@ -1266,6 +1325,9 @@ bool WaveClip::GetRMS(float *rms, double t0,
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format)
 {
+   // Note:  it is not necessary to do this recursively to cutlines.
+   // They get converted as needed when they are expanded.
+
    bool bChanged;
    bool bResult = mSequence->ConvertToSampleFormat(format, &bChanged);
    if (bResult && bChanged)
@@ -1452,7 +1514,8 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
       return NULL;
 }
 
-void WaveClip::WriteXML(XMLWriter &xmlFile)
+void WaveClip::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("waveclip"));
    xmlFile.WriteAttr(wxT("offset"), mOffset, 8);
@@ -1466,30 +1529,6 @@ void WaveClip::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("waveclip"));
 }
 
-bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
-{
-   sampleCount s0, s1;
-
-   other->TimeToSamplesClip(t0, &s0);
-   other->TimeToSamplesClip(t1, &s1);
-
-   std::unique_ptr<Sequence> oldSequence = std::move(mSequence);
-   if (!other->mSequence->Copy(s0, s1, mSequence))
-   {
-      mSequence = std::move(oldSequence);
-      return false;
-   }
-
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->CopyFrom(other->mEnvelope.get(),
-      mOffset + s0.as_double()/mRate,
-      mOffset + s1.as_double()/mRate);
-
-   MarkChanged();
-
-   return true;
-}
-
 bool WaveClip::Paste(double t0, const WaveClip* other)
 {
    const bool clipNeedsResampling = other->mRate != mRate;
@@ -1501,7 +1540,7 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
       newClip =
-         std::make_unique<WaveClip>(*other, mSequence->GetDirManager());
+         std::make_unique<WaveClip>(*other, mSequence->GetDirManager(), true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
          if (!newClip->Resample(mRate))
@@ -1531,7 +1570,11 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
       for (const auto &cutline: pastedClip->mCutLines)
       {
          mCutLines.push_back(
-            make_movable<WaveClip>(*cutline, mSequence->GetDirManager()));
+            make_movable<WaveClip>
+               ( *cutline, mSequence->GetDirManager(),
+                 // Recursively copy cutlines of cutlines.  They don't need
+                 // their offsets adjusted.
+                 true));
          mCutLines.back()->Offset(t0 - mOffset);
       }
 
@@ -1624,32 +1667,23 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    if (t0 > GetEndTime() || t1 < GetStartTime())
       return true; // time out of bounds
 
-   auto newClip = make_movable<WaveClip>
-      (mSequence->GetDirManager(), mSequence->GetSampleFormat(), mRate);
-   double clip_t0 = t0;
-   double clip_t1 = t1;
-   if (clip_t0 < GetStartTime())
-      clip_t0 = GetStartTime();
-   if (clip_t1 > GetEndTime())
-      clip_t1 = GetEndTime();
+   const double clip_t0 = std::max( t0, GetStartTime() );
+   const double clip_t1 = std::min( t1, GetEndTime() );
 
-   newClip->SetOffset(this->mOffset);
-   if (!newClip->CreateFromCopy(clip_t0, clip_t1, this))
-      return false;
+   auto newClip = make_movable<WaveClip>
+      (*this, mSequence->GetDirManager(), true, clip_t0, clip_t1);
+
    newClip->SetOffset(clip_t0-mOffset);
 
-   // Sort out cutlines that belong to the NEW cutline
+   // Remove cutlines from this clip that were in the selection, shift
+   // left those that were after the selection
    // May DELETE as we iterate, so don't use range-for
    for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
       WaveClip* clip = it->get();
       double cutlinePosition = mOffset + clip->GetOffset();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
-      {
-         clip->SetOffset(cutlinePosition - newClip->GetOffset() - mOffset);
-         newClip->mCutLines.push_back(std::move(*it)); // transfer ownership!!
          it = mCutLines.erase(it);
-      }
       else
       {
          if (cutlinePosition >= t1)
@@ -1744,11 +1778,6 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
    return false;
 }
 
-void WaveClip::RemoveAllCutLines()
-{
-   mCutLines.clear();
-}
-
 void WaveClip::OffsetCutLines(double t0, double len)
 {
    for (const auto &cutLine : mCutLines)
@@ -1788,15 +1817,18 @@ void WaveClip::SetRate(int rate)
 
 bool WaveClip::Resample(int rate, ProgressDialog *progress)
 {
+   // Note:  it is not necessary to do this recursively to cutlines.
+   // They get resampled as needed when they are expanded.
+
    if (rate == mRate)
       return true; // Nothing to do
 
    double factor = (double)rate / (double)mRate;
    ::Resample resample(true, factor, factor); // constant rate resampling
 
-   size_t bufsize = 65536;
-   float* inBuffer = new float[bufsize];
-   float* outBuffer = new float[bufsize];
+   const size_t bufsize = 65536;
+   Floats inBuffer{ bufsize };
+   Floats outBuffer{ bufsize };
    sampleCount pos = 0;
    bool error = false;
    int outGenerated = 0;
@@ -1816,14 +1848,14 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       bool isLast = ((pos + inLen) == numSamples);
 
-      if (!mSequence->Get((samplePtr)inBuffer, floatSample, pos, inLen))
+      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen))
       {
          error = true;
          break;
       }
 
-      const auto results = resample.Process(factor, inBuffer, inLen, isLast,
-                                            outBuffer, bufsize);
+      const auto results = resample.Process(factor, inBuffer.get(), inLen, isLast,
+                                            outBuffer.get(), bufsize);
       outGenerated = results.second;
 
       pos += results.first;
@@ -1834,7 +1866,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          break;
       }
 
-      if (!newSequence->Append((samplePtr)outBuffer, floatSample,
+      if (!newSequence->Append((samplePtr)outBuffer.get(), floatSample,
                                outGenerated))
       {
          error = true;
@@ -1843,20 +1875,17 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       if (progress)
       {
-         int updateResult = progress->Update(
+         auto updateResult = progress->Update(
             pos.as_long_long(),
             numSamples.as_long_long()
          );
-         error = (updateResult != eProgressSuccess);
+         error = (updateResult != ProgressResult::Success);
          if (error)
          {
             break;
          }
       }
    }
-
-   delete[] inBuffer;
-   delete[] outBuffer;
 
    if (!error)
    {

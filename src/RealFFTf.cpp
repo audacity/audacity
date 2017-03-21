@@ -36,10 +36,14 @@
 *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include "Audacity.h"
+#include <vector>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include "Experimental.h"
+
+#include <wx/thread.h>
 
 #include "RealFFTf.h"
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
@@ -57,13 +61,8 @@
 HFFT InitializeFFT(size_t fftlen)
 {
    int temp;
-   HFFT h;
+   HFFT h{ safenew FFTParam };
 
-   if((h=(HFFT)malloc(sizeof(FFTParam)))==NULL)
-   {
-      fprintf(stderr,"Error allocating memory for FFT\n");
-      exit(8);
-   }
    /*
    *  FFT size is only half the number of data points
    *  The full FFT output can be reconstructed from this FFT's output.
@@ -71,17 +70,9 @@ HFFT InitializeFFT(size_t fftlen)
    */
    h->Points = fftlen / 2;
 
-   if((h->SinTable=(fft_type *)malloc(2*h->Points*sizeof(fft_type)))==NULL)
-   {
-      fprintf(stderr,"Error allocating memory for Sine table.\n");
-      exit(8);
-   }
+   h->SinTable.reinit(2*h->Points);
 
-   if((h->BitReversed=(int *)malloc(h->Points*sizeof(int)))==NULL)
-   {
-      fprintf(stderr,"Error allocating memory for BitReversed.\n");
-      exit(8);
-   }
+   h->BitReversed.reinit(h->Points);
 
    for(size_t i = 0; i < h->Points; i++)
    {
@@ -108,40 +99,33 @@ HFFT InitializeFFT(size_t fftlen)
    return h;
 }
 
-/*
-*  Free up the memory allotted for Sin table and Twiddle Pointers
-*/
-void EndFFT(HFFT h)
-{
-   if(h->Points > 0) {
-      free(h->BitReversed);
-      free(h->SinTable);
-   }
-   h->Points = 0;
-   free(h);
-}
-
 enum : size_t { MAX_HFFT = 10 };
-static HFFT hFFTArray[MAX_HFFT] = { NULL };
-static int nFFTLockCount[MAX_HFFT] = { 0 };
+
+// Maintain a pool:
+static std::vector< movable_ptr<FFTParam> > hFFTArray(MAX_HFFT);
+wxCriticalSection getFFTMutex;
 
 /* Get a handle to the FFT tables of the desired length */
 /* This version keeps common tables rather than allocating a NEW table every time */
 HFFT GetFFT(size_t fftlen)
 {
+   // To do:  smarter policy about when to retain in the pool and when to
+   // allocate a unique instance.
+
+   wxCriticalSectionLocker locker{ getFFTMutex };
+   
    size_t h = 0;
    auto n = fftlen/2;
+   auto size = hFFTArray.size();
    for(;
-       (h < MAX_HFFT) && (hFFTArray[h] != NULL) && (n != hFFTArray[h]->Points);
+       (h < size) && hFFTArray[h] && (n != hFFTArray[h]->Points);
        h++)
       ;
-   if(h < MAX_HFFT) {
+   if(h < size) {
       if(hFFTArray[h] == NULL) {
-         hFFTArray[h] = InitializeFFT(fftlen);
-         nFFTLockCount[h] = 0;
+         hFFTArray[h].reset( InitializeFFT(fftlen).release() );
       }
-      nFFTLockCount[h]++;
-      return hFFTArray[h];
+      return HFFT{ hFFTArray[h].get() };
    } else {
       // All buffers used, so fall back to allocating a NEW set of tables
       return InitializeFFT(fftlen);
@@ -149,31 +133,21 @@ HFFT GetFFT(size_t fftlen)
 }
 
 /* Release a previously requested handle to the FFT tables */
-void ReleaseFFT(HFFT hFFT)
+void FFTDeleter::operator() (FFTParam *hFFT) const
 {
-   int h;
-   for(h=0; (h<MAX_HFFT) && (hFFTArray[h] != hFFT); h++);
-   if(h<MAX_HFFT) {
-      nFFTLockCount[h]--;
-   } else {
-      EndFFT(hFFT);
-   }
-}
+   wxCriticalSectionLocker locker{ getFFTMutex };
 
-/* Deallocate any unused FFT tables */
-void CleanupFFT()
-{
-   int h;
-   for(h=0; (h<MAX_HFFT); h++) {
-      if((nFFTLockCount[h] <= 0) && (hFFTArray[h] != NULL)) {
-         EndFFT(hFFTArray[h]);
-         hFFTArray[h] = NULL;
-      }
-   }
+   auto it = hFFTArray.begin(), end = hFFTArray.end();
+   while (it != end && it->get() != hFFT)
+      ++it;
+   if ( it != end )
+      ;
+   else
+      delete hFFT;
 }
 
 /*
-*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*  Forward FFT routine.  Must call GetFFT(fftlen) first!
 *
 *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
 *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
@@ -190,7 +164,7 @@ void CleanupFFT()
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf(fft_type *buffer,HFFT h)
+void RealFFTf(fft_type *buffer, const FFTParam *h)
 {
    fft_type *A,*B;
    const fft_type *sptr;
@@ -215,7 +189,7 @@ void RealFFTf(fft_type *buffer,HFFT h)
    {
       A = buffer;
       B = buffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable;
+      sptr = h->SinTable.get();
 
       while(A < endptr1)
       {
@@ -238,8 +212,8 @@ void RealFFTf(fft_type *buffer,HFFT h)
       ButterfliesPerGroup >>= 1;
    }
    /* Massage output to get the output for a real input sequence. */
-   br1 = h->BitReversed + 1;
-   br2 = h->BitReversed + h->Points - 1;
+   br1 = h->BitReversed.get() + 1;
+   br2 = h->BitReversed.get() + h->Points - 1;
 
    while(br1<br2)
    {
@@ -280,7 +254,7 @@ void RealFFTf(fft_type *buffer,HFFT h)
 *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
 *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
 *        Input is in normal order, interleaved (real,imaginary) complex data
-*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*        You must call GetFFT(fftlen) first to initialize some buffers!
 *
 * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
 * - this can be done because both values will always be real only
@@ -292,7 +266,7 @@ void RealFFTf(fft_type *buffer,HFFT h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf(fft_type *buffer,HFFT h)
+void InverseRealFFTf(fft_type *buffer, const FFTParam *h)
 {
    fft_type *A,*B;
    const fft_type *sptr;
@@ -306,7 +280,7 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    /* Massage input to get the input for a real output sequence. */
    A = buffer + 2;
    B = buffer + h->Points * 2 - 2;
-   br1 = h->BitReversed + 1;
+   br1 = h->BitReversed.get() + 1;
    while(A<B)
    {
       sin=h->SinTable[*br1];
@@ -352,7 +326,7 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    {
       A = buffer;
       B = buffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable;
+      sptr = h->SinTable.get();
 
       while(A < endptr1)
       {
@@ -375,7 +349,7 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    }
 }
 
-void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
+void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
 		   fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
@@ -389,7 +363,7 @@ void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime(HFFT hFFT, const fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
    for(size_t i = 0; i < hFFT->Points; i++) {

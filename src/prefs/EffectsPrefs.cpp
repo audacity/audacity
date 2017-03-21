@@ -19,9 +19,9 @@
 
 #include "../Audacity.h"
 
+#include <wx/choice.h>
 #include <wx/defs.h>
 
-#include "../AudacityApp.h"
 #include "../Languages.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"

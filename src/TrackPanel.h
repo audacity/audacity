@@ -30,6 +30,7 @@
 class wxMenu;
 class wxRect;
 
+class EnvelopeEditor;
 class LabelTrack;
 class SpectrumAnalyst;
 class TrackPanel;
@@ -171,6 +172,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual double GetMostRecentXPos();
 
+   virtual void OnIdle(wxIdleEvent & event);
    virtual void OnTimer(wxTimerEvent& event);
 
    virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
@@ -223,7 +225,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual void UpdateVRulers();
    virtual void UpdateVRuler(Track *t);
-   virtual void UpdateTrackVRuler(Track *t);
+   virtual void UpdateTrackVRuler(const Track *t);
    virtual void UpdateVRulerSize();
 
    // Returns the time corresponding to the pixel column one past the track area
@@ -246,20 +248,20 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual bool IsAudioActive();
    virtual bool IsUnsafe();
-   virtual bool HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event);
+   virtual bool HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, wxMouseEvent & event);
    virtual void HandleGlyphDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
    virtual void HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event);
-   virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event);
-   virtual bool IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
+   virtual bool HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &rect, wxMouseEvent &event);
+   virtual bool IsOverCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event);
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
    virtual void ScrollDuringDrag();
 
    // Working out where to dispatch the event to.
    virtual int DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & event);
-   virtual bool HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event);
-   virtual bool HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event);
-   virtual bool HitTestSlide(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSamples(Track *track, const wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestSlide(Track *track, const wxRect &rect, const wxMouseEvent & event);
 #ifdef USE_MIDI
    // data for NoteTrack interactive stretch operations:
    // Stretching applies to a selected region after quantizing the
@@ -284,7 +286,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
    double mStretchLeftBeats; // how many beats from left to cursor
    double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event);
+   virtual bool HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event);
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -331,12 +333,12 @@ protected:
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
-   virtual bool SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event);
+   virtual bool SetCursorForCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event);
    virtual void SetCursorAndTipWhenInLabel( Track * t, const wxMouseEvent &event, wxString &tip );
    virtual void SetCursorAndTipWhenInVResizeArea( bool blinked, wxString &tip );
    virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, const wxMouseEvent & event, wxString &tip );
    virtual void SetCursorAndTipWhenSelectTool
-      ( Track * t, const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
+      ( Track * t, const wxMouseEvent & event, const wxRect &rect, bool bMultiToolMode, wxString &tip, const wxCursor ** ppCursor );
    virtual void SetCursorAndTipByTool( int tool, const wxMouseEvent & event, wxString &tip );
 
 public:
@@ -478,8 +480,13 @@ protected:
    virtual void OnMergeStereo(wxCommandEvent &event);
 
    // Find track info by coordinate
-   virtual Track *FindTrack(int mouseX, int mouseY, bool label, bool link,
-                     wxRect * trackRect = NULL);
+   enum class CellType { Label, Track, VRuler };
+   struct FoundCell {
+      Track *pTrack;
+      CellType type;
+      wxRect rect;
+   };
+   virtual FoundCell FindCell(int mouseX, int mouseY);
 
    virtual wxRect FindTrackRect(Track * target, bool label);
 
@@ -539,6 +546,7 @@ protected:
    TrackInfo mTrackInfo;
  public:
     TrackInfo *GetTrackInfo() { return &mTrackInfo; }
+    const TrackInfo *GetTrackInfo() const { return &mTrackInfo; }
 
 protected:
    TrackPanelListener *mListener;
@@ -801,6 +809,9 @@ protected:
 
    // Keeps track of extra fractional vertical scroll steps
    double mVertScrollRemainder;
+
+   std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
+   std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
 
  protected:
 

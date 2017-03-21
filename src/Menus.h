@@ -70,7 +70,7 @@ public:
 void OnStop();
 void OnPause();
 void OnRecord();
-void OnRecordAppend();
+void OnRecordBelow();
 void OnStopSelect();
 void OnSkipStart();
 void OnSkipEnd();
@@ -210,7 +210,11 @@ void OnSaveAs();
 
 void OnCheckDependencies();
 
-void OnExport();
+void OnExport(const wxString & Format);
+void OnExportAudio();
+void OnExportMp3();
+void OnExportWav();
+void OnExportOgg();
 void OnExportSelection();
 void OnExportMultiple();
 void OnExportLabels();
@@ -229,6 +233,11 @@ public:
 void OnUndo();
 void OnRedo();
 
+private:
+static void FinishCopy(const Track *n, Track *dest);
+static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
+
+public:
 void OnCut();
 void OnSplitCut();
 void OnCopy();
@@ -330,7 +339,7 @@ void OnTogglePinnedHead();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   void OnToogleAutomatedInputLevelAdjustment();
+   void OnToggleAutomatedInputLevelAdjustment();
 #endif
 void OnRescanDevices();
 
@@ -417,6 +426,7 @@ void OnAbout();
 void OnQuickHelp();
 void OnManual();
 void OnCheckForUpdates();
+void MayCheckForUpdates();
 void OnShowLog();
 void OnHelpWelcome();
 void OnBenchmark();

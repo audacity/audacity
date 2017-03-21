@@ -1,28 +1,33 @@
 #ifndef __realfftf_h
 #define __realfftf_h
 
+#include "Audacity.h"
 #include "Experimental.h"
+#include "MemoryX.h"
 
-#define fft_type float
+using fft_type = float;
 struct FFTParam {
-   int *BitReversed;
-   fft_type *SinTable;
+   ArrayOf<int> BitReversed;
+   ArrayOf<fft_type> SinTable;
    size_t Points;
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    int pow2Bits;
 #endif
 };
-typedef FFTParam * HFFT;
 
-HFFT InitializeFFT(size_t);
-void EndFFT(HFFT);
+struct FFTDeleter{
+   void operator () (FFTParam *p) const;
+};
+
+using HFFT = std::unique_ptr<
+   FFTParam, FFTDeleter
+>;
+
 HFFT GetFFT(size_t);
-void ReleaseFFT(HFFT);
-void CleanupFFT();
-void RealFFTf(fft_type *,HFFT);
-void InverseRealFFTf(fft_type *,HFFT);
-void ReorderToTime(HFFT hFFT, const fft_type *buffer, fft_type *TimeOut);
-void ReorderToFreq(HFFT hFFT, const fft_type *buffer,
+void RealFFTf(fft_type *, const FFTParam *);
+void InverseRealFFTf(fft_type *, const FFTParam *);
+void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut);
+void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
 		   fft_type *RealOut, fft_type *ImagOut);
 
 #endif

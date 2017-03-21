@@ -22,8 +22,9 @@ struct SimpleBlockFileCache {
    bool active;
    bool needWrite;
    sampleFormat format;
-   samplePtr sampleData;
-   void* summaryData;
+   ArrayOf<char> sampleData, summaryData;
+
+   SimpleBlockFileCache() {}
 };
 
 // The AU formats we care about
@@ -62,7 +63,7 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    // Reading
 
    /// Read the summary section of the disk file
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
    /// Read the data section of the disk file
    size_t ReadData(samplePtr data, sampleFormat format,
                         size_t start, size_t len) const override;

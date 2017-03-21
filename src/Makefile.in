@@ -219,6 +219,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/ax_compiler_vendor.m4 \
 	$(top_srcdir)/m4/ax_cxx_check_flag.m4 \
 	$(top_srcdir)/m4/ax_cxxcpp_check_flag.m4 \
+	$(top_srcdir)/m4/ax_gcc_version_atleast.m4 \
 	$(top_srcdir)/m4/ax_ld_check_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -245,6 +246,7 @@ am_libaudacity_la_OBJECTS = libaudacity_la-BlockFile.lo \
 	libaudacity_la-Sequence.lo \
 	blockfile/libaudacity_la-LegacyAliasBlockFile.lo \
 	blockfile/libaudacity_la-LegacyBlockFile.lo \
+	blockfile/libaudacity_la-NotYetAvailableException.lo \
 	blockfile/libaudacity_la-ODDecodeBlockFile.lo \
 	blockfile/libaudacity_la-ODPCMAliasBlockFile.lo \
 	blockfile/libaudacity_la-PCMAliasBlockFile.lo \
@@ -265,8 +267,10 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	SampleFormat.h Sequence.cpp Sequence.h \
 	blockfile/LegacyAliasBlockFile.cpp \
 	blockfile/LegacyAliasBlockFile.h blockfile/LegacyBlockFile.cpp \
-	blockfile/LegacyBlockFile.h blockfile/ODDecodeBlockFile.cpp \
-	blockfile/ODDecodeBlockFile.h \
+	blockfile/LegacyBlockFile.h \
+	blockfile/NotYetAvailableException.cpp \
+	blockfile/NotYetAvailableException.h \
+	blockfile/ODDecodeBlockFile.cpp blockfile/ODDecodeBlockFile.h \
 	blockfile/ODPCMAliasBlockFile.cpp \
 	blockfile/ODPCMAliasBlockFile.h \
 	blockfile/PCMAliasBlockFile.cpp blockfile/PCMAliasBlockFile.h \
@@ -274,18 +278,21 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	blockfile/SimpleBlockFile.cpp blockfile/SimpleBlockFile.h \
 	xml/XMLTagHandler.cpp xml/XMLTagHandler.h AboutDialog.cpp \
 	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
-	Audacity.h AudacityApp.cpp AudacityApp.h AudacityLogger.cpp \
-	AudacityLogger.h AudioIO.cpp AudioIO.h AudioIOListener.h \
-	AutoRecovery.cpp AutoRecovery.h BatchCommandDialog.cpp \
-	BatchCommandDialog.h BatchCommands.cpp BatchCommands.h \
-	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
-	Benchmark.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	Audacity.h AudacityApp.cpp AudacityApp.h AudacityException.cpp \
+	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
+	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
+	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
+	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
+	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
+	Dependencies.cpp Dependencies.h DeviceChange.cpp \
 	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
 	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
-	FFmpeg.h FFT.cpp FFT.h FileIO.cpp FileIO.h FileNames.cpp \
-	FileNames.h float_cast.h FreqWindow.cpp FreqWindow.h \
-	HelpText.cpp HelpText.h HistoryWindow.cpp HistoryWindow.h \
-	ImageManipulation.cpp ImageManipulation.h InterpolateAudio.cpp \
+	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
+	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
+	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
+	HistoryWindow.cpp HistoryWindow.h ImageManipulation.cpp \
+	ImageManipulation.h InconsistencyException.cpp \
+	InconsistencyException.h InterpolateAudio.cpp \
 	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
 	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
 	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
@@ -310,14 +317,15 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
 	TrackPanelCell.h TrackPanelCellIterator.h TrackPanelListener.h \
 	TranslatableStringArray.h UndoManager.cpp UndoManager.h \
-	ViewInfo.cpp ViewInfo.h VoiceKey.cpp VoiceKey.h WaveClip.cpp \
-	WaveClip.h WaveTrack.cpp WaveTrack.h WaveTrackLocation.h \
-	WrappedType.cpp WrappedType.h wxFileNameWrapper.h \
-	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
-	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
-	commands/Command.cpp commands/Command.h \
-	commands/CommandBuilder.cpp commands/CommandBuilder.h \
-	commands/CommandDirectory.cpp commands/CommandDirectory.h \
+	UserException.cpp UserException.h ViewInfo.cpp ViewInfo.h \
+	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
+	WaveTrack.h WaveTrackLocation.h WrappedType.cpp WrappedType.h \
+	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
+	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
+	commands/BatchEvalCommand.h commands/Command.cpp \
+	commands/Command.h commands/CommandBuilder.cpp \
+	commands/CommandBuilder.h commands/CommandDirectory.cpp \
+	commands/CommandDirectory.h commands/CommandFlag.h \
 	commands/CommandFunctors.h commands/CommandHandler.cpp \
 	commands/CommandHandler.h commands/CommandManager.cpp \
 	commands/CommandManager.h commands/CommandMisc.h \
@@ -495,6 +503,7 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 	audacity-Sequence.$(OBJEXT) \
 	blockfile/audacity-LegacyAliasBlockFile.$(OBJEXT) \
 	blockfile/audacity-LegacyBlockFile.$(OBJEXT) \
+	blockfile/audacity-NotYetAvailableException.$(OBJEXT) \
 	blockfile/audacity-ODDecodeBlockFile.$(OBJEXT) \
 	blockfile/audacity-ODPCMAliasBlockFile.$(OBJEXT) \
 	blockfile/audacity-PCMAliasBlockFile.$(OBJEXT) \
@@ -526,6 +535,7 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_VST_TRUE@	effects/VST/audacity-VSTControlGTK.$(OBJEXT)
 am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-AColor.$(OBJEXT) audacity-AudacityApp.$(OBJEXT) \
+	audacity-AudacityException.$(OBJEXT) \
 	audacity-AudacityLogger.$(OBJEXT) audacity-AudioIO.$(OBJEXT) \
 	audacity-AutoRecovery.$(OBJEXT) \
 	audacity-BatchCommandDialog.$(OBJEXT) \
@@ -535,10 +545,12 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-DeviceChange.$(OBJEXT) \
 	audacity-DeviceManager.$(OBJEXT) audacity-Diags.$(OBJEXT) \
 	audacity-Envelope.$(OBJEXT) audacity-FFmpeg.$(OBJEXT) \
-	audacity-FFT.$(OBJEXT) audacity-FileIO.$(OBJEXT) \
-	audacity-FileNames.$(OBJEXT) audacity-FreqWindow.$(OBJEXT) \
-	audacity-HelpText.$(OBJEXT) audacity-HistoryWindow.$(OBJEXT) \
+	audacity-FFT.$(OBJEXT) audacity-FileException.$(OBJEXT) \
+	audacity-FileIO.$(OBJEXT) audacity-FileNames.$(OBJEXT) \
+	audacity-FreqWindow.$(OBJEXT) audacity-HelpText.$(OBJEXT) \
+	audacity-HistoryWindow.$(OBJEXT) \
 	audacity-ImageManipulation.$(OBJEXT) \
+	audacity-InconsistencyException.$(OBJEXT) \
 	audacity-InterpolateAudio.$(OBJEXT) \
 	audacity-LabelDialog.$(OBJEXT) audacity-LabelTrack.$(OBJEXT) \
 	audacity-LangChoice.$(OBJEXT) audacity-Languages.$(OBJEXT) \
@@ -564,9 +576,9 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-TimeTrack.$(OBJEXT) audacity-Track.$(OBJEXT) \
 	audacity-TrackArtist.$(OBJEXT) audacity-TrackPanel.$(OBJEXT) \
 	audacity-TrackPanelAx.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
-	audacity-ViewInfo.$(OBJEXT) audacity-VoiceKey.$(OBJEXT) \
-	audacity-WaveClip.$(OBJEXT) audacity-WaveTrack.$(OBJEXT) \
-	audacity-WrappedType.$(OBJEXT) \
+	audacity-UserException.$(OBJEXT) audacity-ViewInfo.$(OBJEXT) \
+	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
+	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
 	commands/audacity-AppCommandEvent.$(OBJEXT) \
 	commands/audacity-BatchEvalCommand.$(OBJEXT) \
 	commands/audacity-Command.$(OBJEXT) \
@@ -1106,6 +1118,8 @@ libaudacity_la_SOURCES = \
 	blockfile/LegacyAliasBlockFile.h \
 	blockfile/LegacyBlockFile.cpp \
 	blockfile/LegacyBlockFile.h \
+	blockfile/NotYetAvailableException.cpp \
+	blockfile/NotYetAvailableException.h \
 	blockfile/ODDecodeBlockFile.cpp \
 	blockfile/ODDecodeBlockFile.h \
 	blockfile/ODPCMAliasBlockFile.cpp \
@@ -1162,18 +1176,21 @@ audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
 	$(am__append_43) $(am__append_46)
 audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
-	Audacity.h AudacityApp.cpp AudacityApp.h AudacityLogger.cpp \
-	AudacityLogger.h AudioIO.cpp AudioIO.h AudioIOListener.h \
-	AutoRecovery.cpp AutoRecovery.h BatchCommandDialog.cpp \
-	BatchCommandDialog.h BatchCommands.cpp BatchCommands.h \
-	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
-	Benchmark.h Dependencies.cpp Dependencies.h DeviceChange.cpp \
+	Audacity.h AudacityApp.cpp AudacityApp.h AudacityException.cpp \
+	AudacityException.h AudacityLogger.cpp AudacityLogger.h \
+	AudioIO.cpp AudioIO.h AudioIOListener.h AutoRecovery.cpp \
+	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
+	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
+	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
+	Dependencies.cpp Dependencies.h DeviceChange.cpp \
 	DeviceChange.h DeviceManager.cpp DeviceManager.h Diags.cpp \
 	Diags.h Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp \
-	FFmpeg.h FFT.cpp FFT.h FileIO.cpp FileIO.h FileNames.cpp \
-	FileNames.h float_cast.h FreqWindow.cpp FreqWindow.h \
-	HelpText.cpp HelpText.h HistoryWindow.cpp HistoryWindow.h \
-	ImageManipulation.cpp ImageManipulation.h InterpolateAudio.cpp \
+	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
+	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
+	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
+	HistoryWindow.cpp HistoryWindow.h ImageManipulation.cpp \
+	ImageManipulation.h InconsistencyException.cpp \
+	InconsistencyException.h InterpolateAudio.cpp \
 	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
 	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
 	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
@@ -1198,14 +1215,15 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
 	TrackPanelCell.h TrackPanelCellIterator.h TrackPanelListener.h \
 	TranslatableStringArray.h UndoManager.cpp UndoManager.h \
-	ViewInfo.cpp ViewInfo.h VoiceKey.cpp VoiceKey.h WaveClip.cpp \
-	WaveClip.h WaveTrack.cpp WaveTrack.h WaveTrackLocation.h \
-	WrappedType.cpp WrappedType.h wxFileNameWrapper.h \
-	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
-	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
-	commands/Command.cpp commands/Command.h \
-	commands/CommandBuilder.cpp commands/CommandBuilder.h \
-	commands/CommandDirectory.cpp commands/CommandDirectory.h \
+	UserException.cpp UserException.h ViewInfo.cpp ViewInfo.h \
+	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
+	WaveTrack.h WaveTrackLocation.h WrappedType.cpp WrappedType.h \
+	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
+	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
+	commands/BatchEvalCommand.h commands/Command.cpp \
+	commands/Command.h commands/CommandBuilder.cpp \
+	commands/CommandBuilder.h commands/CommandDirectory.cpp \
+	commands/CommandDirectory.h commands/CommandFlag.h \
 	commands/CommandFunctors.h commands/CommandHandler.cpp \
 	commands/CommandHandler.h commands/CommandManager.cpp \
 	commands/CommandManager.h commands/CommandMisc.h \
@@ -1453,6 +1471,8 @@ blockfile/libaudacity_la-LegacyAliasBlockFile.lo:  \
 	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
 blockfile/libaudacity_la-LegacyBlockFile.lo:  \
 	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
+blockfile/libaudacity_la-NotYetAvailableException.lo:  \
+	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
 blockfile/libaudacity_la-ODDecodeBlockFile.lo:  \
 	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
 blockfile/libaudacity_la-ODPCMAliasBlockFile.lo:  \
@@ -1526,6 +1546,8 @@ clean-binPROGRAMS:
 blockfile/audacity-LegacyAliasBlockFile.$(OBJEXT):  \
 	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
 blockfile/audacity-LegacyBlockFile.$(OBJEXT):  \
+	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
+blockfile/audacity-NotYetAvailableException.$(OBJEXT):  \
 	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
 blockfile/audacity-ODDecodeBlockFile.$(OBJEXT):  \
 	blockfile/$(am__dirstamp) blockfile/$(DEPDIR)/$(am__dirstamp)
@@ -2031,6 +2053,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AColor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AboutDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityApp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudacityLogger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AudioIO.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-AutoRecovery.Po@am__quote@
@@ -2048,6 +2071,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Envelope.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-FFT.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-FFmpeg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-FileException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-FileFormats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-FileIO.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-FileNames.Po@am__quote@
@@ -2055,6 +2079,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-HelpText.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-HistoryWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ImageManipulation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-InconsistencyException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Internat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-InterpolateAudio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LabelDialog.Po@am__quote@
@@ -2103,6 +2128,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelAx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UndoManager.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UserException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ViewInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-VoiceKey.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveClip.Po@am__quote@
@@ -2118,6 +2144,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudacity_la-Sequence.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-LegacyAliasBlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-LegacyBlockFile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-ODDecodeBlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-ODPCMAliasBlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-PCMAliasBlockFile.Po@am__quote@
@@ -2125,6 +2152,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/audacity-SimpleBlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-LegacyAliasBlockFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-LegacyBlockFile.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-NotYetAvailableException.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-ODDecodeBlockFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-ODPCMAliasBlockFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@blockfile/$(DEPDIR)/libaudacity_la-PCMAliasBlockFile.Plo@am__quote@
@@ -2408,6 +2436,13 @@ blockfile/libaudacity_la-LegacyBlockFile.lo: blockfile/LegacyBlockFile.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaudacity_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o blockfile/libaudacity_la-LegacyBlockFile.lo `test -f 'blockfile/LegacyBlockFile.cpp' || echo '$(srcdir)/'`blockfile/LegacyBlockFile.cpp
 
+blockfile/libaudacity_la-NotYetAvailableException.lo: blockfile/NotYetAvailableException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaudacity_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT blockfile/libaudacity_la-NotYetAvailableException.lo -MD -MP -MF blockfile/$(DEPDIR)/libaudacity_la-NotYetAvailableException.Tpo -c -o blockfile/libaudacity_la-NotYetAvailableException.lo `test -f 'blockfile/NotYetAvailableException.cpp' || echo '$(srcdir)/'`blockfile/NotYetAvailableException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) blockfile/$(DEPDIR)/libaudacity_la-NotYetAvailableException.Tpo blockfile/$(DEPDIR)/libaudacity_la-NotYetAvailableException.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='blockfile/NotYetAvailableException.cpp' object='blockfile/libaudacity_la-NotYetAvailableException.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaudacity_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o blockfile/libaudacity_la-NotYetAvailableException.lo `test -f 'blockfile/NotYetAvailableException.cpp' || echo '$(srcdir)/'`blockfile/NotYetAvailableException.cpp
+
 blockfile/libaudacity_la-ODDecodeBlockFile.lo: blockfile/ODDecodeBlockFile.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libaudacity_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT blockfile/libaudacity_la-ODDecodeBlockFile.lo -MD -MP -MF blockfile/$(DEPDIR)/libaudacity_la-ODDecodeBlockFile.Tpo -c -o blockfile/libaudacity_la-ODDecodeBlockFile.lo `test -f 'blockfile/ODDecodeBlockFile.cpp' || echo '$(srcdir)/'`blockfile/ODDecodeBlockFile.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) blockfile/$(DEPDIR)/libaudacity_la-ODDecodeBlockFile.Tpo blockfile/$(DEPDIR)/libaudacity_la-ODDecodeBlockFile.Plo
@@ -2590,6 +2625,20 @@ blockfile/audacity-LegacyBlockFile.obj: blockfile/LegacyBlockFile.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o blockfile/audacity-LegacyBlockFile.obj `if test -f 'blockfile/LegacyBlockFile.cpp'; then $(CYGPATH_W) 'blockfile/LegacyBlockFile.cpp'; else $(CYGPATH_W) '$(srcdir)/blockfile/LegacyBlockFile.cpp'; fi`
 
+blockfile/audacity-NotYetAvailableException.o: blockfile/NotYetAvailableException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT blockfile/audacity-NotYetAvailableException.o -MD -MP -MF blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Tpo -c -o blockfile/audacity-NotYetAvailableException.o `test -f 'blockfile/NotYetAvailableException.cpp' || echo '$(srcdir)/'`blockfile/NotYetAvailableException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Tpo blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='blockfile/NotYetAvailableException.cpp' object='blockfile/audacity-NotYetAvailableException.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o blockfile/audacity-NotYetAvailableException.o `test -f 'blockfile/NotYetAvailableException.cpp' || echo '$(srcdir)/'`blockfile/NotYetAvailableException.cpp
+
+blockfile/audacity-NotYetAvailableException.obj: blockfile/NotYetAvailableException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT blockfile/audacity-NotYetAvailableException.obj -MD -MP -MF blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Tpo -c -o blockfile/audacity-NotYetAvailableException.obj `if test -f 'blockfile/NotYetAvailableException.cpp'; then $(CYGPATH_W) 'blockfile/NotYetAvailableException.cpp'; else $(CYGPATH_W) '$(srcdir)/blockfile/NotYetAvailableException.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Tpo blockfile/$(DEPDIR)/audacity-NotYetAvailableException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='blockfile/NotYetAvailableException.cpp' object='blockfile/audacity-NotYetAvailableException.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o blockfile/audacity-NotYetAvailableException.obj `if test -f 'blockfile/NotYetAvailableException.cpp'; then $(CYGPATH_W) 'blockfile/NotYetAvailableException.cpp'; else $(CYGPATH_W) '$(srcdir)/blockfile/NotYetAvailableException.cpp'; fi`
+
 blockfile/audacity-ODDecodeBlockFile.o: blockfile/ODDecodeBlockFile.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT blockfile/audacity-ODDecodeBlockFile.o -MD -MP -MF blockfile/$(DEPDIR)/audacity-ODDecodeBlockFile.Tpo -c -o blockfile/audacity-ODDecodeBlockFile.o `test -f 'blockfile/ODDecodeBlockFile.cpp' || echo '$(srcdir)/'`blockfile/ODDecodeBlockFile.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) blockfile/$(DEPDIR)/audacity-ODDecodeBlockFile.Tpo blockfile/$(DEPDIR)/audacity-ODDecodeBlockFile.Po
@@ -2715,6 +2764,20 @@ audacity-AudacityApp.obj: AudacityApp.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AudacityApp.cpp' object='audacity-AudacityApp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AudacityApp.obj `if test -f 'AudacityApp.cpp'; then $(CYGPATH_W) 'AudacityApp.cpp'; else $(CYGPATH_W) '$(srcdir)/AudacityApp.cpp'; fi`
+
+audacity-AudacityException.o: AudacityException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AudacityException.o -MD -MP -MF $(DEPDIR)/audacity-AudacityException.Tpo -c -o audacity-AudacityException.o `test -f 'AudacityException.cpp' || echo '$(srcdir)/'`AudacityException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AudacityException.Tpo $(DEPDIR)/audacity-AudacityException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AudacityException.cpp' object='audacity-AudacityException.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AudacityException.o `test -f 'AudacityException.cpp' || echo '$(srcdir)/'`AudacityException.cpp
+
+audacity-AudacityException.obj: AudacityException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AudacityException.obj -MD -MP -MF $(DEPDIR)/audacity-AudacityException.Tpo -c -o audacity-AudacityException.obj `if test -f 'AudacityException.cpp'; then $(CYGPATH_W) 'AudacityException.cpp'; else $(CYGPATH_W) '$(srcdir)/AudacityException.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-AudacityException.Tpo $(DEPDIR)/audacity-AudacityException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='AudacityException.cpp' object='audacity-AudacityException.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-AudacityException.obj `if test -f 'AudacityException.cpp'; then $(CYGPATH_W) 'AudacityException.cpp'; else $(CYGPATH_W) '$(srcdir)/AudacityException.cpp'; fi`
 
 audacity-AudacityLogger.o: AudacityLogger.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-AudacityLogger.o -MD -MP -MF $(DEPDIR)/audacity-AudacityLogger.Tpo -c -o audacity-AudacityLogger.o `test -f 'AudacityLogger.cpp' || echo '$(srcdir)/'`AudacityLogger.cpp
@@ -2912,6 +2975,20 @@ audacity-FFT.obj: FFT.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-FFT.obj `if test -f 'FFT.cpp'; then $(CYGPATH_W) 'FFT.cpp'; else $(CYGPATH_W) '$(srcdir)/FFT.cpp'; fi`
 
+audacity-FileException.o: FileException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-FileException.o -MD -MP -MF $(DEPDIR)/audacity-FileException.Tpo -c -o audacity-FileException.o `test -f 'FileException.cpp' || echo '$(srcdir)/'`FileException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-FileException.Tpo $(DEPDIR)/audacity-FileException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FileException.cpp' object='audacity-FileException.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-FileException.o `test -f 'FileException.cpp' || echo '$(srcdir)/'`FileException.cpp
+
+audacity-FileException.obj: FileException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-FileException.obj -MD -MP -MF $(DEPDIR)/audacity-FileException.Tpo -c -o audacity-FileException.obj `if test -f 'FileException.cpp'; then $(CYGPATH_W) 'FileException.cpp'; else $(CYGPATH_W) '$(srcdir)/FileException.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-FileException.Tpo $(DEPDIR)/audacity-FileException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FileException.cpp' object='audacity-FileException.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-FileException.obj `if test -f 'FileException.cpp'; then $(CYGPATH_W) 'FileException.cpp'; else $(CYGPATH_W) '$(srcdir)/FileException.cpp'; fi`
+
 audacity-FileIO.o: FileIO.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-FileIO.o -MD -MP -MF $(DEPDIR)/audacity-FileIO.Tpo -c -o audacity-FileIO.o `test -f 'FileIO.cpp' || echo '$(srcdir)/'`FileIO.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-FileIO.Tpo $(DEPDIR)/audacity-FileIO.Po
@@ -2995,6 +3072,20 @@ audacity-ImageManipulation.obj: ImageManipulation.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ImageManipulation.cpp' object='audacity-ImageManipulation.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ImageManipulation.obj `if test -f 'ImageManipulation.cpp'; then $(CYGPATH_W) 'ImageManipulation.cpp'; else $(CYGPATH_W) '$(srcdir)/ImageManipulation.cpp'; fi`
+
+audacity-InconsistencyException.o: InconsistencyException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-InconsistencyException.o -MD -MP -MF $(DEPDIR)/audacity-InconsistencyException.Tpo -c -o audacity-InconsistencyException.o `test -f 'InconsistencyException.cpp' || echo '$(srcdir)/'`InconsistencyException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-InconsistencyException.Tpo $(DEPDIR)/audacity-InconsistencyException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='InconsistencyException.cpp' object='audacity-InconsistencyException.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-InconsistencyException.o `test -f 'InconsistencyException.cpp' || echo '$(srcdir)/'`InconsistencyException.cpp
+
+audacity-InconsistencyException.obj: InconsistencyException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-InconsistencyException.obj -MD -MP -MF $(DEPDIR)/audacity-InconsistencyException.Tpo -c -o audacity-InconsistencyException.obj `if test -f 'InconsistencyException.cpp'; then $(CYGPATH_W) 'InconsistencyException.cpp'; else $(CYGPATH_W) '$(srcdir)/InconsistencyException.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-InconsistencyException.Tpo $(DEPDIR)/audacity-InconsistencyException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='InconsistencyException.cpp' object='audacity-InconsistencyException.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-InconsistencyException.obj `if test -f 'InconsistencyException.cpp'; then $(CYGPATH_W) 'InconsistencyException.cpp'; else $(CYGPATH_W) '$(srcdir)/InconsistencyException.cpp'; fi`
 
 audacity-InterpolateAudio.o: InterpolateAudio.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-InterpolateAudio.o -MD -MP -MF $(DEPDIR)/audacity-InterpolateAudio.Tpo -c -o audacity-InterpolateAudio.o `test -f 'InterpolateAudio.cpp' || echo '$(srcdir)/'`InterpolateAudio.cpp
@@ -3597,6 +3688,20 @@ audacity-UndoManager.obj: UndoManager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='UndoManager.cpp' object='audacity-UndoManager.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UndoManager.obj `if test -f 'UndoManager.cpp'; then $(CYGPATH_W) 'UndoManager.cpp'; else $(CYGPATH_W) '$(srcdir)/UndoManager.cpp'; fi`
+
+audacity-UserException.o: UserException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-UserException.o -MD -MP -MF $(DEPDIR)/audacity-UserException.Tpo -c -o audacity-UserException.o `test -f 'UserException.cpp' || echo '$(srcdir)/'`UserException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-UserException.Tpo $(DEPDIR)/audacity-UserException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='UserException.cpp' object='audacity-UserException.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UserException.o `test -f 'UserException.cpp' || echo '$(srcdir)/'`UserException.cpp
+
+audacity-UserException.obj: UserException.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-UserException.obj -MD -MP -MF $(DEPDIR)/audacity-UserException.Tpo -c -o audacity-UserException.obj `if test -f 'UserException.cpp'; then $(CYGPATH_W) 'UserException.cpp'; else $(CYGPATH_W) '$(srcdir)/UserException.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-UserException.Tpo $(DEPDIR)/audacity-UserException.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='UserException.cpp' object='audacity-UserException.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UserException.obj `if test -f 'UserException.cpp'; then $(CYGPATH_W) 'UserException.cpp'; else $(CYGPATH_W) '$(srcdir)/UserException.cpp'; fi`
 
 audacity-ViewInfo.o: ViewInfo.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ViewInfo.o -MD -MP -MF $(DEPDIR)/audacity-ViewInfo.Tpo -c -o audacity-ViewInfo.o `test -f 'ViewInfo.cpp' || echo '$(srcdir)/'`ViewInfo.cpp

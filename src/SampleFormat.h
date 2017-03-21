@@ -12,6 +12,7 @@
 #define __AUDACITY_SAMPLE_FORMAT__
 
 #include "Audacity.h"
+#include "MemoryX.h"
 #include <wx/defs.h>
 
 #include "audacity/Types.h"
@@ -48,10 +49,6 @@ const wxChar *GetSampleFormatStr(sampleFormat format);
 // Allocating/Freeing Samples
 //
 
-AUDACITY_DLL_API samplePtr NewSamples(size_t count, sampleFormat format);
-AUDACITY_DLL_API void DeleteSamples(samplePtr p);
-
-// RAII version of above
 class SampleBuffer {
 
 public:
@@ -59,7 +56,7 @@ public:
       : mPtr(0)
    {}
    SampleBuffer(size_t count, sampleFormat format)
-      : mPtr(NewSamples(count, format))
+      : mPtr((samplePtr)malloc(count * SAMPLE_SIZE(format)))
    {}
    ~SampleBuffer()
    {
@@ -70,14 +67,14 @@ public:
    SampleBuffer &Allocate(size_t count, sampleFormat format)
    {
       Free();
-      mPtr = NewSamples(count, format);
+      mPtr = (samplePtr)malloc(count * SAMPLE_SIZE(format));
       return *this;
    }
 
 
    void Free()
    {
-      DeleteSamples(mPtr);
+      free(mPtr);
       mPtr = 0;
    }
 
@@ -150,5 +147,11 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 //
 
 void      InitDitherers();
+
+// These are so commonly done for processing samples in floating point form in memory,
+// let's have abbeviations.
+using Floats = ArrayOf<float>;
+using FloatBuffers = ArraysOf<float>;
+using Doubles = ArrayOf<double>;
 
 #endif

@@ -778,8 +778,10 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    int cnt = 0;
-   if (node->prev) {
-      t = node->prev->t;
+   if (hasPrev(node)) {
+      auto prev = node;
+      --prev;
+      t = prev->get();
       i = t->GetIndex() + 1;
       if(MONO_WAVE_PAN(t))
          y = t->GetY(true) + t->GetHeight(true);
@@ -787,8 +789,8 @@ void TrackList::RecalcPositions(TrackNodePointer node)
          y = t->GetY() + t->GetHeight();
    }
 
-   for (const TrackListNode *n = node; n; n = n->next) {
-      t = n->t;
+   for (auto n = node; n != end(); ++n) {
+      t = n->get();
       if(MONO_WAVE_PAN(t))
          cnt++;
 
@@ -978,15 +980,6 @@ void TrackList::Select(Track * t, bool selected /* = true */ )
          }
       }
    }
-}
-
-Track *TrackList::GetLink(Track * t) const
-{
-   if (t) {
-      return t->GetLink();
-   }
-
-   return NULL;
 }
 
 /// Return a track in the list that comes after Track t
@@ -1314,8 +1307,8 @@ int TrackList::GetHeight() const
    int height = 0;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (tail) {
-      const Track *t = tail->t;
+   if (!empty()) {
+      const Track *t = rbegin()->get();
       if(MONO_WAVE_PAN(t))
          height = t->GetY(true) + t->GetHeight(true);
       else

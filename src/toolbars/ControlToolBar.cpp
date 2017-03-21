@@ -886,7 +886,16 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 #ifdef EXPERIMENTAL_DA
       shifted = !shifted;
 #endif
-      if(it.First() == NULL)
+      bool hasWave = false;
+      for (auto t = it.First(); t; t = it.Next()) {
+         if (t->GetKind() == Track::Wave) {
+            hasWave = true;
+            break;
+         }
+      }
+      if(!hasWave)
+         // Treat append-record like record, when there was no given wave track
+         // to append onto.
          shifted = false;
 
       double t0 = p->GetSel0();
@@ -1183,7 +1192,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
    AudacityProject *p = GetActiveProject();
    if (p) {
       // Find first selected track (stereo or mono) and duplicate it
-      Track *track1 = NULL, *track2 = NULL;
+      const Track *track1 = NULL, *track2 = NULL;
       TrackListIterator it(p->GetTracks());
       for (Track *t = it.First(); t; t = it.Next())
       {

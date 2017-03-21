@@ -30,12 +30,12 @@
 
 #include "wxPanelWrapper.h"
 
-enum
+enum class ProgressResult : unsigned
 {
-   eProgressCancelled = 0, //<! User says that whatever is happening is undesirable and shouldn't have happened at all
-   eProgressSuccess,       //<! User says nothing, everything works fine, continue doing whatever we're doing
-   eProgressFailed,        //<! Something has gone wrong, we should stop and cancel everything we did
-   eProgressStopped        //<! Nothing is wrong, but user says we should stop now and leave things as they are now
+   Cancelled = 0, //<! User says that whatever is happening is undesirable and shouldn't have happened at all
+   Success,       //<! User says nothing, everything works fine, continue doing whatever we're doing
+   Failed,        //<! Something has gone wrong, we should stop and cancel everything we did
+   Stopped        //<! Nothing is wrong, but user says we should stop now and leave things as they are now
 };
 
 enum ProgressDialogFlags
@@ -69,16 +69,16 @@ public:
                        int flags = pdlgDefaultFlags,
                        const wxString & sRemainingLabelText = wxEmptyString);
 
-   int Update(int value, const wxString & message = wxEmptyString);
-   int Update(double current, const wxString & message = wxEmptyString);
-   int Update(double current, double total, const wxString & message = wxEmptyString);
-   int Update(wxULongLong_t current, wxULongLong_t total, const wxString & message = wxEmptyString);
-   int Update(wxLongLong current, wxLongLong total, const wxString & message = wxEmptyString);
-   int Update(wxLongLong_t current, wxLongLong_t total, const wxString & message = wxEmptyString);
-   int Update(int current, int total, const wxString & message = wxEmptyString);
+   ProgressResult Update(int value, const wxString & message = wxEmptyString);
+   ProgressResult Update(double current, const wxString & message = wxEmptyString);
+   ProgressResult Update(double current, double total, const wxString & message = wxEmptyString);
+   ProgressResult Update(wxULongLong_t current, wxULongLong_t total, const wxString & message = wxEmptyString);
+   ProgressResult Update(wxLongLong current, wxLongLong total, const wxString & message = wxEmptyString);
+   ProgressResult Update(wxLongLong_t current, wxLongLong_t total, const wxString & message = wxEmptyString);
+   ProgressResult Update(int current, int total, const wxString & message = wxEmptyString);
    void SetMessage(const wxString & message);
 
-   // 'ETB' character to indicate a new column in the message text.
+   // 'ETB' character to indicate a NEW column in the message text.
    static const wxChar ColoumnSplitMarker = (char)23;
 
 protected:
@@ -137,7 +137,7 @@ public:
                        const wxString & message = wxEmptyString,
                        int flags = pdlgDefaultFlags,
                        const wxString & sRemainingLabelText = wxEmptyString);
-   int Update(const wxString & message = wxEmptyString);
+   ProgressResult Update(const wxString & message = wxEmptyString);
 
 protected:
    wxLongLong_t mDuration;

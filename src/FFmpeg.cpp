@@ -19,7 +19,6 @@ License: GPL v2.  See License.txt.
 
 #include "Audacity.h"   // for config*.h
 #include "FFmpeg.h"
-#include "AudacityApp.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "widgets/HelpSystem.h"
@@ -387,10 +386,10 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    }
 
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
-   sc->m_samplesize = av_get_bytes_per_sample(sc->m_samplefmt);
+   sc->m_samplesize = static_cast<size_t>(av_get_bytes_per_sample(sc->m_samplefmt));
 
    int channels = sc->m_codecCtx->channels;
-   unsigned int newsize = sc->m_samplesize * frame->nb_samples * channels;
+   auto newsize = sc->m_samplesize * frame->nb_samples * channels;
    sc->m_decodedAudioSamplesValidSiz = newsize;
    // Reallocate the audio sample buffer if it's smaller than the frame size.
    if (newsize > sc->m_decodedAudioSamplesSiz )

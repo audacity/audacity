@@ -18,6 +18,7 @@ undo memory so as to free up space.
 
 #include "Audacity.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/dialog.h>

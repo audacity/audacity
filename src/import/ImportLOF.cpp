@@ -123,12 +123,12 @@ public:
    LOFImportFileHandle(const wxString & name, std::unique_ptr<wxTextFile> &&file);
    ~LOFImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount(){ return 1; }
+   wxInt32 GetStreamCount() override { return 1; }
 
    const wxArrayString &GetStreamInfo() override
    {
@@ -136,7 +136,8 @@ public:
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+   {}
 
 private:
    // Takes a line of text in lof file and interprets it and opens files
@@ -231,7 +232,7 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
                                 Tags * WXUNUSED(tags))
 {
    outTracks.clear();
@@ -241,7 +242,7 @@ int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHold
    if(mTextFile->Eof())
    {
       mTextFile->Close();
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    wxString line = mTextFile->GetFirstLine();
@@ -261,9 +262,9 @@ int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), TrackHold
 
    // exited ok
    if(mTextFile->Close())
-      return eProgressSuccess;
+      return ProgressResult::Success;
 
-   return eProgressFailed;
+   return ProgressResult::Failed;
 }
 
 static int CountNumTracks(AudacityProject *proj)
@@ -367,7 +368,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
       // To identify filename and open it
       tokenholder = temptok1.GetNextToken();
-      targetfile = temptok1.GetNextToken();
+      wxString targettoken = temptok1.GetNextToken();
+      targetfile = targettoken;
 
       // If path is relative, make absolute path from LOF path
       if(!wxIsAbsolutePath(targetfile)) {
@@ -378,7 +380,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
          }
       }
 
-      #ifdef USE_MIDI
+#ifdef USE_MIDI
       // If file is a midi
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
@@ -388,17 +390,18 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
       // If not a midi, open audio file
       else
-      {
-      #else // !USE_MIDI
+
+#else // !USE_MIDI
          /* if we don't have midi support, go straight on to opening as an
           * audio file. TODO: Some sort of message here? */
+
+#endif // USE_MIDI
       {
-      #endif // USE_MIDI
          mProject->OpenFile(targetfile);
       }
 
       // Set tok to right after filename
-      temptok2.SetString(targetfile);
+      temptok2.SetString(targettoken);
       tokenplace = temptok2.CountTokens();
 
       for (int i = 0; i < tokenplace; i++)

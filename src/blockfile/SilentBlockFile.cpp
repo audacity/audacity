@@ -24,9 +24,10 @@ SilentBlockFile::~SilentBlockFile()
 {
 }
 
-bool SilentBlockFile::ReadSummary(void *data)
+bool SilentBlockFile::ReadSummary(ArrayOf<char> &data)
 {
-   memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+   data.reinit( mSummaryInfo.totalSummaryBytes );
+   memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
    return true;
 }
 
@@ -39,6 +40,7 @@ size_t SilentBlockFile::ReadData(samplePtr data, sampleFormat format,
 }
 
 void SilentBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("silentblockfile"));
 

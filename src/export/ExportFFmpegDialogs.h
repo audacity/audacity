@@ -333,10 +333,10 @@ public:
    void ImportPresets(wxString &filename);
    void ExportPresets(wxString &filename);
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   void WriteXMLHeader(XMLWriter &xmlFile);
-   void WriteXML(XMLWriter &xmlFile);
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   void WriteXMLHeader(XMLWriter &xmlFile) const;
+   void WriteXML(XMLWriter &xmlFile) const;
 
 private:
 

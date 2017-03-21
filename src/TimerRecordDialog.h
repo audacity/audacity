@@ -81,7 +81,7 @@ private:
    bool TransferDataFromWindow();
    void UpdateDuration(); // Update m_TimeSpan_Duration and ctrl based on m_DateTime_Start and m_DateTime_End.
    void UpdateEnd(); // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
-   int WaitForStart();
+   ProgressResult WaitForStart();
 
    // Timer Recording Automation Control Events
    void OnAutoSavePathButton_Click(wxCommandEvent& event);
@@ -99,7 +99,7 @@ private:
    TimerRecordPathCtrl *NewPathControl(wxWindow *wParent, const int iID, const wxString &sCaption, const wxString &sValue);
 
    int ExecutePostRecordActions(bool bWasStopped);
-   int PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
+   ProgressResult PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
 
 private:
    wxDateTime m_DateTime_Start;

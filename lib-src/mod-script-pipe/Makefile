@@ -20,7 +20,7 @@ MOD = mod-script-pipe.so
 # -----------------------------------------------------------------------------
 # NOTE: Set any custom flags you may need
 #
-CXXFLAGS += -Wall -O9
+CXXFLAGS += -Wall -std=gnu++11
 CXXFLAGS += -DCC_HASVISIBILITY # Normally provided by configure
 CXXFLAGS += -DBUILDING_SCRIPT_PIPE
 CXXFLAGS += ${shell echo @WX_CXXFLAGS@ | ../../config.status --file=- }

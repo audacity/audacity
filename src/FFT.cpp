@@ -39,7 +39,10 @@
     * 9: Gaussian(a=4.5)
 */
 
+#include "Audacity.h"
 #include "FFT.h"
+#include "MemoryX.h"
+#include "SampleFormat.h"
 
 #include <wx/intl.h>
 #include <stdlib.h>
@@ -49,7 +52,7 @@
 #include "RealFFTf.h"
 #include "Experimental.h"
 
-static int **gFFTBitTable = NULL;
+static ArraysOf<int> gFFTBitTable;
 static const size_t MaxFastBits = 16;
 
 /* Declare Static functions */
@@ -94,15 +97,14 @@ int ReverseBits(size_t index, size_t NumBits)
 
 void InitFFT()
 {
-   gFFTBitTable = new int *[MaxFastBits];
+   gFFTBitTable.reinit(MaxFastBits);
 
    size_t len = 2;
    for (size_t b = 1; b <= MaxFastBits; b++) {
-
-      gFFTBitTable[b - 1] = new int[len];
-
+      auto &array = gFFTBitTable[b - 1];
+      array.reinit(len);
       for (size_t i = 0; i < len; i++)
-         gFFTBitTable[b - 1][i] = ReverseBits(i, b);
+         array[i] = ReverseBits(i, b);
 
       len <<= 1;
    }
@@ -110,14 +112,7 @@ void InitFFT()
 
 void DeinitFFT()
 {
-   if (gFFTBitTable) {
-      for (size_t b = 1; b <= MaxFastBits; b++) {
-         delete[] gFFTBitTable[b-1];
-      }
-      delete[] gFFTBitTable;
-   }
-   // Deallocate any unused RealFFTf tables
-   CleanupFFT();
+   gFFTBitTable.reset();
 }
 
 static inline size_t FastReverseBits(size_t i, size_t NumBits)
@@ -233,32 +228,29 @@ void FFT(size_t NumSamples,
 
 void RealFFT(size_t NumSamples, const float *RealIn, float *RealOut, float *ImagOut)
 {
-   size_t i;
-   HFFT hFFT = GetFFT(NumSamples);
-   float *pFFT = new float[NumSamples];
+   auto hFFT = GetFFT(NumSamples);
+   Floats pFFT{ NumSamples };
    // Copy the data into the processing buffer
-   for(i = 0; i < NumSamples; i++)
+   for(size_t i = 0; i < NumSamples; i++)
       pFFT[i] = RealIn[i];
 
    // Perform the FFT
-   RealFFTf(pFFT, hFFT);
+   RealFFTf(pFFT.get(), hFFT.get());
 
    // Copy the data into the real and imaginary outputs
-   for(i = 1; i < (NumSamples / 2); i++) {
+   for (size_t i = 1; i<(NumSamples / 2); i++) {
       RealOut[i]=pFFT[hFFT->BitReversed[i]  ];
       ImagOut[i]=pFFT[hFFT->BitReversed[i]+1];
    }
    // Handle the (real-only) DC and Fs/2 bins
    RealOut[0] = pFFT[0];
-   RealOut[i] = pFFT[1];
-   ImagOut[0] = ImagOut[i] = 0;
+   RealOut[NumSamples / 2] = pFFT[1];
+   ImagOut[0] = ImagOut[NumSamples / 2] = 0;
    // Fill in the upper half using symmetry properties
-   for(i++ ; i < NumSamples; i++) {
+   for(size_t i = NumSamples / 2 + 1; i < NumSamples; i++) {
       RealOut[i] =  RealOut[NumSamples-i];
       ImagOut[i] = -ImagOut[NumSamples-i];
    }
-   delete [] pFFT;
-   ReleaseFFT(hFFT);
 }
 
 /*
@@ -275,30 +267,26 @@ void RealFFT(size_t NumSamples, const float *RealIn, float *RealOut, float *Imag
 void InverseRealFFT(size_t NumSamples, const float *RealIn, const float *ImagIn,
 		    float *RealOut)
 {
-   size_t i;
-   HFFT hFFT = GetFFT(NumSamples);
-   float *pFFT = new float[NumSamples];
+   auto hFFT = GetFFT(NumSamples);
+   Floats pFFT{ NumSamples };
    // Copy the data into the processing buffer
-   for(i = 0; i < (NumSamples / 2); i++)
+   for (size_t i = 0; i < (NumSamples / 2); i++)
       pFFT[2*i  ] = RealIn[i];
    if(ImagIn == NULL) {
-      for(i = 0; i < (NumSamples/2); i++)
+      for (size_t i = 0; i < (NumSamples / 2); i++)
          pFFT[2*i+1] = 0;
    } else {
-      for(i = 0; i < (NumSamples/2); i++)
+      for (size_t i = 0; i < (NumSamples / 2); i++)
          pFFT[2*i+1] = ImagIn[i];
    }
    // Put the fs/2 component in the imaginary part of the DC bin
-   pFFT[1] = RealIn[i];
+   pFFT[1] = RealIn[NumSamples / 2];
 
    // Perform the FFT
-   InverseRealFFTf(pFFT, hFFT);
+   InverseRealFFTf(pFFT.get(), hFFT.get());
 
    // Copy the data to the (purely real) output buffer
-   ReorderToTime(hFFT, pFFT, RealOut);
-
-   delete [] pFFT;
-   ReleaseFFT(hFFT);
+   ReorderToTime(hFFT.get(), pFFT.get(), RealOut);
 }
 
 /*
@@ -314,26 +302,23 @@ void InverseRealFFT(size_t NumSamples, const float *RealIn, const float *ImagIn,
 
 void PowerSpectrum(size_t NumSamples, const float *In, float *Out)
 {
-   size_t i;
-   HFFT hFFT = GetFFT(NumSamples);
-   float *pFFT = new float[NumSamples];
+   auto hFFT = GetFFT(NumSamples);
+   Floats pFFT{ NumSamples };
    // Copy the data into the processing buffer
-   for(i = 0; i < NumSamples; i++)
+   for (size_t i = 0; i<NumSamples; i++)
       pFFT[i] = In[i];
 
    // Perform the FFT
-   RealFFTf(pFFT, hFFT);
+   RealFFTf(pFFT.get(), hFFT.get());
 
    // Copy the data into the real and imaginary outputs
-   for(i = 1; i < NumSamples / 2; i++) {
+   for (size_t i = 1; i<NumSamples / 2; i++) {
       Out[i]= (pFFT[hFFT->BitReversed[i]  ]*pFFT[hFFT->BitReversed[i]  ])
          + (pFFT[hFFT->BitReversed[i]+1]*pFFT[hFFT->BitReversed[i]+1]);
    }
    // Handle the (real-only) DC and Fs/2 bins
    Out[0] = pFFT[0]*pFFT[0];
-   Out[i] = pFFT[1]*pFFT[1];
-   delete [] pFFT;
-   ReleaseFFT(hFFT);
+   Out[NumSamples / 2] = pFFT[1]*pFFT[1];
 }
 
 /*

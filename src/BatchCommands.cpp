@@ -25,6 +25,7 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include <wx/filedlg.h>
 #include <wx/textfile.h>
 
+#include "AudacityApp.h"
 #include "Project.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"

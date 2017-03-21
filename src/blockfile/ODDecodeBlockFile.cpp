@@ -47,7 +47,6 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNam
    mAliasChannel(aliasChannel)
 {
    mDecoder = NULL;
-   mDataAvailable=false;
    mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
@@ -59,11 +58,11 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&existingFile, wxFileNam
    SimpleBlockFile{ std::move(existingFile), aliasLen, min, max, rms },
 
    mType(decodeType),
+   mDataAvailable( dataAvailable ),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
    mDecoder = NULL;
-   mDataAvailable=dataAvailable;
    mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
@@ -127,6 +126,7 @@ void ODDecodeBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) c
 }
 
 /// Returns the 256 byte summary data block
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODDecodeBlockFile::Read256(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -135,13 +135,13 @@ bool ODDecodeBlockFile::Read256(float *buffer, size_t start, size_t len)
    }
    else
    {
-      //this should not be reached (client should check IsSummaryAvailable()==true before this.
-      buffer = NULL;
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
 /// Returns the 64K summary data block
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODDecodeBlockFile::Read64K(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -150,14 +150,14 @@ bool ODDecodeBlockFile::Read64K(float *buffer, size_t start, size_t len)
    }
    else
    {
-      //this should not be reached (client should check IsSummaryAvailable()==true before this.
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
 /// If the summary has been computed,
-/// Construct a NEW PCMAliasBlockFile based on this one.
-/// otherwise construct an ODPCMAliasBlockFile that still needs to be computed.
+/// Construct a NEW SimpleBlockFile based on this one.
+/// otherwise construct an ODDecodeBlockFile that still needs to be computed.
 /// @param newFileName The filename to copy the summary data to.
 BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 {
@@ -192,6 +192,7 @@ BlockFilePtr ODDecodeBlockFile::Copy(wxFileNameWrapper &&newFileName)
 /// Most notably, the summaryfile attribute refers to a file that does not yet, so when the project file is read back in
 /// and this object reconstructed, it needs to avoid trying to open it as well as schedule itself for OD loading
 void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    LockRead();
    if(IsSummaryAvailable())
@@ -219,8 +220,8 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
    UnlockRead();
 }
 
-/// Constructs a ODPCMAliasBlockFile from the xml output of WriteXML.
-/// Also schedules the ODPCMAliasBlockFile for OD loading.
+/// Constructs a ODDecodeBlockFile from the xml output of WriteXML.
+/// Also schedules the ODDecodeBlockFile for OD loading.
 // BuildFromXML methods should always return a BlockFile, not NULL,
 // even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
@@ -304,11 +305,7 @@ bool ODDecodeBlockFile::IsSummaryAvailable() const
 
 bool ODDecodeBlockFile::IsDataAvailable() const
 {
-   bool retval;
-   mDataAvailableMutex.Lock();
-   retval= mDataAvailable;
-   mDataAvailableMutex.Unlock();
-   return retval;
+   return mDataAvailable;
 }
 
 /// Write the summary to disk, using the derived ReadData() to get the data
@@ -321,43 +318,38 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
    // derived classes) to get the sample data
    SampleBuffer sampleData;// = NewSamples(mLen, floatSample);
    int ret;
-   //use the decoder here.
-   mDecoderMutex.Lock();
 
-   if(!mDecoder)
    {
-      mDecoderMutex.Unlock();
-      return -1;
+      //use the decoder here.
+      ODLocker locker{ &mDecoderMutex };
+
+      if(!mDecoder)
+         return -1;
+
+      //sampleData and mFormat are set by the decoder.
+      ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
+
+      if(ret < 0) {
+         printf("ODDecodeBlockFile Decode failure\n");
+         return ret; //failure
+      }
    }
 
-
-   //sampleData and mFormat are set by the decoder.
-   ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
-
-   mDecoderMutex.Unlock();
-   if(ret < 0) {
-      printf("ODDecodeBlockFile Decode failure\n");
-      return ret; //failure
+   {
+      //the summary is also calculated here.
+      ODLocker locker{ &mFileNameMutex };
+      //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
+      bool bSuccess =
+         WriteSimpleBlockFile(
+                              sampleData.ptr(),
+                              mLen,
+                              mFormat,
+                              NULL);
+      if ( !bSuccess )
+         return -1;
    }
 
-   //the summary is also calculated here.
-   mFileNameMutex.Lock();
-   //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
-   bool bSuccess =
-      WriteSimpleBlockFile(
-         sampleData.ptr(),
-         mLen,
-         mFormat,
-         NULL);
-   wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
-   wxUnusedVar(bSuccess);
-
-   mFileNameMutex.Unlock();
-
-
-   mDataAvailableMutex.Lock();
-   mDataAvailable=true;
-   mDataAvailableMutex.Unlock();
+   wxAtomicInc( mDataAvailable );
 
    return ret;
 }
@@ -369,9 +361,8 @@ void ODDecodeBlockFile::SetFileName(wxFileNameWrapper &&name)
    mFileName=std::move(name);
 /* mchinen oct 9 2009 don't think we need the char* but leaving it in for now just as a reminder that we might
    if wxFileName isn't threadsafe.
-   delete [] mFileNameChar;
-   mFileNameChar = new char[strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1];
-   strcpy(mFileNameChar,mFileName.GetFullPath().mb_str(wxConvUTF8)); */
+   mFileNameChar.reinit(strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1);
+   strcpy(mFileNameChar.get(), mFileName.GetFullPath().mb_str(wxConvUTF8)); */
    mFileNameMutex.Unlock();
 }
 
@@ -409,6 +400,7 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, size_t len,
    float *summary64K = (float *)(localFullSummary + mSummaryInfo.offset64K);
    float *summary256 = (float *)(localFullSummary + mSummaryInfo.offset256);
 
+   Floats floats;
    float *fbuffer;
 
    //mchinen: think we can hack this - don't allocate and copy if we don't need to.,
@@ -418,18 +410,14 @@ void *ODDecodeBlockFile::CalcSummary(samplePtr buffer, size_t len,
    }
    else
    {
-      fbuffer = new float[len];
+      floats.reinit(len);
+      fbuffer = floats.get();
       CopySamples(buffer, format,
                (samplePtr)fbuffer, floatSample, len);
    }
 
    BlockFile::CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
 
-   //if we've used the float sample..
-   if(format!=floatSample)
-   {
-      delete[] fbuffer;
-   }
    return localFullSummary;
 }
 
@@ -463,17 +451,19 @@ size_t ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
 
 /// Read the summary of this alias block from disk.  Since the audio data
 /// is elsewhere, this consists of reading the entire summary file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer where the summary data will be stored.  It must
 ///              be at least mSummaryInfo.totalSummaryBytes long.
-bool ODDecodeBlockFile::ReadSummary(void *data)
+bool ODDecodeBlockFile::ReadSummary(ArrayOf<char> &data)
 {
-   //I dont think we need to add a mutex here because only the main thread changes filenames and calls ReadSummarz
+   //I dont think we need to add a mutex here because only the main thread changes filenames and calls ReadSummary
    if(IsSummaryAvailable())
       return SimpleBlockFile::ReadSummary(data);
 
-   memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
-   return true;
+   data.reinit( mSummaryInfo.totalSummaryBytes );
+   memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+   return false;
 }
 
 ///set the decoder,

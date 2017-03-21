@@ -129,7 +129,7 @@ class TranscriptionToolBar final : public ToolBar {
    void MakeAlternateImages(
       teBmps eFore, teBmps eDisabled,
       int id, unsigned altIdx);
-   void GetSamples(WaveTrack *t, sampleCount *s0, sampleCount *slen);
+   void GetSamples(const WaveTrack *t, sampleCount *s0, sampleCount *slen);
    void SetButton(bool newstate, AButton *button);
    void RegenerateTooltips() override;
 

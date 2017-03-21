@@ -296,6 +296,7 @@ writing audio.
 #include <wx/txtstrm.h>
 
 #include "AudacityApp.h"
+#include "AudacityException.h"
 #include "Mix.h"
 #include "MixerBoard.h"
 #include "Resample.h"
@@ -1649,6 +1650,8 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
                          double t0, double t1,
                          const AudioIOStartStreamOptions &options)
 {
+   auto cleanup = finally ( [this] { ClearRecordingException(); } );
+
    if( IsBusy() )
       return 0;
 
@@ -1705,10 +1708,11 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    mPlayMode = options.playLooped ? PLAY_LOOPED : PLAY_STRAIGHT;
    mCutPreviewGapStart = options.cutPreviewGapStart;
    mCutPreviewGapLen = options.cutPreviewGapLen;
-   mPlaybackBuffers = NULL;
-   mPlaybackMixers = NULL;
-   mCaptureBuffers = NULL;
-   mResample = NULL;
+
+   mPlaybackBuffers.reset();
+   mPlaybackMixers.reset();
+   mCaptureBuffers.reset();
+   mResample.reset();
 
    double playbackTime = 4.0;
 
@@ -1859,12 +1863,8 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
             auto playbackMixBufferSize =
                mPlaybackSamplesToCopy;
 
-            mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.size()];
-            mPlaybackMixers  = new Mixer*      [mPlaybackTracks.size()];
-
-            // Set everything to zero in case we have to DELETE these due to a memory exception.
-            memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks.size());
-            memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks.size());
+            mPlaybackBuffers.reinit(mPlaybackTracks.size());
+            mPlaybackMixers.reinit(mPlaybackTracks.size());
 
             const Mixer::WarpOptions &warpOptions =
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -1878,10 +1878,11 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
 
             for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
             {
-               mPlaybackBuffers[i] = new RingBuffer(floatSample, playbackBufferSize);
+               mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
-               mPlaybackMixers[i] = new Mixer(WaveTrackConstArray{ mPlaybackTracks[i] },
+               mPlaybackMixers[i] = std::make_unique<Mixer>
+                  (WaveTrackConstArray{ mPlaybackTracks[i] },
                                                warpOptions,
                                                mT0, mT1, 1,
                                                playbackMixBufferSize, false,
@@ -1904,19 +1905,16 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
                return 0;
             }
 
-            mCaptureBuffers = new RingBuffer* [mCaptureTracks.size()];
-            mResample = new Resample* [mCaptureTracks.size()];
+            mCaptureBuffers.reinit(mCaptureTracks.size());
+            mResample.reinit(mCaptureTracks.size());
             mFactor = sampleRate / mRate;
-
-            // Set everything to zero in case we have to DELETE these due to a memory exception.
-            memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks.size());
-            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks.size());
 
             for( unsigned int i = 0; i < mCaptureTracks.size(); i++ )
             {
-               mCaptureBuffers[i] = new RingBuffer( mCaptureTracks[i]->GetSampleFormat(),
+               mCaptureBuffers[i] = std::make_unique<RingBuffer>
+                  ( mCaptureTracks[i]->GetSampleFormat(),
                                                     captureBufferSize );
-               mResample[i] = new Resample(true, mFactor, mFactor); // constant rate resampling
+               mResample[i] = std::make_unique<Resample>(true, mFactor, mFactor); // constant rate resampling
             }
          }
       }
@@ -2087,37 +2085,10 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
       EffectManager::Get().RealtimeFinalize();
    }
 
-   if(mPlaybackBuffers)
-   {
-      for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-         delete mPlaybackBuffers[i];
-      delete [] mPlaybackBuffers;
-      mPlaybackBuffers = NULL;
-   }
-
-   if(mPlaybackMixers)
-   {
-      for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-         delete mPlaybackMixers[i];
-      delete [] mPlaybackMixers;
-      mPlaybackMixers = NULL;
-   }
-
-   if(mCaptureBuffers)
-   {
-      for (unsigned int i = 0; i < mCaptureTracks.size(); i++)
-         delete mCaptureBuffers[i];
-      delete [] mCaptureBuffers;
-      mCaptureBuffers = NULL;
-   }
-
-   if(mResample)
-   {
-      for (unsigned int i = 0; i < mCaptureTracks.size(); i++)
-         delete mResample[i];
-      delete [] mResample;
-      mResample = NULL;
-   }
+   mPlaybackBuffers.reset();
+   mPlaybackMixers.reset();
+   mCaptureBuffers.reset();
+   mResample.reset();
 
    if(!bOnlyBuffers)
    {
@@ -2281,6 +2252,8 @@ void AudioIO::SetMeters()
 
 void AudioIO::StopStream()
 {
+   auto cleanup = finally ( [this] { ClearRecordingException(); } );
+
    if( mPortStreamV19 == NULL
 #ifdef EXPERIMENTAL_MIDI_OUT
        && mMidiStream == NULL
@@ -2443,14 +2416,8 @@ void AudioIO::StopStream()
 
       if (mPlaybackTracks.size() > 0)
       {
-         for (unsigned int i = 0; i < mPlaybackTracks.size(); i++)
-         {
-            delete mPlaybackBuffers[i];
-            delete mPlaybackMixers[i];
-         }
-
-         delete[] mPlaybackBuffers;
-         delete[] mPlaybackMixers;
+         mPlaybackBuffers.reset();
+         mPlaybackMixers.reset();
       }
 
       //
@@ -2458,6 +2425,9 @@ void AudioIO::StopStream()
       //
       if (mCaptureTracks.size() > 0)
       {
+         mCaptureBuffers.reset();
+         mResample.reset();
+
          //
          // We only apply latency correction when we actually played back
          // tracks during the recording. If we did not play back tracks,
@@ -2471,11 +2441,13 @@ void AudioIO::StopStream()
          double recordingOffset =
             mLastRecordingOffset + latencyCorrection / 1000.0;
 
-         for (unsigned int i = 0; i < mCaptureTracks.size(); i++)
-            {
-               delete mCaptureBuffers[i];
-               delete mResample[i];
-
+         for (unsigned int i = 0; i < mCaptureTracks.size(); i++) {
+            // The calls to Flush, and (less likely) Clear and InsertSilence,
+            // may cause exceptions because of exhaustion of disk space.
+            // Stop those exceptions here, or else they propagate through too
+            // many parts of Audacity that are not effects or editing
+            // operations.  GuardedCall ensures that the user sees a warning.
+            GuardedCall<void>( [&] {
                WaveTrack* track = mCaptureTracks[i];
                track->Flush();
 
@@ -2513,17 +2485,16 @@ void AudioIO::StopStream()
                      track->SetOffset(track->GetStartTime() + recordingOffset);
                      if(track->GetEndTime() < 0.)
                      {
-                        wxMessageDialog m(NULL, _("Latency Correction setting has caused the recorded audio to be hidden before zero.\nAudacity has brought it back to start at zero.\nYou may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."),
+                        wxMessageDialog m(NULL, _(
+"Latency Correction setting has caused the recorded audio to be hidden before zero.\nAudacity has brought it back to start at zero.\nYou may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."),
                            _("Latency problem"), wxOK);
                         m.ShowModal();
                         track->SetOffset(0.);
                      }
                   }
                }
-            }
-
-         delete[] mCaptureBuffers;
-         delete[] mResample;
+            } );
+         }
       }
    }
 
@@ -3453,6 +3424,25 @@ void AudioIO::FillBuffers()
 {
    unsigned int i;
 
+   auto delayedHandler = [this] ( AudacityException * pException ) {
+      // In the main thread, stop recording
+      // This is one place where the application handles disk
+      // exhaustion exceptions from wave track operations, without rolling
+      // back to the last pushed undo state.  Instead, partial recording
+      // results are pushed as a NEW undo state.  For this reason, as
+      // commented elsewhere, we want an exception safety guarantee for
+      // the output wave tracks, after the failed append operation, that
+      // the tracks remain as they were after the previous successful
+      // (block-level) appends.
+
+      // Note that the Flush in StopStream() may throw another exception,
+      // but StopStream() contains that exception, and the logic in
+      // AudacityException::DelayedHandlerAction prevents redundant message
+      // boxes.
+      StopStream();
+      DefaultDelayedHandlerAction{}( pException );
+   };
+
    if (mPlaybackTracks.size() > 0)
    {
       // Though extremely unlikely, it is possible that some buffers
@@ -3628,78 +3618,97 @@ void AudioIO::FillBuffers()
       }
    }  // end of playback buffering
 
-   if (mCaptureTracks.size() > 0) // start record buffering
-   {
-      auto commonlyAvail = GetCommonlyAvailCapture();
+   if (!mRecordingException &&
+       mCaptureTracks.size() > 0)
+      GuardedCall<void>( [&] {
+         // start record buffering
+         auto commonlyAvail = GetCommonlyAvailCapture();
 
-      //
-      // Determine how much this will add to captured tracks
-      //
-      double deltat = commonlyAvail / mRate;
+         //
+         // Determine how much this will add to captured tracks
+         //
+         double deltat = commonlyAvail / mRate;
 
-      if (mAudioThreadShouldCallFillBuffersOnce ||
-          deltat >= mMinCaptureSecsToCopy)
-      {
-         // Append captured samples to the end of the WaveTracks.
-         // The WaveTracks have their own buffering for efficiency.
-         AutoSaveFile blockFileLog;
-         auto numChannels = mCaptureTracks.size();
-
-         for( i = 0; (int)i < numChannels; i++ )
+         if (mAudioThreadShouldCallFillBuffersOnce ||
+             deltat >= mMinCaptureSecsToCopy)
          {
-            auto avail = commonlyAvail;
-            sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
+            // Append captured samples to the end of the WaveTracks.
+            // The WaveTracks have their own buffering for efficiency.
+            AutoSaveFile blockFileLog;
+            auto numChannels = mCaptureTracks.size();
 
-            AutoSaveFile appendLog;
-
-            if( mFactor == 1.0 )
+            for( i = 0; (int)i < numChannels; i++ )
             {
-               SampleBuffer temp(avail, trackFormat);
-               const auto got =
+               auto avail = commonlyAvail;
+               sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
+
+               AutoSaveFile appendLog;
+
+               if( mFactor == 1.0 )
+               {
+                  SampleBuffer temp(avail, trackFormat);
+                  const auto got =
                   mCaptureBuffers[i]->Get(temp.ptr(), trackFormat, avail);
-               // wxASSERT(got == avail);
-               // but we can't assert in this thread
-               wxUnusedVar(got);
-               mCaptureTracks[i]-> Append(temp.ptr(), trackFormat, avail, 1,
-                                          &appendLog);
-            }
-            else
-            {
-               size_t size = lrint(avail * mFactor);
-               SampleBuffer temp1(avail, floatSample);
-               SampleBuffer temp2(size, floatSample);
-               const auto got =
+                  // wxASSERT(got == avail);
+                  // but we can't assert in this thread
+                  wxUnusedVar(got);
+                  // see comment in second handler about guarantee
+                  mCaptureTracks[i]-> Append(temp.ptr(), trackFormat, avail, 1,
+                                             &appendLog);
+               }
+               else
+               {
+                  size_t size = lrint(avail * mFactor);
+                  SampleBuffer temp1(avail, floatSample);
+                  SampleBuffer temp2(size, floatSample);
+                  const auto got =
                   mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, avail);
-               // wxASSERT(got == avail);
-               // but we can't assert in this thread
-               wxUnusedVar(got);
-               /* we are re-sampling on the fly. The last resampling call
-                * must flush any samples left in the rate conversion buffer
-                * so that they get recorded
-                */
-               const auto results =
+                  // wxASSERT(got == avail);
+                  // but we can't assert in this thread
+                  wxUnusedVar(got);
+                  /* we are re-sampling on the fly. The last resampling call
+                   * must flush any samples left in the rate conversion buffer
+                   * so that they get recorded
+                   */
+                  const auto results =
                   mResample[i]->Process(mFactor, (float *)temp1.ptr(), avail,
-                     !IsStreamActive(), (float *)temp2.ptr(), size);
-               size = results.second;
-               mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
-                                          &appendLog);
+                                        !IsStreamActive(), (float *)temp2.ptr(), size);
+                  size = results.second;
+                  // see comment in second handler about guarantee
+                  mCaptureTracks[i]-> Append(temp2.ptr(), floatSample, size, 1,
+                                             &appendLog);
+               }
+
+               if (!appendLog.IsEmpty())
+               {
+                  blockFileLog.StartTag(wxT("recordingrecovery"));
+                  blockFileLog.WriteAttr(wxT("id"), mCaptureTracks[i]->GetAutoSaveIdent());
+                  blockFileLog.WriteAttr(wxT("channel"), (int)i);
+                  blockFileLog.WriteAttr(wxT("numchannels"), numChannels);
+                  blockFileLog.WriteSubTree(appendLog);
+                  blockFileLog.EndTag(wxT("recordingrecovery"));
+               }
             }
 
-            if (!appendLog.IsEmpty())
-            {
-               blockFileLog.StartTag(wxT("recordingrecovery"));
-               blockFileLog.WriteAttr(wxT("id"), mCaptureTracks[i]->GetAutoSaveIdent());
-               blockFileLog.WriteAttr(wxT("channel"), (int)i);
-               blockFileLog.WriteAttr(wxT("numchannels"), numChannels);
-               blockFileLog.WriteSubTree(appendLog);
-               blockFileLog.EndTag(wxT("recordingrecovery"));
-            }
+            if (mListener && !blockFileLog.IsEmpty())
+               mListener->OnAudioIONewBlockFiles(blockFileLog);
          }
-
-         if (mListener && !blockFileLog.IsEmpty())
-            mListener->OnAudioIONewBlockFiles(blockFileLog);
-      }
-   }  // end of record buffering
+         // end of record buffering
+      },
+      // handler
+      [this] ( AudacityException *pException ) {
+         if ( pException ) {
+            // So that we don't attempt to fill the recording buffer again
+            // before the main thread stops recording
+            SetRecordingException();
+            return ;
+         }
+         else
+            // Don't want to intercept other exceptions (?)
+            throw;
+      },
+      delayedHandler
+   );
 }
 
 void AudioIO::SetListener(AudioIOListener* listener)
@@ -3887,7 +3896,7 @@ void AudioIO::FillMidiBuffers()
          break;
       }
    int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
-   for(t = 0; t < numMidiPlaybackTracks; t++ )
+   for(unsigned t = 0; t < numMidiPlaybackTracks; t++ )
       if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
          break;
@@ -4360,7 +4369,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
          int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
-         for( t = 0; t < numMidiPlaybackTracks; t++ )
+         for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
             if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #endif
@@ -4378,7 +4387,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          bool selected = false;
          int group = 0;
          int chanCnt = 0;
-         int maxLen = 0;
+         decltype(framesPerBuffer) maxLen = 0;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
             const WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
@@ -4410,7 +4419,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
-            int len = 0;
+            decltype(framesPerBuffer) len = 0;
             // this is original code prior to r10680 -RBD
             if (cut)
             {
