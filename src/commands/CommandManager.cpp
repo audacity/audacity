@@ -848,6 +848,14 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    int index,
    int count)
 {
+   // If we have the identifier already, reuse it.
+   CommandListEntry *prev = mCommandNameHash[name];
+   if (!prev);
+   else if( prev->label != label );
+   else if( multi );
+   else
+      return prev;
+
    {
       // Make a unique_ptr or shared_ptr as appropriate:
       auto entry = make_movable<CommandListEntry>();
@@ -918,7 +926,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    mCommandIDHash[entry->id] = entry;
 
 #if defined(__WXDEBUG__)
-   CommandListEntry *prev = mCommandNameHash[entry->name];
+   prev = mCommandNameHash[entry->name];
    if (prev) {
       // Under Linux it looks as if we may ask for a newID for the same command
       // more than once.  So it's only an error if two different commands

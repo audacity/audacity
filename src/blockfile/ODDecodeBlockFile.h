@@ -112,7 +112,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
                         size_t start, size_t len) const override;
 
    /// Read the summary into a buffer
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
 
    ///Returns the type of audiofile this blockfile is loaded from.
    unsigned int GetDecodeType() /* not override */ const { return mType; }

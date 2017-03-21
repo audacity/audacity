@@ -245,7 +245,7 @@ namespace {
          &Scrubber::OnSeek,        true,       &Scrubber::Seeks,
       },
 
-      { wxT("ToggleScrubRuler"),            XO("Scrub Ruler"),   XO(""),
+      { wxT("ToggleScrubRuler"),            XO("Scrub Ruler"),   wxT(""),
          AlwaysEnabledFlag,
          &Scrubber::OnToggleScrubRuler, true,    &Scrubber::ShowsBar,
       },

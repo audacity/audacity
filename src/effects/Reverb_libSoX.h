@@ -32,6 +32,10 @@ using std::max;
 #define lsx_zalloc(var, n) (var.reinit(n, true), var.get())
 #define filter_advance(p) if (--(p)->ptr < (p)->buffer.get()) (p)->ptr += (p)->size
 
+#if 0
+//initialisations not supported in MSVC 2013.
+//Gives error C2905
+// Do not make conditional on compiler.
 typedef struct {
    ArrayOf<char> data;
    size_t allocation {};   /* Number of bytes allocated for data. */
@@ -39,11 +43,23 @@ typedef struct {
    size_t begin {};        /* Offset of the first byte to read. */
    size_t end {};          /* 1 + Offset of the last byte byte to read. */
 } fifo_t;
+#else
+// WARNING: This structure may need initialisation.
+typedef struct {
+   ArrayOf<char> data;
+   size_t allocation;   /* Number of bytes allocated for data. */
+   size_t item_size;    /* Size of each item in data */
+   size_t begin;        /* Offset of the first byte to read. */
+   size_t end;          /* 1 + Offset of the last byte byte to read. */
+} fifo_t;
+#endif
 
 static void fifo_clear(fifo_t * f)
 {
    f->end = f->begin = 0;
 }
+
+
 
 static void * fifo_reserve(fifo_t * f, FIFO_SIZE_T n)
 {
@@ -194,6 +210,10 @@ static void filter_array_process(filter_array_t * p,
    }
 }
 
+#if 0
+//initialisations not supported in MSVC 2013.
+//Gives error C2905
+// Do not make conditional on compiler.
 typedef struct {
    float feedback {};
    float hf_damping {};
@@ -202,6 +222,17 @@ typedef struct {
    filter_array_t chan[2];
    ArrayOf<float> out[2];
 } reverb_t;
+#else
+// WARNING: This structure may need initialisation.
+typedef struct {
+   float feedback;
+   float hf_damping;
+   float gain;
+   fifo_t input_fifo;
+   filter_array_t chan[2];
+   ArrayOf<float> out[2];
+} reverb_t;
+#endif
 
 static void reverb_create(reverb_t * p, double sample_rate_Hz,
       double wet_gain_dB,

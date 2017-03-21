@@ -75,12 +75,25 @@ FactoryPresets[] =
    { XO("Cathedral"),         { 90,   16,    90,     50,      100, 0,     0,   -20,  100,   false } },
 };
 
+#if 0
+//initialisations not supported in MSVC 2013.
+//Gives error C2905
+// Do not make conditional on compiler.
 struct Reverb_priv_t
 {
    reverb_t reverb;
    float *dry {};
    float *wet[2] { {}, {} };
 };
+#else
+// WARNING: This structure may need initialisation.
+struct Reverb_priv_t
+{
+   reverb_t reverb;
+   float *dry;
+   float *wet[2];
+};
+#endif
 
 //
 // EffectReverb

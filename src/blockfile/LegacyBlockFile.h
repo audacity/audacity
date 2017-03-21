@@ -48,7 +48,7 @@ class LegacyBlockFile final : public BlockFile {
    // Reading
 
    /// Read the summary section of the disk file
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
    /// Read the data section of the disk file
    size_t ReadData(samplePtr data, sampleFormat format,
                         size_t start, size_t len) const override;
