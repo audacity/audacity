@@ -25,6 +25,8 @@ public:
       : AudacityException{ std::move( that ) }
    {}
 
+   UserException& operator= (UserException&&) PROHIBITED;
+
    ~UserException() override;
 
    void DelayedHandlerAction() override;

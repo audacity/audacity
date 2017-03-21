@@ -21,14 +21,12 @@ public:
       : FileException{ Cause::Read, fileName } {}
    NotYetAvailableException(NotYetAvailableException &&that)
       : FileException( std::move( that ) ) {}
+   NotYetAvailableException& operator= (NotYetAvailableException&&) PROHIBITED;
    ~NotYetAvailableException();
 
 protected:
    std::unique_ptr< AudacityException > Move() override;
    wxString ErrorMessage() const override;
-
-private:
-   wxFileName mFileName;
 };
 
 #endif

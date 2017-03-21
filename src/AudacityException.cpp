@@ -31,6 +31,7 @@ MessageBoxException &MessageBoxException::operator = ( MessageBoxException &&tha
 {
    caption = that.caption;
    if ( this != &that ) {
+      AudacityException::operator=( std::move(that) );
       if (!moved)
          wxAtomicDec( sOutstandingMessages );
 
