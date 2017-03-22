@@ -224,11 +224,11 @@ void ControlToolBar::RegenerateTooltips()
             break;
          case ID_RECORD_BUTTON:
             commands.push_back(wxT("Record"));
-#ifndef EXPERIMENTAL_DA
+#ifdef PREFER_NEW_TRACKS
             commands.push_back(_("Append Record"));
             commands.push_back(wxT("RecordAppend"));
 #else
-            commands.push_back(_("Record Below"));
+            commands.push_back(_("Record New Track"));
             commands.push_back(wxT("RecordBelow"));
 #endif
             break;
@@ -874,7 +874,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    bool success = false;
 
    bool shifted = mRecord->WasShiftDown();
-#ifdef EXPERIMENTAL_DA
+#ifndef PREFER_NEW_TRACKS
    shifted = !shifted;
 #endif
 

@@ -784,17 +784,19 @@ void AudacityProject::CreateMenusAndCommands()
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
-      c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-
-// The RecordBelow function is actually 'record-other', i.e. if normal record record beside,
-// it records below, if normal record records below, it records beside.
-// TODO: fix the naming, and also check we do 'the right thing' with other options like
-// TimerRecord.
-#ifdef EXPERIMENTAL_DA
-      c->AddItem(wxT("RecordBelow"), _("Record Below"), FN(OnRecordBelow), wxT("Shift+R"));
+      // The RecordBelow function is actually 'record-other', i.e. if normal record records beside,
+      // it records below, if normal record records below, it records beside.
+      // TODO: fix the naming, and also check we do 'the right thing' with other options like
+      // TimerRecord.
+      // PREFER_NEW_TRACKS is defined if we want the old behaviour of by default adding a new track on
+      // every new recording.
+#ifndef PREFER_NEW_TRACKS
+      c->AddItem(wxT("RecordBelow"), _("Record New Track"), FN(OnRecordBelow), wxT("Shift+R"));
 #else
       c->AddItem(wxT("RecordBelow"), _("Record Beside"), FN(OnRecordBelow), wxT("Shift+R"));
 #endif
+
+      c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
       // JKC: I decided to duplicate this between play and record, rather than put it 
       // at the top level.  AddItem can now cope with simple duplicated items.
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
