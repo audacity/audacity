@@ -39,7 +39,7 @@ protected:
    // Make this protected to prevent slicing copies
    AudacityException( AudacityException&& ) {}
    AudacityException( const AudacityException& ) = default;
-   AudacityException &operator = (AudacityException &&) {}
+   AudacityException &operator = (AudacityException &&) { return *this;}
    AudacityException &operator = ( const AudacityException & ) PROHIBITED;
 };
 
