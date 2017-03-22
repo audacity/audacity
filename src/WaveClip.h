@@ -46,34 +46,8 @@ public:
       , start(-1.0)
       , windowType(-1)
       , frequencyGain(-1)
-#if 0
-      , freq(NULL)
-      , where(NULL)
-#endif
       , dirty(-1)
    {
-   }
-
-   // Make valid cache, to be filled in
-   SpecCache(size_t cacheLen, int algorithm_,
-      double pps_, double start_, int windowType_, size_t windowSize_,
-      unsigned zeroPaddingFactor_, int frequencyGain_)
-      : len(cacheLen)
-      , algorithm(algorithm_)
-      , pps(pps_)
-      , start(start_)
-      , windowType(windowType_)
-      , windowSize(windowSize_)
-      , zeroPaddingFactor(zeroPaddingFactor_)
-      , frequencyGain(frequencyGain_)
-      , freq{}
-
-      // Sample counts corresponding to the columns, and to one past the end.
-      , where(len + 1)
-
-      , dirty(-1)
-   {
-      where[0] = 0;
    }
 
    ~SpecCache()
@@ -83,32 +57,36 @@ public:
    bool Matches(int dirty_, double pixelsPerSecond,
       const SpectrogramSettings &settings, double rate) const;
 
+   // Calculate one column of the spectrum
    bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
        WaveTrackCache &waveTrackCache,
-       int xx, sampleCount numSamples,
+       const int xx, sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond,
        int lowerBoundX, int upperBoundX,
        const std::vector<float> &gainFactors,
        float* __restrict scratch,
        float* __restrict out) const;
 
-   void Allocate(const SpectrogramSettings &settings);
+   // Resize the cache while preserving the (possibly now invalid!) contents
+   void Resize(size_t len_, const SpectrogramSettings& settings,
+               double pixelsPerSecond, double start_);
 
+   // Calculate the dirty columns at the begin and end of the cache
    void Populate
       (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
        int copyBegin, int copyEnd, size_t numPixels,
        sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond);
 
-   const size_t       len { 0 }; // counts pixels, not samples
-   const int          algorithm;
-   const double       pps;
-   const double       start;
-   const int          windowType;
-   const size_t       windowSize { 0 };
-   const unsigned     zeroPaddingFactor { 0 };
-   const int          frequencyGain;
+   size_t       len { 0 }; // counts pixels, not samples
+   int          algorithm;
+   double       pps;
+   double       start;
+   int          windowType;
+   size_t       windowSize { 0 };
+   unsigned     zeroPaddingFactor { 0 };
+   int          frequencyGain;
    std::vector<float> freq;
    std::vector<sampleCount> where;
 

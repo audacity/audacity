@@ -2410,10 +2410,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       : std::min(mid.width, (int)(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
    const size_t numPixels = std::max(0, end - begin);
    const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
-   SpecCache specCache
-      (numPixels, settings.algorithm, -1,
-       t0, settings.windowType,
-       settings.WindowSize(), zeroPaddingFactor, settings.frequencyGain);
+
+   SpecCache specCache;
+
+   // need explicit resize since specCache.where[] accessed before Populate()
+   specCache.Resize(numPixels, settings, -1, t0);
+
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {
          const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;
