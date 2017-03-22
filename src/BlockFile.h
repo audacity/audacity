@@ -67,8 +67,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // Reading
 
    /// Retrieves audio data from this BlockFile
+   /// Returns the number of samples really read, not more than len
+   /// If fewer can be read than len, throws an exception if mayThrow is true,
+   /// otherwise fills the remainder of data with zeroes.
    virtual size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const = 0;
+                        size_t start, size_t len, bool mayThrow = true)
+      const = 0;
 
    // Other Properties
 
@@ -117,11 +121,13 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Returns TRUE if this BlockFile is locked
    virtual bool IsLocked();
 
+   struct MinMaxRMS { float min, max, RMS; };
+
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const;
+   virtual MinMaxRMS GetMinMaxRMS(size_t start, size_t len,
+                          bool mayThrow = true) const;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS) const;
+   virtual MinMaxRMS GetMinMaxRMS(bool mayThrow = true) const;
    /// Returns the 256 byte summary data block
    virtual bool Read256(float *buffer, size_t start, size_t len);
    /// Returns the 64K summary data block
@@ -221,6 +227,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    virtual void FixSummary(void *data);
 
    static size_t CommonReadData(
+      bool mayThrow,
       const wxFileName &fileName, bool &mSilentLog,
       const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
       samplePtr data, sampleFormat format, size_t start, size_t len,

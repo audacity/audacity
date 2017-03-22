@@ -251,7 +251,7 @@ public:
    bool AfterClip(double t) const;
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len) const;
+                   sampleCount start, size_t len, bool mayThrow = true) const;
    bool SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
@@ -278,8 +278,9 @@ public:
                        const sampleCount *& where,
                        size_t numPixels,
                        double t0, double pixelsPerSecond) const;
-   bool GetMinMax(float *min, float *max, double t0, double t1) const;
-   bool GetRMS(float *rms, double t0, double t1);
+   std::pair<float, float> GetMinMax(
+      double t0, double t1, bool mayThrow = true) const;
+   float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    // Set/clear/get rectangle that this WaveClip fills on screen. This is
    // called by TrackArtist while actually drawing the tracks and clips.

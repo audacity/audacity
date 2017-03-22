@@ -252,14 +252,15 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len, fillFormat fill=fillZero) const;
+                   sampleCount start, size_t len,
+                   fillFormat fill = fillZero, bool mayThrow = true) const;
    bool Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
-   bool GetMinMax(float *min, float *max,
-                  double t0, double t1) const;
-   bool GetRMS(float *rms, double t0, double t1) const;
+   std::pair<float, float> GetMinMax(
+      double t0, double t1, bool mayThrow = true) const;
+   float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //
    // MM: We now have more than one sequence and envelope per track, so
@@ -647,7 +648,8 @@ public:
    // Returns null on failure
    // Returned pointer may be invalidated if Get is called again
    // Do not DELETE[] the pointer
-   constSamplePtr Get(sampleFormat format, sampleCount start, size_t len);
+   constSamplePtr Get(
+      sampleFormat format, sampleCount start, size_t len, bool mayThrow);
 
 private:
    void Free();

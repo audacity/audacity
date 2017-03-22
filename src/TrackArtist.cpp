@@ -1324,7 +1324,9 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
       return;
 
    Floats buffer{ size_t(slen) };
-   clip->GetSamples((samplePtr)buffer.get(), floatSample, s0, slen);
+   clip->GetSamples((samplePtr)buffer.get(), floatSample, s0, slen,
+                    // Suppress exceptions in this drawing operation:
+                    false);
 
    ArrayOf<int> xpos{ size_t(slen) };
    ArrayOf<int> ypos{ size_t(slen) };

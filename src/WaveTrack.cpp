@@ -55,6 +55,8 @@ Track classes.
 #include "prefs/SpectrumPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
+#include "InconsistencyException.h"
+
 #include "Experimental.h"
 
 using std::max;
@@ -1902,61 +1904,58 @@ double WaveTrack::GetEndTime() const
 // expressed relative to t=0.0 at the track's sample rate.
 //
 
-bool WaveTrack::GetMinMax(float *min, float *max,
-                          double t0, double t1) const
+std::pair<float, float> WaveTrack::GetMinMax(
+   double t0, double t1, bool mayThrow) const
 {
+   std::pair<float, float> results {
+      // we need these at extremes to make sure we find true min and max
+      FLT_MAX, -FLT_MAX
+   };
    bool clipFound = false;
 
-   *min = FLT_MAX;   // we need these at extremes to make sure we find true min and max
-   *max = -FLT_MAX;
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      return results;
+   }
 
    if (t0 == t1)
-      return true;
-
-   bool result = true;
+      return results;
 
    for (const auto &clip: mClips)
    {
       if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       {
          clipFound = true;
-         float clipmin, clipmax;
-         if (clip->GetMinMax(&clipmin, &clipmax, t0, t1))
-         {
-            if (clipmin < *min)
-               *min = clipmin;
-            if (clipmax > *max)
-               *max = clipmax;
-         } else
-         {
-            result = false;
-         }
+         auto clipResults = clip->GetMinMax(t0, t1, mayThrow);
+         if (clipResults.first < results.first)
+            results.first = clipResults.first;
+         if (clipResults.second > results.second)
+            results.second = clipResults.second;
       }
    }
 
    if(!clipFound)
    {
-      *min = float(0.0);   // sensible defaults if no clips found
-      *max = float(0.0);
+      results = { 0.f, 0.f }; // sensible defaults if no clips found
    }
 
-   return result;
+   return results;
 }
 
-bool WaveTrack::GetRMS(float *rms, double t0, double t1) const
+float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 {
-   *rms = float(0.0);
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      return 0.f;
+   }
 
    if (t0 == t1)
-      return true;
+      return 0.f;
 
-   bool result = true;
    double sumsq = 0.0;
    sampleCount length = 0;
 
@@ -1967,34 +1966,28 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1) const
       // if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       {
-         float cliprms;
          sampleCount clipStart, clipEnd;
 
-         if (clip->GetRMS(&cliprms, t0, t1))
-         {
-            clip->TimeToSamplesClip(wxMax(t0, clip->GetStartTime()), &clipStart);
-            clip->TimeToSamplesClip(wxMin(t1, clip->GetEndTime()), &clipEnd);
-            sumsq += cliprms * cliprms * (clipEnd - clipStart).as_float();
-            length += (clipEnd - clipStart);
-         }
-         else
-         {
-            result = false;
-         }
+         float cliprms = clip->GetRMS(t0, t1, mayThrow);
+
+         clip->TimeToSamplesClip(wxMax(t0, clip->GetStartTime()), &clipStart);
+         clip->TimeToSamplesClip(wxMin(t1, clip->GetEndTime()), &clipEnd);
+         sumsq += cliprms * cliprms * (clipEnd - clipStart).as_float();
+         length += (clipEnd - clipStart);
       }
    }
-   *rms = length > 0 ? sqrt(sumsq / length.as_double()) : 0.0;
-
-   return result;
+   return length > 0 ? sqrt(sumsq / length.as_double()) : 0.0;
 }
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, size_t len, fillFormat fill ) const
+                    sampleCount start, size_t len, fillFormat fill,
+                    bool mayThrow) const
 {
    // Simple optimization: When this buffer is completely contained within one clip,
    // don't clear anything (because we won't have to). Otherwise, just clear
    // everything to be on the safe side.
    bool doClear = true;
+   bool result = true;
    for (const auto &clip: mClips)
    {
       if (start >= clip->GetStartSample() && start+len <= clip->GetEndSample())
@@ -2055,15 +2048,12 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
                (samplePtr)(((char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
-               format, inclipDelta, samplesToCopy.as_size_t() ))
-         {
-            wxASSERT(false); // should always work
-            return false;
-         }
+               format, inclipDelta, samplesToCopy.as_size_t(), mayThrow ))
+            result = false;
       }
    }
 
-   return true;
+   return result;
 }
 
 bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
@@ -2631,7 +2621,7 @@ void WaveTrackCache::SetTrack(const WaveTrack *pTrack)
 }
 
 constSamplePtr WaveTrackCache::Get(sampleFormat format,
-   sampleCount start, size_t len)
+   sampleCount start, size_t len, bool mayThrow)
 {
    if (format == floatSample && len > 0) {
       const auto end = start + len;
@@ -2681,7 +2671,9 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          if (start0 >= 0) {
             const auto len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
-            if (!mPTrack->Get(samplePtr(mBuffers[0].data.get()), floatSample, start0, len0))
+            if (!mPTrack->Get(
+                  samplePtr(mBuffers[0].data.get()), floatSample, start0, len0,
+                  fillZero, mayThrow))
                return 0;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;

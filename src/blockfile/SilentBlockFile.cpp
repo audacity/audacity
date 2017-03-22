@@ -32,7 +32,7 @@ bool SilentBlockFile::ReadSummary(ArrayOf<char> &data)
 }
 
 size_t SilentBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              size_t WXUNUSED(start), size_t len) const
+                              size_t WXUNUSED(start), size_t len, bool) const
 {
    ClearSamples(data, format, 0, len);
 

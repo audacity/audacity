@@ -65,10 +65,10 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    //Calls that rely on summary files need to be overidden
    DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   void GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const override;
+   MinMaxRMS GetMinMaxRMS(
+      size_t start, size_t len, bool mayThrow) const override;
    /// Gets extreme values for the entire block
-   void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
+   MinMaxRMS GetMinMaxRMS(bool mayThrow) const override;
    /// Returns the 256 byte summary data block
    bool Read256(float *buffer, size_t start, size_t len) override;
    /// Returns the 64K summary data block
@@ -118,7 +118,7 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 
    /// Reads the specified data from the aliased file using libsndfile
    size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const override;
+                        size_t start, size_t len, bool mayThrow) const override;
 
    /// Read the summary into a buffer
    bool ReadSummary(ArrayOf<char> &data) override;
