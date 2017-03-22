@@ -4428,8 +4428,8 @@ void AudacityProject::OnPaste()
          wxASSERT( n && c );
          if (c->GetKind() == Track::Wave && n->GetKind() == Track::Wave)
          {
-            bPastedSomething |=
-               ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
+            bPastedSomething = true;
+            ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
          }
          else if (c->GetKind() == Track::Label &&
                   n->GetKind() == Track::Label)
@@ -4457,7 +4457,8 @@ void AudacityProject::OnPaste()
             n = iter.Next();
 
             if (n->GetKind() == Track::Wave) {
-               bPastedSomething |= ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
+               bPastedSomething = true;
+               ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
             }
             else
             {
@@ -4497,16 +4498,16 @@ void AudacityProject::OnPaste()
          if (n->GetSelected() && n->GetKind()==Track::Wave) {
             if (c) {
                wxASSERT(c->GetKind() == Track::Wave);
-               bPastedSomething |=
-                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
+               bPastedSomething = true;
+               ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
             }
             else {
                auto tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                tmp->Flush();
 
-               bPastedSomething |=
-                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
+               bPastedSomething = true;
+               ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
             }
          }
          else if (n->GetKind() == Track::Label && n->GetSelected())
@@ -4947,7 +4948,7 @@ void AudacityProject::OnCutLabels()
   if( gPrefs->Read( wxT( "/GUI/EnableCutLines" ), ( long )0 ) )
      EditByLabel( &WaveTrack::ClearAndAddCutLine, true );
   else
-     EditByLabel( &WaveTrack::Clear1, true );
+     EditByLabel( &WaveTrack::Clear, true );
 
   msClipProject = this;
 
@@ -5001,7 +5002,7 @@ void AudacityProject::OnDeleteLabels()
   if( mViewInfo.selectedRegion.isPoint() )
      return;
 
-  EditByLabel( &WaveTrack::Clear1, true );
+  EditByLabel( &WaveTrack::Clear, true );
 
   mViewInfo.selectedRegion.collapseToT0();
 
@@ -5035,7 +5036,7 @@ void AudacityProject::OnSilenceLabels()
   if( mViewInfo.selectedRegion.isPoint() )
      return;
 
-  EditByLabel( &WaveTrack::Silence1, false );
+  EditByLabel( &WaveTrack::Silence, false );
 
   PushState(
    /* i18n-hint: (verb)*/
@@ -7237,8 +7238,7 @@ void AudacityProject::OnResample()
          // But the thrown exception will cause rollback in the application
          // level handler.
 
-         if (!((WaveTrack*)t)->Resample(newRate, &progress))
-            break;
+         ((WaveTrack*)t)->Resample(newRate, &progress);
 
          // Each time a track is successfully, completely resampled,
          // commit that to the undo stack.  The second and later times,

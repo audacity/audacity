@@ -382,7 +382,7 @@ public:
    void SkipEnd(bool shift);
 
 
-   typedef bool (WaveTrack::* EditFunction)(double, double);
+   typedef void (WaveTrack::* EditFunction)(double, double);
    typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
 
    void EditByLabel(EditFunction action, bool bSyncLockedTracks);

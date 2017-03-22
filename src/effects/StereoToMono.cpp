@@ -157,14 +157,14 @@ bool EffectStereoToMono::ProcessOne(int count)
          curMonoFrame = (curLeftFrame + curRightFrame) / 2.0;
          leftBuffer[i] = curMonoFrame;
       }
-      bResult &= mOutTrack->Append((samplePtr)leftBuffer.get(), floatSample, limit);
+      mOutTrack->Append((samplePtr)leftBuffer.get(), floatSample, limit);
       if (TrackProgress(count, 2.*(index.as_double() / (mEnd - mStart).as_double())))
          return false;
    }
 
    double minStart = wxMin(mLeftTrack->GetStartTime(), mRightTrack->GetStartTime());
    mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
-   bResult &= mOutTrack->Flush();
+   mOutTrack->Flush();
    mLeftTrack->Paste(minStart, mOutTrack.get());
    mLeftTrack->SetLinked(false);
    mRightTrack->SetLinked(false);

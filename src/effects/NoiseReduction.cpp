@@ -1333,9 +1333,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
       double tLen = outputTrack->LongSamplesToTime(len);
       // Filtering effects always end up with more data than they started with.  Delete this 'tail'.
       outputTrack->HandleClear(tLen, outputTrack->GetEndTime(), false, false);
-      bool bResult = track->ClearAndPaste(t0, t0 + tLen, &*outputTrack, true, false);
-      wxASSERT(bResult); // TO DO: Actually handle this.
-      wxUnusedVar(bResult);
+      track->ClearAndPaste(t0, t0 + tLen, &*outputTrack, true, false);
    }
 
    return bLoopSuccess;

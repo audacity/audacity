@@ -6283,25 +6283,14 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
             // When user presses left button on cut line, expand the line again
             double cutlineStart = 0, cutlineEnd = 0;
 
-            if (track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd))
+            track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd);
             {
                // Assume linked track is wave or null
                const auto linked =
                   static_cast<WaveTrack*>(track->GetLink());
-               if (linked) {
+               if (linked)
                   // Expand the cutline in the opposite channel if it is present.
-
-                  // PRL:  Do NOT report that the event is not handled if the other
-                  // channel doesn't also have a cutline to expand at the same time.
-                  // Just ignore the return.  Bug1310.
-
-                  /* bool success = */
-                     linked->ExpandCutLine(mCapturedTrackLocation.pos);
-                  /*
-                  if (!success)
-                     return false;
-                  */
-               }
+                  linked->ExpandCutLine(mCapturedTrackLocation.pos);
 
                mViewInfo->selectedRegion.setTimes(cutlineStart, cutlineEnd);
                DisplaySelection();
@@ -6311,8 +6300,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
          }
          else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint) {
             const double pos = mCapturedTrackLocation.pos;
-            if (!track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
-               return false;
+            track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
 
             // Assume linked track is wave or null
             const auto linked =
@@ -6322,8 +6310,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
                int idx = FindMergeLine(linked, pos);
                if (idx >= 0) {
                   WaveTrack::Location location = linked->GetCachedLocations()[idx];
-                  if (!linked->MergeClips(location.clipidx1, location.clipidx2))
-                     return false;
+                  linked->MergeClips(location.clipidx1, location.clipidx2);
                }
             }
 
@@ -8338,16 +8325,12 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
    if (newFormat == ((WaveTrack*)mPopupMenuTarget)->GetSampleFormat())
       return; // Nothing to do.
 
-   bool bResult = ((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
-   wxASSERT(bResult); // TO DO: Actually handle this.
+   ((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
    // Assume linked track is wave or null
    const auto partner =
       static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
    if (partner)
-   {
-      bResult = partner->ConvertToSampleFormat(newFormat);
-      wxASSERT(bResult); // TO DO: Actually handle this.
-   }
+      partner->ConvertToSampleFormat(newFormat);
 
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s"),
                                         mPopupMenuTarget->GetName().
