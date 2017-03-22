@@ -600,15 +600,13 @@ void WaveTrack::Trim (double t0, double t1)
 
       if(t1 > clip->GetStartTime() && t1 < clip->GetEndTime())
       {
-         if (!clip->Clear(t1,clip->GetEndTime()))
-            return;
+         clip->Clear(t1,clip->GetEndTime());
          inside1 = true;
       }
 
       if(t0 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
-         if (!clip->Clear(clip->GetStartTime(),t0))
-            return;
+         clip->Clear(clip->GetStartTime(),t0);
          clip->SetOffset(t0);
          inside0 = true;
       }
@@ -686,15 +684,9 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
             newTrack->GetSampleFormat(),
             static_cast<int>(newTrack->GetRate()));
       placeholder->SetIsPlaceholder(true);
-      if ( ! placeholder->InsertSilence(
-               0, (t1 - t0) - newTrack->GetEndTime()) )
-      {
-      }
-      else
-      {
-         placeholder->Offset(newTrack->GetEndTime());
-         newTrack->mClips.push_back(std::move(placeholder)); // transfer ownership
-      }
+      placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
+      placeholder->Offset(newTrack->GetEndTime());
+      newTrack->mClips.push_back(std::move(placeholder)); // transfer ownership
    }
 
    return result;
@@ -1143,8 +1135,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                      newClip->GetEnvelope()->Insert(t1 - clip->GetOffset(), val);
                   }
                }
-               if (!newClip->Clear(t0,t1))
-                  return;
+               newClip->Clear(t0,t1);
                newClip->GetEnvelope()->RemoveUnneededPoints(t0);
 
                clipsToAdd.push_back( std::move( newClip ) );
@@ -1410,11 +1401,7 @@ void WaveTrack::Silence(double t0, double t1)
             startDelta = 0;
          }
 
-         if (!clip->GetSequence()->SetSilence(inclipDelta, samplesToCopy))
-         {
-            wxASSERT(false); // should always work
-            return;
-         }
+         clip->GetSequence()->SetSilence(inclipDelta, samplesToCopy);
          clip->MarkChanged();
       }
    }
@@ -1444,8 +1431,7 @@ void WaveTrack::InsertSilence(double t, double len)
 
       // use STRONG-GUARANTEE
       if (it != end)
-         if(!it->get()->InsertSilence(t, len))
-            return;
+         it->get()->InsertSilence(t, len);
 
       // use NOFAIL-GUARANTEE
       for (const auto &clip : mClips)
@@ -1579,9 +1565,7 @@ void WaveTrack::Join(double t0, double t1)
       }
 
       //printf("Pasting at %.6f\n", t);
-      bool bResult = newClip->Paste(t, clip);
-      wxASSERT(bResult); // TO DO: Actually handle this.
-      wxUnusedVar(bResult);
+      newClip->Paste(t, clip);
       t = newClip->GetEndTime();
 
       auto it = FindClip(mClips, clip);
@@ -2122,15 +2106,11 @@ void WaveTrack::Set(samplePtr buffer, sampleFormat format,
             // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->SetSamples(
+         clip->SetSamples(
                (samplePtr)(((char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
-               format, inclipDelta, samplesToCopy.as_size_t() ))
-         {
-            wxASSERT(false); // should always work
-            return;
-         }
+                          format, inclipDelta, samplesToCopy.as_size_t() );
          clip->MarkChanged();
       }
    }
@@ -2393,14 +2373,8 @@ void WaveTrack::SplitAt(double t)
             c->GetEnvelope()->Insert(t - c->GetOffset() - 1.0/c->GetRate(), val);  // frame end points
          c->GetEnvelope()->Insert(t - c->GetOffset(), val);
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
-         if (!c->Clear(t, c->GetEndTime()))
-         {
-            return;
-         }
-         if (!newClip->Clear(c->GetStartTime(), t))
-         {
-            return;
-         }
+         c->Clear(t, c->GetEndTime());
+         newClip->Clear(c->GetStartTime(), t);
 
          //offset the NEW clip by the splitpoint (noting that it is already offset to c->GetStartTime())
          sampleCount here = llrint(floor(((t - c->GetStartTime()) * mRate) + 0.5));
@@ -2511,8 +2485,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
           }
       }
 
-      if (!clip->ExpandCutLine(cutLinePosition))
-         return;
+      clip->ExpandCutLine(cutLinePosition);
 
       // STRONG-GUARANTEE provided that the following gives NOFAIL-GUARANTEE
 
@@ -2553,9 +2526,8 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
    // Append data from second clip to first clip
    // use STRONG-GUARANTEE
-   if (!clip1->Paste(clip1->GetEndTime(), clip2))
-      return;
-
+   clip1->Paste(clip1->GetEndTime(), clip2);
+   
    // use NOFAIL-GUARANTEE for the rest
    // Delete second clip
    auto it = FindClip(mClips, clip2);
@@ -2567,13 +2539,7 @@ void WaveTrack::Resample(int rate, ProgressDialog *progress)
 // Partial completion may leave clips at differing sample rates!
 {
    for (const auto &clip : mClips)
-      if (!clip->Resample(rate, progress))
-      {
-         wxLogDebug( wxT("Resampling problem!  We're partially resampled") );
-         // FIXME: The track is now in an inconsistent state since some
-         //        clips are resampled and some are not
-         return;
-      }
+      clip->Resample(rate, progress);
 
    mRate = rate;
 }
