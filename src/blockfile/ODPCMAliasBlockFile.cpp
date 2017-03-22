@@ -36,6 +36,8 @@ The summary is eventually computed and written to a file in a background thread.
 #include "../ondemand/ODManager.h"
 #include "../AudioIO.h"
 
+#include "NotYetAvailableException.h"
+
 //#include <errno.h>
 
 extern AudioIO *gAudioIO;
@@ -121,37 +123,49 @@ void ODPCMAliasBlockFile::Unlock()
 
 
 /// Gets extreme values for the specified region
-void ODPCMAliasBlockFile::GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const
+auto ODPCMAliasBlockFile::GetMinMaxRMS(
+   size_t start, size_t len, bool mayThrow) const -> MinMaxRMS
 {
    if(IsSummaryAvailable())
    {
-      PCMAliasBlockFile::GetMinMax(start,len,outMin,outMax,outRMS);
+      return PCMAliasBlockFile::GetMinMaxRMS(start, len, mayThrow);
    }
    else
    {
+      if (mayThrow)
+         //throw NotYetAvailableException{ GetAliasedFileName() }
+         ;
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
-      *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -JUST_BELOW_MAX_AUDIO,
+         JUST_BELOW_MAX_AUDIO,
+         0.707f //sin with amp of 1 rms
+      };
    }
 }
 
 /// Gets extreme values for the entire block
-void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
+auto ODPCMAliasBlockFile::GetMinMaxRMS(bool mayThrow) const -> MinMaxRMS
 {
   if(IsSummaryAvailable())
    {
-      PCMAliasBlockFile::GetMinMax(outMin,outMax,outRMS);
+      return PCMAliasBlockFile::GetMinMaxRMS(mayThrow);
    }
    else
    {
+      if (mayThrow)
+         //throw NotYetAvailableException{ GetAliasedFileName() }
+         ;
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
-      *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -JUST_BELOW_MAX_AUDIO,
+         JUST_BELOW_MAX_AUDIO,
+         0.707f //sin with amp of 1 rms
+      };
    }
 }
 
@@ -366,41 +380,45 @@ auto ODPCMAliasBlockFile::GetFileName() const -> GetFileNameResult
 /// Write the summary to disk, using the derived ReadData() to get the data
 void ODPCMAliasBlockFile::WriteSummary()
 {
-   //the mFileName path may change, for example, when the project is saved.
-   //(it moves from /tmp/ to wherever it is saved to.
-   mFileNameMutex.Lock();
-
-   //wxFFile is not thread-safe - if any error occurs in opening the file,
-   // it posts a wxlog message which WILL crash
-   // Audacity because it goes into the wx GUI.
-   // For this reason I left the wxFFile method commented out. (mchinen)
-   //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
-
-   // ...and we use fopen instead.
-   FILE* summaryFile{};
-   wxString sFullPath = mFileName.GetFullPath();
-   {
-      ArrayOf < char > fileNameChar{ strlen(sFullPath.mb_str(wxConvFile)) + 1 };
-      strcpy(fileNameChar.get(), sFullPath.mb_str(wxConvFile));
-      summaryFile = fopen(fileNameChar.get(), "wb");
-
-      mFileNameMutex.Unlock();
-
-      // JKC ANSWER-ME: Whay is IsOpened() commented out?
-      if (!summaryFile){//.IsOpened() ){
-
-         // Never silence the Log w.r.t write errors; they always count
-         //however, this is going to be called from a non-main thread,
-         //and wxLog calls are not thread safe.
-         printf("Unable to write summary data to file: %s", fileNameChar.get());
-         return;
-      }
-   }
-
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
+   // Call this first, so that in case of exceptions from ReadData, there is
+   // no new output file
    SampleBuffer sampleData(mLen, floatSample);
-   this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
+   this->ReadData(sampleData.ptr(), floatSample, 0, mLen, true);
+
+   ArrayOf< char > fileNameChar;
+   FILE *summaryFile{};
+   {
+      //the mFileName path may change, for example, when the project is saved.
+      //(it moves from /tmp/ to wherever it is saved to.
+      ODLocker locker { &mFileNameMutex };
+
+      //wxFFile is not thread-safe - if any error occurs in opening the file,
+      // it posts a wxlog message which WILL crash
+      // Audacity because it goes into the wx GUI.
+      // For this reason I left the wxFFile method commented out. (mchinen)
+      //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
+
+      // ...and we use fopen instead.
+      wxString sFullPath = mFileName.GetFullPath();
+      fileNameChar.reinit( strlen(sFullPath.mb_str(wxConvFile)) + 1 );
+      strcpy(fileNameChar.get(), sFullPath.mb_str(wxConvFile));
+      summaryFile = fopen(fileNameChar.get(), "wb");
+   }
+
+   // JKC ANSWER-ME: Whay is IsOpened() commented out?
+   if (!summaryFile){//.IsOpened() ){
+
+      // Never silence the Log w.r.t write errors; they always count
+      //however, this is going to be called from a non-main thread,
+      //and wxLog calls are not thread safe.
+      printf("Unable to write summary data to file: %s", fileNameChar.get());
+
+      // throw FileException{
+         // FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
+      return;
+   }
 
    ArrayOf<char> cleanup;
    void *summaryData = CalcSummary(sampleData.ptr(), mLen,
@@ -481,7 +499,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                size_t start, size_t len) const
+                                size_t start, size_t len, bool mayThrow) const
 {
 
    auto locker = LockForRead();
@@ -491,7 +509,7 @@ size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       return len;
    }
 
-   return CommonReadData(
+   return CommonReadData( mayThrow,
       mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
       data, format, start, len);
 }

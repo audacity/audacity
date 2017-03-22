@@ -544,10 +544,11 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //    But this change is consistent with the others for EXPERIMENTAL_MIDI_OUT, so I accept it.
    if ((t0 < 0.0) || (t1 < 0.0) || (t0 >= t1) || // bad time value or nothing to show
 #ifdef EXPERIMENTAL_MIDI_OUT
-         ((mMixerBoard->HasSolo() || mTrack->GetMute()) && !mTrack->GetSolo()))
+         ((mMixerBoard->HasSolo() || mTrack->GetMute()) && !mTrack->GetSolo())
 #else
-         ((mMixerBoard->HasSolo() || mLeftTrack->GetMute()) && !mLeftTrack->GetSolo()))
+         ((mMixerBoard->HasSolo() || mLeftTrack->GetMute()) && !mLeftTrack->GetSolo())
 #endif
+      )
    {
       //v Vaughan, 2011-02-25: Moved the update back to TrackPanel::OnTimer() as it helps with
       //    playback issues reported by Bill and noted on Bug 258, so no assert.
@@ -636,9 +637,11 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // in about 1/20 second (ticks of TrackPanel timer), so this won't overflow
    auto nFrames = scnFrames.as_size_t();
 
-   Floats tempFloatsArray{ size_t(nFrames) };
+   Floats tempFloatsArray{ nFrames };
    decltype(tempFloatsArray) meterFloatsArray;
-   bool bSuccess = mLeftTrack->Get((samplePtr)tempFloatsArray.get(), floatSample, startSample, nFrames);
+   // Don't throw on read error in this drawing update routine
+   bool bSuccess = mLeftTrack->Get((samplePtr)tempFloatsArray.get(),
+      floatSample, startSample, nFrames, fillZero, false);
    if (bSuccess)
    {
       // We always pass a stereo sample array to the meter, as it shows 2 channels.
@@ -651,7 +654,9 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
          meterFloatsArray[2 * index] = tempFloatsArray[index];
 
       if (mRightTrack)
-         bSuccess = mRightTrack->Get((samplePtr)tempFloatsArray.get(), floatSample, startSample, nFrames);
+         // Again, don't throw
+         bSuccess = mRightTrack->Get((samplePtr)tempFloatsArray.get(),
+            floatSample, startSample, nFrames, fillZero, false);
 
       if (bSuccess)
          // Interleave right channel, or duplicate same signal for "right" channel in mono case.

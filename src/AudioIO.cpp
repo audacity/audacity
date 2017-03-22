@@ -1883,10 +1883,12 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
                // MB: use normal time for the end time, not warped time!
                mPlaybackMixers[i] = std::make_unique<Mixer>
                   (WaveTrackConstArray{ mPlaybackTracks[i] },
-                                               warpOptions,
-                                               mT0, mT1, 1,
-                                               playbackMixBufferSize, false,
-                                               mRate, floatSample, false);
+                  // Don't throw for read errors, just play silence:
+                  false,
+                  warpOptions,
+                  mT0, mT1, 1,
+                  playbackMixBufferSize, false,
+                  mRate, floatSample, false);
                mPlaybackMixers[i]->ApplyTrackGains(false);
             }
          }

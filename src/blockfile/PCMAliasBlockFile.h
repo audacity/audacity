@@ -38,7 +38,7 @@ class PCMAliasBlockFile /* not final */ : public AliasBlockFile
 
    /// Reads the specified data from the aliased file using libsndfile
    size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const override;
+                        size_t start, size_t len, bool mayThrow) const override;
 
    void SaveXML(XMLWriter &xmlFile) override;
    BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;

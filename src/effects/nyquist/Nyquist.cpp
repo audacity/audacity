@@ -968,7 +968,8 @@ bool NyquistEffect::ProcessOne()
          if (mCurNumChannels > 1) clips += wxT(" )");
 
          float min, max;
-         mCurTrack[i]->GetMinMax(&min, &max, mT0, mT1);
+         auto pair = mCurTrack[i]->GetMinMax(mT0, mT1); // may throw
+         min = pair.first, max = pair.second;
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
          maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
 
@@ -980,8 +981,7 @@ bool NyquistEffect::ProcessOne()
             peakString += wxT("nil");
          }
 
-         float rms = 0.0;
-         mCurTrack[i]->GetRMS(&rms, mT0, mT1);
+         float rms = mCurTrack[i]->GetRMS(mT0, mT1); // may throw
          if (!std::isinf(rms) && !std::isnan(rms)) {
             rmsString += wxString::Format(wxT("(float %s) "), Internat::ToString(rms).c_str());
          } else {

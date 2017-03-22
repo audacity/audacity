@@ -164,8 +164,8 @@ bool EffectAmplify::Init()
 
    for (Track *t = iter.First(); t; t = iter.Next())
    {
-      float min, max;
-      ((WaveTrack *)t)->GetMinMax(&min, &max, mT0, mT1);
+      auto pair = ((WaveTrack *)t)->GetMinMax(mT0, mT1); // may throw
+      const float min = pair.first, max = pair.second;
       float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
 
       if (newpeak > mPeak)

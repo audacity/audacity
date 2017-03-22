@@ -315,7 +315,9 @@ void SimpleBlockFile::FillCache()
 
    // Read samples into cache
    mCache.sampleData.reinit(mLen * SAMPLE_SIZE(mCache.format));
-   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen) != mLen)
+   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen,
+                // no exceptions!
+                false) != mLen)
    {
       // Could not read all samples
       mCache.sampleData.reset();
@@ -387,21 +389,30 @@ bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const
+                        size_t start, size_t len, bool mayThrow) const
 {
    if (mCache.active)
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
 
-      len = std::min(len, std::max(start, mLen) - start);
+      auto framesRead = std::min(len, std::max(start, mLen) - start);
       CopySamples(
          (samplePtr)(mCache.sampleData.get() +
             start * SAMPLE_SIZE(mCache.format)),
-         mCache.format, data, format, len);
-      return len;
+         mCache.format, data, format, framesRead);
+
+      if ( framesRead < len ) {
+         if (mayThrow)
+            // Not the best exception class?
+            //throw FileException{ FileException::Cause::Read, mFileName }
+            ;
+         ClearSamples(data, format, framesRead, len - framesRead);
+      }
+
+      return framesRead;
    }
    else
-      return CommonReadData(
+      return CommonReadData( mayThrow,
          mFileName, mSilentLog, nullptr, 0, 0, data, format, start, len);
 }
 

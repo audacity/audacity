@@ -566,7 +566,9 @@ void FreqWindow::GetAudio()
                // dataLen is not more than 10 * 2 ^ 20
                mDataLen = dataLen.as_size_t();
             mData = Floats{ mDataLen };
-            track->Get((samplePtr)mData.get(), floatSample, start, mDataLen);
+            // Don't allow throw for bad reads
+            track->Get((samplePtr)mData.get(), floatSample, start, mDataLen,
+                       fillZero, false);
          }
          else {
             if (track->GetRate() != mRate) {
@@ -577,7 +579,9 @@ void FreqWindow::GetAudio()
             }
             auto start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
             Floats buffer2{ mDataLen };
-            track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen);
+            // Again, stop exceptions
+            track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen,
+                       fillZero, false);
             for (size_t i = 0; i < mDataLen; i++)
                mData[i] += buffer2[i];
          }
