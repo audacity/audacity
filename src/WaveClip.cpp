@@ -47,12 +47,6 @@
 
 #ifdef _OPENMP
 #include <omp.h>
-#else
-// Comment this out if you want to profile non OpenMP builds too.
-#undef BEGIN_TASK_PROFILING
-#undef END_TASK_PROFILING
-#define BEGIN_TASK_PROFILING(TASK_DESCRIPTION) 
-#define END_TASK_PROFILING(TASK_DESCRIPTION) 
 #endif
 
 class WaveCache {
@@ -824,7 +818,7 @@ bool SpecCache::Matches
 bool SpecCache::CalculateOneSpectrum
    (const SpectrogramSettings &settings,
     WaveTrackCache &waveTrackCache,
-    int xx, sampleCount numSamples,
+    const int xx, const sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond,
     int lowerBoundX, int upperBoundX,
     const std::vector<float> &gainFactors,
@@ -1043,14 +1037,27 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
-void SpecCache::Allocate(const SpectrogramSettings &settings)
+void SpecCache::Grow(size_t len_, const SpectrogramSettings& settings,
+                       double pixelsPerSecond, double start_)
 {
    settings.CacheWindows();
 
    // len columns, and so many rows, column-major.
    // Don't take column literally -- this isn't pixel data yet, it's the
    // raw data to be mapped onto the display.
-   freq.resize(len * settings.NBins());
+   freq.resize(len_ * settings.NBins());
+
+   // Sample counts corresponding to the columns, and to one past the end.
+   where.resize(len_ + 1);
+
+   len = len_;
+   algorithm = settings.algorithm;
+   pps = pixelsPerSecond;
+   start = start_;
+   windowType = settings.windowType;
+   windowSize = settings.WindowSize();
+   zeroPaddingFactor = settings.ZeroPaddingFactor();
+   frequencyGain = settings.frequencyGain;
 }
 
 void SpecCache::Populate
@@ -1059,8 +1066,6 @@ void SpecCache::Populate
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
-   Allocate( settings );
-
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
    const bool autocorrelation =
@@ -1167,7 +1172,6 @@ void SpecCache::Populate
 #endif
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
             float *const results = &freq[nBins * xx];
-            const auto hFFT = settings.hFFT.get();
             for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
@@ -1191,18 +1195,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
-   BEGIN_TASK_PROFILING("GetSpectrogram");
-
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   const int &frequencyGain = settings.frequencyGain;
-   const size_t windowSize = settings.WindowSize();
-   const int &windowType = settings.windowType;
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
-#else
-   const size_t zeroPaddingFactor = 1;
-#endif
 
    bool match =
       mSpecCache &&
@@ -1216,17 +1210,25 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       spectrogram = &mSpecCache->freq[0];
       where = &mSpecCache->where[0];
 
-      END_TASK_PROFILING("GetSpectrogram");
-
       return false;  //hit cache completely
    }
 
+   // Caching is not implemented for reassignment, unless for
+   // a complete hit, because of the complications of time reassignment
    if (settings.algorithm == SpectrogramSettings::algReassignment)
-      // Caching is not implemented for reassignment, unless for
-      // a complete hit, because of the complications of time reassignment
       match = false;
 
-   std::unique_ptr<SpecCache> oldCache(std::move(mSpecCache));
+   // Free the cache when it won't cause a major stutter.
+   // If the window size changed, we know there is nothing to be copied
+   // If we zoomed out, or resized, we can give up memory. But not too much -
+   // up to 2x extra is needed at the end of the clip to prevent stutter.
+   if (mSpecCache->freq.capacity() > 2.1 * mSpecCache->freq.size() ||
+       mSpecCache->windowSize*mSpecCache->zeroPaddingFactor <
+       settings.WindowSize()*settings.ZeroPaddingFactor())
+   {
+      match = false;
+      mSpecCache = std::make_unique<SpecCache>();
+   }
 
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
@@ -1236,7 +1238,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    int copyBegin = 0, copyEnd = 0;
    if (match) {
-      findCorrection(oldCache->where, oldCache->len, numPixels,
+      findCorrection(mSpecCache->where, mSpecCache->len, numPixels,
          t0, mRate, samplesPerPixel,
          oldX0, correction);
       // Remember our first pixel maps to oldX0 in the old cache,
@@ -1244,48 +1246,56 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       // For what range of pixels can data be copied?
       copyBegin = std::min((int)numPixels, std::max(0, -oldX0));
       copyEnd = std::min((int)numPixels, std::max(0,
-         (int)oldCache->len - oldX0
+         (int)mSpecCache->len - oldX0
       ));
    }
 
-   if (!(copyEnd > copyBegin))
-      oldCache.reset(0);
+   // Resize the cache, keep the contents unchanged.
+   mSpecCache->Grow(numPixels, settings, pixelsPerSecond, t0);
+   auto nBins = settings.NBins();
 
-   mSpecCache = std::make_unique<SpecCache>(
-      numPixels, settings.algorithm, pixelsPerSecond, t0,
-      windowType, windowSize, zeroPaddingFactor, frequencyGain);
+   // Optimization: if the old cache is good and overlaps
+   // with the current one, re-use as much of the cache as
+   // possible
+   if (copyEnd > copyBegin)
+   {
+      // memmove is required since dst/src overlap
+      memmove(&mSpecCache->freq[nBins * copyBegin],
+               &mSpecCache->freq[nBins * (copyBegin + oldX0)],
+               nBins * (copyEnd - copyBegin) * sizeof(float));
+   }
+
+   // Reassignment accumulates, so it needs a zeroed buffer
+   if (settings.algorithm == SpectrogramSettings::algReassignment)
+   {
+      // The cache could theoretically copy from the middle, resulting
+      // in two regions to update. This won't happen in zoom, since
+      // old cache doesn't match. It won't happen in resize, since the
+      // spectrum view is pinned to left side of window.
+      wxASSERT(
+         (copyBegin >= 0 && copyEnd == numPixels) || // copied the end
+         (copyBegin == 0 && copyEnd <= numPixels)    // copied the beginning
+      );
+
+      int zeroBegin = copyBegin > 0 ? 0 : copyEnd-copyBegin;
+      int zeroEnd = copyBegin > 0 ? copyBegin : numPixels;
+
+      memset(&mSpecCache->freq[nBins*zeroBegin], 0, nBins*(zeroEnd-zeroBegin)*sizeof(float));
+   }
 
    // purposely offset the display 1/2 sample to the left (as compared
    // to waveform display) to properly center response of the FFT
    fillWhere(mSpecCache->where, numPixels, 0.5, correction,
       t0, mRate, samplesPerPixel);
 
-   // Optimization: if the old cache is good and overlaps
-   // with the current one, re-use as much of the cache as
-   // possible
-   if (oldCache) {
-      mSpecCache->Allocate(settings);
-      auto nBins = settings.NBins();
-      memcpy(&mSpecCache->freq[nBins * copyBegin],
-         &oldCache->freq[nBins * (copyBegin + oldX0)],
-         nBins * (copyEnd - copyBegin) * sizeof(float));
-   }
-
-   BEGIN_TASK_PROFILING("Populate");
-
-   auto nBins = settings.NBins();
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
        mSequence->GetNumSamples(),
        mOffset, mRate, pixelsPerSecond);
 
-   END_TASK_PROFILING("Populate");
-
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];
    where = &mSpecCache->where[0];
-
-   END_TASK_PROFILING("GetSpectrogram");
 
    return true;
 }
