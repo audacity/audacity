@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2017-02-13 19:31+0200\n"
+"PO-Revision-Date: 2017-03-21 19:14+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
@@ -423,7 +423,7 @@ msgstr "Зупинити скрипт"
 
 #: src/AboutDialog.cpp:94
 msgid "Check Online"
-msgstr ""
+msgstr "У інтернеті"
 
 #: src/AboutDialog.cpp:103
 msgid "quality assurance"
@@ -1136,9 +1136,8 @@ msgid "Could not enumerate files in auto save directory."
 msgstr "Неможливо скласти список файлів у теці автозбереження."
 
 #: src/AutoRecovery.cpp:760
-#, fuzzy
 msgid "Error Decoding File"
-msgstr "Помилка під час спроби декодування файла"
+msgstr "Помилка під час декодування файла"
 
 #: src/BatchCommandDialog.cpp:60 src/BatchCommandDialog.cpp:64
 #: src/BatchCommandDialog.cpp:65
@@ -1486,9 +1485,8 @@ msgstr ""
 "іншу теку для тимчасових файлів у діалоговому вікні налаштовування програми."
 
 #: src/DirManager.cpp:424
-#, fuzzy
 msgid "Cleaning project temporary files"
-msgstr "Вилучення тимчасових файлів"
+msgstr "Вилучаємо тимчасові файли проекту"
 
 #: src/DirManager.cpp:437
 msgid "Cleaning up temporary files"
@@ -2169,25 +2167,32 @@ msgstr "Відсутня локальна довідка"
 
 #: src/HelpText.cpp:198
 msgid "Get the Official Released Version of Audacity"
-msgstr ""
+msgstr "Отримати офіційну випущену версію Audacity"
 
 #: src/HelpText.cpp:200
 msgid ""
 "<br><br>The version of Audacity you are using is an <b>Alpha test version</"
 "b>."
 msgstr ""
+"<br><br>Версія Audacity, якою ви користуєтеся є <b>попередньою тестовою "
+"версією (Alpha)</b>."
 
 #: src/HelpText.cpp:201
 msgid ""
 "We strongly recommend that you use our latest stable released version, which "
 "has full documentation and support.<br><br>"
 msgstr ""
+"Ми наполегливо рекомендуємо вам скористатися найсвіжішою стабільною версією "
+"програми, яку повністю документовано і яка супроводжується розробниками.<br><"
+"br>"
 
 #: src/HelpText.cpp:202
 msgid ""
 "You can help us get Audacity ready for release by joining our [[http://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
+"Ви можете допомогти нам поліпшити Audacity до випуску, долучившись до нашої  "
+"[[http://www.audacityteam.org/community/|community]].<hr><br><br>"
 
 #: src/HelpText.cpp:205
 msgid "How to get help"
@@ -2516,9 +2521,8 @@ msgstr ""
 "%s (%s)."
 
 #: src/Legacy.cpp:263
-#, fuzzy
 msgid "Error Converting Legacy Project File"
-msgstr "Помилка під час спроби збереження файла проекту"
+msgstr "Помилка під час спроби перетворити застарілий файл проекту"
 
 #: src/Legacy.cpp:304
 #, c-format
@@ -9709,17 +9713,15 @@ msgstr ""
 "до кодування Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp:1638
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 "Control not created."
 msgstr ""
-"Помилкова специфікація керування «control» Nyquist: «%s» у файлі додатка "
-"«%s».\n"
-"Керування не створено."
+"Помилкова специфікація керування «control» Nyquist: «%s» у файлі додатка «%"
+"s».\nКерування не створено."
 
 #: src/effects/nyquist/Nyquist.cpp:1746
-#, fuzzy
 msgid ""
 "Your code looks like SAL syntax, but there is no 'return' statement.\n"
 "For SAL, use a return statement such as:\n"
@@ -9729,11 +9731,9 @@ msgid ""
 " ."
 msgstr ""
 "Синтаксичні конструкції вашого коду нагадують SAL, але не вказано інструкції "
-"return. Вам слід або скористатися інструкцією return ось так:\n"
-"\treturn s * 0.1\n"
-"для SAL, або почати з дужки, ось так:\n"
-"\t(mult s 0.1)\n"
-"як це робиться у LISP."
+"return. Вам слід або скористатися інструкцією return ось так:\n\treturn "
+"*track* * 0.1\nдля SAL, або почати з дужки, ось так:\n\t(mult *track* "
+"0.1)\nяк це робиться у LISP."
 
 #: src/effects/nyquist/Nyquist.cpp:1749
 msgid "Error in Nyquist code"
@@ -9945,9 +9945,8 @@ msgid "Error writing to file: \"%s\""
 msgstr "Помилка під час спроби записати дані до файла «%s»"
 
 #: src/effects/VST/VSTEffect.cpp:3565
-#, fuzzy
 msgid "Error Saving Effect Presets"
-msgstr "Помилка під час спроби збереження шаблону VST"
+msgstr "Помилка під час спроби зберегти шаблони ефектів"
 
 #: src/effects/VST/VSTEffect.cpp:3686
 #, c-format
@@ -10303,9 +10302,8 @@ msgstr "Відкрити вікно нетипових параметрів фо
 
 #: src/export/ExportFFmpegDialogs.cpp:498
 #: src/export/ExportFFmpegDialogs.cpp:522
-#, fuzzy
 msgid "Error Saving FFmpeg Presets"
-msgstr "Помилка під час спроби збереження шаблону VST"
+msgstr "Помилка під час спроби зберегти шаблони FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp:568
 #, c-format
@@ -14283,9 +14281,8 @@ msgid "NaN"
 msgstr "Не число"
 
 #: src/widgets/numformatter.cpp:146
-#, fuzzy
 msgid "Infinity"
-msgstr "-Нескінченність"
+msgstr "Нескінченність"
 
 #: src/widgets/numformatter.cpp:150
 msgid "-Infinity"
