@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-#if defined(_MSC_VER)
+#if defined(WIN32)
 #undef CDECL
 #define CDECL _cdecl
 #else
