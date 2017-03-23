@@ -4384,7 +4384,11 @@ void AudacityProject::OnPaste()
             {
                // Must perform sync-lock adjustment before incrementing n
                if (n->IsSyncLockSelected()) {
-                  bPastedSomething |= n->SyncLockAdjust(t1, t0+(msClipT1 - msClipT0));
+                  auto newT1 = t0 + (msClipT1 - msClipT0);
+                  if (t1 != newT1 && t1 <= n->GetEndTime()) {
+                     n->SyncLockAdjust(t1, newT1);
+                     bPastedSomething = true;
+                  }
                }
                n = iter.Next();
             }
@@ -4441,8 +4445,9 @@ void AudacityProject::OnPaste()
          }
          else
          {
+            bPastedSomething = true;
             n->Clear(t0, t1);
-            bPastedSomething |= n->Paste(t0, c);
+            n->Paste(t0, c);
          }
 
          // When copying from mono to stereo track, paste the wave form
@@ -4457,7 +4462,8 @@ void AudacityProject::OnPaste()
             else
             {
                n->Clear(t0, t1);
-               bPastedSomething |= n->Paste(t0, c);
+               bPastedSomething = true;
+               n->Paste(t0, c);
             }
          }
 
@@ -4468,7 +4474,11 @@ void AudacityProject::OnPaste()
       } // if (n->GetSelected())
       else if (n->IsSyncLockSelected())
       {
-         bPastedSomething |=  n->SyncLockAdjust(t1, t0 + msClipT1 - msClipT0);
+         auto newT1 = t0 + (msClipT1 - msClipT0);
+         if (t1 != newT1 && t1 <= n->GetEndTime()) {
+            n->SyncLockAdjust(t1, newT1);
+            bPastedSomething = true;
+         }
       }
 
       n = iter.Next();
@@ -4492,9 +4502,7 @@ void AudacityProject::OnPaste()
             }
             else {
                auto tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
-               bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
-               wxASSERT(bResult); // TO DO: Actually handle this.
-               wxUnusedVar(bResult);
+               tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                tmp->Flush();
 
                bPastedSomething |=
@@ -4637,9 +4645,7 @@ bool AudacityProject::HandlePasteNothingSelected()
          }
          wxASSERT(pClip);
 
-         bool bResult = pNewTrack->Paste(0.0, pClip);
-         wxASSERT(bResult); // TO DO: Actually handle this.
-         wxUnusedVar(bResult);
+         pNewTrack->Paste(0.0, pClip);
 
          if (!pFirstNewTrack)
             pFirstNewTrack = pNewTrack;
@@ -4941,7 +4947,7 @@ void AudacityProject::OnCutLabels()
   if( gPrefs->Read( wxT( "/GUI/EnableCutLines" ), ( long )0 ) )
      EditByLabel( &WaveTrack::ClearAndAddCutLine, true );
   else
-     EditByLabel( &WaveTrack::Clear, true );
+     EditByLabel( &WaveTrack::Clear1, true );
 
   msClipProject = this;
 
@@ -4995,7 +5001,7 @@ void AudacityProject::OnDeleteLabels()
   if( mViewInfo.selectedRegion.isPoint() )
      return;
 
-  EditByLabel( &WaveTrack::Clear, true );
+  EditByLabel( &WaveTrack::Clear1, true );
 
   mViewInfo.selectedRegion.collapseToT0();
 
@@ -5029,7 +5035,7 @@ void AudacityProject::OnSilenceLabels()
   if( mViewInfo.selectedRegion.isPoint() )
      return;
 
-  EditByLabel( &WaveTrack::Silence, false );
+  EditByLabel( &WaveTrack::Silence1, false );
 
   PushState(
    /* i18n-hint: (verb)*/

@@ -175,16 +175,18 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
    Track::Holder CopyNonconst(double t0, double t1) /* not override */;
 
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t0, const Track *src) override;
+   void Clear(double t0, double t1) override;
+   bool Clear1(double t0, double t1) { Clear(t0, t1); return true; }
+   void Paste(double t0, const Track *src) override;
    bool ClearAndPaste(double t0, double t1,
                               const Track *src,
                               bool preserve = true,
                               bool merge = true,
                               const TimeWarper *effectWarper = NULL) /* not override */;
 
-   bool Silence(double t0, double t1) override;
-   bool InsertSilence(double t, double len) override;
+   void Silence(double t0, double t1) override;
+   bool Silence1(double t0, double t1) { Silence(t0, t1); return true; }
+   void InsertSilence(double t, double len) override;
 
    bool SplitAt(double t) /* not override */;
    bool Split(double t0, double t1) /* not override */;
@@ -200,7 +202,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    bool HandleClear(double t0, double t1, bool addCutLines, bool split);
 
-   bool SyncLockAdjust(double oldT1, double newT1) override;
+   void SyncLockAdjust(double oldT1, double newT1) override;
 
    /** @brief Returns true if there are no WaveClips in the specified region
     *

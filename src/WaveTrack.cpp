@@ -537,9 +537,7 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
 
    auto tmp = Copy(t0, t1);
 
-   if (!Clear(t0, t1))
-      // THROW_INCONSISTENCY_EXCEPTION
-      ;
+   Clear(t0, t1);
 
    return tmp;
 }
@@ -617,10 +615,7 @@ bool WaveTrack::Trim (double t0, double t1)
    //if inside0 is false, then the left selector was between
    //clips, so DELETE everything to its left.
    if(false == inside1)
-   {
-      if (!Clear(t1,GetEndTime()))
-         return false;
-   }
+      Clear(t1,GetEndTime());
 
    if(false == inside0)
    {
@@ -713,9 +708,9 @@ Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
    return Copy(t0, t1);
 }
 
-bool WaveTrack::Clear(double t0, double t1)
+void WaveTrack::Clear(double t0, double t1)
 {
-   return HandleClear(t0, t1, false, false);
+   HandleClear(t0, t1, false, false);
 }
 
 bool WaveTrack::ClearAndAddCutLine(double t0, double t1)
@@ -812,7 +807,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
-      return Paste(t0, src);
+      Paste(t0, src);
+      return true;
    }
 
    // If provided time warper was NULL, use a default one that does nothing
@@ -867,7 +863,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    if (HandleClear(t0, t1, false, false)) {
 
       // And paste in the NEW data
-      if (Paste(t0, src)) {
+      Paste(t0, src);
+      {
          // First, merge the NEW clip(s) in with the existing clips
          if (merge && splits.GetCount() > 0)
          {
@@ -1147,7 +1144,7 @@ bool WaveTrack::HandleClear(double t0, double t1,
    return true;
 }
 
-bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
+void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 {
    if (newT1 > oldT1) {
       // Insert space within the track
@@ -1156,62 +1153,57 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       // GetEndTime() looks through the clips and may give us EXACTLY the same
       // value as T1, when T1 was set to be at the end of one of those clips.
       if (oldT1 >= GetEndTime())
-         return true;
+         return;
 
       // If track is empty at oldT1 insert whitespace; otherwise, silence
       if (IsEmpty(oldT1, oldT1))
       {
-         bool ret = true;
-
          // Check if clips can move
          bool clipsCanMove = true;
          gPrefs->Read(wxT("/GUI/EditClipCanMove"), &clipsCanMove);
          if (clipsCanMove) {
             auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
 
-            ret = Paste(newT1, tmp.get());
-            wxASSERT(ret);
+            Paste(newT1, tmp.get());
          }
-
-         return ret;
+         return;
       }
       else {
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
          AudacityProject *p = GetActiveProject();
-         if (!p) return false;
+         if (!p)
+            // THROW_INCONSISTENCY_EXCEPTION
+            ;
          TrackFactory *f = p->GetTrackFactory();
-         if (!f) return false;
+         if (!f)
+            // THROW_INCONSISTENCY_EXCEPTION
+            ;
          auto tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
 
-         bool bResult = tmp->InsertSilence(0.0, newT1 - oldT1);
-         wxASSERT(bResult); // TO DO: Actually handle this.
-         wxUnusedVar(bResult);
+         tmp->InsertSilence(0.0, newT1 - oldT1);
          tmp->Flush();
-         bResult = Paste(oldT1, tmp.get());
-         wxASSERT(bResult); // TO DO: Actually handle this.
-         wxUnusedVar(bResult);
+         Paste(oldT1, tmp.get());
       }
    }
    else if (newT1 < oldT1) {
-      return Clear(newT1, oldT1);
+      Clear(newT1, oldT1);
    }
-
-   // fall-through: no change
-   return true;
 }
 
-bool WaveTrack::Paste(double t0, const Track *src)
+void WaveTrack::Paste(double t0, const Track *src)
 // WEAK-GUARANTEE
 {
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
 
    if( src == NULL )
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    if (src->GetKind() != Track::Wave)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    const WaveTrack* other = static_cast<const WaveTrack*>(src);
 
@@ -1237,7 +1229,7 @@ bool WaveTrack::Paste(double t0, const Track *src)
    //
 
    if (other->GetNumClips() == 0)
-      return false;
+      return;
 
    //printf("paste: we have at least one clip\n");
 
@@ -1254,9 +1246,7 @@ bool WaveTrack::Paste(double t0, const Track *src)
          // move everything to the right, then try to paste again
          if (!IsEmpty(t0, GetEndTime())) {
             auto tmp = Cut(t0, GetEndTime()+1.0/mRate);
-            bool bResult = Paste(t0 + insertDuration, tmp.get());
-            wxASSERT(bResult); // TO DO: Actually handle this.
-            wxUnusedVar(bResult);
+            Paste(t0 + insertDuration, tmp.get());
          }
       }
       else {
@@ -1351,13 +1341,13 @@ bool WaveTrack::Paste(double t0, const Track *src)
          mClips.push_back(std::move(newClip)); // transfer ownership
       }
    }
-   return true;
 }
 
-bool WaveTrack::Silence(double t0, double t1)
+void WaveTrack::Silence(double t0, double t1)
 {
    if (t1 < t0)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    auto start = (sampleCount)floor(t0 * mRate + 0.5);
    auto len = (sampleCount)floor(t1 * mRate + 0.5) - start;
@@ -1386,25 +1376,25 @@ bool WaveTrack::Silence(double t0, double t1)
          if (!clip->GetSequence()->SetSilence(inclipDelta, samplesToCopy))
          {
             wxASSERT(false); // should always work
-            return false;
+            return;
          }
          clip->MarkChanged();
       }
    }
-
-   return result;
 }
 
-bool WaveTrack::InsertSilence(double t, double len)
+void WaveTrack::InsertSilence(double t, double len)
 {
    if (len <= 0)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    if (mClips.empty())
    {
       // Special case if there is no clip yet
       WaveClip* clip = CreateClip();
-      return clip->InsertSilence(0, len);
+      clip->InsertSilence(0, len);
+      return;
    }
 
    for (const auto &clip : mClips)
@@ -1414,12 +1404,10 @@ bool WaveTrack::InsertSilence(double t, double len)
       else if (clip->WithinClip(t))
       {
          if (!clip->InsertSilence(t, len)) {
-            return false;
+            return;
          }
       }
    }
-
-   return true;
 }
 
 //Performs the opposite of Join

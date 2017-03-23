@@ -217,18 +217,16 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual Holder Copy
       (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
 
-   // Return true for success
-   virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   virtual void Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
-   // Return true for success
-   virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
+   virtual void Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
 
    // This can be used to adjust a sync-lock selected track when the selection
    // is replaced by one of a different length.
-   virtual bool SyncLockAdjust(double oldT1, double newT1);
+   virtual void SyncLockAdjust(double oldT1, double newT1);
 
-   virtual bool Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
-   virtual bool InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
+   virtual void Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
    virtual int GetKind() const { return None; }
 

@@ -300,28 +300,22 @@ bool Track::IsSyncLockSelected() const
    return false;
 }
 
-bool Track::SyncLockAdjust(double oldT1, double newT1)
+void Track::SyncLockAdjust(double oldT1, double newT1)
 {
    if (newT1 > oldT1) {
       // Insert space within the track
 
       if (oldT1 > GetEndTime())
-         return true;
+         return;
 
       auto tmp = Cut(oldT1, GetEndTime());
 
-      bool ret = Paste(newT1, tmp.get());
-      wxASSERT(ret); // TODO: handle this.
-
-      return ret;
+      Paste(newT1, tmp.get());
    }
    else if (newT1 < oldT1) {
       // Remove from the track
-      return Clear(newT1, oldT1);
+      Clear(newT1, oldT1);
    }
-
-   // fall-through: no change
-   return true;
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )

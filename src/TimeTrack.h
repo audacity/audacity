@@ -43,10 +43,10 @@ class TimeTrack final : public Track {
 
    Holder Cut( double t0, double t1 ) override;
    Holder Copy( double t0, double t1, bool forClipboard ) const override;
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t, const Track * src) override;
-   bool Silence(double t0, double t1) override;
-   bool InsertSilence(double t, double len) override;
+   void Clear(double t0, double t1) override;
+   void Paste(double t, const Track * src) override;
+   void Silence(double t0, double t1) override;
+   void InsertSilence(double t, double len) override;
 
    // Identifying the type of track
    int GetKind() const override { return Time; }

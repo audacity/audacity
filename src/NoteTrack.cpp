@@ -492,20 +492,19 @@ bool NoteTrack::Trim(double t0, double t1)
    return true;
 }
 
-bool NoteTrack::Clear(double t0, double t1)
+void NoteTrack::Clear(double t0, double t1)
 {
    // If t1 = t0, should Clear return true?
    if (t1 <= t0)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; ?
+      return;
    double len = t1-t0;
 
    if (mSeq)
       mSeq->clear(t0 - GetOffset(), len, false);
-
-   return true;
 }
 
-bool NoteTrack::Paste(double t, const Track *src)
+void NoteTrack::Paste(double t, const Track *src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If
@@ -517,11 +516,13 @@ bool NoteTrack::Paste(double t, const Track *src)
 
    //Check that src is a non-NULL NoteTrack
    if (src == NULL || src->GetKind() != Track::Note)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    NoteTrack* other = (NoteTrack*)src;
    if (other->mSeq == NULL)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    if(!mSeq)
       mSeq = std::make_unique<Alg_seq>();
@@ -532,20 +533,16 @@ bool NoteTrack::Paste(double t, const Track *src)
       t += other->GetOffset();
    }
    mSeq->paste(t - GetOffset(), other->mSeq.get());
-
-   return true;
 }
 
-bool NoteTrack::Silence(double, double)
+void NoteTrack::Silence(double, double)
 {
    // to do
-   return false;
 }
 
-bool NoteTrack::InsertSilence(double, double)
+void NoteTrack::InsertSilence(double, double)
 {
    // to do
-   return false;
 }
 
 // Call this function to manipulate the underlying sequence data. This is
