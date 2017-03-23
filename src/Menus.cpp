@@ -684,6 +684,17 @@ void AudacityProject::CreateMenusAndCommands()
 
 
       c->AddSeparator();
+
+      c->AddSeparator();
+      c->BeginSubMenu(_("S&kip to"));
+      c->AddItem(wxT("SkipSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["),
+                 TimeSelectedFlag, TimeSelectedFlag);
+      c->AddItem(wxT("SkipSelEnd"), _("Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"),
+                 TimeSelectedFlag, TimeSelectedFlag);
+      c->EndSubMenu();
+
+      c->AddSeparator();
+
       c->AddCheck(wxT("ShowClipping"), _("&Show Clipping"), FN(OnShowClipping),
          gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
 
@@ -805,18 +816,6 @@ void AudacityProject::CreateMenusAndCommands()
       // Scrubbing sub-menu
       GetScrubber().AddMenuItems();
 
-      c->AddSeparator();
-      c->BeginSubMenu(_("Skip to"));
-      c->AddItem(wxT("GoSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
-      c->AddItem(wxT("GoSelEnd"), _("Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
-
-      c->AddItem(wxT("SkipStart"), _("Track Start"), FN(OnSkipStart), wxT("Home"),
-                 AudioIONotBusyFlag, AudioIONotBusyFlag);
-      c->AddItem(wxT("SkipEnd"), _("Track E&nd"), FN(OnSkipEnd), wxT("End"),
-                 WaveTracksExistFlag | AudioIONotBusyFlag,
-                 WaveTracksExistFlag | AudioIONotBusyFlag);
-      c->EndSubMenu();
-
 #ifndef EXPERIMENTAL_DA
       // JKC: ANSWER-ME: How is this different to 'Skip To' and how is it useful?
       c->BeginSubMenu(_("Cursor to"));
@@ -826,6 +825,9 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"));
       c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"));
+
+      c->AddItem(wxT("CursProjectStart"), _("&Project Start"), FN(OnSkipStart), wxT("Home"));
+      c->AddItem(wxT("CursProjectEnd"), _("Project E&nd"), FN(OnSkipEnd), wxT("End"));
 
       c->EndSubMenu();
 #endif
