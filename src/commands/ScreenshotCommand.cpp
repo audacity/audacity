@@ -275,13 +275,19 @@ void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
    size_t lcnt = list.GetCount();
    wxMenuItem * item;
    wxString Label;
+   wxString Accel;
 
    for (size_t lndx = 0; lndx < lcnt; lndx++) {
       item = list.Item(lndx)->GetData();
       Label = item->GetItemLabelText();
+      Accel = item->GetItemLabel();
+      if( Accel.Contains("\t") )
+         Accel = Accel.AfterLast('\t');
+      else
+         Accel = "";
       if( item->IsSeparator() )
          Label = "----";
-      wxLogDebug("%2i: %s", depth, Label ); 
+      wxLogDebug("%2i,%s,%s", depth, Label,Accel ); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
          ExploreMenu( pMenu, item->GetId(), depth+1 );

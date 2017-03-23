@@ -351,6 +351,11 @@ KeyView::SetView(ViewByType type)
       SelectNode(index);
    }
 
+   int nLines = mLines.GetCount();
+   for(int i=0;i<nLines;i++){
+      wxLogDebug( "%i,%i,%s,%s", i, mLines[i]->depth, mLines[i]->label, mLines[i]->key );
+   }
+
    return;
 }
 
