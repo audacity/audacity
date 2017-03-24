@@ -1202,6 +1202,7 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 }
 
 bool WaveTrack::Paste(double t0, const Track *src)
+// WEAK-GUARANTEE
 {
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
@@ -1287,7 +1288,8 @@ bool WaveTrack::Paste(double t0, const Track *src)
                insideClip = clip.get();
                break;
             }
-         } else
+         }
+         else
          {
             // If clips are immovable we also allow prepending to clips
             if (clip->WithinClip(t0) ||
@@ -1312,12 +1314,11 @@ bool WaveTrack::Paste(double t0, const Track *src)
                if (clip->GetStartTime() > insideClip->GetStartTime() &&
                    insideClip->GetEndTime() + insertDuration >
                                                       clip->GetStartTime())
-               {
-                  wxMessageBox(
-                     _("There is not enough room available to paste the selection"),
-                     _("Error"), wxICON_STOP);
-                  return false;
-               }
+                  // STRONG-GUARANTEE in case of this path
+                  // not that it matters.
+                  throw SimpleMessageBoxException{
+                     _("There is not enough room available to paste the selection")
+                  };
             }
          }
 
@@ -1331,12 +1332,11 @@ bool WaveTrack::Paste(double t0, const Track *src)
    //printf("paste: multi clip mode!\n");
 
    if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
-   {
-      wxMessageBox(
-         _("There is not enough room available to paste the selection"),
-         _("Error"), wxICON_STOP);
-      return false;
-   }
+      // STRONG-GUARANTEE in case of this path
+      // not that it matters.
+      throw SimpleMessageBoxException{
+         _("There is not enough room available to paste the selection")
+      };
 
    for (const auto &clip : other->mClips)
    {
@@ -2447,50 +2447,52 @@ void WaveTrack::UpdateLocationsCache() const
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
 bool WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
+// STRONG-GUARANTEE
 {
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
 
    // Find clip which contains this cut line
-   for (const auto &clip : mClips)
+   double start = 0, end = 0;
+   auto pEnd = mClips.end();
+   auto pClip = std::find_if( mClips.begin(), pEnd,
+      [&](const WaveClipHolder &clip) {
+         return clip->FindCutLine(cutLinePosition, &start, &end); } );
+   if (pClip != pEnd)
    {
-      double start = 0, end = 0;
-
-      if (clip->FindCutLine(cutLinePosition, &start, &end))
+      auto &clip = *pClip;
+      if (!editClipCanMove)
       {
-         if (!editClipCanMove)
+         // We are not allowed to move the other clips, so see if there
+         // is enough room to expand the cut line
+         for (const auto &clip2: mClips)
          {
-            // We are not allowed to move the other clips, so see if there
-            // is enough room to expand the cut line
-            for (const auto &clip2: mClips)
-            {
-               if (clip2->GetStartTime() > clip->GetStartTime() &&
-                   clip->GetEndTime() + end - start > clip2->GetStartTime())
-               {
-                  wxMessageBox(
-                     _("There is not enough room available to expand the cut line"),
-                     _("Error"), wxICON_STOP);
-                  return false;
-               }
-            }
-         }
+            if (clip2->GetStartTime() > clip->GetStartTime() &&
+                clip->GetEndTime() + end - start > clip2->GetStartTime())
+               // STRONG-GUARANTEE in case of this path
+               throw SimpleMessageBoxException{
+                  _("There is not enough room available to expand the cut line")
+               };
+          }
+      }
 
-         if (!clip->ExpandCutLine(cutLinePosition))
-            return false;
+      if (!clip->ExpandCutLine(cutLinePosition))
+         return false;
 
-         if (cutlineStart)
-            *cutlineStart = start;
-         if (cutlineEnd)
-            *cutlineEnd = end;
+      // STRONG-GUARANTEE provided that the following gives NOFAIL-GUARANTEE
 
-         // Move clips which are to the right of the cut line
-         if (editClipCanMove)
+      if (cutlineStart)
+         *cutlineStart = start;
+      if (cutlineEnd)
+         *cutlineEnd = end;
+
+      // Move clips which are to the right of the cut line
+      if (editClipCanMove)
+      {
+         for (const auto &clip2 : mClips)
          {
-            for (const auto &clip2 : mClips)
-            {
-               if (clip2->GetStartTime() > clip->GetStartTime())
-                  clip2->Offset(end - start);
-            }
+            if (clip2->GetStartTime() > clip->GetStartTime())
+               clip2->Offset(end - start);
          }
 
          return true;
