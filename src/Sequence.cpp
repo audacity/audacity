@@ -1114,6 +1114,7 @@ int Sequence::FindBlock(sampleCount pos) const
    return rval;
 }
 
+//static
 bool Sequence::Read(samplePtr buffer, sampleFormat format,
                     const SeqBlock &b, size_t blockRelativeStart, size_t len,
                     bool mayThrow)
@@ -1298,7 +1299,7 @@ struct MinMaxSumsq
 }
 
 bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
-                              size_t len, const sampleCount *where)
+                              size_t len, const sampleCount *where) const
 {
    wxASSERT(len > 0);
    const auto s0 = std::max(sampleCount(0), where[0]);
@@ -1333,7 +1334,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
 
       // Find the range of sample values for this block that
       // are in the display.
-      SeqBlock &seqBlock = mBlock[b];
+      const SeqBlock &seqBlock = mBlock[b];
       const auto start = seqBlock.start;
       nextSrcX = std::min(s1, start + seqBlock.f->GetLength());
 

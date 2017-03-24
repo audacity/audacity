@@ -1727,7 +1727,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
 
 bool WaveClip::FindCutLine(double cutLinePosition,
                            double* cutlineStart /* = NULL */,
-                           double* cutlineEnd /* = NULL */)
+                           double* cutlineEnd /* = NULL */) const
 {
    for (const auto &cutline: mCutLines)
    {

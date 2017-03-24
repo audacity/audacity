@@ -337,10 +337,13 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    // Rememebr the old blocksize, so that we can restore it later.
    auto oldBlockSize = Sequence::GetMaxDiskBlockSize();
-   const auto cleanup = finally([=]
-      { Sequence::SetMaxDiskBlockSize(oldBlockSize); }
-   );
    Sequence::SetMaxDiskBlockSize(blockSize * 1024);
+
+   const auto cleanup = finally( [&] {
+      Sequence::SetMaxDiskBlockSize(oldBlockSize);
+      gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
+      gPrefs->Flush();
+   } );
 
    wxBusyCursor busy;
 
@@ -540,7 +543,4 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    Printf(wxT("Benchmark completed successfully.\n"));
    HoldPrint(false);
-
-   gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
-   gPrefs->Flush();
 }
