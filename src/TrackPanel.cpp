@@ -5212,27 +5212,17 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
       mTracks->MoveUp(mCapturedTrack);
       --mRearrangeCount;
-#ifdef EXPERIMENTAL_MIDI_OUT
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
-                          mCapturedTrack->GetKind() == Track::Note))
-         pMixerBoard->MoveTrackCluster(mCapturedTrack, true /* up */);
-#else
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, true /* up */);
-#endif
+      if (pMixerBoard)
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
+            pMixerBoard->MoveTrackCluster(pPlayable, true /* up */);
    }
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
       ++mRearrangeCount;
       /* i18n-hint: a direction as in up or down.*/
-#ifdef EXPERIMENTAL_MIDI_OUT
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
-                          mCapturedTrack->GetKind() == Track::Note))
-         pMixerBoard->MoveTrackCluster(mCapturedTrack, false /* down */);
-#else
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, false /* down */);
-#endif
+      if (pMixerBoard)
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
+            pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
    }
    else
    {

@@ -6889,8 +6889,9 @@ void AudacityProject::OnRemoveTracks()
 
    while (t) {
       if (t->GetSelected()) {
-         if (mMixerBoard && (t->GetKind() == Track::Wave))
-            mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
+         auto playable = dynamic_cast<PlayableTrack*>(t);
+         if (mMixerBoard && playable)
+            mMixerBoard->RemoveTrackCluster(playable);
          if (!f)
             f = l;         // Capture the track preceeding the first removed track
          t = iter.RemoveCurrent();

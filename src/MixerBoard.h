@@ -62,10 +62,11 @@ public:
 class AudacityProject;
 class Meter;
 class MixerBoard;
-#ifdef EXPERIMENTAL_MIDI_OUT
+
 class Track;
 class NoteTrack;
-#endif
+class PlayableTrack;
+
 class WaveTrack;
 
 class MixerTrackCluster final : public wxPanelWrapper
@@ -73,10 +74,14 @@ class MixerTrackCluster final : public wxPanelWrapper
 public:
    MixerTrackCluster(wxWindow* parent,
                      MixerBoard* grandParent, AudacityProject* project,
-                     WaveTrack* pLeftTrack, WaveTrack* pRightTrack = NULL,
+                     PlayableTrack* pTrack,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
    virtual ~MixerTrackCluster() {}
+
+   WaveTrack *GetWave() const;
+   WaveTrack *GetRight() const;
+   NoteTrack *GetNote() const;
 
    void UpdatePrefs();
 
@@ -115,23 +120,7 @@ private:
 
 
 public:
-#ifdef EXPERIMENTAL_MIDI_OUT
-   // mTrack is redundant, but simplifies code that operates on either
-   // mLeftTrack or mNoteTrack.
-   Track* mTrack; // either mLeftTrack or mNoteTrack, whichever is not NULL
-#endif
-   WaveTrack* mLeftTrack; // NULL if Note Track
-   WaveTrack* mRightTrack; // NULL if mono
-
-   //vvv Vaughan, 2010-11-05:
-   //    I suggest that when this is no longer experimental, rather than all these #ifdef's,
-   //    this be done by factoring, i.e., add two subclasses to MixerTrackCluster,
-   //    MixerNoteTrackCluster and MixerWaveTrackCluster, such that all the common
-   //    code is in the parent, and these #ifdef's are only around
-   //    MixerNoteTrackCluster rather than sprinkled throughout MixerTrackCluster.
-#ifdef EXPERIMENTAL_MIDI_OUT
-   NoteTrack* mNoteTrack; // NULL if Wave Track
-#endif
+   PlayableTrack * mTrack;
 
 private:
    MixerBoard* mMixerBoard;
@@ -213,45 +202,25 @@ public:
    void UpdateTrackClusters();
 
    int GetTrackClustersWidth();
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void MoveTrackCluster(const Track* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
-   void RemoveTrackCluster(const Track* pTrack);
+   void MoveTrackCluster(const PlayableTrack* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
+   void RemoveTrackCluster(const PlayableTrack* pTrack);
 
 
-   wxBitmap* GetMusicalInstrumentBitmap(const wxString & name);
-#else
-   void MoveTrackCluster(const WaveTrack* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
-   void RemoveTrackCluster(const WaveTrack* pTrack);
-
-
-   wxBitmap* GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack);
-#endif
+   wxBitmap* GetMusicalInstrumentBitmap(const Track *pTrack);
 
    bool HasSolo();
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void RefreshTrackCluster(const Track* pTrack, bool bEraseBackground = true);
-#else
-   void RefreshTrackCluster(const WaveTrack* pTrack, bool bEraseBackground = true);
-#endif
+   void RefreshTrackCluster(const PlayableTrack* pTrack, bool bEraseBackground = true);
    void RefreshTrackClusters(bool bEraseBackground = true);
    void ResizeTrackClusters();
 
    void ResetMeters(const bool bResetClipping);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void UpdateName(const Track* pTrack);
-   void UpdateMute(const Track* pTrack = NULL); // NULL means update for all tracks.
-   void UpdateSolo(const Track* pTrack = NULL); // NULL means update for all tracks.
-   void UpdatePan(const Track* pTrack);
-   void UpdateGain(const Track* pTrack);
-#else
-   void UpdateName(const WaveTrack* pTrack);
-   void UpdateMute(const WaveTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdateSolo(const WaveTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdatePan(const WaveTrack* pTrack);
-   void UpdateGain(const WaveTrack* pTrack);
-#endif
+   void UpdateName(const PlayableTrack* pTrack);
+   void UpdateMute(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
+   void UpdateSolo(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
+   void UpdatePan(const PlayableTrack* pTrack);
+   void UpdateGain(const PlayableTrack* pTrack);
 
    void UpdateMeters(const double t1, const bool bLoopedPlay);
 
@@ -259,13 +228,8 @@ public:
 
 private:
    void CreateMuteSoloImages();
-#ifdef EXPERIMENTAL_MIDI_OUT
-   int FindMixerTrackCluster(const Track* pTrack,
+   int FindMixerTrackCluster(const PlayableTrack* pTrack,
                               MixerTrackCluster** hMixerTrackCluster) const;
-#else
-   int FindMixerTrackCluster(const WaveTrack* pLeftTrack,
-                              MixerTrackCluster** hMixerTrackCluster) const;
-#endif
    void LoadMusicalInstruments();
 
    // event handlers

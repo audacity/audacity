@@ -44,9 +44,8 @@ class TipPanel;
 #define DB_SLIDER 2      // -36...36 dB
 #define PAN_SLIDER 3     // -1.0...1.0
 #define SPEED_SLIDER 4  // 0.01 ..3.0
-#ifdef EXPERIMENTAL_MIDI_OUT
+
 #define VEL_SLIDER 5    // -50..50
-#endif
 
 #define DB_MIN -36.0f
 #define DB_MAX 36.0f
