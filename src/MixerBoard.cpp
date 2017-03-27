@@ -340,7 +340,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       wxSizeEvent event(GetSize(), GetId());
       event.SetEventObject(this);
       GetEventHandler()->ProcessEvent(event);
-      UpdateGain();
+      // UpdateGain(); // PRL:  No such name.  Proper compilation fix?
    #endif
 }
 
