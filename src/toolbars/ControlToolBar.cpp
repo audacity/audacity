@@ -418,11 +418,7 @@ void ControlToolBar::EnableDisableButtons()
    if (p) {
       TrackListIterator iter( p->GetTracks() );
       for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetKind() == Track::Wave
-#if defined(USE_MIDI)
-         || t->GetKind() == Track::Note
-#endif
-         ) {
+         if (dynamic_cast<const AudioTrack*>(t)) {
             tracks = true;
             break;
          }
