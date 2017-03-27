@@ -2800,7 +2800,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    wxArrayString selected;
 
    FileDialog dlog(NULL,
-                   _("Select one or more audio files..."),
+                   _("Select one or more files"),
                    path,
                    wxT(""),
                    mask,

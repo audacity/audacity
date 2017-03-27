@@ -5811,7 +5811,7 @@ void AudacityProject::OnImportLabels()
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
 
    wxString fileName =
-       FileSelector(_("Select a text file containing labels..."),
+       FileSelector(_("Select a text file containing labels"),
                     path,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
@@ -5856,7 +5856,7 @@ void AudacityProject::OnImportMIDI()
 {
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
 
-   wxString fileName = FileSelector(_("Select a MIDI file..."),
+   wxString fileName = FileSelector(_("Select a MIDI file"),
                                     path,     // Path
                                     wxT(""),       // Name
                                     wxT(""),       // Extension
@@ -5907,7 +5907,7 @@ void AudacityProject::OnImportRaw()
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
 
    wxString fileName =
-       FileSelector(_("Select any uncompressed audio file..."),
+       FileSelector(_("Select any uncompressed audio file"),
                     path,     // Path
                     wxT(""),       // Name
                     wxT(""),       // Extension
