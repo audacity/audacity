@@ -4963,7 +4963,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
      // mCapturedTrack is not wave...
       if (!pan) {
          // .. so assume it is note
-         static_cast<NoteTrack*>(mCapturedTrack)->SetGain(newValue);
+         static_cast<NoteTrack*>(mCapturedTrack)->SetVelocity(newValue);
 #ifdef EXPERIMENTAL_MIXER_BOARD
             if (pMixerBoard)
                // probably should modify UpdateGain to take a track that is
@@ -9377,7 +9377,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
        auto &gain = mGain; // mGains[index];
        gain->SetStyle(VEL_SLIDER);
        GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
-       GainSlider(index)->Set(t->GetGain());
+       GainSlider(index)->Set(t->GetVelocity());
        GainSlider(index)->OnPaint(*dc
           // , t->GetSelected()
        );

@@ -395,7 +395,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
       mLeftTrack->SetGain(fValue);
 #ifdef EXPERIMENTAL_MIDI_OUT
    else
-      mNoteTrack->SetGain(fValue);
+      mNoteTrack->SetVelocity(fValue);
 #endif
    if (mRightTrack)
       mRightTrack->SetGain(fValue);
@@ -512,7 +512,7 @@ void MixerTrackCluster::UpdateGain()
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (mNoteTrack) {
       mSlider_Gain->SetStyle(VEL_SLIDER);
-      mSlider_Gain->Set(mNoteTrack->GetGain());
+      mSlider_Gain->Set(mNoteTrack->GetVelocity());
       return;
    }
    mSlider_Gain->SetStyle(DB_SLIDER);
