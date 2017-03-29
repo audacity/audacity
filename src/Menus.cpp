@@ -7088,8 +7088,9 @@ void AudacityProject::OnMuteAllTracks()
 
    while (t)
    {
-      if (t->GetKind() == Track::Wave)
-         t->SetMute(true);
+      auto pt = dynamic_cast<PlayableTrack *>(t);
+      if (pt)
+         pt->SetMute(true);
 
       t = iter.Next();
    }
@@ -7107,7 +7108,9 @@ void AudacityProject::OnUnMuteAllTracks()
 
    while (t)
    {
-      t->SetMute(false);
+      auto pt = dynamic_cast<PlayableTrack *>(t);
+      if (pt)
+         pt->SetMute(false);
       t = iter.Next();
    }
 

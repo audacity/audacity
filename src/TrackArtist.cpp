@@ -336,7 +336,8 @@ void TrackArtist::DrawTracks(TrackList * tracks,
 
    bool hasSolo = false;
    for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetSolo()) {
+      auto pt = dynamic_cast<const PlayableTrack *>(t);
+      if (pt && pt->GetSolo()) {
          hasSolo = true;
          break;
       }
@@ -457,7 +458,8 @@ void TrackArtist::DrawTrack(const Track * t,
          clip->ClearDisplayRect();
       }
 
-      bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
+      bool muted = (hasSolo || wt->GetMute()) &&
+         !wt->GetSolo();
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -493,7 +495,11 @@ void TrackArtist::DrawTrack(const Track * t,
    #ifdef USE_MIDI
    case Track::Note:
    {
-      bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
+      auto nt = static_cast<const NoteTrack *>(t);
+      bool muted = false;
+#ifdef EXPERIMENTAL_MIDI_OUT
+      muted = (hasSolo || nt->GetMute()) && !nt->GetSolo();
+#endif
       DrawNoteTrack((NoteTrack *)t, dc, rect, selectedRegion, zoomInfo, muted);
       break;
    }

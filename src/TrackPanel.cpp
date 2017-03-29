@@ -9288,18 +9288,19 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       return; // don't draw mute and solo buttons, because they don't fit into track label
 
    AColor::MediumTrackInfo( dc, t->GetSelected());
+   auto pt = dynamic_cast<const PlayableTrack *>(t);
    if( solo )
    {
-      if( t->GetSolo() )
+      if( pt && pt->GetSolo() )
       {
-         AColor::Solo(dc, t->GetSolo(), t->GetSelected());
+         AColor::Solo(dc, pt->GetSolo(), t->GetSelected());
       }
    }
    else
    {
-      if( t->GetMute() )
+      if( pt && pt->GetMute() )
       {
-         AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
+         AColor::Mute(dc, pt->GetMute(), t->GetSelected(), pt->GetSolo());
       }
    }
    //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
@@ -9318,7 +9319,11 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 
-   AColor::BevelTrackInfo(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
+   AColor::BevelTrackInfo(
+      *dc,
+      (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
+      bev
+   );
 
    if (solo && !down) {
       // Update the mute button, which may be grayed out depending on

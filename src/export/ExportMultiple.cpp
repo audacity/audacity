@@ -154,7 +154,8 @@ void ExportMultiple::CountTracksAndLabels()
          // Count WaveTracks, and for linked pairs, count only the second of the pair.
          case Track::Wave:
          {
-            if (!pTrack->GetMute() && !pTrack->GetLinked()) // Don't count muted tracks.
+            auto wt = static_cast<const WaveTrack *>(pTrack);
+            if (!wt->GetMute() && !pTrack->GetLinked()) // Don't count muted tracks.
                mNumWaveTracks++;
             break;
          }
@@ -811,7 +812,9 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
       // Want only non-muted wave tracks.
-      if ((tr->GetKind() != Track::Wave)  || tr->GetMute())
+      auto wt = static_cast<const WaveTrack *>(tr);
+      if ((tr->GetKind() != Track::Wave) ||
+          wt->GetMute())
          continue;
 
       // Get the times for the track
@@ -898,7 +901,8 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
       // Want only non-muted wave tracks.
-      if ((tr->GetKind() != Track::Wave) || (tr->GetMute() == true)) {
+      auto wt = static_cast<const WaveTrack *>(tr);
+      if ((tr->GetKind() != Track::Wave) || (wt->GetMute())) {
          continue;
       }
 
