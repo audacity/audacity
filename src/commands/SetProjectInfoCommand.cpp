@@ -98,12 +98,14 @@ void SetProjectInfoCommand::setSelected(Track * trk, bool param) const
 
 void SetProjectInfoCommand::setSolo(Track * trk, bool param) const
 {
-   if(trk->GetKind() == Track::Wave)
-      trk->SetSolo(param);
+   auto pt = dynamic_cast<PlayableTrack *>(trk);
+   if (pt)
+      pt->SetSolo(param);
 }
 
 void SetProjectInfoCommand::setMute(Track * trk, bool param) const
 {
-   if(trk->GetKind() == Track::Wave)
-      trk->SetMute(param);
+   auto pt = dynamic_cast<PlayableTrack *>(trk);
+   if (pt)
+      pt->SetMute(param);
 }

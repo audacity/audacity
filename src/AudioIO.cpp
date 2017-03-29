@@ -3790,7 +3790,7 @@ void AudioIO::OutputEvent()
          data1 = mNextEvent->get_pitch();
          if (mNextIsNoteOn) {
             data2 = mNextEvent->get_loud(); // get velocity
-            int offset = mNextEventTrack->GetGain();
+            int offset = mNextEventTrack->GetVelocity();
             data2 += offset; // offset comes from per-track slider
             // clip velocity to insure a legal note-on value
             data2 = (data2 < 0 ? 1 : (data2 > 127 ? 127 : data2));

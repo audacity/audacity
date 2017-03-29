@@ -363,7 +363,8 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
 #endif
 
             // LLL: Remove these during "refactor"
-            if( t->GetMute() )
+            auto pt = dynamic_cast<PlayableTrack *>(t);
+            if( pt && pt->GetMute() )
             {
                // The following comment also applies to the solo, selected,
                // and synclockselected states.
@@ -376,7 +377,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                name->Append( wxT(" ") + wxString(_( " Mute On" )) );
             }
 
-            if( t->GetSolo() )
+            if( pt && pt->GetSolo() )
             {
                /* i18n-hint: This is for screen reader software and indicates that
                   on this track solo is on.*/
@@ -547,12 +548,13 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
          }
 
          // LLL: Remove these during "refactor"
-         if( t->GetMute() )
+         auto pt = dynamic_cast<PlayableTrack *>(t);
+         if( pt && pt->GetMute() )
          {
             strValue->Append( _( " Mute On" ) );
          }
 
-         if( t->GetSolo() )
+         if( pt && pt->GetSolo() )
          {
             strValue->Append( _( " Solo On" ) );
          }

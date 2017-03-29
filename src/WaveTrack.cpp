@@ -79,7 +79,7 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 }
 
 WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
-   Track(projDirManager)
+   PlayableTrack(projDirManager)
 {
    if (format == (sampleFormat)0)
    {
@@ -116,7 +116,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):
-   Track(orig)
+   PlayableTrack(orig)
    , mpSpectrumSettings(orig.mpSpectrumSettings
       ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
       : nullptr
@@ -141,7 +141,7 @@ WaveTrack::WaveTrack(const WaveTrack &orig):
 // Copy the track metadata but not the contents.
 void WaveTrack::Init(const WaveTrack &orig)
 {
-   Track::Init(orig);
+   PlayableTrack::Init(orig);
    mFormat = orig.mFormat;
    mRate = orig.mRate;
    mGain = orig.mGain;
@@ -171,7 +171,7 @@ void WaveTrack::Merge(const Track &orig)
       SetWaveformSettings
          (wt.mpWaveformSettings ? std::make_unique<WaveformSettings>(*wt.mpWaveformSettings) : nullptr);
    }
-   Track::Merge(orig);
+   PlayableTrack::Merge(orig);
 }
 
 WaveTrack::~WaveTrack()

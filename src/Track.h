@@ -140,8 +140,6 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
  protected:
    int                 mChannel;
    double              mOffset;
-   bool                mMute;
-   bool                mSolo;
 
    mutable std::shared_ptr<DirManager> mDirManager;
 
@@ -189,14 +187,10 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
-   bool GetMute    () const { return mMute;     }
    bool GetLinked  () const { return mLinked;   }
-   bool GetSolo    () const { return mSolo;     }
 
    virtual void SetSelected(bool s);
-   void SetMute    (bool m) { mMute     = m; }
    void SetLinked  (bool l);
-   void SetSolo    (bool s) { mSolo     = s; }
 
    int    GetChannel() const { return mChannel; }
    virtual double GetOffset() const = 0;
@@ -249,6 +243,34 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected() const;
+};
+
+class AudioTrack /* not final */ : public Track
+{
+public:
+   AudioTrack(const std::shared_ptr<DirManager> &projDirManager)
+      : Track{ projDirManager } {}
+   AudioTrack(const Track &orig) : Track{ orig } {}
+};
+
+class PlayableTrack /* not final */ : public AudioTrack
+{
+public:
+   PlayableTrack(const std::shared_ptr<DirManager> &projDirManager)
+      : AudioTrack{ projDirManager } {}
+   PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
+
+   bool GetMute    () const { return mMute;     }
+   bool GetSolo    () const { return mSolo;     }
+   void SetMute    (bool m) { mMute     = m; }
+   void SetSolo    (bool s) { mSolo     = s; }
+
+   void Init( const PlayableTrack &init );
+   void Merge( const Track &init ) override;
+
+protected:
+   bool                mMute { false };
+   bool                mSolo { false };
 };
 
 class AUDACITY_DLL_API TrackListIterator /* not final */

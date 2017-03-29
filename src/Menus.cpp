@@ -4608,11 +4608,13 @@ bool AudacityProject::HandlePasteNothingSelected()
                pNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate());
             }
             break;
+
          #ifdef USE_MIDI
-            case Track::Note:
-               pNewTrack = mTrackFactory->NewNoteTrack();
-               break;
-            #endif // USE_MIDI
+         case Track::Note:
+            pNewTrack = mTrackFactory->NewNoteTrack();
+            break;
+         #endif // USE_MIDI
+
          case Track::Label:
             pNewTrack = mTrackFactory->NewLabelTrack();
             break;
@@ -6150,12 +6152,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
 
    while (t) {
       // We only want Wave and Note tracks here.
-#if defined(USE_MIDI)
-      if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                               (t->GetKind() == Track::Note)))
-#else
-      if (t->GetSelected() && (t->GetKind() == Track::Wave))
-#endif
+      if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
       {
          offset = t->GetOffset();
          if (t->GetLinked()) {   // Left channel of stereo track.
@@ -6236,12 +6233,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       while (t) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
-#if defined(USE_MIDI)
-         if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                                  (t->GetKind() == Track::Note)))
-#else
-         if (t->GetSelected() && (t->GetKind() == Track::Wave))
-#endif
+         if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
          {
             t->SetOffset(newPos);   // Move the track
 
@@ -6897,8 +6889,9 @@ void AudacityProject::OnRemoveTracks()
 
    while (t) {
       if (t->GetSelected()) {
-         if (mMixerBoard && (t->GetKind() == Track::Wave))
-            mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
+         auto playable = dynamic_cast<PlayableTrack*>(t);
+         if (mMixerBoard && playable)
+            mMixerBoard->RemoveTrackCluster(playable);
          if (!f)
             f = l;         // Capture the track preceeding the first removed track
          t = iter.RemoveCurrent();
@@ -7095,8 +7088,9 @@ void AudacityProject::OnMuteAllTracks()
 
    while (t)
    {
-      if (t->GetKind() == Track::Wave)
-         t->SetMute(true);
+      auto pt = dynamic_cast<PlayableTrack *>(t);
+      if (pt)
+         pt->SetMute(true);
 
       t = iter.Next();
    }
@@ -7114,7 +7108,9 @@ void AudacityProject::OnUnMuteAllTracks()
 
    while (t)
    {
-      t->SetMute(false);
+      auto pt = dynamic_cast<PlayableTrack *>(t);
+      if (pt)
+         pt->SetMute(false);
       t = iter.Next();
    }
 

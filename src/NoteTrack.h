@@ -50,7 +50,17 @@ class wxRect;
 class DirManager;
 class Alg_seq;   // from "allegro.h"
 
-class AUDACITY_DLL_API NoteTrack final : public Track {
+using NoteTrackBase =
+#ifdef EXPERIMENTAL_MIDI_OUT
+   PlayableTrack
+#else
+   AudioTrack
+#endif
+   ;
+
+class AUDACITY_DLL_API NoteTrack final
+   : public NoteTrackBase
+{
  public:
    friend class TrackArtist;
 
@@ -98,8 +108,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   float GetGain() const { return mGain; }
-   void SetGain(float gain) { mGain = gain; }
+   float GetVelocity() const { return mVelocity; }
+   void SetVelocity(float velocity) { mVelocity = velocity; }
 #endif
 
    double NearestBeatTime(double time, double *beat) const;
@@ -202,7 +212,7 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    long mSerializationLength;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   float mGain; // velocity offset
+   float mVelocity; // velocity offset
 #endif
 
    // mBottom is the Y offset of pitch 0 (normally off screen)
