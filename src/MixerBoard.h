@@ -204,6 +204,7 @@ public:
    int GetTrackClustersWidth();
    void MoveTrackCluster(const PlayableTrack* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
    void RemoveTrackCluster(const PlayableTrack* pTrack);
+   void RemoveTrackCluster(size_t nIndex);
 
 
    wxBitmap* GetMusicalInstrumentBitmap(const Track *pTrack);

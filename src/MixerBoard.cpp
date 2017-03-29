@@ -920,7 +920,7 @@ void MixerBoard::UpdateTrackClusters()
       this->CreateMuteSoloImages();
 
    const int nClusterHeight = mScrolledWindow->GetClientSize().GetHeight() - kDoubleInset;
-   const size_t nClusterCount = mMixerTrackClusters.GetCount();
+   size_t nClusterCount = mMixerTrackClusters.GetCount();
    unsigned int nClusterIndex = 0;
    TrackListIterator iterTracks(mTracks);
    MixerTrackCluster* pMixerTrackCluster = NULL;
@@ -971,15 +971,14 @@ void MixerBoard::UpdateTrackClusters()
       this->UpdateWidth();
       this->ResizeTrackClusters();
    }
-   else if (nClusterIndex < nClusterCount)
+   else while (nClusterIndex < nClusterCount)
    {
       // We've got too many clusters.
       // This can happen only on things like Undo New Audio Track or Undo Import
       // that don't call RemoveTrackCluster explicitly.
       // We've already updated the track pointers for the clusters to the left, so just remove all the rest.
-      // Keep nClusterIndex constant and successively DELETE from left to right.
-      for (unsigned int nCounter = nClusterIndex; nCounter < nClusterCount; nCounter++)
-         this->RemoveTrackCluster(mMixerTrackClusters[nClusterIndex]->mTrack);
+      // Successively DELETE from right to left.
+      RemoveTrackCluster(--nClusterCount);
    }
 }
 
@@ -1032,9 +1031,16 @@ void MixerBoard::RemoveTrackCluster(const PlayableTrack* pTrack)
    // Find and destroy.
    MixerTrackCluster* pMixerTrackCluster;
    int nIndex = this->FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
+
    if (pMixerTrackCluster == NULL)
       return; // Couldn't find it.
 
+   RemoveTrackCluster(nIndex);
+}
+
+void MixerBoard::RemoveTrackCluster(size_t nIndex)
+{
+   auto pMixerTrackCluster = mMixerTrackClusters[nIndex];
    mMixerTrackClusters.RemoveAt(nIndex);
    pMixerTrackCluster->Destroy(); // DELETE is unsafe on wxWindow.
 
@@ -1053,13 +1059,6 @@ void MixerBoard::RemoveTrackCluster(const PlayableTrack* pTrack)
    }
 
    this->UpdateWidth();
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   // Sanity check: if there is still a MixerTrackCluster with pTrack, then
-   // we deleted the first but should have deleted the last:
-   FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   wxASSERT(pMixerTrackCluster == NULL);
-#endif
 }
 
 
