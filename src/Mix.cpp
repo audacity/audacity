@@ -255,7 +255,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    , mQueueMaxLen{ 65536 }
    , mSampleQueue{ mNumInputTracks, mQueueMaxLen }
 
-   , mNumChannels{ static_cast<size_t>(numOutChannels) }
+   , mNumChannels{ numOutChannels }
    , mGains{ mNumChannels }
 
    , mMayThrow{ mayThrow }
