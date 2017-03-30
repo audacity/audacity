@@ -378,8 +378,10 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 
 std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 {
-   if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
-      return {};
+   auto dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
+   if (s0 >= s1 || s0 >= mNumSamples || s1 < 0) {
+      return dest;
+   }
 
    int numBlocks = mBlock.size();
 
@@ -391,7 +393,6 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
    wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
-   auto dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
    dest->mBlock.reserve(b1 - b0 + 1);
 
    SampleBuffer buffer(mMaxSamples, mSampleFormat);
