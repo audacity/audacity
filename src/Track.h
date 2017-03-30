@@ -251,6 +251,13 @@ public:
    AudioTrack(const std::shared_ptr<DirManager> &projDirManager)
       : Track{ projDirManager } {}
    AudioTrack(const Track &orig) : Track{ orig } {}
+
+   // Serialize, not with tags of its own, but as attributes within a tag.
+   void WriteXMLAttributes(XMLWriter &xmlFile) const {}
+
+   // Return true iff the attribute is recognized.
+   bool HandleXMLAttribute(const wxChar * /*attr*/, const wxChar * /*value*/)
+   { return false; }
 };
 
 class PlayableTrack /* not final */ : public AudioTrack
@@ -267,6 +274,12 @@ public:
 
    void Init( const PlayableTrack &init );
    void Merge( const Track &init ) override;
+
+   // Serialize, not with tags of its own, but as attributes within a tag.
+   void WriteXMLAttributes(XMLWriter &xmlFile) const;
+
+   // Return true iff the attribute is recognized.
+   bool HandleXMLAttribute(const wxChar *attr, const wxChar *value);
 
 protected:
    bool                mMute { false };

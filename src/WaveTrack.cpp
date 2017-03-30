@@ -1685,12 +1685,8 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // track is created.
             mLegacyProjectFileOffset = dblValue;
          }
-         else if (!wxStrcmp(attr, wxT("mute")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mMute = (nValue != 0);
-         else if (!wxStrcmp(attr, wxT("solo")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mSolo = (nValue != 0);
+         else if (this->PlayableTrack::HandleXMLAttribute(attr, value))
+         {}
          else if (!wxStrcmp(attr, wxT("height")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mHeight = nValue;
@@ -1789,8 +1785,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), mLinked);
-   xmlFile.WriteAttr(wxT("mute"), mMute);
-   xmlFile.WriteAttr(wxT("solo"), mSolo);
+   this->PlayableTrack::WriteXMLAttributes(xmlFile);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    int height;
    if(MONO_PAN)
