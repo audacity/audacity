@@ -206,7 +206,7 @@ fi
 
 if test x$enable_sse = xyes; then
 
-   if test "${CXX}" = "gnu"; then
+   if test "${ax_cv_cxx_compiler_vendor}" = "gnu"; then
       AX_CHECK_COMPILER_FLAGS(-msse, [SBSMS_CFLAGS="$SBSMS_CFLAGS -msse"],[AC_MSG_ERROR([Need a version of gcc with -msse])])
    fi
 
