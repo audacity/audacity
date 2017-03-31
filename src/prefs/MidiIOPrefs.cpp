@@ -175,8 +175,10 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
 
 void MidiIOPrefs::OnHost(wxCommandEvent & e)
 {
+   wxString itemAtIndex;
    int index = mHost->GetCurrentSelection();
-   wxString itemAtIndex = mHostNames.Item(index);
+   if (index >= 0 && index < mHostNames.Count())
+      itemAtIndex = mHostNames.Item(index);
    int nDevices = Pm_CountDevices();
 
    if (nDevices == 0) {
