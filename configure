@@ -19189,7 +19189,7 @@ fi
 
 if test x$enable_sse = xyes; then
 
-   if test "${CXX}" = "gnu"; then
+   if test "${ax_cv_cxx_compiler_vendor}" = "gnu"; then
        { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -msse" >&5
 $as_echo_n "checking whether C++ compiler accepts -msse... " >&6; }
 if ${ax_cv_cxx_flags__msse+:} false; then :
