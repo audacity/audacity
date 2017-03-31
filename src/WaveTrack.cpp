@@ -532,15 +532,14 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
 Track::Holder WaveTrack::Cut(double t0, double t1)
 {
    if (t1 < t0)
-      return{};
+      // THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    auto tmp = Copy(t0, t1);
 
-   if (!tmp)
-      return{};
-
    if (!Clear(t0, t1))
-      return{};
+      // THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    return tmp;
 }
@@ -548,14 +547,15 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
 Track::Holder WaveTrack::SplitCut(double t0, double t1)
 {
    if (t1 < t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    // SplitCut is the same as 'Copy', then 'SplitDelete'
    auto tmp = Copy(t0, t1);
-   if (!tmp)
-      return{};
+
    if (!SplitDelete(t0, t1))
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    return tmp;
 }
@@ -564,14 +564,15 @@ Track::Holder WaveTrack::SplitCut(double t0, double t1)
 Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 {
    if (t1 < t0)
-      return {};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    // Cut is the same as 'Copy', then 'Delete'
    auto tmp = Copy(t0, t1);
-   if (!tmp)
-      return {};
+
    if (!ClearAndAddCutLine(t0, t1))
-      return {};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    return tmp;
 }
@@ -636,7 +637,8 @@ bool WaveTrack::Trim (double t0, double t1)
 Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    WaveTrack *newTrack;
    Track::Holder result
@@ -1166,8 +1168,6 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          gPrefs->Read(wxT("/GUI/EditClipCanMove"), &clipsCanMove);
          if (clipsCanMove) {
             auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
-            if (!tmp)
-               return false;
 
             ret = Paste(newT1, tmp.get());
             wxASSERT(ret);

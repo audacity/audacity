@@ -429,8 +429,11 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       if (mEditDetail)
          Printf(wxT("Cut: %d - %d \n"), x0 * chunkSize, (x0 + xlen) * chunkSize);
 
-      auto tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
-      if (!tmp) {
+      Track::Holder tmp;
+      try {
+         tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
+      }
+      catch (const AudacityException&) {
          Printf(wxT("Trial %d\n"), z);
          Printf(wxT("Cut (%d, %d) failed.\n"), (x0 * chunkSize),
                 (x0 + xlen) * chunkSize);

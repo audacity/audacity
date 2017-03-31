@@ -438,7 +438,8 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
    }
 
    if (! ConsistencyCheck(wxT("Sequence::Copy()")))
-      return {};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    return dest;
 }

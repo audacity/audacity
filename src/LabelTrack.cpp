@@ -2339,10 +2339,10 @@ bool LabelTrack::Save(wxTextFile * out, bool overwrite)
 Track::Holder LabelTrack::Cut(double t0, double t1)
 {
    auto tmp = Copy(t0, t1);
-   if (!tmp)
-      return{};
+
    if (!Clear(t0, t1))
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
 
    return tmp;
 }
@@ -2353,8 +2353,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
    // SplitCut() == Copy() + SplitDelete()
 
    Track::Holder tmp = Copy(t0, t1);
-   if (!tmp)
-      return {};
+
    if (!SplitDelete(t0, t1))
       return {};
 

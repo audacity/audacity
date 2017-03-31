@@ -4177,8 +4177,7 @@ void AudacityProject::OnCut()
             dest = n->Copy(mViewInfo.selectedRegion.t0(),
                     mViewInfo.selectedRegion.t1());
 
-         if (dest)
-            FinishCopy(n, std::move(dest), newClipboard);
+         FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
@@ -4309,8 +4308,7 @@ void AudacityProject::OnCopy()
       if (n->GetSelected()) {
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1());
-         if (dest)
-            FinishCopy(n, std::move(dest), newClipboard);
+         FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
@@ -4914,11 +4912,9 @@ void AudacityProject::OnDuplicate()
          // Make copies not for clipboard but for direct addition to the project
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1(), false);
-         if (dest) {
-            dest->Init(*n);
-            dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
-            mTracks->Add(std::move(dest));
-         }
+         dest->Init(*n);
+         dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
+         mTracks->Add(std::move(dest));
       }
 
       if (n == l) {
@@ -5129,22 +5125,19 @@ void AudacityProject::OnSplit()
          double sel0 = mViewInfo.selectedRegion.t0();
          double sel1 = mViewInfo.selectedRegion.t1();
 
-         dest = NULL;
-         n->Copy(sel0, sel1, &dest);
-         if (dest) {
-            dest->Init(*n);
-            dest->SetOffset(wxMax(sel0, n->GetOffset()));
+         dest = n->Copy(sel0, sel1);
+         dest->Init(*n);
+         dest->SetOffset(wxMax(sel0, n->GetOffset()));
 
-            if (sel1 >= n->GetEndTime())
-               n->Clear(sel0, sel1);
-            else if (sel0 <= n->GetOffset()) {
-               n->Clear(sel0, sel1);
-               n->SetOffset(sel1);
-            } else
-               n->Silence(sel0, sel1);
+         if (sel1 >= n->GetEndTime())
+            n->Clear(sel0, sel1);
+         else if (sel0 <= n->GetOffset()) {
+            n->Clear(sel0, sel1);
+            n->SetOffset(sel1);
+         } else
+            n->Silence(sel0, sel1);
 
-            newTracks.Add(dest);
-         }
+         newTracks.Add(dest);
       }
       n = iter.Next();
    }
@@ -5190,10 +5183,8 @@ void AudacityProject::OnSplitNew()
                    mViewInfo.selectedRegion.t1());
          }
 #endif
-         if (dest) {
-            dest->SetOffset(wxMax(newt0, offset));
-            FinishCopy(n, std::move(dest), *mTracks);
-         }
+         dest->SetOffset(wxMax(newt0, offset));
+         FinishCopy(n, std::move(dest), *mTracks);
       }
 
       if (n == l) {

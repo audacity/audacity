@@ -435,7 +435,8 @@ int NoteTrack::GetVisibleChannels()
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -457,7 +458,8 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
