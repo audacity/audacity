@@ -105,6 +105,8 @@ class AUDACITY_DLL_API NoteTrack final
    bool Trim (double t0, double t1) /* not override */;
    bool Clear(double t0, double t1) override;
    bool Paste(double t, const Track *src) override;
+   bool Silence(double t0, double t1) override;
+   bool InsertSilence(double t, double len) override;
    bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT

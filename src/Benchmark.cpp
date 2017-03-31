@@ -337,10 +337,13 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    // Rememebr the old blocksize, so that we can restore it later.
    auto oldBlockSize = Sequence::GetMaxDiskBlockSize();
-   const auto cleanup = finally([=]
-      { Sequence::SetMaxDiskBlockSize(oldBlockSize); }
-   );
    Sequence::SetMaxDiskBlockSize(blockSize * 1024);
+
+   const auto cleanup = finally( [&] {
+      Sequence::SetMaxDiskBlockSize(oldBlockSize);
+      gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
+      gPrefs->Flush();
+   } );
 
    wxBusyCursor busy;
 
@@ -426,8 +429,11 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       if (mEditDetail)
          Printf(wxT("Cut: %d - %d \n"), x0 * chunkSize, (x0 + xlen) * chunkSize);
 
-      auto tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
-      if (!tmp) {
+      Track::Holder tmp;
+      try {
+         tmp = t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
+      }
+      catch (const AudacityException&) {
          Printf(wxT("Trial %d\n"), z);
          Printf(wxT("Cut (%d, %d) failed.\n"), (x0 * chunkSize),
                 (x0 + xlen) * chunkSize);
@@ -540,7 +546,4 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    Printf(wxT("Benchmark completed successfully.\n"));
    HoldPrint(false);
-
-   gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
-   gPrefs->Flush();
 }

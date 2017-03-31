@@ -69,6 +69,30 @@ private:
    mutable bool moved { false };
 };
 
+// MessageBoxException that shows a given, unvarying string.
+class SimpleMessageBoxException /* not final */ : public MessageBoxException
+{
+public:
+   explicit SimpleMessageBoxException( const wxString &message_,
+      const wxString &caption = wxString{} )
+      : MessageBoxException{ caption }
+      , message{ message_ }
+   {}
+   ~SimpleMessageBoxException() override;
+
+   SimpleMessageBoxException( const SimpleMessageBoxException& ) = default;
+   SimpleMessageBoxException &operator = (
+      SimpleMessageBoxException && ) PROHIBITED;
+
+   std::unique_ptr< AudacityException > Move() override;
+
+   // Format a default, internationalized error message for this exception.
+   virtual wxString ErrorMessage() const override;
+
+private:
+   wxString message;
+};
+
 struct DefaultDelayedHandlerAction
 {
    void operator () (AudacityException *pException) const

@@ -101,7 +101,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // bl is negative wherever data are not yet available.
    // Return true if successful.
    bool GetWaveDisplay(float *min, float *max, float *rms, int* bl,
-                       size_t len, const sampleCount *where);
+                       size_t len, const sampleCount *where) const;
 
    std::unique_ptr<Sequence> Copy(sampleCount s0, sampleCount s1) const;
    bool Paste(sampleCount s0, const Sequence *src);
