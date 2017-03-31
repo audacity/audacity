@@ -378,11 +378,11 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
          }
       }
 
-      outputTrack->Flush();
+      if (!cancelled){
+         outputTrack->Flush();
 
-      track->Clear(t0,t1);
-      bool success = track->Paste(t0, outputTrack.get());
-      if (!cancelled && success){
+         track->Clear(t0,t1);
+         track->Paste(t0, outputTrack.get());
          m_t1 = mT0 + outputTrack->GetEndTime();
       }
       

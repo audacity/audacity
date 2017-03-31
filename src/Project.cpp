@@ -4993,9 +4993,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
                   // right to left.  Any placeholder already in merged is kept.
                   // Only the rightmost placeholder is important in the final
                   // result.
-                  bool bResult = merged->Paste( 0.0 , dest.get() );
-                  wxASSERT(bResult); // TO DO: Actually handle this.
-                  wxUnusedVar(bResult);
+                  merged->Paste( 0.0 , dest.get() );
                }
             }
             else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset

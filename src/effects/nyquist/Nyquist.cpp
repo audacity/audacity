@@ -1880,11 +1880,9 @@ int NyquistEffect::PutCallback(float *buffer, int channel,
          }
       }
 
-      if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
-         return 0;  // success
-      }
+      mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len);
 
-      return -1; // failure
+      return 0; // success
    }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
 }
 

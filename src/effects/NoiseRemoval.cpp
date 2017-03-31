@@ -575,8 +575,7 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
          double tLen = mOutputTrack->LongSamplesToTime(len);
          // Filtering effects always end up with more data than they started with.  Delete this 'tail'.
          mOutputTrack->HandleClear(tLen, mOutputTrack->GetEndTime(), false, false);
-         bool bResult = track->ClearAndPaste(t0, t0 + tLen, mOutputTrack.get(), true, false);
-         wxASSERT(bResult); // TO DO: Actually handle this.
+         track->ClearAndPaste(t0, t0 + tLen, mOutputTrack.get(), true, false);
       }
    }
 

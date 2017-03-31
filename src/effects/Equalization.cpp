@@ -1174,9 +1174,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
          auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0);
          //put the processed audio in
-         bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
-         wxASSERT(bResult); // TO DO: Actually handle this.
-         wxUnusedVar(bResult);
+         t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
          //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
          //This is not true when the selection is fully contained within one clip (second half of conditional)
          if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first ||

@@ -120,30 +120,27 @@ Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
    return Track::Holder{ std::move( result ) };
 }
 
-bool TimeTrack::Clear(double t0, double t1)
+void TimeTrack::Clear(double t0, double t1)
 {
    mEnvelope->CollapseRegion(t0, t1);
-   return true;
 }
 
-bool TimeTrack::Paste(double t, const Track * src)
+void TimeTrack::Paste(double t, const Track * src)
 {
    if (src->GetKind() != Track::Time)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    mEnvelope->Paste(t, static_cast<const TimeTrack*>(src)->mEnvelope.get());
-   return true;
 }
 
-bool TimeTrack::Silence(double t0, double t1)
+void TimeTrack::Silence(double t0, double t1)
 {
-   return true;
 }
 
-bool TimeTrack::InsertSilence(double t, double len)
+void TimeTrack::InsertSilence(double t, double len)
 {
    mEnvelope->InsertSpace(t, len);
-   return true;
 }
 
 Track::Holder TimeTrack::Duplicate() const

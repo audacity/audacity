@@ -449,8 +449,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       if (mEditDetail)
          Printf(wxT("Paste: %d\n"), y0 * chunkSize);
 
-      if (!t->Paste((double)(y0 * chunkSize), tmp.get()))
-      {
+      try {
+         t->Paste((double)(y0 * chunkSize), tmp.get());
+      }
+      catch (const AudacityException&) {
          Printf(wxT("Trial %d\nFailed on Paste.\n"), z);
          goto fail;
       }
