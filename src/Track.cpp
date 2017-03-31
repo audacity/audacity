@@ -616,16 +616,9 @@ SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 }
 
 namespace {
-   bool IsSyncLockableNonLabelTrack( const Track *pTrack )
+   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
    {
-      if ( pTrack->GetKind() == Track::Wave )
-         return true;
-#ifdef USE_MIDI
-      else if ( pTrack->GetKind() == Track::Note )
-         return true;
-#endif
-      else
-         return false;
+      return nullptr != dynamic_cast< const AudioTrack * >( pTrack );
    }
 }
 
