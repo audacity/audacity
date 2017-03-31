@@ -534,6 +534,18 @@ bool NoteTrack::Paste(double t, const Track *src)
    return true;
 }
 
+bool NoteTrack::Silence(double, double)
+{
+   // to do
+   return false;
+}
+
+bool NoteTrack::InsertSilence(double, double)
+{
+   // to do
+   return false;
+}
+
 // Call this function to manipulate the underlying sequence data. This is
 // NOT the function that handles horizontal dragging.
 bool NoteTrack::Shift(double t) // t is always seconds

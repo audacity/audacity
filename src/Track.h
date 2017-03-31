@@ -206,28 +206,29 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    // separate from the Track.
    const std::shared_ptr<DirManager> &GetDirManager() const { return mDirManager; }
 
-   // Create a NEW track and modify this track (or return null for failure)
-   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
+   // Create a NEW track and modify this track
+   // Return non-NULL or else throw
+   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
-   // Create a NEW track and don't modify this track (or return null for failure)
+   // Create a NEW track and don't modify this track
+   // Return non-NULL or else throw
    // Note that subclasses may want to distinguish tracks stored in a clipboard
    // from those stored in a project
    virtual Holder Copy
-      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const
-   { return{}; }
+      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
 
    // Return true for success
-   virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
+   virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
    // Return true for success
-   virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) {return false;}
+   virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
 
    // This can be used to adjust a sync-lock selected track when the selection
    // is replaced by one of a different length.
    virtual bool SyncLockAdjust(double oldT1, double newT1);
 
-   virtual bool Silence(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
-   virtual bool InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) {return false;}
+   virtual bool Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   virtual bool InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
    virtual int GetKind() const { return None; }
 
