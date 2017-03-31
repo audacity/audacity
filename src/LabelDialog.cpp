@@ -589,7 +589,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
 
    // Ask user for a filename
    wxString fileName =
-       FileSelector(_("Select a text file containing labels..."),
+       FileSelector(_("Select a text file containing labels"),
                     path,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension

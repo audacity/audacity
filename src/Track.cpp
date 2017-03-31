@@ -50,8 +50,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
    mList      = NULL;
    mSelected  = false;
    mLinked    = false;
-   mMute      = false;
-   mSolo      = false;
 
    mY = 0;
    mHeight = 150;
@@ -92,8 +90,6 @@ void Track::Init(const Track &orig)
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;
-   mMute = orig.mMute;
-   mSolo = orig.mSolo;
    mHeight = orig.mHeight;
    mMinimized = orig.mMinimized;
    mChannel = orig.mChannel;
@@ -112,8 +108,6 @@ void Track::SetSelected(bool s)
 void Track::Merge(const Track &orig)
 {
    mSelected = orig.mSelected;
-   mMute = orig.mMute;
-   mSolo = orig.mSolo;
 }
 
 Track::~Track()
@@ -329,6 +323,49 @@ bool Track::SyncLockAdjust(double oldT1, double newT1)
 
    // fall-through: no change
    return true;
+}
+
+void PlayableTrack::Init( const PlayableTrack &orig )
+{
+   mMute = orig.mMute;
+   mSolo = orig.mSolo;
+   AudioTrack::Init( orig );
+}
+
+void PlayableTrack::Merge( const Track &orig )
+{
+   auto pOrig = dynamic_cast<const PlayableTrack *>(&orig);
+   wxASSERT( pOrig );
+   mMute = pOrig->mMute;
+   mSolo = pOrig->mSolo;
+   AudioTrack::Merge( *pOrig );
+}
+
+// Serialize, not with tags of its own, but as attributes within a tag.
+void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
+{
+   xmlFile.WriteAttr(wxT("mute"), mMute);
+   xmlFile.WriteAttr(wxT("solo"), mSolo);
+   AudioTrack::WriteXMLAttributes(xmlFile);
+}
+
+// Return true iff the attribute is recognized.
+bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
+{
+   const wxString strValue{ value };
+   long nValue;
+   if (!wxStrcmp(attr, wxT("mute")) &&
+            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      mMute = (nValue != 0);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("solo")) &&
+            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      mSolo = (nValue != 0);
+      return true;
+   }
+
+   return AudioTrack::HandleXMLAttribute(attr, value);
 }
 
 // TrackListIterator
@@ -579,16 +616,9 @@ SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 }
 
 namespace {
-   bool IsSyncLockableNonLabelTrack( const Track *pTrack )
+   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
    {
-      if ( pTrack->GetKind() == Track::Wave )
-         return true;
-#ifdef USE_MIDI
-      else if ( pTrack->GetKind() == Track::Note )
-         return true;
-#endif
-      else
-         return false;
+      return nullptr != dynamic_cast< const AudioTrack * >( pTrack );
    }
 }
 
@@ -1208,7 +1238,9 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
    for (tr = iter.First(this); tr != NULL; tr = iter.Next()) {
 
       // Want only unmuted wave tracks.
-      if ((tr->GetKind() != Track::Wave) || tr->GetMute())
+      auto wt = static_cast<const WaveTrack *>(tr);
+      if ((tr->GetKind() != Track::Wave) ||
+          wt->GetMute())
          continue;
 
       // do we only want selected ones?
@@ -1265,8 +1297,9 @@ namespace {
 
       for (; p != end; ++p) {
          const auto &track = *p;
+         auto wt = static_cast<const WaveTrack *>(&*track);
          if (track->GetKind() == Track::Wave &&
-            (includeMuted || !track->GetMute()) &&
+            (includeMuted || !wt->GetMute()) &&
             (track->GetSelected() || !selectionOnly)) {
             waveTrackArray.push_back(static_cast<WaveTrack*>(track.get()));
          }

@@ -539,7 +539,7 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
 
       // TODO: Document: Number of open projects
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), gAudacityProjects.size());
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), (int) gAudacityProjects.size());
       // TODO: Document. NOTE: unnamed project returns an empty string.
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetName().c_str());
 
@@ -998,7 +998,6 @@ bool NyquistEffect::ProcessOne()
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
          cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'PEAK)\n"), peakString);
 
-      // TODO: Documen, PEAK-LEVEL is deprecated as of 2.1.3.
       // TODO: Document, PEAK-LEVEL is nil if NaN or INF.
       if (!std::isinf(maxPeakLevel) && !std::isnan(maxPeakLevel) && (maxPeakLevel < FLT_MAX)) {
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),

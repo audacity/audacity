@@ -278,7 +278,7 @@ BEGIN_EVENT_TABLE(DependencyDialog, wxDialogWrapper)
    EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
    EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
    EVT_SIZE(DependencyDialog::OnSize)
-   EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save without Copying"
+   EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save Without Copying"
    EVT_BUTTON(wxID_YES, DependencyDialog::OnYes) // "Copy All Files (Safer)"
    EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel)  // "Cancel Save"
 END_EVENT_TABLE()
@@ -349,7 +349,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       {
          if (mIsSaving) {
             S.Id(wxID_CANCEL).AddButton(_("Cancel Save"));
-            S.Id(wxID_NO).AddButton(_("Save without Copying"));
+            S.Id(wxID_NO).AddButton(_("Save Without Copying"));
          }
          else
             S.Id(wxID_NO).AddButton(_("Do Not Copy"));

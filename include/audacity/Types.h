@@ -70,7 +70,9 @@ public:
    sampleCount ( int v ) : value { v } {}
    sampleCount ( unsigned v ) : value { v } {}
    sampleCount ( long v ) : value { v } {}
-   sampleCount ( unsigned long v ) : value { v } {}
+
+   // unsigned long is 64 bit on some platforms.  Let it narrow.
+   sampleCount ( unsigned long v ) : value ( v ) {}
 
    // Beware implicit conversions from floating point values!
    // Otherwise the meaning of binary operators with sampleCount change

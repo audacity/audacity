@@ -2800,7 +2800,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    wxArrayString selected;
 
    FileDialog dlog(NULL,
-                   _("Select one or more audio files..."),
+                   _("Select one or more files"),
                    path,
                    wxT(""),
                    mask,
@@ -3655,6 +3655,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
    while (t) {
       if ((t->GetKind() == Track::Wave) && bWantSaveCompressed)
       {
+         auto wt = static_cast<const WaveTrack *>(t);
+
          //vvv This should probably be a method, WaveTrack::WriteCompressedTrackXML().
          xmlFile.StartTag(wxT("import"));
          xmlFile.WriteAttr(wxT("filename"), mStrOtherNamesArray[ndx]); // Assumes mTracks order hasn't changed!
@@ -3665,8 +3667,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
          //    xmlFile.WriteAttr(wxT("linked"), t->GetLinked());
 
          xmlFile.WriteAttr(wxT("offset"), t->GetOffset(), 8);
-         xmlFile.WriteAttr(wxT("mute"), t->GetMute());
-         xmlFile.WriteAttr(wxT("solo"), t->GetSolo());
+         xmlFile.WriteAttr(wxT("mute"), wt->GetMute());
+         xmlFile.WriteAttr(wxT("solo"), wt->GetSolo());
          xmlFile.WriteAttr(wxT("height"), t->GetActualHeight());
          xmlFile.WriteAttr(wxT("minimized"), t->GetMinimized());
 
@@ -3975,10 +3977,12 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
               ((pTrack != NULL) && (pSavedTrack != NULL));
               pTrack = iter.Next(), pSavedTrack = savedTrackIter.Next())
          {
-            pWaveTrack = (WaveTrack*)pTrack;
+            pWaveTrack = static_cast<WaveTrack*>(pTrack);
+            auto pSavedWaveTrack = static_cast<const WaveTrack*>(pSavedTrack);
+
             pWaveTrack->SetSelected(pSavedTrack->GetSelected());
-            pWaveTrack->SetMute(pSavedTrack->GetMute());
-            pWaveTrack->SetSolo(pSavedTrack->GetSolo());
+            pWaveTrack->SetMute(pSavedWaveTrack->GetMute());
+            pWaveTrack->SetSolo(pSavedWaveTrack->GetSolo());
 
             pWaveTrack->SetGain(((WaveTrack*)pSavedTrack)->GetGain());
             pWaveTrack->SetPan(((WaveTrack*)pSavedTrack)->GetPan());
@@ -5396,12 +5400,13 @@ void AudacityProject::RemoveTrack(Track * toRemove)
    wxString name = toRemove->GetName();
    Track *partner = toRemove->GetLink();
 
-   if (toRemove->GetKind() == Track::Wave)
+   auto playable = dynamic_cast<PlayableTrack*>(toRemove);
+   if (playable)
    {
       // Update mixer board displayed tracks.
       MixerBoard* pMixerBoard = this->GetMixerBoard();
       if (pMixerBoard)
-         pMixerBoard->RemoveTrackCluster((WaveTrack*)toRemove); // Will remove partner shown in same cluster.
+         pMixerBoard->RemoveTrackCluster(playable); // Will remove partner shown in same cluster.
    }
 
    mTracks->Remove(toRemove);
@@ -5429,36 +5434,45 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
    if (exclusive)
    {
       TrackListIterator iter(GetTracks());
-      Track *i = iter.First();
-      while (i) {
-         if (i == t) {
-            i->SetMute(true);
-            if(i->GetLinked()) { // also mute the linked track
-               i = iter.Next();
+      Track *it = iter.First();
+      while (it) {
+         auto i = dynamic_cast<PlayableTrack *>(it);
+         if (i) {
+            if (i == t) {
                i->SetMute(true);
+               if(i->GetLinked()) { // also mute the linked track
+                  it = iter.Next();
+                  i->SetMute(true);
+               }
             }
+            else {
+               i->SetMute(false);
+            }
+            i->SetSolo(false);
          }
-         else {
-            i->SetMute(false);
-         }
-         i->SetSolo(false);
-         i = iter.Next();
+         it = iter.Next();
       }
    }
    else
    {
       // Normal click toggles this track.
-      t->SetMute(!t->GetMute());
+      auto pt = dynamic_cast<PlayableTrack *>( t );
+      if (!pt)
+         return;
+
+      pt->SetMute(!pt->GetMute());
       if(t->GetLinked())   // set mute the same on both, if a pair
       {
-         bool muted = t->GetMute();
+         bool muted = pt->GetMute();
          TrackListIterator iter(GetTracks());
          Track *i = iter.First();
          while (i != t) {  // search for this track
             i = iter.Next();
          }
          i = iter.Next();  // get the next one, since linked
-         i->SetMute(muted);   // and mute it as well
+         auto pi = dynamic_cast<PlayableTrack *>( i );
+         if (pi)
+            pi->SetMute(muted);   // and mute it as well
       }
 
       if (IsSoloSimple() || IsSoloNone())
@@ -5470,18 +5484,23 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
          // We also set a solo indicator if we have just one track / stereo pair playing.
          // otherwise clear solo on everything.
          while (i) {
-            if( !i->GetMute())
-            {
-               nPlaying += 1;
-               if(i->GetLinked())
-                  i = iter.Next();  // don't count this one as it is linked
+            auto pi = dynamic_cast<PlayableTrack *>( i );
+            if (pi) {
+               if( !pi->GetMute())
+               {
+                  nPlaying += 1;
+                  if(i->GetLinked())
+                     i = iter.Next();  // don't count this one as it is linked
+               }
             }
             i = iter.Next();
          }
 
          i = iter.First();
          while (i) {
-            i->SetSolo( (nPlaying==1) && !i->GetMute() );   // will set both of a stereo pair
+            auto pi = dynamic_cast<PlayableTrack *>( i );
+            if (pi)
+               pi->SetSolo( (nPlaying==1) && !pi->GetMute() );   // will set both of a stereo pair
             i = iter.Next();
          }
       }
@@ -5491,8 +5510,12 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
 
 // Type of solo (standard or simple) follows the set preference, unless
 // alternate == true, which causes the opposite behavior.
-void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
+void AudacityProject::HandleTrackSolo(Track *const t, const bool alternate)
 {
+   const auto pt = dynamic_cast<PlayableTrack *>( t );
+   if (!pt)
+      return;
+
    bool bSoloMultiple = !IsSoloSimple() ^ alternate;
 
    // Standard and Simple solo have opposite defaults:
@@ -5502,17 +5525,19 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
    // when in standard radio button mode.
    if ( bSoloMultiple )
    {
-      t->SetSolo( !t->GetSolo() );
+      pt->SetSolo( !pt->GetSolo() );
       if(t->GetLinked())
       {
-         bool soloed = t->GetSolo();
+         bool soloed = pt->GetSolo();
          TrackListIterator iter(GetTracks());
          Track *i = iter.First();
          while (i != t) {  // search for this track
             i = iter.Next();
          }
          i = iter.Next();  // get the next one, since linked
-         i->SetSolo(soloed);   // and solo it as well
+         auto pi = dynamic_cast<PlayableTrack *>( i );
+         if (pi)
+            pi->SetSolo(soloed);   // and solo it as well
       }
    }
    else
@@ -5521,26 +5546,32 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
       // OR unmute and unsolo everything.
       TrackListIterator iter(GetTracks());
       Track *i = iter.First();
-      bool bWasSolo = t->GetSolo();
+      bool bWasSolo = pt->GetSolo();
       while (i) {
          if( i==t )
          {
-            i->SetSolo(!bWasSolo);
+            pt->SetSolo(!bWasSolo);
             if( IsSoloSimple() )
-               i->SetMute(false);
+               pt->SetMute(false);
             if(t->GetLinked())
             {
                i = iter.Next();
-               i->SetSolo(!bWasSolo);
-               if( IsSoloSimple() )
-                  i->SetMute(false);
+               auto pi = dynamic_cast<PlayableTrack *>( i );
+               if (pi) {
+                  pi->SetSolo(!bWasSolo);
+                  if( IsSoloSimple() )
+                     pi->SetMute(false);
+               }
             }
          }
          else
          {
-            i->SetSolo(false);
-            if( IsSoloSimple() )
-               i->SetMute(!bWasSolo);
+            auto pi = dynamic_cast<PlayableTrack *>( i );
+            if (pi) {
+               pi->SetSolo(false);
+               if( IsSoloSimple() )
+                  pi->SetMute(!bWasSolo);
+            }
          }
          i = iter.Next();
       }

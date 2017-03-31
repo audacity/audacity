@@ -79,7 +79,7 @@ WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
 }
 
 WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, double rate) :
-   Track(projDirManager)
+   PlayableTrack(projDirManager)
 {
    if (format == (sampleFormat)0)
    {
@@ -116,7 +116,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):
-   Track(orig)
+   PlayableTrack(orig)
    , mpSpectrumSettings(orig.mpSpectrumSettings
       ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
       : nullptr
@@ -141,7 +141,7 @@ WaveTrack::WaveTrack(const WaveTrack &orig):
 // Copy the track metadata but not the contents.
 void WaveTrack::Init(const WaveTrack &orig)
 {
-   Track::Init(orig);
+   PlayableTrack::Init(orig);
    mFormat = orig.mFormat;
    mRate = orig.mRate;
    mGain = orig.mGain;
@@ -171,7 +171,7 @@ void WaveTrack::Merge(const Track &orig)
       SetWaveformSettings
          (wt.mpWaveformSettings ? std::make_unique<WaveformSettings>(*wt.mpWaveformSettings) : nullptr);
    }
-   Track::Merge(orig);
+   PlayableTrack::Merge(orig);
 }
 
 WaveTrack::~WaveTrack()
@@ -1685,12 +1685,8 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // track is created.
             mLegacyProjectFileOffset = dblValue;
          }
-         else if (!wxStrcmp(attr, wxT("mute")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mMute = (nValue != 0);
-         else if (!wxStrcmp(attr, wxT("solo")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            mSolo = (nValue != 0);
+         else if (this->PlayableTrack::HandleXMLAttribute(attr, value))
+         {}
          else if (!wxStrcmp(attr, wxT("height")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mHeight = nValue;
@@ -1789,8 +1785,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), mLinked);
-   xmlFile.WriteAttr(wxT("mute"), mMute);
-   xmlFile.WriteAttr(wxT("solo"), mSolo);
+   this->PlayableTrack::WriteXMLAttributes(xmlFile);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    int height;
    if(MONO_PAN)

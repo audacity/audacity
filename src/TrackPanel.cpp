@@ -3732,8 +3732,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 #else
       {
          trySnap = true;
-         desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) /
-            mouseTrack->GetRate();  // set it to a sample point
+         if (mouseTrack->GetKind() == Track::Wave) {
+            WaveTrack *mtw = (WaveTrack *)mouseTrack;
+            desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) /
+               mtw->GetRate();  // set it to a sample point
+         }
          if (mSnapManager && mCapturedClip) {
             clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
             clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
@@ -4960,7 +4963,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
      // mCapturedTrack is not wave...
       if (!pan) {
          // .. so assume it is note
-         static_cast<NoteTrack*>(mCapturedTrack)->SetGain(newValue);
+         static_cast<NoteTrack*>(mCapturedTrack)->SetVelocity(newValue);
 #ifdef EXPERIMENTAL_MIXER_BOARD
             if (pMixerBoard)
                // probably should modify UpdateGain to take a track that is
@@ -5209,27 +5212,17 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
       mTracks->MoveUp(mCapturedTrack);
       --mRearrangeCount;
-#ifdef EXPERIMENTAL_MIDI_OUT
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
-                          mCapturedTrack->GetKind() == Track::Note))
-         pMixerBoard->MoveTrackCluster(mCapturedTrack, true /* up */);
-#else
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, true /* up */);
-#endif
+      if (pMixerBoard)
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
+            pMixerBoard->MoveTrackCluster(pPlayable, true /* up */);
    }
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
       ++mRearrangeCount;
       /* i18n-hint: a direction as in up or down.*/
-#ifdef EXPERIMENTAL_MIDI_OUT
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
-                          mCapturedTrack->GetKind() == Track::Note))
-         pMixerBoard->MoveTrackCluster(mCapturedTrack, false /* down */);
-#else
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, false /* down */);
-#endif
+      if (pMixerBoard)
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
+            pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
    }
    else
    {
@@ -9295,18 +9288,19 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       return; // don't draw mute and solo buttons, because they don't fit into track label
 
    AColor::MediumTrackInfo( dc, t->GetSelected());
+   auto pt = dynamic_cast<const PlayableTrack *>(t);
    if( solo )
    {
-      if( t->GetSolo() )
+      if( pt && pt->GetSolo() )
       {
-         AColor::Solo(dc, t->GetSolo(), t->GetSelected());
+         AColor::Solo(dc, pt->GetSolo(), t->GetSelected());
       }
    }
    else
    {
-      if( t->GetMute() )
+      if( pt && pt->GetMute() )
       {
-         AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
+         AColor::Mute(dc, pt->GetMute(), t->GetSelected(), pt->GetSolo());
       }
    }
    //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
@@ -9325,7 +9319,11 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 
-   AColor::BevelTrackInfo(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
+   AColor::BevelTrackInfo(
+      *dc,
+      (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
+      bev
+   );
 
    if (solo && !down) {
       // Update the mute button, which may be grayed out depending on
@@ -9374,7 +9372,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
        auto &gain = mGain; // mGains[index];
        gain->SetStyle(VEL_SLIDER);
        GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
-       GainSlider(index)->Set(t->GetGain());
+       GainSlider(index)->Set(t->GetVelocity());
        GainSlider(index)->OnPaint(*dc
           // , t->GetSelected()
        );

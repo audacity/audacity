@@ -2218,8 +2218,8 @@ msgid ""
 "More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
-"Di piiù:</b> Visita il nostro [[http://wiki.audacityteam.org/index.php|"
-"Wiki]] per suggerimenti, trucchi, altri tutorial plug-in effetti."
+"Di più:</b> Visita il nostro [[http://wiki.audacityteam.org/index.php|"
+"Wiki]] per suggerimenti, trucchi, altri tutorial ed effetti audio."
 
 #: src/HelpText.cpp:223
 msgid ""
@@ -3646,7 +3646,7 @@ msgstr "Nessuna traccia etichetta"
 
 #: src/Menus.cpp:2716
 msgid "no label track at or below focused track"
-msgstr "nessuna etiichetta traccia nella o sotto la traccia evidenziata"
+msgstr "nessuna etichetta traccia nella o sotto la traccia evidenziata"
 
 #: src/Menus.cpp:2749
 msgid "no labels in label track"
@@ -8228,7 +8228,7 @@ msgstr "I passi per blocco sono troppo pochi per i tipi finestra."
 
 #: src/effects/NoiseReduction.cpp:585
 msgid "Steps per block cannot exceed the window size."
-msgstr "I passi per blocco non possono superare la dimensione finestra."
+msgstr "I passi per blocco non possono superare la dimensione della finestra."
 
 #: src/effects/NoiseReduction.cpp:590
 msgid "Median method is not implemented for more than four steps per window."
@@ -11258,7 +11258,7 @@ msgid ""
 "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
 msgstr ""
-"Errore nella scrittura del file %s (diisco pienol?).\n"
+"Errore durante la scrittura del file %s (disco pieno?).\n"
 "Libsndfile indica \"%s\""
 
 #: src/import/Import.cpp:508
@@ -12386,7 +12386,7 @@ msgstr "Dispositivo:"
 
 #: src/prefs/MidiIOPrefs.cpp:146
 msgid "MIDI Synthesizer Latency (ms):"
-msgstr "Latenza Sintetiizzatore MIDI (ms):"
+msgstr "Latenza Sintetizzatore MIDI (ms):"
 
 #: src/prefs/MidiIOPrefs.cpp:184
 msgid "No MIDI interfaces"

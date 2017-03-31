@@ -161,10 +161,12 @@ bool GetProjectInfoCommand::testLinked(const Track * track) const
 
 bool GetProjectInfoCommand::testSolo(const Track * track) const
 {
-   return track->GetSolo();
+   auto pt = dynamic_cast<const PlayableTrack *>(track);
+   return pt && pt->GetSolo();
 }
 
 bool GetProjectInfoCommand::testMute(const Track * track) const
 {
-   return track->GetMute();
+   auto pt = dynamic_cast<const PlayableTrack *>(track);
+   return pt && pt->GetMute();
 }

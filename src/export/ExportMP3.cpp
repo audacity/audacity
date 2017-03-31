@@ -1685,7 +1685,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {

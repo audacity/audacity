@@ -425,7 +425,9 @@ bool Exporter::ExamineTracks()
 
    while (tr) {
       if (tr->GetKind() == Track::Wave) {
-         if ( (tr->GetSelected() || !mSelectedOnly) && !tr->GetMute() ) {  // don't count muted tracks
+         auto wt = static_cast<const WaveTrack *>(tr);
+         if ( (tr->GetSelected() || !mSelectedOnly) &&
+              !wt->GetMute() ) {  // don't count muted tracks
             mNumSelected++;
 
             if (tr->GetChannel() == Track::LeftChannel) {
@@ -1255,7 +1257,9 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    for( const Track *t = iter.First(); t; t = iter.Next() )
    {
-      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) && !t->GetMute() )
+      auto wt = static_cast<const WaveTrack *>(t);
+      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) &&
+         !wt->GetMute() )
       {
          numTracks++;
          const wxString sTrackName = (t->GetName()).Left(20);

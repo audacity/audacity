@@ -1,26 +1,26 @@
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # Francesc Busquets <fbusquets@yahoo.com>, 2007.
-# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2016.
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2016-2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2016-10-18 19:24+0200\n"
+"PO-Revision-Date: 2017-03-21 09:59+0100\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.10\n"
+"X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "Ja existeix un fitxer anomenat '%s'. Voleu sobreescriure'l?"
+msgstr "Ja existeix el fitxer '%s'. Voleu sobreescriure'l?"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:78 src/LangChoice.cpp:135
 msgid "Confirm"
@@ -34,17 +34,16 @@ msgstr "Seleccioneu un fitxer existent."
 #: src/AutoRecovery.cpp:195 src/Menus.cpp:4294 src/Menus.cpp:4306
 #: src/Menus.cpp:7005 src/Menus.cpp:7084 src/Project.cpp:3124
 #: src/Project.cpp:5118 src/Project.cpp:5137 src/TimerRecordDialog.cpp:471
-#: src/TimerRecordDialog.cpp:649 src/TrackPanel.cpp:8489
-#: src/WaveTrack.cpp:1316 src/WaveTrack.cpp:1335 src/WaveTrack.cpp:2487
-#: src/effects/Contrast.cpp:56 src/effects/Contrast.cpp:75
-#: src/effects/Contrast.cpp:82 src/effects/Contrast.cpp:96
-#: src/effects/Effect.cpp:2584 src/effects/Generator.cpp:59
-#: src/effects/nyquist/Nyquist.cpp:411 src/export/ExportFFmpeg.cpp:842
-#: src/export/ExportMP2.cpp:229 src/prefs/DirectoriesPrefs.cpp:210
-#: src/prefs/DirectoriesPrefs.cpp:239 src/prefs/KeyConfigPrefs.cpp:509
-#: src/prefs/KeyConfigPrefs.cpp:523 src/prefs/KeyConfigPrefs.cpp:548
-#: src/prefs/KeyConfigPrefs.cpp:1038 src/toolbars/ControlToolBar.cpp:686
-#: src/toolbars/ControlToolBar.cpp:1122
+#: src/TimerRecordDialog.cpp:649 src/TrackPanel.cpp:8489 src/WaveTrack.cpp:1316
+#: src/WaveTrack.cpp:1335 src/WaveTrack.cpp:2487 src/effects/Contrast.cpp:56
+#: src/effects/Contrast.cpp:75 src/effects/Contrast.cpp:82
+#: src/effects/Contrast.cpp:96 src/effects/Effect.cpp:2584
+#: src/effects/Generator.cpp:59 src/effects/nyquist/Nyquist.cpp:411
+#: src/export/ExportFFmpeg.cpp:842 src/export/ExportMP2.cpp:229
+#: src/prefs/DirectoriesPrefs.cpp:210 src/prefs/DirectoriesPrefs.cpp:239
+#: src/prefs/KeyConfigPrefs.cpp:509 src/prefs/KeyConfigPrefs.cpp:523
+#: src/prefs/KeyConfigPrefs.cpp:548 src/prefs/KeyConfigPrefs.cpp:1038
+#: src/toolbars/ControlToolBar.cpp:686 src/toolbars/ControlToolBar.cpp:1122
 msgid "Error"
 msgstr "Error"
 
@@ -119,7 +118,7 @@ msgstr "&Vés a"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:769
 msgid "Select &Font..."
-msgstr "Selecciona el tipus de &lletra..."
+msgstr "Selecciona la &lletra..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:771
 msgid "Split &Vertically"
@@ -174,14 +173,12 @@ msgstr "Script"
 msgid "Output"
 msgstr "Sortida"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1051
-#: src/effects/nyquist/Nyquist.cpp:2214
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1051 src/effects/nyquist/Nyquist.cpp:2214
 msgid "Load Nyquist script"
 msgstr "Carrega l'script Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1054
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1100
-#: src/effects/nyquist/Nyquist.cpp:2239
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1100 src/effects/nyquist/Nyquist.cpp:2239
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 "Scripts Nyquist (*.ny)|*.ny|Scripts Lisp (*.lsp)|*.lsp|Tots els fitxers|*"
@@ -200,8 +197,7 @@ msgstr "No s'ha desat l'script."
 msgid "Warning"
 msgstr "Advertència"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1097
-#: src/effects/nyquist/Nyquist.cpp:2236
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1097 src/effects/nyquist/Nyquist.cpp:2236
 msgid "Save Nyquist script"
 msgstr "Desa l'script Nyquist"
 
@@ -447,9 +443,8 @@ msgstr ""
 #: src/AboutDialog.cpp:169 src/AboutDialog.cpp:170 src/AboutDialog.cpp:171
 #: src/AboutDialog.cpp:172 src/AboutDialog.cpp:173 src/AboutDialog.cpp:174
 #: src/AboutDialog.cpp:175 src/AboutDialog.cpp:176
-#, fuzzy
 msgid "developer"
-msgstr "Envolupant"
+msgstr "desenvolupador"
 
 #: src/AboutDialog.cpp:106 src/AboutDialog.cpp:127
 msgid "co-founder and developer"
@@ -474,7 +469,7 @@ msgstr ""
 
 #: src/AboutDialog.cpp:163
 msgid "composer"
-msgstr ""
+msgstr "compositor"
 
 #: src/AboutDialog.cpp:166
 #, fuzzy
@@ -545,9 +540,8 @@ msgid "Credits"
 msgstr "Crèdits"
 
 #: src/AboutDialog.cpp:365
-#, fuzzy
 msgid "Audacity Team Members"
-msgstr "Desenvolupadors d'Audacity:"
+msgstr "Els membres de l'equip d'Audacity"
 
 #: src/AboutDialog.cpp:368
 msgid "Emeritus:"
@@ -558,14 +552,12 @@ msgid "Distinguished Audacity Team members, not currently active"
 msgstr ""
 
 #: src/AboutDialog.cpp:372
-#, fuzzy
 msgid "Contributors"
-msgstr "Altres contribuïdors"
+msgstr "Contribuïdors"
 
 #: src/AboutDialog.cpp:375
-#, fuzzy
 msgid "Translators"
-msgstr "Transporta"
+msgstr "Traductors"
 
 #: src/AboutDialog.cpp:379 src/prefs/LibraryPrefs.cpp:49
 msgid "Libraries"
@@ -692,7 +684,7 @@ msgstr "Data de construcció del programa:"
 
 #: src/AboutDialog.cpp:636
 msgid "Commit Id:"
-msgstr "Id. de pujada:"
+msgstr "Id. de comisió:"
 
 #: src/AboutDialog.cpp:638 src/AboutDialog.cpp:640
 msgid "Build type:"
@@ -943,15 +935,15 @@ msgstr "Registre d'Audacity"
 msgid "&Save..."
 msgstr "&Desa..."
 
-#: src/AudacityLogger.cpp:199 src/Tags.cpp:883
-#: src/prefs/KeyConfigPrefs.cpp:273 src/prefs/KeyConfigPrefs.cpp:781
+#: src/AudacityLogger.cpp:199 src/Tags.cpp:883 src/prefs/KeyConfigPrefs.cpp:273
+#: src/prefs/KeyConfigPrefs.cpp:781
 msgid "Cl&ear"
 msgstr "&Neteja"
 
 #: src/AudacityLogger.cpp:200 src/FreqWindow.cpp:466 src/Menus.cpp:321
 #: src/ShuttleGui.cpp:2166 src/effects/Contrast.cpp:300
 msgid "&Close"
-msgstr "&Tanca"
+msgstr "Tan&ca"
 
 #: src/AudacityLogger.cpp:293
 msgid "log.txt"
@@ -1015,8 +1007,8 @@ msgid ""
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to "
 "the right place."
 msgstr ""
-"L'ajust de la correcció de latència ha fet que el so enregistrat hagi quedat "
-"ocult abans del zero.\n"
+"L'ajust de la correcció de la latència ha fet que el so enregistrat hagi "
+"quedat ocult abans del zero.\n"
 "Audacity ha mogut el fragment per tal que comenci al zero.\n"
 "Podeu fer servir l'eina de desplaçament en el temps (<---> o F5) per "
 "arrossegar la pista al seu lloc."
@@ -1127,7 +1119,7 @@ msgid ""
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"Segur que voleu descartar tots els projectes?\n"
+"Esteu segur que voleu descartar tots els projectes?\n"
 "\n"
 "Si escolliu \"Sí\" es descartaran tots immediatament."
 
@@ -1142,9 +1134,8 @@ msgstr ""
 "No s'han pogut enumerar els fitxers de la carpeta de desament automàtic."
 
 #: src/AutoRecovery.cpp:760
-#, fuzzy
 msgid "Error Decoding File"
-msgstr "S'ha produït un error en descodificar el fitxer"
+msgstr "Error en la descodificació del fitxer"
 
 #: src/BatchCommandDialog.cpp:60 src/BatchCommandDialog.cpp:64
 #: src/BatchCommandDialog.cpp:65
@@ -1169,7 +1160,7 @@ msgstr "&Paràmetres"
 
 #: src/BatchCommandDialog.cpp:101
 msgid "C&hoose command"
-msgstr "Selecció d'&ordre"
+msgstr "Trieu l'&ordre"
 
 #: src/BatchCommands.cpp:569
 msgid "Ogg Vorbis support is not included in this build of Audacity"
@@ -1216,25 +1207,25 @@ msgstr "Aplica %s"
 #: src/BatchProcessDialog.cpp:67 src/BatchProcessDialog.cpp:73
 #: src/BatchProcessDialog.cpp:74
 msgid "Apply Chain"
-msgstr "Aplica la cadena d'ordres"
+msgstr "Aplica la cadena"
 
 #. i18n-hint: A chain is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp:99
 msgid "&Select Chain"
-msgstr "&Seleccioneu una cadena d'ordres"
+msgstr "&Seleccioneu la cadena"
 
 #: src/BatchProcessDialog.cpp:104
 msgid "Chain"
-msgstr "Cadena d'ordres"
+msgstr "Cadena"
 
 #: src/BatchProcessDialog.cpp:111
 msgid "Apply to Current &Project"
-msgstr "Aplica-la al &projecte actual"
+msgstr "Aplica-ho al &projecte actual"
 
 #: src/BatchProcessDialog.cpp:112
 msgid "Apply to &Files..."
-msgstr "Aplica-la als &fitxers..."
+msgstr "Aplica-ho als &fitxers..."
 
 #: src/BatchProcessDialog.cpp:113 src/BatchProcessDialog.cpp:322
 msgid "&Cancel"
@@ -1242,7 +1233,7 @@ msgstr "&Cancel·la"
 
 #: src/BatchProcessDialog.cpp:152 src/BatchProcessDialog.cpp:226
 msgid "No chain selected"
-msgstr "No s'ha seleccionat cap cadena d'ordres"
+msgstr "No s'ha seleccionat cap cadena"
 
 #: src/BatchProcessDialog.cpp:166
 #, c-format
@@ -1273,11 +1264,11 @@ msgstr "Fitxer"
 #: src/BatchProcessDialog.cpp:467 src/BatchProcessDialog.cpp:471
 #: src/BatchProcessDialog.cpp:472
 msgid "Edit Chains"
-msgstr "Edita les cadenes d'ordres"
+msgstr "Edita les cadenes"
 
 #: src/BatchProcessDialog.cpp:524
 msgid "&Chains"
-msgstr "&Cadenes d'ordres"
+msgstr "&Cadenes"
 
 #: src/BatchProcessDialog.cpp:543 src/Tags.cpp:880
 msgid "&Add"
@@ -1293,7 +1284,7 @@ msgstr "&Canvia el nom"
 
 #: src/BatchProcessDialog.cpp:551
 msgid "C&hain (Double-Click or press SPACE to edit)"
-msgstr "Ca&dena d'ordres (feu doble clic o premeu ESPAI per editar-la)"
+msgstr "Ca&dena (feu doble clic o premeu ESPAI per editar-la)"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp:561
@@ -1344,11 +1335,11 @@ msgstr "Voleu desar els canvis?"
 
 #: src/BatchProcessDialog.cpp:780
 msgid "Enter name of new chain"
-msgstr "Escriviu el nom de la cadena d'ordres"
+msgstr "Introduïu el nom de la cadena nova"
 
 #: src/BatchProcessDialog.cpp:781
 msgid "Name of new chain"
-msgstr "&Nom de la cadena d'ordres nova"
+msgstr "Nom de la cadena nova"
 
 #: src/BatchProcessDialog.cpp:792
 msgid "Name must not be blank"
@@ -1364,7 +1355,7 @@ msgstr "Els noms no poden contenir '%c' ni '%c'"
 #: src/BatchProcessDialog.cpp:833
 #, c-format
 msgid "Are you sure you want to delete %s?"
-msgstr "Segur que voleu eliminar %s?"
+msgstr "Esteu segur que voleu suprimir %s?"
 
 #: src/Dependencies.cpp:163
 msgid "Removing Dependencies"
@@ -1419,7 +1410,7 @@ msgstr "Copia els fitxers seleccionats"
 
 #: src/Dependencies.cpp:349 src/Dependencies.cpp:507
 msgid "Cancel Save"
-msgstr "Cancel·la l'acció de desar"
+msgstr "Cancel·la el desament"
 
 #: src/Dependencies.cpp:350
 msgid "Save without Copying"
@@ -1471,7 +1462,7 @@ msgid ""
 "imported files, it will no longer be self-contained. If you then Save "
 "without copying those files in, you may lose data."
 msgstr ""
-"El vostre projecte és actualment de tipus \"autocontingut\"; no depèn de cap "
+"El vostre projecte actualment és de tipus \"autocontingut\"; no depèn de cap "
 "fitxer extern de so. \n"
 "\n"
 "Si modifiqueu el projecte fent que tingui dependències externes de fitxers, "
@@ -1814,7 +1805,7 @@ msgstr "Fitxer de blocs orfe: '%s'"
 
 #: src/DirManager.cpp:2059
 msgid "Caching audio"
-msgstr "Memòria cau de so"
+msgstr "Memòria cau de l'àudio"
 
 #: src/DirManager.cpp:2060
 msgid "Caching audio into memory"
@@ -2138,7 +2129,7 @@ msgstr "S'està reproduint el so"
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp:139
 msgid "Recording Audio"
-msgstr "S'està enregistrant el so"
+msgstr "Enregistrament de l’àudio"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp:144
@@ -2296,9 +2287,8 @@ msgstr ""
 "d'Internet\"."
 
 #: src/HistoryWindow.cpp:59
-#, fuzzy
 msgid "History"
-msgstr "&Historial..."
+msgstr "Historial"
 
 #: src/HistoryWindow.cpp:81
 msgid "&Manage History"
@@ -2331,14 +2321,12 @@ msgid "&Discard"
 msgstr "&Descarta"
 
 #: src/HistoryWindow.cpp:119
-#, fuzzy
 msgid "Clipboard space used"
-msgstr "&Espai de disc utilitzat"
+msgstr "Espai utilitzat del porta-retalls"
 
 #: src/HistoryWindow.cpp:121
-#, fuzzy
 msgid "Discard"
-msgstr "&Descarta"
+msgstr "Descarta"
 
 #: src/HistoryWindow.cpp:130 src/export/ExportCL.cpp:514
 msgid "&OK"
@@ -2381,16 +2369,16 @@ msgstr "Indiqueu un nom de fitxer nou:"
 #. i18n-hint: An opening parenthesis, in some languages a right parenthesis
 #: src/Internat.cpp:265
 msgid "("
-msgstr ""
+msgstr "("
 
 #. i18n-hint: A closing parenthesis, in some languages a left parenthesis
 #: src/Internat.cpp:267
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #: src/LabelDialog.cpp:102
 msgid "Edit Labels"
-msgstr "Edita les etiquetes"
+msgstr "Edició de les etiquetes"
 
 #: src/LabelDialog.cpp:125
 msgid "Press F2 or double click to edit cell contents."
@@ -2423,24 +2411,22 @@ msgstr "Etiqueta"
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp:163 src/TimerRecordDialog.cpp:797
 msgid "Start Time"
-msgstr "Temps inicial"
+msgstr "Comença a l'instant"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp:165 src/TimerRecordDialog.cpp:825
 msgid "End Time"
-msgstr "Temps final"
+msgstr "Acaba a l'instant"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp:167
-#, fuzzy
 msgid "Low Frequency"
-msgstr "Freqüència baixa:"
+msgstr "Freqüència baixa"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp:169
-#, fuzzy
 msgid "High Frequency"
-msgstr "Freqüència alta:"
+msgstr "Freqüència alta"
 
 #: src/LabelDialog.cpp:184
 msgid "New..."
@@ -2473,7 +2459,7 @@ msgstr "Pista d'etiquetes nova"
 
 #: src/LabelDialog.cpp:783
 msgid "Enter track name"
-msgstr "Escriviu el nom de la pista"
+msgstr "Introduïu el nom de la pista"
 
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
@@ -2507,9 +2493,8 @@ msgid "&Delete Label"
 msgstr "&Suprimeix l'etiqueta"
 
 #: src/LabelTrack.cpp:2038
-#, fuzzy
 msgid "&Edit..."
-msgstr "E&dita..."
+msgstr "&Edita..."
 
 #: src/LabelTrack.cpp:2074 src/LabelTrack.cpp:2089 src/TrackPanel.cpp:5970
 #: src/TrackPanel.cpp:6014 src/TrackPanel.cpp:6490
@@ -2533,7 +2518,7 @@ msgstr "És la primera vegada que s'executa Audacity"
 
 #: src/LangChoice.cpp:93
 msgid "Choose Language for Audacity to use:"
-msgstr "Trieu l'idioma que farà servir Audacity:"
+msgstr "Trieu l'idioma per utilitzar-lo amb Audacity:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
 #. * versions of language names.
@@ -2583,18 +2568,16 @@ msgid "Save Project &As..."
 msgstr "&Anomena i desa el projecte..."
 
 #: src/Menus.cpp:328
-#, fuzzy
 msgid "Sa&ve Compressed Copy of Project..."
-msgstr "Desa una còpia comprimida del projecte..."
+msgstr "Desa una còpia co&mprimida del projecte..."
 
 #: src/Menus.cpp:331
 msgid "Chec&k Dependencies..."
 msgstr "Compro&va les dependències..."
 
 #: src/Menus.cpp:335
-#, fuzzy
 msgid "Edit Me&tadata Tags..."
-msgstr "Edita les etiquetes de metadades"
+msgstr "Edita les etiquetes de les me&tadades..."
 
 #: src/Menus.cpp:341 src/import/ImportRaw.cpp:455
 msgid "&Import"
@@ -2633,17 +2616,16 @@ msgid "Export &Multiple..."
 msgstr "Exporta &múltiples fitxers..."
 
 #: src/Menus.cpp:374
-#, fuzzy
 msgid "Export MI&DI..."
-msgstr "Exporta a MIDI..."
+msgstr "Exporta a MI&DI..."
 
 #: src/Menus.cpp:380
 msgid "Appl&y Chain..."
-msgstr "Execu&ta la cadena d'ordres..."
+msgstr "Apl&ica la cadena..."
 
 #: src/Menus.cpp:383
 msgid "Edit C&hains..."
-msgstr "Edita les &cadenes d'ordres..."
+msgstr "Edita les &cadenes..."
 
 #: src/Menus.cpp:387
 msgid "Pa&ge Setup..."
@@ -2878,7 +2860,7 @@ msgstr "&Visualització"
 
 #: src/Menus.cpp:652
 msgid "Zoom &In"
-msgstr "&Apropa el zoom"
+msgstr "&Augmenta el zoom"
 
 #: src/Menus.cpp:655
 msgid "Zoom &Normal"
@@ -2886,11 +2868,11 @@ msgstr "Zoom &normal"
 
 #: src/Menus.cpp:656
 msgid "Zoom &Out"
-msgstr "Allunya el z&oom"
+msgstr "Disminueix el z&oom"
 
 #: src/Menus.cpp:659
 msgid "&Zoom to Selection"
-msgstr "Fes &zoom a la selecció"
+msgstr "&Zoom a la selecció"
 
 #: src/Menus.cpp:662
 msgid "&Fit in Window"
@@ -2902,11 +2884,11 @@ msgstr "Encabeix &verticalment"
 
 #: src/Menus.cpp:666
 msgid "Go to Selection Sta&rt"
-msgstr "Vés a l'&inici de la selecció"
+msgstr "Vés al comen&çament de la selecció"
 
 #: src/Menus.cpp:667
 msgid "Go to Selection En&d"
-msgstr "Vés al &final de la selecció"
+msgstr "Vés a l'acabament &de la selecció"
 
 #: src/Menus.cpp:670
 msgid "&Collapse All Tracks"
@@ -2976,9 +2958,8 @@ msgstr "Barra d'eines de &selecció"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio
 #: src/Menus.cpp:731
-#, fuzzy
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Barra d'eines de selecció e&spectral"
+msgstr "Barra d'eines de selecció espe&ctral"
 
 #. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
 #: src/Menus.cpp:734
@@ -3004,9 +2985,8 @@ msgstr "Barres d'&eines"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp:745
-#, fuzzy
 msgid "Reset Toolb&ars"
-msgstr "Restableix les &barres d'eines"
+msgstr "Restableix les b&arres d'eines"
 
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
@@ -3134,7 +3114,7 @@ msgstr "Desemm&udeix totes les pistes"
 
 #: src/Menus.cpp:863
 msgid "&Align End to End"
-msgstr "&Alinea el final al final"
+msgstr "&Alinea l'acabament a l'acabament"
 
 #: src/Menus.cpp:864
 msgid "Align &Together"
@@ -3150,7 +3130,7 @@ msgstr "Comença al &cursor o al començament de la selecció"
 
 #: src/Menus.cpp:869
 msgid "Start to Selection &End"
-msgstr "Comença al final de la s&elecció"
+msgstr "Comença a l'acabament de la s&elecció"
 
 #: src/Menus.cpp:870
 msgid "End to Cu&rsor/Selection Start"
@@ -3178,12 +3158,10 @@ msgid "Sync-&Lock Tracks (on/off)"
 msgstr "Pistes &síncrones"
 
 #: src/Menus.cpp:918
-#, fuzzy
 msgid "Add Label at &Selection"
 msgstr "Afegeix una etiqueta a la &selecció"
 
 #: src/Menus.cpp:920
-#, fuzzy
 msgid "Add Label at &Playback Position"
 msgstr "Afegeix una etiqueta a la &posició de la reproducció"
 
@@ -3243,23 +3221,20 @@ msgid "Plot Spectrum..."
 msgstr "Traça l'espectre..."
 
 #: src/Menus.cpp:1042
-#, fuzzy
 msgid "&Window"
-msgstr "finestra"
+msgstr "&Finestra"
 
 #. i18n-hint: Standard Macintosh Window menu item:  Make (the current
 #. * window) shrink to an icon on the dock
 #: src/Menus.cpp:1045
-#, fuzzy
 msgid "&Minimize"
-msgstr "Mínim"
+msgstr "&Mínimitza"
 
 #. i18n-hint: Standard Macintosh Window menu item:  Make (the current
 #. * window) full sized
 #: src/Menus.cpp:1049
-#, fuzzy
 msgid "&Zoom"
-msgstr "Zoom"
+msgstr "&Zoom"
 
 #: src/Menus.cpp:1055
 msgid "&Bring All to Front"
@@ -3641,19 +3616,16 @@ msgid "Decrease playback speed"
 msgstr "Redueix la velocitat de reproducció"
 
 #: src/Menus.cpp:1265
-#, fuzzy
 msgid "Move to Next Label"
-msgstr "Vés a la pista següent i selecciona-la"
+msgstr "Mou a la següent etiqueta"
 
 #: src/Menus.cpp:1267
-#, fuzzy
 msgid "Move to Previous Label"
-msgstr "Vés a la pista anterior i selecciona-la"
+msgstr "Mou a l'anterior etiqueta"
 
 #: src/Menus.cpp:1272
-#, fuzzy
 msgid "Minimize all projects"
-msgstr "&Normalitza totes les pistes del projecte"
+msgstr "Minimitza tots els projectes"
 
 #: src/Menus.cpp:1396 src/Menus.cpp:1404
 msgid "Unknown"
@@ -4036,12 +4008,11 @@ msgstr "Tots els fitxers|*"
 #: src/Menus.cpp:5810 src/export/Export.cpp:354 src/export/Export.cpp:977
 #: src/export/ExportMultiple.cpp:734 src/export/ExportMultiple.cpp:876
 msgid "Edit Metadata Tags"
-msgstr "Edita les etiquetes de metadades"
+msgstr "Edició de les etiquetes de les metadades"
 
 #: src/Menus.cpp:5810
-#, fuzzy
 msgid "Metadata Tags"
-msgstr "Edita les etiquetes de metadades"
+msgstr "Etiquetes de les metadades"
 
 #: src/Menus.cpp:5884
 #, c-format
@@ -4078,7 +4049,7 @@ msgstr "comença al cursor o al començament de la selecció"
 
 #: src/Menus.cpp:6075
 msgid "start to selection end"
-msgstr "comença al final de la selecció"
+msgstr "comença a l'acabament de la selecció"
 
 #: src/Menus.cpp:6080
 msgid "end to cursor/selection start"
@@ -4088,7 +4059,7 @@ msgstr "acaba al cursor o al començament de la selecció"
 #: src/effects/ToneGen.cpp:328 src/toolbars/SelectionBar.cpp:162
 #: src/toolbars/SelectionBar.cpp:165 src/toolbars/SelectionBar.cpp:270
 msgid "End"
-msgstr "Final"
+msgstr "Acabament"
 
 #: src/Menus.cpp:6085
 msgid "end to selection end"
@@ -4096,11 +4067,11 @@ msgstr "acaba a l'acabament de la selecció"
 
 #: src/Menus.cpp:6091
 msgid "end to end"
-msgstr "final a final"
+msgstr "acabament a l'acabament"
 
 #: src/Menus.cpp:6092
 msgid "End to End"
-msgstr "Final a Final"
+msgstr "Acabament a l'acabament"
 
 #: src/Menus.cpp:6096
 msgid "together"
@@ -4253,7 +4224,7 @@ msgstr "Nova freqüència de mostreig (Hz):"
 
 #: src/Menus.cpp:7084 src/TrackPanel.cpp:8489
 msgid "The entered value is invalid"
-msgstr "El valor que heu escrit no és vàlid"
+msgstr "El valor que heu introduït no és vàlid"
 
 #: src/Menus.cpp:7093
 #, c-format
@@ -4394,7 +4365,7 @@ msgstr "Sí"
 #: src/TimerRecordDialog.cpp:1018 src/TimerRecordDialog.cpp:1057
 #: src/TimerRecordDialog.cpp:1058
 msgid "No"
-msgstr "Núm."
+msgstr "No"
 
 #: src/ModuleManager.cpp:275
 msgid "Audacity Module Loader"
@@ -4558,14 +4529,13 @@ msgstr "<sense nom>"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/Project.cpp:2501
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave changes to %s?"
-msgstr "Voleu desar els canvis?"
+msgstr "%sVoleu desar els canvis a %s?"
 
 #: src/Project.cpp:2502
-#, fuzzy
 msgid "Save project before closing?"
-msgstr "Voleu desar els canvis abans de tancar?"
+msgstr "Voleu desar el projecte abans de tancar?"
 
 #: src/Project.cpp:2505
 msgid ""
@@ -4838,15 +4808,15 @@ msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
-"'Desa el projecte' és només per a projectes Audacity, no per a fitxers de "
-"so.\n"
-"Feu 'Exporta' si voleu obtenir un fitxer de so que pugui ser utilitzat en "
-"altres aplicacions.\n"
+"'Desa el projecte' només és per als projectes d'Audacity, no per als fitxers "
+"de so.\n"
+"Feu 'Exporta' si voleu obtenir un fitxer de so que es pugui obrir en altres "
+"aplicacions.\n"
 
 #: src/Project.cpp:4236
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Project \"%s\" As..."
-msgstr "Desa el projecte \"%s\" com a..."
+msgstr "%sDesa el projecte \"%s\" com a..."
 
 #: src/Project.cpp:4315
 msgid "Created new project"
@@ -4957,7 +4927,7 @@ msgstr "Marc de captura de pantalla"
 
 #: src/Screenshot.cpp:316
 msgid "Choose location to save files"
-msgstr "Escull una ubicació per desar-hi els fitxers"
+msgstr "Trieu una ubicació per desar-hi els fitxers"
 
 #: src/Screenshot.cpp:326
 msgid "Save images to:"
@@ -4965,7 +4935,7 @@ msgstr "Desa les imatges a:"
 
 #: src/Screenshot.cpp:328 src/export/ExportMultiple.cpp:271
 msgid "Choose..."
-msgstr "Navega..."
+msgstr "Tria..."
 
 #: src/Screenshot.cpp:334
 msgid "Capture entire window or screen"
@@ -5117,7 +5087,7 @@ msgstr "Pistes llargues"
 
 #: src/Screenshot.cpp:523
 msgid "Choose a location to save screenshot images"
-msgstr "Escull una ubicació per desar-hi les imatges capturades"
+msgstr "Trieu una ubicació per desar-hi les imatges capturades"
 
 #: src/Sequence.cpp:1050
 #, fuzzy, c-format
@@ -5241,11 +5211,11 @@ msgstr "Ca&rrega..."
 
 #: src/Tags.cpp:906
 msgid "Set De&fault"
-msgstr "&Estableix com a opció per defecte"
+msgstr "&Estableix-ho com a predeterminat"
 
 #: src/Tags.cpp:1060
 msgid "Edit Genres"
-msgstr "Edita els gèneres"
+msgstr "Edició dels gèneres"
 
 #: src/Tags.cpp:1094 src/Tags.cpp:1133
 msgid "Unable to save genre file."
@@ -5257,7 +5227,9 @@ msgstr "Restableix els gèneres"
 
 #: src/Tags.cpp:1105
 msgid "Are you sure you want to reset the genre list to defaults?"
-msgstr "Segur que voleu restablir la llista de gèneres als valors per defecte?"
+msgstr ""
+"Esteu segur que voleu restablir la llista de gèneres als valors "
+"predeterminats?"
 
 #: src/Tags.cpp:1121
 msgid "Unable to open genre file."
@@ -5265,7 +5237,7 @@ msgstr "No s'ha pogut obrir el fitxer de gèneres."
 
 #: src/Tags.cpp:1155
 msgid "Load Metadata As:"
-msgstr "Llegeix les metadades com a:"
+msgstr "Càrrega de metadades:"
 
 #: src/Tags.cpp:1180
 msgid "Error Loading Metadata"
@@ -5273,7 +5245,7 @@ msgstr "S'ha produït un error en carregar les metadades"
 
 #: src/Tags.cpp:1209
 msgid "Save Metadata As:"
-msgstr "Enregistra les metadades com a:"
+msgstr "Desament de metadades:"
 
 #: src/Tags.cpp:1224
 msgid "Error Saving Tags File"
@@ -5419,44 +5391,40 @@ msgid "Automatic Save path is invalid."
 msgstr ""
 
 #: src/TimerRecordDialog.cpp:375
-#, fuzzy
 msgid "Error in Automatic Save"
-msgstr "S'ha produït un error en la durada"
+msgstr "Error en el desament automàtic"
 
 #: src/TimerRecordDialog.cpp:381
 msgid "Automatic Export path is invalid."
 msgstr ""
 
 #: src/TimerRecordDialog.cpp:382
-#, fuzzy
 msgid "Error in Automatic Export"
-msgstr "S'ha produït un error en la durada"
+msgstr "Error en l'exportació automàtica"
 
 #: src/TimerRecordDialog.cpp:419
 msgid "Timer Recording Disk Space Warning"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp:461 src/TimerRecordDialog.cpp:869
-#, fuzzy
 msgid "Current Project"
-msgstr "Aplica-la al &projecte actual"
+msgstr "Projecte actual"
 
 #: src/TimerRecordDialog.cpp:525
-#, fuzzy
 msgid "Recording start:\n"
-msgstr "Inici de l'enregistrament"
+msgstr "Començament de l'enregistrament:\n"
 
 #: src/TimerRecordDialog.cpp:526
-#, fuzzy
 msgid "Duration:\n"
-msgstr "Durada:"
+msgstr "Durada:\n"
 
 #: src/TimerRecordDialog.cpp:527
-#, fuzzy
 msgid ""
 "Recording end:\n"
 "\n"
-msgstr "Fi de l'enregistrament"
+msgstr ""
+"Acabament de l'enregistrament:\n"
+"\n"
 
 #: src/TimerRecordDialog.cpp:528 src/TimerRecordDialog.cpp:1006
 msgid "Automatic Save enabled:\n"
@@ -5525,51 +5493,42 @@ msgid "099 days 024 h 060 m 060 s"
 msgstr "099 dies 024 h 060 m 060 s"
 
 #: src/TimerRecordDialog.cpp:857
-#, fuzzy
 msgid "Automatic Save"
-msgstr "Automàtic"
+msgstr "Desament automàtic"
 
 #: src/TimerRecordDialog.cpp:860
-#, fuzzy
 msgid "Enable &Automatic Save?"
-msgstr "Activa la &compensació"
+msgstr "Voleu habilitar el desament automàtic?"
 
 #: src/TimerRecordDialog.cpp:871 src/TimerRecordDialog.cpp:872
-#, fuzzy
 msgid "Save Project As:"
-msgstr "&Anomena i desa el projecte..."
+msgstr "Desa el projecte com a:"
 
 #: src/TimerRecordDialog.cpp:875 src/TimerRecordDialog.cpp:890
-#, fuzzy
 msgid "Select..."
-msgstr "Selecciona"
+msgstr "Selecciona..."
 
 #: src/TimerRecordDialog.cpp:881
-#, fuzzy
 msgid "Automatic Export"
-msgstr "Automàtic"
+msgstr "Exportació automàtica."
 
 #: src/TimerRecordDialog.cpp:883
-#, fuzzy
 msgid "Enable Automatic &Export?"
-msgstr "No s'ha pogut exportar"
+msgstr "Voleu habilitar l'exportació automàtica?"
 
 #: src/TimerRecordDialog.cpp:886 src/TimerRecordDialog.cpp:887
-#, fuzzy
 msgid "Export Project As:"
-msgstr "Exporta els valors predefinits"
+msgstr "Exporta el projecte com a:"
 
 #: src/TimerRecordDialog.cpp:896
-#, fuzzy
 msgid "Options"
-msgstr "Opcions:"
+msgstr "Opcions"
 
 #: src/TimerRecordDialog.cpp:900
 msgid "Do nothing"
 msgstr ""
 
 #: src/TimerRecordDialog.cpp:901
-#, fuzzy
 msgid "Exit Audacity"
 msgstr "Surt d'Audacity"
 
@@ -5592,9 +5551,8 @@ msgid "Waiting to start recording at:\n"
 msgstr "S'està esperant per començar l'enregistrament a %s.\n"
 
 #: src/TimerRecordDialog.cpp:1004
-#, fuzzy
 msgid "Recording duration:\n"
-msgstr "S'està enregistrant el so"
+msgstr "Durada de l'enregistrament:\n"
 
 #: src/TimerRecordDialog.cpp:1005
 msgid ""
@@ -5668,9 +5626,8 @@ msgid "&Left Channel"
 msgstr "Canal &esquerre"
 
 #: src/TrackPanel.cpp:629
-#, fuzzy
 msgid "&Right Channel"
-msgstr "Canal dret"
+msgstr "Canal d&ret"
 
 #: src/TrackPanel.cpp:630
 msgid "Ma&ke Stereo Track"
@@ -5707,16 +5664,15 @@ msgstr "Baixa-ho una octa&va"
 
 #: src/TrackPanel.cpp:651
 msgid "&Font..."
-msgstr "&Tipus de lletra..."
+msgstr "&Lletra..."
 
 #: src/TrackPanel.cpp:657
-#, fuzzy
 msgid "L&ogarithmic scale"
-msgstr "L&ogarítmic"
+msgstr "Escala l&ogarítmica"
 
 #: src/TrackPanel.cpp:660
 msgid "&Range..."
-msgstr "&Rang..."
+msgstr "Inte&rval..."
 
 #: src/TrackPanel.cpp:661
 msgid "Logarithmic &Interpolation"
@@ -6086,12 +6042,12 @@ msgstr "Límit superior de velocitat"
 #: src/TrackPanel.cpp:8527
 #, c-format
 msgid "Set range to '%ld' - '%ld'"
-msgstr "Fixa l'abast a '%ld' - '%ld'"
+msgstr "Estableix l'interval a '%ld' - '%ld'"
 
 #. i18n-hint: (verb)
 #: src/TrackPanel.cpp:8532
 msgid "Set Range"
-msgstr "Especifica el rang"
+msgstr "Estableix l'interval"
 
 #: src/TrackPanel.cpp:8544
 msgid "Set time track display to linear"
@@ -6137,17 +6093,17 @@ msgstr "Canvi de nom"
 #. i18n-hint: (noun) This is the font for the label track.
 #: src/TrackPanel.cpp:8740
 msgid "Label Track Font"
-msgstr "Tipus de lletra per la pista d'etiquetes"
+msgstr "Lletra de la pista d'etiquetes"
 
 #. i18n-hint: (noun) The name of the typeface
 #: src/TrackPanel.cpp:8754 src/TrackPanel.cpp:8761
 msgid "Face name"
-msgstr "Nom de portada"
+msgstr "Nom de la portada"
 
 #. i18n-hint: (noun) The size of the typeface
 #: src/TrackPanel.cpp:8766 src/TrackPanel.cpp:8773
 msgid "Face size"
-msgstr "Mida de portada"
+msgstr "Mida de la portada"
 
 #: src/TrackPanel.cpp:9428
 msgid "Stereo, 999999Hz"
@@ -6456,9 +6412,8 @@ msgid "Tone controls"
 msgstr ""
 
 #: src/effects/BassTreble.cpp:218
-#, fuzzy
 msgid "Ba&ss (dB):"
-msgstr "Baixos (dB):"
+msgstr "Baixo&s (dB):"
 
 #: src/effects/BassTreble.cpp:219
 msgid "Bass (dB):"
@@ -6469,9 +6424,8 @@ msgid "&Treble (dB):"
 msgstr "Agu&ts (dB):"
 
 #: src/effects/BassTreble.cpp:249
-#, fuzzy
 msgid "&Volume (dB):"
-msgstr "Agu&ts (dB):"
+msgstr "&Volum(dB):"
 
 #: src/effects/BassTreble.cpp:254 src/effects/Normalize.cpp:35
 msgid "Level"
@@ -6651,19 +6605,16 @@ msgid "Change Tempo without Changing Pitch"
 msgstr "Canvia el temps sense canviar el to"
 
 #: src/effects/ChangeTempo.cpp:226
-#, fuzzy
 msgid "Beats per minute"
-msgstr "Pulsacions per minut:"
+msgstr "Pulsacions per minut"
 
 #: src/effects/ChangeTempo.cpp:233
-#, fuzzy
 msgid "Beats per minute, from"
-msgstr "Pulsacions per minut:"
+msgstr "Pulsacions per minut, de"
 
 #: src/effects/ChangeTempo.cpp:239
-#, fuzzy
 msgid "Beats per minute, to"
-msgstr "Pulsacions per minut:"
+msgstr "Pulsacions per minut, fins a"
 
 #: src/effects/ChangeTempo.cpp:247
 #, fuzzy
@@ -6741,7 +6692,7 @@ msgstr "UsePeak"
 
 #: src/effects/Compressor.cpp:105
 msgid "Compresses the dynamic range of audio"
-msgstr "Comprimeix el rang dinàmic de l'àudio"
+msgstr "Comprimeix l'interval dinàmic de l'àudio"
 
 #: src/effects/Compressor.cpp:219
 msgid "Noise Floor:"
@@ -6869,9 +6820,8 @@ msgstr ""
 "Si us plau, seleccioneu una secció d'una pista."
 
 #: src/effects/Contrast.cpp:96
-#, fuzzy
 msgid "Please select an audio track."
-msgstr "Seleccioneu una acció"
+msgstr "Seleccioneu una pista d'àudio."
 
 #: src/effects/Contrast.cpp:179
 msgid ""
@@ -6977,12 +6927,11 @@ msgid "indeterminate"
 msgstr "Indeterminada"
 
 #: src/effects/Contrast.cpp:396
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f dB Average RMS"
-msgstr "%.1f dB RMS mitjà"
+msgstr "%.2f dB RMS mitjà"
 
 #: src/effects/Contrast.cpp:399
-#, fuzzy
 msgid "Infinite dB difference"
 msgstr "diferència en dB infinita"
 
@@ -6995,9 +6944,9 @@ msgid "zero"
 msgstr "zero"
 
 #: src/effects/Contrast.cpp:409 src/effects/Contrast.cpp:422
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f dB"
-msgstr "%.1f dB"
+msgstr "%.2f dB"
 
 #: src/effects/Contrast.cpp:412 src/effects/Contrast.cpp:552
 msgid "No foreground measured"
@@ -7049,9 +6998,9 @@ msgid "Time ended = %2d hour(s), %2d minute(s), %.2f seconds."
 msgstr "Hora d'acabament = %2d hora(es), %2d minut(s), %.2f segons."
 
 #: src/effects/Contrast.cpp:478 src/effects/Contrast.cpp:497
-#, fuzzy, c-format
+#, c-format
 msgid "Average RMS = %.2f dB."
-msgstr "RMS mitjà = %.1f dB."
+msgstr "RMS mitjà = %.2f dB."
 
 #: src/effects/Contrast.cpp:480 src/effects/Contrast.cpp:499
 msgid "Average RMS = zero."
@@ -7074,9 +7023,9 @@ msgid "Difference is indeterminate."
 msgstr "La diferència és indeterminada."
 
 #: src/effects/Contrast.cpp:509
-#, fuzzy, c-format
+#, c-format
 msgid "Difference = %.2f Average RMS dB."
-msgstr "Diferència = %.1f dB RMS mitjà."
+msgstr "Diferència = %.2f dB RMS mitjà."
 
 #: src/effects/Contrast.cpp:511
 msgid "Difference = infinite Average RMS dB."
@@ -7156,19 +7105,16 @@ msgid "Threshold dB"
 msgstr "Llindar %d dB"
 
 #: src/effects/Distortion.cpp:82 src/effects/Distortion.cpp:129
-#, fuzzy
 msgid "Parameter 1"
-msgstr "Paràmetres"
+msgstr "Paràmetre 1"
 
 #: src/effects/Distortion.cpp:83 src/effects/Distortion.cpp:130
-#, fuzzy
 msgid "Parameter 2"
-msgstr "Paràmetres"
+msgstr "Paràmetre 2"
 
 #: src/effects/Distortion.cpp:84
-#, fuzzy
 msgid "Repeats"
-msgstr "Repeteix"
+msgstr "repeticions"
 
 #: src/effects/Distortion.cpp:102
 #, no-c-format
@@ -7258,18 +7204,16 @@ msgid "Upper Threshold"
 msgstr "Llindar"
 
 #: src/effects/Distortion.cpp:131
-#, fuzzy
 msgid "Number of repeats"
-msgstr "Nombre de repeticions a afegir:"
+msgstr "Nombre de repeticions"
 
 #: src/effects/Distortion.cpp:192
 msgid "Waveshaping distortion effect"
 msgstr ""
 
 #: src/effects/Distortion.cpp:344
-#, fuzzy
 msgid "Distortion type:"
-msgstr "Tipus d'interpolació"
+msgstr "Tipus de distorsió:"
 
 #: src/effects/Distortion.cpp:348
 msgid "DC blocking filter"
@@ -7317,9 +7261,8 @@ msgstr ""
 #: src/effects/Distortion.cpp:705 src/effects/Distortion.cpp:719
 #: src/effects/Distortion.cpp:733 src/effects/Distortion.cpp:747
 #: src/effects/Distortion.cpp:775
-#, fuzzy
 msgid "Output level"
-msgstr "Sortida"
+msgstr "Nivell de sortida"
 
 #: src/effects/Distortion.cpp:748
 #, fuzzy
@@ -7335,9 +7278,8 @@ msgid "Levelling fine adjustment"
 msgstr ""
 
 #: src/effects/Distortion.cpp:790
-#, fuzzy
 msgid "Degree of Levelling"
-msgstr "Grau d'anivellament:"
+msgstr "Grau d'anivellament"
 
 #: src/effects/Distortion.cpp:814
 msgid "dB Limit"
@@ -7349,39 +7291,36 @@ msgid "Wet level"
 msgstr "amb 2 nivells"
 
 #: src/effects/Distortion.cpp:817
-#, fuzzy
 msgid "Residual level"
-msgstr "Resid&u"
+msgstr "Nivell residual"
 
 #: src/effects/Distortion.cpp:833
 msgid " (Not Used):"
-msgstr ""
+msgstr " (sense utilitzar):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp:838
 msgid " (-100 to 0 dB):"
-msgstr ""
+msgstr " (-100 fins a 0 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp:853
 msgid " (-80 to -20 dB):"
-msgstr ""
+msgstr " (-80 fins a -20 dB):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp:864 src/effects/Distortion.cpp:875
-#, fuzzy
 msgid " (0 to 100):"
-msgstr "(%) [-50 a 100]:"
+msgstr " (0 fins a 100):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp:886
 msgid " (0 to 5):"
-msgstr ""
+msgstr " (0 fins a 5):"
 
 #: src/effects/Distortion.h:26
-#, fuzzy
 msgid "Distortion"
-msgstr "Durada"
+msgstr "Distorsió"
 
 #: src/effects/DtmfGen.cpp:39
 msgid "Sequence"
@@ -7650,7 +7589,7 @@ msgstr "Quant a"
 #: src/effects/Effect.cpp:3483
 #, c-format
 msgid "Are you sure you want to delete \"%s\"?"
-msgstr "Segur que voleu suprimir \"%s\"?"
+msgstr "Esteu segur que voleu suprimir \"%s\"?"
 
 #: src/effects/Effect.cpp:3500 src/effects/Effect.cpp:3537
 #: src/effects/Effect.cpp:3547 src/export/ExportFFmpegDialogs.cpp:1404
@@ -7836,10 +7775,10 @@ msgid ""
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
 "then use that one."
 msgstr ""
-"Per fer servir aquesta corba d'equalització en una cadena d'ordres cal que "
-"li doneu un nom.\n"
-"Feu clic al botó 'Desa/Gestiona corbes...', poseu un nom a la corba 'sense "
-"nom', i després utilitzeu-la. "
+"Per utilitzar aquesta corba d'equalització en una cadena de lots cal que li "
+"doneu un nom nou.\n"
+"Feu clic al botó 'Desa/Gestiona les corbes...', reanomeneu la corba 'sense "
+"nom', i després utilitzeu-la."
 
 #: src/effects/Equalization.cpp:367
 msgid "EQ Curve needs a different name"
@@ -7857,9 +7796,8 @@ msgid "Track sample rate is too low for this effect."
 msgstr ""
 
 #: src/effects/Equalization.cpp:491
-#, fuzzy
 msgid "Effect Unavailable"
-msgstr "La vista prèvia no està disponible"
+msgstr "L'efecte no està disponible"
 
 #: src/effects/Equalization.cpp:647 src/effects/ScienFilter.cpp:403
 msgid "+ dB"
@@ -7883,7 +7821,7 @@ msgstr "kHz"
 
 #: src/effects/Equalization.cpp:741
 msgid "&EQ Type:"
-msgstr ""
+msgstr "Tipus d'equalitzador:"
 
 #: src/effects/Equalization.cpp:749
 msgid "&Draw"
@@ -8021,7 +7959,7 @@ msgstr "Gestiona la llista de corbes"
 
 #: src/effects/Equalization.cpp:3114
 msgid "Manage Curves"
-msgstr "Gestiona corbes"
+msgstr "Gestiona les corbes"
 
 #: src/effects/Equalization.cpp:3149
 msgid "&Curves"
@@ -8134,7 +8072,7 @@ msgstr "La corba 'sense nom' és especial i no es pot esborrar."
 
 #: src/effects/Equalization.cpp:3466
 msgid "Choose an EQ curve file"
-msgstr "Escolliu un fitxer de corba d'equalització"
+msgstr "Trieu un fitxer de corba d'equalització"
 
 #: src/effects/Equalization.cpp:3466
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
@@ -8656,7 +8594,7 @@ msgstr "S'està normalitzant sense eliminar el desplaçament sobre el zero...\n"
 
 #: src/effects/Normalize.cpp:193
 msgid "Analyzing: "
-msgstr "S'està analitzant:"
+msgstr "Anàlisi:"
 
 #: src/effects/Normalize.cpp:195
 msgid "Analyzing first track of stereo pair: "
@@ -8790,23 +8728,20 @@ msgid "Combines phase-shifted signals with the original signal"
 msgstr "Combina senyals de fase canviada amb el senyal original"
 
 #: src/effects/Phaser.cpp:247
-#, fuzzy
 msgid "&Stages:"
-msgstr "Etapes:"
+msgstr "Etape&s:"
 
 #: src/effects/Phaser.cpp:258
-#, fuzzy
 msgid "&Dry/Wet:"
-msgstr "Sec/Mullat:"
+msgstr "&Sec/Mullat:"
 
 #: src/effects/Phaser.cpp:263
 msgid "Dry Wet"
 msgstr "Sec Mullat"
 
 #: src/effects/Phaser.cpp:268 src/effects/Wahwah.cpp:231
-#, fuzzy
 msgid "LFO Freq&uency (Hz):"
-msgstr "Freqüència LFO (Hz):"
+msgstr "Fr&eqüència LFO (Hz):"
 
 #: src/effects/Phaser.cpp:273 src/effects/Wahwah.cpp:236
 msgid "LFO frequency in hertz"
@@ -8822,9 +8757,8 @@ msgid "LFO start phase in degrees"
 msgstr "Fase d'inici LFO en graus"
 
 #: src/effects/Phaser.cpp:289
-#, fuzzy
 msgid "Dept&h:"
-msgstr "Profunditat:"
+msgstr "Profun&ditat:"
 
 #: src/effects/Phaser.cpp:294 src/effects/Wahwah.cpp:257
 msgid "Depth in percent"
@@ -8840,9 +8774,8 @@ msgid "Feedback in percent"
 msgstr "Retroalimentació en percentatge"
 
 #: src/effects/Phaser.cpp:310 src/effects/Wahwah.cpp:282
-#, fuzzy
 msgid "&Output gain (dB):"
-msgstr "Guany de la sortida (dB):"
+msgstr "Guany de la s&ortida (dB):"
 
 #: src/effects/Phaser.cpp:315 src/effects/Wahwah.cpp:287
 msgid "Output gain (dB)"
@@ -9167,9 +9100,8 @@ msgid "Frame Period"
 msgstr "Període de la trama d'àudio"
 
 #: src/effects/ScoreAlignDialog.cpp:109
-#, fuzzy
 msgid "Window Size:"
-msgstr "Mida de la finestra"
+msgstr "Mida de la finestra:"
 
 #: src/effects/ScoreAlignDialog.cpp:114
 msgid "Window Size"
@@ -9432,9 +9364,8 @@ msgid "Compress"
 msgstr "Comprimeix"
 
 #: src/effects/TruncSilence.cpp:66
-#, fuzzy
 msgid "Independent"
-msgstr "StereoIndependent"
+msgstr "Independent"
 
 #: src/effects/TruncSilence.cpp:119
 msgid ""
@@ -9492,14 +9423,12 @@ msgstr ""
 "es van fer populars als anys 70"
 
 #: src/effects/Wahwah.cpp:252
-#, fuzzy
 msgid "Dept&h (%):"
-msgstr "Profunditat (%):"
+msgstr "Profun&ditat (%):"
 
 #: src/effects/Wahwah.cpp:262
-#, fuzzy
 msgid "Reso&nance:"
-msgstr "Ressonància:"
+msgstr "Res&sonància:"
 
 #: src/effects/Wahwah.cpp:272
 #, fuzzy
@@ -9757,7 +9686,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp:646
 msgid "Nyquist Error"
-msgstr ""
+msgstr "Error de Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp:737
 msgid "Nyquist"
@@ -9835,7 +9764,7 @@ msgstr "Hi ha un error al codi Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp:2075
 msgid "Enter Nyquist Command: "
-msgstr "Escriviu l'ordre del Nyquist:"
+msgstr "Introduïu l'ordre de Nyquist:"
 
 #: src/effects/nyquist/Nyquist.cpp:2079
 msgid "&Use legacy (version 3) syntax."
@@ -10053,16 +9982,15 @@ msgstr ""
 
 #: src/export/Export.cpp:230
 msgid "No format specific options"
-msgstr ""
+msgstr "No hi ha cap opció específica del format"
 
 #: src/export/Export.cpp:270
 msgid "Export Audio"
 msgstr "Exporta l'àudio"
 
 #: src/export/Export.cpp:354 src/export/Export.cpp:978
-#, fuzzy
 msgid "Exported Tags"
-msgstr "Exporta"
+msgstr "Etiquetes exportades"
 
 #: src/export/Export.cpp:469
 msgid "All selected audio is muted."
@@ -10078,7 +10006,7 @@ msgstr "No s'ha pogut exportar"
 
 #: src/export/Export.cpp:596
 msgid "Are you sure you want to export the file as \""
-msgstr "Segur que voleu exportar el fitxer com a  \""
+msgstr "Esteu segur que voleu exportar el fitxer com a \""
 
 #: src/export/Export.cpp:616
 #, c-format
@@ -10422,7 +10350,7 @@ msgstr "Voleu sobreescriure el valor predefinit '%s'?"
 #: src/export/ExportFFmpegDialogs.cpp:569
 #: src/export/ExportFFmpegDialogs.cpp:764
 msgid "Confirm Overwrite"
-msgstr "Confirmació de l'operació de sobreescriure"
+msgstr "Confirmeu la sobreescriptura"
 
 #: src/export/ExportFFmpegDialogs.cpp:580
 msgid "Please select format before saving a profile"
@@ -11041,9 +10969,8 @@ msgstr ""
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
 #: src/export/ExportMP3.cpp:593
-#, fuzzy
 msgid "Locate LAME"
-msgstr "Ubicació de LAME"
+msgstr "Localitza LAME"
 
 #: src/export/ExportMP3.cpp:614
 #, c-format
@@ -11276,7 +11203,7 @@ msgstr "S'ha creat \"%s\" amb èxit."
 
 #: src/export/ExportMultiple.cpp:488
 msgid "Choose a location to save the exported files"
-msgstr "Escull una ubicació per desar-hi els fitxers exportats"
+msgstr "Trieu una ubicació per desar-hi els fitxers exportats"
 
 #: src/export/ExportMultiple.cpp:587
 #, c-format
@@ -11757,7 +11684,7 @@ msgstr "llegeix directament"
 
 #: src/import/ImportPCM.cpp:269
 msgid "Choose an import method"
-msgstr "Escolliu un mètode d'importació"
+msgstr "Trieu un mètode d'importació"
 
 #: src/import/ImportPCM.cpp:279
 msgid "Make a &copy of the files before editing (safer)"
@@ -11971,7 +11898,7 @@ msgstr "&Ubicació:"
 
 #: src/prefs/DirectoriesPrefs.cpp:94
 msgid "C&hoose..."
-msgstr "Es&colliu..."
+msgstr "&Tria..."
 
 #: src/prefs/DirectoriesPrefs.cpp:96
 msgid "Free Space:"
@@ -12002,7 +11929,7 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp:138
 msgid "Choose a location to place the temporary directory"
-msgstr "Trieu la ubicació del directori temporal"
+msgstr "Trieu una ubicació per ubicar-hi el directori temporal"
 
 #: src/prefs/DirectoriesPrefs.cpp:191
 msgid "unavailable - above location doesn't exist"
@@ -12529,9 +12456,8 @@ msgstr "Dispositius MIDI"
 
 #. i18n-hint: (noun)
 #: src/prefs/MidiIOPrefs.cpp:123
-#, fuzzy
 msgid "Host:"
-msgstr "&Servidor:"
+msgstr "Amfitrió:"
 
 #: src/prefs/MidiIOPrefs.cpp:130
 msgid "Using: PortMidi"
@@ -12678,12 +12604,12 @@ msgstr "Canvia la velocitat de neteja"
 
 #: src/prefs/MousePrefs.cpp:124
 msgid "Zoom in on Point"
-msgstr "Zoom en un punt"
+msgstr "Augmenta el zoom al punt"
 
 #: src/prefs/MousePrefs.cpp:125 src/prefs/MousePrefs.cpp:127
 #: src/prefs/MousePrefs.cpp:148
 msgid "Zoom in on a Range"
-msgstr "Zoom en un rang"
+msgstr "Augmenta el zoom a l'interval"
 
 #: src/prefs/MousePrefs.cpp:125
 msgid "same as right-drag"
@@ -12695,7 +12621,7 @@ msgstr "Clic amb el botó secundari"
 
 #: src/prefs/MousePrefs.cpp:126 src/prefs/MousePrefs.cpp:147
 msgid "Zoom out one step"
-msgstr "Allunya el zoom un pas"
+msgstr "Disminueix el zoom un pas"
 
 #: src/prefs/MousePrefs.cpp:127 src/prefs/MousePrefs.cpp:148
 msgid "Right-Drag"
@@ -12711,7 +12637,7 @@ msgstr "Majúscules+Arrossega"
 
 #: src/prefs/MousePrefs.cpp:128
 msgid "Zoom out on a Range"
-msgstr "Zoom en un rang"
+msgstr "Disminueix el zoom a l'interval"
 
 #: src/prefs/MousePrefs.cpp:129
 msgid "Middle-Click"
@@ -12719,7 +12645,7 @@ msgstr "Clic del mig"
 
 #: src/prefs/MousePrefs.cpp:129
 msgid "Zoom default"
-msgstr "Zoom per defecte"
+msgstr "Zoom predeterminat"
 
 #: src/prefs/MousePrefs.cpp:131
 #, fuzzy
@@ -12809,9 +12735,8 @@ msgid "-Wheel-Rotate"
 msgstr "-Roda del ratolí"
 
 #: src/prefs/MousePrefs.cpp:159
-#, fuzzy
 msgid "Zoom waveform in or out"
-msgstr "Zoom en un punt"
+msgstr "Amplio i redueix el zoom de la forma d'ona"
 
 #: src/prefs/MousePrefs.cpp:160
 #, fuzzy
@@ -12978,7 +12903,7 @@ msgstr "mil·lisegons (valor més alt = més latència)"
 
 #: src/prefs/RecordingPrefs.cpp:106
 msgid "L&atency correction:"
-msgstr "Correcció de &latència:"
+msgstr "Correcció de la &latència:"
 
 #: src/prefs/RecordingPrefs.cpp:110 src/prefs/RecordingPrefs.cpp:111
 msgid "milliseconds (negative = backwards)"
@@ -13007,9 +12932,8 @@ msgid "Use Custom Track &Name"
 msgstr "Nom de la pista"
 
 #: src/prefs/RecordingPrefs.cpp:148
-#, fuzzy
 msgid "Recorded_Audio"
-msgstr "So enregistrat"
+msgstr "Àudio_enregistrat"
 
 #: src/prefs/RecordingPrefs.cpp:150
 #, fuzzy
@@ -13017,17 +12941,16 @@ msgid "Custom name text"
 msgstr "Exportació FFmpeg personalitzada"
 
 #: src/prefs/RecordingPrefs.cpp:155
-#, fuzzy
 msgid "Add &Track Number"
-msgstr "Número de pista"
+msgstr "Afegeix el número de pis&ta"
 
 #: src/prefs/RecordingPrefs.cpp:159
 msgid "Add System &Date"
-msgstr ""
+msgstr "Afegeix la &data del sistema"
 
 #: src/prefs/RecordingPrefs.cpp:163
 msgid "Add System T&ime"
-msgstr ""
+msgstr "Afegeix l'hora del s&istema"
 
 #: src/prefs/RecordingPrefs.cpp:170
 msgid "Automated Recording Level Adjustment"
@@ -13110,7 +13033,7 @@ msgstr "La freqüència mínima ha de ser inferior a la freqüència màxima"
 
 #: src/prefs/SpectrogramSettings.cpp:213
 msgid "The range must be at least 1 dB"
-msgstr "El rang ha de ser d'almenys 1 dB"
+msgstr "L’interval ha de ser d'almenys 1 dB"
 
 #: src/prefs/SpectrogramSettings.cpp:221
 msgid "The frequency gain cannot be negative"
@@ -13142,9 +13065,8 @@ msgstr "32768 - banda més estreta"
 
 #. i18n-hint: use is a verb
 #: src/prefs/SpectrumPrefs.cpp:167 src/prefs/WaveformPrefs.cpp:83
-#, fuzzy
 msgid "&Use Preferences"
-msgstr "Utilitza les preferències"
+msgstr "&Utilitza les preferències"
 
 #: src/prefs/SpectrumPrefs.cpp:174 src/prefs/WaveformPrefs.cpp:91
 msgid "S&cale"
@@ -13168,7 +13090,7 @@ msgstr "&Guany (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp:202
 msgid "&Range (dB):"
-msgstr "&Rang (dB):"
+msgstr "Inte&rval (dB):"
 
 #: src/prefs/SpectrumPrefs.cpp:207
 msgid "Frequency g&ain (dB/dec):"
@@ -13249,7 +13171,7 @@ msgstr "El guany ha de ser un nombre enter"
 
 #: src/prefs/SpectrumPrefs.cpp:328
 msgid "The range must be a positive integer"
-msgstr "El rang ha de ser un nombre enter positiu"
+msgstr "L’interval ha de ser un nombre enter positiu"
 
 #: src/prefs/SpectrumPrefs.cpp:334
 msgid "The frequency gain must be an integer"
@@ -13265,7 +13187,7 @@ msgstr "El nombre màxim de notes ha de ser un enter"
 
 #: src/prefs/SpectrumPrefs.cpp:351
 msgid "The maximum number of notes must be in the range 1..128"
-msgstr "El nombre màxim de notes ha d'estar entre 1 i 128"
+msgstr "El nombre màxim de notes ha d'estar dins de l’interval 1..128"
 
 #: src/prefs/ThemePrefs.cpp:60
 msgid "Theme"
@@ -13380,9 +13302,8 @@ msgid "Waveform (dB)"
 msgstr "So en forma d'ona (dB)"
 
 #: src/prefs/TracksPrefs.cpp:89
-#, fuzzy
 msgid "Spectrogram"
-msgstr "E&spectrograma"
+msgstr "Espectrograma"
 
 #: src/prefs/TracksPrefs.cpp:107
 msgid "&Pinned Recording/Playback head"
@@ -13398,7 +13319,6 @@ msgid "Automatically &fit tracks vertically zoomed"
 msgstr "Zoom vertical automàtic que permeti &encabir-hi totes les pistes"
 
 #: src/prefs/TracksPrefs.cpp:121
-#, fuzzy
 msgid "Default &view mode:"
 msgstr "Mode de &visualització predeterminat:"
 
@@ -13487,7 +13407,7 @@ msgstr "Quan s'&importin fitxers d'àudio sense comprimir"
 
 #: src/prefs/WaveformPrefs.cpp:29
 msgid "Waveforms"
-msgstr ""
+msgstr "Formes d'ona"
 
 #: src/prefs/WaveformPrefs.cpp:96
 msgid "Waveform dB &range"
@@ -13520,9 +13440,8 @@ msgid "Skip to End"
 msgstr "Vés al final"
 
 #: src/toolbars/ControlToolBar.cpp:222
-#, fuzzy
 msgid "Loop Play"
-msgstr "Reprodueix en buc&le"
+msgstr "Reproducció en buc&le"
 
 #: src/toolbars/ControlToolBar.cpp:228
 #, fuzzy
@@ -13612,11 +13531,11 @@ msgstr "Pistes de bloqueig de sincronització"
 
 #: src/toolbars/EditToolBar.cpp:158 src/toolbars/EditToolBar.cpp:218
 msgid "Zoom In"
-msgstr "Apropa el zoom"
+msgstr "Augmenta el zoom"
 
 #: src/toolbars/EditToolBar.cpp:160 src/toolbars/EditToolBar.cpp:219
 msgid "Zoom Out"
-msgstr "Allunya el zoom"
+msgstr "Disminueix el zoom"
 
 #: src/toolbars/EditToolBar.cpp:163
 msgid "Fit selection in window"
@@ -13797,7 +13716,7 @@ msgstr "Ajusta a:"
 
 #: src/toolbars/SelectionBar.cpp:154 src/toolbars/SelectionBar.cpp:262
 msgid "Selection Start:"
-msgstr "Inici de la selecció:"
+msgstr "Començament de la selecció:"
 
 #: src/toolbars/SelectionBar.cpp:169 src/toolbars/SelectionBar.cpp:170
 #: src/toolbars/SelectionBar.cpp:269
@@ -13810,7 +13729,7 @@ msgstr "ocult"
 
 #: src/toolbars/SelectionBar.cpp:191 src/toolbars/SelectionBar.cpp:281
 msgid "Audio Position:"
-msgstr "Posició de so:"
+msgstr "Posició del so:"
 
 #: src/toolbars/SelectionBar.cpp:248
 msgid "Snap To"
@@ -14465,34 +14384,28 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #: src/widgets/ProgressDialog.cpp:1507
-#, fuzzy
 msgid "Are you sure you wish to cancel?"
-msgstr "Segur que voleu eliminar %s?"
+msgstr "Esteu segur que voleu cancel·lar-ho?"
 
 #: src/widgets/ProgressDialog.cpp:1507
-#, fuzzy
 msgid "Confirm Cancel"
-msgstr "Confirmeu l'esborrament"
+msgstr "Confirmeu la cancel·lació"
 
 #: src/widgets/ProgressDialog.cpp:1516
-#, fuzzy
 msgid "Are you sure you wish to stop?"
-msgstr "Segur que voleu eliminar %s?"
+msgstr "Esteu segur que voleu aturar-ho?"
 
 #: src/widgets/ProgressDialog.cpp:1516
-#, fuzzy
 msgid "Confirm Stop"
-msgstr "Confirma"
+msgstr "Confirmeu l'aturada"
 
 #: src/widgets/ProgressDialog.cpp:1526
-#, fuzzy
 msgid "Are you sure you wish to close?"
-msgstr "Segur que voleu eliminar %s?"
+msgstr "Esteu segur que voleu tancar-ho?"
 
 #: src/widgets/ProgressDialog.cpp:1526
-#, fuzzy
 msgid "Confirm Close"
-msgstr "Confirma"
+msgstr "Confirmeu el tancament"
 
 #: src/widgets/Ruler.cpp:1920
 msgid "Timeline"
@@ -14615,9 +14528,9 @@ msgid "Malformed number"
 msgstr "Format de nombre incorrecte"
 
 #: src/widgets/valnum.cpp:376
-#, fuzzy, c-format
+#, c-format
 msgid "Not in range %d to %d"
-msgstr "Fora de rang"
+msgstr "No està dins de l'interval %d fins a %d"
 
 #: src/widgets/valnum.cpp:492
 msgid "Value overflow"
@@ -14628,19 +14541,19 @@ msgid "Too many decimal digits"
 msgstr "Massa dígits decimals"
 
 #: src/widgets/valnum.cpp:510
-#, fuzzy, c-format
+#, c-format
 msgid "Value not in range: %s to %s"
-msgstr "El valor no es troba dins del rang: %.*f a %.*f"
+msgstr "El valor no està dins de l'interval: %s fins a %s"
 
 #: src/widgets/valnum.cpp:515
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be less than %s"
-msgstr "El valor no pot ser inferior a %.*f"
+msgstr "El valor no pot ser inferior a %s"
 
 #: src/widgets/valnum.cpp:519
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greather than %s"
-msgstr "El valor no pot ser superior a %.*f"
+msgstr "El valor no pot ser superior a %s"
 
 #: src/widgets/valnum.cpp:536
 msgid "e"

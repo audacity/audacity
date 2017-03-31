@@ -135,7 +135,7 @@ void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent & WXUNUSED(event))
 void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent & WXUNUSED(event))
 {
    int ret = wxMessageBox(
-      _("Are you sure you want to discard all projects?\n\nChoosing \"Yes\" discards all projects immediately."),
+      _("Are you sure you want to discard all recoverable projects?\n\nChoosing \"Yes\" discards all recoverable projects immediately."),
       _("Confirm Discard Projects"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
 
    if (ret == wxYES)

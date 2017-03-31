@@ -684,6 +684,17 @@ void AudacityProject::CreateMenusAndCommands()
 
 
       c->AddSeparator();
+
+      c->AddSeparator();
+      c->BeginSubMenu(_("S&kip to"));
+      c->AddItem(wxT("SkipSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["),
+                 TimeSelectedFlag, TimeSelectedFlag);
+      c->AddItem(wxT("SkipSelEnd"), _("Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"),
+                 TimeSelectedFlag, TimeSelectedFlag);
+      c->EndSubMenu();
+
+      c->AddSeparator();
+
       c->AddCheck(wxT("ShowClipping"), _("&Show Clipping"), FN(OnShowClipping),
          gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
 
@@ -784,17 +795,19 @@ void AudacityProject::CreateMenusAndCommands()
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
-      c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-
-// The RecordBelow function is actually 'record-other', i.e. if normal record record beside,
-// it records below, if normal record records below, it records beside.
-// TODO: fix the naming, and also check we do 'the right thing' with other options like
-// TimerRecord.
-#ifdef EXPERIMENTAL_DA
-      c->AddItem(wxT("RecordBelow"), _("Record Below"), FN(OnRecordBelow), wxT("Shift+R"));
+      // The RecordBelow function is actually 'record-other', i.e. if normal record records beside,
+      // it records below, if normal record records below, it records beside.
+      // TODO: fix the naming, and also check we do 'the right thing' with other options like
+      // TimerRecord.
+      // PREFER_NEW_TRACKS is defined if we want the old behaviour of by default adding a new track on
+      // every new recording.
+#ifndef PREFER_NEW_TRACKS
+      c->AddItem(wxT("RecordBelow"), _("Record New Track"), FN(OnRecordBelow), wxT("Shift+R"));
 #else
       c->AddItem(wxT("RecordBelow"), _("Record Beside"), FN(OnRecordBelow), wxT("Shift+R"));
 #endif
+
+      c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
       // JKC: I decided to duplicate this between play and record, rather than put it 
       // at the top level.  AddItem can now cope with simple duplicated items.
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
@@ -802,18 +815,6 @@ void AudacityProject::CreateMenusAndCommands()
 
       // Scrubbing sub-menu
       GetScrubber().AddMenuItems();
-
-      c->AddSeparator();
-      c->BeginSubMenu(_("Skip to"));
-      c->AddItem(wxT("GoSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
-      c->AddItem(wxT("GoSelEnd"), _("Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
-
-      c->AddItem(wxT("SkipStart"), _("Track Start"), FN(OnSkipStart), wxT("Home"),
-                 AudioIONotBusyFlag, AudioIONotBusyFlag);
-      c->AddItem(wxT("SkipEnd"), _("Track E&nd"), FN(OnSkipEnd), wxT("End"),
-                 WaveTracksExistFlag | AudioIONotBusyFlag,
-                 WaveTracksExistFlag | AudioIONotBusyFlag);
-      c->EndSubMenu();
 
 #ifndef EXPERIMENTAL_DA
       // JKC: ANSWER-ME: How is this different to 'Skip To' and how is it useful?
@@ -824,6 +825,9 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"));
       c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"));
+
+      c->AddItem(wxT("CursProjectStart"), _("&Project Start"), FN(OnSkipStart), wxT("Home"));
+      c->AddItem(wxT("CursProjectEnd"), _("Project E&nd"), FN(OnSkipEnd), wxT("End"));
 
       c->EndSubMenu();
 #endif
@@ -4604,11 +4608,13 @@ bool AudacityProject::HandlePasteNothingSelected()
                pNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate());
             }
             break;
+
          #ifdef USE_MIDI
-            case Track::Note:
-               pNewTrack = mTrackFactory->NewNoteTrack();
-               break;
-            #endif // USE_MIDI
+         case Track::Note:
+            pNewTrack = mTrackFactory->NewNoteTrack();
+            break;
+         #endif // USE_MIDI
+
          case Track::Label:
             pNewTrack = mTrackFactory->NewLabelTrack();
             break;
@@ -5807,7 +5813,7 @@ void AudacityProject::OnImportLabels()
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
 
    wxString fileName =
-       FileSelector(_("Select a text file containing labels..."),
+       FileSelector(_("Select a text file containing labels"),
                     path,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
@@ -5852,7 +5858,7 @@ void AudacityProject::OnImportMIDI()
 {
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
 
-   wxString fileName = FileSelector(_("Select a MIDI file..."),
+   wxString fileName = FileSelector(_("Select a MIDI file"),
                                     path,     // Path
                                     wxT(""),       // Name
                                     wxT(""),       // Extension
@@ -5903,7 +5909,7 @@ void AudacityProject::OnImportRaw()
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
 
    wxString fileName =
-       FileSelector(_("Select any uncompressed audio file..."),
+       FileSelector(_("Select any uncompressed audio file"),
                     path,     // Path
                     wxT(""),       // Name
                     wxT(""),       // Extension
@@ -6146,12 +6152,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
 
    while (t) {
       // We only want Wave and Note tracks here.
-#if defined(USE_MIDI)
-      if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                               (t->GetKind() == Track::Note)))
-#else
-      if (t->GetSelected() && (t->GetKind() == Track::Wave))
-#endif
+      if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
       {
          offset = t->GetOffset();
          if (t->GetLinked()) {   // Left channel of stereo track.
@@ -6232,12 +6233,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       while (t) {
          // This shifts different tracks in different ways, so no sync-lock move.
          // Only align Wave and Note tracks end to end.
-#if defined(USE_MIDI)
-         if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
-                                  (t->GetKind() == Track::Note)))
-#else
-         if (t->GetSelected() && (t->GetKind() == Track::Wave))
-#endif
+         if (t->GetSelected() && dynamic_cast<const AudioTrack*>(t))
          {
             t->SetOffset(newPos);   // Move the track
 
@@ -6523,7 +6519,7 @@ void AudacityProject::OnScoreAlign()
    if (alignedNoteTrack->GetSequence() == NULL) {
       holder = alignedNoteTrack->Duplicate();
       alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
-      assert(alignedNoteTrack->GetSequence());
+      wxASSERT(alignedNoteTrack->GetSequence());
    }
    // Remove offset from NoteTrack because audio is
    // mixed starting at zero and incorporating clip offsets.
@@ -6893,8 +6889,9 @@ void AudacityProject::OnRemoveTracks()
 
    while (t) {
       if (t->GetSelected()) {
-         if (mMixerBoard && (t->GetKind() == Track::Wave))
-            mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
+         auto playable = dynamic_cast<PlayableTrack*>(t);
+         if (mMixerBoard && playable)
+            mMixerBoard->RemoveTrackCluster(playable);
          if (!f)
             f = l;         // Capture the track preceeding the first removed track
          t = iter.RemoveCurrent();
@@ -7091,8 +7088,9 @@ void AudacityProject::OnMuteAllTracks()
 
    while (t)
    {
-      if (t->GetKind() == Track::Wave)
-         t->SetMute(true);
+      auto pt = dynamic_cast<PlayableTrack *>(t);
+      if (pt)
+         pt->SetMute(true);
 
       t = iter.Next();
    }
@@ -7110,7 +7108,9 @@ void AudacityProject::OnUnMuteAllTracks()
 
    while (t)
    {
-      t->SetMute(false);
+      auto pt = dynamic_cast<PlayableTrack *>(t);
+      if (pt)
+         pt->SetMute(false);
       t = iter.Next();
    }
 

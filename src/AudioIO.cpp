@@ -28,8 +28,8 @@
   To highlight this deliniation, the file is divided into three parts
   based on what thread context each function is intended to run in.
 
-  \par EXPERIMENTAL_MIDI_PLAYBACK
-  If EXPERIMENTAL_MIDI_PLAYBACK is defined, this class also manages
+  \par EXPERIMENTAL_MIDI_OUT
+  If EXPERIMENTAL_MIDI_OUT is defined, this class also manages
   MIDI playback. The reason for putting MIDI here rather than in, say,
   class MidiIO, is that there is no high-level synchronization and
   transport architecture, so Audio and MIDI must be coupled in order
@@ -3790,7 +3790,7 @@ void AudioIO::OutputEvent()
          data1 = mNextEvent->get_pitch();
          if (mNextIsNoteOn) {
             data2 = mNextEvent->get_loud(); // get velocity
-            int offset = mNextEventTrack->GetGain();
+            int offset = mNextEventTrack->GetVelocity();
             data2 += offset; // offset comes from per-track slider
             // clip velocity to insure a legal note-on value
             data2 = (data2 < 0 ? 1 : (data2 > 127 ? 127 : data2));
@@ -3897,7 +3897,7 @@ void AudioIO::FillMidiBuffers()
          hasSolo = true;
          break;
       }
-   int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
+   auto numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
    for(unsigned t = 0; t < numMidiPlaybackTracks; t++ )
       if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() ) {
          hasSolo = true;
@@ -4370,7 +4370,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             if( gAudioIO->mPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         int numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
+         auto numMidiPlaybackTracks = gAudioIO->mMidiPlaybackTracks.size();
          for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
             if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() )
                numSolo++;
