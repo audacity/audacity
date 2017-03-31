@@ -324,7 +324,7 @@ WaveTrack *MixerTrackCluster::GetRight() const
 {
    auto left = GetWave();
    if (left)
-      return static_cast<WaveTrack*>(left);
+      return static_cast<WaveTrack*>(left->GetLink());
    else
       return nullptr;
 }
