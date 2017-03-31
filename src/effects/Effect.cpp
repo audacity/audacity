@@ -1278,8 +1278,6 @@ bool Effect::ProcessPass()
 {
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
-   bool editClipCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 
    FloatBuffers inBuffer, outBuffer;
    ArrayOf<float *> inBufPos, outBufPos;

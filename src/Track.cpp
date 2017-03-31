@@ -309,7 +309,6 @@ bool Track::SyncLockAdjust(double oldT1, double newT1)
          return true;
 
       auto tmp = Cut(oldT1, GetEndTime());
-      if (!tmp) return false;
 
       bool ret = Paste(newT1, tmp.get());
       wxASSERT(ret); // TODO: handle this.

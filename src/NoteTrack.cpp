@@ -435,7 +435,8 @@ int NoteTrack::GetVisibleChannels()
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -457,7 +458,8 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -532,6 +534,18 @@ bool NoteTrack::Paste(double t, const Track *src)
    mSeq->paste(t - GetOffset(), other->mSeq.get());
 
    return true;
+}
+
+bool NoteTrack::Silence(double, double)
+{
+   // to do
+   return false;
+}
+
+bool NoteTrack::InsertSilence(double, double)
+{
+   // to do
+   return false;
 }
 
 // Call this function to manipulate the underlying sequence data. This is
