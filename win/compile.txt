@@ -14,7 +14,8 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This document is for Audacity version 2.1.2.
+This document is for Audacity version 2.1.3 and is currently also valid
+for building 2.2.0-alpha.  
 
 If the advice here is inaccurate or incomplete, 
 email audacity-devel@lists.sourceforge.net.
@@ -41,7 +42,7 @@ To simplify the implementation of a near-identical user
 interface across platforms, Audacity uses wxWidgets, a  
 GUI framework. 
 
-Audacity 2.1.2 requires wxWidgets 3.0.2.
+Audacity 2.1.3 requires wxWidgets 3.0.2.
 
 To be able to build Audacity for Windows, download and install 
 wxWidgets from http://www.wxwidgets.org/.

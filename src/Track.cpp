@@ -300,29 +300,22 @@ bool Track::IsSyncLockSelected() const
    return false;
 }
 
-bool Track::SyncLockAdjust(double oldT1, double newT1)
+void Track::SyncLockAdjust(double oldT1, double newT1)
 {
    if (newT1 > oldT1) {
       // Insert space within the track
 
       if (oldT1 > GetEndTime())
-         return true;
+         return;
 
       auto tmp = Cut(oldT1, GetEndTime());
-      if (!tmp) return false;
 
-      bool ret = Paste(newT1, tmp.get());
-      wxASSERT(ret); // TODO: handle this.
-
-      return ret;
+      Paste(newT1, tmp.get());
    }
    else if (newT1 < oldT1) {
       // Remove from the track
-      return Clear(newT1, oldT1);
+      Clear(newT1, oldT1);
    }
-
-   // fall-through: no change
-   return true;
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
@@ -339,6 +332,33 @@ void PlayableTrack::Merge( const Track &orig )
    mMute = pOrig->mMute;
    mSolo = pOrig->mSolo;
    AudioTrack::Merge( *pOrig );
+}
+
+// Serialize, not with tags of its own, but as attributes within a tag.
+void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
+{
+   xmlFile.WriteAttr(wxT("mute"), mMute);
+   xmlFile.WriteAttr(wxT("solo"), mSolo);
+   AudioTrack::WriteXMLAttributes(xmlFile);
+}
+
+// Return true iff the attribute is recognized.
+bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
+{
+   const wxString strValue{ value };
+   long nValue;
+   if (!wxStrcmp(attr, wxT("mute")) &&
+            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      mMute = (nValue != 0);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("solo")) &&
+            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      mSolo = (nValue != 0);
+      return true;
+   }
+
+   return AudioTrack::HandleXMLAttribute(attr, value);
 }
 
 // TrackListIterator
@@ -589,16 +609,9 @@ SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 }
 
 namespace {
-   bool IsSyncLockableNonLabelTrack( const Track *pTrack )
+   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
    {
-      if ( pTrack->GetKind() == Track::Wave )
-         return true;
-#ifdef USE_MIDI
-      else if ( pTrack->GetKind() == Track::Note )
-         return true;
-#endif
-      else
-         return false;
+      return nullptr != dynamic_cast< const AudioTrack * >( pTrack );
    }
 }
 

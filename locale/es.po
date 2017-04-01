@@ -3,10 +3,10 @@
 # Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.0.x\n"
+"Project-Id-Version: Audacity 2.2.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2016-11-22 17:44+0100\n"
+"PO-Revision-Date: 2017-03-30 02:21-0000\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist@gmail.com>\n"
 "Language-Team: Spanish <audacity-translation@lists.sourceforge.net>\n"
 "Language: es\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
@@ -3812,7 +3812,7 @@ msgstr "Pistas seleccionadas silenciadas durante %.2f segundos en %.2f"
 
 #: src/Menus.cpp:4772 src/effects/Silence.h:22
 msgid "Silence"
-msgstr "Silenciar"
+msgstr "Silencio"
 
 #: src/Menus.cpp:4803
 msgid "Duplicated"

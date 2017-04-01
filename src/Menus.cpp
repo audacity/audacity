@@ -4177,8 +4177,7 @@ void AudacityProject::OnCut()
             dest = n->Copy(mViewInfo.selectedRegion.t0(),
                     mViewInfo.selectedRegion.t1());
 
-         if (dest)
-            FinishCopy(n, std::move(dest), newClipboard);
+         FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
@@ -4309,8 +4308,7 @@ void AudacityProject::OnCopy()
       if (n->GetSelected()) {
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1());
-         if (dest)
-            FinishCopy(n, std::move(dest), newClipboard);
+         FinishCopy(n, std::move(dest), newClipboard);
       }
       n = iter.Next();
    }
@@ -4351,31 +4349,29 @@ void AudacityProject::OnPaste()
    if (c == NULL)
       return;
    Track *ff = NULL;
-   const Track *tmpSrc = NULL;
-   const Track *tmpC = NULL;
-   const Track *prev = NULL;
+   const Track *lastClipBeforeMismatch = NULL;
+   const Track *mismatchedClip = NULL;
+   const Track *prevClip = NULL;
 
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
-   bool bTrackTypeMismatch = false;
 
    while (n && c) {
       if (n->GetSelected()) {
          bAdvanceClipboard = true;
-         if (tmpC)
-            c = tmpC;
+         if (mismatchedClip)
+            c = mismatchedClip;
          if (c->GetKind() != n->GetKind()) {
-            if (!bTrackTypeMismatch) {
-               tmpSrc = prev;
-               tmpC = c;
+            if (!mismatchedClip) {
+               lastClipBeforeMismatch = prevClip;
+               mismatchedClip = c;
             }
-            bTrackTypeMismatch = true;
             bAdvanceClipboard = false;
-            c = tmpSrc;
+            c = lastClipBeforeMismatch;
 
             // If the types still don't match...
             while (c && c->GetKind() != n->GetKind()) {
-               prev = c;
+               prevClip = c;
                c = clipIter.Next();
             }
          }
@@ -4383,12 +4379,16 @@ void AudacityProject::OnPaste()
          // Handle case where the first track in clipboard
          // is of different type than the first selected track
          if (!c) {
-            c = tmpC;
+            c = mismatchedClip;
             while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
             {
                // Must perform sync-lock adjustment before incrementing n
                if (n->IsSyncLockSelected()) {
-                  bPastedSomething |= n->SyncLockAdjust(t1, t0+(msClipT1 - msClipT0));
+                  auto newT1 = t0 + (msClipT1 - msClipT0);
+                  if (t1 != newT1 && t1 <= n->GetEndTime()) {
+                     n->SyncLockAdjust(t1, newT1);
+                     bPastedSomething = true;
+                  }
                }
                n = iter.Next();
             }
@@ -4399,39 +4399,40 @@ void AudacityProject::OnPaste()
          // The last possible case for cross-type pastes: triggered when we try to
          // paste 1+ tracks from one type into 1+ tracks of another type. If
          // there's a mix of types, this shouldn't run.
-         if (!c) {
-            wxMessageBox(
-               _("Pasting one type of track into another is not allowed."),
-               _("Error"), wxICON_ERROR, this);
-            c = n;//so we don't trigger any !c conditions on our way out
-            break;
-         }
+         if (!c)
+            // Throw, so that any previous changes to the project in this loop
+            // are discarded.
+            throw SimpleMessageBoxException{
+               _("Pasting one type of track into another is not allowed.")
+            };
 
          // When trying to copy from stereo to mono track, show error and exit
          // TODO: Automatically offer user to mix down to mono (unfortunately
          //       this is not easy to implement
          if (c->GetLinked() && !n->GetLinked())
-         {
-            wxMessageBox(
-               _("Copying stereo audio into a mono track is not allowed."),
-               _("Error"), wxICON_ERROR, this);
-            break;
-         }
+            // Throw, so that any previous changes to the project in this loop
+            // are discarded.
+            throw SimpleMessageBoxException{
+               _("Copying stereo audio into a mono track is not allowed.")
+            };
 
          if (!ff)
             ff = n;
 
          Maybe<WaveTrack::Locker> locker;
          if (msClipProject != this && c->GetKind() == Track::Wave)
+            // Cause duplication of block files on disk, when copy is
+            // between projects
             locker.create(static_cast<const WaveTrack*>(c));
 
-         if (c->GetKind() == Track::Wave && n && n->GetKind() == Track::Wave)
+         wxASSERT( n && c );
+         if (c->GetKind() == Track::Wave && n->GetKind() == Track::Wave)
          {
-            bPastedSomething |=
-               ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
+            bPastedSomething = true;
+            ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
          }
          else if (c->GetKind() == Track::Label &&
-                  n && n->GetKind() == Track::Label)
+                  n->GetKind() == Track::Label)
          {
             ((LabelTrack *)n)->Clear(t0, t1);
 
@@ -4444,7 +4445,9 @@ void AudacityProject::OnPaste()
          }
          else
          {
-            bPastedSomething |= n->Paste(t0, c);
+            bPastedSomething = true;
+            n->Clear(t0, t1);
+            n->Paste(t0, c);
          }
 
          // When copying from mono to stereo track, paste the wave form
@@ -4454,23 +4457,29 @@ void AudacityProject::OnPaste()
             n = iter.Next();
 
             if (n->GetKind() == Track::Wave) {
-               bPastedSomething |= ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
+               bPastedSomething = true;
+               ((WaveTrack *)n)->ClearAndPaste(t0, t1, c, true, true);
             }
             else
             {
                n->Clear(t0, t1);
-               bPastedSomething |= n->Paste(t0, c);
+               bPastedSomething = true;
+               n->Paste(t0, c);
             }
          }
 
          if (bAdvanceClipboard){
-            prev = c;
+            prevClip = c;
             c = clipIter.Next();
          }
       } // if (n->GetSelected())
       else if (n->IsSyncLockSelected())
       {
-         bPastedSomething |=  n->SyncLockAdjust(t1, t0 + msClipT1 - msClipT0);
+         auto newT1 = t0 + (msClipT1 - msClipT0);
+         if (t1 != newT1 && t1 <= n->GetEndTime()) {
+            n->SyncLockAdjust(t1, newT1);
+            bPastedSomething = true;
+         }
       }
 
       n = iter.Next();
@@ -4487,19 +4496,18 @@ void AudacityProject::OnPaste()
 
       while (n) {
          if (n->GetSelected() && n->GetKind()==Track::Wave) {
-            if (c && c->GetKind() == Track::Wave) {
-               bPastedSomething |=
-                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
+            if (c) {
+               wxASSERT(c->GetKind() == Track::Wave);
+               bPastedSomething = true;
+               ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
             }
             else {
                auto tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
-               bool bResult = tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
-               wxASSERT(bResult); // TO DO: Actually handle this.
-               wxUnusedVar(bResult);
+               tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                tmp->Flush();
 
-               bPastedSomething |=
-                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
+               bPastedSomething = true;
+               ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp.get(), true, true);
             }
          }
          else if (n->GetKind() == Track::Label && n->GetSelected())
@@ -4598,44 +4606,56 @@ bool AudacityProject::HandlePasteNothingSelected()
       while (pClip) {
          Maybe<WaveTrack::Locker> locker;
          if ((msClipProject != this) && (pClip->GetKind() == Track::Wave))
+            // Cause duplication of block files on disk, when copy is
+            // between projects
             locker.create(static_cast<const WaveTrack*>(pClip));
 
-         Track::Holder pNewTrack;
+         Track::Holder uNewTrack;
+         Track *pNewTrack;
          switch (pClip->GetKind()) {
          case Track::Wave:
             {
                WaveTrack *w = (WaveTrack *)pClip;
-               pNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate());
+               uNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate()),
+               pNewTrack = uNewTrack.get();
             }
             break;
 
          #ifdef USE_MIDI
          case Track::Note:
-            pNewTrack = mTrackFactory->NewNoteTrack();
+            uNewTrack = mTrackFactory->NewNoteTrack(),
+            pNewTrack = uNewTrack.get();
             break;
          #endif // USE_MIDI
 
          case Track::Label:
-            pNewTrack = mTrackFactory->NewLabelTrack();
+            uNewTrack = mTrackFactory->NewLabelTrack(),
+            pNewTrack = uNewTrack.get();
             break;
-         case Track::Time:
-            pNewTrack = mTrackFactory->NewTimeTrack();
+         case Track::Time: {
+            // Maintain uniqueness of the time track!
+            pNewTrack = GetTracks()->GetTimeTrack();
+            if (!pNewTrack)
+               uNewTrack = mTrackFactory->NewTimeTrack(),
+               pNewTrack = uNewTrack.get();
             break;
+         }
          default:
             pClip = iterClip.Next();
             continue;
          }
          wxASSERT(pClip);
 
-         bool bResult = pNewTrack->Paste(0.0, pClip);
-         wxASSERT(bResult); // TO DO: Actually handle this.
-         wxUnusedVar(bResult);
+         pNewTrack->Paste(0.0, pClip);
 
          if (!pFirstNewTrack)
-            pFirstNewTrack = pNewTrack.get();
+            pFirstNewTrack = pNewTrack;
 
          pNewTrack->SetSelected(true);
-         FinishCopy(pClip, std::move(pNewTrack), *mTracks);
+         if (uNewTrack)
+            FinishCopy(pClip, std::move(uNewTrack), *mTracks);
+         else
+            FinishCopy(pClip, pNewTrack);
 
          pClip = iterClip.Next();
       }
@@ -4899,11 +4919,9 @@ void AudacityProject::OnDuplicate()
          // Make copies not for clipboard but for direct addition to the project
          auto dest = n->Copy(mViewInfo.selectedRegion.t0(),
                  mViewInfo.selectedRegion.t1(), false);
-         if (dest) {
-            dest->Init(*n);
-            dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
-            mTracks->Add(std::move(dest));
-         }
+         dest->Init(*n);
+         dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
+         mTracks->Add(std::move(dest));
       }
 
       if (n == l) {
@@ -5114,22 +5132,19 @@ void AudacityProject::OnSplit()
          double sel0 = mViewInfo.selectedRegion.t0();
          double sel1 = mViewInfo.selectedRegion.t1();
 
-         dest = NULL;
-         n->Copy(sel0, sel1, &dest);
-         if (dest) {
-            dest->Init(*n);
-            dest->SetOffset(wxMax(sel0, n->GetOffset()));
+         dest = n->Copy(sel0, sel1);
+         dest->Init(*n);
+         dest->SetOffset(wxMax(sel0, n->GetOffset()));
 
-            if (sel1 >= n->GetEndTime())
-               n->Clear(sel0, sel1);
-            else if (sel0 <= n->GetOffset()) {
-               n->Clear(sel0, sel1);
-               n->SetOffset(sel1);
-            } else
-               n->Silence(sel0, sel1);
+         if (sel1 >= n->GetEndTime())
+            n->Clear(sel0, sel1);
+         else if (sel0 <= n->GetOffset()) {
+            n->Clear(sel0, sel1);
+            n->SetOffset(sel1);
+         } else
+            n->Silence(sel0, sel1);
 
-            newTracks.Add(dest);
-         }
+         newTracks.Add(dest);
       }
       n = iter.Next();
    }
@@ -5175,10 +5190,8 @@ void AudacityProject::OnSplitNew()
                    mViewInfo.selectedRegion.t1());
          }
 #endif
-         if (dest) {
-            dest->SetOffset(wxMax(newt0, offset));
-            FinishCopy(n, std::move(dest), *mTracks);
-         }
+         dest->SetOffset(wxMax(newt0, offset));
+         FinishCopy(n, std::move(dest), *mTracks);
       }
 
       if (n == l) {
@@ -7225,8 +7238,7 @@ void AudacityProject::OnResample()
          // But the thrown exception will cause rollback in the application
          // level handler.
 
-         if (!((WaveTrack*)t)->Resample(newRate, &progress))
-            break;
+         ((WaveTrack*)t)->Resample(newRate, &progress);
 
          // Each time a track is successfully, completely resampled,
          // commit that to the undo stack.  The second and later times,

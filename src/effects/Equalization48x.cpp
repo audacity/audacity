@@ -558,19 +558,15 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
       t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
       //         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
       auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT, clipStartEndTimes[i].second-startT);
-      if(toClipOutput)
-      {
-         //put the processed audio in
-         bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
-         wxASSERT(bResult); // TO DO: Actually handle this.
-         //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
-         //This is not true when the selection is fully contained within one clip (second half of conditional)
-         if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first || 
-            clipRealStartEndTimes[i].second != clipStartEndTimes[i].second) &&
-            !(clipRealStartEndTimes[i].first <= startT &&  
-            clipRealStartEndTimes[i].second >= startT+lenT) )
-            t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-      }
+      //put the processed audio in
+      t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
+      //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
+      //This is not true when the selection is fully contained within one clip (second half of conditional)
+      if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first || 
+         clipRealStartEndTimes[i].second != clipStartEndTimes[i].second) &&
+         !(clipRealStartEndTimes[i].first <= startT &&  
+         clipRealStartEndTimes[i].second >= startT+lenT) )
+         t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
    }
    return true;
 }

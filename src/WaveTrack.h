@@ -150,7 +150,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void SetVirtualState(bool state, bool half=false);
 #endif
    sampleFormat GetSampleFormat() const { return mFormat; }
-   bool ConvertToSampleFormat(sampleFormat format);
+   void ConvertToSampleFormat(sampleFormat format);
 
    const SpectrogramSettings &GetSpectrogramSettings() const;
    SpectrogramSettings &GetSpectrogramSettings();
@@ -175,32 +175,32 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
    Track::Holder CopyNonconst(double t0, double t1) /* not override */;
 
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t0, const Track *src) override;
-   bool ClearAndPaste(double t0, double t1,
+   void Clear(double t0, double t1) override;
+   void Paste(double t0, const Track *src) override;
+   void ClearAndPaste(double t0, double t1,
                               const Track *src,
                               bool preserve = true,
                               bool merge = true,
                               const TimeWarper *effectWarper = NULL) /* not override */;
 
-   bool Silence(double t0, double t1) override;
-   bool InsertSilence(double t, double len) override;
+   void Silence(double t0, double t1) override;
+   void InsertSilence(double t, double len) override;
 
-   bool SplitAt(double t) /* not override */;
-   bool Split(double t0, double t1) /* not override */;
+   void SplitAt(double t) /* not override */;
+   void Split(double t0, double t1) /* not override */;
    // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
-   bool ClearAndAddCutLine(double t0, double t1) /* not override */;
+   void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
    Track::Holder SplitCut(double t0, double t1) /* not override */;
-   bool SplitDelete(double t0, double t1) /* not override */;
-   bool Join(double t0, double t1) /* not override */;
-   bool Disjoin(double t0, double t1) /* not override */;
+   void SplitDelete(double t0, double t1) /* not override */;
+   void Join(double t0, double t1) /* not override */;
+   void Disjoin(double t0, double t1) /* not override */;
 
-   bool Trim(double t0, double t1) /* not override */;
+   void Trim(double t0, double t1) /* not override */;
 
-   bool HandleClear(double t0, double t1, bool addCutLines, bool split);
+   void HandleClear(double t0, double t1, bool addCutLines, bool split);
 
-   bool SyncLockAdjust(double oldT1, double newT1) override;
+   void SyncLockAdjust(double oldT1, double newT1) override;
 
    /** @brief Returns true if there are no WaveClips in the specified region
     *
@@ -216,20 +216,20 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
     * appended to that clip. If there are no WaveClips in the track, then a NEW
     * one is created.
     */
-   bool Append(samplePtr buffer, sampleFormat format,
+   void Append(samplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1,
                XMLWriter* blockFileLog=NULL);
    /// Flush must be called after last Append
-   bool Flush();
+   void Flush();
 
-   bool AppendAlias(const wxString &fName, sampleCount start,
+   void AppendAlias(const wxString &fName, sampleCount start,
                     size_t len, int channel,bool useOD);
 
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
    //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
-   bool AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
@@ -254,7 +254,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    bool Get(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len,
                    fillFormat fill = fillZero, bool mayThrow = true) const;
-   bool Set(samplePtr buffer, sampleFormat format,
+   void Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
@@ -486,7 +486,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
    // clipidx1 and clipidx2 are indices into the clip list.
-   bool MergeClips(int clipidx1, int clipidx2);
+   void MergeClips(int clipidx1, int clipidx2);
 
    // Cache special locations (e.g. cut lines) for later speedy access
    void UpdateLocationsCache() const;
@@ -495,7 +495,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    const std::vector<Location> &GetCachedLocations() const { return mDisplayLocationsCache; }
 
    // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-   bool ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
+   void ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
 
    // Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);
@@ -505,7 +505,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void Merge(const Track &orig) override;
 
    // Resample track (i.e. all clips in the track)
-   bool Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, ProgressDialog *progress = NULL);
 
    //
    // AutoSave related

@@ -998,7 +998,6 @@ bool NyquistEffect::ProcessOne()
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
          cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'PEAK)\n"), peakString);
 
-      // TODO: Documen, PEAK-LEVEL is deprecated as of 2.1.3.
       // TODO: Document, PEAK-LEVEL is nil if NaN or INF.
       if (!std::isinf(maxPeakLevel) && !std::isnan(maxPeakLevel) && (maxPeakLevel < FLT_MAX)) {
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
@@ -1881,11 +1880,9 @@ int NyquistEffect::PutCallback(float *buffer, int channel,
          }
       }
 
-      if (mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len)) {
-         return 0;  // success
-      }
+      mOutputTrack[channel]->Append((samplePtr)buffer, floatSample, len);
 
-      return -1; // failure
+      return 0; // success
    }, MakeSimpleGuard( -1 ) ); // translate all exceptions into failure
 }
 

@@ -191,6 +191,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       size.GetHeight() - ctrlPos.y - kQuadrupleInset;
    ctrlSize.Set(kLeftSideStackWidth - kQuadrupleInset, nGainSliderHeight);
 
+#ifdef USE_MIDI
    if (GetNote()) {
       mSlider_Gain =
          safenew MixerTrackSlider(
@@ -201,6 +202,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                true, 0.0, wxVERTICAL);
    }
    else
+#endif
       mSlider_Gain =
          safenew MixerTrackSlider(
                this, ID_SLIDER_GAIN,
@@ -322,15 +324,17 @@ WaveTrack *MixerTrackCluster::GetRight() const
 {
    auto left = GetWave();
    if (left)
-      return static_cast<WaveTrack*>(left);
+      return static_cast<WaveTrack*>(left->GetLink());
    else
       return nullptr;
 }
 
+#ifdef USE_MIDI
 NoteTrack *MixerTrackCluster::GetNote() const
 {
    return dynamic_cast< NoteTrack * >( mTrack );
 }
+#endif
 
 void MixerTrackCluster::UpdatePrefs()
 {

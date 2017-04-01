@@ -1278,8 +1278,6 @@ bool Effect::ProcessPass()
 {
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
-   bool editClipCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 
    FloatBuffers inBuffer, outBuffer;
    ArrayOf<float *> inBufPos, outBufPos;
@@ -1970,8 +1968,7 @@ void Effect::GetSamples(
       t1 = t0 + mDuration;
       if (mT0 == mT1) {
          // Not really part of the calculation, but convenient to put here
-         bool bResult = track->InsertSilence(t0, t1);
-         wxASSERT(bResult); // TO DO: Actually handle this.
+         track->InsertSilence(t0, t1);
       }
    }
 #endif

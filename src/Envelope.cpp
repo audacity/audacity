@@ -198,7 +198,7 @@ EnvPoint *Envelope::AddPointAtEnd( double t, double val )
 
 void Envelope::CopyFrom(const Envelope *e, double t0, double t1)
 {
-   wxASSERT( t0 < t1 );
+   wxASSERT( t0 <= t1 );
 
    mOffset   = wxMax(t0, e->mOffset);
    mTrackLen = wxMin(t1, e->mOffset + e->mTrackLen) - mOffset;

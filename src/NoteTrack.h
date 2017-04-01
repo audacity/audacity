@@ -103,8 +103,10 @@ class AUDACITY_DLL_API NoteTrack final
    Track::Holder Cut  (double t0, double t1) override;
    Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
    bool Trim (double t0, double t1) /* not override */;
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t, const Track *src) override;
+   void Clear(double t0, double t1) override;
+   void Paste(double t, const Track *src) override;
+   void Silence(double t0, double t1) override;
+   void InsertSilence(double t, double len) override;
    bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT

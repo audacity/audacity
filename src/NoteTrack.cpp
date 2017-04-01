@@ -435,7 +435,8 @@ int NoteTrack::GetVisibleChannels()
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -457,7 +458,8 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 <= t0)
-      return{};
+      //THROW_INCONSISTENCY_EXCEPTION
+      ;
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -490,20 +492,19 @@ bool NoteTrack::Trim(double t0, double t1)
    return true;
 }
 
-bool NoteTrack::Clear(double t0, double t1)
+void NoteTrack::Clear(double t0, double t1)
 {
    // If t1 = t0, should Clear return true?
    if (t1 <= t0)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; ?
+      return;
    double len = t1-t0;
 
    if (mSeq)
       mSeq->clear(t0 - GetOffset(), len, false);
-
-   return true;
 }
 
-bool NoteTrack::Paste(double t, const Track *src)
+void NoteTrack::Paste(double t, const Track *src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If
@@ -515,11 +516,13 @@ bool NoteTrack::Paste(double t, const Track *src)
 
    //Check that src is a non-NULL NoteTrack
    if (src == NULL || src->GetKind() != Track::Note)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    NoteTrack* other = (NoteTrack*)src;
    if (other->mSeq == NULL)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    if(!mSeq)
       mSeq = std::make_unique<Alg_seq>();
@@ -530,8 +533,16 @@ bool NoteTrack::Paste(double t, const Track *src)
       t += other->GetOffset();
    }
    mSeq->paste(t - GetOffset(), other->mSeq.get());
+}
 
-   return true;
+void NoteTrack::Silence(double, double)
+{
+   // to do
+}
+
+void NoteTrack::InsertSilence(double, double)
+{
+   // to do
 }
 
 // Call this function to manipulate the underlying sequence data. This is
@@ -758,6 +769,8 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          double dblValue;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
+         else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
+         {}
          else if (!wxStrcmp(attr, wxT("offset")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
                   Internat::CompatibleToDouble(strValue, &dblValue))
@@ -831,10 +844,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    saveme->mSeq->write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
    xmlFile.WriteAttr(wxT("name"), saveme->mName);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   xmlFile.WriteAttr(wxT("mute"), mMute);
-   xmlFile.WriteAttr(wxT("solo"), mSolo);
-#endif
+   this->NoteTrackBase::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("offset"), saveme->GetOffset());
    xmlFile.WriteAttr(wxT("visiblechannels"), saveme->mVisibleChannels);
    xmlFile.WriteAttr(wxT("height"), saveme->GetActualHeight());
