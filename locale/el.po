@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2017-02-13 23:56+0300\n"
+"PO-Revision-Date: 2017-04-01 21:00+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -422,9 +422,8 @@ msgid "Stop script"
 msgstr "Παύση δέσμης ενεργειών"
 
 #: src/AboutDialog.cpp:94
-#, fuzzy
 msgid "Check Online"
-msgstr "Έλεγχος %s"
+msgstr "Διαδικτυακός έλεγχος"
 
 #: src/AboutDialog.cpp:103
 msgid "quality assurance"
@@ -795,7 +794,7 @@ msgstr "Εκκίνηση του Audacity ..."
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp:1533 src/Menus.cpp:304
 msgid "&New"
-msgstr "&Νέα εργασία"
+msgstr "&Νέο έργο"
 
 #. i18n-hint: (verb)
 #: src/AudacityApp.cpp:1534 src/Menus.cpp:309
@@ -845,8 +844,8 @@ msgid ""
 "Audacity is now going to exit. Please launch Audacity again to use the new "
 "temporary directory."
 msgstr ""
-"Το Audacity τώρα θα κλείσει. Παρακαλώ άνοιξε ξανά το Audacity για να "
-"χρησιμοποιήσεις το νέο φάκελο προσωρινών αρχείων."
+"Το Audacity τώρα θα κλείσει. Παρακαλούμε επανεκκινήστε το Audacity για να "
+"χρησιμοποιήσετε τον νέο προσωρινό κατάλογο."
 
 #: src/AudacityApp.cpp:1820
 msgid ""
@@ -1143,9 +1142,8 @@ msgid "Could not enumerate files in auto save directory."
 msgstr "Αδύνατη η απαρίθμηση αρχείων στον κατάλογο αυτόματης αποθήκευσης."
 
 #: src/AutoRecovery.cpp:760
-#, fuzzy
 msgid "Error Decoding File"
-msgstr "Σφάλμα κατά την αποκωδικοποίηση του αρχείου"
+msgstr "Σφάλμα αποκωδικοποίησης του αρχείου"
 
 #: src/BatchCommandDialog.cpp:60 src/BatchCommandDialog.cpp:64
 #: src/BatchCommandDialog.cpp:65
@@ -1490,14 +1488,13 @@ msgid ""
 "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
 msgstr ""
-"Υπάρχει πολύ λίγος ελεύθερος χώρος που απέμεινε στον δίσκο σε αυτόν τον "
-"τόμο.\n"
+"Υπάρχει πολύ λίγος ελεύθερος χώρος που απέμεινε στον δίσκο σε αυτόν τον τόμο."
+"\n"
 "Παρακαλούμε επιλέξτε ένα άλλο προσωρινό κατάλογο στις προτιμήσεις."
 
 #: src/DirManager.cpp:424
-#, fuzzy
 msgid "Cleaning project temporary files"
-msgstr "Καθαρισμός προσωρινών αρχείων"
+msgstr "Καθαρισμός προσωρινών αρχείων έργου"
 
 #: src/DirManager.cpp:437
 msgid "Cleaning up temporary files"
@@ -2184,25 +2181,32 @@ msgstr "Δεν είναι εγκατεστημένη η Βοήθεια τοπι�
 
 #: src/HelpText.cpp:198
 msgid "Get the Official Released Version of Audacity"
-msgstr ""
+msgstr "Λήψη της επίσημης έκδοσης του Audacity"
 
 #: src/HelpText.cpp:200
 msgid ""
 "<br><br>The version of Audacity you are using is an <b>Alpha test version</"
 "b>."
 msgstr ""
+"<br><br>Η έκδοση του Audacity που χρησιμοποιείτε είναι μια <b>άλφα "
+"δοκιμαστική έκδοση</b>."
 
 #: src/HelpText.cpp:201
 msgid ""
 "We strongly recommend that you use our latest stable released version, which "
 "has full documentation and support.<br><br>"
 msgstr ""
+"Σας συνιστούμε έντονα να χρησιμοποιήσετε την τελευταία μας σταθερή έκδοση, "
+"που έχει πλήρη τεκμηρίωση και υποστήριξη.<br><br>"
 
 #: src/HelpText.cpp:202
 msgid ""
 "You can help us get Audacity ready for release by joining our [[http://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
+"Μπορείτε να μας βοηθήσετε να καταστήσετε το Audacity έτοιμο για έκδοση "
+"συμμετέχοντας στην [[http://www.audacityteam.org/community/|κοινότητά]] "
+"μας.<hr><br><br>"
 
 #: src/HelpText.cpp:205
 msgid "How to get help"
@@ -2255,9 +2259,8 @@ msgstr ""
 "Το Audacity έχει τη δυνατότητα εισαγωγής απροστάτευτων αρχείων σε πολλές "
 "άλλες μορφές (όπως M4A και WMA, συμπιεσμένα αρχεία WAV από φορητές συσκευές "
 "εγγραφής και ήχο από αρχεία βίντεο) εφόσον κατεβάσετε και εγκαταστήσετε την "
-"προαιρετική [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#foreign| βιβλιοθήκη FFmpeg]] στον "
-"υπολογιστή σας."
+"προαιρετική [[http://manual.audacityteam.org/man/faq_opening_and_saving_files"
+".html#foreign| βιβλιοθήκη FFmpeg]] στον υπολογιστή σας."
 
 #: src/HelpText.cpp:227
 msgid ""
@@ -2530,9 +2533,8 @@ msgstr ""
 "συστήματος, %s (%s)."
 
 #: src/Legacy.cpp:263
-#, fuzzy
 msgid "Error Converting Legacy Project File"
-msgstr "Σφάλμα κατά την αποθήκευση του έργου"
+msgstr "Σφάλμα μετατροπής παλιού αρχείου έργου"
 
 #: src/Legacy.cpp:304
 #, c-format
@@ -2826,11 +2828,11 @@ msgstr "στο &τέλος του κομματιού"
 
 #: src/Menus.cpp:600
 msgid "Store Re&gion"
-msgstr ""
+msgstr "Αποθήκευση περιο&χής"
 
 #: src/Menus.cpp:603
 msgid "Retrieve Regio&n"
-msgstr ""
+msgstr "Ανάκτηση πε&ριοχής"
 
 #: src/Menus.cpp:606
 msgid "Store Cursor Pos&ition"
@@ -3044,7 +3046,7 @@ msgstr "Ηχογράφηση ενερ&γοποιημένου ήχου (ναι/ό
 
 #: src/Menus.cpp:798
 msgid "Sound Activation Le&vel..."
-msgstr "Επί&πεδο ήχου για καταγραφή..."
+msgstr "Επί&πεδο ενεργοποίησης ήχου..."
 
 #: src/Menus.cpp:801
 msgid "A&utomated Recording Level Adjustment (on/off)"
@@ -4788,8 +4790,8 @@ msgid ""
 msgstr ""
 "Το 'Αποθήκευση συμπιεσμένου έργου' είναι για ένα έργο Audacity, όχι για "
 "αρχείο ήχου.\n"
-"Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
-"'Εξαγωγή'.\n"
+"Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε 'Εξαγωγή'."
+"\n"
 "\n"
 "Τα συμπιεσμένα αρχεία έργου είναι ένας καλός τρόπος για να διαδώσετε το έργο "
 "σας\n"
@@ -4819,7 +4821,7 @@ msgstr "%sΑποθήκευση έργου \"%s\" ως..."
 
 #: src/Project.cpp:4315
 msgid "Created new project"
-msgstr "Δημιουργία νέου έργου"
+msgstr "Δημιουργήθηκε νέο έργο"
 
 #: src/Project.cpp:4532
 #, c-format
@@ -5979,7 +5981,7 @@ msgstr "Έγινε '%s' κομμάτι στέρεο"
 
 #: src/TrackPanel.cpp:8163
 msgid "Make Stereo"
-msgstr "Κάνε στέρεο"
+msgstr "Δημιουργία στερεοφωνικού"
 
 #: src/TrackPanel.cpp:8198
 msgid ""
@@ -6174,8 +6176,7 @@ msgstr "Δεν υπάρχει αρκετός διαθέσιμος χώρος γ�
 
 #: src/WaveTrack.cpp:2486
 msgid "There is not enough room available to expand the cut line"
-msgstr ""
-"Δεν υπάρχει αρκετός διαθέσιμος χώρος για να επεκταθεί η γραμμή αποκοπής"
+msgstr "Δεν υπάρχει αρκετός διαθέσιμος χώρος για να επεκταθεί η γραμμή αποκοπής"
 
 #: src/commands/CommandManager.cpp:109 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:804 src/prefs/MousePrefs.cpp:57
@@ -6260,7 +6261,7 @@ msgstr "Ενίσχυση (dB):"
 
 #: src/effects/Amplify.cpp:247
 msgid "New Peak Amplitude (dB):"
-msgstr "Νέα κορυφή πλάτους σήματος (dB):"
+msgstr "Νέα πλάτος κορυφής (dB):"
 
 #: src/effects/Amplify.cpp:255
 msgid "Allow clipping"
@@ -8869,7 +8870,7 @@ msgstr "Απολαβή με αντήχηση"
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/effects/Reverb.cpp:54
 msgid "DryGain"
-msgstr "Απολαβή ανεπεξέργαστου"
+msgstr "Απολαβή αρχικού ήχου (DryGain)"
 
 #: src/effects/Reverb.cpp:55
 msgid "StereoWidth"
@@ -9733,7 +9734,7 @@ msgstr ""
 "εδώ ως Λατινική-1]"
 
 #: src/effects/nyquist/Nyquist.cpp:1638
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 "Control not created."
@@ -9743,7 +9744,6 @@ msgstr ""
 "Το στοιχείο ελέγχου δεν δημιουργήθηκε."
 
 #: src/effects/nyquist/Nyquist.cpp:1746
-#, fuzzy
 msgid ""
 "Your code looks like SAL syntax, but there is no 'return' statement.\n"
 "For SAL, use a return statement such as:\n"
@@ -9752,12 +9752,13 @@ msgid ""
 "\t(mult *track* 0.1)\n"
 " ."
 msgstr ""
-"Ο κώδικας σας μοιάζει με σύνταξη SAL, αλλά δεν υπάρχει πρόταση επιστροφής. Ή "
-"χρησιμοποιήστε μια πρόταση επιστροφής όπως\n"
-"        return s * 0.1\n"
-"για SAL, ή αρχίστε με μια ανοικτή παρένθεση όπως\n"
-"        (mult s 0.1)\n"
-" για LISP."
+"Ο κώδικας σας μοιάζει με σύνταξη SAL, αλλά δεν υπάρχει πρόταση 'επιστροφής'."
+"\n"
+"Για SAL, χρησιμοποιήστε μια πρόταση επιστροφής όπως:\n"
+"       return *track* * 0.1\n"
+"ή για LISP, αρχίστε με μια ανοικτή παρένθεση όπως:\n"
+"        (mult *track* 0.1)\n"
+" ."
 
 #: src/effects/nyquist/Nyquist.cpp:1749
 msgid "Error in Nyquist code"
@@ -9967,9 +9968,8 @@ msgid "Error writing to file: \"%s\""
 msgstr "Σφάλμα κατά την εγγραφή στο αρχείο: \"%s\""
 
 #: src/effects/VST/VSTEffect.cpp:3565
-#, fuzzy
 msgid "Error Saving Effect Presets"
-msgstr "Σφάλμα κατά την αποθήκευση του προεπιλογών VST"
+msgstr "Σφάλμα αποθήκευσης των προεπιλογών εφέ"
 
 #: src/effects/VST/VSTEffect.cpp:3686
 #, c-format
@@ -10331,9 +10331,8 @@ msgstr "Άνοιγμα προσαρμοσμένων επιλογών μορφή�
 
 #: src/export/ExportFFmpegDialogs.cpp:498
 #: src/export/ExportFFmpegDialogs.cpp:522
-#, fuzzy
 msgid "Error Saving FFmpeg Presets"
-msgstr "Σφάλμα κατά την αποθήκευση του προεπιλογών VST"
+msgstr "Σφάλμα αποθήκευσης των προεπιλογών FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp:568
 #, c-format
@@ -11114,11 +11113,11 @@ msgstr "Η βιβλιοθήκη εξαγωγής MP3 δεν βρέθηκε"
 #: src/export/ExportMultiple.cpp:107 src/export/ExportMultiple.cpp:481
 #: src/export/ExportMultiple.cpp:603
 msgid "Export Multiple"
-msgstr "Εξαγωγή πολλαπλών"
+msgstr "Πολλαπλή εξαγωγή"
 
 #: src/export/ExportMultiple.cpp:182 src/export/ExportMultiple.cpp:192
 msgid "Cannot Export Multiple"
-msgstr "Δεν μπορεί να γίνει εξαγωγή πολλαπλών"
+msgstr "Δεν μπορεί να γίνει πολλαπλή εξαγωγή"
 
 #: src/export/ExportMultiple.cpp:190
 msgid ""
@@ -11737,11 +11736,11 @@ msgstr "Αδύνατη η λήψη ενδιάμεσης μνήμης πλήρω�
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:238
 msgid "Import Raw"
-msgstr "Εισαγωγή ανεπεξέργαστων δεδομένων(Raw)"
+msgstr "Εισαγωγή ανεπεξέργαστων δεδομένων (Raw)"
 
 #: src/import/ImportRaw.cpp:320
 msgid "Import Raw Data"
-msgstr "Εισάγονται ανεπεξέργαστα δεδομένα"
+msgstr "Εισαγωγή ανεπεξέργαστων δεδομένων"
 
 #  i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
 #  know the correct technical word.
@@ -11899,7 +11898,7 @@ msgstr "Φάκελοι"
 
 #: src/prefs/DirectoriesPrefs.cpp:82
 msgid "Temporary files directory"
-msgstr "Φάκελος προσωρινών αρχείων:"
+msgstr "Κατάλογος προσωρινών αρχείων"
 
 #: src/prefs/DirectoriesPrefs.cpp:89
 msgid "&Location:"
@@ -11937,7 +11936,7 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp:138
 msgid "Choose a location to place the temporary directory"
-msgstr "Επέλεξε την τοποθεσία του προσωρινού φακέλου"
+msgstr "Επιλέξτε την τοποθεσία του προσωρινού καταλόγου"
 
 #: src/prefs/DirectoriesPrefs.cpp:191
 msgid "unavailable - above location doesn't exist"
@@ -11967,7 +11966,7 @@ msgid ""
 "Changes to temporary directory will not take effect until Audacity is "
 "restarted"
 msgstr ""
-"Οι αλλαγές στο προσωρινό φάκελο δεν θα εφαρμοστούν μέχρι να γίνει "
+"Οι αλλαγές στο προσωρινό κατάλογο δεν θα εφαρμοστούν μέχρι να γίνει "
 "επανεκκίνηση του Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp:252
@@ -12028,8 +12027,7 @@ msgstr "Έλεγχος για ενημερωμένα πρόσθετα όταν �
 
 #: src/prefs/EffectsPrefs.cpp:145
 msgid "Rescan plugins next time Audacity is started"
-msgstr ""
-"Να επανασαρώνονται τα πρόσθετα την επόμενη φορά που αρχίζει το Audacity"
+msgstr "Να επανασαρώνονται τα πρόσθετα την επόμενη φορά που αρχίζει το Audacity"
 
 #: src/prefs/EffectsPrefs.cpp:153
 msgid "Instruction Set"
@@ -13352,8 +13350,7 @@ msgstr ""
 
 #: src/prefs/TracksPrefs.cpp:156
 msgid "Editing a clip can &move other clips"
-msgstr ""
-"Η επεξεργασία ενός αποσπάσματος μπορεί να &μετακινήσει άλλα αποσπάσματα"
+msgstr "Η επεξεργασία ενός αποσπάσματος μπορεί να &μετακινήσει άλλα αποσπάσματα"
 
 #: src/prefs/TracksPrefs.cpp:159
 msgid "&Type to create a label"
@@ -13385,7 +13382,7 @@ msgstr "Αποθήκευση &κενού έργου"
 
 #: src/prefs/WarningsPrefs.cpp:63
 msgid "&Low disk space at program start up"
-msgstr "&Λίγο χώρο στον δίσκο κατά την εκκίνηση του προγράμματος"
+msgstr "&Λίγος χώρος στον δίσκο κατά την εκκίνηση του προγράμματος"
 
 #: src/prefs/WarningsPrefs.cpp:66
 msgid "Mixing down to &mono during export"
@@ -14346,9 +14343,8 @@ msgid "NaN"
 msgstr "NaN"
 
 #: src/widgets/numformatter.cpp:146
-#, fuzzy
 msgid "Infinity"
-msgstr "-Άπειρο"
+msgstr "Άπειρο"
 
 #: src/widgets/numformatter.cpp:150
 msgid "-Infinity"
