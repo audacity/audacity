@@ -54,6 +54,7 @@ enum CommandFlag : unsigned long long
    PausedFlag            = 0x200000000ULL, // jkc
    NotPausedFlag         = 0x400000000ULL, // jkc
    HasWaveDataFlag       = 0x800000000ULL, // jkc
+   PlayableTracksExistFlag = 0x1000000000ULL,
 
    NoFlagsSpecifed        = ~0ULL
 };

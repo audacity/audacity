@@ -140,8 +140,6 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
  protected:
    int                 mChannel;
    double              mOffset;
-   bool                mMute;
-   bool                mSolo;
 
    mutable std::shared_ptr<DirManager> mDirManager;
 
@@ -189,14 +187,10 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
-   bool GetMute    () const { return mMute;     }
    bool GetLinked  () const { return mLinked;   }
-   bool GetSolo    () const { return mSolo;     }
 
    virtual void SetSelected(bool s);
-   void SetMute    (bool m) { mMute     = m; }
    void SetLinked  (bool l);
-   void SetSolo    (bool s) { mSolo     = s; }
 
    virtual int GetChannel() const { return mChannel;};
    virtual double GetOffset() const = 0;
@@ -214,28 +208,27 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    // separate from the Track.
    const std::shared_ptr<DirManager> &GetDirManager() const { return mDirManager; }
 
-   // Create a NEW track and modify this track (or return null for failure)
-   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) { return{}; }
+   // Create a NEW track and modify this track
+   // Return non-NULL or else throw
+   virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
-   // Create a NEW track and don't modify this track (or return null for failure)
+   // Create a NEW track and don't modify this track
+   // Return non-NULL or else throw
    // Note that subclasses may want to distinguish tracks stored in a clipboard
    // from those stored in a project
    virtual Holder Copy
-      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const
-   { return{}; }
+      (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
 
-   // Return true for success
-   virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
+   virtual void Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
-   // Return true for success
-   virtual bool Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) {return false;}
+   virtual void Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
 
    // This can be used to adjust a sync-lock selected track when the selection
    // is replaced by one of a different length.
-   virtual bool SyncLockAdjust(double oldT1, double newT1);
+   virtual void SyncLockAdjust(double oldT1, double newT1);
 
-   virtual bool Silence(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
-   virtual bool InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) {return false;}
+   virtual void Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+   virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
    virtual int GetKind() const { return None; }
 
@@ -251,6 +244,47 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
 
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected() const;
+};
+
+class AudioTrack /* not final */ : public Track
+{
+public:
+   AudioTrack(const std::shared_ptr<DirManager> &projDirManager)
+      : Track{ projDirManager } {}
+   AudioTrack(const Track &orig) : Track{ orig } {}
+
+   // Serialize, not with tags of its own, but as attributes within a tag.
+   void WriteXMLAttributes(XMLWriter &xmlFile) const {}
+
+   // Return true iff the attribute is recognized.
+   bool HandleXMLAttribute(const wxChar * /*attr*/, const wxChar * /*value*/)
+   { return false; }
+};
+
+class PlayableTrack /* not final */ : public AudioTrack
+{
+public:
+   PlayableTrack(const std::shared_ptr<DirManager> &projDirManager)
+      : AudioTrack{ projDirManager } {}
+   PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
+
+   bool GetMute    () const { return mMute;     }
+   bool GetSolo    () const { return mSolo;     }
+   void SetMute    (bool m) { mMute     = m; }
+   void SetSolo    (bool s) { mSolo     = s; }
+
+   void Init( const PlayableTrack &init );
+   void Merge( const Track &init ) override;
+
+   // Serialize, not with tags of its own, but as attributes within a tag.
+   void WriteXMLAttributes(XMLWriter &xmlFile) const;
+
+   // Return true iff the attribute is recognized.
+   bool HandleXMLAttribute(const wxChar *attr, const wxChar *value);
+
+protected:
+   bool                mMute { false };
+   bool                mSolo { false };
 };
 
 class AUDACITY_DLL_API TrackListIterator /* not final */
@@ -410,6 +444,9 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
 {
+   // privatize this, make you use Swap instead:
+   using ListOfTracks::swap;
+
  public:
    // Create an empty TrackList
    TrackList();

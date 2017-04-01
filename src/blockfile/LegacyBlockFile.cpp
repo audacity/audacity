@@ -151,11 +151,13 @@ LegacyBlockFile::~LegacyBlockFile()
 }
 
 /// Read the summary section of the disk file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer to write the data to.  It must be at least
 /// mSummaryinfo.totalSummaryBytes long.
-bool LegacyBlockFile::ReadSummary(void *data)
+bool LegacyBlockFile::ReadSummary(ArrayOf<char> &data)
 {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
    size_t read;
    {
@@ -163,20 +165,25 @@ bool LegacyBlockFile::ReadSummary(void *data)
       if (mSilentLog)
          silence.create();
 
-      if (!summaryFile.IsOpened()){
+      if (!summaryFile.IsOpened()) {
 
-         memset(data, 0, mSummaryInfo.totalSummaryBytes);
+         memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
 
          mSilentLog = TRUE;
 
-         return true;
+         return false;
       }
 
-      read = summaryFile.Read(data, mSummaryInfo.totalSummaryBytes);
+      read = summaryFile.Read(data.get(), mSummaryInfo.totalSummaryBytes);
    }
-   mSilentLog=FALSE;
+   mSilentLog = FALSE;
 
-   return (read == mSummaryInfo.totalSummaryBytes);
+   if (read != mSummaryInfo.totalSummaryBytes) {
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+      return false;
+   }
+
+   return true;
 }
 
 /// Read the data portion of the block file using libsndfile.  Convert it
@@ -187,10 +194,10 @@ bool LegacyBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 size_t LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              size_t start, size_t len) const
+                              size_t start, size_t len, bool mayThrow) const
 {
    sf_count_t origin = (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
-   return CommonReadData(
+   return CommonReadData( mayThrow,
       mFileName, mSilentLog, nullptr, origin, 0, data, format, start, len,
       &mFormat, mLen
    );

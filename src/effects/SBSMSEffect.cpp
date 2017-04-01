@@ -34,8 +34,6 @@ public:
    ResampleBuf()
    {
       processed = 0;
-      outputLeftTrack = NULL;
-      outputRightTrack = NULL;
    }
 
    ~ResampleBuf()
@@ -442,19 +440,12 @@ bool EffectSBSMS::Process()
                if(rightTrack)
                   rb.outputRightTrack->Flush();
 
-               bool bResult =
                leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
                                         true, false, warper.get());
-               wxASSERT(bResult); // TO DO: Actually handle this.
-               wxUnusedVar(bResult);
 
                if(rightTrack)
-               {
-                  bResult =
                   rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
                                             true, false, warper.get());
-                  wxASSERT(bResult); // TO DO: Actually handle this.
-               }
             }
          }
          mCurTrackNum++;

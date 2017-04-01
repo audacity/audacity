@@ -22,12 +22,17 @@ public:
         const wxString &caption = wxString{},
         const wxFileName &renameTarget_ = {})
    : MessageBoxException{ caption }
-   , fileName{ fileName_ }, cause{ cause_ }, renameTarget{ renameTarget_ }
+   , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }
    {}
 
    FileException(FileException&& that)
       : MessageBoxException(std::move(that))
+      , cause{ that.cause }
+      , fileName{ that.fileName }
+      , renameTarget{ that.renameTarget }
    {}
+
+   FileException& operator= (FileException&&) PROHIBITED;
 
    ~FileException() override;
 

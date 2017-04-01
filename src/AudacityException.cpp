@@ -31,6 +31,7 @@ MessageBoxException &MessageBoxException::operator = ( MessageBoxException &&tha
 {
    caption = that.caption;
    if ( this != &that ) {
+      AudacityException::operator=( std::move(that) );
       if (!moved)
          wxAtomicDec( sOutstandingMessages );
 
@@ -47,6 +48,21 @@ MessageBoxException::~MessageBoxException()
       // If exceptions are used properly, you should never reach this,
       // because moved should become true earlier in the object's lifetime.
       wxAtomicDec( sOutstandingMessages );
+}
+
+SimpleMessageBoxException::~SimpleMessageBoxException()
+{
+}
+
+wxString SimpleMessageBoxException::ErrorMessage() const
+{
+   return message;
+}
+
+std::unique_ptr< AudacityException > SimpleMessageBoxException::Move()
+{
+   return std::unique_ptr< AudacityException >
+   { safenew SimpleMessageBoxException{ std::move( *this ) } };
 }
 
 // This is meant to be invoked via wxEvtHandler::CallAfter

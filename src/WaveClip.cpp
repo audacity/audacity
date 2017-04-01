@@ -36,6 +36,8 @@
 #include "WaveTrack.h"
 #include "FFT.h"
 #include "Profiler.h"
+#include "InconsistencyException.h"
+#include "UserException.h"
 
 #include "prefs/SpectrogramSettings.h"
 
@@ -399,9 +401,9 @@ void WaveClip::SetOffset(double offset)
 }
 
 bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len) const
+                   sampleCount start, size_t len, bool mayThrow) const
 {
-   return mSequence->Get(buffer, format, start, len);
+   return mSequence->Get(buffer, format, start, len, mayThrow);
 }
 
 bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
@@ -899,7 +901,9 @@ bool SpecCache::CalculateOneSpectrum
                floatSample, sampleCount(
                   floor(0.5 + from.as_double() + offset * rate)
                ),
-               myLen)
+               myLen,
+               // Don't throw in this drawing operation
+               false)
             );
 
             if (copy) {
@@ -1284,43 +1288,48 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    return true;
 }
 
-bool WaveClip::GetMinMax(float *min, float *max,
-                          double t0, double t1) const
+std::pair<float, float> WaveClip::GetMinMax(
+   double t0, double t1, bool mayThrow) const
 {
-   *min = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
-   *max = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      return {
+         0.f,  // harmless, but unused since Sequence::GetMinMax does not use these values
+         0.f   // harmless, but unused since Sequence::GetMinMax does not use these values
+      };
+   }
 
    if (t0 == t1)
-      return true;
+      return{ 0.f, 0.f };
 
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   return mSequence->GetMinMax(s0, s1-s0, min, max);
+   return mSequence->GetMinMax(s0, s1-s0, mayThrow);
 }
 
-bool WaveClip::GetRMS(float *rms, double t0,
-                          double t1)
+float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
 {
-   *rms = float(0.0);
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         //THROW_INCONSISTENCY_EXCEPTION
+         ;
+      return 0.f;
+   }
 
    if (t0 == t1)
-      return true;
+      return 0.f;
 
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   return mSequence->GetRMS(s0, s1-s0, rms);
+   return mSequence->GetRMS(s0, s1-s0, mayThrow);
 }
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format)
@@ -1530,6 +1539,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 }
 
 bool WaveClip::Paste(double t0, const WaveClip* other)
+// STRONG-GUARANTEE
 {
    const bool clipNeedsResampling = other->mRate != mRate;
    const bool clipNeedsNewFormat =
@@ -1549,34 +1559,42 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
          // Force sample formats to match.
          newClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
       pastedClip = newClip.get();
-   } else
+   }
+   else
    {
       // No resampling or format change needed, just use original clip without making a copy
       pastedClip = other;
+   }
+
+   // Paste cut lines contained in pasted clip
+   WaveClipHolders newCutlines;
+   for (const auto &cutline: pastedClip->mCutLines)
+   {
+      newCutlines.push_back(
+         make_movable<WaveClip>
+            ( *cutline, mSequence->GetDirManager(),
+              // Recursively copy cutlines of cutlines.  They don't need
+              // their offsets adjusted.
+              true));
+      newCutlines.back()->Offset(t0 - mOffset);
    }
 
    sampleCount s0;
    TimeToSamplesClip(t0, &s0);
 
    bool result = false;
+
+   // Assume STRONG-GUARANTEE from Sequence::Paste
    if (mSequence->Paste(s0, pastedClip->mSequence.get()))
    {
+      // Assume NOFAIL-GUARANTEE in the remaining
       MarkChanged();
       mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
       mEnvelope->RemoveUnneededPoints();
       OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
-      // Paste cut lines contained in pasted clip
-      for (const auto &cutline: pastedClip->mCutLines)
-      {
-         mCutLines.push_back(
-            make_movable<WaveClip>
-               ( *cutline, mSequence->GetDirManager(),
-                 // Recursively copy cutlines of cutlines.  They don't need
-                 // their offsets adjusted.
-                 true));
-         mCutLines.back()->Offset(t0 - mOffset);
-      }
+      for (auto &holder : newCutlines)
+         mCutLines.push_back(std::move(holder));
 
       result = true;
    }
@@ -1718,7 +1736,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
 
 bool WaveClip::FindCutLine(double cutLinePosition,
                            double* cutlineStart /* = NULL */,
-                           double* cutlineEnd /* = NULL */)
+                           double* cutlineEnd /* = NULL */) const
 {
    for (const auto &cutline: mCutLines)
    {
@@ -1736,28 +1754,33 @@ bool WaveClip::FindCutLine(double cutLinePosition,
 }
 
 bool WaveClip::ExpandCutLine(double cutLinePosition)
+// STRONG-GUARANTEE
 {
-   for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
-   {
-      WaveClip *const cutline = it->get();
-      if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
-      {
-         if (!Paste(mOffset+cutline->GetOffset(), cutline))
-            return false;
-         // Now erase the cutline,
-         // but be careful to find it again, because Paste above may
-         // have modified the array of cutlines (if our cutline contained
-         // another cutline!), invalidating the iterator we had.
-         auto begin = mCutLines.begin(), end = mCutLines.end();
-         it = std::find_if(begin, end,
-            [=](decltype(*begin) &p){ return p.get() == cutline; });
-         if (it != end)
-            mCutLines.erase(it); // deletes cutline!
-         else {
-            wxASSERT(false);
-         }
-         return true;
+   auto end = mCutLines.end();
+   auto it = std::find_if( mCutLines.begin(), end,
+      [&](const WaveClipHolder &cutline) {
+         return fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001;
+      } );
+
+   if ( it != end ) {
+      auto cutline = it->get();
+      // assume STRONG-GUARANTEE from Paste
+      if (!Paste(mOffset+cutline->GetOffset(), cutline))
+         return false;
+      // Now erase the cutline,
+      // but be careful to find it again, because Paste above may
+      // have modified the array of cutlines (if our cutline contained
+      // another cutline!), invalidating the iterator we had.
+      end = mCutLines.end();
+      it = std::find_if(mCutLines.begin(), end,
+         [=](const WaveClipHolder &p) { return p.get() == cutline; });
+      if (it != end)
+         mCutLines.erase(it); // deletes cutline!
+      else {
+         // THROW_INCONSISTENCY_EXCEPTION;
+         wxASSERT(false);
       }
+      return true;
    }
 
    return false;
@@ -1779,6 +1802,7 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
 }
 
 void WaveClip::OffsetCutLines(double t0, double len)
+// NOFAIL-GUARANTEE
 {
    for (const auto &cutLine : mCutLines)
    {
@@ -1848,7 +1872,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       bool isLast = ((pos + inLen) == numSamples);
 
-      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen))
+      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
       {
          error = true;
          break;

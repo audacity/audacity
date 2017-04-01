@@ -570,14 +570,10 @@ bool EffectEqualization::PopulateUI(wxWindow *parent)
 
 bool EffectEqualization::CloseUI()
 {
-   mUIParent->RemoveEventHandler(this);
-
-   mUIParent = NULL;
-
    mCurve = NULL;
    mPanel = NULL;
 
-   return true;
+   return Effect::CloseUI();
 }
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
@@ -1099,9 +1095,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          for(size_t j = mM - 1; j < wcopy; j++)
             buffer[i+j] = thisWindow[j];
 
-         float *tempP = thisWindow;
-         thisWindow = lastWindow;
-         lastWindow = tempP;
+         std::swap( thisWindow, lastWindow );
       }  //next i, lump of this block
 
       output->Append((samplePtr)buffer.get(), floatSample, block);
@@ -1182,20 +1176,15 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          //remove the old audio and get the NEW
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
          auto toClipOutput = output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0);
-         if(toClipOutput)
-         {
-            //put the processed audio in
-            bool bResult = t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
-            wxASSERT(bResult); // TO DO: Actually handle this.
-            wxUnusedVar(bResult);
-            //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
-            //This is not true when the selection is fully contained within one clip (second half of conditional)
-            if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first ||
-               clipRealStartEndTimes[i].second != clipStartEndTimes[i].second) &&
-               !(clipRealStartEndTimes[i].first <= startT &&
-               clipRealStartEndTimes[i].second >= startT+lenT) )
-               t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-         }
+         //put the processed audio in
+         t->Paste(clipStartEndTimes[i].first, toClipOutput.get());
+         //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
+         //This is not true when the selection is fully contained within one clip (second half of conditional)
+         if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first ||
+            clipRealStartEndTimes[i].second != clipStartEndTimes[i].second) &&
+            !(clipRealStartEndTimes[i].first <= startT &&
+            clipRealStartEndTimes[i].second >= startT+lenT) )
+            t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
       }
    }
 

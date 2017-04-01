@@ -88,8 +88,6 @@ WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
 
 Effect::Effect()
 {
-   mParent = NULL;
-
    mClient = NULL;
 
    mTracks = NULL;
@@ -520,7 +518,8 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
 
    if (mUIDialog)
    {
-      mUIDialog->Close(true);
+      if ( mUIDialog->Close(true) )
+         mUIDialog = nullptr;
       return false;
    }
 
@@ -529,8 +528,9 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
       return mClient->ShowInterface(parent, forceModal);
    }
 
-   mParent = parent;
-
+   // mUIDialog is null
+   auto cleanup = valueRestorer( mUIDialog );
+   
    mUIDialog = CreateUI(parent, this);
    if (!mUIDialog)
    {
@@ -544,14 +544,13 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    if (SupportsRealtime() && !forceModal)
    {
       mUIDialog->Show();
+      cleanup.release();
 
       // Return false to bypass effect processing
       return false;
    }
 
    bool res = mUIDialog->ShowModal() != 0;
-   mUIDialog = NULL;
-   mParent = NULL;
 
    return res;
 }
@@ -1118,16 +1117,6 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
-namespace {
-   struct SetProgress {
-      SetProgress(ProgressDialog *& mProgress_, ProgressDialog *progress)
-         : mProgress(mProgress_)
-      { mProgress = progress; }
-      ~SetProgress() { mProgress = nullptr; }
-      ProgressDialog *& mProgress;
-   };
-}
-
 bool Effect::DoEffect(wxWindow *parent,
                       double projectRate,
                       TrackList *list,
@@ -1141,7 +1130,6 @@ bool Effect::DoEffect(wxWindow *parent,
 
    mFactory = factory;
    mProjectRate = projectRate;
-   mParent = parent;
    mTracks = list;
    
    bool isSelection = false;
@@ -1191,25 +1179,32 @@ bool Effect::DoEffect(wxWindow *parent,
 
    // Prompting will be bypassed when applying an effect that has already 
    // been configured, e.g. repeating the last effect on a different selection.
+   // Prompting may call Effect::Preview
    if (shouldPrompt && IsInteractive() && !PromptUser(parent))
    {
       return false;
    }
 
+   auto cleanup = finally( [&] {
+      End();
+
+      // In case of failed effect, be sure to free memory.
+      ReplaceProcessedTracks( false );
+   } );
+
    bool returnVal = true;
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
-      ProgressDialog progress(GetName(),
+      ProgressDialog progress{
+         GetName(),
          wxString::Format(_("Applying %s..."), GetName().c_str()),
-         pdlgHideStopButton);
-      SetProgress sp(mProgress, &progress);
+         pdlgHideStopButton
+      };
+      auto vr = valueRestorer( mProgress, &progress );
+
       returnVal = Process();
    }
-
-   End();
-
-   mOutputTracks.reset();
 
    if (returnVal)
    {
@@ -1283,11 +1278,9 @@ bool Effect::ProcessPass()
 {
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
-   bool editClipCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 
-   mInBuffer.reset();
-   mOutBuffer.reset();
+   FloatBuffers inBuffer, outBuffer;
+   ArrayOf<float *> inBufPos, outBufPos;
 
    ChannelName map[3];
 
@@ -1389,36 +1382,36 @@ bool Effect::ProcessPass()
       {
          // Always create the number of input buffers the client expects even if we don't have
          // the same number of channels.
-         mInBufPos.reinit( mNumAudioIn );
-         mInBuffer.reinit( mNumAudioIn, mBufferSize );
+         inBufPos.reinit( mNumAudioIn );
+         inBuffer.reinit( mNumAudioIn, mBufferSize );
 
          // We won't be using more than the first 2 buffers, so clear the rest (if any)
          for (size_t i = 2; i < mNumAudioIn; i++)
          {
             for (size_t j = 0; j < mBufferSize; j++)
             {
-               mInBuffer[i][j] = 0.0;
+               inBuffer[i][j] = 0.0;
             }
          }
 
          // Always create the number of output buffers the client expects even if we don't have
          // the same number of channels.
-         mOutBufPos.reinit( mNumAudioOut );
          // Output buffers get an extra mBlockSize worth to give extra room if
          // the plugin adds latency
-         mOutBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
+         outBufPos.reinit( mNumAudioOut );
+         outBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
       }
 
       // (Re)Set the input buffer positions
       for (size_t i = 0; i < mNumAudioIn; i++)
       {
-         mInBufPos[i] = mInBuffer[i].get();
+         inBufPos[i] = inBuffer[i].get();
       }
 
       // (Re)Set the output buffer positions
       for (size_t i = 0; i < mNumAudioOut; i++)
       {
-         mOutBufPos[i] = mOutBuffer[i].get();
+         outBufPos[i] = outBuffer[i].get();
       }
 
       // Clear unused input buffers
@@ -1426,13 +1419,15 @@ bool Effect::ProcessPass()
       {
          for (size_t j = 0; j < mBufferSize; j++)
          {
-            mInBuffer[1][j] = 0.0;
+            inBuffer[1][j] = 0.0;
          }
          clear = true;
       }
 
       // Go process the track(s)
-      bGoodResult = ProcessTrack(count, map, left, right, leftStart, rightStart, len);
+      bGoodResult = ProcessTrack(
+         count, map, left, right, leftStart, rightStart, len,
+         inBuffer, outBuffer, inBufPos, outBufPos);
       if (!bGoodResult)
       {
          break;
@@ -1440,11 +1435,6 @@ bool Effect::ProcessPass()
 
       count++;
    }
-
-   mOutBuffer.reset();
-   mOutBufPos.reset();
-   mInBuffer.reset();
-   mInBufPos.reset();
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
    {
@@ -1460,7 +1450,11 @@ bool Effect::ProcessTrack(int count,
                           WaveTrack *right,
                           sampleCount leftStart,
                           sampleCount rightStart,
-                          sampleCount len)
+                          sampleCount len,
+                          FloatBuffers &inBuffer,
+                          FloatBuffers &outBuffer,
+                          ArrayOf< float * > &inBufPos,
+                          ArrayOf< float *> &outBufPos)
 {
    bool rc = true;
 
@@ -1469,6 +1463,16 @@ bool Effect::ProcessTrack(int count,
    {
       return false;
    }
+
+   { // Start scope for cleanup
+   auto cleanup = finally( [&] {
+      // Allow the plugin to cleanup
+      if (!ProcessFinalize())
+      {
+         // In case of non-exceptional flow of control, set rc
+         rc = false;
+      }
+   } );
 
    // For each input block of samples, we pass it to the effect along with a
    // variable output location.  This output location is simply a pointer into a
@@ -1539,16 +1543,16 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) mInBuffer[0].get(), floatSample, inLeftPos, inputBufferCnt);
+            left->Get((samplePtr) inBuffer[0].get(), floatSample, inLeftPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) mInBuffer[1].get(), floatSample, inRightPos, inputBufferCnt);
+               right->Get((samplePtr) inBuffer[1].get(), floatSample, inRightPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
             for (size_t i = 0; i < mNumChannels; i++)
             {
-               mInBufPos[i] = mInBuffer[i].get();
+               inBufPos[i] = inBuffer[i].get();
             }
          }
 
@@ -1568,7 +1572,7 @@ bool Effect::ProcessTrack(int count,
             {
                for (decltype(cnt) j = 0 ; j < cnt; j++)
                {
-                  mInBufPos[i][j + curBlockSize] = 0.0;
+                  inBufPos[i][j + curBlockSize] = 0.0;
                }
             }
 
@@ -1595,12 +1599,12 @@ bool Effect::ProcessTrack(int count,
             // Reset the input buffer positions
             for (size_t i = 0; i < mNumChannels; i++)
             {
-               mInBufPos[i] = mInBuffer[i].get();
+               inBufPos[i] = inBuffer[i].get();
 
                // And clear
                for (size_t j = 0; j < mBlockSize; j++)
                {
-                  mInBuffer[i][j] = 0.0;
+                  inBuffer[i][j] = 0.0;
                }
             }
             cleared = true;
@@ -1611,7 +1615,7 @@ bool Effect::ProcessTrack(int count,
       decltype(curBlockSize) processed;
       try
       {
-         processed = ProcessBlock(mInBufPos.get(), mOutBufPos.get(), curBlockSize);
+         processed = ProcessBlock(inBufPos.get(), outBufPos.get(), curBlockSize);
       }
       catch( const AudacityException &e )
       {
@@ -1635,7 +1639,7 @@ bool Effect::ProcessTrack(int count,
       {
          for (size_t i = 0; i < mNumChannels; i++)
          {
-            mInBufPos[i] += curBlockSize;
+            inBufPos[i] += curBlockSize;
          }
          inputRemaining -= curBlockSize;
          inputBufferCnt -= curBlockSize;
@@ -1672,7 +1676,7 @@ bool Effect::ProcessTrack(int count,
             curBlockSize -= delay;
             for (size_t i = 0; i < chans; i++)
             {
-               memmove(mOutBufPos[i], mOutBufPos[i] + delay, sizeof(float) * curBlockSize);
+               memmove(outBufPos[i], outBufPos[i] + delay, sizeof(float) * curBlockSize);
             }
             curDelay = 0;
          }
@@ -1687,7 +1691,7 @@ bool Effect::ProcessTrack(int count,
          // Bump to next output buffer position
          for (size_t i = 0; i < chans; i++)
          {
-            mOutBufPos[i] += curBlockSize;
+            outBufPos[i] += curBlockSize;
          }
       }
       // Output buffers have filled
@@ -1696,32 +1700,32 @@ bool Effect::ProcessTrack(int count,
          if (isProcessor)
          {
             // Write them out
-            left->Set((samplePtr) mOutBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
+            left->Set((samplePtr) outBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
             if (right)
             {
                if (chans >= 2)
                {
-                  right->Set((samplePtr) mOutBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
                }
                else
                {
-                  right->Set((samplePtr) mOutBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
                }
             }
          }
          else if (isGenerator)
          {
-            genLeft->Append((samplePtr) mOutBuffer[0].get(), floatSample, outputBufferCnt);
+            genLeft->Append((samplePtr) outBuffer[0].get(), floatSample, outputBufferCnt);
             if (genRight)
             {
-               genRight->Append((samplePtr) mOutBuffer[1].get(), floatSample, outputBufferCnt);
+               genRight->Append((samplePtr) outBuffer[1].get(), floatSample, outputBufferCnt);
             }
          }
 
          // Reset the output buffer positions
          for (size_t i = 0; i < chans; i++)
          {
-            mOutBufPos[i] = mOutBuffer[i].get();
+            outBufPos[i] = outBuffer[i].get();
          }
 
          // Bump to the next track position
@@ -1753,34 +1757,34 @@ bool Effect::ProcessTrack(int count,
    }
 
    // Put any remaining output
-   if (outputBufferCnt)
+   if (rc && outputBufferCnt)
    {
       if (isProcessor)
       {
-         left->Set((samplePtr) mOutBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
+         left->Set((samplePtr) outBuffer[0].get(), floatSample, outLeftPos, outputBufferCnt);
          if (right)
          {
             if (chans >= 2)
             {
-               right->Set((samplePtr) mOutBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[1].get(), floatSample, outRightPos, outputBufferCnt);
             }
             else
             {
-               right->Set((samplePtr) mOutBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[0].get(), floatSample, outRightPos, outputBufferCnt);
             }
          }
       }
       else if (isGenerator)
       {
-         genLeft->Append((samplePtr) mOutBuffer[0].get(), floatSample, outputBufferCnt);
+         genLeft->Append((samplePtr) outBuffer[0].get(), floatSample, outputBufferCnt);
          if (genRight)
          {
-            genRight->Append((samplePtr) mOutBuffer[1].get(), floatSample, outputBufferCnt);
+            genRight->Append((samplePtr) outBuffer[1].get(), floatSample, outputBufferCnt);
          }
       }
    }
 
-   if (isGenerator)
+   if (rc && isGenerator)
    {
       AudacityProject *p = GetActiveProject();
 
@@ -1794,7 +1798,7 @@ bool Effect::ProcessTrack(int count,
       // The purpose was to remap split lines inside the selected region when
       // a generator replaces it with sound of different duration.  But
       // the "correct" version might have the effect of mapping some splits too
-      // far left, to before the seletion.
+      // far left, to before the selection.
       // In practice the wrong version probably did nothing most of the time,
       // because the cutoff time for the step time warper was 44100 times too
       // far from mT0.
@@ -1813,12 +1817,7 @@ bool Effect::ProcessTrack(int count,
       }
    }
 
-   // Allow the plugin to cleanup
-   if (!ProcessFinalize())
-   {
-      return false;
-   }
-
+   } // End scope for cleanup
    return rc;
 }
 
@@ -1969,8 +1968,7 @@ void Effect::GetSamples(
       t1 = t0 + mDuration;
       if (mT0 == mT1) {
          // Not really part of the calculation, but convenient to put here
-         bool bResult = track->InsertSilence(t0, t1);
-         wxASSERT(bResult); // TO DO: Actually handle this.
+         track->InsertSilence(t0, t1);
       }
    }
 #endif
@@ -2125,19 +2123,25 @@ auto Effect::ModifyAnalysisTrack
 // Else clear and DELETE mOutputTracks copies.
 void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 {
-   wxASSERT(mOutputTracks); // Make sure we at least did the CopyInputTracks().
-
    if (!bGoodResult) {
+      // Free resources, unless already freed.
+
       // Processing failed or was cancelled so throw away the processed tracks.
-      mOutputTracks->Clear();
+      if ( mOutputTracks )
+         mOutputTracks->Clear();
 
       // Reset map
       mIMap.clear();
       mOMap.clear();
 
+      mOutputTracksType = Track::None;
+
       //TODO:undo the non-gui ODTask transfer
       return;
    }
+
+   // Assume resources need to be freed.
+   wxASSERT(mOutputTracks); // Make sure we at least did the CopyInputTracks().
 
    auto iterOut = mOutputTracks->begin(), iterEnd = mOutputTracks->end();
 
@@ -2465,142 +2469,144 @@ void Effect::Preview(bool dryOnly)
       return;
 
    bool success = true;
-   double oldT0 = mT0;
-   double oldT1 = mT1;
+   auto vr0 = valueRestorer( mT0 );
+   auto vr1 = valueRestorer( mT1 );
    // Most effects should stop at t1.
    if (!mPreviewFullSelection)
       mT1 = t1;
 
-   {
-      // Save the original track list
-      TrackList *saveTracks = mTracks;
-      auto cleanup = finally( [&] { mTracks = saveTracks; } );
+   // Save the original track list
+   TrackList *saveTracks = mTracks;
 
-      // Build NEW tracklist from rendering tracks
-      auto uTracks = std::make_unique<TrackList>();
-      mTracks = uTracks.get();
+   auto cleanup = finally( [&] {
+      mTracks = saveTracks;
 
-      // Linear Effect preview optimised by pre-mixing to one track.
-      // Generators need to generate per track.
-      if (mIsLinearEffect && !isGenerator) {
-         WaveTrack::Holder mixLeft, mixRight;
-         MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
-         if (!mixLeft)
-            return;
-
-         mixLeft->Offset(-mixLeft->GetStartTime());
-         mixLeft->InsertSilence(0.0, mT0);
-         mixLeft->SetSelected(true);
-         mixLeft->SetDisplay(WaveTrack::NoDisplay);
-         mTracks->Add(std::move(mixLeft));
-         if (mixRight) {
-            mixRight->Offset(-mixRight->GetStartTime());
-            mixRight->InsertSilence(0.0, mT0);
-            mixRight->SetSelected(true);
-            mTracks->Add(std::move(mixRight));
-         }
-      }
-      else {
-         TrackListOfKindIterator iter(Track::Wave, saveTracks);
-         WaveTrack *src = (WaveTrack *) iter.First();
-         while (src)
-         {
-            if (src->GetSelected() || mPreviewWithNotSelected) {
-               auto dest = src->Copy(mT0, t1);
-               dest->InsertSilence(0.0, mT0);
-               dest->SetSelected(src->GetSelected());
-               static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
-               mTracks->Add(std::move(dest));
-            }
-            src = (WaveTrack *) iter.Next();
-         }
-      }
-
-
-      // Update track/group counts
-      CountWaveTracks();
-
-      // Apply effect
+      // Effect is already inited; we will call Process, End, and then Init
+      // again, so the state is exactly the way it was before Preview
+      // was called.
       if (!dryOnly) {
-         ProgressDialog progress(GetName(),
-                                 _("Preparing preview"),
-                                 pdlgHideCancelButton); // Have only "Stop" button.
-         SetProgress sp(mProgress, &progress);
-         mIsPreview = true;
-         success = Process();
-         mIsPreview = false;
+         End();
+         GuardedCall< void >( [&]{ Init(); } );
       }
 
-      if (success)
-      {
-         WaveTrackConstArray playbackTracks;
-         WaveTrackArray recordingTracks;
-
-         SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-         WaveTrack *src = (WaveTrack *) iter.First();
-         while (src) {
-            playbackTracks.push_back(src);
-            src = (WaveTrack *) iter.Next();
-         }
-         // Some effects (Paulstretch) may need to generate more
-         // than previewLen, so take the min.
-         t1 = std::min(mT0 + previewLen, mT1);
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-         NoteTrackArray empty;
-#endif
-         // Start audio playing
-         AudioIOStartStreamOptions options { rate };
-         int token =
-         gAudioIO->StartStream(playbackTracks, recordingTracks,
-#ifdef EXPERIMENTAL_MIDI_OUT
-                               empty,
-#endif
-                               mT0, t1, options);
-
-         if (token) {
-            auto previewing = ProgressResult::Success;
-            // The progress dialog must be deleted before stopping the stream
-            // to allow events to flow to the app during StopStream processing.
-            // The progress dialog blocks these events.
-            {
-               ProgressDialog progress
-               (GetName(), _("Previewing"), pdlgHideCancelButton);
-
-               while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
-                  ::wxMilliSleep(100);
-                  previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
-               }
-            }
-
-            gAudioIO->StopStream();
-
-            while (gAudioIO->IsBusy()) {
-               ::wxMilliSleep(100);
-            }
-         }
-         else {
-            wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
-                         _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
-         }
-      }
-      
       if (FocusDialog) {
          FocusDialog->SetFocus();
       }
-      
-      mOutputTracks.reset();
+
+      // In case of failed effect, be sure to free memory.
+      ReplaceProcessedTracks( false );
+   } );
+
+   // Build NEW tracklist from rendering tracks
+   auto uTracks = std::make_unique<TrackList>();
+   mTracks = uTracks.get();
+
+   // Linear Effect preview optimised by pre-mixing to one track.
+   // Generators need to generate per track.
+   if (mIsLinearEffect && !isGenerator) {
+      WaveTrack::Holder mixLeft, mixRight;
+      MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
+      if (!mixLeft)
+         return;
+
+      mixLeft->Offset(-mixLeft->GetStartTime());
+      mixLeft->InsertSilence(0.0, mT0);
+      mixLeft->SetSelected(true);
+      mixLeft->SetDisplay(WaveTrack::NoDisplay);
+      mTracks->Add(std::move(mixLeft));
+      if (mixRight) {
+         mixRight->Offset(-mixRight->GetStartTime());
+         mixRight->InsertSilence(0.0, mT0);
+         mixRight->SetSelected(true);
+         mTracks->Add(std::move(mixRight));
+      }
+   }
+   else {
+      TrackListOfKindIterator iter(Track::Wave, saveTracks);
+      WaveTrack *src = (WaveTrack *) iter.First();
+      while (src)
+      {
+         if (src->GetSelected() || mPreviewWithNotSelected) {
+            auto dest = src->Copy(mT0, t1);
+            dest->InsertSilence(0.0, mT0);
+            dest->SetSelected(src->GetSelected());
+            static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
+            mTracks->Add(std::move(dest));
+         }
+         src = (WaveTrack *) iter.Next();
+      }
    }
 
-   mT0 = oldT0;
-   mT1 = oldT1;
 
-   // Effect is already inited; we call Process, End, and then Init
-   // again, so the state is exactly the way it was before Preview
-   // was called.
+   // Update track/group counts
+   CountWaveTracks();
+
+   // Apply effect
    if (!dryOnly) {
-      End();
-      Init();
+      ProgressDialog progress{
+         GetName(),
+         _("Preparing preview"),
+         pdlgHideCancelButton
+      }; // Have only "Stop" button.
+      auto vr = valueRestorer( mProgress, &progress );
+
+      auto vr2 = valueRestorer( mIsPreview, true );
+
+      success = Process();
+   }
+
+   if (success)
+   {
+      WaveTrackConstArray playbackTracks;
+      WaveTrackArray recordingTracks;
+
+      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+      WaveTrack *src = (WaveTrack *) iter.First();
+      while (src) {
+         playbackTracks.push_back(src);
+         src = (WaveTrack *) iter.Next();
+      }
+      // Some effects (Paulstretch) may need to generate more
+      // than previewLen, so take the min.
+      t1 = std::min(mT0 + previewLen, mT1);
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+      NoteTrackArray empty;
+#endif
+      // Start audio playing
+      AudioIOStartStreamOptions options { rate };
+      int token =
+         gAudioIO->StartStream(playbackTracks, recordingTracks,
+#ifdef EXPERIMENTAL_MIDI_OUT
+                            empty,
+#endif
+                            mT0, t1, options);
+
+      if (token) {
+         auto previewing = ProgressResult::Success;
+         // The progress dialog must be deleted before stopping the stream
+         // to allow events to flow to the app during StopStream processing.
+         // The progress dialog blocks these events.
+         {
+            ProgressDialog progress
+            (GetName(), _("Previewing"), pdlgHideCancelButton);
+
+            while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
+               ::wxMilliSleep(100);
+               previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+            }
+         }
+
+         gAudioIO->StopStream();
+
+         while (gAudioIO->IsBusy()) {
+            ::wxMilliSleep(100);
+         }
+      }
+      else {
+         wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
+                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
+      }
    }
 }
 
@@ -3167,10 +3173,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // Progress dialog no longer yields, so this "shouldn't" be necessary (yet to be proven
    // for sure), but it is a nice visual cue that something is going on.
    mApplyBtn->Disable();
+   auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
    mEffect->Apply();
-
-   mApplyBtn->Enable();
 
    return;
 }

@@ -23,6 +23,6 @@ wxString NotYetAvailableException::ErrorMessage() const
 {
    return wxString::Format(
       _("This operation cannot be done until importation of %s completes."),
-      mFileName.GetFullName()
+      fileName.GetFullName()
    );
 }

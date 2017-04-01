@@ -354,13 +354,18 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
    // Kick off the command
    ExportCLProcess process(&output);
-   rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
 
+   {
 #if defined(__WXMSW__)
-   if (!opath.IsEmpty()) {
-      wxSetEnv(wxT("PATH"),opath.c_str());
-   }
+      auto cleanup = finally( [&] {
+         if (!opath.IsEmpty()) {
+            wxSetEnv(wxT("PATH"),opath.c_str());
+         }
+      } );
 #endif
+
+      rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
+   }
 
    if (!rc) {
       wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
@@ -435,6 +440,11 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    auto updateResult = ProgressResult::Success;
 
    {
+      auto closeIt = finally ( [&] {
+         // Should make the process die, before propagating any exception
+         process.CloseOutput();
+      } );
+
       // Prepare the progress display
       ProgressDialog progress(_("Export"),
          selectionOnly ?
@@ -475,6 +485,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
          while (bytes > 0) {
             os->Write(mixed, bytes);
             if (!os->IsOk()) {
+               updateResult = ProgressResult::Cancelled;
                break;
             }
             bytes -= os->LastWrite();
@@ -486,9 +497,6 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       }
       // Done with the progress display
    }
-
-   // Should make the process die
-   process.CloseOutput();
 
    // Wait for process to terminate
    while (process.IsActive()) {

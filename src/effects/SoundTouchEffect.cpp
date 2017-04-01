@@ -159,12 +159,15 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
    if (bGoodResult)
       ReplaceProcessedTracks(bGoodResult);
 
-   mSoundTouch.reset();
-
 //   mT0 = mCurT0;
 //   mT1 = mCurT0 + m_maxNewLength; // Update selection.
 
    return bGoodResult;
+}
+
+void EffectSoundTouch::End()
+{
+   mSoundTouch.reset();
 }
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
@@ -345,7 +348,7 @@ bool EffectSoundTouch::ProcessStereo(
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereoResults(const unsigned int outputCount,
+bool EffectSoundTouch::ProcessStereoResults(const size_t outputCount,
                                             WaveTrack* outputLeftTrack,
                                             WaveTrack* outputRightTrack)
 {

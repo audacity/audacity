@@ -331,7 +331,7 @@ private:
 
    ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
-   void AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
+   bool AddID3Chunk(wxString fName, const Tags *tags, int sf_format);
 
 };
 
@@ -516,6 +516,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                              _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
                                              formatStr.c_str(),
                                              wxString::FromAscii(buffer2).c_str()));
+               updateResult = ProgressResult::Cancelled;
                break;
             }
             
@@ -534,7 +535,8 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
    if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
        ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV))
-      AddID3Chunk(fName, metadata, sf_format);
+      if (!AddID3Chunk(fName, metadata, sf_format) )
+         return ProgressResult::Cancelled;
 
    return updateResult;
 }
@@ -699,7 +701,7 @@ struct id3_tag_deleter {
 };
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
-void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
+bool ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
 {
 #ifdef USE_LIBID3TAG
    id3_tag_holder tp { id3_tag_new() };
@@ -784,12 +786,12 @@ void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
 
    len = id3_tag_render(tp.get(), 0);
    if (len == 0)
-      return;
+      return true;
 
    if ((len % 2) != 0) len++;   // Length must be even.
    ArrayOf<id3_byte_t> buffer { len, true };
    if (buffer == NULL)
-      return;
+      return false;
 
    // Zero all locations, for ending odd UTF16 content
    // correctly, i.e., two '\0's at the end.
@@ -797,33 +799,44 @@ void ExportPCM::AddID3Chunk(wxString fName, const Tags *tags, int sf_format)
    id3_tag_render(tp.get(), buffer.get());
 
    wxFFile f(fName, wxT("r+b"));
-   // FIXME: TRAP_ERR wxFFILE ops in Export PCM ID3 could fail.
    if (f.IsOpened()) {
       wxUint32 sz;
 
       sz = (wxUint32) len;
-      f.SeekEnd(0);
+      if (!f.SeekEnd(0))
+         return false;
       if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV)
-         f.Write("id3 ", 4);	// Must be lower case for foobar2000.
+         {
+            if (4 != f.Write("id3 ", 4))// Must be lower case for foobar2000.
+               return false ;
+         }
       else {
-         f.Write("ID3 ", 4);
+         if (4 != f.Write("ID3 ", 4))
+            return false;
          sz = wxUINT32_SWAP_ON_LE(sz);
       }
-      f.Write(&sz, 4);
+      if (4 != f.Write(&sz, 4))
+         return false;
 
-      f.Write(buffer.get(), len);
+      if (len != f.Write(buffer.get(), len))
+         return false;
 
       sz = (wxUint32) f.Tell() - 8;
       if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)
          sz = wxUINT32_SWAP_ON_LE(sz);
 
-      f.Seek(4);
-      f.Write(&sz, 4);
+      if (!f.Seek(4))
+         return false;
+      if (4 != f.Write(&sz, 4))
+         return false;
 
-      f.Close();
+      if (!f.Close())
+         return false;
    }
+   else
+      return false;
 #endif
-   return;
+   return true;
 }
 
 wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)

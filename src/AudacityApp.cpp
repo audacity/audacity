@@ -831,13 +831,12 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
          // there are no tracks, but there's an Undo history, etc, then
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
-         if (!proj || proj->GetDirty() || !proj->GetIsEmpty()) {
-            proj = CreateNewAudacityProject();
-         }
+         if (proj && (proj->GetDirty() || !proj->GetIsEmpty()))
+            proj = nullptr;
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
          // and it's okay to open a NEW project inside this window.
-         proj->OpenFile(fullPathStr);
+         AudacityProject::OpenProject( proj, fullPathStr );
       }
       else {
          // File doesn't exist - remove file from history

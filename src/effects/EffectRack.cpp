@@ -17,6 +17,8 @@
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include "../MemoryX.h"
+#include "../UndoManager.h"
+
 #include <wx/access.h>
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
@@ -289,17 +291,36 @@ void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
    AudacityProject *project = GetActiveProject();
-   
+
+   bool success = false;
+   auto state = project->GetUndoManager()->GetCurrentState();
+   auto cleanup = finally( [&] {
+      if(!success)
+         project->SetStateTo(state);
+   } );
+
    for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
    {
       if (mPowerState[i])
       {
-         project->OnEffect(mEffects[i]->GetID(),
-                           AudacityProject::OnEffectFlags::kConfigured);
+         if (!project->OnEffect(mEffects[i]->GetID(),
+                           AudacityProject::OnEffectFlags::kConfigured))
+            // If any effect fails (or throws), then stop.
+            return;
+      }
+   }
 
+   success = true;
+
+   // Only after all succeed, do the following.
+   for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
+   {
+      if (mPowerState[i])
+      {
          mPowerState[i] = false;
 
-         wxBitmapButton *btn = static_cast<wxBitmapButton *>(FindWindowById(ID_POWER + i));
+         wxBitmapButton *btn =
+            static_cast<wxBitmapButton *>(FindWindowById(ID_POWER + i));
          btn->SetBitmapLabel(mPowerRaised);
          btn->SetBitmapSelected(mPowerRaised);
       }

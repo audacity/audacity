@@ -247,6 +247,10 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    int id = event.GetId();
    // FIXME: Some "SelectAllIfNone()" do not work as expected
    // due to bugs elsewhere (see: AudacityProject::UpdateMenus() )
+
+   // Be sure the pop-up happens even if there are exceptions
+   auto cleanup = finally( [&] { SetButton(false, mButtons[id]); } );
+
    switch (id) {
       case ETBCutID:
          p->SelectAllIfNone();
@@ -303,8 +307,6 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          break;
 #endif
    }
-
-   SetButton(false, mButtons[id]);
 }
 
 void EditToolBar::EnableDisableButtons()

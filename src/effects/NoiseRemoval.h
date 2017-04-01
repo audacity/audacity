@@ -61,6 +61,7 @@ public:
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
+   void End() override;
 
 private:
 
@@ -98,7 +99,6 @@ private:
    void RemoveNoise();
    void RotateHistoryWindows();
    void FinishTrack();
-   void Cleanup();
 
    // Variables that only exist during processing
    std::unique_ptr<WaveTrack> mOutputTrack;

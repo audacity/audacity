@@ -39,6 +39,10 @@ class EffectSoundTouch /* not final */ : public Effect
 {
 public:
 
+   // Effect implementation
+
+   void End() override;
+
    // EffectSoundTouch implementation
 
 #ifdef USE_MIDI
@@ -66,7 +70,7 @@ private:
    bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack,
                      sampleCount start, sampleCount end,
                       const TimeWarper &warper);
-   bool ProcessStereoResults(const unsigned int outputCount,
+   bool ProcessStereoResults(const size_t outputCount,
                               WaveTrack* outputLeftTrack,
                               WaveTrack* outputRightTrack);
 

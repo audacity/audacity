@@ -156,12 +156,12 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    Track::Holder Cut  (double t0, double t1) override;
    Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t, const Track * src) override;
+   void Clear(double t0, double t1) override;
+   void Paste(double t, const Track * src) override;
    bool Repeat(double t0, double t1, int n);
 
-   bool Silence(double t0, double t1) override;
-   bool InsertSilence(double t, double len) override;
+   void Silence(double t0, double t1) override;
+   void InsertSilence(double t, double len) override;
    int OverGlyph(int x, int y);
    static wxBitmap & GetGlyph( int i);
 

@@ -1685,7 +1685,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 #else
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
@@ -1809,6 +1809,9 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    long bytes;
 
    size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
+   if (bufferSize == 0)
+      return ProgressResult::Cancelled;
+
    ArrayOf<unsigned char> buffer{ bufferSize };
    wxASSERT(buffer);
 
@@ -1873,6 +1876,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
             wxString msg;
             msg.Printf(_("Error %ld returned from MP3 encoder"), bytes);
             wxMessageBox(msg);
+            updateResult = ProgressResult::Cancelled;
             break;
          }
 
@@ -1882,27 +1886,28 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       }
    }
 
-   bytes = exporter.FinishStream(buffer.get());
+   if ( updateResult != ProgressResult::Cancelled ) {
+      bytes = exporter.FinishStream(buffer.get());
 
-   if (bytes) {
-      outFile.Write(buffer.get(), bytes);
+      if (bytes > 0) {
+         outFile.Write(buffer.get(), bytes);
+      }
+
+      // Write ID3 tag if it was supposed to be at the end of the file
+      if (id3len > 0 && endOfFile) {
+         outFile.Write(id3buffer.get(), id3len);
+      }
+
+      // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
+      // versions before 3.98, we must do this after the MP3 file has been
+      // closed.
+      //
+      // Also, if beWriteInfoTag() is used, mGF will no longer be valid after
+      // this call, so do not use it.
+      exporter.PutInfoTag(outFile, pos);
+
+      outFile.Close();
    }
-
-   // Write ID3 tag if it was supposed to be at the end of the file
-   if (id3len && endOfFile) {
-      outFile.Write(id3buffer.get(), id3len);
-   }
-
-   // Always write the info (Xing/Lame) tag.  Until we stop supporting Lame
-   // versions before 3.98, we must do this after the MP3 file has been
-   // closed.
-   //
-   // Also, if beWriteInfoTag() is used, mGF will no longer be valid after
-   // this call, so do not use it.
-   exporter.PutInfoTag(outFile, pos);
-
-   // Close the file
-   outFile.Close();
 
    return updateResult;
 }

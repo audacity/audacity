@@ -327,7 +327,8 @@ void XMLFileWriter::Commit()
          ThrowException( mBackupName, mCaption );
    }
    else {
-      if ( ! wxRemoveFile( mOutputPath ) )
+      if ( wxFileName::FileExists( mOutputPath ) &&
+           ! wxRemoveFile( mOutputPath ) )
          ThrowException( mOutputPath, mCaption );
    }
 

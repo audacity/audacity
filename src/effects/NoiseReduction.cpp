@@ -1333,9 +1333,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
       double tLen = outputTrack->LongSamplesToTime(len);
       // Filtering effects always end up with more data than they started with.  Delete this 'tail'.
       outputTrack->HandleClear(tLen, outputTrack->GetEndTime(), false, false);
-      bool bResult = track->ClearAndPaste(t0, t0 + tLen, &*outputTrack, true, false);
-      wxASSERT(bResult); // TO DO: Actually handle this.
-      wxUnusedVar(bResult);
+      track->ClearAndPaste(t0, t0 + tLen, &*outputTrack, true, false);
    }
 
    return bLoopSuccess;
@@ -1656,14 +1654,11 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
       return;
 
    // Save & restore parameters around Preview, because we didn't do OK.
-   EffectNoiseReduction::Settings oldSettings(*m_pSettings);
-
+   auto cleanup = valueRestorer( *m_pSettings );
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
    m_pEffect->Preview();
-
-   *m_pSettings = oldSettings;
 }
 
 void EffectNoiseReduction::Dialog::OnReduceNoise( wxCommandEvent & WXUNUSED(event))

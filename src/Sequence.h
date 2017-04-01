@@ -86,7 +86,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    sampleCount GetNumSamples() const { return mNumSamples; }
 
    bool Get(samplePtr buffer, sampleFormat format,
-            sampleCount start, size_t len) const;
+            sampleCount start, size_t len, bool mayThrow) const;
 
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
@@ -101,7 +101,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // bl is negative wherever data are not yet available.
    // Return true if successful.
    bool GetWaveDisplay(float *min, float *max, float *rms, int* bl,
-                       size_t len, const sampleCount *where);
+                       size_t len, const sampleCount *where) const;
 
    std::unique_ptr<Sequence> Copy(sampleCount s0, sampleCount s1) const;
    bool Paste(sampleCount s0, const Sequence *src);
@@ -169,10 +169,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Retrieving summary info
    //
 
-   bool GetMinMax(sampleCount start, sampleCount len,
-                  float * min, float * max) const;
-   bool GetRMS(sampleCount start, sampleCount len,
-                  float * outRMS) const;
+   std::pair<float, float> GetMinMax(
+      sampleCount start, sampleCount len, bool mayThrow) const;
+   float GetRMS(sampleCount start, sampleCount len, bool mayThrow) const;
 
    //
    // Getting block size and alignment information
@@ -246,20 +245,23 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
-   bool AppendBlock(const SeqBlock &b);
+   static bool AppendBlock
+      (DirManager &dirManager,
+       BlockArray &blocks, sampleCount &numSamples, const SeqBlock &b);
 
-   bool Read(samplePtr buffer, sampleFormat format,
+   static bool Read(samplePtr buffer, sampleFormat format,
              const SeqBlock &b,
-             size_t blockRelativeStart, size_t len) const;
+             size_t blockRelativeStart, size_t len, bool mayThrow);
 
-   bool CopyWrite(SampleBuffer &scratch,
-                  samplePtr buffer, SeqBlock &b,
-                  size_t blockRelativeStart, size_t len);
-
-   void Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
+   // Accumulate NEW block files onto the end of a block array.
+   // Does not change this sequence.  The intent is to use
+   // CommitChangesIfConsistent later.
+   static void Blockify
+      (DirManager &dirManager, size_t maxSamples, sampleFormat format,
+       BlockArray &list, sampleCount start, samplePtr buffer, size_t len);
 
    bool Get(int b, samplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len) const;
+      sampleCount start, size_t len, bool mayThrow) const;
 
  public:
 

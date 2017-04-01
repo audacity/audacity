@@ -242,7 +242,20 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
          const wxString &extrafilter = wxEmptyString);
    static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
+
+   // Return the given project if that is not NULL, else create a project.
+   // Then open the given project path.
+   // But if an exception escapes this function, create no new project.
+   static AudacityProject *OpenProject(
+      AudacityProject *pProject,
+      const wxString &fileNameArg, bool addtohistory = true);
+
    void OpenFile(const wxString &fileName, bool addtohistory = true);
+
+private:
+   void EnqueueODTasks();
+
+public:
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
@@ -369,7 +382,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void SkipEnd(bool shift);
 
 
-   typedef bool (WaveTrack::* EditFunction)(double, double);
+   typedef void (WaveTrack::* EditFunction)(double, double);
    typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
 
    void EditByLabel(EditFunction action, bool bSyncLockedTracks);
@@ -511,7 +524,8 @@ public:
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
+   void WriteXML(
+      XMLWriter &xmlFile, bool bWantSaveCompressed) /* not override */;
 
    void WriteXMLHeader(XMLWriter &xmlFile) const;
 
@@ -630,8 +644,8 @@ private:
    MixerBoard* mMixerBoard{};
    MixerBoardFrame* mMixerBoardFrame{};
 
-   FreqWindow *mFreqWindow{};
-   ContrastDialog *mContrastDialog{};
+   Destroy_ptr<FreqWindow> mFreqWindow;
+   Destroy_ptr<ContrastDialog> mContrastDialog;
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog{};
@@ -702,7 +716,6 @@ private:
    // Dependencies have been imported and a warning should be shown on save
    bool mImportedDependencies{ false };
 
-   bool mWantSaveCompressed{ false };
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    // Last effect applied to this project

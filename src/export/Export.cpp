@@ -246,6 +246,8 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inpu
 {
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
+                  // Throw, to stop exporting, if read fails:
+                  true,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
@@ -423,7 +425,9 @@ bool Exporter::ExamineTracks()
 
    while (tr) {
       if (tr->GetKind() == Track::Wave) {
-         if ( (tr->GetSelected() || !mSelectedOnly) && !tr->GetMute() ) {  // don't count muted tracks
+         auto wt = static_cast<const WaveTrack *>(tr);
+         if ( (tr->GetSelected() || !mSelectedOnly) &&
+              !wt->GetMute() ) {  // don't count muted tracks
             mNumSelected++;
 
             if (tr->GetChannel() == Track::LeftChannel) {
@@ -827,7 +831,22 @@ bool Exporter::ExportTracks()
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   auto success = mPlugins[mFormat]->Export(mProject,
+   bool success = false;
+
+   auto cleanup = finally( [&] {
+      if (mActualName != mFilename) {
+         // Remove backup
+         if ( success )
+            ::wxRemoveFile(mFilename.GetFullPath());
+         else {
+            // Restore original, if needed
+            ::wxRemoveFile(mActualName.GetFullPath());
+            ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
+         }
+      }
+   } );
+
+   auto result = mPlugins[mFormat]->Export(mProject,
                                        mChannels,
                                        mActualName.GetFullPath(),
                                        mSelectedOnly,
@@ -837,19 +856,10 @@ bool Exporter::ExportTracks()
                                        NULL,
                                        mSubFormat);
 
-   if (mActualName != mFilename) {
-      // Remove backup
-      if (success == ProgressResult::Success || success == ProgressResult::Stopped) {
-         ::wxRemoveFile(mFilename.GetFullPath());
-      }
-      else {
-         // Restore original, if needed
-         ::wxRemoveFile(mActualName.GetFullPath());
-         ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
-      }
-   }
+   success =
+      result == ProgressResult::Success || result == ProgressResult::Stopped;
 
-   return (success == ProgressResult::Success || success == ProgressResult::Stopped);
+   return success;
 }
 
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
@@ -1247,7 +1257,9 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    for( const Track *t = iter.First(); t; t = iter.Next() )
    {
-      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) && !t->GetMute() )
+      auto wt = static_cast<const WaveTrack *>(t);
+      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) &&
+         !wt->GetMute() )
       {
          numTracks++;
          const wxString sTrackName = (t->GetName()).Left(20);

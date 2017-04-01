@@ -336,7 +336,8 @@ void TrackArtist::DrawTracks(TrackList * tracks,
 
    bool hasSolo = false;
    for (t = iter.First(); t; t = iter.Next()) {
-      if (t->GetSolo()) {
+      auto pt = dynamic_cast<const PlayableTrack *>(t);
+      if (pt && pt->GetSolo()) {
          hasSolo = true;
          break;
       }
@@ -457,7 +458,8 @@ void TrackArtist::DrawTrack(const Track * t,
          clip->ClearDisplayRect();
       }
 
-      bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
+      bool muted = (hasSolo || wt->GetMute()) &&
+         !wt->GetSolo();
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -493,7 +495,11 @@ void TrackArtist::DrawTrack(const Track * t,
    #ifdef USE_MIDI
    case Track::Note:
    {
-      bool muted = (hasSolo || t->GetMute()) && !t->GetSolo();
+      auto nt = static_cast<const NoteTrack *>(t);
+      bool muted = false;
+#ifdef EXPERIMENTAL_MIDI_OUT
+      muted = (hasSolo || nt->GetMute()) && !nt->GetSolo();
+#endif
       DrawNoteTrack((NoteTrack *)t, dc, rect, selectedRegion, zoomInfo, muted);
       break;
    }
@@ -1324,7 +1330,9 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
       return;
 
    Floats buffer{ size_t(slen) };
-   clip->GetSamples((samplePtr)buffer.get(), floatSample, s0, slen);
+   clip->GetSamples((samplePtr)buffer.get(), floatSample, s0, slen,
+                    // Suppress exceptions in this drawing operation:
+                    false);
 
    ArrayOf<int> xpos{ size_t(slen) };
    ArrayOf<int> ypos{ size_t(slen) };
@@ -2805,17 +2813,17 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
 
    Alg_seq_ptr seq = track->mSeq.get();
    if (!seq) {
-      assert(track->mSerializationBuffer);
+      wxASSERT(track->mSerializationBuffer);
       // JKC: Previously this indirected via seq->, a NULL pointer.
       // This was actually OK, since unserialize is a static function.
       // Alg_seq:: is clearer.
       std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(track->mSerializationBuffer.get(),
             track->mSerializationLength) };
-      assert(alg_track->get_type() == 's');
+      wxASSERT(alg_track->get_type() == 's');
       const_cast<NoteTrack*>(track)->mSeq.reset(seq = static_cast<Alg_seq*>(alg_track.release()));
       track->mSerializationBuffer.reset();
    }
-   assert(seq);
+   wxASSERT(seq);
    int visibleChannels = track->mVisibleChannels;
 
    if (!track->GetSelected())

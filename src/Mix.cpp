@@ -160,6 +160,8 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    }
 
    Mixer mixer(waveArray,
+      // Throw to abort mix-and-render if read fails:
+      true,
       Mixer::WarpOptions(tracks->GetTimeTrack()),
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
@@ -239,6 +241,7 @@ Mixer::WarpOptions::WarpOptions(double min, double max)
 }
 
 Mixer::Mixer(const WaveTrackConstArray &inputTracks,
+             bool mayThrow,
              const WarpOptions &warpOptions,
              double startTime, double stopTime,
              unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
@@ -252,8 +255,10 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    , mQueueMaxLen{ 65536 }
    , mSampleQueue{ mNumInputTracks, mQueueMaxLen }
 
-   , mNumChannels{ static_cast<size_t>(numOutChannels) }
+   , mNumChannels{ numOutChannels }
    , mGains{ mNumChannels }
+
+   , mMayThrow{ mayThrow }
 {
    mHighQuality = highQuality;
    mInputTrack.reinit(mNumInputTracks);
@@ -434,7 +439,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          // Nothing to do if past end of play interval
          if (getLen > 0) {
             if (backwards) {
-               auto results = cache.Get(floatSample, *pos - (getLen - 1), getLen);
+               auto results = cache.Get(floatSample, *pos - (getLen - 1), getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
@@ -446,7 +451,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos -= getLen;
             }
             else {
-               auto results = cache.Get(floatSample, *pos, getLen);
+               auto results = cache.Get(floatSample, *pos, getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
@@ -554,7 +559,7 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
    slen = std::min(slen, mMaxOut);
 
    if (backwards) {
-      auto results = cache.Get(floatSample, *pos - (slen - 1), slen);
+      auto results = cache.Get(floatSample, *pos - (slen - 1), slen, mMayThrow);
       if (results)
          memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
       else
@@ -567,7 +572,7 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
       *pos -= slen;
    }
    else {
-      auto results = cache.Get(floatSample, *pos, slen);
+      auto results = cache.Get(floatSample, *pos, slen, mMayThrow);
       if (results)
          memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
       else

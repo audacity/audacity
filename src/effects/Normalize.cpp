@@ -344,7 +344,10 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
          wxMilliSleep(100);
       }
 
-      track->GetMinMax(&min, &max, mCurT0, mCurT1);
+      // set mMin, mMax.  No progress bar here as it's fast.
+      auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
+      min = pair.first, max = pair.second;
+
    } else {
       min = -1.0, max = 1.0;   // sensible defaults?
    }

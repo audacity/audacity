@@ -224,7 +224,7 @@ private:
    sampleCount       mCurBufferStart[2];
    size_t            mCurBufferLen[2];
 
-   std::unique_ptr<WaveTrack> mOutputTrack[2];
+   WaveTrack        *mOutputTrack[2];
 
    wxArrayString     mCategories;
 

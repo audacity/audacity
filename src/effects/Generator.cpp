@@ -80,7 +80,7 @@ bool Generator::Process()
                tmp->Flush();
                StepTimeWarper warper{
                   mT0+GetDuration(), GetDuration()-(mT1-mT0) };
-               bGoodResult = track->ClearAndPaste(
+               track->ClearAndPaste(
                   p->GetSel0(), p->GetSel1(), &*tmp, true, false, &warper);
             }
 

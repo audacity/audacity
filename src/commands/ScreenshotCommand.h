@@ -49,6 +49,7 @@ private:
          bool bg = false);
    void CaptureToolbar(ToolManager *man, int type, const wxString &name);
    void CaptureDock(wxWindow *win, const wxString &fileName);
+   void CaptureMenus(wxMenuBar*pBar, const wxString &fileName);
 
 public:
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);

@@ -153,7 +153,7 @@ void LabelTrack::SetOffset(double dOffset)
       labelStruct.selectedRegion.move(dOffset);
 }
 
-bool LabelTrack::Clear(double b, double e)
+void LabelTrack::Clear(double b, double e)
 {
    // May DELETE labels, so use subscripts to iterate
    for (size_t i = 0; i < mLabels.size(); ++i) {
@@ -175,8 +175,6 @@ bool LabelTrack::Clear(double b, double e)
       else if (relation == LabelStruct::WITHIN_LABEL)
          labelStruct.selectedRegion.moveT1( - (e-b));
    }
-
-   return true;
 }
 
 #if 0
@@ -2339,10 +2337,8 @@ bool LabelTrack::Save(wxTextFile * out, bool overwrite)
 Track::Holder LabelTrack::Cut(double t0, double t1)
 {
    auto tmp = Copy(t0, t1);
-   if (!tmp)
-      return{};
-   if (!Clear(t0, t1))
-      return{};
+
+   Clear(t0, t1);
 
    return tmp;
 }
@@ -2353,8 +2349,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
    // SplitCut() == Copy() + SplitDelete()
 
    Track::Holder tmp = Copy(t0, t1);
-   if (!tmp)
-      return {};
+
    if (!SplitDelete(t0, t1))
       return {};
 
@@ -2417,6 +2412,7 @@ Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 bool LabelTrack::PasteOver(double t, const Track * src)
 {
    if (src->GetKind() != Track::Label)
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
       return false;
 
    int len = mLabels.size();
@@ -2440,17 +2436,18 @@ bool LabelTrack::PasteOver(double t, const Track * src)
    return true;
 }
 
-bool LabelTrack::Paste(double t, const Track *src)
+void LabelTrack::Paste(double t, const Track *src)
 {
    if (src->GetKind() != Track::Label)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    LabelTrack *lt = (LabelTrack *)src;
 
    double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
 
    ShiftLabelsOnInsert(shiftAmt, t);
-   return PasteOver(t, src);
+   PasteOver(t, src);
 }
 
 // This repeats the labels in a time interval a specified number of times.
@@ -2506,7 +2503,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
    return true;
 }
 
-bool LabelTrack::Silence(double t0, double t1)
+void LabelTrack::Silence(double t0, double t1)
 {
    int len = mLabels.size();
 
@@ -2550,11 +2547,9 @@ bool LabelTrack::Silence(double t0, double t1)
    }
 
    SortLabels();
-
-   return true;
 }
 
-bool LabelTrack::InsertSilence(double t, double len)
+void LabelTrack::InsertSilence(double t, double len)
 {
    for (auto &labelStruct: mLabels) {
       double t0 = labelStruct.getT0();
@@ -2566,8 +2561,6 @@ bool LabelTrack::InsertSilence(double t, double len)
          t1 += len;
       labelStruct.selectedRegion.setTimes(t0, t1);
    }
-
-   return true;
 }
 
 int LabelTrack::GetNumLabels() const

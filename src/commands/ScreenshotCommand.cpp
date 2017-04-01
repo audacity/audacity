@@ -266,6 +266,65 @@ void ScreenshotCommand::CaptureDock(wxWindow *win, const wxString &fileName)
    Capture(fileName, win, x, y, width, height);
 }
 
+void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
+   Id;//compiler food.
+   if( !pMenu )
+      return;
+
+   wxMenuItemList list = pMenu->GetMenuItems();
+   size_t lcnt = list.GetCount();
+   wxMenuItem * item;
+   wxString Label;
+   wxString Accel;
+
+   for (size_t lndx = 0; lndx < lcnt; lndx++) {
+      item = list.Item(lndx)->GetData();
+      Label = item->GetItemLabelText();
+      Accel = item->GetItemLabel();
+      if( Accel.Contains("\t") )
+         Accel = Accel.AfterLast('\t');
+      else
+         Accel = "";
+      if( item->IsSeparator() )
+         Label = "----";
+      wxLogDebug("%2i,%s,%s", depth, Label,Accel ); 
+      if (item->IsSubMenu()) {
+         pMenu = item->GetSubMenu();
+         ExploreMenu( pMenu, item->GetId(), depth+1 );
+      }
+   }
+}
+
+void ScreenshotCommand::CaptureMenus(wxMenuBar*pBar, const wxString &fileName)
+{
+   fileName;//compiler food.
+   if(!pBar ){
+      wxLogDebug("No menus");
+      return;
+   }
+
+   size_t cnt = pBar->GetMenuCount();
+   size_t i;
+   wxString Label;
+   for(i=0;i<cnt;i++)
+   {
+      Label = pBar->GetMenuLabelText( i );
+      wxLogDebug( "MenuBar: %s", Label );
+      ExploreMenu( pBar->GetMenu( i ), pBar->GetId(), 0 );
+   }
+
+#if 0
+   int x = 0, y = 0;
+   int width, height;
+
+   win->ClientToScreen(&x, &y);
+   win->GetParent()->ScreenToClient(&x, &y);
+   win->GetClientSize(&width, &height);
+
+   Capture(fileName, win, x, y, width, height);
+#endif
+}
+
 wxString ScreenshotCommandType::BuildName()
 {
    return wxT("Screenshot");
@@ -279,6 +338,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    captureModeValidator->AddOption(wxT("windowplus"));
    captureModeValidator->AddOption(wxT("fullscreen"));
    captureModeValidator->AddOption(wxT("toolbars"));
+   captureModeValidator->AddOption(wxT("menus"));
    captureModeValidator->AddOption(wxT("selectionbar"));
    captureModeValidator->AddOption(wxT("tools"));
    captureModeValidator->AddOption(wxT("transport"));
@@ -422,6 +482,10 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    else if (captureMode.IsSameAs(wxT("toolbars")))
    {
       CaptureDock(context.GetProject()->GetToolManager()->GetTopDock(), fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("menus")))
+   {
+      CaptureMenus(context.GetProject()->GetMenuBar(), fileName);
    }
    else if (captureMode.IsSameAs(wxT("selectionbar")))
    {

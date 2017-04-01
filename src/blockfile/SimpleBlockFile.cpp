@@ -267,6 +267,8 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    return true;
 }
 
+// This function should try to fill the cache, but just return without effect
+// (not throwing) if there is failure.
 void SimpleBlockFile::FillCache()
 {
    if (mCache.active)
@@ -313,7 +315,9 @@ void SimpleBlockFile::FillCache()
 
    // Read samples into cache
    mCache.sampleData.reinit(mLen * SAMPLE_SIZE(mCache.format));
-   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen) != mLen)
+   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen,
+                // no exceptions!
+                false) != mLen)
    {
       // Could not read all samples
       mCache.sampleData.reset();
@@ -321,9 +325,8 @@ void SimpleBlockFile::FillCache()
    }
 
    // Read summary data into cache
-   mCache.summaryData.reinit(mSummaryInfo.totalSummaryBytes);
-   if (!ReadSummary(mCache.summaryData.get()))
-      memset(mCache.summaryData.get(), 0, mSummaryInfo.totalSummaryBytes);
+   // Fills with zeroes in case of failure:
+   ReadSummary(mCache.summaryData);
 
    // Cache is active but already on disk
    mCache.active = true;
@@ -336,12 +339,12 @@ void SimpleBlockFile::FillCache()
 ///
 /// @param *data The buffer to write the data to.  It must be at least
 /// mSummaryinfo.totalSummaryBytes long.
-bool SimpleBlockFile::ReadSummary(void *data)
+bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
 {
-   if (mCache.active)
-   {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
+   if (mCache.active) {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
-      memcpy(data, mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
+      memcpy(data.get(), mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
       return true;
    }
    else
@@ -357,23 +360,24 @@ bool SimpleBlockFile::ReadSummary(void *data)
          // FIXME: TRAP_ERR no report to user of absent summary files?
          // filled with zero instead.
          if (!file.IsOpened()){
-            memset(data, 0, mSummaryInfo.totalSummaryBytes);
+            memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
             mSilentLog = TRUE;
-            return true;
+            return false;
          }
       }
-      mSilentLog=FALSE;
+      mSilentLog = FALSE;
 
       // The offset is just past the au header
-      // FIXME: Seek in summary file could fail.
-      if( !file.Seek(sizeof(auHeader)) )
+      if( !file.Seek(sizeof(auHeader)) ||
+          file.Read(data.get(), mSummaryInfo.totalSummaryBytes) !=
+             mSummaryInfo.totalSummaryBytes ) {
+         memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
          return false;
+      }
 
-      auto read = file.Read(data, mSummaryInfo.totalSummaryBytes);
+      FixSummary(data.get());
 
-      FixSummary(data);
-
-      return (read == mSummaryInfo.totalSummaryBytes);
+      return true;
    }
 }
 
@@ -385,21 +389,30 @@ bool SimpleBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const
+                        size_t start, size_t len, bool mayThrow) const
 {
    if (mCache.active)
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
 
-      len = std::min(len, std::max(start, mLen) - start);
+      auto framesRead = std::min(len, std::max(start, mLen) - start);
       CopySamples(
          (samplePtr)(mCache.sampleData.get() +
             start * SAMPLE_SIZE(mCache.format)),
-         mCache.format, data, format, len);
-      return len;
+         mCache.format, data, format, framesRead);
+
+      if ( framesRead < len ) {
+         if (mayThrow)
+            // Not the best exception class?
+            //throw FileException{ FileException::Cause::Read, mFileName }
+            ;
+         ClearSamples(data, format, framesRead, len - framesRead);
+      }
+
+      return framesRead;
    }
    else
-      return CommonReadData(
+      return CommonReadData( mayThrow,
          mFileName, mSilentLog, nullptr, 0, 0, data, format, start, len);
 }
 

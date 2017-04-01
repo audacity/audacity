@@ -684,9 +684,13 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
             break;
          }
 
+
          // If we have simply recorded, exported and then plan to Exit/Restart/Shutdown
          // then we will have a temporary project setup.  Let's get rid of that!
          if (m_bAutoExportEnabled && !m_bAutoSaveEnabled) {
+            // PRL:  Move the following cleanup into a finally?
+            // No, I think you would want to skip this, in case recording
+            // succeeded but then save or export threw an exception.
             DirManager::CleanTempDir();
          }
       } while (false);
@@ -694,6 +698,9 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do we need to cleanup the orphaned temporary project?
    if (m_bProjectCleanupRequired && !bErrorOverride) {
+      // PRL:  Move the following cleanup into a finally?
+      // No, I think you would want to skip this, in case recording
+      // succeeded but then save or export threw an exception.
       RemoveAllAutoSaveFiles();
    }
 

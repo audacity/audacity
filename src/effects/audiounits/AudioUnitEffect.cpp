@@ -1423,9 +1423,13 @@ bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    mDialog = mHost->CreateUI(parent, this);
    if (!mDialog)
@@ -1436,12 +1440,12 @@ bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }
@@ -1729,7 +1733,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    }
    else
    {
-      auto pControl = std::make_unique<AUControl>();
+      auto pControl = Destroy_ptr<AUControl>( safenew AUControl );
       if (!pControl)
       {
          return false;

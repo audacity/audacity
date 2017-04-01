@@ -227,12 +227,11 @@ void ControlToolBar::RegenerateTooltips()
          case ID_RECORD_BUTTON:
             // Without shift
             commands.push_back(wxT("Record"));
-            // With shift
-#ifndef EXPERIMENTAL_DA
+#ifdef PREFER_NEW_TRACKS
             commands.push_back(_("Append Record"));
             commands.push_back(wxT("RecordAppend"));
 #else
-            commands.push_back(_("Record Below"));
+            commands.push_back(_("Record New Track"));
             commands.push_back(wxT("RecordBelow"));
 #endif
             break;
@@ -422,11 +421,7 @@ void ControlToolBar::EnableDisableButtons()
    if (p) {
       TrackListIterator iter( p->GetTracks() );
       for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetKind() == Track::Wave
-#if defined(USE_MIDI)
-         || t->GetKind() == Track::Note
-#endif
-         ) {
+         if (dynamic_cast<const AudioTrack*>(t)) {
             tracks = true;
             break;
          }
@@ -512,6 +507,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    PlayAppearance appearance, /* = PlayOption::Straight */
                                    bool backwards, /* = false */
                                    bool playWhiteSpace /* = false */)
+// STRONG-GUARANTEE (for state of mCutPreviewTracks)
 {
    if (!CanStopAudioStream())
       return -1;
@@ -530,28 +526,29 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    SetPlay(true, appearance);
 
-   if (gAudioIO->IsBusy()) {
-      SetPlay(false);
+   bool success = false;
+   auto cleanup = finally( [&] {
+      if (!success) {
+         SetPlay(false);
+         SetStop(false);
+         SetRecord(false);
+      }
+   } );
+
+   if (gAudioIO->IsBusy())
       return -1;
-   }
 
    const bool cutpreview = appearance == PlayAppearance::CutPreview;
-   if (cutpreview && t0==t1) {
-      SetPlay(false);
+   if (cutpreview && t0==t1)
       return -1; /* msmeyer: makes no sense */
-   }
 
    AudacityProject *p = GetActiveProject();
-   if (!p) {
-      SetPlay(false);
+   if (!p)
       return -1;  // Should never happen, but...
-   }
 
    TrackList *t = p->GetTracks();
-   if (!t) {
-      mPlay->PopUp();
+   if (!t)
       return -1;  // Should never happen, but...
-   }
 
    p->mLastPlayMode = mode;
 
@@ -570,10 +567,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    double latestEnd = (playWhiteSpace)? t1 : t->GetEndTime();
 
-   if (!hasaudio) {
-      SetPlay(false);
+   if (!hasaudio)
       return -1;  // No need to continue without audio tracks
-   }
 
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
    double init_seek = 0.0;
@@ -624,7 +619,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    }
 
    int token = -1;
-   bool success = false;
+
    if (t1 != t0) {
       if (cutpreview) {
          const double tless = std::min(t0, t1);
@@ -651,13 +646,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #endif
                tcp0, tcp1, myOptions);
          }
-         else {
+         else
             // Cannot create cut preview tracks, clean up and exit
-            SetPlay(false);
-            SetStop(false);
-            SetRecord(false);
             return -1;
-         }
       }
       else {
          // Lifted the following into AudacityProject::GetDefaultPlayOptions()
@@ -691,12 +682,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
    }
 
-   if (!success) {
-      SetPlay(false);
-      SetStop(false);
-      SetRecord(false);
+   if (!success)
       return -1;
-   }
 
    StartScrollingIfPreferred();
 
@@ -772,8 +759,8 @@ void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 
    if (p) p->TP_DisplaySelection();
 
+   auto cleanup = finally( [&]{ UpdateStatusBar(p); } );
    PlayDefault();
-   UpdateStatusBar(p);
 }
 
 void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
@@ -865,6 +852,7 @@ void ControlToolBar::Pause()
 }
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
+// STRONG-GUARANTEE (for state of current project's tracks)
 {
    if (gAudioIO->IsBusy()) {
       if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
@@ -882,14 +870,43 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
    SetRecord(true, mRecord->WasShiftDown());
 
+   bool success = false;
+
+   bool shifted = mRecord->WasShiftDown();
+#ifndef PREFER_NEW_TRACKS
+   shifted = !shifted;
+#endif
+
+   TrackList *trackList = p->GetTracks();
+   TrackList tracksCopy{};
+   bool tracksCopied = false;
+
+   WaveTrackArray recordingTracks;
+
+   auto cleanup = finally( [&] {
+      if (!success) {
+         if (tracksCopied)
+            // Restore the tracks to remove any inserted silence
+            *trackList = std::move(tracksCopy);
+
+         if ( ! shifted ) {
+            // msmeyer: Delete recently added tracks if opening stream fails
+            for ( auto track : recordingTracks )
+               trackList->Remove(track);
+         }
+
+         SetPlay(false);
+         SetStop(false);
+         SetRecord(false);
+      }
+
+      // Success or not:
+      UpdateStatusBar(GetActiveProject());
+   } );
+
    if (p) {
-      TrackList *trackList = p->GetTracks();
       TrackListIterator it(trackList);
 
-      bool shifted = mRecord->WasShiftDown();
-#ifdef EXPERIMENTAL_DA
-      shifted = !shifted;
-#endif
       bool hasWave = false;
       for (auto t = it.First(); t; t = it.Next()) {
          if (t->GetKind() == Track::Wave) {
@@ -909,7 +926,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       /* TODO: set up stereo tracks if that is how the user has set up
        * their preferences, and choose sample format based on prefs */
-      WaveTrackArray newRecordingTracks;
       WaveTrackConstArray playbackTracks;
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray midiTracks;
@@ -932,8 +948,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
-      TrackList tracksCopy{};
-      bool tracksCopied = false;
       if (shifted) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
          bool sel = false;
@@ -978,21 +992,24 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                t1 = wt->GetEndTime();
                if (t1 < t0) {
                   if (!tracksCopied) {
+                     // Duplicate all tracks before modifying any of them.
+                     // The duplicates are used to restore state in case
+                     // of failure.
                      tracksCopied = true;
                      tracksCopy = *trackList;
                   }
 
+                  // Pad the recording track with silence, up to the
+                  // maximum time.
                   auto newTrack = p->GetTrackFactory()->NewWaveTrack();
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
                   wt->Clear(t1, t0);
-                  bool bResult = wt->Paste(t1, newTrack.get());
-                  wxASSERT(bResult); // TO DO: Actually handle this.
-                  wxUnusedVar(bResult);
+                  wt->Paste(t1, newTrack.get());
                }
-               newRecordingTracks.push_back(wt);
+               recordingTracks.push_back(wt);
                // Don't record more channels than configured recording pref.
-               if( (int)newRecordingTracks.size() >= recordingChannels ){
+               if( (int)recordingTracks.size() >= recordingChannels ){
                   break;
                }
             }
@@ -1079,7 +1096,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             }
 
             // Let the list hold the track, and keep a pointer to it
-            newRecordingTracks.push_back(
+            recordingTracks.push_back(
                static_cast<WaveTrack*>(
                   trackList->Add(
                      std::move(newTrack))));
@@ -1093,13 +1110,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       int token = gAudioIO->StartStream(playbackTracks,
-                                        newRecordingTracks,
+                                        recordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                         midiTracks,
 #endif
                                         t0, t1, options);
 
-      bool success = (token != 0);
+      success = (token != 0);
 
       if (success) {
          p->SetAudioIOToken(token);
@@ -1108,28 +1125,11 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          StartScrollingIfPreferred();
       }
       else {
-         if (shifted) {
-            // Restore the tracks to remove any inserted silence
-            if (tracksCopied)
-               *trackList = std::move(tracksCopy);
-         }
-         else {
-            // msmeyer: Delete recently added tracks if opening stream fails
-            for (unsigned int i = 0; i < newRecordingTracks.size(); i++) {
-               trackList->Remove(newRecordingTracks[i]);
-            }
-         }
-
          // msmeyer: Show error message if stream could not be opened
          wxMessageBox(_("Error opening sound device. Try changing the audio host, recording device and the project sample rate."),
                       _("Error"), wxOK | wxICON_EXCLAMATION, this);
-
-         SetPlay(false);
-         SetStop(false);
-         SetRecord(false);
       }
    }
-   UpdateStatusBar(GetActiveProject());
 }
 
 
@@ -1190,6 +1190,8 @@ void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cutStart,
                                            double cutEnd, double  WXUNUSED(playEnd))
+
+// STRONG-GUARANTEE (for state of mCutPreviewTracks)
 {
    ClearCutPreviewTracks();
    AudacityProject *p = GetActiveProject();
@@ -1210,6 +1212,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
       if (track1)
       {
          // Duplicate and change tracks
+         // Clear has a very small chance of throwing
          auto new1 = track1->Duplicate();
          new1->Clear(cutStart, cutEnd);
          decltype(new1) new2{};
@@ -1218,6 +1221,8 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
             new2 = track2->Duplicate();
             new2->Clear(cutStart, cutEnd);
          }
+
+         // use NOTHROW-GUARANTEE:
 
          mCutPreviewTracks = std::make_unique<TrackList>();
          mCutPreviewTracks->Add(std::move(new1));

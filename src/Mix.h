@@ -91,7 +91,7 @@ class AUDACITY_DLL_API Mixer {
    // Constructor / Destructor
    //
 
-   Mixer(const WaveTrackConstArray &inputTracks,
+   Mixer(const WaveTrackConstArray &inputTracks, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
@@ -183,6 +183,8 @@ class AUDACITY_DLL_API Mixer {
    double           mRate;
    double           mSpeed;
    bool             mHighQuality;
+
+   bool             mMayThrow;
 };
 
 #endif
