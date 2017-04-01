@@ -24,7 +24,9 @@
 #include "AColor.h"
 #include "AudioIO.h"
 
+#ifdef USE_MIDI
 #include "NoteTrack.h"
+#endif
 
 #include "Project.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
@@ -137,6 +139,9 @@ enum {
    ID_BITMAPBUTTON_MUSICAL_INSTRUMENT = 13000,
    ID_SLIDER_PAN,
    ID_SLIDER_GAIN,
+#ifdef EXPERIMENTAL_MIDI_OUT
+   ID_SLIDER_VELOCITY,
+#endif
    ID_TOGGLEBUTTON_MUTE,
    ID_TOGGLEBUTTON_SOLO,
 };
@@ -148,6 +153,9 @@ BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanelWrapper)
    EVT_BUTTON(ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, MixerTrackCluster::OnButton_MusicalInstrument)
    EVT_SLIDER(ID_SLIDER_PAN, MixerTrackCluster::OnSlider_Pan)
    EVT_SLIDER(ID_SLIDER_GAIN, MixerTrackCluster::OnSlider_Gain)
+#ifdef EXPERIMENTAL_MIDI_OUT
+   EVT_SLIDER(ID_SLIDER_VELOCITY, MixerTrackCluster::OnSlider_Velocity)
+#endif
    //v EVT_COMMAND_SCROLL(ID_SLIDER_GAIN, MixerTrackCluster::OnSliderScroll_Gain)
    EVT_COMMAND(ID_TOGGLEBUTTON_MUTE, wxEVT_COMMAND_BUTTON_CLICKED, MixerTrackCluster::OnButton_Mute)
    EVT_COMMAND(ID_TOGGLEBUTTON_SOLO, wxEVT_COMMAND_BUTTON_CLICKED, MixerTrackCluster::OnButton_Solo)
@@ -184,37 +192,33 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    //    mStaticText_TrackName->SetBackgroundColour(this->GetTrackColor());
 
 
-   // gain slider at left
+   // gain and velocity sliders at left (both in same place)
    ctrlPos.x = kDoubleInset;
    ctrlPos.y += TRACK_NAME_HEIGHT + kDoubleInset;
    const int nGainSliderHeight =
       size.GetHeight() - ctrlPos.y - kQuadrupleInset;
    ctrlSize.Set(kLeftSideStackWidth - kQuadrupleInset, nGainSliderHeight);
 
-#ifdef USE_MIDI
-   if (GetNote()) {
-      mSlider_Gain =
-         safenew MixerTrackSlider(
-               this, ID_SLIDER_GAIN,
-               /* i18n-hint: title of the MIDI Velocity slider */
-               _("Velocity"),
-               ctrlPos, ctrlSize, VEL_SLIDER, true,
-               true, 0.0, wxVERTICAL);
-   }
-   else
-#endif
-      mSlider_Gain =
-         safenew MixerTrackSlider(
-               this, ID_SLIDER_GAIN,
-               /* i18n-hint: title of the Gain slider, used to adjust the volume */
-               _("Gain"),
-               ctrlPos, ctrlSize, DB_SLIDER, true,
-               true, 0.0, wxVERTICAL);
-
+   mSlider_Gain =
+      safenew MixerTrackSlider(
+            this, ID_SLIDER_GAIN,
+            /* i18n-hint: title of the Gain slider, used to adjust the volume */
+            _("Gain"),
+            ctrlPos, ctrlSize, DB_SLIDER, true,
+            true, 0.0, wxVERTICAL);
    mSlider_Gain->SetName(_("Gain"));
-
    this->UpdateGain();
-
+#ifdef EXPERIMENTAL_MIDI_OUT
+   mSlider_Velocity =
+      safenew MixerTrackSlider(
+            this, ID_SLIDER_VELOCITY,
+            /* i18n-hint: title of the MIDI Velocity slider */
+            _("Velocity"),
+            ctrlPos, ctrlSize, VEL_SLIDER, true,
+            true, 0.0, wxVERTICAL);
+   mSlider_Velocity->SetName(_("Velocity"));
+   this->UpdateVelocity();
+#endif
 
    // other controls and meter at right
 
@@ -329,7 +333,7 @@ WaveTrack *MixerTrackCluster::GetRight() const
       return nullptr;
 }
 
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
 NoteTrack *MixerTrackCluster::GetNote() const
 {
    return dynamic_cast< NoteTrack * >( mTrack );
@@ -361,6 +365,9 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
          TRACK_NAME_HEIGHT + kDoubleInset) - // mStaticText_TrackName + margin
       kQuadrupleInset; // margin below gain slider
    mSlider_Gain->SetSize(-1, nGainSliderHeight);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   mSlider_Velocity->SetSize(-1, nGainSliderHeight);
+#endif
 
    bool bSoloNone = mProject->IsSoloNone();
 
@@ -384,10 +391,6 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    float fValue = mSlider_Gain->Get();
    if (GetWave())
       GetWave()->SetGain(fValue);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   else
-      GetNote()->SetVelocity(fValue);
-#endif
    if (GetRight())
       GetRight()->SetGain(fValue);
 
@@ -396,6 +399,20 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    if (bWantPushState)
       mProject->TP_PushState(_("Moved gain slider"), _("Gain"), UndoPush::CONSOLIDATE );
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false*/)
+{
+   float fValue = mSlider_Velocity->Get();
+   if (GetNote())
+      GetNote()->SetVelocity(fValue);
+
+   // Update the TrackPanel correspondingly.
+   mProject->RefreshTPTrack(mTrack);
+   if (bWantPushState)
+      mProject->TP_PushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
+}
+#endif
 
 void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
 {
@@ -462,27 +479,32 @@ void MixerTrackCluster::UpdateSolo()
 
 void MixerTrackCluster::UpdatePan()
 {
-#ifdef EXPERIMENTAL_MIDI_OUT
    if (!GetWave()) {
       mSlider_Pan->Hide();
       return;
    }
-#endif
    mSlider_Pan->Set(GetWave()->GetPan());
 }
 
 void MixerTrackCluster::UpdateGain()
 {
-#ifdef EXPERIMENTAL_MIDI_OUT
    if (!GetWave()) {
-      mSlider_Gain->SetStyle(VEL_SLIDER);
-      mSlider_Gain->Set(GetNote()->GetVelocity());
+      mSlider_Gain->Hide();
       return;
    }
-   mSlider_Gain->SetStyle(DB_SLIDER);
-#endif
    mSlider_Gain->Set(GetWave()->GetGain());
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void MixerTrackCluster::UpdateVelocity()
+{
+   if (!GetNote()) {
+      mSlider_Velocity->Hide();
+      return;
+   }
+   mSlider_Velocity->Set(GetNote()->GetVelocity());
+}
+#endif
 
 void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 {
@@ -695,6 +717,13 @@ void MixerTrackCluster::OnSlider_Gain(wxCommandEvent& WXUNUSED(event))
 {
    this->HandleSliderGain();
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void MixerTrackCluster::OnSlider_Velocity(wxCommandEvent& WXUNUSED(event))
+{
+   this->HandleSliderVelocity();
+}
+#endif
 
 //v void MixerTrackCluster::OnSliderScroll_Gain(wxScrollEvent& WXUNUSED(event))
 //{
@@ -1208,6 +1237,16 @@ void MixerBoard::UpdateGain(const PlayableTrack* pTrack)
    if (pMixerTrackCluster)
       pMixerTrackCluster->UpdateGain();
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void MixerBoard::UpdateVelocity(const PlayableTrack* pTrack)
+{
+   MixerTrackCluster* pMixerTrackCluster;
+   FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
+   if (pMixerTrackCluster)
+      pMixerTrackCluster->UpdateVelocity();
+}
+#endif
 
 void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
 {
