@@ -395,12 +395,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                   this track is shown with a sync-locked icon.*/
                // The absence of a dash between Sync and Locked is deliberate -
                // if present, Jaws reads it as "dash".
-// DA: Time Lock vs Sync Lock.
-#ifdef EXPERIMENTAL_DA
-               name->Append( wxT(" ") + wxString(_( " Time Lock Selected" )) );
-#else
                name->Append( wxT(" ") + wxString(_( " Sync Lock Selected" )) );
-#endif
             }
          }
       }

@@ -148,7 +148,7 @@ void EditToolBar::Populate()
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: Time-Locked vs Sync-Locked
+// DA: No Sync Lock edit button.
 #ifndef EXPERIMENTAL_DA
    AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);

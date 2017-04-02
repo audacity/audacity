@@ -597,12 +597,7 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag, TracksExistFlag);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: Time-Locked vs Sync-Locked
-#ifdef EXPERIMENTAL_DA
-      c->AddItem(wxT("SelSyncLockTracks"), _("In All Time-Locked Tracks"),
-#else
       c->AddItem(wxT("SelSyncLockTracks"), _("In All Sync-Locked Tracks"),
-#endif
          FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
          TracksSelectedFlag | IsSyncLockedFlag,
          TracksSelectedFlag | IsSyncLockedFlag);
@@ -978,12 +973,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: Time-Lock vs Sync-Lock
-#ifdef EXPERIMENTAL_DA
-      c->AddCheck(wxT("SyncLock"), _("Time-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
-#else
       c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
-#endif
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->AddSeparator();
