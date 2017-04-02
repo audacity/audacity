@@ -185,7 +185,7 @@ void ThemePrefs::OnSaveThemeCache(wxCommandEvent & WXUNUSED(event))
 /// Read Theme from internal storage.
 void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 {
-   theTheme.ReadThemeInternal();
+   theTheme.ReadImageCache( theTheme.GetFallbackThemeType() );
    theTheme.ApplyUpdatedImages();
 }
 

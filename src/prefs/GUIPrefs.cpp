@@ -166,6 +166,8 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("dark"));
       {
+         S.TieRadioButton(_("Classic"),
+                          wxT("classic"));
          S.TieRadioButton(_("Dark"),
                           wxT("dark"));
          S.TieRadioButton(_("Light"),
@@ -191,26 +193,9 @@ bool GUIPrefs::Apply()
       gPrefs->Write(wxT("/Locale/Language"), usedLang);
       gPrefs->Flush();
    }
-
-// DA: Default themes differ.
-#ifdef EXPERIMENTAL_DA
-   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
-#else
-   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("light"));
-#endif
-   if( theme != "foo" ){
-//      gPrefs->Write(wxT("/GUI/Theme"), theme);
-//      gPrefs->Flush();
-      wxArrayString aThemes;
-      aThemes.Add( "dark" );
-      aThemes.Add( "light" );
-      aThemes.Add( "custom" );
-      int themeIx = std::max( 0, aThemes.Index( theme ));
-
-      theTheme.ReadImageCache( (teThemeType)themeIx );
-      theTheme.ApplyUpdatedImages();
-   }
-
+   // Reads preference /GUI/Theme
+   theTheme.LoadPreferredTheme();
+   theTheme.ApplyUpdatedImages();
    return true;
 }
 

@@ -46,9 +46,10 @@ enum teResourceFlags
 
 enum teThemeType
 {
+   themeClassic,
    themeDark,
    themeLight,
-   themeFromFile
+   themeFromFile,
 };
 
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxImage,  ArrayOfImages, AUDACITY_DLL_API);
@@ -100,19 +101,22 @@ public:
 public:
    virtual void EnsureInitialised()=0;
    virtual void ApplyUpdatedImages()=0;
-   void LoadThemeAtStartUp( bool bLookForExternalFiles );
+   void LoadTheme( teThemeType Theme );
    void RegisterImage( int &iIndex,char const** pXpm, const wxString & Name);
    void RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name );
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
+   teThemeType GetFallbackThemeType();
+   teThemeType ThemeTypeOfTypeName( const wxString & Name );
    void CreateImageCache(bool bBinarySave = true);
    bool ReadImageCache( teThemeType type = themeFromFile, bool bOkIfNotFound=false);
    void LoadComponents( bool bOkIfNotFound =false);
    void SaveComponents();
-   void ReadThemeInternal();
    void SaveThemeAsCode();
    void WriteImageDefs( );
    void WriteImageMap( );
+   static bool LoadPreferredTheme();
+
 
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
