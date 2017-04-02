@@ -599,6 +599,7 @@ bool EnvelopeEditor::MouseEvent(const wxMouseEvent & event, wxRect & r,
 }
 
 void Envelope::CollapseRegion(double t0, double t1)
+// NOFAIL-GUARANTEE
 {
    // This gets called when somebody clears samples.  All of the
    // control points within the region disappear and the points
@@ -635,6 +636,7 @@ void Envelope::CollapseRegion(double t0, double t1)
 // envelope point applies one-past the last actual sample.
 // Rather than going to a .5-offset-index, we special case the framing.
 void Envelope::Paste(double t0, const Envelope *e)
+// NOFAIL-GUARANTEE
 {
    const bool wasEmpty = (this->mEnv.size() == 0);
 
@@ -828,6 +830,7 @@ Old analysis of cases:
 // 'Unneeded' means that the envelope doesn't change by more than
 // 'tolerence' without the point being there.
 void Envelope::RemoveUnneededPoints(double time, double tolerence)
+// NOFAIL-GUARANTEE
 {
    unsigned int len = mEnv.size();
    unsigned int i;
@@ -864,6 +867,7 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
 }
 
 void Envelope::InsertSpace(double t0, double tlen)
+// NOFAIL-GUARANTEE
 {
    unsigned int len = mEnv.size();
    unsigned int i;
@@ -997,6 +1001,7 @@ int Envelope::Insert(double when, double value)
 // Control
 
 void Envelope::SetOffset(double newOffset)
+// NOFAIL-GUARANTEE
 {
    mOffset = newOffset;
 }

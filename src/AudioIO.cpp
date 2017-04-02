@@ -2449,8 +2449,20 @@ void AudioIO::StopStream()
             // Stop those exceptions here, or else they propagate through too
             // many parts of Audacity that are not effects or editing
             // operations.  GuardedCall ensures that the user sees a warning.
+
+            // Also be sure to Flush each track, at the top of the guarded call,
+            // relying on the guarantee that the track will be left in a flushed
+            // state, though the append buffer may be lost.
+
+            // If the other track operations fail their strong guarantees, then
+            // the shift for latency correction may be skipped.
             GuardedCall<void>( [&] {
                WaveTrack* track = mCaptureTracks[i];
+
+               // use NOFAIL-GUARANTEE that track is flushed,
+               // PARTIAL-GUARANTEE that some initial length of the recording
+               // is saved.
+               // See comments in FillBuffers().
                track->Flush();
 
                if (mPlaybackTracks.size() > 0)
@@ -2475,12 +2487,15 @@ void AudioIO::StopStream()
                   if( appendRecord )
                   {  // append-recording
                      if (recordingOffset < 0)
+                        // use STRONG-GUARANTEE
                         track->Clear(mT0, mT0 - recordingOffset); // cut the latency out
                      else
+                        // use STRONG-GUARANTEE
                         track->InsertSilence(mT0, recordingOffset); // put silence in
                   }
                   else
                   {  // recording into a NEW track
+                     // gives NOFAIL-GUARANTEE though we only need STRONG
                      track->SetOffset(track->GetStartTime() + recordingOffset);
                      if(track->GetEndTime() < 0.)
                      {
@@ -2488,6 +2503,7 @@ void AudioIO::StopStream()
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\nAudacity has brought it back to start at zero.\nYou may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."),
                            _("Latency problem"), wxOK);
                         m.ShowModal();
+                        // gives NOFAIL-GUARANTEE though we only need STRONG
                         track->SetOffset(0.);
                      }
                   }
