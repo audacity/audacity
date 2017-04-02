@@ -284,6 +284,8 @@ bool EffectTruncSilence::ProcessIndependently()
                if (track2->GetKind() == Track::Wave &&
                   !(track2 == track || track2 == link) &&
                   track2->GetSelected()) {
+
+// DA: Time-Locked vs Sync-Locked
 #ifdef EXPERIMENTAL_DA
                   ::wxMessageBox(_("When truncating independently, there may only be one selected audio track in each Time-Locked Track Group."));
 #else

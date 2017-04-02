@@ -38,6 +38,7 @@ enum {
    ETBRedoID,
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+// DA: No Sync Lock edit button
 #ifndef EXPERIMENTAL_DA
    ETBSyncLockID,
 #endif

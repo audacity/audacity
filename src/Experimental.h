@@ -48,7 +48,7 @@
 // feature to link audio tracks to a label track
 #define EXPERIMENTAL_SYNC_LOCK
 
-// enables dark audacity theme and customisations.
+// DA: Enables dark audacity theme and customisations.
 #define EXPERIMENTAL_DA
 
 // experimental theming

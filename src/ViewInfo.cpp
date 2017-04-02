@@ -90,6 +90,7 @@ bool ZoomInfo::ZoomOutAvailable() const
 void ZoomInfo::SetZoom(double pixelsPerSecond)
 {
    zoom = std::max(gMinZoom, std::min(gMaxZoom, pixelsPerSecond));
+// DA: Avoids stuck in snap-to
 #ifdef EXPERIMENTAL_DA
    // Disable snapping if user zooms in a long way.
    // Helps stop users be trapped in snap-to.

@@ -355,6 +355,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 
    wxString creditStr = FormatHtmlText(
       wxString( wxT("<center>") ) +
+// DA: Description and provenance in About box
 #ifdef EXPERIMENTAL_DA
       #undef _
       #define _(s) wxGetTranslation((s))
@@ -370,8 +371,11 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       //wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
 
+// DA: Customisation credit
+#ifdef EXPERIMENTAL_DA
       wxT("<p><b>") + wxString::Format(_("DarkAudacity Customisation")) + wxT("</b><br>") +
       wxT("James Crook, art, coding &amp; design<br>") +
+#endif
 
       wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
@@ -395,6 +399,8 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       GetCreditsByRole(roleThanks) +
 
       wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+
+// DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
       wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
 #endif

@@ -9072,6 +9072,7 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 
    dest.height = kTrackInfoBtnSize;
+// DA: Mute solo buttons wider and higher.
 #ifdef EXPERIMENTAL_DA
    dest.width = 100 - 2 * kTrackInfoBtnSize;
    dest.x = rect.x + (100 - dest.width)*0.5 ;
@@ -9356,6 +9357,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
       _("Mute");
 
+// DA: Uses Theme to draw buttons.
 #ifdef EXPERIMENTAL_DA
    AColor::Bevel2(
 #else   

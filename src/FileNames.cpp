@@ -252,6 +252,7 @@ wxString FileNames::ThemeImageDefsAsCee()
 
 wxString FileNames::ThemeCacheAsCee( )
 {
+// DA: Theme sourcery file name.
 #ifndef EXPERIMENTAL_DA
    return wxFileName( ThemeDir(), wxT("ThemeAsCeeCode.h") ).GetFullPath();
 #else

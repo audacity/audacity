@@ -325,7 +325,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
       c->BeginSubMenu( _("Save Other") );
-//#ifdef EXPERIMENTAL_DA
+
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
@@ -338,7 +338,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ExportOgg"), _("Export as &OGG"), FN(OnExportOgg), wxT(""),
          AudioIONotBusyFlag | WaveTracksExistFlag,
          AudioIONotBusyFlag | WaveTracksExistFlag);
-//#endif
 
       c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExportAudio), wxT("Ctrl+Shift+E"),
          AudioIONotBusyFlag | WaveTracksExistFlag,
@@ -598,6 +597,7 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag, TracksExistFlag);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+// DA: Time-Locked vs Sync-Locked
 #ifdef EXPERIMENTAL_DA
       c->AddItem(wxT("SelSyncLockTracks"), _("In All Time-Locked Tracks"),
 #else
@@ -612,13 +612,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
       c->AddSeparator();
 
-#ifndef EXPERIMENTAL_DA
       c->AddItem(wxT("StoreCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionStore),
          WaveTracksExistFlag,
          WaveTracksExistFlag);
       // Save cursor position is used in some selctions.
       // Maybe there should be a restore for it?
-#endif
 
       // Audacity has 'Store Re&gion' here.
       c->AddItem(wxT("SelSave"), _("Save Sele&ction"), FN(OnSelectionSave),
@@ -815,8 +813,7 @@ void AudacityProject::CreateMenusAndCommands()
       // Scrubbing sub-menu
       GetScrubber().AddMenuItems();
 
-#ifndef EXPERIMENTAL_DA
-      // JKC: ANSWER-ME: How is this different to 'Skip To' and how is it useful?
+      // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it useful?
       c->BeginSubMenu(_("Cursor to"));
 
       c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
@@ -829,7 +826,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("CursProjectEnd"), _("Project E&nd"), FN(OnSkipEnd), wxT("End"));
 
       c->EndSubMenu();
-#endif
 
       c->AddSeparator();
 
@@ -982,6 +978,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+// DA: Time-Lock vs Sync-Lock
 #ifdef EXPERIMENTAL_DA
       c->AddCheck(wxT("SyncLock"), _("Time-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
 #else
@@ -1128,15 +1125,16 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginMenu(_("&Help"));
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
-#ifndef EXPERIMENTAL_DA
-      c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
-      c->AddItem(wxT("Manual"), _("&Manual"), FN(OnManual));
-#else
+// DA: Emphasise it is the Audacity Manual (No separate DA manual).
+#ifdef EXPERIMENTAL_DA
       // 'Getting Started' rather than 'Quick Help' for DarkAudacity.
       // At the moment the video tutorials are aspirational (aka do not exist yet).
       // Emphasise that manual is for Audacity, not DarkAudacity.
       c->AddItem(wxT("QuickHelp"), _("&Getting Started"), FN(OnQuickHelp));
       c->AddItem(wxT("Manual"), wxT("Audacity &Manual"), FN(OnManual));
+#else
+      c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
+      c->AddItem(wxT("Manual"), _("&Manual"), FN(OnManual));
 #endif
 
 
@@ -1171,6 +1169,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 #endif
 
+// DA: Does not fully support update checking.
 #ifndef EXPERIMENTAL_DA
       c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
 #endif

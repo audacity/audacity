@@ -192,6 +192,7 @@ bool GUIPrefs::Apply()
       gPrefs->Flush();
    }
 
+// DA: Default themes differ.
 #ifdef EXPERIMENTAL_DA
    wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
 #else

@@ -302,6 +302,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    }
    else if (releasePageName == wxT("Quick_Help"))
    {
+// DA: No bundled help, by default, and different quick-help URL.
 #ifdef EXPERIMENTAL_DA
       releasePageName = wxT("video") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();

@@ -189,6 +189,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #include "AllThemeResources.h"
 
 // Include the ImageCache...
+// DA: Default theme is dark 
 #ifdef EXPERIMENTAL_DA
 static unsigned char ImageCacheAsData[] = {
 #include "DarkThemeAsCeeCode.h"
@@ -524,6 +525,7 @@ int SourceOutputStream::OpenFile(const wxString & Filename)
    bOk = File.Open( Filename, wxFile::write );
    if( bOk )
    {
+// DA: Naming of output sourcery
 #ifdef EXPERIMENTAL_DA
       File.Write( wxT("//   DarkThemeAsCeeCode.h\r\n") );
 #else
@@ -843,16 +845,17 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    // ELSE we are reading from internal storage.
    else
    {
-#ifndef EXPERIMENTAL_DA
-      wxMemoryInputStream InternalStream(
-         (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
-#else
+// DA: Has more built-in theme sources.
+#ifdef EXPERIMENTAL_DA
       wxMemoryInputStream DarkInternalStream(
          (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
       wxMemoryInputStream LightInternalStream(
          (char *)LightImageCacheAsData, sizeof(LightImageCacheAsData));
       wxMemoryInputStream & InternalStream = (type == themeDark) ?
          DarkInternalStream : LightInternalStream;
+#else
+      wxMemoryInputStream InternalStream(
+         (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
 #endif
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
       {

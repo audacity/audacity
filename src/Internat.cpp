@@ -40,6 +40,7 @@ wxChar Internat::mDecimalSeparator = wxT('.'); // default
 wxArrayString Internat::exclude;
 wxCharBuffer Internat::mFilename;
 
+// DA: Use tweaked translation mechanism to replace 'Audacity' by 'DarkAudacity'.
 #ifdef EXPERIMENTAL_DA
 // This function allows us to replace Audacity by DarkAudacity without peppering 
 // the source code with changes.  We split out this step, the customisation, as 

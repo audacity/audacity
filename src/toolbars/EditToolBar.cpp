@@ -148,6 +148,7 @@ void EditToolBar::Populate()
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+// DA: Time-Locked vs Sync-Locked
 #ifndef EXPERIMENTAL_DA
    AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
@@ -214,6 +215,7 @@ void EditToolBar::RegenerateTooltips()
       { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+// DA: No Sync Lock edit button
 #ifndef EXPERIMENTAL_DA
       { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
 #endif

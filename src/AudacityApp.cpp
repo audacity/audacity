@@ -1275,6 +1275,8 @@ bool AudacityApp::OnInit()
 
    // Don't use AUDACITY_NAME here.
    // We want Audacity with a capital 'A'
+
+// DA: App name
 #ifndef EXPERIMENTAL_DA
    wxString appName = wxT("Audacity");
 #else
@@ -1309,6 +1311,8 @@ bool AudacityApp::OnInit()
 
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
+
+// DA: Path env variable.
 #ifndef EXPERIMENTAL_DA
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
 #else

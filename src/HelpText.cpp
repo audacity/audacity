@@ -210,7 +210,9 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.") + " " +
          _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")+
          _("You can help us get Audacity ready for release by joining our [[http://www.audacityteam.org/community/|community]].<hr><br><br>")+
-#endif         
+#endif   
+
+// DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
          wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
          _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
@@ -259,6 +261,7 @@ audio CDs]].") + wxT("</p>")
    if(Key ==  wxT("remotehelp") )
    {
 // *URL* will be replaced by whatever URL we are looking for.
+// DA: View the manual on line is expected.
 #ifdef EXPERIMENTAL_DA
       return WrapText(_("The Manual does not appear to be installed. \
 Please [[*URL*|view the Manual online]].<br><br>\
