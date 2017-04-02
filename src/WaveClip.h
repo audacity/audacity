@@ -233,11 +233,12 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   bool Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, ProgressDialog *progress = NULL);
 
    void SetOffset(double offset);
    double GetOffset() const { return mOffset; }
-   void Offset(double delta) { SetOffset(GetOffset() + delta); }
+   void Offset(double delta) // NOFAIL-GUARANTEE
+      { SetOffset(GetOffset() + delta); }
    double GetStartTime() const;
    double GetEndTime() const;
    sampleCount GetStartSample() const;
@@ -253,7 +254,7 @@ public:
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
-   bool SetSamples(samplePtr buffer, sampleFormat format,
+   void SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
@@ -268,7 +269,8 @@ public:
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
-   void MarkChanged() { mDirty++; }
+   void MarkChanged() // NOFAIL-GUARANTEE
+      { mDirty++; }
 
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */
@@ -295,31 +297,31 @@ public:
    void UpdateEnvelopeTrackLen();
 
    /// You must call Flush after the last Append
-   bool Append(samplePtr buffer, sampleFormat format,
+   void Append(samplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1,
                XMLWriter* blockFileLog = NULL);
    /// Flush must be called after last Append
    bool Flush();
 
-   bool AppendAlias(const wxString &fName, sampleCount start,
+   void AppendAlias(const wxString &fName, sampleCount start,
                     size_t len, int channel,bool useOD);
 
-   bool AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cutted audio to the clipboard)
-   bool Clear(double t0, double t1);
+   void Clear(double t0, double t1);
 
    /// Clear, and add cut line that starts at t0 and contains everything until t1.
-   bool ClearAndAddCutLine(double t0, double t1);
+   void ClearAndAddCutLine(double t0, double t1);
 
    /// Paste data from other clip, resampling it if not equal rate
-   bool Paste(double t0, const WaveClip* other);
+   void Paste(double t0, const WaveClip* other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
-   bool InsertSilence(double t, double len);
+   void InsertSilence(double t, double len);
 
    /// Get access to cut lines list
    WaveClipHolders &GetCutLines() { return mCutLines; }
@@ -337,7 +339,7 @@ public:
    /** Expand cut line (that is, re-insert audio, then DELETE audio saved in
     * cut line). Returns true if a cut line could be found and sucessfully
     * expanded, false otherwise */
-   bool ExpandCutLine(double cutLinePosition);
+   void ExpandCutLine(double cutLinePosition);
 
    /// Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);

@@ -188,10 +188,12 @@ double WaveTrack::GetOffset() const
 }
 
 void WaveTrack::SetOffset(double o)
+// NOFAIL-GUARANTEE
 {
    double delta = o - GetOffset();
 
    for (const auto &clip : mClips)
+      // assume NOFAIL-GUARANTEE
       clip->SetOffset(clip->GetOffset() + delta);
 
    mOffset = o;
@@ -564,6 +566,7 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
 }
 
 Track::Holder WaveTrack::SplitCut(double t0, double t1)
+// STRONG-GUARANTEE
 {
    if (t1 < t0)
       //THROW_INCONSISTENCY_EXCEPTION
@@ -600,6 +603,7 @@ Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 //Trim trims within a clip, rather than trimming everything.
 //If a bound is outside a clip, it trims everything.
 void WaveTrack::Trim (double t0, double t1)
+// WEAK-GUARANTEE
 {
    bool inside0 = false;
    bool inside1 = false;
@@ -617,15 +621,13 @@ void WaveTrack::Trim (double t0, double t1)
 
       if(t1 > clip->GetStartTime() && t1 < clip->GetEndTime())
       {
-         if (!clip->Clear(t1,clip->GetEndTime()))
-            return;
+         clip->Clear(t1,clip->GetEndTime());
          inside1 = true;
       }
 
       if(t0 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
-         if (!clip->Clear(clip->GetStartTime(),t0))
-            return;
+         clip->Clear(clip->GetStartTime(),t0);
          clip->SetOffset(t0);
          inside0 = true;
       }
@@ -703,15 +705,9 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
             newTrack->GetSampleFormat(),
             static_cast<int>(newTrack->GetRate()));
       placeholder->SetIsPlaceholder(true);
-      if ( ! placeholder->InsertSilence(
-               0, (t1 - t0) - newTrack->GetEndTime()) )
-      {
-      }
-      else
-      {
-         placeholder->Offset(newTrack->GetEndTime());
-         newTrack->mClips.push_back(std::move(placeholder)); // transfer ownership
-      }
+      placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
+      placeholder->Offset(newTrack->GetEndTime());
+      newTrack->mClips.push_back(std::move(placeholder)); // transfer ownership
    }
 
    return result;
@@ -723,11 +719,13 @@ Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
 }
 
 void WaveTrack::Clear(double t0, double t1)
+// STRONG-GUARANTEE
 {
    HandleClear(t0, t1, false, false);
 }
 
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
+// STRONG-GUARANTEE
 {
    HandleClear(t0, t1, true, false);
 }
@@ -814,16 +812,21 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               bool merge, // Whether to remove 'extra' splits
                               const TimeWarper *effectWarper // How does time change
                               )
+// WEAK-GUARANTEE
+// this WaveTrack remains destructible in case of AudacityException.
+// But some of its cutline clips may have been destroyed.
 {
-   double dur = wxMin(t1 - t0, src->GetEndTime());
-   wxArrayDouble splits;
-   WaveClipHolders cuts;
+   double dur = std::min(t1 - t0, src->GetEndTime());
 
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
+      // use WEAK-GUARANTEE
       Paste(t0, src);
       return;
    }
+
+   wxArrayDouble splits;
+   WaveClipHolders cuts;
 
    // If provided time warper was NULL, use a default one that does nothing
    IdentityTimeWarper localWarper;
@@ -904,60 +907,63 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   prev = clip;
                }
             }
-
-            // Refill the array since clips have changed.
-            clips = SortedClipArray();
-
-            {
-               // Scan the sorted clips to look for the start of the pasted
-               // region.
-               WaveClip *prev = nullptr;
-               for (const auto clip : clips) {
-                  if (prev) {
-                     MergeClips(GetClipIndex(prev), GetClipIndex(clip));
-                     break;
-                  }
-                  if (fabs(t0 - clip->GetEndTime()) < tolerance)
-                     // Merge this clip and the next clip if the start time
-                     // falls within it and this isn't the last clip in the track.
-                     prev = clip;
-                  else
-                     prev = nullptr;
-               }
-            }
          }
 
-         // Restore cut/split lines
-         if (preserve) {
+         // Refill the array since clips have changed.
+         auto clips = SortedClipArray();
 
-            // Restore the split lines, transforming the position appropriately
-            for (const auto split: splits) {
-               SplitAt(warper->Warp(split));
-            }
-
-            // Restore the saved cut lines, also transforming if time altered
-            for (const auto &clip : mClips) {
-               double st;
-               double et;
-
-               st = clip->GetStartTime();
-               et = clip->GetEndTime();
-
-               // Scan the cuts for any that live within this clip
-               for (auto it = cuts.begin(); it != cuts.end();) {
-                  WaveClip *cut = it->get();
-                  double cs = cut->GetOffset();
-
-                  // Offset the cut from the start of the clip and add it to
-                  // this clips cutlines.
-                  if (cs >= st && cs <= et) {
-                     cut->SetOffset(warper->Warp(cs) - st);
-                     clip->GetCutLines().push_back( std::move(*it) ); // transfer ownership!
-                     it = cuts.erase(it);
-                  }
-                  else
-                     ++it;
+         {
+            // Scan the sorted clips to look for the start of the pasted
+            // region.
+            WaveClip *prev = nullptr;
+            for (const auto clip : clips) {
+               if (prev) {
+                  // It must be that clip is what was pasted and it begins where
+                  // prev ends.
+                  // use WEAK-GUARANTEE
+                  MergeClips(GetClipIndex(prev), GetClipIndex(clip));
+                  break;
                }
+               if (fabs(t0 - clip->GetEndTime()) < tolerance)
+                  // Merge this clip and the next clip if the start time
+                  // falls within it and this isn't the last clip in the track.
+                  prev = clip;
+               else
+                  prev = nullptr;
+            }
+         }
+      }
+
+      // Restore cut/split lines
+      if (preserve) {
+
+         // Restore the split lines, transforming the position appropriately
+         for (const auto split: splits) {
+            SplitAt(warper->Warp(split));
+         }
+
+         // Restore the saved cut lines, also transforming if time altered
+         for (const auto &clip : mClips) {
+            double st;
+            double et;
+
+            st = clip->GetStartTime();
+            et = clip->GetEndTime();
+
+            // Scan the cuts for any that live within this clip
+            for (auto it = cuts.begin(); it != cuts.end();) {
+               WaveClip *cut = it->get();
+               double cs = cut->GetOffset();
+
+               // Offset the cut from the start of the clip and add it to
+               // this clips cutlines.
+               if (cs >= st && cs <= et) {
+                  cut->SetOffset(warper->Warp(cs) - st);
+                  clip->GetCutLines().push_back( std::move(*it) ); // transfer ownership!
+                  it = cuts.erase(it);
+               }
+               else
+                  ++it;
             }
          }
       }
@@ -965,6 +971,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
 }
 
 void WaveTrack::SplitDelete(double t0, double t1)
+// STRONG-GUARANTEE
 {
    bool addCutLines = false;
    bool split = true;
@@ -1028,6 +1035,7 @@ void WaveTrack::AddClip(movable_ptr<WaveClip> &&clip)
 
 void WaveTrack::HandleClear(double t0, double t1,
                             bool addCutLines, bool split)
+// STRONG-GUARANTEE
 {
    if (t1 < t0)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
@@ -1066,7 +1074,12 @@ void WaveTrack::HandleClear(double t0, double t1,
          // Clip data is affected by command
          if (addCutLines)
          {
-            clip->ClearAndAddCutLine(t0,t1);
+            // Don't modify this clip in place, because we want a strong
+            // guarantee, and might modify another clip
+            clipsToDelete.push_back( clip.get() );
+            auto newClip = make_movable<WaveClip>( *clip, mDirManager, true );
+            newClip->ClearAndAddCutLine( t0, t1 );
+            clipsToAdd.push_back( std::move( newClip ) );
          }
          else
          {
@@ -1075,14 +1088,28 @@ void WaveTrack::HandleClear(double t0, double t1,
 
                if (clip->BeforeClip(t0)) {
                   // Delete from the left edge
-                  clip->Clear(clip->GetStartTime(), t1);
-                  clip->Offset(t1-clip->GetStartTime());
-               } else
-               if (clip->AfterClip(t1)) {
+
+                  // Don't modify this clip in place, because we want a strong
+                  // guarantee, and might modify another clip
+                  clipsToDelete.push_back( clip.get() );
+                  auto newClip = make_movable<WaveClip>( *clip, mDirManager, true );
+                  newClip->Clear(clip->GetStartTime(), t1);
+                  newClip->Offset(t1-clip->GetStartTime());
+
+                  clipsToAdd.push_back( std::move( newClip ) );
+               }
+               else if (clip->AfterClip(t1)) {
                   // Delete to right edge
-                  clip->Clear(t0, clip->GetEndTime());
-               } else
-               {
+
+                  // Don't modify this clip in place, because we want a strong
+                  // guarantee, and might modify another clip
+                  clipsToDelete.push_back( clip.get() );
+                  auto newClip = make_movable<WaveClip>( *clip, mDirManager, true );
+                  newClip->Clear(t0, clip->GetEndTime());
+
+                  clipsToAdd.push_back( std::move( newClip ) );
+               }
+               else {
                   // Delete in the middle of the clip...we actually create two
                   // NEW clips out of the left and right halves...
 
@@ -1101,7 +1128,14 @@ void WaveTrack::HandleClear(double t0, double t1,
                   clipsToDelete.push_back(clip.get());
                }
             }
-            else { // (We are not doing a split cut)
+            else {
+               // (We are not doing a split cut)
+
+               // Don't modify this clip in place, because we want a strong
+               // guarantee, and might modify another clip
+               clipsToDelete.push_back( clip.get() );
+               auto newClip = make_movable<WaveClip>( *clip, mDirManager, true );
+
                /* We are going to DELETE part of the clip here. The clip may
                 * have envelope points, and we need to ensure that the envelope
                 * outside of the cleared region is not affected. This means
@@ -1111,23 +1145,31 @@ void WaveTrack::HandleClear(double t0, double t1,
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
                if (clip->GetEnvelope()->GetNumberOfPoints() > 0) {   // don't insert env pts if none exist
                   double val;
-                  if (clip->WithinClip(t0))
-                     {  // start of region within clip
+                  if (clip->WithinClip(t0)) {
+                     // start of region within clip
                      val = clip->GetEnvelope()->GetValue(t0);
-                     clip->GetEnvelope()->Insert(t0 - clip->GetOffset() - 1.0/clip->GetRate(), val);
-                     }
-                  if (clip->WithinClip(t1))
-                     {  // end of region within clip
+                     newClip->GetEnvelope()->Insert(t0 - clip->GetOffset() - 1.0/clip->GetRate(), val);
+                  }
+                  if (clip->WithinClip(t1)) {
+                     // end of region within clip
                      val = clip->GetEnvelope()->GetValue(t1);
-                     clip->GetEnvelope()->Insert(t1 - clip->GetOffset(), val);
-                     }
+                     newClip->GetEnvelope()->Insert(t1 - clip->GetOffset(), val);
+                  }
                }
-               if (!clip->Clear(t0,t1))
-                  return;
-               clip->GetEnvelope()->RemoveUnneededPoints(t0);
+               newClip->Clear(t0,t1);
+               newClip->GetEnvelope()->RemoveUnneededPoints(t0);
+
+               clipsToAdd.push_back( std::move( newClip ) );
             }
          }
-      } else
+      }
+   }
+
+   // Only now, change the contents of this track
+   // use NOFAIL-GUARANTEE for the rest
+
+   for (const auto &clip : mClips)
+   {
       if (clip->BeforeClip(t1))
       {
          // Clip is "behind" the region -- offset it unless we're splitting
@@ -1380,17 +1422,14 @@ void WaveTrack::Silence(double t0, double t1)
             startDelta = 0;
          }
 
-         if (!clip->GetSequence()->SetSilence(inclipDelta, samplesToCopy))
-         {
-            wxASSERT(false); // should always work
-            return;
-         }
+         clip->GetSequence()->SetSilence(inclipDelta, samplesToCopy);
          clip->MarkChanged();
       }
    }
 }
 
 void WaveTrack::InsertSilence(double t, double len)
+// STRONG-GUARANTEE
 {
    if (len <= 0)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
@@ -1399,20 +1438,27 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      WaveClip* clip = CreateClip();
+      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate);
       clip->InsertSilence(0, len);
+      // use NOFAIL-GUARANTEE
+      mClips.push_back( std::move( clip ) );
       return;
    }
+   else {
+      // Assume at most one clip contains t
+      const auto end = mClips.end();
+      const auto it = std::find_if( mClips.begin(), end,
+         [&](const WaveClipHolder &clip) { return clip->WithinClip(t); } );
 
-   for (const auto &clip : mClips)
-   {
-      if (clip->BeforeClip(t))
-         clip->Offset(len);
-      else if (clip->WithinClip(t))
+      // use STRONG-GUARANTEE
+      if (it != end)
+         it->get()->InsertSilence(t, len);
+
+      // use NOFAIL-GUARANTEE
+      for (const auto &clip : mClips)
       {
-         if (!clip->InsertSilence(t, len)) {
-            return;
-         }
+         if (clip->BeforeClip(t))
+            clip->Offset(len);
       }
    }
 }
@@ -1420,6 +1466,7 @@ void WaveTrack::InsertSilence(double t, double len)
 //Performs the opposite of Join
 //Analyses selected region for possible Joined clips and disjoins them
 void WaveTrack::Disjoin(double t0, double t1)
+// WEAK-GUARANTEE
 {
    auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
    const size_t maxAtOnce = 1048576;
@@ -1497,6 +1544,7 @@ void WaveTrack::Disjoin(double t0, double t1)
 }
 
 void WaveTrack::Join(double t0, double t1)
+// WEAK-GUARANTEE
 {
    // Merge all WaveClips overlapping selection into one
 
@@ -1538,9 +1586,7 @@ void WaveTrack::Join(double t0, double t1)
       }
 
       //printf("Pasting at %.6f\n", t);
-      bool bResult = newClip->Paste(t, clip);
-      wxASSERT(bResult); // TO DO: Actually handle this.
-      wxUnusedVar(bResult);
+      newClip->Paste(t, clip);
       t = newClip->GetEndTime();
 
       auto it = FindClip(mClips, clip);
@@ -1551,6 +1597,9 @@ void WaveTrack::Join(double t0, double t1)
 void WaveTrack::Append(samplePtr buffer, sampleFormat format,
                        size_t len, unsigned int stride /* = 1 */,
                        XMLWriter *blockFileLog /* = NULL */)
+// PARTIAL-GUARANTEE in case of exceptions:
+// Some prefix (maybe none) of the buffer is appended, and no content already
+// flushed to disk is lost.
 {
    RightmostOrNewClip()->Append(buffer, format, len, stride,
                                         blockFileLog);
@@ -1558,12 +1607,14 @@ void WaveTrack::Append(samplePtr buffer, sampleFormat format,
 
 void WaveTrack::AppendAlias(const wxString &fName, sampleCount start,
                             size_t len, int channel,bool useOD)
+// STRONG-GUARANTEE
 {
    RightmostOrNewClip()->AppendAlias(fName, start, len, channel, useOD);
 }
 
 void WaveTrack::AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
+// STRONG-GUARANTEE
 {
    RightmostOrNewClip()->AppendCoded(fName, start, len, channel, decodeType);
 }
@@ -1637,6 +1688,10 @@ size_t WaveTrack::GetIdealBlockSize()
 }
 
 void WaveTrack::Flush()
+// NOFAIL-GUARANTEE that the rightmost clip will be in a flushed state.
+// PARTIAL-GUARANTEE in case of exceptions:
+// Some initial portion (maybe none) of the append buffer of the rightmost
+// clip gets appended; no previously saved contents are lost.
 {
    // After appending, presumably.  Do this to the clip that gets appended.
    RightmostOrNewClip()->Flush();
@@ -2041,6 +2096,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 
 void WaveTrack::Set(samplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len)
+// WEAK-GUARANTEE
 {
    for (const auto &clip: mClips)
    {
@@ -2071,15 +2127,11 @@ void WaveTrack::Set(samplePtr buffer, sampleFormat format,
             // samplesToCopy is positive and not more than len
          }
 
-         if (!clip->SetSamples(
+         clip->SetSamples(
                (samplePtr)(((char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
-               format, inclipDelta, samplesToCopy.as_size_t() ))
-         {
-            wxASSERT(false); // should always work
-            return;
-         }
+                          format, inclipDelta, samplesToCopy.as_size_t() );
          clip->MarkChanged();
       }
    }
@@ -2212,6 +2264,7 @@ WaveClip* WaveTrack::NewestOrNewClip()
 }
 
 WaveClip* WaveTrack::RightmostOrNewClip()
+// NOFAIL-GUARANTEE
 {
    if (mClips.empty()) {
       WaveClip *clip = CreateClip();
@@ -2318,6 +2371,7 @@ bool WaveTrack::CanInsertClip(WaveClip* clip)
 }
 
 void WaveTrack::Split( double t0, double t1 )
+// WEAK-GUARANTEE
 {
    SplitAt( t0 );
    if( t0 != t1 )
@@ -2325,6 +2379,7 @@ void WaveTrack::Split( double t0, double t1 )
 }
 
 void WaveTrack::SplitAt(double t)
+// WEAK-GUARANTEE
 {
    for (const auto &c : mClips)
    {
@@ -2339,14 +2394,8 @@ void WaveTrack::SplitAt(double t)
             c->GetEnvelope()->Insert(t - c->GetOffset() - 1.0/c->GetRate(), val);  // frame end points
          c->GetEnvelope()->Insert(t - c->GetOffset(), val);
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
-         if (!c->Clear(t, c->GetEndTime()))
-         {
-            return;
-         }
-         if (!newClip->Clear(c->GetStartTime(), t))
-         {
-            return;
-         }
+         c->Clear(t, c->GetEndTime());
+         newClip->Clear(c->GetStartTime(), t);
 
          //offset the NEW clip by the splitpoint (noting that it is already offset to c->GetStartTime())
          sampleCount here = llrint(floor(((t - c->GetStartTime()) * mRate) + 0.5));
@@ -2354,6 +2403,7 @@ void WaveTrack::SplitAt(double t)
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
          mClips.push_back(std::move(newClip)); // transfer ownership
+         return;
       }
    }
 }
@@ -2456,8 +2506,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
           }
       }
 
-      if (!clip->ExpandCutLine(cutLinePosition))
-         return;
+      clip->ExpandCutLine(cutLinePosition);
 
       // STRONG-GUARANTEE provided that the following gives NOFAIL-GUARANTEE
 
@@ -2488,6 +2537,7 @@ bool WaveTrack::RemoveCutLine(double cutLinePosition)
 }
 
 void WaveTrack::MergeClips(int clipidx1, int clipidx2)
+// STRONG-GUARANTEE
 {
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);
@@ -2496,9 +2546,10 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
       return; // Don't throw, just do nothing.
 
    // Append data from second clip to first clip
-   if (!clip1->Paste(clip1->GetEndTime(), clip2))
-      return;
-
+   // use STRONG-GUARANTEE
+   clip1->Paste(clip1->GetEndTime(), clip2);
+   
+   // use NOFAIL-GUARANTEE for the rest
    // Delete second clip
    auto it = FindClip(mClips, clip2);
    mClips.erase(it);
@@ -2509,13 +2560,7 @@ void WaveTrack::Resample(int rate, ProgressDialog *progress)
 // Partial completion may leave clips at differing sample rates!
 {
    for (const auto &clip : mClips)
-      if (!clip->Resample(rate, progress))
-      {
-         wxLogDebug( wxT("Resampling problem!  We're partially resampled") );
-         // FIXME: The track is now in an inconsistent state since some
-         //        clips are resampled and some are not
-         return;
-      }
+      clip->Resample(rate, progress);
 
    mRate = rate;
 }
