@@ -1102,7 +1102,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                      }
                }
                if (!clip->Clear(t0,t1))
-                  return false;
+                  return;
                clip->GetEnvelope()->RemoveUnneededPoints(t0);
             }
          }
@@ -1297,7 +1297,8 @@ void WaveTrack::Paste(double t0, const Track *src)
             }
          }
 
-         return insideClip->Paste(t0, other->GetClipByIndex(0));
+         insideClip->Paste(t0, other->GetClipByIndex(0));
+         return;
       }
 
       // Just fall through and exhibit NEW behaviour
@@ -2492,7 +2493,7 @@ void WaveTrack::Resample(int rate, ProgressDialog *progress)
          wxLogDebug( wxT("Resampling problem!  We're partially resampled") );
          // FIXME: The track is now in an inconsistent state since some
          //        clips are resampled and some are not
-         return false;
+         return;
       }
 
    mRate = rate;
