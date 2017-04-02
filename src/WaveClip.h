@@ -237,7 +237,8 @@ public:
 
    void SetOffset(double offset);
    double GetOffset() const { return mOffset; }
-   void Offset(double delta) { SetOffset(GetOffset() + delta); }
+   void Offset(double delta) // NOFAIL-GUARANTEE
+      { SetOffset(GetOffset() + delta); }
    double GetStartTime() const;
    double GetEndTime() const;
    sampleCount GetStartSample() const;
@@ -268,7 +269,8 @@ public:
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
-   void MarkChanged() { mDirty++; }
+   void MarkChanged() // NOFAIL-GUARANTEE
+      { mDirty++; }
 
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */

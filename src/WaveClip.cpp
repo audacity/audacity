@@ -395,6 +395,7 @@ WaveClip::~WaveClip()
 }
 
 void WaveClip::SetOffset(double offset)
+// NOFAIL-GUARANTEE
 {
     mOffset = offset;
     mEnvelope->SetOffset(mOffset);
@@ -1345,6 +1346,7 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format)
 }
 
 void WaveClip::UpdateEnvelopeTrackLen()
+// NOFAIL-GUARANTEE
 {
    mEnvelope->SetTrackLen((mSequence->GetNumSamples().as_double()) / mRate);
 }
@@ -1378,6 +1380,9 @@ void WaveClip::GetDisplayRect(wxRect* r)
 bool WaveClip::Append(samplePtr buffer, sampleFormat format,
                       size_t len, unsigned int stride /* = 1 */,
                       XMLWriter* blockFileLog /*=NULL*/)
+// PARTIAL-GUARANTEE in case of exceptions:
+// Some prefix (maybe none) of the buffer is appended, and no content already
+// flushed to disk is lost.
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
 
@@ -1388,13 +1393,23 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    if (!mAppendBuffer.ptr())
       mAppendBuffer.Allocate(maxBlockSize, seqFormat);
 
+   auto cleanup = finally( [&] {
+      // use NOFAIL-GUARANTEE
+      UpdateEnvelopeTrackLen();
+      MarkChanged();
+   } );
+
    for(;;) {
       if (mAppendBufferLen >= blockSize) {
          bool success =
+            // flush some previously appended contents
+            // use STRONG-GUARANTEE
             mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
                               blockFileLog);
          if (!success)
             return false;
+
+         // use NOFAIL-GUARANTEE for rest of this "if"
          memmove(mAppendBuffer.ptr(),
                  mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
                  (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
@@ -1405,6 +1420,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       if (len == 0)
          break;
 
+      // use NOFAIL-GUARANTEE for rest of this "for"
       wxASSERT(mAppendBufferLen <= maxBlockSize);
       auto toCopy = std::min(len, maxBlockSize - mAppendBufferLen);
 
@@ -1420,16 +1436,17 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       len -= toCopy;
    }
 
-   UpdateEnvelopeTrackLen();
-   MarkChanged();
-
    return true;
 }
 
 bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
                             size_t len, int channel,bool useOD)
+// STRONG-GUARANTEE
 {
+   // use STRONG-GUARANTEE
    bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
+
+   // use NOFAIL-GUARANTEE
    if (result)
    {
       UpdateEnvelopeTrackLen();
@@ -1440,9 +1457,13 @@ bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
 
 bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
+// STRONG-GUARANTEE
 {
+   // use STRONG-GUARANTEE
    bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);
-   if (result)
+
+   // use NOFAIL-GUARANTEE
+if (result)
    {
       UpdateEnvelopeTrackLen();
       MarkChanged();
@@ -1451,6 +1472,10 @@ bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
 }
 
 bool WaveClip::Flush()
+// NOFAIL-GUARANTEE that the clip will be in a flushed state.
+// PARTIAL-GUARANTEE in case of exceptions:
+// Some initial portion (maybe none) of the append buffer of the
+// clip gets appended; no previously flushed contents are lost.
 {
    //wxLogDebug(wxT("WaveClip::Flush"));
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
@@ -1458,12 +1483,18 @@ bool WaveClip::Flush()
 
    bool success = true;
    if (mAppendBufferLen > 0) {
-      success = mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(), mAppendBufferLen);
-      if (success) {
+
+      auto cleanup = finally( [&] {
+         // Blow away the append buffer even in case of failure.  May lose some
+         // data but don't leave the track in an un-flushed state.
+
+         // Use NOFAIL-GUARANTEE of these steps.
          mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();
          MarkChanged();
-      }
+      } );
+
+      success = mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(), mAppendBufferLen);
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
@@ -1603,16 +1634,20 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
 }
 
 bool WaveClip::InsertSilence(double t, double len)
+// STRONG-GUARANTEE
 {
    sampleCount s0;
    TimeToSamplesClip(t, &s0);
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
+   // use STRONG-GUARANTEE
    if (!GetSequence()->InsertSilence(s0, slen))
    {
       wxASSERT(false);
       return false;
    }
+
+   // use NOFAIL-GUARANTEE
    OffsetCutLines(t, len);
    GetEnvelope()->InsertSpace(t, len);
    MarkChanged();
