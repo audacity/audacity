@@ -78,6 +78,10 @@ const int sliderFontSize = 10;
 const int sliderFontSize = 12;
 #endif
 
+#ifndef EXPERIMENTAL_DA
+#define OPTIONAL_SLIDER_TICKS
+#endif
+
 //
 // TipPanel
 //
@@ -651,7 +655,7 @@ void LWSlider::Draw(wxDC & paintDC)
 
    mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
 
-#if 0
+#ifdef OPTIONAL_SLIDER_TICKS
    // Create the bitmap
    mThumbBitmap = std::make_unique<wxBitmap>();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
@@ -858,7 +862,7 @@ void LWSlider::Draw(wxDC & paintDC)
             divs = mMaxValue - mMinValue + 1;
          upp = divs / (double)(mHeightY-1);
       }
-#if 0
+#ifdef OPTIONAL_SLIDER_TICKS
       double d = 0.0;
       int int_d = -1;
       const int kMax = (mOrientation == wxHORIZONTAL) ? mWidthX : mHeightY;

@@ -16,7 +16,6 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "../Experimental.h"
 #include "TruncSilence.h"
 
 #include <algorithm>

@@ -9759,9 +9759,6 @@ msgstr ""
 "ή για LISP, αρχίστε με μια ανοικτή παρένθεση όπως:\n"
 "        (mult *track* 0.1)\n"
 " ."
-=======
-" ."
->>>>>>> master
 
 #: src/effects/nyquist/Nyquist.cpp:1749
 msgid "Error in Nyquist code"

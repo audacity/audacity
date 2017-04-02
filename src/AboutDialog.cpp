@@ -329,9 +329,17 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
    CreateCreditsList();
 
-   wxString par1Str = _(
+   wxString par1Str = 
+// DA: Says that it is a customised version.
+#ifdef EXPERIMENTAL_DA
+      wxT(
 "Audacity, which this is a customised version of, is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
 Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+#else
+      _(
+"Audacity is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+#endif
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
@@ -367,9 +375,12 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
       wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
       wxT("for recording and editing sounds.") +
-      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright")+
-      wxT("&copy; 1999-2017 Audacity Team.<br>") +
+      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
       wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+
+#else
+      _("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
+      _("Audacity the free, open source, cross-platform software for recording and editing sounds.") +
 #endif
 
       //wxT("<p><br>") + par1Str +
@@ -397,7 +408,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       GetCreditsByRole(roleTranslators) +
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
-      wxT("Audacity includes code from the following projects:") + wxT("<br><br>") +
+      _("Audacity includes code from the following projects:") + wxT("<br><br>") +
       GetCreditsByRole(roleLibrary) +
 
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
@@ -408,6 +419,9 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
       wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
+#else
+      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 #endif
 
       wxT("</center>")
@@ -572,7 +586,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += _("Features");
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
-   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme"), enabled);
+#ifdef EXPERIMENTAL_DA
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), enabled);
+#else
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), disabled);
+#endif
 
    # if USE_NYQUIST
    AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),

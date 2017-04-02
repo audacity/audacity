@@ -175,7 +175,10 @@ void EditToolBar::Populate()
    mButtons[ETBPasteID]->SetEnabled(false);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-//   mButtons[ETBSyncLockID]->PushDown();
+// DA: Has no sync Lock Button
+#ifndef EXPERIMENTAL_DA
+   mButtons[ETBSyncLockID]->PushDown();
+#endif
 #endif
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -251,7 +254,16 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    // due to bugs elsewhere (see: AudacityProject::UpdateMenus() )
 
    // Be sure the pop-up happens even if there are exceptions
-   auto cleanup = finally( [&] { SetButton(false, mButtons[id]); } );
+   // Except, Sync Lock button is a toggle...
+   auto cleanup = finally( [&] { 
+      bool bIsToggle = false;
+#ifndef EXPERIMENTAL_DA
+      bIsToggle = bIsToggle || ( id != ETBSyncLockID );
+#endif
+      if( bIsToggle )
+         SetButton(false, mButtons[id]); 
+      } 
+   );
 
    switch (id) {
       case ETBCutID:
@@ -280,9 +292,12 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          p->OnRedo();
          break;
 #ifdef EXPERIMENTAL_SYNC_LOCK
-//      case ETBSyncLockID:
-//         p->OnSyncLock();
-//         return;//avoiding the call to SetButton()
+// DA: Has no sync Lock Button
+#ifndef EXPERIMENTAL_DA
+      case ETBSyncLockID:
+         p->OnSyncLock();
+         break;
+#endif
 #endif
       case ETBZoomInID:
          p->OnZoomIn();
@@ -291,7 +306,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          p->OnZoomOut();
          break;
 
-#if 0 // Disabled for version 1.2.0 since it doesn't work quite right...
+#if 0 // Disabled for version 1.2.0 because we have many other zoomers.
       case ETBZoomToggleID:
          p->OnZoomToggle();
          break;
@@ -339,12 +354,15 @@ void EditToolBar::EnableDisableButtons()
    mButtons[ETBPasteID]->SetEnabled(cm->GetEnabled("Paste"));
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-//   bool bSyncLockTracks;
-//   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
+// DA: Does not have Sync-Lock Button.
+#ifndef EXPERIMENTAL_DA
+   bool bSyncLockTracks;
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
 
-//   if (bSyncLockTracks)
-//      mButtons[ETBSyncLockID]->PushDown();
-//   else
-//      mButtons[ETBSyncLockID]->PopUp();
+   if (bSyncLockTracks)
+      mButtons[ETBSyncLockID]->PushDown();
+   else
+      mButtons[ETBSyncLockID]->PopUp();
+#endif
 #endif
 }

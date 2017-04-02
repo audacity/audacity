@@ -1984,7 +1984,12 @@ namespace {
    bool ReadScrubEnabledPref()
    {
       bool result {};
+// DA: Scrub is disabled by default.
+#ifdef EXPERIMENTAL_DA
       gPrefs->Read(scrubEnabledPrefName, &result, false);
+#else
+      gPrefs->Read(scrubEnabledPrefName, &result, true);
+#endif
       return result;
    }
 
