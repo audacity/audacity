@@ -738,8 +738,8 @@ void LWSlider::Draw(wxDC & paintDC)
 #endif
 
    // Draw the line along which the thumb moves.
-   AColor::Light(&dc, false);
-
+   //AColor::Light(&dc, false);
+   AColor::UseThemeColour( &dc, clrTrackPanelText );
 
    if (mOrientation == wxHORIZONTAL)
    {

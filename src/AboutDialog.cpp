@@ -44,7 +44,12 @@ hold information about one contributor to Audacity.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
+// DA: Logo for About box.
+#ifdef EXPERIMENTAL_DA
+#include "../images/DarkAudacityLogoWithName.xpm"
+#else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
 #include "RevisionIdent.h"
 
 // RevisionIdent.h may contain #defines like these ones:
@@ -299,8 +304,8 @@ AboutDialog::AboutDialog(wxWindow * parent)
    sActiveInstance = this;
 
    SetName(GetTitle());
-   //this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
-   this->SetBackgroundColour(theTheme.Colour( clrMedium ));
+   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+   //this->SetBackgroundColour(theTheme.Colour( clrMedium ));
    icon = NULL;
    ShuttleGui S( this, eIsCreating );
    S.StartNotebook();
@@ -409,7 +414,8 @@ visit our [[http://forum.audacityteam.org/|forum]].");
    );
 
    auto pPage = S.StartNotebookPage( _("Audacity") );
-   pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
+   //pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
+   pPage->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    S.StartVerticalLay(1);
    {
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.

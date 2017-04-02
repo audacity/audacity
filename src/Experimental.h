@@ -49,7 +49,7 @@
 #define EXPERIMENTAL_SYNC_LOCK
 
 // DA: Enables dark audacity theme and customisations.
-#define EXPERIMENTAL_DA
+//#define EXPERIMENTAL_DA
 
 // experimental theming
 // Work in progress, June-2008.
@@ -187,11 +187,13 @@
 // scrolling past zero is enabled. Perhaps that lessens confusion.
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
+#ifndef IN_RC
 // Define to include crash reporting
 #include <wx/defs.h>
 #define EXPERIMENTAL_CRASH_REPORT
 #if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
 #undef EXPERIMENTAL_CRASH_REPORT
+#endif
 #endif
 
 // Paul Licameli (PRL) 31 May 2015

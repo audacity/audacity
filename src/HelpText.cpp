@@ -32,7 +32,7 @@ static wxString WrapText( const wxString & Text )
 {
    return wxString(wxT(""))+
       wxT("<html><head></head>") +
-      wxT("<body bgcolor=") + HtmlColourOfIndex(clrDark) + wxT(">") +
+      wxT("<body bgcolor=") + HtmlColourOfIndex(clrTrackInfo) + wxT(">") +
       wxT("<font color=") + HtmlColourOfIndex(clrTrackPanelText) + wxT(">") +
       wxT("<p>") + Text +
       wxT("</font>")+

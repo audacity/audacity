@@ -197,7 +197,7 @@ static unsigned char LightImageCacheAsData[] = {
 #include "LightThemeAsCeeCode.h"
 };
 static unsigned char ClassicImageCacheAsData[] = {
-#include "ThemeAsCeeCode.h"
+#include "ClassicThemeAsCeeCode.h"
 };
 
 // theTheme is a global variable.

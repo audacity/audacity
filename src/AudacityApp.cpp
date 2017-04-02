@@ -229,7 +229,13 @@ It handles initialization and termination by subclassing wxApp.
 
 #endif //(__WXMSW__)
 
+// DA: Logo for Splash Screen
+#ifdef EXPERIMENTAL_DA
+#include "../images/DarkAudacityLogoWithName.xpm"
+#else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
+
 
 ////////////////////////////////////////////////////////////
 /// Custom events

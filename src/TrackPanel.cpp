@@ -7220,7 +7220,9 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
       mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
-#if 0
+
+// DA: For classic Audacity, show stero/mono and rate.
+#ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
 
          int offset = 8;
@@ -9051,63 +9053,112 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
+int TrackInfo::CalcItemY( int iItem ) const
+{
+   int y = 1;
+   if( iItem == kItemBarButtons )
+      return y;
+   y+= kTrackInfoBtnSize +2;
+   if( iItem == kItemStatusInfo )
+      return y;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   int y1=y;
+   if( iItem == kItemNoteMute )
+      return y;
+   if( iItem == kItemNoteSolo )
+      return y;
+   y=y1;
+#endif
+
+// DA: Does not have status information for a track.
+#ifndef EXPERIMENTAL_DA 
+   y+= 30;
+#else
+   y+= 2;
+#endif
+
+   if( iItem == kItemMute )
+      return y;
+
+// DA: Has Mute and Solo on separate lines.
+#ifdef EXPERIMENTAL_DA 
+   y+= kTrackInfoBtnSize + 2;
+#endif
+
+   if( iItem == kItemSolo )
+      return y;
+   y+= kTrackInfoBtnSize + 3;
+
+   if( iItem == kItemGain )
+      return y;
+   y+= 30;
+   if( iItem == kItemPan )
+      return y;
+   y+= 30;
+   return y;
+}
+
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x;
-   dest.y = rect.y;
+   dest.x = rect.x+1;
+   dest.y = rect.y + CalcItemY( kItemBarButtons );
    dest.width = kTrackInfoBtnSize;
    dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + kTrackInfoBtnSize; // to right of CloseBoxRect
-   dest.y = rect.y;
-   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize; // to right of CloseBoxRect
+   dest.x = rect.x + kTrackInfoBtnSize+2; // to right of CloseBoxRect
+   dest.y = rect.y + CalcItemY( kItemBarButtons );
+   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
    dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
 {
 
+   dest.height = kTrackInfoBtnSize +1;
+   dest.x = rect.x+1;
 
-   dest.height = kTrackInfoBtnSize;
-// DA: Mute solo buttons wider and higher.
-#ifdef EXPERIMENTAL_DA
-   dest.width = 100 - 2 * kTrackInfoBtnSize;
-   dest.x = rect.x + (100 - dest.width)*0.5 ;
-   dest.y = rect.y + kTrackInfoBtnSize + 2;
-   if( bHasSoloButton && solo )
-      dest.y += kTrackInfoBtnSize;
+   int MuteSoloType = 0;
 
-#else
-   dest.width = 48; // Better is (100 - 2 * kTrackInfoBtnSize)/2;
-   dest.x = rect.x;
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (pTrack->GetKind() == Track::Note)
-      dest.y = rect.y + 16;
-   else
-   {
-      wxASSERT(pTrack->GetKind() == Track::Wave);
-      dest.y = rect.y + 50;
-   }
-#else
-   dest.y = rect.y + 50;
+      MuteSoloType = kItemNoteMute - kItemMute;
 #endif
 
-   // Double width Mute if no Solo.
-   if( !bHasSoloButton )
-      dest.width += 48; 
-   else if( solo )
-      dest.x += kTrackInfoBtnSize;
-#endif
+   int yMute = CalcItemY( kItemMute + MuteSoloType );
+   int ySolo = CalcItemY( kItemSolo + MuteSoloType );
+
+   bool bSameRow = ( yMute == ySolo );
+   bool bNarrow = bSameRow && bHasSoloButton;
+
+   if( bNarrow )
+   {
+      dest.width = rect.width / 2-2;
+      if( solo ){
+         dest.x+=dest.width;
+         dest.width-=1;
+      }
+   }
+   else
+   {
+      dest.width = rect.width - 2 * kTrackInfoBtnSize;
+      dest.x = rect.x + kTrackInfoBtnSize;
+   }
+
+   if( bSameRow || !solo )
+      dest.y = rect.y + yMute;
+   else
+      dest.y = rect.y + ySolo;
 
 }
 
 void TrackInfo::GetGainRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + 7;
-   dest.y = rect.y + 60;
+   dest.y = rect.y + CalcItemY( kItemGain );
    dest.width = 84;
    dest.height = 25;
 }
@@ -9115,7 +9166,7 @@ void TrackInfo::GetGainRect(const wxRect & rect, wxRect & dest) const
 void TrackInfo::GetPanRect(const wxRect & rect, wxRect & dest) const
 {
    GetGainRect( rect, dest );
-   dest.y += 30;
+   dest.y = rect.y + CalcItemY( kItemPan );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -9246,7 +9297,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
 #else
    dc->SetPen(*wxBLACK_PEN);
 #endif
-
+   bev.Inflate( -1, -1 );
    // Draw the "X"
    const int s = 6;
 
@@ -9268,7 +9319,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
 {
    wxRect bev;
    GetTitleBarRect(rect, bev);
-   bev.Inflate(-1, -1);
+   //bev.Inflate(-1, -1);
    AColor::Bevel2(*dc, !down, bev);
 
    // Draw title text
@@ -9322,7 +9373,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    if( solo && !bHasSoloButton )
       return;
    GetMuteSoloRect(rect, bev, solo, bHasSoloButton, t);
-   bev.Inflate(-1, -1);
+   //bev.Inflate(-1, -1);
 
    if (bev.y + bev.height >= rect.y + rect.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
@@ -9357,12 +9408,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
       _("Mute");
 
-// DA: Uses Theme to draw buttons.
-#ifdef EXPERIMENTAL_DA
    AColor::Bevel2(
-#else   
-   AColor::BevelTrackInfo(
-#endif
       *dc,
       (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
       bev
