@@ -2333,6 +2333,7 @@ void WaveTrack::SplitAt(double t)
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay
          mClips.push_back(std::move(newClip)); // transfer ownership
+         return;
       }
    }
 }
