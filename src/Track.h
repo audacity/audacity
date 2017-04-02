@@ -192,13 +192,15 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual void SetSelected(bool s);
    void SetLinked  (bool l);
 
-   int    GetChannel() const { return mChannel; }
+   virtual int GetChannel() const { return mChannel;};
    virtual double GetOffset() const = 0;
 
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
    void SetChannel(int    c) { mChannel = c; }
+   virtual void SetPan( float ){ ;};
+   virtual void SetPanFromChannelType(){ ;};
 
    // AS: Note that the dirManager is mutable.  This is
    // mostly to support "Duplicate" of const objects,

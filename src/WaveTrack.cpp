@@ -199,6 +199,27 @@ void WaveTrack::SetOffset(double o)
    mOffset = o;
 }
 
+int WaveTrack::GetChannel() const 
+{
+   if( mChannel != Track::MonoChannel )
+      return mChannel; 
+   auto pan = GetPan();
+   if( pan < -0.99 )
+      return Track::LeftChannel;
+   if( pan >  0.99 )
+      return Track::RightChannel;
+   return mChannel;
+}
+
+void WaveTrack::SetPanFromChannelType()
+{ 
+   if( mChannel == Track::LeftChannel )
+      SetPan( -1.0f );
+   else if( mChannel == Track::RightChannel )
+      SetPan( 1.0f );
+};
+
+
 //static
 WaveTrack::WaveTrackDisplay WaveTrack::FindDefaultViewMode()
 {

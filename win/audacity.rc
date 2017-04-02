@@ -1,6 +1,14 @@
-AudacityLogo ICON "audacity.ico"
-#include "wx/msw/wx.rc"
+#define IN_RC
 #include "Audacity.h"
+#include "Experimental.h"
+
+#ifdef EXPERIMENTAL_DA
+AudacityLogo ICON "darkaudacity.ico"
+#else
+AudacityLogo ICON "audacity.ico"
+#endif
+
+#include "wx/msw/wx.rc"
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -22,15 +30,27 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "The Audacity Team"
-            VALUE "FileDescription", "Audacity®, the Free, Cross-Platform Sound Editor"
+#ifdef EXPERIMENTAL_DA        
+            VALUE "CompanyName", "Extended Audacity Team"
+            VALUE "FileDescription", "A customised Audacity® Cross-Platform Sound Editor"
+            VALUE "FileVersion", AUDACITY_FILE_VERSION
+            VALUE "InternalName", "DarkAudacity"
+            VALUE "LegalCopyright", "Copyright © 2017. All rights reserved."
+            VALUE "LegalTrademarks", "Audacity® is a registered trademark of Dominic Mazzoni."
+            VALUE "OriginalFilename", "DarkAudacity.exe"
+            VALUE "ProductName", "DarkAudacity"
+            VALUE "ProductVersion", AUDACITY_FILE_VERSION
+#else
+            VALUE "CompanyName", "Audacity Team"
+            VALUE "FileDescription", "Audacity® Cross-Platform Sound Editor"
             VALUE "FileVersion", AUDACITY_FILE_VERSION
             VALUE "InternalName", "Audacity"
             VALUE "LegalCopyright", "Copyright © 2017. All rights reserved."
             VALUE "LegalTrademarks", "Audacity® is a registered trademark of Dominic Mazzoni."
             VALUE "OriginalFilename", "Audacity.exe"
-            VALUE "ProductName", "Audacity®"
+            VALUE "ProductName", "Audacity"
             VALUE "ProductVersion", AUDACITY_FILE_VERSION
+#endif            
         END
     END
     BLOCK "VarFileInfo"

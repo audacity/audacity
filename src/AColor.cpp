@@ -230,15 +230,16 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
 
 void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r)
 {
-   wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonLarge : bmpDownButtonLarge );
+   wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonExpand : bmpDownButtonExpand );
    wxMemoryDC memDC;
    memDC.SelectObject(Bmp);
    int h = wxMin( r.height, Bmp.GetHeight() );
 
 
    dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0 );
-   dc.Blit( r.x+r.width/2,r.y,r.width/2, h, &memDC, 
-      Bmp.GetWidth() - r.width/2, 0 );
+   int r2 = r.width - r.width/2;
+   dc.Blit( r.x+r.width/2,r.y,r2, h, &memDC, 
+      Bmp.GetWidth() - r2, 0 );
 }
 
 wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
@@ -334,7 +335,7 @@ void AColor::Dark(wxDC * dc, bool selected)
 void AColor::TrackPanelBackground(wxDC * dc, bool selected)
 {
 #ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrDarkSelected : clrDark);
+   UseThemeColour( dc, selected ? clrMediumSelected : clrMedium);
 #else
    Dark( dc, selected );
 #endif
@@ -425,11 +426,17 @@ void AColor::Init()
    if (inited)
       return;
 
-   wxColour light =
-       wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
-   wxColour med = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
-   wxColour dark =
-       wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW);
+   wxColour light = theTheme.Colour( clrLight ); 
+   // wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
+   wxColour med = theTheme.Colour( clrMedium ); 
+   // wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+   wxColour dark = theTheme.Colour( clrDark ); 
+   // wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW);
+
+   wxColour lightSelected = theTheme.Colour( clrLightSelected ); 
+   wxColour medSelected = theTheme.Colour( clrMediumSelected ); 
+   wxColour darkSelected = theTheme.Colour( clrDarkSelected ); 
+
 
    clippingPen.SetColour(0xCC, 0x11, 0x00);
 
@@ -489,12 +496,12 @@ void AColor::Init()
    darkPen[0].SetColour(dark);
 
    // selected
-   lightBrush[1].SetColour(204, 204, 255);
-   mediumBrush[1].SetColour(200, 200, 214);
-   darkBrush[1].SetColour(148, 148, 170);
-   lightPen[1].SetColour(204, 204, 255);
-   mediumPen[1].SetColour(200, 200, 214);
-   darkPen[1].SetColour(0, 0, 0);
+   lightBrush[1].SetColour(lightSelected);
+   mediumBrush[1].SetColour(medSelected);
+   darkBrush[1].SetColour(darkSelected);
+   lightPen[1].SetColour(lightSelected);
+   mediumPen[1].SetColour(medSelected);
+   darkPen[1].SetColour(darkSelected);
 
 #else
 

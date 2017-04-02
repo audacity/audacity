@@ -78,6 +78,10 @@ const int sliderFontSize = 10;
 const int sliderFontSize = 12;
 #endif
 
+#ifndef EXPERIMENTAL_DA
+#define OPTIONAL_SLIDER_TICKS
+#endif
+
 //
 // TipPanel
 //
@@ -568,8 +572,8 @@ void LWSlider::AdjustSize(const wxSize & sz)
    if( mBitmap ){
       mBitmap.reset();
    }
-   mThumbWidth = 14;
-   mThumbHeight = 14;
+   mThumbWidth = 11;
+   mThumbHeight = 20;
 
    if (mOrientation == wxHORIZONTAL)
    {
@@ -649,6 +653,9 @@ void LWSlider::Draw(wxDC & paintDC)
    // Set up the memory DC
    wxMemoryDC dc;
 
+   mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
+
+#ifdef OPTIONAL_SLIDER_TICKS
    // Create the bitmap
    mThumbBitmap = std::make_unique<wxBitmap>();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
@@ -711,6 +718,7 @@ void LWSlider::Draw(wxDC & paintDC)
    mThumbBitmap->SetMask(safenew wxMask(*mThumbBitmap, transparentColour));
 #endif
 
+#endif
    //
    // Now the background bitmap
    //
@@ -734,16 +742,20 @@ void LWSlider::Draw(wxDC & paintDC)
 #endif
 
    // Draw the line along which the thumb moves.
-   AColor::Dark(&dc, false);
+   //AColor::Light(&dc, false);
+   AColor::UseThemeColour( &dc, clrTrackPanelText );
 
    if (mOrientation == wxHORIZONTAL)
    {
+      AColor::Line(dc, mLeftX, mCenterY, mRightX+2, mCenterY);
       AColor::Line(dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
    }
    else //v if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
    {
+      AColor::Line(dc, mCenterX, mTopY, mCenterX, mBottomY+2);
       AColor::Line(dc, mCenterX+1, mTopY, mCenterX+1, mBottomY+2);
    }
+
 
    // Draw +/- or L/R first.  We need to draw these before the tick marks.
    if (mStyle == PAN_SLIDER)
@@ -850,6 +862,7 @@ void LWSlider::Draw(wxDC & paintDC)
             divs = mMaxValue - mMinValue + 1;
          upp = divs / (double)(mHeightY-1);
       }
+#ifdef OPTIONAL_SLIDER_TICKS
       double d = 0.0;
       int int_d = -1;
       const int kMax = (mOrientation == wxHORIZONTAL) ? mWidthX : mHeightY;
@@ -868,7 +881,7 @@ void LWSlider::Draw(wxDC & paintDC)
             {
                AColor::Line(dc, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
             }
-
+#if 0
             AColor::Dark(&dc, false);
 
             if (mOrientation == wxHORIZONTAL)
@@ -879,9 +892,11 @@ void LWSlider::Draw(wxDC & paintDC)
             {
                AColor::Line(dc, mCenterX-tickLength+1, mTopY+p+1, mCenterX-1, mTopY+p+1); // ticks at left
             }
+#endif
          }
          d += upp;
       }
+#endif
    }
 
    dc.SelectObject(wxNullBitmap);
@@ -1555,6 +1570,9 @@ ASlider::ASlider( wxWindow * parent,
                   int orientation /*= wxHORIZONTAL*/)
 : wxPanel( parent, id, pos, size, wxWANTS_CHARS )
 {
+   //wxColour Col(parent->GetBackgroundColour());
+   //SetBackgroundColour( Col );
+   SetBackgroundColour( theTheme.Colour( clrMedium ) );
    mLWSlider = std::make_unique<LWSlider>( this,
                              name,
                              wxPoint(0,0),

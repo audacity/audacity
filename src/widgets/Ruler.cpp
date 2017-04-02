@@ -1278,6 +1278,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
    if (!mValid)
       Update(timetrack);
 
+   mDC->SetTextForeground( mTickColour );
 #ifdef EXPERIMENTAL_THEMING
    mDC->SetPen(mPen);
 #else
@@ -1983,7 +1984,12 @@ namespace {
    bool ReadScrubEnabledPref()
    {
       bool result {};
+// DA: Scrub is disabled by default.
+#ifdef EXPERIMENTAL_DA
+      gPrefs->Read(scrubEnabledPrefName, &result, false);
+#else
       gPrefs->Read(scrubEnabledPrefName, &result, true);
+#endif
       return result;
    }
 
@@ -2058,11 +2064,12 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, true);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
+      //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
+      bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
       size);
 
    UpdateButtonStates();
@@ -3214,12 +3221,6 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      // synonyms... (makes compatibility with DarkAudacity easier).
-      #define bmpPlayPointerPinned bmpPinnedPlayHead
-      #define bmpPlayPointer bmpUnpinnedPlayHead
-      #define bmpRecordPointerPinned bmpPinnedRecordHead
-      #define bmpRecordPointer bmpUnpinnedRecordHead
-
       bool pinned = TracksPrefs::GetPinnedHeadPreference();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :

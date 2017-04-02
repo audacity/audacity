@@ -302,9 +302,16 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    }
    else if (releasePageName == wxT("Quick_Help"))
    {
+// DA: No bundled help, by default, and different quick-help URL.
+#ifdef EXPERIMENTAL_DA
+      releasePageName = wxT("video") + HelpSystem::ReleaseSuffix + anchor;
+      localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
+      webHelpPath = wxT("http://www.darkaudacity.com/");
+#else
       releasePageName = wxT("quick_help") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
       webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
+#endif
    }
    else
    {
