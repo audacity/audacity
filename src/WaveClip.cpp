@@ -1471,7 +1471,7 @@ if (result)
    }
 }
 
-bool WaveClip::Flush()
+void WaveClip::Flush()
 // NOFAIL-GUARANTEE that the clip will be in a flushed state.
 // PARTIAL-GUARANTEE in case of exceptions:
 // Some initial portion (maybe none) of the append buffer of the
@@ -1498,8 +1498,6 @@ bool WaveClip::Flush()
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
-
-   return success;
 }
 
 bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
