@@ -90,7 +90,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
-   bool Set(samplePtr buffer, sampleFormat format,
+   void SetSamples(samplePtr buffer, sampleFormat format,
             sampleCount start, sampleCount len);
 
    // where is input, assumed to be nondecreasing, and its size is len + 1.
@@ -104,17 +104,17 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
                        size_t len, const sampleCount *where) const;
 
    std::unique_ptr<Sequence> Copy(sampleCount s0, sampleCount s1) const;
-   bool Paste(sampleCount s0, const Sequence *src);
+   void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   bool Append(samplePtr buffer, sampleFormat format, size_t len,
+   void Append(samplePtr buffer, sampleFormat format, size_t len,
                XMLWriter* blockFileLog=NULL);
-   bool Delete(sampleCount start, sampleCount len);
-   bool AppendAlias(const wxString &fullPath,
+   void Delete(sampleCount start, sampleCount len);
+   void AppendAlias(const wxString &fullPath,
                     sampleCount start,
                     size_t len, int channel, bool useOD);
 
-   bool AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
@@ -128,8 +128,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // loaded from an XML file via DirManager::HandleXMLTag
    void AppendBlockFile(const BlockFilePtr &blockFile);
 
-   bool SetSilence(sampleCount s0, sampleCount len);
-   bool InsertSilence(sampleCount s0, sampleCount len);
+   void SetSilence(sampleCount s0, sampleCount len);
+   void InsertSilence(sampleCount s0, sampleCount len);
 
    const std::shared_ptr<DirManager> &GetDirManager() { return mDirManager; }
 
@@ -162,8 +162,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
 
    sampleFormat GetSampleFormat() const;
-   // bool SetSampleFormat(sampleFormat format);
-   bool ConvertToSampleFormat(sampleFormat format, bool* pbChanged);
+
+   // Return true iff there is a change
+   bool ConvertToSampleFormat(sampleFormat format);
 
    //
    // Retrieving summary info
@@ -245,7 +246,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
-   static bool AppendBlock
+   static void AppendBlock
       (DirManager &dirManager,
        BlockArray &blocks, sampleCount &numSamples, const SeqBlock &b);
 
@@ -263,19 +264,38 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool Get(int b, samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len, bool mayThrow) const;
 
- public:
+public:
 
    //
-   // Public methods intended for debugging only
+   // Public methods
    //
 
-   // This function makes sure that the track isn't messed up
+   // This function throws if the track is messed up
    // because of inconsistent block starts & lengths
-   bool ConsistencyCheck(const wxChar *whereStr) const;
+   void ConsistencyCheck (const wxChar *whereStr, bool mayThrow = true) const;
 
    // This function prints information to stdout about the blocks in the
    // tracks and indicates if there are inconsistencies.
-   void DebugPrintf(wxString *dest) const;
+   static void DebugPrintf
+      (const BlockArray &block, sampleCount numSamples, wxString *dest);
+
+private:
+   static void ConsistencyCheck
+      (const BlockArray &block, size_t from,
+       sampleCount numSamples, const wxChar *whereStr,
+       bool mayThrow = true);
+
+   // The next two are used in methods that give a strong guarantee.
+   // They either throw because final consistency check fails, or swap the
+   // changed contents into place.
+
+   void CommitChangesIfConsistent
+      (BlockArray &newBlock, sampleCount numSamples, const wxChar *whereStr);
+
+   void AppendBlocksIfConsistent
+      (BlockArray &additionalBlocks, bool replaceLast,
+       sampleCount numSamples, const wxChar *whereStr);
+
 };
 
 #endif // __AUDACITY_SEQUENCE__

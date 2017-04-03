@@ -301,7 +301,7 @@ public:
                size_t len, unsigned int stride=1,
                XMLWriter* blockFileLog = NULL);
    /// Flush must be called after last Append
-   bool Flush();
+   void Flush();
 
    void AppendAlias(const wxString &fName, sampleCount start,
                     size_t len, int channel,bool useOD);

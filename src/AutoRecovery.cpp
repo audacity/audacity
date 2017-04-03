@@ -411,7 +411,8 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
-      seq->ConsistencyCheck(wxT("RecordingRecoveryHandler::HandleXMLEndTag"));
+      seq->ConsistencyCheck
+         (wxT("RecordingRecoveryHandler::HandleXMLEndTag"), false);
    }
 }
 
