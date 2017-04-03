@@ -495,11 +495,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("Disjoin"), _("Detac&h at Silences"), FN(OnDisjoin), wxT("Ctrl+Alt+J"));
       c->EndSubMenu();
 
-      c->AddSeparator();
-
-      c->AddItem(wxT("EditMetaData"), _("Me&tadata..."), FN(OnEditMetadata));
-      c->AddSeparator();
-
       /////////////////////////////////////////////////////////////////////////////
 
       c->BeginSubMenu(_("La&bels"));
@@ -563,80 +558,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndSubMenu();
 
-      /////////////////////////////////////////////////////////////////////////////
-
-      /* i18n-hint: (verb) It's an item on a menu. */
-      c->BeginSubMenu(_("&Select"));
-      c->SetDefaultFlags(TracksExistFlag, TracksExistFlag);
-
-      c->AddItem(wxT("SelectAll"), _("&All"), FN(OnSelectAll), wxT("Ctrl+A"));
-      c->AddItem(wxT("SelectNone"), _("&None"), FN(OnSelectNone), wxT("Ctrl+Shift+A"));
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      c->BeginSubMenu(_("S&pectral"));
-      c->AddItem(wxT("ToggleSpectralSelection"), _("To&ggle spectral selection"), FN(OnToggleSpectralSelection), wxT("Q"));
-      c->AddItem(wxT("NextHigherPeakFrequency"), _("Next Higher Peak Frequency"), FN(OnNextHigherPeakFrequency));
-      c->AddItem(wxT("NextLowerPeakFrequency"), _("Next Lower Peak Frequency"), FN(OnNextLowerPeakFrequency));
-      c->EndSubMenu();
-#endif
-
-      c->AddItem(wxT("SetLeftSelection"), _("&Left at Playback Position"), FN(OnSetLeftSelection), wxT("["));
-      c->AddItem(wxT("SetRightSelection"), _("&Right at Playback Position"), FN(OnSetRightSelection), wxT("]"));
-
-      c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
-
-      c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
-      c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
-      c->AddItem(wxT("SelPrevClipBoundaryToCursor"), _("Pre&vious Clip Boundary to Cursor"),
-         FN(OnSelectPrevClipBoundaryToCursor), wxT(""),
-         TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
-      c->AddItem(wxT("SelCursorToNextClipBoundary"), _("Cursor to Ne&xt Clip Boundary"),
-         FN(OnSelectCursorToNextClipBoundary), wxT(""),
-         TrackPanelHasFocus |WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
-      c->AddItem(wxT("SelPrevClip"), _("Previo&us Clip"), FN(OnSelectPrevClip), wxT(""),
-         WaveTracksExistFlag | TrackPanelHasFocus, WaveTracksExistFlag | TrackPanelHasFocus);
-      c->AddItem(wxT("SelNextClip"), _("N&ext Clip"), FN(OnSelectNextClip), wxT(""),
-         WaveTracksExistFlag | TrackPanelHasFocus, WaveTracksExistFlag | TrackPanelHasFocus);
-      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Saved &Cursor Position"), FN(OnSelectCursorStoredCursor),
-         wxT(""), TracksExistFlag, TracksExistFlag);
-
-
-      c->AddSeparator();
-
-      c->AddItem(wxT("SelAllTracks"), _("In All &Tracks"), FN(OnSelectAllTracks),
-         wxT("Ctrl+Shift+K"),
-         TracksExistFlag, TracksExistFlag);
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddItem(wxT("SelSyncLockTracks"), _("In All Sync-Locked Tracks"),
-         FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
-         TracksSelectedFlag | IsSyncLockedFlag,
-         TracksSelectedFlag | IsSyncLockedFlag);
-#endif
-
-      c->AddSeparator();
-      c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
-      c->AddSeparator();
-
-      c->AddItem(wxT("StoreCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionStore),
-         WaveTracksExistFlag,
-         WaveTracksExistFlag);
-      // Save cursor position is used in some selctions.
-      // Maybe there should be a restore for it?
-
-      // Audacity has 'Store Re&gion' here.
-      c->AddItem(wxT("SelSave"), _("Save Sele&ction"), FN(OnSelectionSave),
-         WaveTracksSelectedFlag,
-         WaveTracksSelectedFlag);
-      // Audacity has 'Retrieve Regio&n' here.
-      c->AddItem(wxT("SelRestore"), _("Restore Selectio&n"), FN(OnSelectionRestore),
-         TracksExistFlag,
-         TracksExistFlag);
-      c->EndSubMenu();
-
-      /////////////////////////////////////////////////////////////////////////////
-
-
+      c->AddItem(wxT("EditMetaData"), _("Me&tadata..."), FN(OnEditMetadata));
 
       /////////////////////////////////////////////////////////////////////////////
 
@@ -655,6 +577,104 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("Preferences"), _("Pre&ferences..."), FN(OnPreferences), key,
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
+
+      c->EndMenu();
+
+      /////////////////////////////////////////////////////////////////////////////
+      // Select Menu
+      /////////////////////////////////////////////////////////////////////////////
+
+      /* i18n-hint: (verb) It's an item on a menu. */
+      c->BeginMenu(_("&Select"));
+      c->SetDefaultFlags(TracksExistFlag, TracksExistFlag);
+
+      c->AddItem(wxT("SelectAll"), _("&All"), FN(OnSelectAll), wxT("Ctrl+A"));
+      c->AddItem(wxT("SelectNone"), _("&None"), FN(OnSelectNone), wxT("Ctrl+Shift+A"));
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
+
+      c->BeginSubMenu(_("Tracks"));
+      c->AddItem(wxT("SelAllTracks"), _("In All &Tracks"), FN(OnSelectAllTracks),
+         wxT("Ctrl+Shift+K"),
+         TracksExistFlag, TracksExistFlag);
+
+#ifdef EXPERIMENTAL_SYNC_LOCK
+      c->AddItem(wxT("SelSyncLockTracks"), _("In All Sync-Locked Tracks"),
+         FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
+         TracksSelectedFlag | IsSyncLockedFlag,
+         TracksSelectedFlag | IsSyncLockedFlag);
+#endif
+
+      c->EndSubMenu();
+
+      c->SetDefaultFlags(TracksExistFlag, TracksExistFlag);
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->BeginSubMenu(_("Region"));
+
+      c->AddItem(wxT("SetLeftSelection"), _("&Left at Playback Position"), FN(OnSetLeftSelection), wxT("["));
+      c->AddItem(wxT("SetRightSelection"), _("&Right at Playback Position"), FN(OnSetRightSelection), wxT("]"));
+      c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
+      c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
+      c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
+      c->AddSeparator();
+      // Audacity has 'Store Re&gion' here.
+      c->AddItem(wxT("SelSave"), _("Save Sele&ction"), FN(OnSelectionSave),
+         WaveTracksSelectedFlag,
+         WaveTracksSelectedFlag);
+      // Audacity has 'Retrieve Regio&n' here.
+      c->AddItem(wxT("SelRestore"), _("Restore Selectio&n"), FN(OnSelectionRestore),
+         TracksExistFlag,
+         TracksExistFlag);
+      c->AddSeparator();
+      c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
+
+      c->EndSubMenu();
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(TracksExistFlag, TracksExistFlag);
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      c->BeginSubMenu(_("S&pectral"));
+      c->AddItem(wxT("ToggleSpectralSelection"), _("To&ggle spectral selection"), FN(OnToggleSpectralSelection), wxT("Q"));
+      c->AddItem(wxT("NextHigherPeakFrequency"), _("Next Higher Peak Frequency"), FN(OnNextHigherPeakFrequency));
+      c->AddItem(wxT("NextLowerPeakFrequency"), _("Next Lower Peak Frequency"), FN(OnNextLowerPeakFrequency));
+      c->EndSubMenu();
+#endif
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
+
+      c->BeginSubMenu(_("Clip Boundaries"));
+      c->AddItem(wxT("SelPrevClipBoundaryToCursor"), _("Pre&vious Clip Boundary to Cursor"),
+         FN(OnSelectPrevClipBoundaryToCursor), wxT(""),
+         TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
+      c->AddItem(wxT("SelCursorToNextClipBoundary"), _("Cursor to Ne&xt Clip Boundary"),
+         FN(OnSelectCursorToNextClipBoundary), wxT(""),
+         TrackPanelHasFocus |WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
+      c->AddItem(wxT("SelPrevClip"), _("Previo&us Clip"), FN(OnSelectPrevClip), wxT(""),
+         WaveTracksExistFlag | TrackPanelHasFocus, WaveTracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("SelNextClip"), _("N&ext Clip"), FN(OnSelectNextClip), wxT(""),
+         WaveTracksExistFlag | TrackPanelHasFocus, WaveTracksExistFlag | TrackPanelHasFocus);
+
+      c->EndSubMenu();
+      /////////////////////////////////////////////////////////////////////////////
+
+
+      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Saved &Cursor Position"), FN(OnSelectCursorStoredCursor),
+         wxT(""), TracksExistFlag, TracksExistFlag);
+
+      c->AddItem(wxT("StoreCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionStore),
+         WaveTracksExistFlag,
+         WaveTracksExistFlag);
+      // Save cursor position is used in some selctions.
+      // Maybe there should be a restore for it?
+
 
       c->EndMenu();
 
