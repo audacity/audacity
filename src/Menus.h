@@ -311,6 +311,11 @@ void OnGoSelEnd();
 void OnExpandAllTracks();
 void OnCollapseAllTracks();
 
+void OnPanTracks(float PanValue);
+void OnPanLeft();
+void OnPanRight();
+void OnPanCenter();
+
 void OnMuteAllTracks();
 void OnUnMuteAllTracks();
 

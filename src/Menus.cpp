@@ -954,6 +954,13 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"));
       c->EndSubMenu();
 
+      c->BeginSubMenu("Pan");
+      c->AddItem(wxT("PanLeft"), _("&Left"), FN(OnPanLeft));
+      c->AddItem(wxT("PanRight"), _("&Right"), FN(OnPanRight));
+      c->AddItem(wxT("PanCenter"), _("&Center"), FN(OnPanCenter));
+      c->EndSubMenu();
+
+
       c->AddSeparator();
 
       wxArrayString alignLabelsNoSync;
@@ -7362,6 +7369,41 @@ void AudacityProject::OnExpandAllTracks()
    ModifyState(true);
    RedrawProject();
 }
+
+void AudacityProject::OnPanTracks(float PanValue)
+{
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+
+   // count selected wave tracks
+   int count =0;
+   while (t)
+   {
+      if( t->GetKind() == Track::Wave && t->GetSelected() )
+         count++;
+      t = iter.Next();
+   }
+
+   // iter through them, all if none selected.
+   t = iter.First();
+   while (t)
+   {
+      if( t->GetKind() == Track::Wave && ((count==0) || t->GetSelected()) ){
+         WaveTrack *left = (WaveTrack *)t;
+         left->SetPan( PanValue );
+      }
+      t = iter.Next();
+   }
+
+   ModifyState(true);
+   RedrawProject();
+   if (mMixerBoard)
+      mMixerBoard->UpdatePan();
+}
+
+void AudacityProject::OnPanLeft(){ OnPanTracks( -1.0);}
+void AudacityProject::OnPanRight(){ OnPanTracks( 1.0);}
+void AudacityProject::OnPanCenter(){ OnPanTracks( 0.0);}
 
 
 void AudacityProject::OnMuteAllTracks()

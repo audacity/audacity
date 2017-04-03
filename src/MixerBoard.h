@@ -236,7 +236,7 @@ public:
    void UpdateName(const PlayableTrack* pTrack);
    void UpdateMute(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
    void UpdateSolo(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
-   void UpdatePan(const PlayableTrack* pTrack);
+   void UpdatePan(const PlayableTrack* pTrack = NULL); // NULL means update for all tracks.
    void UpdateGain(const PlayableTrack* pTrack);
 #ifdef EXPERIMENTAL_MIDI_OUT
    void UpdateVelocity(const PlayableTrack* pTrack);
