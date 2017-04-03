@@ -371,7 +371,7 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
     EVT_MENU(OnSwapChannelsID, TrackPanel::OnSwapChannels)
-    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereoMono)
+    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
     EVT_MENU(OnSplitStereoMonoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnMergeStereoID, TrackPanel::OnMergeStereo)
 
@@ -630,7 +630,10 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
    mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
    mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
-//   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+// DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
+#ifndef EXPERIMENTAL_DA
+   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+#endif
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), (mFormatMenu = formatMenu.release()));
@@ -8125,10 +8128,11 @@ void TrackPanel::SplitStereo(bool stereo)
 {
    wxASSERT(mPopupMenuTarget);
 
-   if (!stereo){
+   if (stereo){
       mPopupMenuTarget->SetPanFromChannelType();
-      mPopupMenuTarget->SetChannel(Track::MonoChannel);
    }
+   mPopupMenuTarget->SetChannel(Track::MonoChannel);
+
 
    // Assume partner is present, and is wave
    auto partner = static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
@@ -8147,10 +8151,11 @@ void TrackPanel::SplitStereo(bool stereo)
    if (partner)
    {
       partner->SetName(mPopupMenuTarget->GetName());
-      if (!stereo){
+      if (stereo){
          partner->SetPanFromChannelType();
-         partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
       }
+      partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
+
 
       //On Demand - have each channel add it's own.
       if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
