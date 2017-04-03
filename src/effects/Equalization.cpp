@@ -624,6 +624,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             int w;
             mdBRuler->ruler.GetMaxSize(&w, NULL);
             mdBRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
+            mdBRuler->ruler.SetTickColour( wxColour(0,0,0) );
 
             S.Prop(1);
             S.AddSpace(0, 1);
@@ -679,6 +680,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          int h;
          mFreqRuler->ruler.GetMaxSize(NULL, &h);
          mFreqRuler->SetMinSize(wxSize(wxDefaultCoord, h));
+         mFreqRuler->ruler.SetTickColour( wxColour(0,0,0) );
+
 
          S.Prop(1);
          S.SetBorder(1);

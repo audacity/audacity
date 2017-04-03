@@ -76,6 +76,17 @@ enum {
    kTimerInterval = 50, // milliseconds
 };
 
+enum {
+   kItemBarButtons = 0,
+   kItemStatusInfo = 1,
+   kItemMute = 2,
+   kItemSolo = 3,
+   kItemNoteMute = 4,
+   kItemNoteSolo = 5,
+   kItemGain = 6,
+   kItemPan = 7,
+};
+
 class AUDACITY_DLL_API TrackInfo
 {
 public:
@@ -83,8 +94,10 @@ public:
    ~TrackInfo();
 
 private:
+   int CalcItemY( int iItem ) const;
    int GetTrackInfoWidth() const;
    void SetTrackInfoFont(wxDC *dc) const;
+
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
    void DrawBordersWithin(wxDC * dc, const wxRect & rect, bool bHasMuteSolo ) const;
@@ -859,7 +872,7 @@ enum : int {
 
 enum : int {
    kTrackInfoWidth = 100,
-   kTrackInfoBtnSize = 16 // widely used dimension, usually height
+   kTrackInfoBtnSize = 18 // widely used dimension, usually height
 };
 
 #ifdef _MSC_VER

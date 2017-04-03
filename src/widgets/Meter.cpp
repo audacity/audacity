@@ -256,11 +256,11 @@ Meter::Meter(AudacityProject *project,
    mRuler.SetFonts(GetFont(), GetFont(), GetFont());
    mRuler.SetFlip(mStyle != MixerTrackCluster);
    mRuler.SetLabelEdges(true);
+   //mRuler.SetTickColour( wxColour( 0,0,255 ) );
 
    UpdatePrefs();
 
-   wxColour backgroundColour =
-      wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+   wxColour backgroundColour = theTheme.Colour( clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxSOLID);
@@ -428,6 +428,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    std::unique_ptr<wxDC> paintDC{ wxAutoBufferedPaintDCFactory(this) };
 #endif
    wxDC & destDC = *paintDC;
+   wxColour clrText = theTheme.Colour( clrTrackPanelText );
+   wxColour clrBoxFill = theTheme.Colour( clrMedium );
 
    if (mLayoutValid == false)
    {
@@ -444,10 +446,10 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       // LLL:  Should research USE_AQUA_THEME usefulness...
 #ifndef USE_AQUA_THEME
 #ifdef EXPERIMENTAL_THEMING
-      if( !mMeterDisabled )
-      {
-         mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
-      }
+      //if( !mMeterDisabled )
+      //{
+      //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
+      //}
 #endif
    
       dc.SetPen(*wxTRANSPARENT_PEN);
@@ -469,6 +471,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          }
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
          dc.SetFont(GetFont());
+         dc.SetTextForeground( clrText );
          dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
          dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
       }
@@ -569,9 +572,10 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 #endif
          }
       }
-   
+      mRuler.SetTickColour( clrText );
+      dc.SetTextForeground( clrText );
       // Draw the ruler
-      mRuler.Draw(dc);   
+      //mRuler.Draw(dc);   
 
       // Bitmap created...unselect
       dc.SelectObject(wxNullBitmap);
@@ -586,11 +590,16 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       DrawMeterBar(destDC, &mBar[i]);
    }
 
+   destDC.SetTextForeground( clrText );
+
+#if 0
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
+      mRuler.SetTickColour( clrText );
       mRuler.Draw(destDC);
    }
+#endif
 
    // Let the user know they can click to start monitoring
    if( mIsInput && !mActive )
@@ -619,11 +628,12 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                            Siz.GetHeight(),
                            Siz.GetWidth() );
 
-               destDC.SetBrush( *wxWHITE_BRUSH );
-               destDC.SetPen( *wxGREY_PEN );
+               destDC.SetBrush( wxBrush( clrBoxFill ) );
+               destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
                r.SetTop( r.GetBottom() + (gap / 2) );
+               destDC.SetTextForeground( clrText );
                destDC.DrawRotatedText( Text, r.GetPosition(), 90 );
                break;
             }
@@ -637,12 +647,13 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                          Siz.GetWidth(),
                          Siz.GetHeight() );
 
-               destDC.SetBrush( *wxWHITE_BRUSH );
-               destDC.SetPen( *wxGREY_PEN );
+               destDC.SetBrush( wxBrush( clrBoxFill ) );
+               destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
                r.SetLeft( r.GetLeft() + (gap / 2) );
                r.SetTop( r.GetTop() + (gap / 2));
+               destDC.SetTextForeground( clrText );
                destDC.DrawText( Text, r.GetPosition() );
                break;
             }

@@ -30,6 +30,7 @@ and on Mac OS X for the filesystem.
 
 #include "Internat.h"
 #include "FileDialog.h"
+#include "Experimental.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -38,6 +39,44 @@ and on Mac OS X for the filesystem.
 wxChar Internat::mDecimalSeparator = wxT('.'); // default
 wxArrayString Internat::exclude;
 wxCharBuffer Internat::mFilename;
+
+// DA: Use tweaked translation mechanism to replace 'Audacity' by 'DarkAudacity'.
+#ifdef EXPERIMENTAL_DA
+// This function allows us to replace Audacity by DarkAudacity without peppering 
+// the source code with changes.  We split out this step, the customisation, as 
+// it is used on its own (without translation) in the wxTS macro.
+const wxString& GetCustomSubstitution(const wxString& str2)
+{
+   // If contains 'DarkAudacity, already converted.
+   if( str2.Contains( "DarkAudacity" ))
+      return str2;
+   // If does not contain 'Audacity', nothing to do.
+   if( !str2.Contains( "Audacity" ))
+      return str2;
+   wxString str3 = str2;
+   str3.Replace( "Audacity", "DarkAudacity" );
+   str3.Replace( " an DarkAudacity", " a DarkAudacity" );
+   // DA also renames sync-lock(ed) as time-lock(ed).
+   str3.Replace( "Sync-Lock", "Time-Lock" );
+   str3.Replace( "Sync-&Lock", "Time-&Lock" );
+   str3.Replace( "Sync Lock", "Time Lock" );
+   return wxTranslations::GetUntranslatedString(str3);
+}
+#else 
+const wxString& GetCustomSubstitution(const wxString& str1)
+{
+   return str1 ;
+}
+#endif
+
+// In any translated string, we can replace the name 'Audacity' by 'DarkAudacity'
+// without requiring translators to see extra strings for the two versions.
+const wxString& GetCustomTranslation(const wxString& str1)
+{
+   const wxString& str2 = wxGetTranslation( str1 );
+   return GetCustomSubstitution( str2 );
+}
+
 
 void Internat::Init()
 {

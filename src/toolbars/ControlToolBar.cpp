@@ -218,11 +218,14 @@ void ControlToolBar::RegenerateTooltips()
       switch (iWinID)
       {
          case ID_PLAY_BUTTON:
+            // Without shift
             commands.push_back(wxT("Play"));
+            // With shift
             commands.push_back(_("Loop Play"));
             commands.push_back(wxT("PlayLooped"));
             break;
          case ID_RECORD_BUTTON:
+            // Without shift
             commands.push_back(wxT("Record"));
 #ifdef PREFER_NEW_TRACKS
             commands.push_back(_("Append Record"));
@@ -945,7 +948,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
-
       if (shifted) {
          recordingChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2);
          bool sel = false;

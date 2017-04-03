@@ -104,6 +104,9 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    virtual ~WaveTrack();
    double GetOffset() const override;
    void SetOffset(double o) override;
+   virtual int GetChannel() const override;
+   virtual void SetPanFromChannelType() override;
+
 
    /** @brief Get the time at which the first clip in the track starts
     *
@@ -142,7 +145,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool SetPan(float newPan);
 #else
-   void SetPan(float newPan);
+   void SetPan(float newPan) override;
 #endif
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;

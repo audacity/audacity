@@ -52,6 +52,7 @@ with changes in the SelectionBar.
 #include "../Project.h"
 #include "../Snap.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "../AllThemeResources.h"
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
 
@@ -136,41 +137,62 @@ void SelectionBar::Populate()
    // Top row (mostly labels)
    //
 
-   mainSizer->Add(safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
+   wxColour clrText = theTheme.Colour( clrTrackPanelText );
+   wxColour clrText2 = *wxBLUE;
+   wxStaticText * pProjRate = safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
    // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines
    //       and I could not figure out why.  Thus...hackage.
 #if defined(__WXGTK__)
-                  wxDefaultPosition, wxSize(110, -1)),
+                  wxDefaultPosition, wxSize(110, -1));
 #else
-                  wxDefaultPosition, wxDefaultSize),
+                  wxDefaultPosition, wxDefaultSize);
 #endif
-               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-
+   pProjRate->SetForegroundColour( clrText );
+   mainSizer->Add(pProjRate,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(safenew wxStaticText(this, -1, _("Snap To:")),
-               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   wxStaticText * pSnapTo = safenew wxStaticText(this, -1, _("Snap To:"));
+   pSnapTo->SetForegroundColour( clrText );
+   mainSizer->Add( pSnapTo, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mainSizer->Add(safenew wxStaticText(this, -1, _("Selection Start:")),
-               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   wxStaticText * pSelStart = safenew wxStaticText(this, -1, _("Selection Start:"));
+   pSelStart->SetForegroundColour( clrText );
+   mainSizer->Add( pSelStart,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    bool showSelectionLength = false;
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
 
    {
+      // Can't set textcolour of radio buttons.
+      // so instead we make the text empty and add in two wxStaticTexts
+      // and we can set the colour of those.
+      // Slight regression relative ot Audacity in that this text is not 
+      // clickable/active.  You have to click on the actual button.
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, _("End"),
+      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, wxT(""),
          wxDefaultPosition, wxDefaultSize,
          wxRB_GROUP);
       mRightEndButton->SetName(_("End"));
+      mRightEndButton->SetForegroundColour( clrText );
       mRightEndButton->SetValue(!showSelectionLength);
       hSizer->Add(mRightEndButton,
          0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, _("Length"));
+      wxStaticText * pEndText = safenew wxStaticText(this, -1, _("End"));
+      pEndText->SetForegroundColour( clrText );
+      hSizer->Add(pEndText,
+         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+
+      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, wxT(""));
       mRightLengthButton->SetName(_("Length"));
+      mRightLengthButton->SetForegroundColour( clrText );
       mRightLengthButton->SetValue(showSelectionLength);
       hSizer->Add(mRightLengthButton,
          0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+      wxStaticText * pLengthText = safenew wxStaticText(this, -1, _("Length"));
+      pLengthText->SetForegroundColour( clrText );
+      hSizer->Add(pLengthText,
+         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+
 #if defined(__WXMSW__)
       // Refer to Microsoft KB article 261192 for an explanation as
       // to why this is needed.  We've only experienced it under Win2k
@@ -180,16 +202,17 @@ void SelectionBar::Populate()
          safenew wxRadioButton(this, wxID_ANY, _("hidden"),
          wxDefaultPosition, wxDefaultSize,
          wxRB_GROUP);
+      dummyButton->SetForegroundColour( clrText );
       dummyButton->Disable();
       dummyButton->Hide();
 #endif
       mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
    }
-
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(safenew wxStaticText(this, -1, _("Audio Position:")),
-                  0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   wxStaticText * pAudioPos = safenew wxStaticText(this, -1, _("Audio Position:"));
+   pAudioPos->SetForegroundColour( clrText );
+   mainSizer->Add(pAudioPos, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
    //
    // Middle row (mostly time controls)
@@ -199,6 +222,7 @@ void SelectionBar::Populate()
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));
    mRateBox->SetName(_("Project Rate (Hz):"));
+   //mRateBox->SetForegroundColour( clrText2 );
    wxTextValidator vld(wxFILTER_INCLUDE_CHAR_LIST);
    vld.SetIncludes(wxArrayString(10, numbers));
    mRateBox->SetValidator(vld);
@@ -246,6 +270,7 @@ void SelectionBar::Populate()
    mainSizer->Add(mSnapTo,
                   0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
+   //mSnapTo->SetForegroundColour( clrText2 );
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
 
    mSnapTo->Connect(wxEVT_SET_FOCUS,
@@ -260,6 +285,7 @@ void SelectionBar::Populate()
    mLeftTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, OnLeftTimeID, formatName, 0.0, mRate);
    mLeftTime->SetName(_("Selection Start:"));
+   mLeftTime->SetForegroundColour( clrText );
    mLeftTime->EnableMenu();
    mainSizer->Add(mLeftTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
@@ -268,6 +294,7 @@ void SelectionBar::Populate()
    mRightTime->SetName(wxString(_("Selection ")) + (showSelectionLength ?
                                                    _("Length") :
                                                    _("End")));
+   mRightTime->SetForegroundColour( clrText );
    mRightTime->EnableMenu();
    mainSizer->Add(mRightTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
@@ -279,6 +306,7 @@ void SelectionBar::Populate()
    mAudioTime = safenew NumericTextCtrl(
       NumericConverter::TIME, this, wxID_ANY, formatName, 0.0, mRate);
    mAudioTime->SetName(_("Audio Position:"));
+   mAudioTime->SetForegroundColour( clrText );
    mAudioTime->EnableMenu();
    mainSizer->Add(mAudioTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 

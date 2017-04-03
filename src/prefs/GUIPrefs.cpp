@@ -24,12 +24,16 @@
 
 #include "../AudacityApp.h"
 #include "../Languages.h"
+#include "../Theme.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "GUISettings.h"
 
 #include "../Experimental.h"
+
+#include "ThemePrefs.h"
+#include "../AColor.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Interface"))
@@ -157,6 +161,23 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    }
    S.EndStatic();
+
+   S.StartStatic(_("Theme"));
+   {
+      S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("dark"));
+      {
+         S.TieRadioButton(_("Classic"),
+                          wxT("classic"));
+         S.TieRadioButton(_("Dark"),
+                          wxT("dark"));
+         S.TieRadioButton(_("Light"),
+                          wxT("light"));
+         S.TieRadioButton(_("Custom"),
+                          wxT("custom"));
+      }
+      S.EndRadioButtonGroup();
+   }
+   S.EndStatic();
 }
 
 bool GUIPrefs::Apply()
@@ -172,7 +193,9 @@ bool GUIPrefs::Apply()
       gPrefs->Write(wxT("/Locale/Language"), usedLang);
       gPrefs->Flush();
    }
-
+   // Reads preference /GUI/Theme
+   theTheme.LoadPreferredTheme();
+   theTheme.ApplyUpdatedImages();
    return true;
 }
 

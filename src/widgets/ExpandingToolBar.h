@@ -144,7 +144,7 @@ class ToolBarGrabber final : public wxPanelWrapper
 
  protected:
    int               mState;
-   ImageRoll         mImageRoll[2];
+   //ImageRoll         mImageRoll[2];
    ExpandingToolBar *mOwnerToolBar;
 
    DECLARE_EVENT_TABLE()

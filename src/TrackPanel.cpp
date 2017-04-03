@@ -371,7 +371,7 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
     EVT_MENU(OnSwapChannelsID, TrackPanel::OnSwapChannels)
-    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
+    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnSplitStereoMonoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnMergeStereoID, TrackPanel::OnMergeStereo)
 
@@ -624,13 +624,13 @@ void TrackPanel::BuildMenus(void)
 
    // include both mono and stereo items as a work around for bug 1250
 
-   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
    mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
    mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
-   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+//   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), (mFormatMenu = formatMenu.release()));
@@ -7212,7 +7212,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                      true);
    }
 
-   mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
+   //mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
 
    auto wt = bIsWave ? static_cast<WaveTrack*>(t) : nullptr;
    if (bIsWave) {
@@ -7220,6 +7220,9 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
       mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
+
+// DA: For classic Audacity, show stero/mono and rate.
+#ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
 
          int offset = 8;
@@ -7233,6 +7236,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                          trackRect.x + offset,
                          trackRect.y + 38);
       }
+#endif
    }
 
 #ifdef USE_MIDI
@@ -7702,6 +7706,9 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnSwapChannelsID, t->GetLinked() && !unsafe);
       theMenu->Enable(OnMergeStereoID, canMakeStereo && !unsafe);
       theMenu->Enable(OnSplitStereoID, t->GetLinked() && !unsafe);
+
+// Several menu items no longer needed....
+#if 0
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked() && !unsafe);
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
@@ -7726,6 +7733,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnChannelMonoID, !t->GetLinked());
       theMenu->Enable(OnChannelLeftID, !t->GetLinked());
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
+#endif
 
       WaveTrack *const track = (WaveTrack *)t;
       const int display = track->GetDisplay();
@@ -8056,8 +8064,10 @@ void TrackPanel::SplitStereo(bool stereo)
 {
    wxASSERT(mPopupMenuTarget);
 
-   if (!stereo)
+   if (!stereo){
+      mPopupMenuTarget->SetPanFromChannelType();
       mPopupMenuTarget->SetChannel(Track::MonoChannel);
+   }
 
    // Assume partner is present, and is wave
    auto partner = static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
@@ -8076,8 +8086,10 @@ void TrackPanel::SplitStereo(bool stereo)
    if (partner)
    {
       partner->SetName(mPopupMenuTarget->GetName());
-      if (!stereo)
+      if (!stereo){
+         partner->SetPanFromChannelType();
          partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
+      }
 
       //On Demand - have each channel add it's own.
       if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
@@ -8122,7 +8134,9 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
       // Set partner's parameters to match target.
       partner->Merge(*mPopupMenuTarget);
 
+      mPopupMenuTarget->SetPan( 0.0f );
       mPopupMenuTarget->SetChannel(Track::LeftChannel);
+      partner->SetPan( 0.0f );
       partner->SetChannel(Track::RightChannel);
 
       // Set NEW track heights and minimized state
@@ -9039,63 +9053,120 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
+int TrackInfo::CalcItemY( int iItem ) const
+{
+   int y = 1;
+   if( iItem == kItemBarButtons )
+      return y;
+   y+= kTrackInfoBtnSize +2;
+   if( iItem == kItemStatusInfo )
+      return y;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   int y1=y;
+   if( iItem == kItemNoteMute )
+      return y;
+   if( iItem == kItemNoteSolo )
+      return y;
+   y=y1;
+#endif
+
+// DA: Does not have status information for a track.
+#ifndef EXPERIMENTAL_DA 
+   y+= 30;
+#else
+   y+= 2;
+#endif
+
+   if( iItem == kItemMute )
+      return y;
+
+// DA: Has Mute and Solo on separate lines.
+#ifdef EXPERIMENTAL_DA 
+   y+= kTrackInfoBtnSize + 2;
+#endif
+
+   if( iItem == kItemSolo )
+      return y;
+   y+= kTrackInfoBtnSize + 3;
+
+   if( iItem == kItemGain )
+      return y;
+   y+= 30;
+   if( iItem == kItemPan )
+      return y;
+   y+= 30;
+   return y;
+}
+
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x;
-   dest.y = rect.y;
+   dest.x = rect.x+1;
+   dest.y = rect.y + CalcItemY( kItemBarButtons );
    dest.width = kTrackInfoBtnSize;
    dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + kTrackInfoBtnSize; // to right of CloseBoxRect
-   dest.y = rect.y;
-   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize; // to right of CloseBoxRect
+   dest.x = rect.x + kTrackInfoBtnSize+2; // to right of CloseBoxRect
+   dest.y = rect.y + CalcItemY( kItemBarButtons );
+   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
    dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
 {
-   dest.x = rect.x;
+
+   dest.height = kTrackInfoBtnSize +1;
+   dest.x = rect.x+1;
+
+   int MuteSoloType = 0;
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (pTrack->GetKind() == Track::Note)
-      dest.y = rect.y + 16;
+      MuteSoloType = kItemNoteMute - kItemMute;
+#endif
+
+   int yMute = CalcItemY( kItemMute + MuteSoloType );
+   int ySolo = CalcItemY( kItemSolo + MuteSoloType );
+
+   bool bSameRow = ( yMute == ySolo );
+   bool bNarrow = bSameRow && bHasSoloButton;
+
+   if( bNarrow )
+   {
+      dest.width = rect.width / 2-2;
+      if( solo ){
+         dest.x+=dest.width;
+         dest.width-=1;
+      }
+   }
    else
    {
-      wxASSERT(pTrack->GetKind() == Track::Wave);
-      dest.y = rect.y + 50;
+      dest.width = rect.width - 2 * kTrackInfoBtnSize;
+      dest.x = rect.x + kTrackInfoBtnSize;
    }
-#else
-   dest.y = rect.y + 50;
-#endif
-   dest.width = 48;
-   dest.height = kTrackInfoBtnSize;
 
-   if( !bHasSoloButton )
-   {
-      dest.width +=48;
-   }
-   else if (solo)
-   {
-      dest.x += 48;
-   }
+   if( bSameRow || !solo )
+      dest.y = rect.y + yMute;
+   else
+      dest.y = rect.y + ySolo;
+
 }
 
 void TrackInfo::GetGainRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + 7;
-   dest.y = rect.y + 70;
+   dest.y = rect.y + CalcItemY( kItemGain );
    dest.width = 84;
    dest.height = 25;
 }
 
 void TrackInfo::GetPanRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + 7;
-   dest.y = rect.y + 100;
-   dest.width = 84;
-   dest.height = 25;
+   GetGainRect( rect, dest );
+   dest.y = rect.y + CalcItemY( kItemPan );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -9111,10 +9182,10 @@ void TrackInfo::GetVelocityRect(const wxRect & rect, wxRect & dest) const
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
-   dest.x = rect.x + kBlankWidth;
+   dest.x = rect.x + 4;
    dest.y = rect.y + rect.height - 19;
    // Width is kTrackInfoWidth less space on left for track select and on right for sync-lock icon.
-   dest.width = kTrackInfoWidth - (2 * kBlankWidth);
+   dest.width = kTrackInfoWidth - (1.2 * kBlankWidth);
    dest.height = kTrackInfoBtnSize;
 }
 
@@ -9218,6 +9289,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(rect, bev);
+   AColor::Bevel2(*dc, !down, bev);
 
 #ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -9225,7 +9297,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
 #else
    dc->SetPen(*wxBLACK_PEN);
 #endif
-
+   bev.Inflate( -1, -1 );
    // Draw the "X"
    const int s = 6;
 
@@ -9239,8 +9311,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
    AColor::Line(*dc, rs,     ts, ls,     bs);
    AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
 
-   bev.Inflate(-1, -1);
-   AColor::BevelTrackInfo(*dc, !down, bev);
+//   bev.Inflate(-1, -1);
 }
 
 void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
@@ -9248,7 +9319,8 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
 {
    wxRect bev;
    GetTitleBarRect(rect, bev);
-   bev.Inflate(-1, -1);
+   //bev.Inflate(-1, -1);
+   AColor::Bevel2(*dc, !down, bev);
 
    // Draw title text
    SetTrackInfoFont(dc);
@@ -9262,20 +9334,25 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    }
 
-   // wxGTK leaves little scraps (antialiasing?) of the
-   // characters if they are repeatedly drawn.  This
-   // happens when holding down mouse button and moving
-   // in and out of the title bar.  So clear it first.
-   AColor::MediumTrackInfo(dc, t->GetSelected());
-   dc->DrawRectangle(bev);
-   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
-
    // Pop-up triangle
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour( clrTrackPanelText );
 #else
    wxColour c = *wxBLACK;
 #endif
+
+   // wxGTK leaves little scraps (antialiasing?) of the
+   // characters if they are repeatedly drawn.  This
+   // happens when holding down mouse button and moving
+   // in and out of the title bar.  So clear it first.
+//   AColor::MediumTrackInfo(dc, t->GetSelected());
+//   dc->DrawRectangle(bev);
+
+   dc->SetTextForeground( c );
+   dc->SetTextBackground( wxTRANSPARENT );
+   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+
+
 
    dc->SetPen(c);
    dc->SetBrush(c);
@@ -9286,7 +9363,6 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
                  bev.y + ((bev.height - (s / 2)) / 2),
                  s);
 
-   AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
 /// Draw the Mute or the Solo button, depending on the value of solo.
@@ -9297,13 +9373,14 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    if( solo && !bHasSoloButton )
       return;
    GetMuteSoloRect(rect, bev, solo, bHasSoloButton, t);
-   bev.Inflate(-1, -1);
+   //bev.Inflate(-1, -1);
 
    if (bev.y + bev.height >= rect.y + rect.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
-
-   AColor::MediumTrackInfo( dc, t->GetSelected());
    auto pt = dynamic_cast<const PlayableTrack *>(t);
+
+#if 0
+   AColor::MediumTrackInfo( dc, t->GetSelected());
    if( solo )
    {
       if( pt && pt->GetSolo() )
@@ -9322,6 +9399,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    //    AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
    dc->SetPen( *wxTRANSPARENT_PEN );//No border!
    dc->DrawRectangle(bev);
+#endif
 
    wxCoord textWidth, textHeight;
    wxString str = (solo) ?
@@ -9330,15 +9408,15 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
       _("Mute");
 
-   SetTrackInfoFont(dc);
-   dc->GetTextExtent(str, &textWidth, &textHeight);
-   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
-
-   AColor::BevelTrackInfo(
+   AColor::Bevel2(
       *dc,
       (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
       bev
    );
+
+   SetTrackInfoFont(dc);
+   dc->GetTextExtent(str, &textWidth, &textHeight);
+   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 
    if (solo && !down) {
       // Update the mute button, which may be grayed out depending on
@@ -9357,6 +9435,8 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
    AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
 
+   AColor::Bevel2(*dc, !down, bev);
+
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour(clrTrackPanelText);
    dc->SetBrush(c);
@@ -9371,20 +9451,21 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
                  10,
                  t->GetMinimized());
 
-   AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
 void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) const
 {
    wxRect sliderRect;
+   // Larger slidermargin means it disappears sooner on collapsing track.
+   const int sliderMargin = 14;
 
    GetGainRect(rect, sliderRect);
-   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       GainSlider(t, captured)->OnPaint(*dc);
    }
 
    GetPanRect(rect, sliderRect);
-   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       PanSlider(t, captured)->OnPaint(*dc);
    }
 }

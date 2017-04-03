@@ -229,7 +229,13 @@ It handles initialization and termination by subclassing wxApp.
 
 #endif //(__WXMSW__)
 
+// DA: Logo for Splash Screen
+#ifdef EXPERIMENTAL_DA
+#include "../images/DarkAudacityLogoWithName.xpm"
+#else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
+
 
 ////////////////////////////////////////////////////////////
 /// Custom events
@@ -1275,8 +1281,13 @@ bool AudacityApp::OnInit()
 
    // Don't use AUDACITY_NAME here.
    // We want Audacity with a capital 'A'
-   wxString appName = wxT("Audacity");
 
+// DA: App name
+#ifndef EXPERIMENTAL_DA
+   wxString appName = wxT("Audacity");
+#else
+   wxString appName = wxT("DarkAudacity");
+#endif
 
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
@@ -1307,7 +1318,12 @@ bool AudacityApp::OnInit()
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
 
+// DA: Path env variable.
+#ifndef EXPERIMENTAL_DA
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
+#else
+   wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
+#endif
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);

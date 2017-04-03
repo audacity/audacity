@@ -133,10 +133,10 @@ void Track::SetOwner(TrackList *list, TrackNodePointer node)
 int Track::GetMinimizedHeight() const
 {
    if (GetLink()) {
-      return 20;
+      return 21;
    }
 
-   return 40;
+   return 42;
 }
 
 int Track::GetIndex() const

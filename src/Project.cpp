@@ -1276,7 +1276,7 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
-// DA 2.1.3x did not ship with a manual, so default for DA is internet.
+// DA: Default for DA is manual from internet.
 #ifdef EXPERIMENTAL_DA
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("FromInternet") );
 #else

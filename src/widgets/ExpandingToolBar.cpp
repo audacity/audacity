@@ -147,10 +147,10 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
       mGrabber = safenew ToolBarGrabber(this, -1, this);
 
    /// \todo check whether this is a memory leak (and check similar code)
-   wxImage hbar = theTheme.Image(bmpToolBarToggle);
-   wxColour magicColor = wxColour(0, 255, 255);
-   ImageArray fourStates = ImageRoll::SplitV(hbar, magicColor);
-
+   //wxImage hbar = theTheme.Image(bmpToolBarToggle);
+   //wxColour magicColor = wxColour(0, 255, 255);
+   //ImageArray fourStates = ImageRoll::SplitV(hbar, magicColor);
+/*
    mToggleButton = safenew AButton(this, kToggleButtonID,
                                wxDefaultPosition, wxDefaultSize,
                                ImageRoll(ImageRoll::HorizontalRoll,
@@ -163,7 +163,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
                                          fourStates[3], magicColor),
                                true);
    mToggleButton->UseDisabledAsDownHiliteImage(true);
-
+*/
    SetAutoLayout(true);
    mTimer.SetOwner(this, kTimerID);
 }
@@ -542,11 +542,11 @@ void ExpandingToolBar::StartMoving()
    mDropTarget = kDummyRect;
 
    wxColour magicColor = wxColour(0, 255, 255);
-   wxImage tgtImage = theTheme.Image(bmpToolBarTarget);
-   ImageRoll tgtImageRoll = ImageRoll(ImageRoll::VerticalRoll,
-                                      tgtImage,
-                                      magicColor);
-   mTargetPanel = safenew ImageRollPanel(mAreaParent, -1, tgtImageRoll,
+//   wxImage tgtImage = theTheme.Image(bmpToolBarTarget);
+//   ImageRoll tgtImageRoll = ImageRoll(ImageRoll::VerticalRoll,
+//                                      tgtImage,
+//                                      magicColor);
+   mTargetPanel = safenew ImageRollPanel(mAreaParent, -1, //tgtImageRoll,
                                      wxDefaultPosition,
                                      wxDefaultSize,
                                      wxTRANSPARENT_WINDOW);
@@ -672,6 +672,7 @@ ToolBarGrabber::ToolBarGrabber(wxWindow *parent,
    wxPanelWrapper(parent, id, pos, size),
    mOwnerToolBar(ownerToolbar)
 {
+#if 0
    wxImage grabberImages = theTheme.Image(bmpToolBarGrabber);
    wxColour magicColor = wxColour(0, 255, 255);
    ImageArray images = ImageRoll::SplitH(grabberImages, magicColor);
@@ -685,7 +686,7 @@ ToolBarGrabber::ToolBarGrabber(wxWindow *parent,
 
    SetSizeHints(mImageRoll[0].GetMinSize(),
                 mImageRoll[1].GetMaxSize());
-
+#endif
    mState = 0;
 }
 
@@ -720,7 +721,7 @@ void ToolBarGrabber::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
-   mImageRoll[mState].Draw(dc, GetClientRect());
+  // mImageRoll[mState].Draw(dc, GetClientRect());
 }
 
 void ToolBarGrabber::OnSize(wxSizeEvent & WXUNUSED(event))

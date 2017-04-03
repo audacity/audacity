@@ -45,7 +45,8 @@
 #if IS_ALPHA
    #define AUDACITY_SUFFIX wxT("-alpha-") __TDATE__
 #else
-   #define AUDACITY_SUFFIX    wxT("") // for a stable release
+   //#define AUDACITY_SUFFIX    wxT("") // for a stable release
+   #define AUDACITY_SUFFIX wxT("x  ") __TDATE__
 #endif
 
 #define AUDACITY_MAKESTR( x ) #x
@@ -57,11 +58,20 @@
                                 wxT( AUDACITY_QUOTE( AUDACITY_REVISION ) ) \
                                 AUDACITY_SUFFIX
 
+// DA: x on end of version string.
+#ifdef EXPERIMENTAL_DA
 // Version string for file info (under Windows)
 #define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
                               AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
                               AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
+                              AUDACITY_QUOTE( AUDACITY_MODLEVEL ) " x"
+#else
+#define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
+                              AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
+                              AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
                               AUDACITY_QUOTE( AUDACITY_MODLEVEL )
+#endif
+
 
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place
@@ -177,10 +187,35 @@ void QuitAudacity();
 #define MAX_AUDIO (1. - 1./(1<<15))
 #define JUST_BELOW_MAX_AUDIO (1.f - 1.f/(1<<14))
 
+
+#ifndef IN_RC
+#include <wx/defs.h>
+#include <wx/string.h>
+
+extern const wxString& GetCustomTranslation(const wxString& str1 );
+extern const wxString& GetCustomSubstitution(const wxString& str1 );
+
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
-#define XO(s) wxT(s)
+#define XO(s)  wxT(s)
 // Marks string for substitution only.
-#define _TS(s) wxT(s)
+#define _TS( s ) GetCustomSubstitution( s )
+
+
+#define WXINTL_NO_GETTEXT_MACRO
+
+#ifdef wxPLURAL
+#undef wxPLURAL
+#endif
+
+#define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
+
+
+#ifdef _
+#undef _
+#endif
+
+#define _(s) GetCustomTranslation((s))
+#endif
 
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete

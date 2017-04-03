@@ -72,6 +72,7 @@ and use it for toolbar and window layouts too.
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"
+#include "AColor.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -188,8 +189,15 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #include "AllThemeResources.h"
 
 // Include the ImageCache...
-static unsigned char ImageCacheAsData[] = {
-#include "ThemeAsCeeCode.h"
+
+static unsigned char DarkImageCacheAsData[] = {
+#include "DarkThemeAsCeeCode.h"
+};
+static unsigned char LightImageCacheAsData[] = {
+#include "LightThemeAsCeeCode.h"
+};
+static unsigned char ClassicImageCacheAsData[] = {
+#include "ClassicThemeAsCeeCode.h"
 };
 
 // theTheme is a global variable.
@@ -217,14 +225,27 @@ void Theme::EnsureInitialised()
    RegisterExtraThemeResources();
 #endif
 
-   bool bLoadThemeAtStart;
-   gPrefs->Read( wxT("/Theme/LoadAtStart"), &bLoadThemeAtStart, false );
-   LoadThemeAtStartUp( bLoadThemeAtStart );
+   LoadPreferredTheme();
+}
+
+bool ThemeBase::LoadPreferredTheme()
+{
+// DA: Default themes differ.
+#ifdef EXPERIMENTAL_DA
+   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
+#else
+   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("classic"));
+#endif
+
+   theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
+   return true;
 }
 
 void Theme::ApplyUpdatedImages()
 {
+   AColor::ReInit();
    AudacityProject *p = GetActiveProject();
+   p->ResetColours();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
       ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
@@ -262,41 +283,17 @@ ThemeBase::~ThemeBase(void)
 }
 
 /// This function is called to load the initial Theme images.
-/// There are many possible choices for what this function
-/// should do, as we have (potentially) four sources of images.
-///   - (deprecated) programmed in XPMs.
-///   - Programmed in in-built theme.
-///   - External image Cache file.
-///   - External component files.
-///
-/// We currently still have the deprecated XPMs, so we have
-/// those being used if the user decides not to load themes.
-///
-/// @param bLookForExternalFiles uses file iff true.
-void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
+/// It does not though cause the GUI to refresh.
+void ThemeBase::LoadTheme( teThemeType Theme )
 {
    EnsureInitialised();
 
-   const bool cbBinaryRead =true;
    const bool cbOkIfNotFound = true;
 
-   // IF not interested in external files,
-   // THEN just use the internal default set.
-   if( !bLookForExternalFiles )
-   {
-      // IF the XPMs have been retired, THEN we'd better use the built-in cache
-      // at start up.
-      // ELSE do nothing, we already have XPM based images.
-#ifdef XPMS_RETIRED
-      ReadThemeInternal();
-#endif
-      return;
-   }
-   // ELSE IF can't read the external image cache.
-   else if( !ReadImageCache( cbBinaryRead, cbOkIfNotFound ) )
+   if( !ReadImageCache( Theme, cbOkIfNotFound ) )
    {
       // THEN get the default set.
-      ReadThemeInternal();
+      ReadImageCache( GetFallbackThemeType(), !cbOkIfNotFound );
 
       // JKC: Now we could go on and load the individual images
       // on top of the default images using the commented out
@@ -513,7 +510,12 @@ int SourceOutputStream::OpenFile(const wxString & Filename)
    bOk = File.Open( Filename, wxFile::write );
    if( bOk )
    {
+// DA: Naming of output sourcery
+#ifdef EXPERIMENTAL_DA
+      File.Write( wxT("//   DarkThemeAsCeeCode.h\r\n") );
+#else
       File.Write( wxT("//   ThemeAsCeeCode.h\r\n") );
+#endif
       File.Write( wxT("//\r\n") );
       File.Write( wxT("//   This file was Auto-Generated.\r\n") );
       File.Write( wxT("//   It is included by Theme.cpp.\r\n") );
@@ -703,7 +705,7 @@ void ThemeBase::WriteImageMap( )
       return;
 
    File.Write( wxT("<html>\r\n"));
-   File.Write( wxT("<body>\r\n"));
+   File.Write( wxT("<body bgcolor=\"303030\">\r\n"));
    File.Write( wxT("<img src=\"ImageCache.png\" usemap=\"#map1\">\r\n" ));
    File.Write( wxT("<map name=\"map1\">\r\n") );
 
@@ -781,7 +783,28 @@ void ThemeBase::WriteImageDefs( )
 }
 
 
+teThemeType ThemeBase::GetFallbackThemeType(){
+// Fallback must be an internally supported type,
+// to guarantee it is found.
+#ifdef EXPERIMENTAL_DA
+   return themeDark;
+#else
+   return themeClassic;
+#endif
+}
 
+teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
+{
+   wxArrayString aThemes;
+   aThemes.Add( "classic" );
+   aThemes.Add( "dark" );
+   aThemes.Add( "light" );
+   aThemes.Add( "custom" );
+   int themeIx = aThemes.Index( Name );
+   if( themeIx < 0 )
+      return GetFallbackThemeType();
+   return (teThemeType)themeIx;
+}
 
 
 
@@ -790,7 +813,7 @@ void ThemeBase::WriteImageDefs( )
 ///   otherwise the data is taken from a compiled in block of memory.
 /// @param bOkIfNotFound if true means do not report absent file.
 /// @return true iff we loaded the images.
-bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
+bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 {
    EnsureInitialised();
    wxImage ImageCache;
@@ -802,8 +825,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
-   // IF bBinary read THEN a normal read from a PNG file
-   if(  bBinaryRead )
+   if(  type == themeFromFile )
    {
       const wxString &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
@@ -829,8 +851,25 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    // ELSE we are reading from internal storage.
    else
    {
-      wxMemoryInputStream InternalStream(
-         (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
+      size_t ImageSize = 0;
+      char * pImage = NULL;
+      switch( type ){
+         case themeClassic : 
+            ImageSize = sizeof(ClassicImageCacheAsData);
+            pImage = (char *)ClassicImageCacheAsData;
+            break;
+         default: 
+         case themeDark : 
+            ImageSize = sizeof(DarkImageCacheAsData);
+            pImage = (char *)DarkImageCacheAsData;
+            break;
+         case themeLight : 
+            ImageSize = sizeof(LightImageCacheAsData);
+            pImage = (char *)LightImageCacheAsData;
+            break;
+      }
+      wxMemoryInputStream InternalStream( pImage, ImageSize );
+
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
       {
          // If we get this message, it means that the data in file
@@ -1013,11 +1052,6 @@ void ThemeBase::SaveComponents()
          FileNames::ThemeComponentsDir().c_str() ));
 }
 
-void ThemeBase::ReadThemeInternal()
-{
-   // false indicates not using standard binary method.
-   ReadImageCache( false );
-}
 
 void ThemeBase::SaveThemeAsCode()
 {
