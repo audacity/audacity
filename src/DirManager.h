@@ -95,6 +95,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Adds one to the reference count of the block file,
    // UNLESS it is "locked", then it makes a NEW copy of
    // the BlockFile.
+   // May throw an exception in case of disk space exhaustion, otherwise
+   // returns non-null.
    BlockFilePtr CopyBlockFile(const BlockFilePtr &b);
 
    BlockFile *LoadBlockFile(const wxChar **attrs, sampleFormat format);

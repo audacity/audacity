@@ -57,15 +57,18 @@ to get its definition, rather than rolling our own.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "SimpleBlockFile.h"
+
 #include <wx/wx.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/utils.h>
 #include <wx/log.h>
 
+#include "../FileException.h"
 #include "../Prefs.h"
 
-#include "SimpleBlockFile.h"
 #include "../FileFormats.h"
 
 #include "sndfile.h"
@@ -114,8 +117,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
    if (!(allowDeferredWrite && useCache) && !bypassCache)
    {
       bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
-      wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
-      wxUnusedVar(bSuccess);
+      if (!bSuccess)
+         throw FileException{
+            FileException::Cause::Write, GetFileName().name };
    }
 
    if (useCache) {
@@ -404,8 +408,7 @@ size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       if ( framesRead < len ) {
          if (mayThrow)
             // Not the best exception class?
-            //throw FileException{ FileException::Cause::Read, mFileName }
-            ;
+            throw FileException{ FileException::Cause::Read, mFileName };
          ClearSamples(data, format, framesRead, len - framesRead);
       }
 
