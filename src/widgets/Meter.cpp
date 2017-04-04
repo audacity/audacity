@@ -575,7 +575,9 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       mRuler.SetTickColour( clrText );
       dc.SetTextForeground( clrText );
       // Draw the ruler
-      //mRuler.Draw(dc);   
+#ifndef EXPERIMENTAL_DA
+      mRuler.Draw(dc);
+#endif
 
       // Bitmap created...unselect
       dc.SelectObject(wxNullBitmap);
@@ -592,7 +594,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    destDC.SetTextForeground( clrText );
 
-#if 0
+#ifndef EXPERIMENTAL_DA
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
