@@ -276,6 +276,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    Envelope* GetEnvelopeAtX(int xcoord);
 
    WaveClip* GetClipAtSample(sampleCount sample);
+   WaveClip* GetClipAtTime(double time);
 
    //
    // Getting information about the track's internal block sizes

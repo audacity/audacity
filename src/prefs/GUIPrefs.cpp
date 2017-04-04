@@ -164,7 +164,11 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Theme"));
    {
+#ifdef EXPERIMENTAL_DA
       S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("dark"));
+#else
+      S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("classic"));
+#endif
       {
          S.TieRadioButton(_("Classic"),
                           wxT("classic"));

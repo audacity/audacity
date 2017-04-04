@@ -2228,6 +2228,17 @@ WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
    return NULL;
 }
 
+WaveClip* WaveTrack::GetClipAtTime(double time)
+{
+   // When the time is both the end of a clip and the start of the next clip, the
+   // latter clip is returned.
+   const auto clips = SortedClipArray();
+   auto result = find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
+      return time >= clip->GetStartTime() && time <= clip->GetEndTime(); });
+
+   return result != clips.rend() ? *result : nullptr;
+}
+
 Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)
 {
    WaveClip* clip = GetClipAtX(xcoord);

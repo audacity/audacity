@@ -2163,14 +2163,17 @@ void LabelTrack::Import(wxTextFile & in)
    //Currently, we expect a tag file to have two values and a label
    //on each line. If the second token is not a number, we treat
    //it as a single-value label.
+   bool error = false;
    for (int index = 0; index < lines;) {
       try {
          // Let LabelStruct::Import advance index
          LabelStruct l { LabelStruct::Import(in, index) };
          mLabels.push_back(l);
       }
-      catch(const LabelStruct::BadFormatException&) {}
+      catch(const LabelStruct::BadFormatException&) { error = true; }
    }
+   if (error)
+      ::wxMessageBox( _("One or more saved labels could not be read.") );
    SortLabels();
 }
 

@@ -160,6 +160,9 @@ void OnSelExtendRight(const wxEvent * evt);
 void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
+void OnClipLeft();
+void OnClipRight();
+
 void OnCursorShortJumpLeft();
 void OnCursorShortJumpRight();
 void OnCursorLongJumpLeft();
@@ -282,6 +285,12 @@ void OnNextLowerPeakFrequency();
 #endif
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
+void OnSelectPrevClipBoundaryToCursor();
+void OnSelectCursorToNextClipBoundary();
+void OnSelectClipBoundary(bool next);
+void OnSelectPrevClip();
+void OnSelectNextClip();
+void OnSelectClip(bool next);
 void OnSelectCursorStoredCursor();
 void OnSelectSyncLockSel();
 void OnSelectAllTracks();
@@ -301,6 +310,11 @@ void OnGoSelEnd();
 
 void OnExpandAllTracks();
 void OnCollapseAllTracks();
+
+void OnPanTracks(float PanValue);
+void OnPanLeft();
+void OnPanRight();
+void OnPanCenter();
 
 void OnMuteAllTracks();
 void OnUnMuteAllTracks();
@@ -375,6 +389,19 @@ void OnCursorTrackStart();
 void OnCursorTrackEnd();
 void OnCursorSelStart();
 void OnCursorSelEnd();
+typedef struct FoundClipBoundary {
+   int nFound;    // 0, 1, or 2
+   double time;
+   int index1;
+   bool clipStart1;
+   int index2;
+   bool clipStart2;
+} FoundClipBoundary;
+FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
+FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
+void OnCursorNextClipBoundary();
+void OnCursorPrevClipBoundary();
+void OnCursorClipBoundary(bool next);
 
 void OnAlignNoSync(int index);
 void OnAlign(int index);

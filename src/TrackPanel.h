@@ -252,6 +252,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
 
+   virtual void OnClipMove(bool right);
+
  protected:
    virtual MixerBoard* GetMixerBoard();
    /** @brief Populates the track pop-down menu with the common set of
@@ -377,6 +379,8 @@ protected:
    virtual void HandleSlide(wxMouseEvent & event);
    virtual void StartSlide(wxMouseEvent &event);
    virtual void DoSlide(wxMouseEvent &event);
+   virtual void DoSlideHorizontal();
+   virtual void CreateListOfCapturedClips(double clickTime);
    virtual void AddClipsToCaptured(Track *t, bool withinSelection);
    virtual void AddClipsToCaptured(Track *t, double t0, double t1);
 

@@ -609,7 +609,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
          auto file = mDirManager->CopyBlockFile(block.f);
          if (!file) {
             wxASSERT(false); // TODO: Handle this better, alert the user of failure.
-            return false;
+            return;
          }
 
          newBlock.push_back(SeqBlock(file, block.start + s));
@@ -743,7 +743,7 @@ void Sequence::AppendBlock
    if (!newBlock.f) {
       /// \todo Error Could not paste!  (Out of disk space?)
       wxASSERT(false); // TODO: Handle this better, alert the user of failure.
-      return false;
+      return;
    }
 
    mBlock.push_back(newBlock);

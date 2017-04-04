@@ -1227,10 +1227,18 @@ void MixerBoard::UpdateSolo(const PlayableTrack* pTrack /*= NULL*/) // NULL mean
 
 void MixerBoard::UpdatePan(const PlayableTrack* pTrack)
 {
-   MixerTrackCluster* pMixerTrackCluster;
-   FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster)
-      pMixerTrackCluster->UpdatePan();
+   if (pTrack == NULL)
+   {
+      for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+         mMixerTrackClusters[i]->UpdatePan();
+   }
+   else
+   {
+      MixerTrackCluster* pMixerTrackCluster;
+      FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
+      if (pMixerTrackCluster)
+         pMixerTrackCluster->UpdatePan();
+   }
 }
 
 void MixerBoard::UpdateGain(const PlayableTrack* pTrack)
