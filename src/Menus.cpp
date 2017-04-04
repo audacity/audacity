@@ -817,8 +817,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AudioIONotBusyFlag | CanStopAudioStreamFlag,
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
-      c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
-      // The RecordBelow function is actually 'record-other', i.e. if normal record records beside,
+      c->AddItem(wxT("RecordBeside"), _("&Record"), FN(OnRecord), wxT("R"));
+      // The OnRecordBelow function is actually 'record-other', i.e. if normal record records beside,
       // it records below, if normal record records below, it records beside.
       // TODO: fix the naming, and also check we do 'the right thing' with other options like
       // TimerRecord.
