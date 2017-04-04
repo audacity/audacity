@@ -5433,14 +5433,14 @@ void AudacityProject::OnSelectClip(bool next)
       int i = 0;
 
       if (next) {
-         auto result = find_if(clips.begin(), clips.end(), [&] (WaveClip* const& clip) {
+         auto result = std::find_if(clips.begin(), clips.end(), [&] (WaveClip* const& clip) {
             return clip->GetStartTime() == t0; });
          if (result != clips.end() && (*result)->GetEndTime() != t1 ) {
             clip = *result;
             i = result - clips.begin();
          }
          else {
-            auto result = find_if(clips.begin(), clips.end(), [&] (WaveClip* const& clip) {
+            auto result = std::find_if(clips.begin(), clips.end(), [&] (WaveClip* const& clip) {
                return clip->GetStartTime() > t0; });
             if (result != clips.end()) {
                clip = *result;
@@ -5449,7 +5449,7 @@ void AudacityProject::OnSelectClip(bool next)
          }
       }
       else {
-         auto result = find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
+         auto result = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
             return clip->GetStartTime() < t0; });
          if (result != clips.rend()) {
             clip = *result;
@@ -6301,9 +6301,9 @@ AudacityProject::FoundClipBoundary AudacityProject::FindNextClipBoundary(const W
    AudacityProject::FoundClipBoundary result{};
 
    const auto clips = wt->SortedClipArray();
-   auto resultStart = find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+   auto resultStart = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() > time; });
-   auto resultEnd = find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+   auto resultEnd = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetEndTime() > time; });
 
    if (resultStart != clips.end() && resultEnd != clips.end()) {
@@ -6343,9 +6343,9 @@ AudacityProject::FoundClipBoundary AudacityProject::FindPrevClipBoundary(const W
    AudacityProject::FoundClipBoundary result{};
 
    const auto clips = wt->SortedClipArray();
-   auto resultStart = find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
+   auto resultStart = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() < time; });
-   auto resultEnd = find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
+   auto resultEnd = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
       return clip->GetEndTime() < time; });
 
    if (resultStart != clips.rend() && resultEnd != clips.rend()) {
