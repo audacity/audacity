@@ -65,10 +65,7 @@ class DeviceToolBar final : public ToolBar {
    void RepositionCombos();
    void SetNames();
    void RegenerateTooltips() override;
-
    void ShowComboDialog(wxChoice *combo, const wxString &title);
-
-   std::unique_ptr<wxBitmap> mPlayBitmap, mRecordBitmap;
 
    wxChoice *mInput;
    wxChoice *mOutput;

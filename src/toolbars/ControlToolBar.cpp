@@ -165,6 +165,7 @@ void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
 
 void ControlToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsLarge();
 
    mPause = MakeButton(bmpPause, bmpPause, bmpPauseDisabled,

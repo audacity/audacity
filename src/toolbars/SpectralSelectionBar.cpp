@@ -52,6 +52,7 @@ with changes in the SpectralSelectionBar.
 #include "SpectralSelectionBar.h"
 
 #include "../Prefs.h"
+#include "../AllThemeResources.h"
 #include "../SelectedRegion.h"
 #include "../widgets/NumericTextCtrl.h"
 
@@ -106,6 +107,7 @@ void SpectralSelectionBar::Create(wxWindow * parent)
 
 void SpectralSelectionBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
 
    // This will be inherited by all children:

@@ -124,6 +124,7 @@ AButton *EditToolBar::AddButton(
 
 void EditToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
    /* Buttons */

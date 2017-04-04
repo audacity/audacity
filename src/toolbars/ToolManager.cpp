@@ -1285,6 +1285,7 @@ void ToolManager::OnIndicatorPaint( wxPaintEvent & event )
    // TODO: Better to use a bitmap than a triangular region.
    wxWindow *w = (wxWindow *)event.GetEventObject();
    wxPaintDC dc( w );
+   // TODO: Better (faster) to use the existing spare brush.
    wxBrush brush( theTheme.Colour( clrTrackPanelText ) );
    dc.SetBackground( brush );
    dc.Clear();

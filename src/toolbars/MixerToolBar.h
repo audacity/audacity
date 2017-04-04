@@ -61,8 +61,6 @@ class MixerToolBar final : public ToolBar {
    void InitializeMixerToolBar();
    void SetToolTips();
 
-   std::unique_ptr<wxBitmap> mPlayBitmap, mRecordBitmap;
-
    ASlider *mInputSlider;
    ASlider *mOutputSlider;
 

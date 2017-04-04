@@ -172,6 +172,7 @@ void TranscriptionToolBar::MakeAlternateImages(
 
 void TranscriptionToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 // Very similar to code in ControlToolBar...
 // Very similar to code in EditToolBar
    MakeButtonBackgroundsSmall();

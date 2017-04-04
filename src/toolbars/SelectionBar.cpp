@@ -111,6 +111,7 @@ void SelectionBar::Create(wxWindow * parent)
 
 void SelectionBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    mLeftTime = mRightTime = mAudioTime = nullptr;
 
    // This will be inherited by all children:

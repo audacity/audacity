@@ -31,7 +31,7 @@
 #include <wx/gbsizer.h>
 
 #include "MeterToolBar.h"
-
+#include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../Project.h"
 #include "../widgets/Meter.h"
@@ -105,6 +105,7 @@ void MeterToolBar::ReCreateButtons()
 
 void MeterToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    wxASSERT(mProject); // to justify safenew
    Add((mSizer = safenew wxGridBagSizer()), 1, wxEXPAND);
 
