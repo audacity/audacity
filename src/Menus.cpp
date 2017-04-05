@@ -7414,16 +7414,21 @@ void AudacityProject::OnMuteAllTracks()
    while (t)
    {
       auto pt = dynamic_cast<PlayableTrack *>(t);
-      if (pt)
+      if (pt) {
          pt->SetMute(true);
-
+         if (IsSoloSimple())
+            pt->SetSolo(false);
+      }
       t = iter.Next();
    }
 
    ModifyState(true);
    RedrawProject();
-   if (mMixerBoard)
+   if (mMixerBoard) {
       mMixerBoard->UpdateMute();
+      if (IsSoloSimple())
+         mMixerBoard->UpdateSolo();
+   }
 }
 
 void AudacityProject::OnUnMuteAllTracks()
@@ -7434,15 +7439,21 @@ void AudacityProject::OnUnMuteAllTracks()
    while (t)
    {
       auto pt = dynamic_cast<PlayableTrack *>(t);
-      if (pt)
+      if (pt) {
          pt->SetMute(false);
+         if (IsSoloSimple())
+            pt->SetSolo(false);
+      }
       t = iter.Next();
    }
 
    ModifyState(true);
    RedrawProject();
-   if (mMixerBoard)
+   if (mMixerBoard) {
       mMixerBoard->UpdateMute();
+      if (IsSoloSimple())
+         mMixerBoard->UpdateSolo();
+   }
 }
 
 void AudacityProject::OnLockPlayRegion()
