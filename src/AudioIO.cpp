@@ -2237,6 +2237,10 @@ void AudioIO::SetPlaybackMeter(AudacityProject *project, Meter *meter)
    }
 }
 
+Meter * AudioIO::GetCaptureMeter(){
+   return mInputMeter;
+}
+
 void AudioIO::SetMeters()
 {
    if (mInputMeter)
@@ -2515,6 +2519,7 @@ void AudioIO::StopStream()
 
    if (mInputMeter)
       mInputMeter->Reset(mRate, false);
+
    if (mOutputMeter)
       mOutputMeter->Reset(mRate, false);
 

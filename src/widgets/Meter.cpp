@@ -368,7 +368,8 @@ Meter::~Meter()
    // LLL:  This prevents a crash during termination if monitoring
    //       is active.
    if (gAudioIO && gAudioIO->IsMonitoring())
-      gAudioIO->StopStream();
+      if( gAudioIO->GetCaptureMeter() == this )
+         gAudioIO->StopStream();
 }
 
 void Meter::UpdatePrefs()
@@ -1824,45 +1825,32 @@ void Meter::StartMonitoring()
    }
 }
 
+void Meter::StopMonitoring(){
+   mMonitoring = false;
+   if (gAudioIO->IsMonitoring()){
+      gAudioIO->StopStream();
+   } 
+}
+
 void Meter::OnAudioIOStatus(wxCommandEvent &evt)
 {
    evt.Skip();
-
    AudacityProject *p = (AudacityProject *) evt.GetEventObject();
 
-   mActive = false;
-   if (evt.GetInt() != 0)
-   {
-      if (p == mProject)
-      {
-         mActive = true;
+   mActive = (evt.GetInt() != 0) && (p == mProject);
 
-         mTimer.Start(1000 / mMeterRefreshRate);
-
-         if (evt.GetEventType() == EVT_AUDIOIO_MONITOR)
-         {
-            mMonitoring = mActive;
-         }
-      }
-      else
-      {
-         mTimer.Stop();
-
-         mMonitoring = false;
-      }
-   }
-   else
-   {
+   if( mActive ){
+      mTimer.Start(1000 / mMeterRefreshRate);
+      if (evt.GetEventType() == EVT_AUDIOIO_MONITOR)
+         mMonitoring = mActive;
+   } else {
       mTimer.Stop();
-
       mMonitoring = false;
    }
 
    // Only refresh is we're the active meter
    if (IsShownOnScreen())
-   {
       Refresh(false);
-   }
 }
 
 // SaveState() and RestoreState() exist solely for purpose of recreating toolbars
@@ -1880,11 +1868,10 @@ void Meter::RestoreState(const State &state)
 
    mMonitoring = state.mMonitoring;
    mActive = state.mActive;
+   wxLogDebug("Restore state for %08X, is %i", (int)this, mActive );
 
    if (mActive)
-   {
       mTimer.Start(1000 / mMeterRefreshRate);
-   }
 }
 
 //

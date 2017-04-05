@@ -87,20 +87,26 @@ void MeterToolBar::ReCreateButtons()
 
    if (mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter)
    {
-      mProject->SetPlaybackMeter( NULL );
       playState = mPlayMeter->SaveState();
+      mProject->SetPlaybackMeter( NULL );
    }
 
    if (mRecordMeter && mProject->GetCaptureMeter() == mRecordMeter)
    {
-      mProject->SetCaptureMeter( NULL );
       recordState = mRecordMeter->SaveState();
+      mProject->SetCaptureMeter( NULL );
    }
 
    ToolBar::ReCreateButtons();
 
    mPlayMeter->RestoreState(playState);
+   if( playState.mSaved  ){
+      mProject->SetPlaybackMeter( mPlayMeter );
+   }
    mRecordMeter->RestoreState(recordState);
+   if( recordState.mSaved ){
+      mProject->SetCaptureMeter( mRecordMeter );
+   }
 }
 
 void MeterToolBar::Populate()

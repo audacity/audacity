@@ -389,6 +389,7 @@ class AUDACITY_DLL_API AudioIO final {
    bool IsAvailable(AudacityProject *projecT);
    void SetCaptureMeter(AudacityProject *project, Meter *meter);
    void SetPlaybackMeter(AudacityProject *project, Meter *meter);
+   Meter * GetCaptureMeter();
 
 private:
    /** \brief Set the current VU meters - this should be done once after

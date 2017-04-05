@@ -175,6 +175,7 @@ class Meter final : public wxPanelWrapper
    bool IsClipping() const;
 
    void StartMonitoring();
+   void StopMonitoring();
 
    // These exist solely for the purpose of resetting the toolbars
    struct State{ bool mSaved, mMonitoring, mActive; };
