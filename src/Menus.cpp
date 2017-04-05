@@ -759,6 +759,10 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginSubMenu(_("&Toolbars"));
 
+      /* i18n-hint: (verb)*/
+      c->AddItem(wxT("ResetToolbars"), _("&Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddSeparator();
+
       /* i18n-hint: Clicking this menu item shows the toolbar that manages devices*/
       c->AddCheck(wxT("ShowDeviceTB"), _("&Device Toolbar"), FN(OnShowDeviceToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
@@ -785,11 +789,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler*/
       c->AddCheck(wxT("ShowScrubbingTB"), _("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-
-      c->AddSeparator();
-
-      /* i18n-hint: (verb)*/
-      c->AddItem(wxT("ResetToolbars"), _("&Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -876,6 +875,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
       c->BeginSubMenu(_("Transport Options"));
+      // Sound Activated recording options
+      c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
+      c->AddCheck(wxT("SoundActivation"), _("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0);
+      c->AddSeparator();
+
       c->AddCheck(wxT("PinnedHead"), _("Pinned Play/Record &Head (on/off)"),
                   FN(OnTogglePinnedHead), 0,
                   // Switching of scrolling on and off is permitted even during transport
@@ -884,9 +888,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("Duplex"), _("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0);
       c->AddCheck(wxT("SWPlaythrough"), _("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0);
 
-      // Sound Activated recording options
-      c->AddCheck(wxT("SoundActivation"), _("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0);
-      c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
@@ -963,6 +964,8 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
+      //////////////////////////////////////////////////////////////////////////
+
       wxArrayString alignLabelsNoSync;
       alignLabelsNoSync.Add(_("&Align End to End"));
       alignLabelsNoSync.Add(_("Align &Together"));
@@ -1000,8 +1003,6 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndSubMenu();
 
-      //////////////////////////////////////////////////////////////////////////
-
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
 
@@ -1012,15 +1013,6 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | NoteTracksSelectedFlag | WaveTracksSelectedFlag,
          AudioIONotBusyFlag | NoteTracksSelectedFlag | WaveTracksSelectedFlag);
 #endif // EXPERIMENTAL_SCOREALIGN
-
-      c->AddSeparator();
-
-#ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
-         AlwaysEnabledFlag, AlwaysEnabledFlag);
-
-      c->AddSeparator();
-#endif
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1036,6 +1028,13 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
+
+#ifdef EXPERIMENTAL_SYNC_LOCK
+      c->AddSeparator();
+      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
+         AlwaysEnabledFlag, AlwaysEnabledFlag);
+
+#endif
 
       c->EndMenu();
 
