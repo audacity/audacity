@@ -655,7 +655,8 @@ void LWSlider::Draw(wxDC & paintDC)
 
    mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
 
-#ifdef OPTIONAL_SLIDER_TICKS
+// This code draws the (old) slider thumb.
+#if 0
    // Create the bitmap
    mThumbBitmap = std::make_unique<wxBitmap>();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);

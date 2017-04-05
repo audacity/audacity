@@ -92,6 +92,7 @@ class AUDACITY_DLL_API TrackInfo
 public:
    TrackInfo(TrackPanel * pParentIn);
    ~TrackInfo();
+   void ReCreateSliders();
 
 private:
    int CalcItemY( int iItem ) const;
@@ -172,6 +173,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual void DeleteMenus(void);
 
    virtual void UpdatePrefs();
+   virtual void ApplyUpdatedTheme();
 
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);

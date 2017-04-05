@@ -245,8 +245,7 @@ void Theme::ApplyUpdatedImages()
 {
    AColor::ReInit();
    AudacityProject *p = GetActiveProject();
-   p->SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   p->ResetColours();
+   p->ApplyUpdatedTheme();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
       ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);

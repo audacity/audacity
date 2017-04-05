@@ -786,6 +786,12 @@ void TrackPanel::UpdatePrefs()
    Refresh();
 }
 
+void TrackPanel::ApplyUpdatedTheme()
+{
+   mTrackInfo.ReCreateSliders();
+}
+
+
 /// Remembers the track we clicked on and why we captured it.
 /// We also use this method to clear the record
 /// of the captured track, passing NULL as the track.
@@ -9060,36 +9066,54 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 {
    pParent = pParentIn;
 
+   mGain = NULL;
+   mGainCaptured=NULL;
+   mPan = NULL;
+   mPanCaptured=NULL;
+
+   ReCreateSliders();
+
+   UpdatePrefs();
+}
+
+TrackInfo::~TrackInfo()
+{
+}
+
+void TrackInfo::ReCreateSliders(){
    wxRect rect(0, 0, 1000, 1000);
    wxRect sliderRect;
-
    GetGainRect(rect, sliderRect);
 
+   float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
    mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
-   mGain->SetDefaultValue(1.0);
+   mGain->SetDefaultValue(defPos);
+
    mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
-   mGainCaptured->SetDefaultValue(1.0);
+   mGainCaptured->SetDefaultValue(defPos);
 
    GetPanRect(rect, sliderRect);
 
+   defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
    mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
-   mPan->SetDefaultValue(0.0);
+   mPan->SetDefaultValue(defPos);
+
    mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);
-   mPanCaptured->SetDefaultValue(0.0);
+   mPanCaptured->SetDefaultValue(defPos);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    GetVelocityRect(rect, sliderRect);
@@ -9107,11 +9131,6 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
    mVelocityCaptured->SetDefaultValue(0.0);
 #endif
 
-   UpdatePrefs();
-}
-
-TrackInfo::~TrackInfo()
-{
 }
 
 int TrackInfo::GetTrackInfoWidth() const

@@ -2026,6 +2026,12 @@ void AdornedRulerPanel::UpdatePrefs()
 
 void AdornedRulerPanel::ReCreateButtons()
 {
+   // TODO: Should we do this to destroy the grabber??
+   // Get rid of any children we may have
+   // DestroyChildren();
+
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+
    for (auto & button : mButtons) {
       if (button)
          button->Destroy();
@@ -2039,6 +2045,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // This makes it visually clearer that the button is a button.
 
    wxPoint position( 1, 0 );
+
    Grabber * pGrabber = safenew Grabber(this, this->GetId());
    pGrabber->SetAsSpacer( true );
    //pGrabber->SetSize( 10, 27 ); // default is 10,27

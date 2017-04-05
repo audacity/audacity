@@ -1255,10 +1255,11 @@ AudacityProject::~AudacityProject()
                      this);
 }
 
-void AudacityProject::ResetColours()
+void AudacityProject::ApplyUpdatedTheme()
 {
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    ClearBackground();// For wxGTK.
+   mTrackPanel->ApplyUpdatedTheme();
 }
 
 
