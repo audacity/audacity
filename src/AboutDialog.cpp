@@ -429,7 +429,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 
    auto pPage = S.StartNotebookPage( _("Audacity") );
    //pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
-   pPage->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+   //pPage->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    S.StartVerticalLay(1);
    {
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
@@ -440,6 +440,11 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       // It also makes it easier to revert to full size if we decide to.
       const float fScale = 0.5f;// smaller size.
       wxImage RescaledImage(logo.ConvertToImage());
+      wxColour MainColour( 
+         RescaledImage.GetRed(1,1), 
+         RescaledImage.GetGreen(1,1), 
+         RescaledImage.GetBlue(1,1));
+      pPage->SetBackgroundColour(MainColour);
       // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
       RescaledImage.Rescale((int)(LOGOWITHNAME_WIDTH * fScale), (int)(LOGOWITHNAME_HEIGHT *fScale));
       wxBitmap RescaledBitmap(RescaledImage);
