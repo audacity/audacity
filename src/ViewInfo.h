@@ -86,6 +86,9 @@ public:
 
    // There is NO GetZoom()!
    // Use TimeToPosition and PositionToTime and OffsetTimeByPixels!
+   // DB added GetZoom() - needed for zoom presets.
+
+   double GetZoom() const {return zoom; }
 
    // Limits zoom to certain bounds
    void SetZoom(double pixelsPerSecond);
