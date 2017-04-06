@@ -7454,7 +7454,7 @@ void AudacityProject::OnMuteAllTracks()
       auto pt = dynamic_cast<PlayableTrack *>(t);
       if (pt) {
          pt->SetMute(true);
-         if (IsSoloSimple())
+         if (IsSoloSimple() || IsSoloNone())
             pt->SetSolo(false);
       }
       t = iter.Next();
@@ -7464,7 +7464,7 @@ void AudacityProject::OnMuteAllTracks()
    RedrawProject();
    if (mMixerBoard) {
       mMixerBoard->UpdateMute();
-      if (IsSoloSimple())
+      if (IsSoloSimple() || IsSoloNone())
          mMixerBoard->UpdateSolo();
    }
 }
@@ -7479,7 +7479,7 @@ void AudacityProject::OnUnMuteAllTracks()
       auto pt = dynamic_cast<PlayableTrack *>(t);
       if (pt) {
          pt->SetMute(false);
-         if (IsSoloSimple())
+         if (IsSoloSimple() || IsSoloNone())
             pt->SetSolo(false);
       }
       t = iter.Next();
@@ -7489,7 +7489,7 @@ void AudacityProject::OnUnMuteAllTracks()
    RedrawProject();
    if (mMixerBoard) {
       mMixerBoard->UpdateMute();
-      if (IsSoloSimple())
+      if (IsSoloSimple() || IsSoloNone())
          mMixerBoard->UpdateSolo();
    }
 }
