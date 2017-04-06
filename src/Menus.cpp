@@ -718,11 +718,6 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->AddCheck(wxT("ShowClipping"), _("&Show Clipping"), FN(OnShowClipping),
-         gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
-
-      c->AddSeparator();
-
       // History window should be available either for UndoAvailableFlag or RedoAvailableFlag,
       // but we can't make the AddItem flags and mask have both, because they'd both have to be true for the
       // command to be enabled.
@@ -791,6 +786,12 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowScrubbingTB"), _("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
+
+      c->AddSeparator();
+
+      c->AddCheck(wxT("ShowClipping"), _("&Show Clipping (on/off)"), FN(OnShowClipping),
+         gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
+
 
       c->EndMenu();
 
@@ -874,6 +875,8 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
+      c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
+
       c->BeginSubMenu(_("Transport Options"));
       // Sound Activated recording options
       c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
@@ -893,7 +896,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
 #endif
       c->EndSubMenu();
-      c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
       c->EndMenu();
 
