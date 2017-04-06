@@ -5682,15 +5682,12 @@ void AudacityProject::OnZoomThousandthSecond()
 
 void AudacityProject::OnZoomPreset(double newZoom)
 {
-   double currentZoom = mViewInfo.GetZoom();
+   double zoomFactor = newZoom * mViewInfo.OffsetTimeByPixels(0.0, 1);
 
-   if (currentZoom != 0.0) {
-      double ratio = newZoom/currentZoom;
-      if (ratio > 1.0 )
-         ZoomInByFactor(ratio);
-      else if (ratio < 1.0)
-         ZoomOutByFactor(ratio);
-   }
+   if (zoomFactor > 1.0 )
+      ZoomInByFactor(zoomFactor);
+   else if (zoomFactor < 1.0)
+      ZoomOutByFactor(zoomFactor);
 }
 
 void AudacityProject::OnZoomFit()
