@@ -85,6 +85,16 @@ void GUIPrefs::Populate()
    mHtmlHelpChoices.Add(_("Local"));
    mHtmlHelpChoices.Add(_("From Internet"));
 
+   mThemeCodes.Add( wxT("classic") );
+   mThemeCodes.Add( wxT("light") );
+   mThemeCodes.Add( wxT("dark") );
+   mThemeCodes.Add( wxT("custom") );
+
+   mThemeChoices.Add( _("Classic") );
+   mThemeChoices.Add( _("Light") );
+   mThemeChoices.Add( _("Dark") );
+   mThemeChoices.Add( _("Custom") );
+
    GetRangeChoices(&mRangeChoices, &mRangeCodes);
 
 #if 0
@@ -108,24 +118,15 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
-      S.TieCheckBox(_("&Ergonomic order of Transport Toolbar buttons"),
-                    wxT("/GUI/ErgonomicTransportButtons"),
-                    true);
-      S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
-                    wxT("/GUI/ShowSplashScreen"),
-                    true);
-
-      S.AddSpace(10);
-
       S.StartMultiColumn(2);
       {
+
+#ifdef EXPERIMENTAL_DA
+         const wxString defaultTheme = wxT("dark");
+#else
+         const wxString defaultTheme = wxT("classic");
+#endif
          const wxString defaultRange = wxString::Format(wxT("%d"), ENV_DB_RANGE);
-         S.TieChoice(_("Meter dB &range:"),
-                     ENV_DB_KEY,
-                     defaultRange,
-                     mRangeChoices,
-                     mRangeCodes);
-         S.SetSizeHints(mRangeChoices);
 
          S.TieChoice(_("&Language:"),
                      wxT("/Locale/Language"),
@@ -140,13 +141,37 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                      mHtmlHelpChoices,
                      mHtmlHelpCodes);
          S.SetSizeHints(mHtmlHelpChoices);
+
+         S.TieChoice(_("Theme:"),
+                     wxT("/GUI/Theme"),
+                     defaultTheme,
+                     mThemeChoices,
+                     mThemeCodes);
+         S.SetSizeHints(mThemeChoices);
+
+         S.TieChoice(_("Meter dB &range:"),
+                     ENV_DB_KEY,
+                     defaultRange,
+                     mRangeChoices,
+                     mRangeCodes);
+         S.SetSizeHints(mRangeChoices);
       }
       S.EndMultiColumn();
+//      S.AddSpace(10);
+// JKC: This is a silly preference.  Kept here as a reminder that we may
+// later want to have configurable button order.
+//      S.TieCheckBox(_("&Ergonomic order of Transport Toolbar buttons"),
+//                    wxT("/GUI/ErgonomicTransportButtons"),
+//                    true);
+
    }
    S.EndStatic();
 
    S.StartStatic(_("Behaviors"));
    {
+      S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
+                    wxT("/GUI/ShowSplashScreen"),
+                    true);
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
@@ -159,27 +184,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/GUI/MonoAsVirtualStereo"),
                     false);
 #endif
-   }
-   S.EndStatic();
-
-   S.StartStatic(_("Theme"));
-   {
-#ifdef EXPERIMENTAL_DA
-      S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("dark"));
-#else
-      S.StartRadioButtonGroup(wxT("/GUI/Theme"), wxT("classic"));
-#endif
-      {
-         S.TieRadioButton(_("Classic"),
-                          wxT("classic"));
-         S.TieRadioButton(_("Dark"),
-                          wxT("dark"));
-         S.TieRadioButton(_("Light"),
-                          wxT("light"));
-         S.TieRadioButton(_("Custom"),
-                          wxT("custom"));
-      }
-      S.EndRadioButtonGroup();
    }
    S.EndStatic();
 }
