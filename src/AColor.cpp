@@ -228,9 +228,15 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
    AColor::Line(dc, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
 }
 
-void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r)
+void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel)
 {
-   wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonExpand : bmpDownButtonExpand );
+   int index = 0;
+   if( bSel )
+      index = up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
+   else
+      index = up ? bmpUpButtonExpand : bmpDownButtonExpand;
+
+   wxBitmap & Bmp = theTheme.Bitmap( index );
    wxMemoryDC memDC;
    memDC.SelectObject(Bmp);
    int h = wxMin( r.height, Bmp.GetHeight() );
@@ -335,7 +341,7 @@ void AColor::Dark(wxDC * dc, bool selected)
 void AColor::TrackPanelBackground(wxDC * dc, bool selected)
 {
 #ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrMediumSelected : clrMedium);
+   UseThemeColour( dc, selected ? clrMediumSelected : clrTrackBackground );
 #else
    Dark( dc, selected );
 #endif

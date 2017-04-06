@@ -188,10 +188,13 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 20 ), wxT("SliderThumb"));
    DEFINE_IMAGE( bmpSlider, wxImage( 80, 20 ), wxT("Slider"));
    DEFINE_IMAGE( bmpHiliteSlider, wxImage( 80, 20 ), wxT("HiliteSlider"));
+   DEFINE_IMAGE( bmpUpButtonExpandSel, wxImage( 96, 18 ), wxT("UpButtonExpandSel"));
+   DEFINE_IMAGE( bmpDownButtonExpandSel, wxImage( 96, 18 ), wxT("DownButtonExpandSel"));
    SET_THEME_FLAGS(  resFlagNewLine  );
    DEFINE_IMAGE( bmpUpButtonExpand, wxImage( 96, 18 ), wxT("UpButtonExpand"));
    DEFINE_IMAGE( bmpDownButtonExpand, wxImage( 96, 18 ), wxT("DownButtonExpand"));
    DEFINE_IMAGE( bmpHiliteButtonExpand, wxImage( 96, 18 ), wxT("HiliteButtonExpand"));
+   DEFINE_IMAGE( bmpHiliteButtonExpandSel, wxImage( 96, 18 ), wxT("HiliteButtonExpandSel"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
    DEFINE_IMAGE( bmpUpButtonLarge, wxImage( 48, 48 ), wxT("UpButtonLarge"));
@@ -356,4 +359,10 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
    // This is for waveform drawing, selected outside of clips
    DEFINE_COLOUR( clrBlankSelected, wxColour(170, 170, 192), wxT("BlankSelected"));
+
+   DEFINE_COLOUR( clrSliderLight,         wxColour(   1,   1,   1),  wxT("SliderLight") );
+   DEFINE_COLOUR( clrSliderMain,          wxColour(  43,  43,  43),  wxT("SliderMain") );
+   DEFINE_COLOUR( clrSliderDark,          wxColour(   1,   1,   1),  wxT("SliderDark") );
+   DEFINE_COLOUR( clrTrackBackground,     wxColour(  20,  20,  20),  wxT("TrackBackground") );
+
 

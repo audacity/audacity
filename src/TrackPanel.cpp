@@ -4832,9 +4832,9 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
    wxClientDC dc(this);
 
    if (event.Dragging())
-      mTrackInfo.DrawCloseBox(&dc, rect, closeRect.Contains(event.m_x, event.m_y));
+      mTrackInfo.DrawCloseBox(&dc, rect, t, closeRect.Contains(event.m_x, event.m_y));
    else if (event.LeftUp()) {
-      mTrackInfo.DrawCloseBox(&dc, rect, false);
+      mTrackInfo.DrawCloseBox(&dc, rect, t, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
          AudacityProject *p = GetProject();
          p->StopIfPaused();
@@ -5432,7 +5432,7 @@ bool TrackPanel::CloseFunc(Track * t, wxRect rect, int x, int y)
    SetCapturedTrack( t, IsClosing );
    mCapturedRect = rect;
 
-   mTrackInfo.DrawCloseBox(&dc, rect, true);
+   mTrackInfo.DrawCloseBox(&dc, rect, t, true);
    return true;
 }
 
@@ -7265,7 +7265,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
    rect.width = mTrackInfo.GetTrackInfoWidth();
    bool captured = (t == mCapturedTrack);
-   mTrackInfo.DrawCloseBox(dc, rect, (captured && mMouseCapture==IsClosing));
+   mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
@@ -9371,11 +9371,11 @@ void TrackInfo::GetTrackControlsRect(const wxRect & rect, wxRect & dest) const
 }
 
 
-void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
+void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t,  bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(rect, bev);
-   AColor::Bevel2(*dc, !down, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected() );
 
 #ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -9406,7 +9406,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
    wxRect bev;
    GetTitleBarRect(rect, bev);
    //bev.Inflate(-1, -1);
-   AColor::Bevel2(*dc, !down, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected());
 
    // Draw title text
    SetTrackInfoFont(dc);
@@ -9496,7 +9496,8 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    AColor::Bevel2(
       *dc,
       (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
-      bev
+      bev,
+      t->GetSelected()
    );
 
    SetTrackInfoFont(dc);
@@ -9517,10 +9518,10 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
    GetMinimizeRect(rect, bev);
 
    // Clear background to get rid of previous arrow
-   AColor::MediumTrackInfo(dc, t->GetSelected());
-   dc->DrawRectangle(bev);
+   //AColor::MediumTrackInfo(dc, t->GetSelected());
+   //dc->DrawRectangle(bev);
 
-   AColor::Bevel2(*dc, !down, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected());
 
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour(clrTrackPanelText);
