@@ -700,7 +700,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZoomOneSecond"), _("&One Second"), FN(OnZoomOneSecond));
       c->AddItem(wxT("ZoomTenthSecond"), _("&Tenth Second"), FN(OnZoomTenthSecond));
       c->AddItem(wxT("ZoomHundredthSecond"), _("&Hundredth Second"), FN(OnZoomHundredthSecond));
-      c->AddItem(wxT("ZoomThousandthSecond"), _("Thou&sandth Second"), FN(OnZoomThousandthSecond));
+      c->AddItem(wxT("ZoomMillisecond"), _("&Millisecond"), FN(OnZoomMillisecond));
       c->EndSubMenu();
 
       c->AddSeparator();
@@ -5675,7 +5675,7 @@ void AudacityProject::OnZoomHundredthSecond()
    OnZoomPreset(100.0);
 }
 
-void AudacityProject::OnZoomThousandthSecond()
+void AudacityProject::OnZoomMillisecond()
 {
    OnZoomPreset(1000.0);
 }

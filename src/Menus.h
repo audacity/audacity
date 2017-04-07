@@ -304,7 +304,7 @@ void OnZoomNormal();
 void OnZoomOneSecond();
 void OnZoomTenthSecond();
 void OnZoomHundredthSecond();
-void OnZoomThousandthSecond();
+void OnZoomMillisecond();
 void OnZoomPreset(double newZoom);
 void OnZoomFit();
 void OnZoomFitV();
