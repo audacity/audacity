@@ -148,14 +148,11 @@ void EditToolBar::Populate()
 
    AddSeparator();
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: No Sync Lock edit button.
-#ifndef EXPERIMENTAL_DA
+#ifdef OPTION_SYNC_LOCK_BUTTON
    AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
 
    AddSeparator();
-#endif
 #endif
 
    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
@@ -175,11 +172,8 @@ void EditToolBar::Populate()
    mButtons[ETBZoomFitID]->SetEnabled(false);
    mButtons[ETBPasteID]->SetEnabled(false);
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: Has no sync Lock Button
-#ifndef EXPERIMENTAL_DA
+#ifdef OPTION_SYNC_LOCK_BUTTON
    mButtons[ETBSyncLockID]->PushDown();
-#endif
 #endif
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -218,11 +212,8 @@ void EditToolBar::RegenerateTooltips()
       { ETBUndoID,     wxT("Undo"),        XO("Undo")  },
       { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: No Sync Lock edit button
-#ifndef EXPERIMENTAL_DA
+#ifdef OPTION_SYNC_LOCK_BUTTON
       { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
-#endif
 #endif
 
       { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
@@ -258,7 +249,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    // Except, Sync Lock button is a toggle...
    auto cleanup = finally( [&] { 
       bool bIsToggle = false;
-#ifndef EXPERIMENTAL_DA
+#ifdef OPTION_SYNC_LOCK_BUTTON
       bIsToggle = bIsToggle || ( id != ETBSyncLockID );
 #endif
       if( bIsToggle )
@@ -292,13 +283,10 @@ void EditToolBar::OnButton(wxCommandEvent &event)
       case ETBRedoID:
          p->OnRedo();
          break;
-#ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: Has no sync Lock Button
-#ifndef EXPERIMENTAL_DA
+#ifdef OPTION_SYNC_LOCK_BUTTON
       case ETBSyncLockID:
          p->OnSyncLock();
          break;
-#endif
 #endif
       case ETBZoomInID:
          p->OnZoomIn();
@@ -354,9 +342,7 @@ void EditToolBar::EnableDisableButtons()
 
    mButtons[ETBPasteID]->SetEnabled(cm->GetEnabled("Paste"));
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
-// DA: Does not have Sync-Lock Button.
-#ifndef EXPERIMENTAL_DA
+#ifdef OPTION_SYNC_LOCK_BUTTON
    bool bSyncLockTracks;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
 
@@ -364,6 +350,5 @@ void EditToolBar::EnableDisableButtons()
       mButtons[ETBSyncLockID]->PushDown();
    else
       mButtons[ETBSyncLockID]->PopUp();
-#endif
 #endif
 }
