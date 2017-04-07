@@ -696,7 +696,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
       c->EndSubMenu();
 
-      c->BeginSubMenu(_("Set One &Pixel to"));
+      c->BeginSubMenu(_("Zoom One &Pixel to"));
       c->AddItem(wxT("ZoomOneSecond"), _("&One Second"), FN(OnZoomOneSecond));
       c->AddItem(wxT("ZoomTenthSecond"), _("&Tenth Second"), FN(OnZoomTenthSecond));
       c->AddItem(wxT("ZoomHundredthSecond"), _("&Hundredth Second"), FN(OnZoomHundredthSecond));
