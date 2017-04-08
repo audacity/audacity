@@ -73,6 +73,7 @@ and use it for toolbar and window layouts too.
 #include "FileNames.h"
 #include "Prefs.h"
 #include "AColor.h"
+#include "ImageManipulation.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -276,6 +277,7 @@ void Theme::RegisterColours()
 
 ThemeBase::ThemeBase(void)
 {
+   bRecolourOnLoad = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -315,12 +317,52 @@ void ThemeBase::LoadTheme( teThemeType Theme )
       CreateImageCache();
 #endif
    }
+   if( bRecolourOnLoad )
+      RecolourTheme();
+   bRecolourOnLoad = false;
 
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
    // ApplyUpdatedImages();
 }
 
+void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
+{
+   wxImage Image( Bitmap( iIndex ).ConvertToImage() );
+
+   std::unique_ptr<wxImage> pResult = ChangeImageColour(
+      &Image, From, To );
+   ReplaceImage( iIndex, pResult.get() );
+}
+
+// This function coerces a theme to be more like the system colours.
+void ThemeBase::RecolourTheme()
+{
+   wxColour From = Colour( clrMedium );
+   wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+   // only recolour if recolouring is slight.
+   int d = 
+      abs( From.Red() - To.Red() )
+      + abs( From.Green() - To.Green() )
+      + abs( From.Blue() - To.Blue() );
+
+   // Don't recolour if difference is too big, or no difference.
+   if( d  > 120 )
+      return;
+   if( d== 0 )
+      return;
+
+   Colour( clrMedium ) = To;
+
+   RecolourBitmap( bmpUpButtonLarge, From, To );
+   RecolourBitmap( bmpDownButtonLarge, From, To );
+   RecolourBitmap( bmpHiliteButtonLarge, From, To );
+   RecolourBitmap( bmpUpButtonSmall, From, To );
+   RecolourBitmap( bmpDownButtonSmall, From, To );
+   RecolourBitmap( bmpHiliteButtonSmall, From, To );
+//   Colour( clrTrackInfo ) = To;
+//   RecolourBitmap( bmpUpButtonExpand, From, To );
+}
 
 wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 {
@@ -825,6 +867,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
+   bRecolourOnLoad = false;
    if(  type == themeFromFile )
    {
       const wxString &FileName = FileNames::ThemeCachePng();
@@ -855,6 +898,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       char * pImage = NULL;
       switch( type ){
          case themeClassic : 
+            bRecolourOnLoad = true;
             ImageSize = sizeof(ClassicImageCacheAsData);
             pImage = (char *)ClassicImageCacheAsData;
             break;

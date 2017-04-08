@@ -116,6 +116,8 @@ public:
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
+   void RecolourBitmap( int iIndex, wxColour From, wxColour To );
+   void RecolourTheme();
 
 
    wxColour & Colour( int iIndex );
@@ -124,6 +126,7 @@ public:
    wxCursor & Cursor( int iIndex );
    wxFont   & Font( int iIndex );
    wxSize ImageSize( int iIndex );
+   bool bRecolourOnLoad;
 
    void ReplaceImage( int iIndex, wxImage * pImage );
 
