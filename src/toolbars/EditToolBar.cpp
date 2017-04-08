@@ -250,9 +250,9 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    auto cleanup = finally( [&] { 
       bool bIsToggle = false;
 #ifdef OPTION_SYNC_LOCK_BUTTON
-      bIsToggle = bIsToggle || ( id != ETBSyncLockID );
+      bIsToggle = bIsToggle || ( id == ETBSyncLockID );
 #endif
-      if( bIsToggle )
+      if( !bIsToggle )
          SetButton(false, mButtons[id]); 
       } 
    );
