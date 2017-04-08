@@ -1379,9 +1379,9 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
 
-   c->AddCommand(wxT("PlayAtSpeed"), _("Play at speed"), FN(OnPlayAtSpeed));
-   c->AddCommand(wxT("PlayAtSpeedLooped"), _("Loop Play at speed"), FN(OnPlayAtSpeedLooped));
-   c->AddCommand(wxT("PlayAtSpeedCutPreview"), _("Play Cut Preview at speed"), FN(OnPlayAtSpeedCutPreview));
+   c->AddCommand(wxT("PlayAtSpeed"), _("Play-at-Speed"), FN(OnPlayAtSpeed));
+   c->AddCommand(wxT("PlayAtSpeedLooped"), _("Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
+   c->AddCommand(wxT("PlayAtSpeedCutPreview"), _("Play Cut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview));
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));

@@ -303,7 +303,7 @@ void TranscriptionToolBar::RegenerateTooltips()
       wxString commandName;
       wxString untranslatedLabel;
    } table[] = {
-      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-speed")  },
+      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed")  },
    };
 
    std::vector<wxString> commands;
