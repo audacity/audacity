@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2017-03-21 09:59+0100\n"
+"PO-Revision-Date: 2017-04-03 12:11+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "Language: ca\n"
@@ -492,20 +492,18 @@ msgid "OK"
 msgstr "D'acord"
 
 #: src/AboutDialog.cpp:327
-#, fuzzy
 msgid ""
 "Audacity is a free program written by a worldwide team of [[http://www."
 "audacityteam.org/about/credits|volunteers]]. Audacity is [[http://www."
 "audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
 "other Unix-like systems)."
 msgstr ""
-"Audacity és un programa lliure escrit per un equip de <a href=\"http://"
-"audacityteam.org/about/credits\">desenvolupadors</a>. Audacity està <a href="
-"\"http://audacityteam.org/download\">disponible</a> per a Windows, Mac i GNU/"
-"Linux (així com per a altres sistemes Unix)."
+"Audacity és un programa lliure que ha estat escrit per un equip de [[http://"
+"www.audacityteam.org/about/credits|voluntaris]]. Audacity està [[http://www."
+"audacityteam.org/download|disponible]] per a Windows, Mac i GNU/Linux (així "
+"com per a altres sistemes de tipus Unix)."
 
 #: src/AboutDialog.cpp:337
-#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our [[mailto:feedback@audacityteam.org|feedback address]]. For help, view "
@@ -513,10 +511,10 @@ msgid ""
 "our [[http://forum.audacityteam.org/|forum]]."
 msgstr ""
 "Si trobeu alguna errada o voleu fer algun suggeriment, escriviu-nos en "
-"anglès a l'adreça d'<a href=\"mailto:feedback@audacityteam.org\">opinions "
-"dels usuaris</a>. Per obtenir ajuda vegeu la secció de trucs a la nostra <a "
-"href=\"http://wiki.audacityteam.org/\">wiki</a>, o visiteu el nostre <a href="
-"\"http://audacityteam.org/forum/\">fòrum</a>."
+"anglès a l'[[mailto:feedback@audacityteam.org|adreça de retroacció]]. Per "
+"obtenir ajuda vegeu la secció de consells i trucs a la nostra [[http://wiki."
+"audacityteam.org/|wiki]], o visiteu el nostre [[http://forum.audacityteam."
+"org/|fòrum]]."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -528,12 +526,11 @@ msgid "translator_credits"
 msgstr "Traducció al català: Francesc Busquets, Robert Buj i Pau Bosch"
 
 #: src/AboutDialog.cpp:359
-#, fuzzy
 msgid ""
 "Free, open source, cross-platform software for recording and editing sounds."
 msgstr ""
-"programari lliure, multiplataforma i de codi obert per enregistrar i editar "
-"sons<br>"
+"Programari lliure, multiplataforma i de codi obert per a l'enregistrament i "
+"edició de sons."
 
 #: src/AboutDialog.cpp:363
 msgid "Credits"
@@ -545,7 +542,7 @@ msgstr "Els membres de l'equip d'Audacity"
 
 #: src/AboutDialog.cpp:368
 msgid "Emeritus:"
-msgstr ""
+msgstr "Emèrits:"
 
 #: src/AboutDialog.cpp:369
 msgid "Distinguished Audacity Team members, not currently active"
@@ -568,17 +565,16 @@ msgid "Special thanks:"
 msgstr "Agraïments especials:"
 
 #: src/AboutDialog.cpp:386
-#, fuzzy
 msgid "<b>Audacity<sup>&reg;</sup></b> software is copyright"
-msgstr "El programari <b>Audacity&reg;</b> és copyright"
+msgstr "El programari <b>Audacity<sup>&reg;</sup></b> té copyright"
 
 #: src/AboutDialog.cpp:388
-#, fuzzy
 msgid ""
 "The name <b>Audacity<sup>&reg;</sup></b> is a registered trademark of "
 "Dominic Mazzoni."
 msgstr ""
-"El nom <b>Audacity&reg;</b> és una marca registrada de Dominic Mazzoni."
+"El nom <b>Audacity<sup>&reg;</sup></b> és una marca registrada de Dominic "
+"Mazzoni."
 
 #: src/AboutDialog.cpp:389
 msgid ""
@@ -746,7 +742,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp:955
 msgid "Files Missing"
-msgstr "Fitxers Desapareguts"
+msgstr "Fitxers desapareguts"
 
 #: src/AudacityApp.cpp:1047
 #, c-format
@@ -2177,7 +2173,7 @@ msgstr "No hi ha cap ajuda local disponible"
 
 #: src/HelpText.cpp:198
 msgid "Get the Official Released Version of Audacity"
-msgstr ""
+msgstr "Aconsegueix la versió del llançament oficial d’Audacity"
 
 #: src/HelpText.cpp:200
 msgid ""
@@ -2932,9 +2928,8 @@ msgstr "Barra d'eines d'&edició"
 
 #. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
 #: src/Menus.cpp:720
-#, fuzzy
 msgid "Co&mbined Meter Toolbar"
-msgstr "&Barra d'eines de mesuradors combinats"
+msgstr "Barra d'eines de mesuradors co&mbinats"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the recording level meters
 #: src/Menus.cpp:722
@@ -2968,9 +2963,8 @@ msgstr "Barra d'eines d'&utilitats"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp:736
-#, fuzzy
 msgid "Tra&nscription Toolbar"
-msgstr "Barra d'eines de &transcripció"
+msgstr "Barra d'eines de tra&nscripció"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
 #: src/Menus.cpp:738
@@ -3171,7 +3165,7 @@ msgstr "&Edita les etiquetes..."
 
 #: src/Menus.cpp:931
 msgid "&Type to Create a Label (on/off)"
-msgstr ""
+msgstr "&Teclegeu per crear una etiqueta (actiu/inactiu)"
 
 #: src/Menus.cpp:938
 msgid "S&ort Tracks"
@@ -4904,7 +4898,7 @@ msgstr ""
 #: src/Project.cpp:5618
 #, c-format
 msgid "%d %s and %d %s."
-msgstr ""
+msgstr "%d %s i %d %s."
 
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp:66
@@ -5090,13 +5084,14 @@ msgid "Choose a location to save screenshot images"
 msgstr "Trieu una ubicació per desar-hi les imatges capturades"
 
 #: src/Sequence.cpp:1050
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
 msgstr ""
-"La seqüència té un fitxer de bloc amb una longitud %s > mMaxSamples %s.\n"
-"Es truncarà a mMaxSamples."
+"La seqüència té un fitxer de bloc que excedeix el nombre màxim de %s mostres "
+"per bloc.\n"
+"Es trunca a aquesta durada màxima."
 
 #: src/Sequence.cpp:1052
 #, fuzzy
@@ -5534,11 +5529,11 @@ msgstr "Surt d'Audacity"
 
 #: src/TimerRecordDialog.cpp:902
 msgid "Restart system"
-msgstr ""
+msgstr "Reinicia el sistema"
 
 #: src/TimerRecordDialog.cpp:903
 msgid "Shutdown system"
-msgstr ""
+msgstr "Apaga el sistema"
 
 #: src/TimerRecordDialog.cpp:913
 #, fuzzy
@@ -5577,14 +5572,12 @@ msgid ""
 msgstr "Processament completat."
 
 #: src/TimerRecordDialog.cpp:1049
-#, fuzzy
 msgid "Recording Saved:\n"
-msgstr "Fi de l'enregistrament"
+msgstr "Enregistrament desat:\n"
 
 #: src/TimerRecordDialog.cpp:1050
-#, fuzzy
 msgid "Recording Exported:\n"
-msgstr "Fi de l'enregistrament"
+msgstr "Enregistrament exportat:\n"
 
 #: src/TimerRecordDialog.cpp:1066
 #, fuzzy
@@ -6368,19 +6361,19 @@ msgstr "segons"
 
 #: src/effects/AutoDuck.cpp:444
 msgid "Outer fade down length:"
-msgstr "Longitud del fàding final exterior:"
+msgstr "Durada del fàding final exterior:"
 
 #: src/effects/AutoDuck.cpp:450
 msgid "Outer fade up length:"
-msgstr "Longitud del fàding inicial exterior:"
+msgstr "Durada del fàding inicial exterior:"
 
 #: src/effects/AutoDuck.cpp:456
 msgid "Inner fade down length:"
-msgstr "Longitud del fàding final interior:"
+msgstr "Durada del fàding final interior:"
 
 #: src/effects/AutoDuck.cpp:462
 msgid "Inner fade up length:"
-msgstr "Longitud del fàding inicial interior:"
+msgstr "Durada del fàding inicial interior:"
 
 #: src/effects/AutoDuck.cpp:472 src/effects/Compressor.cpp:208
 msgid "Threshold:"
@@ -6573,19 +6566,19 @@ msgstr "Fins a les rpm"
 
 #: src/effects/ChangeSpeed.cpp:359 src/toolbars/SelectionBar.cpp:365
 msgid "Selection Length"
-msgstr "Longitud de la selecció"
+msgstr "Durada de la selecció"
 
 #: src/effects/ChangeSpeed.cpp:363
 msgid "Current Length:"
-msgstr "Longitud actual:"
+msgstr "Durada actual:"
 
 #: src/effects/ChangeSpeed.cpp:374
 msgid "Current length of selection."
-msgstr "Longitud actual de la selecció."
+msgstr "Durada actual de la selecció."
 
 #: src/effects/ChangeSpeed.cpp:379
 msgid "New Length:"
-msgstr "Nova longitud:"
+msgstr "Durada nova:"
 
 #: src/effects/ChangeSpeed.h:28
 msgid "Change Speed"
@@ -6617,9 +6610,8 @@ msgid "Beats per minute, to"
 msgstr "Pulsacions per minut, fins a"
 
 #: src/effects/ChangeTempo.cpp:247
-#, fuzzy
 msgid "Length (seconds)"
-msgstr "Longitud (segons):"
+msgstr "Durada (segons):"
 
 #: src/effects/ChangeTempo.cpp:311
 #, fuzzy
@@ -7085,7 +7077,7 @@ msgstr "Anivellador"
 
 #: src/effects/Distortion.cpp:70
 msgid "Rectifier Distortion"
-msgstr ""
+msgstr "Distorsió del rectificador"
 
 #: src/effects/Distortion.cpp:71
 msgid "Hard Limiter 1413"
@@ -7097,7 +7089,7 @@ msgstr "Tipus"
 
 #: src/effects/Distortion.cpp:79
 msgid "DC Block"
-msgstr ""
+msgstr "Bloc DC"
 
 #: src/effects/Distortion.cpp:80
 #, fuzzy
@@ -7853,11 +7845,11 @@ msgstr "Escala lineal de freqüències"
 
 #: src/effects/Equalization.cpp:792
 msgid "Length of &Filter:"
-msgstr "Longitud del &filtre:"
+msgstr "Durada del &filtre:"
 
 #: src/effects/Equalization.cpp:800
 msgid "Length of Filter"
-msgstr "Longitud del filtre"
+msgstr "Durada del filtre"
 
 #: src/effects/Equalization.cpp:827
 msgid "&Select Curve:"
@@ -8835,19 +8827,19 @@ msgstr "Nombre de repeticions a afegir:"
 
 #: src/effects/Repeat.cpp:183
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Longitud de selecció actual: dd:hh:mm:ss"
+msgstr "Durada de selecció actual: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:184
 msgid "New selection length: dd:hh:mm:ss"
-msgstr "Longitud de selecció nova: dd:hh:mm:ss"
+msgstr "Durada de la selecció nova: dd:hh:mm:ss"
 
 #: src/effects/Repeat.cpp:225
 msgid "Current selection length: "
-msgstr "Longitud de selecció actual: "
+msgstr "Durada de selecció actual: "
 
 #: src/effects/Repeat.cpp:235
 msgid "New selection length: "
-msgstr "Longitud de selecció nova:"
+msgstr "Durada de la selecció nova:"
 
 #: src/effects/Repeat.cpp:238
 msgid "Warning: No repeats."
@@ -9372,7 +9364,7 @@ msgid ""
 "Automatically reduces the length of passages where the volume is below a "
 "specified level"
 msgstr ""
-"Redueix de manera automàtica la longitud dels passatges que tinguin un volum "
+"Redueix automàticament la durada dels passatges que tinguin un volum "
 "inferior al nivell indicat"
 
 #: src/effects/TruncSilence.cpp:286
@@ -9628,7 +9620,7 @@ msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp:237 src/effects/VST/VSTEffect.cpp:794
 msgid " A basic text-only method is also available. "
-msgstr " Està també disponible un mètode bàsic en mode de text. "
+msgstr " També hi ha també disponible un mètode de només text bàsic. "
 
 #: src/effects/lv2/LV2Effect.cpp:239 src/effects/VST/VSTEffect.cpp:796
 msgid "Enable &graphical interface"
@@ -11890,7 +11882,7 @@ msgstr "Directoris"
 
 #: src/prefs/DirectoriesPrefs.cpp:82
 msgid "Temporary files directory"
-msgstr "Directori per a fitxers temporals"
+msgstr "Directori dels fitxers temporals"
 
 #: src/prefs/DirectoriesPrefs.cpp:89
 msgid "&Location:"
@@ -11983,27 +11975,27 @@ msgstr "Opcions de l'efecte"
 
 #: src/prefs/EffectsPrefs.cpp:107
 msgid "Sorted by Effect Name"
-msgstr "Ordenat per nom de l'efecte"
+msgstr "Ordenats pel nom de l'efecte"
 
 #: src/prefs/EffectsPrefs.cpp:108
 msgid "Sorted by Publisher and Effect Name"
-msgstr "Ordenat per creador i nom d'efecte"
+msgstr "Ordenats per l'editor i nom d'efecte"
 
 #: src/prefs/EffectsPrefs.cpp:109
 msgid "Sorted by Type and Effect Name"
-msgstr "Ordenat per tipus i nom d'efecte"
+msgstr "Ordenats pel tipus i nom d'efecte"
 
 #: src/prefs/EffectsPrefs.cpp:110
 msgid "Grouped by Publisher"
-msgstr "Agrupat per autor"
+msgstr "Agrupats per l'editor"
 
 #: src/prefs/EffectsPrefs.cpp:111
 msgid "Grouped by Type"
-msgstr "Agrupat per tipus"
+msgstr "Agrupats pel tipus"
 
 #: src/prefs/EffectsPrefs.cpp:119
 msgid "Effects in menus are:"
-msgstr "Els efectes als menús són:"
+msgstr "Els efectes als menús estan:"
 
 #: src/prefs/EffectsPrefs.cpp:126
 msgid "Maximum effects per group (0 to disable):"
@@ -12108,27 +12100,27 @@ msgstr "Confirma l'eliminació del criteri"
 
 #: src/prefs/GUIPrefs.cpp:62
 msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (rang estret de valors, per editar sons amb molta amplitud)"
+msgstr "-36 dB (interval estret de valors, per editar sons amb molta amplitud)"
 
 #: src/prefs/GUIPrefs.cpp:63
 msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (rang PCM de les mostres de 8 bits)"
+msgstr "-48 dB (interval PCM de les mostres de 8 bits)"
 
 #: src/prefs/GUIPrefs.cpp:64
 msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (rang PCM de les mostres de 10 bits)"
+msgstr "-60 dB (interval PCM de les mostres de 10 bits)"
 
 #: src/prefs/GUIPrefs.cpp:65
 msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (rang PCM de les mostres de 12 bits)"
+msgstr "-72 dB (interval PCM de les mostres de 12 bits)"
 
 #: src/prefs/GUIPrefs.cpp:66
 msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (rang PCM de les mostres de 14 bits)"
+msgstr "-84 dB (interval PCM de les mostres de 14 bits)"
 
 #: src/prefs/GUIPrefs.cpp:67
 msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (rang PCM de les mostres de 16 bits)"
+msgstr "-96 dB (interval PCM de les mostres de 16 bits)"
 
 #: src/prefs/GUIPrefs.cpp:68
 msgid "-120 dB (approximate limit of human hearing)"
@@ -12136,7 +12128,7 @@ msgstr "-120 dB (límit aproximat de percepció de l'oïda humana)"
 
 #: src/prefs/GUIPrefs.cpp:69
 msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (rang PCM de les mostres de 24 bits)"
+msgstr "-145 dB (interval PCM de les mostres de 24 bits)"
 
 #: src/prefs/GUIPrefs.cpp:81
 msgid "Local"
@@ -12161,7 +12153,7 @@ msgstr "Mostra el missatge '&Com aconseguir ajuda' a l'inici del programa"
 
 #: src/prefs/GUIPrefs.cpp:119
 msgid "Meter dB &range:"
-msgstr "Rang en dB del mesurador:"
+msgstr "Interval en dB del mesurador:"
 
 #: src/prefs/GUIPrefs.cpp:126
 msgid "&Language:"
@@ -12307,7 +12299,7 @@ msgstr "&Estableix"
 #: src/prefs/KeyConfigPrefs.cpp:278 src/prefs/KeyConfigPrefs.cpp:786
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
 msgstr ""
-"Nota: Prement Cmd+Q es tancarà el programa. Totes les altres tecles són "
+"Nota: Si premeu Cmd+Q es tancarà el programa. Totes les altres tecles són "
 "vàlides."
 
 #: src/prefs/KeyConfigPrefs.cpp:285 src/prefs/KeyConfigPrefs.cpp:793
@@ -12576,7 +12568,7 @@ msgstr "Arrossegament amb el botó principal"
 
 #: src/prefs/MousePrefs.cpp:110 src/prefs/MousePrefs.cpp:146
 msgid "Set Selection Range"
-msgstr "Especifica el rang de selecció"
+msgstr "Estableix l’interval de la selecció"
 
 #: src/prefs/MousePrefs.cpp:111
 msgid "Shift-Left-Click"
@@ -12584,7 +12576,7 @@ msgstr "Maj+clic esquerre"
 
 #: src/prefs/MousePrefs.cpp:111
 msgid "Extend Selection Range"
-msgstr "Amplia l'abast de la selecció"
+msgstr "Amplia l’interval de la selecció"
 
 #: src/prefs/MousePrefs.cpp:112
 msgid "Left-Double-Click"
@@ -12753,7 +12745,7 @@ msgstr "Vista prèvia dels efectes"
 
 #: src/prefs/PlaybackPrefs.cpp:61
 msgid "&Length of preview:"
-msgstr "&Longitud de la vista prèvia:"
+msgstr "Durada de &la vista prèvia:"
 
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp:73
@@ -12868,21 +12860,19 @@ msgstr "Reprodueix a través"
 #: src/prefs/RecordingPrefs.cpp:76
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr ""
-"Overdub: Reprodueix les altres &pistes mentre se n'enregistra una de nova"
+"Doblatge: reprodueix les altres &pistes mentre se n'enregistra una de nova"
 
 #: src/prefs/RecordingPrefs.cpp:80
-#, fuzzy
 msgid "&Hardware Playthrough: Listen to input while recording or monitoring"
 msgstr ""
-"Reproducció a través de &maquinari: escolteu-ho mentre s'enregistra o es "
-"monitora una pista nova"
+"Reproducció a través de &maquinari: escolteu l'entrada mentre s'enregistra o "
+"es monitora"
 
 #: src/prefs/RecordingPrefs.cpp:84
-#, fuzzy
 msgid "&Software Playthrough: Listen to input while recording or monitoring"
 msgstr ""
-"Reproducció a través de &programari: escolteu-ho mentre s'enregistra o es "
-"monitora una pista nova"
+"Reproducció a travé&s de programari: escolteu l'entrada mentre s'enregistra "
+"o es monitora"
 
 #: src/prefs/RecordingPrefs.cpp:88
 #, fuzzy
@@ -12899,7 +12889,7 @@ msgstr "So a la &memòria intermèdia:"
 
 #: src/prefs/RecordingPrefs.cpp:103 src/prefs/RecordingPrefs.cpp:104
 msgid "milliseconds (higher = more latency)"
-msgstr "mil·lisegons (valor més alt = més latència)"
+msgstr "mil·lisegons (valor més elevat = major latència)"
 
 #: src/prefs/RecordingPrefs.cpp:106
 msgid "L&atency correction:"
@@ -12907,7 +12897,7 @@ msgstr "Correcció de la &latència:"
 
 #: src/prefs/RecordingPrefs.cpp:110 src/prefs/RecordingPrefs.cpp:111
 msgid "milliseconds (negative = backwards)"
-msgstr "mil·lisegons (valor negatiu = marxa enrere)"
+msgstr "mil·lisegons (valor negatiu = cap endarrere)"
 
 #: src/prefs/RecordingPrefs.cpp:117
 msgid "Sound Activated Recording"
@@ -12927,9 +12917,8 @@ msgid "Naming newly recorded tracks"
 msgstr "S'estan mesclant i renderitzant les pistes"
 
 #: src/prefs/RecordingPrefs.cpp:142
-#, fuzzy
 msgid "Use Custom Track &Name"
-msgstr "Nom de la pista"
+msgstr "Utilitza el &nom de pista personalitzat"
 
 #: src/prefs/RecordingPrefs.cpp:148
 msgid "Recorded_Audio"
@@ -13293,9 +13282,8 @@ msgid "Simple"
 msgstr "Simple"
 
 #: src/prefs/TracksPrefs.cpp:76
-#, fuzzy
 msgid "Multi-track"
-msgstr "Diverses"
+msgstr "Diverses pistes"
 
 #: src/prefs/TracksPrefs.cpp:86
 msgid "Waveform (dB)"
@@ -13323,14 +13311,12 @@ msgid "Default &view mode:"
 msgstr "Mode de &visualització predeterminat:"
 
 #: src/prefs/TracksPrefs.cpp:128
-#, fuzzy
 msgid "Default audio track &name:"
-msgstr "S'ha creat una nova pista de so"
+msgstr "&Nom predeterminat de la pista d'àudio:"
 
 #: src/prefs/TracksPrefs.cpp:135
-#, fuzzy
 msgid "Sho&w audio track name as overlay"
-msgstr "&Mostra el nom de la pista en la visualització d'ona"
+msgstr "&Mostra el nom de la pista d'àudio com una superposició"
 
 #: src/prefs/TracksPrefs.cpp:143
 #, fuzzy
@@ -13339,9 +13325,8 @@ msgstr "&Selecciona tot el so del projecte si no hi ha res seleccionat"
 
 #. i18n-hint: cut-lines are a lines indicating where to cut.
 #: src/prefs/TracksPrefs.cpp:147
-#, fuzzy
 msgid "Enable cut &lines"
-msgstr "Habilita les línies del re&tall"
+msgstr "Habilita les &línies del retall"
 
 #: src/prefs/TracksPrefs.cpp:150
 msgid "Enable &dragging of left and right selection edges"
@@ -13359,7 +13344,7 @@ msgstr "L'edició d'un clip pot &moure altres clips"
 
 #: src/prefs/TracksPrefs.cpp:159
 msgid "&Type to create a label"
-msgstr ""
+msgstr "&Teclegeu per crear una etiqueta"
 
 #: src/prefs/TracksPrefs.cpp:163
 msgid "Enable scrolling left of &zero"
@@ -13721,7 +13706,7 @@ msgstr "Començament de la selecció:"
 #: src/toolbars/SelectionBar.cpp:169 src/toolbars/SelectionBar.cpp:170
 #: src/toolbars/SelectionBar.cpp:269
 msgid "Length"
-msgstr "Longitud"
+msgstr "Durada"
 
 #: src/toolbars/SelectionBar.cpp:180
 msgid "hidden"
@@ -13729,7 +13714,7 @@ msgstr "ocult"
 
 #: src/toolbars/SelectionBar.cpp:191 src/toolbars/SelectionBar.cpp:281
 msgid "Audio Position:"
-msgstr "Posició del so:"
+msgstr "Posició de l'àudio:"
 
 #: src/toolbars/SelectionBar.cpp:248
 msgid "Snap To"
@@ -14363,9 +14348,8 @@ msgid "NaN"
 msgstr "NaN"
 
 #: src/widgets/numformatter.cpp:146
-#, fuzzy
 msgid "Infinity"
-msgstr "-Infinit"
+msgstr "Infinit"
 
 #: src/widgets/numformatter.cpp:150
 msgid "-Infinity"
