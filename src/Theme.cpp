@@ -61,6 +61,7 @@ and use it for toolbar and window layouts too.
 #include <wx/ffile.h>
 #include <wx/mstream.h>
 #include <wx/msgdlg.h>
+#include <wx/settings.h>
 
 #include "Project.h"
 #include "toolbars/ToolBar.h"
@@ -339,7 +340,11 @@ void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
 void ThemeBase::RecolourTheme()
 {
    wxColour From = Colour( clrMedium );
+#if defined( __WXGTK__ )
+   wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
+#else
    wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+#endif
    // only recolour if recolouring is slight.
    int d = 
       abs( From.Red() - To.Red() )
