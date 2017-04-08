@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2017-03-27 15:01+0800\n"
-"Last-Translator: zhangmin <zm1990s@gmail.com>\n"
+"PO-Revision-Date: 2017-04-03 17:14+0800\n"
+"Last-Translator: zh_CN.po <dingpengyu06@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
 "zh/)\n"
 "Language: zh_CN\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
@@ -64,7 +64,7 @@ msgstr "文件对话框失败，错误代码 %0lx。"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:188
 msgid "&Nyquist Workbench..."
-msgstr "Nyquist 工作台(&N)..."
+msgstr "奈奎斯特 工作台(&N)..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:745
 msgid "&Undo\tCtrl+Z"
@@ -181,12 +181,12 @@ msgstr "输出"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1051 src/effects/nyquist/Nyquist.cpp:2214
 msgid "Load Nyquist script"
-msgstr "加载 Nyquist 脚本"
+msgstr "加载 奈奎斯特 脚本"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1054
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1100 src/effects/nyquist/Nyquist.cpp:2239
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr "Nyquist 脚本 (*.ny)|*.ny|Lisp 脚本 (*.lsp)|*.lsp|所有文件|*"
+msgstr "奈奎斯特 脚本 (*.ny)|*.ny|Lisp 脚本 (*.lsp)|*.lsp|所有文件|*"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1082
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1112
@@ -204,7 +204,7 @@ msgstr "警告"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1097 src/effects/nyquist/Nyquist.cpp:2236
 msgid "Save Nyquist script"
-msgstr "保存 Nyquist 脚本"
+msgstr "保存 奈奎斯特 脚本"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1196
 msgid "Find dialog"
@@ -234,7 +234,7 @@ msgstr "外部 Audacity 模块，是一个编写效果器的简单 IDE 。"
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1420
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1488
 msgid "Nyquist Effect Workbench"
-msgstr "Nyquist 效果工作台"
+msgstr "奈奎斯特 效果工作台"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1487
 msgid "No matches found"
@@ -250,7 +250,7 @@ msgstr "无标题"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1644
 msgid "Nyquist Effect Workbench - "
-msgstr "Nyquist 效果工作台 - "
+msgstr "奈奎斯特  效果工作台- "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1708 src/PluginManager.cpp:491
 #: src/prefs/ModulePrefs.cpp:102
@@ -947,7 +947,7 @@ msgstr "关闭(&C)"
 
 #: src/AudacityLogger.cpp:293
 msgid "log.txt"
-msgstr "log.txt"
+msgstr "日志.txt"
 
 #: src/AudacityLogger.cpp:295
 msgid "Save log to:"
@@ -1940,7 +1940,7 @@ msgstr "对数频率"
 #: src/effects/ScienFilter.cpp:584 src/widgets/Meter.cpp:1989
 #: src/widgets/Meter.cpp:1990
 msgid "dB"
-msgstr "dB"
+msgstr "分贝"
 
 #: src/FreqWindow.cpp:307
 msgid "Scroll"
@@ -2004,7 +2004,7 @@ msgstr "没有选择足够的数据。"
 #: src/effects/ScienFilter.cpp:503 src/import/ImportRaw.cpp:443
 #: src/widgets/NumericTextCtrl.cpp:472
 msgid "Hz"
-msgstr "Hz"
+msgstr "赫兹"
 
 #. i18n-hint: short form of 'seconds'.
 #: src/FreqWindow.cpp:727 src/effects/AutoDuck.cpp:771
@@ -2015,12 +2015,12 @@ msgstr "秒"
 #: src/FreqWindow.cpp:921
 #, c-format
 msgid "%d Hz (%s) = %d dB"
-msgstr "%d Hz (%s) = %d dB"
+msgstr "%d 赫兹 (%s) = %d 分贝"
 
 #: src/FreqWindow.cpp:922
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
-msgstr "%d Hz (%s) = %.1f dB"
+msgstr "%d 赫兹 (%s) = %.1f 分贝"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
@@ -2134,7 +2134,7 @@ msgid ""
 "You can help us get Audacity ready for release by joining our [[http://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"您可以通过加入我们来帮助我们让Audacity准备发布 [[http://www.audacityteam.org/"
+"您可以通过加入我们来帮助我们让Audacity变的更好 [[http://www.audacityteam.org/"
 "community/|audacity社区]].<hr><br><br>"
 
 #: src/HelpText.cpp:205
@@ -3677,7 +3677,7 @@ msgstr "移动轨道"
 
 #: src/Menus.cpp:3756
 msgid "labels.txt"
-msgstr "labels.txt"
+msgstr "标签.txt"
 
 #: src/Menus.cpp:3768
 msgid "There are no label tracks to export."
@@ -4821,7 +4821,7 @@ msgstr "不到1分钟"
 #: src/Project.cpp:5618
 #, c-format
 msgid "%d %s and %d %s."
-msgstr ""
+msgstr "%d %s and %d %s."
 
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp:66
@@ -5576,7 +5576,7 @@ msgstr "格式(&F)"
 
 #: src/TrackPanel.cpp:640
 msgid "Rat&e"
-msgstr "Rat&e"
+msgstr "鼠&e"
 
 #: src/TrackPanel.cpp:645
 msgid "Up &Octave"
@@ -5624,9 +5624,8 @@ msgid "Move Track to &Bottom"
 msgstr "移动轨道到底部(&B)"
 
 #: src/TrackPanel.cpp:1378
-#, fuzzy
 msgid "Command-Click"
-msgstr "Command"
+msgstr "命令点击"
 
 #: src/TrackPanel.cpp:1380
 #, fuzzy
@@ -6016,7 +6015,7 @@ msgstr "字体大小"
 
 #: src/TrackPanel.cpp:9428
 msgid "Stereo, 999999Hz"
-msgstr "立体声, 999999Hz"
+msgstr "立体声, 999999赫兹"
 
 #: src/TrackPanelAx.cpp:325 src/TrackPanelAx.cpp:529
 msgid "TrackView"
@@ -6102,7 +6101,7 @@ msgstr "没有足够的空间来扩展剪切线"
 #: src/prefs/KeyConfigPrefs.cpp:804 src/prefs/MousePrefs.cpp:57
 #: src/widgets/KeyView.cpp:1545 src/widgets/KeyView.cpp:1557
 msgid "Command"
-msgstr "Command"
+msgstr "命令"
 
 #: src/commands/CommandManager.cpp:1084
 msgid ""
@@ -6176,15 +6175,15 @@ msgstr "增加或减小选中音频的音量"
 
 #: src/effects/Amplify.cpp:220
 msgid "Amplification (dB):"
-msgstr "增益(dB)："
+msgstr "增益(分贝)："
 
 #: src/effects/Amplify.cpp:230
 msgid "Amplification dB"
-msgstr "增益 dB"
+msgstr "增益 分贝"
 
 #: src/effects/Amplify.cpp:247
 msgid "New Peak Amplitude (dB):"
-msgstr "新建峰值振幅 (dB)："
+msgstr "新建峰值振幅 (分贝)："
 
 #: src/effects/Amplify.cpp:255
 msgid "Allow clipping"
@@ -6196,7 +6195,7 @@ msgstr "增幅(放大)"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
-msgstr "回避值Db"
+msgstr "回避值分贝"
 
 #: src/effects/AutoDuck.cpp:42
 msgid "InnerFadeDownLen"
@@ -6216,7 +6215,7 @@ msgstr "向外增强长度"
 
 #: src/effects/AutoDuck.cpp:46
 msgid "ThresholdDb"
-msgstr "阈值Db"
+msgstr "阈值分贝"
 
 #: src/effects/AutoDuck.cpp:47
 msgid "MaximumPause"
@@ -6316,9 +6315,8 @@ msgid "Tone controls"
 msgstr "音调控制"
 
 #: src/effects/BassTreble.cpp:218
-#, fuzzy
 msgid "Ba&ss (dB):"
-msgstr "低音(dB)："
+msgstr "低音(分贝)："
 
 #: src/effects/BassTreble.cpp:219
 msgid "Bass (dB):"
@@ -6352,7 +6350,7 @@ msgstr "百分比"
 
 #: src/effects/ChangePitch.cpp:58 src/effects/ChangeTempo.cpp:52
 msgid "SBSMS"
-msgstr "吕雪莉"
+msgstr "SBSMS"
 
 #: src/effects/ChangePitch.cpp:126
 msgid "Change the pitch of a track without changing its tempo"
@@ -6636,7 +6634,7 @@ msgstr "释放时间"
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp:274
 msgid "Make-up gain for 0 dB after compressing"
-msgstr "压缩后增长到 0 dB"
+msgstr "压缩后增长到 0 分贝"
 
 #: src/effects/Compressor.cpp:276
 msgid "Compress based on Peaks"
@@ -6651,12 +6649,12 @@ msgstr "阈值： %d dB"
 #: src/effects/Compressor.cpp:601 src/effects/Compressor.cpp:605
 #, c-format
 msgid "%3d dB"
-msgstr "%3d dB"
+msgstr "%3d 分贝"
 
 #: src/effects/Compressor.cpp:604
 #, c-format
 msgid "Noise Floor %d dB"
-msgstr "本底噪音 %d dB"
+msgstr "本底噪音 %d 分贝"
 
 #: src/effects/Compressor.cpp:609
 #, c-format
@@ -6833,14 +6831,13 @@ msgid "indeterminate"
 msgstr "不确定"
 
 #: src/effects/Contrast.cpp:396
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f dB Average RMS"
-msgstr "平均 RMS 振幅 %.1f dB "
+msgstr "平均 RMS 振幅 %.1f 分贝 "
 
 #: src/effects/Contrast.cpp:399
-#, fuzzy
 msgid "Infinite dB difference"
-msgstr "无限 dB 差距"
+msgstr "无限 分贝 差距"
 
 #: src/effects/Contrast.cpp:405
 msgid "Measured foreground level"
@@ -6851,9 +6848,9 @@ msgid "zero"
 msgstr "零"
 
 #: src/effects/Contrast.cpp:409 src/effects/Contrast.cpp:422
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f dB"
-msgstr "%.1f dB"
+msgstr "%.1f 分贝"
 
 #: src/effects/Contrast.cpp:412 src/effects/Contrast.cpp:552
 msgid "No foreground measured"
@@ -6915,7 +6912,7 @@ msgstr "平均 RMS 振幅 = 零"
 
 #: src/effects/Contrast.cpp:482 src/effects/Contrast.cpp:501
 msgid "Average RMS =  dB."
-msgstr "平均 RMS 振幅 =  dB."
+msgstr "平均 RMS 振幅 =  分贝."
 
 #: src/effects/Contrast.cpp:484
 msgid "Background"
@@ -6930,9 +6927,9 @@ msgid "Difference is indeterminate."
 msgstr "差别不确定."
 
 #: src/effects/Contrast.cpp:509
-#, fuzzy, c-format
+#, c-format
 msgid "Difference = %.2f Average RMS dB."
-msgstr "差别 = 平均 RMS 振幅 %.1f dB."
+msgstr "差别 = 平均 RMS 振幅 %.1f 分贝."
 
 #: src/effects/Contrast.cpp:511
 msgid "Difference = infinite Average RMS dB."
@@ -7007,9 +7004,8 @@ msgid "DC Block"
 msgstr "直流块"
 
 #: src/effects/Distortion.cpp:80
-#, fuzzy
 msgid "Threshold dB"
-msgstr "阈值： %d dB"
+msgstr "阈值： %d 分贝"
 
 #: src/effects/Distortion.cpp:82 src/effects/Distortion.cpp:129
 #, fuzzy
@@ -7029,12 +7025,12 @@ msgstr "重复"
 #: src/effects/Distortion.cpp:102
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "硬夹80%增益12dB，化妆"
+msgstr "硬夹80%增益12分贝，化妆"
 
 #: src/effects/Distortion.cpp:104
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "软夹80%增益12dB，化妆"
+msgstr "软夹80%增益12分贝，化妆"
 
 #: src/effects/Distortion.cpp:105
 msgid "Fuzz Box"
@@ -7713,23 +7709,23 @@ msgstr "不提供预览"
 
 #: src/effects/Equalization.cpp:647 src/effects/ScienFilter.cpp:403
 msgid "+ dB"
-msgstr "+ dB"
+msgstr "+ 分贝"
 
 #: src/effects/Equalization.cpp:651 src/effects/ScienFilter.cpp:407
 msgid "Max dB"
-msgstr "最大 dB"
+msgstr "最大 分贝"
 
 #: src/effects/Equalization.cpp:657 src/effects/ScienFilter.cpp:413
 msgid "- dB"
-msgstr "- dB"
+msgstr "- 分贝"
 
 #: src/effects/Equalization.cpp:659 src/effects/ScienFilter.cpp:415
 msgid "Min dB"
-msgstr "最小 dB"
+msgstr "最小 分贝"
 
 #: src/effects/Equalization.cpp:719 src/widgets/NumericTextCtrl.cpp:479
 msgid "kHz"
-msgstr "kHz"
+msgstr "仟赫"
 
 #: src/effects/Equalization.cpp:741
 msgid "&EQ Type:"
@@ -8245,7 +8241,7 @@ msgstr "选择的噪音样本太短"
 
 #: src/effects/NoiseReduction.cpp:1458
 msgid "&Noise reduction (dB):"
-msgstr "降噪强度(&N)(dB)"
+msgstr "降噪强度(&N)(分贝)"
 
 #: src/effects/NoiseReduction.cpp:1458 src/effects/NoiseRemoval.cpp:733
 msgid "Noise reduction"
@@ -8285,7 +8281,7 @@ msgstr "频率平滑"
 
 #: src/effects/NoiseReduction.cpp:1477
 msgid "Sensiti&vity (dB):"
-msgstr "敏感度(&v)(dB):"
+msgstr "敏感度(&v)(分贝):"
 
 #: src/effects/NoiseReduction.cpp:1477
 msgid "Old Sensitivity"
@@ -8434,15 +8430,15 @@ msgstr ""
 
 #: src/effects/NoiseRemoval.cpp:729
 msgid "Noise re&duction (dB):"
-msgstr "(&D)噪声抑制(dB)："
+msgstr "(&D)噪声抑制(分贝)："
 
 #: src/effects/NoiseRemoval.cpp:737
 msgid "&Sensitivity (dB):"
-msgstr "(&S)灵敏度(dB)："
+msgstr "(&S)灵敏度(分贝)："
 
 #: src/effects/NoiseRemoval.cpp:747
 msgid "Fr&equency smoothing (Hz):"
-msgstr "(&E) 频率圆滑(Hz)："
+msgstr "(&E) 频率圆滑(赫兹：)："
 
 #: src/effects/NoiseRemoval.cpp:757
 msgid "Attac&k/decay time (secs):"
@@ -8523,7 +8519,7 @@ msgstr "标准化最大振幅为"
 
 #: src/effects/Normalize.cpp:285
 msgid "Maximum amplitude dB"
-msgstr "最大振幅 dB"
+msgstr "最大振幅 分贝"
 
 #: src/effects/Normalize.cpp:295
 msgid "Normalize stereo channels independently"
@@ -8531,7 +8527,7 @@ msgstr "分别标准化立体声的两个声道"
 
 #: src/effects/Normalize.cpp:507
 msgid ".  Maximum 0dB."
-msgstr ". 最大 0dB。"
+msgstr ". 最大 0分贝。"
 
 #: src/effects/Paulstretch.cpp:38
 msgid "Stretch Factor"
@@ -8641,13 +8637,12 @@ msgid "Dry Wet"
 msgstr "干湿"
 
 #: src/effects/Phaser.cpp:268 src/effects/Wahwah.cpp:231
-#, fuzzy
 msgid "LFO Freq&uency (Hz):"
-msgstr "低频振荡频率 (Hz)："
+msgstr "低频振荡频率 (赫兹)："
 
 #: src/effects/Phaser.cpp:273 src/effects/Wahwah.cpp:236
 msgid "LFO frequency in hertz"
-msgstr "低频振荡频率 (Hz)："
+msgstr "低频振荡频率 (赫兹)："
 
 #: src/effects/Phaser.cpp:278 src/effects/Wahwah.cpp:241
 #, fuzzy
@@ -8677,13 +8672,12 @@ msgid "Feedback in percent"
 msgstr "反馈百分比"
 
 #: src/effects/Phaser.cpp:310 src/effects/Wahwah.cpp:282
-#, fuzzy
 msgid "&Output gain (dB):"
-msgstr "输出增益 (dB):"
+msgstr "输出增益 (分贝):"
 
 #: src/effects/Phaser.cpp:315 src/effects/Wahwah.cpp:287
 msgid "Output gain (dB)"
-msgstr "输出增益 (dB)"
+msgstr "输出增益 (分贝)"
 
 #: src/effects/Phaser.h:30
 msgid "Phaser"
@@ -8860,11 +8854,11 @@ msgstr "高音调(%) (&H)："
 
 #: src/effects/Reverb.cpp:439
 msgid "Wet &Gain (dB):"
-msgstr "湿增益(dB) (&G)："
+msgstr "湿增益(分贝) (&G)："
 
 #: src/effects/Reverb.cpp:440
 msgid "Dr&y Gain (dB):"
-msgstr "干增益(dB) (&y)："
+msgstr "干增益(分贝) (&y)："
 
 #: src/effects/Reverb.cpp:441
 msgid "Stereo Wid&th (%):"
@@ -9209,15 +9203,15 @@ msgstr "波形："
 
 #: src/effects/ToneGen.cpp:334 src/effects/ToneGen.cpp:391
 msgid "Frequency (Hz):"
-msgstr "频率(Hz)："
+msgstr "频率(赫兹)："
 
 #: src/effects/ToneGen.cpp:342
 msgid "Frequency Hertz Start"
-msgstr "开始频率 Hz"
+msgstr "开始频率 赫兹"
 
 #: src/effects/ToneGen.cpp:352
 msgid "Frequency Hertz End"
-msgstr "结束频率 Hz"
+msgstr "结束频率 赫兹"
 
 #: src/effects/ToneGen.cpp:367
 msgid "Amplitude Start"
@@ -9249,7 +9243,7 @@ msgstr "压缩多余的静音"
 
 #: src/effects/TruncSilence.cpp:61
 msgid "Db"
-msgstr "Db"
+msgstr "分贝"
 
 #: src/effects/TruncSilence.cpp:63
 msgid "Minimum"
@@ -9535,7 +9529,7 @@ msgstr "长度(&D):"
 
 #: src/effects/nyquist/LoadNyquist.cpp:105
 msgid "Nyquist Effects"
-msgstr "Nyquist 效果器"
+msgstr "奈奎斯特 效果器"
 
 #: src/effects/nyquist/LoadNyquist.cpp:126
 msgid "Provides Nyquist Effects support to Audacity"
