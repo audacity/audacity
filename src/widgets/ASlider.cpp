@@ -767,7 +767,8 @@ void LWSlider::Draw(wxDC & paintDC)
 
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
-      wxFont labelFont(sliderFontSize-3, wxSWISS, wxNORMAL, wxNORMAL);
+      int fontSize = 7;
+      wxFont labelFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
       dc.SetFont(labelFont);
 
       // Colors
