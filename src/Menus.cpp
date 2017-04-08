@@ -994,12 +994,18 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginSubMenu(_("&Align Tracks"));
 
-      c->BeginSubMenu(_("Just Move Tracks"));
+      //c->BeginSubMenu(_("Just Move Tracks"));
       c->AddItemList(wxT("Align"), alignLabelsNoSync, FN(OnAlignNoSync));
       c->AddSeparator();
       c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
+      c->AddSeparator();
+      c->AddCheck(wxT("MoveSelectionWithTracks"), _("Move Selection with Tracks (on/off)"), 
+         FN(OnMoveSelectionWithTracks), 
+         gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 1L),
+         AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->EndSubMenu();
 
+#if 0
       // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
       c->BeginSubMenu(_("Move Sele&ction and Tracks"));
 
@@ -1009,8 +1015,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | TracksSelectedFlag);
 
       c->EndSubMenu();
-
-      c->EndSubMenu();
+#endif
 
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
@@ -1040,7 +1045,8 @@ void AudacityProject::CreateMenusAndCommands()
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
       c->AddSeparator();
-      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock), 0,
+      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks (on/off)"), FN(OnSyncLock),
+         gPrefs->Read(wxT("/GUI/SyncLockTracks"), 0L),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
 
 #endif
@@ -6638,13 +6644,17 @@ void AudacityProject::OnAlignNoSync(int index)
 
 void AudacityProject::OnAlign(int index)
 {
-   HandleAlign(index, false);
+   bool bMoveWith;
+   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, true);
+   HandleAlign(index, bMoveWith);
 }
-
+/*
+// Now handled in OnAlign.
 void AudacityProject::OnAlignMoveSel(int index)
 {
    HandleAlign(index, true);
 }
+*/
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 // rough relative amount of time to compute one
@@ -7138,6 +7148,15 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
    return index;
 }
 
+void AudacityProject::OnMoveSelectionWithTracks()
+{
+   bool bMoveWith;
+   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, true);
+   gPrefs->Write(wxT("/GUI/MoveSelectionWithTracks"), !bMoveWith);
+   gPrefs->Flush();
+
+}
+
 void AudacityProject::OnSyncLock()
 {
    bool bSyncLockTracks;
@@ -7150,6 +7169,8 @@ void AudacityProject::OnSyncLock()
 
    mTrackPanel->Refresh(false);
 }
+
+
 
 void AudacityProject::OnAddLabel()
 {

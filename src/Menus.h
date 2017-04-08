@@ -410,7 +410,7 @@ void OnCursorClipBoundary(bool next);
 
 void OnAlignNoSync(int index);
 void OnAlign(int index);
-void OnAlignMoveSel(int index);
+//void OnAlignMoveSel(int index);
 void HandleAlign(int index, bool moveSel);
 size_t mAlignLabelsCount;
 
@@ -425,6 +425,7 @@ void OnNewLabelTrack();
 void OnNewTimeTrack();
 void OnTimerRecord();
 void OnRemoveTracks();
+void OnMoveSelectionWithTracks();
 void OnSyncLock();
 void OnAddLabel();
 void OnAddLabelPlaying();
