@@ -17,4 +17,4 @@ before_install:
 language:
     - cpp
 script:
-    - ./configure && make
+    - ./configure && make -j4
