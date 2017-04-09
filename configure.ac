@@ -237,7 +237,7 @@ AC_CHECK_HEADERS_ONCE(alloca.h)
 
 
 dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
-if test "${ax_cv_c_compiler_vendor}" = "gnu"; then
+if "${CXX}" -v 2>&1 | grep -q '^gcc version'; then
 
     dnl GCC < 4.9 has known bugs (#1397) and can't be used
     AX_GCC_VERSION_ATLEAST(4,9,0,[gcc_ok=yes], [gcc_ok=no])
