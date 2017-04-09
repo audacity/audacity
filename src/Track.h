@@ -191,8 +191,6 @@ class AUDACITY_DLL_API Track /* not final */
    : public CommonTrackPanelCell, public XMLTagHandler
 {
    friend class TrackList;
-   friend class TrackListIterator;
-   friend class SyncLockedTracksIterator;
 
  // To be TrackDisplay
  private:
@@ -416,16 +414,6 @@ public:
    // to do: privatize this
    virtual TrackKind GetKind() const { return TrackKind::None; }
 
-   // to do: remove these
-   static const TrackKind Label = TrackKind::Label;
-#ifdef USE_MIDI
-   static const TrackKind Note = TrackKind::Note;
-#endif
-   static const TrackKind Wave = TrackKind::Wave;
-   static const TrackKind Time = TrackKind::Time;
-   static const TrackKind All = TrackKind::All;
-   static const TrackKind None = TrackKind::None;
-
 private:
    template<typename T>
       friend typename std::enable_if< std::is_pointer<T>::value, T >::type
@@ -437,7 +425,6 @@ private:
          T
       >::type
          track_cast(const Track *track);
-   friend class TrackListOfKindIterator;
 
 public:
    bool SameKindAs(const Track &track) const
@@ -1079,170 +1066,6 @@ template <
    }
 };
 
-class AUDACITY_DLL_API TrackListIterator /* not final */
-: public std::iterator< std::forward_iterator_tag, Track *const >
-{
- public:
-   // The default-constructed value can serve as the end iterator for
-   // traversal over any track list.
-   TrackListIterator() {}
-   explicit TrackListIterator(TrackList * val);
-   explicit TrackListIterator(TrackList * val, TrackNodePointer p);
-   TrackListIterator(const TrackListIterator&) = default;
-   TrackListIterator& operator=(const TrackListIterator&) = default;
-   virtual ~TrackListIterator() {}
-
-   // Iterate functions
-   virtual Track *First(TrackList * val = nullptr);
-   virtual Track *StartWith(Track * val);
-   virtual Track *Next();
-   virtual Track *Prev();
-   virtual Track *Last();
-
-   // Provide minimal STL forward-iterator idiom:
-
-   // unlike Next, this is non-mutating.
-   // An end iterator may be safely dereferenced, returning nullptr.
-   Track *operator * () const;
-
-   TrackListIterator &operator++ () { (void) Next(); return *this; }
-   TrackListIterator operator++ (int)
-   { auto copy = *this; operator++(); return copy; }
-
-   bool operator == (const TrackListIterator &other) const;
-   bool operator != (const TrackListIterator &other) const
-   { return !(*this == other); }
-
- protected:
-   friend TrackList;
-
-   TrackList *l {};
-   TrackNodePointer cur{};
-};
-
-class AUDACITY_DLL_API TrackListConstIterator
-: public std::iterator< std::forward_iterator_tag, const Track *const >
-{
-public:
-   // The default-constructed value can serve as the end iterator for
-   // traversal over any track list.
-   TrackListConstIterator() {}
-   explicit TrackListConstIterator(
-      const TrackList * val, TrackNodePointer p)
-      : mIter(const_cast<TrackList*>(val), p)
-   {}
-   explicit TrackListConstIterator(
-      const TrackList * val)
-      : mIter(const_cast<TrackList*>(val))
-   {}
-   TrackListConstIterator(const TrackListConstIterator&) = default;
-   TrackListConstIterator& operator=(const TrackListConstIterator&) = default;
-   ~TrackListConstIterator() {}
-
-   // Iterate functions
-   const Track *First(const TrackList * val = NULL)
-   { return mIter.First(const_cast<TrackList*>(val)); }
-   const Track *StartWith(const Track * val)
-   { return mIter.StartWith(const_cast<Track*>(val)); }
-   const Track *Next()
-   { return mIter.Next(); }
-   const Track *Prev()
-   { return mIter.Prev(); }
-   const Track *Last()
-   { return mIter.Last(); }
-
-   // Provide minimal STL forward-iterator idiom:
-
-   // unlike Next, this is non-mutating.
-   // An end iterator may be safely dereferenced, returning nullptr.
-   const Track *operator * () const { return *mIter; }
-
-   TrackListConstIterator &operator++ () { (void) Next(); return *this; }
-   TrackListConstIterator operator++ (int)
-   { auto copy = *this; operator++(); return copy; }
-
-   bool operator == (const TrackListConstIterator &other) const
-   { return mIter == other.mIter; }
-   bool operator != (const TrackListConstIterator &other) const
-   { return !(*this == other); }
-
-private:
-   TrackListIterator mIter;
-};
-
-// TrackListCondIterator (base class for iterators that iterate over all tracks)
-// that meet a condition)
-class AUDACITY_DLL_API TrackListCondIterator /* not final */ : public TrackListIterator
-{
-   public:
-      TrackListCondIterator(TrackList *val = NULL)
-         :  TrackListIterator(val) {}
-      virtual ~TrackListCondIterator() {}
-
-      // Iteration functions
-      Track *First(TrackList *val = NULL) override;
-      Track *StartWith(Track *val) override;
-      Track *Next() override;
-      Track *Prev() override;
-      Track *Last() override;
-
-   protected:
-      // NEW virtual
-      virtual bool Condition(Track *t) = 0;
-};
-
-//
-// TrackListOfKindIterator
-//
-// Based on TrackListIterator and returns only tracks of the specified type.
-//
-class AUDACITY_DLL_API TrackListOfKindIterator /* not final */ : public TrackListCondIterator
-{
- public:
-   TrackListOfKindIterator(TrackKind kind, TrackList * val = nullptr);
-   virtual ~TrackListOfKindIterator() {}
-
- protected:
-   virtual bool Condition(Track *t) override;
-
- private:
-   TrackKind kind;
-};
-
-//
-// SelectedTrackListOfKindIterator
-//
-// Based on TrackListOfKindIterator and returns only tracks selected.
-//
-class AUDACITY_DLL_API SelectedTrackListOfKindIterator final : public TrackListOfKindIterator
-{
- public:
-   SelectedTrackListOfKindIterator(TrackKind kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
-   virtual ~SelectedTrackListOfKindIterator() {}
-
- protected:
-   bool Condition(Track *t) override;
-};
-
-// SyncLockedTracksIterator returns only tracks belonging to the sync-locked tracks
-// in which the starting track is a member.
-class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
-{
- public:
-   SyncLockedTracksIterator(TrackList * val);
-   virtual ~SyncLockedTracksIterator() {}
-
-   // Iterate functions
-   Track *StartWith(Track *member) override;
-   Track *Next() override;
-   Track *Prev() override;
-   Track *Last() override;
-
- private:
-   bool IsGoodNextTrack(const Track *t) const;
-   bool mInLabelSection;
-};
-
 
 /** \brief TrackList is a flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, plus serialization of the list of tracks.
@@ -1305,14 +1128,13 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // Iteration
 
    // Hide the inherited begin() and end()
-   using iterator = TrackListIterator;
-   using const_iterator = TrackListConstIterator;
+   using iterator = TrackIter<Track>;
+   using const_iterator = TrackIter<const Track>;
    using value_type = Track *;
-   iterator begin() { return iterator{
-      this, { ListOfTracks::begin(), this } }; }
-   iterator end() { return {}; }
-   const_iterator begin() const { return const_iterator{ this }; }
-   const_iterator end() const { return {}; }
+   iterator begin() { return Any().begin(); }
+   iterator end() { return Any().end(); }
+   const_iterator begin() const { return Any().begin(); }
+   const_iterator end() const { return Any().end(); }
    const_iterator cbegin() const { return begin(); }
    const_iterator cend() const { return end(); }
 
@@ -1472,8 +1294,6 @@ public:
    }
 
    friend class Track;
-   friend class TrackListIterator;
-   friend class SyncLockedTracksIterator;
 
    /// For use in sorting:  assume each iterator points into this list, no duplications
    void Permute(const std::vector<TrackNodePointer> &permutation);

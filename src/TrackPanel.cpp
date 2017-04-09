@@ -89,11 +89,6 @@ subset of the TrackPanel methods from all over the place.
 
 *//**************************************************************//**
 
-\class TrackListIterator
-\brief An iterator for a TrackList.
-
-*//**************************************************************//**
-
 \class TrackListNode
 \brief Used by TrackList, points to a Track.
 
