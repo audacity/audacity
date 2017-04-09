@@ -999,7 +999,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
       c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
       c->AddSeparator();
-      c->AddCheck(wxT("MoveSelectionWithTracks"), _("Move Selection with Tracks (on/off)"), 
+      c->AddCheck(wxT("MoveSelectionWithTracks"), _("&Move Selection with Tracks (on/off)"), 
          FN(OnMoveSelectionWithTracks), 
          gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 1L),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
