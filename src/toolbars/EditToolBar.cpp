@@ -246,15 +246,8 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    // due to bugs elsewhere (see: AudacityProject::UpdateMenus() )
 
    // Be sure the pop-up happens even if there are exceptions
-   // Except, Sync Lock button is a toggle...
-   auto cleanup = finally( [&] { 
-      bool bIsToggle = false;
-#ifdef OPTION_SYNC_LOCK_BUTTON
-      bIsToggle = bIsToggle || ( id == ETBSyncLockID );
-#endif
-      if( !bIsToggle )
-         SetButton(false, mButtons[id]); 
-      } 
+   // except for buttons which toggle.
+   auto cleanup = finally( [&] { mButtons[id]->InteractionOver();}
    );
 
    switch (id) {
