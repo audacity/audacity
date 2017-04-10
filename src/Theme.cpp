@@ -201,6 +201,9 @@ static unsigned char LightImageCacheAsData[] = {
 static unsigned char ClassicImageCacheAsData[] = {
 #include "ClassicThemeAsCeeCode.h"
 };
+static unsigned char HiContrastImageCacheAsData[] = {
+#include "HiContrastThemeAsCeeCode.h"
+};
 
 // theTheme is a global variable.
 AUDACITY_DLL_API Theme theTheme;
@@ -852,6 +855,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "classic" );
    aThemes.Add( "dark" );
    aThemes.Add( "light" );
+   aThemes.Add( "hi-contrast" );
    aThemes.Add( "custom" );
    int themeIx = aThemes.Index( Name );
    if( themeIx < 0 )
@@ -922,6 +926,10 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          case themeDark : 
             ImageSize = sizeof(DarkImageCacheAsData);
             pImage = (char *)DarkImageCacheAsData;
+            break;
+         case themeHiContrast : 
+            ImageSize = sizeof(HiContrastImageCacheAsData);
+            pImage = (char *)HiContrastImageCacheAsData;
             break;
       }
       wxMemoryInputStream InternalStream( pImage, ImageSize );

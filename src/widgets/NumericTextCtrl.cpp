@@ -1372,7 +1372,8 @@ bool NumericTextCtrl::Layout()
    mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight);
    memDC.SelectObject(*mBackgroundBitmap);
 
-   memDC.SetBrush(*wxLIGHT_GREY_BRUSH);
+   theTheme.SetBrushColour( Brush, clrTimeBack );
+   memDC.SetBrush(Brush);
    memDC.SetPen(*wxTRANSPARENT_PEN);
    memDC.DrawRectangle(0, 0, mWidth + mButtonWidth, mHeight);
 
@@ -1381,13 +1382,13 @@ bool NumericTextCtrl::Layout()
    memDC.GetTextExtent(wxT("0"), &strW, &strH);
    int labelTop = numberBottom - strH;
 
-   memDC.SetTextForeground(*wxBLACK);
-   memDC.SetTextBackground(*wxLIGHT_GREY);
+   memDC.SetTextForeground(theTheme.Colour( clrTimeFont ));
+   memDC.SetTextBackground(theTheme.Colour( clrTimeBack ));
    memDC.DrawText(mPrefix, mBorderLeft, labelTop);
 
    theTheme.SetBrushColour( Brush, clrTimeBack );
    memDC.SetBrush(Brush);
-   memDC.SetBrush(*wxLIGHT_GREY_BRUSH);
+   //memDC.SetBrush(*wxLIGHT_GREY_BRUSH);
    for(i=0; i<mDigits.GetCount(); i++)
       memDC.DrawRectangle(mDigits[i].digitBox);
    memDC.SetBrush( wxNullBrush );
