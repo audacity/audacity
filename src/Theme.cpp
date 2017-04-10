@@ -337,6 +337,8 @@ void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
 }
 
 // This function coerces a theme to be more like the system colours.
+// Only used for built in themes.  For custom themes a user
+// will choose a better theme for them and just not use a mismatching one.
 void ThemeBase::RecolourTheme()
 {
    wxColour From = Colour( clrMedium );
@@ -354,7 +356,11 @@ void ThemeBase::RecolourTheme()
    // Don't recolour if difference is too big, or no difference.
    if( d  > 120 )
       return;
-   if( d== 0 )
+
+   // A minor tint difference from standard does not need 
+   // to be recouloured either.  Includes case of d==0 which is nothing
+   // needs to be done.
+   if( d < 40 )
       return;
 
    Colour( clrMedium ) = To;
@@ -902,19 +908,20 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       size_t ImageSize = 0;
       char * pImage = NULL;
       switch( type ){
+         default: 
          case themeClassic : 
             bRecolourOnLoad = true;
             ImageSize = sizeof(ClassicImageCacheAsData);
             pImage = (char *)ClassicImageCacheAsData;
             break;
-         default: 
+         case themeLight : 
+            bRecolourOnLoad = true;
+            ImageSize = sizeof(LightImageCacheAsData);
+            pImage = (char *)LightImageCacheAsData;
+            break;
          case themeDark : 
             ImageSize = sizeof(DarkImageCacheAsData);
             pImage = (char *)DarkImageCacheAsData;
-            break;
-         case themeLight : 
-            ImageSize = sizeof(LightImageCacheAsData);
-            pImage = (char *)LightImageCacheAsData;
             break;
       }
       wxMemoryInputStream InternalStream( pImage, ImageSize );
