@@ -470,12 +470,12 @@ void AudacityProject::CreateMenusAndCommands()
 
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Silence"), _("Silence Audi&o"), FN(OnSilence), wxT("Ctrl+L"),
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
+         AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
+         AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag);
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Trim"), _("Tri&m Audio"), FN(OnTrim), wxT("Ctrl+T"),
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
+         AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag,
+         AudioIONotBusyFlag | TimeSelectedFlag | AudioTracksSelectedFlag);
       c->EndSubMenu();
 
       c->AddSeparator();
@@ -1986,6 +1986,7 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
             }
             else {
                flags |= WaveTracksSelectedFlag;
+               flags |= AudioTracksSelectedFlag;
             }
          }
          if( t->GetEndTime() > t->GetStartTime() )
@@ -2003,6 +2004,7 @@ CommandFlag AudacityProject::GetUpdateFlags(bool checkActive)
          if (nt->GetSelected()) {
             flags |= TracksSelectedFlag;
             flags |= NoteTracksSelectedFlag;
+            flags |= AudioTracksSelectedFlag; // even if not EXPERIMENTAL_MIDI_OUT
          }
       }
 #endif
@@ -2225,8 +2227,11 @@ void AudacityProject::UpdateMenus(bool checkActive)
       {
          mCommandManager.Enable(wxT("ExportSel"), false);
          mCommandManager.Enable(wxT("SplitNew"), false);
-         mCommandManager.Enable(wxT("Trim"), false);
          mCommandManager.Enable(wxT("SplitDelete"), false);
+      }
+      if (!(flags & TimeSelectedFlag) | !(flags & AudioTracksSelectedFlag))
+      {
+         mCommandManager.Enable(wxT("Trim"), false);
       }
    }
 
@@ -5057,10 +5062,11 @@ void AudacityProject::OnJoin()
 
 void AudacityProject::OnSilence()
 {
-   SelectedTrackListOfKindIterator iter(Track::Wave, GetTracks());
+   TrackListIterator iter(GetTracks());
 
    for (Track *n = iter.First(); n; n = iter.Next())
-      n->Silence(mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1());
+      if (n->GetSelected() && (nullptr != dynamic_cast<AudioTrack *>(n)))
+         n->Silence(mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1());
 
    PushState(wxString::
              Format(_("Silenced selected tracks for %.2f seconds at %.2f"),

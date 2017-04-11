@@ -516,14 +516,27 @@ void NoteTrack::Paste(double t, const Track *src)
    mSeq->paste(t - GetOffset(), other->mSeq.get());
 }
 
-void NoteTrack::Silence(double, double)
+void NoteTrack::Silence(double t0, double t1)
 {
-   // to do
+   if (t1 < t0)
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   auto len = t1 - t0;
+
+   mSeq->convert_to_seconds();
+   // XXX: do we want to set the all param?
+   // If it's set, then it seems like notes are silenced if they start or end in the range,
+   // otherwise only if they start in the range. --Poke
+   mSeq->silence(t0 - GetOffset(), len, false);
 }
 
-void NoteTrack::InsertSilence(double, double)
+void NoteTrack::InsertSilence(double t, double len)
 {
-   // to do
+   if (len <= 0)
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   mSeq->convert_to_seconds();
+   mSeq->insert_silence(t - GetOffset(), len);
 }
 
 // Call this function to manipulate the underlying sequence data. This is
