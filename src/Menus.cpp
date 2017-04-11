@@ -5901,7 +5901,7 @@ void AudacityProject::DoZoomFitV()
    TrackListIterator iter(GetTracks());
    Track *t = iter.First();
    while (t) {
-      if ((t->GetKind() == Track::Wave) &&
+      if ((nullptr != dynamic_cast<AudioTrack*>(t)) &&
           !t->GetMinimized())
          count++;
       else
@@ -5921,7 +5921,7 @@ void AudacityProject::DoZoomFitV()
    TrackListIterator iter2(GetTracks());
    t = iter2.First();
    while (t) {
-      if ((t->GetKind() == Track::Wave) &&
+      if ((nullptr != dynamic_cast<AudioTrack*>(t)) &&
           !t->GetMinimized())
          t->SetHeight(height);
       t = iter2.Next();
