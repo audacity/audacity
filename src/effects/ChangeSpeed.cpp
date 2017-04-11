@@ -229,28 +229,23 @@ bool EffectChangeSpeed::Process()
    CopyInputTracks(Track::All); // Set up mOutputTracks.
    bool bGoodResult = true;
 
-   TrackListIterator iter(mOutputTracks.get());
-   Track* t;
    mCurTrackNum = 0;
    mMaxNewLength = 0.0;
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
-   t = iter.First();
-   while (t != NULL)
-   {
-      if (t->GetKind() == Track::Label) {
-         if (t->GetSelected() || t->IsSyncLockSelected())
+   mOutputTracks->Any().VisitWhile( bGoodResult,
+      [&](LabelTrack *lt) {
+         if (lt->GetSelected() || lt->IsSyncLockSelected())
          {
-            if (!ProcessLabelTrack(static_cast<LabelTrack*>(t))) {
+            if (!ProcessLabelTrack(lt))
                bGoodResult = false;
-               break;
-            }
          }
-      }
-      else if (t->GetKind() == Track::Wave && t->GetSelected())
-      {
-         WaveTrack *pOutWaveTrack = (WaveTrack*)t;
+      },
+      [&](WaveTrack *pOutWaveTrack, const Track::Fallthrough &fallthrough) {
+         if (!pOutWaveTrack->GetSelected())
+            return fallthrough();
+
          //Get start and end times from track
          mCurT0 = pOutWaveTrack->GetStartTime();
          mCurT1 = pOutWaveTrack->GetEndTime();
@@ -268,21 +263,15 @@ bool EffectChangeSpeed::Process()
 
             //ProcessOne() (implemented below) processes a single track
             if (!ProcessOne(pOutWaveTrack, start, end))
-            {
                bGoodResult = false;
-               break;
-            }
          }
          mCurTrackNum++;
+      },
+      [&](Track *t) {
+         if (t->IsSyncLockSelected())
+            t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
-      else if (t->IsSyncLockSelected())
-      {
-         t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
-      }
-
-      //Iterate to the next track
-      t=iter.Next();
-   }
+   );
 
    if (bGoodResult)
       ReplaceProcessedTracks(bGoodResult);

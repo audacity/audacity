@@ -523,31 +523,26 @@ bool EffectTruncSilence::DoRemoval
                            mTruncLongestAllowedSilence);
       }
 
-      double cutLen = std::max(0.0, inLength - outLength);
+      const double cutLen = std::max(0.0, inLength - outLength);
+      // Don't waste time cutting nothing.
+      if( cutLen == 0.0 )
+         continue;
+      
       totalCutLen += cutLen;
 
-      TrackListIterator iterOut(mOutputTracks.get());
-      bool lastSeen = false;
-      for (Track *t = iterOut.StartWith(firstTrack); t && !lastSeen; t = iterOut.Next())
-      {
-         lastSeen = (t == lastTrack);
-         if (!(t->GetSelected() || t->IsSyncLockSelected()))
-            continue;
+      double cutStart = (r->start + r->end - cutLen) / 2;
+      double cutEnd = cutStart + cutLen;
+      (mOutputTracks->Any()
+         .StartingWith(firstTrack).EndingAfter(lastTrack)
+         + &Track::IsSelectedOrSyncLockSelected
+         - [&](const Track *pTrack) { return
+           // Don't waste time past the end of a track
+           pTrack->GetEndTime() < r->start;
+         }
+      ).Visit(
+         [&](WaveTrack *wt) {
 
-         // Don't waste time past the end of a track
-         if (t->GetEndTime() < r->start)
-            continue;
-
-         // Don't waste time cutting nothing.
-         if( cutLen == 0.0 )
-            continue;
-
-         double cutStart = (r->start + r->end - cutLen) / 2;
-         double cutEnd = cutStart + cutLen;
-         if (t->GetKind() == Track::Wave)
-         {
             // In WaveTracks, clear with a cross-fade
-            WaveTrack *const wt = static_cast<WaveTrack*>(t);
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
             cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
@@ -580,11 +575,12 @@ bool EffectTruncSilence::DoRemoval
 
             // Write cross-faded data
             wt->Set((samplePtr)buf1.get(), floatSample, t1, blendFrames);
-         }
-         else
+         },
+         [&](Track *t) {
             // Non-wave tracks: just do a sync-lock adjust
             t->SyncLockAdjust(cutEnd, cutStart);
-      }
+         }
+      );
       ++whichReg;
    }
 

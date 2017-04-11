@@ -2289,13 +2289,12 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
    if (!selectedRegion.isPoint())
       flags |= TimeSelectedFlag;
 
-   TrackListIterator iter(project.GetTracks());
-   Track *t = iter.First();
-   while (t) {
+   auto tracks = project.GetTracks();
+   auto trackRange = tracks->Any();
+   if ( trackRange )
       flags |= TracksExistFlag;
-      if (t->GetKind() == Track::Label) {
-         LabelTrack *lt = (LabelTrack *) t;
-
+   trackRange.Visit(
+      [&](LabelTrack *lt) {
          flags |= LabelTracksExistFlag;
 
          if (lt->GetSelected()) {
@@ -2313,8 +2312,8 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
          if (lt->IsTextSelected()) {
             flags |= CutCopyAvailableFlag;
          }
-      }
-      else if (t->GetKind() == Track::Wave) {
+      },
+      [&](WaveTrack *t) {
          flags |= WaveTracksExistFlag;
          flags |= PlayableTracksExistFlag;
          if (t->GetSelected()) {
@@ -2331,9 +2330,8 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
             flags |= HasWaveDataFlag;
       }
 #if defined(USE_MIDI)
-      else if (t->GetKind() == Track::Note) {
-         NoteTrack *nt = (NoteTrack *) t;
-
+      ,
+      [&](NoteTrack *nt) {
          flags |= NoteTracksExistFlag;
 #ifdef EXPERIMENTAL_MIDI_OUT
          flags |= PlayableTracksExistFlag;
@@ -2346,8 +2344,7 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
          }
       }
 #endif
-      t = iter.Next();
-   }
+   );
 
    if((AudacityProject::msClipT1 - AudacityProject::msClipT0) > 0.0)
       flags |= ClipboardFlag;
@@ -5589,24 +5586,21 @@ void MenuCommandHandler::OnCut(const CommandContext &context)
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
 
-   n = iter.First();
-   while (n) {
-      if (n->GetSelected()) {
-         Track::Holder dest;
+   tracks->Selected().Visit(
 #if defined(USE_MIDI)
-         if (n->GetKind() == Track::Note)
-            // Since portsmf has a built-in cut operator, we use that instead
-            dest = n->Cut(selectedRegion.t0(),
-                   selectedRegion.t1());
-         else
+      [&](NoteTrack *n) {
+         // Since portsmf has a built-in cut operator, we use that instead
+         auto dest = n->Cut(selectedRegion.t0(),
+                selectedRegion.t1());
+         FinishCopy(n, std::move(dest), newClipboard);
+      },
 #endif
-            dest = n->Copy(selectedRegion.t0(),
-                    selectedRegion.t1());
-
+      [&](Track *n) {
+         auto dest = n->Copy(selectedRegion.t0(),
+                 selectedRegion.t1());
          FinishCopy(n, std::move(dest), newClipboard);
       }
-      n = iter.Next();
-   }
+   );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
@@ -5614,35 +5608,28 @@ void MenuCommandHandler::OnCut(const CommandContext &context)
    // Proceed to change the project.  If this throws, the project will be
    // rolled back by the top level handler.
 
-   n = iter.First();
-   while (n) {
-      // We clear from selected and sync-lock selected tracks.
-      if (n->GetSelected() || n->IsSyncLockSelected()) {
-         switch (n->GetKind())
-         {
+   (tracks->Any() + &Track::IsSelectedOrSyncLockSelected).Visit(
 #if defined(USE_MIDI)
-            case Track::Note:
-               //if NoteTrack, it was cut, so do not clear anything
-            break;
+      [](NoteTrack*) {
+         //if NoteTrack, it was cut, so do not clear anything
+
+         // PRL:  But what if it was sync lock selected only, not selected?
+      },
 #endif
-            case Track::Wave:
-               if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
-                  ((WaveTrack*)n)->ClearAndAddCutLine(
-                     selectedRegion.t0(),
-                     selectedRegion.t1());
-                  break;
-               }
-
-               // Fall through
-
-            default:
-               n->Clear(selectedRegion.t0(),
-                        selectedRegion.t1());
-            break;
+      [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
+         if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
+            wt->ClearAndAddCutLine(
+               selectedRegion.t0(),
+               selectedRegion.t1());
          }
+         else
+            fallthrough();
+      },
+      [&](Track *n) {
+         n->Clear(selectedRegion.t0(),
+                  selectedRegion.t1());
       }
-      n = iter.Next();
-   }
+   );
 
    AudacityProject::msClipT0 = selectedRegion.t0();
    AudacityProject::msClipT1 = selectedRegion.t1();
@@ -5670,35 +5657,30 @@ void MenuCommandHandler::OnSplitCut(const CommandContext &context)
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
    auto historyWindow = project.GetHistoryWindow();
 
-   TrackListIterator iter(tracks);
-   Track *n = iter.First();
-
    AudacityProject::ClearClipboard();
 
    auto pNewClipboard = TrackList::Create();
    auto &newClipboard = *pNewClipboard;
 
-   while (n) {
-      if (n->GetSelected()) {
-         Track::Holder dest;
-         if (n->GetKind() == Track::Wave)
-         {
-            dest = ((WaveTrack*)n)->SplitCut(
-               selectedRegion.t0(),
-               selectedRegion.t1());
-         }
-         else
-         {
-            dest = n->Copy(selectedRegion.t0(),
+   Track::Holder dest;
+
+   tracks->Selected().Visit(
+      [&](WaveTrack *n) {
+         dest = n->SplitCut(
+            selectedRegion.t0(),
+            selectedRegion.t1());
+         if (dest)
+            FinishCopy(n, std::move(dest), newClipboard);
+      },
+      [&](Track *n) {
+         dest = n->Copy(selectedRegion.t0(),
+                 selectedRegion.t1());
+         n->Silence(selectedRegion.t0(),
                     selectedRegion.t1());
-            n->Silence(selectedRegion.t0(),
-                       selectedRegion.t1());
-         }
          if (dest)
             FinishCopy(n, std::move(dest), newClipboard);
       }
-      n = iter.Next();
-   }
+   );
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    newClipboard.Swap(*AudacityProject::msClipboard);
@@ -6255,32 +6237,19 @@ void MenuCommandHandler::OnTrim(const CommandContext &context)
    if (selectedRegion.isPoint())
       return;
 
-   TrackListIterator iter(tracks);
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         switch (n->GetKind())
-         {
-#if defined(USE_MIDI)
-            case Track::Note:
-               ((NoteTrack*)n)->Trim(selectedRegion.t0(),
-                                     selectedRegion.t1());
-            break;
+   tracks->Selected().Visit(
+#ifdef USE_MIDI
+      [&](NoteTrack *nt) {
+         nt->Trim(selectedRegion.t0(),
+            selectedRegion.t1());
+      },
 #endif
-
-            case Track::Wave:
-               //Delete the section before the left selector
-               ((WaveTrack*)n)->Trim(selectedRegion.t0(),
-                                     selectedRegion.t1());
-            break;
-
-            default:
-            break;
-         }
+      [&](WaveTrack *wt) {
+         //Delete the section before the left selector
+         wt->Trim(selectedRegion.t0(),
+            selectedRegion.t1());
       }
-      n = iter.Next();
-   }
+   );
 
    project.PushState(
       wxString::Format(
@@ -6303,24 +6272,16 @@ void MenuCommandHandler::OnSplitDelete(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-
-   Track *n = iter.First();
-
-   while (n) {
-      if (n->GetSelected()) {
-         if (n->GetKind() == Track::Wave)
-         {
-            ((WaveTrack*)n)->SplitDelete(selectedRegion.t0(),
-                                         selectedRegion.t1());
-         }
-         else {
-            n->Silence(selectedRegion.t0(),
-                       selectedRegion.t1());
-         }
+   tracks->Selected().Visit(
+      [&](WaveTrack *wt) {
+         wt->SplitDelete(selectedRegion.t0(),
+                         selectedRegion.t1());
+      },
+      [&](Track *n) {
+         n->Silence(selectedRegion.t0(),
+                    selectedRegion.t1());
       }
-      n = iter.Next();
-   }
+   );
 
    project.PushState(
       wxString::Format(_("Split-deleted %.2f seconds at t=%.2f"),
@@ -6713,39 +6674,43 @@ void MenuCommandHandler::OnSplitNew(const CommandContext &context)
    auto tracks = project.GetTracks();
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   TrackListIterator iter(tracks);
-   Track *l = iter.Last();
+   Track::Holder dest;
 
-   for (Track *n = iter.First(); n; n = iter.Next()) {
-      if (n->GetSelected()) {
-         Track::Holder dest;
-         double newt0 = 0, newt1 = 0;
-         double offset = n->GetOffset();
-         if (n->GetKind() == Track::Wave) {
-            const auto wt = static_cast<WaveTrack*>(n);
+   // This iteration is unusual because we add to the list inside the loop
+   auto range = tracks->Selected();
+   auto last = *range.rbegin();
+   for (auto track : range) {
+      track->TypeSwitch(
+         [&](WaveTrack *wt) {
             // Clips must be aligned to sample positions or the NEW clip will not fit in the gap where it came from
+            double offset = wt->GetOffset();
             offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
-            newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(selectedRegion.t0()));
-            newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(selectedRegion.t1()));
+            double newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(
+               selectedRegion.t0()));
+            double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
+               selectedRegion.t1()));
             dest = wt->SplitCut(newt0, newt1);
+            if (dest) {
+               dest->SetOffset(wxMax(newt0, offset));
+               FinishCopy(wt, std::move(dest), *tracks);
+            }
          }
 #if 0
+         ,
          // LL:  For now, just skip all non-wave tracks since the other do not
          //      yet support proper splitting.
-         else {
-            dest = n->Cut(selectedRegion.t0(),
-                   selectedRegion.t1());
+         [&](Track *n) {
+            dest = n->Cut(viewInfo.selectedRegion.t0(),
+                   viewInfo.selectedRegion.t1());
+            if (dest) {
+               dest->SetOffset(wxMax(0, n->GetOffset()));
+               FinishCopy(n, std::move(dest), *tracks);
+            }
          }
 #endif
-         if (dest) {
-            dest->SetOffset(wxMax(newt0, offset));
-            FinishCopy(n, std::move(dest), *tracks);
-         }
-      }
-
-      if (n == l) {
+      );
+      if (track == last)
          break;
-      }
    }
 
    project.PushState(_("Split to new track"), _("Split New"));
@@ -8928,29 +8893,25 @@ void MenuCommandHandler::OnScoreAlign(const CommandContext &context)
    auto tracks = project.GetTracks();
    const auto rate = project.GetRate();
 
-   TrackListIterator iter(tracks);
-   Track *t = iter.First();
    int numWaveTracksSelected = 0;
    int numNoteTracksSelected = 0;
    int numOtherTracksSelected = 0;
-   NoteTrack *nt;
    double endTime = 0.0;
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
-   while (t) {
-      if (t->GetSelected()) {
-         if (t->GetKind() == Track::Wave) {
-            numWaveTracksSelected++;
-            WaveTrack *wt = (WaveTrack *) t;
-            endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
-         } else if(t->GetKind() == Track::Note) {
-            numNoteTracksSelected++;
-            nt = (NoteTrack *) t;
-         } else numOtherTracksSelected++;
+   GetTracks()->Selected().Visit(
+      [&](WaveTrack *wt) {
+         numWaveTracksSelected++;
+         endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
+      },
+      [&](NoteTrack *) {
+         numNoteTracksSelected++;
+      },
+      [&](Track*) {
+         numOtherTracksSelected++;
       }
-      t = iter.Next();
-   }
+   );
 
    if(numWaveTracksSelected == 0 ||
       numNoteTracksSelected != 1 ||
