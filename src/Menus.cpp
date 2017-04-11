@@ -3874,10 +3874,9 @@ double MenuCommandHandler::OnClipMove
    auto &selectedRegion = viewInfo.selectedRegion;
 
    // just dealing with clips in wave tracks for the moment. Note tracks??
-   if (track && track->GetKind() == Track::Wave) {
+   if (track) return track->TypeSwitch<double>( [&]( WaveTrack *wt ) {
       ClipMoveState state;
 
-      auto wt = static_cast<WaveTrack*>(track);
       auto t0 = selectedRegion.t0();
 
       state.capturedClip = wt->GetClipAtTime( t0 );
@@ -3924,7 +3923,7 @@ double MenuCommandHandler::OnClipMove
       selectedRegion.setTimes(newT0, newT0 + diff);
 
       return state.hSlideAmount;
-   }
+   } );
    return 0.0;
 }
 
@@ -4268,15 +4267,11 @@ void MenuCommandHandler::OnTrackPan(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->PanSlider(wt);
-   if (slider->ShowDialog()) {
-      project.SetTrackPan(wt, slider);
-   }
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->PanSlider(wt);
+      if (slider->ShowDialog())
+         project.SetTrackPan(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackPanLeft(const CommandContext &context)
@@ -4285,14 +4280,11 @@ void MenuCommandHandler::OnTrackPanLeft(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->PanSlider(wt);
-   slider->Decrease(1);
-   project.SetTrackPan(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->PanSlider(wt);
+      slider->Decrease(1);
+      project.SetTrackPan(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackPanRight(const CommandContext &context)
@@ -4301,14 +4293,11 @@ void MenuCommandHandler::OnTrackPanRight(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->PanSlider(wt);
-   slider->Increase(1);
-   project.SetTrackPan(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->PanSlider(wt);
+      slider->Increase(1);
+      project.SetTrackPan(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackGain(const CommandContext &context)
@@ -4318,15 +4307,11 @@ void MenuCommandHandler::OnTrackGain(const CommandContext &context)
 
    /// This will pop up the track gain dialog for specified track
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->GainSlider(wt);
-   if (slider->ShowDialog()) {
-      project.SetTrackGain(wt, slider);
-   }
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->GainSlider(wt);
+      if (slider->ShowDialog())
+         project.SetTrackGain(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackGainInc(const CommandContext &context)
@@ -4335,14 +4320,11 @@ void MenuCommandHandler::OnTrackGainInc(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->GainSlider(wt);
-   slider->Increase(1);
-   project.SetTrackGain(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->GainSlider(wt);
+      slider->Increase(1);
+      project.SetTrackGain(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackGainDec(const CommandContext &context)
@@ -4351,14 +4333,11 @@ void MenuCommandHandler::OnTrackGainDec(const CommandContext &context)
    auto trackPanel = project.GetTrackPanel();
 
    Track *const track = trackPanel->GetFocusedTrack();
-   if (!track || (track->GetKind() != Track::Wave)) {
-      return;
-   }
-   const auto wt = static_cast<WaveTrack*>(track);
-
-   LWSlider *slider = trackPanel->GainSlider(wt);
-   slider->Decrease(1);
-   project.SetTrackGain(wt, slider);
+   if (track) track->TypeSwitch( [&](WaveTrack *wt) {
+      LWSlider *slider = trackPanel->GainSlider(wt);
+      slider->Decrease(1);
+      project.SetTrackGain(wt, slider);
+   });
 }
 
 void MenuCommandHandler::OnTrackMenu(const CommandContext &context)
@@ -4374,13 +4353,10 @@ void MenuCommandHandler::OnTrackMute(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
 
-   Track *t = NULL;
-   if (!t) {
-      t = trackPanel->GetFocusedTrack();
-      if (!dynamic_cast<PlayableTrack*>(t))
-         return;
-   }
-   project.DoTrackMute(t, false);
+   const auto track = trackPanel->GetFocusedTrack();
+   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
+      project.DoTrackMute(t, false);
+   });
 }
 
 void MenuCommandHandler::OnTrackSolo(const CommandContext &context)
@@ -4388,14 +4364,10 @@ void MenuCommandHandler::OnTrackSolo(const CommandContext &context)
    auto &project = context.project;
    auto trackPanel = project.GetTrackPanel();
 
-   Track *t = NULL;
-   if (!t)
-   {
-      t = trackPanel->GetFocusedTrack();
-      if (!dynamic_cast<PlayableTrack*>(t))
-         return;
-   }
-   project.DoTrackSolo(t, false);
+   const auto track = trackPanel->GetFocusedTrack();
+   if (track) track->TypeSwitch( [&](PlayableTrack *t) {
+      project.DoTrackSolo(t, false);
+   });
 }
 
 void MenuCommandHandler::OnTrackClose(const CommandContext &context)
@@ -6103,45 +6075,38 @@ bool MenuCommandHandler::HandlePasteNothingSelected(AudacityProject &project)
       Track* pFirstNewTrack = NULL;
       while (pClip) {
          Maybe<WaveTrack::Locker> locker;
-         if ((AudacityProject::msClipProject != &project) && (pClip->GetKind() == Track::Wave))
-            // Cause duplication of block files on disk, when copy is
-            // between projects
-            locker.create(static_cast<const WaveTrack*>(pClip));
 
          Track::Holder uNewTrack;
          Track *pNewTrack;
-         switch (pClip->GetKind()) {
-         case Track::Wave:
-            {
-               WaveTrack *w = (WaveTrack *)pClip;
-               uNewTrack = trackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate()),
+         pClip->TypeSwitch(
+            [&](const WaveTrack *wc) {
+               if ((AudacityProject::msClipProject != &project))
+                  // Cause duplication of block files on disk, when copy is
+                  // between projects
+                  locker.create(wc);
+               uNewTrack = trackFactory->NewWaveTrack(
+                  wc->GetSampleFormat(), wc->GetRate()),
                pNewTrack = uNewTrack.get();
+            },
+#ifdef USE_MIDI
+            [&](const NoteTrack *) {
+               uNewTrack = trackFactory->NewNoteTrack(),
+               pNewTrack = uNewTrack.get();
+            },
+#endif
+            [&](const LabelTrack *) {
+               uNewTrack = trackFactory->NewLabelTrack(),
+               pNewTrack = uNewTrack.get();
+            },
+            [&](const TimeTrack *) {
+               // Maintain uniqueness of the time track!
+               pNewTrack = tracks->GetTimeTrack();
+               if (!pNewTrack)
+                  uNewTrack = trackFactory->NewTimeTrack(),
+                  pNewTrack = uNewTrack.get();
             }
-            break;
+         );
 
-         #ifdef USE_MIDI
-         case Track::Note:
-            uNewTrack = trackFactory->NewNoteTrack(),
-            pNewTrack = uNewTrack.get();
-            break;
-         #endif // USE_MIDI
-
-         case Track::Label:
-            uNewTrack = trackFactory->NewLabelTrack(),
-            pNewTrack = uNewTrack.get();
-            break;
-         case Track::Time: {
-            // Maintain uniqueness of the time track!
-            pNewTrack = tracks->GetTimeTrack();
-            if (!pNewTrack)
-               uNewTrack = trackFactory->NewTimeTrack(),
-               pNewTrack = uNewTrack.get();
-            break;
-         }
-         default:
-            pClip = iterClip.Next();
-            continue;
-         }
          wxASSERT(pClip);
 
          pNewTrack->Paste(0.0, pClip);

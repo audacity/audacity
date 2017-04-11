@@ -119,13 +119,16 @@ void TimeTrack::Clear(double t0, double t1)
 
 void TimeTrack::Paste(double t, const Track * src)
 {
-   if (src->GetKind() != Track::Time)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+   bool bOk = src && src->TypeSwitch< bool >( [&] (const TimeTrack *tt) {
+      auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+      mEnvelope->PasteEnvelope
+         (t, tt->mEnvelope.get(), sampleTime);
+      return true;
+   } );
 
-   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
-   mEnvelope->PasteEnvelope
-      (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
+   if (! bOk )
+      // THROW_INCONSISTENCY_EXCEPTION // ?
+      ;
 }
 
 void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))

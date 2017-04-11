@@ -74,33 +74,29 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 bool SetClipCommand::ApplyInner( const CommandContext & context, Track * t )
 {
    static_cast<void>(context);
-   if( t->GetKind() != Track::Wave) 
-      return true;
-   
    // if no 'At' is specified, then any clip in any selected track will be set.
+   t->TypeSwitch([&](WaveTrack *waveTrack) {
+      WaveClipPointers ptrs( waveTrack->SortedClipArray());
+      for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
+         WaveClip * pClip = *it;
+         bool bFound =
+            !bHasContainsTime || (
+               ( pClip->GetStartTime() <= mContainsTime ) &&
+               ( pClip->GetEndTime() >= mContainsTime )
+            );
+         if( bFound )
+         {
+            // Inside this IF is where we actually apply the command
 
-   WaveTrack *waveTrack = static_cast<WaveTrack*>(t);
-   wxASSERT( waveTrack );
-   WaveClipPointers ptrs( waveTrack->SortedClipArray());
-   for(auto it = ptrs.begin(); (it != ptrs.end()); it++ ){
-      WaveClip * pClip = *it;
-      bool bFound = 
-         !bHasContainsTime || (
-            ( pClip->GetStartTime() <= mContainsTime ) &&
-            ( pClip->GetEndTime() >= mContainsTime )
-         );
-      if( bFound )
-      {
-         // Inside this IF is where we actually apply the command
+            if( bHasColour )
+               pClip->SetColourIndex(mColour);
+            // No validation of overlap yet.  We assume the user is sensible!
+            if( bHasT0 )
+               pClip->SetOffset(mT0);
+            // \todo Use SetClip to move a clip between tracks too.
 
-         if( bHasColour )
-            pClip->SetColourIndex(mColour);
-         // No validation of overlap yet.  We assume the user is sensible!
-         if( bHasT0 )
-            pClip->SetOffset(mT0);
-         // \todo Use SetClip to move a clip between tracks too.
-
+         }
       }
-   }
+   } );
    return true;
 }

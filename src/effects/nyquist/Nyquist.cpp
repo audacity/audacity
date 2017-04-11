@@ -1073,37 +1073,36 @@ bool NyquistEffect::ProcessOne()
       wxString bitFormat;
       wxString spectralEditp;
 
-      switch (mCurTrack[0]->GetKind())
-      {
-         case Track::Wave:
+      mCurTrack[0]->TypeSwitch(
+         [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
+            switch (wt->GetDisplay())
             {
-               case WaveTrack::Waveform:
-                  view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
-                  break;
-               case WaveTrack::Spectrum:
-                  view = wxT("\"Spectrogram\"");
-                  break;
-               default: view = wxT("NIL"); break;
+            case WaveTrack::Waveform:
+               view = (mCurTrack[0]->GetWaveformSettings().scaleType == 0) ? wxT("\"Waveform\"") : wxT("\"Waveform (dB)\"");
+               break;
+            case WaveTrack::Spectrum:
+               view = wxT("\"Spectrogram\"");
+               break;
+            default: view = wxT("NIL"); break;
             }
-         break;
+         },
 #if defined(USE_MIDI)
-         case Track::Note:
+         [&](const NoteTrack *) {
             type = wxT("midi");
             view = wxT("\"Midi\"");
-         break;
+         },
 #endif
-         case Track::Label:
+         [&](const LabelTrack *) {
             type = wxT("label");
             view = wxT("\"Label\"");
-         break;
-         case Track::Time:
+         },
+         [&](const TimeTrack *) {
             type = wxT("time");
             view = wxT("\"Time\"");
-         break;
-      }
+         }
+      );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName());

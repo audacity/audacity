@@ -4317,9 +4317,6 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
       auto newTrack = mTracks->Add(std::move(uNewTrack));
       results.push_back(Track::Pointer(newTrack));
-      if (newRate == 0 && newTrack->GetKind() == Track::Wave) {
-         newRate = ((WaveTrack *)newTrack)->GetRate();
-      }
       newTrack->SetSelected(true);
       //we need to check link status based on the first channel only.
       if(0==i)
@@ -4331,11 +4328,13 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
          newTrack->SetName(trackNameBase);
       }
 
-      // Check if NEW track contains aliased blockfiles and if yes,
-      // remember this to show a warning later
-      if (newTrack->GetKind() == WaveTrack::Wave)
-      {
-         if (WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0)) {
+      newTrack->TypeSwitch( [&](WaveTrack *wt) {
+         if (newRate == 0)
+            newRate = wt->GetRate();
+
+         // Check if NEW track contains aliased blockfiles and if yes,
+         // remember this to show a warning later
+         if(WaveClip* clip = wt->GetClipByIndex(0)) {
             BlockArray &blocks = clip->GetSequence()->GetBlockArray();
             if (blocks.size())
             {
@@ -4346,7 +4345,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
                }
             }
          }
-      }
+      });
    }
 
    // Automatically assign rate of imported file to whole project,
@@ -4442,9 +4441,9 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
 
    if (pTrackArray) {
       for (const auto &newTrack : newSharedTracks) {
-         if (newTrack->GetKind() == Track::Wave)
-            pTrackArray->push_back(
-               std::static_pointer_cast<WaveTrack>(newTrack));
+         newTrack->TypeSwitch( [&](WaveTrack *wt) {
+            pTrackArray->push_back( Track::Pointer< WaveTrack >( wt ) );
+         });
       }
    }
 
@@ -4799,8 +4798,7 @@ void AudacityProject::PopState(const UndoState &state)
       auto copyTrack = mTracks->Add(t->Duplicate());
 
       //add the track to OD if the manager exists.  later we might do a more rigorous check...
-      if (copyTrack->GetKind() == Track::Wave)
-      {
+      copyTrack->TypeSwitch( [&](WaveTrack *wt) {
          //if the ODManager hasn't been initialized, there's no chance this track has OD blocks since this
          //is a "Redo" operation.
          //TODO: update this to look like the update loop in OpenFile that handles general purpose ODTasks.
@@ -4818,9 +4816,10 @@ void AudacityProject::PopState(const UndoState &state)
             // PRL:  Is it correct to add all tracks to one task, even if they
             // are not partnered channels?  Rather than
             // make one task for each?
-            computeTask->AddWaveTrack((WaveTrack*)copyTrack);
+            computeTask->AddWaveTrack(wt);
          }
-      }
+      });
+
       t = iter.Next();
    }
 
