@@ -558,7 +558,8 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndSubMenu();
 
-      c->AddItem(wxT("EditMetaData"), _("Me&tadata..."), FN(OnEditMetadata));
+      c->AddItem(wxT("EditMetaData"), _("Me&tadata..."), FN(OnEditMetadata),
+         AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       /////////////////////////////////////////////////////////////////////////////
 
