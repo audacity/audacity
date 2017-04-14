@@ -287,7 +287,13 @@ void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
          Accel = "";
       if( item->IsSeparator() )
          Label = "----";
-      wxLogDebug("%2i,%s,%s", depth, Label,Accel ); 
+      int flags = 0;
+      if (item->IsSubMenu())
+         flags +=1;
+      if (item->IsCheck() )
+         flags +=2;
+
+      wxLogDebug("T.Add( %2i, %2i, new wxString(\"%s¬%s\") );", depth, flags, Label,Accel ); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
          ExploreMenu( pMenu, item->GetId(), depth+1 );
