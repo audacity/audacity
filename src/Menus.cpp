@@ -695,16 +695,15 @@ void AudacityProject::CreateMenusAndCommands()
          ZoomOutAvailableFlag,
          ZoomOutAvailableFlag);
       c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
-      c->EndSubMenu();
-
-      c->BeginSubMenu(_("Zoom One &Pixel to"));
-      c->AddItem(wxT("ZoomOneSecond"), _("&One Second"), FN(OnZoomOneSecond));
-      c->AddItem(wxT("ZoomTenthSecond"), _("&Tenth Second"), FN(OnZoomTenthSecond));
-      c->AddItem(wxT("ZoomHundredthSecond"), _("&Hundredth Second"), FN(OnZoomHundredthSecond));
-      c->AddItem(wxT("ZoomMillisecond"), _("&Millisecond"), FN(OnZoomMillisecond));
-      c->EndSubMenu();
-
+#ifndef EXPERIMENTAL_DA
       c->AddSeparator();
+      c->AddItem(wxT("ZoomOneSecond"), _("1px to 1 &Second"), FN(OnZoomOneSecond));
+      c->AddItem(wxT("ZoomTenthSecond"), _("1px to &Tenth Second"), FN(OnZoomTenthSecond));
+      c->AddItem(wxT("ZoomHundredthSecond"), _("1px to &Hundredth Second"), FN(OnZoomHundredthSecond));
+      c->AddItem(wxT("ZoomMillisecond"), _("1px to 1 &Millisecond"), FN(OnZoomMillisecond));
+#endif
+      c->EndSubMenu();
+
       c->BeginSubMenu(_("&Track Size"));
       c->AddItem(wxT("FitInWindow"), _("&Fit to Width"), FN(OnZoomFit), wxT("Ctrl+F"));
       c->AddItem(wxT("FitV"), _("Fit to &Height"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
@@ -712,11 +711,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ExpandAllTracks"), _("E&xpand Collapsed Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
       c->EndSubMenu();
 
-
-
-      c->AddSeparator();
-
-      c->AddSeparator();
       c->BeginSubMenu(_("S&kip to"));
       c->AddItem(wxT("SkipSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["),
                  TimeSelectedFlag, TimeSelectedFlag);
