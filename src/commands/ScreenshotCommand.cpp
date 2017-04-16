@@ -293,7 +293,7 @@ void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
       if (item->IsCheck() )
          flags +=2;
 
-      wxLogDebug("T.Add( %2i, %2i, new wxString(\"%s¬%s\") );", depth, flags, Label,Accel ); 
+      wxLogDebug("T.Add( %2i, %2i,  0, new wxString(\"%s¬%s\") );", depth, flags, Label,Accel ); 
       if (item->IsSubMenu()) {
          pMenu = item->GetSubMenu();
          ExploreMenu( pMenu, item->GetId(), depth+1 );
@@ -315,8 +315,8 @@ void ScreenshotCommand::CaptureMenus(wxMenuBar*pBar, const wxString &fileName)
    for(i=0;i<cnt;i++)
    {
       Label = pBar->GetMenuLabelText( i );
-      wxLogDebug( "MenuBar: %s", Label );
-      ExploreMenu( pBar->GetMenu( i ), pBar->GetId(), 0 );
+      wxLogDebug( "\nT.Add(  0,  0,  0, new wxString(\"%s¬\") );", Label);
+      ExploreMenu( pBar->GetMenu( i ), pBar->GetId(), 1 );
    }
 
 #if 0
