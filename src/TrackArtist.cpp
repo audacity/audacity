@@ -1372,7 +1372,6 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
                    rect.x + xpos[s], zeroLevelYCoordinate);
    }
 
-
    if (showPoints)
    {
       // Draw points where spacing is enough
