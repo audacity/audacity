@@ -1868,7 +1868,7 @@ void Meter::RestoreState(const State &state)
 
    mMonitoring = state.mMonitoring;
    mActive = state.mActive;
-   wxLogDebug("Restore state for %08X, is %i", (int)this, mActive );
+   //wxLogDebug("Restore state for %p, is %i", this, mActive );
 
    if (mActive)
       mTimer.Start(1000 / mMeterRefreshRate);
