@@ -291,10 +291,7 @@ bool SnapManager::SnapToPoints(Track *currentTrack,
       return true;
    }
 
-   // indexInThisTrack is ONLY used if count > 0
-   // and is initialised then, so we can 'initialise' it
-   // to anything to keep compiler quiet.
-   size_t indexInThisTrack = left;
+   size_t indexInThisTrack = 0;
    size_t countInThisTrack = 0;
    for (i = left; i <= right; ++i)
    {

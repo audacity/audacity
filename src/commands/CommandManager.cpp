@@ -79,13 +79,14 @@ CommandManager.  It holds the callback for one command.
 #include "CommandManager.h"
 
 #include <wx/defs.h>
+#include <wx/eventfilter.h>
 #include <wx/hash.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/tokenzr.h>
 
-#include "../AudacityApp.h"
+#include "../AudacityException.h"
 #include "../Prefs.h"
 #include "../Project.h"
 
@@ -190,47 +191,51 @@ public:
 
    int FilterEvent(wxEvent& event) override
    {
-      // Quickly bail if this isn't something we want.
-      wxEventType type = event.GetEventType();
-      if (type != wxEVT_CHAR_HOOK && type != wxEVT_KEY_UP)
-      {
+      // Unguarded exception propagation may crash the program, at least
+      // on Mac while in the objective-C closure above
+      return GuardedCall< int > ( [&] {
+         // Quickly bail if this isn't something we want.
+         wxEventType type = event.GetEventType();
+         if (type != wxEVT_CHAR_HOOK && type != wxEVT_KEY_UP)
+         {
+            return Event_Skip;
+         }
+
+         // We must have a project since we will be working with the Command Manager
+         // and capture handler, both of which are (currently) tied to individual projects.
+         //
+         // Shouldn't they be tied to the application instead???
+         AudacityProject *project = GetActiveProject();
+         if (!project || !project->IsEnabled())
+         {
+            return Event_Skip;
+         }
+
+         // Make a copy of the event and (possibly) make it look like a key down
+         // event.
+         wxKeyEvent key = (wxKeyEvent &) event;
+         if (type == wxEVT_CHAR_HOOK)
+         {
+            key.SetEventType(wxEVT_KEY_DOWN);
+         }
+
+         // Give the capture handler first dibs at the event.
+         wxWindow *handler = project->GetKeyboardCaptureHandler();
+         if (handler && HandleCapture(handler, key))
+         {
+            return Event_Processed;
+         }
+
+         // Capture handler didn't want it, so ask the Command Manager.
+         CommandManager *manager = project->GetCommandManager();
+         if (manager && manager->FilterKeyEvent(project, key))
+         {
+            return Event_Processed;
+         }
+
+         // Give it back to WX for normal processing.
          return Event_Skip;
-      }
-
-      // We must have a project since we will be working with the Command Manager
-      // and capture handler, both of which are (currently) tied to individual projects.
-      //
-      // Shouldn't they be tied to the application instead???
-      AudacityProject *project = GetActiveProject();
-      if (!project || !project->IsEnabled())
-      {
-         return Event_Skip;
-      }
-
-      // Make a copy of the event and (possibly) make it look like a key down
-      // event.
-      wxKeyEvent key = (wxKeyEvent &) event;
-      if (type == wxEVT_CHAR_HOOK)
-      {
-         key.SetEventType(wxEVT_KEY_DOWN);
-      }
-
-      // Give the capture handler first dibs at the event.
-      wxWindow *handler = project->GetKeyboardCaptureHandler();
-      if (handler && HandleCapture(handler, key))
-      {
-         return Event_Processed;
-      }
-
-      // Capture handler didn't want it, so ask the Command Manager.
-      CommandManager *manager = project->GetCommandManager();
-      if (manager && manager->FilterKeyEvent(project, key))
-      {
-         return Event_Processed;
-      }
-
-      // Give it back to WX for normal processing.
-      return Event_Skip;
+      }, MakeSimpleGuard( Event_Skip ) );
    }
 
 private:
@@ -843,6 +848,14 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    int index,
    int count)
 {
+   // If we have the identifier already, reuse it.
+   CommandListEntry *prev = mCommandNameHash[name];
+   if (!prev);
+   else if( prev->label != label );
+   else if( multi );
+   else
+      return prev;
+
    {
       // Make a unique_ptr or shared_ptr as appropriate:
       auto entry = make_movable<CommandListEntry>();
@@ -913,7 +926,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    mCommandIDHash[entry->id] = entry;
 
 #if defined(__WXDEBUG__)
-   CommandListEntry *prev = mCommandNameHash[entry->name];
+   prev = mCommandNameHash[entry->name];
    if (prev) {
       // Under Linux it looks as if we may ask for a newID for the same command
       // more than once.  So it's only an error if two different commands
@@ -1114,10 +1127,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       // rest of the command handling.  But, to use the common handler, we
       // enable them temporarily and then disable them again after handling.
       // LL:  Why do they need to be disabled???
-      entry->enabled = true;
-      bool ret = HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
       entry->enabled = false;
-      return ret;
+      auto cleanup = valueRestorer( entry->enabled, true );
+      return HandleCommandEntry(entry, NoFlagsSpecifed, NoFlagsSpecifed, &evt);
    }
 
    // Any other keypresses must be destined for this project window.
@@ -1359,9 +1371,11 @@ wxString CommandManager::GetCategoryFromName(const wxString &name)
    return entry->labelTop;
 }
 
-wxString CommandManager::GetKeyFromName(const wxString &name)
+wxString CommandManager::GetKeyFromName(const wxString &name) const
 {
-   CommandListEntry *entry = mCommandNameHash[name];
+   CommandListEntry *entry =
+      // May create a NULL entry
+      const_cast<CommandManager*>(this)->mCommandNameHash[name];
    if (!entry)
       return wxT("");
 
@@ -1426,7 +1440,8 @@ XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
    return this;
 }
 
-void CommandManager::WriteXML(XMLWriter &xmlFile)
+void CommandManager::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("audacitykeyboard"));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);

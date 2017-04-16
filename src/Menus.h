@@ -70,7 +70,7 @@ public:
 void OnStop();
 void OnPause();
 void OnRecord();
-void OnRecordAppend();
+void OnRecordBelow();
 void OnStopSelect();
 void OnSkipStart();
 void OnSkipEnd();
@@ -160,6 +160,9 @@ void OnSelExtendRight(const wxEvent * evt);
 void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
+void OnClipLeft();
+void OnClipRight();
+
 void OnCursorShortJumpLeft();
 void OnCursorShortJumpRight();
 void OnCursorLongJumpLeft();
@@ -210,7 +213,11 @@ void OnSaveAs();
 
 void OnCheckDependencies();
 
-void OnExport();
+void OnExport(const wxString & Format);
+void OnExportAudio();
+void OnExportMp3();
+void OnExportWav();
+void OnExportOgg();
 void OnExportSelection();
 void OnExportMultiple();
 void OnExportLabels();
@@ -229,6 +236,11 @@ public:
 void OnUndo();
 void OnRedo();
 
+private:
+static void FinishCopy(const Track *n, Track *dest);
+static void FinishCopy(const Track *n, Track::Holder &&dest, TrackList &list);
+
+public:
 void OnCut();
 void OnSplitCut();
 void OnCopy();
@@ -273,6 +285,12 @@ void OnNextLowerPeakFrequency();
 #endif
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
+void OnSelectPrevClipBoundaryToCursor();
+void OnSelectCursorToNextClipBoundary();
+void OnSelectClipBoundary(bool next);
+void OnSelectPrevClip();
+void OnSelectNextClip();
+void OnSelectClip(bool next);
 void OnSelectCursorStoredCursor();
 void OnSelectSyncLockSel();
 void OnSelectAllTracks();
@@ -283,6 +301,11 @@ void OnZoomIn();
 void OnZoomOut();
 // void OnZoomToggle();
 void OnZoomNormal();
+void OnZoomOneSecond();
+void OnZoomTenthSecond();
+void OnZoomHundredthSecond();
+void OnZoomMillisecond();
+void OnZoomPreset(double newZoom);
 void OnZoomFit();
 void OnZoomFitV();
 void DoZoomFitV();
@@ -292,6 +315,11 @@ void OnGoSelEnd();
 
 void OnExpandAllTracks();
 void OnCollapseAllTracks();
+
+void OnPanTracks(float PanValue);
+void OnPanLeft();
+void OnPanRight();
+void OnPanCenter();
 
 void OnMuteAllTracks();
 void OnUnMuteAllTracks();
@@ -330,7 +358,7 @@ void OnTogglePinnedHead();
 void OnTogglePlayRecording();
 void OnToggleSWPlaythrough();
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   void OnToogleAutomatedInputLevelAdjustment();
+   void OnToggleAutomatedInputLevelAdjustment();
 #endif
 void OnRescanDevices();
 
@@ -338,7 +366,12 @@ void OnRescanDevices();
 void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
-void DoImportMIDI(const wxString &fileName);
+
+// return null on failure; if success, return the given project, or a new
+// one, if the given was null; create no new project if failure
+static AudacityProject *DoImportMIDI(
+   AudacityProject *pProject, const wxString &fileName);
+
 void OnImportRaw();
 
 void OnEditMetadata();
@@ -361,10 +394,23 @@ void OnCursorTrackStart();
 void OnCursorTrackEnd();
 void OnCursorSelStart();
 void OnCursorSelEnd();
+typedef struct FoundClipBoundary {
+   int nFound;    // 0, 1, or 2
+   double time;
+   int index1;
+   bool clipStart1;
+   int index2;
+   bool clipStart2;
+} FoundClipBoundary;
+FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
+FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
+void OnCursorNextClipBoundary();
+void OnCursorPrevClipBoundary();
+void OnCursorClipBoundary(bool next);
 
 void OnAlignNoSync(int index);
 void OnAlign(int index);
-void OnAlignMoveSel(int index);
+//void OnAlignMoveSel(int index);
 void HandleAlign(int index, bool moveSel);
 size_t mAlignLabelsCount;
 
@@ -379,6 +425,7 @@ void OnNewLabelTrack();
 void OnNewTimeTrack();
 void OnTimerRecord();
 void OnRemoveTracks();
+void OnMoveSelectionWithTracks();
 void OnSyncLock();
 void OnAddLabel();
 void OnAddLabelPlaying();

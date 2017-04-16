@@ -127,15 +127,17 @@ bool GetTrackInfoCommand::Apply(CommandExecutionContext context)
    }
    else if (mode.IsSameAs(wxT("Solo")))
    {
-      if (t->GetKind() == Track::Wave)
-         SendBooleanStatus(t->GetSolo());
+      auto pt = dynamic_cast<const PlayableTrack *>(t);
+      if (pt)
+         SendBooleanStatus(pt->GetSolo());
       else
          SendBooleanStatus(false);
    }
    else if (mode.IsSameAs(wxT("Mute")))
    {
-      if (t->GetKind() == Track::Wave)
-         SendBooleanStatus(t->GetMute());
+      auto pt = dynamic_cast<const PlayableTrack *>(t);
+      if (pt)
+         SendBooleanStatus(pt->GetMute());
       else
          SendBooleanStatus(false);
    }

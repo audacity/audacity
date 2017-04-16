@@ -41,6 +41,9 @@ class GUIPrefs final : public PrefsPanel
    wxArrayString mHtmlHelpCodes;
    wxArrayString mHtmlHelpChoices;
 
+   wxArrayString mThemeCodes;
+   wxArrayString mThemeChoices;
+
    wxArrayString mRangeCodes;
    wxArrayString mRangeChoices;
 };

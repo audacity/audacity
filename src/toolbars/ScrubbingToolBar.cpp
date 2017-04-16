@@ -103,6 +103,7 @@ AButton *ScrubbingToolBar::AddButton
 
 void ScrubbingToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
    /* Buttons */

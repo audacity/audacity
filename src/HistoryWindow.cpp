@@ -18,6 +18,7 @@ undo memory so as to free up space.
 
 #include "Audacity.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -83,8 +84,8 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
          // Do this BEFORE inserting the columns.  On the Mac at least, the
          // columns are deleted and later InsertItem()s will cause Audacity to crash.
          mList->SetSingleStyle(wxLC_SINGLE_SEL);
-         mList->InsertColumn(0, _("Action"), wxLIST_FORMAT_LEFT, 300);
-         mList->InsertColumn(1, _("Size"), wxLIST_FORMAT_LEFT, 85);
+         mList->InsertColumn(0, _("Action"), wxLIST_FORMAT_LEFT, 260);
+         mList->InsertColumn(1, _("Reclaimable Space"), wxLIST_FORMAT_LEFT, 125);
 
          //Assign rather than set the image list, so that it is deleted later.
          // AssignImageList takes ownership

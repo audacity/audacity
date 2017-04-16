@@ -22,6 +22,7 @@
 #include "../widgets/wxPanelWrapper.h"
 
 #include "TwoPassSimpleMono.h"
+#include "../SampleFormat.h"
 
 class EffectCompressorPanel;
 class ShuttleGui;
@@ -79,9 +80,9 @@ private:
 
 private:
    double    mRMSSum;
-   int       mCircleSize;
-   int       mCirclePos;
-   double   *mCircle;
+   size_t    mCircleSize;
+   size_t    mCirclePos;
+   Doubles   mCircle;
 
    double    mAttackTime;
    double    mThresholdDB;
@@ -100,8 +101,7 @@ private:
    int       mNoiseCounter;
    double    mGain;
    double    mLastLevel;
-   float	   *mFollow1;
-   float	   *mFollow2;
+   Floats mFollow1, mFollow2;
    size_t    mFollowLen;
 
    double    mMax;			//MJS

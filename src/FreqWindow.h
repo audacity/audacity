@@ -30,6 +30,7 @@
 #include <wx/textctrl.h>
 #include <wx/utils.h>
 #include "widgets/Ruler.h"
+#include "SampleFormat.h"
 
 class wxStatusBar;
 class wxButton;
@@ -198,7 +199,7 @@ private:
 
    double mRate;
    size_t mDataLen;
-   float *mData;
+   Floats mData;
    size_t mWindowSize;
 
    bool mLogAxis;

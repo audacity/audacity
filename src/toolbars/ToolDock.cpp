@@ -356,7 +356,7 @@ ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
    // Init
    mManager = manager;
    memset(mBars, 0, sizeof(mBars)); // otherwise uninitialized
-
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
    // Use for testing gaps
    // SetOwnBackgroundColour( wxColour( 255, 0, 0 ) );
 }
@@ -872,11 +872,10 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
 
    // Start with a clean background
    //
-   // Under GTK, we specifically set the toolbar background to the background
-   // colour in the system theme.
-#if defined( __WXGTK__ )
-   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
-#endif
+   // Under GTK, we don't set the toolbar background to the background
+   // colour in the system theme.  Instead we use our own colour.
+
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium )));
    dc.Clear();
 
    // Set the gap color

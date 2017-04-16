@@ -50,7 +50,17 @@ class wxRect;
 class DirManager;
 class Alg_seq;   // from "allegro.h"
 
-class AUDACITY_DLL_API NoteTrack final : public Track {
+using NoteTrackBase =
+#ifdef EXPERIMENTAL_MIDI_OUT
+   PlayableTrack
+#else
+   AudioTrack
+#endif
+   ;
+
+class AUDACITY_DLL_API NoteTrack final
+   : public NoteTrackBase
+{
  public:
    friend class TrackArtist;
 
@@ -69,8 +79,8 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
-   int DrawLabelControls(wxDC & dc, wxRect & r);
-   bool LabelClick(wxRect & r, int x, int y, bool right);
+   int DrawLabelControls(wxDC & dc, const wxRect &r);
+   bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
    Alg_seq* GetSequence();
@@ -78,9 +88,9 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 
    int GetVisibleChannels();
 
-   Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup);
-   bool ExportMIDI(const wxString &f);
-   bool ExportAllegro(const wxString &f);
+   Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const;
+   bool ExportMIDI(const wxString &f) const;
+   bool ExportAllegro(const wxString &f) const;
 
 /* REQUIRES PORTMIDI */
 //   int GetLastMidiPosition() const { return mLastMidiPosition; }
@@ -91,18 +101,20 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
 
    // High-level editing
    Track::Holder Cut  (double t0, double t1) override;
-   Track::Holder Copy (double t0, double t1) const override;
+   Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
    bool Trim (double t0, double t1) /* not override */;
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t, const Track *src) override;
+   void Clear(double t0, double t1) override;
+   void Paste(double t, const Track *src) override;
+   void Silence(double t0, double t1) override;
+   void InsertSilence(double t, double len) override;
    bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   float GetGain() const { return mGain; }
-   void SetGain(float gain) { mGain = gain; }
+   float GetVelocity() const { return mVelocity; }
+   void SetVelocity(float velocity) { mVelocity = velocity; }
 #endif
 
-   double NearestBeatTime(double time, double *beat);
+   double NearestBeatTime(double time, double *beat) const;
    bool StretchRegion(double b0, double b1, double dur);
 
    int GetBottomNote() const { return mBottomNote; }
@@ -165,14 +177,9 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    void StartVScroll();
    void VScroll(int start, int end);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   wxRect GetGainPlacementRect() const { return mGainPlacementRect; }
-   void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
-#endif
-
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) override;
+   void WriteXML(XMLWriter &xmlFile) const override;
 
    // channels are numbered as integers 0-15, visible channels
    // (mVisibleChannels) is a bit set. Channels are displayed as
@@ -198,11 +205,11 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    // mSeq variable. (TrackArtist should check to make sure this
    // flip-flop from mSeq to mSerializationBuffer happened an
    // even number of times, otherwise mSeq will be NULL).
-   mutable char *mSerializationBuffer; // NULL means no buffer
+   mutable std::unique_ptr<char[]> mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   float mGain; // velocity offset
+   float mVelocity; // velocity offset
 #endif
 
    // mBottom is the Y offset of pitch 0 (normally off screen)
@@ -212,7 +219,6 @@ class AUDACITY_DLL_API NoteTrack final : public Track {
    int mPitchHeight;
    int mVisibleChannels; // bit set of visible channels
    int mLastMidiPosition;
-   wxRect mGainPlacementRect;
 };
 
 #endif // USE_MIDI

@@ -23,7 +23,6 @@
 #include <wx/dnd.h>
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 

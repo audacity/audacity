@@ -32,6 +32,7 @@ around to NEW positions.
 #include "../Experimental.h"
 
 #include "../AColor.h"
+#include "../AllThemeResources.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for Grabber
@@ -60,6 +61,7 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
    mOver = false;
    mPressed = false;
    mAsSpacer = false;
+   SetBackgroundColour( theTheme.Colour( clrMedium ) );
 
    /* i18n-hint: A 'Grabber' is a region you can click and drag on
    It's used to drag a track around (when in multi-tool mode) rather
@@ -117,32 +119,12 @@ void Grabber::DrawGrabber( wxDC & dc )
    r.SetPosition( wxPoint(0,0) );
    int y, left, right, top, bottom;
 
-#ifndef EXPERIMENTAL_THEMING
-
    AColor::Medium(&dc, mOver );
    dc.DrawRectangle(r);
 
    // HACK: We used a wider rectangle to also cover one pixel of space just to the right.
    if( mAsSpacer )
       r.width -= 1;
-
-#else
-   // Paint the background
-   if( mOver )
-   {
-   AColor::Medium(&dc, mOver );
-   dc.DrawRectangle(r);
-   }
-   else
-   {
-      // Get colour from parent...
-      // when parent colour changes, child colour might not!
-      wxBrush brush( GetParent()->GetBackgroundColour() );
-      dc.SetBrush( brush );
-      dc.DrawRectangle(r);
-   }
-#endif
-
 
 #ifndef __WXMAC__
 

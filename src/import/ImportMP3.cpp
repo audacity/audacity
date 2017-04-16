@@ -39,6 +39,7 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 
+#include "../AudacityException.h"
 #include "../Prefs.h"
 #include "Import.h"
 #include "ImportPlugin.h"
@@ -86,7 +87,7 @@ extern "C" {
 
 #include "../WaveTrack.h"
 
-#define INPUT_BUFFER_SIZE 65535
+#define INPUT_BUFFER_SIZE 65535u
 #define PROGRESS_SCALING_FACTOR 100000
 
 /* this is a private structure we can use for whatever we like, and it will get
@@ -94,13 +95,13 @@ extern "C" {
  * things. */
 struct private_data {
    wxFile *file;            /* the file containing the mp3 data we're feeding the encoder */
-   unsigned char *inputBuffer;
+   ArrayOf<unsigned char> inputBuffer{ INPUT_BUFFER_SIZE };
    int inputBufferFill;     /* amount of data in inputBuffer */
    TrackFactory *trackFactory;
    TrackHolders channels;
    ProgressDialog *progress;
    unsigned numChannels;
-   int updateResult;
+   ProgressResult updateResult;
    bool id3checked;
    bool eof;      /* having supplied both underlying file and guard pad data */
 };
@@ -131,12 +132,12 @@ public:
 
    ~MP3ImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount(){ return 1; }
+   wxInt32 GetStreamCount() override { return 1; }
 
    const wxArrayString &GetStreamInfo() override
    {
@@ -144,14 +145,14 @@ public:
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+   {}
 
 private:
    void ImportID3(Tags *tags);
 
    std::unique_ptr<wxFile> mFile;
    void *mUserData;
-   struct private_data mPrivateData;
    mad_decoder mDecoder;
 };
 
@@ -207,7 +208,7 @@ auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTracks,
                                 Tags *tags)
 {
    outTracks.clear();
@@ -216,33 +217,31 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
    /* Prepare decoder data, initialize decoder */
 
-   mPrivateData.file        = mFile.get();
-   mPrivateData.inputBuffer = new unsigned char [INPUT_BUFFER_SIZE];
-   mPrivateData.inputBufferFill = 0;
-   mPrivateData.progress    = mProgress.get();
-   mPrivateData.updateResult= eProgressSuccess;
-   mPrivateData.id3checked  = false;
-   mPrivateData.numChannels = 0;
-   mPrivateData.trackFactory= trackFactory;
-   mPrivateData.eof         = false;
+   private_data privateData;
+   privateData.file        = mFile.get();
+   privateData.inputBufferFill = 0;
+   privateData.progress    = mProgress.get();
+   privateData.updateResult= ProgressResult::Success;
+   privateData.id3checked  = false;
+   privateData.numChannels = 0;
+   privateData.trackFactory= trackFactory;
+   privateData.eof         = false;
 
-   mad_decoder_init(&mDecoder, &mPrivateData, input_cb, 0, 0, output_cb, error_cb, 0);
+   mad_decoder_init(&mDecoder, &privateData, input_cb, 0, 0, output_cb, error_cb, 0);
 
    /* and send the decoder on its way! */
 
    bool res = (mad_decoder_run(&mDecoder, MAD_DECODER_MODE_SYNC) == 0) &&
-              (mPrivateData.numChannels > 0) &&
-              !(mPrivateData.updateResult == eProgressCancelled) &&
-              !(mPrivateData.updateResult == eProgressFailed);
+              (privateData.numChannels > 0) &&
+              !(privateData.updateResult == ProgressResult::Cancelled) &&
+              !(privateData.updateResult == ProgressResult::Failed);
 
    mad_decoder_finish(&mDecoder);
-
-   delete[] mPrivateData.inputBuffer;
 
    if (!res) {
       /* failure */
       /* printf("failure\n"); */
-      return (mPrivateData.updateResult);
+      return (privateData.updateResult);
    }
 
    /* success */
@@ -250,15 +249,15 @@ int MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHolders &outTra
 
       /* copy the WaveTrack pointers into the Track pointer list that
        * we are expected to fill */
-   for(const auto &channel : mPrivateData.channels) {
+   for(const auto &channel : privateData.channels) {
       channel->Flush();
    }
-   outTracks.swap(mPrivateData.channels);
+   outTracks.swap(privateData.channels);
 
    /* Read in any metadata */
    ImportID3(tags);
 
-   return mPrivateData.updateResult;
+   return privateData.updateResult;
 }
 
 MP3ImportFileHandle::~MP3ImportFileHandle()
@@ -270,6 +269,10 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
 #ifdef USE_LIBID3TAG
    wxFile f;   // will be closed when it goes out of scope
    struct id3_file *fp = NULL;
+   auto cleanup = finally([&]{
+      if (fp)
+         id3_file_close(fp);
+   });
 
    if (f.Open(mFilename)) {
       // Use id3_file_fdopen() instead of id3_file_open since wxWidgets can open a
@@ -286,10 +289,8 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
    f.Detach();
 
    struct id3_tag *tp = id3_file_tag(fp);
-   if (!tp) {
-      id3_file_close(fp);
+   if (!tp)
       return;
-   }
 
    tags->Clear();
 
@@ -358,9 +359,9 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       else if (frame->nfields == 3) {
          ustr = id3_field_getstring(&frame->fields[1]);
          if (ustr) {
-            char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-            n = UTF8CTOWX(str);
-            free(str);
+            // Is this duplication really needed?
+            MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+            n = UTF8CTOWX(str.get());
          }
 
          ustr = id3_field_getstring(&frame->fields[2]);
@@ -370,25 +371,23 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       }
 
       if (ustr) {
-         char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-         v = UTF8CTOWX(str);
-         free(str);
+         // Is this duplication really needed?
+         MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+         v = UTF8CTOWX(str.get());
       }
 
       if (!n.IsEmpty() && !v.IsEmpty()) {
          tags->SetTag(n, v);
+      }
    }
-}
 
    // Convert v1 genre to name
    if (tags->HasTag(TAG_GENRE)) {
       long g = -1;
       if (tags->GetTag(TAG_GENRE).ToLong(&g)) {
          tags->SetTag(TAG_GENRE, tags->GetGenre(g));
+      }
    }
-}
-
-   id3_file_close(fp);
 #endif // ifdef USE_LIBID3TAG
 }
 
@@ -405,7 +404,7 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
    data->updateResult = data->progress->Update((wxULongLong_t)data->file->Tell(),
                                              (wxULongLong_t)data->file->Length() != 0 ?
                                              (wxULongLong_t)data->file->Length() : 1);
-   if(data->updateResult != eProgressSuccess)
+   if(data->updateResult != ProgressResult::Success)
       return MAD_FLOW_STOP;
 
    if (data->eof) {
@@ -417,8 +416,8 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
 
 #ifdef USE_LIBID3TAG
    if (!data->id3checked) {
-      data->file->Read(data->inputBuffer, ID3_TAG_QUERYSIZE);
-      int len = id3_tag_query(data->inputBuffer, ID3_TAG_QUERYSIZE);
+      data->file->Read(data->inputBuffer.get(), ID3_TAG_QUERYSIZE);
+      int len = id3_tag_query(data->inputBuffer.get(), ID3_TAG_QUERYSIZE);
       if (len > 0) {
          data->file->Seek(len, wxFromStart);
       }
@@ -439,14 +438,15 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
     *           -- Rob Leslie, on the mad-dev mailing list */
 
    int unconsumedBytes;
-   if (stream->next_frame) {
+   if(stream->next_frame ) {
       /* we must use inputBufferFill instead of INPUT_BUFFER_SIZE here
          because the final buffer of the file may be only partially
          filled, and we would otherwise be providing too much input
          after eof */
-      unconsumedBytes = data->inputBuffer + data->inputBufferFill
-	  - stream->next_frame;
-      memmove(data->inputBuffer, stream->next_frame, unconsumedBytes);
+      unconsumedBytes = data->inputBuffer.get() + data->inputBufferFill
+         - stream->next_frame;
+      if (unconsumedBytes > 0)
+         memmove(data->inputBuffer.get(), stream->next_frame, unconsumedBytes);
    }
    else
       unconsumedBytes = 0;
@@ -457,19 +457,19 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
       /* supply the requisite MAD_BUFFER_GUARD zero bytes to ensure
          the final frame gets decoded properly, then finish */
        
-      memset(data->inputBuffer + unconsumedBytes, 0, MAD_BUFFER_GUARD);
+      memset(data->inputBuffer.get() + unconsumedBytes, 0, MAD_BUFFER_GUARD);
       mad_stream_buffer
-          (stream, data->inputBuffer, MAD_BUFFER_GUARD + unconsumedBytes);
+          (stream, data->inputBuffer.get(), MAD_BUFFER_GUARD + unconsumedBytes);
       
       data->eof = true; /* so on next call, we will tell mad to stop */
       
       return MAD_FLOW_CONTINUE;
    }
 
-   off_t read = data->file->Read(data->inputBuffer + unconsumedBytes,
+   off_t read = data->file->Read(data->inputBuffer.get() + unconsumedBytes,
                                  INPUT_BUFFER_SIZE - unconsumedBytes);
 
-   mad_stream_buffer(stream, data->inputBuffer, read + unconsumedBytes);
+   mad_stream_buffer(stream, data->inputBuffer.get(), read + unconsumedBytes);
 
    data->inputBufferFill = int(read + unconsumedBytes);
 
@@ -483,67 +483,61 @@ enum mad_flow output_cb(void *_data,
                         struct mad_header const * WXUNUSED(header),
                         struct mad_pcm *pcm)
 {
-   int samplerate;
-   struct private_data *data = (struct private_data *)_data;
-   int smpl;
+   // Don't C++ exceptions propagate through mad
+   return GuardedCall< mad_flow > ( [&] {
+      int samplerate;
+      struct private_data *data = (struct private_data *)_data;
 
-   samplerate= pcm->samplerate;
-   auto channels  = pcm->channels;
-   const auto samples   = pcm->length;
+      samplerate= pcm->samplerate;
+      auto channels  = pcm->channels;
+      const auto samples   = pcm->length;
 
-   /* If this is the first run, we need to create the WaveTracks that
-    * will hold the data.  We do this now because now is the first
-    * moment when we know how many channels there are. */
+      /* If this is the first run, we need to create the WaveTracks that
+       * will hold the data.  We do this now because now is the first
+       * moment when we know how many channels there are. */
 
-   if(data->channels.empty()) {
-      data->channels.resize(channels);
+      if(data->channels.empty()) {
+         data->channels.resize(channels);
 
-      sampleFormat format = (sampleFormat) gPrefs->
-         Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+         sampleFormat format = (sampleFormat) gPrefs->
+            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
-      for(auto &channel: data->channels) {
-         channel = data->trackFactory->NewWaveTrack(format, samplerate);
-         channel->SetChannel(Track::MonoChannel);
+         for(auto &channel: data->channels) {
+            channel = data->trackFactory->NewWaveTrack(format, samplerate);
+            channel->SetChannel(Track::MonoChannel);
+         }
+
+         /* special case: 2 channels is understood to be stereo */
+         if(channels == 2) {
+            data->channels.begin()->get()->SetChannel(Track::LeftChannel);
+            data->channels.rbegin()->get()->SetChannel(Track::RightChannel);
+            data->channels.begin()->get()->SetLinked(true);
+         }
+         data->numChannels = channels;
+      }
+      else {
+         // This is not the first run, protect us from libmad glitching
+         // on the number of channels
+         channels = data->numChannels;
       }
 
-      /* special case: 2 channels is understood to be stereo */
-      if(channels == 2) {
-         data->channels.begin()->get()->SetChannel(Track::LeftChannel);
-         data->channels.rbegin()->get()->SetChannel(Track::RightChannel);
-         data->channels.begin()->get()->SetLinked(true);
-      }
-      data->numChannels = channels;
-   }
-   else {
-      // This is not the first run, protect us from libmad glitching
-      // on the number of channels
-      channels = data->numChannels;
-   }
+      /* TODO: get rid of this by adding fixed-point support to SampleFormat.
+       * For now, we allocate temporary float buffers to convert the fixed
+       * point samples into something we can feed to the WaveTrack.  Allocating
+       * big blocks of data like this isn't a great idea, but it's temporary.
+       */
+      FloatBuffers channelBuffers{ channels, samples };
+      for(size_t smpl = 0; smpl < samples; smpl++)
+         for(int chn = 0; chn < channels; chn++)
+            channelBuffers[chn][smpl] = scale(pcm->samples[chn][smpl]);
 
-   /* TODO: get rid of this by adding fixed-point support to SampleFormat.
-    * For now, we allocate temporary float buffers to convert the fixed
-    * point samples into something we can feed to the WaveTrack.  Allocating
-    * big blocks of data like this isn't a great idea, but it's temporary.
-    */
-   float **channelBuffers = new float* [channels];
-   for(int chn = 0; chn < channels; chn++)
-      channelBuffers[chn] = new float [samples];
-
-   for(smpl = 0; smpl < samples; smpl++)
       for(int chn = 0; chn < channels; chn++)
-         channelBuffers[chn][smpl] = scale(pcm->samples[chn][smpl]);
+         data->channels[chn]->Append((samplePtr)channelBuffers[chn].get(),
+                                     floatSample,
+                                     samples);
 
-   auto iter = data->channels.begin();
-   for (int chn = 0; chn < channels; ++iter, ++chn)
-      iter->get()->Append((samplePtr)channelBuffers[chn],
-                                  floatSample,
-                                  samples);
-
-   for(int chn = 0; chn < channels; chn++)
-      delete[] channelBuffers[chn];
-   delete[] channelBuffers;
-
-   return MAD_FLOW_CONTINUE;
+         return MAD_FLOW_CONTINUE;
+   }, MakeSimpleGuard(MAD_FLOW_BREAK) );
 }
 
 enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stream),

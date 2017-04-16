@@ -14,10 +14,18 @@
 
 #include "Audacity.h"
 
+#include "MemoryX.h"
 #include <wx/intl.h>
 #include <wx/string.h>
 
 #include "SampleFormat.h"
+
+struct soxr;
+extern "C" void soxr_delete(soxr*);
+struct soxr_deleter {
+   void operator () (soxr *p) const { if (p) soxr_delete(p); }
+};
+using soxrHandle = std::unique_ptr<soxr, soxr_deleter>;
 
 class Resample final
 {
@@ -78,7 +86,7 @@ class Resample final
 
  protected:
    int   mMethod; // resampler-specific enum for resampling method
-   void* mHandle; // constant-rate or variable-rate resampler (XOR per instance)
+   soxrHandle mHandle; // constant-rate or variable-rate resampler (XOR per instance)
    bool mbWantConstRateResampling;
 };
 

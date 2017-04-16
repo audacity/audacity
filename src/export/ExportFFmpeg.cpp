@@ -140,7 +140,7 @@ public:
    ///\param metadata tags to write into file
    ///\param subformat index of export type
    ///\return true if export succeded
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
       unsigned channels,
       const wxString &fName,
       bool selectedOnly,
@@ -165,7 +165,7 @@ private:
    unsigned          mChannels{};
    bool              mSupportsUTF8{};
 
-   // Smart pointer fields, their order is the reverse in which they are reset in Finalize():
+   // Smart pointer fields, their order is the reverse in which they are reset in FreeResources():
    AVFifoBufferHolder   mEncAudioFifo;          // FIFO to write incoming audio samples into
    AVMallocHolder<int16_t> mEncAudioFifoOutBuf;  // buffer to read _out_ of the FIFO into
    AVFormatContextHolder mEncFormatCtx;        // libavformat's context for our output file
@@ -357,7 +357,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
       return false;
    }
 
-   // Only now, we can keep all the resources until Finalize().
+   // Only now, we can keep all the resources until after Finalize().
    // Cancel the local cleanup.
    cleanup.release();
 
@@ -737,7 +737,6 @@ bool ExportFFmpeg::Finalize()
    // Write any file trailers.
    av_write_trailer(mEncFormatCtx.get());
 
-   FreeResources();
    return true;
 }
 
@@ -774,7 +773,8 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
    // Put the raw audio samples into the FIFO.
    ret = av_fifo_generic_write(mEncAudioFifo.get(), pRawSamples, nBytesToWrite,NULL);
 
-   wxASSERT(ret == nBytesToWrite);
+   if(ret != nBytesToWrite)
+      return false;
 
    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz) {
       wxMessageBox(wxString::Format(_("FFmpeg : ERROR - nAudioFrameSizeOut too large.")),
@@ -823,12 +823,12 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 }
 
 
-int ExportFFmpeg::Export(AudacityProject *project,
+ProgressResult ExportFFmpeg::Export(AudacityProject *project,
                        unsigned channels, const wxString &fName,
                        bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata, int subformat)
 {
    if (!CheckFFmpegPresence())
-      return false;
+      return ProgressResult::Cancelled;
    mChannels = channels;
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(subformat);
@@ -840,22 +840,26 @@ int ExportFFmpeg::Export(AudacityProject *project,
                channels,
                ExportFFmpegOptions::fmts[mSubFormat].maxchannels),
             _("Error"));
-      return false;
+      return ProgressResult::Cancelled;
    }
    mName = fName;
    const TrackList *tracks = project->GetTracks();
    bool ret = true;
 
-   if (mSubFormat >= FMT_LAST) return false;
+   if (mSubFormat >= FMT_LAST)
+      return ProgressResult::Cancelled;
 
    wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
    if (mSubFormat == FMT_OTHER)
       shortname = gPrefs->Read(wxT("/FileFormats/FFmpegFormat"),wxT("matroska"));
    ret = Init(shortname.mb_str(),project, metadata, subformat);
+   auto cleanup = finally ( [&] { FreeResources(); } );
 
-   if (!ret) return false;
+   if (!ret)
+      return ProgressResult::Cancelled;
 
-   int pcmBufferSize = 1024;
+   size_t pcmBufferSize = 1024;
+
    const WaveTrackConstArray waveTracks =
       tracks->GetWaveTrackConstArray(selectionOnly, false);
    auto mixer = CreateMixer(waveTracks,
@@ -864,14 +868,14 @@ int ExportFFmpeg::Export(AudacityProject *project,
       channels, pcmBufferSize, true,
       mSampleRate, int16Sample, true, mixerSpec);
 
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    {
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
          wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
          wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
 
-      while (updateResult == eProgressSuccess) {
+      while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);
 
          if (pcmNumSamples == 0)
@@ -879,13 +883,19 @@ int ExportFFmpeg::Export(AudacityProject *project,
 
          short *pcmBuffer = (short *)mixer->GetBuffer();
 
-         EncodeAudioFrame(pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels);
+         if (!EncodeAudioFrame(
+            pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
+            updateResult = ProgressResult::Cancelled;
+            break;
+         }
 
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
 
-   Finalize();
+   if ( updateResult != ProgressResult::Cancelled )
+      if ( !Finalize() )
+         return ProgressResult::Cancelled;
 
    return updateResult;
 }

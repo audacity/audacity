@@ -14,6 +14,8 @@
 #include <wx/dynarray.h>
 #include <wx/ffile.h>
 
+#include "../FileException.h"
+
 ///
 /// XMLWriter
 ///
@@ -60,41 +62,55 @@ class AUDACITY_DLL_API XMLWriter /* not final */ {
 ///
 /// XMLFileWriter
 ///
-class AUDACITY_DLL_API XMLFileWriter final : public wxFFile, public XMLWriter {
+
+/// This writes to a provisional file, and replaces the previously existing
+/// contents by a file rename in Commit() only after all writes succeed.
+/// The original contents may also be retained at a backup path name, as
+/// directed by the optional constructor argument.
+/// If it is destroyed before Commit(), then the provisional file is removed.
+/// If the construction and all operations are inside a GuardedCall or event
+/// handler, then the default delayed handler action in case of exceptions will
+/// notify the user of problems.
+class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
 
  public:
 
-   XMLFileWriter();
+   /// The caption is for message boxes to show in case of errors.
+   /// Might throw.
+   XMLFileWriter
+      ( const wxString &outputPath, const wxString &caption,
+        bool keepBackup = false );
+
    virtual ~XMLFileWriter();
 
-   /// Open the file. Might throw XMLFileWriterException.
-   void Open(const wxString &name, const wxString &mode);
+   /// Close all tags and then close the file.
+   /// Might throw.  If not, then create
+   /// or modify the file at the output path.
+   void Commit();
 
-   /// Close file. Might throw XMLFileWriterException.
-   void Close();
-
-   /// Close file without automatically ending tags.
-   /// Might throw XMLFileWriterException.
-   void CloseWithoutEndingTags(); // for auto-save files
-
-   /// Write to file. Might throw XMLFileWriterException.
+   /// Write to file. Might throw.
    void Write(const wxString &data) override;
+
+   wxString GetBackupName() const { return mBackupName; }
 
  private:
 
-};
+   void ThrowException(
+      const wxFileName &fileName, const wxString &caption)
+   {
+      throw FileException{ FileException::Cause::Write, fileName, caption };
+   }
 
-///
-/// Exception thrown by various XMLFileWriter methods
-///
-class XMLFileWriterException
-{
-public:
-   XMLFileWriterException(const wxString& message) { mMessage = message; }
-   wxString GetMessage() const { return mMessage; }
+   /// Close file without automatically ending tags.
+   /// Might throw.
+   void CloseWithoutEndingTags(); // for auto-save files
 
-protected:
-   wxString mMessage;
+   const wxString mOutputPath;
+   const wxString mCaption;
+   wxString mBackupName;
+   const bool mKeepBackup;
+
+   wxFFile mBackupFile;
 };
 
 ///

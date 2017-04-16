@@ -57,25 +57,17 @@ Envelope::Envelope()
    mDB = true;
    mDefaultValue = 1.0;
    mDragPoint = -1;
-   mDirty = false;
-   mIsDeleting = false;
-   mMirror = true;
 
    mMinValue = 1.0e-7;
    mMaxValue = 2.0;
 
-   mButton = wxMOUSE_BTN_NONE;
-
    mSearchGuess = -1;
+
+   mDragPointValid = false;
 }
 
 Envelope::~Envelope()
 {
-}
-
-void Envelope::Mirror(bool mirror)
-{
-   mMirror = mirror;
 }
 
 /// Rescale function for time tracks (could also be used for other tracks though).
@@ -112,6 +104,84 @@ void Envelope::Flatten(double value)
    mDefaultValue = ClampValue(value);
 }
 
+void Envelope::SetDragPoint(int dragPoint)
+{
+   mDragPoint = std::max(-1, std::min(int(mEnv.size() - 1), dragPoint));
+   mDragPointValid = (mDragPoint >= 0);
+}
+
+void Envelope::SetDragPointValid(bool valid)
+{
+   mDragPointValid = (valid && mDragPoint >= 0);
+   if (mDragPoint >= 0 && !valid) {
+      // We're going to be deleting the point; On
+      // screen we show this by having the envelope move to
+      // the position it will have after deletion of the point.
+      // Without deleting the point we move it left or right
+      // to the same position as the previous or next point.
+
+      static const double big = std::numeric_limits<double>::max();
+      auto size = mEnv.size();
+
+      if( size <= 1) {
+         // There is only one point - just move it
+         // off screen and at default height.
+         // temporary state when dragging only!
+         mEnv[mDragPoint].SetT(big);
+         mEnv[mDragPoint].SetVal(mDefaultValue);
+         return;
+      }
+      else if ( mDragPoint + 1 == size ) {
+         // Put the point at the height of the last point, but also off screen.
+         mEnv[mDragPoint].SetT(big);
+         mEnv[mDragPoint].SetVal(mEnv[ size - 1 ].GetVal());
+      }
+      else {
+         // Place it exactly on its right neighbour.
+         // That way the drawing code will overpaint the dark dot with
+         // a light dot, as if it were deleted.
+         const auto &neighbor = mEnv[mDragPoint + 1];
+         mEnv[mDragPoint].SetT(neighbor.GetT());
+         mEnv[mDragPoint].SetVal(neighbor.GetVal());
+      }
+   }
+}
+
+void Envelope::MoveDragPoint(double newWhen, double value)
+{
+   SetDragPointValid(true);
+   if (!mDragPointValid)
+      return;
+
+   // We'll limit the drag point time to be between those of the preceding
+   // and next envelope point.
+   double limitLo = 0.0;
+   double limitHi = mTrackLen;
+
+   if (mDragPoint > 0)
+      limitLo = std::max(limitLo, mEnv[mDragPoint - 1].GetT());
+   if (mDragPoint + 1 < mEnv.size())
+      limitHi = std::min(limitHi, mEnv[mDragPoint + 1].GetT());
+
+   EnvPoint &dragPoint = mEnv[mDragPoint];
+   const double tt =
+      std::max(limitLo, std::min(limitHi, newWhen));
+
+   // This might temporary violate the constraint that at most two
+   // points share a time value.
+   dragPoint.SetT(tt);
+   dragPoint.SetVal(value);
+}
+
+void Envelope::ClearDragPoint()
+{
+   if (!mDragPointValid && mDragPoint >= 0)
+      Delete(mDragPoint);
+
+   mDragPoint = -1;
+   mDragPointValid = false;
+}
+
 void Envelope::SetRange(double minValue, double maxValue) {
    mMinValue = minValue;
    mMaxValue = maxValue;
@@ -128,7 +198,7 @@ EnvPoint *Envelope::AddPointAtEnd( double t, double val )
 
 void Envelope::CopyFrom(const Envelope *e, double t0, double t1)
 {
-   wxASSERT( t0 < t1 );
+   wxASSERT( t0 <= t1 );
 
    mOffset   = wxMax(t0, e->mOffset);
    mTrackLen = wxMin(t1, e->mOffset + e->mTrackLen) - mOffset;
@@ -186,7 +256,7 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 /// TODO: This should probably move to track artist.
 void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
                     bool dB, double dBRange,
-                    float zoomMin, float zoomMax) const
+                    float zoomMin, float zoomMax, bool mirrored) const
 {
    dc.SetPen(AColor::envelopePen);
    dc.SetBrush(*wxWHITE_BRUSH);
@@ -207,7 +277,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
 
          y = GetWaveYPos(v, zoomMin, zoomMax, r.height, dB,
             true, dBRange, false);
-         if (!mMirror) {
+         if (!mirrored) {
             DrawPoint(dc, r, x, y, true);
          }
          else {
@@ -282,6 +352,7 @@ XMLTagHandler *Envelope::HandleXMLChild(const wxChar *tag)
 }
 
 void Envelope::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    unsigned int ctrlPt;
 
@@ -311,7 +382,7 @@ inline int SQR(int x) { return x * x; }
 /// @dB - display mode either linear or log.
 /// @zoomMin - vertical scale, typically -1.0
 /// @zoomMax - vertical scale, typically +1.0
-float Envelope::ValueOfPixel( int y, int height, bool upper,
+float EnvelopeEditor::ValueOfPixel( int y, int height, bool upper,
                               bool dB, double dBRange,
                               float zoomMin, float zoomMax)
 {
@@ -320,9 +391,9 @@ float Envelope::ValueOfPixel( int y, int height, bool upper,
    // MB: this is mostly equivalent to what the old code did, I'm not sure
    // if anything special is needed for asymmetric ranges
    if(upper)
-      return ClampValue(v);
+      return mEnvelope.ClampValue(v);
    else
-      return ClampValue(-v);
+      return mEnvelope.ClampValue(-v);
 }
 
 /// HandleMouseButtonDown either finds an existing control point or adds a NEW one
@@ -331,13 +402,13 @@ float Envelope::ValueOfPixel( int y, int height, bool upper,
 /// a given time value:
 /// We have an upper and lower envelope line.
 /// Also we may be showing an inner envelope (at 0.5 the range).
-bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
+bool EnvelopeEditor::HandleMouseButtonDown(const wxMouseEvent & event, wxRect & r,
                                      const ZoomInfo &zoomInfo,
                                      bool dB, double dBRange,
                                      float zoomMin, float zoomMax)
 {
    int ctr = (int)(r.height * zoomMax / (zoomMax - zoomMin));
-   bool upper = !mMirror || (zoomMin >= 0.0) || (event.m_y - r.y < ctr);
+   bool upper = !mMirrored || (zoomMin >= 0.0) || (event.m_y - r.y < ctr);
 
    int clip_y = event.m_y - r.y;
    if(clip_y < 0) clip_y = 0; //keeps point in rect r, even if mouse isn't
@@ -348,16 +419,15 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
 
    // Member variables hold state that will be needed in dragging.
    mButton        = event.GetButton();
-   mIsDeleting    = false;
    mContourOffset = false;
 
    //   wxLogDebug(wxT("Y:%i Height:%i Offset:%i"), y, height, mContourOffset );
-   int len = mEnv.size();
+   int len = mEnvelope.GetNumberOfPoints();
 
    // TODO: extract this into a function FindNearestControlPoint()
    // TODO: also fix it so that we can drag the last point on an envelope.
    for (int i = 0; i < len; i++) { //search for control point nearest click
-      const double time = mEnv[i].GetT() + mOffset;
+      const double time = mEnvelope[i].GetT() + mEnvelope.GetOffset();
       const wxInt64 position = zoomInfo.TimeToPosition(time);
       if (position >= 0 && position < r.width) {
 
@@ -366,7 +436,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
          int numControlPoints;
 
          // Outer control points
-         double value = mEnv[i].GetVal();
+         double value = mEnvelope[i].GetVal();
          y[0] = GetWaveYPos(value, zoomMin, zoomMax, r.height,
                                 dB, true, dBRange, false);
          y[1] = GetWaveYPos(-value, zoomMin, zoomMax, r.height,
@@ -383,7 +453,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
          if (y[2] > y[3])
             numControlPoints = 2;
 
-         if (!mMirror)
+         if (!mMirrored)
             numControlPoints = 1;
 
          const int deltaXSquared = SQR(x - (event.m_x - r.x));
@@ -400,7 +470,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
    }
 
    if (bestNum >= 0) {
-      mDragPoint = bestNum;
+      mEnvelope.SetDragPoint(bestNum);
    }
    else {
       // TODO: Extract this into a function CreateNewPoint
@@ -409,13 +479,13 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
       //      if (when <= 0 || when >= mTrackLen)
       //         return false;
 
-      const double v = GetValue( when );
+      const double v = mEnvelope.GetValue( when );
 
       int ct = GetWaveYPos( v, zoomMin, zoomMax, r.height, dB,
                                false, dBRange, false) ;
       int cb = GetWaveYPos( -v-.000000001, zoomMin, zoomMax, r.height, dB,
                                false, dBRange, false) ;
-      if( ct <= cb || !mMirror ){
+      if (ct <= cb || !mMirrored) {
          int t = GetWaveYPos( v, zoomMin, zoomMax, r.height, dB,
                                  true, dBRange, false) ;
          int b = GetWaveYPos( -v, zoomMin, zoomMax, r.height, dB,
@@ -424,7 +494,7 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
          ct = (t + ct) / 2;
          cb = (b + cb) / 2;
 
-         if(mMirror &&
+         if (mMirrored &&
             (event.m_y - r.y) > ct &&
             ((event.m_y - r.y) < cb))
             mContourOffset = true;
@@ -435,50 +505,22 @@ bool Envelope::HandleMouseButtonDown(wxMouseEvent & event, wxRect & r,
       double newVal = ValueOfPixel(clip_y, r.height, upper, dB, dBRange,
                                    zoomMin, zoomMax);
 
-      mDragPoint = Insert(when - mOffset, newVal);
+      mEnvelope.SetDragPoint(mEnvelope.Insert(when - mEnvelope.GetOffset(), newVal));
       mDirty = true;
    }
 
    mUpper = upper;
 
-   mInitialVal = mEnv[mDragPoint].GetVal();
-
-   mInitialY = event.m_y+mContourOffset;
+   // const int dragPoint = mEnvelope.GetDragPoint();
+   // mInitialVal = mEnvelope[dragPoint].GetVal();
+   // mInitialY = event.m_y+mContourOffset;
 
    return true;
 }
 
-/// Mark dragged point for deletion.
-/// It will be deleted on mouse button up.
-void Envelope::MarkDragPointForDeletion()
-{
-   mIsDeleting = true;
-
-   // We're going to be deleting the point; On
-   // screen we show this by having the envelope move to
-   // the position it will have after deletion of the point.
-   // Without delting the point we move it left or right
-   // to the same position as the previous or next point.
-
-   if( mEnv.size() <= 1)
-   {
-      // There is only one point - just move it
-      // off screen and at default height.
-      // temporary state when dragging only!
-      mEnv[mDragPoint].SetT(-1000000.0);
-      mEnv[mDragPoint].SetVal(mDefaultValue);
-      return;
-   }
-
-   // Place it exactly on one of its neighbours.
-   int iNeighbourPoint = mDragPoint + ((mDragPoint > 0) ? -1:+1);
-   mEnv[mDragPoint].SetT(mEnv[iNeighbourPoint].GetT());
-   mEnv[mDragPoint].SetVal(mEnv[iNeighbourPoint].GetVal());
-}
-
-void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
-                                 const ZoomInfo &zoomInfo, bool dB, double dBRange,
-                                 float zoomMin, float zoomMax)
+void EnvelopeEditor::MoveDragPoint(const wxMouseEvent & event, wxRect & r,
+                               const ZoomInfo &zoomInfo, bool dB, double dBRange,
+                               float zoomMin, float zoomMax)
 {
    int clip_y = event.m_y - r.y;
    if(clip_y < 0) clip_y = 0;
@@ -491,29 +533,14 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
    // TODO: However because mTrackEpsilon assumes 200KHz this use
    // of epsilon is a tad bogus.  What we need to do instead is DELETE
    // a duplicated point on a mouse up.
-   double newWhen = zoomInfo.PositionToTime(event.m_x, r.x) - mOffset;
-
-   // We'll limit the drag point time to be between those of the preceding
-   // and next envelope point.
-   double limitLo = 0.0;
-   double limitHi = mTrackLen;
-
-   if (mDragPoint > 0)
-      limitLo = mEnv[mDragPoint - 1].GetT() + mTrackEpsilon;
-   if (mDragPoint < (int)mEnv.size() - 1 )
-      limitHi = mEnv[mDragPoint + 1].GetT() - mTrackEpsilon;
-
-   newWhen = Limit( limitLo, newWhen, limitHi );
-   newWhen = Limit( mTrackEpsilon, newWhen, mTrackLen - mTrackEpsilon);
-
-   mEnv[mDragPoint].SetT(newWhen);
-   mEnv[mDragPoint].SetVal(newVal);
-
+   double newWhen = zoomInfo.PositionToTime(event.m_x, r.x) - mEnvelope.GetOffset();
+   mEnvelope.MoveDragPoint(newWhen, newVal);
 }
 
-bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
+bool EnvelopeEditor::HandleDragging(const wxMouseEvent & event, wxRect & r,
                                const ZoomInfo &zoomInfo, bool dB, double dBRange,
-                               float zoomMin, float zoomMax)
+                               float zoomMin, float zoomMax,
+                               float WXUNUSED(eMin), float WXUNUSED(eMax))
 {
    mDirty = true;
 
@@ -523,27 +550,24 @@ bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
    if (larger.Contains(event.m_x, event.m_y))
    {
       // IF we're in the rect THEN we're not deleting this point (anymore).
-      mIsDeleting = false;
       // ...we're dragging it.
-      MoveDraggedPoint( event, r, zoomInfo, dB, dBRange, zoomMin, zoomMax);
+      MoveDragPoint( event, r, zoomInfo, dB, dBRange, zoomMin, zoomMax);
       return true;
    }
 
-   if(mIsDeleting )
+   if(!mEnvelope.GetDragPointValid())
       // IF we already know we're deleting THEN no envelope point to update.
       return false;
 
-   MarkDragPointForDeletion();
+   // Invalidate the point
+   mEnvelope.SetDragPointValid(false);
    return true;
 }
 
-// Exit dragging mode and deletes dragged point if neccessary.
-bool Envelope::HandleMouseButtonUp()
+// Exit dragging mode and delete dragged point if neccessary.
+bool EnvelopeEditor::HandleMouseButtonUp()
 {
-   if (mIsDeleting) {
-      Delete(mDragPoint);
-   }
-   mDragPoint = -1;
+   mEnvelope.ClearDragPoint();
    mButton = wxMOUSE_BTN_NONE;
    return true;
 }
@@ -559,14 +583,14 @@ void Envelope::Insert(int point, const EnvPoint &p)
 }
 
 // Returns true if parent needs to be redrawn
-bool Envelope::MouseEvent(wxMouseEvent & event, wxRect & r,
+bool EnvelopeEditor::MouseEvent(const wxMouseEvent & event, wxRect & r,
                           const ZoomInfo &zoomInfo, bool dB, double dBRange,
                           float zoomMin, float zoomMax)
 {
    if (event.ButtonDown() && mButton == wxMOUSE_BTN_NONE)
       return HandleMouseButtonDown( event, r, zoomInfo, dB, dBRange,
                                     zoomMin, zoomMax);
-   if (event.Dragging() && mDragPoint >= 0)
+   if (event.Dragging() && mEnvelope.GetDragPoint() >= 0)
       return HandleDragging( event, r, zoomInfo, dB, dBRange,
                              zoomMin, zoomMax);
    if (event.ButtonUp() && event.GetButton() == mButton)
@@ -575,6 +599,7 @@ bool Envelope::MouseEvent(wxMouseEvent & event, wxRect & r,
 }
 
 void Envelope::CollapseRegion(double t0, double t1)
+// NOFAIL-GUARANTEE
 {
    // This gets called when somebody clears samples.  All of the
    // control points within the region disappear and the points
@@ -611,6 +636,7 @@ void Envelope::CollapseRegion(double t0, double t1)
 // envelope point applies one-past the last actual sample.
 // Rather than going to a .5-offset-index, we special case the framing.
 void Envelope::Paste(double t0, const Envelope *e)
+// NOFAIL-GUARANTEE
 {
    const bool wasEmpty = (this->mEnv.size() == 0);
 
@@ -804,6 +830,7 @@ Old analysis of cases:
 // 'Unneeded' means that the envelope doesn't change by more than
 // 'tolerence' without the point being there.
 void Envelope::RemoveUnneededPoints(double time, double tolerence)
+// NOFAIL-GUARANTEE
 {
    unsigned int len = mEnv.size();
    unsigned int i;
@@ -840,6 +867,7 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
 }
 
 void Envelope::InsertSpace(double t0, double tlen)
+// NOFAIL-GUARANTEE
 {
    unsigned int len = mEnv.size();
    unsigned int i;
@@ -868,7 +896,7 @@ int Envelope::Move(double when, double value)
 }
 
 
-int Envelope::GetNumberOfPoints() const
+size_t Envelope::GetNumberOfPoints() const
 {
    return mEnv.size();
 }
@@ -973,6 +1001,7 @@ int Envelope::Insert(double when, double value)
 // Control
 
 void Envelope::SetOffset(double newOffset)
+// NOFAIL-GUARANTEE
 {
    mOffset = newOffset;
 }
@@ -1523,7 +1552,6 @@ void Envelope::testMe()
    double t0=0, t1=0;
 
    SetInterpolateDB(false);
-   Mirror(false);
 
    Flatten(0.5);
    checkResult( 1, Integral(0.0,100.0), 50);
@@ -1575,3 +1603,18 @@ void Envelope::testMe()
    checkResult( 19, NextPointAfter( 5 ), 10 );
 }
 
+EnvelopeEditor::EnvelopeEditor(Envelope &envelope, bool mirrored)
+   : mEnvelope(envelope)
+   , mMirrored(mirrored)
+   , mContourOffset(-1)
+   // , mInitialVal(-1.0)
+   // , mInitialY(-1)
+   , mUpper(false)
+   , mButton(wxMOUSE_BTN_NONE)
+   , mDirty(false)
+{
+}
+
+EnvelopeEditor::~EnvelopeEditor()
+{
+}

@@ -88,7 +88,7 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   float *buffer = new float[track->GetMaxBlockSize()];
+   Floats buffer{ track->GetMaxBlockSize() };
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
@@ -100,19 +100,16 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
          limitSampleBufferSize( track->GetBestBlockSize(s), end - s );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer, floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block);
 
       //Process the buffer.  If it fails, clean up and exit.
-      if (!ProcessSimpleMono(buffer, block)) {
-         delete[]buffer;
-
+      if (!ProcessSimpleMono(buffer.get(), block))
          //Return false because the effect failed.
          return false;
-      }
 
       //Processing succeeded. copy the newly-changed samples back
       //onto the track.
-      track->Set((samplePtr) buffer, floatSample, s, block);
+      track->Set((samplePtr) buffer.get(), floatSample, s, block);
 
       //Increment s one blockfull of samples
       s += block;
@@ -120,14 +117,9 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
       //Update the Progress meter
       if (TrackProgress(mCurTrackNum,
                         (s - start).as_double() /
-                        len)) {
-         delete[]buffer;
+                        len))
          return false;
-      }
    }
-
-   //Clean up the buffer
-   delete[]buffer;
 
    //Return true because the effect processing succeeded.
    return true;

@@ -57,15 +57,18 @@ to get its definition, rather than rolling our own.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
+#include "SimpleBlockFile.h"
+
 #include <wx/wx.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/utils.h>
 #include <wx/log.h>
 
+#include "../FileException.h"
 #include "../Prefs.h"
 
-#include "SimpleBlockFile.h"
 #include "../FileFormats.h"
 
 #include "sndfile.h"
@@ -114,8 +117,9 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
    if (!(allowDeferredWrite && useCache) && !bypassCache)
    {
       bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
-      wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
-      wxUnusedVar(bSuccess);
+      if (!bSuccess)
+         throw FileException{
+            FileException::Cause::Write, GetFileName().name };
    }
 
    if (useCache) {
@@ -124,14 +128,14 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
       mCache.needWrite = true;
       mCache.format = format;
       const auto sampleDataSize = sampleLen * SAMPLE_SIZE(format);
-      mCache.sampleData = new char[sampleDataSize];
-      memcpy(mCache.sampleData, sampleData, sampleDataSize);
+      mCache.sampleData.reinit(sampleDataSize);
+      memcpy(mCache.sampleData.get(), sampleData, sampleDataSize);
       ArrayOf<char> cleanup;
       void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
-         format, cleanup);
-      mCache.summaryData = new char[mSummaryInfo.totalSummaryBytes];
-      memcpy(mCache.summaryData, summaryData,
-             (size_t)mSummaryInfo.totalSummaryBytes);
+                                                format, cleanup);
+      mCache.summaryData.reinit(mSummaryInfo.totalSummaryBytes);
+      memcpy(mCache.summaryData.get(), summaryData,
+             mSummaryInfo.totalSummaryBytes);
     }
 }
 
@@ -155,11 +159,6 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, size_t len,
 
 SimpleBlockFile::~SimpleBlockFile()
 {
-   if (mCache.active)
-   {
-      delete[] mCache.sampleData;
-      delete[] (char *)mCache.summaryData;
-   }
 }
 
 bool SimpleBlockFile::WriteSimpleBlockFile(
@@ -272,6 +271,8 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    return true;
 }
 
+// This function should try to fill the cache, but just return without effect
+// (not throwing) if there is failure.
 void SimpleBlockFile::FillCache()
 {
    if (mCache.active)
@@ -317,18 +318,19 @@ void SimpleBlockFile::FillCache()
    file.Close();
 
    // Read samples into cache
-   mCache.sampleData = new char[mLen * SAMPLE_SIZE(mCache.format)];
-   if (ReadData(mCache.sampleData, mCache.format, 0, mLen) != mLen)
+   mCache.sampleData.reinit(mLen * SAMPLE_SIZE(mCache.format));
+   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen,
+                // no exceptions!
+                false) != mLen)
    {
       // Could not read all samples
-      delete mCache.sampleData;
+      mCache.sampleData.reset();
       return;
    }
 
    // Read summary data into cache
-   mCache.summaryData = new char[mSummaryInfo.totalSummaryBytes];
-   if (!ReadSummary(mCache.summaryData))
-      memset(mCache.summaryData, 0, mSummaryInfo.totalSummaryBytes);
+   // Fills with zeroes in case of failure:
+   ReadSummary(mCache.summaryData);
 
    // Cache is active but already on disk
    mCache.active = true;
@@ -341,14 +343,15 @@ void SimpleBlockFile::FillCache()
 ///
 /// @param *data The buffer to write the data to.  It must be at least
 /// mSummaryinfo.totalSummaryBytes long.
-bool SimpleBlockFile::ReadSummary(void *data)
+bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
 {
-   if (mCache.active)
-   {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
+   if (mCache.active) {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
-      memcpy(data, mCache.summaryData, (size_t)mSummaryInfo.totalSummaryBytes);
+      memcpy(data.get(), mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
       return true;
-   } else
+   }
+   else
    {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Reading summary from disk.");
 
@@ -361,23 +364,24 @@ bool SimpleBlockFile::ReadSummary(void *data)
          // FIXME: TRAP_ERR no report to user of absent summary files?
          // filled with zero instead.
          if (!file.IsOpened()){
-            memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+            memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
             mSilentLog = TRUE;
-            return true;
+            return false;
          }
       }
-      mSilentLog=FALSE;
+      mSilentLog = FALSE;
 
       // The offset is just past the au header
-      // FIXME: Seek in summary file could fail.
-      if( !file.Seek(sizeof(auHeader)) )
+      if( !file.Seek(sizeof(auHeader)) ||
+          file.Read(data.get(), mSummaryInfo.totalSummaryBytes) !=
+             mSummaryInfo.totalSummaryBytes ) {
+         memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
          return false;
+      }
 
-      int read = (int)file.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+      FixSummary(data.get());
 
-      FixSummary(data);
-
-      return (read == mSummaryInfo.totalSummaryBytes);
+      return true;
    }
 }
 
@@ -389,92 +393,34 @@ bool SimpleBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const
+                        size_t start, size_t len, bool mayThrow) const
 {
    if (mCache.active)
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
 
-      len = std::min(len, std::max(start, mLen) - start);
+      auto framesRead = std::min(len, std::max(start, mLen) - start);
       CopySamples(
-         (samplePtr)(((char*)mCache.sampleData) +
+         (samplePtr)(mCache.sampleData.get() +
             start * SAMPLE_SIZE(mCache.format)),
-         mCache.format, data, format, len);
-      return len;
-   }
-   else {
-      //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
+         mCache.format, data, format, framesRead);
 
-      SF_INFO info;
-      wxFile f;   // will be closed when it goes out of scope
-      SFFile sf;
-      {
-         Maybe<wxLogNull> silence{};
-         if (mSilentLog)
-            silence.create();
-
-         memset(&info, 0, sizeof(info));
-
-         if (f.Open(mFileName.GetFullPath())) {
-            // Even though there is an sf_open() that takes a filename, use the one that
-            // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-            // libsndfile can't (under Windows).
-            sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-         }
-         // FIXME: TRAP_ERR failure of wxFile open incompletely handled in SimpleBlockFile::ReadData.
-         // FIXME: Too much cut and paste code between the different block file types.
-
-
-         if (!sf) {
-
-            memset(data, 0, SAMPLE_SIZE(format)*len);
-
-            mSilentLog = TRUE;
-
-            return len;
-         }
-      }
-      mSilentLog=FALSE;
-
-      SFCall<sf_count_t>(sf_seek, sf.get(), start, SEEK_SET);
-      SampleBuffer buffer(len, floatSample);
-
-      size_t framesRead = 0;
-
-      // If both the src and dest formats are integer formats,
-      // read integers from the file (otherwise we would be
-      // converting to float and back, which is unneccesary)
-      if (format == int16Sample &&
-          sf_subtype_is_integer(info.format)) {
-         framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)data, len);
-      }
-      else
-      if (format == int24Sample &&
-          sf_subtype_is_integer(info.format))
-      {
-         framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
-
-         // libsndfile gave us the 3 byte sample in the 3 most
-         // significant bytes -- we want it in the 3 least
-         // significant bytes.
-         int *intPtr = (int *)data;
-         for( int i = 0; i < framesRead; i++ )
-            intPtr[i] = intPtr[i] >> 8;
-      }
-      else {
-         // Otherwise, let libsndfile handle the conversion and
-         // scaling, and pass us normalized data as floats.  We can
-         // then convert to whatever format we want.
-         framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-         CopySamples(buffer.ptr(), floatSample,
-                     (samplePtr)data, format, framesRead);
+      if ( framesRead < len ) {
+         if (mayThrow)
+            // Not the best exception class?
+            throw FileException{ FileException::Cause::Read, mFileName };
+         ClearSamples(data, format, framesRead, len - framesRead);
       }
 
       return framesRead;
    }
+   else
+      return CommonReadData( mayThrow,
+         mFileName, mSilentLog, nullptr, 0, 0, data, format, start, len);
 }
 
 void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("simpleblockfile"));
 
@@ -606,7 +552,6 @@ auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 
 void SimpleBlockFile::Recover(){
    wxFFile file(mFileName.GetFullPath(), wxT("wb"));
-   //int i;
 
    if( !file.IsOpened() ){
       // Can't do anything else.
@@ -638,8 +583,8 @@ void SimpleBlockFile::WriteCacheToDisk()
    if (!GetNeedWriteCacheToDisk())
       return;
 
-   if (WriteSimpleBlockFile(mCache.sampleData, mLen, mCache.format,
-                            mCache.summaryData))
+   if (WriteSimpleBlockFile(mCache.sampleData.get(), mLen, mCache.format,
+                            mCache.summaryData.get()))
       mCache.needWrite = false;
 }
 

@@ -139,10 +139,10 @@ class QTImportFileHandle final : public ImportFileHandle
       }
    }
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
-   wxInt32 GetStreamCount()
+   wxInt32 GetStreamCount() override
    {
       return 1;
    }
@@ -153,11 +153,11 @@ class QTImportFileHandle final : public ImportFileHandle
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use)
+   void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
    }
 
-   int Import(TrackFactory *trackFactory,
+   ProgressResult Import(TrackFactory *trackFactory,
               TrackHolders &outTracks,
               Tags *tags) override;
 
@@ -229,7 +229,7 @@ auto QTImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int QTImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                TrackHolders &outTracks,
                                Tags *tags)
 {
@@ -237,7 +237,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
 
    OSErr err = noErr;
    MovieAudioExtractionRef maer = NULL;
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    auto totSamples =
       (sampleCount) GetMovieDuration(mMovie); // convert from TimeValue
    decltype(totSamples) numSamples = 0;
@@ -245,8 +245,13 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    UInt32 quality = kQTAudioRenderQuality_Max;
    AudioStreamBasicDescription desc;
    UInt32 maxSampleSize;
-   UInt32 bufsize;
    bool res = false;
+
+   auto cleanup = finally( [&] {
+      if (maer) {
+         MovieAudioExtractionEnd(maer);
+      }
+   } );
 
    CreateProgress();
 
@@ -301,7 +306,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
       }
    
       auto numchan = desc.mChannelsPerFrame;
-      bufsize = 5 * desc.mSampleRate;
+      const size_t bufsize = 5 * desc.mSampleRate;
    
       // determine sample format
       sampleFormat format;
@@ -319,29 +324,39 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
             format = floatSample;
             break;
       }
-   
-      AudioBufferList *abl = (AudioBufferList *)
-         calloc(1, offsetof(AudioBufferList, mBuffers) + (sizeof(AudioBuffer) * numchan));
+
+      // Allocate an array of pointers, whose size is not known statically,
+      // and prefixed with the AudioBufferList structure.
+      MallocPtr< AudioBufferList > abl{
+         static_cast< AudioBufferList * >(
+            calloc( 1, offsetof( AudioBufferList, mBuffers ) +
+               (sizeof(AudioBuffer) * numchan))) };
       abl->mNumberBuffers = numchan;
    
       TrackHolders channels{ numchan };
+
+      const auto size = sizeof(float) * bufsize;
+      ArraysOf<unsigned char> holders{ numchan, size };
+      for (size_t c = 0; c < numchan; c++) {
+         auto &buffer = abl->mBuffers[c];
+         auto &holder = holders[c];
+         auto &channel = channels[c];
+
+         buffer.mNumberChannels = 1;
+         buffer.mDataByteSize = size;
+
+         buffer.mData = holder.get();
    
-      int c;
-      for (c = 0; c < numchan; c++) {
-         abl->mBuffers[c].mNumberChannels = 1;
-         abl->mBuffers[c].mDataByteSize = sizeof(float) * bufsize;
-         abl->mBuffers[c].mData = malloc(abl->mBuffers[c].mDataByteSize);
-   
-         channels[c] = trackFactory->NewWaveTrack(format);
-         channels[c]->SetRate(desc.mSampleRate);
+         channel = trackFactory->NewWaveTrack( format );
+         channel->SetRate( desc.mSampleRate );
    
          if (numchan == 2) {
             if (c == 0) {
-               channels[c]->SetChannel(Track::LeftChannel);
-               channels[c]->SetLinked(true);
+               channel->SetChannel(Track::LeftChannel);
+               channel->SetLinked(true);
             }
             else if (c == 1) {
-               channels[c]->SetChannel(Track::RightChannel);
+               channel->SetChannel(Track::RightChannel);
             }
          }
       }
@@ -352,14 +367,14 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          err = MovieAudioExtractionFillBuffer(maer,
                                               &numFrames,
-                                              abl,
+                                              abl.get(),
                                               &flags);
          if (err != noErr) {
             wxMessageBox(_("Unable to get fill buffer"));
             break;
          }
    
-         for (c = 0; c < numchan; c++) {
+         for (size_t c = 0; c < numchan; c++) {
             channels[c]->Append((char *) abl->mBuffers[c].mData, floatSample, numFrames);
          }
    
@@ -372,9 +387,9 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          if (numFrames == 0 || flags & kQTMovieAudioExtractionComplete) {
             break;
          }
-      } while (updateResult == eProgressSuccess);
+      } while (updateResult == ProgressResult::Success);
    
-      res = (updateResult == eProgressSuccess && err == noErr);
+      res = (updateResult == ProgressResult::Success && err == noErr);
    
       if (res) {
          for (const auto &channel: channels) {
@@ -383,12 +398,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    
          outTracks.swap(channels);
       }
-   
-      for (c = 0; c < numchan; c++) {
-         free(abl->mBuffers[c].mData);
-      }
-      free(abl);
-   
+
       //
       // Extract any metadata
       //
@@ -399,11 +409,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
 
 // done:
 
-   if (maer) {
-      MovieAudioExtractionEnd(maer);
-   }
-
-   return (res ? eProgressSuccess : eProgressFailed);
+   return (res ? ProgressResult::Success : ProgressResult::Failed);
 }
 
 static const struct
@@ -437,6 +443,12 @@ names[] =
 void QTImportFileHandle::AddMetadata(Tags *tags)
 {
    QTMetaDataRef metaDataRef = NULL;
+   auto cleanup = finally( [&] {
+      // we are done so release our metadata object
+      if ( metaDataRef )
+         QTMetaDataRelease(metaDataRef);
+   } );
+
    OSErr err;
 
    err = QTCopyMovieMetaData(mMovie, &metaDataRef);
@@ -463,7 +475,6 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
          continue;
       }
 
-      QTPropertyValuePtr outValPtr = nil;
       QTPropertyValueType outPropType;
       ::ByteCount outPropValueSize;
       ::ByteCount outPropValueSizeUsed = 0;
@@ -495,7 +506,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       }
 
       // Alloc memory for it
-      outValPtr = malloc(outPropValueSize);
+      ArrayOf<char> outVals{ outPropValueSize };
 
       // Retrieve the data
       err =  QTMetaDataGetItemProperty(metaDataRef,
@@ -503,24 +514,22 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
                                        kPropertyClass_MetaDataItem,
                                        kQTMetaDataItemPropertyID_Value,
                                        outPropValueSize,
-                                       outValPtr,
+                                       outVals.get(),
                                        &outPropValueSizeUsed);
-      if (err != noErr) {
-         free(outValPtr);
+      if (err != noErr)
          continue;
-      }
 
       wxString v = wxT("");
 
       switch (dataType)
       {
          case kQTMetaDataTypeUTF8:
-            v = wxString((char *)outValPtr, wxConvUTF8);
+            v = wxString(outVals.get(), wxConvUTF8);
          break;
          case kQTMetaDataTypeUTF16BE:
          {
             wxMBConvUTF16BE conv;
-            v = wxString((char *)outValPtr, conv);
+            v = wxString(outVals.get(), conv);
          }
          break;
       }
@@ -528,12 +537,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       if (!v.IsEmpty()) {
          tags->SetTag(names[i].name, v);
       }
-
-      free(outValPtr);
    }
-
-   // we are done so release our metadata object
-   QTMetaDataRelease(metaDataRef);
 
    return;
 }

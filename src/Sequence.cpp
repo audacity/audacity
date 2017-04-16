@@ -41,12 +41,16 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
+#include "AudacityException.h"
+
 #include "BlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
 #include "DirManager.h"
 
 #include "blockfile/SimpleBlockFile.h"
 #include "blockfile/SilentBlockFile.h"
+
+#include "InconsistencyException.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 
@@ -68,9 +72,7 @@ Sequence::Sequence(const Sequence &orig, const std::shared_ptr<DirManager> &proj
    , mMinSamples(orig.mMinSamples)
    , mMaxSamples(orig.mMaxSamples)
 {
-   bool bResult = Paste(0, &orig);
-   wxASSERT(bResult); // TO DO: Actually handle this.
-   (void)bResult;
+   Paste(0, &orig);
 }
 
 Sequence::~Sequence()
@@ -127,19 +129,16 @@ bool Sequence::SetSampleFormat(sampleFormat format)
 }
 */
 
-bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
+bool Sequence::ConvertToSampleFormat(sampleFormat format)
+// STRONG-GUARANTEE
 {
-   wxASSERT(pbChanged);
-   *pbChanged = false;
-
-   // Caller should check this no-change case before calling; we ignore it here.
    if (format == mSampleFormat)
-      return true;
+      // no change
+      return false;
 
    if (mBlock.size() == 0)
    {
       mSampleFormat = format;
-      *pbChanged = true;
       return true;
    }
 
@@ -151,25 +150,32 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    mMinSamples = sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2;
    mMaxSamples = mMinSamples * 2;
 
-   BlockArray newBlockArray;
-   // Use the ratio of old to NEW mMaxSamples to make a reasonable guess at allocation.
-   newBlockArray.reserve(1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
+   bool bSuccess = false;
+   auto cleanup = finally( [&] {
+      if (!bSuccess) {
+         // Conversion failed. Revert these member vars.
+         mSampleFormat = oldFormat;
+         mMaxSamples = oldMaxSamples;
+         mMinSamples = oldMinSamples;
+      }
+   } );
 
-   bool bSuccess = true;
+   BlockArray newBlockArray;
+   // Use the ratio of old to NEW mMaxSamples to make a reasonable guess
+   // at allocation.
+   newBlockArray.reserve
+      (1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
+
    {
       SampleBuffer bufferOld(oldMaxSamples, oldFormat);
       SampleBuffer bufferNew(oldMaxSamples, format);
 
-      for (size_t i = 0, nn = mBlock.size(); i < nn && bSuccess; i++)
+      for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
       {
          SeqBlock &oldSeqBlock = mBlock[i];
          const auto &oldBlockFile = oldSeqBlock.f;
-
          const auto len = oldBlockFile->GetLength();
-
-         bSuccess = (oldBlockFile->ReadData(bufferOld.ptr(), oldFormat, 0, len) > 0);
-         if (!bSuccess)
-            break;
+         Read(bufferOld.ptr(), oldFormat, oldSeqBlock, 0, len, true);
 
          CopySamples(bufferOld.ptr(), oldFormat, bufferNew.ptr(), format, len);
 
@@ -185,52 +191,35 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          // Using Blockify will handle the cases where len > the NEW mMaxSamples. Previous code did not.
          const auto blockstart = oldSeqBlock.start;
          const unsigned prevSize = newBlockArray.size();
-         Blockify(newBlockArray, blockstart, bufferNew.ptr(), len);
-         bSuccess = (newBlockArray.size() > prevSize);
-         if (bSuccess)
-            *pbChanged = true;
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+                  newBlockArray, blockstart, bufferNew.ptr(), len);
       }
    }
 
-   if (bSuccess)
-   {
-      // Invalidate all the old, non-aliased block files.
-      // Aliased files will be converted at save, per comment above.
+   // Invalidate all the old, non-aliased block files.
+   // Aliased files will be converted at save, per comment above.
 
-      // Replace with NEW blocks.
-      mBlock.swap(newBlockArray);
-   }
-   else
-   {
-      /* vvvvv We *should do the following, but TrackPanel::OnFormatChange() doesn't actually check the conversion results,
-         it just assumes the conversion was successful.
-         TODO: Uncomment this section when TrackPanel::OnFormatChange() is upgraded to check the results.
+   // Commit the changes to block file array
+   CommitChangesIfConsistent
+      (newBlockArray, mNumSamples, wxT("Sequence::ConvertToSampleFormat()"));
 
-         PRL:  I don't understand why the comment above justifies leaving the sequence in an inconsistent state.
-         If this function must fail, better to leave it as a no-op on this sequence.  I am uncommenting the
-         lines below, and adding one to revert mMinSamples too.
-         */
+   // Commit the other changes
+   bSuccess = true;
 
-      // Conversion failed. Revert these member vars.
-      mSampleFormat = oldFormat;
-      mMaxSamples = oldMaxSamples;
-      mMinSamples = oldMinSamples;
-
-      *pbChanged = false;  // Revert overall change flag, in case we had some partial success in the loop.
-   }
-
-   bSuccess &= ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
-
-   return bSuccess;
+   return true;
 }
 
-bool Sequence::GetMinMax(sampleCount start, sampleCount len,
-                         float * outMin, float * outMax) const
+std::pair<float, float> Sequence::GetMinMax(
+   sampleCount start, sampleCount len, bool mayThrow) const
 {
    if (len == 0 || mBlock.size() == 0) {
-      *outMin = float(0.0);   // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
-      *outMax = float(0.0);   // -FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
-      return true;
+      return {
+         0.f,
+         // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
+
+         0.f
+         // -FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
+      };
    }
 
    float min = FLT_MAX;
@@ -244,13 +233,12 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    // already in memory.
 
    for (unsigned b = block0 + 1; b < block1; ++b) {
-      float blockMin, blockMax, blockRMS;
-      mBlock[b].f->GetMinMax(&blockMin, &blockMax, &blockRMS);
+      auto results = mBlock[b].f->GetMinMaxRMS(mayThrow);
 
-      if (blockMin < min)
-         min = blockMin;
-      if (blockMax > max)
-         max = blockMax;
+      if (results.min < min)
+         min = results.min;
+      if (results.max > max)
+         max = results.max;
    }
 
    // Now we take the first and last blocks into account, noting that the
@@ -258,12 +246,11 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
    // of either of these blocks is within min...max, then we can ignore them.
    // If not, we need read some samples and summaries from disk.
    {
-      float block0Min, block0Max, block0RMS;
       const SeqBlock &theBlock = mBlock[block0];
       const auto &theFile = theBlock.f;
-      theFile->GetMinMax(&block0Min, &block0Max, &block0RMS);
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
-      if (block0Min < min || block0Max > max) {
+      if (results.min < min || results.max > max) {
          // start lies within theBlock:
          auto s0 = ( start - theBlock.start ).as_size_t();
          const auto maxl0 = (
@@ -273,54 +260,43 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
          wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
          const auto l0 = limitSampleBufferSize ( maxl0, len );
 
-         float partialMin, partialMax, partialRMS;
-         theFile->GetMinMax(s0, l0,
-            &partialMin, &partialMax, &partialRMS);
-         if (partialMin < min)
-            min = partialMin;
-         if (partialMax > max)
-            max = partialMax;
+         results = theFile->GetMinMaxRMS(s0, l0, mayThrow);
+         if (results.min < min)
+            min = results.min;
+         if (results.max > max)
+            max = results.max;
       }
    }
 
    if (block1 > block0)
    {
-      float block1Min, block1Max, block1RMS;
       const SeqBlock &theBlock = mBlock[block1];
       const auto &theFile = theBlock.f;
-      theFile->GetMinMax(&block1Min, &block1Max, &block1RMS);
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
-      if (block1Min < min || block1Max > max) {
+      if (results.min < min || results.max > max) {
 
          // start + len - 1 lies in theBlock:
          const auto l0 = ( start + len - theBlock.start ).as_size_t();
          wxASSERT(l0 <= mMaxSamples); // Vaughan, 2011-10-19
 
-         float partialMin, partialMax, partialRMS;
-         theFile->GetMinMax(0, l0,
-            &partialMin, &partialMax, &partialRMS);
-         if (partialMin < min)
-            min = partialMin;
-         if (partialMax > max)
-            max = partialMax;
+         results = theFile->GetMinMaxRMS(0, l0, mayThrow);
+         if (results.min < min)
+            min = results.min;
+         if (results.max > max)
+            max = results.max;
       }
    }
 
-   *outMin = min;
-   *outMax = max;
-
-   return true;
+   return { min, max };
 }
 
-bool Sequence::GetRMS(sampleCount start, sampleCount len,
-                         float * outRMS) const
+float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 {
    // len is the number of samples that we want the rms of.
    // it may be longer than a block, and the code is carefully set up to handle that.
-   if (len == 0 || mBlock.size() == 0) {
-      *outRMS = float(0.0);
-      return true;
-   }
+   if (len == 0 || mBlock.size() == 0)
+      return 0.f;
 
    double sumsq = 0.0;
    sampleCount length = 0; // this is the cumulative length of the bits we have the ms of so far, and should end up == len
@@ -332,12 +308,12 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // this is very fast because we have the rms of every entire block
    // already in memory.
    for (unsigned b = block0 + 1; b < block1; b++) {
-      float blockMin, blockMax, blockRMS;
       const SeqBlock &theBlock = mBlock[b];
       const auto &theFile = theBlock.f;
-      theFile->GetMinMax(&blockMin, &blockMax, &blockRMS);
+      auto results = theFile->GetMinMaxRMS(mayThrow);
 
       const auto fileLen = theFile->GetLength();
+      const auto blockRMS = results.RMS;
       sumsq += blockRMS * blockRMS * fileLen;
       length += fileLen;
    }
@@ -356,9 +332,8 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
       const auto l0 = limitSampleBufferSize( maxl0, len );
 
-      float partialMin, partialMax, partialRMS;
-      theFile->GetMinMax(s0, l0, &partialMin, &partialMax, &partialRMS);
-
+      auto results = theFile->GetMinMaxRMS(s0, l0, mayThrow);
+      const auto partialRMS = results.RMS;
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
    }
@@ -371,8 +346,8 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
       const auto l0 = ( start + len - theBlock.start ).as_size_t();
       wxASSERT(l0 <= mMaxSamples); // PRL: I think Vaughan missed this
 
-      float partialMin, partialMax, partialRMS;
-      theFile->GetMinMax(0, l0, &partialMin, &partialMax, &partialRMS);
+      auto results = theFile->GetMinMaxRMS(0, l0, mayThrow);
+      const auto partialRMS = results.RMS;
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
    }
@@ -380,17 +355,15 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // PRL: catch bugs like 1320:
    wxASSERT(length == len);
 
-   *outRMS = sqrt(sumsq / length.as_double() );
-
-   return true;
+   return sqrt(sumsq / length.as_double() );
 }
 
-bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &dest) const
+std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 {
-   dest.reset();
-
-   if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
-      return false;
+   auto dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
+   if (s0 >= s1 || s0 >= mNumSamples || s1 < 0) {
+      return dest;
+   }
 
    int numBlocks = mBlock.size();
 
@@ -402,7 +375,6 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
    wxUnusedVar(numBlocks);
    wxASSERT(b0 <= b1);
 
-   dest = std::make_unique<Sequence>(mDirManager, mSampleFormat);
    dest->mBlock.reserve(b1 - b0 + 1);
 
    SampleBuffer buffer(mMaxSamples, mSampleFormat);
@@ -418,7 +390,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
       blocklen =
          ( std::min(s1, block0.start + file->GetLength()) - s0 ).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
-      Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen);
+      Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen, true);
 
       dest->Append(buffer.ptr(), mSampleFormat, blocklen);
    }
@@ -427,7 +399,8 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
 
    // If there are blocks in the middle, copy the blockfiles directly
    for (int bb = b0 + 1; bb < b1; ++bb)
-      dest->AppendBlock(mBlock[bb]); // Increase ref count or duplicate file
+      AppendBlock(*dest->mDirManager, dest->mBlock, dest->mNumSamples, mBlock[bb]);
+      // Increase ref count or duplicate file
 
    // Do the last block
    if (b1 > b0) {
@@ -437,15 +410,18 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, std::unique_ptr<Sequence> &d
       blocklen = (s1 - block.start).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
-         Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen);
+         Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen, true);
          dest->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
       else
          // Special case, copy exactly
-         dest->AppendBlock(block); // Increase ref count or duplicate file
+         AppendBlock(*dest->mDirManager, dest->mBlock, dest->mNumSamples, block);
+         // Increase ref count or duplicate file
    }
 
-   return ConsistencyCheck(wxT("Sequence::Copy()"));
+   dest->ConsistencyCheck(wxT("Sequence::Copy()"));
+
+   return dest;
 }
 
 namespace {
@@ -455,7 +431,8 @@ namespace {
    }
 }
 
-bool Sequence::Paste(sampleCount s, const Sequence *src)
+void Sequence::Paste(sampleCount s, const Sequence *src)
+// STRONG-GUARANTEE
 {
    if ((s < 0) || (s > mNumSamples))
    {
@@ -464,8 +441,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
          // PRL:  Why bother with Internat when the above is just wxT?
          Internat::ToString(s.as_double(), 0).c_str(),
          Internat::ToString(mNumSamples.as_double(), 0).c_str());
-      wxASSERT(false);
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
    }
 
    // Quick check to make sure that it doesn't overflow
@@ -476,8 +452,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
          // PRL:  Why bother with Internat when the above is just wxT?
          Internat::ToString(mNumSamples.as_double(), 0).c_str(),
          Internat::ToString(src->mNumSamples.as_double(), 0).c_str());
-      wxASSERT(false);
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
    }
 
    if (src->mSampleFormat != mSampleFormat)
@@ -485,8 +460,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       wxLogError(
          wxT("Sequence::Paste: Sample format to be pasted, %s, does not match destination format, %s."),
          GetSampleFormatStr(src->mSampleFormat), GetSampleFormatStr(src->mSampleFormat));
-      wxASSERT(false);
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
    }
 
    const BlockArray &srcBlock = src->mBlock;
@@ -495,7 +469,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
    if (addedLen == 0 || srcNumBlocks == 0)
-      return true;
+      return;
 
    const size_t numBlocks = mBlock.size();
 
@@ -505,10 +479,18 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       // onto the end because the current last block is longer than the
       // minimum size
 
+      // Build and swap a copy so there is a strong exception safety guarantee
+      BlockArray newBlock{ mBlock };
+      sampleCount samples = mNumSamples;
       for (unsigned int i = 0; i < srcNumBlocks; i++)
-         AppendBlock(srcBlock[i]); // Increase ref count or duplicate file
+         // AppendBlock may throw for limited disk space, if pasting from
+         // one project into another.
+         AppendBlock(*mDirManager, newBlock, samples, srcBlock[i]);
+         // Increase ref count or duplicate file
 
-      return ConsistencyCheck(wxT("Paste branch one"));
+      CommitChangesIfConsistent
+         (newBlock, samples, wxT("Paste branch one"));
+      return;
    }
 
    const int b = (s == mNumSamples) ? mBlock.size() - 1 : FindBlock(s);
@@ -531,18 +513,22 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       auto sAddedLen = addedLen.as_size_t();
       // s lies within block:
       auto splitPoint = ( s - block.start ).as_size_t();
-      Read(buffer.ptr(), mSampleFormat, block, 0, splitPoint);
+      Read(buffer.ptr(), mSampleFormat, block, 0, splitPoint, true);
       src->Get(0, buffer.ptr() + splitPoint*sampleSize,
-               mSampleFormat, 0, sAddedLen);
+               mSampleFormat, 0, sAddedLen, true);
       Read(buffer.ptr() + (splitPoint + sAddedLen) * sampleSize,
            mSampleFormat, block,
-           splitPoint, length - splitPoint);
+           splitPoint, length - splitPoint, true);
 
       auto file =
          mDirManager->NewSimpleBlockFile(
             // largerBlockLen is not more than mMaxSamples...
             buffer.ptr(), largerBlockLen.as_size_t(), mSampleFormat);
 
+      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // if we modify only one block in place.
+
+      // use NOFAIL-GUARANTEE in remaining steps
       block.f = file;
 
       for (unsigned int i = b + 1; i < numBlocks; i++)
@@ -550,7 +536,10 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       mNumSamples += addedLen;
 
-      return ConsistencyCheck(wxT("Paste branch two"));
+      // This consistency check won't throw, it asserts.
+      // Proof that we kept consistency is not hard.
+      ConsistencyCheck(wxT("Paste branch two"), false);
+      return;
    }
 
    // Case three: if we are inserting four or fewer blocks,
@@ -574,15 +563,16 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       const auto sum = splitLen + sAddedLen;
 
       SampleBuffer sumBuffer(sum, mSampleFormat);
-      Read(sumBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
+      Read(sumBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint, true);
       src->Get(0, sumBuffer.ptr() + splitPoint * sampleSize,
                mSampleFormat,
-               0, sAddedLen);
+               0, sAddedLen, true);
       Read(sumBuffer.ptr() + (splitPoint + sAddedLen) * sampleSize, mSampleFormat,
            splitBlock, splitPoint,
-           splitLen - splitPoint);
+           splitLen - splitPoint, true);
 
-      Blockify(newBlock, splitBlock.start, sumBuffer.ptr(), sum);
+      Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+               newBlock, splitBlock.start, sumBuffer.ptr(), sum);
    } else {
 
       // The final case is that we're inserting at least five blocks.
@@ -604,30 +594,28 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       SampleBuffer sampleBuffer(std::max(leftLen, rightLen), mSampleFormat);
 
-      Read(sampleBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint);
+      Read(sampleBuffer.ptr(), mSampleFormat, splitBlock, 0, splitPoint, true);
       src->Get(0, sampleBuffer.ptr() + splitPoint*sampleSize,
-         mSampleFormat, 0, srcFirstTwoLen);
+         mSampleFormat, 0, srcFirstTwoLen, true);
 
-      Blockify(newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
+      Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+               newBlock, splitBlock.start, sampleBuffer.ptr(), leftLen);
 
       for (i = 2; i < srcNumBlocks - 2; i++) {
          const SeqBlock &block = srcBlock[i];
          auto file = mDirManager->CopyBlockFile(block.f);
-         if (!file) {
-            wxASSERT(false); // TODO: Handle this better, alert the user of failure.
-            return false;
-         }
-
+         // We can assume file is not null
          newBlock.push_back(SeqBlock(file, block.start + s));
       }
 
       auto lastStart = penultimate.start;
       src->Get(srcNumBlocks - 2, sampleBuffer.ptr(), mSampleFormat,
-               lastStart, srcLastTwoLen);
+               lastStart, srcLastTwoLen, true);
       Read(sampleBuffer.ptr() + srcLastTwoLen * sampleSize, mSampleFormat,
-           splitBlock, splitPoint, rightSplit);
+           splitBlock, splitPoint, rightSplit, true);
 
-      Blockify(newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
+      Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+               newBlock, s + lastStart, sampleBuffer.ptr(), rightLen);
    }
 
    // Copy remaining blocks to NEW block array and
@@ -635,26 +623,25 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    for (i = b + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock[i].Plus(addedLen));
 
-   mBlock.swap(newBlock);
-
-   mNumSamples += addedLen;
-
-   return ConsistencyCheck(wxT("Paste branch three"));
+   CommitChangesIfConsistent
+      (newBlock, mNumSamples + addedLen, wxT("Paste branch three"));
 }
 
-bool Sequence::SetSilence(sampleCount s0, sampleCount len)
+void Sequence::SetSilence(sampleCount s0, sampleCount len)
+// STRONG-GUARANTEE
 {
-   return Set(NULL, mSampleFormat, s0, len);
+   SetSamples(NULL, mSampleFormat, s0, len);
 }
 
-bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
+void Sequence::InsertSilence(sampleCount s0, sampleCount len)
+// STRONG-GUARANTEE
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + (len.as_double())))
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    if (len <= 0)
-      return true;
+      return;
 
    // Create a NEW track containing as much silence as we
    // need to insert, and then call Paste to do the insertion.
@@ -690,19 +677,18 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    sTrack.mNumSamples = pos;
 
-   bool bResult = Paste(s0, &sTrack);
-   wxASSERT(bResult);
-
-   return bResult && ConsistencyCheck(wxT("InsertSilence"));
+   // use STRONG-GUARANTEE
+   Paste(s0, &sTrack);
 }
 
-bool Sequence::AppendAlias(const wxString &fullPath,
+void Sequence::AppendAlias(const wxString &fullPath,
                            sampleCount start,
                            size_t len, int channel, bool useOD)
+// STRONG-GUARANTEE
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)len)))
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    SeqBlock newBlock(
       useOD?
@@ -712,16 +698,15 @@ bool Sequence::AppendAlias(const wxString &fullPath,
    );
    mBlock.push_back(newBlock);
    mNumSamples += len;
-
-   return true;
 }
 
-bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
+void Sequence::AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
+// STRONG-GUARANTEE
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)len)))
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    SeqBlock newBlock(
       mDirManager->NewODDecodeBlockFile(fName, start, len, channel, decodeType),
@@ -729,36 +714,27 @@ bool Sequence::AppendCoded(const wxString &fName, sampleCount start,
    );
    mBlock.push_back(newBlock);
    mNumSamples += len;
-
-   return true;
 }
 
-bool Sequence::AppendBlock(const SeqBlock &b)
+void Sequence::AppendBlock
+   (DirManager &mDirManager,
+    BlockArray &mBlock, sampleCount &mNumSamples, const SeqBlock &b)
 {
    // Quick check to make sure that it doesn't overflow
    if (Overflows((mNumSamples.as_double()) + ((double)b.f->GetLength())))
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    SeqBlock newBlock(
-      mDirManager->CopyBlockFile(b.f), // Bump ref count if not locked, else copy
+      mDirManager.CopyBlockFile(b.f), // Bump ref count if not locked, else copy
       mNumSamples
    );
-   if (!newBlock.f) {
-      /// \todo Error Could not paste!  (Out of disk space?)
-      wxASSERT(false); // TODO: Handle this better, alert the user of failure.
-      return false;
-   }
-
-   //Don't need to Ref because it was done by CopyBlockFile, above...
-   //mDirManager->Ref(newBlock.f);
+   // We can assume newBlock.f is not null
 
    mBlock.push_back(newBlock);
    mNumSamples += newBlock.f->GetLength();
 
    // Don't do a consistency check here because this
    // function gets called in an inner loop.
-
-   return true;
 }
 
 ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
@@ -1024,7 +1000,8 @@ XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
 }
 
 // Throws exceptions rather than reporting errors.
-void Sequence::WriteXML(XMLWriter &xmlFile)
+void Sequence::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    unsigned int b;
 
@@ -1035,7 +1012,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
-      SeqBlock &bb = mBlock[b];
+      const SeqBlock &bb = mBlock[b];
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
       // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,
@@ -1112,67 +1089,51 @@ int Sequence::FindBlock(sampleCount pos) const
    return rval;
 }
 
+//static
 bool Sequence::Read(samplePtr buffer, sampleFormat format,
-                    const SeqBlock &b, size_t blockRelativeStart, size_t len)
-                    const
+                    const SeqBlock &b, size_t blockRelativeStart, size_t len,
+                    bool mayThrow)
 {
    const auto &f = b.f;
 
    wxASSERT(blockRelativeStart + len <= f->GetLength());
 
-   auto result = f->ReadData(buffer, format, blockRelativeStart, len);
+   // Either throws, or of !mayThrow, tells how many were really read
+   auto result = f->ReadData(buffer, format, blockRelativeStart, len, mayThrow);
 
    if (result != len)
    {
       wxLogWarning(wxT("Expected to read %ld samples, got %d samples."),
                    len, result);
-      ClearSamples(buffer, format, result, len-result);
+      return false;
    }
 
    return true;
 }
 
-bool Sequence::CopyWrite(SampleBuffer &scratch,
-                         samplePtr buffer, SeqBlock &b,
-                         size_t blockRelativeStart, size_t len)
-{
-   // We don't ever write to an existing block; to support Undo,
-   // we copy the old block entirely into memory, dereference it,
-   // make the change, and then write the NEW block to disk.
-
-   const auto length = b.f->GetLength();
-   wxASSERT(length <= mMaxSamples);
-   wxASSERT(blockRelativeStart + len <= length);
-
-   auto sampleSize = SAMPLE_SIZE(mSampleFormat);
-
-   Read(scratch.ptr(), mSampleFormat, b, 0, length);
-   memcpy(scratch.ptr() +
-          blockRelativeStart * sampleSize, buffer, len*sampleSize);
-
-   b.f = mDirManager->NewSimpleBlockFile(scratch.ptr(), length, mSampleFormat);
-
-   return true;
-}
-
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
-   sampleCount start, size_t len) const
+   sampleCount start, size_t len, bool mayThrow) const
 {
    if (start == mNumSamples) {
       return len == 0;
    }
 
    if (start < 0 || start > mNumSamples ||
-      start + len > mNumSamples)
+       start + len > mNumSamples) {
+      if (mayThrow)
+         THROW_INCONSISTENCY_EXCEPTION;
+      ClearSamples( buffer, floatSample, 0, len );
       return false;
+   }
    int b = FindBlock(start);
 
-   return Get(b, buffer, format, start, len);
+   return Get(b, buffer, format, start, len, mayThrow);
 }
 
 bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
-   sampleCount start, size_t len) const
+   sampleCount start, size_t len, bool mayThrow) const
 {
+   bool result = true;
    while (len) {
       const SeqBlock &block = mBlock[b];
       // start is in block
@@ -1180,24 +1141,25 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
       // bstart is not more than block length
       const auto blen = std::min(len, block.f->GetLength() - bstart);
 
-      Read(buffer, format, block, bstart, blen);
+      if (! Read(buffer, format, block, bstart, blen, mayThrow) )
+         result = false;
 
       len -= blen;
       buffer += (blen * SAMPLE_SIZE(format));
       b++;
       start += blen;
    }
-
-   return true;
+   return result;
 }
 
 // Pass NULL to set silence
-bool Sequence::Set(samplePtr buffer, sampleFormat format,
+void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
+// STRONG-GUARANTEE
 {
    if (start < 0 || start >= mNumSamples ||
-       start+len > mNumSamples)
-      return false;
+       start + len > mNumSamples)
+      THROW_INCONSISTENCY_EXCEPTION;
 
    SampleBuffer scratch(mMaxSamples, mSampleFormat);
 
@@ -1208,46 +1170,67 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
    }
 
    int b = FindBlock(start);
+   BlockArray newBlock;
+   std::copy( mBlock.begin(), mBlock.begin() + b, std::back_inserter(newBlock) );
 
    while (len != 0) {
-      SeqBlock &block = mBlock[b];
+      newBlock.push_back( mBlock[b] );
+      SeqBlock &block = newBlock.back();
       // start is within block
       const auto bstart = ( start - block.start ).as_size_t();
       const auto fileLength = block.f->GetLength();
       const auto blen = limitSampleBufferSize( fileLength - bstart, len );
 
-      if (buffer) {
-         if (format == mSampleFormat)
-            CopyWrite(scratch, buffer, block, bstart, blen);
-         else {
-            // To do: remove the extra movement.  Can we copy-samples within CopyWrite?
-            CopySamples(buffer, format, temp.ptr(), mSampleFormat, blen);
-            CopyWrite(scratch, temp.ptr(), block, bstart, blen);
+      samplePtr useBuffer = buffer;
+      if (buffer && format != mSampleFormat)
+      {
+         // To do: remove the extra movement.
+         CopySamples(buffer, format, temp.ptr(), mSampleFormat, blen);
+         useBuffer = temp.ptr();
+      }
+
+      // We don't ever write to an existing block; to support Undo,
+      // we copy the old block entirely into memory, dereference it,
+      // make the change, and then write the NEW block to disk.
+
+      if (!(fileLength <= mMaxSamples &&
+            bstart + blen <= fileLength))
+         THROW_INCONSISTENCY_EXCEPTION;
+
+      if ( bstart > 0 || blen < fileLength ) {
+         Read(scratch.ptr(), mSampleFormat, block, 0, fileLength, true);
+
+         if (useBuffer) {
+            auto sampleSize = SAMPLE_SIZE(mSampleFormat);
+            memcpy(scratch.ptr() +
+                   bstart * sampleSize, useBuffer, blen * sampleSize);
          }
-         buffer += (blen * SAMPLE_SIZE(format));
+         else
+            ClearSamples(scratch.ptr(), mSampleFormat, bstart, blen);
+
+         block.f = mDirManager->NewSimpleBlockFile(
+            scratch.ptr(), fileLength, mSampleFormat);
       }
       else {
-         // If it's a full block of silence
-         if (start == block.start &&
-             blen == fileLength) {
-
-            block.f = make_blockfile<SilentBlockFile>(blen);
-         }
-         else {
-            // Odd partial blocks of silence at start or end.
-            temp.Allocate(blen, format);
-            ClearSamples(temp.ptr(), format, 0, blen);
-            // Otherwise write silence just to the portion of the block
-            CopyWrite(scratch, temp.ptr(), block, bstart, blen);
-         }
+         // Avoid reading the disk when the replacement is total
+         if (useBuffer)
+            block.f = mDirManager->NewSimpleBlockFile(
+               useBuffer, fileLength, mSampleFormat);
+         else
+            block.f = make_blockfile<SilentBlockFile>(fileLength);
       }
+
+      if( buffer )
+         buffer += (blen * SAMPLE_SIZE(format));
 
       len -= blen;
       start += blen;
       b++;
    }
 
-   return ConsistencyCheck(wxT("Set"));
+   std::copy( mBlock.begin() + b, mBlock.end(), std::back_inserter(newBlock) );
+
+   CommitChangesIfConsistent( newBlock, mNumSamples, wxT("SetSamples") );
 }
 
 namespace {
@@ -1294,7 +1277,7 @@ struct MinMaxSumsq
 }
 
 bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
-                              size_t len, const sampleCount *where)
+                              size_t len, const sampleCount *where) const
 {
    wxASSERT(len > 0);
    const auto s0 = std::max(sampleCount(0), where[0]);
@@ -1307,7 +1290,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
    // ... unless the mNumSamples ceiling applies, and then there are other defenses
    const auto s1 =
       std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
-   float *temp = new float[mMaxSamples];
+   Floats temp{ mMaxSamples };
 
    decltype(len) pixel = 0;
 
@@ -1329,7 +1312,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
 
       // Find the range of sample values for this block that
       // are in the display.
-      SeqBlock &seqBlock = mBlock[b];
+      const SeqBlock &seqBlock = mBlock[b];
       const auto start = seqBlock.start;
       nextSrcX = std::min(s1, start + seqBlock.f->GetLength());
 
@@ -1399,13 +1382,16 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
       default:
       case 1:
          // Read samples
-         Read((samplePtr)temp, floatSample, seqBlock, startPosition, num);
+         // no-throw for display operations!
+         Read((samplePtr)temp.get(), floatSample, seqBlock, startPosition, num, false);
          break;
       case 256:
          // Read triples
          //check to see if summary data has been computed
          if (seqBlock.f->IsSummaryAvailable())
-            seqBlock.f->Read256(temp, startPosition, num);
+            // Ignore the return value.
+            // This function fills with zeroes if read fails
+            seqBlock.f->Read256(temp.get(), startPosition, num);
          else
             //otherwise, mark the display as not yet computed
             blockStatus = -1 - b;
@@ -1414,7 +1400,9 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          // Read triples
          //check to see if summary data has been computed
          if (seqBlock.f->IsSummaryAvailable())
-            seqBlock.f->Read64K(temp, startPosition, num);
+            // Ignore the return value.
+            // This function fills with zeroes if read fails
+            seqBlock.f->Read64K(temp.get(), startPosition, num);
          else
             //otherwise, mark the display as not yet computed
             blockStatus = -1 - b;
@@ -1430,7 +1418,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          auto midPosition = ((whereNow - start) / divisor).as_size_t();
          int diff(midPosition - filePosition);
          if (diff > 0) {
-            MinMaxSumsq values(temp, diff, divisor);
+            MinMaxSumsq values(temp.get(), diff, divisor);
             const int lastPixel = pixel - 1;
             float &lastMin = min[lastPixel];
             lastMin = std::min(lastMin, values.min);
@@ -1470,7 +1458,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          rmsDenom = (positionX - filePosition);
          wxASSERT(rmsDenom > 0);
          const float *const pv =
-            temp + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
+            temp.get() + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
          MinMaxSumsq values(pv, rmsDenom, divisor);
 
          // Assign results
@@ -1492,8 +1480,6 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
 
    wxASSERT(pixel == len);
 
-   delete[] temp;
-
    return true;
 }
 
@@ -1512,25 +1498,34 @@ size_t Sequence::GetIdealAppendLen() const
       return max - lastBlockLen;
 }
 
-bool Sequence::Append(samplePtr buffer, sampleFormat format,
+void Sequence::Append(samplePtr buffer, sampleFormat format,
                       size_t len, XMLWriter* blockFileLog /*=NULL*/)
+// STRONG-GUARANTEE
 {
+   if (len == 0)
+      return;
+
    // Quick check to make sure that it doesn't overflow
    if (Overflows(mNumSamples.as_double() + ((double)len)))
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   BlockArray newBlock;
+   sampleCount newNumSamples = mNumSamples;
 
    // If the last block is not full, we need to add samples to it
    int numBlocks = mBlock.size();
    SeqBlock *pLastBlock;
    decltype(pLastBlock->f->GetLength()) length;
    SampleBuffer buffer2(mMaxSamples, mSampleFormat);
+   bool replaceLast = false;
    if (numBlocks > 0 &&
        (length =
         (pLastBlock = &mBlock.back())->f->GetLength()) < mMinSamples) {
-      SeqBlock &lastBlock = *pLastBlock;
+      // Enlarge a sub-minimum block at the end
+      const SeqBlock &lastBlock = *pLastBlock;
       const auto addLen = std::min(mMaxSamples - length, len);
 
-      Read(buffer2.ptr(), mSampleFormat, lastBlock, 0, length);
+      Read(buffer2.ptr(), mSampleFormat, lastBlock, 0, length, true);
 
       CopySamples(buffer,
                   format,
@@ -1538,49 +1533,57 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
                   mSampleFormat,
                   addLen);
 
-      const int newLastBlockLen = length + addLen;
+      const auto newLastBlockLen = length + addLen;
 
       SeqBlock newLastBlock(
-         mDirManager->NewSimpleBlockFile(buffer2.ptr(), newLastBlockLen, mSampleFormat,
-            blockFileLog != NULL),
+         mDirManager->NewSimpleBlockFile(
+            buffer2.ptr(), newLastBlockLen, mSampleFormat,
+            blockFileLog != NULL
+         ),
          lastBlock.start
       );
-      // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
+
       if (blockFileLog)
+         // shouldn't throw, because XMLWriter is not XMLFileWriter
          static_cast< SimpleBlockFile * >( &*newLastBlock.f )
             ->SaveXML( *blockFileLog );
 
-      lastBlock = newLastBlock;
+      newBlock.push_back( newLastBlock );
 
       len -= addLen;
-      mNumSamples += addLen;
+      newNumSamples += addLen;
       buffer += addLen * SAMPLE_SIZE(format);
+
+      replaceLast = true;
    }
    // Append the rest as NEW blocks
    while (len) {
       const auto idealSamples = GetIdealBlockSize();
-      const auto l = std::min(idealSamples, len);
+      const auto addedLen = std::min(idealSamples, len);
       BlockFilePtr pFile;
       if (format == mSampleFormat) {
-         pFile = mDirManager->NewSimpleBlockFile(buffer, l, mSampleFormat,
-                                                blockFileLog != NULL);
+         pFile = mDirManager->NewSimpleBlockFile(
+            buffer, addedLen, mSampleFormat, blockFileLog != NULL);
       }
       else {
-         CopySamples(buffer, format, buffer2.ptr(), mSampleFormat, l);
-         pFile = mDirManager->NewSimpleBlockFile(buffer2.ptr(), l, mSampleFormat,
-                                                blockFileLog != NULL);
+         CopySamples(buffer, format, buffer2.ptr(), mSampleFormat, addedLen);
+         pFile = mDirManager->NewSimpleBlockFile(
+            buffer2.ptr(), addedLen, mSampleFormat, blockFileLog != NULL);
       }
 
-      // FIXME: TRAP_ERR This could throw an exception that should(?) be converted to return false.
       if (blockFileLog)
+         // shouldn't throw, because XMLWriter is not XMLFileWriter
          static_cast< SimpleBlockFile * >( &*pFile )->SaveXML( *blockFileLog );
 
-      mBlock.push_back(SeqBlock(pFile, mNumSamples));
+      newBlock.push_back(SeqBlock(pFile, mNumSamples));
 
-      buffer += l * SAMPLE_SIZE(format);
-      mNumSamples += l;
-      len -= l;
+      buffer += addedLen * SAMPLE_SIZE(format);
+      newNumSamples += addedLen;
+      len -= addedLen;
    }
+
+   AppendBlocksIfConsistent(newBlock, replaceLast,
+                            newNumSamples, wxT("Append"));
 
 // JKC: During generate we use Append again and again.
 // If generating a long sequence this test would give O(n^2)
@@ -1588,11 +1591,11 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
 #ifdef VERY_SLOW_CHECKING
    ConsistencyCheck(wxT("Append"));
 #endif
-
-   return true;
 }
 
-void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
+void Sequence::Blockify
+   (DirManager &mDirManager, size_t mMaxSamples, sampleFormat mSampleFormat,
+    BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
 {
    if (len <= 0)
       return;
@@ -1607,18 +1610,20 @@ void Sequence::Blockify(BlockArray &list, sampleCount start, samplePtr buffer, s
       int newLen = ((i + 1) * len / num) - offset;
       samplePtr bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
 
-      b.f = mDirManager->NewSimpleBlockFile(bufStart, newLen, mSampleFormat);
+      b.f = mDirManager.NewSimpleBlockFile(bufStart, newLen, mSampleFormat);
 
       list.push_back(b);
    }
 }
 
-bool Sequence::Delete(sampleCount start, sampleCount len)
+void Sequence::Delete(sampleCount start, sampleCount len)
+// STRONG-GUARANTEE
 {
    if (len == 0)
-      return true;
+      return;
+
    if (len < 0 || start < 0 || start >= mNumSamples)
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
    //On-demand threads iterate over the mBlocks and the GUI thread deletes them, so for now put a mutex here over
@@ -1632,9 +1637,6 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    auto sampleSize = SAMPLE_SIZE(mSampleFormat);
 
-   // Special case: if the samples to DELETE are all within a single
-   // block and the resulting length is not too small, perform the
-   // deletion within this block:
    SeqBlock *pBlock;
    decltype(pBlock->f->GetLength()) length;
 
@@ -1643,7 +1645,11 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    // The maximum size that will ever be needed
    const auto scratchSize = mMaxSamples + mMinSamples;
 
-   if (b0 == b1 && (length = (pBlock = &mBlock[b0])->f->GetLength()) - len >= mMinSamples) {
+   // Special case: if the samples to DELETE are all within a single
+   // block and the resulting length is not too small, perform the
+   // deletion within this block:
+   if (b0 == b1 &&
+       (length = (pBlock = &mBlock[b0])->f->GetLength()) - len >= mMinSamples) {
       SeqBlock &b = *pBlock;
       // start is within block
       auto pos = ( start - b.start ).as_size_t();
@@ -1654,24 +1660,32 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
       scratch.Allocate(scratchSize, mSampleFormat);
 
-      Read(scratch.ptr(), mSampleFormat, b, 0, pos);
+      Read(scratch.ptr(), mSampleFormat, b, 0, pos, true);
       Read(scratch.ptr() + (pos * sampleSize), mSampleFormat,
            b,
            // ... and therefore pos + len
            // is not more than the length of the block
-           ( pos + len ).as_size_t(), newLen - pos);
+           ( pos + len ).as_size_t(), newLen - pos, true);
 
-      b = SeqBlock(
-         mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat),
-         b.start
-      );
+      auto newFile =
+          mDirManager->NewSimpleBlockFile(scratch.ptr(), newLen, mSampleFormat);
+
+      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // if we modify only one block in place.
+
+      // use NOFAIL-GUARANTEE in remaining steps
+
+      b.f = newFile;
 
       for (unsigned int j = b0 + 1; j < numBlocks; j++)
          mBlock[j].start -= len;
 
       mNumSamples -= len;
 
-      return ConsistencyCheck(wxT("Delete - branch one"));
+      // This consistency check won't throw, it asserts.
+      // Proof that we kept consistency is not hard.
+      ConsistencyCheck(wxT("Delete - branch one"), false);
+      return;
    }
 
    // Create a NEW array of blocks
@@ -1695,7 +1709,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       if (preBufferLen >= mMinSamples || b0 == 0) {
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
-         Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen);
+         Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen, true);
          auto pFile =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), preBufferLen, mSampleFormat);
 
@@ -1708,12 +1722,13 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
 
-         Read(scratch.ptr(), mSampleFormat, prepreBlock, 0, prepreLen);
+         Read(scratch.ptr(), mSampleFormat, prepreBlock, 0, prepreLen, true);
          Read(scratch.ptr() + prepreLen*sampleSize, mSampleFormat,
-              preBlock, 0, preBufferLen);
+              preBlock, 0, preBufferLen, true);
 
          newBlock.erase(newBlock.end() - 1);
-         Blockify(newBlock, prepreBlock.start, scratch.ptr(), sum);
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+                  newBlock, prepreBlock.start, scratch.ptr(), sum);
       }
    }
    else {
@@ -1738,7 +1753,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
             scratch.Allocate(postBufferLen, mSampleFormat);
          // start + len - 1 lies within postBlock
          auto pos = (start + len - postBlock.start).as_size_t();
-         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
+         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen, true);
          auto file =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), postBufferLen, mSampleFormat);
 
@@ -1753,11 +1768,12 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
             scratch.Allocate(sum, mSampleFormat);
          // start + len - 1 lies within postBlock
          auto pos = (start + len - postBlock.start).as_size_t();
-         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen);
+         Read(scratch.ptr(), mSampleFormat, postBlock, pos, postBufferLen, true);
          Read(scratch.ptr() + (postBufferLen * sampleSize), mSampleFormat,
-              postpostBlock, 0, postpostLen);
+              postpostBlock, 0, postpostLen, true);
 
-         Blockify(newBlock, start, scratch.ptr(), sum);
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+                  newBlock, start, scratch.ptr(), sum);
          b1++;
       }
    }
@@ -1770,50 +1786,119 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    for (i = b1 + 1; i < numBlocks; i++)
       newBlock.push_back(mBlock[i].Plus(-len));
 
-   // Substitute our NEW array for the old one
-   mBlock.swap(newBlock);
-
-   // Update total number of samples and do a consistency check.
-   mNumSamples -= len;
-
-   return ConsistencyCheck(wxT("Delete - branch two"));
+   CommitChangesIfConsistent
+      (newBlock, mNumSamples - len, wxT("Delete - branch two"));
 }
 
-bool Sequence::ConsistencyCheck(const wxChar *whereStr) const
+void Sequence::ConsistencyCheck(const wxChar *whereStr, bool mayThrow) const
 {
-   unsigned int i;
-   sampleCount pos = 0;
-   unsigned int numBlocks = mBlock.size();
-   bool bError = false;
+   ConsistencyCheck(mBlock, 0, mNumSamples, whereStr, mayThrow);
+}
 
-   for (i = 0; !bError && i < numBlocks; i++) {
+void Sequence::ConsistencyCheck
+   (const BlockArray &mBlock, size_t from,
+    sampleCount mNumSamples, const wxChar *whereStr,
+    bool mayThrow)
+{
+   bool bError = false;
+   // Construction of the exception at the appropriate line of the function
+   // gives a little more discrimination
+   InconsistencyException ex;
+
+   unsigned int i;
+   sampleCount pos = mBlock[from].start;
+   if ( from == 0 && pos != 0 )
+      ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+
+   unsigned int numBlocks = mBlock.size();
+
+   for (i = from; !bError && i < numBlocks; i++) {
       const SeqBlock &seqBlock = mBlock[i];
       if (pos != seqBlock.start)
-         bError = true;
+         ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
 
-      if (seqBlock.f)
+      if ( seqBlock.f )
          pos += seqBlock.f->GetLength();
       else
-         bError = true;
+         ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
    }
-   if (pos != mNumSamples)
-      bError = true;
+   if ( !bError && pos != mNumSamples )
+      ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
 
-   if (bError)
+   if ( bError )
    {
       wxLogError(wxT("*** Consistency check failed after %s. ***"), whereStr);
       wxString str;
-      DebugPrintf(&str);
+      DebugPrintf(mBlock, mNumSamples, &str);
       wxLogError(wxT("%s"), str.c_str());
       wxLogError(wxT("*** Please report this error to feedback@audacityteam.org. ***\n\n")
                  wxT("Recommended course of action:\n")
                  wxT("Undo the failed operation(s), then export or save your work and quit."));
-   }
 
-   return !bError;
+      if (mayThrow)
+         throw ex;
+      else
+         wxASSERT(false);
+   }
 }
 
-void Sequence::DebugPrintf(wxString *dest) const
+void Sequence::CommitChangesIfConsistent
+   (BlockArray &newBlock, sampleCount numSamples, const wxChar *whereStr)
+{
+   ConsistencyCheck( newBlock, 0, numSamples, whereStr ); // may throw
+
+   // now commit
+   // use NOFAIL-GUARANTEE
+
+   mBlock.swap(newBlock);
+   mNumSamples = numSamples;
+}
+
+void Sequence::AppendBlocksIfConsistent
+(BlockArray &additionalBlocks, bool replaceLast,
+ sampleCount numSamples, const wxChar *whereStr)
+{
+   // Any additional blocks are meant to be appended,
+   // replacing the final block if there was one.
+
+   if (additionalBlocks.empty())
+      return;
+
+   bool tmpValid = false;
+   SeqBlock tmp;
+
+   if ( replaceLast && ! mBlock.empty() ) {
+      tmp = mBlock.back(), tmpValid = true;
+      mBlock.pop_back();
+   }
+
+   auto prevSize = mBlock.size();
+
+   bool consistent = false;
+   auto cleanup = finally( [&] {
+      if ( !consistent ) {
+         mBlock.resize( prevSize );
+         if ( tmpValid )
+            mBlock.push_back( tmp );
+      }
+   } );
+
+   std::copy( additionalBlocks.begin(), additionalBlocks.end(),
+              std::back_inserter( mBlock ) );
+
+   // Check consistency only of the blocks that were added,
+   // avoiding quadratic time for repeated checking of repeating appends
+   ConsistencyCheck( mBlock, prevSize, numSamples, whereStr ); // may throw
+
+   // now commit
+   // use NOFAIL-GUARANTEE
+
+   mNumSamples = numSamples;
+   consistent = true;
+}
+
+void Sequence::DebugPrintf
+   (const BlockArray &mBlock, sampleCount mNumSamples, wxString *dest)
 {
    unsigned int i;
    decltype(mNumSamples) pos = 0;

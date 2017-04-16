@@ -32,6 +32,7 @@
 using namespace soundtouch;
 
 
+class TimeWarper;
 class WaveTrack;
 
 class EffectSoundTouch /* not final */ : public Effect
@@ -40,7 +41,7 @@ public:
 
    // Effect implementation
 
-   bool Process() override;
+   void End() override;
 
    // EffectSoundTouch implementation
 
@@ -50,19 +51,26 @@ public:
 #endif
 
 protected:
+   // Effect implementation
+
+   bool ProcessWithTimeWarper(const TimeWarper &warper);
+
    std::unique_ptr<SoundTouch> mSoundTouch;
    double mCurT0;
    double mCurT1;
 
 private:
-   bool ProcessLabelTrack(LabelTrack *track);
+   bool ProcessLabelTrack(LabelTrack *track, const TimeWarper &warper);
 #ifdef USE_MIDI
-   bool ProcessNoteTrack(NoteTrack *track);
+   bool ProcessNoteTrack(NoteTrack *track, const TimeWarper &warper);
 #endif
-   bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
+   bool ProcessOne(
+      WaveTrack * t, sampleCount start, sampleCount end,
+      const TimeWarper &warper);
    bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack,
-                        sampleCount start, sampleCount end);
-   bool ProcessStereoResults(const unsigned int outputCount,
+                     sampleCount start, sampleCount end,
+                      const TimeWarper &warper);
+   bool ProcessStereoResults(const size_t outputCount,
                               WaveTrack* outputLeftTrack,
                               WaveTrack* outputRightTrack);
 

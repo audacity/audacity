@@ -556,62 +556,14 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
    mSampleRate = 44100;
    mBlockSize = 0;
 
-   mInputPorts = NULL;
-   mOutputPorts = NULL;
-   mInputControls = NULL;
-   mOutputControls = NULL;
-
    mLatencyPort = -1;
 
    mDialog = NULL;
    mParent = NULL;
-   mSliders = NULL;
-   mFields = NULL;
-   mLabels = NULL;
-   mToggles = NULL;
 }
 
 LadspaEffect::~LadspaEffect()
 {
-   if (mInputPorts)
-   {
-      delete [] mInputPorts;
-   }
-
-   if (mOutputPorts)
-   {
-      delete [] mOutputPorts;
-   }
-
-   if (mInputControls)
-   {
-      delete [] mInputControls;
-   }
-
-   if (mOutputControls)
-   {
-      delete [] mOutputControls;
-   }
-
-   if (mToggles)
-   {
-      delete [] mToggles;
-   }
-
-   if (mSliders)
-   {
-      delete [] mSliders;
-   }
-
-   if (mFields)
-   {
-      delete [] mFields;
-   }
-
-   if (mLabels)
-   {
-      delete [] mLabels;
-   }
 }
 
 // ============================================================================
@@ -715,10 +667,10 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
       return false;
    }
 
-   mInputPorts = new unsigned long [mData->PortCount];
-   mOutputPorts = new unsigned long [mData->PortCount];
-   mInputControls = new float [mData->PortCount];
-   mOutputControls = new float [mData->PortCount];
+   mInputPorts.reinit( mData->PortCount );
+   mOutputPorts.reinit( mData->PortCount );
+   mInputControls.reinit( mData->PortCount );
+   mOutputControls.reinit( mData->PortCount );
 
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1044,9 +996,13 @@ bool LadspaEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if ( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    mDialog = mHost->CreateUI(parent, this);
    if (!mDialog)
@@ -1061,12 +1017,12 @@ bool LadspaEffect::ShowInterface(wxWindow *parent, bool forceModal)
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }
@@ -1165,13 +1121,11 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
 
    mParent->PushEventHandler(this);
 
-   mToggles = new wxCheckBox *[mData->PortCount];
-   mSliders = new wxSlider *[mData->PortCount];
-   mFields = new wxTextCtrl *[mData->PortCount];
-   mLabels = new wxStaticText *[mData->PortCount];
-   mMeters = new LadspaEffectMeter *[mData->PortCount];
-
-   memset(mFields, 0, mData->PortCount * sizeof(wxTextCtrl *));
+   mToggles.reinit( mData->PortCount );
+   mSliders.reinit( mData->PortCount );
+   mFields.reinit( mData->PortCount, true);
+   mLabels.reinit( mData->PortCount );
+   mMeters.reinit( mData->PortCount );
 
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
@@ -1505,29 +1459,10 @@ bool LadspaEffect::CloseUI()
 {
    mParent->RemoveEventHandler(this);
 
-   if (mToggles)
-   {
-      delete [] mToggles;
-      mToggles = NULL;
-   }
-
-   if (mSliders)
-   {
-      delete [] mSliders;
-      mSliders = NULL;
-   }
-
-   if (mFields)
-   {
-      delete [] mFields;
-      mFields = NULL;
-   }
-
-   if (mLabels)
-   {
-      delete [] mLabels;
-      mLabels = NULL;
-   }
+   mToggles.reset();
+   mSliders.reset();
+   mFields.reset();
+   mLabels.reset();
 
    mUIHost = NULL;
    mParent = NULL;

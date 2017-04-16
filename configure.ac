@@ -34,7 +34,7 @@ dnl Require autoconf >= 2.59
 AC_PREREQ([2.59])
 
 dnl Init autoconf
-AC_INIT([audacity], [2.1.3])
+AC_INIT([audacity], [2.2.0])
 dnl Check for existence of Audacity.h
 AC_CONFIG_SRCDIR([src/Audacity.h])
 AC_CONFIG_AUX_DIR([autotools])
@@ -237,7 +237,7 @@ AC_CHECK_HEADERS_ONCE(alloca.h)
 
 
 dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
-if test "${ax_cv_c_compiler_vendor}" = "gnu"; then
+if "${CXX}" -v 2>&1 | grep -q '^gcc version'; then
 
     dnl GCC < 4.9 has known bugs (#1397) and can't be used
     AX_GCC_VERSION_ATLEAST(4,9,0,[gcc_ok=yes], [gcc_ok=no])
@@ -373,9 +373,6 @@ AUDACITY_CHECKLIB_LV2
 AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_PORTSMF
 AUDACITY_CHECKLIB_WIDGETEXTRA
-
-FFMPEG_ARGUMENT=local
-LIBFLAC_ARGUMENT=local
 
 dnl Decide what libraries to build with, and whether to use system or local libraries
 dnl Set variables based on choices.

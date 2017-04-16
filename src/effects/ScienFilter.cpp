@@ -153,6 +153,7 @@ BEGIN_EVENT_TABLE(EffectScienFilter, wxEvtHandler)
 END_EVENT_TABLE()
 
 EffectScienFilter::EffectScienFilter()
+: mpBiquad{ size_t( MAX_Order / 2 ), true }
 {
    mOrder = DEF_Order;
    mFilterType = DEF_Type;
@@ -170,18 +171,10 @@ EffectScienFilter::EffectScienFilter()
 
    mLoFreq = 20;              // Lowest frequency to display in response graph
    mNyquist = 44100.0 / 2.0;  // only used during initialization, updated when effect is used
-
-   mpBiquad = new BiquadStruct[MAX_Order / 2];
-   memset(mpBiquad, 0, sizeof(BiquadStruct) * MAX_Order / 2);
-   for (int i = 0; i < MAX_Order / 2; i++)
-   {
-      mpBiquad[i].fNumerCoeffs[0] = 1.0;	// straight-through
-   }
 }
 
 EffectScienFilter::~EffectScienFilter()
 {
-   delete [] mpBiquad;
 }
 
 // IdentInterface implementation
@@ -332,7 +325,7 @@ bool EffectScienFilter::Init()
    int selcount = 0;
    double rate = 0.0;
 
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, inputTracks());
    WaveTrack *t = (WaveTrack *) iter.First();
 
    mNyquist = (t ? t->GetRate() : GetActiveProject()->GetRate()) / 2.0;

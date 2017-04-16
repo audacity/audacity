@@ -21,6 +21,7 @@
 #include "Effect.h"
 
 #include "../MemoryX.h"
+#include "../SampleFormat.h"
 #include <wx/dialog.h>
 #include <wx/slider.h>
 
@@ -60,6 +61,7 @@ public:
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
+   void End() override;
 
 private:
 
@@ -70,12 +72,12 @@ private:
    // Parameters chosen before the first phase
    double    mSampleRate;
    size_t    mWindowSize;
-   int       mSpectrumSize;
+   size_t    mSpectrumSize;
    float     mMinSignalTime;    // in secs
 
    // The frequency-indexed noise threshold derived during the first
    // phase of analysis
-   float    *mNoiseThreshold;  // length is mSpectrumSize
+   Floats mNoiseThreshold;  // length is mSpectrumSize
 
    // Parameters that affect the noise removal, regardless of how the
    // noise profile was extracted
@@ -97,7 +99,6 @@ private:
    void RemoveNoise();
    void RotateHistoryWindows();
    void FinishTrack();
-   void Cleanup();
 
    // Variables that only exist during processing
    std::unique_ptr<WaveTrack> mOutputTrack;
@@ -106,22 +107,22 @@ private:
    int                   mInputPos;
 
    HFFT     hFFT;
-   float    *mFFTBuffer;         // mWindowSize
-   float    *mWindow;            // mWindowSize
+   Floats mFFTBuffer;         // mWindowSize
+   Floats mWindow;            // mWindowSize
 
    int       mFreqSmoothingBins;
    int       mAttackDecayBlocks;
    float     mOneBlockAttackDecay;
    float     mNoiseAttenFactor;
    float     mSensitivityFactor;
-   int       mMinSignalBlocks;
-   int       mHistoryLen;
-   float    *mInWaveBuffer;     // mWindowSize
-   float    *mOutOverlapBuffer; // mWindowSize
-   float   **mSpectrums;        // mHistoryLen x mSpectrumSize
-   float   **mGains;            // mHistoryLen x mSpectrumSize
-   float   **mRealFFTs;         // mHistoryLen x mWindowSize
-   float   **mImagFFTs;         // mHistoryLen x mWindowSize
+   size_t    mMinSignalBlocks;
+   size_t    mHistoryLen;
+   Floats mInWaveBuffer;     // mWindowSize
+   Floats mOutOverlapBuffer; // mWindowSize
+   ArraysOf<float> mSpectrums;        // mHistoryLen x mSpectrumSize
+   ArraysOf<float> mGains;            // mHistoryLen x mSpectrumSize
+   ArraysOf<float> mRealFFTs;         // mHistoryLen x mWindowSize
+   ArraysOf<float> mImagFFTs;         // mHistoryLen x mWindowSize
 
    friend class NoiseRemovalDialog;
 };

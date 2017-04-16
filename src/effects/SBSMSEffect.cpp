@@ -22,6 +22,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "../WaveTrack.h"
 #include "../Project.h"
 #include "TimeWarper.h"
+#include "../FileException.h"
 
 enum {
   SBSMSOutBlockSize = 512
@@ -33,44 +34,36 @@ public:
    ResampleBuf()
    {
       processed = 0;
-      buf = NULL;
-      leftBuffer = NULL;
-      rightBuffer = NULL;
-
-      SBSMSBuf = NULL;
-      outputLeftTrack = NULL;
-      outputRightTrack = NULL;
    }
 
    ~ResampleBuf()
    {
-      if(buf)                 free(buf);
-      if(leftBuffer)          free(leftBuffer);
-      if(rightBuffer)         free(rightBuffer);
-      if(SBSMSBuf)            free(SBSMSBuf);
    }
 
    bool bPitch;
-   audio *buf;
+   ArrayOf<audio> buf;
    double ratio;
    sampleCount processed;
    size_t blockSize;
    long SBSMSBlockSize;
    sampleCount offset;
    sampleCount end;
-   float *leftBuffer;
-   float *rightBuffer;
+   ArrayOf<float> leftBuffer;
+   ArrayOf<float> rightBuffer;
    WaveTrack *leftTrack;
    WaveTrack *rightTrack;
    std::unique_ptr<SBSMS> sbsms;
    std::unique_ptr<SBSMSInterface> iface;
-   audio *SBSMSBuf;
+   ArrayOf<audio> SBSMSBuf;
 
    // Not required by callbacks, but makes for easier cleanup
    std::unique_ptr<Resampler> resampler;
    std::unique_ptr<SBSMSQuality> quality;
    std::unique_ptr<WaveTrack> outputLeftTrack;
    std::unique_ptr<WaveTrack> outputRightTrack;
+
+   wxFileName failedFileName;
+   bool error{ false };
 };
 
 class SBSMSEffectInterface final : public SBSMSInterfaceSliding {
@@ -104,8 +97,28 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    );
 
    // Get the samples from the tracks and put them in the buffers.
-   r->leftTrack->Get((samplePtr)(r->leftBuffer), floatSample, r->offset, blockSize);
-   r->rightTrack->Get((samplePtr)(r->rightBuffer), floatSample, r->offset, blockSize);
+   // I don't know if we can safely propagate errors through sbsms, and it
+   // does not seem to let us report error codes, so use this roundabout to
+   // stop the effect early.
+   // This would be easier with std::exception_ptr but we don't have that yet.
+   try {
+      r->leftTrack->Get(
+         (samplePtr)(r->leftBuffer.get()), floatSample, r->offset, blockSize);
+      r->rightTrack->Get(
+         (samplePtr)(r->rightBuffer.get()), floatSample, r->offset, blockSize);
+   }
+   catch ( const FileException& e ) {
+      if ( e.cause == FileException::Cause::Read )
+         r->failedFileName = e.fileName;
+      data->size = 0;
+      r->error = true;
+      return 0;
+   }
+   catch ( ... ) {
+      data->size = 0;
+      r->error = true;
+      return 0;
+   }
 
    // convert to sbsms audio format
    for(decltype(blockSize) i=0; i<blockSize; i++) {
@@ -113,7 +126,7 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
       r->buf[i][1] = r->rightBuffer[i];
    }
 
-   data->buf = r->buf;
+   data->buf = r->buf.get();
    data->size = blockSize;
    if(r->bPitch) {
      float t0 = r->processed.as_float() / r->iface->getSamplesToInput();
@@ -132,8 +145,8 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
 long postResampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
-   auto count = r->sbsms->read(r->iface.get(), r->SBSMSBuf, r->SBSMSBlockSize);
-   data->buf = r->SBSMSBuf;
+   auto count = r->sbsms->read(r->iface.get(), r->SBSMSBuf.get(), r->SBSMSBlockSize);
+   data->buf = r->SBSMSBuf.get();
    data->size = count;
    data->ratio0 = 1.0 / r->ratio;
    data->ratio1 = 1.0 / r->ratio;
@@ -187,9 +200,9 @@ std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double durati
 // it are shifted along appropriately.
 bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
 {
-   auto warper = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
-   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1, std::move(warper)));
-   lt->WarpLabels(*GetTimeWarper());
+   auto warper1 = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
+   RegionTimeWarper warper{ mT0, mT1, std::move(warper1) };
+   lt->WarpLabels(warper);
    return true;
 }
 
@@ -225,7 +238,7 @@ bool EffectSBSMS::Process()
    mTotalStretch = rateSlide.getTotalStretch();
 
    t = iter.First();
-   while (t != NULL) {
+   while (bGoodResult && t != NULL) {
       if (t->GetKind() == Track::Label &&
             (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
@@ -285,11 +298,11 @@ bool EffectSBSMS::Process()
             ResampleBuf rb;
             auto maxBlockSize = leftTrack->GetMaxBlockSize();
             rb.blockSize = maxBlockSize;
-            rb.buf = (audio*)calloc(rb.blockSize,sizeof(audio));
+            rb.buf.reinit(rb.blockSize, true);
             rb.leftTrack = leftTrack;
             rb.rightTrack = rightTrack?rightTrack:leftTrack;
-            rb.leftBuffer = (float*)calloc(maxBlockSize,sizeof(float));
-            rb.rightBuffer = (float*)calloc(maxBlockSize,sizeof(float));
+            rb.leftBuffer.reinit(maxBlockSize, true);
+            rb.rightBuffer.reinit(maxBlockSize, true);
 
             // Samples in selection
             auto samplesIn = end - start;
@@ -325,7 +338,7 @@ bool EffectSBSMS::Process()
               rb.resampler = std::make_unique<Resampler>(resampleCB, &rb, srProcess==srTrack?SlideIdentity:SlideConstant);
               rb.sbsms = std::make_unique<SBSMS>(rightTrack ? 2 : 1, rb.quality.get(), true);
               rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
-              rb.SBSMSBuf = (audio*)calloc(rb.SBSMSBlockSize,sizeof(audio));
+              rb.SBSMSBuf.reinit(static_cast<size_t>(rb.SBSMSBlockSize), true);
 
               // Note: width of getMaxPresamples() is only long.  Widen it
               decltype(start) processPresamples = rb.quality->getMaxPresamples();
@@ -372,7 +385,6 @@ bool EffectSBSMS::Process()
                maxDuration = duration;
 
             auto warper = createTimeWarper(mCurT0,mCurT1,maxDuration,rateStart,rateEnd,rateSlideType);
-            SetTimeWarper(std::move(warper));
 
             rb.outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
                                                         leftTrack->GetRate());
@@ -413,22 +425,27 @@ bool EffectSBSMS::Process()
                if (TrackProgress(nWhichTrack, frac))
                   return false;
             }
-            rb.outputLeftTrack->Flush();
-            if(rightTrack)
-               rb.outputRightTrack->Flush();
+            if (rb.failedFileName.IsOk())
+               // re-construct an exception
+               // I wish I had std::exception_ptr instead
+               // and could re-throw any AudacityException
+               throw FileException{
+                  FileException::Cause::Read, rb.failedFileName };
+            else if (rb.error)
+               // well, what?
+               bGoodResult = false;
 
-            bool bResult =
+            if (bGoodResult) {
+               rb.outputLeftTrack->Flush();
+               if(rightTrack)
+                  rb.outputRightTrack->Flush();
+
                leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
-                                          true, false, GetTimeWarper());
-            wxASSERT(bResult); // TO DO: Actually handle this.
-            wxUnusedVar(bResult);
+                                        true, false, warper.get());
 
-            if(rightTrack)
-            {
-               bResult =
+               if(rightTrack)
                   rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
-                                             true, false, GetTimeWarper());
-               wxASSERT(bResult); // TO DO: Actually handle this.
+                                            true, false, warper.get());
             }
          }
          mCurTrackNum++;

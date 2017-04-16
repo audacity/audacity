@@ -60,6 +60,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/stat.h>
 #endif
 
+#include "AudacityException.h"
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
 #include "AColor.h"
@@ -228,7 +229,13 @@ It handles initialization and termination by subclassing wxApp.
 
 #endif //(__WXMSW__)
 
+// DA: Logo for Splash Screen
+#ifdef EXPERIMENTAL_DA
+#include "../images/DarkAudacityLogoWithName.xpm"
+#else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
+
 
 ////////////////////////////////////////////////////////////
 /// Custom events
@@ -521,7 +528,7 @@ class GnomeShutdown
  public:
    GnomeShutdown()
    {
-      mArgv[0] = strdup("Audacity");
+      mArgv[0].reset(strdup("Audacity"));
 
       mGnomeui = dlopen("libgnomeui-2.so.0", RTLD_NOW);
       if (!mGnomeui) {
@@ -550,11 +557,11 @@ class GnomeShutdown
          return;
       }
 
-      gnome_program_init(mArgv[0],
+      gnome_program_init(mArgv[0].get(),
                          "1.0",
                          libgnomeui_module_info_get(),
                          1,
-                         mArgv,
+                         reinterpret_cast<char**>(mArgv),
                          NULL);
 
       mClient = gnome_master_client();
@@ -568,13 +575,11 @@ class GnomeShutdown
    virtual ~GnomeShutdown()
    {
       // Do not dlclose() the libraries here lest you want segfaults...
-
-      free(mArgv[0]);
    }
 
  private:
 
-   char *mArgv[1];
+   MallocString<> mArgv[1];
    void *mGnomeui;
    void *mGnome;
    GnomeClient *mClient;
@@ -832,13 +837,12 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
          // there are no tracks, but there's an Undo history, etc, then
          // bad things can happen, including data files moving to the NEW
          // project directory, etc.
-         if (!proj || proj->GetDirty() || !proj->GetIsEmpty()) {
-            proj = CreateNewAudacityProject();
-         }
+         if (proj && (proj->GetDirty() || !proj->GetIsEmpty()))
+            proj = nullptr;
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
          // and it's okay to open a NEW project inside this window.
-         proj->OpenFile(fullPathStr);
+         AudacityProject::OpenProject( proj, fullPathStr );
       }
       else {
          // File doesn't exist - remove file from history
@@ -848,6 +852,11 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
       }
    }
    return(true);
+}
+
+bool AudacityApp::SafeMRUOpen(const wxString &fullPathStr)
+{
+   return GuardedCall< bool >( [&]{ return MRUOpen( fullPathStr ); } );
 }
 
 void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
@@ -867,13 +876,16 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    // because we don't want to RemoveFileFromHistory() just because it already exists,
    // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
    // that method does not return the bad result.
+   // PRL: Don't call SafeMRUOpen
+   // -- if open fails for some exceptional reason of resource exhaustion that
+   // the user can correct, leave the file in history.
    if (!AudacityProject::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       mRecentFiles->RemoveFileFromHistory(n);
 }
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-   // Filenames are queued when Audacity receives the a few of the
+   // Filenames are queued when Audacity receives a few of the
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
    if (gInited) {
@@ -902,7 +914,9 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
             // LL:  In all but one case an appropriate message is already displayed.  The
             //      instance that a message is NOT displayed is when a failure to write
             //      to the config file has occurred.
-            if (!MRUOpen(name)) {
+            // PRL: Catch any exceptions, don't try this file again, continue to
+            // other files.
+            if (!SafeMRUOpen(name)) {
                wxFAIL_MSG(wxT("MRUOpen failed"));
             }
          }
@@ -914,13 +928,12 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       // find which project owns the blockfile
       // note: there may be more than 1, but just go with the first one.
       //size_t numProjects = gAudacityProjects.size();
-      AudacityProject *offendingProject {};
+      AProjectHolder offendingProject;
       wxString missingFileName;
 
       {
          ODLocker locker { &m_LastMissingBlockFileLock };
-         offendingProject =
-            AProjectHolder{ m_LastMissingBlockFileProject }.get();
+         offendingProject = m_LastMissingBlockFileProject.lock();
          missingFileName = m_LastMissingBlockFilePath;
       }
 
@@ -944,7 +957,7 @@ locations of the missing files."), missingFileName.c_str());
          if (offendingProject->GetMissingAliasFileDialog()) {
             offendingProject->GetMissingAliasFileDialog()->Raise();
          } else {
-            ShowAliasMissingDialog(offendingProject, _("Files Missing"),
+            ShowAliasMissingDialog(offendingProject.get(), _("Files Missing"),
                                    errorMessage, wxT(""), true);
          }
       }
@@ -1087,6 +1100,47 @@ void AudacityApp::OnFatalException()
    exit(-1);
 }
 
+bool AudacityApp::OnExceptionInMainLoop()
+{
+   // This function is invoked from catch blocks in the wxWidgets framework,
+   // and throw; without argument re-throws the exception being handled,
+   // letting us dispatch according to its type.
+
+   try { throw; }
+   catch ( AudacityException &e ) {
+      // Here is the catch-all for our own exceptions
+
+      // Use CallAfter to delay this to the next pass of the event loop,
+      // rather than risk doing it inside stack unwinding.
+      auto pProject = ::GetActiveProject();
+      std::shared_ptr< AudacityException > pException { e.Move().release() };
+      CallAfter( [=]      // Capture pException by value!
+      {
+
+         // Restore the state of the project to what it was before the
+         // failed operation
+         pProject->RollbackState();
+
+         pProject->RedrawProject();
+
+         // Give the user an alert
+         pException->DelayedHandlerAction();
+
+      } );
+
+      // Don't quit the program
+      return true;
+   }
+   catch ( ... ) {
+      // There was some other type of exception we don't know.
+      // Let the inherited function do throw; again and whatever else it does.
+      return wxApp::OnExceptionInMainLoop();
+   }
+
+   // Shouldn't ever reach this line
+   return false;
+}
+
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
 {
@@ -1200,6 +1254,13 @@ bool AudacityApp::OnInit()
    // JKC: ANSWER-ME: Who actually added the event loop guarantor?
    // Although 'blame' says Leland, I think it came from a donated patch.
 
+   // PRL:  It was added by LL at 54676a72285ba7ee3a69920e91fa390a71ef10c9 :
+   // "   Ensure OnInit() has an event loop
+   //     And allow events to flow so the splash window updates under GTK"
+   // then mistakenly lost in the merge at
+   // 37168ebbf67ae869ab71a3b5cbbf1d2a48e824aa
+   // then restored at 7687972aa4b2199f0717165235f3ef68ade71e08
+
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
 
@@ -1220,8 +1281,13 @@ bool AudacityApp::OnInit()
 
    // Don't use AUDACITY_NAME here.
    // We want Audacity with a capital 'A'
-   wxString appName = wxT("Audacity");
 
+// DA: App name
+#ifndef EXPERIMENTAL_DA
+   wxString appName = wxT("Audacity");
+#else
+   wxString appName = wxT("DarkAudacity");
+#endif
 
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
@@ -1252,7 +1318,12 @@ bool AudacityApp::OnInit()
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
 
+// DA: Path env variable.
+#ifndef EXPERIMENTAL_DA
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
+#else
+   wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
+#endif
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
@@ -1569,7 +1640,9 @@ bool AudacityApp::OnInit()
 #if !defined(__WXMAC__)
          for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
          {
-            MRUOpen(parser->GetParam(i));
+            // PRL: Catch any exceptions, don't try this file again, continue to
+            // other files.
+            SafeMRUOpen(parser->GetParam(i));
          }
 #endif
       }

@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 #include "NoteTrack.h"
+#include "Experimental.h"
 
 #include <wx/dc.h>
 #include <wx/brush.h>
@@ -33,7 +34,7 @@
 #include "Prefs.h"
 #include "effects/TimeWarper.h"
 
-#include "Experimental.h"
+#include "InconsistencyException.h"
 
 #ifdef SONIFY
 #include "portmidi.h"
@@ -103,18 +104,17 @@ NoteTrack::Holder TrackFactory::NewNoteTrack()
    return std::make_unique<NoteTrack>(mDirManager);
 }
 
-NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager):
-Track(projDirManager)
+NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
+   : NoteTrackBase(projDirManager)
 {
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
 
    mSeq = NULL;
-   mSerializationBuffer = NULL;
    mSerializationLength = 0;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   mGain = 0;
+   mVelocity = 0;
 #endif
    mBottomNote = 24;
    mPitchHeight = 5;
@@ -125,9 +125,6 @@ Track(projDirManager)
 
 NoteTrack::~NoteTrack()
 {
-   if (mSerializationBuffer) {
-      delete [] mSerializationBuffer;
-   }
 }
 
 Track::Holder NoteTrack::Duplicate() const
@@ -141,20 +138,22 @@ Track::Holder NoteTrack::Duplicate() const
    // project object.
    if (mSeq) {
       SonifyBeginSerialize();
-      assert(!mSerializationBuffer);
+      wxASSERT(!mSerializationBuffer);
       // serialize from this to duplicate's mSerializationBuffer
-      mSeq->serialize((void**)&duplicate->mSerializationBuffer,
+      void *buffer;
+      mSeq->serialize(&buffer,
                       &duplicate->mSerializationLength);
+      duplicate->mSerializationBuffer.reset( (char*)buffer );
       SonifyEndSerialize();
    } else if (mSerializationBuffer) {
       SonifyBeginUnserialize();
-      assert(!mSeq);
-      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer,
+      wxASSERT(!mSeq);
+      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer.get(),
                                                       mSerializationLength) };
-      assert(alg_track->get_type() == 's');
+      wxASSERT(alg_track->get_type() == 's');
       duplicate->mSeq.reset(static_cast<Alg_seq*>(alg_track.release()));
       SonifyEndUnserialize();
-   } else assert(false); // bug if neither mSeq nor mSerializationBuffer
+   } else wxFAIL_MSG("neither mSeq nor mSerializationBuffer were present"); // bug if neither mSeq nor mSerializationBuffer
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetPitchHeight(mPitchHeight);
@@ -162,7 +161,7 @@ Track::Holder NoteTrack::Duplicate() const
    duplicate->mVisibleChannels = mVisibleChannels;
    duplicate->SetOffset(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
-   duplicate->SetGain(GetGain());
+   duplicate->SetVelocity(GetVelocity());
 #endif
    // This std::move is needed to "upcast" the pointer type
    return std::move(duplicate);
@@ -198,9 +197,8 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       const auto nt = static_cast<NoteTrack*>(unt.get());
       wxASSERT(!mSeq && nt->mSeq && !nt->mSerializationBuffer);
       // swap mSeq and Buffer between this and nt
-      nt->mSerializationBuffer = mSerializationBuffer;
+      nt->mSerializationBuffer = std::move(mSerializationBuffer);
       nt->mSerializationLength = mSerializationLength;
-      mSerializationBuffer = NULL;
       mSerializationLength = 0;
       mSeq = std::move(nt->mSeq);
    }
@@ -242,7 +240,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
 
 
 
-int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
+int NoteTrack::DrawLabelControls(wxDC & dc, const wxRect &r)
 {
    int wid = 23;
    int ht = 16;
@@ -331,7 +329,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
    return box.GetBottom();
 }
 
-bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
+bool NoteTrack::LabelClick(const wxRect &r, int mx, int my, bool right)
 {
    int wid = 23;
    int ht = 16;
@@ -438,7 +436,8 @@ int NoteTrack::GetVisibleChannels()
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
    if (t1 <= t0)
-      return{};
+      THROW_INCONSISTENCY_EXCEPTION;
+
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -457,10 +456,11 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    return std::move(newTrack);
 }
 
-Track::Holder NoteTrack::Copy(double t0, double t1) const
+Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 <= t0)
-      return{};
+      THROW_INCONSISTENCY_EXCEPTION;
+
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -493,20 +493,18 @@ bool NoteTrack::Trim(double t0, double t1)
    return true;
 }
 
-bool NoteTrack::Clear(double t0, double t1)
+void NoteTrack::Clear(double t0, double t1)
 {
-   // If t1 = t0, should Clear return true?
    if (t1 <= t0)
-      return false;
+      THROW_INCONSISTENCY_EXCEPTION;
+
    double len = t1-t0;
 
    if (mSeq)
       mSeq->clear(t0 - GetOffset(), len, false);
-
-   return true;
 }
 
-bool NoteTrack::Paste(double t, const Track *src)
+void NoteTrack::Paste(double t, const Track *src)
 {
    // Paste inserts src at time t. If src has a positive offset,
    // the offset is treated as silence which is also inserted. If
@@ -518,11 +516,13 @@ bool NoteTrack::Paste(double t, const Track *src)
 
    //Check that src is a non-NULL NoteTrack
    if (src == NULL || src->GetKind() != Track::Note)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    NoteTrack* other = (NoteTrack*)src;
    if (other->mSeq == NULL)
-      return false;
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
 
    if(!mSeq)
       mSeq = std::make_unique<Alg_seq>();
@@ -533,8 +533,16 @@ bool NoteTrack::Paste(double t, const Track *src)
       t += other->GetOffset();
    }
    mSeq->paste(t - GetOffset(), other->mSeq.get());
+}
 
-   return true;
+void NoteTrack::Silence(double, double)
+{
+   // to do
+}
+
+void NoteTrack::InsertSilence(double, double)
+{
+   // to do
 }
 
 // Call this function to manipulate the underlying sequence data. This is
@@ -564,7 +572,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
    return true;
 }
 
-double NoteTrack::NearestBeatTime(double time, double *beat)
+double NoteTrack::NearestBeatTime(double time, double *beat) const
 {
    wxASSERT(mSeq);
    // Alg_seq knows nothing about offset, so remove offset time
@@ -601,7 +609,7 @@ namespace
    }
 }
 
-Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
+Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const
 {
    cleanup.reset();
    double offset = GetOffset();
@@ -615,10 +623,16 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
    cleanup.reset( mSeq->copy(start, mSeq->get_dur() - start, false) );
    auto seq = cleanup.get();
    if (offset > 0) {
-      // swap cleanup and mSeq so that Shift operates on the NEW copy
-      swap(mSeq, cleanup);
-      Shift(offset);
-      swap(mSeq, cleanup);  // undo the swap
+      {
+         // Cheat a little
+         NoteTrack *pMutable = const_cast< NoteTrack * >(this);
+
+         // swap cleanup and mSeq so that Shift operates on the NEW copy
+         swap(pMutable->mSeq, cleanup);
+         auto cleanup2 = finally( [&] { swap(pMutable->mSeq, cleanup); } );
+
+         pMutable->Shift(offset);
+      }
 #ifdef OLD_CODE
       // now shift events by offset. This must be done with an integer
       // number of measures, so first, find the beats-per-measure
@@ -720,7 +734,7 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup)
 }
 
 
-bool NoteTrack::ExportMIDI(const wxString &f)
+bool NoteTrack::ExportMIDI(const wxString &f) const
 {
    std::unique_ptr<Alg_seq> cleanup;
    auto seq = MakeExportableSeq(cleanup);
@@ -728,7 +742,7 @@ bool NoteTrack::ExportMIDI(const wxString &f)
    return rslt;
 }
 
-bool NoteTrack::ExportAllegro(const wxString &f)
+bool NoteTrack::ExportAllegro(const wxString &f) const
 {
    double offset = GetOffset();
    bool in_seconds;
@@ -755,6 +769,8 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          double dblValue;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
+         else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
+         {}
          else if (!wxStrcmp(attr, wxT("offset")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
                   Internat::CompatibleToDouble(strValue, &dblValue))
@@ -779,7 +795,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("velocity")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
                   Internat::CompatibleToDouble(strValue, &dblValue))
-            mGain = (float) dblValue;
+            mVelocity = (float) dblValue;
 #endif
          else if (!wxStrcmp(attr, wxT("bottomnote")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
@@ -800,7 +816,8 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
    return NULL;
 }
 
-void NoteTrack::WriteXML(XMLWriter &xmlFile)
+void NoteTrack::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    std::ostringstream data;
    // Normally, Duplicate is called in pairs -- once to put NoteTrack
@@ -818,15 +835,16 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    // and perform WriteXML, we may need to restore NoteTracks from binary
    // blobs to regular data structures (with an Alg_seq member).
    Track::Holder holder;
-   NoteTrack *saveme = this;
+   const NoteTrack *saveme = this;
    if (!mSeq) { // replace saveme with an (unserialized) duplicate
       holder = Duplicate();
       saveme = static_cast<NoteTrack*>(holder.get());
-      assert(saveme->mSeq);
+      wxASSERT(saveme->mSeq);
    }
    saveme->mSeq->write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
    xmlFile.WriteAttr(wxT("name"), saveme->mName);
+   this->NoteTrackBase::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("offset"), saveme->GetOffset());
    xmlFile.WriteAttr(wxT("visiblechannels"), saveme->mVisibleChannels);
    xmlFile.WriteAttr(wxT("height"), saveme->GetActualHeight());
@@ -834,7 +852,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   xmlFile.WriteAttr(wxT("velocity"), (double) saveme->mGain);
+   xmlFile.WriteAttr(wxT("velocity"), (double) saveme->mVelocity);
 #endif
    xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));

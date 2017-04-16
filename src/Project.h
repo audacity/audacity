@@ -53,6 +53,7 @@ class wxBoxSizer;
 class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;
+class wxTimerEvent;
 
 class AudacityProject;
 class AutoSaveFile;
@@ -143,7 +144,8 @@ class ImportXMLTagHandler final : public XMLTagHandler
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override { return NULL; }
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override
+      { return NULL; }
 
    // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
    // <import> tags are instead written by AudacityProject::WriteXML.
@@ -165,9 +167,12 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
 
+   virtual void ApplyUpdatedTheme();
+
    AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks.get(); }
+   const TrackList *GetTracks() const { return mTracks.get(); }
    UndoManager *GetUndoManager() { return mUndoManager.get(); }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
@@ -238,7 +243,20 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
          const wxString &extrafilter = wxEmptyString);
    static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
+
+   // Return the given project if that is not NULL, else create a project.
+   // Then open the given project path.
+   // But if an exception escapes this function, create no new project.
+   static AudacityProject *OpenProject(
+      AudacityProject *pProject,
+      const wxString &fileNameArg, bool addtohistory = true);
+
    void OpenFile(const wxString &fileName, bool addtohistory = true);
+
+private:
+   void EnqueueODTasks();
+
+public:
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
@@ -261,6 +279,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
+   const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
 
    bool GetIsEmpty();
 
@@ -298,6 +317,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 #include "Menus.h"
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
+   const CommandManager *GetCommandManager() const { return &mCommandManager; }
 
    // Keyboard capture
    static bool HasKeyboardCapture(const wxWindow *handler);
@@ -363,7 +383,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    void SkipEnd(bool shift);
 
 
-   typedef bool (WaveTrack::* EditFunction)(double, double);
+   typedef void (WaveTrack::* EditFunction)(double, double);
    typedef std::unique_ptr<Track> (WaveTrack::* EditDestFunction)(double, double);
 
    void EditByLabel(EditFunction action, bool bSyncLockedTracks);
@@ -460,6 +480,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    SpectralSelectionBar *GetSpectralSelectionBar();
 #endif
    ToolsToolBar *GetToolsToolBar();
+   const ToolsToolBar *GetToolsToolBar() const;
    TranscriptionToolBar *GetTranscriptionToolBar();
 
    Meter *GetPlaybackMeter();
@@ -504,9 +525,10 @@ public:
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) /* not override */;
+   void WriteXML(
+      XMLWriter &xmlFile, bool bWantSaveCompressed) /* not override */;
 
-   void WriteXMLHeader(XMLWriter &xmlFile);
+   void WriteXMLHeader(XMLWriter &xmlFile) const;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
    ViewInfo mViewInfo;
@@ -543,8 +565,8 @@ public:
    void DeleteCurrentAutoSaveFile();
 
  public:
-   bool IsSoloSimple() { return mSoloPref == wxT("Simple"); }
-   bool IsSoloNone() { return mSoloPref == wxT("None"); }
+   bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
+   bool IsSoloNone() const { return mSoloPref == wxT("None"); }
 
  private:
 
@@ -623,8 +645,8 @@ private:
    MixerBoard* mMixerBoard{};
    MixerBoardFrame* mMixerBoardFrame{};
 
-   FreqWindow *mFreqWindow{};
-   ContrastDialog *mContrastDialog{};
+   Destroy_ptr<FreqWindow> mFreqWindow;
+   Destroy_ptr<ContrastDialog> mContrastDialog;
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog{};
@@ -695,7 +717,6 @@ private:
    // Dependencies have been imported and a warning should be shown on save
    bool mImportedDependencies{ false };
 
-   bool mWantSaveCompressed{ false };
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    // Last effect applied to this project

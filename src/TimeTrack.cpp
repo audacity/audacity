@@ -48,7 +48,6 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetInterpolateDB(true);
    mEnvelope->Flatten(1.0);
-   mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
 
@@ -64,21 +63,24 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    blankPen.SetColour(214, 214, 214);
 }
 
-TimeTrack::TimeTrack(const TimeTrack &orig):
-   Track(orig)
+TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
+   : Track(orig)
    , mZoomInfo(orig.mZoomInfo)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
    ///@TODO: Give Envelope:: a copy-constructor instead of this?
    mEnvelope = std::make_unique<Envelope>();
+   mEnvelope->Flatten(1.0);
    mEnvelope->SetTrackLen(DBL_MAX);
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
-   mEnvelope->Flatten(1.0);
-   mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
    mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
-   mEnvelope->Paste(0.0, orig.mEnvelope.get());
+   if ( pT0 && pT1 )
+      // restricted copy
+      mEnvelope->CopyFrom(orig.mEnvelope.get(), *pT0, *pT1);
+   else
+      mEnvelope->Paste(0.0, orig.mEnvelope.get());
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mRuler = std::make_unique<Ruler>();
@@ -103,6 +105,42 @@ void TimeTrack::Init(const TimeTrack &orig)
 
 TimeTrack::~TimeTrack()
 {
+}
+
+Track::Holder TimeTrack::Cut( double t0, double t1 )
+{
+   auto result = Copy( t0, t1, false );
+   Clear( t0, t1 );
+   return result;
+}
+
+Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
+{
+   auto result = std::make_unique<TimeTrack>( *this, &t0, &t1 );
+   return Track::Holder{ std::move( result ) };
+}
+
+void TimeTrack::Clear(double t0, double t1)
+{
+   mEnvelope->CollapseRegion(t0, t1);
+}
+
+void TimeTrack::Paste(double t, const Track * src)
+{
+   if (src->GetKind() != Track::Time)
+      // THROW_INCONSISTENCY_EXCEPTION; // ?
+      return;
+
+   mEnvelope->Paste(t, static_cast<const TimeTrack*>(src)->mEnvelope.get());
+}
+
+void TimeTrack::Silence(double t0, double t1)
+{
+}
+
+void TimeTrack::InsertSilence(double t, double len)
+{
+   mEnvelope->InsertSpace(t, len);
 }
 
 Track::Holder TimeTrack::Duplicate() const
@@ -206,7 +244,8 @@ XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
   return NULL;
 }
 
-void TimeTrack::WriteXML(XMLWriter &xmlFile)
+void TimeTrack::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("timetrack"));
 
@@ -253,8 +292,8 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
    mRuler->Draw(dc, this);
 
-   double *envValues = new double[mid.width];
-   GetEnvelope()->GetValues(envValues, mid.width, 0, zoomInfo);
+   Doubles envValues{ size_t(mid.width) };
+   GetEnvelope()->GetValues(envValues.get(), mid.width, 0, zoomInfo);
 
    dc.SetPen(AColor::envelopePen);
 
@@ -269,9 +308,6 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
          int thisy = r.y + (int)y;
          AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
       }
-
-   if (envValues)
-      delete[]envValues;
 }
 
 void TimeTrack::testMe()

@@ -21,7 +21,6 @@
 
 #include "../Audacity.h"
 #include "ImportPCM.h"
-#include "../AudacityApp.h"
 #include "../Internat.h"
 #include "../Tags.h"
 
@@ -92,12 +91,12 @@ public:
    PCMImportFileHandle(wxString name, SFFile &&file, SF_INFO info);
    ~PCMImportFileHandle();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount(){ return 1; }
+   wxInt32 GetStreamCount() override { return 1; }
 
    const wxArrayString &GetStreamInfo() override
    {
@@ -105,7 +104,8 @@ public:
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+   {}
 
 private:
    SFFile                mFile;
@@ -324,7 +324,12 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
    return oldCopyPref;
 }
 
-int PCMImportFileHandle::Import(TrackFactory *trackFactory,
+struct id3_tag_deleter {
+   void operator () (id3_tag *p) const { if (p) id3_tag_delete(p); }
+};
+using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
+
+ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
                                 TrackHolders &outTracks,
                                 Tags *tags)
 {
@@ -336,7 +341,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    wxString copyEdit = AskCopyOrEdit();
 
    if (copyEdit == wxT("cancel"))
-      return eProgressCancelled;
+      return ProgressResult::Cancelled;
 
    // Fall back to "copy" if it doesn't match anything else, since it is safer
    bool doEdit = false;
@@ -372,7 +377,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
    auto maxBlockSize = channels.begin()->get()->GetMaxBlockSize();
-   int updateResult = false;
+   auto updateResult = ProgressResult::Cancelled;
 
    // If the format is not seekable, we must use 'copy' mode,
    // because 'edit' mode depends on the ability to seek to an
@@ -405,7 +410,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                fileTotalFrames.as_long_long()
             );
             updateCounter = 0;
-            if (updateResult != eProgressSuccess)
+            if (updateResult != ProgressResult::Success)
                break;
          }
       }
@@ -443,24 +448,23 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // PRL:  guard against excessive memory buffer allocation in case of many channels
       using type = decltype(maxBlockSize);
       if (mInfo.channels < 1)
-         return eProgressFailed;
+         return ProgressResult::Failed;
       auto maxBlock = std::min(maxBlockSize,
          std::numeric_limits<type>::max() /
             (mInfo.channels * SAMPLE_SIZE(mFormat))
       );
       if (maxBlock < 1)
-         return eProgressFailed;
+         return ProgressResult::Failed;
 
-      SampleBuffer srcbuffer;
+      SampleBuffer srcbuffer, buffer;
       wxASSERT(mInfo.channels >= 0);
-      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr())
+      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr() ||
+             NULL == buffer.Allocate(maxBlock, mFormat).ptr())
       {
          maxBlock /= 2;
          if (maxBlock < 1)
-            return eProgressFailed;
+            return ProgressResult::Failed;
       }
-
-      SampleBuffer buffer(maxBlock, mFormat);
 
       decltype(fileTotalFrames) framescompleted = 0;
 
@@ -473,6 +477,11 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
          else
             block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
+
+         if(block < 0 || block > maxBlock) {
+            wxASSERT(false);
+            block = maxBlock;
+         }
 
          if (block) {
             auto iter = channels.begin();
@@ -497,13 +506,13 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             framescompleted.as_long_long(),
             fileTotalFrames.as_long_long()
          );
-         if (updateResult != eProgressSuccess)
+         if (updateResult != ProgressResult::Success)
             break;
 
       } while (block > 0);
    }
 
-   if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
+   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled) {
       return updateResult;
    }
 
@@ -585,14 +594,17 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                continue;
             }
 
-            id3_byte_t *buffer = (id3_byte_t *)malloc(len);
-            if (!buffer) {
-               break;
-            }
 
-            f.Read(buffer, len);
-            struct id3_tag *tp = id3_tag_parse(buffer, len);
-            free(buffer);
+            id3_tag_holder tp;
+            {
+               ArrayOf<id3_byte_t> buffer{ len };
+               if (!buffer) {
+                  break;
+               }
+
+               f.Read(buffer.get(), len);
+               tp.reset( id3_tag_parse(buffer.get(), len) );
+            }
 
             if (!tp) {
                break;
@@ -663,9 +675,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                else if (frame->nfields == 3) {
                   ustr = id3_field_getstring(&frame->fields[1]);
                   if (ustr) {
-                     char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-                     n = UTF8CTOWX(str);
-                     free(str);
+                     // Is this duplication really needed?
+                     MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                     n = UTF8CTOWX(str.get());
                   }
 
                   ustr = id3_field_getstring(&frame->fields[2]);
@@ -675,9 +687,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                }
 
                if (ustr) {
-                  char *str = (char *)id3_ucs4_utf8duplicate(ustr);
-                  v = UTF8CTOWX(str);
-                  free(str);
+                  // Is this duplication really needed?
+                  MallocString<> str{ (char *)id3_ucs4_utf8duplicate(ustr) };
+                  v = UTF8CTOWX(str.get());
                }
 
                if (!n.IsEmpty() && !v.IsEmpty()) {
@@ -693,11 +705,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                }
             }
 
-            id3_tag_delete(tp);
             break;
          }
-
-         f.Close();
       }
    }
 #endif

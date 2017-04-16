@@ -36,6 +36,8 @@ The summary is eventually computed and written to a file in a background thread.
 #include "../ondemand/ODManager.h"
 #include "../AudioIO.h"
 
+#include "NotYetAvailableException.h"
+
 //#include <errno.h>
 
 extern AudioIO *gAudioIO;
@@ -121,41 +123,52 @@ void ODPCMAliasBlockFile::Unlock()
 
 
 /// Gets extreme values for the specified region
-void ODPCMAliasBlockFile::GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const
+auto ODPCMAliasBlockFile::GetMinMaxRMS(
+   size_t start, size_t len, bool mayThrow) const -> MinMaxRMS
 {
    if(IsSummaryAvailable())
    {
-      PCMAliasBlockFile::GetMinMax(start,len,outMin,outMax,outRMS);
+      return PCMAliasBlockFile::GetMinMaxRMS(start, len, mayThrow);
    }
    else
    {
+      if (mayThrow)
+         throw NotYetAvailableException{ GetAliasedFileName() };
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
-      *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -JUST_BELOW_MAX_AUDIO,
+         JUST_BELOW_MAX_AUDIO,
+         0.707f //sin with amp of 1 rms
+      };
    }
 }
 
 /// Gets extreme values for the entire block
-void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS) const
+auto ODPCMAliasBlockFile::GetMinMaxRMS(bool mayThrow) const -> MinMaxRMS
 {
   if(IsSummaryAvailable())
    {
-      PCMAliasBlockFile::GetMinMax(outMin,outMax,outRMS);
+      return PCMAliasBlockFile::GetMinMaxRMS(mayThrow);
    }
    else
    {
+      if (mayThrow)
+         throw NotYetAvailableException{ GetAliasedFileName() };
+
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
-      *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
-      *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
-      *outRMS = (float)0.707;//sin with amp of 1 rms
+      return {
+         -JUST_BELOW_MAX_AUDIO,
+         JUST_BELOW_MAX_AUDIO,
+         0.707f //sin with amp of 1 rms
+      };
    }
 }
 
-/// Returns the 256 byte summary data block.  Clients should check to see if the summary is available before trying to read it with this call.
+/// Returns the 256 byte summary data block.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODPCMAliasBlockFile::Read256(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -165,12 +178,13 @@ bool ODPCMAliasBlockFile::Read256(float *buffer, size_t start, size_t len)
    else
    {
       //return nothing.
-      buffer = NULL;
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
-/// Returns the 64K summary data block. Clients should check to see if the summary is available before trying to read it with this call.
+/// Returns the 64K summary data block.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 bool ODPCMAliasBlockFile::Read64K(float *buffer, size_t start, size_t len)
 {
    if(IsSummaryAvailable())
@@ -180,8 +194,8 @@ bool ODPCMAliasBlockFile::Read64K(float *buffer, size_t start, size_t len)
    else
    {
       //return nothing - it hasn't been calculated yet
-      buffer = NULL;
-      return true;
+      ClearSamples((samplePtr)buffer, floatSample, 0, len);
+      return false;
    }
 }
 
@@ -194,7 +208,7 @@ BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
    BlockFilePtr newBlockFile;
 
    //mAliasedFile can change so we lock readdatamutex, which is responsible for it.
-   LockRead();
+   auto locker = LockForRead();
    //If the file has been written AND it has been saved, we create a PCM alias blockfile because for
    //all intents and purposes, it is the same.
    //However, if it hasn't been saved yet, we shouldn't create one because the default behavior of the
@@ -216,20 +230,19 @@ BlockFilePtr ODPCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
       //The client code will need to schedule this blockfile for OD summarizing if it is going to a NEW track.
    }
 
-   UnlockRead();
-
    return newBlockFile;
 }
 
 
 /// Writes the xml as a PCMAliasBlockFile if we can (if we have a summary file)
 /// Otherwise writes XML as a subset of attributes with 'odpcmaliasblockfile as the start tag.
-/// Most notably, the summaryfile attribute refers to a file that does not yet, so when the project file is read back in
+/// Most notably, the summaryfile attribute refers to a file that does not yet exist, so when the project file is read back in
 /// and this object reconstructed, it needs to avoid trying to open it as well as schedule itself for OD loading
 void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    //we lock this so that mAliasedFileName doesn't change.
-   LockRead();
+   auto locker = LockForRead();
    if(IsSummaryAvailable())
    {
       PCMAliasBlockFile::SaveXML(xmlFile);
@@ -240,11 +253,11 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
       xmlFile.StartTag(wxT("odpcmaliasblockfile"));
 
       //unlock to prevent deadlock and resume lock after.
-      UnlockRead();
-      mFileNameMutex.Lock();
-      xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
-      mFileNameMutex.Unlock();
-      LockRead();
+      {
+         auto suspension = locker.Suspend();
+         ODLocker locker2 { &mFileNameMutex };
+         xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
+      }
 
       xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"),
@@ -254,8 +267,6 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
       xmlFile.EndTag(wxT("odpcmaliasblockfile"));
    }
-
-   UnlockRead();
 }
 
 /// Constructs a ODPCMAliasBlockFile from the xml output of WriteXML.
@@ -345,10 +356,9 @@ bool ODPCMAliasBlockFile::IsSummaryAvailable() const
 ///Calls write summary, and makes sure it is only done once in a thread-safe fashion.
 void ODPCMAliasBlockFile::DoWriteSummary()
 {
-   mWriteSummaryMutex.Lock();
+   ODLocker locker { &mWriteSummaryMutex };
    if(!IsSummaryAvailable())
       WriteSummary();
-   mWriteSummaryMutex.Unlock();
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.
@@ -368,40 +378,44 @@ auto ODPCMAliasBlockFile::GetFileName() const -> GetFileNameResult
 /// Write the summary to disk, using the derived ReadData() to get the data
 void ODPCMAliasBlockFile::WriteSummary()
 {
-   //the mFileName path may change, for example, when the project is saved.
-   //(it moves from /tmp/ to wherever it is saved to.
-   mFileNameMutex.Lock();
+   // To build the summary data, call ReadData (implemented by the
+   // derived classes) to get the sample data
+   // Call this first, so that in case of exceptions from ReadData, there is
+   // no new output file
+   SampleBuffer sampleData(mLen, floatSample);
+   this->ReadData(sampleData.ptr(), floatSample, 0, mLen, true);
 
-   //wxFFile is not thread-safe - if any error occurs in opening the file,
-   // it posts a wxlog message which WILL crash
-   // Audacity because it goes into the wx GUI.
-   // For this reason I left the wxFFile method commented out. (mchinen)
-   //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
+   ArrayOf< char > fileNameChar;
+   FILE *summaryFile{};
+   {
+      //the mFileName path may change, for example, when the project is saved.
+      //(it moves from /tmp/ to wherever it is saved to.
+      ODLocker locker { &mFileNameMutex };
 
-   // ...and we use fopen instead.
-   wxString sFullPath = mFileName.GetFullPath();
-   char* fileNameChar = new char[strlen(sFullPath.mb_str(wxConvFile)) + 1];
-   strcpy(fileNameChar, sFullPath.mb_str(wxConvFile));
-   FILE* summaryFile = fopen(fileNameChar, "wb");
+      //wxFFile is not thread-safe - if any error occurs in opening the file,
+      // it posts a wxlog message which WILL crash
+      // Audacity because it goes into the wx GUI.
+      // For this reason I left the wxFFile method commented out. (mchinen)
+      //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
 
-   mFileNameMutex.Unlock();
+      // ...and we use fopen instead.
+      wxString sFullPath = mFileName.GetFullPath();
+      fileNameChar.reinit( strlen(sFullPath.mb_str(wxConvFile)) + 1 );
+      strcpy(fileNameChar.get(), sFullPath.mb_str(wxConvFile));
+      summaryFile = fopen(fileNameChar.get(), "wb");
+   }
 
    // JKC ANSWER-ME: Whay is IsOpened() commented out?
-   if( !summaryFile){//.IsOpened() ){
+   if (!summaryFile){//.IsOpened() ){
 
       // Never silence the Log w.r.t write errors; they always count
       //however, this is going to be called from a non-main thread,
       //and wxLog calls are not thread safe.
-      printf("Unable to write summary data to file: %s", fileNameChar);
-      delete [] fileNameChar;
-      return;
-   }
-   delete [] fileNameChar;
+      printf("Unable to write summary data to file: %s", fileNameChar.get());
 
-   // To build the summary data, call ReadData (implemented by the
-   // derived classes) to get the sample data
-   SampleBuffer sampleData(mLen, floatSample);
-   this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
+      throw FileException{
+         FileException::Cause::Read, wxFileName{ fileNameChar.get() } };
+   }
 
    ArrayOf<char> cleanup;
    void *summaryData = CalcSummary(sampleData.ptr(), mLen,
@@ -449,6 +463,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
    float *summary64K = (float *)(localFullSummary + mSummaryInfo.offset64K);
    float *summary256 = (float *)(localFullSummary + mSummaryInfo.offset256);
 
+   Floats floats;
    float *fbuffer;
 
    //mchinen: think we can hack this - don't allocate and copy if we don't need to.,
@@ -458,18 +473,14 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
    }
    else
    {
-      fbuffer = new float[len];
+      floats.reinit(len);
+      fbuffer = floats.get();
       CopySamples(buffer, format,
                (samplePtr)fbuffer, floatSample, len);
    }
 
    BlockFile::CalcSummaryFromBuffer(fbuffer, len, summary256, summary64K);
 
-   //if we've used the float sample..
-   if(format!=floatSample)
-   {
-      delete[] fbuffer;
-   }
    return localFullSummary;
 }
 
@@ -485,122 +496,60 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, size_t len,
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 size_t ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                size_t start, size_t len) const
+                                size_t start, size_t len, bool mayThrow) const
 {
 
-   LockRead();
-
-   SF_INFO info;
+   auto locker = LockForRead();
 
    if(!mAliasedFileName.IsOk()){ // intentionally silenced
       memset(data,0,SAMPLE_SIZE(format)*len);
-      UnlockRead();
       return len;
    }
 
-   memset(&info, 0, sizeof(info));
-
-   wxString aliasPath = mAliasedFileName.GetFullPath();
-
-   wxFile f;   // will be closed when it goes out of scope
-   SFFile sf;
-
-   if (f.Exists(aliasPath) && f.Open(aliasPath)) {
-      // Even though there is an sf_open() that takes a filename, use the one that
-      // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-      // libsndfile can't (under Windows).
-      sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-   }
-   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in ODPCMAliasBlockFile::ReadData.
-
-
-   if (!sf) {
-
-      memset(data,0,SAMPLE_SIZE(format)*len);
-
-      mSilentAliasLog = TRUE;
-      // Set a marker to display an error message
-      if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
-         wxGetApp().MarkAliasedFilesMissingWarning(this);
-
-      UnlockRead();
-      return len;
-   }
-
-   mSilentAliasLog=FALSE;
-
-   // Third party library has its own type alias, check it
-   static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
-                 "Type sf_count_t is too narrow to hold a sampleCount");
-   SFCall<sf_count_t>(sf_seek, sf.get(),
-                      ( mAliasStart + start ).as_long_long(), SEEK_SET);
-
-   wxASSERT(info.channels >= 0);
-   SampleBuffer buffer(len * info.channels, floatSample);
-
-   size_t framesRead = 0;
-
-   if (format == int16Sample &&
-       !sf_subtype_more_than_16_bits(info.format)) {
-      // Special case: if the file is in 16-bit (or less) format,
-      // and the calling method wants 16-bit data, go ahead and
-      // read 16-bit data directly.  This is a pretty common
-      // case, as most audio files are 16-bit.
-      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
-
-      for (int i = 0; i < framesRead; i++)
-         ((short *)data)[i] =
-            ((short *)buffer.ptr())[(info.channels * i) + mAliasChannel];
-   }
-   else {
-      // Otherwise, let libsndfile handle the conversion and
-      // scaling, and pass us normalized data as floats.  We can
-      // then convert to whatever format we want.
-      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-      float *bufferPtr = &((float *)buffer.ptr())[mAliasChannel];
-      CopySamples((samplePtr)bufferPtr, floatSample,
-                  (samplePtr)data, format,
-                  framesRead, true, info.channels);
-   }
-
-   UnlockRead();
-   return framesRead;
+   return CommonReadData( mayThrow,
+      mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
+      data, format, start, len);
 }
 
 /// Read the summary of this alias block from disk.  Since the audio data
 /// is elsewhere, this consists of reading the entire summary file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer where the summary data will be stored.  It must
 ///              be at least mSummaryInfo.totalSummaryBytes long.
-bool ODPCMAliasBlockFile::ReadSummary(void *data)
+bool ODPCMAliasBlockFile::ReadSummary(ArrayOf<char> &data)
 {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
 
-   mFileNameMutex.Lock();
+   ODLocker locker{ &mFileNameMutex };
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
 
-   if( !summaryFile.IsOpened() ){
+   if( !summaryFile.IsOpened() ) {
 
       // NEW model; we need to return valid data
-      memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
 
       // we silence the logging for this operation in this object
       // after first occurrence of error; it's already reported and
       // spewing at the user will complicate the user's ability to
       // deal
-      mSilentLog=TRUE;
+      mSilentLog = TRUE;
 
-      mFileNameMutex.Unlock();
-      return true;
+      return false;
+   }
+   else
+      mSilentLog = FALSE; // worked properly, any future error is NEW
 
-   }else mSilentLog=FALSE; // worked properly, any future error is NEW
+   auto read = summaryFile.Read(data.get(), mSummaryInfo.totalSummaryBytes);
 
-   int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+   if (read != mSummaryInfo.totalSummaryBytes) {
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+      return false;
+   }
+   
+   FixSummary(data.get());
 
-   FixSummary(data);
-
-
-   mFileNameMutex.Unlock();
-   return (read == mSummaryInfo.totalSummaryBytes);
+   return true;
 }
 
 /// Prevents a read on other threads.

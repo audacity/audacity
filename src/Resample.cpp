@@ -41,13 +41,11 @@ Resample::Resample(const bool useBestMethod, const double dMinFactor, const doub
       mbWantConstRateResampling = false; // variable rate resampling
       q_spec = soxr_quality_spec(SOXR_HQ, SOXR_VR);
    }
-   mHandle = (void *)soxr_create(1, dMinFactor, 1, 0, 0, &q_spec, 0);
+   mHandle.reset(soxr_create(1, dMinFactor, 1, 0, 0, &q_spec, 0));
 }
 
 Resample::~Resample()
 {
-   soxr_delete((soxr_t)mHandle);
-   mHandle = NULL;
 }
 
 int Resample::GetNumMethods() { return 4; }
@@ -85,16 +83,16 @@ std::pair<size_t, size_t>
    size_t idone, odone;
    if (mbWantConstRateResampling)
    {
-      soxr_process((soxr_t)mHandle,
+      soxr_process(mHandle.get(),
             inBuffer , (lastFlag? ~inBufferLen : inBufferLen), &idone,
             outBuffer,                           outBufferLen, &odone);
    }
    else
    {
-      soxr_set_io_ratio((soxr_t)mHandle, 1/factor, 0);
+      soxr_set_io_ratio(mHandle.get(), 1/factor, 0);
 
       inBufferLen = lastFlag? ~inBufferLen : inBufferLen;
-      soxr_process((soxr_t)mHandle,
+      soxr_process(mHandle.get(),
             inBuffer , inBufferLen , &idone,
             outBuffer, outBufferLen, &odone);
    }

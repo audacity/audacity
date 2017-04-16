@@ -40,9 +40,9 @@
 
 #include "../Audacity.h"
 #include "Meter.h"
-#include "../AudacityApp.h"
 
 #include <algorithm>
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>
@@ -113,17 +113,15 @@ wxString MeterUpdateMsg::toStringIfClipped()
 // without needing mutexes.
 //
 
-MeterUpdateQueue::MeterUpdateQueue(int maxLen):
+MeterUpdateQueue::MeterUpdateQueue(size_t maxLen):
    mBufferSize(maxLen)
 {
-   mBuffer = new MeterUpdateMsg[mBufferSize];
    Clear();
 }
 
 // destructor
 MeterUpdateQueue::~MeterUpdateQueue()
 {
-   delete[] mBuffer;
 }
 
 void MeterUpdateQueue::Clear()
@@ -258,11 +256,11 @@ Meter::Meter(AudacityProject *project,
    mRuler.SetFonts(GetFont(), GetFont(), GetFont());
    mRuler.SetFlip(mStyle != MixerTrackCluster);
    mRuler.SetLabelEdges(true);
+   //mRuler.SetTickColour( wxColour( 0,0,255 ) );
 
    UpdatePrefs();
 
-   wxColour backgroundColour =
-      wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+   wxColour backgroundColour = theTheme.Colour( clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxSOLID);
@@ -370,7 +368,8 @@ Meter::~Meter()
    // LLL:  This prevents a crash during termination if monitoring
    //       is active.
    if (gAudioIO && gAudioIO->IsMonitoring())
-      gAudioIO->StopStream();
+      if( gAudioIO->GetCaptureMeter() == this )
+         gAudioIO->StopStream();
 }
 
 void Meter::UpdatePrefs()
@@ -430,6 +429,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    std::unique_ptr<wxDC> paintDC{ wxAutoBufferedPaintDCFactory(this) };
 #endif
    wxDC & destDC = *paintDC;
+   wxColour clrText = theTheme.Colour( clrTrackPanelText );
+   wxColour clrBoxFill = theTheme.Colour( clrMedium );
 
    if (mLayoutValid == false)
    {
@@ -446,10 +447,10 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       // LLL:  Should research USE_AQUA_THEME usefulness...
 #ifndef USE_AQUA_THEME
 #ifdef EXPERIMENTAL_THEMING
-      if( !mMeterDisabled )
-      {
-         mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
-      }
+      //if( !mMeterDisabled )
+      //{
+      //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
+      //}
 #endif
    
       dc.SetPen(*wxTRANSPARENT_PEN);
@@ -471,6 +472,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          }
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
          dc.SetFont(GetFont());
+         dc.SetTextForeground( clrText );
          dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
          dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
       }
@@ -571,9 +573,12 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 #endif
          }
       }
-   
+      mRuler.SetTickColour( clrText );
+      dc.SetTextForeground( clrText );
       // Draw the ruler
-      mRuler.Draw(dc);   
+#ifndef EXPERIMENTAL_DA
+      mRuler.Draw(dc);
+#endif
 
       // Bitmap created...unselect
       dc.SelectObject(wxNullBitmap);
@@ -588,11 +593,16 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       DrawMeterBar(destDC, &mBar[i]);
    }
 
+   destDC.SetTextForeground( clrText );
+
+#ifndef EXPERIMENTAL_DA
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
+      mRuler.SetTickColour( clrText );
       mRuler.Draw(destDC);
    }
+#endif
 
    // Let the user know they can click to start monitoring
    if( mIsInput && !mActive )
@@ -621,11 +631,12 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                            Siz.GetHeight(),
                            Siz.GetWidth() );
 
-               destDC.SetBrush( *wxWHITE_BRUSH );
-               destDC.SetPen( *wxGREY_PEN );
+               destDC.SetBrush( wxBrush( clrBoxFill ) );
+               destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
                r.SetTop( r.GetBottom() + (gap / 2) );
+               destDC.SetTextForeground( clrText );
                destDC.DrawRotatedText( Text, r.GetPosition(), 90 );
                break;
             }
@@ -639,12 +650,13 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
                          Siz.GetWidth(),
                          Siz.GetHeight() );
 
-               destDC.SetBrush( *wxWHITE_BRUSH );
-               destDC.SetPen( *wxGREY_PEN );
+               destDC.SetBrush( wxBrush( clrBoxFill ) );
+               destDC.SetPen( *wxWHITE_PEN );
                destDC.DrawRectangle( r );
                destDC.SetBackgroundMode( wxTRANSPARENT );
                r.SetLeft( r.GetLeft() + (gap / 2) );
                r.SetTop( r.GetTop() + (gap / 2));
+               destDC.SetTextForeground( clrText );
                destDC.DrawText( Text, r.GetPosition() );
                break;
             }
@@ -1813,71 +1825,53 @@ void Meter::StartMonitoring()
    }
 }
 
+void Meter::StopMonitoring(){
+   mMonitoring = false;
+   if (gAudioIO->IsMonitoring()){
+      gAudioIO->StopStream();
+   } 
+}
+
 void Meter::OnAudioIOStatus(wxCommandEvent &evt)
 {
    evt.Skip();
-
    AudacityProject *p = (AudacityProject *) evt.GetEventObject();
 
-   mActive = false;
-   if (evt.GetInt() != 0)
-   {
-      if (p == mProject)
-      {
-         mActive = true;
+   mActive = (evt.GetInt() != 0) && (p == mProject);
 
-         mTimer.Start(1000 / mMeterRefreshRate);
-
-         if (evt.GetEventType() == EVT_AUDIOIO_MONITOR)
-         {
-            mMonitoring = mActive;
-         }
-      }
-      else
-      {
-         mTimer.Stop();
-
-         mMonitoring = false;
-      }
-   }
-   else
-   {
+   if( mActive ){
+      mTimer.Start(1000 / mMeterRefreshRate);
+      if (evt.GetEventType() == EVT_AUDIOIO_MONITOR)
+         mMonitoring = mActive;
+   } else {
       mTimer.Stop();
-
       mMonitoring = false;
    }
 
    // Only refresh is we're the active meter
    if (IsShownOnScreen())
-   {
       Refresh(false);
-   }
 }
 
 // SaveState() and RestoreState() exist solely for purpose of recreating toolbars
 // They should really be quering the project for current audio I/O state, but there
 // isn't a clear way of doing that just yet.  (It should NOT query AudioIO.)
-void *Meter::SaveState()
+auto Meter::SaveState() -> State
 {
-   bool *state = new bool[2];
-   state[0] = mMonitoring;
-   state[1] = mActive;
-
-   return state;
+   return { true, mMonitoring, mActive };
 }
 
-void Meter::RestoreState(void *state)
+void Meter::RestoreState(const State &state)
 {
-   bool *s = (bool *)state;
-   mMonitoring = s[0];
-   mActive = s[1];
+   if (!state.mSaved)
+      return;
+
+   mMonitoring = state.mMonitoring;
+   mActive = state.mActive;
+   //wxLogDebug("Restore state for %p, is %i", this, mActive );
 
    if (mActive)
-   {
       mTimer.Start(1000 / mMeterRefreshRate);
-   }
-
-   delete [] s;
 }
 
 //

@@ -15,6 +15,8 @@ information.
 *//*******************************************************************/
 
 
+#include "Audacity.h"
+#include "MemoryX.h"
 #include <wx/arrstr.h>
 #include <wx/intl.h>
 #include "sndfile.h"
@@ -119,7 +121,6 @@ wxString sf_header_name(int format)
 wxString sf_header_shortname(int format)
 {
    SF_FORMAT_INFO	format_info;
-   char *tmp;
    int i;
    wxString s;
 
@@ -127,8 +128,7 @@ wxString sf_header_shortname(int format)
    format_info.format = (format & SF_FORMAT_TYPEMASK);
    sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
-   tmp = (char *)malloc(strlen(format_info.name)+1);
-   strcpy(tmp, format_info.name);
+   MallocString<> tmp { strdup( format_info.name ) };
    i = 0;
    while(tmp[i]) {
       if (tmp[i]==' ')
@@ -137,9 +137,7 @@ wxString sf_header_shortname(int format)
          i++;
    }
 
-   s = LAT1CTOWX(tmp);
-
-   free(tmp);
+   s = LAT1CTOWX(tmp.get());
 
    return s;
 }

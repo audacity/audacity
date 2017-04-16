@@ -31,7 +31,6 @@
 
 #include "MixerToolBar.h"
 
-#include "../AudacityApp.h"
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
@@ -58,8 +57,6 @@ END_EVENT_TABLE()
 MixerToolBar::MixerToolBar()
 : ToolBar(MixerBarID, _("Mixer"), wxT("Mixer"))
 {
-   mPlayBitmap = NULL;
-   mRecordBitmap = NULL;
    mInputSliderVolume = 0.0;
    mOutputSliderVolume = 0.0;
 }
@@ -75,26 +72,21 @@ void MixerToolBar::Create(wxWindow *parent)
 
 void MixerToolBar::Populate()
 {
-   if( mRecordBitmap == NULL )
-      mRecordBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpMic));
-
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
+   // Recording icon and slider
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
-                          *mRecordBitmap), 0, wxALIGN_CENTER);
-
+                          theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER);
    mInputSlider = safenew ASlider(this, wxID_ANY, _("Recording Volume"),
                               wxDefaultPosition, wxSize(130, 25));
    mInputSlider->SetScroll(0.1f, 2.0f);
    mInputSlider->SetName(_("Slider Recording"));
    Add(mInputSlider, 0, wxALIGN_CENTER);
 
-   if( mPlayBitmap == NULL )
-      mPlayBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpSpeaker));
-
+   // Playback icon and slider
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
-                          *mPlayBitmap), 0, wxALIGN_CENTER);
-
+                          theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER);
    mOutputSlider = safenew ASlider(this, wxID_ANY, _("Playback Volume"),
                                wxDefaultPosition, wxSize(130, 25));
    mOutputSlider->SetScroll(0.1f, 2.0f);

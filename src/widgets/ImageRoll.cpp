@@ -424,16 +424,16 @@ IMPLEMENT_CLASS(ImageRollPanel, wxPanelWrapper)
 
 ImageRollPanel::ImageRollPanel(wxWindow *parent,
                                wxWindowID id,
-                               ImageRoll &imgRoll,
+                               //ImageRoll &imgRoll,
                                const wxPoint& pos,
                                const wxSize& size,
                                long style):
    wxPanelWrapper(parent, id, pos, size, style),
-   mImageRoll(imgRoll),
+   //mImageRoll(imgRoll),
    mLogicalFunction(wxCOPY)
 {
-   SetSizeHints(mImageRoll.GetMinSize(),
-                mImageRoll.GetMaxSize());
+//   SetSizeHints(mImageRoll.GetMinSize(),
+//                mImageRoll.GetMaxSize());
 }
 
 void ImageRollPanel::SetLogicalFunction(wxRasterOperationMode func)
@@ -445,7 +445,7 @@ void ImageRollPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
-   mImageRoll.Draw(dc, GetClientRect(), mLogicalFunction);
+//   mImageRoll.Draw(dc, GetClientRect(), mLogicalFunction);
 }
 
 void ImageRollPanel::OnSize(wxSizeEvent & WXUNUSED(event))

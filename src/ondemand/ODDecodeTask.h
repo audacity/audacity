@@ -16,7 +16,7 @@
 This is an abstract class that subclasses will have to derive the types
 from.  For any type there should only be one ODDecodeTask associated with
 a given track.
-There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
+There could be the ODDecodeBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
 robust enough to allow all the user changes such as copy/paste, DELETE, and so on.
 
@@ -62,7 +62,7 @@ class ODDecodeTask /* not final */ : public ODTask
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName)=0;
 
-   ///there could be the ODBlockFiles of several FLACs in one track (after copy and pasting)
+   ///there could be the ODDecodeBlockFiles of several FLACs in one track (after copy and pasting)
    ///so we keep a list of decoders that keep track of the file names, etc, and check the blocks against them.
    ///Blocks that have IsDataAvailable()==false are blockfiles to be decoded.  if BlockFile::GetDecodeType()==ODDecodeTask::GetODType() then
    ///this decoder should handle it.  Decoders are accessible with the methods below.  These aren't thread-safe and should only
@@ -86,14 +86,13 @@ protected:
 
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles
-      (std::vector< std::shared_ptr< ODDecodeBlockFile > > &unorderedBlocks);
+      (std::vector< std::weak_ptr< ODDecodeBlockFile > > &unorderedBlocks);
 
 
-   std::vector<std::shared_ptr<ODDecodeBlockFile>> mBlockFiles;
+   std::vector<std::weak_ptr<ODDecodeBlockFile>> mBlockFiles;
    std::vector<movable_ptr<ODFileDecoder>> mDecoders;
 
    int mMaxBlockFiles;
-   int mComputedBlockFiles;
 
 };
 

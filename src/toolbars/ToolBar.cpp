@@ -142,9 +142,9 @@ void ToolBarResizer::OnPaint( wxPaintEvent & event )
    // Under GTK, we specifically set the toolbar background to the background
    // colour in the system theme.
 #if defined( __WXGTK__ )
-   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
+//   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
 #endif
-
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
    wxSize sz = GetSize();
@@ -685,12 +685,17 @@ void ToolBar::MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn )
 
 void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
+   // Don't recolour the buttons...
+   MakeMacRecoloredImage( eBmpOut, eBmpIn );
+   return;
    wxImage * pSrc = &theTheme.Image( eBmpIn );
 #if defined( __WXGTK__ )
    wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
 #else
    wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
 #endif
+
+   newColour = wxColour( 60,60,60 );
    wxColour baseColour = wxColour( 204, 204, 204 );
 
    auto pPattern = ChangeImageColour( pSrc, baseColour, newColour );
@@ -802,7 +807,11 @@ void ToolBar::SetButtonToolTip
          if (!iter->empty()) {
             if (commandManager) {
                auto keyStr = commandManager->GetKeyFromName(*iter);
-               if (!keyStr.empty()) {
+               // For DarkAudacity, only add '(shortcut-info)' if there is 
+               // some, rather than as in that case in Audacity saying 
+               // '(no key)'.  More users will be confused by the Audacity 
+               // way than helped by it.
+               if (!keyStr.empty()){
                   result += wxT(" ");
                   result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
                }
@@ -851,9 +860,9 @@ void ToolBar::OnPaint( wxPaintEvent & event )
    // Under GTK, we specifically set the toolbar background to the background
    // colour in the system theme.
 #if defined( __WXGTK__ )
-   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
+   //dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
 #endif
-
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
 // EXPERIMENTAL_THEMING is set to not apply the gradient
@@ -861,7 +870,7 @@ void ToolBar::OnPaint( wxPaintEvent & event )
 #ifdef USE_AQUA_THEME
    Repaint( &dc );
 #else
-
+   return;
 #ifdef EXPERIMENTAL_THEMING
    wxImage * mpBackGradient =   &theTheme.Image( bmpRecoloredUpLarge  );
 

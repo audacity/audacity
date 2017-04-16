@@ -38,12 +38,13 @@ class SummaryInfo {
    int            offset64K;
    size_t         frames256;
    int            offset256;
-   int            totalSummaryBytes;
+   size_t         totalSummaryBytes;
 };
 
 
 
 class BlockFile;
+class AliasBlockFile;
 using BlockFilePtr = std::shared_ptr<BlockFile>;
 
 template< typename Result, typename... Args >
@@ -66,8 +67,12 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // Reading
 
    /// Retrieves audio data from this BlockFile
+   /// Returns the number of samples really read, not more than len
+   /// If fewer can be read than len, throws an exception if mayThrow is true,
+   /// otherwise fills the remainder of data with zeroes.
    virtual size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const = 0;
+                        size_t start, size_t len, bool mayThrow = true)
+      const = 0;
 
    // Other Properties
 
@@ -77,7 +82,8 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
 
    // Fill read cache of block file, if it has any
    virtual bool GetNeedFillCache() { return false; }
-   virtual void FillCache() { /* no cache by default */ }
+
+   virtual void FillCache() /* noexcept */ { /* no cache by default */ }
 
    /// Stores a representation of this file in XML
    virtual void SaveXML(XMLWriter &xmlFile) = 0;
@@ -115,11 +121,13 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    /// Returns TRUE if this BlockFile is locked
    virtual bool IsLocked();
 
+   struct MinMaxRMS { float min, max, RMS; };
+
    /// Gets extreme values for the specified region
-   virtual void GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const;
+   virtual MinMaxRMS GetMinMaxRMS(size_t start, size_t len,
+                          bool mayThrow = true) const;
    /// Gets extreme values for the entire block
-   virtual void GetMinMax(float *outMin, float *outMax, float *outRMS) const;
+   virtual MinMaxRMS GetMinMaxRMS(bool mayThrow = true) const;
    /// Returns the 256 byte summary data block
    virtual bool Read256(float *buffer, size_t start, size_t len);
    /// Returns the 64K summary data block
@@ -148,6 +156,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    //summary only), write out a placeholder of silence data (missing
    //.au) or mark the blockfile to deal some other way without spewing
    //errors.
+   // May throw exceptions for i/o errors.
    virtual void Recover() = 0;
    /// if we've detected an on-disk problem, the user opted to
    //continue and the error persists, don't keep reporting it.  The
@@ -160,10 +169,42 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
    // not balanced by unlocking calls.
    virtual void CloseLock(){Lock();}
 
+ protected:
    /// Prevents a read on other threads.  The basic blockfile runs on only one thread, so does nothing.
    virtual void LockRead() const {}
    /// Allows reading on other threads.
    virtual void UnlockRead() const {}
+
+   struct ReadLocker { void operator () ( const BlockFile *p ) const {
+      if (p) p->LockRead(); } };
+   struct ReadUnlocker { void operator () ( const BlockFile *p ) const {
+      if (p) p->UnlockRead(); } };
+   using ReadLockBase =
+      movable_ptr_with_deleter< const BlockFile, ReadUnlocker >;
+
+ public:
+   class ReadLock : public ReadLockBase
+   {
+      friend BlockFile;
+      ReadLock ( const BlockFile *p, const BlockFile::ReadUnlocker &u )
+         : ReadLockBase { p, u } {}
+   public:
+#ifdef __AUDACITY_OLD_STD__
+      ReadLock (const ReadLock &that) : ReadLockBase( that ) {}
+      ReadLock &operator= (const ReadLock &that)
+      {
+         *((ReadLockBase*)this) = that;
+      }
+#endif
+      ReadLock(ReadLock&&that) : ReadLockBase{ std::move(that) } {}
+      using Suspension = std::unique_ptr< const BlockFile, ReadLocker >;
+      Suspension Suspend() const
+      { if (get()) get()->UnlockRead();
+        return Suspension{ get(), ReadLocker{} }; }
+   };
+
+   // RAII wrapper about the read locking functions
+   ReadLock LockForRead() const { LockRead(); return { this, ReadUnlocker{} }; }
 
  private:
 
@@ -179,11 +220,18 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
                               float *summary256, float *summary64K);
 
    /// Read the summary section of the file.  Derived classes implement.
-   virtual bool ReadSummary(void *data) = 0;
+   virtual bool ReadSummary(ArrayOf<char> &data) = 0;
 
    /// Byte-swap the summary data, in case it was saved by a system
    /// on a different platform
    virtual void FixSummary(void *data);
+
+   static size_t CommonReadData(
+      bool mayThrow,
+      const wxFileName &fileName, bool &mSilentLog,
+      const AliasBlockFile *pAliasFile, sampleCount origin, unsigned channel,
+      samplePtr data, sampleFormat format, size_t start, size_t len,
+      const sampleFormat *pLegacyFormat = nullptr, size_t legacyLen = 0);
 
  private:
    int mLockCount;
@@ -243,11 +291,11 @@ class AliasBlockFile /* not final */ : public BlockFile
    /// Write the summary to disk, using the derived ReadData() to get the data
    virtual void WriteSummary();
    /// Read the summary into a buffer
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
 
    wxFileNameWrapper mAliasedFileName;
    sampleCount mAliasStart;
-   int         mAliasChannel;
+   const int         mAliasChannel;
    mutable bool        mSilentAliasLog;
 };
 

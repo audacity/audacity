@@ -124,6 +124,7 @@ AButton *EditToolBar::AddButton(
 
 void EditToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
    /* Buttons */
@@ -147,8 +148,8 @@ void EditToolBar::Populate()
 
    AddSeparator();
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksDisabled, ETBSyncLockID,
+#ifdef OPTION_SYNC_LOCK_BUTTON
+   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
 
    AddSeparator();
@@ -171,7 +172,7 @@ void EditToolBar::Populate()
    mButtons[ETBZoomFitID]->SetEnabled(false);
    mButtons[ETBPasteID]->SetEnabled(false);
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
+#ifdef OPTION_SYNC_LOCK_BUTTON
    mButtons[ETBSyncLockID]->PushDown();
 #endif
 
@@ -211,7 +212,7 @@ void EditToolBar::RegenerateTooltips()
       { ETBUndoID,     wxT("Undo"),        XO("Undo")  },
       { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
+#ifdef OPTION_SYNC_LOCK_BUTTON
       { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
 #endif
 
@@ -243,6 +244,12 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    int id = event.GetId();
    // FIXME: Some "SelectAllIfNone()" do not work as expected
    // due to bugs elsewhere (see: AudacityProject::UpdateMenus() )
+
+   // Be sure the pop-up happens even if there are exceptions
+   // except for buttons which toggle.
+   auto cleanup = finally( [&] { mButtons[id]->InteractionOver();}
+   );
+
    switch (id) {
       case ETBCutID:
          p->SelectAllIfNone();
@@ -269,10 +276,10 @@ void EditToolBar::OnButton(wxCommandEvent &event)
       case ETBRedoID:
          p->OnRedo();
          break;
-#ifdef EXPERIMENTAL_SYNC_LOCK
+#ifdef OPTION_SYNC_LOCK_BUTTON
       case ETBSyncLockID:
          p->OnSyncLock();
-         return;//avoiding the call to SetButton()
+         break;
 #endif
       case ETBZoomInID:
          p->OnZoomIn();
@@ -281,7 +288,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          p->OnZoomOut();
          break;
 
-#if 0 // Disabled for version 1.2.0 since it doesn't work quite right...
+#if 0 // Disabled for version 1.2.0 because we have many other zoomers.
       case ETBZoomToggleID:
          p->OnZoomToggle();
          break;
@@ -299,8 +306,6 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          break;
 #endif
    }
-
-   SetButton(false, mButtons[id]);
 }
 
 void EditToolBar::EnableDisableButtons()
@@ -330,7 +335,7 @@ void EditToolBar::EnableDisableButtons()
 
    mButtons[ETBPasteID]->SetEnabled(cm->GetEnabled("Paste"));
 
-#ifdef EXPERIMENTAL_SYNC_LOCK
+#ifdef OPTION_SYNC_LOCK_BUTTON
    bool bSyncLockTracks;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
 

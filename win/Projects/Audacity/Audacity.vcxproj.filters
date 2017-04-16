@@ -887,6 +887,21 @@
     <ClCompile Include="..\..\..\src\widgets\wxPanelWrapper.cpp">
       <Filter>src\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\AudacityException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\InconsistencyException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FileException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\UserException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp">
+      <Filter>src\blockfile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1797,6 +1812,24 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportForwards.h">
       <Filter>src\import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandFlag.h">
+      <Filter>src\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudacityException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\InconsistencyException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FileException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\UserException.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h">
+      <Filter>src\blockfile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

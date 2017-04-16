@@ -10,6 +10,7 @@
 // Objective-C++ .  Avoid mixing languages elsewhere.
 
 #include "Audacity.h"
+#include "AudacityApp.h"
 #include "Project.h"
 
 #undef USE_COCOA

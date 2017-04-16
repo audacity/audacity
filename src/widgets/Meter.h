@@ -68,7 +68,7 @@ class MeterUpdateMsg
 class MeterUpdateQueue
 {
  public:
-   MeterUpdateQueue(int maxLen);
+   explicit MeterUpdateQueue(size_t maxLen);
    ~MeterUpdateQueue();
 
    bool Put(MeterUpdateMsg &msg);
@@ -79,8 +79,8 @@ class MeterUpdateQueue
  private:
    int              mStart;
    int              mEnd;
-   int              mBufferSize;
-   MeterUpdateMsg  *mBuffer;
+   size_t           mBufferSize;
+   ArrayOf<MeterUpdateMsg> mBuffer{mBufferSize};
 };
 
 class MeterAx;
@@ -175,10 +175,12 @@ class Meter final : public wxPanelWrapper
    bool IsClipping() const;
 
    void StartMonitoring();
+   void StopMonitoring();
 
-   // These exist solely for the purpose of reseting the toolbars
-   void *SaveState();
-   void RestoreState(void *state);
+   // These exist solely for the purpose of resetting the toolbars
+   struct State{ bool mSaved, mMonitoring, mActive; };
+   State SaveState();
+   void RestoreState(const State &state);
 
  private:
    static bool s_AcceptsFocus;

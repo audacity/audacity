@@ -29,22 +29,37 @@ using std::max;
 #define FIFO_SIZE_T size_t
 #define FIFO_MIN 0x4000
 #define fifo_read_ptr(f) fifo_read(f, (FIFO_SIZE_T)0, NULL)
-#define lsx_zalloc(var, n) var = (float *)calloc(n, sizeof(*var))
-#define filter_advance(p) if (--(p)->ptr < (p)->buffer) (p)->ptr += (p)->size
-#define filter_delete(p) free((p)->buffer)
+#define lsx_zalloc(var, n) (var.reinit(n, true), var.get())
+#define filter_advance(p) if (--(p)->ptr < (p)->buffer.get()) (p)->ptr += (p)->size
 
+#if 0
+//initialisations not supported in MSVC 2013.
+//Gives error C2905
+// Do not make conditional on compiler.
 typedef struct {
-   char * data;
+   ArrayOf<char> data;
+   size_t allocation {};   /* Number of bytes allocated for data. */
+   size_t item_size {};    /* Size of each item in data */
+   size_t begin {};        /* Offset of the first byte to read. */
+   size_t end {};          /* 1 + Offset of the last byte byte to read. */
+} fifo_t;
+#else
+// WARNING: This structure may need initialisation.
+typedef struct {
+   ArrayOf<char> data;
    size_t allocation;   /* Number of bytes allocated for data. */
    size_t item_size;    /* Size of each item in data */
    size_t begin;        /* Offset of the first byte to read. */
    size_t end;          /* 1 + Offset of the last byte byte to read. */
 } fifo_t;
+#endif
 
 static void fifo_clear(fifo_t * f)
 {
    f->end = f->begin = 0;
 }
+
+
 
 static void * fifo_reserve(fifo_t * f, FIFO_SIZE_T n)
 {
@@ -55,19 +70,19 @@ static void * fifo_reserve(fifo_t * f, FIFO_SIZE_T n)
 
    while (1) {
       if (f->end + n <= f->allocation) {
-         void *p = f->data + f->end;
+         void *p = f->data.get() + f->end;
 
          f->end += n;
          return p;
       }
       if (f->begin > FIFO_MIN) {
-         memmove(f->data, f->data + f->begin, f->end - f->begin);
+         memmove(f->data.get(), f->data.get() + f->begin, f->end - f->begin);
          f->end -= f->begin;
          f->begin = 0;
          continue;
       }
       f->allocation += n;
-      f->data = (char *)realloc(f->data, f->allocation);
+      f->data.reinit(f->allocation);
    }
 }
 
@@ -81,7 +96,7 @@ static void * fifo_write(fifo_t * f, FIFO_SIZE_T n, void const * data)
 
 static void * fifo_read(fifo_t * f, FIFO_SIZE_T n, void * data)
 {
-   char * ret = f->data + f->begin;
+   char * ret = f->data.get() + f->begin;
    n *= f->item_size;
    if (n > (FIFO_SIZE_T)(f->end - f->begin))
       return NULL;
@@ -91,22 +106,18 @@ static void * fifo_read(fifo_t * f, FIFO_SIZE_T n, void * data)
    return ret;
 }
 
-static void fifo_delete(fifo_t * f)
-{
-   free(f->data);
-}
-
 static void fifo_create(fifo_t * f, FIFO_SIZE_T item_size)
 {
    f->item_size = item_size;
    f->allocation = FIFO_MIN;
-   f->data = (char *)malloc(f->allocation);
+   f->data.reinit(f->allocation);
    fifo_clear(f);
 }
 
 typedef struct {
    size_t  size;
-   float   * buffer, * ptr;
+   ArrayOf<float> buffer;
+   float   * ptr;
    float   store;
 } filter_t;
 
@@ -199,24 +210,29 @@ static void filter_array_process(filter_array_t * p,
    }
 }
 
-static void filter_array_delete(filter_array_t * p)
-{
-   size_t i;
-
-   for (i = 0; i < array_length(allpass_lengths); ++i)
-      filter_delete(&p->allpass[i]);
-   for (i = 0; i < array_length(comb_lengths); ++i)
-      filter_delete(&p->comb[i]);
-}
-
+#if 0
+//initialisations not supported in MSVC 2013.
+//Gives error C2905
+// Do not make conditional on compiler.
+typedef struct {
+   float feedback {};
+   float hf_damping {};
+   float gain {};
+   fifo_t input_fifo {};
+   filter_array_t chan[2];
+   ArrayOf<float> out[2];
+} reverb_t;
+#else
+// WARNING: This structure may need initialisation.
 typedef struct {
    float feedback;
    float hf_damping;
    float gain;
    fifo_t input_fifo;
    filter_array_t chan[2];
-   float * out[2];
+   ArrayOf<float> out[2];
 } reverb_t;
+#endif
 
 static void reverb_create(reverb_t * p, double sample_rate_Hz,
       double wet_gain_dB,
@@ -254,17 +270,7 @@ static void reverb_process(reverb_t * p, size_t length)
 {
    size_t i;
    for (i = 0; i < 2 && p->out[i]; ++i)
-      filter_array_process(p->chan + i, length, (float *) fifo_read_ptr(&p->input_fifo), p->out[i], &p->feedback, &p->hf_damping, &p->gain);
+      filter_array_process(p->chan + i, length, (float *) fifo_read_ptr(&p->input_fifo), p->out[i].get(), &p->feedback, &p->hf_damping, &p->gain);
    fifo_read(&p->input_fifo, length, NULL);
-}
-
-static void reverb_delete(reverb_t * p)
-{
-   size_t i;
-   for (i = 0; i < 2 && p->out[i]; ++i) {
-      free(p->out[i]);
-      filter_array_delete(p->chan + i);
-   }
-   fifo_delete(&p->input_fifo);
 }
 

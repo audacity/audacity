@@ -41,6 +41,7 @@ public:
    // Effect implementation
 
    bool Process() override;
+   void End() override;
    bool IsHidden() override;
 
 private:

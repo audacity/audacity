@@ -34,9 +34,19 @@ class TimeWarper;
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-#define MONO_WAVE_PAN(T) (T != NULL && T->GetChannel() == Track::MonoChannel && T->GetKind() == Track::Wave && ((WaveTrack *)T)->GetPan() != 0 && WaveTrack::mMonoAsVirtualStereo && ((WaveTrack *)T)->GetDisplay() == WaveTrack::WaveformDisplay)
+#define MONO_WAVE_PAN(T) \
+   (T != NULL && \
+    T->GetChannel() == Track::MonoChannel && \
+    T->GetKind() == Track::Wave && \
+    ((const WaveTrack *)T)->GetPan() != 0 && \
+    WaveTrack::mMonoAsVirtualStereo && \
+    ((const WaveTrack *)T)->GetDisplay() == WaveTrack::Waveform)
 
-#define MONO_PAN  (mPan != 0.0 && mChannel == MonoChannel && mDisplay == WaveformDisplay && mMonoAsVirtualStereo)
+#define MONO_PAN \
+   (mPan != 0.0 && \
+    mChannel == MonoChannel && \
+    mDisplay == Waveform && \
+    mMonoAsVirtualStereo)
 #endif
 
 /// \brief Structure to hold region of a wavetrack and a comparison function
@@ -59,7 +69,7 @@ class Regions : public std::vector < Region > {};
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack final : public Track {
+class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
  private:
 
@@ -94,6 +104,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    virtual ~WaveTrack();
    double GetOffset() const override;
    void SetOffset(double o) override;
+   virtual int GetChannel() const override;
+   virtual void SetPanFromChannelType() override;
+
 
    /** @brief Get the time at which the first clip in the track starts
     *
@@ -132,15 +145,15 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool SetPan(float newPan);
 #else
-   void SetPan(float newPan);
+   void SetPan(float newPan) override;
 #endif
    // Takes gain and pan into account
    float GetChannelGain(int channel) const;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void SetVirtualState(bool state, bool half=false);
 #endif
-   sampleFormat GetSampleFormat() { return mFormat; }
-   bool ConvertToSampleFormat(sampleFormat format);
+   sampleFormat GetSampleFormat() const { return mFormat; }
+   void ConvertToSampleFormat(sampleFormat format);
 
    const SpectrogramSettings &GetSpectrogramSettings() const;
    SpectrogramSettings &GetSpectrogramSettings();
@@ -157,41 +170,47 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    //
 
    Track::Holder Cut(double t0, double t1) override;
-   Track::Holder Copy(double t0, double t1) const override;
+
+   // If forClipboard is true,
+   // and there is no clip at the end time of the selection, then the result
+   // will contain a "placeholder" clip whose only purpose is to make
+   // GetEndTime() correct.  This clip is not re-copied when pasting.
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
    Track::Holder CopyNonconst(double t0, double t1) /* not override */;
-   bool Clear(double t0, double t1) override;
-   bool Paste(double t0, const Track *src) override;
-   bool ClearAndPaste(double t0, double t1,
+
+   void Clear(double t0, double t1) override;
+   void Paste(double t0, const Track *src) override;
+   void ClearAndPaste(double t0, double t1,
                               const Track *src,
                               bool preserve = true,
                               bool merge = true,
-                              TimeWarper *effectWarper = NULL) /* not override */;
+                              const TimeWarper *effectWarper = NULL) /* not override */;
 
-   bool Silence(double t0, double t1) override;
-   bool InsertSilence(double t, double len) override;
+   void Silence(double t0, double t1) override;
+   void InsertSilence(double t, double len) override;
 
-   bool SplitAt(double t) /* not override */;
-   bool Split(double t0, double t1) /* not override */;
+   void SplitAt(double t) /* not override */;
+   void Split(double t0, double t1) /* not override */;
    // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
-   bool ClearAndAddCutLine(double t0, double t1) /* not override */;
+   void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
    Track::Holder SplitCut(double t0, double t1) /* not override */;
-   bool SplitDelete(double t0, double t1) /* not override */;
-   bool Join(double t0, double t1) /* not override */;
-   bool Disjoin(double t0, double t1) /* not override */;
+   void SplitDelete(double t0, double t1) /* not override */;
+   void Join(double t0, double t1) /* not override */;
+   void Disjoin(double t0, double t1) /* not override */;
 
-   bool Trim(double t0, double t1) /* not override */;
+   void Trim(double t0, double t1) /* not override */;
 
-   bool HandleClear(double t0, double t1, bool addCutLines, bool split);
+   void HandleClear(double t0, double t1, bool addCutLines, bool split);
 
-   bool SyncLockAdjust(double oldT1, double newT1) override;
+   void SyncLockAdjust(double oldT1, double newT1) override;
 
    /** @brief Returns true if there are no WaveClips in the specified region
     *
     * @return true if no clips in the track overlap the specified time range,
     * false otherwise.
     */
-   bool IsEmpty(double t0, double t1);
+   bool IsEmpty(double t0, double t1) const;
 
    /** @brief Append the sample data to the WaveTrack. You must call Flush()
     * after the last Append.
@@ -200,24 +219,24 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
     * appended to that clip. If there are no WaveClips in the track, then a NEW
     * one is created.
     */
-   bool Append(samplePtr buffer, sampleFormat format,
+   void Append(samplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1,
                XMLWriter* blockFileLog=NULL);
    /// Flush must be called after last Append
-   bool Flush();
+   void Flush();
 
-   bool AppendAlias(const wxString &fName, sampleCount start,
+   void AppendAlias(const wxString &fName, sampleCount start,
                     size_t len, int channel,bool useOD);
 
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
    //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
-   bool AppendCoded(const wxString &fName, sampleCount start,
+   void AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType);
 
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags();
+   unsigned int GetODFlags() const;
 
    ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
    void ClearWaveCaches();
@@ -236,14 +255,15 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len, fillFormat fill=fillZero) const;
-   bool Set(samplePtr buffer, sampleFormat format,
+                   sampleCount start, size_t len,
+                   fillFormat fill = fillZero, bool mayThrow = true) const;
+   void Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
-   bool GetMinMax(float *min, float *max,
-                  double t0, double t1) const;
-   bool GetRMS(float *rms, double t0, double t1);
+   std::pair<float, float> GetMinMax(
+      double t0, double t1, bool mayThrow = true) const;
+   float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //
    // MM: We now have more than one sequence and envelope per track, so
@@ -254,9 +274,9 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    WaveClip* GetClipAtX(int xcoord);
    Sequence* GetSequenceAtX(int xcoord);
    Envelope* GetEnvelopeAtX(int xcoord);
-   Envelope* GetActiveEnvelope(void);
 
    WaveClip* GetClipAtSample(sampleCount sample);
+   WaveClip* GetClipAtTime(double time);
 
    //
    // Getting information about the track's internal block sizes
@@ -278,7 +298,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    void HandleXMLEndTag(const wxChar *tag) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXML(XMLWriter &xmlFile) override;
+   void WriteXML(XMLWriter &xmlFile) const override;
 
    // Returns true if an error occurred while reading from XML
    bool GetErrorOpening() override;
@@ -470,7 +490,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
    // clipidx1 and clipidx2 are indices into the clip list.
-   bool MergeClips(int clipidx1, int clipidx2);
+   void MergeClips(int clipidx1, int clipidx2);
 
    // Cache special locations (e.g. cut lines) for later speedy access
    void UpdateLocationsCache() const;
@@ -479,7 +499,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    const std::vector<Location> &GetCachedLocations() const { return mDisplayLocationsCache; }
 
    // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
-   bool ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
+   void ExpandCutLine(double cutLinePosition, double* cutlineStart = NULL, double* cutlineEnd = NULL);
 
    // Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);
@@ -489,7 +509,7 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
    void Merge(const Track &orig) override;
 
    // Resample track (i.e. all clips in the track)
-   bool Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, ProgressDialog *progress = NULL);
 
    //
    // AutoSave related
@@ -607,7 +627,15 @@ class AUDACITY_DLL_API WaveTrack final : public Track {
 // one block file).
 class WaveTrackCache {
 public:
-   explicit WaveTrackCache(const WaveTrack *pTrack = 0)
+   WaveTrackCache()
+      : mPTrack(0)
+      , mBufferSize(0)
+      , mOverlapBuffer()
+      , mNValidBuffers(0)
+   {
+   }
+
+   explicit WaveTrackCache(const WaveTrack *pTrack)
       : mPTrack(0)
       , mBufferSize(0)
       , mOverlapBuffer()
@@ -624,19 +652,27 @@ public:
    // Returns null on failure
    // Returned pointer may be invalidated if Get is called again
    // Do not DELETE[] the pointer
-   constSamplePtr Get(sampleFormat format, sampleCount start, size_t len);
+   constSamplePtr Get(
+      sampleFormat format, sampleCount start, size_t len, bool mayThrow);
 
 private:
    void Free();
 
    struct Buffer {
-      float *data;
+      Floats data;
       sampleCount start;
       sampleCount len;
 
-      Buffer() : data(0), start(0), len(0) {}
-      void Free() { delete[] data; data = 0; start = 0; len = 0; }
+      Buffer() : start(0), len(0) {}
+      void Free() { data.reset(); start = 0; len = 0; }
       sampleCount end() const { return start + len; }
+
+      void swap ( Buffer &other )
+      {
+         data .swap ( other.data );
+         std::swap( start, other.start );
+         std::swap( len, other.len );
+      }
    };
 
    const WaveTrack *mPTrack;

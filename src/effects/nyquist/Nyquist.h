@@ -205,7 +205,7 @@ private:
    int               mVersion;
    NyqControlArray   mControls;
 
-   int               mCurNumChannels;  // See bug 1566
+   unsigned          mCurNumChannels;
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
    sampleCount       mCurLen;
@@ -224,7 +224,7 @@ private:
    sampleCount       mCurBufferStart[2];
    size_t            mCurBufferLen[2];
 
-   std::unique_ptr<WaveTrack> mOutputTrack[2];
+   WaveTrack        *mOutputTrack[2];
 
    wxArrayString     mCategories;
 
@@ -236,6 +236,9 @@ private:
 
    wxTextCtrl *mCommandText;
    wxCheckBox *mVersionCheckBox;
+
+   bool              mError{ false };
+   wxFileName        mFailedFileName;
 
    DECLARE_EVENT_TABLE()
 

@@ -11,6 +11,7 @@
 
 #include "../Audacity.h"
 
+#include <algorithm>
 #include <wx/msgdlg.h>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
@@ -397,6 +398,7 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
       }
    }
 
+   // Get rid of the old chain
    // And install the NEW one
    mRealtimeEffects = effects;
 
@@ -407,7 +409,7 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 
 bool EffectManager::RealtimeIsActive()
 {
-   return mRealtimeEffects.GetCount() != 0;
+   return mRealtimeEffects.size() != 0;
 }
 
 bool EffectManager::RealtimeIsSuspended()
@@ -434,7 +436,7 @@ void EffectManager::RealtimeAddEffect(Effect *effect)
    }
    
    // Add to list of active effects
-   mRealtimeEffects.Add(effect);
+   mRealtimeEffects.push_back(effect);
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
@@ -452,7 +454,10 @@ void EffectManager::RealtimeRemoveEffect(Effect *effect)
    }
       
    // Remove from list of active effects
-   mRealtimeEffects.Remove(effect);
+   auto end = mRealtimeEffects.end();
+   auto found = std::find(mRealtimeEffects.begin(), end, effect);
+   if (found != end)
+      mRealtimeEffects.erase(found);
 
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
@@ -472,10 +477,8 @@ void EffectManager::RealtimeInitialize()
    mRealtimeActive = true;
 
    // Tell each effect to get ready for action
-   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
-   {
-      mRealtimeEffects[i]->RealtimeInitialize();
-   }
+   for (auto e : mRealtimeEffects)
+      e->RealtimeInitialize();
 
    // Get things moving
    RealtimeResume();
@@ -483,10 +486,8 @@ void EffectManager::RealtimeInitialize()
 
 void EffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
 {
-   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
-   {
-      mRealtimeEffects[i]->RealtimeAddProcessor(group, chans, rate);
-   }
+   for (auto e : mRealtimeEffects)
+      e->RealtimeAddProcessor(group, chans, rate);
 
    mRealtimeChans.push_back(chans);
    mRealtimeRates.Add(rate);
@@ -501,10 +502,8 @@ void EffectManager::RealtimeFinalize()
    mRealtimeLatency = 0;
 
    // Tell each effect to clean up as well
-   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
-   {
-      mRealtimeEffects[i]->RealtimeFinalize();
-   }
+   for (auto e : mRealtimeEffects)
+      e->RealtimeFinalize();
 
    // Reset processor parameters
    mRealtimeChans.clear();
@@ -529,10 +528,8 @@ void EffectManager::RealtimeSuspend()
    mRealtimeSuspended = true;
 
    // And make sure the effects don't either
-   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
-   {
-      mRealtimeEffects[i]->RealtimeSuspend();
-   }
+   for (auto e : mRealtimeEffects)
+      e->RealtimeSuspend();
 
    mRealtimeLock.Leave();
 }
@@ -549,10 +546,8 @@ void EffectManager::RealtimeResume()
    }
 
    // Tell the effects to get ready for more action
-   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
-   {
-      mRealtimeEffects[i]->RealtimeResume();
-   }
+   for (auto e : mRealtimeEffects)
+      e->RealtimeResume();
 
    // And we should too
    mRealtimeSuspended = false;
@@ -572,12 +567,10 @@ void EffectManager::RealtimeProcessStart()
    // have been suspended.
    if (!mRealtimeSuspended)
    {
-      for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+      for (auto e : mRealtimeEffects)
       {
-         if (mRealtimeEffects[i]->IsRealtimeActive())
-         {
-            mRealtimeEffects[i]->RealtimeProcessStart();
-         }
+         if (e->IsRealtimeActive())
+            e->RealtimeProcessStart();
       }
    }
 
@@ -594,7 +587,7 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mRealtimeSuspended || mRealtimeEffects.IsEmpty())
+   if (mRealtimeSuspended || mRealtimeEffects.empty())
    {
       mRealtimeLock.Leave();
       return numSamples;
@@ -619,11 +612,11 @@ size_t EffectManager::RealtimeProcess(int group, unsigned chans, float **buffers
    // Now call each effect in the chain while swapping buffer pointers to feed the
    // output of one effect as the input to the next effect
    size_t called = 0;
-   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   for (auto e : mRealtimeEffects)
    {
-      if (mRealtimeEffects[i]->IsRealtimeActive())
+      if (e->IsRealtimeActive())
       {
-         mRealtimeEffects[i]->RealtimeProcess(group, chans, ibuf, obuf, numSamples);
+         e->RealtimeProcess(group, chans, ibuf, obuf, numSamples);
          called++;
       }
 
@@ -671,12 +664,10 @@ void EffectManager::RealtimeProcessEnd()
    // have been suspended.
    if (!mRealtimeSuspended)
    {
-      for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+      for (auto e : mRealtimeEffects)
       {
-         if (mRealtimeEffects[i]->IsRealtimeActive())
-         {
-            mRealtimeEffects[i]->RealtimeProcessEnd();
-         }
+         if (e->IsRealtimeActive())
+            e->RealtimeProcessEnd();
       }
    }
 

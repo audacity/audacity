@@ -37,7 +37,7 @@
 #include "sndfile.h"
 
 void ComputeLegacySummaryInfo(const wxFileName &fileName,
-                              int summaryLen,
+                              size_t summaryLen,
                               sampleFormat format,
                               SummaryInfo *info,
                               bool noRMS,bool Silent,
@@ -68,7 +68,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
    // 64K summary data
    //
 
-   float *summary = new float[info->frames64K * fields];
+   Floats summary{ info->frames64K * fields };
    SampleBuffer data(info->frames64K * fields,
       info->format);
 
@@ -100,7 +100,7 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
    int count = read / info->bytesPerFrame;
 
    CopySamples(data.ptr(), info->format,
-               (samplePtr)summary, floatSample, count);
+               (samplePtr)summary.get(), floatSample, count);
 
    (*min) = FLT_MAX;
    (*max) = FLT_MIN;
@@ -118,8 +118,6 @@ void ComputeLegacySummaryInfo(const wxFileName &fileName,
       (*rms) = sqrt(sumsq / count);
    else
       (*rms) = 0;
-
-   delete[] summary;
 }
 
 /// Construct a LegacyBlockFile memory structure that will point to an
@@ -153,32 +151,39 @@ LegacyBlockFile::~LegacyBlockFile()
 }
 
 /// Read the summary section of the disk file.
+/// Fill with zeroes and return false if data are unavailable for any reason.
 ///
 /// @param *data The buffer to write the data to.  It must be at least
 /// mSummaryinfo.totalSummaryBytes long.
-bool LegacyBlockFile::ReadSummary(void *data)
+bool LegacyBlockFile::ReadSummary(ArrayOf<char> &data)
 {
+   data.reinit( mSummaryInfo.totalSummaryBytes );
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
-   int read;
+   size_t read;
    {
       Maybe<wxLogNull> silence{};
       if (mSilentLog)
          silence.create();
 
-      if (!summaryFile.IsOpened()){
+      if (!summaryFile.IsOpened()) {
 
-         memset(data, 0, (size_t)mSummaryInfo.totalSummaryBytes);
+         memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
 
          mSilentLog = TRUE;
 
-         return true;
+         return false;
       }
 
-      read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
+      read = summaryFile.Read(data.get(), mSummaryInfo.totalSummaryBytes);
    }
-   mSilentLog=FALSE;
+   mSilentLog = FALSE;
 
-   return (read == mSummaryInfo.totalSummaryBytes);
+   if (read != mSummaryInfo.totalSummaryBytes) {
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+      return false;
+   }
+
+   return true;
 }
 
 /// Read the data portion of the block file using libsndfile.  Convert it
@@ -189,95 +194,17 @@ bool LegacyBlockFile::ReadSummary(void *data)
 /// @param start  The offset in this block file
 /// @param len    The number of samples to read
 size_t LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              size_t start, size_t len) const
+                              size_t start, size_t len, bool mayThrow) const
 {
-   SF_INFO info;
-
-   memset(&info, 0, sizeof(info));
-
-   switch(mFormat) {
-   case int16Sample:
-      info.format =
-         SF_FORMAT_RAW | SF_FORMAT_PCM_16 | SF_ENDIAN_CPU;
-      break;
-   default:
-   case floatSample:
-      info.format =
-         SF_FORMAT_RAW | SF_FORMAT_FLOAT | SF_ENDIAN_CPU;
-      break;
-   case int24Sample:
-      info.format = SF_FORMAT_RAW | SF_FORMAT_PCM_32 | SF_ENDIAN_CPU;
-      break;
-   }
-   info.samplerate = 44100; // Doesn't matter
-   info.channels = 1;
-   info.frames = mLen + (mSummaryInfo.totalSummaryBytes /
-                         SAMPLE_SIZE(mFormat));
-
-   wxFile f;   // will be closed when it goes out of scope
-   SFFile sf;
-
-   if (f.Open(mFileName.GetFullPath())) {
-      // Even though there is an sf_open() that takes a filename, use the one that
-      // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-      // libsndfile can't (under Windows).
-      sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-   }
-   // FIXME: TRAP_ERR failure of wxFile open incompletely handled in LegacyBlockfile::ReadData.
-
-   {
-      Maybe<wxLogNull> silence{};
-      if (mSilentLog)
-         silence.create();
-
-      if (!sf){
-
-         memset(data, 0, SAMPLE_SIZE(format)*len);
-
-         mSilentLog = TRUE;
-
-         return len;
-      }
-   }
-   mSilentLog=FALSE;
-
-   sf_count_t seekstart = start +
-         (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
-   SFCall<sf_count_t>(sf_seek, sf.get(), seekstart , SEEK_SET);
-
-   SampleBuffer buffer(len, floatSample);
-   size_t framesRead = 0;
-
-   // If both the src and dest formats are integer formats,
-   // read integers from the file (otherwise we would be
-   // converting to float and back, which is unneccesary)
-   if (format == int16Sample &&
-       sf_subtype_is_integer(info.format)) {
-      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)data, len);
-   }
-   else if (format == int24Sample &&
-             sf_subtype_is_integer(info.format)) {
-      framesRead = SFCall<sf_count_t>(sf_readf_int, sf.get(), (int *)data, len);
-
-         // libsndfile gave us the 3 byte sample in the 3 most
-      // significant bytes -- we want it in the 3 least
-      // significant bytes.
-      int *intPtr = (int *)data;
-      for( int i = 0; i < framesRead; i++ )
-         intPtr[i] = intPtr[i] >> 8;
-   } else {
-      // Otherwise, let libsndfile handle the conversion and
-      // scaling, and pass us normalized data as floats.  We can
-      // then convert to whatever format we want.
-      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-      CopySamples(buffer.ptr(), floatSample,
-                  (samplePtr)data, format, framesRead);
-   }
-
-   return framesRead;
+   sf_count_t origin = (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
+   return CommonReadData( mayThrow,
+      mFileName, mSilentLog, nullptr, origin, 0, data, format, start, len,
+      &mFormat, mLen
+   );
 }
 
 void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("legacyblockfile"));
 

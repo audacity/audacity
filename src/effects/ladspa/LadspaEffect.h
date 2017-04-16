@@ -13,6 +13,7 @@ class wxStaticText;
 class wxTextCtrl;
 class wxCheckBox;
 
+#include "../../MemoryX.h"
 #include <wx/dialog.h>
 
 #include "audacity/EffectInterface.h"
@@ -22,6 +23,7 @@ class wxCheckBox;
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "ladspa.h"
+#include "../../SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
 #define LADSPAEFFECTS_FAMILY wxT("LADSPA")
@@ -158,20 +160,19 @@ private:
 
    double mSampleRate;
    size_t mBlockSize;
-   int mUserBlockSize;
 
    bool mInteractive;
 
    unsigned mAudioIns;
-   unsigned long *mInputPorts;
+   ArrayOf<unsigned long> mInputPorts;
 
    unsigned mAudioOuts;
-   unsigned long *mOutputPorts;
+   ArrayOf<unsigned long> mOutputPorts;
 
    int mNumInputControls;
-   float *mInputControls;
+   Floats mInputControls;
    int mNumOutputControls;
-   float *mOutputControls;
+   Floats mOutputControls;
 
    bool mUseLatency;
    int mLatencyPort;
@@ -185,11 +186,11 @@ private:
    NumericTextCtrl *mDuration;
    wxDialog *mDialog;
    wxWindow *mParent;
-   wxSlider **mSliders;
-   wxTextCtrl **mFields;
-   wxStaticText **mLabels;
-   wxCheckBox **mToggles;
-   LadspaEffectMeter **mMeters;
+   ArrayOf<wxSlider*> mSliders;
+   ArrayOf<wxTextCtrl*> mFields;
+   ArrayOf<wxStaticText*> mLabels;
+   ArrayOf<wxCheckBox*> mToggles;
+   ArrayOf<LadspaEffectMeter *> mMeters;
 
    DECLARE_EVENT_TABLE()
 

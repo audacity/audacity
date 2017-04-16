@@ -15,6 +15,7 @@
 #include "ExportCL.h"
 #include "../Project.h"
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/log.h>
@@ -283,7 +284,7 @@ public:
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format);
 
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -305,7 +306,7 @@ ExportCL::ExportCL()
    SetDescription(_("(external program)"),0);
 }
 
-int ExportCL::Export(AudacityProject *project,
+ProgressResult ExportCL::Export(AudacityProject *project,
                       unsigned channels,
                       const wxString &fName,
                       bool selectionOnly,
@@ -353,13 +354,18 @@ int ExportCL::Export(AudacityProject *project,
 
    // Kick off the command
    ExportCLProcess process(&output);
-   rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
 
+   {
 #if defined(__WXMSW__)
-   if (!opath.IsEmpty()) {
-      wxSetEnv(wxT("PATH"),opath.c_str());
-   }
+      auto cleanup = finally( [&] {
+         if (!opath.IsEmpty()) {
+            wxSetEnv(wxT("PATH"),opath.c_str());
+         }
+      } );
 #endif
+
+      rc = wxExecute(cmd, wxEXEC_ASYNC, &process);
+   }
 
    if (!rc) {
       wxMessageBox(wxString::Format(_("Cannot export audio to %s"),
@@ -367,7 +373,7 @@ int ExportCL::Export(AudacityProject *project,
       process.Detach();
       process.CloseOutput();
 
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Turn off logging to prevent broken pipe messages
@@ -431,9 +437,14 @@ int ExportCL::Export(AudacityProject *project,
 
    size_t numBytes = 0;
    samplePtr mixed = NULL;
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    {
+      auto closeIt = finally ( [&] {
+         // Should make the process die, before propagating any exception
+         process.CloseOutput();
+      } );
+
       // Prepare the progress display
       ProgressDialog progress(_("Export"),
          selectionOnly ?
@@ -441,7 +452,7 @@ int ExportCL::Export(AudacityProject *project,
          _("Exporting the entire project using command-line encoder"));
 
       // Start piping the mixed data to the command
-      while (updateResult == eProgressSuccess && process.IsActive() && os->IsOk()) {
+      while (updateResult == ProgressResult::Success && process.IsActive() && os->IsOk()) {
          // Capture any stdout and stderr from the command
          Drain(process.GetInputStream(), &output);
          Drain(process.GetErrorStream(), &output);
@@ -474,6 +485,7 @@ int ExportCL::Export(AudacityProject *project,
          while (bytes > 0) {
             os->Write(mixed, bytes);
             if (!os->IsOk()) {
+               updateResult = ProgressResult::Cancelled;
                break;
             }
             bytes -= os->LastWrite();
@@ -485,9 +497,6 @@ int ExportCL::Export(AudacityProject *project,
       }
       // Done with the progress display
    }
-
-   // Should make the process die
-   process.CloseOutput();
 
    // Wait for process to terminate
    while (process.IsActive()) {

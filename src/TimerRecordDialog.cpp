@@ -23,6 +23,7 @@
 #include "FileNames.h"
 
 #include <wx/defs.h>
+#include <wx/dir.h>
 #include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/progdlg.h>
@@ -504,12 +505,12 @@ int TimerRecordDialog::RunWaitDialog()
 {
    AudacityProject* pProject = GetActiveProject();
    
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    if (m_DateTime_Start > wxDateTime::UNow())
       updateResult = this->WaitForStart();
 
-   if (updateResult != eProgressSuccess)  {
+   if (updateResult != ProgressResult::Success)  {
       // Don't proceed, but don't treat it as canceled recording. User just canceled waiting.
       return POST_TIMER_RECORD_CANCEL_WAIT;
    } else {
@@ -551,7 +552,7 @@ int TimerRecordDialog::RunWaitDialog()
       this->OnTimer(dummyTimerEvent);
 
       // Loop for progress display during recording.
-      while (bIsRecording && (updateResult == eProgressSuccess)) {
+      while (bIsRecording && (updateResult == ProgressResult::Success)) {
          updateResult = progress.Update();
          wxMilliSleep(kTimerInterval);
          bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
@@ -563,10 +564,10 @@ int TimerRecordDialog::RunWaitDialog()
    pProject->OnStop();
 
    // Let the caller handle cancellation or failure from recording progress.
-   if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
+   if (updateResult == ProgressResult::Cancelled || updateResult == ProgressResult::Failed)
       return POST_TIMER_RECORD_CANCEL;
 
-   return ExecutePostRecordActions((updateResult == eProgressStopped));
+   return ExecutePostRecordActions((updateResult == ProgressResult::Stopped));
 }
 
 int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
@@ -674,8 +675,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          // Lets show a warning dialog telling the user what is about to happen.
          // If the user no longer wants to carry out this action then they can click
          // Cancel and we will do POST_TIMER_RECORD_NOTHING instead.
-         int iDelayOutcome = PreActionDelay(iPostRecordAction, (TimerRecordCompletedActions)eActionFlags);
-         if (iDelayOutcome != eProgressSuccess) {
+         auto iDelayOutcome = PreActionDelay(iPostRecordAction, (TimerRecordCompletedActions)eActionFlags);
+         if (iDelayOutcome != ProgressResult::Success) {
             // Cancel the action!
             iPostRecordAction = POST_TIMER_RECORD_NOTHING;
             // Set this to true to avoid any chance of the temp files being deleted
@@ -683,9 +684,13 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
             break;
          }
 
+
          // If we have simply recorded, exported and then plan to Exit/Restart/Shutdown
          // then we will have a temporary project setup.  Let's get rid of that!
          if (m_bAutoExportEnabled && !m_bAutoSaveEnabled) {
+            // PRL:  Move the following cleanup into a finally?
+            // No, I think you would want to skip this, in case recording
+            // succeeded but then save or export threw an exception.
             DirManager::CleanTempDir();
          }
       } while (false);
@@ -693,6 +698,9 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
    // Do we need to cleanup the orphaned temporary project?
    if (m_bProjectCleanupRequired && !bErrorOverride) {
+      // PRL:  Move the following cleanup into a finally?
+      // No, I think you would want to skip this, in case recording
+      // succeeded but then save or export threw an exception.
       RemoveAllAutoSaveFiles();
    }
 
@@ -883,7 +891,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(3, wxEXPAND);
             {
                S.AddPrompt(_("Export Project As:"));
-               m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), _(""));
+               m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
                m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select..."));
@@ -992,7 +1000,7 @@ void TimerRecordDialog::UpdateEnd()
    m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
 }
 
-int TimerRecordDialog::WaitForStart()
+ProgressResult TimerRecordDialog::WaitForStart()
 {
    // MY: The Waiting For Start dialog now shows what actions will occur after recording has completed
    wxString sPostAction = m_pTimerAfterCompleteChoiceCtrl->GetString(m_pTimerAfterCompleteChoiceCtrl->GetSelection());
@@ -1025,9 +1033,9 @@ int TimerRecordDialog::WaitForStart()
       pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
       _("Recording will commence in:"));
 
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    bool bIsRecording = false;
-   while (updateResult == eProgressSuccess && !bIsRecording)
+   while (updateResult == ProgressResult::Success && !bIsRecording)
    {
       updateResult = progress.Update();
       wxMilliSleep(10);
@@ -1036,7 +1044,7 @@ int TimerRecordDialog::WaitForStart()
    return updateResult;
 }
 
-int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions)
+ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions)
 {
    wxString sAction = m_pTimerAfterCompleteChoiceCtrl->GetString(iActionIndex);
    wxString sCountdownLabel;
@@ -1067,9 +1075,9 @@ int TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCompletedActi
                           pdlgHideStopButton | pdlgHideElapsedTime,
                           sCountdownLabel);
 
-   int iUpdateResult = eProgressSuccess;
+   auto iUpdateResult = ProgressResult::Success;
    bool bIsTime = false;
-   while (iUpdateResult == eProgressSuccess && !bIsTime)
+   while (iUpdateResult == ProgressResult::Success && !bIsTime)
    {
       iUpdateResult = dlgAction.Update();
       wxMilliSleep(10);

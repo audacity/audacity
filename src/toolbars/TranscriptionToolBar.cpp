@@ -31,7 +31,6 @@
 #include "../Envelope.h"
 
 #include "ControlToolBar.h"
-#include "../AudacityApp.h"
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../Experimental.h"
@@ -173,6 +172,7 @@ void TranscriptionToolBar::MakeAlternateImages(
 
 void TranscriptionToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 // Very similar to code in ControlToolBar...
 // Very similar to code in EditToolBar
    MakeButtonBackgroundsSmall();
@@ -303,7 +303,7 @@ void TranscriptionToolBar::RegenerateTooltips()
       wxString commandName;
       wxString untranslatedLabel;
    } table[] = {
-      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-speed")  },
+      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed")  },
    };
 
    std::vector<wxString> commands;
@@ -393,7 +393,8 @@ void TranscriptionToolBar::SetButton(bool down, AButton* button)
    }
 }
 
-void TranscriptionToolBar::GetSamples(WaveTrack *t, sampleCount *s0, sampleCount *slen)
+void TranscriptionToolBar::GetSamples(
+   const WaveTrack *t, sampleCount *s0, sampleCount *slen)
 {
    // GetSamples attempts to translate the start and end selection markers into sample indices
    // These selection numbers are doubles.
@@ -528,15 +529,16 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
 
    Track *t = iter.First();   //Make a track
    if(t ) {
-      sampleCount start,len;
-      GetSamples((WaveTrack*)t, &start,&len);
+      auto wt = static_cast<const WaveTrack*>(t);
+      sampleCount start, len;
+      GetSamples(wt, &start, &len);
 
       //Adjust length to end if selection is null
       //if(len == 0)
-      //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
+      //len = wt->GetSequence()->GetNumSamples()-start;
 
-      auto newstart = mVk->OnForward(*(WaveTrack*)t,start,len);
-      double newpos = newstart / ((WaveTrack*)t)->GetRate();
+      auto newstart = mVk->OnForward(*wt, start, len);
+      double newpos = newstart.as_double() / wt->GetRate();
 
       p->SetSel0(newpos);
       p->RedrawProject();
@@ -561,15 +563,16 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
    SetButton(false, mButtons[TTB_StartOff]);
    Track *t = iter.First();   //Make a track
    if(t) {
-      sampleCount start,len;
-      GetSamples((WaveTrack*)t, &start,&len);
+      auto wt = static_cast<const WaveTrack*>(t);
+      sampleCount start, len;
+      GetSamples(wt, &start, &len);
 
       //Adjust length to end if selection is null
       //if(len == 0)
-      //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
+      //len = wt->GetSequence()->GetNumSamples()-start;
 
-      auto newstart = mVk->OffForward(*(WaveTrack*)t,start,len);
-      double newpos = newstart / ((WaveTrack*)t)->GetRate();
+      auto newstart = mVk->OffForward(*wt, start, len);
+      double newpos = newstart.as_double() / wt->GetRate();
 
       p->SetSel0(newpos);
       p->RedrawProject();
@@ -594,8 +597,9 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
 
    Track *t = iter.First();   //Make a track
    if(t) {
-      sampleCount start,len;
-      GetSamples((WaveTrack*)t, &start,&len);
+      auto wt = static_cast<const WaveTrack*>(t);
+      sampleCount start, len;
+      GetSamples(wt, &start, &len);
 
       //Adjust length to end if selection is null
       if(len == 0)
@@ -603,8 +607,8 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
             len = start;
             start = 0;
          }
-      auto newEnd = mVk->OnBackward(*(WaveTrack*)t,start+ len,len);
-      double newpos = newEnd / ((WaveTrack*)t)->GetRate();
+      auto newEnd = mVk->OnBackward(*wt, start + len, len);
+      double newpos = newEnd.as_double() / wt->GetRate();
 
       p->SetSel1(newpos);
       p->RedrawProject();
@@ -630,16 +634,17 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
 
    Track *t = iter.First();   //Make a track
    if(t) {
-      sampleCount start,len;
-      GetSamples((WaveTrack*)t, &start,&len);
+      auto wt = static_cast<const WaveTrack*>(t);
+      sampleCount start, len;
+      GetSamples(wt, &start, &len);
 
       //Adjust length to end if selection is null
       if(len == 0) {
          len = start;
          start = 0;
       }
-      auto newEnd = mVk->OffBackward(*(WaveTrack*)t,start+ len,len);
-      double newpos = newEnd / ((WaveTrack*)t)->GetRate();
+      auto newEnd = mVk->OffBackward(*wt, start + len, len);
+      double newpos = newEnd.as_double() / wt->GetRate();
 
       p->SetSel1(newpos);
       p->RedrawProject();
@@ -665,25 +670,27 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 
 
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
    if(t)
       {
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
+         auto wt = static_cast<const WaveTrack*>(t);
+         sampleCount start, len;
+         GetSamples(wt, &start, &len);
 
          //Adjust length to end if selection is null
          //if(len == 0)
-         //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
+         //len = wt->GetSequence()->GetNumSamples()-start;
 
-         double rate =  ((WaveTrack*)t)->GetRate();
-         auto newstart = mVk->OffBackward(*(WaveTrack*)t,start,start);
-         auto newend   = mVk->OffForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
+         double rate =  wt->GetRate();
+         auto newstart = mVk->OffBackward(*wt, start, start);
+         auto newend   =
+            mVk->OffForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
 
          //reset the selection bounds.
-         p->SetSel0(newstart / rate);
-         p->SetSel1(newend /  rate);
+         p->SetSel0(newstart.as_double() / rate);
+         p->SetSel1(newend.as_double() /  rate);
          p->RedrawProject();
 
       }
@@ -705,24 +712,26 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 
 
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
    if(t)
       {
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
+         auto wt = static_cast<const WaveTrack*>(t);
+         sampleCount start, len;
+         GetSamples(wt, &start, &len);
 
          //Adjust length to end if selection is null
          //if(len == 0)
-         //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
-         double rate =  ((WaveTrack*)t)->GetRate();
-         auto newstart = mVk->OnBackward(*(WaveTrack*)t,start,start);
-         auto newend   = mVk->OnForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
+         //len = wt->GetSequence()->GetNumSamples()-start;
+         double rate =  wt->GetRate();
+         auto newstart = mVk->OnBackward(*wt, start, start);
+         auto newend   =
+            mVk->OnForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
 
          //reset the selection bounds.
-         p->SetSel0(newstart /  rate);
-         p->SetSel1(newend / rate);
+         p->SetSel0(newstart.as_double() /  rate);
+         p->SetSel1(newend.as_double() / rate);
          p->RedrawProject();
 
       }
@@ -745,15 +754,16 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
    AudacityProject *p = GetActiveProject();
 
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
    Track *t = iter.First();   //Get a track
 
    if(t)
       {
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
+         auto wt = static_cast<const WaveTrack*>(t);
+         sampleCount start, len;
+         GetSamples(wt, &start, &len);
 
-         mVk->CalibrateNoise(*((WaveTrack*)t),start,len);
+         mVk->CalibrateNoise(*wt, start, len);
          mVk->AdjustThreshold(3);
 
          mButtons[TTB_StartOn]->Enable();
@@ -798,13 +808,14 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
    if(t)
       {
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
+         auto wt = static_cast<const WaveTrack*>(t);
+         sampleCount start, len;
+         GetSamples(wt, &start, &len);
 
          //Adjust length to end if selection is null
          if(len == 0)
@@ -812,12 +823,12 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                len = start;
                start = 0;
             }
-         int lastlen = 0;
+         sampleCount lastlen = 0;
          double newStartPos, newEndPos;
 
 
          //This is the minumum word size in samples (.05 is 50 ms)
-         int minWordSize = (int)(((WaveTrack*)t)->GetRate() * .05);
+         int minWordSize = (int)(wt->GetRate() * .05);
 
          //Continue until we have processed the entire
          //region, or we are making no progress.
@@ -826,7 +837,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
                lastlen = len;
 
-               auto newStart = mVk->OnForward(*(WaveTrack*)t,start,len);
+               auto newStart = mVk->OnForward(*wt, start, len);
 
                //JKC: If no start found then don't add any labels.
                if( newStart==start)
@@ -843,7 +854,8 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                //OK, now we have found a NEW starting point.  A 'word' should be at least
                //50 ms long, so jump ahead minWordSize
 
-               auto newEnd   = mVk->OffForward(*(WaveTrack*)t,newStart+minWordSize, len);
+               auto newEnd   =
+                  mVk->OffForward(*wt, newStart + minWordSize, len);
 
                //If newEnd didn't move, we should give up, because
                // there isn't another end before the end of the selection.
@@ -855,8 +867,8 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
                len -= (newEnd - newStart);
 
                //Calculate the start and end of the words, in seconds
-               newStartPos = newStart / ((WaveTrack*)t)->GetRate();
-               newEndPos = newEnd / ((WaveTrack*)t)->GetRate();
+               newStartPos = newStart.as_double() / wt->GetRate();
+               newEndPos = newEnd.as_double() / wt->GetRate();
 
 
                //Increment

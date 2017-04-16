@@ -18,6 +18,7 @@
 
 #include <sndfile.h>
 
+#include "../AudacityApp.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../MemoryX.h"
@@ -74,81 +75,16 @@ PCMAliasBlockFile::~PCMAliasBlockFile()
 /// @param start  The offset within the block to begin reading
 /// @param len    The number of samples to read
 size_t PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
-                                size_t start, size_t len) const
+                                size_t start, size_t len, bool mayThrow) const
 {
-   SF_INFO info;
-
    if(!mAliasedFileName.IsOk()){ // intentionally silenced
-      memset(data,0,SAMPLE_SIZE(format)*len);
+      memset(data, 0, SAMPLE_SIZE(format) * len);
       return len;
    }
 
-   wxFile f;   // will be closed when it goes out of scope
-   SFFile sf;
-   {
-      Maybe<wxLogNull> silence{};
-      if (mSilentAliasLog)
-         silence.create();
-
-      memset(&info, 0, sizeof(info));
-
-      if (f.Exists(mAliasedFileName.GetFullPath())) { // Don't use Open if file does not exits
-         if (f.Open(mAliasedFileName.GetFullPath())) {
-            // Even though there is an sf_open() that takes a filename, use the one that
-            // takes a file descriptor since wxWidgets can open a file with a Unicode name and
-            // libsndfile can't (under Windows).
-            sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE));
-         }
-         // FIXME: TRAP_ERR failure of wxFile open incompletely handled in PCMAliasBlockFile::ReadData.
-
-      }
-
-      if (!sf) {
-         memset(data, 0, SAMPLE_SIZE(format)*len);
-         silence.reset();
-         mSilentAliasLog = TRUE;
-
-         // Set a marker to display an error message for the silence
-         if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
-            wxGetApp().MarkAliasedFilesMissingWarning(this);
-         return len;
-      }
-   }
-   mSilentAliasLog=FALSE;
-
-   // Third party library has its own type alias, check it
-   static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
-                 "Type sf_count_t is too narrow to hold a sampleCount");
-   SFCall<sf_count_t>(sf_seek, sf.get(),
-                      ( mAliasStart + start ).as_long_long(), SEEK_SET);
-   wxASSERT(info.channels >= 0);
-   SampleBuffer buffer(len * info.channels, floatSample);
-
-   size_t framesRead = 0;
-
-   if (format == int16Sample &&
-       !sf_subtype_more_than_16_bits(info.format)) {
-      // Special case: if the file is in 16-bit (or less) format,
-      // and the calling method wants 16-bit data, go ahead and
-      // read 16-bit data directly.  This is a pretty common
-      // case, as most audio files are 16-bit.
-      framesRead = SFCall<sf_count_t>(sf_readf_short, sf.get(), (short *)buffer.ptr(), len);
-      for (int i = 0; i < framesRead; i++)
-         ((short *)data)[i] =
-            ((short *)buffer.ptr())[(info.channels * i) + mAliasChannel];
-   }
-   else {
-      // Otherwise, let libsndfile handle the conversion and
-      // scaling, and pass us normalized data as floats.  We can
-      // then convert to whatever format we want.
-      framesRead = SFCall<sf_count_t>(sf_readf_float, sf.get(), (float *)buffer.ptr(), len);
-      float *bufferPtr = &((float *)buffer.ptr())[mAliasChannel];
-      CopySamples((samplePtr)bufferPtr, floatSample,
-                  (samplePtr)data, format,
-                  framesRead, true, info.channels);
-   }
-
-   return framesRead;
+   return CommonReadData( mayThrow,
+      mAliasedFileName, mSilentAliasLog, this, mAliasStart, mAliasChannel,
+      data, format, start, len);
 }
 
 /// Construct a NEW PCMAliasBlockFile based on this one, but writing
@@ -165,6 +101,7 @@ BlockFilePtr PCMAliasBlockFile::Copy(wxFileNameWrapper &&newFileName)
 }
 
 void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
+// may throw
 {
    xmlFile.StartTag(wxT("pcmaliasblockfile"));
 

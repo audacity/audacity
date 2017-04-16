@@ -121,7 +121,7 @@ bool ExportOGGOptions::TransferDataFromWindow()
 // ExportOGG
 //----------------------------------------------------------------------------
 
-#define SAMPLES_PER_RUN 8192
+#define SAMPLES_PER_RUN 8192u
 
 class ExportOGG final : public ExportPlugin
 {
@@ -132,7 +132,7 @@ public:
    // Required
    wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
-   int Export(AudacityProject *project,
+   ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,
                bool selectedOnly,
@@ -158,7 +158,7 @@ ExportOGG::ExportOGG()
    SetDescription(_("Ogg Vorbis Files"),0);
 }
 
-int ExportOGG::Export(AudacityProject *project,
+ProgressResult ExportOGG::Export(AudacityProject *project,
                        unsigned numChannels,
                        const wxString &fName,
                        bool selectionOnly,
@@ -173,14 +173,14 @@ int ExportOGG::Export(AudacityProject *project,
    double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    int       eos = 0;
 
    FileIO outFile(fName, FileIO::Output);
 
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // All the Ogg and Vorbis encoding data
@@ -193,13 +193,22 @@ int ExportOGG::Export(AudacityProject *project,
    vorbis_dsp_state dsp;
    vorbis_block     block;
 
+   auto cleanup = finally( [&] {
+      ogg_stream_clear(&stream);
+
+      vorbis_block_clear(&block);
+      vorbis_dsp_clear(&dsp);
+      vorbis_info_clear(&info);
+      vorbis_comment_clear(&comment);
+   } );
+
    // Encoding setup
    vorbis_info_init(&info);
    vorbis_encode_init_vbr(&info, numChannels, (int)(rate + 0.5), quality);
 
    // Retrieve tags
    if (!FillComment(project, &comment, metadata)) {
-      return false;
+      return ProgressResult::Cancelled;
    }
 
    // Set up analysis state and auxiliary encoding storage
@@ -253,23 +262,24 @@ int ExportOGG::Export(AudacityProject *project,
          _("Exporting the selected audio as Ogg Vorbis") :
          _("Exporting the entire project as Ogg Vorbis"));
 
-      while (updateResult == eProgressSuccess && !eos) {
+      while (updateResult == ProgressResult::Success && !eos) {
          float **vorbis_buffer = vorbis_analysis_buffer(&dsp, SAMPLES_PER_RUN);
          auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
 
+         int err;
          if (samplesThisRun == 0) {
             // Tell the library that we wrote 0 bytes - signalling the end.
-            vorbis_analysis_wrote(&dsp, 0);
+            err = vorbis_analysis_wrote(&dsp, 0);
          }
          else {
 
-            for (int i = 0; i < numChannels; i++) {
+            for (size_t i = 0; i < numChannels; i++) {
                float *temp = (float *)mixer->GetBuffer(i);
                memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
             }
 
             // tell the encoder how many samples we have
-            vorbis_analysis_wrote(&dsp, samplesThisRun);
+            err = vorbis_analysis_wrote(&dsp, samplesThisRun);
          }
 
          // I don't understand what this call does, so here is the comment
@@ -278,22 +288,23 @@ int ExportOGG::Export(AudacityProject *project,
          //    vorbis does some data preanalysis, then divvies up blocks
          //    for more involved (potentially parallel) processing. Get
          //    a single block for encoding now
-         while (vorbis_analysis_blockout(&dsp, &block) == 1) {
+         while (!err && vorbis_analysis_blockout(&dsp, &block) == 1) {
 
             // analysis, assume we want to use bitrate management
-            vorbis_analysis(&block, NULL);
-            vorbis_bitrate_addblock(&block);
+            err = vorbis_analysis(&block, NULL);
+            if (!err)
+               err = vorbis_bitrate_addblock(&block);
 
-            while (vorbis_bitrate_flushpacket(&dsp, &packet)) {
+            while (!err && vorbis_bitrate_flushpacket(&dsp, &packet)) {
 
                // add the packet to the bitstream
-               ogg_stream_packetin(&stream, &packet);
+               err = ogg_stream_packetin(&stream, &packet);
 
                // From vorbis-tools-1.0/oggenc/encode.c:
                //   If we've gone over a page boundary, we can do actual output,
                //   so do so (for however many pages are available).
 
-               while (!eos) {
+               while (!err && !eos) {
                   int result = ogg_stream_pageout(&stream, &page);
                   if (!result) {
                      break;
@@ -309,16 +320,14 @@ int ExportOGG::Export(AudacityProject *project,
             }
          }
 
+         if (err) {
+            updateResult = ProgressResult::Cancelled;
+            break;
+         }
+
          updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-
-   ogg_stream_clear(&stream);
-
-   vorbis_block_clear(&block);
-   vorbis_dsp_clear(&dsp);
-   vorbis_info_clear(&info);
-   vorbis_comment_clear(&comment);
 
    outFile.Close();
 

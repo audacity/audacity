@@ -32,6 +32,7 @@ class wxWindow;
 #include "audacity/EffectInterface.h"
 
 #include "../Experimental.h"
+#include "../SampleFormat.h"
 #include "../SelectedRegion.h"
 #include "../Shuttle.h"
 #include "../Internat.h"
@@ -46,7 +47,6 @@ class ShuttleGui;
 class AudacityProject;
 class LabelTrack;
 class SelectedRegion;
-class TimeWarper;
 class EffectUIHost;
 class Track;
 class TrackList;
@@ -241,6 +241,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                  TrackFactory *factory, SelectedRegion *selectedRegion,
                  bool shouldPrompt = true);
 
+   bool Delegate( Effect &delegate,
+      wxWindow *parent, SelectedRegion *selectedRegion, bool shouldPrompt);
+
    // Realtime Effect Processing
    /* not virtual */ bool RealtimeAddProcessor(int group, unsigned chans, float rate);
    /* not virtual */ size_t RealtimeProcess(int group,
@@ -284,7 +287,9 @@ protected:
    virtual bool InitPass2();
    virtual int GetPass();
 
-   // clean up any temporary memory
+   // clean up any temporary memory, needed only per invocation of the
+   // effect, after either successful or failed or exception-aborted processing.
+   // Invoked inside a "finally" block so it must be no-throw.
    virtual void End();
 
    // Most effects just use the previewLength, but time-stretching/compressing
@@ -324,10 +329,8 @@ protected:
    int GetNumWaveGroups() { return mNumGroups; }
 
    // Calculates the start time and selection length in samples
-   void GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len);
-
-   void SetTimeWarper(std::unique_ptr<TimeWarper> &&warper);
-   TimeWarper *GetTimeWarper();
+   void GetSamples(
+      const WaveTrack *track, sampleCount *start, sampleCount *len);
 
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
@@ -434,7 +437,7 @@ protected:
                                // be created with this rate...
    double         mSampleRate;
    TrackFactory   *mFactory;
-   TrackList      *mTracks;      // the complete list of all tracks
+   TrackList *inputTracks() const { return mTracks; }
    std::unique_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
@@ -442,7 +445,6 @@ protected:
    double         mF0;
    double         mF1;
 #endif
-   std::unique_ptr<TimeWarper> mWarper;
    wxArrayString  mPresetNames;
    wxArrayString  mPresetValues;
    int            mPass;
@@ -470,18 +472,21 @@ protected:
                      WaveTrack *right,
                      sampleCount leftStart,
                      sampleCount rightStart,
-                     sampleCount len);
- 
+                     sampleCount len,
+                     FloatBuffers &inBuffer,
+                     FloatBuffers &outBuffer,
+                     ArrayOf< float * > &inBufPos,
+                     ArrayOf< float *> &outBufPos);
+
  //
  // private data
  //
  // Used only by the base Effect class
  //
 private:
-   wxWindow *mParent;
+   TrackList *mTracks; // the complete list of all tracks
 
    bool mIsBatch;
-
    bool mIsLinearEffect;
    bool mPreviewWithNotSelected;
    bool mPreviewFullSelection;
@@ -502,13 +507,8 @@ private:
 
    // For client driver
    EffectClientInterface *mClient;
-   unsigned mNumAudioIn;
-   unsigned mNumAudioOut;
-
-   float **mInBuffer;
-   float **mOutBuffer;
-   float **mInBufPos;
-   float **mOutBufPos;
+   size_t mNumAudioIn;
+   size_t mNumAudioOut;
 
    size_t mBufferSize;
    size_t mBlockSize;

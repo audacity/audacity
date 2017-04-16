@@ -36,6 +36,8 @@
 #include "WaveTrack.h"
 #include "FFT.h"
 #include "Profiler.h"
+#include "InconsistencyException.h"
+#include "UserException.h"
 
 #include "prefs/SpectrogramSettings.h"
 
@@ -273,7 +275,8 @@ protected:
 };
 
 static void ComputeSpectrumUsingRealFFTf
-   (float * __restrict buffer, HFFT hFFT, const float * __restrict window, size_t len, float * __restrict out)
+   (float * __restrict buffer, const FFTParam *hFFT,
+    const float * __restrict window, size_t len, float * __restrict out)
 {
    size_t i;
    if(len > hFFT->Points * 2)
@@ -300,21 +303,22 @@ static void ComputeSpectrumUsingRealFFTf
    }
 }
 
-WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate)
+WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
+                   sampleFormat format, int rate)
 {
-   mOffset = 0;
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
+
    mEnvelope = std::make_unique<Envelope>();
+
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
-   mAppendBufferLen = 0;
-   mDirty = 0;
-   mIsPlaceholder = false;
 }
 
-WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &projDirManager)
+WaveClip::WaveClip(const WaveClip& orig,
+                   const std::shared_ptr<DirManager> &projDirManager,
+                   bool copyCutlines)
 {
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
@@ -323,44 +327,96 @@ WaveClip::WaveClip(const WaveClip& orig, const std::shared_ptr<DirManager> &proj
    mOffset = orig.mOffset;
    mRate = orig.mRate;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
+
    mEnvelope = std::make_unique<Envelope>();
    mEnvelope->Paste(0.0, orig.mEnvelope.get());
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen((orig.mSequence->GetNumSamples().as_double()) / orig.mRate);
+
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
 
-   for (const auto &clip: orig.mCutLines)
-      mCutLines.push_back(make_movable<WaveClip>(*clip, projDirManager));
+   if ( copyCutlines )
+      for (const auto &clip: orig.mCutLines)
+         mCutLines.push_back
+            ( make_movable<WaveClip>( *clip, projDirManager, true ) );
 
-   mAppendBufferLen = 0;
-   mDirty = 0;
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
+
+// to do
+WaveClip::WaveClip(const WaveClip& orig,
+                   const std::shared_ptr<DirManager> &projDirManager,
+                   bool copyCutlines,
+                   double t0, double t1)
+{
+   // Copy only a range of the other WaveClip
+
+   mOffset = orig.mOffset;
+   mRate = orig.mRate;
+
+   mWaveCache = std::make_unique<WaveCache>();
+   mSpecCache = std::make_unique<SpecCache>();
+   mSpecPxCache = std::make_unique<SpecPxCache>(1);
+
+   mIsPlaceholder = orig.GetIsPlaceholder();
+
+   sampleCount s0, s1;
+
+   orig.TimeToSamplesClip(t0, &s0);
+   orig.TimeToSamplesClip(t1, &s1);
+
+   mSequence = orig.mSequence->Copy(s0, s1);
+
+   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope->CopyFrom(orig.mEnvelope.get(),
+                       mOffset + s0.as_double()/mRate,
+                       mOffset + s1.as_double()/mRate);
+
+   if ( copyCutlines )
+      // Copy cutline clips that fall in the range
+      for (const auto &ppClip : orig.mCutLines)
+      {
+         const WaveClip* clip = ppClip.get();
+         double cutlinePosition = orig.mOffset + clip->GetOffset();
+         if (cutlinePosition >= t0 && cutlinePosition <= t1)
+         {
+            auto newCutLine =
+               make_movable< WaveClip >( *clip, projDirManager, true );
+            newCutLine->SetOffset( cutlinePosition - t0 );
+            mCutLines.push_back(std::move(newCutLine));
+         }
+      }
+}
+
 
 WaveClip::~WaveClip()
 {
 }
 
 void WaveClip::SetOffset(double offset)
+// NOFAIL-GUARANTEE
 {
     mOffset = offset;
     mEnvelope->SetOffset(mOffset);
 }
 
 bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len) const
+                   sampleCount start, size_t len, bool mayThrow) const
 {
-   return mSequence->Get(buffer, format, start, len);
+   return mSequence->Get(buffer, format, start, len, mayThrow);
 }
 
-bool WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
+void WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len)
+// STRONG-GUARANTEE
 {
-   bool bResult = mSequence->Set(buffer, format, start, len);
+   // use STRONG-GUARANTEE
+   mSequence->SetSamples(buffer, format, start, len);
+
+   // use NOFAIL-GUARANTEE
    MarkChanged();
-   return bResult;
 }
 
 BlockArray* WaveClip::GetSequenceBlockArray()
@@ -643,29 +699,31 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
             if (right > left) {
-               float *b;
+               Floats b;
+               float *pb{};
                // left is nonnegative and at most mAppendBufferLen:
                auto sLeft = left.as_size_t();
                // The difference is at most mAppendBufferLen:
                size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  b = &((float *)mAppendBuffer.ptr())[sLeft];
+                  pb = &((float *)mAppendBuffer.ptr())[sLeft];
                else {
-                  b = new float[len];
+                  b.reinit(len);
+                  pb = b.get();
                   CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
                               seqFormat,
-                              (samplePtr)b, floatSample, len);
+                              (samplePtr)pb, floatSample, len);
                }
 
                float theMax, theMin, sumsq;
                {
-                  const float val = b[0];
+                  const float val = pb[0];
                   theMax = theMin = val;
                   sumsq = val * val;
                }
                for(decltype(len) j = 1; j < len; j++) {
-                  const float val = b[j];
+                  const float val = pb[j];
                   theMax = std::max(theMax, val);
                   theMin = std::min(theMin, val);
                   sumsq += val * val;
@@ -675,9 +733,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                max[i] = theMax;
                rms[i] = (float)sqrt(sumsq / len);
                bl[i] = 1; //for now just fake it.
-
-               if (seqFormat != floatSample)
-                  delete[] b;
 
                didUpdate=true;
             }
@@ -802,16 +857,16 @@ bool SpecCache::CalculateOneSpectrum
 
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
-   const size_t zeroPaddingFactor = (autocorrelation ? 1 : settings.ZeroPaddingFactor());
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
    const size_t padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
    const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
+   auto nBins = settings.NBins();
 
    if (from < 0 || from >= numSamples) {
       if (xx >= 0 && xx < len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
-         float *const results = &out[half * xx];
-         std::fill(results, results + half, 0.0f);
+         float *const results = &out[nBins * xx];
+         std::fill(results, results + nBins, 0.0f);
       }
    }
    else {
@@ -851,21 +906,27 @@ bool SpecCache::CalculateOneSpectrum
                floatSample, sampleCount(
                   floor(0.5 + from.as_double() + offset * rate)
                ),
-               myLen)
+               myLen,
+               // Don't throw in this drawing operation
+               false)
             );
 
-            if (copy)
-               memcpy(adj, useBuffer, myLen * sizeof(float));
+            if (copy) {
+               if (useBuffer)
+                  memcpy(adj, useBuffer, myLen * sizeof(float));
+               else
+                  memset(adj, 0, myLen * sizeof(float));
+            }
          }
       }
 
-      if (copy)
+      if (copy || !useBuffer)
          useBuffer = scratch;
 
       if (autocorrelation) {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
-         float *const results = &out[half * xx];
+         float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
          ComputeSpectrum(useBuffer, windowSize, windowSize,
             rate, results,
@@ -873,7 +934,7 @@ bool SpecCache::CalculateOneSpectrum
       }
       else if (reassignment) {
          static const double epsilon = 1e-16;
-         const HFFT hFFT = settings.hFFT;
+         const auto hFFT = settings.hFFT.get();
 
          float *const scratch2 = scratch + fftLen;
          std::copy(scratch, scratch2, scratch2);
@@ -882,21 +943,21 @@ bool SpecCache::CalculateOneSpectrum
          std::copy(scratch, scratch2, scratch3);
 
          {
-            const float *const window = settings.window;
+            const float *const window = settings.window.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch[ii] *= window[ii];
             RealFFTf(scratch, hFFT);
          }
 
          {
-            const float *const dWindow = settings.dWindow;
+            const float *const dWindow = settings.dWindow.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch2[ii] *= dWindow[ii];
             RealFFTf(scratch2, hFFT);
          }
 
          {
-            const float *const tWindow = settings.tWindow;
+            const float *const tWindow = settings.tWindow.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                scratch3[ii] *= tWindow[ii];
             RealFFTf(scratch3, hFFT);
@@ -949,7 +1010,7 @@ bool SpecCache::CalculateOneSpectrum
                   result = true;
 
                   // This is non-negative, because bin and correctedX are
-                  auto ind = (int)half * correctedX + bin;
+                  auto ind = (int)nBins * correctedX + bin;
 #ifdef _OPENMP
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
@@ -964,7 +1025,7 @@ bool SpecCache::CalculateOneSpectrum
       else {
          // not reassignment, xx is surely within bounds.
          wxASSERT(xx >= 0);
-         float *const results = &out[half * xx];
+         float *const results = &out[nBins * xx];
 
          // Do the FFT.  Note that useBuffer is multiplied by the window,
          // and the window is initialized with leading and trailing zeroes
@@ -973,10 +1034,10 @@ bool SpecCache::CalculateOneSpectrum
 
          // This function mutates useBuffer
          ComputeSpectrumUsingRealFFTf
-            (useBuffer, settings.hFFT, settings.window, fftLen, results);
+            (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependant gain factor
-            for (size_t ii = 0; ii < half; ++ii)
+            for (size_t ii = 0; ii < nBins; ++ii)
                results[ii] += gainFactors[ii];
          }
       }
@@ -985,13 +1046,23 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
+void SpecCache::Allocate(const SpectrogramSettings &settings)
+{
+   settings.CacheWindows();
+
+   // len columns, and so many rows, column-major.
+   // Don't take column literally -- this isn't pixel data yet, it's the
+   // raw data to be mapped onto the display.
+   freq.resize(len * settings.NBins());
+}
+
 void SpecCache::Populate
    (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
     int copyBegin, int copyEnd, size_t numPixels,
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
 {
-   settings.CacheWindows();
+   Allocate( settings );
 
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
@@ -1000,7 +1071,7 @@ void SpecCache::Populate
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
 #else
    const size_t zeroPaddingFactor = 1;
 #endif
@@ -1008,7 +1079,7 @@ void SpecCache::Populate
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
+   const auto nBins = settings.NBins();
 
    const size_t bufferSize = fftLen;
    const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
@@ -1028,16 +1099,16 @@ void SpecCache::Populate
       // Storage for mutable per-thread data.
       // private clause ensures one copy per thread
       struct ThreadLocalStorage {
-         ThreadLocalStorage()  { cache = nullptr; }
-         ~ThreadLocalStorage() { delete cache; }
+         ThreadLocalStorage()  { }
+         ~ThreadLocalStorage() { }
 
          void init(WaveTrackCache &waveTrackCache, size_t scratchSize) {
             if (!cache) {
-               cache = new WaveTrackCache(waveTrackCache.GetTrack());
+               cache = std::make_unique<WaveTrackCache>(waveTrackCache.GetTrack());
                scratch.resize(scratchSize);
             }
          }
-         WaveTrackCache* cache;
+         std::unique_ptr<WaveTrackCache> cache;
          std::vector<float> scratch;
       } tls;
 
@@ -1098,9 +1169,9 @@ void SpecCache::Populate
          #pragma omp parallel for
 #endif
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
-            float *const results = &freq[half * xx];
-            const HFFT hFFT = settings.hFFT;
-            for (size_t ii = 0; ii < hFFT->Points; ++ii) {
+            float *const results = &freq[nBins * xx];
+            const auto hFFT = settings.hFFT.get();
+            for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
                   power = -160.0;
@@ -1109,7 +1180,7 @@ void SpecCache::Populate
             }
             if (!gainFactors.empty()) {
                // Apply a frequency-dependant gain factor
-               for (size_t ii = 0; ii < half; ++ii)
+               for (size_t ii = 0; ii < nBins; ++ii)
                   results[ii] += gainFactors[ii];
             }
          }
@@ -1118,7 +1189,8 @@ void SpecCache::Populate
 }
 
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
-                              const float *& spectrogram, const sampleCount *& where,
+                              const float *& spectrogram,
+                              const sampleCount *& where,
                               size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
@@ -1126,21 +1198,14 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   const bool autocorrelation =
-      settings.algorithm == SpectrogramSettings::algPitchEAC;
    const int &frequencyGain = settings.frequencyGain;
    const size_t windowSize = settings.WindowSize();
    const int &windowType = settings.windowType;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = autocorrelation ? 1 : settings.ZeroPaddingFactor();
+   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
 #else
    const size_t zeroPaddingFactor = 1;
 #endif
-
-   // FFT length may be longer than the window of samples that affect results
-   // because of zero padding done for increased frequency resolution
-   const size_t fftLen = windowSize * zeroPaddingFactor;
-   const auto half = fftLen / 2;
 
    bool match =
       mSpecCache &&
@@ -1202,13 +1267,16 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // with the current one, re-use as much of the cache as
    // possible
    if (oldCache) {
-      memcpy(&mSpecCache->freq[half * copyBegin],
-         &oldCache->freq[half * (copyBegin + oldX0)],
-         half * (copyEnd - copyBegin) * sizeof(float));
+      mSpecCache->Allocate(settings);
+      auto nBins = settings.NBins();
+      memcpy(&mSpecCache->freq[nBins * copyBegin],
+         &oldCache->freq[nBins * (copyBegin + oldX0)],
+         nBins * (copyEnd - copyBegin) * sizeof(float));
    }
 
    BEGIN_TASK_PROFILING("Populate");
 
+   auto nBins = settings.NBins();
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
        mSequence->GetNumSamples(),
@@ -1225,55 +1293,60 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    return true;
 }
 
-bool WaveClip::GetMinMax(float *min, float *max,
-                          double t0, double t1) const
+std::pair<float, float> WaveClip::GetMinMax(
+   double t0, double t1, bool mayThrow) const
 {
-   *min = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
-   *max = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         THROW_INCONSISTENCY_EXCEPTION;
+      return {
+         0.f,  // harmless, but unused since Sequence::GetMinMax does not use these values
+         0.f   // harmless, but unused since Sequence::GetMinMax does not use these values
+      };
+   }
 
    if (t0 == t1)
-      return true;
+      return{ 0.f, 0.f };
 
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   return mSequence->GetMinMax(s0, s1-s0, min, max);
+   return mSequence->GetMinMax(s0, s1-s0, mayThrow);
 }
 
-bool WaveClip::GetRMS(float *rms, double t0,
-                          double t1)
+float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
 {
-   *rms = float(0.0);
-
-   if (t0 > t1)
-      return false;
+   if (t0 > t1) {
+      if (mayThrow)
+         THROW_INCONSISTENCY_EXCEPTION;
+      return 0.f;
+   }
 
    if (t0 == t1)
-      return true;
+      return 0.f;
 
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   return mSequence->GetRMS(s0, s1-s0, rms);
+   return mSequence->GetRMS(s0, s1-s0, mayThrow);
 }
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format)
 {
-   bool bChanged;
-   bool bResult = mSequence->ConvertToSampleFormat(format, &bChanged);
-   if (bResult && bChanged)
+   // Note:  it is not necessary to do this recursively to cutlines.
+   // They get converted as needed when they are expanded.
+
+   auto bChanged = mSequence->ConvertToSampleFormat(format);
+   if (bChanged)
       MarkChanged();
-   wxASSERT(bResult); // TODO: Throw an actual error.
 }
 
 void WaveClip::UpdateEnvelopeTrackLen()
+// NOFAIL-GUARANTEE
 {
    mEnvelope->SetTrackLen((mSequence->GetNumSamples().as_double()) / mRate);
 }
@@ -1304,9 +1377,12 @@ void WaveClip::GetDisplayRect(wxRect* r)
    *r = mDisplayRect;
 }
 
-bool WaveClip::Append(samplePtr buffer, sampleFormat format,
+void WaveClip::Append(samplePtr buffer, sampleFormat format,
                       size_t len, unsigned int stride /* = 1 */,
                       XMLWriter* blockFileLog /*=NULL*/)
+// PARTIAL-GUARANTEE in case of exceptions:
+// Some prefix (maybe none) of the buffer is appended, and no content already
+// flushed to disk is lost.
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
 
@@ -1317,13 +1393,20 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    if (!mAppendBuffer.ptr())
       mAppendBuffer.Allocate(maxBlockSize, seqFormat);
 
+   auto cleanup = finally( [&] {
+      // use NOFAIL-GUARANTEE
+      UpdateEnvelopeTrackLen();
+      MarkChanged();
+   } );
+
    for(;;) {
       if (mAppendBufferLen >= blockSize) {
-         bool success =
-            mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
-                              blockFileLog);
-         if (!success)
-            return false;
+         // flush some previously appended contents
+         // use STRONG-GUARANTEE
+         mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize,
+                           blockFileLog);
+
+         // use NOFAIL-GUARANTEE for rest of this "if"
          memmove(mAppendBuffer.ptr(),
                  mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
                  (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
@@ -1334,6 +1417,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       if (len == 0)
          break;
 
+      // use NOFAIL-GUARANTEE for rest of this "for"
       wxASSERT(mAppendBufferLen <= maxBlockSize);
       auto toCopy = std::min(len, maxBlockSize - mAppendBufferLen);
 
@@ -1348,56 +1432,59 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       buffer += toCopy * SAMPLE_SIZE(format) * stride;
       len -= toCopy;
    }
+}
 
+void WaveClip::AppendAlias(const wxString &fName, sampleCount start,
+                            size_t len, int channel,bool useOD)
+// STRONG-GUARANTEE
+{
+   // use STRONG-GUARANTEE
+   mSequence->AppendAlias(fName, start, len, channel,useOD);
+
+   // use NOFAIL-GUARANTEE
    UpdateEnvelopeTrackLen();
    MarkChanged();
-
-   return true;
 }
 
-bool WaveClip::AppendAlias(const wxString &fName, sampleCount start,
-                            size_t len, int channel,bool useOD)
-{
-   bool result = mSequence->AppendAlias(fName, start, len, channel,useOD);
-   if (result)
-   {
-      UpdateEnvelopeTrackLen();
-      MarkChanged();
-   }
-   return result;
-}
-
-bool WaveClip::AppendCoded(const wxString &fName, sampleCount start,
+void WaveClip::AppendCoded(const wxString &fName, sampleCount start,
                             size_t len, int channel, int decodeType)
+// STRONG-GUARANTEE
 {
-   bool result = mSequence->AppendCoded(fName, start, len, channel, decodeType);
-   if (result)
-   {
-      UpdateEnvelopeTrackLen();
-      MarkChanged();
-   }
-   return result;
+   // use STRONG-GUARANTEE
+   mSequence->AppendCoded(fName, start, len, channel, decodeType);
+
+   // use NOFAIL-GUARANTEE
+   UpdateEnvelopeTrackLen();
+   MarkChanged();
 }
 
-bool WaveClip::Flush()
+void WaveClip::Flush()
+// NOFAIL-GUARANTEE that the clip will be in a flushed state.
+// PARTIAL-GUARANTEE in case of exceptions:
+// Some initial portion (maybe none) of the append buffer of the
+// clip gets appended; no previously flushed contents are lost.
 {
    //wxLogDebug(wxT("WaveClip::Flush"));
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
-   bool success = true;
    if (mAppendBufferLen > 0) {
-      success = mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(), mAppendBufferLen);
-      if (success) {
+
+      auto cleanup = finally( [&] {
+         // Blow away the append buffer even in case of failure.  May lose some
+         // data but don't leave the track in an un-flushed state.
+
+         // Use NOFAIL-GUARANTEE of these steps.
          mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();
          MarkChanged();
-      }
+      } );
+
+      mSequence->Append(mAppendBuffer.ptr(), mSequence->GetSampleFormat(),
+         mAppendBufferLen);
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
-
-   return success;
 }
 
 bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -1452,7 +1539,8 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
       return NULL;
 }
 
-void WaveClip::WriteXML(XMLWriter &xmlFile)
+void WaveClip::WriteXML(XMLWriter &xmlFile) const
+// may throw
 {
    xmlFile.StartTag(wxT("waveclip"));
    xmlFile.WriteAttr(wxT("offset"), mOffset, 8);
@@ -1466,31 +1554,8 @@ void WaveClip::WriteXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("waveclip"));
 }
 
-bool WaveClip::CreateFromCopy(double t0, double t1, const WaveClip* other)
-{
-   sampleCount s0, s1;
-
-   other->TimeToSamplesClip(t0, &s0);
-   other->TimeToSamplesClip(t1, &s1);
-
-   std::unique_ptr<Sequence> oldSequence = std::move(mSequence);
-   if (!other->mSequence->Copy(s0, s1, mSequence))
-   {
-      mSequence = std::move(oldSequence);
-      return false;
-   }
-
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->CopyFrom(other->mEnvelope.get(),
-      mOffset + s0.as_double()/mRate,
-      mOffset + s1.as_double()/mRate);
-
-   MarkChanged();
-
-   return true;
-}
-
-bool WaveClip::Paste(double t0, const WaveClip* other)
+void WaveClip::Paste(double t0, const WaveClip* other)
+// STRONG-GUARANTEE
 {
    const bool clipNeedsResampling = other->mRate != mRate;
    const bool clipNeedsNewFormat =
@@ -1501,131 +1566,91 @@ bool WaveClip::Paste(double t0, const WaveClip* other)
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
       newClip =
-         std::make_unique<WaveClip>(*other, mSequence->GetDirManager());
+         std::make_unique<WaveClip>(*other, mSequence->GetDirManager(), true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
-         if (!newClip->Resample(mRate))
-            return false;
+         newClip->Resample(mRate);
       if (clipNeedsNewFormat)
          // Force sample formats to match.
          newClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
       pastedClip = newClip.get();
-   } else
+   }
+   else
    {
       // No resampling or format change needed, just use original clip without making a copy
       pastedClip = other;
    }
 
+   // Paste cut lines contained in pasted clip
+   WaveClipHolders newCutlines;
+   for (const auto &cutline: pastedClip->mCutLines)
+   {
+      newCutlines.push_back(
+         make_movable<WaveClip>
+            ( *cutline, mSequence->GetDirManager(),
+              // Recursively copy cutlines of cutlines.  They don't need
+              // their offsets adjusted.
+              true));
+      newCutlines.back()->Offset(t0 - mOffset);
+   }
+
    sampleCount s0;
    TimeToSamplesClip(t0, &s0);
 
-   bool result = false;
-   if (mSequence->Paste(s0, pastedClip->mSequence.get()))
-   {
-      MarkChanged();
-      mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
-      mEnvelope->RemoveUnneededPoints();
-      OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
+   // Assume STRONG-GUARANTEE from Sequence::Paste
+   mSequence->Paste(s0, pastedClip->mSequence.get());
 
-      // Paste cut lines contained in pasted clip
-      for (const auto &cutline: pastedClip->mCutLines)
-      {
-         mCutLines.push_back(
-            make_movable<WaveClip>(*cutline, mSequence->GetDirManager()));
-         mCutLines.back()->Offset(t0 - mOffset);
-      }
+   // Assume NOFAIL-GUARANTEE in the remaining
+   MarkChanged();
+   mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
+   mEnvelope->RemoveUnneededPoints();
+   OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
-      result = true;
-   }
-
-   return result;
+   for (auto &holder : newCutlines)
+      mCutLines.push_back(std::move(holder));
 }
 
-bool WaveClip::InsertSilence(double t, double len)
+void WaveClip::InsertSilence(double t, double len)
+// STRONG-GUARANTEE
 {
    sampleCount s0;
    TimeToSamplesClip(t, &s0);
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
-   if (!GetSequence()->InsertSilence(s0, slen))
-   {
-      wxASSERT(false);
-      return false;
-   }
+   // use STRONG-GUARANTEE
+   GetSequence()->InsertSilence(s0, slen);
+
+   // use NOFAIL-GUARANTEE
    OffsetCutLines(t, len);
    GetEnvelope()->InsertSpace(t, len);
    MarkChanged();
-
-   return true;
 }
 
-bool WaveClip::Clear(double t0, double t1)
+void WaveClip::Clear(double t0, double t1)
+// STRONG-GUARANTEE
 {
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   if (GetSequence()->Delete(s0, s1-s0))
-   {
-      // msmeyer
-      //
-      // Delete all cutlines that are within the given area, if any.
-      //
-      // Note that when cutlines are active, two functions are used:
-      // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
-      // whenever the user directly calls a command that removes some audio, e.g.
-      // "Cut" or "Clear" from the menu. This command takes care about recursive
-      // preserving of cutlines within clips. Clear() is called when internal
-      // operations want to remove audio. In the latter case, it is the right
-      // thing to just remove all cutlines within the area.
-      //
-      double clip_t0 = t0;
-      double clip_t1 = t1;
-      if (clip_t0 < GetStartTime())
-         clip_t0 = GetStartTime();
-      if (clip_t1 > GetEndTime())
-         clip_t1 = GetEndTime();
+   // use STRONG-GUARANTEE
+   GetSequence()->Delete(s0, s1-s0);
 
-      // May DELETE as we iterate, so don't use range-for
-      for (auto it = mCutLines.begin(); it != mCutLines.end();)
-      {
-         WaveClip* clip = it->get();
-         double cutlinePosition = mOffset + clip->GetOffset();
-         if (cutlinePosition >= t0 && cutlinePosition <= t1)
-         {
-            // This cutline is within the area, DELETE it
-            it = mCutLines.erase(it);
-         }
-         else
-         {
-            if (cutlinePosition >= t1)
-            {
-               clip->Offset(clip_t0 - clip_t1);
-            }
-            ++it;
-         }
-      }
+   // use NOFAIL-GUARANTEE in the remaining
 
-      // Collapse envelope
-      GetEnvelope()->CollapseRegion(t0, t1);
-      if (t0 < GetStartTime())
-         Offset(-(GetStartTime() - t0));
-
-      MarkChanged();
-      return true;
-   }
-
-   return false;
-}
-
-bool WaveClip::ClearAndAddCutLine(double t0, double t1)
-{
-   if (t0 > GetEndTime() || t1 < GetStartTime())
-      return true; // time out of bounds
-
-   auto newClip = make_movable<WaveClip>
-      (mSequence->GetDirManager(), mSequence->GetSampleFormat(), mRate);
+   // msmeyer
+   //
+   // Delete all cutlines that are within the given area, if any.
+   //
+   // Note that when cutlines are active, two functions are used:
+   // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
+   // whenever the user directly calls a command that removes some audio, e.g.
+   // "Cut" or "Clear" from the menu. This command takes care about recursive
+   // preserving of cutlines within clips. Clear() is called when internal
+   // operations want to remove audio. In the latter case, it is the right
+   // thing to just remove all cutlines within the area.
+   //
    double clip_t0 = t0;
    double clip_t1 = t1;
    if (clip_t0 < GetStartTime())
@@ -1633,12 +1658,6 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    if (clip_t1 > GetEndTime())
       clip_t1 = GetEndTime();
 
-   newClip->SetOffset(this->mOffset);
-   if (!newClip->CreateFromCopy(clip_t0, clip_t1, this))
-      return false;
-   newClip->SetOffset(clip_t0-mOffset);
-
-   // Sort out cutlines that belong to the NEW cutline
    // May DELETE as we iterate, so don't use range-for
    for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
@@ -1646,10 +1665,52 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
       double cutlinePosition = mOffset + clip->GetOffset();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
       {
-         clip->SetOffset(cutlinePosition - newClip->GetOffset() - mOffset);
-         newClip->mCutLines.push_back(std::move(*it)); // transfer ownership!!
+         // This cutline is within the area, DELETE it
          it = mCutLines.erase(it);
       }
+      else
+      {
+         if (cutlinePosition >= t1)
+         {
+            clip->Offset(clip_t0 - clip_t1);
+         }
+         ++it;
+      }
+   }
+
+   // Collapse envelope
+   GetEnvelope()->CollapseRegion(t0, t1);
+   if (t0 < GetStartTime())
+      Offset(-(GetStartTime() - t0));
+
+   MarkChanged();
+}
+
+void WaveClip::ClearAndAddCutLine(double t0, double t1)
+// WEAK-GUARANTEE
+// this WaveClip remains destructible in case of AudacityException.
+// But some cutlines may be deleted
+{
+   if (t0 > GetEndTime() || t1 < GetStartTime())
+      return; // time out of bounds
+
+   const double clip_t0 = std::max( t0, GetStartTime() );
+   const double clip_t1 = std::min( t1, GetEndTime() );
+
+   auto newClip = make_movable< WaveClip >
+      (*this, mSequence->GetDirManager(), true, clip_t0, clip_t1);
+
+   newClip->SetOffset( clip_t0 - mOffset );
+
+   // Remove cutlines from this clip that were in the selection, shift
+   // left those that were after the selection
+   // May DELETE as we iterate, so don't use range-for
+   for (auto it = mCutLines.begin(); it != mCutLines.end();)
+   {
+      WaveClip* clip = it->get();
+      double cutlinePosition = mOffset + clip->GetOffset();
+      if (cutlinePosition >= t0 && cutlinePosition <= t1)
+         it = mCutLines.erase(it);
       else
       {
          if (cutlinePosition >= t1)
@@ -1666,25 +1727,22 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   if (GetSequence()->Delete(s0, s1-s0))
-   {
-      // Collapse envelope
-      GetEnvelope()->CollapseRegion(t0, t1);
-      if (t0 < GetStartTime())
-         Offset(-(GetStartTime() - t0));
+   // use WEAK-GUARANTEE
+   GetSequence()->Delete(s0, s1-s0);
 
-      MarkChanged();
+   // Collapse envelope
+   GetEnvelope()->CollapseRegion(t0, t1);
+   if (t0 < GetStartTime())
+      Offset(-(GetStartTime() - t0));
 
-      mCutLines.push_back(std::move(newClip));
-      return true;
-   }
-   else
-      return false;
+   MarkChanged();
+
+   mCutLines.push_back(std::move(newClip));
 }
 
 bool WaveClip::FindCutLine(double cutLinePosition,
                            double* cutlineStart /* = NULL */,
-                           double* cutlineEnd /* = NULL */)
+                           double* cutlineEnd /* = NULL */) const
 {
    for (const auto &cutline: mCutLines)
    {
@@ -1701,32 +1759,31 @@ bool WaveClip::FindCutLine(double cutLinePosition,
    return false;
 }
 
-bool WaveClip::ExpandCutLine(double cutLinePosition)
+void WaveClip::ExpandCutLine(double cutLinePosition)
+// STRONG-GUARANTEE
 {
-   for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
-   {
-      WaveClip *const cutline = it->get();
-      if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
-      {
-         if (!Paste(mOffset+cutline->GetOffset(), cutline))
-            return false;
-         // Now erase the cutline,
-         // but be careful to find it again, because Paste above may
-         // have modified the array of cutlines (if our cutline contained
-         // another cutline!), invalidating the iterator we had.
-         auto begin = mCutLines.begin(), end = mCutLines.end();
-         it = std::find_if(begin, end,
-            [=](decltype(*begin) &p){ return p.get() == cutline; });
-         if (it != end)
-            mCutLines.erase(it); // deletes cutline!
-         else {
-            wxASSERT(false);
-         }
-         return true;
-      }
-   }
+   auto end = mCutLines.end();
+   auto it = std::find_if( mCutLines.begin(), end,
+      [&](const WaveClipHolder &cutline) {
+         return fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001;
+      } );
 
-   return false;
+   if ( it != end ) {
+      auto cutline = it->get();
+      // assume STRONG-GUARANTEE from Paste
+      Paste(mOffset+cutline->GetOffset(), cutline);
+      // Now erase the cutline,
+      // but be careful to find it again, because Paste above may
+      // have modified the array of cutlines (if our cutline contained
+      // another cutline!), invalidating the iterator we had.
+      end = mCutLines.end();
+      it = std::find_if(mCutLines.begin(), end,
+         [=](const WaveClipHolder &p) { return p.get() == cutline; });
+      if (it != end)
+         mCutLines.erase(it); // deletes cutline!
+      else
+         THROW_INCONSISTENCY_EXCEPTION;
+   }
 }
 
 bool WaveClip::RemoveCutLine(double cutLinePosition)
@@ -1744,12 +1801,8 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
    return false;
 }
 
-void WaveClip::RemoveAllCutLines()
-{
-   mCutLines.clear();
-}
-
 void WaveClip::OffsetCutLines(double t0, double len)
+// NOFAIL-GUARANTEE
 {
    for (const auto &cutLine : mCutLines)
    {
@@ -1786,17 +1839,21 @@ void WaveClip::SetRate(int rate)
    MarkChanged();
 }
 
-bool WaveClip::Resample(int rate, ProgressDialog *progress)
+void WaveClip::Resample(int rate, ProgressDialog *progress)
+// STRONG-GUARANTEE
 {
+   // Note:  it is not necessary to do this recursively to cutlines.
+   // They get resampled as needed when they are expanded.
+
    if (rate == mRate)
-      return true; // Nothing to do
+      return; // Nothing to do
 
    double factor = (double)rate / (double)mRate;
    ::Resample resample(true, factor, factor); // constant rate resampling
 
-   size_t bufsize = 65536;
-   float* inBuffer = new float[bufsize];
-   float* outBuffer = new float[bufsize];
+   const size_t bufsize = 65536;
+   Floats inBuffer{ bufsize };
+   Floats outBuffer{ bufsize };
    sampleCount pos = 0;
    bool error = false;
    int outGenerated = 0;
@@ -1816,14 +1873,14 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
       bool isLast = ((pos + inLen) == numSamples);
 
-      if (!mSequence->Get((samplePtr)inBuffer, floatSample, pos, inLen))
+      if (!mSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
       {
          error = true;
          break;
       }
 
-      const auto results = resample.Process(factor, inBuffer, inLen, isLast,
-                                            outBuffer, bufsize);
+      const auto results = resample.Process(factor, inBuffer.get(), inLen, isLast,
+                                            outBuffer.get(), bufsize);
       outGenerated = results.second;
 
       pos += results.first;
@@ -1834,40 +1891,35 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          break;
       }
 
-      if (!newSequence->Append((samplePtr)outBuffer, floatSample,
-                               outGenerated))
-      {
-         error = true;
-         break;
-      }
+      newSequence->Append((samplePtr)outBuffer.get(), floatSample,
+                          outGenerated);
 
       if (progress)
       {
-         int updateResult = progress->Update(
+         auto updateResult = progress->Update(
             pos.as_long_long(),
             numSamples.as_long_long()
          );
-         error = (updateResult != eProgressSuccess);
+         error = (updateResult != ProgressResult::Success);
          if (error)
-         {
-            break;
-         }
+            throw UserException{};
       }
    }
 
-   delete[] inBuffer;
-   delete[] outBuffer;
-
-   if (!error)
+   if (error)
+      throw SimpleMessageBoxException{
+         _("Resampling failed.")
+      };
+   else
    {
-      mSequence = std::move(newSequence);
-      mRate = rate;
+      // Use NOFAIL-GUARANTEE in these steps
 
       // Invalidate wave display cache
       mWaveCache = std::make_unique<WaveCache>();
       // Invalidate the spectrum display cache
       mSpecCache = std::make_unique<SpecCache>();
-   }
 
-   return !error;
+      mSequence = std::move(newSequence);
+      mRate = rate;
+   }
 }

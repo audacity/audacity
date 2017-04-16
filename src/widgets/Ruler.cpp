@@ -48,7 +48,7 @@
 \brief An array of these created by the Ruler is used to determine
 what and where text annotations to the numbers on the Ruler get drawn.
 
-\todo Check whether Ruler is costing too much time in malloc/free of
+\todo Check whether Ruler is costing too much time in allocation/free of
 array of Ruler::Label.
 
 *//******************************************************************/
@@ -58,6 +58,7 @@ array of Ruler::Label.
 
 #include <math.h>
 
+#include <wx/app.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>
@@ -143,13 +144,8 @@ Ruler::Ruler()
 
    mUserFonts = false;
 
-   mMajorLabels = 0;
-   mMinorLabels = 0;
-   mMinorMinorLabels = 0;
    mLengthOld = 0;
    mLength = 0;
-   mBits = NULL;
-   mUserBits = NULL;
    mUserBitLen = 0;
 
    mValid = false;
@@ -169,15 +165,6 @@ Ruler::Ruler()
 Ruler::~Ruler()
 {
    Invalidate();  // frees up our arrays
-   if( mUserBits )
-      delete [] mUserBits;//JKC
-
-   if (mMajorLabels)
-      delete[] mMajorLabels;
-   if (mMinorLabels)
-      delete[] mMinorLabels;
-   if (mMinorMinorLabels)
-      delete[] mMinorMinorLabels;
 }
 
 void Ruler::SetTwoTone(bool twoTone)
@@ -332,8 +319,6 @@ void Ruler::SetNumberScale(const NumberScale *pScale)
 
 void Ruler::OfflimitsPixels(int start, int end)
 {
-   int i;
-
    if (!mUserBits) {
       if (mOrientation == wxHORIZONTAL)
          mLength = mRight-mLeft;
@@ -341,24 +326,19 @@ void Ruler::OfflimitsPixels(int start, int end)
          mLength = mBottom-mTop;
       if( mLength < 0 )
          return;
-      mUserBits = new int[mLength+1];
-      for(i=0; i<=mLength; i++)
-         mUserBits[i] = 0;
+      mUserBits.reinit(static_cast<size_t>(mLength+1), true);
       mUserBitLen  = mLength+1;
    }
 
-   if (end < start) {
-      i = end;
-      end = start;
-      start = i;
-   }
+   if (end < start)
+      std::swap( start, end );
 
    if (start < 0)
       start = 0;
    if (end > mLength)
       end = mLength;
 
-   for(i=start; i<=end; i++)
+   for(int i = start; i <= end; i++)
       mUserBits[i] = 1;
 }
 
@@ -384,13 +364,9 @@ void Ruler::Invalidate()
    else
       mLength = mBottom-mTop;
 
-   if (mBits) {
-      delete [] mBits;
-      mBits = NULL;
-   }
+   mBits.reset();
    if (mUserBits && mLength+1 != mUserBitLen) {
-      delete[] mUserBits;
-      mUserBits = NULL;
+      mUserBits.reset();
       mUserBitLen = 0;
    }
 }
@@ -1052,27 +1028,20 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
    // We can just recompute them as we need them?  Yes, but only if
    // mCustom is false!!!!
 
+   auto size = static_cast<size_t>(mLength + 1);
    if(!mCustom) {
       mNumMajor = 0;
       mNumMinor = 0;
       mNumMinorMinor = 0;
       if (mLength!=mLengthOld) {
-         if (mMajorLabels)
-            delete[] mMajorLabels;
-         mMajorLabels = new Label[mLength+1];
-         if (mMinorLabels)
-            delete[] mMinorLabels;
-         mMinorLabels = new Label[mLength+1];
-         if (mMinorMinorLabels)
-            delete[] mMinorMinorLabels;
-         mMinorMinorLabels = new Label[mLength+1];
+         mMajorLabels.reinit(size);
+         mMinorLabels.reinit(size);
+         mMinorMinorLabels.reinit(size);
          mLengthOld = mLength;
       }
    }
 
-   if (mBits)
-      delete[] mBits;
-   mBits = new int[mLength+1];
+   mBits.reinit(size);
    if (mUserBits)
       for(i=0; i<=mLength; i++)
          mBits[i] = mUserBits[i];
@@ -1182,7 +1151,7 @@ void Ruler::Update(const TimeTrack* timetrack)// Envelope *speedEnv, long minSpe
 
       NumberScale numberScale(mpNumberScale
          ? *mpNumberScale
-         : NumberScale(nstLogarithmic, mMin, mMax, 1.0f)
+         : NumberScale(nstLogarithmic, mMin, mMax)
       );
 
       mDigits=2; //TODO: implement dynamic digit computation
@@ -1309,6 +1278,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
    if (!mValid)
       Update(timetrack);
 
+   mDC->SetTextForeground( mTickColour );
 #ifdef EXPERIMENTAL_THEMING
    mDC->SetPen(mPen);
 #else
@@ -1514,8 +1484,8 @@ int Ruler::FindZero(Label * label, const int len)
 int Ruler::GetZeroPosition()
 {
    int zero;
-   if((zero = FindZero(mMajorLabels, mNumMajor)) < 0)
-      zero = FindZero(mMinorLabels, mNumMinor);
+   if((zero = FindZero(mMajorLabels.get(), mNumMajor)) < 0)
+      zero = FindZero(mMinorLabels.get(), mNumMinor);
    // PRL: don't consult minor minor??
    return zero;
 }
@@ -1538,28 +1508,24 @@ void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 
 void Ruler::SetCustomMode(bool value) { mCustom = value; }
 
-void Ruler::SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, int step)
+void Ruler::SetCustomMajorLabels(wxArrayString *label, size_t numLabel, int start, int step)
 {
-   int i;
-
    mNumMajor = numLabel;
-   mMajorLabels = new Label[numLabel];
+   mMajorLabels.reinit(numLabel);
 
-   for(i=0; i<numLabel; i++) {
+   for(size_t i = 0; i<numLabel; i++) {
       mMajorLabels[i].text = label->Item(i);
       mMajorLabels[i].pos  = start + i*step;
    }
    //Remember: DELETE majorlabels....
 }
 
-void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step)
+void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int start, int step)
 {
-   int i;
-
    mNumMinor = numLabel;
-   mMinorLabels = new Label[numLabel];
+   mMinorLabels.reinit(numLabel);
 
-   for(i=0; i<numLabel; i++) {
+   for(size_t i = 0; i<numLabel; i++) {
       mMinorLabels[i].text = label->Item(i);
       mMinorLabels[i].pos  = start + i*step;
    }
@@ -2018,7 +1984,12 @@ namespace {
    bool ReadScrubEnabledPref()
    {
       bool result {};
+// DA: Scrub is disabled by default.
+#ifdef EXPERIMENTAL_DA
+      gPrefs->Read(scrubEnabledPrefName, &result, false);
+#else
       gPrefs->Read(scrubEnabledPrefName, &result, true);
+#endif
       return result;
    }
 
@@ -2055,6 +2026,12 @@ void AdornedRulerPanel::UpdatePrefs()
 
 void AdornedRulerPanel::ReCreateButtons()
 {
+   // TODO: Should we do this to destroy the grabber??
+   // Get rid of any children we may have
+   // DestroyChildren();
+
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+
    for (auto & button : mButtons) {
       if (button)
          button->Destroy();
@@ -2068,6 +2045,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // This makes it visually clearer that the button is a button.
 
    wxPoint position( 1, 0 );
+
    Grabber * pGrabber = safenew Grabber(this, this->GetId());
    pGrabber->SetAsSpacer( true );
    //pGrabber->SetSize( 10, 27 ); // default is 10,27
@@ -2093,11 +2071,12 @@ void AdornedRulerPanel::ReCreateButtons()
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPinnedPlayHead, true);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
    ToolBar::MakeAlternateImages(
       *button, 1,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
+      //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
+      bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
       size);
 
    UpdateButtonStates();
@@ -2707,19 +2686,21 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       ClearPlayRegion();
    }
 
-   StartQPPlay(evt.ShiftDown(), evt.ControlDown());
-
    mMouseEventState = mesNone;
    mIsDragging = false;
    mLeftDownClick = -1;
 
-   if (mPlayRegionLock) {
-      // Restore Locked Play region
-      SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-      mProject->OnLockPlayRegion();
-      // and release local lock
-      mPlayRegionLock = false;
-   }
+   auto cleanup = finally( [&] {
+      if (mPlayRegionLock) {
+         // Restore Locked Play region
+         SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
+         mProject->OnLockPlayRegion();
+         // and release local lock
+         mPlayRegionLock = false;
+      }
+   } );
+
+   StartQPPlay(evt.ShiftDown(), evt.ControlDown());
 }
 
 void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
@@ -2767,18 +2748,20 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
          options.timeTrack = NULL;
 
       ControlToolBar::PlayAppearance appearance =
-      cutPreview ? ControlToolBar::PlayAppearance::CutPreview
-      : options.playLooped ? ControlToolBar::PlayAppearance::Looped
-      : ControlToolBar::PlayAppearance::Straight;
+         cutPreview ? ControlToolBar::PlayAppearance::CutPreview
+         : options.playLooped ? ControlToolBar::PlayAppearance::Looped
+         : ControlToolBar::PlayAppearance::Straight;
+
+      mPlayRegionStart = start;
+      mPlayRegionEnd = end;
+      Refresh();
+
       ctb->PlayPlayRegion((SelectedRegion(start, end)),
                           options, PlayMode::normalPlay,
                           appearance,
                           false,
                           true);
 
-      mPlayRegionStart = start;
-      mPlayRegionEnd = end;
-      Refresh();
    }
 }
 
@@ -3245,12 +3228,6 @@ void AdornedRulerPanel::DoDrawIndicator
       dc->DrawPolygon( 3, tri );
    }
    else {
-      // synonyms... (makes compatibility with DarkAudacity easier).
-      #define bmpPlayPointerPinned bmpPinnedPlayHead
-      #define bmpPlayPointer bmpUnpinnedPlayHead
-      #define bmpRecordPointerPinned bmpPinnedRecordHead
-      #define bmpRecordPointer bmpUnpinnedRecordHead
-
       bool pinned = TracksPrefs::GetPinnedHeadPreference();
       wxBitmap & bmp = theTheme.Bitmap( pinned ? 
          (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :

@@ -177,6 +177,7 @@ win/Debug
 win/Release
 win/Projects/*/Debug
 win/Projects/*/Release
+win/.vs/
 
 # All those help files
 help/manual*
@@ -187,3 +188,4 @@ win/resetPrefs.txt
 
 # Emacs backup files
 *~
+win/xaudacity.ico

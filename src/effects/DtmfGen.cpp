@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "../Experimental.h"
 #include "DtmfGen.h"
 
 #include <wx/intl.h>
@@ -33,12 +34,19 @@ enum
    ID_DutyCycle,
 };
 
+// DA: DTMF for Audacity uses a different string.
+#ifdef EXPERIMENTAL_DA
+#define SHORT_APP_NAME "darkaudacity"
+#else
+#define SHORT_APP_NAME "audacity"
+#endif
+
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type        Key               Def               Min      Max      Scale
-Param( Sequence,  wxString,   XO("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
-Param( DutyCycle, double,     XO("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
-Param( Amplitude, double,     XO("Amplitude"),  0.8,              0.001,   1.0,     1      );
+//     Name       Type        Key               Def                   Min      Max      Scale
+Param( Sequence,  wxString,   XO("Sequence"),   wxT(SHORT_APP_NAME),  wxT(""), wxT(""), wxT(""));
+Param( DutyCycle, double,     XO("Duty Cycle"), 55.0,                 0.0,     100.0,   10.0   );
+Param( Amplitude, double,     XO("Amplitude"),  0.8,                  0.001,   1.0,     1      );
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
 
@@ -269,7 +277,7 @@ bool EffectDtmf::Startup()
    // Load the old "current" settings
    if (gPrefs->Exists(base))
    {
-      gPrefs->Read(base + wxT("String"), &dtmfSequence, wxT("audacity"));
+      gPrefs->Read(base + wxT("String"), &dtmfSequence, wxT(SHORT_APP_NAME));
       gPrefs->Read(base + wxT("DutyCycle"), &dtmfDutyCycle, 550L);
       gPrefs->Read(base + wxT("Amplitude"), &dtmfAmplitude, 0.8f);
 

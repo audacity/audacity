@@ -46,6 +46,7 @@ Licensed under the GNU General Public License v2 or later
 #endif
 
 // all the includes live here by default
+#include "../AudacityException.h"
 #include "../SampleFormat.h"
 #include "../Tags.h"
 #include "../Internat.h"
@@ -156,7 +157,8 @@ struct GStreamContext
 };
 
 // For RAII on gst objects
-template<typename T> using GstObjHandle = std::unique_ptr < T, Deleter<void, gst_object_unref > > ;
+template<typename T> using GstObjHandle =
+   std::unique_ptr < T, Deleter<void, gst_object_unref > > ;
 
 ///! Does actual import, returned by GStreamerImportPlugin::Open
 class GStreamerImportFileHandle final : public ImportFileHandle
@@ -169,12 +171,12 @@ public:
    ///\return true if successful, false otherwise
    bool Init();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Called by Import.cpp
    ///\return number of readable audio streams in the file
-   wxInt32 GetStreamCount();
+   wxInt32 GetStreamCount() override;
 
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
@@ -183,7 +185,7 @@ public:
    ///! Called by Import.cpp
    ///\param index - index of the stream in mStreamInfo and mStreams arrays
    ///\param use - true if this stream should be imported, false otherwise
-   void SetStreamUsage(wxInt32 index, bool use);
+   void SetStreamUsage(wxInt32 index, bool use) override;
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
@@ -224,8 +226,8 @@ private:
    TrackFactory           *mTrackFactory; //!< Factory to create tracks when samples arrive
 
    GstString               mUri;          //!< URI of file
-   GstObjHandle<GstElement> mPipeline;     //!< GStreamer pipeline
-   GstObjHandle<GstBus>     mBus;          //!< Message bus
+   GstObjHandle<GstElement> mPipeline;    //!< GStreamer pipeline
+   GstObjHandle<GstBus>    mBus;          //!< Message bus
    GstElement             *mDec;          //!< uridecodebin element
    bool                    mAsyncDone;    //!< true = 1st async-done message received
 
@@ -272,17 +274,21 @@ GetGStreamerImportPlugin(ImportPluginList &importPluginList,
 
    // Initialize gstreamer
    GErrorHandle error;
-   int argc = 0;
-   char **argv = NULL;
-   GError *ee;
-   if (!gst_init_check(&argc, &argv, &ee))
+   bool initError;
+   {
+      int argc = 0;
+      char **argv = NULL;
+      GError *ee;
+      initError = !gst_init_check(&argc, &argv, &ee);
+      error.reset(ee);
+   }
+   if ( initError )
    {
       wxLogMessage(wxT("Failed to initialize GStreamer. Error %d: %s"),
                    error.get()->code,
                    wxString::FromUTF8(error.get()->message).c_str());
       return;
    }
-   error.reset(ee);
 
    guint major, minor, micro, nano;
    gst_version(&major, &minor, &micro, &nano);
@@ -489,20 +495,23 @@ inline void GstSampleUnref(GstSample *p) { gst_sample_unref(p); } // I can't use
 static GstFlowReturn
 GStreamerNewSample(GstAppSink *appsink, gpointer data)
 {
-   GStreamerImportFileHandle *handle = (GStreamerImportFileHandle *)data;
-   static GMutex mutex;
+   // Don't let C++ exceptions propagate through GStreamer
+   return GuardedCall< GstFlowReturn > ( [&] {
+      GStreamerImportFileHandle *handle = (GStreamerImportFileHandle *)data;
+      static GMutex mutex;
 
-   // Get the sample
-   std::unique_ptr < GstSample, Deleter< GstSample, GstSampleUnref> >
-      sample{ gst_app_sink_pull_sample(appsink) };
+      // Get the sample
+      std::unique_ptr < GstSample, Deleter< GstSample, GstSampleUnref> >
+         sample{ gst_app_sink_pull_sample(appsink) };
 
-   // We must single thread here to prevent concurrent use of the
-   // Audacity track functions.
-   g_mutex_locker locker{ mutex };
+      // We must single thread here to prevent concurrent use of the
+      // Audacity track functions.
+      g_mutex_locker locker{ mutex };
 
-   handle->OnNewSample(GETCTX(appsink), sample.get());
+      handle->OnNewSample(GETCTX(appsink), sample.get());
 
-   return GST_FLOW_OK;
+      return GST_FLOW_OK;
+   }, MakeSimpleGuard(GST_FLOW_ERROR) );
 }
 
 // ----------------------------------------------------------------------------
@@ -1088,7 +1097,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    {
       wxMessageBox(wxT("File doesn't contain any audio streams."),
                    wxT("GStreamer Importer"));
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    // Get the ball rolling...
@@ -1097,7 +1106,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    {
       wxMessageBox(wxT("Unable to import file, state change failed."),
                    wxT("GStreamer Importer"));
-      return eProgressFailed;
+      return ProgressResult::Failed;
    }
 
    // Get the duration of the stream
@@ -1106,8 +1115,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
 
    // Handle bus messages and update progress while files is importing
    bool success = true;
-   int updateResult = eProgressSuccess;
-   while (ProcessBusMessage(success) && success && updateResult == eProgressSuccess)
+   int updateResult = ProgressResult::Success;
+   while (ProcessBusMessage(success) && success && updateResult == ProgressResult::Success)
    {
       gint64 position;
 
@@ -1123,7 +1132,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    gst_element_set_state(mPipeline.get(), GST_STATE_NULL);
 
    // Something bad happened
-   if (!success || updateResult == eProgressFailed || updateResult == eProgressCancelled)
+   if (!success || updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
    {
       return updateResult;
    }

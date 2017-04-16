@@ -51,10 +51,9 @@ class AUDACITY_DLL_API MixerSpec
    unsigned mNumTracks, mNumChannels, mMaxNumChannels;
 
    void Alloc();
-   void Free();
 
-   public:
-   bool **mMap;
+public:
+   ArraysOf<bool> mMap;
 
    MixerSpec( unsigned numTracks, unsigned maxNumChannels );
    MixerSpec( const MixerSpec &mixerSpec );
@@ -92,7 +91,7 @@ class AUDACITY_DLL_API Mixer {
    // Constructor / Destructor
    //
 
-   Mixer(const WaveTrackConstArray &inputTracks,
+   Mixer(const WaveTrackConstArray &inputTracks, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
@@ -150,41 +149,42 @@ class AUDACITY_DLL_API Mixer {
                                 Resample * pResample);
 
  private:
-   // Input
-   int              mNumInputTracks;
-   WaveTrackCache  *mInputTrack;
 
+    // Input
+   size_t           mNumInputTracks;
+   ArrayOf<WaveTrackCache> mInputTrack;
    bool             mbVariableRates;
    const TimeTrack *mTimeTrack;
-   sampleCount     *mSamplePos;
+   ArrayOf<sampleCount> mSamplePos;
    bool             mApplyTrackGains;
-   float           *mGains;
-   double          *mEnvValues;
+   Doubles          mEnvValues;
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
-   Resample       **mResample;
-   float          **mSampleQueue;
-   int             *mQueueStart;
-   int             *mQueueLen;
+   ArrayOf<std::unique_ptr<Resample>> mResample;
    size_t           mQueueMaxLen;
+   FloatBuffers     mSampleQueue;
+   ArrayOf<int>     mQueueStart;
+   ArrayOf<int>     mQueueLen;
    size_t           mProcessLen;
    MixerSpec        *mMixerSpec;
 
    // Output
    size_t              mMaxOut;
    unsigned         mNumChannels;
+   Floats           mGains;
    unsigned         mNumBuffers;
    size_t              mBufferSize;
    size_t              mInterleavedBufferSize;
    sampleFormat     mFormat;
    bool             mInterleaved;
-   SampleBuffer    *mBuffer;
-   SampleBuffer    *mTemp;
-   float           *mFloatBuffer;
+   ArrayOf<SampleBuffer> mBuffer, mTemp;
+   Floats           mFloatBuffer;
    double           mRate;
    double           mSpeed;
    bool             mHighQuality;
+
+   bool             mMayThrow;
 };
 
 #endif

@@ -14,7 +14,7 @@
 \brief ODDecodeBlockFile is a special type of SimpleBlockFile that does not necessarily have summary OR audio data available
 The summary and audio is eventually computed and written to a file in a background thread.
 
-Load On-Demand implementation of the SimpleBlockFIle for audio files that need to be decoded (mp3,flac,etc..).
+Load On-Demand implementation of the SimpleBlockFile for audio files that need to be decoded (mp3,flac,etc..).
 
 Also, see ODPCMAliasBlockFile for a similar file.
 *//*******************************************************************/
@@ -32,6 +32,7 @@ Also, see ODPCMAliasBlockFile for a similar file.
 #include "../ondemand/ODTaskThread.h"
 #include "../DirManager.h"
 #include "../ondemand/ODDecodeTask.h"
+#include <wx/atomic.h>
 #include <wx/thread.h>
 
 /// An AliasBlockFile that references uncompressed data in an existing file
@@ -62,10 +63,10 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    //Calls that rely on summary files need to be overidden
    DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   void GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const override;
+   MinMaxRMS GetMinMaxRMS(
+      size_t start, size_t len, bool mayThrow) const override;
    /// Gets extreme values for the entire block
-   void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
+   MinMaxRMS GetMinMaxRMS(bool mayThrow) const override;
    /// Returns the 256 byte summary data block
    bool Read256(float *buffer, size_t start, size_t len) override;
    /// Returns the 64K summary data block
@@ -76,19 +77,18 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
 
 
-   ///Makes NEW ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   ///Makes NEW ODDecodeBlockFile or SimpleBlockFile depending on summary availability
    BlockFilePtr Copy(wxFileNameWrapper &&fileName) override;
 
-   ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
+   ///Saves as xml ODDecodeBlockFile or SimpleBlockFile depending on summary availability
    void SaveXML(XMLWriter &xmlFile) override;
 
-   ///Reconstructs from XML a ODPCMAliasBlockFile and reschedules it for OD loading
+   ///Reconstructs from XML a ODDecodeBlockFile and reschedules it for OD loading
    static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);
 
    ///Writes the summary file if summary data is available
    void Recover(void) override;
 
-   ///A public interface to WriteSummary
    int DoWriteBlockFile(){return WriteODDecodeBlockFile();}
 
    int WriteODDecodeBlockFile();
@@ -109,10 +109,10 @@ class ODDecodeBlockFile final : public SimpleBlockFile
 
    /// Reads the specified data from the aliased file using libsndfile
    size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const override;
+                        size_t start, size_t len, bool mayThrow) const override;
 
    /// Read the summary into a buffer
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
 
    ///Returns the type of audiofile this blockfile is loaded from.
    unsigned int GetDecodeType() /* not override */ const { return mType; }
@@ -167,8 +167,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    ///The original file the audio came from.
    wxFileNameWrapper mAudioFileName;
 
-   mutable ODLock    mDataAvailableMutex;
-   bool mDataAvailable;
+   wxAtomicInt mDataAvailable{ 0 };
    bool mDataBeingComputed;
 
    ODFileDecoder* mDecoder;
@@ -186,7 +185,7 @@ class ODDecodeBlockFile final : public SimpleBlockFile
    sampleFormat mFormat;
 
    sampleCount mAliasStart;//where in the encoded audio file this block corresponds to.
-   int         mAliasChannel;//The channel number in the encoded file..
+   const int         mAliasChannel;//The channel number in the encoded file..
 
 };
 

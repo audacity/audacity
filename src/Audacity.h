@@ -26,8 +26,10 @@
 
 // If building with GNU compiler, then must be 4.9 or later.
 // TODO: This would be much nicer as a standalone test in configure.ac
-#if !defined(__APPLE__) && defined __GNUC__ && ( __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9))
-#error insufficient compiler
+#if !defined(__APPLE__) && !defined(__clang__) && \
+    defined __GNUC__ && ( __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9))
+
+    #error Audacity requires at least GCC 4.9
 #endif
 
 
@@ -38,14 +40,15 @@
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
-#define AUDACITY_RELEASE   1
-#define AUDACITY_REVISION  3
+#define AUDACITY_RELEASE   2
+#define AUDACITY_REVISION  0
 #define AUDACITY_MODLEVEL  0
 
 #if IS_ALPHA
    #define AUDACITY_SUFFIX wxT("-alpha-") __TDATE__
 #else
-   #define AUDACITY_SUFFIX    wxT("") // for a stable release
+   //#define AUDACITY_SUFFIX    wxT("") // for a stable release
+   #define AUDACITY_SUFFIX wxT("x  ") __TDATE__
 #endif
 
 #define AUDACITY_MAKESTR( x ) #x
@@ -57,11 +60,20 @@
                                 wxT( AUDACITY_QUOTE( AUDACITY_REVISION ) ) \
                                 AUDACITY_SUFFIX
 
+// DA: x on end of version string.
+#ifdef EXPERIMENTAL_DA
 // Version string for file info (under Windows)
 #define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
                               AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
                               AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
+                              AUDACITY_QUOTE( AUDACITY_MODLEVEL ) " x"
+#else
+#define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
+                              AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
+                              AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
                               AUDACITY_QUOTE( AUDACITY_MODLEVEL )
+#endif
+
 
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place
@@ -174,10 +186,38 @@ void QuitAudacity();
 #define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
 #define LINEAR_TO_DB(x) (20.0 * log10(x))
 
+#define MAX_AUDIO (1. - 1./(1<<15))
+#define JUST_BELOW_MAX_AUDIO (1.f - 1.f/(1<<14))
+
+
+#ifndef IN_RC
+#include <wx/defs.h>
+#include <wx/string.h>
+
+extern const wxString& GetCustomTranslation(const wxString& str1 );
+extern const wxString& GetCustomSubstitution(const wxString& str1 );
+
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
-#define XO(s) wxT(s)
+#define XO(s)  wxT(s)
 // Marks string for substitution only.
-#define _TS(s) wxT(s)
+#define _TS( s ) GetCustomSubstitution( s )
+
+
+#define WXINTL_NO_GETTEXT_MACRO
+
+#ifdef wxPLURAL
+#undef wxPLURAL
+#endif
+
+#define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
+
+
+#ifdef _
+#undef _
+#endif
+
+#define _(s) GetCustomTranslation((s))
+#endif
 
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete

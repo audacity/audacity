@@ -88,7 +88,9 @@
 #endif
 
 #include "AudacityApp.h"
+#include "AudacityException.h"
 #include "BlockFile.h"
+#include "FileException.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
 #include "blockfile/SimpleBlockFile.h"
@@ -96,6 +98,7 @@
 #include "blockfile/PCMAliasBlockFile.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
+#include "InconsistencyException.h"
 #include "Internat.h"
 #include "Project.h"
 #include "Prefs.h"
@@ -171,7 +174,7 @@ static int RecursivelyEnumerate(wxString dirPath,
    if(dir.IsOpened()){
       wxString name;
 
-      // Don't delete files from a selective top level, e.g. if handed "projects*" as the 
+      // Don't DELETE files from a selective top level, e.g. if handed "projects*" as the
       // directory specifier.
       if (bFiles && dirspec.IsEmpty() ){
          cont= dir.GetFirst(&name, filespec, wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
@@ -426,7 +429,7 @@ DirManager::~DirManager()
 
 
 // static
-// This is quite a dangerous function.  In the temp dir it will delete every directory
+// This is quite a dangerous function.  In the temp dir it will DELETE every directory
 // recursively, that has 'project*' as the name - EVEN if it happens not to be an Audacity
 // project but just something else called project.
 void DirManager::CleanTempDir()
@@ -1109,8 +1112,12 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
 // Adds one to the reference count of the block file,
 // UNLESS it is "locked", then it makes a NEW copy of
 // the BlockFile.
+// This function returns non-NULL, or else throws
 BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
 {
+   if (!b)
+      THROW_INCONSISTENCY_EXCEPTION;
+
    auto result = b->GetFileName();
    const auto &fn = result.name;
 
@@ -1121,7 +1128,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       //
       // LLL: Except for silent block files which have uninitialized filename.
       if (fn.IsOk())
-         mBlockFileHash[fn.GetName()]=b;
+         mBlockFileHash[fn.GetName()] = b;
       return b;
    }
 
@@ -1147,7 +1154,9 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       {
          if( !wxCopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
-            return {};
+            // Disk space exhaustion, maybe
+            throw FileException{
+               FileException::Cause::Write, newFile };
       }
 
       // Done with fn
@@ -1155,12 +1164,12 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
 
       b2 = b->Copy(std::move(newFile));
 
-      if (b2 == NULL)
-         return {};
-
-      mBlockFileHash[newName]=b2;
+      mBlockFileHash[newName] = b2;
       aliasList.Add(newPath);
    }
+
+   if (!b2)
+      THROW_INCONSISTENCY_EXCEPTION;
 
    return b2;
 }
@@ -1404,6 +1413,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    bool needToRename = false;
    wxBusyCursor busy;
    BlockHash::iterator iter = mBlockFileHash.begin();
+   std::vector< BlockFile::ReadLock > readLocks;
    while (iter != mBlockFileHash.end())
    {
       BlockFilePtr b = iter->second.lock();
@@ -1419,14 +1429,14 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
             needToRename = true;
 
             //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            ab->LockRead();
+            readLocks.push_back( ab->LockForRead() );
          }
          //now for encoded OD blocks  (e.g. flac)
          else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
             needToRename = true;
 
             //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
-            db->LockRead();
+            readLocks.push_back( db->LockForRead() );
          }
       }
       ++iter;
@@ -1442,27 +1452,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
          // second earlier.)  But we'll handle this scenario
          // just in case!!!
 
-         // Put things back where they were
-         BlockHash::iterator iter = mBlockFileHash.begin();
-         while (iter != mBlockFileHash.end())
-         {
-            BlockFilePtr b = iter->second.lock();
-            if (b) {
-               auto ab = static_cast< AliasBlockFile * > ( &*b );
-               auto db = static_cast< ODDecodeBlockFile * > ( &*b );
-
-               if (b->IsAlias() && (ab->GetAliasedFileName() == fName))
-                  ab->UnlockRead();
-               if (!b->IsDataAvailable() && (db->GetEncodedAudioFilename() == fName))
-                  db->UnlockRead();
-            }
-            ++iter;
-         }
-
          // Print error message and cancel the export
          wxLogSysError(_("Unable to rename '%s' to '%s'."),
                        fullPath.c_str(),
                        renamedFullPath.c_str());
+
+         // Destruction of readLocks puts things back where they were
          return false;
       }
       else
@@ -1479,14 +1474,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                if (b->IsAlias() && ab->GetAliasedFileName() == fName)
                {
                   ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
-                  ab->UnlockRead();
                   wxPrintf(_("Changed block %s to new alias name\n"),
                            b->GetFileName().name.GetFullName().c_str());
 
                }
                else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
                   db->ChangeAudioFile(wxFileNameWrapper{ renamedFileName });
-                  db->UnlockRead();
                }
             }
             ++iter;
@@ -1609,10 +1602,8 @@ _("Project check of \"%s\" folder \
             wxASSERT(b);
             if (b) {
                auto ab = static_cast< AliasBlockFile * > ( &*b );
-               if (action == 1)
-                  // Silence error logging for this block in this session.
-                  ab->SilenceAliasLog();
-               else if (action == 2)
+
+               if (action == 2)
                {
                   // silence the blockfiles by yanking the filename
                   // This is done, eventually, in PCMAliasBlockFile::ReadData()
@@ -1621,9 +1612,22 @@ _("Project check of \"%s\" folder \
                   wxFileNameWrapper dummy;
                   dummy.Clear();
                   ab->ChangeAliasedFileName(std::move(dummy));
-                  ab->Recover();
+
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] { ab->Recover(); },
+                     [&] (AudacityException*) { action = 1; }
+                  );
+
                   nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
                }
+
+               if (action == 1)
+                  // Silence error logging for this block in this session.
+                  ab->SilenceAliasLog();
             }
             ++iter;
          }
@@ -1673,11 +1677,22 @@ _("Project check of \"%s\" folder \
             BlockFilePtr b = iter->second.lock();
             wxASSERT(b);
             if (b) {
-               if(action==0){
+               if(action==0) {
                   //regenerate from data
-                  b->Recover();
-                  nResult |= FSCKstatus_CHANGED;
-               }else if (action==1){
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] {
+                        b->Recover();
+                        nResult |= FSCKstatus_CHANGED;
+                     },
+                     [&] (AudacityException*) { action = 1; }
+                  );
+               }
+
+               if (action==1){
                   // Silence error logging for this block in this session.
                   b->SilenceLog();
                }
@@ -1737,11 +1752,22 @@ _("Project check of \"%s\" folder \
             if (b) {
                if (action == 2)
                {
-                  //regenerate with zeroes
-                  b->Recover();
-                  nResult = FSCKstatus_CHANGED;
+                  //regenerate from data
+                  // If recovery fails for one file, silence it,
+                  // and don't try to recover other files but
+                  // silence them too.  GuardedCall will cause an appropriate
+                  // error message for the user.
+                  GuardedCall<void>(
+                     [&] {
+                        //regenerate with zeroes
+                        b->Recover();
+                        nResult |= FSCKstatus_CHANGED;
+                     },
+                     [&] (AudacityException*) { action = 1; }
+                  );
                }
-               else if (action == 1)
+
+               if (action == 1)
                   b->SilenceLog();
             }
             ++iter;

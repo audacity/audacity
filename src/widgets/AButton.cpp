@@ -26,10 +26,12 @@
 #include "AButton.h"
 #include "../AColor.h"
 
+#include <wx/app.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>
 #include <wx/image.h>
+#include <wx/timer.h>
 
 //This is needed for tooltips
 #include "../Project.h"
@@ -561,7 +563,9 @@ void AButton::Click()
 {
    wxCommandEvent event(wxEVT_COMMAND_BUTTON_CLICKED, GetId());
    event.SetEventObject(this);
-   GetEventHandler()->ProcessEvent(event);
+   // Be sure to use SafelyProcessEvent so that exceptions do not propagate
+   // out of DoDefaultAction
+   GetEventHandler()->SafelyProcessEvent(event);
 }
 
 void AButton::SetShift(bool shift)

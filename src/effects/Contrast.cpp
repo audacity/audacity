@@ -12,8 +12,6 @@
 #include "../Audacity.h"
 #include "Contrast.h"
 
-#include "../AudacityApp.h"
-
 #include "../WaveTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -86,7 +84,8 @@ bool ContrastDialog::GetDB(float &dB)
          return false;
       }
 
-      ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
+      // Don't throw in this analysis dialog
+      rms = ((WaveTrack *)t)->GetRMS(mT0, mT1, false);
       meanSq += rms * rms;
       t = (WaveTrack *) iter.Next();
    }

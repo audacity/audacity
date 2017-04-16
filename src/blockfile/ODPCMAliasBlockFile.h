@@ -16,10 +16,10 @@ The summary is eventually computed and written to a file in a background thread.
 
 Load On-Demand implementation of the AliasBlockFile for PCM files.
 
-to load large files more quickly, we take skip computing the summary data and put
+to load large files more quickly, we skip computing the summary data and put
 ODPCMAliasBlockFiles in the sequence as place holders.  A background thread loads and
 computes the summary data into these classes.
-ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when NEW
+ODPCMAliasBlockFiles unlike all other BlockFiles are not immutable (for the most part,) because when NEW
 summary data is computed for an existing ODPCMAliasBlockFile we save the buffer then and write the Summary File.
 
 All BlockFile methods that treat the summary data as a buffer that exists in its BlockFile
@@ -65,10 +65,10 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
    //Calls that rely on summary files need to be overidden
    DiskByteCount GetSpaceUsage() const override;
    /// Gets extreme values for the specified region
-   void GetMinMax(size_t start, size_t len,
-                          float *outMin, float *outMax, float *outRMS) const override;
+   MinMaxRMS GetMinMaxRMS(
+      size_t start, size_t len, bool mayThrow) const override;
    /// Gets extreme values for the entire block
-   void GetMinMax(float *outMin, float *outMax, float *outRMS) const override;
+   MinMaxRMS GetMinMaxRMS(bool mayThrow) const override;
    /// Returns the 256 byte summary data block
    bool Read256(float *buffer, size_t start, size_t len) override;
    /// Returns the 64K summary data block
@@ -118,10 +118,10 @@ class ODPCMAliasBlockFile final : public PCMAliasBlockFile
 
    /// Reads the specified data from the aliased file using libsndfile
    size_t ReadData(samplePtr data, sampleFormat format,
-                        size_t start, size_t len) const override;
+                        size_t start, size_t len, bool mayThrow) const override;
 
    /// Read the summary into a buffer
-   bool ReadSummary(void *data) override;
+   bool ReadSummary(ArrayOf<char> &data) override;
 
    ///sets the file name the summary info will be saved in.  threadsafe.
    void SetFileName(wxFileNameWrapper &&name) override;

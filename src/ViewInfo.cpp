@@ -98,6 +98,7 @@ void ZoomInfo::SetZoom(double pixelsPerSecond)
          zoom = floor(pixelsPerSample) * samplesPerSecond;
       }
    }
+// DA: Avoids stuck in snap-to
 #ifdef EXPERIMENTAL_DA
    // Disable snapping if user zooms in a long way.
    // Helps stop users be trapped in snap-to.
@@ -169,7 +170,8 @@ void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, do
          beforeWidth / zoom));
 }
 
-void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile)
+void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
+// may throw
 {
    selectedRegion.WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
    xmlFile.WriteAttr(wxT("vpos"), vpos);

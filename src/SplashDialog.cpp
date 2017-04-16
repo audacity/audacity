@@ -42,7 +42,12 @@ most commonly asked questions about Audacity.
 #include "Prefs.h"
 #include "HelpText.h"
 
+// DA: Logo for Splash Dialog (welcome dialog)
+#ifdef EXPERIMENTAL_DA
+#include "../images/DarkAudacityLogoWithName.xpm"
+#else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
 
 SplashDialog * SplashDialog::pSelf=NULL;
 
@@ -64,7 +69,6 @@ SplashDialog::SplashDialog(wxWindow * parent)
       wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    SetName(GetTitle());
-   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    m_pLogo = NULL; //v
    ShuttleGui S( this, eIsCreating );
    Populate( S );
@@ -77,7 +81,8 @@ SplashDialog::SplashDialog(wxWindow * parent)
 
 void SplashDialog::Populate( ShuttleGui & S )
 {
-   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+//   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+//   this->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
    bool bShow;
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &bShow, true );
    S.StartVerticalLay(1);
@@ -85,11 +90,18 @@ void SplashDialog::Populate( ShuttleGui & S )
    //v For now, change to AudacityLogoWithName via old-fashioned ways, not Theme.
    m_pLogo = std::make_unique<wxBitmap>((const char **) AudacityLogoWithName_xpm); //v
 
+
    // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
    // our source, but this allows us to tweak the size - if we want to.
    // It also makes it easier to revert to full size if we decide to.
    const float fScale=0.5f;// smaller size.
    wxImage RescaledImage( m_pLogo->ConvertToImage() );
+   wxColour MainColour( 
+      RescaledImage.GetRed(1,1), 
+      RescaledImage.GetGreen(1,1), 
+      RescaledImage.GetBlue(1,1));
+   this->SetBackgroundColour(MainColour);
+
    // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
    RescaledImage.Rescale( (int)(LOGOWITHNAME_WIDTH * fScale), (int)(LOGOWITHNAME_HEIGHT *fScale) );
    wxBitmap RescaledBitmap( RescaledImage );

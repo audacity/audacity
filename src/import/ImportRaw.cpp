@@ -27,10 +27,12 @@ and sample size to help you importing data of an unknown format.
 #include "Import.h"
 
 #include "../DirManager.h"
+#include "../FileException.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../UserException.h"
 #include "../WaveTrack.h"
 
 #include <cmath>
@@ -87,11 +89,14 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxTextCtrl *mRateText;
 
    int         mNumEncodings;
-   int        *mEncodingSubtype;
+   ArrayOf<int> mEncodingSubtype;
 
    DECLARE_EVENT_TABLE()
 };
 
+// This function leaves outTracks empty as an indication of error,
+// but may also throw FileException to make use of the application's
+// user visible error reporting.
 void ImportRaw(wxWindow *parent, const wxString &fileName,
               TrackFactory *trackFactory, TrackHolders &outTracks)
 {
@@ -102,7 +107,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
    double rate = 44100.0;
    double percent = 100.0;
    TrackHolders channels;
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    {
       SF_INFO sndInfo;
@@ -158,12 +163,11 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       }
 
       if (!sndFile){
-         // TODO: Handle error
          char str[1000];
          sf_error_str((SNDFILE *)NULL, str, 1000);
          printf("%s\n", str);
 
-         return;
+         throw FileException{ FileException::Cause::Open, fileName };
       }
 
       result = sf_command(sndFile.get(), SFC_SET_RAW_START_OFFSET, &offset, sizeof(offset));
@@ -171,6 +175,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          char str[1000];
          sf_error_str(sndFile.get(), str, 1000);
          printf("%s\n", str);
+
+         throw FileException{ FileException::Cause::Read, fileName };
       }
 
       SFCall<sf_count_t>(sf_seek, sndFile.get(), 0, SEEK_SET);
@@ -254,9 +260,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          else {
             // This is not supposed to happen, sndfile.h says result is always
             // a count, not an invalid value for error
-            wxASSERT(false);
-            updateResult = eProgressFailed;
-            break;
+            throw FileException{ FileException::Cause::Read, fileName };
          }
 
          if (block) {
@@ -282,16 +286,14 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
             framescompleted.as_long_long(),
             totalFrames.as_long_long()
          );
-         if (updateResult != eProgressSuccess)
+         if (updateResult != ProgressResult::Success)
             break;
          
       } while (block > 0 && framescompleted < totalFrames);
    }
 
-   if (updateResult == eProgressFailed || updateResult == eProgressCancelled) {
-      // It's a shame we can't return proper error code
-      return;
-   }
+   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
+      throw UserException{};
 
    for (const auto &channel : channels)
       channel->Flush();
@@ -340,7 +342,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
    num = sf_num_encodings();
    mNumEncodings = 0;
-   mEncodingSubtype = new int[num];
+   mEncodingSubtype.reinit(static_cast<size_t>(num));
 
    selection = 0;
    for (i=0; i<num; i++) {
@@ -464,7 +466,6 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
 ImportRawDialog::~ImportRawDialog()
 {
-   delete[] mEncodingSubtype;
 }
 
 void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))

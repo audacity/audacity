@@ -50,8 +50,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
    mList      = NULL;
    mSelected  = false;
    mLinked    = false;
-   mMute      = false;
-   mSolo      = false;
 
    mY = 0;
    mHeight = 150;
@@ -92,8 +90,6 @@ void Track::Init(const Track &orig)
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;
-   mMute = orig.mMute;
-   mSolo = orig.mSolo;
    mHeight = orig.mHeight;
    mMinimized = orig.mMinimized;
    mChannel = orig.mChannel;
@@ -112,8 +108,6 @@ void Track::SetSelected(bool s)
 void Track::Merge(const Track &orig)
 {
    mSelected = orig.mSelected;
-   mMute = orig.mMute;
-   mSolo = orig.mSolo;
 }
 
 Track::~Track()
@@ -139,10 +133,10 @@ void Track::SetOwner(TrackList *list, TrackNodePointer node)
 int Track::GetMinimizedHeight() const
 {
    if (GetLink()) {
-      return 20;
+      return 21;
    }
 
-   return 40;
+   return 42;
 }
 
 int Track::GetIndex() const
@@ -306,29 +300,65 @@ bool Track::IsSyncLockSelected() const
    return false;
 }
 
-bool Track::SyncLockAdjust(double oldT1, double newT1)
+void Track::SyncLockAdjust(double oldT1, double newT1)
 {
    if (newT1 > oldT1) {
       // Insert space within the track
 
       if (oldT1 > GetEndTime())
-         return true;
+         return;
 
       auto tmp = Cut(oldT1, GetEndTime());
-      if (!tmp) return false;
 
-      bool ret = Paste(newT1, tmp.get());
-      wxASSERT(ret); // TODO: handle this.
-
-      return ret;
+      Paste(newT1, tmp.get());
    }
    else if (newT1 < oldT1) {
       // Remove from the track
-      return Clear(newT1, oldT1);
+      Clear(newT1, oldT1);
+   }
+}
+
+void PlayableTrack::Init( const PlayableTrack &orig )
+{
+   mMute = orig.mMute;
+   mSolo = orig.mSolo;
+   AudioTrack::Init( orig );
+}
+
+void PlayableTrack::Merge( const Track &orig )
+{
+   auto pOrig = dynamic_cast<const PlayableTrack *>(&orig);
+   wxASSERT( pOrig );
+   mMute = pOrig->mMute;
+   mSolo = pOrig->mSolo;
+   AudioTrack::Merge( *pOrig );
+}
+
+// Serialize, not with tags of its own, but as attributes within a tag.
+void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
+{
+   xmlFile.WriteAttr(wxT("mute"), mMute);
+   xmlFile.WriteAttr(wxT("solo"), mSolo);
+   AudioTrack::WriteXMLAttributes(xmlFile);
+}
+
+// Return true iff the attribute is recognized.
+bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
+{
+   const wxString strValue{ value };
+   long nValue;
+   if (!wxStrcmp(attr, wxT("mute")) &&
+            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      mMute = (nValue != 0);
+      return true;
+   }
+   else if (!wxStrcmp(attr, wxT("solo")) &&
+            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+      mSolo = (nValue != 0);
+      return true;
    }
 
-   // fall-through: no change
-   return true;
+   return AudioTrack::HandleXMLAttribute(attr, value);
 }
 
 // TrackListIterator
@@ -579,16 +609,9 @@ SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 }
 
 namespace {
-   bool IsSyncLockableNonLabelTrack( const Track *pTrack )
+   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
    {
-      if ( pTrack->GetKind() == Track::Wave )
-         return true;
-#ifdef USE_MIDI
-      else if ( pTrack->GetKind() == Track::Note )
-         return true;
-#endif
-      else
-         return false;
+      return nullptr != dynamic_cast< const AudioTrack * >( pTrack );
    }
 }
 
@@ -778,8 +801,10 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    int cnt = 0;
-   if (node->prev) {
-      t = node->prev->t;
+   if (hasPrev(node)) {
+      auto prev = node;
+      --prev;
+      t = prev->get();
       i = t->GetIndex() + 1;
       if(MONO_WAVE_PAN(t))
          y = t->GetY(true) + t->GetHeight(true);
@@ -787,8 +812,8 @@ void TrackList::RecalcPositions(TrackNodePointer node)
          y = t->GetY() + t->GetHeight();
    }
 
-   for (const TrackListNode *n = node; n; n = n->next) {
-      t = n->t;
+   for (auto n = node; n != end(); ++n) {
+      t = n->get();
       if(MONO_WAVE_PAN(t))
          cnt++;
 
@@ -978,15 +1003,6 @@ void TrackList::Select(Track * t, bool selected /* = true */ )
          }
       }
    }
-}
-
-Track *TrackList::GetLink(Track * t) const
-{
-   if (t) {
-      return t->GetLink();
-   }
-
-   return NULL;
 }
 
 /// Return a track in the list that comes after Track t
@@ -1215,7 +1231,9 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
    for (tr = iter.First(this); tr != NULL; tr = iter.Next()) {
 
       // Want only unmuted wave tracks.
-      if ((tr->GetKind() != Track::Wave) || tr->GetMute())
+      auto wt = static_cast<const WaveTrack *>(tr);
+      if ((tr->GetKind() != Track::Wave) ||
+          wt->GetMute())
          continue;
 
       // do we only want selected ones?
@@ -1272,8 +1290,9 @@ namespace {
 
       for (; p != end; ++p) {
          const auto &track = *p;
+         auto wt = static_cast<const WaveTrack *>(&*track);
          if (track->GetKind() == Track::Wave &&
-            (includeMuted || !track->GetMute()) &&
+            (includeMuted || !wt->GetMute()) &&
             (track->GetSelected() || !selectionOnly)) {
             waveTrackArray.push_back(static_cast<WaveTrack*>(track.get()));
          }
@@ -1314,8 +1333,8 @@ int TrackList::GetHeight() const
    int height = 0;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (tail) {
-      const Track *t = tail->t;
+   if (!empty()) {
+      const Track *t = rbegin()->get();
       if(MONO_WAVE_PAN(t))
          height = t->GetY(true) + t->GetHeight(true);
       else

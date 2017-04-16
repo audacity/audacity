@@ -1108,10 +1108,6 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    // UI
    
    mGui = false;
-   mNames = NULL;
-   mSliders = NULL;
-   mDisplays = NULL;
-   mLabels = NULL;
    mContainer = NULL;
 
    // If we're a slave then go ahead a load immediately
@@ -1126,26 +1122,6 @@ VSTEffect::~VSTEffect()
    if (mDialog)
    {
       mDialog->Close();
-   }
-
-   if (mNames)
-   {
-      delete [] mNames;
-   }
-
-   if (mSliders)
-   {
-      delete [] mSliders;
-   }
-
-   if (mDisplays)
-   {
-      delete [] mDisplays;
-   }
-
-   if (mLabels)
-   {
-      delete [] mLabels;
    }
 
    Unload();
@@ -1289,7 +1265,9 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
 
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), mUserBlockSize, 8192);
+      int userBlockSize;
+      mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), userBlockSize, 8192);
+      mUserBlockSize = std::max( 1, userBlockSize );
       mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
 
       mBlockSize = mUserBlockSize;
@@ -1330,7 +1308,7 @@ int VSTEffect::GetMidiOutCount()
 
 size_t VSTEffect::SetBlockSize(size_t maxBlockSize)
 {
-   mBlockSize = std::min((int)maxBlockSize, mUserBlockSize);
+   mBlockSize = std::min( maxBlockSize, mUserBlockSize );
    return mBlockSize;
 }
 
@@ -1424,26 +1402,16 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
 
 bool VSTEffect::RealtimeInitialize()
 {
-   mMasterIn = new float *[mAudioIns];
-   for (int i = 0; i < mAudioIns; i++)
-   {
-      mMasterIn[i] = new float[mBlockSize];
-      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
-   }
-
-   mMasterOut = new float *[mAudioOuts];
-   for (int i = 0; i < mAudioOuts; i++)
-   {
-      mMasterOut[i] = new float[mBlockSize];
-   }
+   mMasterIn.reinit( mAudioIns, mBlockSize, true );
+   mMasterOut.reinit( mAudioOuts, mBlockSize );
 
    return ProcessInitialize(0, NULL);
 }
 
 bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
-   VSTEffect *slave = new VSTEffect(mPath, this);
-   mSlaves.Add(slave);
+   mSlaves.push_back(make_movable<VSTEffect>(mPath, this));
+   VSTEffect *const slave = mSlaves.back().get();
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
@@ -1478,24 +1446,13 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 
 bool VSTEffect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->ProcessFinalize();
-      delete mSlaves[i];
-   }
-   mSlaves.Clear();
+   for (const auto &slave : mSlaves)
+      slave->ProcessFinalize();
+   mSlaves.clear();
 
-   for (int i = 0; i < mAudioIns; i++)
-   {
-      delete [] mMasterIn[i];
-   }
-   delete [] mMasterIn;
+   mMasterIn.reset();
 
-   for (int i = 0; i < mAudioOuts; i++)
-   {
-      delete [] mMasterOut[i];
-   }
-   delete [] mMasterOut;
+   mMasterOut.reset();
 
    return ProcessFinalize();
 }
@@ -1504,10 +1461,8 @@ bool VSTEffect::RealtimeSuspend()
 {
    PowerOff();
 
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->PowerOff();
-   }
+   for (const auto &slave : mSlaves)
+      slave->PowerOff();
 
    return true;
 }
@@ -1516,10 +1471,8 @@ bool VSTEffect::RealtimeResume()
 {
    PowerOn();
 
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->PowerOn();
-   }
+   for (const auto &slave : mSlaves)
+      slave->PowerOn();
 
    return true;
 }
@@ -1527,9 +1480,7 @@ bool VSTEffect::RealtimeResume()
 bool VSTEffect::RealtimeProcessStart()
 {
    for (int i = 0; i < mAudioIns; i++)
-   {
-      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
-   }
+      memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
 
    mNumSamples = 0;
 
@@ -1554,7 +1505,11 @@ size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
 
 bool VSTEffect::RealtimeProcessEnd()
 {
-   ProcessBlock(mMasterIn, mMasterOut, mNumSamples);
+   // These casts to float** should be safe...
+   ProcessBlock(
+      reinterpret_cast <float**> (mMasterIn.get()),
+      reinterpret_cast <float**> (mMasterOut.get()),
+      mNumSamples);
 
    return true;
 }
@@ -1589,9 +1544,13 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if ( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    //   mProcessLevel = 1;      // in GUI thread
 
@@ -1614,12 +1573,12 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    if (SupportsRealtime() && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }
@@ -1646,8 +1605,6 @@ bool VSTEffect::GetAutomationParameters(EffectAutomationParameters & parms)
 
 bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   size_t slaveCnt = mSlaves.GetCount();
-
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1666,10 +1623,8 @@ bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       if (d >= -1.0 && d <= 1.0)
       {
          callSetParameter(i, d);
-         for (size_t i = 0; i < slaveCnt; i++)
-         {
-            mSlaves[i]->callSetParameter(i, d);
-         }
+         for (const auto &slave : mSlaves)
+            slave->callSetParameter(i, d);
       }
    }
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
@@ -1817,29 +1772,10 @@ bool VSTEffect::CloseUI()
 
    RemoveHandler();
 
-   if (mNames)
-   {
-      delete [] mNames;
-      mNames = NULL;
-   }
-
-   if (mSliders)
-   {
-      delete [] mSliders;
-      mSliders = NULL;
-   }
-
-   if (mDisplays)
-   {
-      delete [] mDisplays;
-      mDisplays = NULL;
-   }
-
-   if (mLabels)
-   {
-      delete [] mLabels;
-      mLabels = NULL;
-   }
+   mNames.reset();
+   mSliders.reset();
+   mDisplays.reset();
+   mLabels.reset();
 
    mUIHost = NULL;
    mParent = NULL;
@@ -1888,6 +1824,7 @@ void VSTEffect::ExportPresets()
    }
    else if (ext.CmpNoCase(wxT("xml")) == 0)
    {
+      // may throw
       SaveXML(fn);
    }
    else
@@ -1978,7 +1915,9 @@ void VSTEffect::ShowOptions()
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
-      mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), mUserBlockSize, 8192);
+      int userBlockSize;
+      mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), userBlockSize, 8192);
+      mUserBlockSize = std::max( 1, userBlockSize );
       mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
    }
 }
@@ -2328,14 +2267,13 @@ bool VSTEffect::LoadParameters(const wxString & group)
 
    if (mHost->GetPrivateConfig(group, wxT("Chunk"), value, wxEmptyString))
    {
-      char *buf = new char[value.length() / 4 * 3];
+      ArrayOf<char> buf{ value.length() / 4 * 3 };
 
-      int len = VSTEffect::b64decode(value, buf);
+      int len = VSTEffect::b64decode(value, buf.get());
       if (len)
       {
-         callSetChunk(true, len, buf, &info);
+         callSetChunk(true, len, buf.get(), &info);
       }
-      delete [] buf;
 
       return true;
    }
@@ -2513,10 +2451,8 @@ void VSTEffect::Automate(int index, float value)
       return;
    }
 
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->callSetParameter(index, value);
-   }
+   for (const auto &slave : mSlaves)
+      slave->callSetParameter(index, value);
 
    return;
 }
@@ -2587,10 +2523,8 @@ void VSTEffect::callSetParameter(int index, float value)
    {
       mAEffect->setParameter(mAEffect, index, value);
 
-      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-      {
-         mSlaves[i]->callSetParameter(index, value);
-      }
+      for (const auto &slave : mSlaves)
+         slave->callSetParameter(index, value);
    }
 }
 
@@ -2599,10 +2533,8 @@ void VSTEffect::callSetProgram(int index)
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
 
    callDispatcher(effSetProgram, 0, index, NULL, 0.0);
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->callSetProgram(index);
-   }
+   for (const auto &slave : mSlaves)
+      slave->callSetProgram(index);
 
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 }
@@ -2643,10 +2575,8 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
    callDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->callSetChunk(isPgm, len, buf, info);
-   }
+   for (const auto &slave : mSlaves)
+      slave->callSetChunk(isPgm, len, buf, info);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2789,7 +2719,7 @@ void VSTEffect::BuildFancy()
    // Turn the power on...some effects need this when the editor is open
    PowerOn();
 
-   auto control = std::make_unique<VSTControl>();
+   auto control = Destroy_ptr<VSTControl>{ safenew VSTControl };
    if (!control)
    {
       return;
@@ -2847,10 +2777,10 @@ void VSTEffect::BuildPlain()
       mParent->SetSizer(mainSizer.release());
    }
 
-   mNames = new wxStaticText *[mAEffect->numParams];
-   mSliders = new wxSlider *[mAEffect->numParams];
-   mDisplays = new wxStaticText *[mAEffect->numParams];
-   mLabels = new wxStaticText *[mAEffect->numParams];
+   mNames.reinit(static_cast<size_t>(mAEffect->numParams));
+   mSliders.reinit(static_cast<size_t>(mAEffect->numParams));
+   mDisplays.reinit(static_cast<size_t>(mAEffect->numParams));
+   mLabels.reinit(static_cast<size_t>(mAEffect->numParams));
 
    {
       auto paramSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, scroller, _("Effect Settings"));
@@ -3062,7 +2992,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
    }
 
    // Allocate memory for the contents
-   unsigned char *data = new unsigned char[f.Length()];
+   ArrayOf<unsigned char> data{ size_t(f.Length()) };
    if (!data)
    {
       wxMessageBox(_("Unable to allocate memory when loading presets file."),
@@ -3071,7 +3001,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
                    mParent);
       return false;
    }
-   unsigned char *bptr = data;
+   unsigned char *bptr = data.get();
 
    do
    {
@@ -3218,9 +3148,6 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
       }
    } while (false);
 
-   // Get rid of the data
-   delete [] data;
-
    return ret;
 }
 
@@ -3236,7 +3163,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
    }
 
    // Allocate memory for the contents
-   unsigned char *data = new unsigned char[f.Length()];
+   ArrayOf<unsigned char> data{ size_t(f.Length()) };
    if (!data)
    {
       wxMessageBox(_("Unable to allocate memory when loading presets file."),
@@ -3245,7 +3172,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
                    mParent);
       return false;
    }
-   unsigned char *bptr = data;
+   unsigned char *bptr = data.get();
 
    do
    {
@@ -3270,9 +3197,6 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
       // Go verify and set the program
       ret = LoadFXProgram(&bptr, len, i, false);
    } while (false);
-
-   // Get rid of the data
-   delete [] data;
 
    return ret;
 }
@@ -3640,11 +3564,9 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
 
 // Throws exceptions rather than giving error return.
 void VSTEffect::SaveXML(const wxFileName & fn)
+// may throw
 {
-   XMLFileWriter xmlFile;
-
-   // Create/Open the file
-   xmlFile.Open(fn.GetFullPath(), wxT("wb"));
+   XMLFileWriter xmlFile{ fn.GetFullPath(), _("Error Saving Effect Presets") };
 
    xmlFile.StartTag(wxT("vstprogrampersistence"));
    xmlFile.WriteAttr(wxT("version"), wxT("2"));
@@ -3695,10 +3617,7 @@ void VSTEffect::SaveXML(const wxFileName & fn)
 
    xmlFile.EndTag(wxT("vstprogrampersistence"));
 
-   // Close the file
-   xmlFile.Close();
-
-   return;
+   xmlFile.Commit();
 }
 
 bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -3947,15 +3866,14 @@ void VSTEffect::HandleXMLEndTag(const wxChar *tag)
    {
       if (mChunk.length())
       {
-         char *buf = new char[mChunk.length() / 4 * 3];
+         ArrayOf<char> buf{ mChunk.length() / 4 * 3 };
 
-         int len = VSTEffect::b64decode(mChunk, buf);
+         int len = VSTEffect::b64decode(mChunk, buf.get());
          if (len)
          {
-            callSetChunk(true, len, buf, &mXMLInfo);
+            callSetChunk(true, len, buf.get(), &mXMLInfo);
          }
 
-         delete [] buf;
          mChunk.clear();
       }
       mInChunk = false;

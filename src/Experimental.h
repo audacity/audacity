@@ -48,10 +48,13 @@
 // feature to link audio tracks to a label track
 #define EXPERIMENTAL_SYNC_LOCK
 
+// DA: Enables dark audacity theme and customisations.
+//#define EXPERIMENTAL_DA
+
 // experimental theming
 // Work in progress, June-2008.
 // This mostly sets up a weird color scheme currently.
-//#define EXPERIMENTAL_THEMING
+#define EXPERIMENTAL_THEMING
 
 //August 2009 - Theming not locked down enough for a stable release.
 // This turns on the Theme panel in Prefs dialog. It is independent of EXPERIMENTAL_THEMING.
@@ -184,11 +187,13 @@
 // scrolling past zero is enabled. Perhaps that lessens confusion.
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
+#ifndef IN_RC
 // Define to include crash reporting
 #include <wx/defs.h>
 #define EXPERIMENTAL_CRASH_REPORT
 #if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
 #undef EXPERIMENTAL_CRASH_REPORT
+#endif
 #endif
 
 // Paul Licameli (PRL) 31 May 2015

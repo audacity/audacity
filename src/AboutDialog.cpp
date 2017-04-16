@@ -44,7 +44,12 @@ hold information about one contributor to Audacity.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
+// DA: Logo for About box.
+#ifdef EXPERIMENTAL_DA
+#include "../images/DarkAudacityLogoWithName.xpm"
+#else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
 #include "RevisionIdent.h"
 
 // RevisionIdent.h may contain #defines like these ones:
@@ -300,6 +305,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
    SetName(GetTitle());
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+   //this->SetBackgroundColour(theTheme.Colour( clrMedium ));
    icon = NULL;
    ShuttleGui S( this, eIsCreating );
    S.StartNotebook();
@@ -323,9 +329,17 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
    CreateCreditsList();
 
-   wxString par1Str = _(
+   wxString par1Str = 
+// DA: Says that it is a customised version.
+#ifdef EXPERIMENTAL_DA
+      wxT(
+"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
+Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+#else
+      _(
 "Audacity is a free program written by a worldwide team of [[http://www.audacityteam.org/about/credits|volunteers]]. \
 Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+#endif
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
@@ -351,18 +365,35 @@ visit our [[http://forum.audacityteam.org/|forum]].");
    {
       translatorCredits = _("translator_credits") + wxT("<br>");
    }
-   wxString localeStr = wxLocale::GetSystemEncodingName();
 
    wxString creditStr = FormatHtmlText(
-      wxString( wxT("<center>")) +
-      wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      _("Free, open source, cross-platform software for recording and editing sounds.") +
-      wxT(" [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
-      wxT("<p><br>") + par1Str +
-      wxT("<p>") + par2Str +
+      wxString( wxT("<center>") ) +
+// DA: Description and provenance in About box
+#ifdef EXPERIMENTAL_DA
+      #undef _
+      #define _(s) wxGetTranslation((s))
+      wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
+      wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
+      wxT("for recording and editing sounds.") +
+      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+
+#else
+      _("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
+      _("Audacity the free, open source, cross-platform software for recording and editing sounds.") +
+#endif
+
+      //wxT("<p><br>") + par1Str +
+      //wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") + wxT("<p>") +
 
-      wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br><br>") +
+// DA: Customisation credit
+#ifdef EXPERIMENTAL_DA
+      wxT("<p><b>") + wxString::Format(_("DarkAudacity Customisation")) + wxT("</b><br>") +
+      wxT("James Crook, art, coding &amp; design<br>") +
+#endif
+
+      wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
 
       wxT("<p><b> ") + _("Emeritus:") + wxT("</b><br>") +
@@ -373,30 +404,33 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       GetCreditsByRole(roleContributor) +
 
       wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
-      translatorCredits + 
+      translatorCredits +
       GetCreditsByRole(roleTranslators) +
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
-      wxT("Audacity includes code from the following projects:") + wxT("<br><br>") +
+      _("Audacity includes code from the following projects:") + wxT("<br><br>") +
       GetCreditsByRole(roleLibrary) +
 
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>") + _("<b>Audacity<sup>&reg;</sup></b> software is copyright")+
-      wxT("&copy; 1999-2017 Audacity Team.<br>") +
-      _("The name <b>Audacity<sup>&reg;</sup></b> is a registered trademark of Dominic Mazzoni.") +
-      wxT("<p><br>")+_("Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
-      wxT("</center>"));
+      wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
 
+// DA: Link for DA url too
+#ifdef EXPERIMENTAL_DA
+      wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|http://www.darkaudacity.com/]]") +
+#else
+      _("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      _("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
+#endif
 
-   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
+      wxT("</center>")
+   );
 
-
-   // New way to add to About box....
-   S.StartNotebookPage( wxT("Audacity") );
+   auto pPage = S.StartNotebookPage( _("Audacity") );
+   //pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
+   //pPage->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    S.StartVerticalLay(1);
-
    {
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
       wxBitmap logo(AudacityLogoWithName_xpm); //v
@@ -406,6 +440,11 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       // It also makes it easier to revert to full size if we decide to.
       const float fScale = 0.5f;// smaller size.
       wxImage RescaledImage(logo.ConvertToImage());
+      wxColour MainColour( 
+         RescaledImage.GetRed(1,1), 
+         RescaledImage.GetGreen(1,1), 
+         RescaledImage.GetBlue(1,1));
+      pPage->SetBackgroundColour(MainColour);
       // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
       RescaledImage.Rescale((int)(LOGOWITHNAME_WIDTH * fScale), (int)(LOGOWITHNAME_HEIGHT *fScale));
       wxBitmap RescaledBitmap(RescaledImage);
@@ -551,6 +590,12 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += wxT("<h3>");
    informationStr += _("Features");
    informationStr += wxT("</h3>\n<table>");  // start table of features
+
+#ifdef EXPERIMENTAL_DA
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), enabled);
+#else
+   AddBuildinfoRow(&informationStr, wxT("Theme"), _("Dark Theme Extras"), disabled);
+#endif
 
    # if USE_NYQUIST
    AddBuildinfoRow(&informationStr, wxT("Nyquist"), _("Plug-in support"),

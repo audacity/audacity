@@ -831,9 +831,6 @@ AudioUnitEffect::AudioUnitEffect(const wxString & path,
    mDialog = NULL;
    mParent = NULL;
 
-   mInputList = NULL;
-   mOutputList = NULL;
-
    mUnitInitialized = false;
 
    mEventListenerRef = NULL;
@@ -965,17 +962,16 @@ bool AudioUnitEffect::SupportsAutomation()
    }
 
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
+   ArrayOf < AudioUnitParameterID > array{cnt};
 
    result = AudioUnitGetProperty(mUnit,
                                  kAudioUnitProperty_ParameterList,
                                  kAudioUnitScope_Global,
                                  0,
-                                 array,
+                                 array.get(),
                                  &dataSize);  
    if (result != noErr)
    {
-      delete [] array;
       return false;
    }
 
@@ -991,20 +987,16 @@ bool AudioUnitEffect::SupportsAutomation()
                                     &dataSize);  
       if (result != noErr)
       {
-         delete [] array;
          return false;
       }
 
       if (info.flags & kAudioUnitParameterFlag_IsWritable)
       {
          // All we need is one
-         delete [] array;
          return true;
       }
    }
 
-   delete [] array;
-   
    return false;
 }
 
@@ -1096,17 +1088,16 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
 
       // And get them
       UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-      AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
+      ArrayOf<AudioUnitParameterID> array {cnt};
    
       result = AudioUnitGetProperty(mUnit,
                                     kAudioUnitProperty_ParameterList,
                                     kAudioUnitScope_Global,
                                     0,
-                                    array,
+                                    array.get(),
                                     &dataSize);  
       if (result != noErr)
       {
-         delete [] array;
          return false;
       }
 
@@ -1119,12 +1110,9 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
                                               &event);
          if (result != noErr)
          {
-            delete [] array;
             return false;
          }
       }
-
-      delete [] array;
 
       event.mEventType = kAudioUnitEvent_PropertyChange;
       event.mArgument.mProperty.mAudioUnit = mUnit;
@@ -1246,11 +1234,11 @@ bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelN
 {
    OSStatus result;
 
-   mInputList = new AudioBufferList[mAudioIns];
-   mInputList->mNumberBuffers = mAudioIns;
+   mInputList.reinit( mAudioIns );
+   mInputList[0].mNumberBuffers = mAudioIns;
    
-   mOutputList = new AudioBufferList[mAudioOuts];
-   mOutputList->mNumberBuffers = mAudioOuts;
+   mOutputList.reinit( mAudioOuts );
+   mOutputList[0].mNumberBuffers = mAudioOuts;
 
    memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
    mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
@@ -1294,35 +1282,26 @@ bool AudioUnitEffect::ProcessFinalize()
 {
    mReady = false;
 
-   if (mOutputList)
-   {
-      delete [] mOutputList;
-      mOutputList = NULL;
-   }
-
-   if (mInputList)
-   {
-      delete [] mInputList;
-      mInputList = NULL;
-   }
+   mOutputList.reset();
+   mInputList.reset();
 
    return true;
 }
 
 size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
-   for (int i = 0; i < mAudioIns; i++)
+   for (size_t i = 0; i < mAudioIns; i++)
    {
-      mInputList->mBuffers[i].mNumberChannels = 1;
-      mInputList->mBuffers[i].mData = inBlock[i];
-      mInputList->mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
+      mInputList[0].mBuffers[i].mNumberChannels = 1;
+      mInputList[0].mBuffers[i].mData = inBlock[i];
+      mInputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
    }
 
-   for (int i = 0; i < mAudioOuts; i++)
+   for (size_t i = 0; i < mAudioOuts; i++)
    {
-      mOutputList->mBuffers[i].mNumberChannels = 1;
-      mOutputList->mBuffers[i].mData = outBlock[i];
-      mOutputList->mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
+      mOutputList[0].mBuffers[i].mNumberChannels = 1;
+      mOutputList[0].mBuffers[i].mData = outBlock[i];
+      mOutputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
    }
 
    AudioUnitRenderActionFlags flags = 0;
@@ -1333,7 +1312,7 @@ size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t b
                             &mTimeStamp,
                             0,
                             blockLen,
-                            mOutputList);
+                            mOutputList.get());
    if (result != noErr)
    {
       printf("Render failed: %d %4.4s\n", (int)result, (char *)&result);
@@ -1347,20 +1326,8 @@ size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t b
 
 bool AudioUnitEffect::RealtimeInitialize()
 {
-   mMasterIn = new float *[mAudioIns];
-
-   for (int i = 0; i < mAudioIns; i++)
-   {
-      mMasterIn[i] = new float[mBlockSize];
-      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
-   }
-
-   mMasterOut = new float *[mAudioOuts];
-   for (int i = 0; i < mAudioOuts; i++)
-   {
-      mMasterOut[i] = new float[mBlockSize];
-   }
-
+   mMasterIn.reinit(mAudioIns, mBlockSize, true);
+   mMasterOut.reinit( mAudioOuts, mBlockSize );
    return ProcessInitialize(0);
 }
 
@@ -1389,17 +1356,8 @@ bool AudioUnitEffect::RealtimeFinalize()
       mSlaves[i]->ProcessFinalize();
    mSlaves.clear();
 
-   for (int i = 0; i < mAudioIns; i++)
-   {
-      delete [] mMasterIn[i];
-   }
-   delete [] mMasterIn;
-
-   for (int i = 0; i < mAudioOuts; i++)
-   {
-      delete [] mMasterOut[i];
-   }
-   delete [] mMasterOut;
+   mMasterIn.reset();
+   mMasterOut.reset();
 
    return ProcessFinalize();
 }
@@ -1424,10 +1382,8 @@ bool AudioUnitEffect::RealtimeResume()
 
 bool AudioUnitEffect::RealtimeProcessStart()
 {
-   for (int i = 0; i < mAudioIns; i++)
-   {
-      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
-   }
+   for (size_t i = 0; i < mAudioIns; i++)
+      memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
 
    mNumSamples = 0;
 
@@ -1441,7 +1397,7 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
 {
    wxASSERT(numSamples <= mBlockSize);
 
-   for (int c = 0; c < mAudioIns; c++)
+   for (size_t c = 0; c < mAudioIns; c++)
    {
       for (decltype(numSamples) s = 0; s < numSamples; s++)
       {
@@ -1455,7 +1411,10 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
 
 bool AudioUnitEffect::RealtimeProcessEnd()
 {
-   ProcessBlock(mMasterIn, mMasterOut, mNumSamples);
+   ProcessBlock(
+      reinterpret_cast<float**>(mMasterIn.get()),
+      reinterpret_cast<float**>(mMasterOut.get()),
+      mNumSamples);
 
    return true;
 }
@@ -1464,9 +1423,13 @@ bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)
    {
-      mDialog->Close(true);
+      if( mDialog->Close(true) )
+         mDialog = nullptr;
       return false;
    }
+
+   // mDialog is null
+   auto cleanup = valueRestorer( mDialog );
 
    mDialog = mHost->CreateUI(parent, this);
    if (!mDialog)
@@ -1477,12 +1440,12 @@ bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
+      cleanup.release();
 
       return false;
    }
 
    bool res = mDialog->ShowModal() != 0;
-   mDialog = NULL;
 
    return res;
 }
@@ -1505,17 +1468,16 @@ bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms
    }
 
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
+   ArrayOf<AudioUnitParameterID> array {cnt};
 
    result = AudioUnitGetProperty(mUnit,
                                  kAudioUnitProperty_ParameterList,
                                  kAudioUnitScope_Global,
                                  0,
-                                 array,
+                                 array.get(),
                                  &dataSize);  
    if (result != noErr)
    {
-      delete [] array;
       return false;
    }
 
@@ -1531,7 +1493,6 @@ bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms
                                     &dataSize);  
       if (result != noErr)
       {
-         delete [] array;
          return false;
       }
 
@@ -1554,13 +1515,10 @@ bool AudioUnitEffect::GetAutomationParameters(EffectAutomationParameters & parms
                                      &value);
       if (result != noErr)
       {
-         delete [] array;
          return false;
       }
       parms.Write(name, value);
    }
-
-   delete [] array;
 
    return true;
 }
@@ -1583,17 +1541,16 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
    }
 
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
+   ArrayOf<AudioUnitParameterID> array {cnt};
 
    result = AudioUnitGetProperty(mUnit,
                                  kAudioUnitProperty_ParameterList,
                                  kAudioUnitScope_Global,
                                  0,
-                                 array,
+                                 array.get(),
                                  &dataSize);  
    if (result != noErr)
    {
-      delete [] array;
       return false;
    }
 
@@ -1609,7 +1566,6 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
                                     &dataSize);  
       if (result != noErr)
       {
-         delete [] array;
          return false;
       }
 
@@ -1628,7 +1584,6 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
       double d = 0.0;
       if (!parms.Read(name, &d))
       {
-         delete [] array;
          return false;
       }
 
@@ -1641,12 +1596,9 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
                                      0);
       if (result != noErr)
       {
-         delete [] array;
          return false;
       }
    }
-
-   delete [] array;
 
    AudioUnitParameter aup;
    aup.mAudioUnit = mUnit;
@@ -1781,7 +1733,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    }
    else
    {
-      auto pControl = std::make_unique<AUControl>();
+      auto pControl = Destroy_ptr<AUControl>( safenew AUControl );
       if (!pControl)
       {
          return false;
@@ -2064,8 +2016,6 @@ bool AudioUnitEffect::SetRateAndChannels()
 bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
 {
    OSStatus result;
-   int numParameters, i;
-   AudioUnitParameterID *parameters;
    Float32 parameterValue;
    UInt32 size;
 
@@ -2087,25 +2037,24 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
 
    // Now get the list of all parameter IDs
 
-   numParameters = size / sizeof(AudioUnitParameterID);
-   parameters = new AudioUnitParameterID[numParameters];
+   auto numParameters = size / sizeof(AudioUnitParameterID);
+   ArrayOf<AudioUnitParameterID> parameters{ numParameters };
    result = AudioUnitGetProperty(srcUnit,
                                    kAudioUnitProperty_ParameterList,
                                    kAudioUnitScope_Global,
                                    0,
-                                   parameters,
+                                   parameters.get(),
                                    &size);
    if (result != 0)
    {
       printf("Couldn't get parameter list\n");
-      delete[] parameters;
       return false;
    }
 
    // Copy the parameters from the main unit to the unit specific to
    // this track
 
-   for (i = 0; i < numParameters; i++)
+   for (unsigned i = 0; i < numParameters; i++)
    {
       result = AudioUnitGetParameter(srcUnit,
                                        parameters[i],
@@ -2130,8 +2079,6 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
       }
    }
 
-   delete[] parameters;
-
    return true;
 }
 
@@ -2152,9 +2099,7 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
                                  AudioBufferList *ioData)
 {
    for (int i = 0; i < ioData->mNumberBuffers; i++)
-   {
-      ioData->mBuffers[i].mData = mInputList->mBuffers[i].mData;
-   }
+      ioData->mBuffers[i].mData = mInputList[0].mBuffers[i].mData;
 
    return 0;
 }
@@ -2246,7 +2191,8 @@ void AudioUnitEffect::GetChannelCounts()
       return;
    }
 
-   AUChannelInfo *info = (AUChannelInfo *) malloc(dataSize);
+   ArrayOf<char> buffer{ dataSize };
+   auto info = (AUChannelInfo *) buffer.get();
 
    // Retrieve the channel info
    result = AudioUnitGetProperty(mUnit,
@@ -2261,7 +2207,6 @@ void AudioUnitEffect::GetChannelCounts()
       mAudioIns = 2;
       mAudioOuts = 2;
 
-      free(info);
       return;
    }
 

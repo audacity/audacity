@@ -203,12 +203,12 @@ public:
    bool InitCodecs();
 
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
       Tags *tags) override;
 
    ///! Reads next audio frame
@@ -223,8 +223,7 @@ public:
 
    ///! Writes decoded data into WaveTracks. Called by DecodeFrame
    ///\param sc - stream context
-   ///\return 0 on success, 1 on error or interruption
-   int WriteData(streamContext *sc);
+   ProgressResult WriteData(streamContext *sc);
 
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
@@ -240,7 +239,7 @@ public:
 
    ///! Called by Import.cpp
    ///\return number of readable streams in the file
-   wxInt32 GetStreamCount()
+   wxInt32 GetStreamCount() override
    {
       return mNumStreams;
    }
@@ -255,7 +254,7 @@ public:
    ///! Called by Import.cpp
    ///\param StreamID - index of the stream in mStreamInfo and mScs arrays
    ///\param Use - true if this stream should be imported, false otherwise
-   void SetStreamUsage(wxInt32 StreamID, bool Use)
+   void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
       if (StreamID < mNumStreams)
          mScs->get()[StreamID]->m_use = Use;
@@ -393,7 +392,7 @@ bool FFmpegImportFileHandle::InitCodecs()
 {
    // Allocate the array of pointers to hold stream contexts pointers
    // Some of the allocated space may be unused (corresponds to video, subtitle, or undecodeable audio streams)
-   mScs = std::make_shared<Scs>(mFormatContext->nb_streams);
+   mScs = std::make_shared<Scs>(size_t{mFormatContext->nb_streams});
    // Fill the stream contexts
    for (unsigned int i = 0; i < mFormatContext->nb_streams; i++)
    {
@@ -467,7 +466,7 @@ auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
               TrackHolders &outTracks,
               Tags *tags)
 {
@@ -572,7 +571,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    }
    // This is the heart of the importing process
    // The result of Import() to be returend. It will be something other than zero if user canceled or some error appears.
-   int res = eProgressSuccess;
+   auto res = ProgressResult::Success;
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
    mUsingOD = false;
@@ -623,27 +622,27 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
                       sc->m_stream->codec->channels * mNumStreams
                   ).as_long_long()
                );
-               if (res != eProgressSuccess)
+               if (res != ProgressResult::Success)
                   break;
             }
          }
          tasks.push_back(std::move(odTask));
       }
       //Now we add the tasks and let them run, or DELETE them if the user cancelled
-      if (res == eProgressSuccess)
+      if (res == ProgressResult::Success)
          for (int i = 0; i < (int)tasks.size(); i++)
             ODManager::Instance()->AddNewTask(std::move(tasks[i]));
    } else {
 #endif
 
    // Read next frame.
-   for (streamContext *sc; (sc = ReadNextFrame()) != NULL && (res == eProgressSuccess);)
+   for (streamContext *sc; (sc = ReadNextFrame()) != NULL && (res == ProgressResult::Success);)
    {
       // ReadNextFrame returns 1 if stream is not to be imported
       if (sc != (streamContext*)1)
       {
          // Decode frame until it is not possible to decode any further
-         while (sc->m_pktRemainingSiz > 0 && (res == eProgressSuccess || res == eProgressStopped))
+         while (sc->m_pktRemainingSiz > 0 && (res == ProgressResult::Success || res == ProgressResult::Stopped))
          {
             if (DecodeFrame(sc,false) < 0)
                break;
@@ -659,7 +658,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    }
 
    // Flush the decoders.
-   if ((mNumStreams != 0) && (res == eProgressSuccess || res == eProgressStopped))
+   if ((mNumStreams != 0) && (res == ProgressResult::Success || res == ProgressResult::Stopped))
    {
       for (int i = 0; i < mNumStreams; i++)
       {
@@ -678,7 +677,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 #endif   //EXPERIMENTAL_OD_FFMPEG
 
    // Something bad happened - destroy everything!
-   if (res == eProgressCancelled || res == eProgressFailed)
+   if (res == ProgressResult::Cancelled || res == ProgressResult::Failed)
       return res;
    //else if (res == 2), we just stop the decoding as if the file has ended
 
@@ -712,7 +711,7 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
    return import_ffmpeg_decode_frame(sc, flushing);
 }
 
-int FFmpegImportFileHandle::WriteData(streamContext *sc)
+ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
 {
    // Find the stream index in mScs array
    int streamid = -1;
@@ -729,17 +728,14 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Stream is not found. This should not really happen
    if (streamid == -1)
    {
-      return 1;
+      return ProgressResult::Success;
    }
 
    // Allocate the buffer to store audio.
-   int insamples = sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize;
-   int nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
-   uint8_t **tmp = (uint8_t **) malloc(sizeof(uint8_t *) * nChannels);
-   for (int chn = 0; chn < nChannels; chn++)
-   {
-      tmp[chn] = (uint8_t *) malloc(sc->m_osamplesize * (insamples / nChannels));
-   }
+   auto insamples = sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize;
+   size_t nChannels = std::min(sc->m_stream->codec->channels, sc->m_initialchannels);
+
+   ArraysOf<uint8_t> tmp{ nChannels, sc->m_osamplesize * (insamples / nChannels) };
 
    // Separate the channels and convert input sample format to 16-bit
    uint8_t *in = sc->m_decodedAudioSamples.get();
@@ -755,37 +751,32 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
             {
                case AV_SAMPLE_FMT_U8:
                case AV_SAMPLE_FMT_U8P:
-                  ((int16_t *)tmp[chn])[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
+                  ((int16_t *)tmp[chn].get())[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
                break;
 
                case AV_SAMPLE_FMT_S16:
                case AV_SAMPLE_FMT_S16P:
-                  ((int16_t *)tmp[chn])[index] = (int16_t) *(int16_t *)in;
+                  ((int16_t *)tmp[chn].get())[index] = (int16_t) *(int16_t *)in;
                break;
 
                case AV_SAMPLE_FMT_S32:
                case AV_SAMPLE_FMT_S32P:
-                  ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1u << 31));
+                  ((float *)tmp[chn].get())[index] = (float) *(int32_t *)in * (1.0 / (1u << 31));
                break;
 
                case AV_SAMPLE_FMT_FLT:
                case AV_SAMPLE_FMT_FLTP:
-                  ((float *)tmp[chn])[index] = (float) *(float *)in;
+                  ((float *)tmp[chn].get())[index] = (float) *(float *)in;
                break;
 
                case AV_SAMPLE_FMT_DBL:
                case AV_SAMPLE_FMT_DBLP:
-                  ((float *)tmp[chn])[index] = (float) *(double *)in;
+                  ((float *)tmp[chn].get())[index] = (float) *(double *)in;
                break;
 
                default:
                   wxLogError(wxT("Stream %d has unrecognized sample format %d."), streamid, sc->m_samplefmt);
-                  for (int chn=0; chn < nChannels; chn++)
-                  {
-                     free(tmp[chn]);
-                  }
-                  free(tmp);
-                  return 1;
+                  return ProgressResult::Success;
                break;
             }
          }
@@ -799,14 +790,11 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    auto iter2 = iter->begin();
    for (int chn=0; chn < nChannels; ++iter2, ++chn)
    {
-      iter2->get()->Append((samplePtr)tmp[chn],sc->m_osamplefmt,index);
-      free(tmp[chn]);
+      iter2->get()->Append((samplePtr)tmp[chn].get(), sc->m_osamplefmt, index);
    }
 
-   free(tmp);
-
    // Try to update the progress indicator (and see if user wants to cancel)
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
    int64_t filesize = avio_size(mFormatContext->pb);
    // PTS (presentation time) is the proper way of getting current position
    if (sc->m_pkt->pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
@@ -859,6 +847,8 @@ void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const ch
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
+   av_log_set_callback(av_log_default_callback);
+
    // Do this before unloading the libraries
    mContext.reset();
 

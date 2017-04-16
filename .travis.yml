@@ -17,4 +17,4 @@ before_install:
 language:
     - cpp
 script:
-    - aclocal --install -I m4 && automake && ./configure && make
+    -  time ./configure && time make -j2

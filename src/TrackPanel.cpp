@@ -227,10 +227,10 @@ but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindTrack() for label returns a rectangle up to and including the One Pixel column,
+FindCell() for label or vruler returns a rectangle up to and including the One Pixel column,
 but OMITS left and top insets
 
-FindTrack() for !label returns a rectangle with x == GetLeftOffset(), and INCLUDES
+FindCell() for track returns a rectangle with x == GetLeftOffset(), and INCLUDES
 right and top insets
 
 +--------------- ... ------ ... --------------------- ...       ... -------------+
@@ -447,7 +447,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       // wxWidgets owns the accessible object
       SetAccessible(mAx = pAx.release());
 #else
-      // wxWidgets doesn not own the object, but we need to retain it
+      // wxWidgets does not own the object, but we need to retain it
       mAx = std::move(pAx);
 #endif
    }
@@ -624,13 +624,16 @@ void TrackPanel::BuildMenus(void)
 
    // include both mono and stereo items as a work around for bug 1250
 
-   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
-   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+//   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
    mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
    mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
+// DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
+#ifndef EXPERIMENTAL_DA
    mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+#endif
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), (mFormatMenu = formatMenu.release()));
@@ -725,7 +728,7 @@ void TrackPanel::DeleteMenus(void)
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
 void TrackPanel::UpdateVirtualStereoOrder()
 {
-   TrackListOfKindIterator iter(TrackKind::Wave, mTracks);
+   TrackListOfKindIterator iter(Track::Wave, GetTracks());
    Track *t;
    int temp;
 
@@ -782,6 +785,12 @@ void TrackPanel::UpdatePrefs()
 
    Refresh();
 }
+
+void TrackPanel::ApplyUpdatedTheme()
+{
+   mTrackInfo.ReCreateSliders();
+}
+
 
 /// Remembers the track we clicked on and why we captured it.
 /// We also use this method to clear the record
@@ -1182,7 +1191,8 @@ void TrackPanel::HandleInterruptedDrag()
     IsGainSliding,
     IsPanSliding,
     WasOverCutLine,
-    IsStretching
+    IsStretching,
+    IsVelocitySliding
     */
    // The bogus id isn't used anywhere, but may help with debugging.
    // as this is sending a bogus mouse up.  The mouse button is still actually down
@@ -1232,8 +1242,13 @@ bool TrackPanel::HandleEscapeKey(bool down)
       Track *const next = mTracks->GetNext(mCapturedTrack);
       mCapturedTrack->SetHeight(mInitialUpperActualHeight);
       mCapturedTrack->SetMinimized(mInitialMinimized);
-      next->SetHeight(mInitialActualHeight);
-      next->SetMinimized(mInitialMinimized);
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if( !MONO_WAVE_PAN(mCapturedTrack) )
+#endif
+      {
+         next->SetHeight(mInitialActualHeight);
+         next->SetMinimized(mInitialMinimized);
+      }
    }
       break;
    case IsResizingBelowLinkedTracks:
@@ -1241,8 +1256,13 @@ bool TrackPanel::HandleEscapeKey(bool down)
       Track *const prev = mTracks->GetPrev(mCapturedTrack);
       mCapturedTrack->SetHeight(mInitialActualHeight);
       mCapturedTrack->SetMinimized(mInitialMinimized);
-      prev->SetHeight(mInitialUpperActualHeight);
-      prev->SetMinimized(mInitialMinimized);
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if( !MONO_WAVE_PAN(mCapturedTrack) )
+#endif
+      {
+         prev->SetHeight(mInitialUpperActualHeight);
+         prev->SetMinimized(mInitialMinimized);
+      }
    }
       break;
    default:
@@ -1353,7 +1373,7 @@ bool TrackPanel::SetCursorByActivity( )
    return false;
 }
 
-bool TrackPanel::SetCursorForCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
+bool TrackPanel::SetCursorForCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event)
 {
    if (IsOverCutline(track, rect, event)) {
       bool unsafe = IsUnsafe();
@@ -1540,7 +1560,7 @@ void TrackPanel::HandleCenterFrequencyClick
 // we hover over, most notably when hovering over the selction boundaries.
 // Determine and set the cursor and tip accordingly.
 void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
-        const wxMouseEvent & event, wxRect &rect, bool bMultiToolMode,
+        const wxMouseEvent & event, const wxRect &rect, bool bMultiToolMode,
         wxString &tip, const wxCursor ** ppCursor )
 {
    // Do not set the default cursor here and re-set later, that causes
@@ -1713,10 +1733,9 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
 
    // (2) If we are not over a track at all, set the cursor to Arrow and
    //     clear the StatusBar,
-   wxRect labelRect, trackRect;
-   Track *const label = FindTrack(event.m_x, event.m_y, true, true, &labelRect);
-   Track *const nonlabel = FindTrack(event.m_x, event.m_y, false, false, &trackRect);
-   Track *const track = label ? label : nonlabel;
+   const auto foundCell = FindCell( event.m_x, event.m_y );
+   auto &track = foundCell.pTrack;
+   auto &trackRect = foundCell.rect;
 
    if (!track) {
       SetCursor(*mArrowCursor);
@@ -1735,16 +1754,17 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    wxString tip;
 
    // Are we within the vertical resize area?
-   if (nonlabel
-      ? within(event.m_y, trackRect.y + trackRect.height, TRACK_RESIZE_REGION)
-      : within(event.m_y, labelRect.y + labelRect.height, TRACK_RESIZE_REGION))
+   if (within(event.m_y, trackRect.GetBottom(), TRACK_RESIZE_REGION))
    {
-      SetCursorAndTipWhenInVResizeArea(nonlabel && track->GetLinked(), tip);
+      SetCursorAndTipWhenInVResizeArea(
+         track->GetLinked() && foundCell.type != CellType::Label, tip);
       // tip may still be NULL at this point, in which case we go on looking.
    }
 
-   if ((tip == wxString()) && label) {
-      SetCursorAndTipWhenInLabel( label, event, tip );
+   if ((tip == wxString()) &&
+       (foundCell.type == CellType::Label ||
+        foundCell.type == CellType::VRuler)) {
+      SetCursorAndTipWhenInLabel( track, event, tip );
    }
 
    // Otherwise, we must be over a track of some kind
@@ -1758,9 +1778,8 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    }
 
    if ((tip == wxString()) &&
-      nonlabel &&
-      nonlabel->GetKind() == Track::Wave &&
-      SetCursorForCutline(static_cast<WaveTrack*>(nonlabel), trackRect, event))
+      track->GetKind() == Track::Wave &&
+      SetCursorForCutline(static_cast<WaveTrack*>(track), trackRect, event))
       return;
 
    if( tip == wxString() )
@@ -1808,8 +1827,9 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
 /// dragging over a waveform.
 void TrackPanel::HandleSelect(wxMouseEvent & event)
 {
-   wxRect rect;
-   Track *t = FindTrack(event.m_x, event.m_y, false, false, &rect);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &t = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
    // AS: Ok, did the user just click the mouse, release the mouse,
    //  or drag?
@@ -1839,9 +1859,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 
    } else if (event.LeftDClick() && !event.ShiftDown()) {
       if (!mCapturedTrack) {
-         wxRect rect;
-         mCapturedTrack =
-            FindTrack(event.m_x, event.m_y, false, false, &rect);
+         mCapturedTrack = t;
          if (!mCapturedTrack)
             return;
       }
@@ -2505,9 +2523,12 @@ void TrackPanel::StartSnappingFreqSelection (const WaveTrack *pTrack)
                                end - start ));
    const auto effectiveLength = std::max(minLength, length);
    frequencySnappingData.resize(effectiveLength, 0.0f);
+
    pTrack->Get(
       reinterpret_cast<samplePtr>(&frequencySnappingData[0]),
-      floatSample, start, length);
+      floatSample, start, length, fillZero,
+      // Don't try to cope with exceptions, just read zeroes instead.
+      false);
 
    // Use same settings as are now used for spectrogram display,
    // except, shrink the window as needed so we get some answers
@@ -2884,12 +2905,6 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    wxRect rect      = mCapturedRect;
    Track *pTrack = mCapturedTrack;
 
-   if (!pTrack) {
-      pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
-      rect.y += kTopMargin;
-      rect.height -= kTopMargin + kBottomMargin;
-   }
-
    // Also fuhggeddaboudit if not in a track.
    if (!pTrack)
       return;
@@ -2918,7 +2933,7 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 
    // Handle which tracks are selected
    Track *sTrack = pTrack;
-   Track *eTrack = FindTrack(x, y, false, false, NULL);
+   Track *eTrack = FindCell(x, y).pTrack;
    if( !event.ControlDown() )
       SelectRangeOfTracks(sTrack, eTrack);
 
@@ -2978,7 +2993,7 @@ double TrackPanel::PositionToFrequency(const WaveTrack *wt,
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
    float minFreq, maxFreq;
    wt->GetSpectrumBounds(&minFreq, &maxFreq);
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
+   const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
    const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
    return numberScale.PositionToValue(1.0 - p);
 }
@@ -2994,7 +3009,7 @@ wxInt64 TrackPanel::FrequencyToPosition(const WaveTrack *wt,
    const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
    float minFreq, maxFreq;
    wt->GetSpectrumBounds(&minFreq, &maxFreq);
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq, rate, false));
+   const NumberScale numberScale( settings.GetScale( minFreq, maxFreq ) );
    const float p = numberScale.ValueToPosition(frequency);
    return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
 }
@@ -3155,10 +3170,11 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
 void TrackPanel::HandleEnvelope(wxMouseEvent & event)
 {
    if (event.LeftDown()) {
-      wxRect rect;
-      Track *pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      auto &pTrack = foundCell.pTrack;
+      auto &rect = foundCell.rect;
 
-      if (!pTrack)
+      if (!pTrack || foundCell.type != CellType::Track)
          return;
 
       SetCapturedTrack(pTrack, IsEnveloping);
@@ -3210,8 +3226,13 @@ void TrackPanel::ForwardEventToTimeTrackEnvelope(wxMouseEvent & event)
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
+   if (event.ButtonDown()) {
+      mEnvelopeEditor = std::make_unique<EnvelopeEditor>(*pspeedenvelope, false);
+      mEnvelopeEditorRight.reset();
+   }
    bool needUpdate =
-      pspeedenvelope->MouseEvent(
+      mEnvelopeEditor &&
+      mEnvelopeEditor->MouseEvent(
          event, envRect,
          *mViewInfo,
          ptimetrack->GetDisplayLog(), dBRange, lower, upper);
@@ -3247,7 +3268,13 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
       wxRect envRect = mCapturedRect;
       float zoomMin, zoomMax;
       pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-      needUpdate = penvelope->MouseEvent(
+      if (event.ButtonDown()) {
+         mEnvelopeEditor = std::make_unique<EnvelopeEditor>(*penvelope, true);
+         mEnvelopeEditorRight.reset();
+      }
+      needUpdate =
+         mEnvelopeEditor &&
+         mEnvelopeEditor->MouseEvent(
          event, envRect,
          *mViewInfo,
          dB, dBRange, zoomMin, zoomMax);
@@ -3257,30 +3284,23 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
       // Assume linked track is wave or null
       const auto link = static_cast<WaveTrack *>(mCapturedTrack->GetLink());
       if (link) {
-         Envelope *e2 = link->GetEnvelopeAtX(event.GetX());
-         // There isn't necessarily an envelope there; no guarantee a
-         // linked track has the same WaveClip structure...
-         bool updateNeeded = false;
-         if (e2) {
+         if (event.ButtonDown()) {
+            Envelope *e2 = link->GetEnvelopeAtX(event.GetX());
+            if (e2)
+               mEnvelopeEditorRight = std::make_unique<EnvelopeEditor>(*e2, true);
+            else {
+               // There isn't necessarily an envelope there; no guarantee a
+               // linked track has the same WaveClip structure...
+            }
+         }
+         if (mEnvelopeEditorRight) {
             wxRect envRect = mCapturedRect;
             float zoomMin, zoomMax;
             pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-            updateNeeded = e2->MouseEvent(event, envRect,
-                                          *mViewInfo, dB, dBRange,
-                                          zoomMin, zoomMax);
-            needUpdate |= updateNeeded;
-         }
-         if(!e2 || !updateNeeded)   // no envelope found at this x point, or found but not updated
-         {
-            if( (e2 = link->GetActiveEnvelope()) != 0 )  // search for any active DragPoint
-            {
-               wxRect envRect = mCapturedRect;
-               float zoomMin, zoomMax;
-               pwavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
-               needUpdate |= e2->MouseEvent(event, envRect,
-                                            *mViewInfo, dB, dBRange,
-                                            zoomMin, zoomMax);
-            }
+            needUpdate|= mEnvelopeEditorRight->MouseEvent(event, envRect,
+                                         *mViewInfo,
+                                         dB, dBRange,
+                                         zoomMin, zoomMax);
          }
       }
 
@@ -3322,6 +3342,20 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       DoSlide(event);
 
    if (event.LeftUp()) {
+
+      SetCapturedTrack( NULL );
+
+      mSnapManager.reset();
+
+      // Do not draw yellow lines
+      if (mSnapLeft != -1 || mSnapRight != -1) {
+         mSnapLeft = mSnapRight = -1;
+         Refresh(false);
+      }
+
+      if (!mDidSlideVertically && mHSlideAmount==0)
+         return;
+
       for (size_t i = 0; i < mCapturedClipArray.size(); i++)
       {
          TrackClip &trackClip = mCapturedClipArray[i];
@@ -3341,19 +3375,6 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
             pWaveClip->MarkChanged();
          }
       }
-
-      SetCapturedTrack( NULL );
-
-      mSnapManager.reset();
-
-      // Do not draw yellow lines
-      if (mSnapLeft != -1 || mSnapRight != -1) {
-         mSnapLeft = mSnapRight = -1;
-         Refresh(false);
-      }
-
-      if (!mDidSlideVertically && mHSlideAmount==0)
-         return;
 
       MakeParentRedrawScrollbars();
 
@@ -3427,16 +3448,16 @@ namespace {
 /// Prepare for sliding.
 void TrackPanel::StartSlide(wxMouseEvent & event)
 {
-   wxRect rect;
-
    mHSlideAmount = 0.0;
    mDidSlideVertically = false;
 
    mTrackExclusions.clear();
 
-   Track *vt = FindTrack(event.m_x, event.m_y, false, false, &rect);
-   if (!vt)
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &vt = foundCell.pTrack;
+   if (!vt || foundCell.type != CellType::Track)
       return;
+   auto &rect = foundCell.rect;
 
    ToolsToolBar * ttb = mListener->TP_GetToolsToolBar();
    bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
@@ -3448,108 +3469,37 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       clickTime > mViewInfo->selectedRegion.t0() &&
       clickTime < mViewInfo->selectedRegion.t1());
 
-   if ((vt->GetKind() == Track::Wave
+   WaveTrack *wt = vt->GetKind() == Track::Wave
+      ? static_cast<WaveTrack*>(vt) : nullptr;
+
+   if ((wt
 #ifdef USE_MIDI
         || vt->GetKind() == Track::Note
 #endif
        ) && !event.ShiftDown())
    {
 #ifdef USE_MIDI
-      if (vt->GetKind() == Track::Wave) {
+      if (!wt)
+         mCapturedClip = NULL;
+      else
 #endif
-         WaveTrack* wt = (WaveTrack*)vt;
+      {
          mCapturedClip = wt->GetClipAtX(event.m_x);
          if (mCapturedClip == NULL)
             return;
-#ifdef USE_MIDI
-      }
-      else {
-         mCapturedClip = NULL;
-      }
-#endif
-      // The captured clip is the focus, but we need to create a list
-      // of all clips that have to move, also...
-
-      mCapturedClipArray.clear();
-
-      // First, if click was in selection, capture selected clips; otherwise
-      // just the clicked-on clip
-      if (mCapturedClipIsSelection) {
-         TrackListIterator iter(GetTracks());
-         for (Track *t = iter.First(); t; t = iter.Next()) {
-            if (t->GetSelected()) {
-               AddClipsToCaptured(t, true);
-               if (t->GetKind() != Track::Wave)
-                  mTrackExclusions.push_back(t);
-            }
-         }
-      }
-      else {
-         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
-
-         // Check for stereo partner
-         Track *partner = mTracks->GetLink(vt);
-         WaveTrack *wt;
-         if (mCapturedClip &&
-             // Assume linked track is wave or null
-             nullptr != (wt = static_cast<WaveTrack*>(partner))) {
-            WaveClip *const clip =
-               FindClipAtTime(wt,
-                  mViewInfo->PositionToTime(event.m_x, GetLeftOffset()));
-            if (clip)
-               mCapturedClipArray.push_back(TrackClip(partner, clip));
-         }
       }
 
-      // Now, if sync-lock is enabled, capture any clip that's linked to a
-      // captured clip.
-      if (GetProject()->IsSyncLocked()) {
-         // AWD: mCapturedClipArray expands as the loop runs, so newly-added
-         // clips are considered (the effect is like recursion and terminates
-         // because AddClipsToCaptured doesn't add duplicate clips); to remove
-         // this behavior just store the array size beforehand.
-         for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-            // Capture based on tracks that have clips -- that means we
-            // don't capture based on links to label tracks for now (until
-            // we can treat individual labels as clips)
-            if (mCapturedClipArray[i].clip) {
-               // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(GetTracks());
-               for (Track *t = git.StartWith(mCapturedClipArray[i].track);
-                     t; t = git.Next() )
-               {
-                  AddClipsToCaptured(t,
-                        mCapturedClipArray[i].clip->GetStartTime(),
-                        mCapturedClipArray[i].clip->GetEndTime() );
-                  if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.push_back(t);
-               }
-            }
-#ifdef USE_MIDI
-            // Capture additional clips from NoteTracks
-            Track *nt = mCapturedClipArray[i].track;
-            if (nt->GetKind() == Track::Note) {
-               // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(GetTracks());
-               for (Track *t = git.StartWith(nt); t; t = git.Next())
-               {
-                  AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
-                  if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.push_back(t);
-               }
-            }
-#endif
-         }
-      }
+      mCapturedTrack = vt;
+      CreateListOfCapturedClips(clickTime);
 
    } else {
       mCapturedClip = NULL;
       mCapturedClipArray.clear();
+      mCapturedTrack = vt;
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
 
-   mCapturedTrack = vt;
    mCapturedRect = rect;
 
    mMouseClickX = event.m_x;
@@ -3573,6 +3523,83 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    }
 
    mMouseCapture = IsSliding;
+}
+
+void TrackPanel::CreateListOfCapturedClips(double clickTime)
+{
+// The captured clip is the focus, but we need to create a list
+   // of all clips that have to move, also...
+
+   mCapturedClipArray.clear();
+
+   // First, if click was in selection, capture selected clips; otherwise
+   // just the clicked-on clip
+   if (mCapturedClipIsSelection) {
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         if (t->GetSelected()) {
+            AddClipsToCaptured(t, true);
+            if (t->GetKind() != Track::Wave)
+               mTrackExclusions.push_back(t);
+         }
+      }
+   }
+   else {
+      mCapturedClipArray.push_back(TrackClip(mCapturedTrack, mCapturedClip));
+
+      // Check for stereo partner
+      Track *partner = mCapturedTrack->GetLink();
+      WaveTrack *wt;
+      if (mCapturedClip &&
+            // Assume linked track is wave or null
+            nullptr != (wt = static_cast<WaveTrack*>(partner))) {
+         WaveClip *const clip = FindClipAtTime(wt, clickTime);
+
+         if (clip)
+            mCapturedClipArray.push_back(TrackClip(partner, clip));
+      }
+   }
+
+   // Now, if sync-lock is enabled, capture any clip that's linked to a
+   // captured clip.
+   if (GetProject()->IsSyncLocked()) {
+      // AWD: mCapturedClipArray expands as the loop runs, so newly-added
+      // clips are considered (the effect is like recursion and terminates
+      // because AddClipsToCaptured doesn't add duplicate clips); to remove
+      // this behavior just store the array size beforehand.
+      for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
+         // Capture based on tracks that have clips -- that means we
+         // don't capture based on links to label tracks for now (until
+         // we can treat individual labels as clips)
+         if (mCapturedClipArray[i].clip) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git(GetTracks());
+            for (Track *t = git.StartWith(mCapturedClipArray[i].track);
+                  t; t = git.Next() )
+            {
+               AddClipsToCaptured(t,
+                     mCapturedClipArray[i].clip->GetStartTime(),
+                     mCapturedClipArray[i].clip->GetEndTime() );
+               if (t->GetKind() != Track::Wave)
+                  mTrackExclusions.push_back(t);
+            }
+         }
+#ifdef USE_MIDI
+         // Capture additional clips from NoteTracks
+         Track *nt = mCapturedClipArray[i].track;
+         if (nt->GetKind() == Track::Note) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git(GetTracks());
+            for (Track *t = git.StartWith(nt); t; t = git.Next())
+            {
+               AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+               if (t->GetKind() != Track::Wave)
+                  mTrackExclusions.push_back(t);
+            }
+         }
+#endif
+      }
+   }
 }
 
 // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
@@ -3647,16 +3674,17 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // find which track the mouse is currently in (mouseTrack) -
    // this may not be the same as the one we started in...
-   Track *mouseTrack = FindTrack(event.m_x, event.m_y, false, false, NULL);
-   if (mouseTrack == NULL) {
-      // Allow sliding if the pointer is not over any track, but only if x is
+
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   if (foundCell.type != CellType::Track)
+      // Allow sliding only if x is
       // within the bounds of the tracks area.
-      int width;
-      GetTracksUsableArea(&width, NULL);
-      if (event.m_x >= GetLeftOffset() && event.m_x < GetLeftOffset() + width)
-         mouseTrack = mCapturedTrack;
-      else
-         return;
+      return;
+
+   auto mouseTrack = foundCell.pTrack;
+   if (mouseTrack == nullptr) {
+      // Allow sliding if the pointer is not over any track.
+      mouseTrack = mCapturedTrack;
    }
 
    // Start by undoing the current slide amount; everything
@@ -3677,7 +3705,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
    else {
       mCapturedTrack->Offset(-mHSlideAmount);
-      Track* link = mTracks->GetLink(mCapturedTrack);
+      Track* link = mCapturedTrack->GetLink();
       if (link)
          link->Offset(-mHSlideAmount);
    }
@@ -3720,8 +3748,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 #else
       {
          trySnap = true;
-         desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) /
-            mouseTrack->GetRate();  // set it to a sample point
+         if (mouseTrack->GetKind() == Track::Wave) {
+            WaveTrack *mtw = (WaveTrack *)mouseTrack;
+            desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) /
+               mtw->GetRate();  // set it to a sample point
+         }
          if (mSnapManager && mCapturedClip) {
             clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
             clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
@@ -3861,6 +3892,24 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    mHSlideAmount = desiredSlideAmount;
 
+   DoSlideHorizontal();
+
+
+   if (mCapturedClipIsSelection) {
+      // Slide the selection, too
+      mViewInfo->selectedRegion.move(mHSlideAmount);
+   }
+
+   if (slidVertically) {
+      // NEW origin
+      mHSlideAmount = 0;
+   }
+
+   Refresh(false);
+}
+
+void TrackPanel::DoSlideHorizontal()
+{
 #ifdef USE_MIDI
    if (mCapturedClipArray.size())
 #else
@@ -3927,22 +3976,59 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
       mCapturedTrack->Offset(mHSlideAmount);
-      Track* link = mTracks->GetLink(mCapturedTrack);
+      Track* link = mCapturedTrack->GetLink();
       if (link)
          link->Offset(mHSlideAmount);
    }
+}
 
-   if (mCapturedClipIsSelection) {
-      // Slide the selection, too
-      mViewInfo->selectedRegion.move(mHSlideAmount);
+void TrackPanel::OnClipMove(bool right)
+{
+   auto track = GetFocusedTrack();
+
+
+   // just dealing with clips in wave tracks for the moment. Note tracks??
+   if (track && track->GetKind() == Track::Wave) {
+      auto wt = static_cast<WaveTrack*>(track);
+      mCapturedClip = wt->GetClipAtTime(mViewInfo->selectedRegion.t0());
+      if (mCapturedClip == nullptr)
+         return;
+      
+      mCapturedTrack = track;
+      mCapturedClipIsSelection = track->GetSelected() && !mViewInfo->selectedRegion.isPoint();
+      mTrackExclusions.clear();
+
+      CreateListOfCapturedClips(mViewInfo->selectedRegion.t0());
+
+      double desiredSlideAmount = mViewInfo->OffsetTimeByPixels(0.0, 1);
+
+      // set it to a sample point, and minimum of 1 sample point
+      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
+      nSamples = std::max(nSamples, 1.0);
+      desiredSlideAmount = nSamples / wt->GetRate();
+
+      if (!right)
+         desiredSlideAmount *= -1;
+      mHSlideAmount = desiredSlideAmount;
+      DoSlideHorizontal();
+
+      // update t0 and t1. There is the possibility that the updated
+      // t0 may no longer be within the clip due to rounding errors,
+      // so t0 is adjusted so that it is.
+      double newT0 = mViewInfo->selectedRegion.t0() + mHSlideAmount;
+      if (newT0 < mCapturedClip->GetStartTime())
+         newT0 = mCapturedClip->GetStartTime();
+      if (newT0 > mCapturedClip->GetEndTime())
+         newT0 = mCapturedClip->GetEndTime();
+      double diff = mViewInfo->selectedRegion.t1() - mViewInfo->selectedRegion.t0();
+      mViewInfo->selectedRegion.setTimes(newT0, newT0 + diff);
+
+      ScrollIntoView(mViewInfo->selectedRegion.t0());
+      Refresh(false);
+
+      if (mHSlideAmount == 0.0)
+         MessageForScreenReader( _("clip not moved"));
    }
-
-   if (slidVertically) {
-      // NEW origin
-      mHSlideAmount = 0;
-   }
-
-   Refresh(false);
 }
 
 
@@ -3977,9 +4063,10 @@ void TrackPanel::HandleZoomClick(wxMouseEvent & event)
    if (mCapturedTrack)
       return;
 
-   mCapturedTrack = FindTrack(event.m_x, event.m_y, false, false,
-                              &mCapturedRect);
-   if (!mCapturedTrack)
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   mCapturedTrack = foundCell.pTrack;
+   mCapturedRect = foundCell.rect;
+   if (foundCell.type != CellType::Track || !(mCapturedTrack = foundCell.pTrack))
       return;
 
    SetCapturedTrack(mCapturedTrack, IsZooming);
@@ -4096,9 +4183,10 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
 {
    if (mCapturedTrack)
       return;
-   mCapturedTrack = FindTrack(event.m_x, event.m_y, true, false,
-                              &mCapturedRect);
-   if (!mCapturedTrack)
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   mCapturedTrack = foundCell.pTrack;
+   mCapturedRect = foundCell.rect;
+   if (foundCell.type != CellType::VRuler || !(mCapturedTrack = foundCell.pTrack))
       return;
 
    if (mCapturedTrack->GetKind() == Track::Wave
@@ -4203,7 +4291,7 @@ void TrackPanel::HandleWaveTrackVZoom
  bool fixedMousePoint)
 {
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack *>(tracks->GetLink(track));
+   const auto partner = static_cast<WaveTrack *>(track->GetLink());
    int height = track->GetHeight() - (kTopMargin + kBottomMargin);
    int ypos = rect.y + kBorderThickness;
 
@@ -4222,7 +4310,7 @@ void TrackPanel::HandleWaveTrackVZoom
 
    if (spectral) {
       track->GetSpectrumBounds(&min, &max);
-      scale = (settings.GetScale(min, max, rate, false));
+      scale = settings.GetScale( min, max );
       const auto fftLength = settings.GetFFTLength();
       const float binSize = rate / fftLength;
 
@@ -4448,10 +4536,11 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, const WaveTrack *
 
    bool showPoints;
    {
-      wxRect rect;
-      FindTrack(event.m_x, event.m_y, false, false, &rect);
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      if ( foundCell.type != CellType::Track )
+         return false;
       const double rate = wt->GetRate();
-      const double time = mViewInfo->PositionToTime(event.m_x, rect.x);
+      const double time = mViewInfo->PositionToTime(event.m_x, foundCell.rect.x);
       int width;
       GetTracksUsableArea(&width, NULL);
       showPoints = SampleResolutionTest(*mViewInfo, wt, time, rate, width);
@@ -4499,14 +4588,14 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double dBRange, do
 /// Someone has just clicked the mouse.  What do we do?
 void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 {
-   //declare a rectangle to determine clicking position
-   wxRect rect;
-
    //Get the track the mouse is over, and save it away for future events
    mDrawingTrack = NULL;
-   Track *const t = FindTrack(event.m_x, event.m_y, false, false, &rect);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &t = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
-   if (!t || (t->GetKind() != Track::Wave))
+   if (!t || (t->GetKind() != Track::Wave)
+       || foundCell.type != CellType::Track)
       return;
    const auto wt = static_cast<WaveTrack *>(t);
    if( !IsSampleEditingPossible( event, wt ) )
@@ -4542,20 +4631,18 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       //  SMOOTHING_PROPORTION_MAX and at the far bounds is SMOOTHING_PROPORTION_MIN
 
       //Get the region of samples around the selected point
-      int sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
-      float *sampleRegion = new float[sampleRegionSize];
-      float * newSampleRegion = new float[1 + 2 * SMOOTHING_BRUSH_RADIUS];
+      size_t sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
+      Floats sampleRegion{ sampleRegionSize };
+      Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
 
       //Get a sample  from the track to do some tricks on.
-      mDrawingTrack->Get((samplePtr)sampleRegion, floatSample,
+      mDrawingTrack->Get((samplePtr)sampleRegion.get(), floatSample,
                                        mDrawingStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
                                        sampleRegionSize);
-      int i, j;
-
       //Go through each point of the smoothing brush and apply a smoothing operation.
-      for(j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
+      for(auto j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
          float sumOfSamples = 0;
-         for (i= -SMOOTHING_KERNEL_RADIUS; i <= SMOOTHING_KERNEL_RADIUS; i++){
+         for (auto i = -SMOOTHING_KERNEL_RADIUS; i <= SMOOTHING_KERNEL_RADIUS; i++){
             //Go through each point of the smoothing kernel and find the average
 
             //The average is a weighted average, scaled by a weighting kernel that is simply triangular
@@ -4580,7 +4667,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
       float prob;
 
-      for(j=-SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
+      for(auto j = -SMOOTHING_BRUSH_RADIUS; j <= SMOOTHING_BRUSH_RADIUS; j++){
 
          prob = SMOOTHING_PROPORTION_MAX - (float)abs(j)/SMOOTHING_BRUSH_RADIUS * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
 
@@ -4589,11 +4676,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
             sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + j] * (1 - prob);
       }
       //Set the sample to the point of the mouse event
-      mDrawingTrack->Set((samplePtr)newSampleRegion, floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
-
-      //Clean this up right away to avoid a memory leak
-      delete[] sampleRegion;
-      delete[] newSampleRegion;
+      mDrawingTrack->Set((samplePtr)newSampleRegion.get(), floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
 
       mDrawingLastDragSampleValue = 0;
    }
@@ -4749,9 +4832,9 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
    wxClientDC dc(this);
 
    if (event.Dragging())
-      mTrackInfo.DrawCloseBox(&dc, rect, closeRect.Contains(event.m_x, event.m_y));
+      mTrackInfo.DrawCloseBox(&dc, rect, t, closeRect.Contains(event.m_x, event.m_y));
    else if (event.LeftUp()) {
-      mTrackInfo.DrawCloseBox(&dc, rect, false);
+      mTrackInfo.DrawCloseBox(&dc, rect, t, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
          AudacityProject *p = GetProject();
          p->StopIfPaused();
@@ -4829,7 +4912,7 @@ void TrackPanel::HandleMutingSoloing(wxMouseEvent & event, bool solo)
    }
 
    wxRect buttonRect;
-   mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton());
+   mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton(), t);
 
    wxClientDC dc(this);
 
@@ -4874,8 +4957,8 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
    else if (event.LeftUp()) {
       if (buttonRect.Contains(event.m_x, event.m_y)) {
          t->SetMinimized(!t->GetMinimized());
-         if (mTracks->GetLink(t))
-            mTracks->GetLink(t)->SetMinimized(t->GetMinimized());
+         if (t->GetLink())
+            t->GetLink()->SetMinimized(t->GetMinimized());
          MakeParentRedrawScrollbars();
          MakeParentModifyState(true);
       }
@@ -4894,6 +4977,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool panZero = false;
 #endif
+   wxASSERT(mCapturedTrack->GetKind() == Track::Wave);
 
    // On the Mac, we'll lose track capture if the slider dialog
    // is displayed, but it doesn't hurt to do this for all plats.
@@ -4912,20 +4996,15 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 
    float newValue = slider->Get();
    MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
-#ifdef EXPERIMENTAL_MIDI_OUT
-  if (capturedTrack->GetKind() == Track::Wave)
-#endif
-  {
-     const auto wt = static_cast<WaveTrack*>(capturedTrack);
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack *>(mTracks->GetLink(wt));
+   const auto link = static_cast<WaveTrack *>(capturedTrack->GetLink());
 
    if (pan) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      panZero = wt->SetPan(newValue);
+      panZero = capturedTrack->SetPan(newValue);
 #else
-      wt->SetPan(newValue);
+      capturedTrack->SetPan(newValue);
 #endif
       if (link)
          link->SetPan(newValue);
@@ -4935,50 +5014,56 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 #endif
 
       if (pMixerBoard)
-         pMixerBoard->UpdatePan(wt);
+         pMixerBoard->UpdatePan(capturedTrack);
    }
    else {
-      wt->SetGain(newValue);
+      capturedTrack->SetGain(newValue);
       if (link)
          link->SetGain(newValue);
 
       if (pMixerBoard)
-         pMixerBoard->UpdateGain(wt);
+         pMixerBoard->UpdateGain(capturedTrack);
    }
-  }
-#ifdef EXPERIMENTAL_MIDI_OUT
-  else {
-     // mCapturedTrack is not wave...
-      if (!pan) {
-         // .. so assume it is note
-         static_cast<NoteTrack*>(mCapturedTrack)->SetGain(newValue);
-#ifdef EXPERIMENTAL_MIXER_BOARD
-            if (pMixerBoard)
-               // probably should modify UpdateGain to take a track that is
-               // either a WaveTrack or a NoteTrack.
-               pMixerBoard->UpdateGain((WaveTrack*)capturedTrack);
-#endif
-      }
-   }
-#endif
 
    RefreshTrack(capturedTrack);
 
    if (event.ButtonUp()) {
-#ifdef EXPERIMENTAL_MIDI_OUT
-    if (capturedTrack->GetKind() == Track::Wave) {
-#endif
       MakeParentPushState(pan ? _("Moved pan slider") : _("Moved gain slider"),
                           pan ? _("Pan") : _("Gain"),
                           UndoPush::CONSOLIDATE);
-#ifdef EXPERIMENTAL_MIDI_OUT
-    } else {
-      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
-    }
-#endif
       SetCapturedTrack( NULL );
    }
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void TrackPanel::HandleVelocitySlider(wxMouseEvent &event)
+{
+   wxASSERT(mCapturedTrack->GetKind() == Track::Note);
+   NoteTrack *capturedTrack = (NoteTrack *) mCapturedTrack;
+
+   LWSlider *slider = mTrackInfo.VelocitySlider(capturedTrack, true);
+
+   slider->OnMouseEvent(event);
+
+   //If we have a double-click, do this...
+   if (event.LeftDClick())
+      mMouseCapture = IsUncaptured;
+
+   float newValue = slider->Get();
+   capturedTrack->SetVelocity(newValue);
+
+   MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
+
+   if (pMixerBoard) {
+      pMixerBoard->UpdateVelocity(capturedTrack);
+   }
+   RefreshTrack(capturedTrack);
+   if (event.ButtonUp()) {
+      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
+      SetCapturedTrack(NULL);
+   }
+}
+#endif
 
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
@@ -5052,9 +5137,9 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 
    bool unsafe = IsUnsafe();
 
-   wxRect rect;
-
-   Track *t = FindTrack(event.m_x, event.m_y, true, true, &rect);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &t = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
    // LL: Check close box
    if (isleft && CloseFunc(t, rect, event.m_x, event.m_y))
@@ -5080,7 +5165,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       {
          // DM: Check Mute and Solo buttons on WaveTracks:
          if (MuteSoloFunc(t, rect, event.m_x, event.m_y, false) ||
-            MuteSoloFunc(t, rect, event.m_x, event.m_y, true))
+               MuteSoloFunc(t, rect, event.m_x, event.m_y, true))
             return;
 
          if (GainFunc(t, rect, event, event.m_x, event.m_y))
@@ -5095,21 +5180,11 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       {
          wxRect midiRect;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         // this is an awful hack: make a NEW rectangle at an offset because
-         // MuteSoloFunc thinks buttons are located below some text, e.g.
-         // "Mono, 44100Hz 32-bit float", but this is not true for a Note track
-         wxRect muteSoloRect(rect);
-         muteSoloRect.y -= 34; // subtract the height of wave track text
-         if (MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, false) ||
-            MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, true))
+         if (isleft && (MuteSoloFunc(t, rect, event.m_x, event.m_y, false) ||
+               MuteSoloFunc(t, rect, event.m_x, event.m_y, true)))
             return;
 
-         // this is a similar hack: GainFunc expects a Wave track slider, so it's
-         // looking in the wrong place. We pass it a bogus rectangle created when
-         // the slider was placed to "fake" GainFunc into finding the slider in
-         // its actual location.
-         if (GainFunc(t, ((NoteTrack *) t)->GetGainPlacementRect(),
-            event, event.m_x, event.m_y))
+         if (isleft && VelocityFunc(t, rect, event, event.m_x, event.m_y))
             return;
 #endif
          mTrackInfo.GetTrackControlsRect(rect, midiRect);
@@ -5200,27 +5275,17 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
       mTracks->MoveUp(mCapturedTrack);
       --mRearrangeCount;
-#ifdef EXPERIMENTAL_MIDI_OUT
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
-                          mCapturedTrack->GetKind() == Track::Note))
-         pMixerBoard->MoveTrackCluster(mCapturedTrack, true /* up */);
-#else
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, true /* up */);
-#endif
+      if (pMixerBoard)
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
+            pMixerBoard->MoveTrackCluster(pPlayable, true /* up */);
    }
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
       ++mRearrangeCount;
       /* i18n-hint: a direction as in up or down.*/
-#ifdef EXPERIMENTAL_MIDI_OUT
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
-                          mCapturedTrack->GetKind() == Track::Note))
-         pMixerBoard->MoveTrackCluster(mCapturedTrack, false /* down */);
-#else
-      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, false /* down */);
-#endif
+      if (pMixerBoard)
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
+            pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
    }
    else
    {
@@ -5285,6 +5350,23 @@ bool TrackPanel::PanFunc(Track * t, wxRect rect, wxMouseEvent &event,
    return true;
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+bool TrackPanel::VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
+   int x, int y)
+{
+   wxRect sliderRect;
+   mTrackInfo.GetVelocityRect(rect, sliderRect);
+   if (!sliderRect.Contains(x, y))
+      return false;
+
+   SetCapturedTrack(t, IsVelocitySliding);
+   mCapturedRect = rect;
+   HandleVelocitySlider(event);
+
+   return true;
+}
+#endif
+
 /// Mute or solo the given track (t).  If solo is true, we're
 /// soloing, otherwise we're muting.  Basically, check and see
 /// whether x and y fall within the  area of the appropriate button.
@@ -5292,7 +5374,8 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect rect, int x, int y,
                               bool solo)
 {
    wxRect buttonRect;
-   mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton());
+   rect.width +=4;
+   mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton(), t);
    if (!buttonRect.Contains(x, y))
       return false;
 
@@ -5349,7 +5432,7 @@ bool TrackPanel::CloseFunc(Track * t, wxRect rect, int x, int y)
    SetCapturedTrack( t, IsClosing );
    mCapturedRect = rect;
 
-   mTrackInfo.DrawCloseBox(&dc, rect, true);
+   mTrackInfo.DrawCloseBox(&dc, rect, t, true);
    return true;
 }
 
@@ -5374,20 +5457,14 @@ bool TrackPanel::PopupFunc(Track * t, wxRect rect, int x, int y)
 ///  update the track size.
 void TrackPanel::HandleResizeClick( wxMouseEvent & event )
 {
-   wxRect rTrack;
-   wxRect rLabel;
-
+   // Get here only if the click was near the bottom of the cell rectangle.
    // DM: Figure out what track is about to be resized
-   Track *track = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto track = foundCell.pTrack;
 
-   if (!track) {
-      // This will only return unlinked tracks or left channels of stereo tracks
-      // or NULL:
-      track = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
-      // If stereo, get the right channel.
-      if (track && track->GetLinked())
-         track = track->GetLink();
-   }
+   if (foundCell.type == CellType::Label && track && track->GetLinked())
+      // Click was at the bottom of a stereo track.
+      track = track->GetLink();
 
    if (!track) {
       return;
@@ -5397,77 +5474,58 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    // To do: escape key
-   if(MONO_WAVE_PAN(t)){
+   if(MONO_WAVE_PAN(track)){
       //STM:  Determine whether we should rescale one or two tracks
-      if (t->GetVirtualStereo()) {
+      if (track->GetVirtualStereo()) {
          // mCapturedTrack is the lower track
-         mInitialTrackHeight = t->GetHeight(true);
-         mInitialUpperTrackHeight = t->GetHeight();
-         SetCapturedTrack(t, IsResizingBelowLinkedTracks);
+         mInitialTrackHeight = track->GetHeight(true);
+         mInitialActualHeight = mInitialUpperActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
+         mInitialUpperTrackHeight = track->GetHeight();
+         SetCapturedTrack(track, IsResizingBelowLinkedTracks);
       }
       else {
          // mCapturedTrack is the upper track
-         mInitialTrackHeight = t->GetHeight(true);
-         mInitialUpperTrackHeight = t->GetHeight();
-         SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
+         mInitialTrackHeight = track->GetHeight(true);
+         mInitialActualHeight = mInitialUpperActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
+         mInitialUpperTrackHeight = track->GetHeight();
+         SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
       }
-   }else{
-      Track *prev = mTracks->GetPrev(t);
-      Track *next = mTracks->GetNext(t);
+   }
+   else
+#endif
+   {
+      Track *prev = mTracks->GetPrev(track);
+      Track *next = mTracks->GetNext(track);
 
       //STM:  Determine whether we should rescale one or two tracks
-      if (prev && prev->GetLink() == t) {
+      if (prev && prev->GetLink() == track) {
          // mCapturedTrack is the lower track
-         mInitialTrackHeight = t->GetHeight();
-         mInitialMinimized = t->GetMinimized();
+         mInitialTrackHeight = track->GetHeight();
+         mInitialActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
          mInitialUpperTrackHeight = prev->GetHeight();
-         SetCapturedTrack(t, IsResizingBelowLinkedTracks);
+         mInitialUpperActualHeight = prev->GetActualHeight();
+         SetCapturedTrack(track, IsResizingBelowLinkedTracks);
       }
-      else if (next && t->GetLink() == next) {
+      else if (next && track->GetLink() == next) {
          // mCapturedTrack is the upper track
          mInitialTrackHeight = next->GetHeight();
+         mInitialActualHeight = next->GetActualHeight();
          mInitialMinimized = next->GetMinimized();
-         mInitialUpperTrackHeight = t->GetHeight();
-         SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
+         mInitialUpperTrackHeight = track->GetHeight();
+         mInitialUpperActualHeight = track->GetActualHeight();
+         SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
       }
       else {
          // DM: Save the initial mouse location and the initial height
-         mInitialTrackHeight = t->GetHeight();
-         mInitialMinimized = t->GetMinimized();
-         SetCapturedTrack(t, IsResizing);
+         mInitialTrackHeight = track->GetHeight();
+         mInitialActualHeight = track->GetActualHeight();
+         mInitialMinimized = track->GetMinimized();
+         SetCapturedTrack(track, IsResizing);
       }
    }
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
-   Track *prev = mTracks->GetPrev(track);
-   Track *next = mTracks->GetNext(track);
-
-   //STM:  Determine whether we should rescale one or two tracks
-   if (prev && prev->GetLink() == track) {
-      // mCapturedTrack is the lower track
-      mInitialTrackHeight = track->GetHeight();
-      mInitialActualHeight = track->GetActualHeight();
-      mInitialMinimized = track->GetMinimized();
-      mInitialUpperTrackHeight = prev->GetHeight();
-      mInitialUpperActualHeight = prev->GetActualHeight();
-      SetCapturedTrack(track, IsResizingBelowLinkedTracks);
-   }
-   else if (next && track->GetLink() == next) {
-      // mCapturedTrack is the upper track
-      mInitialTrackHeight = next->GetHeight();
-      mInitialActualHeight = next->GetActualHeight();
-      mInitialMinimized = next->GetMinimized();
-      mInitialUpperTrackHeight = track->GetHeight();
-      mInitialUpperActualHeight = track->GetActualHeight();
-      SetCapturedTrack(track, IsResizingBetweenLinkedTracks);
-   }
-   else {
-      // DM: Save the initial mouse location and the initial height
-      mInitialTrackHeight = track->GetHeight();
-      mInitialActualHeight = track->GetActualHeight();
-      mInitialMinimized = track->GetMinimized();
-      SetCapturedTrack(track, IsResizing);
-   }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
 
 ///  This happens when the button is released from a drag.
@@ -5519,177 +5577,127 @@ void TrackPanel::HandleResizeDrag(wxMouseEvent & event)
 #endif
    }
 
+   // Common pieces of code for MONO_WAVE_PAN and otherwise.
+   auto doResizeBelow = [&] (Track *prev, bool vStereo) {
+      double proportion = static_cast < double >(mInitialTrackHeight)
+      / (mInitialTrackHeight + mInitialUpperTrackHeight);
+
+      int newTrackHeight = static_cast < int >
+      (mInitialTrackHeight + delta * proportion);
+
+      int newUpperTrackHeight = static_cast < int >
+      (mInitialUpperTrackHeight + delta * (1.0 - proportion));
+
+      //make sure neither track is smaller than its minimum height
+      if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
+         newTrackHeight = mCapturedTrack->GetMinimizedHeight();
+      if (newUpperTrackHeight < prev->GetMinimizedHeight())
+         newUpperTrackHeight = prev->GetMinimizedHeight();
+
+      mCapturedTrack->SetHeight(newTrackHeight
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+                                , vStereo
+#endif
+                                );
+      prev->SetHeight(newUpperTrackHeight);
+   };
+
+   auto doResizeBetween = [&] (Track *next, bool vStereo) {
+      int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
+      int newTrackHeight = mInitialTrackHeight - delta;
+
+      // make sure neither track is smaller than its minimum height
+      if (newTrackHeight < next->GetMinimizedHeight()) {
+         newTrackHeight = next->GetMinimizedHeight();
+         newUpperTrackHeight =
+         mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
+      }
+      if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
+         newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
+         newTrackHeight =
+         mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
+      }
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if (vStereo) {
+         float temp = 1.0f;
+         if(newUpperTrackHeight != 0.0f)
+            temp = (float)newUpperTrackHeight/(float)(newUpperTrackHeight + newTrackHeight);
+         mCapturedTrack->SetVirtualTrackPercentage(temp);
+      }
+#endif
+
+      mCapturedTrack->SetHeight(newUpperTrackHeight);
+      next->SetHeight(newTrackHeight
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+                      , vStereo
+#endif
+      );
+   };
+
+   auto doResize = [&] {
+      int newTrackHeight = mInitialTrackHeight + delta;
+      if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
+         newTrackHeight = mCapturedTrack->GetMinimizedHeight();
+      mCapturedTrack->SetHeight(newTrackHeight);
+   };
+
    //STM: We may be dragging one or two (stereo) tracks.
    // If two, resize proportionally if we are dragging the lower track, and
    // adjust compensatively if we are dragging the upper track.
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   switch( mMouseCapture )
-   {
-   case IsResizingBelowLinkedTracks:
+   if(MONO_WAVE_PAN(mCapturedTrack)) {
+      switch( mMouseCapture )
       {
-         if(MONO_WAVE_PAN(mCapturedTrack)){
-            double proportion = static_cast < double >(mInitialTrackHeight)
-                / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-            int newTrackHeight = static_cast < int >
-                (mInitialTrackHeight + delta * proportion);
-
-            int newUpperTrackHeight = static_cast < int >
-                (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-            //make sure neither track is smaller than its minimum height
-            if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-               newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-            if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight())
-               newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-
-            mCapturedTrack->SetHeight(newTrackHeight,true);
-            mCapturedTrack->SetHeight(newUpperTrackHeight);
-         }
-         else{
-            Track *prev = mTracks->GetPrev(mCapturedTrack);
-
-            double proportion = static_cast < double >(mInitialTrackHeight)
-                / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-            int newTrackHeight = static_cast < int >
-                (mInitialTrackHeight + delta * proportion);
-
-            int newUpperTrackHeight = static_cast < int >
-                (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-            //make sure neither track is smaller than its minimum height
-            if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-               newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-            if (newUpperTrackHeight < prev->GetMinimizedHeight())
-               newUpperTrackHeight = prev->GetMinimizedHeight();
-
-            mCapturedTrack->SetHeight(newTrackHeight);
-            prev->SetHeight(newUpperTrackHeight);
-         }
-         break;
-      }
-   case IsResizingBetweenLinkedTracks:
-      {
-         if(MONO_WAVE_PAN(mCapturedTrack)){
-            int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-            int newTrackHeight = mInitialTrackHeight - delta;
-
-            // make sure neither track is smaller than its minimum height
-            if (newTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-               newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-               newUpperTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-            }
-            if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-               newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-               newTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-            }
-            float temp = 1.0f;
-            if(newUpperTrackHeight != 0.0f)
-               temp = (float)newUpperTrackHeight/(float)(newUpperTrackHeight + newTrackHeight);
-
-            mCapturedTrack->SetVirtualTrackPercentage(temp);
-            mCapturedTrack->SetHeight(newUpperTrackHeight);
-            mCapturedTrack->SetHeight(newTrackHeight,true);
-         }
-         else{
-            Track *next = mTracks->GetNext(mCapturedTrack);
-            int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-            int newTrackHeight = mInitialTrackHeight - delta;
-
-            // make sure neither track is smaller than its minimum height
-            if (newTrackHeight < next->GetMinimizedHeight()) {
-               newTrackHeight = next->GetMinimizedHeight();
-               newUpperTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
-            }
-            if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-               newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-               newTrackHeight =
-                   mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
-            }
-
-            mCapturedTrack->SetHeight(newUpperTrackHeight);
-            next->SetHeight(newTrackHeight);
+         case IsResizingBelowLinkedTracks:
+         {
+            doResizeBelow( mCapturedTrack, true );
             break;
          }
-         break;
+         case IsResizingBetweenLinkedTracks:
+         {
+            doResizeBetween( mCapturedTrack, true );
+            break;
+         }
+         case IsResizing:
+         {
+            // Should imply !MONO_WAVE_PAN(mCapturedTrack),
+            // so impossible, but anyway:
+            doResize();
+            break;
+         }
+         default:
+            // don't refresh in this case.
+            return;
       }
-   case IsResizing:
-      {
-         int newTrackHeight = mInitialTrackHeight + delta;
-         if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-            newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         mCapturedTrack->SetHeight(newTrackHeight);
-         break;
-      }
-   default:
-      // don't refresh in this case.
-      return;
    }
-#else // EXPERIMENTAL_OUTPUT_DISPLAY
-   switch( mMouseCapture )
+   else
+#endif
    {
-   case IsResizingBelowLinkedTracks:
+      switch( mMouseCapture )
       {
-         Track *prev = mTracks->GetPrev(mCapturedTrack);
-
-         double proportion = static_cast < double >(mInitialTrackHeight)
-             / (mInitialTrackHeight + mInitialUpperTrackHeight);
-
-         int newTrackHeight = static_cast < int >
-             (mInitialTrackHeight + delta * proportion);
-
-         int newUpperTrackHeight = static_cast < int >
-             (mInitialUpperTrackHeight + delta * (1.0 - proportion));
-
-         //make sure neither track is smaller than its minimum height
-         if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-            newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         if (newUpperTrackHeight < prev->GetMinimizedHeight())
-            newUpperTrackHeight = prev->GetMinimizedHeight();
-
-         mCapturedTrack->SetHeight(newTrackHeight);
-         prev->SetHeight(newUpperTrackHeight);
-         break;
-      }
-   case IsResizingBetweenLinkedTracks:
-      {
-         Track *next = mTracks->GetNext(mCapturedTrack);
-         int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
-         int newTrackHeight = mInitialTrackHeight - delta;
-
-         // make sure neither track is smaller than its minimum height
-         if (newTrackHeight < next->GetMinimizedHeight()) {
-            newTrackHeight = next->GetMinimizedHeight();
-            newUpperTrackHeight =
-                mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
+         case IsResizingBelowLinkedTracks:
+         {
+            Track *prev = mTracks->GetPrev(mCapturedTrack);
+            doResizeBelow(prev, false);
+            break;
          }
-         if (newUpperTrackHeight < mCapturedTrack->GetMinimizedHeight()) {
-            newUpperTrackHeight = mCapturedTrack->GetMinimizedHeight();
-            newTrackHeight =
-                mInitialUpperTrackHeight + mInitialTrackHeight - mCapturedTrack->GetMinimizedHeight();
+         case IsResizingBetweenLinkedTracks:
+         {
+            Track *next = mTracks->GetNext(mCapturedTrack);
+            doResizeBetween(next, false);
+            break;
          }
-
-         mCapturedTrack->SetHeight(newUpperTrackHeight);
-         next->SetHeight(newTrackHeight);
-         break;
+         case IsResizing:
+         {
+            doResize();
+            break;
+         }
+         default:
+            // don't refresh in this case.
+            return;
       }
-   case IsResizing:
-      {
-         int newTrackHeight = mInitialTrackHeight + delta;
-         if (newTrackHeight < mCapturedTrack->GetMinimizedHeight())
-            newTrackHeight = mCapturedTrack->GetMinimizedHeight();
-         mCapturedTrack->SetHeight(newTrackHeight);
-         break;
-      }
-   default:
-      // don't refresh in this case.
-      return;
    }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
    Refresh(false);
 }
 
@@ -5754,9 +5762,10 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 
    // Special case of pointer in the vertical ruler
    if (event.ShiftDown() || event.CmdDown()) {
-      wxRect rect;
-      Track *const pTrack = FindTrack(event.m_x, event.m_y, true, false, &rect);
-      if (pTrack && event.m_x >= GetVRulerOffset()) {
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      auto &pTrack = foundCell.pTrack;
+      auto &rect = foundCell.rect;
+      if (pTrack && foundCell.type == CellType::VRuler) {
          HandleWheelRotationInVRuler(event, steps, pTrack, rect);
          // Always stop propagation even if the ruler didn't change.  The ruler
          // is a narrow enough target.
@@ -5924,7 +5933,7 @@ void TrackPanel::HandleWheelRotationInVRuler
             wt->GetSpectrumBounds(&bottom, &top);
             const double rate = wt->GetRate();
             const float bound = rate / 2;
-            const NumberScale numberScale(settings.GetScale(bottom, top, rate, false));
+            const NumberScale numberScale( settings.GetScale( bottom, top ) );
             float newTop =
                std::min(bound, numberScale.PositionToValue(1.0f + delta));
             const float newBottom =
@@ -6133,6 +6142,7 @@ void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 /// on our current state, we forward the mouse events to
 /// various interested parties.
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
+try
 {
 #if defined(__WXMAC__) && defined(EVT_MAGNIFY)
    // PRL:
@@ -6142,6 +6152,16 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       HandleWheelRotation(event);
    }
 #endif
+
+   // If a mouse event originates from a keyboard context menu event then
+   // event.GetPosition() == wxDefaultPosition. wxContextMenu events are handled in
+   // TrackPanel::OnContextMenu(), and therefore associated mouse events are ignored here.
+   // Not ignoring them was causing bug 613: the mouse events were interpreted as clicking
+   // outside the tracks.
+   if (event.GetPosition() == wxDefaultPosition && (event.RightDown() || event.RightUp())) {
+      event.Skip();
+      return;
+   }
 
    if (event.m_wheelRotation != 0)
       HandleWheelRotation(event);
@@ -6243,6 +6263,11 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    case IsPanSliding:
       HandleSliders(event, true);
       break;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   case IsVelocitySliding:
+      HandleVelocitySlider(event);
+      break;
+#endif
    case IsMinimizing:
       HandleMinimizing(event);
       break;
@@ -6272,10 +6297,29 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    if (event.ButtonUp()) {
       wxRect rect;
 
-      Track *t = FindTrack(event.m_x, event.m_y, false, false, &rect);
-      if (t)
+      const auto foundCell = FindCell(event.m_x, event.m_y);
+      auto t = foundCell.pTrack;
+      if (t
+          && foundCell.type == CellType::Track
+      )
          EnsureVisible(t);
    }
+}
+catch( ... )
+{
+   // Abort any dragging, as if by hitting Esc
+   if ( HandleEscapeKey( true ) )
+      ;
+   else {
+      // Ensure these steps, if escape handling did nothing
+      SetCapturedTrack(NULL, IsUncaptured);
+      if (HasCapture())
+         ReleaseMouse();
+      wxMouseEvent dummy;
+      HandleCursor(dummy);
+      Refresh(false);
+   }
+   throw;
 }
 
 namespace {
@@ -6293,7 +6337,7 @@ namespace {
    }
 }
 
-bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, wxMouseEvent &event)
+bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &rect, wxMouseEvent &event)
 {
    // FIXME: Disable this and return true when CutLines aren't showing?
    // (Don't use gPrefs-> for the fix as registry access is slow).
@@ -6325,25 +6369,14 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
             // When user presses left button on cut line, expand the line again
             double cutlineStart = 0, cutlineEnd = 0;
 
-            if (track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd))
+            track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd);
             {
                // Assume linked track is wave or null
                const auto linked =
-                  static_cast<WaveTrack*>(mTracks->GetLink(track));
-               if (linked) {
+                  static_cast<WaveTrack*>(track->GetLink());
+               if (linked)
                   // Expand the cutline in the opposite channel if it is present.
-
-                  // PRL:  Do NOT report that the event is not handled if the other
-                  // channel doesn't also have a cutline to expand at the same time.
-                  // Just ignore the return.  Bug1310.
-
-                  /* bool success = */
-                     linked->ExpandCutLine(mCapturedTrackLocation.pos);
-                  /*
-                  if (!success)
-                     return false;
-                  */
-               }
+                  linked->ExpandCutLine(mCapturedTrackLocation.pos);
 
                mViewInfo->selectedRegion.setTimes(cutlineStart, cutlineEnd);
                DisplaySelection();
@@ -6353,19 +6386,17 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
          }
          else if (mCapturedTrackLocation.typ == WaveTrackLocation::locationMergePoint) {
             const double pos = mCapturedTrackLocation.pos;
-            if (!track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
-               return false;
+            track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
 
             // Assume linked track is wave or null
             const auto linked =
-               static_cast<WaveTrack*>(mTracks->GetLink(track));
+               static_cast<WaveTrack*>(track->GetLink());
             if (linked) {
                // Don't assume correspondence of merge points across channels!
                int idx = FindMergeLine(linked, pos);
                if (idx >= 0) {
                   WaveTrack::Location location = linked->GetCachedLocations()[idx];
-                  if (!linked->MergeClips(location.clipidx1, location.clipidx2))
-                     return false;
+                  linked->MergeClips(location.clipidx1, location.clipidx2);
                }
             }
 
@@ -6379,7 +6410,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
          track->RemoveCutLine(mCapturedTrackLocation.pos);
          // Assume linked track is wave or null
          const auto linked =
-            static_cast<WaveTrack*>(mTracks->GetLink(track));
+            static_cast<WaveTrack*>(track->GetLink());
          if (linked)
             linked->RemoveCutLine(mCapturedTrackLocation.pos);
          MakeParentPushState(_("Removed Cut Line"), _("Remove") );
@@ -6414,7 +6445,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &rect, 
    return false;
 }
 
-bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEvent &event)
+bool TrackPanel::IsOverCutline(WaveTrack * track, const wxRect &rect, const wxMouseEvent &event)
 {
    for (auto loc: track->GetCachedLocations())
    {
@@ -6440,7 +6471,7 @@ bool TrackPanel::IsOverCutline(WaveTrack * track, wxRect &rect, const wxMouseEve
 
 
 /// Event has happened on a track and it has been determined to be a label track.
-bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, wxRect &rect, wxMouseEvent & event)
+bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, wxMouseEvent & event)
 {
    if (!event.ButtonDown())
       return false;
@@ -6603,21 +6634,16 @@ void TrackPanel::HandleTextDragRelease(LabelTrack * lTrack, wxMouseEvent & event
 //  from the other OnMouseEvent code.
 void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 {
-   Track * pTrack;
-   Track * pControlTrack;
-   wxRect rTrack;
-   wxRect rLabel;
+   const auto foundCell = FindCell( event.m_x, event.m_y );
+   auto &pTrack = foundCell.pTrack;
+   auto &rect = foundCell.rect;
 
    bool unsafe = IsUnsafe();
 
-   pControlTrack = FindTrack(event.m_x, event.m_y, true, true, &rLabel);
-   pTrack = FindTrack(event.m_x, event.m_y, false, false, &rTrack);
-
    //call HandleResize if I'm over the border area
    if (event.LeftDown() &&
-          (within(event.m_y, rTrack.y + rTrack.height, TRACK_RESIZE_REGION)
-        || within(event.m_y, rLabel.y + rLabel.height,
-                  TRACK_RESIZE_REGION))) {
+       pTrack &&
+          (within(event.m_y, rect.GetBottom(), TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
       return;
@@ -6625,43 +6651,45 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
 
    // AS: If the user clicked outside all tracks, make nothing
    //  selected.
-   if ((event.ButtonDown() || event.ButtonDClick()) &&
-       !(pTrack || pControlTrack)) {
+   if ((event.ButtonDown() || event.ButtonDClick()) && !pTrack) {
       SelectNone();
       Refresh(false);
       return;
    }
 
-   //Determine if user clicked on the track's left-hand label
-   if (!mCapturedTrack && event.m_x < GetLeftOffset()) {
-      if (event.m_x >= GetVRulerOffset()) {
+   //Determine if user clicked on the track's left-hand label or ruler
+   if (!mCapturedTrack) {
+      if (foundCell.type == CellType::VRuler) {
          if( !event.Dragging() ) // JKC: Only want the mouse down event.
             HandleVZoom(event);
          HandleCursor(event);
+         return;
       }
-      else {
+      else if (foundCell.type == CellType::Label) {
          HandleLabelClick(event);
          HandleCursor(event);
+         return;
       }
-      return;
    }
 
    //Determine if user clicked on a label track.
    //If so, use MouseDown handler for the label track.
-   if (pTrack && (pTrack->GetKind() == Track::Label))
+   if (pTrack && foundCell.type == CellType::Track &&
+       (pTrack->GetKind() == Track::Label))
    {
-      if (HandleLabelTrackClick((LabelTrack *)pTrack, rTrack, event))
+      if (HandleLabelTrackClick((LabelTrack *)pTrack, rect, event))
          return;
    }
 
    bool handled = false;
 
-   if (pTrack && (pTrack->GetKind() == Track::Wave) &&
+   if (pTrack && foundCell.type == CellType::Track &&
+       (pTrack->GetKind() == Track::Wave) &&
       (mMouseCapture == IsUncaptured || mMouseCapture == WasOverCutLine))
-      handled = HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rTrack, event);
+      handled = HandleTrackLocationMouseEvent((WaveTrack *)pTrack, rect, event);
 
    ToolsToolBar * pTtb = mListener->TP_GetToolsToolBar();
-   if( !handled && pTtb != NULL )
+   if( !handled && pTtb != NULL && foundCell.type == CellType::Track )
    {
       int toolToUse = DetermineToolToUse(pTtb, event);
 
@@ -6724,10 +6752,10 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
       return currentTool;
 
    // So now we have to find out what we are near to..
-   wxRect rect;
-
-   Track *pTrack = FindTrack(event.m_x, event.m_y, false, false, &rect);
-   if( !pTrack )
+   const auto foundCell = FindCell(event.m_x, event.m_y);
+   auto &pTrack = foundCell.pTrack;
+   auto &rect = foundCell.rect;
+   if( !pTrack|| foundCell.type != CellType::Track )
       return currentTool;
 
    int trackKind = pTrack->GetKind();
@@ -6767,7 +6795,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
 
 
 #ifdef USE_MIDI
-bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event)
 {
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
@@ -6791,7 +6819,7 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &rect, const wxMouseEvent &
 
 /// method that tells us if the mouse event landed on an
 /// envelope boundary.
-bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestEnvelope(Track *track, const wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6859,7 +6887,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &rect, const wxMouseEvent 
 
 /// method that tells us if the mouse event landed on an
 /// editable sample
-bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestSamples(Track *track, const wxRect &rect, const wxMouseEvent & event)
 {
    wxASSERT(track);
    if( track->GetKind() != Track::Wave )
@@ -6884,7 +6912,11 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent &
    // Just get one sample.
    float oneSample;
    auto s0 = (sampleCount)(tt * rate + 0.5);
-   wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1);
+   if ( !wavetrack->Get(
+         (samplePtr)&oneSample, floatSample, s0, 1, fillZero,
+         // Do not propagate exception but return a failure value
+         false))
+      return false;
 
    // Get y distance of envelope point from center line (in pixels).
    float zoomMin, zoomMax;
@@ -6910,7 +6942,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &rect, const wxMouseEvent &
 
 /// method that tells us if the mouse event landed on a
 /// time-slider that allows us to time shift the sequence.
-bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &rect, const wxMouseEvent & event)
+bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), const wxRect &rect, const wxMouseEvent & event)
 {
    // Perhaps we should delegate this to TrackArtist as only TrackArtist
    // knows what the real sizes are??
@@ -7233,7 +7265,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
    rect.width = mTrackInfo.GetTrackInfoWidth();
    bool captured = (t == mCapturedTrack);
-   mTrackInfo.DrawCloseBox(dc, rect, (captured && mMouseCapture==IsClosing));
+   mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
@@ -7251,7 +7283,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                      true);
    }
 
-   mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
+   //mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
 
    auto wt = bIsWave ? static_cast<WaveTrack*>(t) : nullptr;
    if (bIsWave) {
@@ -7259,6 +7291,9 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
       mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
+
+// DA: For classic Audacity, show stero/mono and rate.
+#ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
 
          int offset = 8;
@@ -7272,15 +7307,11 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                          trackRect.x + offset,
                          trackRect.y + 38);
       }
+#endif
    }
 
 #ifdef USE_MIDI
    else if (bIsNote) {
-      // Note tracks do not have text, e.g. "Mono, 44100Hz, 32-bit float", so
-      // Mute & Solo button goes higher. To preserve existing AudioTrack code,
-      // we move the buttons up by pretending track is higher (at lower y)
-      rect.y -= 34;
-      rect.height += 34;
       wxRect midiRect;
       mTrackInfo.GetTrackControlsRect(trackRect, midiRect);
       // Offset by height of Solo/Mute buttons:
@@ -7288,36 +7319,22 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       midiRect.height -= 21; // allow room for minimize button at bottom
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-         // the offset 2 is just to leave a little space between channel buttons
-         // and velocity slider (if any)
-         int h = ((NoteTrack *) t)->DrawLabelControls(*dc, midiRect) + 2;
+      ((NoteTrack *)t)->DrawLabelControls(*dc, midiRect);
 
-         // Draw some lines for MuteSolo buttons:
-         if (rect.height > 84) {
-            AColor::Line(*dc, rect.x+48 , rect.y+50, rect.x+48, rect.y + 66);
-            // bevel below mute/solo
-            AColor::Line(*dc, rect.x, rect.y + 66, mTrackInfo.GetTrackInfoWidth(), rect.y + 66);
-         }
-         mTrackInfo.DrawMuteSolo(dc, rect, t,
-               (captured && mMouseCapture == IsMuting), false, HasSoloButton());
-         mTrackInfo.DrawMuteSolo(dc, rect, t,
-               (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
+      // Draw some lines for MuteSolo buttons (normally handled by DrawBordersWithin but not done for note tracks)
+      if (rect.height > 48) {
+         // Note: offset up by 34 units
+         AColor::Line(*dc, rect.x + 48, rect.y + 16, rect.x + 48, rect.y + 32);    // between mute/solo
+         AColor::Line(*dc, rect.x, rect.y + 32, kTrackInfoWidth, rect.y + 32);   // below mute/solo
+      }
+      mTrackInfo.DrawMuteSolo(dc, rect, t,
+            (captured && mMouseCapture == IsMuting), false, HasSoloButton());
+      mTrackInfo.DrawMuteSolo(dc, rect, t,
+            (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
-         // place a volume control below channel buttons (this will
-         // control an offset to midi velocity).
-         // DrawVelocitySlider places slider assuming this is a Wave track
-         // and using a large offset to leave room for other things,
-         // so here we make a fake rectangle as if it is for a Wave
-         // track, but it is offset to place the slider properly in
-         // a Note track. This whole placement thing should be redesigned
-         // to lay out different types of tracks and controls
-         wxRect gr; // gr is gain rectangle where slider is drawn
-         mTrackInfo.GetGainRect(rect, gr);
-         rect.y = rect.y + h - gr.y; // ultimately want slider at rect.y + h
-         rect.height = rect.height - h + gr.y;
-         // save for mouse hit detect:
-         ((NoteTrack *) t)->SetGainPlacementRect(rect);
-         mTrackInfo.DrawVelocitySlider(dc, (NoteTrack *) t, rect);
+      // Place a volume control below channel buttons (this will
+      // control an offset to midi velocity).
+      mTrackInfo.DrawVelocitySlider(dc, (NoteTrack *)t, rect, captured);
 #endif
    }
 #endif // USE_MIDI
@@ -7346,15 +7363,11 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
    dc->DrawRectangle(side);
 
    // Area between tracks of stereo group
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (t->GetLinked() || MONO_WAVE_PAN(t)) {
-      side = rect;
-      side.y += t->GetHeight() - 1;
-      side.height = kTopInset + 1;
-      dc->DrawRectangle(side);
-   }
-#else
-   if (t->GetLinked()) {
+       || MONO_WAVE_PAN(t)
+#endif
+       ) {
       // Paint the channel separator over (what would be) the shadow of the top
       // channel, and the top inset of the bottom channel
       side = rect;
@@ -7362,7 +7375,6 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
       side.height = kTopInset + kShadowThickness;
       dc->DrawRectangle(side);
    }
-#endif
 }
 
 /// Draw a three-level highlight gradient around the focused track.
@@ -7403,7 +7415,7 @@ void TrackPanel::UpdateVRuler(Track *t)
    UpdateVRulerSize();
 }
 
-void TrackPanel::UpdateTrackVRuler(Track *t)
+void TrackPanel::UpdateTrackVRuler(const Track *t)
 {
    wxASSERT(t);
    if (!t)
@@ -7415,7 +7427,7 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
             t->GetHeight() - (kTopMargin + kBottomMargin));
 
    mTrackArtist->UpdateVRuler(t, rect);
-   Track *l = t->GetLink();
+   const Track *l = t->GetLink();
    if (l)
    {
       rect.height = l->GetHeight() - (kTopMargin + kBottomMargin);
@@ -7765,6 +7777,9 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnSwapChannelsID, t->GetLinked() && !unsafe);
       theMenu->Enable(OnMergeStereoID, canMakeStereo && !unsafe);
       theMenu->Enable(OnSplitStereoID, t->GetLinked() && !unsafe);
+
+// Several menu items no longer needed....
+#if 0
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked() && !unsafe);
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
@@ -7789,6 +7804,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnChannelMonoID, !t->GetLinked());
       theMenu->Enable(OnChannelLeftID, !t->GetLinked());
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
+#endif
 
       WaveTrack *const track = (WaveTrack *)t;
       const int display = track->GetDisplay();
@@ -7984,14 +8000,11 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
 
    // The lines at bottom of 1st track and top of second track of stereo group
    // Possibly replace with DrawRectangle to add left border.
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (t->GetLinked() || MONO_WAVE_PAN(t)) {
-      int h1 = rect.y + t->GetHeight() - kTopInset;
-      AColor::Line(*dc, vrul, h1 - 2, rect.x + rect.width - 1, h1 - 2);
-      AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
-   }
-#else
-   if (t->GetLinked()) {
+       || MONO_WAVE_PAN(t)
+#endif
+       ) {
       // The given rect has had the top inset subtracted
       int h1 = rect.y + t->GetHeight() - kTopInset;
       // h1 is the top coordinate of the second tracks' rectangle
@@ -7999,7 +8012,6 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
       AColor::Line(*dc, vrul, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
       AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
    }
-#endif
 }
 
 void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
@@ -8030,13 +8042,12 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
 wxString TrackPanel::TrackSubText(WaveTrack * t)
 {
    wxString s = wxString::Format(wxT("%dHz"), (int) (t->GetRate() + 0.5));
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if (t->GetLinked() && t->GetChannel() != Track::MonoChannel)
-      s = _("Stereo, ") + s;
-#else
-   if (t->GetLinked())
-      s = _("Stereo, ") + s;
+       && t->GetChannel() != Track::MonoChannel
 #endif
+   )
+      s = _("Stereo, ") + s;
    else {
       if (t->GetChannel() == Track::MonoChannel)
          s = _("Mono, ") + s;
@@ -8124,8 +8135,11 @@ void TrackPanel::SplitStereo(bool stereo)
 {
    wxASSERT(mPopupMenuTarget);
 
-   if (!stereo)
-      mPopupMenuTarget->SetChannel(Track::MonoChannel);
+   if (stereo){
+      mPopupMenuTarget->SetPanFromChannelType();
+   }
+   mPopupMenuTarget->SetChannel(Track::MonoChannel);
+
 
    // Assume partner is present, and is wave
    auto partner = static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
@@ -8144,8 +8158,11 @@ void TrackPanel::SplitStereo(bool stereo)
    if (partner)
    {
       partner->SetName(mPopupMenuTarget->GetName());
-      if (!stereo)
-         partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
+      if (stereo){
+         partner->SetPanFromChannelType();
+      }
+      partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
+
 
       //On Demand - have each channel add it's own.
       if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
@@ -8190,7 +8207,9 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
       // Set partner's parameters to match target.
       partner->Merge(*mPopupMenuTarget);
 
+      mPopupMenuTarget->SetPan( 0.0f );
       mPopupMenuTarget->SetChannel(Track::LeftChannel);
+      partner->SetPan( 0.0f );
       partner->SetChannel(Track::RightChannel);
 
       // Set NEW track heights and minimized state
@@ -8329,9 +8348,9 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
             : WaveformSettings::stLogarithmic;
    }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if (wt->GetDisplay() == WaveTrack::WaveformDisplay) {
+      if (wt->GetDisplay() == WaveTrack::Waveform) {
          wt->SetVirtualState(false);
-      }else if (id == WaveTrack::WaveformDisplay) {
+      }else if (id == WaveTrack::Waveform) {
          wt->SetVirtualState(true);
       }
 #endif
@@ -8348,7 +8367,7 @@ void TrackPanel::SetRate(WaveTrack * wt, double rate)
 {
    wt->SetRate(rate);
    // Assume linked track is wave or null
-   const auto partner = static_cast<WaveTrack*>(mTracks->GetLink(wt));
+   const auto partner = static_cast<WaveTrack*>(wt->GetLink());
    if (partner)
       partner->SetRate(rate);
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
@@ -8389,16 +8408,12 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
    if (newFormat == ((WaveTrack*)mPopupMenuTarget)->GetSampleFormat())
       return; // Nothing to do.
 
-   bool bResult = ((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
-   wxASSERT(bResult); // TO DO: Actually handle this.
+   ((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
    // Assume linked track is wave or null
    const auto partner =
-      static_cast<WaveTrack*>(mTracks->GetLink(mPopupMenuTarget));
+      static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
    if (partner)
-   {
-      bResult = partner->ConvertToSampleFormat(newFormat);
-      wxASSERT(bResult); // TO DO: Actually handle this.
-   }
+      partner->ConvertToSampleFormat(newFormat);
 
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s"),
                                         mPopupMenuTarget->GetName().
@@ -8859,91 +8874,101 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 /// Determines which track is under the mouse
 ///  @param mouseX - mouse X position.
 ///  @param mouseY - mouse Y position.
-///  @param label  - true iff the X Y position is relative to side-panel with the labels in it.
-///  @param link - true iff we should consider a hit in any linked track as a hit.
-///  @param *trackRect - returns track rectangle.
-Track *TrackPanel::FindTrack(int mouseX, int mouseY, bool label, bool link,
-                              wxRect * trackRect)
+TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 {
-   // If label is true, resulting rectangle OMITS left and top insets.
-   // If label is false, resulting rectangle INCLUDES right and top insets.
-
    wxRect rect;
    rect.x = 0;
    rect.y = -mViewInfo->vpos;
    rect.y += kTopInset;
    GetSize(&rect.width, &rect.height);
 
-   if (label) {
-      rect.width = GetLeftOffset();
-   } else {
-      rect.x = GetLeftOffset();
-      rect.width -= GetLeftOffset();
+   // The type of cell that may be found is determined by the x coordinate.
+   CellType type = CellType::Track;
+   if (mouseX >= 0 && mouseX < rect.width) {
+      if (mouseX < GetVRulerOffset())
+         type = CellType::Label,
+         rect.width = GetVRulerOffset();
+      else if (mouseX < GetLeftOffset())
+         type = CellType::VRuler,
+         rect.x = GetVRulerOffset(),
+         rect.width = GetLeftOffset() - GetVRulerOffset();
+      else
+         type = CellType::Track,
+         rect.x = GetLeftOffset(),
+         rect.width -= GetLeftOffset();
    }
+
+   auto output = [&](Track *pTrack) -> FoundCell {
+      // If label or vruler, resulting rectangle OMITS left and top insets.
+      // If track, resulting rectangle INCLUDES right and top insets.
+      if (pTrack) {
+         rect.y -= kTopInset;
+         switch (type) {
+            case CellType::Label:
+               rect.x += kLeftInset;
+               rect.width -= kLeftInset;
+               rect.y += kTopInset;
+               rect.height -= kTopInset;
+               break;
+            case CellType::VRuler:
+               rect.y += kTopInset;
+               rect.height -= kTopInset;
+               break;
+            case CellType::Track:
+            default:
+               break;
+         }
+         return { pTrack, type, rect };
+      }
+      else
+         return { nullptr, type, {} };
+   };
 
    VisibleTrackIterator iter(GetProject());
    for (Track * t = iter.First(); t; t = iter.Next()) {
       rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
       rect.height = t->GetHeight();
 
-      if (link && t->GetLink()) {
-         Track *l = t->GetLink();
-         int h = l->GetHeight();
-         if (!t->GetLinked()) {
-            t = l;
-            rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
+      if (type == CellType::Label) {
+         if (t->GetLink()) {
+            Track *l = t->GetLink();
+            int h = l->GetHeight();
+            if (!t->GetLinked()) {
+               t = l;
+               rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
+            }
+            rect.height += h;
          }
-         rect.height += h;
-      }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      else if(link && MONO_WAVE_PAN(t))
-      {
-         rect.height += t->GetHeight(true);
-      }
+         else if( MONO_WAVE_PAN(t) )
+            rect.height += t->GetHeight(true);
 #endif
+      }
+
       //Determine whether the mouse is inside
       //the current rectangle.  If so, recalculate
       //the proper dimensions and return.
       if (rect.Contains(mouseX, mouseY)) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+         // PRL:  Is it good to have a side effect in a hit-testing routine?
          t->SetVirtualStereo(false);
 #endif
-         if (trackRect) {
-            rect.y -= kTopInset;
-            if (label) {
-               rect.x += kLeftInset;
-               rect.width -= kLeftInset;
-               rect.y += kTopInset;
-               rect.height -= kTopInset;
-            }
-            *trackRect = rect;
-         }
-
-         return t;
+         return output(t);
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(!link && MONO_WAVE_PAN(t)){
+      if(type != CellType::Label && MONO_WAVE_PAN(t)){
          rect.y = t->GetY(true) - mViewInfo->vpos + kTopInset;
          rect.height = t->GetHeight(true);
          if (rect.Contains(mouseX, mouseY)) {
+            // PRL:  Is it good to have a side effect in a hit-testing routine?
             t->SetVirtualStereo(true);
-            if (trackRect) {
-               rect.y -= kTopInset;
-               if (label) {
-                  rect.x += kLeftInset;
-                  rect.width -= kLeftInset;
-                  rect.y += kTopInset;
-                  rect.height -= kTopInset;
-               }
-               *trackRect = rect;
-            }
-            return t;
+            return output(t);
          }
       }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
    }
 
-   return NULL;
+   return { nullptr, type, {} };
 }
 
 /// This finds the rectangle of a given track, either the
@@ -9042,36 +9067,12 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 {
    pParent = pParentIn;
 
-   wxRect rect(0, 0, 1000, 1000);
-   wxRect sliderRect;
+   mGain = NULL;
+   mGainCaptured=NULL;
+   mPan = NULL;
+   mPanCaptured=NULL;
 
-   GetGainRect(rect, sliderRect);
-
-   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
-                        wxPoint(sliderRect.x, sliderRect.y),
-                        wxSize(sliderRect.width, sliderRect.height),
-                        DB_SLIDER);
-   mGain->SetDefaultValue(1.0);
-   mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
-                                wxPoint(sliderRect.x, sliderRect.y),
-                                wxSize(sliderRect.width, sliderRect.height),
-                                DB_SLIDER);
-   mGainCaptured->SetDefaultValue(1.0);
-
-   GetPanRect(rect, sliderRect);
-
-   /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
-                       wxPoint(sliderRect.x, sliderRect.y),
-                       wxSize(sliderRect.width, sliderRect.height),
-                       PAN_SLIDER);
-   mPan->SetDefaultValue(0.0);
-   mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
-                               wxPoint(sliderRect.x, sliderRect.y),
-                               wxSize(sliderRect.width, sliderRect.height),
-                               PAN_SLIDER);
-   mPanCaptured->SetDefaultValue(0.0);
+   ReCreateSliders();
 
    UpdatePrefs();
 }
@@ -9080,67 +9081,197 @@ TrackInfo::~TrackInfo()
 {
 }
 
+void TrackInfo::ReCreateSliders(){
+   wxRect rect(0, 0, 1000, 1000);
+   wxRect sliderRect;
+   GetGainRect(rect, sliderRect);
+
+   float defPos = 1.0;
+   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
+   mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
+                        wxPoint(sliderRect.x, sliderRect.y),
+                        wxSize(sliderRect.width, sliderRect.height),
+                        DB_SLIDER);
+   mGain->SetDefaultValue(defPos);
+
+   mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
+                                wxPoint(sliderRect.x, sliderRect.y),
+                                wxSize(sliderRect.width, sliderRect.height),
+                                DB_SLIDER);
+   mGainCaptured->SetDefaultValue(defPos);
+
+   GetPanRect(rect, sliderRect);
+
+   defPos = 0.0;
+   /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
+   mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
+                       wxPoint(sliderRect.x, sliderRect.y),
+                       wxSize(sliderRect.width, sliderRect.height),
+                       PAN_SLIDER);
+   mPan->SetDefaultValue(defPos);
+
+   mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
+                               wxPoint(sliderRect.x, sliderRect.y),
+                               wxSize(sliderRect.width, sliderRect.height),
+                               PAN_SLIDER);
+   mPanCaptured->SetDefaultValue(defPos);
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   GetVelocityRect(rect, sliderRect);
+
+   /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
+   mVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
+      wxPoint(sliderRect.x, sliderRect.y),
+      wxSize(sliderRect.width, sliderRect.height),
+      VEL_SLIDER);
+   mVelocity->SetDefaultValue(0.0);
+   mVelocityCaptured = std::make_unique<LWSlider>(pParent, _("Velocity"),
+      wxPoint(sliderRect.x, sliderRect.y),
+      wxSize(sliderRect.width, sliderRect.height),
+      VEL_SLIDER);
+   mVelocityCaptured->SetDefaultValue(0.0);
+#endif
+
+}
+
 int TrackInfo::GetTrackInfoWidth() const
 {
    return kTrackInfoWidth;
 }
 
+int TrackInfo::CalcItemY( int iItem ) const
+{
+   int y = 1;
+   if( iItem == kItemBarButtons )
+      return y;
+   y+= kTrackInfoBtnSize +2;
+   if( iItem == kItemStatusInfo )
+      return y;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   int y1=y;
+   if( iItem == kItemNoteMute )
+      return y;
+   if( iItem == kItemNoteSolo )
+      return y;
+   y=y1;
+#endif
+
+// DA: Does not have status information for a track.
+#ifndef EXPERIMENTAL_DA 
+   y+= 30;
+#else
+   y+= 2;
+#endif
+
+   if( iItem == kItemMute )
+      return y;
+
+// DA: Has Mute and Solo on separate lines.
+#ifdef EXPERIMENTAL_DA 
+   y+= kTrackInfoBtnSize + 2;
+#endif
+
+   if( iItem == kItemSolo )
+      return y;
+   y+= kTrackInfoBtnSize + 3;
+
+   if( iItem == kItemGain )
+      return y;
+   y+= 30;
+   if( iItem == kItemPan )
+      return y;
+   y+= 30;
+   return y;
+}
+
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x;
-   dest.y = rect.y;
+   dest.x = rect.x+1;
+   dest.y = rect.y + CalcItemY( kItemBarButtons );
    dest.width = kTrackInfoBtnSize;
    dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + kTrackInfoBtnSize; // to right of CloseBoxRect
-   dest.y = rect.y;
-   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize; // to right of CloseBoxRect
+   dest.x = rect.x + kTrackInfoBtnSize+2; // to right of CloseBoxRect
+   dest.y = rect.y + CalcItemY( kItemBarButtons );
+   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
    dest.height = kTrackInfoBtnSize;
 }
 
-void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton) const
+void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
 {
-   dest.x = rect.x ;
-   dest.y = rect.y + 50;
-   dest.width = 48;
-   dest.height = kTrackInfoBtnSize;
 
-   if( !bHasSoloButton )
+   dest.height = kTrackInfoBtnSize +1;
+   dest.x = rect.x+1;
+
+   int MuteSoloType = 0;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   if (pTrack->GetKind() == Track::Note)
+      MuteSoloType = kItemNoteMute - kItemMute;
+#endif
+
+   int yMute = CalcItemY( kItemMute + MuteSoloType );
+   int ySolo = CalcItemY( kItemSolo + MuteSoloType );
+
+   bool bSameRow = ( yMute == ySolo );
+   bool bNarrow = bSameRow && bHasSoloButton;
+
+   if( bNarrow )
    {
-      dest.width +=48;
+      dest.width = rect.width / 2-2;
+      if( solo ){
+         dest.x+=dest.width;
+         dest.width-=1;
+      }
    }
-   else if (solo)
+   else
    {
-      dest.x += 48;
+      dest.width = rect.width - 2 * kTrackInfoBtnSize;
+      dest.x = rect.x + kTrackInfoBtnSize;
    }
+
+   if( bSameRow || !solo )
+      dest.y = rect.y + yMute;
+   else
+      dest.y = rect.y + ySolo;
+
 }
 
 void TrackInfo::GetGainRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + 7;
-   dest.y = rect.y + 70;
+   dest.y = rect.y + CalcItemY( kItemGain );
    dest.width = 84;
    dest.height = 25;
 }
 
 void TrackInfo::GetPanRect(const wxRect & rect, wxRect & dest) const
 {
+   GetGainRect( rect, dest );
+   dest.y = rect.y + CalcItemY( kItemPan );
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void TrackInfo::GetVelocityRect(const wxRect & rect, wxRect & dest) const
+{
    dest.x = rect.x + 7;
    dest.y = rect.y + 100;
    dest.width = 84;
    dest.height = 25;
 }
+#endif
 
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
-   dest.x = rect.x + kBlankWidth;
+   dest.x = rect.x + 4;
    dest.y = rect.y + rect.height - 19;
    // Width is kTrackInfoWidth less space on left for track select and on right for sync-lock icon.
-   dest.width = kTrackInfoWidth - (2 * kBlankWidth);
+   dest.width = kTrackInfoWidth - (1.2 * kBlankWidth);
    dest.height = kTrackInfoBtnSize;
 }
 
@@ -9240,10 +9371,11 @@ void TrackInfo::GetTrackControlsRect(const wxRect & rect, wxRect & dest) const
 }
 
 
-void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
+void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t,  bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(rect, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected() );
 
 #ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -9251,7 +9383,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
 #else
    dc->SetPen(*wxBLACK_PEN);
 #endif
-
+   bev.Inflate( -1, -1 );
    // Draw the "X"
    const int s = 6;
 
@@ -9265,8 +9397,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
    AColor::Line(*dc, rs,     ts, ls,     bs);
    AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
 
-   bev.Inflate(-1, -1);
-   AColor::BevelTrackInfo(*dc, !down, bev);
+//   bev.Inflate(-1, -1);
 }
 
 void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
@@ -9274,7 +9405,8 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
 {
    wxRect bev;
    GetTitleBarRect(rect, bev);
-   bev.Inflate(-1, -1);
+   //bev.Inflate(-1, -1);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected());
 
    // Draw title text
    SetTrackInfoFont(dc);
@@ -9288,20 +9420,25 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    }
 
-   // wxGTK leaves little scraps (antialiasing?) of the
-   // characters if they are repeatedly drawn.  This
-   // happens when holding down mouse button and moving
-   // in and out of the title bar.  So clear it first.
-   AColor::MediumTrackInfo(dc, t->GetSelected());
-   dc->DrawRectangle(bev);
-   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
-
    // Pop-up triangle
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour( clrTrackPanelText );
 #else
    wxColour c = *wxBLACK;
 #endif
+
+   // wxGTK leaves little scraps (antialiasing?) of the
+   // characters if they are repeatedly drawn.  This
+   // happens when holding down mouse button and moving
+   // in and out of the title bar.  So clear it first.
+//   AColor::MediumTrackInfo(dc, t->GetSelected());
+//   dc->DrawRectangle(bev);
+
+   dc->SetTextForeground( c );
+   dc->SetTextBackground( wxTRANSPARENT );
+   dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+
+
 
    dc->SetPen(c);
    dc->SetBrush(c);
@@ -9312,7 +9449,6 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
                  bev.y + ((bev.height - (s / 2)) / 2),
                  s);
 
-   AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
 /// Draw the Mute or the Solo button, depending on the value of solo.
@@ -9322,31 +9458,33 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    wxRect bev;
    if( solo && !bHasSoloButton )
       return;
-   GetMuteSoloRect(rect, bev, solo, bHasSoloButton);
-   bev.Inflate(-1, -1);
-
+   GetMuteSoloRect(rect, bev, solo, bHasSoloButton, t);
+   //bev.Inflate(-1, -1);
    if (bev.y + bev.height >= rect.y + rect.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
+   auto pt = dynamic_cast<const PlayableTrack *>(t);
 
+#if 0
    AColor::MediumTrackInfo( dc, t->GetSelected());
    if( solo )
    {
-      if( t->GetSolo() )
+      if( pt && pt->GetSolo() )
       {
-         AColor::Solo(dc, t->GetSolo(), t->GetSelected());
+         AColor::Solo(dc, pt->GetSolo(), t->GetSelected());
       }
    }
    else
    {
-      if( t->GetMute() )
+      if( pt && pt->GetMute() )
       {
-         AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
+         AColor::Mute(dc, pt->GetMute(), t->GetSelected(), pt->GetSolo());
       }
    }
    //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
    //    AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
    dc->SetPen( *wxTRANSPARENT_PEN );//No border!
    dc->DrawRectangle(bev);
+#endif
 
    wxCoord textWidth, textHeight;
    wxString str = (solo) ?
@@ -9355,11 +9493,16 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
       _("Mute");
 
+   AColor::Bevel2(
+      *dc,
+      (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
+      bev,
+      t->GetSelected()
+   );
+
    SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
-
-   AColor::BevelTrackInfo(*dc, (solo?t->GetSolo():t->GetMute()) == down, bev);
 
    if (solo && !down) {
       // Update the mute button, which may be grayed out depending on
@@ -9375,8 +9518,10 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
    GetMinimizeRect(rect, bev);
 
    // Clear background to get rid of previous arrow
-   AColor::MediumTrackInfo(dc, t->GetSelected());
-   dc->DrawRectangle(bev);
+   //AColor::MediumTrackInfo(dc, t->GetSelected());
+   //dc->DrawRectangle(bev);
+
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected());
 
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour(clrTrackPanelText);
@@ -9392,44 +9537,36 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
                  10,
                  t->GetMinimized());
 
-   AColor::BevelTrackInfo(*dc, !down, bev);
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect) const
-{
-    wxRect gainRect;
-    int index = t->GetIndex();
-
-    //EnsureSufficientSliders(index);
-
-    GetGainRect(rect, gainRect);
-    if (gainRect.y + gainRect.height < rect.y + rect.height - 19) {
-       auto &gain = mGain; // mGains[index];
-       gain->SetStyle(VEL_SLIDER);
-       GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
-       GainSlider(index)->Set(t->GetGain());
-       GainSlider(index)->OnPaint(*dc
-          // , t->GetSelected()
-       );
-    }
-}
-#endif
 
 void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) const
 {
    wxRect sliderRect;
+   // Larger slidermargin means it disappears sooner on collapsing track.
+   const int sliderMargin = 14;
 
    GetGainRect(rect, sliderRect);
-   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       GainSlider(t, captured)->OnPaint(*dc);
    }
 
    GetPanRect(rect, sliderRect);
-   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       PanSlider(t, captured)->OnPaint(*dc);
    }
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool captured) const
+{
+   wxRect sliderRect;
+
+   GetVelocityRect(rect, sliderRect);
+   if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
+      VelocitySlider(t, captured)->OnPaint(*dc);
+   }
+}
+#endif
 
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
@@ -9464,6 +9601,25 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 
    return (captured ? mPanCaptured : mPan).get();
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
+{
+   wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
+   wxRect sliderRect;
+   GetVelocityRect(rect, sliderRect);
+
+   wxPoint pos = sliderRect.GetPosition();
+   float velocity = t->GetVelocity();
+
+   mVelocity->Move(pos);
+   mVelocity->Set(velocity);
+   mVelocityCaptured->Move(pos);
+   mVelocityCaptured->Set(velocity);
+
+   return (captured ? mVelocityCaptured : mVelocity).get();
+}
+#endif
 
 void TrackInfo::UpdatePrefs()
 {

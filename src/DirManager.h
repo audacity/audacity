@@ -95,6 +95,8 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Adds one to the reference count of the block file,
    // UNLESS it is "locked", then it makes a NEW copy of
    // the BlockFile.
+   // May throw an exception in case of disk space exhaustion, otherwise
+   // returns non-null.
    BlockFilePtr CopyBlockFile(const BlockFilePtr &b);
 
    BlockFile *LoadBlockFile(const wxChar **attrs, sampleFormat format);
@@ -121,9 +123,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Note: following affects only the loading of block files when opening a project
    void SetLoadingMaxSamples(size_t max) { mMaxSamples = max; }
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
-   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); } // This class only reads tags.
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) override
+      { return NULL; }
    bool AssignFile(wxFileNameWrapper &filename, const wxString &value, bool check);
 
    // Clean the temp dir. Note that now where we have auto recovery the temp
@@ -177,7 +179,9 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    // Write all write-cached block files to disc, if any
    void WriteCacheToDisk();
 
-   // Fill cache of blockfiles, if caching is enabled (otherwise do nothing)
+   // (Try to) fill cache of blockfiles, if caching is enabled (otherwise do
+   // nothing)
+   // A no-fail operation that does not throw
    void FillBlockfilesCache();
 
  private:

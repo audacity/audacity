@@ -81,16 +81,12 @@ static void GetAllSeqBlocks(AudacityProject *project,
 // tracks and replace each aliased block file with its replacement.
 // Note that this code respects reference-counting and thus the
 // process of making a project self-contained is actually undoable.
-static void ReplaceBlockFiles(AudacityProject *project,
+static void ReplaceBlockFiles(BlockPtrArray &blocks,
                               ReplacedBlockFileHash &hash)
+// NOFAIL-GUARANTEE
 {
-   //const auto &dirManager = project->GetDirManager();
-   BlockPtrArray blocks;
-   GetAllSeqBlocks(project, &blocks);
-
-   int i;
-   for (i = 0; i < (int)blocks.size(); i++) {
-      auto &f = blocks[i]->f;
+   for (const auto &pBlock : blocks) {
+      auto &f = pBlock->f;
       const auto src = &*f;
       if (hash.count( src ) > 0) {
          const auto &dst = hash[src];
@@ -156,13 +152,14 @@ void FindDependencies(AudacityProject *project,
 // all of those alias block files with disk block files.
 static void RemoveDependencies(AudacityProject *project,
                                AliasedFileArray &aliasedFiles)
+// STRONG-GUARANTEE
 {
    const auto &dirManager = project->GetDirManager();
 
    ProgressDialog progress
       (_("Removing Dependencies"),
       _("Copying audio data into project..."));
-   int updateResult = eProgressSuccess;
+   auto updateResult = ProgressResult::Success;
 
    // Hash aliasedFiles based on their full paths and
    // count total number of bytes to process.
@@ -198,6 +195,8 @@ static void RemoveDependencies(AudacityProject *project,
          BlockFilePtr newBlockFile;
          {
             SampleBuffer buffer(len, format);
+            // We tolerate exceptions from NewSimpleBlockFile and so we
+            // can allow exceptions from ReadData too
             f->ReadData(buffer.ptr(), format, 0, len);
             newBlockFile =
                dirManager->NewSimpleBlockFile(buffer.ptr(), len, format);
@@ -209,16 +208,19 @@ static void RemoveDependencies(AudacityProject *project,
          // Update the progress bar
          completedBytes += SAMPLE_SIZE(format) * len;
          updateResult = progress.Update(completedBytes, totalBytesToProcess);
-         if (updateResult != eProgressSuccess)
-           break;
+         if (updateResult != ProgressResult::Success)
+            // leave the project unchanged
+            return;
       }
    }
+
+   // COMMIT OPERATIONS needing NOFAIL-GUARANTEE:
 
    // Above, we created a SimpleBlockFile contained in our project
    // to go with each AliasBlockFile that we wanted to migrate.
    // However, that didn't actually change any references to these
    // blockfiles in the Sequences, so we do that next...
-   ReplaceBlockFiles(project, blockFileHash);
+   ReplaceBlockFiles(blocks, blockFileHash);
 }
 
 //
@@ -276,7 +278,7 @@ BEGIN_EVENT_TABLE(DependencyDialog, wxDialogWrapper)
    EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
    EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
    EVT_SIZE(DependencyDialog::OnSize)
-   EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save without Copying"
+   EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save Without Copying"
    EVT_BUTTON(wxID_YES, DependencyDialog::OnYes) // "Copy All Files (Safer)"
    EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel)  // "Cancel Save"
 END_EVENT_TABLE()
@@ -347,7 +349,7 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       {
          if (mIsSaving) {
             S.Id(wxID_CANCEL).AddButton(_("Cancel Save"));
-            S.Id(wxID_NO).AddButton(_("Save without Copying"));
+            S.Id(wxID_NO).AddButton(_("Save Without Copying"));
          }
          else
             S.Id(wxID_NO).AddButton(_("Do Not Copy"));
@@ -473,22 +475,22 @@ void DependencyDialog::OnYes(wxCommandEvent & WXUNUSED(event))
 
 void DependencyDialog::OnCopySelectedFiles(wxCommandEvent & WXUNUSED(event))
 {
-   AliasedFileArray aliasedFilesToDelete;
+   AliasedFileArray aliasedFilesToDelete, remainingAliasedFiles;
 
    long i = 0;
-   for(auto iter = mAliasedFiles.begin(); iter != mAliasedFiles.end();) {
-      if (mFileListCtrl->GetItemState(i, wxLIST_STATE_SELECTED)) {
-         // Two-step move could be simplified when all compilers have C++11 vector
-         aliasedFilesToDelete.push_back(AliasedFile{});
-         aliasedFilesToDelete.back() = std::move(*iter);
-         iter = mAliasedFiles.erase(iter);
-      }
+   for( const auto &file : mAliasedFiles ) {
+      if (mFileListCtrl->GetItemState(i, wxLIST_STATE_SELECTED))
+         aliasedFilesToDelete.push_back( file );
       else
-         ++iter;
+         remainingAliasedFiles.push_back( file );
       ++i;
    }
 
+   // provides STRONG-GUARANTEE
    RemoveDependencies(mProject, aliasedFilesToDelete);
+
+   // COMMIT OPERATIONS needing NOFAIL-GUARANTEE:
+   mAliasedFiles.swap( remainingAliasedFiles );
    PopulateList();
 
    if (mAliasedFiles.empty() || !mHasNonMissingFiles)

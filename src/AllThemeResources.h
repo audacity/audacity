@@ -7,7 +7,7 @@
   James Crook
 
   Audacity is free software.
-  This file is licensed under the GPL license, see License.txt
+  License: GPL v2 - see LICENSE.txt
 
 ********************************************************************//**
 
@@ -67,54 +67,11 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpCutPreviewDisabled, wxImage( 16, 16 ), wxT("CutPreviewDisabled"));
    DEFINE_IMAGE( bmpAppendRecord, wxImage( 16, 16 ), wxT("AppendRecord"));
    DEFINE_IMAGE( bmpAppendRecordDisabled, wxImage( 16, 16 ), wxT("AppendRecordDisabled"));
-   DEFINE_IMAGE( bmpScrubDisabled, wxImage( 18, 16 ), wxT("ScrubDisabled"));
    DEFINE_IMAGE( bmpScrub, wxImage( 18, 16 ), wxT("Scrub"));
-   DEFINE_IMAGE( bmpSeekDisabled, wxImage( 26, 16 ), wxT("SeekDisabled"));
+   DEFINE_IMAGE( bmpScrubDisabled, wxImage( 18, 16 ), wxT("ScrubDisabled"));
    DEFINE_IMAGE( bmpSeek, wxImage( 26, 16 ), wxT("Seek"));
+   DEFINE_IMAGE( bmpSeekDisabled, wxImage( 26, 16 ), wxT("SeekDisabled"));
 
-   SET_THEME_FLAGS(  resFlagNewLine  );
-   DEFINE_IMAGE( bmpUpButtonLarge, wxImage( 48, 48 ), wxT("UpButtonLarge"));
-   DEFINE_IMAGE( bmpDownButtonLarge, wxImage( 48, 48 ), wxT("DownButtonLarge"));
-   DEFINE_IMAGE( bmpHiliteButtonLarge, wxImage( 48, 48 ), wxT("HiliteButtonLarge"));
-   DEFINE_IMAGE( bmpUpButtonSmall, wxImage( 27, 27 ), wxT("UpButtonSmall"));
-   DEFINE_IMAGE( bmpDownButtonSmall, wxImage( 27, 27 ), wxT("DownButtonSmall"));
-   DEFINE_IMAGE( bmpHiliteButtonSmall, wxImage( 27, 27 ), wxT("HiliteButtonSmall"));
-   DEFINE_IMAGE( bmpVolumeSlider, wxImage( 100, 28 ), wxT("VolumeSlider"));
-   DEFINE_IMAGE( bmpVolumeSliderThumb, wxImage( 10, 28 ), wxT("VolumeSliderThumb"));
-   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 14 ), wxT("SliderThumb"));
-   DEFINE_IMAGE( bmpToggleScrubRuler, wxImage( 20, 20 ), wxT("ToggleScrubBar"));
-
-   SET_THEME_FLAGS(  resFlagNone  );
-   DEFINE_IMAGE( bmpMacUpButton, wxImage( 36, 36 ), wxT("MacUpButton"));
-   DEFINE_IMAGE( bmpMacDownButton, wxImage( 36, 36 ), wxT("MacDownButton"));
-   DEFINE_IMAGE( bmpMacHiliteButton, wxImage( 36, 36 ), wxT("MacHiliteButton"));
-   DEFINE_IMAGE( bmpMacUpButtonSmall, wxImage( 27, 27 ), wxT("MacUpButtonSmall"));
-   DEFINE_IMAGE( bmpMacDownButtonSmall, wxImage( 27, 27 ), wxT("MacDownButtonSmall"));
-   DEFINE_IMAGE( bmpMacHiliteButtonSmall, wxImage( 27, 27 ), wxT("MacHiliteButtonSmall"));
-   DEFINE_IMAGE( bmpMacSlider, wxImage( 100, 28 ), wxT("MacSlider"));
-   DEFINE_IMAGE( bmpMacSliderThumb, wxImage( 17, 28 ), wxT("MacSliderThumb"));
-
-   SET_THEME_FLAGS(  resFlagInternal  );
-   DEFINE_IMAGE( bmpRecoloredUpLarge, wxImage( 48, 48 ), wxT("RecoloredUpLarge"));
-   DEFINE_IMAGE( bmpRecoloredDownLarge, wxImage( 48, 48 ), wxT("RecoloredDownLarge"));
-   DEFINE_IMAGE( bmpRecoloredHiliteLarge, wxImage( 48, 48 ), wxT("RecoloredHiliteLarge"));
-   DEFINE_IMAGE( bmpRecoloredUpSmall, wxImage( 27, 27 ), wxT("RecoloredUpSmall"));
-   DEFINE_IMAGE( bmpRecoloredDownSmall, wxImage( 27, 27 ), wxT("RecoloredDownSmall"));
-   DEFINE_IMAGE( bmpRecoloredHiliteSmall, wxImage( 27, 27 ), wxT("RecoloredHiliteSmall"));
-
-   SET_THEME_FLAGS(  resFlagCursor  );
-   DEFINE_IMAGE( bmpIBeamCursor, wxImage( 32, 32 ), wxT("IBeamCursor"));
-   DEFINE_IMAGE( bmpDrawCursor, wxImage( 32, 32 ), wxT("DrawCursor"));
-   DEFINE_IMAGE( bmpEnvCursor, wxImage( 32, 32 ), wxT("EnvCursor"));
-   DEFINE_IMAGE( bmpTimeCursor, wxImage( 32, 32 ), wxT("TimeCursor"));
-   DEFINE_IMAGE( bmpZoomInCursor, wxImage( 32, 32 ), wxT("ZoomInCursor"));
-   DEFINE_IMAGE( bmpZoomOutCursor, wxImage( 32, 32 ), wxT("ZoomOutCursor"));
-   DEFINE_IMAGE( bmpLabelCursorLeft, wxImage( 32, 32 ), wxT("LabelCursorLeft"));
-   DEFINE_IMAGE( bmpLabelCursorRight, wxImage( 32, 32 ), wxT("LabelCursorRight"));
-   DEFINE_IMAGE( bmpDisabledCursor, wxImage( 32, 32 ), wxT("DisabledCursor"));
-   DEFINE_IMAGE( bmpBottomFrequencyCursor, wxImage( 32, 32 ), wxT("BottomFrequencyCursor"));
-   DEFINE_IMAGE( bmpTopFrequencyCursor, wxImage( 32, 32 ), wxT("TopFrequencyCursor"));
-   DEFINE_IMAGE( bmpBandWidthCursor, wxImage(32, 32), wxT("BandWidthCursor"));
 
    SET_THEME_FLAGS(  resFlagNone  );
    DEFINE_IMAGE( bmpIBeam, wxImage( 27, 27 ), wxT("IBeam"));
@@ -156,10 +113,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpUndoDisabled, wxImage( 26, 24 ), wxT("UndoDisabled"));
    DEFINE_IMAGE( bmpRedo, wxImage( 26, 24 ), wxT("Redo"));
    DEFINE_IMAGE( bmpRedoDisabled, wxImage( 26, 24 ), wxT("RedoDisabled"));
-
-   DEFINE_IMAGE( bmpSyncLockTracksDown, wxImage( 20, 20 ), wxT("SyncLockTracksDown"));
-   DEFINE_IMAGE( bmpSyncLockTracksUp, wxImage( 20, 20 ), wxT("SyncLockTracksUp"));
-   DEFINE_IMAGE( bmpSyncLockTracksDisabled, wxImage( 20, 20 ), wxT("SyncLockTracksDisabled"));
 
    SET_THEME_FLAGS(  resFlagPaired | resFlagNewLine  );
    DEFINE_IMAGE( bmpTnStartOn, wxImage( 27, 27 ), wxT("TnStartOn"));
@@ -212,6 +165,82 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpDockOverShort, wxImage( 15, 27 ), wxT("DockOverShort"));
    DEFINE_IMAGE( bmpDockUp, wxImage( 15, 55 ), wxT("DockUp"));
    DEFINE_IMAGE( bmpDockUpShort, wxImage( 15, 27 ), wxT("DockUpShort"));
+   DEFINE_IMAGE( bmpPinnedPlayRecordHead, wxImage( 27, 27 ), wxT("PinnedPlayRecordHead"));
+   DEFINE_IMAGE( bmpUnpinnedPlayRecordHead, wxImage( 27, 27 ), wxT("UnpinnedPlayRecordHead"));
+
+   DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
+   DEFINE_IMAGE( bmpEditEffects, wxImage(21, 20), wxT("EditEffects"));
+   DEFINE_IMAGE( bmpSyncLockTracksDown, wxImage( 20, 20 ), wxT("SyncLockTracksDown"));
+   DEFINE_IMAGE( bmpSyncLockTracksUp, wxImage( 20, 20 ), wxT("SyncLockTracksUp"));
+   DEFINE_IMAGE( bmpSyncLockTracksDisabled, wxImage( 20, 20 ), wxT("SyncLockTracksDisabled"));
+   DEFINE_IMAGE( bmpToggleScrubRuler, wxImage( 20, 20 ), wxT("ToggleScrubRuler"));
+//   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 14 ), wxT("SliderThumb"));
+   DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
+
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE( bmpPlayPointer, wxImage( 20, 20 ), wxT("PlayPointer"));
+   DEFINE_IMAGE( bmpPlayPointerPinned, wxImage( 20, 20 ), wxT("PlayPointerPinned"));
+   DEFINE_IMAGE( bmpRecordPointer, wxImage( 20, 20 ), wxT("RecordPointer"));
+   DEFINE_IMAGE( bmpRecordPointerPinned, wxImage( 20, 20 ), wxT("RecordPointerPinned"));
+   DEFINE_IMAGE( bmpGrabberDropLoc, wxImage( 20, 20 ), wxT("GrabberDropLoc"));
+
+   SET_THEME_FLAGS(  resFlagNone  );
+   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 20 ), wxT("SliderThumb"));
+   DEFINE_IMAGE( bmpSlider, wxImage( 80, 20 ), wxT("Slider"));
+   DEFINE_IMAGE( bmpHiliteSlider, wxImage( 80, 20 ), wxT("HiliteSlider"));
+   DEFINE_IMAGE( bmpUpButtonExpandSel, wxImage( 96, 18 ), wxT("UpButtonExpandSel"));
+   DEFINE_IMAGE( bmpDownButtonExpandSel, wxImage( 96, 18 ), wxT("DownButtonExpandSel"));
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE( bmpUpButtonExpand, wxImage( 96, 18 ), wxT("UpButtonExpand"));
+   DEFINE_IMAGE( bmpDownButtonExpand, wxImage( 96, 18 ), wxT("DownButtonExpand"));
+   DEFINE_IMAGE( bmpHiliteButtonExpand, wxImage( 96, 18 ), wxT("HiliteButtonExpand"));
+   DEFINE_IMAGE( bmpHiliteButtonExpandSel, wxImage( 96, 18 ), wxT("HiliteButtonExpandSel"));
+
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE( bmpUpButtonLarge, wxImage( 48, 48 ), wxT("UpButtonLarge"));
+   DEFINE_IMAGE( bmpDownButtonLarge, wxImage( 48, 48 ), wxT("DownButtonLarge"));
+   DEFINE_IMAGE( bmpHiliteButtonLarge, wxImage( 48, 48 ), wxT("HiliteButtonLarge"));
+   DEFINE_IMAGE( bmpUpButtonSmall, wxImage( 27, 27 ), wxT("UpButtonSmall"));
+   DEFINE_IMAGE( bmpDownButtonSmall, wxImage( 27, 27 ), wxT("DownButtonSmall"));
+   DEFINE_IMAGE( bmpHiliteButtonSmall, wxImage( 27, 27 ), wxT("HiliteButtonSmall"));
+   //DEFINE_IMAGE( bmpVolumeSlider, wxImage( 100, 28 ), wxT("VolumeSlider"));
+   //DEFINE_IMAGE( bmpVolumeSliderThumb, wxImage( 10, 28 ), wxT("VolumeSliderThumb"));
+
+   SET_THEME_FLAGS(  resFlagNone  );
+   DEFINE_IMAGE( bmpMacUpButton, wxImage( 36, 36 ), wxT("MacUpButton"));
+   DEFINE_IMAGE( bmpMacDownButton, wxImage( 36, 36 ), wxT("MacDownButton"));
+   DEFINE_IMAGE( bmpMacHiliteButton, wxImage( 36, 36 ), wxT("MacHiliteButton"));
+   DEFINE_IMAGE( bmpMacUpButtonSmall, wxImage( 27, 27 ), wxT("MacUpButtonSmall"));
+   DEFINE_IMAGE( bmpMacDownButtonSmall, wxImage( 27, 27 ), wxT("MacDownButtonSmall"));
+   DEFINE_IMAGE( bmpMacHiliteButtonSmall, wxImage( 27, 27 ), wxT("MacHiliteButtonSmall"));
+   DEFINE_IMAGE( bmpMacSlider, wxImage( 100, 28 ), wxT("MacSlider"));
+   DEFINE_IMAGE( bmpMacSliderThumb, wxImage( 17, 28 ), wxT("MacSliderThumb"));
+
+   SET_THEME_FLAGS(  resFlagInternal  );
+   DEFINE_IMAGE( bmpRecoloredUpLarge, wxImage( 48, 48 ), wxT("RecoloredUpLarge"));
+   DEFINE_IMAGE( bmpRecoloredDownLarge, wxImage( 48, 48 ), wxT("RecoloredDownLarge"));
+   DEFINE_IMAGE( bmpRecoloredHiliteLarge, wxImage( 48, 48 ), wxT("RecoloredHiliteLarge"));
+   DEFINE_IMAGE( bmpRecoloredUpSmall, wxImage( 27, 27 ), wxT("RecoloredUpSmall"));
+   DEFINE_IMAGE( bmpRecoloredDownSmall, wxImage( 27, 27 ), wxT("RecoloredDownSmall"));
+   DEFINE_IMAGE( bmpRecoloredHiliteSmall, wxImage( 27, 27 ), wxT("RecoloredHiliteSmall"));
+
+   SET_THEME_FLAGS(  resFlagCursor  );
+   DEFINE_IMAGE( bmpIBeamCursor, wxImage( 32, 32 ), wxT("IBeamCursor"));
+   DEFINE_IMAGE( bmpDrawCursor, wxImage( 32, 32 ), wxT("DrawCursor"));
+   DEFINE_IMAGE( bmpEnvCursor, wxImage( 32, 32 ), wxT("EnvCursor"));
+   DEFINE_IMAGE( bmpTimeCursor, wxImage( 32, 32 ), wxT("TimeCursor"));
+   DEFINE_IMAGE( bmpZoomInCursor, wxImage( 32, 32 ), wxT("ZoomInCursor"));
+   DEFINE_IMAGE( bmpZoomOutCursor, wxImage( 32, 32 ), wxT("ZoomOutCursor"));
+   DEFINE_IMAGE( bmpLabelCursorLeft, wxImage( 32, 32 ), wxT("LabelCursorLeft"));
+   DEFINE_IMAGE( bmpLabelCursorRight, wxImage( 32, 32 ), wxT("LabelCursorRight"));
+   DEFINE_IMAGE( bmpDisabledCursor, wxImage( 32, 32 ), wxT("DisabledCursor"));
+   DEFINE_IMAGE( bmpBottomFrequencyCursor, wxImage( 32, 32 ), wxT("BottomFrequencyCursor"));
+   DEFINE_IMAGE( bmpTopFrequencyCursor, wxImage( 32, 32 ), wxT("TopFrequencyCursor"));
+   DEFINE_IMAGE( bmpBandWidthCursor, wxImage(32, 32), wxT("BandWidthCursor"));
+
+
+   
+   /*
    DEFINE_IMAGE( bmpToolBarToggle, wxImage( 43, 35 ), wxT("ToolBarToggle"));
    DEFINE_IMAGE( bmpToolBarTarget, wxImage( 17, 26 ), wxT("ToolBarTarget"));
    DEFINE_IMAGE( bmpToolBarGrabber, wxImage( 17, 8 ), wxT("ToolBarGrabber"));
@@ -220,22 +249,21 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpUploadFolder, wxImage( 16, 16 ), wxT("UploadFolder"));
    DEFINE_IMAGE( bmpUploadMp3, wxImage( 16, 16 ), wxT("UploadMp3"));
    DEFINE_IMAGE( bmpUploadUp, wxImage( 16, 16 ), wxT("UploadUp"));
-
+*/
    SET_THEME_FLAGS(  resFlagNewLine  );
 
+// DA: The logo with name xpm has a different width.
+#ifdef EXPERIMENTAL_DA
+#define LOGOWITHNAME_WIDTH 629
+#else
 #define LOGOWITHNAME_WIDTH 506
+#endif
+
 #define LOGOWITHNAME_HEIGHT 200
 
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo"));
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
 
-   DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
-   DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
-
-   SET_THEME_FLAGS(  resFlagNone  );
-   DEFINE_IMAGE( bmpEditEffects, wxImage(21, 20), wxT("EditEffects"));
-
-#if defined(EXPERIMENTAL_THEMING)
    DEFINE_COLOUR( clrBlank,      wxColour( 64,  64,  64), wxT("Blank"));
    DEFINE_COLOUR( clrUnselected, wxColour( 30,  30,  30), wxT("Unselected"));
    DEFINE_COLOUR( clrSelected,   wxColour( 93,  65,  93), wxT("Selected"));
@@ -247,26 +275,9 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrRms,        wxColour(107, 154, 247), wxT("Rms"));
    DEFINE_COLOUR( clrMuteRms,    wxColour(136, 136, 144), wxT("MuteRms"));
    DEFINE_COLOUR( clrShadow,     wxColour(148, 148, 148), wxT("Shadow"));
-#else
-   DEFINE_COLOUR( clrBlank,      wxColour(214, 214, 214), wxT("Blank"));
-   DEFINE_COLOUR( clrUnselected, wxColour(192, 192, 192), wxT("Unselected"));
-   DEFINE_COLOUR( clrSelected,   wxColour(148, 148, 170), wxT("Selected"));
-   DEFINE_COLOUR( clrSample,     wxColour( 50,  50, 200), wxT("Sample"));
-   DEFINE_COLOUR( clrSelSample,  wxColour( 50,  50, 200), wxT("SelSample"));
-   DEFINE_COLOUR( clrDragSample, wxColour(  0,   0,   0), wxT("DragSample"));
-
-   DEFINE_COLOUR( clrMuteSample, wxColour(136, 136, 144), wxT("MuteSample"));
-   DEFINE_COLOUR( clrRms,        wxColour(100, 100, 220), wxT("Rms"));
-   DEFINE_COLOUR( clrMuteRms,    wxColour(136, 136, 144), wxT("MuteRms"));
-   DEFINE_COLOUR( clrShadow,     wxColour(148, 148, 148), wxT("Shadow"));
-#endif
 
    DEFINE_COLOUR( clrAboutBoxBackground,  wxColour(255, 255, 255),  wxT("AboutBackground"));
-#if defined(EXPERIMENTAL_THEMING)
-   DEFINE_COLOUR( clrTrackPanelText,      wxColour(153, 153, 153),  wxT("TrackPanelText"));
-#else
-   DEFINE_COLOUR( clrTrackPanelText,      wxColour(  0,   0,   0),  wxT("TrackPanelText"));
-#endif
+   DEFINE_COLOUR( clrTrackPanelText,      wxColour(200, 200, 200),  wxT("TrackPanelText"));
    DEFINE_COLOUR( clrLabelTrackText,      wxColour(  0,   0,   0),  wxT("LabelTrackText"));
 
    DEFINE_COLOUR( clrMeterPeak,            wxColour(102, 102, 255),  wxT("MeterPeak"));
@@ -286,11 +297,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrMeterOutputClipBrush, wxColour(255, 53, 53),     wxT("MeterOutputClipBrush") );
    DEFINE_COLOUR( clrMeterOutputLightPen,  wxColour(153, 255, 153),   wxT("MeterOutputLightPen") );
    DEFINE_COLOUR( clrMeterOutputDarkPen,   wxColour(61, 164, 61),     wxT("MeterOutputDarkPen") );
-#if defined(EXPERIMENTAL_THEMING)
    DEFINE_COLOUR( clrRulerBackground,      wxColour( 93,  65,  93),   wxT("RulerBackground") );
-#else
-   DEFINE_COLOUR( clrRulerBackground,      wxColour(148, 148, 170),   wxT("RulerBackground") );
-#endif
    DEFINE_COLOUR( clrAxisLines,            wxColour(0, 0, 255),       wxT("AxisLines") );
    DEFINE_COLOUR( clrGraphLines,           wxColour(110, 110, 220),   wxT("GraphLines") );
    DEFINE_COLOUR( clrResponseLines,        wxColour(0, 255, 0),       wxT("ResponseLines") );
@@ -326,15 +333,9 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrLabelSelectedPen,     wxColour(   148,148,170),  wxT("LabelSelectedPen") );
    DEFINE_COLOUR( clrLabelSurroundPen,     wxColour(     0,  0,  0),  wxT("LabelSurroundPen") );
 
-#ifdef EXPERIMENTAL_THEMING
    DEFINE_COLOUR( clrTrackFocus0,          wxColour( 200, 200, 200),  wxT("TrackFocus0") );
    DEFINE_COLOUR( clrTrackFocus1,          wxColour( 180, 180, 180),  wxT("TrackFocus1") );
    DEFINE_COLOUR( clrTrackFocus2,          wxColour( 160, 160, 160),  wxT("TrackFocus2") );
-#else
-   DEFINE_COLOUR( clrTrackFocus0,          wxColour( 255, 255, 128),  wxT("TrackFocus0") );
-   DEFINE_COLOUR( clrTrackFocus1,          wxColour( 215, 215, 138),  wxT("TrackFocus1") );
-   DEFINE_COLOUR( clrTrackFocus2,          wxColour( 185, 185, 142),  wxT("TrackFocus2") );
-#endif
 
    DEFINE_COLOUR( clrSnapGuide,            wxColour( 255, 255,   0),  wxT("SnapGuide") );
    DEFINE_COLOUR( clrTrackInfo,            wxColour(  64,  64,  64),  wxT("TrackInfo") );
@@ -358,4 +359,10 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
    // This is for waveform drawing, selected outside of clips
    DEFINE_COLOUR( clrBlankSelected, wxColour(170, 170, 192), wxT("BlankSelected"));
+
+   DEFINE_COLOUR( clrSliderLight,         wxColour(   1,   1,   1),  wxT("SliderLight") );
+   DEFINE_COLOUR( clrSliderMain,          wxColour(  43,  43,  43),  wxT("SliderMain") );
+   DEFINE_COLOUR( clrSliderDark,          wxColour(   1,   1,   1),  wxT("SliderDark") );
+   DEFINE_COLOUR( clrTrackBackground,     wxColour(  20,  20,  20),  wxT("TrackBackground") );
+
 

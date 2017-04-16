@@ -240,12 +240,14 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
 std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const WaveTrackConstArray &inputTracks,
          const TimeTrack *timeTrack,
          double startTime, double stopTime,
-         unsigned numOutChannels, int outBufferSize, bool outInterleaved,
+         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
+                  // Throw, to stop exporting, if read fails:
+                  true,
                   Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
@@ -423,7 +425,9 @@ bool Exporter::ExamineTracks()
 
    while (tr) {
       if (tr->GetKind() == Track::Wave) {
-         if ( (tr->GetSelected() || !mSelectedOnly) && !tr->GetMute() ) {  // don't count muted tracks
+         auto wt = static_cast<const WaveTrack *>(tr);
+         if ( (tr->GetSelected() || !mSelectedOnly) &&
+              !wt->GetMute() ) {  // don't count muted tracks
             mNumSelected++;
 
             if (tr->GetChannel() == Track::LeftChannel) {
@@ -822,14 +826,27 @@ bool Exporter::CheckMix()
 
 bool Exporter::ExportTracks()
 {
-   int success;
-
    // Keep original in case of failure
    if (mActualName != mFilename) {
       ::wxRenameFile(mActualName.GetFullPath(), mFilename.GetFullPath());
    }
 
-   success = mPlugins[mFormat]->Export(mProject,
+   bool success = false;
+
+   auto cleanup = finally( [&] {
+      if (mActualName != mFilename) {
+         // Remove backup
+         if ( success )
+            ::wxRemoveFile(mFilename.GetFullPath());
+         else {
+            // Restore original, if needed
+            ::wxRemoveFile(mActualName.GetFullPath());
+            ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
+         }
+      }
+   } );
+
+   auto result = mPlugins[mFormat]->Export(mProject,
                                        mChannels,
                                        mActualName.GetFullPath(),
                                        mSelectedOnly,
@@ -839,19 +856,10 @@ bool Exporter::ExportTracks()
                                        NULL,
                                        mSubFormat);
 
-   if (mActualName != mFilename) {
-      // Remove backup
-      if (success == eProgressSuccess || success == eProgressStopped) {
-         ::wxRemoveFile(mFilename.GetFullPath());
-      }
-      else {
-         // Restore original, if needed
-         ::wxRemoveFile(mActualName.GetFullPath());
-         ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
-      }
-   }
+   success =
+      result == ProgressResult::Success || result == ProgressResult::Stopped;
 
-   return (success == eProgressSuccess || success == eProgressStopped);
+   return success;
 }
 
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
@@ -998,23 +1006,20 @@ ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec,
       wxArrayString trackNames,wxWindow *parent, wxWindowID id,
       const wxPoint& pos, const wxSize& size):
    wxPanelWrapper(parent, id, pos, size)
+   , mMixerSpec{mixerSpec}
+   , mChannelRects{ mMixerSpec->GetMaxNumChannels() }
+   , mTrackRects{ mMixerSpec->GetNumTracks() }
 {
    mBitmap = NULL;
    mWidth = 0;
    mHeight = 0;
-   mMixerSpec = mixerSpec;
    mSelectedTrack = mSelectedChannel = -1;
-
-   mTrackRects = new wxRect[ mMixerSpec->GetNumTracks() ];
-   mChannelRects = new wxRect[ mMixerSpec->GetMaxNumChannels() ];
 
    mTrackNames = trackNames;
 }
 
 ExportMixerPanel::~ExportMixerPanel()
 {
-   delete[] mTrackRects;
-   delete[] mChannelRects;
 }
 
 //set the font on memDC such that text can fit in specified width and height
@@ -1252,7 +1257,9 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
 
    for( const Track *t = iter.First(); t; t = iter.Next() )
    {
-      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) && !t->GetMute() )
+      auto wt = static_cast<const WaveTrack *>(t);
+      if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) &&
+         !wt->GetMute() )
       {
          numTracks++;
          const wxString sTrackName = (t->GetName()).Left(20);

@@ -163,7 +163,7 @@ bool EffectNormalize::Process()
    WaveTrack *track = (WaveTrack *) iter.First();
    WaveTrack *prevTrack;
    prevTrack = track;
-   mCurTrackNum = 0;
+   int curTrackNum = 0;
    wxString topMsg;
    if(mDC && mGain)
       topMsg = _("Removing DC offset and Normalizing...\n");
@@ -193,9 +193,13 @@ bool EffectNormalize::Process()
             msg = topMsg + _("Analyzing: ") + trackName;
          else
             msg = topMsg + _("Analyzing first track of stereo pair: ") + trackName;
-         AnalyseTrack(track, msg);  // sets mOffset and offset-adjusted mMin and mMax
-         if(!track->GetLinked() || mStereoInd) {   // mono or 'stereo tracks independently'
-            float extent = wxMax(fabs(mMax), fabs(mMin));
+         float offset, min, max;
+         if (! ( bGoodResult =
+                 AnalyseTrack(track, msg, curTrackNum, offset, min, max) ) )
+             break;
+         if(!track->GetLinked() || mStereoInd) {
+            // mono or 'stereo tracks independently'
+            float extent = wxMax(fabs(max), fabs(min));
             if( (extent > 0) && mGain )
                mMult = ratio / extent;
             else
@@ -204,7 +208,7 @@ bool EffectNormalize::Process()
             if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
                msg = topMsg + _("Processing stereo channels independently: ") + trackName;
 
-            if (!ProcessOne(track, msg))
+            if (!ProcessOne(track, msg, curTrackNum, offset))
             {
                bGoodResult = false;
                break;
@@ -215,37 +219,29 @@ bool EffectNormalize::Process()
             // we have a linked stereo track
             // so we need to find it's min, max and offset
             // as they are needed to calc the multiplier for both tracks
-            float offset1 = mOffset;   // remember ones from first track
-            float min1 = mMin;
-            float max1 = mMax;
             track = (WaveTrack *) iter.Next();  // get the next one
-            mCurTrackNum++;   // keeps progress bar correct
             msg = topMsg + _("Analyzing second track of stereo pair: ") + trackName;
-            AnalyseTrack(track, msg);  // sets mOffset and offset-adjusted mMin and mMax
-            float offset2 = mOffset;   // ones for second track
-            float min2 = mMin;
-            float max2 = mMax;
-            float extent = wxMax(fabs(min1), fabs(max1));
+            float offset2, min2, max2;
+            if ( ! ( bGoodResult =
+                     AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2) ) )
+                break;
+            float extent = wxMax(fabs(min), fabs(max));
             extent = wxMax(extent, fabs(min2));
             extent = wxMax(extent, fabs(max2));
             if( (extent > 0) && mGain )
                mMult = ratio / extent; // we need to use this for both linked tracks
             else
                mMult = 1.0;
-            mOffset = offset1;
             track = (WaveTrack *) iter.Prev();  // go back to the first linked one
-            mCurTrackNum--;   // keeps progress bar correct
             msg = topMsg + _("Processing first track of stereo pair: ") + trackName;
-            if (!ProcessOne(track, msg))
+            if (!ProcessOne(track, msg, curTrackNum, offset))
             {
                bGoodResult = false;
                break;
             }
-            mOffset = offset2;
             track = (WaveTrack *) iter.Next();  // go to the second linked one
-            mCurTrackNum++;   // keeps progress bar correct
             msg = topMsg + _("Processing second track of stereo pair: ") + trackName;
-            if (!ProcessOne(track, msg))
+            if (!ProcessOne(track, msg, curTrackNum, offset2))
             {
                bGoodResult = false;
                break;
@@ -256,7 +252,7 @@ bool EffectNormalize::Process()
       //Iterate to the next track
       prevTrack = track;
       track = (WaveTrack *) iter.Next();
-      mCurTrackNum++;
+      curTrackNum++;
    }
 
    this->ReplaceProcessedTracks(bGoodResult);
@@ -333,39 +329,49 @@ bool EffectNormalize::TransferDataFromWindow()
 
 // EffectNormalize implementation
 
-void EffectNormalize::AnalyseTrack(WaveTrack * track, const wxString &msg)
+bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
+                                   int curTrackNum,
+                                   float &offset, float &min, float &max)
 {
    if(mGain) {
       // Since we need complete summary data, we need to block until the OD tasks are done for this track
       // TODO: should we restrict the flags to just the relevant block files (for selections)
       while (track->GetODFlags()) {
          // update the gui
-         mProgress->Update(0, wxT("Waiting for waveform to finish computing..."));
+         if (ProgressResult::Cancelled == mProgress->Update(
+            0, wxT("Waiting for waveform to finish computing...")) )
+            return false;
          wxMilliSleep(100);
       }
 
-      track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1); // set mMin, mMax.  No progress bar here as it's fast.
+      // set mMin, mMax.  No progress bar here as it's fast.
+      auto pair = track->GetMinMax(mCurT0, mCurT1); // may throw
+      min = pair.first, max = pair.second;
+
    } else {
-      mMin = -1.0, mMax = 1.0;   // sensible defaults?
+      min = -1.0, max = 1.0;   // sensible defaults?
    }
 
    if(mDC) {
-      AnalyseDC(track, msg); // sets mOffset
-      mMin += mOffset;
-      mMax += mOffset;
+      auto rc = AnalyseDC(track, msg, curTrackNum, offset);
+      min += offset;
+      max += offset;
+      return rc;
    } else {
-      mOffset = 0.0;
+      offset = 0.0;
+      return true;
    }
 }
 
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
 //and executes AnalyzeData on it...
-// sets mOffset
-bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
+bool EffectNormalize::AnalyseDC(const WaveTrack * track, const wxString &msg,
+                                int curTrackNum,
+                                float &offset)
 {
    bool rc = true;
 
-   mOffset = 0.0; // we might just return
+   offset = 0.0; // we might just return
 
    if(!mDC)  // don't do analysis if not doing dc removal
       return(rc);
@@ -381,7 +387,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   float *buffer = new float[track->GetMaxBlockSize()];
+   Floats buffer{ track->GetMaxBlockSize() };
 
    mSum = 0.0; // dc offset inits
    mCount = 0;
@@ -398,26 +404,23 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer, floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block);
 
       //Process the buffer.
-      AnalyzeData(buffer, block);
+      AnalyzeData(buffer.get(), block);
 
       //Increment s one blockfull of samples
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(mCurTrackNum,
+      if (TrackProgress(curTrackNum,
                         ((s - start).as_double() / len)/2.0, msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
    }
 
-   //Clean up the buffer
-   delete[] buffer;
-
-   mOffset = -mSum / mCount.as_double();  // calculate actual offset (amount that needs to be added on)
+   offset = -mSum / mCount.as_double();  // calculate actual offset (amount that needs to be added on)
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
@@ -425,8 +428,10 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, const wxString &msg)
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessData, on it...
-// uses mMult and mOffset to normalize a track.  Needs to have them set before being called
-bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
+// uses mMult and offset to normalize a track.
+// mMult must be set before this is called
+bool EffectNormalize::ProcessOne(
+   WaveTrack * track, const wxString &msg, int curTrackNum, float offset)
 {
    bool rc = true;
 
@@ -441,7 +446,7 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
 
    //Initiate a processing buffer.  This buffer will (most likely)
    //be shorter than the length of the track being processed.
-   float *buffer = new float[track->GetMaxBlockSize()];
+   Floats buffer{ track->GetMaxBlockSize() };
 
    //Go through the track one buffer at a time. s counts which
    //sample the current buffer starts at.
@@ -455,26 +460,24 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, const wxString &msg)
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer, floatSample, s, block);
+      track->Get((samplePtr) buffer.get(), floatSample, s, block);
 
       //Process the buffer.
-      ProcessData(buffer, block);
+      ProcessData(buffer.get(), block, offset);
 
       //Copy the newly-changed samples back onto the track.
-      track->Set((samplePtr) buffer, floatSample, s, block);
+      track->Set((samplePtr) buffer.get(), floatSample, s, block);
 
       //Increment s one blockfull of samples
       s += block;
 
       //Update the Progress meter
-      if (TrackProgress(mCurTrackNum,
+      if (TrackProgress(curTrackNum,
                         0.5+((s - start).as_double() / len)/2.0, msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
    }
-   //Clean up the buffer
-   delete[] buffer;
 
    //Return true because the effect processing succeeded ... unless cancelled
    return rc;
@@ -487,10 +490,10 @@ void EffectNormalize::AnalyzeData(float *buffer, size_t len)
    mCount += len;
 }
 
-void EffectNormalize::ProcessData(float *buffer, size_t len)
+void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
 {
    for(decltype(len) i = 0; i < len; i++) {
-      float adjFrame = (buffer[i] + mOffset) * mMult;
+      float adjFrame = (buffer[i] + offset) * mMult;
       buffer[i] = adjFrame;
    }
 }

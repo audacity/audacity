@@ -13,6 +13,8 @@
 
 #if USE_LV2
 
+#include "../../MemoryX.h"
+#include <vector>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
@@ -32,6 +34,7 @@
 #include <lilv/lilv.h>
 #include <suil/suil.h>
 
+#include "../../SampleFormat.h"
 #include "../../widgets/NumericTextCtrl.h"
 
 #include "LoadLV2.h"
@@ -204,7 +207,7 @@ private:
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
 
-   LV2_Options_Option *AddOption(const char *key, uint32_t size, const char *type, void *value);
+   size_t AddOption(const char *key, uint32_t size, const char *type, void *value);
    LV2_Feature *AddFeature(const char *uri, void *data);
 
    bool BuildFancy();
@@ -254,7 +257,7 @@ private:
 
    EffectHostInterface *mHost;
 
-   int mBlockSize;
+   size_t mBlockSize;
    double mSampleRate;
 
    wxLongToLongHashMap mControlsMap;
@@ -274,8 +277,7 @@ private:
    LilvInstance *mProcess;
    LV2SlaveArray mSlaves;
 
-   float **mMasterIn;
-   float **mMasterOut;
+   FloatBuffers mMasterIn, mMasterOut;
    size_t mNumSamples;
 
    double mLength;
@@ -286,8 +288,7 @@ private:
 
    bool mUseGUI;
 
-   char **mURIMap;
-   int mNumURIMap;
+   std::vector< movable_ptr_with_deleter<char, freer> > mURIMap;
 
    LV2_URI_Map_Feature mUriMapFeature;
    LV2_URID_Map mURIDMapFeature;
@@ -295,15 +296,13 @@ private:
    LV2UI_Resize mUIResizeFeature;
    LV2_Extension_Data_Feature mExtDataFeature;
    
-   LV2_Options_Option *mBlockSizeOption;
-   LV2_Options_Option *mSampleRateOption;
+   size_t mBlockSizeOption;
+   size_t mSampleRateOption;
 
    LV2_Options_Interface *mOptionsInterface;
-   LV2_Options_Option *mOptions;
-   int mNumOptions;
+   std::vector<LV2_Options_Option> mOptions;
 
-   LV2_Feature **mFeatures;
-   int mNumFeatures;
+   std::vector<movable_ptr<LV2_Feature>> mFeatures;
 
    LV2_Feature *mInstanceAccessFeature;
    LV2_Feature *mParentFeature;
@@ -314,8 +313,8 @@ private:
    SuilInstance *mSuilInstance;
 
    NumericTextCtrl *mDuration;
-   wxSlider **mSliders;
-   wxTextCtrl **mFields;
+   ArrayOf<wxSlider*> mSliders;
+   ArrayOf<wxTextCtrl*> mFields;
 
    bool mFactoryPresetsLoaded;
    wxArrayString mFactoryPresetNames;

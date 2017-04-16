@@ -37,6 +37,7 @@
 #include <wx/intl.h>    // needed for _("translated stings") even if we
                         // don't have libflac available
 
+#include "../AudacityException.h"
 #include "Import.h"
 #include "ImportPlugin.h"
 
@@ -152,12 +153,12 @@ public:
 
    bool Init();
 
-   wxString GetFileDescription();
+   wxString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   int Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
-   wxInt32 GetStreamCount(){ return 1; }
+   wxInt32 GetStreamCount() override { return 1; }
 
    const wxArrayString &GetStreamInfo() override
    {
@@ -165,7 +166,8 @@ public:
       return empty;
    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+   {}
 
 private:
    sampleFormat          mFormat;
@@ -177,7 +179,7 @@ private:
    FLAC__uint64          mNumSamples;
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
-   int                   mUpdateResult;
+   ProgressResult        mUpdateResult;
    TrackHolders          mChannels;
    movable_ptr<ODDecodeFlacTask> mDecoderTask;
 };
@@ -220,7 +222,8 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
       case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
       case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
 
-      case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
+      // FIXME: not declared when compiling on Ubuntu.
+      //case FLAC__MAX_METADATA_TYPE: // quiet compiler warning with this line
 
       break;
    }
@@ -251,37 +254,38 @@ void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus WXUNUSED(status))
 FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *frame,
                                                           const FLAC__int32 * const buffer[])
 {
-   short *tmp=new short[frame->header.blocksize];
+   // Don't let C++ exceptions propagate through libflac
+   return GuardedCall< FLAC__StreamDecoderWriteStatus > ( [&] {
+      auto tmp = ArrayOf< short >{ frame->header.blocksize };
 
-   auto iter = mFile->mChannels.begin();
-   for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
-      if (frame->header.bits_per_sample == 16) {
-         for (unsigned int s=0; s<frame->header.blocksize; s++) {
-            tmp[s]=buffer[chn][s];
+      auto iter = mFile->mChannels.begin();
+      for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
+         if (frame->header.bits_per_sample == 16) {
+            for (unsigned int s=0; s<frame->header.blocksize; s++) {
+               tmp[s]=buffer[chn][s];
+            }
+
+            iter->get()->Append((samplePtr)tmp.get(),
+                     int16Sample,
+                     frame->header.blocksize);
          }
-
-         iter->get()->Append((samplePtr)tmp,
-                  int16Sample,
-                  frame->header.blocksize);
+         else {
+            iter->get()->Append((samplePtr)buffer[chn],
+                     int24Sample,
+                     frame->header.blocksize);
+         }
       }
-      else {
-         iter->get()->Append((samplePtr)buffer[chn],
-                  int24Sample,
-                  frame->header.blocksize);
+
+      mFile->mSamplesDone += frame->header.blocksize;
+
+      mFile->mUpdateResult = mFile->mProgress->Update((wxULongLong_t) mFile->mSamplesDone, mFile->mNumSamples != 0 ? (wxULongLong_t)mFile->mNumSamples : 1);
+      if (mFile->mUpdateResult != ProgressResult::Success)
+      {
+         return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
       }
-   }
 
-   delete [] tmp;
-
-   mFile->mSamplesDone += frame->header.blocksize;
-
-   mFile->mUpdateResult = mFile->mProgress->Update((wxULongLong_t) mFile->mSamplesDone, mFile->mNumSamples != 0 ? (wxULongLong_t)mFile->mNumSamples : 1);
-   if (mFile->mUpdateResult != eProgressSuccess)
-   {
-      return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
-   }
-
-   return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+      return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+   }, MakeSimpleGuard(FLAC__STREAM_DECODER_WRITE_STATUS_ABORT) );
 }
 
 
@@ -344,7 +348,7 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
 :  ImportFileHandle(name),
    mSamplesDone(0),
    mStreamInfoDone(false),
-   mUpdateResult(eProgressSuccess)
+   mUpdateResult(ProgressResult::Success)
 {
    mFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
@@ -438,7 +442,7 @@ auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 
-int FLACImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult FLACImportFileHandle::Import(TrackFactory *trackFactory,
                                  TrackHolders &outTracks,
                                  Tags *tags)
 {
@@ -451,7 +455,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
    mChannels.resize(mNumChannels);
 
    auto iter = mChannels.begin();
-   for (int c = 0; c < mNumChannels; ++iter, ++c) {
+   for (size_t c = 0; c < mNumChannels; ++iter, ++c) {
       *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
 
       if (mNumChannels == 2) {
@@ -499,14 +503,14 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
             limitSampleBufferSize( maxBlockSize, fileTotalFrames - i );
 
          auto iter = mChannels.begin();
-         for (int c = 0; c < mNumChannels; ++c, ++iter)
+         for (size_t c = 0; c < mNumChannels; ++c, ++iter)
             iter->get()->AppendCoded(mFilename, i, blockLen, c, ODTask::eODFLAC);
 
          mUpdateResult = mProgress->Update(
             i.as_long_long(),
             fileTotalFrames.as_long_long()
          );
-         if (mUpdateResult != eProgressSuccess)
+         if (mUpdateResult != ProgressResult::Success)
             break;
       }
 
@@ -528,7 +532,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 //END OD
 
 
-   if (mUpdateResult == eProgressFailed || mUpdateResult == eProgressCancelled) {
+   if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled) {
       return mUpdateResult;
    }
 
@@ -539,7 +543,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
    tags->Clear();
    size_t cnt = mFile->mComments.GetCount();
-   for (int c = 0; c < cnt; c++) {
+   for (size_t c = 0; c < cnt; c++) {
       wxString name = mFile->mComments[c].BeforeFirst(wxT('='));
       wxString value = mFile->mComments[c].AfterFirst(wxT('='));
       if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
@@ -557,7 +561,8 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
 FLACImportFileHandle::~FLACImportFileHandle()
 {
-   //don't DELETE mFile if we are using OD.
+   //don't finish *mFile if we are using OD,
+   //because it was not initialized in Init().
 #ifndef EXPERIMENTAL_OD_FLAC
    mFile->finish();
 #endif

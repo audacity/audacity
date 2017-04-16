@@ -30,8 +30,6 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "../AudacityApp.h"
-
 #include "ToolDock.h"
 #include "../TrackPanel.h"
 
@@ -61,8 +59,6 @@ END_EVENT_TABLE()
 DeviceToolBar::DeviceToolBar()
 : ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
 {
-   mPlayBitmap = NULL;
-   mRecordBitmap = NULL;
 }
 
 DeviceToolBar::~DeviceToolBar()
@@ -89,6 +85,7 @@ void DeviceToolBar::DeinitChildren()
 
 void DeviceToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    DeinitChildren();
    // Hosts
    mHost = safenew wxChoice(this,
@@ -99,19 +96,15 @@ void DeviceToolBar::Populate()
    Add(mHost, 0, wxALIGN_CENTER);
 
    // Input device
-   if( mRecordBitmap == NULL )
-      mRecordBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpMic));
-
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
-                          *mRecordBitmap), 0, wxALIGN_CENTER);
-
+                          theTheme.Bitmap(bmpMic)), 0, wxALIGN_CENTER);
    mInput = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
+   // Input channels
    Add(mInput, 0, wxALIGN_CENTER);
-
    mInputChannels = safenew wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
@@ -119,12 +112,9 @@ void DeviceToolBar::Populate()
    Add(mInputChannels, 0, wxALIGN_CENTER);
 
    // Output device
-   if( mPlayBitmap == NULL )
-      mPlayBitmap = std::make_unique<wxBitmap>(theTheme.Bitmap(bmpSpeaker));
    Add(safenew wxStaticBitmap(this,
                           wxID_ANY,
-                          *mPlayBitmap), 0, wxALIGN_CENTER);
-
+                          theTheme.Bitmap(bmpSpeaker)), 0, wxALIGN_CENTER);
    mOutput = safenew wxChoice(this,
                                wxID_ANY,
                                wxDefaultPosition,
@@ -475,8 +465,8 @@ void DeviceToolBar::RepositionCombos()
    while (constrained && ratioUnused > 0.01f && i < 5) {
       i++;
       constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true);
-      constrained |= RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, mRecordBitmap->GetWidth(), true);
-      constrained |= RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, mPlayBitmap->GetWidth(), true);
+      constrained |= RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, theTheme.Bitmap(bmpMic).GetWidth(), true);
+      constrained |= RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, theTheme.Bitmap(bmpSpeaker).GetWidth(), true);
       constrained |= RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused, 0, true);
    }
 

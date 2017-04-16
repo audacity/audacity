@@ -122,6 +122,9 @@ class AButton final : public wxWindow {
    void ClearDoubleClicked() { mIsDoubleClicked = false; }
 
    void SetButtonToggles( bool toggler ){ mToggle = toggler;}
+   // When click is over and mouse has moved away, a normal button
+   // should pop up.
+   void InteractionOver(){ if( !mToggle ) PopUp();}
    void Toggle(){ mButtonIsDown ? PopUp() : PushDown();}
    void Click();
    void SetShift(bool shift);

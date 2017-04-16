@@ -61,6 +61,7 @@ and use it for toolbar and window layouts too.
 #include <wx/ffile.h>
 #include <wx/mstream.h>
 #include <wx/msgdlg.h>
+#include <wx/settings.h>
 
 #include "Project.h"
 #include "toolbars/ToolBar.h"
@@ -72,6 +73,8 @@ and use it for toolbar and window layouts too.
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
 #include "FileNames.h"
 #include "Prefs.h"
+#include "AColor.h"
+#include "ImageManipulation.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -188,8 +191,18 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #include "AllThemeResources.h"
 
 // Include the ImageCache...
-static unsigned char ImageCacheAsData[] = {
-#include "ThemeAsCeeCode.h"
+
+static unsigned char DarkImageCacheAsData[] = {
+#include "DarkThemeAsCeeCode.h"
+};
+static unsigned char LightImageCacheAsData[] = {
+#include "LightThemeAsCeeCode.h"
+};
+static unsigned char ClassicImageCacheAsData[] = {
+#include "ClassicThemeAsCeeCode.h"
+};
+static unsigned char HiContrastImageCacheAsData[] = {
+#include "HiContrastThemeAsCeeCode.h"
 };
 
 // theTheme is a global variable.
@@ -217,14 +230,27 @@ void Theme::EnsureInitialised()
    RegisterExtraThemeResources();
 #endif
 
-   bool bLoadThemeAtStart;
-   gPrefs->Read( wxT("/Theme/LoadAtStart"), &bLoadThemeAtStart, false );
-   LoadThemeAtStartUp( bLoadThemeAtStart );
+   LoadPreferredTheme();
+}
+
+bool ThemeBase::LoadPreferredTheme()
+{
+// DA: Default themes differ.
+#ifdef EXPERIMENTAL_DA
+   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
+#else
+   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("classic"));
+#endif
+
+   theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
+   return true;
 }
 
 void Theme::ApplyUpdatedImages()
 {
+   AColor::ReInit();
    AudacityProject *p = GetActiveProject();
+   p->ApplyUpdatedTheme();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
       ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
@@ -255,6 +281,7 @@ void Theme::RegisterColours()
 
 ThemeBase::ThemeBase(void)
 {
+   bRecolourOnLoad = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -262,41 +289,17 @@ ThemeBase::~ThemeBase(void)
 }
 
 /// This function is called to load the initial Theme images.
-/// There are many possible choices for what this function
-/// should do, as we have (potentially) four sources of images.
-///   - (deprecated) programmed in XPMs.
-///   - Programmed in in-built theme.
-///   - External image Cache file.
-///   - External component files.
-///
-/// We currently still have the deprecated XPMs, so we have
-/// those being used if the user decides not to load themes.
-///
-/// @param bLookForExternalFiles uses file iff true.
-void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
+/// It does not though cause the GUI to refresh.
+void ThemeBase::LoadTheme( teThemeType Theme )
 {
    EnsureInitialised();
 
-   const bool cbBinaryRead =true;
    const bool cbOkIfNotFound = true;
 
-   // IF not interested in external files,
-   // THEN just use the internal default set.
-   if( !bLookForExternalFiles )
-   {
-      // IF the XPMs have been retired, THEN we'd better use the built-in cache
-      // at start up.
-      // ELSE do nothing, we already have XPM based images.
-#ifdef XPMS_RETIRED
-      ReadThemeInternal();
-#endif
-      return;
-   }
-   // ELSE IF can't read the external image cache.
-   else if( !ReadImageCache( cbBinaryRead, cbOkIfNotFound ) )
+   if( !ReadImageCache( Theme, cbOkIfNotFound ) )
    {
       // THEN get the default set.
-      ReadThemeInternal();
+      ReadImageCache( GetFallbackThemeType(), !cbOkIfNotFound );
 
       // JKC: Now we could go on and load the individual images
       // on top of the default images using the commented out
@@ -318,12 +321,62 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
       CreateImageCache();
 #endif
    }
+   if( bRecolourOnLoad )
+      RecolourTheme();
+   bRecolourOnLoad = false;
 
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
    // ApplyUpdatedImages();
 }
 
+void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
+{
+   wxImage Image( Bitmap( iIndex ).ConvertToImage() );
+
+   std::unique_ptr<wxImage> pResult = ChangeImageColour(
+      &Image, From, To );
+   ReplaceImage( iIndex, pResult.get() );
+}
+
+// This function coerces a theme to be more like the system colours.
+// Only used for built in themes.  For custom themes a user
+// will choose a better theme for them and just not use a mismatching one.
+void ThemeBase::RecolourTheme()
+{
+   wxColour From = Colour( clrMedium );
+#if defined( __WXGTK__ )
+   wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
+#else
+   wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+#endif
+   // only recolour if recolouring is slight.
+   int d = 
+      abs( From.Red() - To.Red() )
+      + abs( From.Green() - To.Green() )
+      + abs( From.Blue() - To.Blue() );
+
+   // Don't recolour if difference is too big, or no difference.
+   if( d  > 120 )
+      return;
+
+   // A minor tint difference from standard does not need 
+   // to be recouloured either.  Includes case of d==0 which is nothing
+   // needs to be done.
+   if( d < 40 )
+      return;
+
+   Colour( clrMedium ) = To;
+
+   RecolourBitmap( bmpUpButtonLarge, From, To );
+   RecolourBitmap( bmpDownButtonLarge, From, To );
+   RecolourBitmap( bmpHiliteButtonLarge, From, To );
+   RecolourBitmap( bmpUpButtonSmall, From, To );
+   RecolourBitmap( bmpDownButtonSmall, From, To );
+   RecolourBitmap( bmpHiliteButtonSmall, From, To );
+//   Colour( clrTrackInfo ) = To;
+//   RecolourBitmap( bmpUpButtonExpand, From, To );
+}
 
 wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 {
@@ -347,7 +400,9 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 
 //   unsigned char *src = Img1.GetData();
    unsigned char *mk = Img2.GetData();
-   unsigned char *alpha = (unsigned char*)malloc( nBytes );
+   //wxImage::setAlpha requires memory allocated with malloc, not new
+   MallocString<unsigned char> alpha{
+      static_cast<unsigned char*>(malloc( nBytes )) };
 
    // Extract alpha channel from second XPM.
    for(i=0;i<nBytes;i++)
@@ -356,7 +411,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
       mk+=3;
    }
 
-   Img1.SetAlpha( alpha);
+   Img1.SetAlpha( alpha.release() );
 
    //dmazzoni: the top line does not work on wxGTK
    //wxBitmap Result( Img1, 32 );
@@ -511,7 +566,12 @@ int SourceOutputStream::OpenFile(const wxString & Filename)
    bOk = File.Open( Filename, wxFile::write );
    if( bOk )
    {
+// DA: Naming of output sourcery
+#ifdef EXPERIMENTAL_DA
+      File.Write( wxT("//   DarkThemeAsCeeCode.h\r\n") );
+#else
       File.Write( wxT("//   ThemeAsCeeCode.h\r\n") );
+#endif
       File.Write( wxT("//\r\n") );
       File.Write( wxT("//   This file was Auto-Generated.\r\n") );
       File.Write( wxT("//   It is included by Theme.cpp.\r\n") );
@@ -701,7 +761,7 @@ void ThemeBase::WriteImageMap( )
       return;
 
    File.Write( wxT("<html>\r\n"));
-   File.Write( wxT("<body>\r\n"));
+   File.Write( wxT("<body bgcolor=\"303030\">\r\n"));
    File.Write( wxT("<img src=\"ImageCache.png\" usemap=\"#map1\">\r\n" ));
    File.Write( wxT("<map name=\"map1\">\r\n") );
 
@@ -779,7 +839,29 @@ void ThemeBase::WriteImageDefs( )
 }
 
 
+teThemeType ThemeBase::GetFallbackThemeType(){
+// Fallback must be an internally supported type,
+// to guarantee it is found.
+#ifdef EXPERIMENTAL_DA
+   return themeDark;
+#else
+   return themeClassic;
+#endif
+}
 
+teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
+{
+   wxArrayString aThemes;
+   aThemes.Add( "classic" );
+   aThemes.Add( "dark" );
+   aThemes.Add( "light" );
+   aThemes.Add( "hi-contrast" );
+   aThemes.Add( "custom" );
+   int themeIx = aThemes.Index( Name );
+   if( themeIx < 0 )
+      return GetFallbackThemeType();
+   return (teThemeType)themeIx;
+}
 
 
 
@@ -788,7 +870,7 @@ void ThemeBase::WriteImageDefs( )
 ///   otherwise the data is taken from a compiled in block of memory.
 /// @param bOkIfNotFound if true means do not report absent file.
 /// @return true iff we loaded the images.
-bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
+bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 {
    EnsureInitialised();
    wxImage ImageCache;
@@ -800,8 +882,8 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
-   // IF bBinary read THEN a normal read from a PNG file
-   if(  bBinaryRead )
+   bRecolourOnLoad = false;
+   if(  type == themeFromFile )
    {
       const wxString &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
@@ -827,8 +909,31 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    // ELSE we are reading from internal storage.
    else
    {
-      wxMemoryInputStream InternalStream(
-         (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
+      size_t ImageSize = 0;
+      char * pImage = NULL;
+      switch( type ){
+         default: 
+         case themeClassic : 
+            bRecolourOnLoad = true;
+            ImageSize = sizeof(ClassicImageCacheAsData);
+            pImage = (char *)ClassicImageCacheAsData;
+            break;
+         case themeLight : 
+            bRecolourOnLoad = true;
+            ImageSize = sizeof(LightImageCacheAsData);
+            pImage = (char *)LightImageCacheAsData;
+            break;
+         case themeDark : 
+            ImageSize = sizeof(DarkImageCacheAsData);
+            pImage = (char *)DarkImageCacheAsData;
+            break;
+         case themeHiContrast : 
+            ImageSize = sizeof(HiContrastImageCacheAsData);
+            pImage = (char *)HiContrastImageCacheAsData;
+            break;
+      }
+      wxMemoryInputStream InternalStream( pImage, ImageSize );
+
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
       {
          // If we get this message, it means that the data in file
@@ -1011,11 +1116,6 @@ void ThemeBase::SaveComponents()
          FileNames::ThemeComponentsDir().c_str() ));
 }
 
-void ThemeBase::ReadThemeInternal()
-{
-   // false indicates not using standard binary method.
-   ReadImageCache( false );
-}
 
 void ThemeBase::SaveThemeAsCode()
 {

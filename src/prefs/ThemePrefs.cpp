@@ -93,13 +93,10 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 
 #ifdef __WXDEBUG__
       S.AddFixedText(
-         _("You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\nC version of the image cache that can be compiled in as a default.")
+         _("This is a debug version of Audacity, with an extra button, 'Output Sourcery'.  This will save a\nC version of the image cache that can be compiled in as a default.")
          );
 #endif
 
-      S.AddFixedText(
-         _("If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\nwhen the program starts up.")
-         );
       S.AddFixedText(
          _("Saving and loading individual theme files uses a separate file for each image, but is\notherwise the same idea.")
          );
@@ -123,14 +120,6 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
          S.Id(idReadThemeInternal).AddButton(_("&Defaults"));
-      }
-      S.EndHorizontalLay();
-
-      S.StartHorizontalLay(wxALIGN_LEFT);
-      {
-         S.TieCheckBox(_("Load Theme Cache At Startup"),
-                       wxT("/Theme/LoadAtStart"),
-                       false);
       }
       S.EndHorizontalLay();
    }
@@ -172,7 +161,6 @@ void ThemePrefs::OnSaveThemeComponents(wxCommandEvent & WXUNUSED(event))
 void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 {
    theTheme.ReadImageCache();
-   AColor::ReInit();
    theTheme.ApplyUpdatedImages();
 }
 
@@ -186,7 +174,7 @@ void ThemePrefs::OnSaveThemeCache(wxCommandEvent & WXUNUSED(event))
 /// Read Theme from internal storage.
 void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 {
-   theTheme.ReadThemeInternal();
+   theTheme.ReadImageCache( theTheme.GetFallbackThemeType() );
    theTheme.ApplyUpdatedImages();
 }
 

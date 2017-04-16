@@ -186,7 +186,8 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
    dc.SetPen( wxColour( 90, 90, 90 ) );
 
 #if !defined(__WXMAC__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
+   wxBrush clearer( wxColour( 60,60,60 ));
+   dc.SetBackground( clearer ); 
    dc.Clear();
    dc.SetBrush( *wxTRANSPARENT_BRUSH );
    dc.DrawRectangle( 0, 0, sz.GetWidth(), sz.GetHeight() );
@@ -490,7 +491,13 @@ static struct DefaultConfigEntry {
    { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
    { MixerBarID,             PlayMeterBarID,         NoBarID                },
    { EditBarID,              MixerBarID,             NoBarID                },
+
+// DA: Transcription Toolbar not docked, by default.
+#ifdef EXPERIMENTAL_DA
+   { TranscriptionBarID,     NoBarID,                NoBarID                },
+#else
    { TranscriptionBarID,     EditBarID,              NoBarID                },
+#endif
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
@@ -564,6 +571,12 @@ void ToolManager::Reset()
          || ndx == SpectralSelectionBarID
 #endif
          || ndx == ScrubbingBarID
+// DA: Hides three more toolbars.
+#ifdef EXPERIMENTAL_DA
+         || ndx == DeviceBarID
+         || ndx == TranscriptionBarID
+         || ndx == SelectionBarID
+#endif
          )
       {
          expose = false;
@@ -1269,9 +1282,12 @@ void ToolManager::OnTimer( wxTimerEvent & event )
 //
 void ToolManager::OnIndicatorPaint( wxPaintEvent & event )
 {
+   // TODO: Better to use a bitmap than a triangular region.
    wxWindow *w = (wxWindow *)event.GetEventObject();
    wxPaintDC dc( w );
-   dc.SetBackground( *wxBLUE_BRUSH );
+   // TODO: Better (faster) to use the existing spare brush.
+   wxBrush brush( theTheme.Colour( clrTrackPanelText ) );
+   dc.SetBackground( brush );
    dc.Clear();
 }
 
