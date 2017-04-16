@@ -94,7 +94,7 @@ void ZoomInfo::SetZoom(double pixelsPerSecond)
    if ( project ) {
       double samplesPerSecond = project->GetRate();
       double pixelsPerSample = pixelsPerSecond/samplesPerSecond;
-      if ( pixelsPerSample >= 4 ) {
+      if ( pixelsPerSample > 2 ) {
          zoom = floor(pixelsPerSample) * samplesPerSecond;
       }
    }

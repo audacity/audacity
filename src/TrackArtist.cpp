@@ -1803,8 +1803,8 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
    FindWavePortions(portions, rect, zoomInfo, params);
    const unsigned nPortions = portions.size();
 
-   // Require at least 1 pixel per sample for drawing individual samples.
-   const double threshold1 = 1 * rate;
+   // Require at least 2 pixel per sample for drawing individual samples.
+   const double threshold1 = 2 * rate;
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * rate;
 
