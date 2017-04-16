@@ -479,7 +479,7 @@ const BuiltinFormatString FrequencyConverterFormats[] =  {
       _("kHz"),
          /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
-         _("0100.01000 kHz|0.001")
+         _("01000.01000 kHz|0.001")
    },
 };
 
