@@ -2318,13 +2318,12 @@ CommandFlag MenuCommandHandler::GetUpdateFlags
          flags |= PlayableTracksExistFlag;
          if (t->GetSelected()) {
             flags |= TracksSelectedFlag;
-            if (t->GetLinked()) {
+            // TODO: more-than-two-channels
+            if (TrackList::Channels(t).size() > 1) {
                flags |= StereoRequiredFlag;
             }
-            else {
-               flags |= WaveTracksSelectedFlag;
-               flags |= AudioTracksSelectedFlag;
-            }
+            flags |= WaveTracksSelectedFlag;
+            flags |= AudioTracksSelectedFlag;
          }
          if( t->GetEndTime() > t->GetStartTime() )
             flags |= HasWaveDataFlag;
