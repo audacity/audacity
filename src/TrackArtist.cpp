@@ -1364,6 +1364,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    }
 
    // Draw lines
+   wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
+   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_DEFAULT);
    for (decltype(slen) s = 0; s < slen; s++) {
       AColor::Line(dc,
                    rect.x + xpos[s], rect.y + ypos[s],
@@ -1388,6 +1390,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
          }
       }
    }
+   dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 
    // Draw clipping
    if (clipcnt) {
@@ -1809,10 +1812,10 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
    FindWavePortions(portions, rect, zoomInfo, params);
    const unsigned nPortions = portions.size();
 
-   // Require at least 4 pixels per sample for drawing individual samples.
-   const double threshold1 = 4 * rate;
-   // Require at least 4 pixels per sample for drawing the draggable points.
-   const double threshold2 = 4 * rate;
+   // Require at least 1 pixel per sample for drawing individual samples.
+   const double threshold1 = 1 * rate;
+   // Require at least 3 pixels per sample for drawing the draggable points.
+   const double threshold2 = 3 * rate;
 
    {
       bool showIndividualSamples = false;
