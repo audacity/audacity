@@ -290,7 +290,7 @@ void ExploreMenu( wxMenu * pMenu, int Id, int depth ){
       int flags = 0;
       if (item->IsSubMenu())
          flags +=1;
-      if (item->IsCheck() )
+      if (item->IsCheck() && item->IsChecked())
          flags +=2;
 
       wxLogDebug("T.Add( %2i, %2i,  0, new wxString(\"%s¬%s\") );", depth, flags, Label,Accel ); 
