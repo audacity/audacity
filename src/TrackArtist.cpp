@@ -1364,8 +1364,12 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    }
 
    // Draw lines
-   wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
-   dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+   auto gc = dc.GetGraphicsContext();
+   wxAntialiasMode aamode = wxANTIALIAS_NONE;
+   if (gc) {
+      aamode = gc->GetAntialiasMode();
+      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+   }
    for (decltype(slen) s = 0; s < slen; s++) {
       AColor::Line(dc,
                    rect.x + xpos[s], rect.y + ypos[s],
@@ -1389,7 +1393,9 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
          }
       }
    }
-   dc.GetGraphicsContext()->SetAntialiasMode(aamode);
+   if (gc) {
+      gc->SetAntialiasMode(aamode);
+   }
 
    // Draw clipping
    if (clipcnt) {
