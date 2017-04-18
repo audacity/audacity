@@ -89,6 +89,15 @@ void TracksPrefs::Populate()
    mViewChoices.Add(_("Spectrogram"));
    mViewCodes.Add(WaveTrack::Spectrum);
 
+
+   // How samples are displayed when zoomed in:
+
+   mSampleDisplayChoice.Add(_("Connect dots"));
+   mSampleDisplayCodes.Add((int) WaveTrack::LinarInterpolate);
+
+   mSampleDisplayChoice.Add(_("Stem plot"));
+   mSampleDisplayCodes.Add((int) WaveTrack::StemPlot);
+
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
    // Use 'eIsCreatingFromPrefs' so that the GUI is
@@ -124,6 +133,13 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                      mViewChoices,
                      mViewCodes);
          S.SetSizeHints(mViewChoices);
+
+         S.TieChoice(_("Display samples:"),
+                     wxT("/GUI/SampleView"),
+                     0,
+                     mSampleDisplayChoice,
+                     mSampleDisplayCodes);
+         S.SetSizeHints(mSampleDisplayChoice);
 
          S.TieTextBox(_("Default audio track &name:"),
                       wxT("/GUI/TrackNames/DefaultTrackName"),

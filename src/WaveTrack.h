@@ -547,6 +547,13 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
       NoDisplay,            // Preview track has no display
    };
 
+   // Only two types of sample display for now, but
+   // others (eg sinc interpolation) may be added later.
+   enum SampleDisplay {
+      LinarInterpolate = 0,
+      StemPlot
+   };
+
    // Read appropriate value from preferences
    static WaveTrackDisplay FindDefaultViewMode();
 

@@ -273,6 +273,7 @@ TrackArtist::TrackArtist()
 
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
+   mSampleDisplay = 0;
    UpdatePrefs();
 
    SetColours();
@@ -1362,15 +1363,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
                                   rect.height, dB, true, dBRange, false)));
    }
 
-   // Draw lines
-   for (decltype(slen) s = 0; s < slen - 1; s++) {
-      AColor::Line(dc,
-                   rect.x + xpos[s], rect.y + ypos[s],
-                   rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
-   }
 
-   if (showPoints)
-   {
+   if (showPoints) {
       // Draw points where spacing is enough
       const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
       wxRect pr;
@@ -1384,6 +1378,28 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
             pr.y = rect.y + ypos[s] - tickSize/2;
             dc.DrawEllipse(pr);
          }
+      }
+   }
+
+   if (showPoints && (mSampleDisplay == (int) WaveTrack::StemPlot)) {
+      // Draw vertical lines
+      int yZero = rect.y +
+                  std::max(-1,
+                     std::min(rect.height,
+                        GetWaveYPos(0.0, zoomMin, zoomMax,
+                                    rect.height, dB, true, dBRange, false)));
+      for (decltype(slen) s = 0; s < slen; s++) {
+         AColor::Line(dc,
+                     rect.x + xpos[s], rect.y + ypos[s],
+                     rect.x + xpos[s], yZero);
+      }
+   }
+   else {
+      // Connect samples with straight lines
+      for (decltype(slen) s = 0; s < slen - 1; s++) {
+         AColor::Line(dc,
+                     rect.x + xpos[s], rect.y + ypos[s],
+                     rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
       }
    }
 
@@ -3202,6 +3218,7 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
+   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 0);
    SetColours();
 }
 
