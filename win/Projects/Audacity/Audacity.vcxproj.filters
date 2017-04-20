@@ -542,6 +542,9 @@
     <ClCompile Include="..\..\..\src\prefs\ThemePrefs.cpp">
       <Filter>src\prefs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\TracksBehaviorsPrefs.cpp">
+      <Filter>src\prefs</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\prefs\TracksPrefs.cpp">
       <Filter>src\prefs</Filter>
     </ClCompile>

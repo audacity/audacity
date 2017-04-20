@@ -1383,11 +1383,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
 
    if (showPoints && (mSampleDisplay == (int) WaveTrack::StemPlot)) {
       // Draw vertical lines
-      int yZero = rect.y +
-                  std::max(-1,
-                     std::min(rect.height,
-                        GetWaveYPos(0.0, zoomMin, zoomMax,
-                                    rect.height, dB, true, dBRange, false)));
+      int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
+      yZero = rect.y + std::max(-1, std::min(rect.height, yZero));
       for (decltype(slen) s = 0; s < slen; s++) {
          AColor::Line(dc,
                      rect.x + xpos[s], rect.y + ypos[s],

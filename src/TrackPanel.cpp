@@ -192,6 +192,7 @@ is time to refresh some aspect of the screen.
 
 #include "prefs/PrefsDialog.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
@@ -8284,6 +8285,7 @@ void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
    // Get here only from the wave track menu
    const auto wt = static_cast<WaveTrack*>(mPopupMenuTarget);
    // WaveformPrefsFactory waveformFactory(wt);
+   TracksBehaviorsPrefsFactory tracksBehaviorsFactory();
    SpectrumPrefsFactory spectrumFactory(wt);
 
    PrefsDialog::Factories factories;
