@@ -1058,10 +1058,9 @@ bool CommandManager::GetEnabled(const wxString &name)
 void CommandManager::Check(const wxString &name, bool checked)
 {
    CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry || !entry->menu) {
+   if (!entry || !entry->menu || entry->isOccult) {
       return;
    }
-
    entry->menu->Check(entry->id, checked);
 }
 
