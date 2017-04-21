@@ -320,6 +320,7 @@ void OnMuteAllTracks();
 void OnUnMuteAllTracks();
 
 void OnShowClipping();
+void OnShowExtraMenus();
 
 void OnHistory();
 
@@ -449,9 +450,12 @@ void OnApplyChain();
 void OnEditChains();
 void OnStereoToMono(int index);
 void OnManagePluginsMenu(EffectType Type);
+void RebuildAllMenuBars();
 void OnManageGenerators();
 void OnManageEffects();
 void OnManageAnalyzers();
+
+
 
         // Help Menu
 

@@ -169,11 +169,19 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Behaviors"));
+   S.StartStatic(_("Show / Hide"));
    {
       S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
                     wxT("/GUI/ShowSplashScreen"),
                     true);
+      S.TieCheckBox(_("Show e&xtra menus."),
+                    wxT("/GUI/ShowExtraMenus"),
+                    false);
+   }
+   S.EndStatic();
+
+   S.StartStatic(_("Behaviors"));
+   {
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
