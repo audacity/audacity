@@ -699,13 +699,6 @@ void AudacityProject::CreateMenusAndCommands()
          ZoomOutAvailableFlag,
          ZoomOutAvailableFlag);
       c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
-#ifndef EXPERIMENTAL_DA
-      c->AddSeparator();
-      c->AddItem(wxT("ZoomOneSecond"), _("1px to 1 &Second"), FN(OnZoomOneSecond));
-      c->AddItem(wxT("ZoomTenthSecond"), _("1px to &Tenth Second"), FN(OnZoomTenthSecond));
-      c->AddItem(wxT("ZoomHundredthSecond"), _("1px to &Hundredth Second"), FN(OnZoomHundredthSecond));
-      c->AddItem(wxT("ZoomMillisecond"), _("1px to 1 &Millisecond"), FN(OnZoomMillisecond));
-#endif
       c->EndSubMenu();
 
       c->BeginSubMenu(_("T&rack Size"));
@@ -5667,36 +5660,6 @@ void AudacityProject::OnZoomNormal()
 {
    Zoom(ZoomInfo::GetDefaultZoom());
    mTrackPanel->Refresh(false);
-}
-
-void AudacityProject::OnZoomOneSecond()
-{
-   OnZoomPreset(1.0);
-}
-
-void AudacityProject::OnZoomTenthSecond()
-{
-   OnZoomPreset(10.0);
-}
-
-void AudacityProject::OnZoomHundredthSecond()
-{
-   OnZoomPreset(100.0);
-}
-
-void AudacityProject::OnZoomMillisecond()
-{
-   OnZoomPreset(1000.0);
-}
-
-void AudacityProject::OnZoomPreset(double newZoom)
-{
-   double zoomFactor = newZoom * mViewInfo.OffsetTimeByPixels(0.0, 1);
-
-   if (zoomFactor > 1.0 )
-      ZoomInByFactor(zoomFactor);
-   else if (zoomFactor < 1.0)
-      ZoomOutByFactor(zoomFactor);
 }
 
 void AudacityProject::OnZoomFit()
