@@ -293,6 +293,7 @@ void AudacityProject::CreateMenusAndCommands()
    {
       auto menubar = c->AddMenuBar(wxT("appmenu"));
       wxASSERT(menubar);
+      c->SetOccultCommands( false );
 
       /////////////////////////////////////////////////////////////////////////////
       // File menu
@@ -1223,174 +1224,234 @@ void AudacityProject::CreateMenusAndCommands()
       SetMenuBar(menubar.release());
    }
 
-   c->AddGlobalCommand(wxT("PrevWindow"), _("Move backward thru active windows"), FN(PrevWindow), wxT("Alt+Shift+F6"));
-   c->AddGlobalCommand(wxT("NextWindow"), _("Move forward thru active windows"), FN(NextWindow), wxT("Alt+F6"));
 
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
-   c->AddCommand(wxT("PrevFrame"), _("Move backward from toolbars to tracks"), FN(PrevFrame), wxT("Ctrl+Shift+F6"));
-   c->AddCommand(wxT("NextFrame"), _("Move forward from toolbars to tracks"), FN(NextFrame), wxT("Ctrl+F6"));
+   auto menubar2 = c->AddMenuBar(wxT("ext-menu"));
+   c->SetOccultCommands( true );
 
-   c->AddCommand(wxT("SelectTool"), _("Selection Tool"), FN(OnSelectTool), wxT("F1"));
-   c->AddCommand(wxT("EnvelopeTool"),_("Envelope Tool"), FN(OnEnvelopeTool), wxT("F2"));
-   c->AddCommand(wxT("DrawTool"), _("Draw Tool"), FN(OnDrawTool), wxT("F3"));
-   c->AddCommand(wxT("ZoomTool"), _("Zoom Tool"), FN(OnZoomTool), wxT("F4"));
-   c->AddCommand(wxT("TimeShiftTool"), _("Time Shift Tool"), FN(OnTimeShiftTool), wxT("F5"));
-   c->AddCommand(wxT("MultiTool"), _("Multi Tool"), FN(OnMultiTool), wxT("F6"));
+   /////////////////////////////////////////////////////////////////////////////
+   // Ext-Bar Menu
+   /////////////////////////////////////////////////////////////////////////////
+   c->BeginMenu( "Ext-Bar" );
+   c->BeginSubMenu( "Tools" );
 
-   c->AddCommand(wxT("NextTool"), _("Next Tool"), FN(OnNextTool), wxT("D"));
-   c->AddCommand(wxT("PrevTool"), _("Previous Tool"), FN(OnPrevTool), wxT("A"));
+   c->AddItem(wxT("SelectTool"), _("Selection Tool"), FN(OnSelectTool), wxT("F1"));
+   c->AddItem(wxT("EnvelopeTool"),_("Envelope Tool"), FN(OnEnvelopeTool), wxT("F2"));
+   c->AddItem(wxT("DrawTool"), _("Draw Tool"), FN(OnDrawTool), wxT("F3"));
+   c->AddItem(wxT("ZoomTool"), _("Zoom Tool"), FN(OnZoomTool), wxT("F4"));
+   c->AddItem(wxT("TimeShiftTool"), _("Time Shift Tool"), FN(OnTimeShiftTool), wxT("F5"));
+   c->AddItem(wxT("MultiTool"), _("Multi Tool"), FN(OnMultiTool), wxT("F6"));
+
+   c->AddItem(wxT("NextTool"), _("Next Tool"), FN(OnNextTool), wxT("D"));
+   c->AddItem(wxT("PrevTool"), _("Previous Tool"), FN(OnPrevTool), wxT("A"));
+   c->EndSubMenu();
+
+   c->BeginSubMenu( "Transport" );
+
+// PlayStop is already in the menus.
+#if 1
    /* i18n-hint: (verb) Start playing audio*/
-   c->AddCommand(wxT("Play"), _("Play"), FN(OnPlayStop),
+   c->AddItem(wxT("Play"), _("Play"), FN(OnPlayStop),
                  WaveTracksExistFlag | AudioIONotBusyFlag,
                  WaveTracksExistFlag | AudioIONotBusyFlag);
+#endif
    /* i18n-hint: (verb) Stop playing audio*/
-   c->AddCommand(wxT("Stop"), _("Stop"), FN(OnStop),
+   c->AddItem(wxT("Stop"), _("Stop"), FN(OnStop),
                  AudioIOBusyFlag,
                  AudioIOBusyFlag);
 
    c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
 
-   c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"),
+   c->AddItem(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
-   c->AddCommand(wxT("PlayToSelection"),_("Play To Selection"), FN(OnPlayToSelection), wxT("B"),
+   c->AddItem(wxT("PlayToSelection"),_("Play To Selection"), FN(OnPlayToSelection), wxT("B"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
-   c->AddCommand(wxT("PlayBeforeSelectionStart"),_("Play Before Selection Start"), FN(OnPlayBeforeSelectionStart), wxT("Shift+F5"));
-   c->AddCommand(wxT("PlayAfterSelectionStart"),_("Play After Selection Start"), FN(OnPlayAfterSelectionStart), wxT("Shift+F6"));
-   c->AddCommand(wxT("PlayBeforeSelectionEnd"),_("Play Before Selection End"), FN(OnPlayBeforeSelectionEnd), wxT("Shift+F7"));
-   c->AddCommand(wxT("PlayAfterSelectionEnd"),_("Play After Selection End"), FN(OnPlayAfterSelectionEnd), wxT("Shift+F8"));
-   c->AddCommand(wxT("PlayBeforeAndAfterSelectionStart"),_("Play Before and After Selection Start"), FN(OnPlayBeforeAndAfterSelectionStart), wxT("Ctrl+Shift+F5"));
-   c->AddCommand(wxT("PlayBeforeAndAfterSelectionEnd"),_("Play Before and After Selection End"), FN(OnPlayBeforeAndAfterSelectionEnd), wxT("Ctrl+Shift+F7"));
-   c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"),
+   c->AddItem(wxT("PlayBeforeSelectionStart"),_("Play Before Selection Start"), FN(OnPlayBeforeSelectionStart), wxT("Shift+F5"));
+   c->AddItem(wxT("PlayAfterSelectionStart"),_("Play After Selection Start"), FN(OnPlayAfterSelectionStart), wxT("Shift+F6"));
+   c->AddItem(wxT("PlayBeforeSelectionEnd"),_("Play Before Selection End"), FN(OnPlayBeforeSelectionEnd), wxT("Shift+F7"));
+   c->AddItem(wxT("PlayAfterSelectionEnd"),_("Play After Selection End"), FN(OnPlayAfterSelectionEnd), wxT("Shift+F8"));
+   c->AddItem(wxT("PlayBeforeAndAfterSelectionStart"),_("Play Before and After Selection Start"), FN(OnPlayBeforeAndAfterSelectionStart), wxT("Ctrl+Shift+F5"));
+   c->AddItem(wxT("PlayBeforeAndAfterSelectionEnd"),_("Play Before and After Selection End"), FN(OnPlayBeforeAndAfterSelectionEnd), wxT("Ctrl+Shift+F7"));
+   c->AddItem(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"),
                  CaptureNotBusyFlag,
                  CaptureNotBusyFlag);
+   c->EndSubMenu();
+
+
+   c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+
+   c->BeginSubMenu( "Selection" );
+
+   c->AddItem(wxT("SnapToOff"), _("Snap To Off"), FN(OnSnapToOff));
+   c->AddItem(wxT("SnapToNearest"), _("Snap To Nearest"), FN(OnSnapToNearest));
+   c->AddItem(wxT("SnapToPrior"), _("Snap To Prior"), FN(OnSnapToPrior));
+
+   c->AddItem(wxT("SelStart"), _("Selection to Start"), FN(OnSelToStart), wxT("Shift+Home"));
+   c->AddItem(wxT("SelEnd"), _("Selection to End"), FN(OnSelToEnd), wxT("Shift+End"));
+   c->AddItem(wxT("SelExtLeft"), _("Selection Extend Left"), FN(OnSelExtendLeft), wxT("Shift+Left\twantKeyup\tallowDup"));
+   c->AddItem(wxT("SelExtRight"), _("Selection Extend Right"), FN(OnSelExtendRight), wxT("Shift+Right\twantKeyup\tallowDup"));
+
+   c->AddItem(wxT("SelSetExtLeft"), _("Set (or Extend) Left Selection"), FN(OnSelSetExtendLeft));
+   c->AddItem(wxT("SelSetExtRight"), _("Set (or Extend) Right Selection"), FN(OnSelSetExtendRight));
+
+   c->AddItem(wxT("SelCntrLeft"), _("Selection Contract Left"), FN(OnSelContractLeft), wxT("Ctrl+Shift+Right\twantKeyup"));
+   c->AddItem(wxT("SelCntrRight"), _("Selection Contract Right"), FN(OnSelContractRight), wxT("Ctrl+Shift+Left\twantKeyup"));
+
+   c->EndSubMenu();
+
+
+   c->BeginSubMenu( "Edit" );
+   c->AddItem(wxT("DeleteKey"), _("DeleteKey"), FN(OnDelete), wxT("Backspace"),
+                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
+                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
+
+   c->AddItem(wxT("DeleteKey2"), _("DeleteKey2"), FN(OnDelete), wxT("Delete"),
+                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
+                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
+   c->EndSubMenu();
+
+
+   c->BeginSubMenu( "Scrub" );
+   c->SetDefaultFlags(AudioIOBusyFlag, AudioIOBusyFlag);
+
+   c->AddItem(wxT("SeekLeftShort"), _("Short seek left during playback"), FN(OnSeekLeftShort), wxT("Left\tallowDup"));
+   c->AddItem(wxT("SeekRightShort"),_("Short seek right during playback"), FN(OnSeekRightShort), wxT("Right\tallowDup"));
+   c->AddItem(wxT("SeekLeftLong"), _("Long seek left during playback"), FN(OnSeekLeftLong), wxT("Shift+Left\tallowDup"));
+   c->AddItem(wxT("SeekRightLong"), _("Long Seek right during playback"), FN(OnSeekRightLong), wxT("Shift+Right\tallowDup"));
+   c->EndSubMenu();
 
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
 
-   c->AddCommand(wxT("SelStart"), _("Selection to Start"), FN(OnSelToStart), wxT("Shift+Home"));
-   c->AddCommand(wxT("SelEnd"), _("Selection to End"), FN(OnSelToEnd), wxT("Shift+End"));
+   c->BeginSubMenu( "Device" );
 
-   c->AddCommand(wxT("DeleteKey"), _("DeleteKey"), FN(OnDelete), wxT("Backspace"),
-                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
-                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
+   c->AddItem(wxT("InputDevice"), _("Change recording device"), FN(OnInputDevice), wxT("Shift+I"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->AddItem(wxT("OutputDevice"), _("Change playback device"), FN(OnOutputDevice), wxT("Shift+O"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->AddItem(wxT("AudioHost"), _("Change audio host"), FN(OnAudioHost), wxT("Shift+H"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->AddItem(wxT("InputChannels"), _("Change recording channels"), FN(OnInputChannels), wxT("Shift+N"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->EndSubMenu();
 
-   c->AddCommand(wxT("DeleteKey2"), _("DeleteKey2"), FN(OnDelete), wxT("Delete"),
-                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
-                 AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
+   c->BeginSubMenu( "Mixer" );
+   c->AddItem(wxT("OutputGain"), _("Adjust playback volume"), FN(OnOutputGain));
+   c->AddItem(wxT("OutputGainInc"), _("Increase playback volume"), FN(OnOutputGainInc));
+   c->AddItem(wxT("OutputGainDec"), _("Decrease playback volume"), FN(OnOutputGainDec));
+   c->AddItem(wxT("InputGain"), _("Adjust recording volume"), FN(OnInputGain));
+   c->AddItem(wxT("InputGainInc"), _("Increase recording volume"), FN(OnInputGainInc));
+   c->AddItem(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
+   c->EndSubMenu();
 
-   c->SetDefaultFlags(AudioIOBusyFlag, AudioIOBusyFlag);
 
-   c->AddCommand(wxT("SeekLeftShort"), _("Short seek left during playback"), FN(OnSeekLeftShort), wxT("Left\tallowDup"));
-   c->AddCommand(wxT("SeekRightShort"),_("Short seek right during playback"), FN(OnSeekRightShort), wxT("Right\tallowDup"));
-   c->AddCommand(wxT("SeekLeftLong"), _("Long seek left during playback"), FN(OnSeekLeftLong), wxT("Shift+Left\tallowDup"));
-   c->AddCommand(wxT("SeekRightLong"), _("Long Seek right during playback"), FN(OnSeekRightLong), wxT("Shift+Right\tallowDup"));
+   c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
+
+   c->BeginSubMenu( "Transcription" );
+
+   c->AddItem(wxT("PlayAtSpeed"), _("Play-at-Speed"), FN(OnPlayAtSpeed));
+   c->AddItem(wxT("PlayAtSpeedLooped"), _("Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
+   c->AddItem(wxT("PlayAtSpeedCutPreview"), _("Play Cut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview));
+   c->AddItem(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
+   c->AddItem(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
+   c->AddItem(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
+
+   // These were on the original transcription toolbar.  But they are not on the
+   // shortened one.
+   c->AddItem(wxT("MoveToNextLabel"), _("Move to Next Label"), FN(OnMoveToNextLabel), wxT("Alt+Right"),
+      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
+   c->AddItem(wxT("MoveToPrevLabel"), _("Move to Previous Label"), FN(OnMoveToPrevLabel), wxT("Alt+Left"),
+      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
+   c->EndSubMenu();
+
+   c->EndMenu();
+
+
+   /////////////////////////////////////////////////////////////////////////////
+   // Ext-Command Menu
+   /////////////////////////////////////////////////////////////////////////////
+
+   c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+
+   c->BeginMenu( "Ext-Command" );
+   c->AddGlobalCommand(wxT("PrevWindow"), _("Move backward thru active windows"), FN(PrevWindow), wxT("Alt+Shift+F6"));
+   c->AddGlobalCommand(wxT("NextWindow"), _("Move forward thru active windows"), FN(NextWindow), wxT("Alt+F6"));
+
+   c->BeginSubMenu( "Focus" );
+   c->AddItem(wxT("PrevFrame"), _("Move backward from toolbars to tracks"), FN(PrevFrame), wxT("Ctrl+Shift+F6"));
+   c->AddItem(wxT("NextFrame"), _("Move forward from toolbars to tracks"), FN(NextFrame), wxT("Ctrl+F6"));
 
    c->SetDefaultFlags(TracksExistFlag | TrackPanelHasFocus,
                       TracksExistFlag | TrackPanelHasFocus);
 
-   c->AddCommand(wxT("PrevTrack"), _("Move Focus to Previous Track"), FN(OnCursorUp), wxT("Up"));
-   c->AddCommand(wxT("NextTrack"), _("Move Focus to Next Track"), FN(OnCursorDown), wxT("Down"));
-   c->AddCommand(wxT("FirstTrack"), _("Move Focus to First Track"), FN(OnFirstTrack), wxT("Ctrl+Home"));
-   c->AddCommand(wxT("LastTrack"), _("Move Focus to Last Track"), FN(OnLastTrack), wxT("Ctrl+End"));
+   c->AddItem(wxT("PrevTrack"), _("Move Focus to Previous Track"), FN(OnCursorUp), wxT("Up"));
+   c->AddItem(wxT("NextTrack"), _("Move Focus to Next Track"), FN(OnCursorDown), wxT("Down"));
+   c->AddItem(wxT("FirstTrack"), _("Move Focus to First Track"), FN(OnFirstTrack), wxT("Ctrl+Home"));
+   c->AddItem(wxT("LastTrack"), _("Move Focus to Last Track"), FN(OnLastTrack), wxT("Ctrl+End"));
 
 
-   c->AddCommand(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
-   c->AddCommand(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
+   c->AddItem(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
+   c->AddItem(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
 
 
-   c->AddCommand(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
-   c->AddCommand(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
+   c->AddItem(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
+   c->AddItem(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
+   c->EndSubMenu();
 
-   c->AddCommand(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Left\twantKeyup\tallowDup"));
-   c->AddCommand(wxT("CursorRight"), _("Cursor Right"), FN(OnCursorRight), wxT("Right\twantKeyup\tallowDup"));
-   c->AddCommand(wxT("CursorShortJumpLeft"), _("Cursor Short Jump Left"), FN(OnCursorShortJumpLeft), wxT(","));
-   c->AddCommand(wxT("CursorShortJumpRight"), _("Cursor Short Jump Right"), FN(OnCursorShortJumpRight), wxT("."));
-   c->AddCommand(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
-   c->AddCommand(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
+   c->BeginSubMenu( "Cursor" );
 
-   c->AddCommand(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT(""));
-   c->AddCommand(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
+   c->AddItem(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Left\twantKeyup\tallowDup"));
+   c->AddItem(wxT("CursorRight"), _("Cursor Right"), FN(OnCursorRight), wxT("Right\twantKeyup\tallowDup"));
+   c->AddItem(wxT("CursorShortJumpLeft"), _("Cursor Short Jump Left"), FN(OnCursorShortJumpLeft), wxT(","));
+   c->AddItem(wxT("CursorShortJumpRight"), _("Cursor Short Jump Right"), FN(OnCursorShortJumpRight), wxT("."));
+   c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
+   c->AddItem(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
 
-   c->AddCommand(wxT("SelExtLeft"), _("Selection Extend Left"), FN(OnSelExtendLeft), wxT("Shift+Left\twantKeyup\tallowDup"));
-   c->AddCommand(wxT("SelExtRight"), _("Selection Extend Right"), FN(OnSelExtendRight), wxT("Shift+Right\twantKeyup\tallowDup"));
+   c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT(""));
+   c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
+   c->EndSubMenu();
 
-   c->AddCommand(wxT("SelSetExtLeft"), _("Set (or Extend) Left Selection"), FN(OnSelSetExtendLeft));
-   c->AddCommand(wxT("SelSetExtRight"), _("Set (or Extend) Right Selection"), FN(OnSelSetExtendRight));
-
-   c->AddCommand(wxT("SelCntrLeft"), _("Selection Contract Left"), FN(OnSelContractLeft), wxT("Ctrl+Shift+Right\twantKeyup"));
-   c->AddCommand(wxT("SelCntrRight"), _("Selection Contract Right"), FN(OnSelContractRight), wxT("Ctrl+Shift+Left\twantKeyup"));
-
-   c->AddCommand(wxT("TrackPan"), _("Change pan on focused track"), FN(OnTrackPan), wxT("Shift+P"));
-   c->AddCommand(wxT("TrackPanLeft"), _("Pan left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"));
-   c->AddCommand(wxT("TrackPanRight"), _("Pan right on focused track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"));
-   c->AddCommand(wxT("TrackGain"), _("Change gain on focused track"), FN(OnTrackGain), wxT("Shift+G"));
-   c->AddCommand(wxT("TrackGainInc"), _("Increase gain on focused track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"));
-   c->AddCommand(wxT("TrackGainDec"), _("Decrease gain on focused track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"));
-   c->AddCommand(wxT("TrackMenu"), _("Open menu on focused track"), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"));
-   c->AddCommand(wxT("TrackMute"), _("Mute/Unmute focused track"), FN(OnTrackMute), wxT("Shift+U"));
-   c->AddCommand(wxT("TrackSolo"), _("Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"));
-   c->AddCommand(wxT("TrackClose"), _("Close focused track"), FN(OnTrackClose), wxT("Shift+C"));
-   c->AddCommand(wxT("TrackMoveUp"), _("Move focused track up"), FN(OnTrackMoveUp));
-   c->AddCommand(wxT("TrackMoveDown"), _("Move focused track down"), FN(OnTrackMoveDown));
-   c->AddCommand(wxT("TrackMoveTop"), _("Move focused track to top"), FN(OnTrackMoveTop));
-   c->AddCommand(wxT("TrackMoveBottom"), _("Move focused track to bottom"), FN(OnTrackMoveBottom));
-
+   c->BeginSubMenu( "Track" );
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+   c->AddItem(wxT("TrackPan"), _("Change pan on focused track"), FN(OnTrackPan), wxT("Shift+P"));
+   c->AddItem(wxT("TrackPanLeft"), _("Pan left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"));
+   c->AddItem(wxT("TrackPanRight"), _("Pan right on focused track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"));
+   c->AddItem(wxT("TrackGain"), _("Change gain on focused track"), FN(OnTrackGain), wxT("Shift+G"));
+   c->AddItem(wxT("TrackGainInc"), _("Increase gain on focused track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"));
+   c->AddItem(wxT("TrackGainDec"), _("Decrease gain on focused track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"));
+   c->AddItem(wxT("TrackMenu"), _("Open menu on focused track"), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"));
+   c->AddItem(wxT("TrackMute"), _("Mute/Unmute focused track"), FN(OnTrackMute), wxT("Shift+U"));
+   c->AddItem(wxT("TrackSolo"), _("Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"));
+   c->AddItem(wxT("TrackClose"), _("Close focused track"), FN(OnTrackClose), wxT("Shift+C"));
+   c->AddItem(wxT("TrackMoveUp"), _("Move focused track up"), FN(OnTrackMoveUp));
+   c->AddItem(wxT("TrackMoveDown"), _("Move focused track down"), FN(OnTrackMoveDown));
+   c->AddItem(wxT("TrackMoveTop"), _("Move focused track to top"), FN(OnTrackMoveTop));
+   c->AddItem(wxT("TrackMoveBottom"), _("Move focused track to bottom"), FN(OnTrackMoveBottom));
+   c->EndSubMenu();
 
-   c->AddCommand(wxT("SnapToOff"), _("Snap To Off"), FN(OnSnapToOff));
-   c->AddCommand(wxT("SnapToNearest"), _("Snap To Nearest"), FN(OnSnapToNearest));
-   c->AddCommand(wxT("SnapToPrior"), _("Snap To Prior"), FN(OnSnapToPrior));
-
-   c->AddCommand(wxT("FullScreenOnOff"), _("Full screen on/off"), FN(OnFullScreen),
+   c->AddItem(wxT("FullScreenOnOff"), _("Full screen on/off"), FN(OnFullScreen),
 #ifdef __WXMAC__
       wxT("Ctrl+/"));
 #else
       wxT("F11"));
 #endif
 
-   c->AddCommand(wxT("InputDevice"), _("Change recording device"), FN(OnInputDevice), wxT("Shift+I"),
-                 AudioIONotBusyFlag,
-                 AudioIONotBusyFlag);
-   c->AddCommand(wxT("OutputDevice"), _("Change playback device"), FN(OnOutputDevice), wxT("Shift+O"),
-                 AudioIONotBusyFlag,
-                 AudioIONotBusyFlag);
-   c->AddCommand(wxT("AudioHost"), _("Change audio host"), FN(OnAudioHost), wxT("Shift+H"),
-                 AudioIONotBusyFlag,
-                 AudioIONotBusyFlag);
-   c->AddCommand(wxT("InputChannels"), _("Change recording channels"), FN(OnInputChannels), wxT("Shift+N"),
-                 AudioIONotBusyFlag,
-                 AudioIONotBusyFlag);
-
-   c->AddCommand(wxT("OutputGain"), _("Adjust playback volume"), FN(OnOutputGain));
-   c->AddCommand(wxT("OutputGainInc"), _("Increase playback volume"), FN(OnOutputGainInc));
-   c->AddCommand(wxT("OutputGainDec"), _("Decrease playback volume"), FN(OnOutputGainDec));
-   c->AddCommand(wxT("InputGain"), _("Adjust recording volume"), FN(OnInputGain));
-   c->AddCommand(wxT("InputGainInc"), _("Increase recording volume"), FN(OnInputGainInc));
-   c->AddCommand(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
-
-   c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
-
-   c->AddCommand(wxT("PlayAtSpeed"), _("Play-at-Speed"), FN(OnPlayAtSpeed));
-   c->AddCommand(wxT("PlayAtSpeedLooped"), _("Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
-   c->AddCommand(wxT("PlayAtSpeedCutPreview"), _("Play Cut Preview-at-Speed"), FN(OnPlayAtSpeedCutPreview));
-   c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
-   c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
-   c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
-
-   c->AddCommand(wxT("MoveToNextLabel"), _("Move to Next Label"), FN(OnMoveToNextLabel), wxT("Alt+Right"),
-      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
-   c->AddCommand(wxT("MoveToPrevLabel"), _("Move to Previous Label"), FN(OnMoveToPrevLabel), wxT("Alt+Left"),
-      CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
-
 #ifdef __WXMAC__
    /* i8n-hint: Shrink all project windows to icons on the Macintosh tooldock */
-   c->AddCommand(wxT("MacMinimizeAll"), _("Minimize all projects"),
+   c->AddItem(wxT("MacMinimizeAll"), _("Minimize all projects"),
                  FN(OnMacMinimizeAll), wxT("Ctrl+Alt+M"),
                  AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
+   c->EndMenu();
+
+
 
    mLastFlags = AlwaysEnabledFlag;
 

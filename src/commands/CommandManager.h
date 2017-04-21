@@ -72,6 +72,7 @@ struct CommandListEntry
    bool skipKeydown;
    bool wantKeyup;
    bool isGlobal;
+   bool isOccult;
    CommandFlag flags;
    CommandMask mask;
 };
@@ -185,6 +186,9 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void SetDefaultFlags(CommandFlag flags, CommandMask mask);
    CommandFlag GetDefaultFlags() const { return mDefaultFlags; }
    CommandMask GetDefaultMask() const { return mDefaultMask; }
+
+   void SetOccultCommands( bool bOccult);
+
 
    void SetCommandFlags(const wxString &name, CommandFlag flags, CommandMask mask);
    void SetCommandFlags(const wxChar **names,
@@ -328,6 +332,7 @@ private:
 
    CommandFlag mDefaultFlags;
    CommandMask mDefaultMask;
+   bool bMakingOccultCommands;
 };
 
 #endif

@@ -356,7 +356,7 @@ KeyView::SetView(ViewByType type)
    int nLines = mLines.GetCount();
    int flags = 8;
    for(int i=0;i<nLines;i++){
-      wxLogDebug("T.Add( %2i, %2i,  0, new wxString(\"%s¬%s\") );", mLines[i]->depth-1, flags, mLines[i]->label,mLines[i]->key ); 
+      wxLogDebug("T.Add( %2i, %2i,  0, \"%s¬%s\" );", mLines[i]->depth-1, flags, mLines[i]->label,mLines[i]->key ); 
    }
 #endif
 
