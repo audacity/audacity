@@ -325,7 +325,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag,
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
-      c->BeginSubMenu( _("Save Other") );
+      c->BeginSubMenu( _("Save Othe&r") );
 
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
@@ -381,7 +381,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Chains"));
+      c->BeginSubMenu(_("C&hains"));
       c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
@@ -596,13 +596,13 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
 
-      c->BeginSubMenu(_("Tracks"));
+      c->BeginSubMenu(_("&Tracks"));
       c->AddItem(wxT("SelAllTracks"), _("In All &Tracks"), FN(OnSelectAllTracks),
          wxT("Ctrl+Shift+K"),
          TracksExistFlag, TracksExistFlag);
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-      c->AddItem(wxT("SelSyncLockTracks"), _("In All Sync-Locked Tracks"),
+      c->AddItem(wxT("SelSyncLockTracks"), _("In All &Sync-Locked Tracks"),
          FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
          TracksSelectedFlag | IsSyncLockedFlag,
          TracksSelectedFlag | IsSyncLockedFlag);
@@ -614,7 +614,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("Region"));
+      c->BeginSubMenu(_("R&egion"));
 
       c->AddItem(wxT("SetLeftSelection"), _("&Left at Playback Position"), FN(OnSetLeftSelection), wxT("["));
       c->AddItem(wxT("SetRightSelection"), _("&Right at Playback Position"), FN(OnSetRightSelection), wxT("]"));
@@ -622,15 +622,19 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
       c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
       c->AddSeparator();
-      // Audacity has 'Store Re&gion' here.
-      c->AddItem(wxT("SelSave"), _("Save Sele&ction"), FN(OnSelectionSave),
+      // GA: Audacity had 'Store Re&gion' here previously. There is no one-step
+      // way to restore the 'Saved Cursor Position' in Select Menu, so arguably 
+      // using the word 'Selection' to do duty for both saving the region or the
+      // cursor is better. But it does not belong in a 'Region' submenu. 
+      c->AddItem(wxT("SelSave"), _("S&tore Selection"), FN(OnSelectionSave),
          WaveTracksSelectedFlag,
          WaveTracksSelectedFlag);
-      // Audacity has 'Retrieve Regio&n' here.
-      c->AddItem(wxT("SelRestore"), _("Restore Selectio&n"), FN(OnSelectionRestore),
+      // Audacity had 'Retrieve Regio&n' here previously. 
+      c->AddItem(wxT("SelRestore"), _("Retrieve Selectio&n"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
       c->AddSeparator();
+      // GA: Likewise zero crossings can be just the cursor, so this doesn't belong here. 
       c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
 
       c->EndSubMenu();
@@ -642,8 +646,8 @@ void AudacityProject::CreateMenusAndCommands()
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       c->BeginSubMenu(_("S&pectral"));
       c->AddItem(wxT("ToggleSpectralSelection"), _("To&ggle spectral selection"), FN(OnToggleSpectralSelection), wxT("Q"));
-      c->AddItem(wxT("NextHigherPeakFrequency"), _("Next Higher Peak Frequency"), FN(OnNextHigherPeakFrequency));
-      c->AddItem(wxT("NextLowerPeakFrequency"), _("Next Lower Peak Frequency"), FN(OnNextLowerPeakFrequency));
+      c->AddItem(wxT("NextHigherPeakFrequency"), _("Next &Higher Peak Frequency"), FN(OnNextHigherPeakFrequency));
+      c->AddItem(wxT("NextLowerPeakFrequency"), _("Next &Lower Peak Frequency"), FN(OnNextLowerPeakFrequency));
       c->EndSubMenu();
 #endif
 
@@ -651,7 +655,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->SetDefaultFlags(TracksSelectedFlag, TracksSelectedFlag);
 
-      c->BeginSubMenu(_("Clip Boundaries"));
+      c->BeginSubMenu(_("Clip B&oundaries"));
       c->AddItem(wxT("SelPrevClipBoundaryToCursor"), _("Pre&vious Clip Boundary to Cursor"),
          FN(OnSelectPrevClipBoundaryToCursor), wxT(""),
          TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
@@ -667,13 +671,13 @@ void AudacityProject::CreateMenusAndCommands()
       /////////////////////////////////////////////////////////////////////////////
 
 
-      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Saved &Cursor Position"), FN(OnSelectCursorStoredCursor),
+      c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Stored &Cursor Position"), FN(OnSelectCursorStoredCursor),
          wxT(""), TracksExistFlag, TracksExistFlag);
 
-      c->AddItem(wxT("StoreCursorPosition"), _("Save Cursor Pos&ition"), FN(OnCursorPositionStore),
+      c->AddItem(wxT("StoreCursorPosition"), _("Store Cursor Pos&ition"), FN(OnCursorPositionStore),
          WaveTracksExistFlag,
          WaveTracksExistFlag);
-      // Save cursor position is used in some selctions.
+      // Save cursor position is used in some selections.
       // Maybe there should be a restore for it?
 
 
@@ -685,7 +689,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginMenu(_("&View"));
       c->SetDefaultFlags(TracksExistFlag, TracksExistFlag);
-      c->BeginSubMenu(_("Zoom"));
+      c->BeginSubMenu(_("&Zoom"));
 
       c->AddItem(wxT("ZoomIn"), _("Zoom &In"), FN(OnZoomIn), wxT("Ctrl+1"),
          ZoomInAvailableFlag,
@@ -704,14 +708,14 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
       c->EndSubMenu();
 
-      c->BeginSubMenu(_("&Track Size"));
+      c->BeginSubMenu(_("T&rack Size"));
       c->AddItem(wxT("FitInWindow"), _("&Fit to Width"), FN(OnZoomFit), wxT("Ctrl+F"));
       c->AddItem(wxT("FitV"), _("Fit to &Height"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
       c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
       c->AddItem(wxT("ExpandAllTracks"), _("E&xpand Collapsed Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
       c->EndSubMenu();
 
-      c->BeginSubMenu(_("S&kip to"));
+      c->BeginSubMenu(_("Sk&ip to"));
       c->AddItem(wxT("SkipSelStart"), _("Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["),
                  TimeSelectedFlag, TimeSelectedFlag);
       c->AddItem(wxT("SkipSelEnd"), _("Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"),
@@ -805,7 +809,7 @@ void AudacityProject::CreateMenusAndCommands()
       play, record, pause etc. */
       c->BeginMenu(_("T&ransport"));
       c->SetDefaultFlags(CanStopAudioStreamFlag, CanStopAudioStreamFlag);
-      c->BeginSubMenu(_("Play"));
+      c->BeginSubMenu(_("Pl&ay"));
       /* i18n-hint: (verb) Start or Stop audio playback*/
       c->AddItem(wxT("PlayStop"), _("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"));
       c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("X"));
@@ -815,7 +819,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->EndSubMenu();
 
-      c->BeginSubMenu( _("Record"));
+      c->BeginSubMenu( _("&Record"));
       c->SetDefaultFlags(AudioIONotBusyFlag | CanStopAudioStreamFlag,
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
@@ -827,7 +831,7 @@ void AudacityProject::CreateMenusAndCommands()
       // PREFER_NEW_TRACKS is defined if we want the old behaviour of by default adding a new track on
       // every new recording.
 #ifndef PREFER_NEW_TRACKS
-      c->AddItem(wxT("RecordBelow"), _("Record New Track"), FN(OnRecordBelow), wxT("Shift+R"));
+      c->AddItem(wxT("RecordBelow"), _("Record &New Track"), FN(OnRecordBelow), wxT("Shift+R"));
 #else
       c->AddItem(wxT("RecordBelow"), _("Record Beside"), FN(OnRecordBelow), wxT("Shift+R"));
 #endif
@@ -842,7 +846,9 @@ void AudacityProject::CreateMenusAndCommands()
       GetScrubber().AddMenuItems();
 
       // JKC: ANSWER-ME: How is 'cursor to' different to 'Skip To' and how is it useful?
-      c->BeginSubMenu(_("Cursor to"));
+      // GA: 'Skip to' moves the viewpoint to center of the track and preserves the 
+      // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.   
+      c->BeginSubMenu(_("&Cursor to"));
 
       c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
       c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd));
@@ -879,7 +885,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
-      c->BeginSubMenu(_("Transport Options"));
+      c->BeginSubMenu(_("Transport &Options"));
       // Sound Activated recording options
       c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
       c->AddCheck(wxT("SoundActivation"), _("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0);
@@ -923,14 +929,14 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->BeginSubMenu(_("Mix") );
+      c->BeginSubMenu(_("Mi&x") );
       {
          // Stereo to Mono is an oddball command that is also subject to control by the
          // plug-in manager, as if an effect.  Decide whether to show or hide it.
          const PluginID ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
          const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
          if (plug && plug->IsEnabled())
-            c->AddItem(wxT("Stereo to Mono"), _("Mix Stereo down to Mono"), FN(OnStereoToMono),
+            c->AddItem(wxT("Stereo to Mono"), _("Mix Stereo down to &Mono"), FN(OnStereoToMono),
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag,
             AudioIONotBusyFlag | StereoRequiredFlag | WaveTracksSelectedFlag);
       }
@@ -954,12 +960,12 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->BeginSubMenu("Mute/Unmute");
+      c->BeginSubMenu("M&ute/Unmute");
       c->AddItem(wxT("MuteAllTracks"), _("&Mute All Tracks"), FN(OnMuteAllTracks), wxT("Ctrl+U"));
       c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"));
       c->EndSubMenu();
 
-      c->BeginSubMenu("Pan");
+      c->BeginSubMenu("&Pan");
       c->AddItem(wxT("PanLeft"), _("&Left"), FN(OnPanLeft));
       c->AddItem(wxT("PanRight"), _("&Right"), FN(OnPanRight));
       c->AddItem(wxT("PanCenter"), _("&Center"), FN(OnPanCenter));
@@ -1182,7 +1188,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->BeginSubMenu( _("Tools") );
+      c->BeginSubMenu( _("&Tools") );
       c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
 #if IS_ALPHA
@@ -1194,7 +1200,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
       c->AddSeparator();
 
-      c->BeginSubMenu(_("Diagnostics"));
+      c->BeginSubMenu(_("&Diagnostics"));
       c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
