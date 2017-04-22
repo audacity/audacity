@@ -144,7 +144,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                      mHtmlHelpCodes);
          S.SetSizeHints(mHtmlHelpChoices);
 
-         S.TieChoice(_("Theme:"),
+         S.TieChoice(_("Th&eme:"),
                      wxT("/GUI/Theme"),
                      defaultTheme,
                      mThemeChoices,
@@ -174,7 +174,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
                     wxT("/GUI/ShowSplashScreen"),
                     true);
-      S.TieCheckBox(_("Show e&xtra menus."),
+      S.TieCheckBox(_("Show e&xtra menus"),
                     wxT("/GUI/ShowExtraMenus"),
                     false);
    }
