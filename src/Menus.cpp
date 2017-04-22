@@ -3018,22 +3018,26 @@ void AudacityProject::OnSelSetExtendRight()
 
 void AudacityProject::OnSelExtendLeft(const wxEvent * evt)
 {
-   OnCursorLeft( true, false, evt->GetEventType() == wxEVT_KEY_UP );
+   bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
+   OnCursorLeft( true, false, bKeyUp );
 }
 
 void AudacityProject::OnSelExtendRight(const wxEvent * evt)
 {
-   OnCursorRight( true, false, evt->GetEventType() == wxEVT_KEY_UP );
+   bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
+   OnCursorRight( true, false, bKeyUp );
 }
 
 void AudacityProject::OnSelContractLeft(const wxEvent * evt)
 {
-   OnCursorRight( true, true, evt->GetEventType() == wxEVT_KEY_UP );
+   bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
+   OnCursorRight( true, true, bKeyUp );
 }
 
 void AudacityProject::OnSelContractRight(const wxEvent * evt)
 {
-   OnCursorLeft( true, true, evt->GetEventType() == wxEVT_KEY_UP );
+   bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
+   OnCursorLeft( true, true, bKeyUp );
 }
 
 void AudacityProject::OnClipLeft()
