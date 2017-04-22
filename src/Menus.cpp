@@ -2978,12 +2978,14 @@ void AudacityProject::OnToggle()
 
 void AudacityProject::OnCursorLeft(const wxEvent * evt)
 {
-   OnCursorLeft( false, false, evt->GetEventType() == wxEVT_KEY_UP );
+   bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
+   OnCursorLeft( false, false, bKeyUp );
 }
 
 void AudacityProject::OnCursorRight(const wxEvent * evt)
 {
-   OnCursorRight( false, false, evt->GetEventType() == wxEVT_KEY_UP );
+   bool bKeyUp = (evt) && evt->GetEventType() == wxEVT_KEY_UP;
+   OnCursorRight( false, false, bKeyUp );
 }
 
 void AudacityProject::OnCursorShortJumpLeft()
