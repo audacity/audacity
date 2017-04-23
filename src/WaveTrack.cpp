@@ -428,12 +428,16 @@ bool WaveTrack::SetPan(float newPan)
    else
       mPan = newPan;
 
-   if(mDisplay == WaveTrack::Waveform && mChannel == Track::MonoChannel && (p == 0.0f && newPan != 0.0f || p != 0.0f && newPan == 0.0f) && mMonoAsVirtualStereo)
+   if(mDisplay == WaveTrack::Waveform &&
+      mChannel == Track::MonoChannel &&
+      ((p == 0.0f) != (newPan == 0.0f)) &&
+      mMonoAsVirtualStereo)
    {
       panZero=true;
-      if(!mPan){
+      if(!mPan) {
          mHeight = mHeight + mHeightv;
-      }else{
+      }
+      else {
          temp = mHeight;
          mHeight = temp*mPerY;
          mHeightv = temp - mHeight;

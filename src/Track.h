@@ -199,7 +199,11 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    virtual void SetOffset (double o) { mOffset = o; }
 
    void SetChannel(int    c) { mChannel = c; }
-   virtual void SetPan( float ){ ;};
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   virtual bool SetPan( float ){ return false; }
+#else
+   virtual void SetPan( float ){ ;}
+#endif
    virtual void SetPanFromChannelType(){ ;};
 
    // AS: Note that the dirManager is mutable.  This is
