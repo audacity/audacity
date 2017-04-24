@@ -758,32 +758,32 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ResetToolbars"), _("&Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->AddSeparator();
 
-      /* i18n-hint: Clicking this menu item shows the toolbar that manages devices*/
-      c->AddCheck(wxT("ShowDeviceTB"), _("&Device Toolbar"), FN(OnShowDeviceToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
-      c->AddCheck(wxT("ShowEditTB"), _("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* i18n-hint: Clicking this menu item shows the toolbar which has sound level meters*/
-      c->AddCheck(wxT("ShowMeterTB"), _("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/
+      c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* i18n-hint: Clicking this menu item shows a toolbar that has some tools in it*/
+      c->AddCheck(wxT("ShowToolsTB"), _("T&ools Toolbar"), FN(OnShowToolsToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the recording level meters*/
       c->AddCheck(wxT("ShowRecordMeterTB"), _("&Recording Meter Toolbar"), FN(OnShowRecordMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the playback level meter*/
       c->AddCheck(wxT("ShowPlayMeterTB"), _("&Playback Meter Toolbar"), FN(OnShowPlayMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* --i18n-hint: Clicking this menu item shows the toolbar which has sound level meters*/
+      //c->AddCheck(wxT("ShowMeterTB"), _("Co&mbined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
       c->AddCheck(wxT("ShowMixerTB"), _("Mi&xer Toolbar"), FN(OnShowMixerToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
+      c->AddCheck(wxT("ShowEditTB"), _("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)*/
+      c->AddCheck(wxT("ShowTranscriptionTB"), _("Tra&nscription Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler*/
+      c->AddCheck(wxT("ShowScrubbingTB"), _("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      /* i18n-hint: Clicking this menu item shows the toolbar that manages devices*/
+      c->AddCheck(wxT("ShowDeviceTB"), _("&Device Toolbar"), FN(OnShowDeviceToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio*/
       c->AddCheck(wxT("ShowSelectionTB"), _("&Selection Toolbar"), FN(OnShowSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio*/
       c->AddCheck(wxT("ShowSpectralSelectionTB"), _("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #endif
-      /* i18n-hint: Clicking this menu item shows a toolbar that has some tools in it*/
-      c->AddCheck(wxT("ShowToolsTB"), _("T&ools Toolbar"), FN(OnShowToolsToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)*/
-      c->AddCheck(wxT("ShowTranscriptionTB"), _("Tra&nscription Toolbar"), FN(OnShowTranscriptionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/
-      c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-      /* i18n-hint: Clicking this menu item shows the toolbar that enables Scrub or Seek playback and Scrub Ruler*/
-      c->AddCheck(wxT("ShowScrubbingTB"), _("Scru&b Toolbar"), FN(OnShowScrubbingToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -1238,9 +1238,14 @@ void AudacityProject::CreateMenusAndCommands()
       /////////////////////////////////////////////////////////////////////////////
       // Ext-Bar Menu
       /////////////////////////////////////////////////////////////////////////////
+
       c->BeginMenu("Ext-Bar");
 
+      //////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu("Transport");
+
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
       c->AddItem(wxT("Play"), _("Play"), FN(OnPlayStop),
@@ -1270,6 +1275,8 @@ void AudacityProject::CreateMenusAndCommands()
          CaptureNotBusyFlag);
       c->EndSubMenu();
 
+      //////////////////////////////////////////////////////////////////////////
+
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu("Tools");
 
@@ -1284,9 +1291,24 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("PrevTool"), _("Previous Tool"), FN(OnPrevTool), wxT("A"));
       c->EndSubMenu();
 
+      //////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->BeginSubMenu("Mixer");
+
+      c->AddItem(wxT("OutputGain"), _("Adjust playback volume"), FN(OnOutputGain));
+      c->AddItem(wxT("OutputGainInc"), _("Increase playback volume"), FN(OnOutputGainInc));
+      c->AddItem(wxT("OutputGainDec"), _("Decrease playback volume"), FN(OnOutputGainDec));
+      c->AddItem(wxT("InputGain"), _("Adjust recording volume"), FN(OnInputGain));
+      c->AddItem(wxT("InputGainInc"), _("Increase recording volume"), FN(OnInputGainInc));
+      c->AddItem(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
+      c->EndSubMenu();
+
+      //////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu("Edit");
+
       c->AddItem(wxT("DeleteKey"), _("DeleteKey"), FN(OnDelete), wxT("Backspace"),
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
@@ -1296,32 +1318,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
       c->EndSubMenu();
 
-
-      c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
-      c->BeginSubMenu("Device");
-
-      c->AddItem(wxT("InputDevice"), _("Change recording device"), FN(OnInputDevice), wxT("Shift+I"),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-      c->AddItem(wxT("OutputDevice"), _("Change playback device"), FN(OnOutputDevice), wxT("Shift+O"),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-      c->AddItem(wxT("AudioHost"), _("Change audio host"), FN(OnAudioHost), wxT("Shift+H"),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-      c->AddItem(wxT("InputChannels"), _("Change recording channels"), FN(OnInputChannels), wxT("Shift+N"),
-         AudioIONotBusyFlag,
-         AudioIONotBusyFlag);
-      c->EndSubMenu();
-
-      c->BeginSubMenu("Mixer");
-      c->AddItem(wxT("OutputGain"), _("Adjust playback volume"), FN(OnOutputGain));
-      c->AddItem(wxT("OutputGainInc"), _("Increase playback volume"), FN(OnOutputGainInc));
-      c->AddItem(wxT("OutputGainDec"), _("Decrease playback volume"), FN(OnOutputGainDec));
-      c->AddItem(wxT("InputGain"), _("Adjust recording volume"), FN(OnInputGain));
-      c->AddItem(wxT("InputGainInc"), _("Increase recording volume"), FN(OnInputGainInc));
-      c->AddItem(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
-      c->EndSubMenu();
+      //////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
       c->BeginSubMenu("Transcription");
@@ -1341,14 +1338,37 @@ void AudacityProject::CreateMenusAndCommands()
          CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
       c->EndSubMenu();
 
-      c->BeginSubMenu("Scrub");
+      //////////////////////////////////////////////////////////////////////////
+
       c->SetDefaultFlags(AudioIOBusyFlag, AudioIOBusyFlag);
+      c->BeginSubMenu("Scrub");
 
       c->AddItem(wxT("SeekLeftShort"), _("Short seek left during playback"), FN(OnSeekLeftShort), wxT("Left\tallowDup"));
       c->AddItem(wxT("SeekRightShort"), _("Short seek right during playback"), FN(OnSeekRightShort), wxT("Right\tallowDup"));
       c->AddItem(wxT("SeekLeftLong"), _("Long seek left during playback"), FN(OnSeekLeftLong), wxT("Shift+Left\tallowDup"));
       c->AddItem(wxT("SeekRightLong"), _("Long Seek right during playback"), FN(OnSeekRightLong), wxT("Shift+Right\tallowDup"));
       c->EndSubMenu();
+
+      //////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->BeginSubMenu("Device");
+
+      c->AddItem(wxT("InputDevice"), _("Change recording device"), FN(OnInputDevice), wxT("Shift+I"),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+      c->AddItem(wxT("OutputDevice"), _("Change playback device"), FN(OnOutputDevice), wxT("Shift+O"),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+      c->AddItem(wxT("AudioHost"), _("Change audio host"), FN(OnAudioHost), wxT("Shift+H"),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+      c->AddItem(wxT("InputChannels"), _("Change recording channels"), FN(OnInputChannels), wxT("Shift+N"),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+      c->EndSubMenu();
+
+      //////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu("Selection");
@@ -1379,11 +1399,15 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginMenu("Ext-Command");
+
       c->AddGlobalCommand(wxT("PrevWindow"), _("Move backward thru active windows"), FN(PrevWindow), wxT("Alt+Shift+F6"));
       c->AddGlobalCommand(wxT("NextWindow"), _("Move forward thru active windows"), FN(NextWindow), wxT("Alt+F6"));
 
+      //////////////////////////////////////////////////////////////////////////
+
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu("Focus");
+
       c->AddItem(wxT("PrevFrame"), _("Move backward from toolbars to tracks"), FN(PrevFrame), wxT("Ctrl+Shift+F6"));
       c->AddItem(wxT("NextFrame"), _("Move forward from toolbars to tracks"), FN(NextFrame), wxT("Ctrl+F6"));
 
@@ -1394,15 +1418,16 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("FirstTrack"), _("Move Focus to First Track"), FN(OnFirstTrack), wxT("Ctrl+Home"));
       c->AddItem(wxT("LastTrack"), _("Move Focus to Last Track"), FN(OnLastTrack), wxT("Ctrl+End"));
 
-
       c->AddItem(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
       c->AddItem(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
-
 
       c->AddItem(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
       c->AddItem(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
       c->EndSubMenu();
 
+      //////////////////////////////////////////////////////////////////////////
+
+      c->SetDefaultFlags(TracksExistFlag, TracksExistFlag );
       c->BeginSubMenu("Cursor");
 
       c->AddItem(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Left\twantKeyup\tallowDup"));
@@ -1416,8 +1441,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
       c->EndSubMenu();
 
-      c->BeginSubMenu("Track");
+      //////////////////////////////////////////////////////////////////////////
+
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->BeginSubMenu("Track");
+
       c->AddItem(wxT("TrackPan"), _("Change pan on focused track"), FN(OnTrackPan), wxT("Shift+P"));
       c->AddItem(wxT("TrackPanLeft"), _("Pan left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"));
       c->AddItem(wxT("TrackPanRight"), _("Pan right on focused track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"));
