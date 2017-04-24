@@ -8091,7 +8091,7 @@ void TrackPanel::OnSwapChannels(wxCommandEvent & WXUNUSED(event))
    const bool hasFocus =
       (focused == mPopupMenuTarget || focused == partner);
 
-   SplitStereo(true);
+   SplitStereo(false);
    mPopupMenuTarget->SetChannel(Track::RightChannel);
    partner->SetChannel(Track::LeftChannel);
 
