@@ -183,10 +183,9 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
    wxSize sz = GetSize();
    wxRect r;
 
-   dc.SetPen( wxColour( 90, 90, 90 ) );
-
+   dc.SetPen( theTheme.Colour( clrTrackPanelText) );
 #if !defined(__WXMAC__)
-   wxBrush clearer( wxColour( 60,60,60 ));
+   wxBrush clearer( theTheme.Colour( clrMedium ));
    dc.SetBackground( clearer ); 
    dc.Clear();
    dc.SetBrush( *wxTRANSPARENT_BRUSH );
