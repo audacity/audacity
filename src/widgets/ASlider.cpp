@@ -629,7 +629,8 @@ void LWSlider::OnPaint(wxDC &dc)
    }
    else
    {
-      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho, mTop+thumbPos, true);
+      // TODO: Don't use pixel-count hack in positioning.  
+      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
    }
 
    if (mTipPanel)
@@ -653,7 +654,15 @@ void LWSlider::Draw(wxDC & paintDC)
    // Set up the memory DC
    wxMemoryDC dc;
 
-   mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
+
+   if (mOrientation == wxVERTICAL){
+      wxImage img(theTheme.Bitmap( bmpSliderThumb ).ConvertToImage() );
+      wxImage img2 = img.Rotate90(false);
+      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
+   }
+   else
+      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
+
 
 // This code draws the (old) slider thumb.
 #if 0
