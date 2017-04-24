@@ -188,7 +188,9 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
                     wxT("/GUI/RetainLabels"),
                     false);
-
+      S.TieCheckBox(_("B&lend System and Audacity Theme"),
+                    wxT("/GUI/BlendThemes"),
+                    true);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       S.TieCheckBox(_("&Display a mono channel as virtual stereo"),
                     wxT("/GUI/MonoAsVirtualStereo"),

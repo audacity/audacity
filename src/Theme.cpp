@@ -367,15 +367,15 @@ void ThemeBase::RecolourTheme()
       return;
 
    Colour( clrMedium ) = To;
-
    RecolourBitmap( bmpUpButtonLarge, From, To );
    RecolourBitmap( bmpDownButtonLarge, From, To );
    RecolourBitmap( bmpHiliteButtonLarge, From, To );
    RecolourBitmap( bmpUpButtonSmall, From, To );
    RecolourBitmap( bmpDownButtonSmall, From, To );
    RecolourBitmap( bmpHiliteButtonSmall, From, To );
-//   Colour( clrTrackInfo ) = To;
-//   RecolourBitmap( bmpUpButtonExpand, From, To );
+
+   Colour( clrTrackInfo ) = To;
+   RecolourBitmap( bmpUpButtonExpand, From, To );
 }
 
 wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
@@ -882,7 +882,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
-   bRecolourOnLoad = false;
+   gPrefs->Read(wxT("/GUI/BlendThemes"), &bRecolourOnLoad, true);
+
    if(  type == themeFromFile )
    {
       const wxString &FileName = FileNames::ThemeCachePng();
@@ -914,12 +915,10 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       switch( type ){
          default: 
          case themeClassic : 
-            bRecolourOnLoad = true;
             ImageSize = sizeof(ClassicImageCacheAsData);
             pImage = (char *)ClassicImageCacheAsData;
             break;
          case themeLight : 
-            bRecolourOnLoad = true;
             ImageSize = sizeof(LightImageCacheAsData);
             pImage = (char *)LightImageCacheAsData;
             break;
@@ -932,6 +931,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
             pImage = (char *)HiContrastImageCacheAsData;
             break;
       }
+
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
