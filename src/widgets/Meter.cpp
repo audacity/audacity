@@ -462,14 +462,9 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       if (mStyle != MixerTrackCluster)
       {
          bool highlight = InIcon();
-         if (highlight) {
-            auto rect = mIconRect;
-            rect.Inflate(gap, gap);
-            wxColour colour(247, 247, 247);
-            dc.SetBrush(colour);
-            dc.SetPen(colour	);
-            dc.DrawRectangle(rect);
-         }
+         dc.DrawBitmap( theTheme.Bitmap( highlight ? bmpHiliteButtonSmall : bmpUpButtonSmall ), 
+            mIconRect.GetPosition(), false );
+
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
          dc.SetFont(GetFont());
          dc.SetTextForeground( clrText );
@@ -1411,8 +1406,8 @@ void Meter::HandleLayout(wxDC &dc)
       mRuler.OfflimitsPixels(0, 0);
       break;
    case HorizontalStereo:
-      // Ensure there's a margin between left edge of window and items
-      left = gap;
+      // Button right next to dragger.
+      left = 0;
 
       // Add a gap between bottom of icon and bottom of window
       height -= gap;
@@ -1422,6 +1417,7 @@ void Meter::HandleLayout(wxDC &dc)
       mIconRect.SetY(height - iconHeight);
       mIconRect.SetWidth(iconWidth);
       mIconRect.SetHeight(iconHeight);
+      left = gap;
 
       // Make sure there's room for icon and gap between the bottom of the meter and icon
       height -= iconHeight + gap;
@@ -1466,15 +1462,16 @@ void Meter::HandleLayout(wxDC &dc)
       mRuler.OfflimitsPixels(0, mIconRect.GetRight() - 4);
       break;
    case HorizontalStereoCompact:
-      // Ensure there's a margin between left edge of window and items
-      left = gap;
+      // Button right next to dragger.
+      left = 0;
 
       // Create icon rectangle
       mIconRect.SetX(left);
-      mIconRect.SetY((height - iconHeight) / 2);
+      mIconRect.SetY((height - iconHeight) / 2 -1);
       mIconRect.SetWidth(iconWidth);
       mIconRect.SetHeight(iconHeight);
 
+      left = gap;
       // Add width of icon and gap between icon and L/R
       left += iconWidth + gap;
 
