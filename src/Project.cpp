@@ -4033,7 +4033,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
                pRightTrack = NULL;
 
             auto cleanup = finally( [&] {
-               if (wasSelected) {
+               if (!wasSelected) {
                   pTrack->SetSelected(false);
                   if (pRightTrack)
                      pRightTrack->SetSelected(false);
