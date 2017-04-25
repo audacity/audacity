@@ -177,6 +177,13 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Show e&xtra menus"),
                     wxT("/GUI/ShowExtraMenus"),
                     false);
+#ifdef EXPERIMENTAL_THEME_PREFS
+      // We do not want to make this option mainstream.  It's a 
+      // convenience for developers.
+      S.TieCheckBox(_("Show alternative &styling (Mac vs PC)"),
+                    wxT("/GUI/ShowMac"),
+                    false);
+#endif
    }
    S.EndStatic();
 

@@ -52,6 +52,7 @@ in which buttons can be placed.
 #include "../commands/Keyboard.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
+#include "../Prefs.h"
 
 ////////////////////////////////////////////////////////////
 /// ToolBarResizer
@@ -705,28 +706,50 @@ void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 
 void ToolBar:: MakeButtonBackgroundsLarge()
 {
-#ifdef USE_AQUA_THEME
-   MakeMacRecoloredImage( bmpRecoloredUpLarge,     bmpMacUpButton );
-   MakeMacRecoloredImage( bmpRecoloredDownLarge,   bmpMacDownButton );
-   MakeMacRecoloredImage( bmpRecoloredHiliteLarge, bmpMacHiliteButton );
-#else
-   MakeRecoloredImage( bmpRecoloredUpLarge,     bmpUpButtonLarge );
-   MakeRecoloredImage( bmpRecoloredDownLarge,   bmpDownButtonLarge );
-   MakeRecoloredImage( bmpRecoloredHiliteLarge, bmpHiliteButtonLarge );
+
+   bool bUseAqua = false;
+
+#ifdef EXPERIMENTAL_THEME_PREFS
+   gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
 #endif
+
+#ifdef USE_AQUA_THEME
+   bUseAqua = !bUseAqua;
+#endif
+
+   if( bUseAqua ){
+      MakeMacRecoloredImage( bmpRecoloredUpLarge,     bmpMacUpButton );
+      MakeMacRecoloredImage( bmpRecoloredDownLarge,   bmpMacDownButton );
+      MakeMacRecoloredImage( bmpRecoloredHiliteLarge, bmpMacHiliteButton );
+   } else {
+      MakeRecoloredImage( bmpRecoloredUpLarge,     bmpUpButtonLarge );
+      MakeRecoloredImage( bmpRecoloredDownLarge,   bmpDownButtonLarge );
+      MakeRecoloredImage( bmpRecoloredHiliteLarge, bmpHiliteButtonLarge );
+   }
 }
 
 void ToolBar::MakeButtonBackgroundsSmall()
 {
-#ifdef USE_AQUA_THEME
-   MakeMacRecoloredImage( bmpRecoloredUpSmall,     bmpMacUpButtonSmall );
-   MakeMacRecoloredImage( bmpRecoloredDownSmall,   bmpMacDownButtonSmall );
-   MakeMacRecoloredImage( bmpRecoloredHiliteSmall, bmpMacHiliteButtonSmall );
-#else
-   MakeRecoloredImage( bmpRecoloredUpSmall,     bmpUpButtonSmall );
-   MakeRecoloredImage( bmpRecoloredDownSmall,   bmpDownButtonSmall );
-   MakeRecoloredImage( bmpRecoloredHiliteSmall, bmpHiliteButtonSmall );
+
+   bool bUseAqua = false;
+
+#ifdef EXPERIMENTAL_THEME_PREFS
+   gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
 #endif
+
+#ifdef USE_AQUA_THEME
+   bUseAqua = !bUseAqua;
+#endif
+
+   if( bUseAqua ){
+      MakeMacRecoloredImage( bmpRecoloredUpSmall,     bmpMacUpButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredDownSmall,   bmpMacDownButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredHiliteSmall, bmpMacHiliteButtonSmall );
+   } else {
+      MakeRecoloredImage( bmpRecoloredUpSmall,     bmpUpButtonSmall );
+      MakeRecoloredImage( bmpRecoloredDownSmall,   bmpDownButtonSmall );
+      MakeRecoloredImage( bmpRecoloredHiliteSmall, bmpHiliteButtonSmall );
+   }
 }
 
 /// Makes a button and its four different state bitmaps
