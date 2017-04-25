@@ -213,11 +213,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    iter.begin();
    Alg_event_ptr event;
    while (0 != (event = iter.next()) && event->time < t1) {
-      if (event->is_note() && event->time >= t0
-#ifdef EXPERIMENTAL_MIDI_CONTROLS
-            && IsVisibleChan(event->chan)
-#endif
-            ) {
+      if (event->is_note() && event->time >= t0) {
          event->set_pitch(event->get_pitch() + semitones);
       }
    }
