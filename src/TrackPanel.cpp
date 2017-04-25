@@ -957,13 +957,22 @@ int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 
 const TCPLines &getTCPLines( const Track &track )
 {
+   auto lines = track.TypeSwitch< TCPLines * >(
 #ifdef USE_MIDI
-   if ( track.GetKind() == Track::Note )
-      return noteTrackTCPLines;
+      [](const NoteTrack*){
+         return &noteTrackTCPLines;
+      },
 #endif
+      [](const WaveTrack*){
+         return &waveTrackTCPLines;
+      },
+      [](const Track*){
+         return &commonTrackTCPLines;
+      }
+   );
 
-   if ( track.GetKind() == Track::Wave )
-      return waveTrackTCPLines;
+   if (lines)
+      return *lines;
 
    return commonTrackTCPLines;
 }
@@ -1719,7 +1728,7 @@ void TrackPanel::DrawOutside
  const Track * t, const wxRect & rec)
 {
    auto dc = &context.dc;
-   bool bIsWave = (t->GetKind() == Track::Wave);
+   const auto wt = track_cast<const WaveTrack*>(t);
 
    // Draw things that extend right of track control panel
    {
@@ -1735,7 +1744,7 @@ void TrackPanel::DrawOutside
 
       int labelw = GetLabelWidth();
       int vrul = GetVRulerOffset();
-      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), bIsWave, labelw, vrul);
+      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), (wt != nullptr), labelw, vrul);
 
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
