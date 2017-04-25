@@ -5194,6 +5194,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 
          if ((isleft || isright) && midiRect.Contains(event.m_x, event.m_y) &&
                static_cast<NoteTrack *>(t)->LabelClick(midiRect, event.m_x, event.m_y, isright)) {
+            MakeParentModifyState(false);
             Refresh(false);
             return;
          }
