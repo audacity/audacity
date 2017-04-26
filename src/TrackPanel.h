@@ -810,7 +810,7 @@ protected:
    std::unique_ptr<wxCursor>
       mBottomFrequencyCursor, mTopFrequencyCursor, mBandWidthCursor;
 #endif
-#if USE_MIDI
+#ifdef USE_MIDI
    std::unique_ptr<wxCursor>
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif

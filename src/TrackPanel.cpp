@@ -479,7 +479,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mBandWidthCursor = MakeCursor( wxCURSOR_ARROW,  BandWidthCursorXpm, 16, 16);
 #endif
 
-#if USE_MIDI
+#ifdef USE_MIDI
    mStretchMode = stretchCenter;
    mStretching = false;
    mStretched = false;
