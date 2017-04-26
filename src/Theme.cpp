@@ -282,6 +282,7 @@ void Theme::RegisterColours()
 ThemeBase::ThemeBase(void)
 {
    bRecolourOnLoad = false;
+   bRecolouringIsActive = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -321,6 +322,7 @@ void ThemeBase::LoadTheme( teThemeType Theme )
       CreateImageCache();
 #endif
    }
+   bRecolouringIsActive = false;
    if( bRecolourOnLoad )
       RecolourTheme();
    bRecolourOnLoad = false;
@@ -356,9 +358,10 @@ void ThemeBase::RecolourTheme()
       + abs( From.Green() - To.Green() )
       + abs( From.Blue() - To.Blue() );
 
-   // Don't recolour if difference is too big, or no difference.
+   // Don't recolour if difference is too big.
    if( d  > 120 )
       return;
+   bRecolouringIsActive = true;
 
    // A minor tint difference from standard does not need 
    // to be recouloured either.  Includes case of d==0 which is nothing
