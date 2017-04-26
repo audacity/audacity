@@ -121,7 +121,7 @@ public:
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
 
-
+   int ColourDistance( wxColour & From, wxColour & To );
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
    wxImage  & Image( int iIndex );

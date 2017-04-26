@@ -595,6 +595,14 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
       mRuler.SetTickColour( clrText );
+      // If the text colour is too similar to the meter colour, then we need a background
+      // for the text.  We require a total of at least one full-scale RGB difference.
+      int d = theTheme.ColourDistance( clrText, theTheme.Colour( clrMeterOutputRMSBrush ) );
+      if( d < 256 )
+      {
+         destDC.SetBackgroundMode( wxSOLID );
+         destDC.SetTextBackground( clrBoxFill );
+      }
       mRuler.Draw(destDC);
    }
 #endif

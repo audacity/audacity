@@ -341,6 +341,13 @@ void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
    ReplaceImage( iIndex, pResult.get() );
 }
 
+int ThemeBase::ColourDistance( wxColour & From, wxColour & To ){
+   return 
+      abs( From.Red() - To.Red() )
+      + abs( From.Green() - To.Green() )
+      + abs( From.Blue() - To.Blue() );
+}
+
 // This function coerces a theme to be more like the system colours.
 // Only used for built in themes.  For custom themes a user
 // will choose a better theme for them and just not use a mismatching one.
@@ -353,10 +360,7 @@ void ThemeBase::RecolourTheme()
    wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
 #endif
    // only recolour if recolouring is slight.
-   int d = 
-      abs( From.Red() - To.Red() )
-      + abs( From.Green() - To.Green() )
-      + abs( From.Blue() - To.Blue() );
+   int d = ColourDistance( From, To );
 
    // Don't recolour if difference is too big.
    if( d  > 120 )
