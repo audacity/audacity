@@ -656,9 +656,10 @@ void LWSlider::Draw(wxDC & paintDC)
 
 
    if (mOrientation == wxVERTICAL){
-      wxImage img(theTheme.Bitmap( bmpSliderThumb ).ConvertToImage() );
-      wxImage img2 = img.Rotate90(false);
-      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
+//      wxImage img(theTheme.Bitmap( bmpSliderThumb ).ConvertToImage() );
+//      wxImage img2 = img.Rotate90(false);
+//      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
+      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotated )));
    }
    else
       mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));

@@ -9318,20 +9318,18 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & rect, bool bHasMuteSo
 
 //#define USE_BEVELS
 
-#ifdef USE_BEVELS
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool bHasMuteSolo, const int labelw, const int vrul) const
-#else
-void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
-   bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul)) const
-#endif
 {
+   //compiler food.
+   bHasMuteSolo;
+   vrul;
+
    // fill in label
    wxRect fill = rect;
    fill.width = labelw-4;
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
-
 
 #ifdef USE_BEVELS
    if( bHasMuteSolo )

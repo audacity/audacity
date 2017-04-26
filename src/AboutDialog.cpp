@@ -428,8 +428,6 @@ visit our [[http://forum.audacityteam.org/|forum]].");
    );
 
    auto pPage = S.StartNotebookPage( _("Audacity") );
-   //pPage->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
-   //pPage->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    S.StartVerticalLay(1);
    {
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.

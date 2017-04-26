@@ -81,8 +81,6 @@ SplashDialog::SplashDialog(wxWindow * parent)
 
 void SplashDialog::Populate( ShuttleGui & S )
 {
-//   this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
-//   this->SetBackgroundColour(wxColour(0xAB, 0xAB,0xAB ));
    bool bShow;
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &bShow, true );
    S.StartVerticalLay(1);
