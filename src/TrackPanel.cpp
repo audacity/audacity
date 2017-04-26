@@ -5040,7 +5040,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 void TrackPanel::HandleVelocitySlider(wxMouseEvent &event)
 {
    wxASSERT(mCapturedTrack->GetKind() == Track::Note);
-   NoteTrack *capturedTrack = (NoteTrack *) mCapturedTrack;
+   NoteTrack *capturedTrack = static_cast<NoteTrack *>(mCapturedTrack);
 
    LWSlider *slider = mTrackInfo.VelocitySlider(capturedTrack, true);
 
@@ -7333,7 +7333,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
       // Place a volume control below channel buttons (this will
       // control an offset to midi velocity).
-      mTrackInfo.DrawVelocitySlider(dc, (NoteTrack *)t, rect, captured);
+      mTrackInfo.DrawVelocitySlider(dc, static_cast<NoteTrack *>(t), rect, captured);
    }
 #endif // EXPERIMENTAL_MIDI_OUT
 }
