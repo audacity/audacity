@@ -7311,7 +7311,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 #endif
    }
 
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    else if (bIsNote) {
       wxRect midiRect;
       mTrackInfo.GetTrackControlsRect(trackRect, midiRect);
@@ -7319,7 +7319,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       midiRect.y += 15;
       midiRect.height -= 21; // allow room for minimize button at bottom
 
-#ifdef EXPERIMENTAL_MIDI_OUT
       ((NoteTrack *)t)->DrawLabelControls(*dc, midiRect);
 
       // Draw some lines for MuteSolo buttons (normally handled by DrawBordersWithin but not done for note tracks)
@@ -7336,9 +7335,8 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
       // Place a volume control below channel buttons (this will
       // control an offset to midi velocity).
       mTrackInfo.DrawVelocitySlider(dc, (NoteTrack *)t, rect, captured);
-#endif
    }
-#endif // USE_MIDI
+#endif // EXPERIMENTAL_MIDI_OUT
 }
 
 void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
