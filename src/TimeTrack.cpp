@@ -24,6 +24,7 @@
 #include "Prefs.h"
 #include "Internat.h"
 #include "ViewInfo.h"
+#include "AllThemeResources.h"
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
@@ -59,8 +60,8 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
-   blankBrush.SetColour(214, 214, 214);
-   blankPen.SetColour(214, 214, 214);
+   blankBrush.SetColour(theTheme.Colour( clrBlank));
+   blankPen.SetColour(theTheme.Colour( clrBlank));
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
