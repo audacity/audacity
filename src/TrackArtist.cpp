@@ -487,7 +487,7 @@ void TrackArtist::DrawTrack(const Track * t,
           !(!wt->GetLinked() && wt->GetLink())) {
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
-         dc.SetTextForeground(wxColour(255, 255, 0));
+         dc.SetTextForeground(theTheme.Colour( clrTrackNameText ));
          dc.DrawText (wt->GetName(), rect.x+10, rect.y);  // move right 10 pixels to avoid overwriting <- symbol
       }
       break;              // case Wave
@@ -2840,19 +2840,18 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    // we add the height of bottomNote from the position of pitch 0
    track->PrepareIPitchToY(rect);
 
-   // Background comes in 6 colors:
+   // Background comes in 4 colors, that are now themed.
    //   214, 214,214 -- unselected white keys
-   //   192,192,192 -- unselected black keys
-   //   170,170,170 -- unselected bar lines
+   //   192,192,192 -- black keys
+   //   170,170,170 -- bar lines
    //   165,165,190 -- selected white keys
-   //   148,148,170 -- selected black keys
-   //   131,131,150 -- selected bar lines
+
    wxPen blackStripePen;
-   blackStripePen.SetColour(192, 192, 192);
+   blackStripePen.SetColour(theTheme.Colour( clrMidiZebra));
    wxBrush blackStripeBrush;
-   blackStripeBrush.SetColour(192, 192, 192);
+   blackStripeBrush.SetColour(theTheme.Colour( clrMidiZebra));
    wxPen barLinePen;
-   barLinePen.SetColour(170, 170, 170);
+   barLinePen.SetColour(theTheme.Colour( clrMidiLines));
 
    DrawNoteBackground(track, dc, rect, rect, zoomInfo, blankBrush, blankPen,
                       blackStripeBrush, blackStripePen, barLinePen);
@@ -2873,14 +2872,14 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    dc.SetPen(selectedWhiteKeyPen);
 
    wxBrush selectedWhiteKeyBrush;
-   selectedWhiteKeyBrush.SetColour(165, 165, 190);
+   selectedWhiteKeyBrush.SetColour(theTheme.Colour( clrSelected ));
    // Then, the black keys and octave stripes, as smaller rectangles
    wxPen selectedBlackKeyPen;
-   selectedBlackKeyPen.SetColour(148, 148, 170);
+   selectedBlackKeyPen.SetColour(theTheme.Colour( clrMidiZebra));
    wxBrush selectedBlackKeyBrush;
-   selectedBlackKeyBrush.SetColour(148, 148, 170);
+   selectedBlackKeyBrush.SetColour(theTheme.Colour( clrMidiZebra));
    wxPen selectedBarLinePen;
-   selectedBarLinePen.SetColour(131, 131, 150);
+   selectedBarLinePen.SetColour(theTheme.Colour( clrMidiLines));
 
    DrawNoteBackground(track, dc, rect, selBG, zoomInfo,
                       selectedWhiteKeyBrush, selectedWhiteKeyPen,
