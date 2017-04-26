@@ -1372,7 +1372,7 @@ bool NumericTextCtrl::Layout()
    mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight);
    memDC.SelectObject(*mBackgroundBitmap);
 
-   theTheme.SetBrushColour( Brush, clrTimeBack );
+   theTheme.SetBrushColour( Brush, clrTimeHours );
    memDC.SetBrush(Brush);
    memDC.SetPen(*wxTRANSPARENT_PEN);
    memDC.DrawRectangle(0, 0, mWidth + mButtonWidth, mHeight);
