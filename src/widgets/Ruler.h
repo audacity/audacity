@@ -171,7 +171,7 @@ public:
    wxRect mRect;
 
 private:
-   static wxColour mTickColour;
+   wxColour mTickColour;
    wxPen mPen;
 
    int          mMaxWidth, mMaxHeight;
@@ -204,7 +204,7 @@ private:
       int lx, ly;
       wxString text;
 
-      void Draw(wxDC &dc, bool twoTone) const;
+      void Draw(wxDC &dc, bool twoTone, wxColour c) const;
    };
 
    int          mNumMajor;
@@ -258,6 +258,7 @@ class AUDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
    void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
+   void SetTickColour( wxColour & c){ ruler.SetTickColour( c );}
 
    // We don't need or want to accept focus.
    bool AcceptsFocus() const { return false; }

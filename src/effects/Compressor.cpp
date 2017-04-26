@@ -42,6 +42,8 @@
 #include "../widgets/Ruler.h"
 
 #include "../WaveTrack.h"
+#include "../Theme.h"
+#include "../AllThemeResources.h"
 
 enum
 {
@@ -684,6 +686,9 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    vRuler.SetBounds(0, 0, w, height - h);
    hRuler.SetBounds(w, height - h, width, height);
+
+   vRuler.SetTickColour( theTheme.Colour( clrGraphLabels ));
+   hRuler.SetTickColour( theTheme.Colour( clrGraphLabels ));
 
 #if defined(__WXMSW__)
    dc.Clear();

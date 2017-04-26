@@ -100,7 +100,7 @@ using std::max;
 #define PLAY_REGION_RECT_HEIGHT 3
 #define PLAY_REGION_GLOBAL_OFFSET_Y 7
 
-wxColour Ruler::mTickColour{ 153, 153, 153 };
+//wxColour Ruler::mTickColour{ 153, 153, 153 };
 
 //
 // Ruler
@@ -126,6 +126,7 @@ Ruler::Ruler()
    mBottom = -1;
    mbTicksOnly = true;
    mbTicksAtExtremes = false;
+   mTickColour = wxColour( 153, 153, 153 );
    mPen.SetColour(mTickColour);
 
    // Note: the font size is now adjusted automatically whenever
@@ -1340,7 +1341,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
          }
       }
 
-      mMajorLabels[i].Draw(*mDC, mTwoTone);
+      mMajorLabels[i].Draw(*mDC, mTwoTone, mTickColour);
    }
 
    if(mbMinor == true) {
@@ -1368,7 +1369,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         mMinorLabels[i].Draw(*mDC, mTwoTone);
+         mMinorLabels[i].Draw(*mDC, mTwoTone, mTickColour);
       }
    }
 
@@ -1400,7 +1401,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         mMinorMinorLabels[i].Draw(*mDC, mTwoTone);
+         mMinorMinorLabels[i].Draw(*mDC, mTwoTone, mTickColour);
       }
    }
 }
@@ -1532,14 +1533,14 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int star
    //Remember: DELETE majorlabels....
 }
 
-void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
+void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 {
    if (text != wxT("")) {
       bool altColor = twoTone && value < 0.0;
 
 #ifdef EXPERIMENTAL_THEMING
       // TODO:  handle color distinction
-      dc.SetTextForeground(mTickColour);
+      dc.SetTextForeground(c);
 #else
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
@@ -3095,16 +3096,15 @@ void AdornedRulerPanel::ShowContextMenu( MenuChoice choice, const wxPoint *pPosi
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
-   AColor::MediumTrackInfo( dc, false );
+   AColor::UseThemeColour( dc, clrTrackInfo );
    dc->DrawRectangle( mInner );
 
    if (mShowScrubbing) {
       // Let's distinguish the scrubbing area by using the same gray as for
       // selected track control panel.
-      AColor::MediumTrackInfo(dc, true);
+      AColor::UseThemeColour(dc, clrScrubRuler );
       dc->DrawRectangle(mScrubZone);
    }
-
 }
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
