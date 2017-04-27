@@ -421,10 +421,14 @@ void AColor::Solo(wxDC * dc, bool on, bool selected)
    }
 }
 
+bool AColor::gradient_inited = 0;
+
 void AColor::ReInit()
 {
    inited=false;
    Init();
+   gradient_inited=0;
+   PreComputeGradient();
 }
 
 void AColor::Init()
@@ -626,7 +630,7 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
 }
 
-bool AColor::gradient_inited = 0;
+
 
 unsigned char AColor::gradient_pre[ColorGradientTotal][2][gradientSteps][3];
 
@@ -647,13 +651,17 @@ void AColor::PreComputeGradient() {
                      r = g = b = 0.84 - 0.84 * value;
                   } else {
                      const int gsteps = 4;
-                     float gradient[gsteps + 1][3] = {
-                        {float(0.75), float(0.75), float(0.75)},    // lt gray
-                        {float(0.30), float(0.60), float(1.00)},    // lt blue
-                        {float(0.90), float(0.10), float(0.90)},    // violet
-                        {float(1.00), float(0.00), float(0.00)},    // red
-                        {float(1.00), float(1.00), float(1.00)}     // white
-                     };
+                     float gradient[gsteps + 1][3];
+                     theTheme.Colour( clrSpectro1 ) = theTheme.Colour( clrUnselected );
+                     theTheme.Colour( clrSpectro1Sel ) = theTheme.Colour( clrSelected );
+                     int clrFirst = (selected == ColorGradientUnselected ) ? clrSpectro1 : clrSpectro1Sel;
+                     for(int j=0;j<(gsteps+1);j++){
+                        wxColour c = theTheme.Colour( clrFirst+j );
+                        gradient[ j] [0] = c.Red()/255.0;
+                        gradient[ j] [1] = c.Green()/255.0;
+                        gradient[ j] [2] = c.Blue()/255.0;
+                     }
+
 
                      int left = (int)(value * gsteps);
                      int right = (left == gsteps ? gsteps : left + 1);
