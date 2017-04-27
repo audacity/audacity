@@ -275,8 +275,9 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
       min = max;
    }
 
-   dc.SetBrush(blankBrush);
-   dc.SetPen(blankPen);
+   //dc.SetBrush(blankBrush);
+   //dc.SetPen(blankPen);
+   AColor::UseThemeColour( &dc, clrTrackBackground );
    dc.DrawRectangle(r);
 
    //copy this rectangle away for future use.
@@ -291,6 +292,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
                             // LL:  It's because the ruler only Invalidate()s when the NEW value is different
                             //      than the current value.
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   mRuler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
    mRuler->Draw(dc, this);
 
    Doubles envValues{ size_t(mid.width) };
