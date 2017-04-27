@@ -543,6 +543,9 @@ void ToolBar::UpdatePrefs()
    if ( mResizer )
    {
       mResizer->SetToolTip( _("Click and drag to resize toolbar") );
+      wxSizeEvent e;
+      GetParent()->GetEventHandler()->AddPendingEvent( e );
+      GetParent()->Refresh();
    }
 #endif
 

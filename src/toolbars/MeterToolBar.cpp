@@ -174,8 +174,6 @@ void MeterToolBar::UpdatePrefs()
    // Give base class a chance
    ToolBar::UpdatePrefs();
 
-   wxSizeEvent e;
-   GetParent()->GetEventHandler()->AddPendingEvent( e );
 
 }
 
