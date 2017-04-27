@@ -394,6 +394,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
          return;
    }
 
+   // flush now so toolbars will know their position.
+   gPrefs->Flush();
    if (mCategories) {
       // Now apply the changes
       for (size_t i = 0; i < mCategories->GetPageCount(); i++) {

@@ -170,8 +170,9 @@ void ToolFrame::OnGrabber( GrabberEvent & event )
 void ToolFrame::OnToolBarUpdate( wxCommandEvent & event )
 {
    // Resize floater window to exactly contain toolbar
+   // use actual size rather than minimum size.
    if (mBar)
-      mBar->GetParent()->SetClientSize( mBar->GetMinSize() );
+      mBar->GetParent()->SetClientSize( mBar->GetSize() );// ->GetMinSize() );
 
    // Allow it to propagate to our parent
    event.Skip();

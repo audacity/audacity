@@ -484,9 +484,6 @@ void ToolBar::ReCreateButtons()
       // Use a box sizer for laying out controls
       ms->Add((mHSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
 
-      // (Re)Establish dock state
-      SetDocked(GetDock(), false);
-
       // Go add all the rest of the gadgets
       Populate();
 
@@ -498,6 +495,10 @@ void ToolBar::ReCreateButtons()
          ms->Add(mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1);
          mResizer->SetToolTip(_("Click and drag to resize toolbar"));
       }
+      
+      // Set dock after possibly creating resizer.
+      // (Re)Establish dock state
+      SetDocked(GetDock(), false);
 
       // Set the sizer
       SetSizerAndFit(ms.release());
@@ -585,8 +586,10 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 //
 void ToolBar::Updated()
 {
-   wxCommandEvent e( EVT_TOOLBAR_UPDATED, GetId() );
-   GetParent()->GetEventHandler()->AddPendingEvent( e );
+   if( IsDocked() )
+      GetDock()->Updated();
+   //wxCommandEvent e( EVT_TOOLBAR_UPDATED, GetId() );
+   //GetParent()->GetEventHandler()->AddPendingEvent( e );
 }
 
 //

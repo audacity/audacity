@@ -309,6 +309,7 @@ public:
 
    // Reverse what was done by WrapConfiguration.
    void RestoreConfiguration(ToolBarConfiguration &backup);
+   void Updated();
 
  protected:
 
@@ -323,7 +324,7 @@ public:
    void VisitLayout(LayoutVisitor &visitor,
                     ToolBarConfiguration *pWrappedConfiguration = nullptr);
 
-   void Updated();
+
 
    int mTotalToolBarHeight;
    wxWindow *mParent;

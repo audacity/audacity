@@ -173,6 +173,10 @@ void MeterToolBar::UpdatePrefs()
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
+
+   wxSizeEvent e;
+   GetParent()->GetEventHandler()->AddPendingEvent( e );
+
 }
 
 void MeterToolBar::RegenerateTooltips()
@@ -226,7 +230,7 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
       mRecordMeter->SetMinSize( wxSize( width, height ));
    }
    if( mPlayMeter ) {
-      mPlayMeter->SetMinSize( wxSize( width, height ));
+      mPlayMeter->SetMinSize( wxSize( width, height));
       mSizer->SetItemPosition( mPlayMeter, pos );
    }
 
