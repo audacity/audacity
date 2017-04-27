@@ -37,7 +37,7 @@
 #include "InconsistencyException.h"
 
 #ifdef SONIFY
-#include "portmidi.h"
+#include "../lib-src/portmidi/pm_common/portmidi.h"
 
 #define SON_PROGRAM 0
 #define SON_AutoSave 67
