@@ -126,7 +126,7 @@ Ruler::Ruler()
    mBottom = -1;
    mbTicksOnly = true;
    mbTicksAtExtremes = false;
-   mTickColour = wxColour( 153, 153, 153 );
+   mTickColour = wxColour( theTheme.Colour( clrTrackPanelText ));
    mPen.SetColour(mTickColour);
 
    // Note: the font size is now adjusted automatically whenever
