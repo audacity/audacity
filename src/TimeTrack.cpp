@@ -59,9 +59,6 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
-
-   blankBrush.SetColour(theTheme.Colour( clrBlank));
-   blankPen.SetColour(theTheme.Colour( clrBlank));
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
@@ -88,9 +85,6 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
    mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
-
-   blankBrush.SetColour(214, 214, 214);
-   blankPen.SetColour(214, 214, 214);
 }
 
 // Copy the track metadata but not the contents.
@@ -275,9 +269,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
       min = max;
    }
 
-   //dc.SetBrush(blankBrush);
-   //dc.SetPen(blankPen);
-   AColor::UseThemeColour( &dc, clrTrackBackground );
+   AColor::UseThemeColour( &dc, clrUnselected );
    dc.DrawRectangle(r);
 
    //copy this rectangle away for future use.
