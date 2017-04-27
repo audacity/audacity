@@ -90,6 +90,14 @@ bool ZoomInfo::ZoomOutAvailable() const
 void ZoomInfo::SetZoom(double pixelsPerSecond)
 {
    zoom = std::max(gMinZoom, std::min(gMaxZoom, pixelsPerSecond));
+   AudacityProject * project = GetActiveProject();
+   if ( project ) {
+      double samplesPerSecond = project->GetRate();
+      double pixelsPerSample = pixelsPerSecond/samplesPerSecond;
+      if ( pixelsPerSample > 2 ) {
+         zoom = floor(pixelsPerSample) * samplesPerSecond;
+      }
+   }
 // DA: Avoids stuck in snap-to
 #ifdef EXPERIMENTAL_DA
    // Disable snapping if user zooms in a long way.
