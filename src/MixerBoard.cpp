@@ -961,12 +961,9 @@ void MixerBoard::UpdateTrackClusters()
    TrackListIterator iterTracks(mTracks);
    MixerTrackCluster* pMixerTrackCluster = NULL;
    Track* pTrack;
-   Track* pRightTrack;
 
    pTrack = iterTracks.First();
    while (pTrack) {
-      pRightTrack = pTrack->GetLinked() ? iterTracks.Next() : NULL;
-
       if (auto pPlayableTrack = dynamic_cast<PlayableTrack*>(pTrack))
       {
          if (nClusterIndex < nClusterCount)
