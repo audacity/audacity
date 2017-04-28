@@ -164,7 +164,7 @@ void SelectionBar::Populate()
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
 
    {
-      bool bCustomRadioLabels = !theTheme.RecolouringIsActive();
+      bool bSysTextColour = theTheme.IsUsingSyestemTextColour();
       // Can't set textcolour of radio buttons.
       // so instead we make the text empty and add in two wxStaticTexts
       // and we can set the colour of those.
@@ -175,7 +175,7 @@ void SelectionBar::Populate()
       // Should not be a hardship for them, as themes make little difference 
       // for them, except Hi-Contrast, which should be used with recolouring.
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, bCustomRadioLabels ? wxT("") : _("End"),
+      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, bSysTextColour ? _("End") : wxT("") ,
          wxDefaultPosition, wxDefaultSize,
          wxRB_GROUP);
       mRightEndButton->SetName(_("End"));
@@ -183,7 +183,7 @@ void SelectionBar::Populate()
       mRightEndButton->SetValue(!showSelectionLength);
       hSizer->Add(mRightEndButton,
          0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      if( bCustomRadioLabels )
+      if( !bSysTextColour )
       {
          wxStaticText * pEndText = safenew wxStaticText(this, -1, _("End"));
          pEndText->SetForegroundColour( clrText );
@@ -191,13 +191,13 @@ void SelectionBar::Populate()
             0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
       }
 
-      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, bCustomRadioLabels ? wxT(""): _("Length"));
+      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID,bSysTextColour ? _("Length") : wxT("") );
       mRightLengthButton->SetName(_("Length"));
       mRightLengthButton->SetForegroundColour( clrText );
       mRightLengthButton->SetValue(showSelectionLength);
       hSizer->Add(mRightLengthButton,
          0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-      if( bCustomRadioLabels )
+      if( !bSysTextColour )
       {
          wxStaticText * pLengthText = safenew wxStaticText(this, -1, _("Length"));
          pLengthText->SetForegroundColour( clrText );

@@ -282,7 +282,7 @@ void Theme::RegisterColours()
 ThemeBase::ThemeBase(void)
 {
    bRecolourOnLoad = false;
-   bRecolouringIsActive = false;
+   bIsUsingSystemTextColour = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -322,9 +322,25 @@ void ThemeBase::LoadTheme( teThemeType Theme )
       CreateImageCache();
 #endif
    }
-   bRecolouringIsActive = false;
+
    if( bRecolourOnLoad )
       RecolourTheme();
+
+   wxColor Back        = theTheme.Colour( clrTrackInfo );
+   wxColor CurrentText = theTheme.Colour( clrTrackPanelText );
+   wxColor DesiredText = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
+
+   int TextColourDifference =  ColourDistance( CurrentText, DesiredText );
+
+   bIsUsingSystemTextColour = ( TextColourDifference == 0 );
+   // Theming is very accepting of alternative text colours.  They just need to 
+   // have decent contrast to the background colour, if we're blending themes. 
+   if( !bIsUsingSystemTextColour ){
+      int ContrastLevel        =  ColourDistance( Back, DesiredText );
+      bIsUsingSystemTextColour = bRecolourOnLoad && (ContrastLevel > 250);
+      if( bIsUsingSystemTextColour )
+         Colour( clrTrackPanelText ) = DesiredText;
+   }
    bRecolourOnLoad = false;
 
    // Next line is not required as we haven't yet built the GUI
@@ -365,7 +381,6 @@ void ThemeBase::RecolourTheme()
    // Don't recolour if difference is too big.
    if( d  > 120 )
       return;
-   bRecolouringIsActive = true;
 
    // A minor tint difference from standard does not need 
    // to be recouloured either.  Includes case of d==0 which is nothing

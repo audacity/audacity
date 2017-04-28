@@ -117,7 +117,7 @@ public:
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
-   bool RecolouringIsActive(){ return bRecolouringIsActive;};
+   bool IsUsingSyestemTextColour(){ return bIsUsingSystemTextColour;};
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
 
@@ -129,7 +129,7 @@ public:
    wxFont   & Font( int iIndex );
    wxSize ImageSize( int iIndex );
    bool bRecolourOnLoad;  // Request to recolour.
-   bool bRecolouringIsActive;  // We're actually doing it.
+   bool bIsUsingSystemTextColour;
 
    void ReplaceImage( int iIndex, wxImage * pImage );
 
