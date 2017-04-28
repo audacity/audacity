@@ -1510,8 +1510,11 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
          ;// don't add to menus!
       }
       else if (plug->IsEffectDefault()
+#ifdef EXPERIMENTAL_DA
          // Move Nyquist prompt into nyquist group.
-         && (plug->GetName() != _("Nyquist Prompt")))
+         && (plug->GetName() != _("Nyquist Prompt"))
+#endif
+         )
       {
          defplugs.Add(plug);
       }
