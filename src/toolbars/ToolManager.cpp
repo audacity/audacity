@@ -170,8 +170,9 @@ void ToolFrame::OnGrabber( GrabberEvent & event )
 void ToolFrame::OnToolBarUpdate( wxCommandEvent & event )
 {
    // Resize floater window to exactly contain toolbar
+   // use actual size rather than minimum size.
    if (mBar)
-      mBar->GetParent()->SetClientSize( mBar->GetMinSize() );
+      mBar->GetParent()->SetClientSize( mBar->GetSize() );// ->GetMinSize() );
 
    // Allow it to propagate to our parent
    event.Skip();
@@ -183,10 +184,9 @@ void ToolFrame::OnPaint( wxPaintEvent & WXUNUSED(event) )
    wxSize sz = GetSize();
    wxRect r;
 
-   dc.SetPen( wxColour( 90, 90, 90 ) );
-
+   dc.SetPen( theTheme.Colour( clrTrackPanelText) );
 #if !defined(__WXMAC__)
-   wxBrush clearer( wxColour( 60,60,60 ));
+   wxBrush clearer( theTheme.Colour( clrMedium ));
    dc.SetBackground( clearer ); 
    dc.Clear();
    dc.SetBrush( *wxTRANSPARENT_BRUSH );
@@ -1285,6 +1285,7 @@ void ToolManager::OnIndicatorPaint( wxPaintEvent & event )
    // TODO: Better to use a bitmap than a triangular region.
    wxWindow *w = (wxWindow *)event.GetEventObject();
    wxPaintDC dc( w );
+   // TODO: Better (faster) to use the existing spare brush.
    wxBrush brush( theTheme.Colour( clrTrackPanelText ) );
    dc.SetBackground( brush );
    dc.Clear();

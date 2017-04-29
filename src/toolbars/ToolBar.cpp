@@ -52,6 +52,7 @@ in which buttons can be placed.
 #include "../commands/Keyboard.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
+#include "../Prefs.h"
 
 ////////////////////////////////////////////////////////////
 /// ToolBarResizer
@@ -142,9 +143,9 @@ void ToolBarResizer::OnPaint( wxPaintEvent & event )
    // Under GTK, we specifically set the toolbar background to the background
    // colour in the system theme.
 #if defined( __WXGTK__ )
-   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
+//   dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
 #endif
-
+   dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
    wxSize sz = GetSize();
@@ -483,9 +484,6 @@ void ToolBar::ReCreateButtons()
       // Use a box sizer for laying out controls
       ms->Add((mHSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
 
-      // (Re)Establish dock state
-      SetDocked(GetDock(), false);
-
       // Go add all the rest of the gadgets
       Populate();
 
@@ -497,6 +495,10 @@ void ToolBar::ReCreateButtons()
          ms->Add(mResizer, 0, wxEXPAND | wxALIGN_TOP | wxLEFT, 1);
          mResizer->SetToolTip(_("Click and drag to resize toolbar"));
       }
+      
+      // Set dock after possibly creating resizer.
+      // (Re)Establish dock state
+      SetDocked(GetDock(), false);
 
       // Set the sizer
       SetSizerAndFit(ms.release());
@@ -541,6 +543,9 @@ void ToolBar::UpdatePrefs()
    if ( mResizer )
    {
       mResizer->SetToolTip( _("Click and drag to resize toolbar") );
+      wxSizeEvent e;
+      GetParent()->GetEventHandler()->AddPendingEvent( e );
+      GetParent()->Refresh();
    }
 #endif
 
@@ -584,8 +589,10 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 //
 void ToolBar::Updated()
 {
-   wxCommandEvent e( EVT_TOOLBAR_UPDATED, GetId() );
-   GetParent()->GetEventHandler()->AddPendingEvent( e );
+   if( IsDocked() )
+      GetDock()->Updated();
+   //wxCommandEvent e( EVT_TOOLBAR_UPDATED, GetId() );
+   //GetParent()->GetEventHandler()->AddPendingEvent( e );
 }
 
 //
@@ -705,28 +712,50 @@ void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 
 void ToolBar:: MakeButtonBackgroundsLarge()
 {
-#ifdef USE_AQUA_THEME
-   MakeMacRecoloredImage( bmpRecoloredUpLarge,     bmpMacUpButton );
-   MakeMacRecoloredImage( bmpRecoloredDownLarge,   bmpMacDownButton );
-   MakeMacRecoloredImage( bmpRecoloredHiliteLarge, bmpMacHiliteButton );
-#else
-   MakeRecoloredImage( bmpRecoloredUpLarge,     bmpUpButtonLarge );
-   MakeRecoloredImage( bmpRecoloredDownLarge,   bmpDownButtonLarge );
-   MakeRecoloredImage( bmpRecoloredHiliteLarge, bmpHiliteButtonLarge );
+
+   bool bUseAqua = false;
+
+#ifdef EXPERIMENTAL_THEME_PREFS
+   gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
 #endif
+
+#ifdef USE_AQUA_THEME
+   bUseAqua = !bUseAqua;
+#endif
+
+   if( bUseAqua ){
+      MakeMacRecoloredImage( bmpRecoloredUpLarge,     bmpMacUpButton );
+      MakeMacRecoloredImage( bmpRecoloredDownLarge,   bmpMacDownButton );
+      MakeMacRecoloredImage( bmpRecoloredHiliteLarge, bmpMacHiliteButton );
+   } else {
+      MakeRecoloredImage( bmpRecoloredUpLarge,     bmpUpButtonLarge );
+      MakeRecoloredImage( bmpRecoloredDownLarge,   bmpDownButtonLarge );
+      MakeRecoloredImage( bmpRecoloredHiliteLarge, bmpHiliteButtonLarge );
+   }
 }
 
 void ToolBar::MakeButtonBackgroundsSmall()
 {
-#ifdef USE_AQUA_THEME
-   MakeMacRecoloredImage( bmpRecoloredUpSmall,     bmpMacUpButtonSmall );
-   MakeMacRecoloredImage( bmpRecoloredDownSmall,   bmpMacDownButtonSmall );
-   MakeMacRecoloredImage( bmpRecoloredHiliteSmall, bmpMacHiliteButtonSmall );
-#else
-   MakeRecoloredImage( bmpRecoloredUpSmall,     bmpUpButtonSmall );
-   MakeRecoloredImage( bmpRecoloredDownSmall,   bmpDownButtonSmall );
-   MakeRecoloredImage( bmpRecoloredHiliteSmall, bmpHiliteButtonSmall );
+
+   bool bUseAqua = false;
+
+#ifdef EXPERIMENTAL_THEME_PREFS
+   gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
 #endif
+
+#ifdef USE_AQUA_THEME
+   bUseAqua = !bUseAqua;
+#endif
+
+   if( bUseAqua ){
+      MakeMacRecoloredImage( bmpRecoloredUpSmall,     bmpMacUpButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredDownSmall,   bmpMacDownButtonSmall );
+      MakeMacRecoloredImage( bmpRecoloredHiliteSmall, bmpMacHiliteButtonSmall );
+   } else {
+      MakeRecoloredImage( bmpRecoloredUpSmall,     bmpUpButtonSmall );
+      MakeRecoloredImage( bmpRecoloredDownSmall,   bmpDownButtonSmall );
+      MakeRecoloredImage( bmpRecoloredHiliteSmall, bmpHiliteButtonSmall );
+   }
 }
 
 /// Makes a button and its four different state bitmaps

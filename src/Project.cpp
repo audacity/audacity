@@ -1255,10 +1255,11 @@ AudacityProject::~AudacityProject()
                      this);
 }
 
-void AudacityProject::ResetColours()
+void AudacityProject::ApplyUpdatedTheme()
 {
    SetBackgroundColour(theTheme.Colour( clrMedium ));
    ClearBackground();// For wxGTK.
+   mTrackPanel->ApplyUpdatedTheme();
 }
 
 
@@ -4021,6 +4022,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       {
          if (pTrack->GetKind() == Track::Wave)
          {
+            auto wasSelected = pTrack->GetSelected();
             pTrack->SetSelected(true);
             if (pTrack->GetLinked())
             {
@@ -4030,6 +4032,14 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
             else
                pRightTrack = NULL;
 
+            auto cleanup = finally( [&] {
+               if (!wasSelected) {
+                  pTrack->SetSelected(false);
+                  if (pRightTrack)
+                     pRightTrack->SetSelected(false);
+               }
+            } );
+
             uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), wxT("ogg"));
             FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
             bSuccess =
@@ -4037,9 +4047,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
                                     wxT("OGG"), uniqueTrackFileName.GetFullPath(), true,
                                     pTrack->GetStartTime(), pTrack->GetEndTime());
 
-            pTrack->SetSelected(false);
-            if (pRightTrack)
-               pRightTrack->SetSelected(false);
+            if (!bSuccess)
+               break;
          }
       }
 

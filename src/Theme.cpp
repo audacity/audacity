@@ -61,6 +61,7 @@ and use it for toolbar and window layouts too.
 #include <wx/ffile.h>
 #include <wx/mstream.h>
 #include <wx/msgdlg.h>
+#include <wx/settings.h>
 
 #include "Project.h"
 #include "toolbars/ToolBar.h"
@@ -73,6 +74,7 @@ and use it for toolbar and window layouts too.
 #include "FileNames.h"
 #include "Prefs.h"
 #include "AColor.h"
+#include "ImageManipulation.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -199,6 +201,9 @@ static unsigned char LightImageCacheAsData[] = {
 static unsigned char ClassicImageCacheAsData[] = {
 #include "ClassicThemeAsCeeCode.h"
 };
+static unsigned char HiContrastImageCacheAsData[] = {
+#include "HiContrastThemeAsCeeCode.h"
+};
 
 // theTheme is a global variable.
 AUDACITY_DLL_API Theme theTheme;
@@ -245,7 +250,7 @@ void Theme::ApplyUpdatedImages()
 {
    AColor::ReInit();
    AudacityProject *p = GetActiveProject();
-   p->ResetColours();
+   p->ApplyUpdatedTheme();
    for( int ii = 0; ii < ToolBarCount; ++ii )
    {
       ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
@@ -276,6 +281,8 @@ void Theme::RegisterColours()
 
 ThemeBase::ThemeBase(void)
 {
+   bRecolourOnLoad = false;
+   bIsUsingSystemTextColour = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -316,11 +323,82 @@ void ThemeBase::LoadTheme( teThemeType Theme )
 #endif
    }
 
+   if( bRecolourOnLoad )
+      RecolourTheme();
+
+   wxColor Back        = theTheme.Colour( clrTrackInfo );
+   wxColor CurrentText = theTheme.Colour( clrTrackPanelText );
+   wxColor DesiredText = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
+
+   int TextColourDifference =  ColourDistance( CurrentText, DesiredText );
+
+   bIsUsingSystemTextColour = ( TextColourDifference == 0 );
+   // Theming is very accepting of alternative text colours.  They just need to 
+   // have decent contrast to the background colour, if we're blending themes. 
+   if( !bIsUsingSystemTextColour ){
+      int ContrastLevel        =  ColourDistance( Back, DesiredText );
+      bIsUsingSystemTextColour = bRecolourOnLoad && (ContrastLevel > 250);
+      if( bIsUsingSystemTextColour )
+         Colour( clrTrackPanelText ) = DesiredText;
+   }
+   bRecolourOnLoad = false;
+
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
    // ApplyUpdatedImages();
 }
 
+void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
+{
+   wxImage Image( Bitmap( iIndex ).ConvertToImage() );
+
+   std::unique_ptr<wxImage> pResult = ChangeImageColour(
+      &Image, From, To );
+   ReplaceImage( iIndex, pResult.get() );
+}
+
+int ThemeBase::ColourDistance( wxColour & From, wxColour & To ){
+   return 
+      abs( From.Red() - To.Red() )
+      + abs( From.Green() - To.Green() )
+      + abs( From.Blue() - To.Blue() );
+}
+
+// This function coerces a theme to be more like the system colours.
+// Only used for built in themes.  For custom themes a user
+// will choose a better theme for them and just not use a mismatching one.
+void ThemeBase::RecolourTheme()
+{
+   wxColour From = Colour( clrMedium );
+#if defined( __WXGTK__ )
+   wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
+#else
+   wxColour To = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+#endif
+   // only recolour if recolouring is slight.
+   int d = ColourDistance( From, To );
+
+   // Don't recolour if difference is too big.
+   if( d  > 120 )
+      return;
+
+   // A minor tint difference from standard does not need 
+   // to be recouloured either.  Includes case of d==0 which is nothing
+   // needs to be done.
+   if( d < 40 )
+      return;
+
+   Colour( clrMedium ) = To;
+   RecolourBitmap( bmpUpButtonLarge, From, To );
+   RecolourBitmap( bmpDownButtonLarge, From, To );
+   RecolourBitmap( bmpHiliteButtonLarge, From, To );
+   RecolourBitmap( bmpUpButtonSmall, From, To );
+   RecolourBitmap( bmpDownButtonSmall, From, To );
+   RecolourBitmap( bmpHiliteButtonSmall, From, To );
+
+   Colour( clrTrackInfo ) = To;
+   RecolourBitmap( bmpUpButtonExpand, From, To );
+}
 
 wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 {
@@ -799,6 +877,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "classic" );
    aThemes.Add( "dark" );
    aThemes.Add( "light" );
+   aThemes.Add( "hi-contrast" );
    aThemes.Add( "custom" );
    int themeIx = aThemes.Index( Name );
    if( themeIx < 0 )
@@ -824,6 +903,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //   {
 //      ImageCache.InitAlpha();
 //   }
+
+   gPrefs->Read(wxT("/GUI/BlendThemes"), &bRecolourOnLoad, true);
 
    if(  type == themeFromFile )
    {
@@ -854,20 +935,25 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       size_t ImageSize = 0;
       char * pImage = NULL;
       switch( type ){
+         default: 
          case themeClassic : 
             ImageSize = sizeof(ClassicImageCacheAsData);
             pImage = (char *)ClassicImageCacheAsData;
-            break;
-         default: 
-         case themeDark : 
-            ImageSize = sizeof(DarkImageCacheAsData);
-            pImage = (char *)DarkImageCacheAsData;
             break;
          case themeLight : 
             ImageSize = sizeof(LightImageCacheAsData);
             pImage = (char *)LightImageCacheAsData;
             break;
+         case themeDark : 
+            ImageSize = sizeof(DarkImageCacheAsData);
+            pImage = (char *)DarkImageCacheAsData;
+            break;
+         case themeHiContrast : 
+            ImageSize = sizeof(HiContrastImageCacheAsData);
+            pImage = (char *)HiContrastImageCacheAsData;
+            break;
       }
+
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))

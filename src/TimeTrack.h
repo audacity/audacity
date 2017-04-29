@@ -146,9 +146,6 @@ class TimeTrack final : public Track {
    Track::Holder Duplicate() const override;
 
    friend class TrackFactory;
-
-   wxBrush blankBrush;
-   wxPen blankPen;
 };
 
 

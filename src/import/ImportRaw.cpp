@@ -27,10 +27,12 @@ and sample size to help you importing data of an unknown format.
 #include "Import.h"
 
 #include "../DirManager.h"
+#include "../FileException.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../UserException.h"
 #include "../WaveTrack.h"
 
 #include <cmath>
@@ -92,6 +94,9 @@ class ImportRawDialog final : public wxDialogWrapper {
    DECLARE_EVENT_TABLE()
 };
 
+// This function leaves outTracks empty as an indication of error,
+// but may also throw FileException to make use of the application's
+// user visible error reporting.
 void ImportRaw(wxWindow *parent, const wxString &fileName,
               TrackFactory *trackFactory, TrackHolders &outTracks)
 {
@@ -158,12 +163,11 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       }
 
       if (!sndFile){
-         // TODO: Handle error
          char str[1000];
          sf_error_str((SNDFILE *)NULL, str, 1000);
          printf("%s\n", str);
 
-         return;
+         throw FileException{ FileException::Cause::Open, fileName };
       }
 
       result = sf_command(sndFile.get(), SFC_SET_RAW_START_OFFSET, &offset, sizeof(offset));
@@ -171,6 +175,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          char str[1000];
          sf_error_str(sndFile.get(), str, 1000);
          printf("%s\n", str);
+
+         throw FileException{ FileException::Cause::Read, fileName };
       }
 
       SFCall<sf_count_t>(sf_seek, sndFile.get(), 0, SEEK_SET);
@@ -254,9 +260,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          else {
             // This is not supposed to happen, sndfile.h says result is always
             // a count, not an invalid value for error
-            wxASSERT(false);
-            updateResult = ProgressResult::Failed;
-            break;
+            throw FileException{ FileException::Cause::Read, fileName };
          }
 
          if (block) {
@@ -288,10 +292,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       } while (block > 0 && framescompleted < totalFrames);
    }
 
-   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled) {
-      // It's a shame we can't return proper error code
-      return;
-   }
+   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
+      throw UserException{};
 
    for (const auto &channel : channels)
       channel->Flush();

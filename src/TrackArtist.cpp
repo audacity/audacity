@@ -273,6 +273,7 @@ TrackArtist::TrackArtist()
 
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
+   mSampleDisplay = 0;
    UpdatePrefs();
 
    SetColours();
@@ -487,7 +488,7 @@ void TrackArtist::DrawTrack(const Track * t,
           !(!wt->GetLinked() && wt->GetLink())) {
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
-         dc.SetTextForeground(wxColour(255, 255, 0));
+         dc.SetTextForeground(theTheme.Colour( clrTrackNameText ));
          dc.DrawText (wt->GetName(), rect.x+10, rect.y);  // move right 10 pixels to avoid overwriting <- symbol
       }
       break;              // case Wave
@@ -545,7 +546,7 @@ void TrackArtist::DrawVRuler(const Track *t, wxDC * dc, wxRect & rect)
       }
 
       UpdateVRuler(t, rr);
-
+      vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
       vruler->Draw(*dc);
 
       return;
@@ -569,7 +570,7 @@ void TrackArtist::DrawVRuler(const Track *t, wxDC * dc, wxRect & rect)
       }
 
       UpdateVRuler(t, rr);
-
+      vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
       vruler->Draw(*dc);
 
       return;
@@ -1362,15 +1363,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
                                   rect.height, dB, true, dBRange, false)));
    }
 
-   // Draw lines
-   for (decltype(slen) s = 0; s < slen - 1; s++) {
-      AColor::Line(dc,
-                   rect.x + xpos[s], rect.y + ypos[s],
-                   rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
-   }
 
-   if (showPoints)
-   {
+   if (showPoints) {
       // Draw points where spacing is enough
       const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
       wxRect pr;
@@ -1384,6 +1378,25 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
             pr.y = rect.y + ypos[s] - tickSize/2;
             dc.DrawEllipse(pr);
          }
+      }
+   }
+
+   if (showPoints && (mSampleDisplay == (int) WaveTrack::StemPlot)) {
+      // Draw vertical lines
+      int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
+      yZero = rect.y + std::max(-1, std::min(rect.height, yZero));
+      for (decltype(slen) s = 0; s < slen; s++) {
+         AColor::Line(dc,
+                     rect.x + xpos[s], rect.y + ypos[s],
+                     rect.x + xpos[s], yZero);
+      }
+   }
+   else {
+      // Connect samples with straight lines
+      for (decltype(slen) s = 0; s < slen - 1; s++) {
+         AColor::Line(dc,
+                     rect.x + xpos[s], rect.y + ypos[s],
+                     rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
       }
    }
 
@@ -2840,19 +2853,18 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    // we add the height of bottomNote from the position of pitch 0
    track->PrepareIPitchToY(rect);
 
-   // Background comes in 6 colors:
+   // Background comes in 4 colors, that are now themed.
    //   214, 214,214 -- unselected white keys
-   //   192,192,192 -- unselected black keys
-   //   170,170,170 -- unselected bar lines
+   //   192,192,192 -- black keys
+   //   170,170,170 -- bar lines
    //   165,165,190 -- selected white keys
-   //   148,148,170 -- selected black keys
-   //   131,131,150 -- selected bar lines
+
    wxPen blackStripePen;
-   blackStripePen.SetColour(192, 192, 192);
+   blackStripePen.SetColour(theTheme.Colour( clrMidiZebra));
    wxBrush blackStripeBrush;
-   blackStripeBrush.SetColour(192, 192, 192);
+   blackStripeBrush.SetColour(theTheme.Colour( clrMidiZebra));
    wxPen barLinePen;
-   barLinePen.SetColour(170, 170, 170);
+   barLinePen.SetColour(theTheme.Colour( clrMidiLines));
 
    DrawNoteBackground(track, dc, rect, rect, zoomInfo, blankBrush, blankPen,
                       blackStripeBrush, blackStripePen, barLinePen);
@@ -2873,14 +2885,14 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    dc.SetPen(selectedWhiteKeyPen);
 
    wxBrush selectedWhiteKeyBrush;
-   selectedWhiteKeyBrush.SetColour(165, 165, 190);
+   selectedWhiteKeyBrush.SetColour(theTheme.Colour( clrSelected ));
    // Then, the black keys and octave stripes, as smaller rectangles
    wxPen selectedBlackKeyPen;
-   selectedBlackKeyPen.SetColour(148, 148, 170);
+   selectedBlackKeyPen.SetColour(theTheme.Colour( clrMidiZebra));
    wxBrush selectedBlackKeyBrush;
-   selectedBlackKeyBrush.SetColour(148, 148, 170);
+   selectedBlackKeyBrush.SetColour(theTheme.Colour( clrMidiZebra));
    wxPen selectedBarLinePen;
-   selectedBarLinePen.SetColour(131, 131, 150);
+   selectedBarLinePen.SetColour(theTheme.Colour( clrMidiLines));
 
    DrawNoteBackground(track, dc, rect, selBG, zoomInfo,
                       selectedWhiteKeyBrush, selectedWhiteKeyPen,
@@ -3203,6 +3215,8 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
+   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 0);
+   SetColours();
 }
 
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC

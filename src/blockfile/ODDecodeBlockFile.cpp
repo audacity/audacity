@@ -27,6 +27,7 @@ The summary is eventually computed and written to a file in a background thread.
 #include <wx/thread.h>
 #include <sndfile.h>
 
+#include "../FileException.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
 #include "NotYetAvailableException.h"
@@ -38,8 +39,9 @@ char bheaderTag[bheaderTagLen + 1] = "AudacityBlockFile112";
 
    /// Create a disk file and write summary and sample data to it
 ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNameWrapper &&audioFileName, sampleCount aliasStart,
-                     size_t aliasLen, int aliasChannel,unsigned int decodeType):
-   SimpleBlockFile{ std::move(baseFileName),
+                     size_t aliasLen, int aliasChannel,unsigned int decodeType)
+try
+   : SimpleBlockFile{ std::move(baseFileName),
                     NULL, aliasLen, floatSample, true, true },
    //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
 
@@ -50,6 +52,14 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileNameWrapper &&baseFileName, wxFileNam
    mDecoder = NULL;
    mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
+}
+catch ( const FileException & e )
+{
+   // The constructor SimpleBlockFile sometimes throws this,
+   // but it never will for the arguments that were passed to it here.
+   // So add a catch for completeness, but just assert that this won't happen.
+   wxASSERT(false);
+   throw;
 }
 
 /// Create the memory structure to refer to the given block file
@@ -102,8 +112,7 @@ auto ODDecodeBlockFile::GetMinMaxRMS(
    else
    {
       if (mayThrow)
-         // throw NotYetAvailableException{ mAudioFileName }
-         ;
+         throw NotYetAvailableException{ mAudioFileName };
 
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
@@ -123,8 +132,7 @@ auto ODDecodeBlockFile::GetMinMaxRMS(bool mayThrow) const -> MinMaxRMS
    else
    {
       if (mayThrow)
-         // throw NotYetAvailableException{ mAudioFileName }
-         ;
+         throw NotYetAvailableException{ mAudioFileName };
 
       //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
@@ -446,8 +454,7 @@ size_t ODDecodeBlockFile::ReadData(samplePtr data, sampleFormat format,
    else
    {
       if (mayThrow)
-         //throw NotYetAvailableException{ mFileName }
-         ;
+         throw NotYetAvailableException{ mAudioFileName };
 
       //we should do an ODRequest to start processing the data here, and wait till it finishes. and just do a SimpleBlockFile
       //ReadData.

@@ -19,7 +19,7 @@ Paul Licameli
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "xml/XMLWriter.h"
-#include "prefs/TracksPrefs.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
@@ -148,8 +148,8 @@ void ViewInfo::UpdatePrefs()
 {
    ZoomInfo::UpdatePrefs();
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
-                TracksPrefs::ScrollingPreferenceDefault());
+   gPrefs->Read(TracksBehaviorsPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
+                TracksBehaviorsPrefs::ScrollingPreferenceDefault());
 #endif
 
 }

@@ -240,6 +240,7 @@ bool EffectNormalize::Process()
                break;
             }
             track = (WaveTrack *) iter.Next();  // go to the second linked one
+            curTrackNum++;   // keeps progress bar correct
             msg = topMsg + _("Processing second track of stereo pair: ") + trackName;
             if (!ProcessOne(track, msg, curTrackNum, offset2))
             {

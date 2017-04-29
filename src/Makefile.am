@@ -505,6 +505,8 @@ audacity_SOURCES = \
 	prefs/SpectrumPrefs.h \
 	prefs/ThemePrefs.cpp \
 	prefs/ThemePrefs.h \
+	prefs/TracksBehaviorsPrefs.cpp \
+	prefs/TracksBehaviorsPrefs.h \
 	prefs/TracksPrefs.cpp \
 	prefs/TracksPrefs.h \
 	prefs/WarningsPrefs.cpp \

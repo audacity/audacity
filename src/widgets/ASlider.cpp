@@ -629,7 +629,8 @@ void LWSlider::OnPaint(wxDC &dc)
    }
    else
    {
-      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho, mTop+thumbPos, true);
+      // TODO: Don't use pixel-count hack in positioning.  
+      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
    }
 
    if (mTipPanel)
@@ -653,9 +654,19 @@ void LWSlider::Draw(wxDC & paintDC)
    // Set up the memory DC
    wxMemoryDC dc;
 
-   mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
 
-#ifdef OPTIONAL_SLIDER_TICKS
+   if (mOrientation == wxVERTICAL){
+//      wxImage img(theTheme.Bitmap( bmpSliderThumb ).ConvertToImage() );
+//      wxImage img2 = img.Rotate90(false);
+//      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
+      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotated )));
+   }
+   else
+      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
+
+
+// This code draws the (old) slider thumb.
+#if 0
    // Create the bitmap
    mThumbBitmap = std::make_unique<wxBitmap>();
    mThumbBitmap->Create(mThumbWidth, mThumbHeight, paintDC);
@@ -743,7 +754,9 @@ void LWSlider::Draw(wxDC & paintDC)
 
    // Draw the line along which the thumb moves.
    //AColor::Light(&dc, false);
-   AColor::UseThemeColour( &dc, clrTrackPanelText );
+   //AColor::UseThemeColour( &dc, clrTrackPanelText );
+   //AColor::Dark(&dc, false);
+   AColor::UseThemeColour(&dc, clrSliderMain );
 
    if (mOrientation == wxHORIZONTAL)
    {
@@ -764,7 +777,8 @@ void LWSlider::Draw(wxDC & paintDC)
 
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
-      wxFont labelFont(sliderFontSize-3, wxSWISS, wxNORMAL, wxNORMAL);
+      int fontSize = 7;
+      wxFont labelFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
       dc.SetFont(labelFont);
 
       // Colors
@@ -775,7 +789,7 @@ void LWSlider::Draw(wxDC & paintDC)
       dc.SetTextBackground( theTheme.Colour( clrTrackInfo ) );
       dc.SetBackground( theTheme.Colour( clrTrackInfo ) );
       // HAVE to use solid and not transparent here,
-      // otherwise windows will do it's clever font optimisation trick,
+      // otherwise windows will do its clever font optimisation trick,
       // but against a default colour of white, which is not OK on a dark
       // background.
       dc.SetBackgroundMode( wxSOLID );
@@ -794,8 +808,7 @@ void LWSlider::Draw(wxDC & paintDC)
    {
       // draw the '-' and the '+'
 #ifdef EXPERIMENTAL_THEMING
-      wxPen pen( theTheme.Colour( clrTrackPanelText ));
-      dc.SetPen( pen );
+      AColor::UseThemeColour(&dc, clrTrackPanelText );
 #else
       dc.SetPen(mEnabled ? *wxBLACK : wxColour(128, 128, 128));
 #endif
@@ -819,6 +832,10 @@ void LWSlider::Draw(wxDC & paintDC)
          }
       }
    }
+
+   // Use special colour to indicate no ticks.
+   wxColour TickColour = theTheme.Colour( clrSliderLight );
+   bool bTicks = TickColour != wxColour(60,60,60);
 
    //v 20090820: Ruler doesn't align with slider correctly -- yet.
    //if ((mOrientation == wxVERTICAL) && (mStyle == DB_SLIDER))
@@ -848,7 +865,7 @@ void LWSlider::Draw(wxDC & paintDC)
    //   mpRuler->Draw(*dc);
    //}
    //else
-   {
+   if( bTicks ) {
       // tick marks
       int divs = 10;
       double upp;
@@ -872,7 +889,8 @@ void LWSlider::Draw(wxDC & paintDC)
          {
             int_d = (int)d;
             int tickLength = ((int_d == 0) || (int_d == divs)) ? 5: 3; // longer ticks at extremes
-            AColor::Light(&dc, false);
+            AColor::UseThemeColour(&dc, clrSliderLight );
+
             if (mOrientation == wxHORIZONTAL)
             {
                AColor::Line(dc, mLeftX+p, mCenterY-tickLength, mLeftX+p, mCenterY-1); // ticks above
@@ -881,8 +899,9 @@ void LWSlider::Draw(wxDC & paintDC)
             {
                AColor::Line(dc, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
             }
-#if 0
-            AColor::Dark(&dc, false);
+
+//          AColor::Dark(&dc, false);
+            AColor::UseThemeColour(&dc, clrSliderDark );
 
             if (mOrientation == wxHORIZONTAL)
             {
@@ -892,7 +911,6 @@ void LWSlider::Draw(wxDC & paintDC)
             {
                AColor::Line(dc, mCenterX-tickLength+1, mTopY+p+1, mCenterX-1, mTopY+p+1); // ticks at left
             }
-#endif
          }
          d += upp;
       }

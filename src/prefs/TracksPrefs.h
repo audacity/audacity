@@ -13,10 +13,10 @@
 #ifndef __AUDACITY_TRACKS_PREFS__
 #define __AUDACITY_TRACKS_PREFS__
 
-#include <wx/defs.h>
+//#include <wx/defs.h>
 
-#include <wx/arrstr.h>
-#include <wx/window.h>
+//#include <wx/arrstr.h>
+//#include <wx/window.h>
 
 #include "PrefsPanel.h"
 
@@ -31,18 +31,17 @@ class TracksPrefs final : public PrefsPanel
 
    static bool GetPinnedHeadPreference();
    static void SetPinnedHeadPreference(bool value, bool flush = false);
-   static const wxChar *ScrollingPreferenceKey();
-   static inline bool ScrollingPreferenceDefault() { return false; }
 
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
 
    static int iPreferencePinned;
-   wxArrayString mSoloCodes;
-   wxArrayString mSoloChoices;
+
    wxArrayInt    mViewCodes;
    wxArrayString mViewChoices;
+   wxArrayInt    mSampleDisplayCodes;
+   wxArrayString mSampleDisplayChoice;
 };
 
 class TracksPrefsFactory final : public PrefsPanelFactory

@@ -32,7 +32,7 @@ other settings.
 #include <wx/choice.h>
 #include <wx/intl.h>
 
-#include "portmidi.h"
+#include "../../lib-src/portmidi/pm_common/portmidi.h"
 
 #include "../AudioIO.h"
 #include "../Internat.h"

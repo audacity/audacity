@@ -23,10 +23,12 @@
 
 #ifdef USE_MIDI
 
+// TODO: Put the relative paths into automake.
+
 #ifdef EXPERIMENTAL_MIDI_OUT
-#include "portmidi.h"
-#include "porttime.h"
-#include "allegro.h"
+#include "../lib-src/portmidi/pm_common/portmidi.h"
+#include "../lib-src/portmidi/porttime/porttime.h"
+#include "../lib-src/portsmf/allegro.h"
 
 class NoteTrack;
 using NoteTrackArray = std::vector < NoteTrack* >;
@@ -36,7 +38,7 @@ using NoteTrackArray = std::vector < NoteTrack* >;
 #endif // USE_MIDI
 
 #if USE_PORTMIXER
-#include "portmixer.h"
+#include "../lib-src/portmixer/include/portmixer.h"
 #endif
 
 #include <wx/event.h>
@@ -389,6 +391,7 @@ class AUDACITY_DLL_API AudioIO final {
    bool IsAvailable(AudacityProject *projecT);
    void SetCaptureMeter(AudacityProject *project, Meter *meter);
    void SetPlaybackMeter(AudacityProject *project, Meter *meter);
+   Meter * GetCaptureMeter();
 
 private:
    /** \brief Set the current VU meters - this should be done once after

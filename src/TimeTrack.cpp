@@ -24,6 +24,7 @@
 #include "Prefs.h"
 #include "Internat.h"
 #include "ViewInfo.h"
+#include "AllThemeResources.h"
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
@@ -58,9 +59,6 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
-
-   blankBrush.SetColour(214, 214, 214);
-   blankPen.SetColour(214, 214, 214);
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
@@ -87,9 +85,6 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
    mRuler->SetUseZoomInfo(0, mZoomInfo);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
-
-   blankBrush.SetColour(214, 214, 214);
-   blankPen.SetColour(214, 214, 214);
 }
 
 // Copy the track metadata but not the contents.
@@ -274,8 +269,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
       min = max;
    }
 
-   dc.SetBrush(blankBrush);
-   dc.SetPen(blankPen);
+   AColor::UseThemeColour( &dc, clrUnselected );
    dc.DrawRectangle(r);
 
    //copy this rectangle away for future use.
@@ -290,6 +284,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
                             // LL:  It's because the ruler only Invalidate()s when the NEW value is different
                             //      than the current value.
    mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   mRuler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
    mRuler->Draw(dc, this);
 
    Doubles envValues{ size_t(mid.width) };

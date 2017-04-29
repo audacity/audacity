@@ -192,6 +192,7 @@ is time to refresh some aspect of the screen.
 
 #include "prefs/PrefsDialog.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
 #include "toolbars/ControlToolBar.h"
@@ -371,7 +372,7 @@ BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
     EVT_MENU(OnSwapChannelsID, TrackPanel::OnSwapChannels)
-    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereoMono)
+    EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
     EVT_MENU(OnSplitStereoMonoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnMergeStereoID, TrackPanel::OnMergeStereo)
 
@@ -630,7 +631,10 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
    mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
    mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
-//   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+// DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
+#ifndef EXPERIMENTAL_DA
+   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
+#endif
    mWaveTrackMenu->AppendSeparator();
 
    mWaveTrackMenu->Append(0, _("&Format"), (mFormatMenu = formatMenu.release()));
@@ -782,6 +786,12 @@ void TrackPanel::UpdatePrefs()
 
    Refresh();
 }
+
+void TrackPanel::ApplyUpdatedTheme()
+{
+   mTrackInfo.ReCreateSliders();
+}
+
 
 /// Remembers the track we clicked on and why we captured it.
 /// We also use this method to clear the record
@@ -3479,89 +3489,18 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          if (mCapturedClip == NULL)
             return;
       }
-      // The captured clip is the focus, but we need to create a list
-      // of all clips that have to move, also...
 
-      mCapturedClipArray.clear();
-
-      // First, if click was in selection, capture selected clips; otherwise
-      // just the clicked-on clip
-      if (mCapturedClipIsSelection) {
-         TrackListIterator iter(GetTracks());
-         for (Track *t = iter.First(); t; t = iter.Next()) {
-            if (t->GetSelected()) {
-               AddClipsToCaptured(t, true);
-               if (t->GetKind() != Track::Wave)
-                  mTrackExclusions.push_back(t);
-            }
-         }
-      }
-      else {
-         mCapturedClipArray.push_back(TrackClip(vt, mCapturedClip));
-
-         // Check for stereo partner
-         Track *partner = vt->GetLink();
-         WaveTrack *wt;
-         if (mCapturedClip &&
-             // Assume linked track is wave or null
-             nullptr != (wt = static_cast<WaveTrack*>(partner))) {
-            WaveClip *const clip =
-               FindClipAtTime(wt,
-                  mViewInfo->PositionToTime(event.m_x, GetLeftOffset()));
-            if (clip)
-               mCapturedClipArray.push_back(TrackClip(partner, clip));
-         }
-      }
-
-      // Now, if sync-lock is enabled, capture any clip that's linked to a
-      // captured clip.
-      if (GetProject()->IsSyncLocked()) {
-         // AWD: mCapturedClipArray expands as the loop runs, so newly-added
-         // clips are considered (the effect is like recursion and terminates
-         // because AddClipsToCaptured doesn't add duplicate clips); to remove
-         // this behavior just store the array size beforehand.
-         for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-            // Capture based on tracks that have clips -- that means we
-            // don't capture based on links to label tracks for now (until
-            // we can treat individual labels as clips)
-            if (mCapturedClipArray[i].clip) {
-               // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(GetTracks());
-               for (Track *t = git.StartWith(mCapturedClipArray[i].track);
-                     t; t = git.Next() )
-               {
-                  AddClipsToCaptured(t,
-                        mCapturedClipArray[i].clip->GetStartTime(),
-                        mCapturedClipArray[i].clip->GetEndTime() );
-                  if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.push_back(t);
-               }
-            }
-#ifdef USE_MIDI
-            // Capture additional clips from NoteTracks
-            Track *nt = mCapturedClipArray[i].track;
-            if (nt->GetKind() == Track::Note) {
-               // Iterate over sync-lock group tracks.
-               SyncLockedTracksIterator git(GetTracks());
-               for (Track *t = git.StartWith(nt); t; t = git.Next())
-               {
-                  AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
-                  if (t->GetKind() != Track::Wave)
-                     mTrackExclusions.push_back(t);
-               }
-            }
-#endif
-         }
-      }
+      mCapturedTrack = vt;
+      CreateListOfCapturedClips(clickTime);
 
    } else {
       mCapturedClip = NULL;
       mCapturedClipArray.clear();
+      mCapturedTrack = vt;
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
 
-   mCapturedTrack = vt;
    mCapturedRect = rect;
 
    mMouseClickX = event.m_x;
@@ -3585,6 +3524,83 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    }
 
    mMouseCapture = IsSliding;
+}
+
+void TrackPanel::CreateListOfCapturedClips(double clickTime)
+{
+// The captured clip is the focus, but we need to create a list
+   // of all clips that have to move, also...
+
+   mCapturedClipArray.clear();
+
+   // First, if click was in selection, capture selected clips; otherwise
+   // just the clicked-on clip
+   if (mCapturedClipIsSelection) {
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         if (t->GetSelected()) {
+            AddClipsToCaptured(t, true);
+            if (t->GetKind() != Track::Wave)
+               mTrackExclusions.push_back(t);
+         }
+      }
+   }
+   else {
+      mCapturedClipArray.push_back(TrackClip(mCapturedTrack, mCapturedClip));
+
+      // Check for stereo partner
+      Track *partner = mCapturedTrack->GetLink();
+      WaveTrack *wt;
+      if (mCapturedClip &&
+            // Assume linked track is wave or null
+            nullptr != (wt = static_cast<WaveTrack*>(partner))) {
+         WaveClip *const clip = FindClipAtTime(wt, clickTime);
+
+         if (clip)
+            mCapturedClipArray.push_back(TrackClip(partner, clip));
+      }
+   }
+
+   // Now, if sync-lock is enabled, capture any clip that's linked to a
+   // captured clip.
+   if (GetProject()->IsSyncLocked()) {
+      // AWD: mCapturedClipArray expands as the loop runs, so newly-added
+      // clips are considered (the effect is like recursion and terminates
+      // because AddClipsToCaptured doesn't add duplicate clips); to remove
+      // this behavior just store the array size beforehand.
+      for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
+         // Capture based on tracks that have clips -- that means we
+         // don't capture based on links to label tracks for now (until
+         // we can treat individual labels as clips)
+         if (mCapturedClipArray[i].clip) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git(GetTracks());
+            for (Track *t = git.StartWith(mCapturedClipArray[i].track);
+                  t; t = git.Next() )
+            {
+               AddClipsToCaptured(t,
+                     mCapturedClipArray[i].clip->GetStartTime(),
+                     mCapturedClipArray[i].clip->GetEndTime() );
+               if (t->GetKind() != Track::Wave)
+                  mTrackExclusions.push_back(t);
+            }
+         }
+#ifdef USE_MIDI
+         // Capture additional clips from NoteTracks
+         Track *nt = mCapturedClipArray[i].track;
+         if (nt->GetKind() == Track::Note) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git(GetTracks());
+            for (Track *t = git.StartWith(nt); t; t = git.Next())
+            {
+               AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+               if (t->GetKind() != Track::Wave)
+                  mTrackExclusions.push_back(t);
+            }
+         }
+#endif
+      }
+   }
 }
 
 // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
@@ -3877,6 +3893,24 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    mHSlideAmount = desiredSlideAmount;
 
+   DoSlideHorizontal();
+
+
+   if (mCapturedClipIsSelection) {
+      // Slide the selection, too
+      mViewInfo->selectedRegion.move(mHSlideAmount);
+   }
+
+   if (slidVertically) {
+      // NEW origin
+      mHSlideAmount = 0;
+   }
+
+   Refresh(false);
+}
+
+void TrackPanel::DoSlideHorizontal()
+{
 #ifdef USE_MIDI
    if (mCapturedClipArray.size())
 #else
@@ -3947,18 +3981,55 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       if (link)
          link->Offset(mHSlideAmount);
    }
+}
 
-   if (mCapturedClipIsSelection) {
-      // Slide the selection, too
-      mViewInfo->selectedRegion.move(mHSlideAmount);
+void TrackPanel::OnClipMove(bool right)
+{
+   auto track = GetFocusedTrack();
+
+
+   // just dealing with clips in wave tracks for the moment. Note tracks??
+   if (track && track->GetKind() == Track::Wave) {
+      auto wt = static_cast<WaveTrack*>(track);
+      mCapturedClip = wt->GetClipAtTime(mViewInfo->selectedRegion.t0());
+      if (mCapturedClip == nullptr)
+         return;
+      
+      mCapturedTrack = track;
+      mCapturedClipIsSelection = track->GetSelected() && !mViewInfo->selectedRegion.isPoint();
+      mTrackExclusions.clear();
+
+      CreateListOfCapturedClips(mViewInfo->selectedRegion.t0());
+
+      double desiredSlideAmount = mViewInfo->OffsetTimeByPixels(0.0, 1);
+
+      // set it to a sample point, and minimum of 1 sample point
+      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
+      nSamples = std::max(nSamples, 1.0);
+      desiredSlideAmount = nSamples / wt->GetRate();
+
+      if (!right)
+         desiredSlideAmount *= -1;
+      mHSlideAmount = desiredSlideAmount;
+      DoSlideHorizontal();
+
+      // update t0 and t1. There is the possibility that the updated
+      // t0 may no longer be within the clip due to rounding errors,
+      // so t0 is adjusted so that it is.
+      double newT0 = mViewInfo->selectedRegion.t0() + mHSlideAmount;
+      if (newT0 < mCapturedClip->GetStartTime())
+         newT0 = mCapturedClip->GetStartTime();
+      if (newT0 > mCapturedClip->GetEndTime())
+         newT0 = mCapturedClip->GetEndTime();
+      double diff = mViewInfo->selectedRegion.t1() - mViewInfo->selectedRegion.t0();
+      mViewInfo->selectedRegion.setTimes(newT0, newT0 + diff);
+
+      ScrollIntoView(mViewInfo->selectedRegion.t0());
+      Refresh(false);
+
+      if (mHSlideAmount == 0.0)
+         MessageForScreenReader( _("clip not moved"));
    }
-
-   if (slidVertically) {
-      // NEW origin
-      mHSlideAmount = 0;
-   }
-
-   Refresh(false);
 }
 
 
@@ -4762,9 +4833,9 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
    wxClientDC dc(this);
 
    if (event.Dragging())
-      mTrackInfo.DrawCloseBox(&dc, rect, closeRect.Contains(event.m_x, event.m_y));
+      mTrackInfo.DrawCloseBox(&dc, rect, t, closeRect.Contains(event.m_x, event.m_y));
    else if (event.LeftUp()) {
-      mTrackInfo.DrawCloseBox(&dc, rect, false);
+      mTrackInfo.DrawCloseBox(&dc, rect, t, false);
       if (closeRect.Contains(event.m_x, event.m_y)) {
          AudacityProject *p = GetProject();
          p->StopIfPaused();
@@ -5304,6 +5375,7 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect rect, int x, int y,
                               bool solo)
 {
    wxRect buttonRect;
+   rect.width +=4;
    mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton(), t);
    if (!buttonRect.Contains(x, y))
       return false;
@@ -5361,7 +5433,7 @@ bool TrackPanel::CloseFunc(Track * t, wxRect rect, int x, int y)
    SetCapturedTrack( t, IsClosing );
    mCapturedRect = rect;
 
-   mTrackInfo.DrawCloseBox(&dc, rect, true);
+   mTrackInfo.DrawCloseBox(&dc, rect, t, true);
    return true;
 }
 
@@ -7194,7 +7266,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
    rect.width = mTrackInfo.GetTrackInfoWidth();
    bool captured = (t == mCapturedTrack);
-   mTrackInfo.DrawCloseBox(dc, rect, (captured && mMouseCapture==IsClosing));
+   mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
@@ -8020,7 +8092,7 @@ void TrackPanel::OnSwapChannels(wxCommandEvent & WXUNUSED(event))
    const bool hasFocus =
       (focused == mPopupMenuTarget || focused == partner);
 
-   SplitStereo(true);
+   SplitStereo(false);
    mPopupMenuTarget->SetChannel(Track::RightChannel);
    partner->SetChannel(Track::LeftChannel);
 
@@ -8064,10 +8136,11 @@ void TrackPanel::SplitStereo(bool stereo)
 {
    wxASSERT(mPopupMenuTarget);
 
-   if (!stereo){
+   if (stereo){
       mPopupMenuTarget->SetPanFromChannelType();
-      mPopupMenuTarget->SetChannel(Track::MonoChannel);
    }
+   mPopupMenuTarget->SetChannel(Track::MonoChannel);
+
 
    // Assume partner is present, and is wave
    auto partner = static_cast<WaveTrack*>(mPopupMenuTarget->GetLink());
@@ -8086,10 +8159,11 @@ void TrackPanel::SplitStereo(bool stereo)
    if (partner)
    {
       partner->SetName(mPopupMenuTarget->GetName());
-      if (!stereo){
+      if (stereo){
          partner->SetPanFromChannelType();
-         partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
       }
+      partner->SetChannel(Track::MonoChannel);  // Keep original stereo track name.
+
 
       //On Demand - have each channel add it's own.
       if (ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave)
@@ -8211,6 +8285,7 @@ void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
    // Get here only from the wave track menu
    const auto wt = static_cast<WaveTrack*>(mPopupMenuTarget);
    // WaveformPrefsFactory waveformFactory(wt);
+   TracksBehaviorsPrefsFactory tracksBehaviorsFactory();
    SpectrumPrefsFactory spectrumFactory(wt);
 
    PrefsDialog::Factories factories;
@@ -8994,36 +9069,54 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 {
    pParent = pParentIn;
 
+   mGain = NULL;
+   mGainCaptured=NULL;
+   mPan = NULL;
+   mPanCaptured=NULL;
+
+   ReCreateSliders();
+
+   UpdatePrefs();
+}
+
+TrackInfo::~TrackInfo()
+{
+}
+
+void TrackInfo::ReCreateSliders(){
    wxRect rect(0, 0, 1000, 1000);
    wxRect sliderRect;
-
    GetGainRect(rect, sliderRect);
 
+   float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
    mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
-   mGain->SetDefaultValue(1.0);
+   mGain->SetDefaultValue(defPos);
+
    mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
-   mGainCaptured->SetDefaultValue(1.0);
+   mGainCaptured->SetDefaultValue(defPos);
 
    GetPanRect(rect, sliderRect);
 
+   defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
    mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
-   mPan->SetDefaultValue(0.0);
+   mPan->SetDefaultValue(defPos);
+
    mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);
-   mPanCaptured->SetDefaultValue(0.0);
+   mPanCaptured->SetDefaultValue(defPos);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    GetVelocityRect(rect, sliderRect);
@@ -9041,11 +9134,6 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
    mVelocityCaptured->SetDefaultValue(0.0);
 #endif
 
-   UpdatePrefs();
-}
-
-TrackInfo::~TrackInfo()
-{
 }
 
 int TrackInfo::GetTrackInfoWidth() const
@@ -9232,20 +9320,18 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & rect, bool bHasMuteSo
 
 //#define USE_BEVELS
 
-#ifdef USE_BEVELS
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool bHasMuteSolo, const int labelw, const int vrul) const
-#else
-void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
-   bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul)) const
-#endif
 {
+   //compiler food.
+   bHasMuteSolo;
+   vrul;
+
    // fill in label
    wxRect fill = rect;
    fill.width = labelw-4;
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill);
-
 
 #ifdef USE_BEVELS
    if( bHasMuteSolo )
@@ -9285,11 +9371,11 @@ void TrackInfo::GetTrackControlsRect(const wxRect & rect, wxRect & dest) const
 }
 
 
-void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const
+void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t,  bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(rect, bev);
-   AColor::Bevel2(*dc, !down, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected() );
 
 #ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -9320,7 +9406,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
    wxRect bev;
    GetTitleBarRect(rect, bev);
    //bev.Inflate(-1, -1);
-   AColor::Bevel2(*dc, !down, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected());
 
    // Draw title text
    SetTrackInfoFont(dc);
@@ -9374,7 +9460,6 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       return;
    GetMuteSoloRect(rect, bev, solo, bHasSoloButton, t);
    //bev.Inflate(-1, -1);
-
    if (bev.y + bev.height >= rect.y + rect.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
    auto pt = dynamic_cast<const PlayableTrack *>(t);
@@ -9411,7 +9496,8 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    AColor::Bevel2(
       *dc,
       (solo ? pt->GetSolo() : (pt && pt->GetMute())) == down,
-      bev
+      bev,
+      t->GetSelected()
    );
 
    SetTrackInfoFont(dc);
@@ -9432,10 +9518,10 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
    GetMinimizeRect(rect, bev);
 
    // Clear background to get rid of previous arrow
-   AColor::MediumTrackInfo(dc, t->GetSelected());
-   dc->DrawRectangle(bev);
+   //AColor::MediumTrackInfo(dc, t->GetSelected());
+   //dc->DrawRectangle(bev);
 
-   AColor::Bevel2(*dc, !down, bev);
+   AColor::Bevel2(*dc, !down, bev, t->GetSelected());
 
 #ifdef EXPERIMENTAL_THEMING
    wxColour c = theTheme.Colour(clrTrackPanelText);

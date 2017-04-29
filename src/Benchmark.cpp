@@ -474,7 +474,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    elapsed = timer.Time();
 
    if (mBlockDetail) {
-      t->GetClipByIndex(0)->GetSequence()->DebugPrintf(&tempStr);
+      auto seq = t->GetClipByIndex(0)->GetSequence();
+      seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }
    Printf(wxT("Time to perform %d edits: %ld ms\n"), trials, elapsed);

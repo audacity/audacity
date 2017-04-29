@@ -319,6 +319,7 @@
     <ClCompile Include="..\..\..\src\prefs\RecordingPrefs.cpp" />
     <ClCompile Include="..\..\..\src\prefs\SpectrumPrefs.cpp" />
     <ClCompile Include="..\..\..\src\prefs\ThemePrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\TracksBehaviorsPrefs.cpp" />
     <ClCompile Include="..\..\..\src\prefs\TracksPrefs.cpp" />
     <ClCompile Include="..\..\..\src\prefs\WarningsPrefs.cpp" />
     <ClCompile Include="..\..\..\src\widgets\AButton.cpp" />

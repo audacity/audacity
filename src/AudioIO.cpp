@@ -315,7 +315,7 @@ writing audio.
    #define MIDI_SLEEP 10 /* milliseconds */
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
-   #include "portmidi.h"
+   #include "../lib-src/portmidi/pm_common/portmidi.h"
    #include "../lib-src/portaudio-v19/src/common/pa_util.h"
    #include "NoteTrack.h"
 #endif
@@ -2237,6 +2237,10 @@ void AudioIO::SetPlaybackMeter(AudacityProject *project, Meter *meter)
    }
 }
 
+Meter * AudioIO::GetCaptureMeter(){
+   return mInputMeter;
+}
+
 void AudioIO::SetMeters()
 {
    if (mInputMeter)
@@ -2515,6 +2519,7 @@ void AudioIO::StopStream()
 
    if (mInputMeter)
       mInputMeter->Reset(mRate, false);
+
    if (mOutputMeter)
       mOutputMeter->Reset(mRate, false);
 

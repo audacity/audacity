@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 #include "NoteTrack.h"
+#include "Experimental.h"
 
 #include <wx/dc.h>
 #include <wx/brush.h>
@@ -33,10 +34,10 @@
 #include "Prefs.h"
 #include "effects/TimeWarper.h"
 
-#include "Experimental.h"
+#include "InconsistencyException.h"
 
 #ifdef SONIFY
-#include "portmidi.h"
+#include "../lib-src/portmidi/pm_common/portmidi.h"
 
 #define SON_PROGRAM 0
 #define SON_AutoSave 67
@@ -435,8 +436,8 @@ int NoteTrack::GetVisibleChannels()
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
    if (t1 <= t0)
-      //THROW_INCONSISTENCY_EXCEPTION
-      ;
+      THROW_INCONSISTENCY_EXCEPTION;
+
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -458,8 +459,8 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 <= t0)
-      //THROW_INCONSISTENCY_EXCEPTION
-      ;
+      THROW_INCONSISTENCY_EXCEPTION;
+
    double len = t1-t0;
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
@@ -494,10 +495,9 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
-   // If t1 = t0, should Clear return true?
    if (t1 <= t0)
-      // THROW_INCONSISTENCY_EXCEPTION; ?
-      return;
+      THROW_INCONSISTENCY_EXCEPTION;
+
    double len = t1-t0;
 
    if (mSeq)

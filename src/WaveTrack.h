@@ -276,6 +276,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    Envelope* GetEnvelopeAtX(int xcoord);
 
    WaveClip* GetClipAtSample(sampleCount sample);
+   WaveClip* GetClipAtTime(double time);
 
    //
    // Getting information about the track's internal block sizes
@@ -544,6 +545,13 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
       MaxDisplay = Spectrum,
 
       NoDisplay,            // Preview track has no display
+   };
+
+   // Only two types of sample display for now, but
+   // others (eg sinc interpolation) may be added later.
+   enum SampleDisplay {
+      LinarInterpolate = 0,
+      StemPlot
    };
 
    // Read appropriate value from preferences

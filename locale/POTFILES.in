@@ -510,6 +510,8 @@ src/prefs/SpectrumPrefs.cpp
 src/prefs/SpectrumPrefs.h
 src/prefs/ThemePrefs.cpp
 src/prefs/ThemePrefs.h
+src/prefs/TracksBehaviorsPrefs.cpp
+src/prefs/TracksBehaviorsPrefs.h
 src/prefs/TracksPrefs.cpp
 src/prefs/TracksPrefs.h
 src/prefs/WarningsPrefs.cpp

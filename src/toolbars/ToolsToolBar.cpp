@@ -186,6 +186,7 @@ AButton * ToolsToolBar::MakeTool( teBmps eTool,
 
 void ToolsToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
    Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
 

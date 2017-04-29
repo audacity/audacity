@@ -354,8 +354,9 @@ KeyView::SetView(ViewByType type)
 #if 0
    // JKC: Optional code to list commants and shortcuts to debug console.
    int nLines = mLines.GetCount();
+   int flags = 8;
    for(int i=0;i<nLines;i++){
-      wxLogDebug( "%i,%i,%s,%s", i, mLines[i]->depth, mLines[i]->label, mLines[i]->key );
+      wxLogDebug("T.Add( %2i, %2i,  0, \"%s¬%s\" );", mLines[i]->depth-1, flags, mLines[i]->label,mLines[i]->key ); 
    }
 #endif
 

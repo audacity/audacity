@@ -285,6 +285,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          int w;
          vRuler->ruler.GetMaxSize(&w, NULL);
          vRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
+         vRuler->SetTickColour( theTheme.Colour( clrGraphLabels ));
 
          S.AddSpace(wxDefaultCoord, 1);
          S.Prop(1);
@@ -354,6 +355,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          int h;
          hRuler->ruler.GetMaxSize(NULL, &h);
          hRuler->SetMinSize(wxSize(wxDefaultCoord, h));
+         hRuler->SetTickColour( theTheme.Colour( clrGraphLabels ));
 
          S.AddSpace(1, wxDefaultCoord);
          S.Prop(1);

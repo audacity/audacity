@@ -172,6 +172,7 @@ void TranscriptionToolBar::MakeAlternateImages(
 
 void TranscriptionToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 // Very similar to code in ControlToolBar...
 // Very similar to code in EditToolBar
    MakeButtonBackgroundsSmall();
@@ -302,7 +303,7 @@ void TranscriptionToolBar::RegenerateTooltips()
       wxString commandName;
       wxString untranslatedLabel;
    } table[] = {
-      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-speed")  },
+      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed")  },
    };
 
    std::vector<wxString> commands;

@@ -59,6 +59,7 @@
 #include "SpectrumPrefs.h"
 #include "ThemePrefs.h"
 #include "TracksPrefs.h"
+#include "TracksBehaviorsPrefs.h"
 #include "WarningsPrefs.h"
 // #include "WaveformPrefs.h"
 #include "WaveformSettings.h"
@@ -141,6 +142,7 @@ PrefsDialog::Factories
    static LibraryPrefsFactory libraryPrefsFactory;
 #endif
    // static WaveformPrefsFactory waveformPrefsFactory;
+   static TracksBehaviorsPrefsFactory tracksBehaviorsPrefsFactory;
    static SpectrumPrefsFactory spectrumPrefsFactory;
    static DirectoriesPrefsFactory directoriesPrefsFactory;
    static WarningsPrefsFactory warningsPrefsFactory;
@@ -166,8 +168,9 @@ PrefsDialog::Factories
       &guiPrefsFactory,
 
       // Group other page(s)
-      PrefsNode(&tracksPrefsFactory, 1),
+      PrefsNode(&tracksPrefsFactory, 2),
       // &waveformPrefsFactory,
+      &tracksBehaviorsPrefsFactory,
       &spectrumPrefsFactory,
 
       // Group one other page
@@ -394,6 +397,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
          return;
    }
 
+   // flush now so toolbars will know their position.
+   gPrefs->Flush();
    if (mCategories) {
       // Now apply the changes
       for (size_t i = 0; i < mCategories->GetPageCount(); i++) {

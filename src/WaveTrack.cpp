@@ -428,12 +428,16 @@ bool WaveTrack::SetPan(float newPan)
    else
       mPan = newPan;
 
-   if(mDisplay == WaveTrack::Waveform && mChannel == Track::MonoChannel && (p == 0.0f && newPan != 0.0f || p != 0.0f && newPan == 0.0f) && mMonoAsVirtualStereo)
+   if(mDisplay == WaveTrack::Waveform &&
+      mChannel == Track::MonoChannel &&
+      ((p == 0.0f) != (newPan == 0.0f)) &&
+      mMonoAsVirtualStereo)
    {
       panZero=true;
-      if(!mPan){
+      if(!mPan) {
          mHeight = mHeight + mHeightv;
-      }else{
+      }
+      else {
          temp = mHeight;
          mHeight = temp*mPerY;
          mHeightv = temp - mHeight;
@@ -555,8 +559,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
 Track::Holder WaveTrack::Cut(double t0, double t1)
 {
    if (t1 < t0)
-      // THROW_INCONSISTENCY_EXCEPTION
-      ;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    auto tmp = Copy(t0, t1);
 
@@ -569,8 +572,7 @@ Track::Holder WaveTrack::SplitCut(double t0, double t1)
 // STRONG-GUARANTEE
 {
    if (t1 < t0)
-      //THROW_INCONSISTENCY_EXCEPTION
-      ;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    // SplitCut is the same as 'Copy', then 'SplitDelete'
    auto tmp = Copy(t0, t1);
@@ -584,15 +586,12 @@ Track::Holder WaveTrack::SplitCut(double t0, double t1)
 Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 {
    if (t1 < t0)
-      //THROW_INCONSISTENCY_EXCEPTION
-      ;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    // Cut is the same as 'Copy', then 'Delete'
    auto tmp = Copy(t0, t1);
 
-   if (!ClearAndAddCutLine(t0, t1))
-      //THROW_INCONSISTENCY_EXCEPTION
-      ;
+   ClearAndAddCutLine(t0, t1);
 
    return tmp;
 }
@@ -648,8 +647,7 @@ void WaveTrack::Trim (double t0, double t1)
 Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 <= t0)
-      //THROW_INCONSISTENCY_EXCEPTION
-      ;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    WaveTrack *newTrack;
    Track::Holder result
@@ -1038,8 +1036,7 @@ void WaveTrack::HandleClear(double t0, double t1,
 // STRONG-GUARANTEE
 {
    if (t1 < t0)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
@@ -1221,12 +1218,10 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // follow EditClipCanMove rules (Paste() does it right)
          AudacityProject *p = GetActiveProject();
          if (!p)
-            // THROW_INCONSISTENCY_EXCEPTION
-            ;
+            THROW_INCONSISTENCY_EXCEPTION;
          TrackFactory *f = p->GetTrackFactory();
          if (!f)
-            // THROW_INCONSISTENCY_EXCEPTION
-            ;
+            THROW_INCONSISTENCY_EXCEPTION;
          auto tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
 
          tmp->InsertSilence(0.0, newT1 - oldT1);
@@ -1395,8 +1390,7 @@ void WaveTrack::Paste(double t0, const Track *src)
 void WaveTrack::Silence(double t0, double t1)
 {
    if (t1 < t0)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    auto start = (sampleCount)floor(t0 * mRate + 0.5);
    auto len = (sampleCount)floor(t1 * mRate + 0.5) - start;
@@ -1432,8 +1426,7 @@ void WaveTrack::InsertSilence(double t, double len)
 // STRONG-GUARANTEE
 {
    if (len <= 0)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
+      THROW_INCONSISTENCY_EXCEPTION;
 
    if (mClips.empty())
    {
@@ -1953,8 +1946,7 @@ std::pair<float, float> WaveTrack::GetMinMax(
 
    if (t0 > t1) {
       if (mayThrow)
-         //THROW_INCONSISTENCY_EXCEPTION
-         ;
+         THROW_INCONSISTENCY_EXCEPTION;
       return results;
    }
 
@@ -1986,8 +1978,7 @@ float WaveTrack::GetRMS(double t0, double t1, bool mayThrow) const
 {
    if (t0 > t1) {
       if (mayThrow)
-         //THROW_INCONSISTENCY_EXCEPTION
-         ;
+         THROW_INCONSISTENCY_EXCEPTION;
       return 0.f;
    }
 
@@ -2226,6 +2217,17 @@ WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
    }
 
    return NULL;
+}
+
+WaveClip* WaveTrack::GetClipAtTime(double time)
+{
+   // When the time is both the end of a clip and the start of the next clip, the
+   // latter clip is returned.
+   const auto clips = SortedClipArray();
+   auto result = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
+      return time >= clip->GetStartTime() && time <= clip->GetEndTime(); });
+
+   return result != clips.rend() ? *result : nullptr;
 }
 
 Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)

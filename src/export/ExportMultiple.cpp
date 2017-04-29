@@ -922,20 +922,25 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
       }
 
       /* Select the track */
+      auto wasSelected = tr->GetSelected();
       tr->SetSelected(true);
       if (tr2) {
          // Select it also
          tr2->SetSelected(true);
       }
 
+      auto cleanup = finally( [&] {
+         if (!wasSelected) {
+            // Reset selection state
+            tr->SetSelected(false);
+            if (tr2) {
+               tr2->SetSelected(false);
+            }
+         }
+      } );
+
       // Export the data. "channels" are per track.
       ok = DoExport(activeSetting.channels, activeSetting.destfile, true, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
-
-      // Reset selection state
-      tr->SetSelected(false);
-      if (tr2) {
-         tr2->SetSelected(false);
-      }
 
       // Stop if an error occurred
       if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {

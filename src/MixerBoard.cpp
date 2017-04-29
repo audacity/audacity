@@ -961,12 +961,9 @@ void MixerBoard::UpdateTrackClusters()
    TrackListIterator iterTracks(mTracks);
    MixerTrackCluster* pMixerTrackCluster = NULL;
    Track* pTrack;
-   Track* pRightTrack;
 
    pTrack = iterTracks.First();
    while (pTrack) {
-      pRightTrack = pTrack->GetLinked() ? iterTracks.Next() : NULL;
-
       if (auto pPlayableTrack = dynamic_cast<PlayableTrack*>(pTrack))
       {
          if (nClusterIndex < nClusterCount)
@@ -1227,10 +1224,18 @@ void MixerBoard::UpdateSolo(const PlayableTrack* pTrack /*= NULL*/) // NULL mean
 
 void MixerBoard::UpdatePan(const PlayableTrack* pTrack)
 {
-   MixerTrackCluster* pMixerTrackCluster;
-   FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
-   if (pMixerTrackCluster)
-      pMixerTrackCluster->UpdatePan();
+   if (pTrack == NULL)
+   {
+      for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
+         mMixerTrackClusters[i]->UpdatePan();
+   }
+   else
+   {
+      MixerTrackCluster* pMixerTrackCluster;
+      FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
+      if (pMixerTrackCluster)
+         pMixerTrackCluster->UpdatePan();
+   }
 }
 
 void MixerBoard::UpdateGain(const PlayableTrack* pTrack)

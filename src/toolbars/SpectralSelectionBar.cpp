@@ -52,6 +52,7 @@ with changes in the SpectralSelectionBar.
 #include "SpectralSelectionBar.h"
 
 #include "../Prefs.h"
+#include "../AllThemeResources.h"
 #include "../SelectedRegion.h"
 #include "../widgets/NumericTextCtrl.h"
 
@@ -106,6 +107,7 @@ void SpectralSelectionBar::Create(wxWindow * parent)
 
 void SpectralSelectionBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
 
    // This will be inherited by all children:
@@ -374,7 +376,13 @@ void SpectralSelectionBar::ValuesToControls()
       mWidthCtrl->SetValue(mWidth);
    }
    else {
-      SetBounds();
+      //Bug 1633
+      //The controls may not be able to show mHigh, e.g.
+      //if set to Hz, and in that case we should either show invalid
+      //or 'do the best we can' and truncate.  
+      //If we set bounds we instead clip to the mHigh to mLow, 
+      //So no SetBounds, for now.
+      //SetBounds();
       mLowCtrl->SetValue(mLow);
       mHighCtrl->SetValue(mHigh);
    }

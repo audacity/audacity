@@ -86,6 +86,7 @@ array of Ruler::Label.
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/PlaybackPrefs.h"
 #include "../prefs/TracksPrefs.h"
+#include "../prefs/TracksBehaviorsPrefs.h"
 #include "../widgets/Grabber.h"
 
 //#define SCRUB_ABOVE
@@ -100,7 +101,7 @@ using std::max;
 #define PLAY_REGION_RECT_HEIGHT 3
 #define PLAY_REGION_GLOBAL_OFFSET_Y 7
 
-wxColour Ruler::mTickColour{ 153, 153, 153 };
+//wxColour Ruler::mTickColour{ 153, 153, 153 };
 
 //
 // Ruler
@@ -126,6 +127,7 @@ Ruler::Ruler()
    mBottom = -1;
    mbTicksOnly = true;
    mbTicksAtExtremes = false;
+   mTickColour = wxColour( theTheme.Colour( clrTrackPanelText ));
    mPen.SetColour(mTickColour);
 
    // Note: the font size is now adjusted automatically whenever
@@ -1340,7 +1342,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
          }
       }
 
-      mMajorLabels[i].Draw(*mDC, mTwoTone);
+      mMajorLabels[i].Draw(*mDC, mTwoTone, mTickColour);
    }
 
    if(mbMinor == true) {
@@ -1368,7 +1370,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         mMinorLabels[i].Draw(*mDC, mTwoTone);
+         mMinorLabels[i].Draw(*mDC, mTwoTone, mTickColour);
       }
    }
 
@@ -1400,7 +1402,7 @@ void Ruler::Draw(wxDC& dc, const TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         mMinorMinorLabels[i].Draw(*mDC, mTwoTone);
+         mMinorMinorLabels[i].Draw(*mDC, mTwoTone, mTickColour);
       }
    }
 }
@@ -1532,14 +1534,14 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, size_t numLabel, int star
    //Remember: DELETE majorlabels....
 }
 
-void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
+void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
 {
    if (text != wxT("")) {
       bool altColor = twoTone && value < 0.0;
 
 #ifdef EXPERIMENTAL_THEMING
       // TODO:  handle color distinction
-      dc.SetTextForeground(mTickColour);
+      dc.SetTextForeground(c);
 #else
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
@@ -2009,8 +2011,8 @@ void AdornedRulerPanel::UpdatePrefs()
 #ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
    {
       bool scrollBeyondZero = false;
-      gPrefs->Read(TracksPrefs::ScrollingPreferenceKey(), &scrollBeyondZero,
-                   TracksPrefs::ScrollingPreferenceDefault());
+      gPrefs->Read(TracksBehaviorsPrefs::ScrollingPreferenceKey(), &scrollBeyondZero,
+                   TracksBehaviorsPrefs::ScrollingPreferenceDefault());
       mRuler.SetTwoTone(scrollBeyondZero);
    }
 #endif
@@ -2026,6 +2028,12 @@ void AdornedRulerPanel::UpdatePrefs()
 
 void AdornedRulerPanel::ReCreateButtons()
 {
+   // TODO: Should we do this to destroy the grabber??
+   // Get rid of any children we may have
+   // DestroyChildren();
+
+   SetBackgroundColour(theTheme.Colour( clrMedium ));
+
    for (auto & button : mButtons) {
       if (button)
          button->Destroy();
@@ -2039,6 +2047,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // This makes it visually clearer that the button is a button.
 
    wxPoint position( 1, 0 );
+
    Grabber * pGrabber = safenew Grabber(this, this->GetId());
    pGrabber->SetAsSpacer( true );
    //pGrabber->SetSize( 10, 27 ); // default is 10,27
@@ -3088,16 +3097,15 @@ void AdornedRulerPanel::ShowContextMenu( MenuChoice choice, const wxPoint *pPosi
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
-   AColor::MediumTrackInfo( dc, false );
+   AColor::UseThemeColour( dc, clrTrackInfo );
    dc->DrawRectangle( mInner );
 
    if (mShowScrubbing) {
       // Let's distinguish the scrubbing area by using the same gray as for
       // selected track control panel.
-      AColor::MediumTrackInfo(dc, true);
+      AColor::UseThemeColour(dc, clrScrubRuler );
       dc->DrawRectangle(mScrubZone);
    }
-
 }
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)

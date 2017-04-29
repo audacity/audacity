@@ -31,7 +31,7 @@
 #include <wx/gbsizer.h>
 
 #include "MeterToolBar.h"
-
+#include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../Project.h"
 #include "../widgets/Meter.h"
@@ -87,24 +87,31 @@ void MeterToolBar::ReCreateButtons()
 
    if (mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter)
    {
-      mProject->SetPlaybackMeter( NULL );
       playState = mPlayMeter->SaveState();
+      mProject->SetPlaybackMeter( NULL );
    }
 
    if (mRecordMeter && mProject->GetCaptureMeter() == mRecordMeter)
    {
-      mProject->SetCaptureMeter( NULL );
       recordState = mRecordMeter->SaveState();
+      mProject->SetCaptureMeter( NULL );
    }
 
    ToolBar::ReCreateButtons();
 
    mPlayMeter->RestoreState(playState);
+   if( playState.mSaved  ){
+      mProject->SetPlaybackMeter( mPlayMeter );
+   }
    mRecordMeter->RestoreState(recordState);
+   if( recordState.mSaved ){
+      mProject->SetCaptureMeter( mRecordMeter );
+   }
 }
 
 void MeterToolBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    wxASSERT(mProject); // to justify safenew
    Add((mSizer = safenew wxGridBagSizer()), 1, wxEXPAND);
 
@@ -166,6 +173,8 @@ void MeterToolBar::UpdatePrefs()
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
+
+
 }
 
 void MeterToolBar::RegenerateTooltips()
@@ -219,7 +228,7 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
       mRecordMeter->SetMinSize( wxSize( width, height ));
    }
    if( mPlayMeter ) {
-      mPlayMeter->SetMinSize( wxSize( width, height ));
+      mPlayMeter->SetMinSize( wxSize( width, height));
       mSizer->SetItemPosition( mPlayMeter, pos );
    }
 

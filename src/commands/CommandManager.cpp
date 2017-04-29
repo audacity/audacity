@@ -419,7 +419,8 @@ CommandManager::CommandManager():
    mCurrentID(17000),
    mCurrentMenuName(COMMAND),
    mDefaultFlags(AlwaysEnabledFlag),
-   mDefaultMask(AlwaysEnabledFlag)
+   mDefaultMask(AlwaysEnabledFlag),
+   bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
 }
@@ -903,6 +904,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       entry->skipKeydown = (accel.Find(wxT("\tskipKeydown")) != wxNOT_FOUND);
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
       entry->isGlobal = false;
+      entry->isOccult = bMakingOccultCommands;
 
       // For key bindings for commands with a list, such as effects,
       // the name in prefs is the category name plus the effect name.
@@ -1030,6 +1032,8 @@ void CommandManager::EnableUsingFlags(CommandFlag flags, CommandMask mask)
    for(const auto &entry : mCommandList) {
       if (entry->multi && entry->index != 0)
          continue;
+      if( entry->isOccult )
+         continue;
 
       auto combinedMask = (mask & entry->mask);
       if (combinedMask) {
@@ -1054,10 +1058,9 @@ bool CommandManager::GetEnabled(const wxString &name)
 void CommandManager::Check(const wxString &name, bool checked)
 {
    CommandListEntry *entry = mCommandNameHash[name];
-   if (!entry || !entry->menu) {
+   if (!entry || !entry->menu || entry->isOccult) {
       return;
    }
-
    entry->menu->Check(entry->id, checked);
 }
 
@@ -1464,6 +1467,11 @@ void CommandManager::SetDefaultFlags(CommandFlag flags, CommandMask mask)
 {
    mDefaultFlags = flags;
    mDefaultMask = mask;
+}
+
+void CommandManager::SetOccultCommands( bool bOccult)
+{
+   bMakingOccultCommands = bOccult;
 }
 
 void CommandManager::SetCommandFlags(const wxString &name,

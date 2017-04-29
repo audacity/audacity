@@ -228,9 +228,15 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
    AColor::Line(dc, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
 }
 
-void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r)
+void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel)
 {
-   wxBitmap & Bmp = theTheme.Bitmap( up ? bmpUpButtonExpand : bmpDownButtonExpand );
+   int index = 0;
+   if( bSel )
+      index = up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
+   else
+      index = up ? bmpUpButtonExpand : bmpDownButtonExpand;
+
+   wxBitmap & Bmp = theTheme.Bitmap( index );
    wxMemoryDC memDC;
    memDC.SelectObject(Bmp);
    int h = wxMin( r.height, Bmp.GetHeight() );
@@ -335,7 +341,7 @@ void AColor::Dark(wxDC * dc, bool selected)
 void AColor::TrackPanelBackground(wxDC * dc, bool selected)
 {
 #ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrMediumSelected : clrMedium);
+   UseThemeColour( dc, selected ? clrMediumSelected : clrTrackBackground );
 #else
    Dark( dc, selected );
 #endif
@@ -415,10 +421,14 @@ void AColor::Solo(wxDC * dc, bool on, bool selected)
    }
 }
 
+bool AColor::gradient_inited = 0;
+
 void AColor::ReInit()
 {
    inited=false;
    Init();
+   gradient_inited=0;
+   PreComputeGradient();
 }
 
 void AColor::Init()
@@ -620,7 +630,7 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
 }
 
-bool AColor::gradient_inited = 0;
+
 
 unsigned char AColor::gradient_pre[ColorGradientTotal][2][gradientSteps][3];
 
@@ -641,13 +651,17 @@ void AColor::PreComputeGradient() {
                      r = g = b = 0.84 - 0.84 * value;
                   } else {
                      const int gsteps = 4;
-                     float gradient[gsteps + 1][3] = {
-                        {float(0.75), float(0.75), float(0.75)},    // lt gray
-                        {float(0.30), float(0.60), float(1.00)},    // lt blue
-                        {float(0.90), float(0.10), float(0.90)},    // violet
-                        {float(1.00), float(0.00), float(0.00)},    // red
-                        {float(1.00), float(1.00), float(1.00)}     // white
-                     };
+                     float gradient[gsteps + 1][3];
+                     theTheme.Colour( clrSpectro1 ) = theTheme.Colour( clrUnselected );
+                     theTheme.Colour( clrSpectro1Sel ) = theTheme.Colour( clrSelected );
+                     int clrFirst = (selected == ColorGradientUnselected ) ? clrSpectro1 : clrSpectro1Sel;
+                     for(int j=0;j<(gsteps+1);j++){
+                        wxColour c = theTheme.Colour( clrFirst+j );
+                        gradient[ j] [0] = c.Red()/255.0;
+                        gradient[ j] [1] = c.Green()/255.0;
+                        gradient[ j] [2] = c.Blue()/255.0;
+                     }
+
 
                      int left = (int)(value * gsteps);
                      int right = (left == gsteps ? gsteps : left + 1);

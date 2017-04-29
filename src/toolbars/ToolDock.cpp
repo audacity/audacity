@@ -874,9 +874,8 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
    //
    // Under GTK, we don't set the toolbar background to the background
    // colour in the system theme.  Instead we use our own colour.
-#if defined( __WXGTK__ )
+
    dc.SetBackground( wxBrush( theTheme.Colour( clrMedium )));
-#endif
    dc.Clear();
 
    // Set the gap color

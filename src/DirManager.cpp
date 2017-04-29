@@ -90,6 +90,7 @@
 #include "AudacityApp.h"
 #include "AudacityException.h"
 #include "BlockFile.h"
+#include "FileException.h"
 #include "blockfile/LegacyBlockFile.h"
 #include "blockfile/LegacyAliasBlockFile.h"
 #include "blockfile/SimpleBlockFile.h"
@@ -97,6 +98,7 @@
 #include "blockfile/PCMAliasBlockFile.h"
 #include "blockfile/ODPCMAliasBlockFile.h"
 #include "blockfile/ODDecodeBlockFile.h"
+#include "InconsistencyException.h"
 #include "Internat.h"
 #include "Project.h"
 #include "Prefs.h"
@@ -1110,8 +1112,12 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
 // Adds one to the reference count of the block file,
 // UNLESS it is "locked", then it makes a NEW copy of
 // the BlockFile.
+// This function returns non-NULL, or else throws
 BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
 {
+   if (!b)
+      THROW_INCONSISTENCY_EXCEPTION;
+
    auto result = b->GetFileName();
    const auto &fn = result.name;
 
@@ -1122,7 +1128,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       //
       // LLL: Except for silent block files which have uninitialized filename.
       if (fn.IsOk())
-         mBlockFileHash[fn.GetName()]=b;
+         mBlockFileHash[fn.GetName()] = b;
       return b;
    }
 
@@ -1148,7 +1154,9 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       {
          if( !wxCopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
-            return {};
+            // Disk space exhaustion, maybe
+            throw FileException{
+               FileException::Cause::Write, newFile };
       }
 
       // Done with fn
@@ -1156,12 +1164,12 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
 
       b2 = b->Copy(std::move(newFile));
 
-      if (b2 == NULL)
-         return {};
-
-      mBlockFileHash[newName]=b2;
+      mBlockFileHash[newName] = b2;
       aliasList.Add(newPath);
    }
+
+   if (!b2)
+      THROW_INCONSISTENCY_EXCEPTION;
 
    return b2;
 }

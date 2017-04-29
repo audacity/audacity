@@ -111,6 +111,7 @@ void SelectionBar::Create(wxWindow * parent)
 
 void SelectionBar::Populate()
 {
+   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    mLeftTime = mRightTime = mAudioTime = nullptr;
 
    // This will be inherited by all children:
@@ -163,13 +164,18 @@ void SelectionBar::Populate()
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
 
    {
+      bool bSysTextColour = theTheme.IsUsingSyestemTextColour();
       // Can't set textcolour of radio buttons.
       // so instead we make the text empty and add in two wxStaticTexts
       // and we can set the colour of those.
-      // Slight regression relative ot Audacity in that this text is not 
+      // Slight regression relative ot Audacity, in that this text is not 
       // clickable/active.  You have to click on the actual button.
+      // And can't tab between and hear the labels with voice over.
+      // So VI users should use blend themes (which is the default).
+      // Should not be a hardship for them, as themes make little difference 
+      // for them, except Hi-Contrast, which should be used with recolouring.
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, wxT(""),
+      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, bSysTextColour ? _("End") : wxT("") ,
          wxDefaultPosition, wxDefaultSize,
          wxRB_GROUP);
       mRightEndButton->SetName(_("End"));
@@ -177,21 +183,27 @@ void SelectionBar::Populate()
       mRightEndButton->SetValue(!showSelectionLength);
       hSizer->Add(mRightEndButton,
          0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      wxStaticText * pEndText = safenew wxStaticText(this, -1, _("End"));
-      pEndText->SetForegroundColour( clrText );
-      hSizer->Add(pEndText,
-         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+      if( !bSysTextColour )
+      {
+         wxStaticText * pEndText = safenew wxStaticText(this, -1, _("End"));
+         pEndText->SetForegroundColour( clrText );
+         hSizer->Add(pEndText,
+            0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+      }
 
-      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID, wxT(""));
+      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID,bSysTextColour ? _("Length") : wxT("") );
       mRightLengthButton->SetName(_("Length"));
       mRightLengthButton->SetForegroundColour( clrText );
       mRightLengthButton->SetValue(showSelectionLength);
       hSizer->Add(mRightLengthButton,
          0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-      wxStaticText * pLengthText = safenew wxStaticText(this, -1, _("Length"));
-      pLengthText->SetForegroundColour( clrText );
-      hSizer->Add(pLengthText,
-         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+      if( !bSysTextColour )
+      {
+         wxStaticText * pLengthText = safenew wxStaticText(this, -1, _("Length"));
+         pLengthText->SetForegroundColour( clrText );
+         hSizer->Add(pLengthText,
+            0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+      }
 
 #if defined(__WXMSW__)
       // Refer to Microsoft KB article 261192 for an explanation as

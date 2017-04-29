@@ -1222,6 +1222,7 @@
 		5EF958851DEB121800191280 /* InconsistencyException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF958831DEB121800191280 /* InconsistencyException.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
+		AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */; };
 		ED15214D163C22F000451B5F /* lsr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152123163C220300451B5F /* lsr.c */; };
 		ED152161163C244200451B5F /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
 		ED152162163C244200451B5F /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
@@ -3027,6 +3028,8 @@
 		8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EQDefaultCurves.xml; path = ../presets/EQDefaultCurves.xml; sourceTree = SOURCE_ROOT; };
 		8484F31213086237002DF7F0 /* DeviceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		8484F31313086237002DF7F0 /* DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = DeviceManager.h; sourceTree = "<group>"; tabWidth = 3; };
+		AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TracksBehaviorsPrefs.cpp; sourceTree = "<group>"; };
+		AA00841A1EA8C6F70070CCE3 /* TracksBehaviorsPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TracksBehaviorsPrefs.h; sourceTree = "<group>"; };
 		AAC1F49C1DE653A70038BB3A /* sample-data-import.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-import.ny"; path = "../../Audacity/plug-ins/sample-data-import.ny"; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4282,6 +4285,8 @@
 		1790B0B509883BFD008A330A /* prefs */ = {
 			isa = PBXGroup;
 			children = (
+				AA00841A1EA8C6F70070CCE3 /* TracksBehaviorsPrefs.h */,
+				AA0084181EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp */,
 				1790B0B809883BFD008A330A /* BatchPrefs.cpp */,
 				1790B0B909883BFD008A330A /* BatchPrefs.h */,
 				284B278E0FC66863005EAC96 /* DevicePrefs.cpp */,
@@ -7604,6 +7609,7 @@
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,
 				28884947131B6CF600B59735 /* bn.po in Sources */,
+				AA0084191EA8C6E70070CCE3 /* TracksBehaviorsPrefs.cpp in Sources */,
 				28884948131B6CF600B59735 /* bs.po in Sources */,
 				28884949131B6CF600B59735 /* ca.po in Sources */,
 				2888494A131B6CF600B59735 /* ca_ES@valencia.po in Sources */,

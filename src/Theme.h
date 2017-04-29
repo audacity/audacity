@@ -49,6 +49,7 @@ enum teThemeType
    themeClassic,
    themeDark,
    themeLight,
+   themeHiContrast,
    themeFromFile,
 };
 
@@ -116,14 +117,19 @@ public:
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
+   bool IsUsingSyestemTextColour(){ return bIsUsingSystemTextColour;};
+   void RecolourBitmap( int iIndex, wxColour From, wxColour To );
+   void RecolourTheme();
 
-
+   int ColourDistance( wxColour & From, wxColour & To );
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
    wxImage  & Image( int iIndex );
    wxCursor & Cursor( int iIndex );
    wxFont   & Font( int iIndex );
    wxSize ImageSize( int iIndex );
+   bool bRecolourOnLoad;  // Request to recolour.
+   bool bIsUsingSystemTextColour;
 
    void ReplaceImage( int iIndex, wxImage * pImage );
 

@@ -49,7 +49,7 @@
 #define EXPERIMENTAL_SYNC_LOCK
 
 // DA: Enables dark audacity theme and customisations.
-//#define EXPERIMENTAL_DA
+#define EXPERIMENTAL_DA
 
 // experimental theming
 // Work in progress, June-2008.
@@ -114,7 +114,9 @@
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
 #ifdef USE_MIDI
-//#define EXPERIMENTAL_MIDI_OUT
+#ifdef __WXMSW__
+   #define EXPERIMENTAL_MIDI_OUT
+#endif
 #endif
 
 // USE_MIDI must be defined in order for EXPERIMENTAL_SCOREALIGN to work

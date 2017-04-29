@@ -92,6 +92,7 @@ class AUDACITY_DLL_API TrackInfo
 public:
    TrackInfo(TrackPanel * pParentIn);
    ~TrackInfo();
+   void ReCreateSliders();
 
 private:
    int CalcItemY( int iItem ) const;
@@ -101,7 +102,7 @@ private:
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
    void DrawBordersWithin(wxDC * dc, const wxRect & rect, bool bHasMuteSolo ) const;
-   void DrawCloseBox(wxDC * dc, const wxRect & rect, bool down) const;
+   void DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
    void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
@@ -172,6 +173,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual void DeleteMenus(void);
 
    virtual void UpdatePrefs();
+   virtual void ApplyUpdatedTheme();
 
    virtual void OnPaint(wxPaintEvent & event);
    virtual void OnMouseEvent(wxMouseEvent & event);
@@ -251,6 +253,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
+
+   virtual void OnClipMove(bool right);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -377,6 +381,8 @@ protected:
    virtual void HandleSlide(wxMouseEvent & event);
    virtual void StartSlide(wxMouseEvent &event);
    virtual void DoSlide(wxMouseEvent &event);
+   virtual void DoSlideHorizontal();
+   virtual void CreateListOfCapturedClips(double clickTime);
    virtual void AddClipsToCaptured(Track *t, bool withinSelection);
    virtual void AddClipsToCaptured(Track *t, double t0, double t1);
 
