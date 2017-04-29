@@ -19,6 +19,7 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../Experimental.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Tracks Behaviors"))
