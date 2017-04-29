@@ -634,10 +634,10 @@ void WaveTrack::Trim (double t0, double t1)
 
    //if inside0 is false, then the left selector was between
    //clips, so DELETE everything to its left.
-   if(false == inside1)
+   if(!inside1 && t1 < GetEndTime())
       Clear(t1,GetEndTime());
 
-   if(false == inside0)
+   if(!inside0)
       SplitDelete(0,t0);
 }
 

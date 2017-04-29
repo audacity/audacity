@@ -495,7 +495,7 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
-   if (t1 <= t0)
+   if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
    double len = t1-t0;
