@@ -1343,8 +1343,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AudioIOBusyFlag, AudioIOBusyFlag);
       c->BeginSubMenu("Scrub");
 
-      c->AddItem(wxT("SeekLeftShort"), _("Short seek left during playback"), FN(OnSeekLeftShort), wxT("Left\tallowDup"));
-      c->AddItem(wxT("SeekRightShort"), _("Short seek right during playback"), FN(OnSeekRightShort), wxT("Right\tallowDup"));
+      c->AddItem(wxT("SeekLeftShort"), _("Short seek left during playback"), FN(OnSeekLeftShort), wxT("Ctrl+Left\tallowDup"));
+      c->AddItem(wxT("SeekRightShort"), _("Short seek right during playback"), FN(OnSeekRightShort), wxT("Ctrl+Right\tallowDup"));
       c->AddItem(wxT("SeekLeftLong"), _("Long seek left during playback"), FN(OnSeekLeftLong), wxT("Shift+Left\tallowDup"));
       c->AddItem(wxT("SeekRightLong"), _("Long Seek right during playback"), FN(OnSeekRightLong), wxT("Shift+Right\tallowDup"));
       c->EndSubMenu();
@@ -1430,8 +1430,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(TracksExistFlag, TracksExistFlag );
       c->BeginSubMenu("Cursor");
 
-      c->AddItem(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Left\twantKeyup\tallowDup"));
-      c->AddItem(wxT("CursorRight"), _("Cursor Right"), FN(OnCursorRight), wxT("Right\twantKeyup\tallowDup"));
+      c->AddItem(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Ctrl+Left\twantKeyup\tallowDup"));
+      c->AddItem(wxT("CursorRight"), _("Cursor Right"), FN(OnCursorRight), wxT("Ctrl+Right\twantKeyup\tallowDup"));
       c->AddItem(wxT("CursorShortJumpLeft"), _("Cursor Short Jump Left"), FN(OnCursorShortJumpLeft), wxT(","));
       c->AddItem(wxT("CursorShortJumpRight"), _("Cursor Short Jump Right"), FN(OnCursorShortJumpRight), wxT("."));
       c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
