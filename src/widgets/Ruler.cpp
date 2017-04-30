@@ -3101,11 +3101,11 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
    dc->DrawRectangle( mInner );
 
    if (mShowScrubbing) {
-      // Let's distinguish the scrubbing area by using the same gray as for
-      // selected track control panel.
+      // Let's distinguish the scrubbing area by using a themable
+      // colour and a line to set it off.  
       AColor::UseThemeColour(dc, clrScrubRuler, clrTrackPanelText );
       wxRect ScrubRect = mScrubZone;
-      ScrubRect.Inflate( 1,1 );
+      ScrubRect.Inflate( 1,0 );
       dc->DrawRectangle(ScrubRect);
    }
 }
