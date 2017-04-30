@@ -281,13 +281,15 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
 #endif
 }
 
-void AColor::UseThemeColour( wxDC * dc, int iIndex )
+void AColor::UseThemeColour( wxDC * dc, int iIndex, int index2 )
 {
    if (!inited)
       Init();
    wxColour col = theTheme.Colour( iIndex );
    spareBrush.SetColour( col );
    dc->SetBrush( spareBrush );
+   if( index2 != -1)
+      col = theTheme.Colour( index2 );
    sparePen.SetColour( col );
    dc->SetPen( sparePen );
 }
