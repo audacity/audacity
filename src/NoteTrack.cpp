@@ -435,7 +435,7 @@ int NoteTrack::GetVisibleChannels()
 
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
-   if (t1 <= t0)
+   if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
    double len = t1-t0;
@@ -458,7 +458,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
 
 Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
-   if (t1 <= t0)
+   if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
    double len = t1-t0;
@@ -481,7 +481,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 
 bool NoteTrack::Trim(double t0, double t1)
 {
-   if (t1 <= t0)
+   if (t1 < t0)
       return false;
    mSeq->convert_to_seconds();
    // DELETE way beyond duration just in case something is out there:

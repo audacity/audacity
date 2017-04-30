@@ -646,7 +646,7 @@ void WaveTrack::Trim (double t0, double t1)
 
 Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
-   if (t1 <= t0)
+   if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
    WaveTrack *newTrack;
