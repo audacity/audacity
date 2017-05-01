@@ -231,6 +231,7 @@ void ControlToolBar::RegenerateTooltips()
             commands.push_back(wxT("Play"));
             // With shift
             commands.push_back(_("Loop Play"));
+            // For the shortcut tooltip.
             commands.push_back(wxT("PlayLooped"));
             break;
          case ID_RECORD_BUTTON:
@@ -240,11 +241,11 @@ void ControlToolBar::RegenerateTooltips()
                gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
                if( bPreferAppend ){
                   commands.push_back(_("Record New Track"));
-                  commands.push_back(wxT("RecordBelow"));
                } else {
                   commands.push_back(_("Append Record"));
-                  commands.push_back(wxT("RecordAppend"));
                }
+               // For the shortcut tooltip.
+               commands.push_back(wxT("Record2ndChoice"));
             }
             break;
          case ID_PAUSE_BUTTON:
