@@ -465,7 +465,7 @@ void ToolBar::Create( wxWindow *parent )
 void ToolBar::ReCreateButtons()
 {
    wxSize sz3 = GetSize();
-   wxLogDebug( "x:%i y:%i",sz3.x, sz3.y);
+   //wxLogDebug( "x:%i y:%i",sz3.x, sz3.y);
 
    // SetSizer(NULL) detaches mHSizer and deletes it.
    // Do not use Detach() here, as that attempts to detach mHSizer from itself!
