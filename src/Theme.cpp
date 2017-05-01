@@ -231,6 +231,7 @@ void Theme::EnsureInitialised()
 #endif
 
    LoadPreferredTheme();
+
 }
 
 bool ThemeBase::LoadPreferredTheme()
@@ -322,6 +323,9 @@ void ThemeBase::LoadTheme( teThemeType Theme )
       CreateImageCache();
 #endif
    }
+
+   RotateImageInto( bmpRecordBeside, bmpRecordBelow, false );
+   RotateImageInto( bmpRecordBesideDisabled, bmpRecordBelowDisabled, false );
 
    if( bRecolourOnLoad )
       RecolourTheme();
@@ -1220,4 +1224,9 @@ void ThemeBase::ReplaceImage( int iIndex, wxImage * pImage )
    Bitmap( iIndex ) = wxBitmap( *pImage );
 }
 
-
+void ThemeBase::RotateImageInto( int iTo, int iFrom, bool bClockwise )
+{
+   wxImage img(theTheme.Bitmap( iFrom ).ConvertToImage() );
+   wxImage img2 = img.Rotate90( bClockwise );
+   ReplaceImage( iTo, &img2 );
+}

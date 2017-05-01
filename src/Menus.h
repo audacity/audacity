@@ -70,7 +70,7 @@ public:
 void OnStop();
 void OnPause();
 void OnRecord();
-void OnRecordBelow();
+void OnRecord2ndChoice();
 void OnStopSelect();
 void OnSkipStart();
 void OnSkipEnd();

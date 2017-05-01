@@ -819,18 +819,19 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AudioIONotBusyFlag | CanStopAudioStreamFlag,
                          AudioIONotBusyFlag | CanStopAudioStreamFlag);
       /* i18n-hint: (verb)*/
-      c->AddItem(wxT("RecordBeside"), _("&Record"), FN(OnRecord), wxT("R"));
-      // The OnRecordBelow function is actually 'record-other', i.e. if normal record records beside,
+      c->AddItem(wxT("Record1stChoice"), _("&Record"), FN(OnRecord), wxT("R"));
+      // The OnRecord2ndChoice function is: if normal record records beside,
       // it records below, if normal record records below, it records beside.
-      // TODO: fix the naming, and also check we do 'the right thing' with other options like
-      // TimerRecord.
-      // PREFER_NEW_TRACKS is defined if we want the old behaviour of by default adding a new track on
-      // every new recording.
-#ifndef PREFER_NEW_TRACKS
-      c->AddItem(wxT("RecordBelow"), _("Record &New Track"), FN(OnRecordBelow), wxT("Shift+R"));
-#else
-      c->AddItem(wxT("RecordBelow"), _("Record Beside"), FN(OnRecordBelow), wxT("Shift+R"));
-#endif
+      // TODO: Do 'the right thing' with other options like TimerRecord.
+      bool bPreferAppend;
+      gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+      c->AddItem(  wxT("Record2ndChoice"), 
+         // Our first choice is bound to R (by default) and gets the prime position.
+         // We supply the name for the 'other one' here.  It should be bound to Shift+R 
+         bPreferAppend ? _("Record &New Track") : _("&Append Record"), 
+         FN(OnRecord2ndChoice), 
+         wxT("Shift+R")
+      );
 
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
       // JKC: I decided to duplicate this between play and record, rather than put it 
@@ -2592,7 +2593,9 @@ void AudacityProject::OnRecord()
    GetControlToolBar()->OnRecord(evt);
 }
 
-void AudacityProject::OnRecordBelow()
+// If first choice is record same track 2nd choice is record new track
+// and vice versa.
+void AudacityProject::OnRecord2ndChoice()
 {
    wxCommandEvent evt;
    evt.SetInt(1); // 0 is default, use 1 to set shift on, 2 to clear it

@@ -132,6 +132,7 @@ public:
    bool bIsUsingSystemTextColour;
 
    void ReplaceImage( int iIndex, wxImage * pImage );
+   void RotateImageInto( int iTo, int iFrom, bool bClockwise );
 
    void SetBrushColour( wxBrush & Brush, int iIndex );
    void SetPenColour(   wxPen & Pen, int iIndex );

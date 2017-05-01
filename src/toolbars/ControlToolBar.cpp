@@ -193,8 +193,16 @@ void ControlToolBar::Populate()
 
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
-   MakeAlternateImages(*mRecord, 1, bmpAppendRecord, bmpAppendRecord,
-      bmpAppendRecordDisabled);
+
+   bool bPreferAppend;
+   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+   if( bPreferAppend )
+      MakeAlternateImages(*mRecord, 1, bmpRecordBelow, bmpRecordBelow,
+         bmpRecordBelowDisabled);
+   else
+      MakeAlternateImages(*mRecord, 1, bmpRecordBeside, bmpRecordBeside,
+         bmpRecordBesideDisabled);
+
    mRecord->FollowModifierKeys();
 
 #if wxUSE_TOOLTIPS
@@ -228,13 +236,16 @@ void ControlToolBar::RegenerateTooltips()
          case ID_RECORD_BUTTON:
             // Without shift
             commands.push_back(wxT("Record"));
-#ifdef PREFER_NEW_TRACKS
-            commands.push_back(_("Append Record"));
-            commands.push_back(wxT("RecordAppend"));
-#else
-            commands.push_back(_("Record New Track"));
-            commands.push_back(wxT("RecordBelow"));
-#endif
+            {  bool bPreferAppend;
+               gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+               if( bPreferAppend ){
+                  commands.push_back(_("Record New Track"));
+                  commands.push_back(wxT("RecordBelow"));
+               } else {
+                  commands.push_back(_("Append Record"));
+                  commands.push_back(wxT("RecordAppend"));
+               }
+            }
             break;
          case ID_PAUSE_BUTTON:
             commands.push_back(wxT("Pause"));
@@ -874,9 +885,11 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    bool success = false;
 
    bool shifted = mRecord->WasShiftDown();
-#ifndef PREFER_NEW_TRACKS
-   shifted = !shifted;
-#endif
+
+   bool bPreferAppend;
+   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+   if( bPreferAppend )
+      shifted = !shifted;
 
    TrackList *trackList = p->GetTracks();
    TrackList tracksCopy{};
