@@ -464,6 +464,9 @@ void ToolBar::Create( wxWindow *parent )
 
 void ToolBar::ReCreateButtons()
 {
+   wxSize sz3 = GetSize();
+   wxLogDebug( "x:%i y:%i",sz3.x, sz3.y);
+
    // SetSizer(NULL) detaches mHSizer and deletes it.
    // Do not use Detach() here, as that attempts to detach mHSizer from itself!
    SetSizer( NULL );
@@ -512,14 +515,19 @@ void ToolBar::ReCreateButtons()
    // Set the true AND minimum sizes and do final layout
    if(IsResizable())
    {
-      sz.SetWidth(GetMinToolbarWidth());
       // JKC we're going to allow all resizable toolbars to be resized
-      // to 1 unit high!
+      // to 1 unit high, typically 27 pixels.
       wxSize sz2 = sz;
+      sz2.SetWidth(GetMinToolbarWidth());
       sz2.y = tbs -1;
       SetMinSize(sz2);
-      sz.SetWidth(GetInitialWidth());
-      SetSize(sz);
+      // Initial size at least as big as minimum.
+      if( sz3.y < sz2.y )
+         sz3.y = sz2.y;
+      if( sz3.x < sz2.x )
+         sz3.x = GetInitialWidth();
+      //sz.SetWidth();
+      SetSize(sz3);
    }
    else
    {

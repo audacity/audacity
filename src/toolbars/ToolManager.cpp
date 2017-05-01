@@ -525,6 +525,7 @@ void ToolManager::Reset()
          (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ].get(),
          (entry.below == NoBarID) ? nullptr : mBars[ entry.below ].get()
       };
+      bar->SetSize( 20,20 );
 
       wxWindow *floater;
       ToolDock *dock;
