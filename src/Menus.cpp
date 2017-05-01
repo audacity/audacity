@@ -5573,8 +5573,10 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
    const TrackList* tracks = GetTracks();
    finalResults.clear();
 
-   bool anyWaveTracksSelected = std::any_of(tracks->begin(), tracks->end(), [] (const movable_ptr<Track>& t) {
-      return t->GetSelected() && t->GetKind() == Track::Wave; });
+   bool anyWaveTracksSelected =
+      tracks->end() != std::find_if(tracks->begin(), tracks->end(),
+         [] (const movable_ptr<Track>& t) {
+            return t->GetSelected() && t->GetKind() == Track::Wave; });
 
    // first search the tracks individually
    std::vector<FoundClip> results;
@@ -5600,8 +5602,9 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
          std::max_element(results.begin(), results.end(), compareStart);
 
       std::vector<FoundClip> resultsStartTime;
-      std::copy_if(results.begin(), results.end(), std::back_inserter(resultsStartTime),
-         [&] (const FoundClip& r) { return r.startTime == (*p).startTime; } );
+      for ( auto &r : results )
+         if ( r.startTime == (*p).startTime )
+            resultsStartTime.push_back( r );
 
       if (resultsStartTime.size() > 1) {
          // more than one clip with same start time so
@@ -5614,9 +5617,9 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
             std::max_element(resultsStartTime.begin(),
             resultsStartTime.end(), compareEnd);
 
-         std::copy_if(resultsStartTime.begin(), resultsStartTime.end(),
-            std::back_inserter(finalResults),
-            [&] (const FoundClip& r) { return r.endTime == (*p).endTime; } );
+         for ( auto &r : resultsStartTime )
+            if ( r.endTime == (*p).endTime )
+               finalResults.push_back( r );
       }
       else {
          finalResults = resultsStartTime;
@@ -6605,8 +6608,10 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
    const TrackList* tracks = GetTracks();
    finalResults.clear();
 
-   bool anyWaveTracksSelected = std::any_of(tracks->begin(), tracks->end(), [] (const movable_ptr<Track>& t) {
-      return t->GetSelected() && t->GetKind() == Track::Wave; });
+   bool anyWaveTracksSelected =
+      tracks->end() != std::find_if(tracks->begin(), tracks->end(),
+         [] (const movable_ptr<Track>& t) {
+            return t->GetSelected() && t->GetKind() == Track::Wave; });
 
    // first search the tracks individually
    std::vector<FoundClipBoundary> results;
@@ -6631,8 +6636,9 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
       auto p = next ? min_element(results.begin(), results.end(), compare ) :
          max_element(results.begin(), results.end(), compare);
 
-      std::copy_if(results.begin(), results.end(), std::back_inserter(finalResults),
-         [&] (const FoundClipBoundary& r) { return r.time == (*p).time; });
+      for ( auto &r : results )
+         if ( r.time == (*p).time )
+            finalResults.push_back( r );
    }
 
    return nTracksSearched;
