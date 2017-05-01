@@ -510,7 +510,7 @@ bool NyquistEffect::Process()
          list += wxT("\"") + EscapeString(paths[i]) + wxT("\" ");
       }
       list = list.RemoveLast();
-      // TODO:Document: "PLUGIN" is deprecated as of Audacity 2.1.3. Use "PLUG-IN" instead.
+
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUG-IN)\n"), list.c_str());
 
@@ -538,9 +538,7 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
 
-      // TODO: Document: Number of open projects
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"), (int) gAudacityProjects.size());
-      // TODO: Document. NOTE: unnamed project returns an empty string.
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetName().c_str());
 
       TrackListIterator all(project->GetTracks());
@@ -904,7 +902,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
 
-      //TODO: Document NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
+      //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp.c_str());
 
       double startTime = 0.0;
@@ -973,7 +971,6 @@ bool NyquistEffect::ProcessOne()
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
          maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
 
-         // TODO: Document, PEAK is nil if NaN or INF.
          // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
          if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
             peakString += wxString::Format(wxT("(float %s) "), Internat::ToString(maxPeak).c_str());
@@ -993,18 +990,15 @@ bool NyquistEffect::ProcessOne()
                               (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
                               clips.c_str());
 
-      // TODO: Document, PEAK is linear PEAK per channel.
       (mCurNumChannels > 1)?
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'PEAK)\n"), peakString) :
          cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'PEAK)\n"), peakString);
 
-      // TODO: Document, PEAK-LEVEL is nil if NaN or INF.
       if (!std::isinf(maxPeakLevel) && !std::isnan(maxPeakLevel) && (maxPeakLevel < FLT_MAX)) {
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
                                  Internat::ToString(maxPeakLevel).c_str());
       }
 
-      // TODO: Document, RMS is linear RMS per channel.
       (mCurNumChannels > 1)?
          cmd += wxString::Format(wxT("(putprop '*SELECTION* (vector %s) 'RMS)\n"), rmsString) :
          cmd += wxString::Format(wxT("(putprop '*SELECTION* %s 'RMS)\n"), rmsString);
