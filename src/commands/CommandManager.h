@@ -305,6 +305,7 @@ protected:
    wxMenu * CurrentSubMenu() const;
    wxMenu * CurrentMenu() const;
    wxString GetLabel(const CommandListEntry *entry) const;
+   wxString GetLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
    //
    // Loading/Saving
