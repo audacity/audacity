@@ -363,58 +363,6 @@ LWSlider::LWSlider(wxWindow * parent,
         stepValue, canUseShift, style, heavyweight, popup, 1.0, orientation);
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-void LWSlider::SetStyle(int style)
-{
-   mStyle = style;
-   mSpeed = 1.0;
-   switch(style)
-   {
-   case PAN_SLIDER:
-      mMinValue = -1.0f;
-      mMaxValue = +1.0f;
-      mStepValue = 0.1f;
-      mOrientation = wxHORIZONTAL; //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
-      mName = _("Pan");
-      break;
-   case DB_SLIDER:
-      mMinValue = DB_MIN;
-      if (mOrientation == wxHORIZONTAL)
-         mMaxValue = DB_MAX;
-      else
-         mMaxValue = DB_MAX; // for MixerBoard //v Previously was 6dB for MixerBoard, but identical for now.
-      mStepValue = 1.0f;
-      mSpeed = 0.5;
-      mName = _("Gain");
-      break;
-   case FRAC_SLIDER:
-      mMinValue = FRAC_MIN;
-      mMaxValue = FRAC_MAX;
-      mStepValue = STEP_CONTINUOUS;
-      break;
-   case SPEED_SLIDER:
-      mMinValue = SPEED_MIN;
-      mMaxValue = SPEED_MAX;
-      mStepValue = STEP_CONTINUOUS;
-      break;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   case VEL_SLIDER:
-      mMinValue = VEL_MIN;
-      mMaxValue = VEL_MAX;
-      mStepValue = 1.0f;
-      mSpeed = 0.5;
-      mName = _("Velocity");
-      break;
-#endif
-   default:
-      mMinValue = FRAC_MIN;
-      mMaxValue = FRAC_MAX;
-      mStepValue = 0.0f;
-      wxASSERT(false); // undefined style
-   }
-}
-#endif
-
 // Construct predefined slider
 LWSlider::LWSlider(wxWindow *parent,
                    const wxString &name,
@@ -426,15 +374,7 @@ LWSlider::LWSlider(wxWindow *parent,
                    int orientation /* = wxHORIZONTAL */) // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 {
    wxString leftLabel, rightLabel;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   mOrientation = orientation;
-   mName = name;
 
-   SetStyle(style);
-
-   Init(parent, mName, pos, size, mMinValue, mMaxValue, mStepValue,
-        true, style, heavyweight, popup, mSpeed, mOrientation);
-#else
    float minValue, maxValue, stepValue;
    float speed = 1.0;
 
@@ -465,7 +405,14 @@ LWSlider::LWSlider(wxWindow *parent,
       maxValue = 3.0f;
       stepValue = STEP_CONTINUOUS;
       break;
-
+#ifdef EXPERIMENTAL_MIDI_OUT
+   case VEL_SLIDER:
+      minValue = VEL_MIN;
+      maxValue = VEL_MAX;
+      stepValue = 1.0f;
+      speed = 0.5;
+      break;
+#endif
    default:
       minValue = 0.0f;
       maxValue = 1.0f;
@@ -475,8 +422,6 @@ LWSlider::LWSlider(wxWindow *parent,
 
    Init(parent, name, pos, size, minValue, maxValue, stepValue,
         true, style, heavyweight, popup, speed, orientation);
-
-#endif
 }
 
 void LWSlider::Init(wxWindow * parent,
@@ -1729,14 +1674,6 @@ void ASlider::Set(float value)
 {
    mLWSlider->Set(value);
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-void ASlider::SetStyle(int style)
-{
-   mStyle = style;
-   mLWSlider->SetStyle(style);
-}
-#endif
 
 void ASlider::Increase(float steps)
 {
