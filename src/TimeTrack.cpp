@@ -136,11 +136,11 @@ Track::Holder TimeTrack::Duplicate() const
 
 bool TimeTrack::GetInterpolateLog() const
 {
-   return mEnvelope->GetInterpolateDB();
+   return mEnvelope->GetExponential();
 }
 
 void TimeTrack::SetInterpolateLog(bool interpolateLog) {
-   mEnvelope->SetInterpolateDB(interpolateLog);
+   mEnvelope->SetExponential(interpolateLog);
 }
 
 //Compute the (average) warp factor between two non-warped time points
@@ -217,7 +217,7 @@ void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
    if(mRescaleXMLValues)
    {
       mRescaleXMLValues = false;
-      mEnvelope->Rescale(mRangeLower, mRangeUpper);
+      mEnvelope->RescaleValues(mRangeLower, mRangeUpper);
       mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
    }
 }
@@ -299,10 +299,10 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
 void TimeTrack::testMe()
 {
    GetEnvelope()->Flatten(0.0);
-   GetEnvelope()->Insert( 0.0, 0.2 );
-   GetEnvelope()->Insert( 5.0 - 0.001, 0.2 );
-   GetEnvelope()->Insert( 5.0 + 0.001, 1.3 );
-   GetEnvelope()->Insert( 10.0, 1.3 );
+   GetEnvelope()->InsertOrReplace(0.0, 0.2);
+   GetEnvelope()->InsertOrReplace(5.0 - 0.001, 0.2);
+   GetEnvelope()->InsertOrReplace(5.0 + 0.001, 1.3);
+   GetEnvelope()->InsertOrReplace(10.0, 1.3);
 
    double value1 = GetEnvelope()->Integral(2.0, 13.0);
    double expected1 = (5.0 - 2.0) * 0.2 + (13.0 - 5.0) * 1.3;

@@ -1145,13 +1145,13 @@ void WaveTrack::HandleClear(double t0, double t1,
                   if (clip->WithinClip(t0)) {
                      // start of region within clip
                      val = clip->GetEnvelope()->GetValue(t0);
-                     newClip->GetEnvelope()->Insert(t0 - clip->GetOffset() - 1.0/clip->GetRate(), val);
-                  }
-                  if (clip->WithinClip(t1)) {
-                     // end of region within clip
+                     newClip->GetEnvelope()->InsertOrReplace(t0 - clip->GetOffset() - 1.0 / clip->GetRate(), val);
+                     }
+                  if (clip->WithinClip(t1))
+                     {  // end of region within clip
                      val = clip->GetEnvelope()->GetValue(t1);
-                     newClip->GetEnvelope()->Insert(t1 - clip->GetOffset(), val);
-                  }
+                     newClip->GetEnvelope()->InsertOrReplace(t1 - clip->GetOffset(), val);
+                     }
                }
                newClip->Clear(t0,t1);
                newClip->GetEnvelope()->RemoveUnneededPoints(t0);
@@ -2393,8 +2393,8 @@ void WaveTrack::SplitAt(double t)
          //make two envelope points to preserve the value.
          //handle the case where we split on the 1st sample (without this we hit an assert)
          if(t - 1.0/c->GetRate() >= c->GetOffset())
-            c->GetEnvelope()->Insert(t - c->GetOffset() - 1.0/c->GetRate(), val);  // frame end points
-         c->GetEnvelope()->Insert(t - c->GetOffset(), val);
+            c->GetEnvelope()->InsertOrReplace(t - c->GetOffset() - 1.0 / c->GetRate(), val);  // frame end points
+         c->GetEnvelope()->InsertOrReplace(t - c->GetOffset(), val);
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          c->Clear(t, c->GetEndTime());
          newClip->Clear(c->GetStartTime(), t);

@@ -91,9 +91,8 @@ public:
    double GetOffset() const { return mOffset; }
    double GetTrackLen() const { return mTrackLen; }
 
-   bool GetInterpolateDB() { return mDB; }
-   void SetInterpolateDB(bool db) { mDB = db; }
-   void Rescale(double minValue, double maxValue);
+   bool GetExponential() const { return mDB; }
+   void SetExponential(bool db) { mDB = db; }
 
    void Flatten(double value);
 
@@ -127,6 +126,7 @@ public:
    // Control
    void SetOffset(double newOffset);
    void SetTrackLen(double trackLen);
+   void RescaleValues(double minValue, double maxValue);
 
    // Accessors
    /** \brief Get envelope value at time t */
@@ -158,12 +158,12 @@ public:
    bool IsDirty() const;
 
    /** \brief Add a point at a particular spot */
-   int Insert(double when, double value);
+   int InsertOrReplace(double when, double value);
 
    /** \brief Move a point at when to value
     *
     * Returns 0 if point moved, -1 if not found.*/
-   int Move(double when, double value);
+   int Reassign(double when, double value);
 
    /** \brief DELETE a point by its position in array */
    void Delete(int point);

@@ -60,7 +60,7 @@ Envelope::~Envelope()
 /// and rescale all envelope points accordingly (unlike SetRange, which clamps the envelope points to the NEW range).
 /// @minValue - the NEW minimum value
 /// @maxValue - the NEW maximum value
-void Envelope::Rescale(double minValue, double maxValue)
+void Envelope::RescaleValues(double minValue, double maxValue)
 {
    double oldMinValue = mMinValue;
    double oldMaxValue = mMaxValue;
@@ -499,7 +499,7 @@ bool EnvelopeEditor::HandleMouseButtonDown(const wxMouseEvent & event, wxRect & 
       double newVal = ValueOfPixel(clip_y, r.height, upper, dB, dBRange,
                                    zoomMin, zoomMax);
 
-      mEnvelope.SetDragPoint(mEnvelope.Insert(when - mEnvelope.GetOffset(), newVal));
+      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplace(when - mEnvelope.GetOffset(), newVal));
       mDirty = true;
    }
 
@@ -732,7 +732,7 @@ Old analysis of cases:
             //wxLogDebug(wxT("Case 1"));
          }
          else {
-            Insert(t0 + mTrackEpsilon, splitval);   // Case 3: insert a point to maintain the envelope
+            InsertOrReplace(t0 + mTrackEpsilon, splitval);   // Case 3: insert a point to maintain the envelope
             someToShift = true;
             //wxLogDebug(wxT("Case 3"));
          }
@@ -744,21 +744,21 @@ Old analysis of cases:
                //wxLogDebug(wxT("Case 2"));
             }
             else {   // Case 4:
-               Insert(t0 - mTrackEpsilon, splitval);   // insert a point to maintain the envelope
+               InsertOrReplace(t0 - mTrackEpsilon, splitval);   // insert a point to maintain the envelope
                //wxLogDebug(wxT("Case 4"));
             }
          }
          else {
             if(onPoint) {  // Case 7: move the point L and insert a NEW one to the R
                mEnv[pos].SetT(mEnv[pos].GetT() - mTrackEpsilon);
-               Insert(t0 + mTrackEpsilon, splitval);
+               InsertOrReplace(t0 + mTrackEpsilon, splitval);
                someToShift = true;
                //wxLogDebug(wxT("Case 7"));
             }
             else {
                if( !beforeStart && !afterEnd ) {// Case 5: Insert points to L and R
-                  Insert(t0 - mTrackEpsilon, splitval);
-                  Insert(t0 + mTrackEpsilon, splitval);
+                  InsertOrReplace(t0 - mTrackEpsilon, splitval);
+                  InsertOrReplace(t0 + mTrackEpsilon, splitval);
                   someToShift = true;
                   //wxLogDebug(wxT("Case 5"));
                }
@@ -805,13 +805,13 @@ Old analysis of cases:
       // calls for the start and end times will have no effect.
       const double leftval = e->GetValue(0 + e->mOffset);
       const double rightval = e->GetValue(e->mTrackLen + e->mOffset);
-      Insert(t0, leftval);
-      Insert(t0 + e->mTrackLen, rightval);
+      InsertOrReplace(t0, leftval);
+      InsertOrReplace(t0 + e->mTrackLen, rightval);
    }
 
    len = e->mEnv.size();
    for (i = 0; i < len; i++)
-      Insert(t0 + e->mEnv[i].GetT(), e->mEnv[i].GetVal());
+      InsertOrReplace(t0 + e->mEnv[i].GetT(), e->mEnv[i].GetVal());
 
 /*   if(len != 0)
       for (i = 0; i < mEnv.size(); i++)
@@ -846,7 +846,7 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
       bool bExcludePoint = true;
       if( fabs(val -val1) > tolerence )
       {
-         Insert(when, val); // put it back, we needed it
+         InsertOrReplace(when, val); // put it back, we needed it
 
          //Insert may have modified instead of inserting, if two points were at the same time.
          // in which case len needs to shrink i and len, because the array size decreased.
@@ -872,7 +872,7 @@ void Envelope::InsertSpace(double t0, double tlen)
    mTrackLen += tlen;
 }
 
-int Envelope::Move(double when, double value)
+int Envelope::Reassign(double when, double value)
 {
    int len = mEnv.size();
    if (len == 0)
@@ -939,7 +939,7 @@ void Envelope::GetPoints(double *bufferWhen,
  * @param value the envelope value to use at the given point.
  * @return the index of the NEW envelope point within array of envelope points.
  */
-int Envelope::Insert(double when, double value)
+int Envelope::InsertOrReplace(double when, double value)
 {
 #if defined(__WXDEBUG__)
    // in debug builds, do a spot of argument checking
@@ -1566,7 +1566,7 @@ void Envelope::testMe()
 {
    double t0=0, t1=0;
 
-   SetInterpolateDB(false);
+   SetExponential(false);
 
    Flatten(0.5);
    checkResult( 1, Integral(0.0,100.0), 50);
@@ -1578,14 +1578,14 @@ void Envelope::testMe()
    checkResult( 5, Integral(-20.0,-10.0), 5);
 
    Flatten(0.5);
-   Insert( 5.0, 0.5 );
+   InsertOrReplace( 5.0, 0.5 );
    checkResult( 6, Integral(0.0,100.0), 50);
    checkResult( 7, Integral(-10.0,10.0), 10);
 
    Flatten(0.0);
-   Insert( 0.0, 0.0 );
-   Insert( 5.0, 1.0 );
-   Insert( 10.0, 0.0 );
+   InsertOrReplace( 0.0, 0.0 );
+   InsertOrReplace( 5.0, 1.0 );
+   InsertOrReplace( 10.0, 0.0 );
    t0 = 10.0 - .1;
    t1 = 10.0 + .1;
    double result = Integral(0.0,t1);
@@ -1595,9 +1595,9 @@ void Envelope::testMe()
    checkResult( 8, result - resulta - resultb, 0);
 
    Flatten(0.0);
-   Insert( 0.0, 0.0 );
-   Insert( 5.0, 1.0 );
-   Insert( 10.0, 0.0 );
+   InsertOrReplace( 0.0, 0.0 );
+   InsertOrReplace( 5.0, 1.0 );
+   InsertOrReplace( 10.0, 0.0 );
    t0 = 10.0 - .1;
    t1 = 10.0 + .1;
    checkResult( 9, Integral(0.0,t1), 5);
@@ -1605,9 +1605,9 @@ void Envelope::testMe()
    checkResult( 11, Integral(t0,t1), .001);
 
    mEnv.clear();
-   Insert( 0.0, 0.0 );
-   Insert( 5.0, 1.0 );
-   Insert( 10.0, 0.0 );
+   InsertOrReplace( 0.0, 0.0 );
+   InsertOrReplace( 5.0, 1.0 );
+   InsertOrReplace( 10.0, 0.0 );
    checkResult( 12, NumberOfPointsAfter( -1 ), 3 );
    checkResult( 13, NumberOfPointsAfter( 0 ), 2 );
    checkResult( 14, NumberOfPointsAfter( 1 ), 2 );

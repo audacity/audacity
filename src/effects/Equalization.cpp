@@ -1651,7 +1651,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = (log10(std::max((double) loFreqI, when)) - loLog)/denom;
       }
       value = mCurves[currentCurve].points[0].dB;
-      env->Insert(std::min(1.0, std::max(0.0, when)), value);
+      env->InsertOrReplace(std::min(1.0, std::max(0.0, when)), value);
       ForceRecalc();
       return;
    }
@@ -1670,7 +1670,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = mCurves[currentCurve].points[pointCount].Freq / mHiFreq;
          value = mCurves[currentCurve].points[pointCount].dB;
          if(when <= 1) {
-            env->Insert(when, value);
+            env->InsertOrReplace(when, value);
          }
          else {
             // There are more points at higher freqs, so interpolate next one then stop.
@@ -1680,7 +1680,7 @@ void EffectEqualization::setCurve(int currentCurve)
             double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
             double nextDB = mCurves[currentCurve].points[pointCount].dB;
             value = lastDB + ((nextDB - lastDB) * ((mHiFreq - lastF) / (nextF - lastF)));
-            env->Insert(when, value);
+            env->InsertOrReplace(when, value);
             break;
          }
       }
@@ -1702,7 +1702,7 @@ void EffectEqualization::setCurve(int currentCurve)
          // All points below 20 Hz, so just use final point.
          when = 0.0;
          value = mCurves[currentCurve].points[numPoints-1].dB;
-         env->Insert(when, value);
+         env->InsertOrReplace(when, value);
          ForceRecalc();
          return;
       }
@@ -1717,7 +1717,7 @@ void EffectEqualization::setCurve(int currentCurve)
          double nextDB = mCurves[currentCurve].points[firstAbove20Hz].dB;
          when = 0.0;
          value = nextDB - ((nextDB - prevDB) * ((nextF - loLog) / (nextF - prevF)));
-         env->Insert(when, value);
+         env->InsertOrReplace(when, value);
       }
 
       // Now get the rest.
@@ -1729,7 +1729,7 @@ void EffectEqualization::setCurve(int currentCurve)
          when = (flog - loLog)/denom;
          value = mCurves[currentCurve].points[pointCount].dB;
          if(when <= 1.0) {
-            env->Insert(when, value);
+            env->InsertOrReplace(when, value);
          }
          else {
             // This looks weird when adjusting curve in Draw mode if
@@ -1748,7 +1748,7 @@ void EffectEqualization::setCurve(int currentCurve)
             double logLastF = log10(mCurves[currentCurve].points[pointCount-1].Freq);
             double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
             value = lastDB + ((value - lastDB) * ((log10(mHiFreq) - logLastF) / (flog - logLastF)));
-            env->Insert(when, value);
+            env->InsertOrReplace(when, value);
             break;
          }
       }
@@ -2177,7 +2177,7 @@ void EffectEqualization::UpdateGraphic()
       {
          when = freq/mHiFreq;
          value = mLinEnvelope->GetValue(when);
-         mLinEnvelope->Insert(when, value);
+         mLinEnvelope->InsertOrReplace(when, value);
       }
 
       EnvLinToLog();
@@ -2249,14 +2249,14 @@ void EffectEqualization::EnvLogToLin(void)
    mLinEnvelope->Flatten(0.);
    mLinEnvelope->SetTrackLen(1.0);
    mLogEnvelope->GetPoints( when.get(), value.get(), numPoints );
-   mLinEnvelope->Move(0., value[0]);
+   mLinEnvelope->Reassign(0., value[0]);
    double loLog = log10(20.);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
 
    for (size_t i = 0; i < numPoints; i++)
-      mLinEnvelope->Insert(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
-   mLinEnvelope->Move(1., value[numPoints-1]);
+      mLinEnvelope->InsertOrReplace(pow( 10., ((when[i] * denom) + loLog))/mHiFreq , value[i]);
+   mLinEnvelope->Reassign(1., value[numPoints-1]);
 }
 
 void EffectEqualization::EnvLinToLog(void)
@@ -2273,7 +2273,7 @@ void EffectEqualization::EnvLinToLog(void)
    mLogEnvelope->Flatten(0.);
    mLogEnvelope->SetTrackLen(1.0);
    mLinEnvelope->GetPoints( when.get(), value.get(), numPoints );
-   mLogEnvelope->Move(0., value[0]);
+   mLogEnvelope->Reassign(0., value[0]);
    double loLog = log10(20.);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
@@ -2286,16 +2286,16 @@ void EffectEqualization::EnvLinToLog(void)
          // Caution: on Linux, when when == 20, the log calulation rounds
          // to just under zero, which causes an assert error.
          double flog = (log10(when[i]*mHiFreq)-loLog)/denom;
-         mLogEnvelope->Insert(std::max(0.0, flog) , value[i]);
+         mLogEnvelope->InsertOrReplace(std::max(0.0, flog) , value[i]);
       }
       else
       {  //get the first point as close as we can to the last point requested
          changed = true;
          double v = value[i];
-         mLogEnvelope->Insert(0., v);
+         mLogEnvelope->InsertOrReplace(0., v);
       }
    }
-   mLogEnvelope->Move(1., value[numPoints-1]);
+   mLogEnvelope->Reassign(1., value[numPoints - 1]);
 
    if(changed)
       EnvelopeUpdated(mLogEnvelope.get(), false);
@@ -2448,10 +2448,10 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                }
             }
             if(mWhens[i]<=0.)
-               env->Move( 0., value );
-            env->Insert( mWhens[i], value );
+               env->Reassign(0., value);
+            env->InsertOrReplace( mWhens[i], value );
          }
-         env->Move( 1., value );
+         env->Reassign( 1., value );
          break;
       }
 
@@ -2492,10 +2492,10 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                }
             }
             if(mWhens[i]<=0.)
-               env->Move( 0., value );
-            env->Insert( mWhens[i], value );
+               env->Reassign(0., value);
+            env->InsertOrReplace( mWhens[i], value );
          }
-         env->Move( 1., value );
+         env->Reassign( 1., value );
          break;
       }
 
@@ -2506,7 +2506,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          spline(mWhenSliders, mEQVals, mBandsInUse+1, y2);
          for(double xf=0; xf<1.; xf+=1./NUM_PTS)
          {
-            env->Insert(xf, splint(mWhenSliders, mEQVals, mBandsInUse+1, y2, xf));
+            env->InsertOrReplace(xf, splint(mWhenSliders, mEQVals, mBandsInUse+1, y2, xf));
          }
          break;
       }
@@ -2735,9 +2735,9 @@ void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
       for (size_t i = 0; i < numPoints; i++)
       {
          if(lin)
-            mLinEnvelope->Move(when[i] , -value[i]);
+            mLinEnvelope->Reassign(when[i] , -value[i]);
          else
-            mLogEnvelope->Move(when[i] , -value[i]);
+            mLogEnvelope->Reassign(when[i] , -value[i]);
       }
 
       // copy it back to the other one (just in case)
