@@ -606,36 +606,62 @@ bool EnvelopeEditor::MouseEvent(const wxMouseEvent & event, wxRect & r,
    return false;
 }
 
-void Envelope::CollapseRegion(double t0, double t1)
+void Envelope::CollapseRegion( double t0, double t1, double sampleTime )
 // NOFAIL-GUARANTEE
 {
-   // This gets called when somebody clears samples.  All of the
-   // control points within the region disappear and the points
-   // to the right get shifted over.
+   // This gets called when somebody clears samples.
 
-   t0 -= mOffset;
-   t1 -= mOffset;
+   // Snip points in the interval (t0, t1), shift values left at times after t1.
+   // For the boundaries of the interval, preserve the left-side limit at the
+   // start and right-side limit at the end.
 
-   t0 = std::max(0.0, std::min(mTrackLen, t0));
-   t1 = std::max(0.0, std::min(mTrackLen, t1));
+   const auto epsilon = sampleTime / 2;
+   t0 = std::max( 0.0, std::min( mTrackLen, t0 - mOffset ) );
+   t1 = std::max( 0.0, std::min( mTrackLen, t1 - mOffset ) );
 
-   int len = mEnv.size();
-   int i;
-
-   // Remove points in deleted region.
-   for (i = 0; i < len - 0; i++)
-      if (mEnv[i].GetT() >= t0 && mEnv[i].GetT() < t1) {
-         Delete(i);
-         len--;
-         i--;
+   // Determine the start of the range of points to remove from the array.
+   auto range0 = EqualRange( t0, 0 );
+   auto begin = range0.first;
+   if ( begin == range0.second ) {
+      if ( t0 > epsilon ) {
+         // There was no point exactly at t0;
+         // insert a point to preserve the value.
+         auto val = GetValueRelative( t0 );
+         InsertOrReplaceRelative( t0, val );
+         ++begin;
       }
+   }
+   else
+      // We will keep the first (or only) point that was at t0.
+      ++begin;
+
+   // We want end to be the index one past the range of points to remove from
+   // the array.
+   // At first, find index of the first point after t1:
+   auto range1 = EqualRange( t1, 0 );
+   auto end = range1.second;
+   if ( range1.first == end ) {
+      if ( mTrackLen - t1 > epsilon ) {
+         // There was no point exactly at t1; insert a point to preserve the value.
+         auto val = GetValueRelative( t1 );
+         InsertOrReplaceRelative( t1, val );
+         // end is now the index of this NEW point and that is correct.
+      }
+   }
+   else
+      // We will keep the last (or only) point that was at t1.
+      --end;
+
+   mEnv.erase( mEnv.begin() + begin, mEnv.begin() + end );
 
    // Shift points left after deleted region.
-   for (i = 0; i < len; i++)
-      if (mEnv[i].GetT() >= t1)
-         mEnv[i].SetT(mEnv[i].GetT() - (t1 - t0));
+   auto len = mEnv.size();
+   for ( size_t i = begin; i < len; ++i ) {
+      auto &point = mEnv[i];
+      point.SetT( point.GetT() - (t1 - t0) );
+   }
 
-   mTrackLen -= (t1-t0);
+   mTrackLen -= ( t1 - t0 );
 }
 
 // This operation is trickier than it looks; the basic rub is that

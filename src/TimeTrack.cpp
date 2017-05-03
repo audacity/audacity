@@ -22,6 +22,7 @@
 #include "widgets/Ruler.h"
 #include "Envelope.h"
 #include "Prefs.h"
+#include "Project.h"
 #include "Internat.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -108,7 +109,8 @@ Track::Holder TimeTrack::Copy( double t0, double t1, bool ) const
 
 void TimeTrack::Clear(double t0, double t1)
 {
-   mEnvelope->CollapseRegion(t0, t1);
+   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+   mEnvelope->CollapseRegion( t0, t1, sampleTime );
 }
 
 void TimeTrack::Paste(double t, const Track * src)

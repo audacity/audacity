@@ -1676,7 +1676,8 @@ void WaveClip::Clear(double t0, double t1)
    }
 
    // Collapse envelope
-   GetEnvelope()->CollapseRegion(t0, t1);
+   auto sampleTime = 1.0 / GetRate();
+   GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
    if (t0 < GetStartTime())
       Offset(-(GetStartTime() - t0));
 
@@ -1728,7 +1729,8 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    GetSequence()->Delete(s0, s1-s0);
 
    // Collapse envelope
-   GetEnvelope()->CollapseRegion(t0, t1);
+   auto sampleTime = 1.0 / GetRate();
+   GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
    if (t0 < GetStartTime())
       Offset(-(GetStartTime() - t0));
 

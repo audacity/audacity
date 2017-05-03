@@ -118,8 +118,11 @@ public:
       float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
-   void CollapseRegion(double t0, double t1);
+   // sampleTime determines when the endpoint of the collapse is near enough
+   // to an endpoint of the domain, that an extra control point is not needed.
+   void CollapseRegion(double t0, double t1, double sampleTime);
    void Paste(double t0, const Envelope *e);
+
    void InsertSpace(double t0, double tlen);
    void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 
