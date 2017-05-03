@@ -1540,8 +1540,7 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
       bool altColor = twoTone && value < 0.0;
 
 #ifdef EXPERIMENTAL_THEMING
-      // TODO:  handle color distinction
-      dc.SetTextForeground(c);
+      dc.SetTextForeground(altColor ? theTheme.Colour( clrTextNegativeNumbers) : c);
 #else
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif

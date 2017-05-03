@@ -312,15 +312,6 @@ void AColor::Medium(wxDC * dc, bool selected)
    dc->SetPen(mediumPen[index]);
 }
 
-#if 0
-#ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrMediumSelected : clrMedium);
-#endif
-#ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrLightSelected : clrLight);
-#endif
-#endif
-
 void AColor::MediumTrackInfo(wxDC * dc, bool selected)
 {
 #ifdef EXPERIMENTAL_THEMING
