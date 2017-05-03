@@ -228,7 +228,7 @@ void ControlToolBar::RegenerateTooltips()
       {
          case ID_PLAY_BUTTON:
             // Without shift
-            commands.push_back(wxT("Play"));
+            commands.push_back(wxT("PlayStop"));
             // With shift
             commands.push_back(_("Loop Play"));
             // For the shortcut tooltip.
@@ -236,7 +236,8 @@ void ControlToolBar::RegenerateTooltips()
             break;
          case ID_RECORD_BUTTON:
             // Without shift
-            commands.push_back(wxT("Record"));
+            //commands.push_back(wxT("Record"));
+            commands.push_back(wxT("Record1stChoice"));
             {  bool bPreferAppend;
                gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
                if( bPreferAppend ){
