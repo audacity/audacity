@@ -42,28 +42,12 @@ a draggable point type.
 #include "DirManager.h"
 #include "TrackArtist.h"
 
-Envelope::Envelope()
+Envelope::Envelope(bool exponential, double minValue, double maxValue, double defaultValue)
+   : mDB(exponential)
+   , mMinValue(minValue)
+   , mMaxValue(maxValue)
+   , mDefaultValue { ClampValue(defaultValue) }
 {
-   mOffset = 0.0;
-   mTrackLen = 0.0;
-
-   // Anything with a sample rate of no more than 200 KHz
-   // will have samples spaced apart by at least this amount,
-   // "epsilon".  We use this to enforce that there aren't
-   // allowed to be multiple control points at the same t
-   // value.
-   mTrackEpsilon = 1.0 / 200000.0;
-
-   mDB = true;
-   mDefaultValue = 1.0;
-   mDragPoint = -1;
-
-   mMinValue = 1.0e-7;
-   mMaxValue = 2.0;
-
-   mSearchGuess = -1;
-
-   mDragPointValid = false;
 }
 
 Envelope::~Envelope()
@@ -196,41 +180,51 @@ EnvPoint *Envelope::AddPointAtEnd( double t, double val )
    return &mEnv.back();
 }
 
-void Envelope::CopyFrom(const Envelope *e, double t0, double t1)
+Envelope::Envelope(const Envelope &orig, double t0, double t1)
+   : mDB(orig.mDB)
+   , mMinValue(orig.mMinValue)
+   , mMaxValue(orig.mMaxValue)
+   , mDefaultValue(orig.mDefaultValue)
 {
-   wxASSERT( t0 <= t1 );
+   mOffset = wxMax(t0, orig.mOffset);
+   mTrackLen = wxMin(t1, orig.mOffset + orig.mTrackLen) - mOffset;
 
-   mOffset   = wxMax(t0, e->mOffset);
-   mTrackLen = wxMin(t1, e->mOffset + e->mTrackLen) - mOffset;
+   auto range1 = orig.EqualRange( t0 - orig.mOffset, 0 );
+   auto range2 = orig.EqualRange( t1 - orig.mOffset, 0 );
+   CopyRange(orig, range1.first, range2.second);
+}
 
-   mEnv.clear();
-   int len = e->mEnv.size();
-   int i = 0;
+Envelope::Envelope(const Envelope &orig)
+   : mDB(orig.mDB)
+   , mMinValue(orig.mMinValue)
+   , mMaxValue(orig.mMaxValue)
+   , mDefaultValue(orig.mDefaultValue)
+{
+   mOffset = orig.mOffset;
+   mTrackLen = orig.mTrackLen;
+   CopyRange(orig, 0, orig.GetNumberOfPoints());
+}
 
-   // Skip the points that come before the copied region
-   while ((i < len) && e->mOffset + e->mEnv[i].GetT() <= t0)
-      i++;
+void Envelope::CopyRange(const Envelope &orig, size_t begin, size_t end)
+{
+   int len = orig.mEnv.size();
+   int i = begin;
 
    // Create the point at 0 if it needs interpolated representation
-   if (i>0)
-      AddPointAtEnd( 0, e->GetValue(mOffset) );
+   if ( i > 0 )
+      AddPointAtEnd(0, orig.GetValue(mOffset));
 
    // Copy points from inside the copied region
-   while (i < len) {
-      const EnvPoint &point = e->mEnv[i];
-      const double when = e->mOffset + point.GetT() - mOffset;
-      if (when < mTrackLen) {
-         AddPointAtEnd(when, point.GetVal());
-         i++;
-      }
-      else
-         break;
+   for (; i < end; ++i) {
+      const EnvPoint &point = orig[i];
+      const double when = point.GetT() + (orig.mOffset - mOffset);
+      AddPointAtEnd(when, point.GetVal());
    }
 
    // Create the final point if it needs interpolated representation
    // If the last point of e was exatly at t1, this effectively copies it too.
    if (mTrackLen > 0 && i < len)
-      AddPointAtEnd( mTrackLen, e->GetValue(mOffset + mTrackLen));
+      AddPointAtEnd( mTrackLen, orig.GetValue(mOffset + mTrackLen));
 }
 
 /// Limit() limits a double value to a range.
@@ -996,6 +990,27 @@ int Envelope::Insert(double when, double value)
      }
    }
    return i;
+}
+
+std::pair<int, int> Envelope::EqualRange( double when, double sampleTime ) const
+{
+   // Find range of envelope points matching the given time coordinate
+   // (within an interval of length sampleTime)
+   // by binary search; if empty, it still indicates where to
+   // insert.
+   const auto tolerance = sampleTime / 2;
+   auto begin = mEnv.begin();
+   auto end = mEnv.end();
+   auto first = std::lower_bound(
+      begin, end,
+      EnvPoint{ const_cast<Envelope*>( this ), when - tolerance, 0.0 },
+      []( const EnvPoint &point1, const EnvPoint &point2 )
+         { return point1.GetT() < point2.GetT(); }
+   );
+   auto after = first;
+   while ( after != end && after->GetT() < when + tolerance )
+      ++after;
+   return { first - begin, after - begin };
 }
 
 // Control

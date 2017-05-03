@@ -45,12 +45,9 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mRangeUpper = 1.1;
    mDisplayLog = false;
 
-   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope = std::make_unique<Envelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
    mEnvelope->SetTrackLen(DBL_MAX);
-   mEnvelope->SetInterpolateDB(true);
-   mEnvelope->Flatten(1.0);
    mEnvelope->SetOffset(0);
-   mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
 
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
@@ -67,18 +64,12 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
-   ///@TODO: Give Envelope:: a copy-constructor instead of this?
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->Flatten(1.0);
-   mEnvelope->SetTrackLen(DBL_MAX);
-   SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
-   mEnvelope->SetOffset(0);
-   mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
-   if ( pT0 && pT1 )
-      // restricted copy
-      mEnvelope->CopyFrom(orig.mEnvelope.get(), *pT0, *pT1);
+   if (pT0 && pT1)
+      mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope, *pT0, *pT1 );
    else
-      mEnvelope->Paste(0.0, orig.mEnvelope.get());
+      mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope );
+   mEnvelope->SetTrackLen(DBL_MAX);
+   mEnvelope->SetOffset(0);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mRuler = std::make_unique<Ruler>();

@@ -75,8 +75,15 @@ private:
 typedef std::vector<EnvPoint> EnvArray;
 
 class Envelope final : public XMLTagHandler {
- public:
-   Envelope();
+public:
+   // Envelope can define a piecewise linear function, or piecewise exponential.
+   Envelope(bool exponential, double minValue, double maxValue, double defaultValue);
+
+   Envelope(const Envelope &orig);
+
+   // Create from a subrange of another envelope.
+   Envelope(const Envelope &orig, double t0, double t1);
+
    void Initialize(int numPoints);
 
    virtual ~ Envelope();
@@ -113,8 +120,6 @@ class Envelope final : public XMLTagHandler {
 
    // Handling Cut/Copy/Paste events
    void CollapseRegion(double t0, double t1);
-   // Takes absolute times, NOT offset-relative:
-   void CopyFrom(const Envelope * e, double t0, double t1);
    void Paste(double t0, const Envelope *e);
    void InsertSpace(double t0, double tlen);
    void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
@@ -172,10 +177,12 @@ class Envelope final : public XMLTagHandler {
 private:
    friend class EnvelopeEditor;
    /** \brief Accessor for points */
-   EnvPoint &operator[] (int index)
+   const EnvPoint &operator[] (int index) const
    {
       return mEnv[index];
    }
+
+   std::pair<int, int> EqualRange( double when, double sampleTime ) const;
 
 public:
    /** \brief Returns the sets of when and value pairs */
@@ -199,6 +206,7 @@ public:
 
 private:
    EnvPoint *  AddPointAtEnd( double t, double val );
+   void CopyRange(const Envelope &orig, size_t begin, size_t end);
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
 
@@ -206,25 +214,25 @@ private:
    EnvArray mEnv;
 
    /** \brief The time at which the envelope starts, i.e. the start offset */
-   double mOffset;
+   double mOffset { 0.0 };
    /** \brief The length of the envelope, which is the same as the length of the
     * underlying track (normally) */
-   double mTrackLen;
+   double mTrackLen { 0.0 };
 
    // TODO: mTrackEpsilon based on assumption of 200KHz.  Needs review if/when
    // we support higher sample rates.
    /** \brief The shortest distance appart that points on an envelope can be
     * before being considered the same point */
-   double mTrackEpsilon;
-   double mDefaultValue;
+   double mTrackEpsilon { 1.0 / 200000.0 };
    bool mDB;
    double mMinValue, mMaxValue;
+   double mDefaultValue;
 
    // UI stuff
-   bool mDragPointValid;
-   int mDragPoint;
+   bool mDragPointValid { false };
+   int mDragPoint { -1 };
 
-   mutable int mSearchGuess;
+   mutable int mSearchGuess { -2 };
 };
 
 inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)

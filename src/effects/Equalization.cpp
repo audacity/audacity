@@ -239,13 +239,15 @@ EffectEqualization::EffectEqualization()
       mInterpolations.Add(wxGetTranslation(kInterpStrings[i]));
    }
 
-   mLogEnvelope = std::make_unique<Envelope>();
-   mLogEnvelope->SetInterpolateDB(false);
-   mLogEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
+   mLogEnvelope = std::make_unique<Envelope>
+      (false,
+       MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
+       1.0);
 
-   mLinEnvelope = std::make_unique<Envelope>();
-   mLinEnvelope->SetInterpolateDB(false);
-   mLinEnvelope->SetRange(MIN_dBMin, MAX_dBMax); // MB: this is the highest possible range
+   mLinEnvelope = std::make_unique<Envelope>
+      (false,
+       MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
+       1.0);
 
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
@@ -2308,12 +2310,7 @@ void EffectEqualization::ErrMin(void)
    double correction = 1.6;
    bool flag;
    size_t j=0;
-   Envelope testEnvelope;
-   testEnvelope.SetInterpolateDB(false);
-   testEnvelope.SetRange(-120.0, 60.0);
-   testEnvelope.Flatten(0.);
-   testEnvelope.SetTrackLen(1.0);
-   testEnvelope.CopyFrom(mLogEnvelope.get(), 0.0, 1.0);
+   Envelope testEnvelope{ *mLogEnvelope };
 
    for(size_t i = 0; i < NUM_PTS; i++)
       vals[i] = testEnvelope.GetValue(mWhens[i]);
