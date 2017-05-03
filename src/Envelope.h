@@ -202,10 +202,6 @@ private:
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
 
-   // Possibly inline functions:
-   // This function resets them integral memoizers (call whenever the Envelope changes)
-   void resetIntegralMemoizer() { lastIntegral_t0=0; lastIntegral_t1=0; lastIntegral_result=0; }
-
    // The list of envelope control points.
    EnvArray mEnv;
 
@@ -223,11 +219,6 @@ private:
    double mDefaultValue;
    bool mDB;
    double mMinValue, mMaxValue;
-
-   // These are memoizing variables for Integral()
-   double lastIntegral_t0;
-   double lastIntegral_t1;
-   double lastIntegral_result;
 
    // UI stuff
    bool mDragPointValid;
