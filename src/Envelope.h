@@ -143,9 +143,13 @@ public:
    void GetValues
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
+private:
+   // relative time
    int NumberOfPointsAfter(double t) const;
+   // relative time
    double NextPointAfter(double t) const;
 
+public:
    double Average( double t0, double t1 ) const;
    double AverageOfInverse( double t0, double t1 ) const;
    double Integral( double t0, double t1 ) const;
@@ -157,8 +161,9 @@ public:
 
    bool IsDirty() const;
 
-   /** \brief Add a point at a particular spot */
-   int InsertOrReplace(double when, double value);
+   /** \brief Add a point at a particular absolute time coordinate */
+   int InsertOrReplace(double when, double value)
+   { return InsertOrReplaceRelative( when - mOffset, value ); }
 
    /** \brief Move a point at when to value
     *
@@ -175,6 +180,7 @@ public:
    size_t GetNumberOfPoints() const;
 
 private:
+   int InsertOrReplaceRelative(double when, double value);
    friend class EnvelopeEditor;
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
@@ -200,13 +206,14 @@ public:
    bool GetDragPointValid() const { return mDragPointValid; }
    // Modify the dragged point and change its value.
    // But consistency constraints may move it less then you ask for.
+
+private:
    void MoveDragPoint(double newWhen, double value);
    // May delete the drag point.  Restores envelope consistency.
    void ClearDragPoint();
-
-private:
    EnvPoint *  AddPointAtEnd( double t, double val );
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
+   // relative time
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
 

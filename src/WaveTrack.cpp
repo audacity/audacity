@@ -2393,8 +2393,8 @@ void WaveTrack::SplitAt(double t)
          //make two envelope points to preserve the value.
          //handle the case where we split on the 1st sample (without this we hit an assert)
          if(t - 1.0/c->GetRate() >= c->GetOffset())
-            c->GetEnvelope()->InsertOrReplace(t - c->GetOffset() - 1.0 / c->GetRate(), val);  // frame end points
-         c->GetEnvelope()->InsertOrReplace(t - c->GetOffset(), val);
+            c->GetEnvelope()->InsertOrReplace(t - 1.0 / c->GetRate(), val);  // frame end points
+         c->GetEnvelope()->InsertOrReplace(t, val);
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          c->Clear(t, c->GetEndTime());
          newClip->Clear(c->GetStartTime(), t);

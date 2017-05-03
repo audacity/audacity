@@ -499,7 +499,7 @@ bool EnvelopeEditor::HandleMouseButtonDown(const wxMouseEvent & event, wxRect & 
       double newVal = ValueOfPixel(clip_y, r.height, upper, dB, dBRange,
                                    zoomMin, zoomMax);
 
-      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplace(when - mEnvelope.GetOffset(), newVal));
+      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplaceRelative(when - mEnvelope.GetOffset(), newVal));
       mDirty = true;
    }
 
@@ -732,7 +732,7 @@ Old analysis of cases:
             //wxLogDebug(wxT("Case 1"));
          }
          else {
-            InsertOrReplace(t0 + mTrackEpsilon, splitval);   // Case 3: insert a point to maintain the envelope
+            InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);   // Case 3: insert a point to maintain the envelope
             someToShift = true;
             //wxLogDebug(wxT("Case 3"));
          }
@@ -744,21 +744,21 @@ Old analysis of cases:
                //wxLogDebug(wxT("Case 2"));
             }
             else {   // Case 4:
-               InsertOrReplace(t0 - mTrackEpsilon, splitval);   // insert a point to maintain the envelope
+               InsertOrReplaceRelative(t0 - mTrackEpsilon, splitval);   // insert a point to maintain the envelope
                //wxLogDebug(wxT("Case 4"));
             }
          }
          else {
             if(onPoint) {  // Case 7: move the point L and insert a NEW one to the R
                mEnv[pos].SetT(mEnv[pos].GetT() - mTrackEpsilon);
-               InsertOrReplace(t0 + mTrackEpsilon, splitval);
+               InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
                someToShift = true;
                //wxLogDebug(wxT("Case 7"));
             }
             else {
                if( !beforeStart && !afterEnd ) {// Case 5: Insert points to L and R
-                  InsertOrReplace(t0 - mTrackEpsilon, splitval);
-                  InsertOrReplace(t0 + mTrackEpsilon, splitval);
+                  InsertOrReplaceRelative(t0 - mTrackEpsilon, splitval);
+                  InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
                   someToShift = true;
                   //wxLogDebug(wxT("Case 5"));
                }
@@ -805,13 +805,13 @@ Old analysis of cases:
       // calls for the start and end times will have no effect.
       const double leftval = e->GetValue(0 + e->mOffset);
       const double rightval = e->GetValue(e->mTrackLen + e->mOffset);
-      InsertOrReplace(t0, leftval);
-      InsertOrReplace(t0 + e->mTrackLen, rightval);
+      InsertOrReplaceRelative(t0, leftval);
+      InsertOrReplaceRelative(t0 + e->mTrackLen, rightval);
    }
 
    len = e->mEnv.size();
    for (i = 0; i < len; i++)
-      InsertOrReplace(t0 + e->mEnv[i].GetT(), e->mEnv[i].GetVal());
+      InsertOrReplaceRelative(t0 + e->mEnv[i].GetT(), e->mEnv[i].GetVal());
 
 /*   if(len != 0)
       for (i = 0; i < mEnv.size(); i++)
@@ -846,7 +846,7 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
       bool bExcludePoint = true;
       if( fabs(val -val1) > tolerence )
       {
-         InsertOrReplace(when, val); // put it back, we needed it
+         InsertOrReplaceRelative(when, val); // put it back, we needed it
 
          //Insert may have modified instead of inserting, if two points were at the same time.
          // in which case len needs to shrink i and len, because the array size decreased.
@@ -863,6 +863,8 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
 void Envelope::InsertSpace(double t0, double tlen)
 // NOFAIL-GUARANTEE
 {
+   t0 -= mOffset;
+
    unsigned int len = mEnv.size();
    unsigned int i;
 
@@ -874,6 +876,8 @@ void Envelope::InsertSpace(double t0, double tlen)
 
 int Envelope::Reassign(double when, double value)
 {
+   when -= mOffset;
+
    int len = mEnv.size();
    if (len == 0)
       return -1;
@@ -904,7 +908,7 @@ void Envelope::GetPoints(double *bufferWhen,
       n = bufferLen;
    int i;
    for (i = 0; i < n; i++) {
-      bufferWhen[i] = mEnv[i].GetT();
+      bufferWhen[i] = mEnv[i].GetT() - mOffset;
       bufferValue[i] = mEnv[i].GetVal();
    }
 }
@@ -926,20 +930,11 @@ void Envelope::GetPoints(double *bufferWhen,
 
 /** @brief Add a control point to the envelope
  *
- * Control point positions start at zero and are measured in seconds from the
- * start of the envelope. The position of the envelope on the project-wide
- * time scale is store in seconds in Envelope::mOffset.
- * This is worth remembering.
- * If you call Envelope::Insert() from WaveClip, or anywhere else outside the
- * Envelope class that is using project timing, subtract the envelope's mOffset
- * from the time.
- * If you call Envelope::Insert() from within Envelope, don't subtract mOffset
- * because you are working in relative time inside the envelope
  * @param when the time in seconds when the envelope point should be created.
  * @param value the envelope value to use at the given point.
  * @return the index of the NEW envelope point within array of envelope points.
  */
-int Envelope::InsertOrReplace(double when, double value)
+int Envelope::InsertOrReplaceRelative(double when, double value)
 {
 #if defined(__WXDEBUG__)
    // in debug builds, do a spot of argument checking
@@ -1044,6 +1039,7 @@ double Envelope::GetValue(double t) const
    return temp;
 }
 
+// relative time
 /// @param Lo returns last index at or before this time.
 /// @param Hi returns first index after this time.
 void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
@@ -1195,6 +1191,7 @@ void Envelope::GetValues
       buffer[xx] = GetValue(zoomInfo.PositionToTime(xx, -leftOffset));
 }
 
+// relative time
 int Envelope::NumberOfPointsAfter(double t) const
 {
    if( t >= mEnv[mEnv.size()-1].GetT() )
@@ -1213,6 +1210,7 @@ int Envelope::NumberOfPointsAfter(double t) const
    }
 }
 
+// relative time
 double Envelope::NextPointAfter(double t) const
 {
    if( mEnv[mEnv.size()-1].GetT() < t )
@@ -1342,6 +1340,9 @@ double Envelope::Integral( double t0, double t1 ) const
    if(count == 0) // 'empty' envelope
       return (t1 - t0) * mDefaultValue;
 
+   t0 -= mOffset;
+   t1 -= mOffset;
+
    double total = 0.0, lastT, lastVal;
    unsigned int i; // this is the next point to check
    if(t0 < mEnv[0].GetT()) // t0 preceding the first point
@@ -1402,6 +1403,9 @@ double Envelope::IntegralOfInverse( double t0, double t1 ) const
    if(count == 0) // 'empty' envelope
       return (t1 - t0) / mDefaultValue;
 
+   t0 -= mOffset;
+   t1 -= mOffset;
+
    double total = 0.0, lastT, lastVal;
    unsigned int i; // this is the next point to check
    if(t0 < mEnv[0].GetT()) // t0 preceding the first point
@@ -1458,93 +1462,98 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
    if(count == 0) // 'empty' envelope
       return t0 + area * mDefaultValue;
 
-   double lastT, lastVal;
-   int i; // this is the next point to check
-   if(t0 < mEnv[0].GetT()) // t0 preceding the first point
-   {
-      if (area < 0) {
-         return t0 + area * mEnv[0].GetVal();
-      }
-      else {
-         i = 1;
-         lastT = mEnv[0].GetT();
-         lastVal = mEnv[0].GetVal();
-         double added = (lastT - t0) / lastVal;
-         if(added >= area)
+   // Correct for offset!
+   t0 -= mOffset;
+   return mOffset + [&] {
+      // Now we can safely assume t0 is relative time!
+      double lastT, lastVal;
+      int i; // this is the next point to check
+      if(t0 < mEnv[0].GetT()) // t0 preceding the first point
+      {
+         if (area < 0) {
             return t0 + area * mEnv[0].GetVal();
-         area -= added;
+         }
+         else {
+            i = 1;
+            lastT = mEnv[0].GetT();
+            lastVal = mEnv[0].GetVal();
+            double added = (lastT - t0) / lastVal;
+            if(added >= area)
+               return t0 + area * mEnv[0].GetVal();
+            area -= added;
+         }
       }
-   }
-   else if(t0 >= mEnv[count - 1].GetT()) // t0 following the last point
-   {
-      if (area < 0) {
-         i = count - 2;
-         lastT = mEnv[count - 1].GetT();
-         lastVal = mEnv[count - 1].GetVal();
-         double added = (lastT - t0) / lastVal; // negative
-         if(added <= area)
+      else if(t0 >= mEnv[count - 1].GetT()) // t0 following the last point
+      {
+         if (area < 0) {
+            i = count - 2;
+            lastT = mEnv[count - 1].GetT();
+            lastVal = mEnv[count - 1].GetVal();
+            double added = (lastT - t0) / lastVal; // negative
+            if(added <= area)
+               return t0 + area * mEnv[count - 1].GetVal();
+            area -= added;
+         }
+         else {
             return t0 + area * mEnv[count - 1].GetVal();
-         area -= added;
+         }
+      }
+      else // t0 enclosed by points
+      {
+         // Skip any points that come before t0 using binary search
+         int lo, hi;
+         BinarySearchForTime(lo, hi, t0);
+         lastVal = InterpolatePoints(mEnv[lo].GetVal(), mEnv[hi].GetVal(), (t0 - mEnv[lo].GetT()) / (mEnv[hi].GetT() - mEnv[lo].GetT()), mDB);
+         lastT = t0;
+         if (area < 0)
+            i = lo;
+         else
+            i = hi; // the point immediately after t0.
+      }
+
+      if (area < 0) {
+         // loop BACKWARDS through the rest of the envelope points until we get to t1
+         // (which is less than t0)
+         while (1)
+         {
+            if(i < 0) // the requested range extends beyond the leftmost point
+            {
+               return lastT + area * lastVal;
+            }
+            else
+            {
+               double added =
+                  -IntegrateInverseInterpolated(mEnv[i].GetVal(), lastVal, lastT - mEnv[i].GetT(), mDB);
+               if(added <= area)
+                  return lastT - SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), lastT - mEnv[i].GetT(), -area, mDB);
+               area -= added;
+               lastT = mEnv[i].GetT();
+               lastVal = mEnv[i].GetVal();
+               --i;
+            }
+         }
       }
       else {
-         return t0 + area * mEnv[count - 1].GetVal();
-      }
-   }
-   else // t0 enclosed by points
-   {
-      // Skip any points that come before t0 using binary search
-      int lo, hi;
-      BinarySearchForTime(lo, hi, t0);
-      lastVal = InterpolatePoints(mEnv[lo].GetVal(), mEnv[hi].GetVal(), (t0 - mEnv[lo].GetT()) / (mEnv[hi].GetT() - mEnv[lo].GetT()), mDB);
-      lastT = t0;
-      if (area < 0)
-         i = lo;
-      else
-         i = hi; // the point immediately after t0.
-   }
-
-   if (area < 0) {
-      // loop BACKWARDS through the rest of the envelope points until we get to t1
-      // (which is less than t0)
-      while (1)
-      {
-         if(i < 0) // the requested range extends beyond the leftmost point
+         // loop through the rest of the envelope points until we get to t1
+         while (1)
          {
-            return lastT + area * lastVal;
-         }
-         else
-         {
-            double added =
-               -IntegrateInverseInterpolated(mEnv[i].GetVal(), lastVal, lastT - mEnv[i].GetT(), mDB);
-            if(added <= area)
-               return lastT - SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), lastT - mEnv[i].GetT(), -area, mDB);
-            area -= added;
-            lastT = mEnv[i].GetT();
-            lastVal = mEnv[i].GetVal();
-            --i;
+            if(i >= count) // the requested range extends beyond the last point
+            {
+               return lastT + area * lastVal;
+            }
+            else
+            {
+               double added = IntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, mDB);
+               if(added >= area)
+                  return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, area, mDB);
+               area -= added;
+               lastT = mEnv[i].GetT();
+               lastVal = mEnv[i].GetVal();
+               i++;
+            }
          }
       }
-   }
-   else {
-      // loop through the rest of the envelope points until we get to t1
-      while (1)
-      {
-         if(i >= count) // the requested range extends beyond the last point
-         {
-            return lastT + area * lastVal;
-         }
-         else
-         {
-            double added = IntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, mDB);
-            if(added >= area)
-               return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, area, mDB);
-            area -= added;
-            lastT = mEnv[i].GetT();
-            lastVal = mEnv[i].GetVal();
-            i++;
-         }
-      }
-   }
+   }();
 }
 
 void Envelope::print() const
@@ -1578,14 +1587,14 @@ void Envelope::testMe()
    checkResult( 5, Integral(-20.0,-10.0), 5);
 
    Flatten(0.5);
-   InsertOrReplace( 5.0, 0.5 );
+   InsertOrReplaceRelative( 5.0, 0.5 );
    checkResult( 6, Integral(0.0,100.0), 50);
    checkResult( 7, Integral(-10.0,10.0), 10);
 
    Flatten(0.0);
-   InsertOrReplace( 0.0, 0.0 );
-   InsertOrReplace( 5.0, 1.0 );
-   InsertOrReplace( 10.0, 0.0 );
+   InsertOrReplaceRelative( 0.0, 0.0 );
+   InsertOrReplaceRelative( 5.0, 1.0 );
+   InsertOrReplaceRelative( 10.0, 0.0 );
    t0 = 10.0 - .1;
    t1 = 10.0 + .1;
    double result = Integral(0.0,t1);
@@ -1595,9 +1604,9 @@ void Envelope::testMe()
    checkResult( 8, result - resulta - resultb, 0);
 
    Flatten(0.0);
-   InsertOrReplace( 0.0, 0.0 );
-   InsertOrReplace( 5.0, 1.0 );
-   InsertOrReplace( 10.0, 0.0 );
+   InsertOrReplaceRelative( 0.0, 0.0 );
+   InsertOrReplaceRelative( 5.0, 1.0 );
+   InsertOrReplaceRelative( 10.0, 0.0 );
    t0 = 10.0 - .1;
    t1 = 10.0 + .1;
    checkResult( 9, Integral(0.0,t1), 5);
@@ -1605,9 +1614,9 @@ void Envelope::testMe()
    checkResult( 11, Integral(t0,t1), .001);
 
    mEnv.clear();
-   InsertOrReplace( 0.0, 0.0 );
-   InsertOrReplace( 5.0, 1.0 );
-   InsertOrReplace( 10.0, 0.0 );
+   InsertOrReplaceRelative( 0.0, 0.0 );
+   InsertOrReplaceRelative( 5.0, 1.0 );
+   InsertOrReplaceRelative( 10.0, 0.0 );
    checkResult( 12, NumberOfPointsAfter( -1 ), 3 );
    checkResult( 13, NumberOfPointsAfter( 0 ), 2 );
    checkResult( 14, NumberOfPointsAfter( 1 ), 2 );
