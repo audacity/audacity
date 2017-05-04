@@ -86,7 +86,11 @@ public:
 
    void Initialize(int numPoints);
 
-   virtual ~ Envelope();
+   virtual ~Envelope();
+
+   // Return true if violations of point ordering invariants were detected
+   // and repaired
+   bool ConsistencyCheck();
 
    double GetOffset() const { return mOffset; }
    double GetTrackLen() const { return mTrackLen; }

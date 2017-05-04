@@ -56,6 +56,55 @@ Envelope::~Envelope()
 {
 }
 
+bool Envelope::ConsistencyCheck()
+{
+   bool consistent = true;
+
+   bool disorder;
+   do {
+      disorder = false;
+      for ( size_t ii = 0, count = mEnv.size(); ii < count; ) {
+         // Find range of points with equal T
+         const double thisT = mEnv[ii].GetT();
+         double nextT;
+         auto nextI = ii + 1;
+         while ( nextI < count && thisT == ( nextT = mEnv[nextI].GetT() ) )
+            ++nextI;
+
+         if ( nextI < count && nextT < thisT )
+            disorder = true;
+
+         while ( nextI - ii > 2 ) {
+            // too many coincident time values
+            if (ii == mDragPoint || nextI - 1 == mDragPoint)
+               // forgivable
+               ;
+            else {
+               consistent = false;
+               // repair it
+               Delete( nextI - 2 );
+               if (mDragPoint >= nextI - 2)
+                  --mDragPoint;
+               --nextI, --count;
+               // wxLogError
+            }
+         }
+
+         ii = nextI;
+      }
+
+      if (disorder) {
+         consistent = false;
+         // repair it
+         std::stable_sort( mEnv.begin(), mEnv.end(),
+            []( const EnvPoint &a, const EnvPoint &b )
+               { return a.GetT() < b.GetT(); } );
+      }
+   } while ( disorder );
+
+   return consistent;
+}
+
 /// Rescale function for time tracks (could also be used for other tracks though).
 /// This is used to load old time track project files where the envelope used a 0 to 1
 /// range instead of storing the actual time track values. This function will change the range of the envelope
