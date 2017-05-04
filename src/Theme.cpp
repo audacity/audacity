@@ -512,6 +512,7 @@ void FlowPacker::Init(int width)
    myHeight = 0;
    iImageGroupSize = 1;
    SetNewGroup(1);
+   mBorderWidth = 0;
 }
 
 void FlowPacker::SetNewGroup( int iGroupSize )
@@ -537,6 +538,8 @@ void FlowPacker::SetColourGroup( )
 
 void FlowPacker::GetNextPosition( int xSize, int ySize )
 {
+   xSize += 2*mBorderWidth;
+   ySize += 2*mBorderWidth;
    // if the height has increased, then we are on a NEW group.
    if(( ySize > myHeight )||(mFlags != mOldFlags ))
    {
@@ -566,6 +569,11 @@ void FlowPacker::GetNextPosition( int xSize, int ySize )
 wxRect FlowPacker::Rect()
 {
    return wxRect( mxPos, myPos, mComponentWidth, mComponentHeight);
+}
+
+wxRect FlowPacker::RectInner()
+{
+   return Rect().Deflate( mBorderWidth, mBorderWidth );
 }
 
 void FlowPacker::RectMid( int &x, int &y )
@@ -665,6 +673,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    int i;
 
    mFlow.Init( ImageCacheWidth );
+   mFlow.mBorderWidth =1;
 
 //#define IMAGE_MAP
 #ifdef IMAGE_MAP
@@ -680,7 +689,10 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
          mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
-         PasteSubImage( &ImageCache, &SrcImage, mFlow.mxPos, mFlow.myPos );
+         ImageCache.SetRGB( mFlow.Rect(), 0xf2, 0xb0, 0x27 );
+         PasteSubImage( &ImageCache, &SrcImage, 
+            mFlow.mxPos + mFlow.mBorderWidth, 
+            mFlow.myPos + mFlow.mBorderWidth);
 #ifdef IMAGE_MAP
          // No href in html.  Uses title not alt.
          wxRect R( mFlow.Rect() );
@@ -700,7 +712,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       wxColour c = mColours[i];
-      ImageCache.SetRGB( mFlow.Rect(), c.Red(), c.Green(), c.Blue() );
+      ImageCache.SetRGB( mFlow.Rect() , 0xf2, 0xb0, 0x27 );
+      ImageCache.SetRGB( mFlow.RectInner() , c.Red(), c.Green(), c.Blue() );
 
       // YUCK!  No function in wxWidgets to set a rectangle of alpha...
       for(x=0;x<iColSize;x++)
@@ -796,6 +809,7 @@ void ThemeBase::WriteImageMap( )
 
    int i;
    mFlow.Init( ImageCacheWidth );
+   mFlow.mBorderWidth = 1;
 
    wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
    if( !File.IsOpened() )
@@ -815,7 +829,7 @@ void ThemeBase::WriteImageMap( )
       {
          mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
-         wxRect R( mFlow.Rect() );
+         wxRect R( mFlow.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
             mBitmapNames[i].c_str(),
@@ -829,7 +843,7 @@ void ThemeBase::WriteImageMap( )
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       // No href in html.  Uses title not alt.
-      wxRect R( mFlow.Rect() );
+      wxRect R( mFlow.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
          mColourNames[i].c_str(),
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
@@ -994,6 +1008,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    }
    int i;
    mFlow.Init(ImageCacheWidth);
+   mFlow.mBorderWidth = 1;
    // Load the bitmaps
    for(i=0;i<(int)mImages.GetCount();i++)
    {
@@ -1003,7 +1018,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       {
          mFlow.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
          //      wxLogDebug(wxT("Copy at %i %i (%i,%i)"), mxPos, myPos, xWidth1, yHeight1 );
-         Image = GetSubImageWithAlpha( ImageCache, mFlow.Rect());
+         Image = GetSubImageWithAlpha( ImageCache, mFlow.RectInner() );
          mBitmaps[i] = wxBitmap(Image);
       }
    }
