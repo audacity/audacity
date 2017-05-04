@@ -982,6 +982,9 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          if( entry->key.StartsWith("Right")) break;
          if( entry->key.StartsWith("Up" )) break;
          if( entry->key.StartsWith("Down")) break;
+         if( entry->key.StartsWith("Return")) break;
+         if( entry->key.StartsWith("Tab")) break;
+         if( entry->key.StartsWith("Shift+Tab")) break;
          //if( entry->key.StartsWith("Space" )) break;
 // These ones appear ot be illegal and mess up accelerator processing.
          if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
