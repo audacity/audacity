@@ -175,7 +175,7 @@ void Envelope::SetRange(double minValue, double maxValue) {
 }
 
 // This is used only during construction of an Envelope by complete or partial
-// copy of another.
+// copy of another, or when truncating a track.
 void Envelope::AddPointAtEnd( double t, double val )
 {
    mEnv.push_back( EnvPoint{ t, val } );
@@ -1037,16 +1037,20 @@ void Envelope::SetOffset(double newOffset)
 }
 
 void Envelope::SetTrackLen(double trackLen)
+// NOFAIL-GUARANTEE
 {
-   mTrackLen = trackLen;
+   // Preserve the right-side limit at trackLen.
+   bool needPoint = ( trackLen < mTrackLen );
+   double value;
+   if ( needPoint )
+      value = GetValueRelative( trackLen );
 
-   int len = mEnv.size();
-   for (int i = 0; i < len; i++)
-      if (mEnv[i].GetT() > mTrackLen) {
-         Delete(i);
-         len--;
-         i--;
-      }
+   mTrackLen = trackLen;
+   int newLen = EqualRange( trackLen, 0 ).second;
+   mEnv.resize( newLen );
+
+   if ( needPoint )
+      AddPointAtEnd( mTrackLen, value );
 }
 
 void Envelope::RescaleTimes( double newLength )
