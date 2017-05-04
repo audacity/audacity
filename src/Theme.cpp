@@ -290,11 +290,20 @@ ThemeBase::~ThemeBase(void)
 {
 }
 
+char * ThemeNames [] =
+{  "Classic",
+   "Dark",
+   "Light",
+   "HiContrast",
+   "Custom"
+};
+
 /// This function is called to load the initial Theme images.
 /// It does not though cause the GUI to refresh.
 void ThemeBase::LoadTheme( teThemeType Theme )
 {
    EnsureInitialised();
+   mThemeName =  ThemeNames[ Theme ];
 
    const bool cbOkIfNotFound = true;
 
@@ -714,7 +723,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    wxLogDebug( "</map>" );
 #endif
 
-   // IF nBinarySave, THEN saving to a normal PNG file.
+   // IF bBinarySave, THEN saving to a normal PNG file.
    if( bBinarySave )
    {
       const wxString &FileName = FileNames::ThemeCachePng();
@@ -731,6 +740,12 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          return;
       }
 #endif
+      // Deliberate policy to use the fast/cheap blocky pixel-multiplication
+      // algorithm, as this introduces no artifacts on repeated scale up/down.
+      ImageCache.Rescale( 
+         ImageCache.GetWidth() * 4,
+         ImageCache.GetHeight() *4,
+         wxIMAGE_QUALITY_NEAREST );
       if( !ImageCache.SaveFile( FileName, wxBITMAP_TYPE_PNG ))
       {
          wxMessageBox(
@@ -788,7 +803,8 @@ void ThemeBase::WriteImageMap( )
 
    File.Write( wxT("<html>\r\n"));
    File.Write( wxT("<body bgcolor=\"303030\">\r\n"));
-   File.Write( wxT("<img src=\"ImageCache.png\" usemap=\"#map1\">\r\n" ));
+   wxString Temp = wxString::Format( wxT("<img src=\"ImageCache.png\" width=\"%i\" usemap=\"#map1\">\r\n" ), ImageCacheWidth );
+   File.Write( Temp );
    File.Write( wxT("<map name=\"map1\">\r\n") );
 
    for(i=0;i<(int)mImages.GetCount();i++)
@@ -971,6 +987,11 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       }
    }
 
+   // Resize a large image down.
+   if( ImageCache.GetWidth() > ImageCacheWidth ){
+      int h = ImageCache.GetHeight() * ((1.0*ImageCacheWidth)/ImageCache.GetWidth());
+      ImageCache.Rescale(  ImageCacheWidth, h );
+   }
    int i;
    mFlow.Init(ImageCacheWidth);
    // Load the bitmaps
