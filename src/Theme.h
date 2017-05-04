@@ -73,6 +73,7 @@ public:
    void SetNewGroup( int iGroupSize );
    void SetColourGroup( );
    wxRect Rect();
+   wxRect RectInner();
    void RectMid( int &x, int &y );
 
    // These 4 should become private again...
@@ -80,6 +81,7 @@ public:
    int mxPos;
    int myPos;
    int myHeight;
+   int mBorderWidth;
 
 private:
    int iImageGroupSize;
