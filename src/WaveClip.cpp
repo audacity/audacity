@@ -1832,7 +1832,8 @@ void WaveClip::Unlock()
 void WaveClip::SetRate(int rate)
 {
    mRate = rate;
-   UpdateEnvelopeTrackLen();
+   auto newLength = mSequence->GetNumSamples().as_double() / mRate;
+   mEnvelope->RescaleTimes( newLength );
    MarkChanged();
 }
 

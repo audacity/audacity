@@ -394,9 +394,14 @@ double WaveTrack::GetRate() const
 
 void WaveTrack::SetRate(double newRate)
 {
+   wxASSERT( newRate > 0 );
+   newRate = std::max( 1.0, newRate );
+   auto ratio = mRate / newRate;
    mRate = (int) newRate;
-   for (const auto &clip : mClips)
+   for (const auto &clip : mClips) {
       clip->SetRate((int)newRate);
+      clip->SetOffset( clip->GetOffset() * ratio );
+   }
 }
 
 float WaveTrack::GetGain() const

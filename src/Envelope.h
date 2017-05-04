@@ -127,6 +127,7 @@ public:
    void SetOffset(double newOffset);
    void SetTrackLen(double trackLen);
    void RescaleValues(double minValue, double maxValue);
+   void RescaleTimes( double newLength );
 
    // Accessors
    /** \brief Get envelope value at time t */
