@@ -1049,21 +1049,17 @@ double Envelope::GetValue(double t) const
 }
 
 // relative time
-/// @param Lo returns last index at or before this time.
-/// @param Hi returns first index after this time.
+/// @param Lo returns last index at or before this time, maybe -1
+/// @param Hi returns first index after this time, maybe past the end
 void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
 {
-   Lo = 0;
-   Hi = mEnv.size() - 1;
-   // JC: Do we have a problem if the envelope only has one point??
-   wxASSERT(Hi > Lo);
-
    // Optimizations for the usual pattern of repeated calls with
    // small increases of t.
    {
-      if (mSearchGuess >= 0 && mSearchGuess < (int)(mEnv.size()) - 1) {
+      if (mSearchGuess >= 0 && mSearchGuess < mEnv.size()) {
          if (t >= mEnv[mSearchGuess].GetT() &&
-            t < mEnv[1 + mSearchGuess].GetT()) {
+             (1 + mSearchGuess == mEnv.size() ||
+              t < mEnv[1 + mSearchGuess].GetT())) {
             Lo = mSearchGuess;
             Hi = 1 + mSearchGuess;
             return;
@@ -1071,9 +1067,10 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
       }
 
       ++mSearchGuess;
-      if (mSearchGuess >= 0 && mSearchGuess < (int)(mEnv.size()) - 1) {
+      if (mSearchGuess >= 0 && mSearchGuess < mEnv.size()) {
          if (t >= mEnv[mSearchGuess].GetT() &&
-            t < mEnv[1 + mSearchGuess].GetT()) {
+             (1 + mSearchGuess == mEnv.size() ||
+              t < mEnv[1 + mSearchGuess].GetT())) {
             Lo = mSearchGuess;
             Hi = 1 + mSearchGuess;
             return;
@@ -1081,8 +1078,13 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
       }
    }
 
+   Lo = -1;
+   Hi = mEnv.size();
+
+   // Invariants:  Lo is not less than -1, Hi not more than size
    while (Hi > (Lo + 1)) {
       int mid = (Lo + Hi) / 2;
+      // mid must be strictly between Lo and Hi, therefore a valid index
       if (t < mEnv[mid].GetT())
          Hi = mid;
       else
@@ -1152,6 +1154,8 @@ void Envelope::GetValues(double *buffer, int bufferLen,
 
          int lo,hi;
          BinarySearchForTime( lo, hi, t );
+         // mEnv[0] is before t because of eliminations above, therefore lo >= 0
+         // mEnv[len - 1] is after t, therefore hi <= len - 1
          tprev = mEnv[lo].GetT();
          tnext = mEnv[hi].GetT();
 
@@ -1203,38 +1207,21 @@ void Envelope::GetValues
 // relative time
 int Envelope::NumberOfPointsAfter(double t) const
 {
-   if( t >= mEnv[mEnv.size()-1].GetT() )
-      return 0;
-   else if( t < mEnv[0].GetT() )
-      return mEnv.size();
-   else
-   {
-      int lo,hi;
-      BinarySearchForTime( lo, hi, t );
+   int lo,hi;
+   BinarySearchForTime( lo, hi, t );
 
-      if( mEnv[hi].GetT() == t )
-         return mEnv.size() - (hi+1);
-      else
-         return mEnv.size() - hi;
-   }
+   return mEnv.size() - hi;
 }
 
 // relative time
 double Envelope::NextPointAfter(double t) const
 {
-   if( mEnv[mEnv.size()-1].GetT() < t )
+   int lo,hi;
+   BinarySearchForTime( lo, hi, t );
+   if (hi >= mEnv.size())
       return t;
-   else if( t < mEnv[0].GetT() )
-      return mEnv[0].GetT();
    else
-   {
-      int lo,hi;
-      BinarySearchForTime( lo, hi, t );
-      if( mEnv[hi].GetT() == t )
-         return mEnv[hi+1].GetT();
-      else
-         return mEnv[hi].GetT();
-   }
+      return mEnv[hi].GetT();
 }
 
 double Envelope::Average( double t0, double t1 ) const
@@ -1363,7 +1350,7 @@ double Envelope::Integral( double t0, double t1 ) const
       lastVal = mEnv[0].GetVal();
       total += (lastT - t0) * lastVal;
    }
-   else if(t0 >= mEnv[count - 1].GetT()) // t0 following the last point
+   else if(t0 >= mEnv[count - 1].GetT()) // t0 at or following the last point
    {
       return (t1 - t0) * mEnv[count - 1].GetVal();
    }
@@ -1389,7 +1376,7 @@ double Envelope::Integral( double t0, double t1 ) const
          double thisVal = InterpolatePoints(mEnv[i - 1].GetVal(), mEnv[i].GetVal(), (t1 - mEnv[i - 1].GetT()) / (mEnv[i].GetT() - mEnv[i - 1].GetT()), mDB);
          return total + IntegrateInterpolated(lastVal, thisVal, t1 - lastT, mDB);
       }
-      else // this point preceeds the end of the range
+      else // this point precedes the end of the range
       {
          total += IntegrateInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, mDB);
          lastT = mEnv[i].GetT();
@@ -1426,7 +1413,7 @@ double Envelope::IntegralOfInverse( double t0, double t1 ) const
       lastVal = mEnv[0].GetVal();
       total += (lastT - t0) / lastVal;
    }
-   else if(t0 >= mEnv[count - 1].GetT()) // t0 following the last point
+   else if(t0 >= mEnv[count - 1].GetT()) // t0 at or following the last point
    {
       return (t1 - t0) / mEnv[count - 1].GetVal();
    }
@@ -1452,7 +1439,7 @@ double Envelope::IntegralOfInverse( double t0, double t1 ) const
          double thisVal = InterpolatePoints(mEnv[i - 1].GetVal(), mEnv[i].GetVal(), (t1 - mEnv[i - 1].GetT()) / (mEnv[i].GetT() - mEnv[i - 1].GetT()), mDB);
          return total + IntegrateInverseInterpolated(lastVal, thisVal, t1 - lastT, mDB);
       }
-      else // this point preceeds the end of the range
+      else // this point precedes the end of the range
       {
          total += IntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, mDB);
          lastT = mEnv[i].GetT();
@@ -1492,7 +1479,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
             area -= added;
          }
       }
-      else if(t0 >= mEnv[count - 1].GetT()) // t0 following the last point
+      else if(t0 >= mEnv[count - 1].GetT()) // t0 at or following the last point
       {
          if (area < 0) {
             i = count - 2;
