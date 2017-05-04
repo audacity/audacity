@@ -525,6 +525,7 @@ void ToolManager::Reset()
          (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ].get(),
          (entry.below == NoBarID) ? nullptr : mBars[ entry.below ].get()
       };
+      bar->SetSize( 20,20 );
 
       wxWindow *floater;
       ToolDock *dock;
@@ -541,24 +542,20 @@ void ToolManager::Reset()
          floater = bar->GetParent();
       }
 
+      // Decide which dock.
       if (ndx == SelectionBarID 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          || ndx == SpectralSelectionBarID
 #endif
          )
-      {
          dock = mBotDock;
-
-         wxCommandEvent e;
-         bar->GetEventHandler()->ProcessEvent(e);
-      }
       else
-      {
          dock = mTopDock;
-         bar->ReCreateButtons();
-      }
 
+      // Recreate bar buttons (and resize it)
+      bar->ReCreateButtons();
       bar->EnableDisableButtons();
+
 #if 0
       if( bar->IsResizable() )
       {
@@ -566,6 +563,7 @@ void ToolManager::Reset()
       }
 #endif
 
+      // Hide some bars.
       if( ndx == MeterBarID
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          || ndx == SpectralSelectionBarID
@@ -578,10 +576,10 @@ void ToolManager::Reset()
          || ndx == SelectionBarID
 #endif
          )
-      {
          expose = false;
-      }
 
+      // Next condition will alwys (?) be true, as the reset configuration is
+      // with no floating toolbars.
       if( dock != NULL )
       {
          // when we dock, we reparent, so bar is no longer a child of floater.

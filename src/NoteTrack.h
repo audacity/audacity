@@ -79,14 +79,12 @@ class AUDACITY_DLL_API NoteTrack final
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
-   int DrawLabelControls(wxDC & dc, const wxRect &r);
+   void DrawLabelControls(wxDC & dc, const wxRect &rect);
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
    Alg_seq* GetSequence();
    void PrintSequence();
-
-   int GetVisibleChannels();
 
    Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const;
    bool ExportMIDI(const wxString &f) const;
@@ -184,14 +182,28 @@ class AUDACITY_DLL_API NoteTrack final
    // channels are numbered as integers 0-15, visible channels
    // (mVisibleChannels) is a bit set. Channels are displayed as
    // integers 1-16.
-#define CHANNEL_BIT(c) (1 << (c))
+
+   // Allegro's data structure does not restrict channels to 16.
+   // Since there is not way to select more than 16 channels,
+   // map all channel numbers mod 16. This will have no effect
+   // on MIDI files, but it will allow users to at least select
+   // all channels on non-MIDI event sequence data.
 #define ALL_CHANNELS 0xFFFF
-   bool IsVisibleChan(int c) {
+#define CHANNEL_BIT(c) (1 << (c & ALL_CHANNELS))
+   bool IsVisibleChan(int c) const {
       return (mVisibleChannels & CHANNEL_BIT(c)) != 0;
    }
    void SetVisibleChan(int c) { mVisibleChannels |= CHANNEL_BIT(c); }
    void ClearVisibleChan(int c) { mVisibleChannels &= ~CHANNEL_BIT(c); }
    void ToggleVisibleChan(int c) { mVisibleChannels ^= CHANNEL_BIT(c); }
+   // Solos the given channel.  If it's the only channel visible, all channels
+   // are enabled; otherwise, it is set to the only visible channel.
+   void SoloVisibleChan(int c) {
+      if (mVisibleChannels == CHANNEL_BIT(c))
+         mVisibleChannels = ALL_CHANNELS;
+      else
+         mVisibleChannels = CHANNEL_BIT(c);
+   }
  private:
    std::unique_ptr<Alg_seq> mSeq; // NULL means no sequence
    // when Duplicate() is called, assume that it is to put a copy

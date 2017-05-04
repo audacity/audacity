@@ -220,9 +220,7 @@ bool GUIPrefs::Apply()
       gPrefs->Write(wxT("/Locale/Language"), usedLang);
       gPrefs->Flush();
    }
-   // Reads preference /GUI/Theme
-   theTheme.LoadPreferredTheme();
-   theTheme.ApplyUpdatedImages();
+
    return true;
 }
 

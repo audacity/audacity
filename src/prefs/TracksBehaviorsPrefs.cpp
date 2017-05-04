@@ -63,6 +63,9 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Select then act on entire project, if no audio selected"),
                     wxT("/GUI/SelectAllOnNone"),
                     true);
+      S.TieCheckBox(_("Append recordings to same track, by default"),
+                    wxT("/GUI/PreferAppendRecord"),
+                    true);
       /* i18n-hint: cut-lines are a lines indicating where to cut.*/
       S.TieCheckBox(_("Enable cut &lines"),
                     wxT("/GUI/EnableCutLines"),

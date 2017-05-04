@@ -193,8 +193,16 @@ void ControlToolBar::Populate()
 
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
-   MakeAlternateImages(*mRecord, 1, bmpAppendRecord, bmpAppendRecord,
-      bmpAppendRecordDisabled);
+
+   bool bPreferAppend;
+   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+   if( bPreferAppend )
+      MakeAlternateImages(*mRecord, 1, bmpRecordBelow, bmpRecordBelow,
+         bmpRecordBelowDisabled);
+   else
+      MakeAlternateImages(*mRecord, 1, bmpRecordBeside, bmpRecordBeside,
+         bmpRecordBesideDisabled);
+
    mRecord->FollowModifierKeys();
 
 #if wxUSE_TOOLTIPS
@@ -220,21 +228,26 @@ void ControlToolBar::RegenerateTooltips()
       {
          case ID_PLAY_BUTTON:
             // Without shift
-            commands.push_back(wxT("Play"));
+            commands.push_back(wxT("PlayStop"));
             // With shift
             commands.push_back(_("Loop Play"));
+            // For the shortcut tooltip.
             commands.push_back(wxT("PlayLooped"));
             break;
          case ID_RECORD_BUTTON:
             // Without shift
-            commands.push_back(wxT("Record"));
-#ifdef PREFER_NEW_TRACKS
-            commands.push_back(_("Append Record"));
-            commands.push_back(wxT("RecordAppend"));
-#else
-            commands.push_back(_("Record New Track"));
-            commands.push_back(wxT("RecordBelow"));
-#endif
+            //commands.push_back(wxT("Record"));
+            commands.push_back(wxT("Record1stChoice"));
+            {  bool bPreferAppend;
+               gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+               if( bPreferAppend ){
+                  commands.push_back(_("Record New Track"));
+               } else {
+                  commands.push_back(_("Append Record"));
+               }
+               // For the shortcut tooltip.
+               commands.push_back(wxT("Record2ndChoice"));
+            }
             break;
          case ID_PAUSE_BUTTON:
             commands.push_back(wxT("Pause"));
@@ -874,9 +887,11 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    bool success = false;
 
    bool shifted = mRecord->WasShiftDown();
-#ifndef PREFER_NEW_TRACKS
-   shifted = !shifted;
-#endif
+
+   bool bPreferAppend;
+   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+   if( bPreferAppend )
+      shifted = !shifted;
 
    TrackList *trackList = p->GetTracks();
    TrackList tracksCopy{};

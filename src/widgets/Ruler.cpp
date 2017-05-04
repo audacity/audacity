@@ -1540,8 +1540,7 @@ void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
       bool altColor = twoTone && value < 0.0;
 
 #ifdef EXPERIMENTAL_THEMING
-      // TODO:  handle color distinction
-      dc.SetTextForeground(c);
+      dc.SetTextForeground(altColor ? theTheme.Colour( clrTextNegativeNumbers) : c);
 #else
       dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
 #endif
@@ -3101,10 +3100,12 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
    dc->DrawRectangle( mInner );
 
    if (mShowScrubbing) {
-      // Let's distinguish the scrubbing area by using the same gray as for
-      // selected track control panel.
-      AColor::UseThemeColour(dc, clrScrubRuler );
-      dc->DrawRectangle(mScrubZone);
+      // Let's distinguish the scrubbing area by using a themable
+      // colour and a line to set it off.  
+      AColor::UseThemeColour(dc, clrScrubRuler, clrTrackPanelText );
+      wxRect ScrubRect = mScrubZone;
+      ScrubRect.Inflate( 1,0 );
+      dc->DrawRectangle(ScrubRect);
    }
 }
 

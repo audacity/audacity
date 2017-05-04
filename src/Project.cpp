@@ -2326,8 +2326,10 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 
    if (handled)
       event.Skip(false);
-   else
+   else{
+      event.ResumePropagation( 999 );
       event.Skip(true);
+   }
 }
 
 void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))

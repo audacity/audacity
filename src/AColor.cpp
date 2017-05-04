@@ -281,13 +281,15 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
 #endif
 }
 
-void AColor::UseThemeColour( wxDC * dc, int iIndex )
+void AColor::UseThemeColour( wxDC * dc, int iIndex, int index2 )
 {
    if (!inited)
       Init();
    wxColour col = theTheme.Colour( iIndex );
    spareBrush.SetColour( col );
    dc->SetBrush( spareBrush );
+   if( index2 != -1)
+      col = theTheme.Colour( index2 );
    sparePen.SetColour( col );
    dc->SetPen( sparePen );
 }
@@ -309,15 +311,6 @@ void AColor::Medium(wxDC * dc, bool selected)
    dc->SetBrush(mediumBrush[index]);
    dc->SetPen(mediumPen[index]);
 }
-
-#if 0
-#ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrMediumSelected : clrMedium);
-#endif
-#ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrLightSelected : clrLight);
-#endif
-#endif
 
 void AColor::MediumTrackInfo(wxDC * dc, bool selected)
 {

@@ -479,7 +479,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mBandWidthCursor = MakeCursor( wxCURSOR_ARROW,  BandWidthCursorXpm, 16, 16);
 #endif
 
-#if USE_MIDI
+#ifdef USE_MIDI
    mStretchMode = stretchCenter;
    mStretching = false;
    mStretched = false;
@@ -5040,7 +5040,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 void TrackPanel::HandleVelocitySlider(wxMouseEvent &event)
 {
    wxASSERT(mCapturedTrack->GetKind() == Track::Note);
-   NoteTrack *capturedTrack = (NoteTrack *) mCapturedTrack;
+   NoteTrack *capturedTrack = static_cast<NoteTrack *>(mCapturedTrack);
 
    LWSlider *slider = mTrackInfo.VelocitySlider(capturedTrack, true);
 
@@ -5179,7 +5179,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       // DM: If it's a NoteTrack, it has special controls
       else if (t->GetKind() == Track::Note)
       {
-         wxRect midiRect;
 #ifdef EXPERIMENTAL_MIDI_OUT
          if (isleft && (MuteSoloFunc(t, rect, event.m_x, event.m_y, false) ||
                MuteSoloFunc(t, rect, event.m_x, event.m_y, true)))
@@ -5188,10 +5187,14 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
          if (isleft && VelocityFunc(t, rect, event, event.m_x, event.m_y))
             return;
 #endif
-         mTrackInfo.GetTrackControlsRect(rect, midiRect);
-         if (midiRect.Contains(event.m_x, event.m_y) &&
-            ((NoteTrack *)t)->LabelClick(midiRect, event.m_x, event.m_y,
-            event.Button(wxMOUSE_BTN_RIGHT))) {
+         wxRect midiRect;
+         mTrackInfo.GetMidiControlsRect(rect, midiRect);
+
+         bool isright = event.Button(wxMOUSE_BTN_RIGHT);
+
+         if ((isleft || isright) && midiRect.Contains(event.m_x, event.m_y) &&
+               static_cast<NoteTrack *>(t)->LabelClick(midiRect, event.m_x, event.m_y, isright)) {
+            MakeParentModifyState(false);
             Refresh(false);
             return;
          }
@@ -7311,17 +7314,13 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 #endif
    }
 
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    else if (bIsNote) {
       wxRect midiRect;
-      mTrackInfo.GetTrackControlsRect(trackRect, midiRect);
-      // Offset by height of Solo/Mute buttons:
-      midiRect.y += 15;
-      midiRect.height -= 21; // allow room for minimize button at bottom
+      mTrackInfo.GetMidiControlsRect(rect, midiRect);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-      ((NoteTrack *)t)->DrawLabelControls(*dc, midiRect);
-
+      if (midiRect.y + midiRect.height < rect.y + rect.height - 19)
+         static_cast<NoteTrack *>(t)->DrawLabelControls(*dc, midiRect);
       // Draw some lines for MuteSolo buttons (normally handled by DrawBordersWithin but not done for note tracks)
       if (rect.height > 48) {
          // Note: offset up by 34 units
@@ -7335,10 +7334,9 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
       // Place a volume control below channel buttons (this will
       // control an offset to midi velocity).
-      mTrackInfo.DrawVelocitySlider(dc, (NoteTrack *)t, rect, captured);
-#endif
+      mTrackInfo.DrawVelocitySlider(dc, static_cast<NoteTrack *>(t), rect, captured);
    }
-#endif // USE_MIDI
+#endif // EXPERIMENTAL_MIDI_OUT
 }
 
 void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
@@ -9285,6 +9283,15 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
    dest.height = kTrackInfoBtnSize;
 }
 
+#ifdef USE_MIDI
+void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest) const
+{
+   dest.x = rect.x + 2; // To center slightly
+   dest.width = kMidiCellWidth * 4;
+   dest.y = rect.y + 34;
+   dest.height = kMidiCellHeight * 4;
+}
+#endif
 
 /// \todo Probably should move to 'Utils.cpp'.
 void TrackInfo::SetTrackInfoFont(wxDC * dc) const
@@ -9356,22 +9363,7 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
 #endif
 }
 
-void TrackInfo::GetTrackControlsRect(const wxRect & rect, wxRect & dest) const
-{
-   wxRect top;
-   wxRect bot;
-
-   GetTitleBarRect(rect, top);
-   GetMinimizeRect(rect, bot);
-
-   dest.x = rect.x;
-   dest.width = kTrackInfoWidth - dest.x;
-   dest.y = top.GetBottom() + 2; // BUG
-   dest.height = bot.GetTop() - top.GetBottom() - 2;
-}
-
-
-void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t,  bool down) const
+void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t, bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(rect, bev);

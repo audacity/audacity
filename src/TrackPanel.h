@@ -114,7 +114,6 @@ private:
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
 
-   void GetTrackControlsRect(const wxRect & rect, wxRect &dest) const;
    void GetCloseBoxRect(const wxRect & rect, wxRect &dest) const;
    void GetTitleBarRect(const wxRect & rect, wxRect &dest) const;
    void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
@@ -126,6 +125,9 @@ private:
 #endif
    void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
+#ifdef USE_MIDI
+   void GetMidiControlsRect(const wxRect & rect, wxRect &dest) const;
+#endif
 
 public:
    LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
@@ -810,7 +812,7 @@ protected:
    std::unique_ptr<wxCursor>
       mBottomFrequencyCursor, mTopFrequencyCursor, mBandWidthCursor;
 #endif
-#if USE_MIDI
+#ifdef USE_MIDI
    std::unique_ptr<wxCursor>
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
@@ -880,6 +882,13 @@ enum : int {
    kTrackInfoWidth = 100,
    kTrackInfoBtnSize = 18 // widely used dimension, usually height
 };
+
+#ifdef USE_MIDI
+enum : int {
+   kMidiCellWidth = (kTrackInfoWidth / 4) - 2,
+   kMidiCellHeight = kTrackInfoBtnSize
+};
+#endif
 
 #ifdef _MSC_VER
 #pragma warning( pop )

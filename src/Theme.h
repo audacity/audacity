@@ -53,6 +53,8 @@ enum teThemeType
    themeFromFile,
 };
 
+
+
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxImage,  ArrayOfImages, AUDACITY_DLL_API);
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxBitmap, ArrayOfBitmaps, AUDACITY_DLL_API);
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxColour, ArrayOfColours, AUDACITY_DLL_API);
@@ -132,6 +134,7 @@ public:
    bool bIsUsingSystemTextColour;
 
    void ReplaceImage( int iIndex, wxImage * pImage );
+   void RotateImageInto( int iTo, int iFrom, bool bClockwise );
 
    void SetBrushColour( wxBrush & Brush, int iIndex );
    void SetPenColour(   wxPen & Pen, int iIndex );
@@ -141,6 +144,8 @@ public:
    wxImage MaskedImage( char const ** pXpm, char const ** pMask );
    // Utility functiuon that takes a 32 bit bitmap and makes it into an image.
    wxImage MakeImageWithAlpha( wxBitmap & Bmp );
+
+   wxString mThemeName;
 
 protected:
    ArrayOfImages mImages;

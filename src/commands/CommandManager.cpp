@@ -410,7 +410,7 @@ private:
    UInt32 mDeadKeyState;
 #endif
 
-} monitor;
+}monitor;
 
 ///
 ///  Standard Constructor
@@ -719,7 +719,7 @@ void CommandManager::AddItem(const wxChar *name,
 {
    CommandListEntry *entry = NewIdentifier(name, label_in, accel, CurrentMenu(), callback, false, 0, 0);
    int ID = entry->id;
-   wxString label = GetLabel(entry);
+   wxString label = GetLabelWithDisabledAccel(entry);
 
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
@@ -966,6 +966,37 @@ wxString CommandManager::GetLabel(const CommandListEntry *entry) const
    return label;
 }
 
+// A label that may have its accelerator disabled.
+// The problem is that as soon as we show accelerators in the menu, the menu might
+// catch them in normal wxWidgets processing, rather than passing the key presses on
+// to the controls that had the focus.  We would like all the menu accelerators to be
+// disabled, in fact.  
+wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry) const
+{
+   wxString label = entry->label;
+#if 1
+   do{
+      if (!entry->key.IsEmpty())
+      {
+         if( entry->key.StartsWith("Left" )) break;
+         if( entry->key.StartsWith("Right")) break;
+         if( entry->key.StartsWith("Up" )) break;
+         if( entry->key.StartsWith("Down")) break;
+         if( entry->key.StartsWith("Return")) break;
+         if( entry->key.StartsWith("Tab")) break;
+         if( entry->key.StartsWith("Shift+Tab")) break;
+         //if( entry->key.StartsWith("Space" )) break;
+// These ones appear ot be illegal and mess up accelerator processing.
+         if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
+         if( entry->key.StartsWith("Backspace" )) break;
+         if( entry->key.StartsWith("Delete" )) break;
+         label += wxT("\t") + entry->key;
+         //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
+      }
+   } while (false );
+#endif
+   return label;
+}
 ///Enables or disables a menu item based on its name (not the
 ///label in the menu bar, but the name of the command.)
 ///If you give it the name of a multi-item (one that was
@@ -1147,13 +1178,42 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 
    wxKeyEvent temp = evt;
 
+   // Possibly let wxWidgets do its normal key handling IF it is one of
+   // the standard navigation keys.
+   if((type == wxEVT_KEY_DOWN) || (type == wxEVT_KEY_UP ))
+   {
+      wxWindow * pWnd = wxWindow::FindFocus();
+      wxWindow * pTrackPanel = (wxWindow*)GetActiveProject()->GetTrackPanel();
+      //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
+      // We allow the keystrokes below to be handled by wxWidgets controls IF we are 
+      // in some sub window rather than in the TrackPanel itself.
+      // Otherwise they will go to our command handler and if it handles them 
+      // they will NOT be available to wxWidgets.
+      if( pWnd !=  pTrackPanel ){
+         switch( evt.GetKeyCode() ){
+         case WXK_LEFT:
+         case WXK_RIGHT:
+         case WXK_UP:
+         case WXK_DOWN:
+         case WXK_SPACE:
+         case WXK_TAB:
+         case WXK_BACK:
+         case WXK_HOME:
+         case WXK_END:
+         case WXK_RETURN:
+         case WXK_NUMPAD_ENTER:
+         case WXK_DELETE:
+            return false;
+         }
+      }
+   }
+
    if (type == wxEVT_KEY_DOWN)
    {
       if (entry->skipKeydown)
       {
          return true;
       }
-
       return HandleCommandEntry(entry, flags, NoFlagsSpecifed, &temp);
    }
 

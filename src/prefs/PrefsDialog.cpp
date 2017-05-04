@@ -69,6 +69,8 @@
 #include "MidiIOPrefs.h"
 #endif
 
+#include "../Theme.h"
+
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
@@ -411,6 +413,10 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mUniquePage->Apply();
 
    gPrefs->Flush();
+
+   // Reads preference /GUI/Theme
+   theTheme.LoadPreferredTheme();
+   theTheme.ApplyUpdatedImages();
 
    SavePreferredPage();
 
