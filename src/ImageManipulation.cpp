@@ -408,10 +408,12 @@ wxImage GetSubImageWithAlpha( const wxImage & Src,  const wxRect &rect )
       data+=width;
    }
 
+   image.InitAlpha();
+   if( !Src.HasAlpha() )
+      return image;
    // OK, so we've copied the RGB data.
    // Now do the Alpha channel.
-   wxASSERT( Src.HasAlpha() );
-   image.InitAlpha();
+   //wxASSERT( Src.HasAlpha() );
 
    subleft/=3;
    width/=3;
