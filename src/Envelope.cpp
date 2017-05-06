@@ -663,9 +663,6 @@ void Envelope::Paste(double t0, const Envelope *e)
    // get values to perform framing of the insertion
    double splitval = GetValue(t0 + mOffset);
 
-   if(len != 0) {   // Not case 10: there are point/s in the envelope
-
-
 /*
 Old analysis of cases:
 (see discussions on audacity-devel around 19/8/7 - 23/8/7 and beyond, "Envelopes and 'Join'")
@@ -691,7 +688,7 @@ Old analysis of cases:
 // In pasting in a clip we choose to preserve the envelope so that the loudness of the
 // parts is unchanged.
 //
-// 1) This may introduce a discontnuity in the envelope at a boundary between the
+// 1) This may introduce a discontinuity in the envelope at a boundary between the
 //    old and NEW clips.  In that case we must ensure there are envelope points
 //    at sample positions immediately before and immediately after the boundary.
 // 2) If the points have the same value we only need one of them.
@@ -703,7 +700,9 @@ Old analysis of cases:
 // Even simpler: we could always add two points at a boundary and then call
 // RemoveUnneededPoints() (provided that function behaves correctly).
 
-      // See if existing points need shifting to the right, and what Case we are in
+   // See if existing points need shifting to the right, and what Case we are in
+   if(len != 0) {
+      // Not case 10: there are point/s in the envelope
       for (i = 0; i < len; i++) {
          if (mEnv[i].GetT() > t0)
             someToShift = true;
@@ -720,57 +719,66 @@ Old analysis of cases:
       if( (mTrackLen - t0) < mTrackEpsilon )
          atEnd = true;
       if(0 > t0)
-         beforeStart = true;  // Case 13
+         // Case 13
+         beforeStart = true;
       if(mTrackLen < t0)
-         afterEnd = true;  // Case 12
+         // Case 12
+         afterEnd = true;
 
       // Now test for the various Cases, and try to do the right thing
-      if(atStart) {   // insertion at the beginning
-         if(onPoint) {  // first env point is at LH end
-            mEnv[0].SetT(mEnv[0].GetT() + mTrackEpsilon);   // Case 1: move it R slightly to avoid duplicate point
+      if(atStart) {
+         // insertion at the beginning
+         if(onPoint) {
+            // Case 1: move it R slightly to avoid duplicate point
+            // first env point is at LH end
+            mEnv[0].SetT(mEnv[0].GetT() + mTrackEpsilon);
             someToShift = true;  // there is now, even if there wasn't before
             //wxLogDebug(wxT("Case 1"));
          }
          else {
-            InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);   // Case 3: insert a point to maintain the envelope
+            // Case 3: insert a point to maintain the envelope
+            InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
             someToShift = true;
             //wxLogDebug(wxT("Case 3"));
          }
       }
       else {
-         if(atEnd) { // insertion at the end
-            if(onPoint) {  // last env point is at RH end, Case 2:
-               mEnv[0].SetT(mEnv[0].GetT() - mTrackEpsilon);  // move it L slightly to avoid duplicate point
+         if(atEnd) {
+            // insertion at the end
+            if(onPoint) {
+               // last env point is at RH end, Case 2:
+               // move it L slightly to avoid duplicate point
+               mEnv[0].SetT(mEnv[0].GetT() - mTrackEpsilon);
                //wxLogDebug(wxT("Case 2"));
             }
-            else {   // Case 4:
-               InsertOrReplaceRelative(t0 - mTrackEpsilon, splitval);   // insert a point to maintain the envelope
+            else {
+               // Case 4:
+               // insert a point to maintain the envelope
+               InsertOrReplaceRelative(t0 - mTrackEpsilon, splitval);
                //wxLogDebug(wxT("Case 4"));
             }
          }
+         else if(onPoint) {
+            // Case 7: move the point L and insert a NEW one to the R
+            mEnv[pos].SetT(mEnv[pos].GetT() - mTrackEpsilon);
+            InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
+            someToShift = true;
+            //wxLogDebug(wxT("Case 7"));
+         }
+         else if( !beforeStart && !afterEnd ) {
+            // Case 5: Insert points to L and R
+            InsertOrReplaceRelative(t0 - mTrackEpsilon, splitval);
+            InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
+            someToShift = true;
+            //wxLogDebug(wxT("Case 5"));
+         }
+         else if( beforeStart ) {
+            // Case 13:
+            //wxLogDebug(wxT("Case 13"));
+         }
          else {
-            if(onPoint) {  // Case 7: move the point L and insert a NEW one to the R
-               mEnv[pos].SetT(mEnv[pos].GetT() - mTrackEpsilon);
-               InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
-               someToShift = true;
-               //wxLogDebug(wxT("Case 7"));
-            }
-            else {
-               if( !beforeStart && !afterEnd ) {// Case 5: Insert points to L and R
-                  InsertOrReplaceRelative(t0 - mTrackEpsilon, splitval);
-                  InsertOrReplaceRelative(t0 + mTrackEpsilon, splitval);
-                  someToShift = true;
-                  //wxLogDebug(wxT("Case 5"));
-               }
-               else {
-                  if( beforeStart ) {  // Case 13:
-                     //wxLogDebug(wxT("Case 13"));
-                  }
-                  else {   // Case 12:
-                     //wxLogDebug(wxT("Case 12"));
-                  }
-               }
-            }
+            // Case 12:
+            //wxLogDebug(wxT("Case 12"));
          }
       }
 
@@ -783,7 +791,8 @@ Old analysis of cases:
       }
       mTrackLen += deltat;
    }
-   else {   // Case 10:
+   else {
+      // Case 10:
       if( mTrackLen == 0 ) // creating a NEW envelope
       {
          mTrackLen = e->mTrackLen;
