@@ -1607,7 +1607,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
       mCutLines.push_back(std::move(holder));
 }
 
-void WaveClip::InsertSilence(double t, double len)
+void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 // STRONG-GUARANTEE
 {
    sampleCount s0;
@@ -1619,8 +1619,33 @@ void WaveClip::InsertSilence(double t, double len)
 
    // use NOFAIL-GUARANTEE
    OffsetCutLines(t, len);
-   GetEnvelope()->InsertSpace(t, len);
+
+   const auto sampleTime = 1.0 / GetRate();
+   auto pEnvelope = GetEnvelope();
+   if ( pEnvelopeValue ) {
+
+      // Preserve limit value at the end
+      auto oldLen = pEnvelope->GetTrackLen();
+      auto oldT = pEnvelope->GetOffset() + oldLen;
+      auto newLen = oldLen + len;
+      pEnvelope->InsertOrReplace( oldT, pEnvelope->GetValue( oldT ) );
+
+      // Ramp across the silence to the given value
+      pEnvelope->SetTrackLen( newLen );
+      pEnvelope->InsertOrReplace
+         ( pEnvelope->GetOffset() + newLen, *pEnvelopeValue );
+   }
+   else
+      pEnvelope->InsertSpace( t, len );
+
    MarkChanged();
+}
+
+void WaveClip::AppendSilence( double len, double envelopeValue )
+// STRONG-GUARANTEE
+{
+   auto t = GetEndTime();
+   InsertSilence( t, len, &envelopeValue );
 }
 
 void WaveClip::Clear(double t0, double t1)

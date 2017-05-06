@@ -1564,12 +1564,15 @@ void WaveTrack::Join(double t0, double t1)
       if (clip->GetOffset() - t > (1.0 / mRate)) {
          double addedSilence = (clip->GetOffset() - t);
          //printf("Adding %.6f seconds of silence\n");
-         newClip->InsertSilence(t, addedSilence);
+         auto offset = clip->GetOffset();
+         auto value = clip->GetEnvelope()->GetValue( offset );
+         newClip->AppendSilence( addedSilence, value );
          t += addedSilence;
       }
 
       //printf("Pasting at %.6f\n", t);
       newClip->Paste(t, clip);
+
       t = newClip->GetEndTime();
 
       auto it = FindClip(mClips, clip);
