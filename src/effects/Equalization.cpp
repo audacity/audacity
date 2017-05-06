@@ -1671,9 +1671,10 @@ void EffectEqualization::setCurve(int currentCurve)
          value = mCurves[currentCurve].points[pointCount].dB;
          if(when <= 1) {
             env->InsertOrReplace(when, value);
+            if (when == 1)
+               break;
          }
          else {
-            // There are more points at higher freqs, so interpolate next one then stop.
             when = 1.0;
             double lastF = mCurves[currentCurve].points[pointCount-1].Freq;
             double nextF = mCurves[currentCurve].points[pointCount].Freq;
