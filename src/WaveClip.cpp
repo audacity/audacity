@@ -1600,7 +1600,9 @@ void WaveClip::Paste(double t0, const WaveClip* other)
 
    // Assume NOFAIL-GUARANTEE in the remaining
    MarkChanged();
-   mEnvelope->Paste(s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get());
+   auto sampleTime = 1.0 / GetRate();
+   mEnvelope->Paste
+      (s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get(), sampleTime);
    mEnvelope->RemoveUnneededPoints();
    OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 

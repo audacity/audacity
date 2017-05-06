@@ -125,7 +125,11 @@ public:
    // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
    void CollapseRegion(double t0, double t1, double sampleDur);
-   void Paste(double t0, const Envelope *e);
+
+   // Envelope has no notion of rate and control point times are not quantized;
+   // but a tolerance is needed in the Paste routine, and better to inform it
+   // of an appropriate number, than use hidden arbitrary constants.
+   void Paste(double t0, const Envelope *e, double sampleDur);
 
    void InsertSpace(double t0, double tlen);
    void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);

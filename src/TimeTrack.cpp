@@ -122,7 +122,9 @@ void TimeTrack::Paste(double t, const Track * src)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       return;
 
-   mEnvelope->Paste(t, static_cast<const TimeTrack*>(src)->mEnvelope.get());
+   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+   mEnvelope->Paste
+      (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
 }
 
 void TimeTrack::Silence(double t0, double t1)

@@ -734,7 +734,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // envelope point applies to the first sample, but the t=tracklen
 // envelope point applies one-past the last actual sample.
 // Rather than going to a .5-offset-index, we special case the framing.
-void Envelope::Paste(double t0, const Envelope *e)
+void Envelope::Paste(double t0, const Envelope *e, double sampleDur)
 // NOFAIL-GUARANTEE
 {
    const bool wasEmpty = (this->mEnv.size() == 0);
