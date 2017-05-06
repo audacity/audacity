@@ -1042,7 +1042,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
          mFlow.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
-         //      wxLogDebug(wxT("Copy at %i %i (%i,%i)"), mxPos, myPos, xWidth1, yHeight1 );
+         wxRect R = mFlow.RectInner();
+         //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mBitmapNames[i].c_str() );
          Image = GetSubImageWithAlpha( ImageCache, mFlow.RectInner() );
          mBitmaps[i] = wxBitmap(Image);
       }
@@ -1060,6 +1061,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    {
       mFlow.GetNextPosition( iColSize, iColSize );
       mFlow.RectMid( x, y );
+      wxRect R = mFlow.RectInner();
+      //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mColourNames[i].c_str() );
       // Only change the colour if the alpha is opaque.
       // This allows us to add NEW colours more easily.
       if( ImageCache.GetAlpha(x,y ) > 128 )
