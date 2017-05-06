@@ -909,17 +909,37 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
    }
 }
 
-void Envelope::InsertSpace(double t0, double tlen)
+void Envelope::InsertSpace( double t0, double tlen )
 // NOFAIL-GUARANTEE
 {
    t0 -= mOffset;
 
-   unsigned int len = mEnv.size();
-   unsigned int i;
+   // Preserve the left-side limit at the split.
+   auto val = GetValueRelative( t0 );
+   auto range = EqualRange( t0, 0 );
 
-   for (i = 0; i < len; i++)
-      if (mEnv[i].GetT() > t0)
-         mEnv[i].SetT(mEnv[i].GetT() + tlen);
+   size_t index;
+   if ( range.first < range.second )
+      // There is already a control point.
+      index = 1 + range.first;
+   else
+      // Make a control point.
+      index = 1 + InsertOrReplaceRelative( t0, val );
+
+   // Shift points.
+   auto len = mEnv.size();
+   for ( ; index < len; ++index ) {
+      auto &point = mEnv[ index ];
+      point.SetT( point.GetT() + tlen );
+   }
+
+   // Preserve the right-side limit.
+   if ( 1 + range.first < range.second )
+      // There was a control point already.
+      ;
+   else
+      InsertOrReplaceRelative( t0 + tlen, val );
+
    mTrackLen += tlen;
 }
 
