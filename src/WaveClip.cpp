@@ -309,7 +309,7 @@ WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
 
-   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
 
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
@@ -328,10 +328,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    mRate = orig.mRate;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
 
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->Paste(0.0, orig.mEnvelope.get());
-   mEnvelope->SetOffset(orig.GetOffset());
-   mEnvelope->SetTrackLen((orig.mSequence->GetNumSamples().as_double()) / orig.mRate);
+   mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
@@ -345,7 +342,6 @@ WaveClip::WaveClip(const WaveClip& orig,
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
 
-// to do
 WaveClip::WaveClip(const WaveClip& orig,
                    const std::shared_ptr<DirManager> &projDirManager,
                    bool copyCutlines,
@@ -369,10 +365,11 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mSequence = orig.mSequence->Copy(s0, s1);
 
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->CopyFrom(orig.mEnvelope.get(),
-                       mOffset + s0.as_double()/mRate,
-                       mOffset + s1.as_double()/mRate);
+   mEnvelope = std::make_unique<Envelope>(
+      *orig.mEnvelope,
+      mOffset + s0.as_double()/mRate,
+      mOffset + s1.as_double()/mRate
+   );
 
    if ( copyCutlines )
       // Copy cutline clips that fall in the range
@@ -1835,7 +1832,8 @@ void WaveClip::Unlock()
 void WaveClip::SetRate(int rate)
 {
    mRate = rate;
-   UpdateEnvelopeTrackLen();
+   auto newLength = mSequence->GetNumSamples().as_double() / mRate;
+   mEnvelope->RescaleTimes( newLength );
    MarkChanged();
 }
 

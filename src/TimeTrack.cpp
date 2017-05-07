@@ -45,12 +45,9 @@ TimeTrack::TimeTrack(const std::shared_ptr<DirManager> &projDirManager, const Zo
    mRangeUpper = 1.1;
    mDisplayLog = false;
 
-   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope = std::make_unique<Envelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
    mEnvelope->SetTrackLen(DBL_MAX);
-   mEnvelope->SetInterpolateDB(true);
-   mEnvelope->Flatten(1.0);
    mEnvelope->SetOffset(0);
-   mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
 
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
@@ -67,18 +64,12 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
-   ///@TODO: Give Envelope:: a copy-constructor instead of this?
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->Flatten(1.0);
-   mEnvelope->SetTrackLen(DBL_MAX);
-   SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
-   mEnvelope->SetOffset(0);
-   mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
-   if ( pT0 && pT1 )
-      // restricted copy
-      mEnvelope->CopyFrom(orig.mEnvelope.get(), *pT0, *pT1);
+   if (pT0 && pT1)
+      mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope, *pT0, *pT1 );
    else
-      mEnvelope->Paste(0.0, orig.mEnvelope.get());
+      mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope );
+   mEnvelope->SetTrackLen(DBL_MAX);
+   mEnvelope->SetOffset(0);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mRuler = std::make_unique<Ruler>();
@@ -145,11 +136,11 @@ Track::Holder TimeTrack::Duplicate() const
 
 bool TimeTrack::GetInterpolateLog() const
 {
-   return mEnvelope->GetInterpolateDB();
+   return mEnvelope->GetExponential();
 }
 
 void TimeTrack::SetInterpolateLog(bool interpolateLog) {
-   mEnvelope->SetInterpolateDB(interpolateLog);
+   mEnvelope->SetExponential(interpolateLog);
 }
 
 //Compute the (average) warp factor between two non-warped time points
@@ -226,7 +217,7 @@ void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
    if(mRescaleXMLValues)
    {
       mRescaleXMLValues = false;
-      mEnvelope->Rescale(mRangeLower, mRangeUpper);
+      mEnvelope->RescaleValues(mRangeLower, mRangeUpper);
       mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
    }
 }
@@ -308,10 +299,10 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
 void TimeTrack::testMe()
 {
    GetEnvelope()->Flatten(0.0);
-   GetEnvelope()->Insert( 0.0, 0.2 );
-   GetEnvelope()->Insert( 5.0 - 0.001, 0.2 );
-   GetEnvelope()->Insert( 5.0 + 0.001, 1.3 );
-   GetEnvelope()->Insert( 10.0, 1.3 );
+   GetEnvelope()->InsertOrReplace(0.0, 0.2);
+   GetEnvelope()->InsertOrReplace(5.0 - 0.001, 0.2);
+   GetEnvelope()->InsertOrReplace(5.0 + 0.001, 1.3);
+   GetEnvelope()->InsertOrReplace(10.0, 1.3);
 
    double value1 = GetEnvelope()->Integral(2.0, 13.0);
    double expected1 = (5.0 - 2.0) * 0.2 + (13.0 - 5.0) * 1.3;
