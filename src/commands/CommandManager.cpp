@@ -975,9 +975,13 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
 {
    wxString label = entry->label;
 #if 1
+   wxString Accel = "";
    do{
       if (!entry->key.IsEmpty())
       {
+         // Dummy accelerator that looks Ok in menus but is non functional.
+         // Note the space before the key.
+         Accel = wxString("\t ") + entry->key;
          if( entry->key.StartsWith("Left" )) break;
          if( entry->key.StartsWith("Right")) break;
          if( entry->key.StartsWith("Up" )) break;
@@ -985,15 +989,29 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          if( entry->key.StartsWith("Return")) break;
          if( entry->key.StartsWith("Tab")) break;
          if( entry->key.StartsWith("Shift+Tab")) break;
+         if( entry->key.StartsWith("0")) break;
+         if( entry->key.StartsWith("1")) break;
+         if( entry->key.StartsWith("2")) break;
+         if( entry->key.StartsWith("3")) break;
+         if( entry->key.StartsWith("4")) break;
+         if( entry->key.StartsWith("5")) break;
+         if( entry->key.StartsWith("6")) break;
+         if( entry->key.StartsWith("7")) break;
+         if( entry->key.StartsWith("8")) break;
+         if( entry->key.StartsWith("9")) break;
+         // No accelerator.
+         Accel = "";
          //if( entry->key.StartsWith("Space" )) break;
-// These ones appear ot be illegal and mess up accelerator processing.
+         // These ones appear to be illegal and mess up accelerator processing.
          if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
          if( entry->key.StartsWith("Backspace" )) break;
          if( entry->key.StartsWith("Delete" )) break;
-         label += wxT("\t") + entry->key;
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
+         // Normal accelerator.
+         Accel = wxString("\t") + entry->key;
       }
    } while (false );
+   label += Accel;
 #endif
    return label;
 }
@@ -1203,6 +1221,16 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          case WXK_RETURN:
          case WXK_NUMPAD_ENTER:
          case WXK_DELETE:
+         case '0':
+         case '1':
+         case '2':
+         case '3':
+         case '4':
+         case '5':
+         case '6':
+         case '7':
+         case '8':
+         case '9':
             return false;
          }
       }
