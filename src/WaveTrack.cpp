@@ -1430,6 +1430,10 @@ void WaveTrack::Silence(double t0, double t1)
 void WaveTrack::InsertSilence(double t, double len)
 // STRONG-GUARANTEE
 {
+   // Nothing to do, if length is zero.
+   // Fixes Bug 1626
+   if( len == 0 )
+      return;
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
