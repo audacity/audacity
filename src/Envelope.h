@@ -215,7 +215,7 @@ private:
    void MoveDragPoint(double newWhen, double value);
    // May delete the drag point.  Restores envelope consistency.
    void ClearDragPoint();
-   EnvPoint *  AddPointAtEnd( double t, double val );
+   void AddPointAtEnd( double t, double val );
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
    // relative time
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;

@@ -174,10 +174,23 @@ void Envelope::SetRange(double minValue, double maxValue) {
       mEnv[i].SetVal( this, mEnv[i].GetVal() ); // this clamps the value to the NEW range
 }
 
-EnvPoint *Envelope::AddPointAtEnd( double t, double val )
+// This is used only during construction of an Envelope by complete or partial
+// copy of another.
+void Envelope::AddPointAtEnd( double t, double val )
 {
    mEnv.push_back( EnvPoint{ t, val } );
-   return &mEnv.back();
+
+   // Assume copied points were stored by nondecreasing time.
+   // Allow no more than two points at exactly the same time.
+   // Maybe that happened, because extra points were inserted at the boundary
+   // of the copied range, which were not in the source envelope.
+   auto nn = mEnv.size() - 1;
+   while ( nn >= 2 && mEnv[ nn - 2 ].GetT() == t ) {
+      // Of three or more points at the same time, erase one in the middle,
+      // not the one newly added.
+      mEnv.erase( mEnv.begin() + nn - 1 );
+      --nn;
+   }
 }
 
 Envelope::Envelope(const Envelope &orig, double t0, double t1)
@@ -342,7 +355,8 @@ XMLTagHandler *Envelope::HandleXMLChild(const wxChar *tag)
    if (wxStrcmp(tag, wxT("controlpoint")))
       return NULL;
 
-   return AddPointAtEnd(0,0);
+   mEnv.push_back( EnvPoint{} );
+   return &mEnv.back();
 }
 
 void Envelope::WriteXML(XMLWriter &xmlFile) const
