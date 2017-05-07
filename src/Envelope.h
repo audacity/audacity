@@ -145,6 +145,9 @@ public:
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
 private:
+   double GetValueRelative(double t) const;
+   void GetValuesRelative
+      (double *buffer, int len, double t0, double tstep) const;
    // relative time
    int NumberOfPointsAfter(double t) const;
    // relative time

@@ -1060,6 +1060,14 @@ double Envelope::GetValue(double t) const
    return temp;
 }
 
+double Envelope::GetValueRelative(double t) const
+{
+   double temp;
+
+   GetValuesRelative(&temp, 1, t, 1.0);
+   return temp;
+}
+
 // relative time
 /// @param Lo returns last index at or before this time, maybe -1
 /// @param Hi returns first index after this time, maybe past the end
@@ -1126,7 +1134,12 @@ void Envelope::GetValues(double *buffer, int bufferLen,
 {
    // Convert t0 from absolute to clip-relative time
    t0 -= mOffset;
+   GetValuesRelative( buffer, bufferLen, t0, tstep);
+}
 
+void Envelope::GetValuesRelative(double *buffer, int bufferLen,
+                         double t0, double tstep) const
+{
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
    // wxASSERT( bufferLen > 0 );
 
