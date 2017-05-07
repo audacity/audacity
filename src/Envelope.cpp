@@ -1012,7 +1012,7 @@ std::pair<int, int> Envelope::EqualRange( double when, double sampleTime ) const
          { return point1.GetT() < point2.GetT(); }
    );
    auto after = first;
-   while ( after != end && after->GetT() < when + tolerance )
+   while ( after != end && after->GetT() <= when + tolerance )
       ++after;
    return { first - begin, after - begin };
 }
