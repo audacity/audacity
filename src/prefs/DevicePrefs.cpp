@@ -161,6 +161,35 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndStatic();
+
+   // These previously lived in recording preferences.
+   // However they are liable to become device specific.
+   // Buffering also affects playback, not just recording, so is a device characteristic.
+   S.StartStatic( _("Latency"));
+   {
+      S.StartThreeColumn();
+      {
+         wxTextCtrl *w;
+         // only show the following controls if we use Portaudio v19, because
+         // for Portaudio v18 we always use default buffer sizes
+         w = S.TieNumericTextBox(_("Audio to &buffer:"),
+                                 wxT("/AudioIO/LatencyDuration"),
+                                 DEFAULT_LATENCY_DURATION,
+                                 9);
+         S.AddUnits(_("milliseconds (higher = more latency)"));
+         w->SetName(w->GetName() + wxT(" ") + _("milliseconds (higher = more latency)"));
+
+         w = S.TieNumericTextBox(_("L&atency correction:"),
+                                 wxT("/AudioIO/LatencyCorrection"),
+                                 DEFAULT_LATENCY_CORRECTION,
+                                 9);
+         S.AddUnits(_("milliseconds (negative = backwards)"));
+         w->SetName(w->GetName() + wxT(" ") + _("milliseconds (negative = backwards)"));
+      }
+      S.EndThreeColumn();
+   }
+   S.EndStatic();
+
 }
 
 void DevicePrefs::OnHost(wxCommandEvent & e)
