@@ -74,7 +74,7 @@ void Envelope::RescaleValues(double minValue, double maxValue)
    // rescale all points
    for( unsigned int i = 0; i < mEnv.size(); i++ ) {
       factor = (mEnv[i].GetVal() - oldMinValue) / (oldMaxValue - oldMinValue);
-      mEnv[i].SetVal(mMinValue + (mMaxValue - mMinValue) * factor);
+      mEnv[i].SetVal( this, mMinValue + (mMaxValue - mMinValue) * factor );
    }
 
 }
@@ -112,13 +112,13 @@ void Envelope::SetDragPointValid(bool valid)
          // off screen and at default height.
          // temporary state when dragging only!
          mEnv[mDragPoint].SetT(big);
-         mEnv[mDragPoint].SetVal(mDefaultValue);
+         mEnv[mDragPoint].SetVal( this, mDefaultValue );
          return;
       }
       else if ( mDragPoint + 1 == size ) {
          // Put the point at the height of the last point, but also off screen.
          mEnv[mDragPoint].SetT(big);
-         mEnv[mDragPoint].SetVal(mEnv[ size - 1 ].GetVal());
+         mEnv[mDragPoint].SetVal( this, mEnv[ size - 1 ].GetVal() );
       }
       else {
          // Place it exactly on its right neighbour.
@@ -126,7 +126,7 @@ void Envelope::SetDragPointValid(bool valid)
          // a light dot, as if it were deleted.
          const auto &neighbor = mEnv[mDragPoint + 1];
          mEnv[mDragPoint].SetT(neighbor.GetT());
-         mEnv[mDragPoint].SetVal(neighbor.GetVal());
+         mEnv[mDragPoint].SetVal( this, neighbor.GetVal() );
       }
    }
 }
@@ -154,7 +154,7 @@ void Envelope::MoveDragPoint(double newWhen, double value)
    // This might temporary violate the constraint that at most two
    // points share a time value.
    dragPoint.SetT(tt);
-   dragPoint.SetVal(value);
+   dragPoint.SetVal( this, value );
 }
 
 void Envelope::ClearDragPoint()
@@ -171,12 +171,12 @@ void Envelope::SetRange(double minValue, double maxValue) {
    mMaxValue = maxValue;
    mDefaultValue = ClampValue(mDefaultValue);
    for( unsigned int i = 0; i < mEnv.size(); i++ )
-      mEnv[i].SetVal(mEnv[i].GetVal()); // this clamps the value to the NEW range
+      mEnv[i].SetVal( this, mEnv[i].GetVal() ); // this clamps the value to the NEW range
 }
 
 EnvPoint *Envelope::AddPointAtEnd( double t, double val )
 {
-   mEnv.push_back(EnvPoint(this, t, val));
+   mEnv.push_back( EnvPoint{ t, val } );
    return &mEnv.back();
 }
 
@@ -898,7 +898,7 @@ int Envelope::Reassign(double when, double value)
    if (i >= len || when < mEnv[i].GetT())
       return -1;
 
-   mEnv[i].SetVal(value);
+   mEnv[i].SetVal( this, value );
    return 0;
 }
 
@@ -978,15 +978,12 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
    while (i < len && when > mEnv[i].GetT())
       i++;
 
-   if(i < len && when == mEnv[i].GetT()) {
-
+   if(i < len && when == mEnv[i].GetT())
      // modify existing
-     mEnv[i].SetVal(value);
-
-   }
+     mEnv[i].SetVal( this, value );
    else {
      // Add NEW
-     EnvPoint e(this, when, value);
+     EnvPoint e{ when, value };
      if (i < len) {
         Insert(i, e);
      } else {
@@ -1007,7 +1004,7 @@ std::pair<int, int> Envelope::EqualRange( double when, double sampleTime ) const
    auto end = mEnv.end();
    auto first = std::lower_bound(
       begin, end,
-      EnvPoint{ const_cast<Envelope*>( this ), when - tolerance, 0.0 },
+      EnvPoint{ when - tolerance, 0.0 },
       []( const EnvPoint &point1, const EnvPoint &point2 )
          { return point1.GetT() < point2.GetT(); }
    );

@@ -36,12 +36,13 @@ class ZoomInfo;
 class EnvPoint final : public XMLTagHandler {
 
 public:
-   inline EnvPoint(Envelope *envelope, double t, double val);
+   EnvPoint() {}
+   inline EnvPoint( double t, double val ) : mT{ t }, mVal{ val } {}
 
    double GetT() const { return mT; }
    void SetT(double t) { mT = t; }
    double GetVal() const { return mVal; }
-   inline void SetVal(double val);
+   inline void SetVal( Envelope *pEnvelope, double val );
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override
    {
@@ -52,7 +53,7 @@ public:
             if (!wxStrcmp(attr, wxT("t")))
                SetT(Internat::CompatibleToDouble(value));
             else if (!wxStrcmp(attr, wxT("val")))
-               SetVal(Internat::CompatibleToDouble(value));
+               SetVal( nullptr, Internat::CompatibleToDouble(value) );
          }
          return true;
       }
@@ -66,9 +67,8 @@ public:
    }
 
 private:
-   Envelope *mEnvelope;
-   double mT;
-   double mVal;
+   double mT {};
+   double mVal {};
 
 };
 
@@ -243,16 +243,11 @@ private:
    mutable int mSearchGuess { -2 };
 };
 
-inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)
+inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
 {
-   mEnvelope = envelope;
-   mT = t;
-   mVal = mEnvelope->ClampValue(val);
-}
-
-inline void EnvPoint::SetVal(double val)
-{
-   mVal = mEnvelope->ClampValue(val);
+   if ( pEnvelope )
+      val = pEnvelope->ClampValue(val);
+   mVal = val;
 }
 
 // A class that holds state for the duration of dragging
