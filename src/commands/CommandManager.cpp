@@ -999,10 +999,10 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          if( entry->key.StartsWith("7")) break;
          if( entry->key.StartsWith("8")) break;
          if( entry->key.StartsWith("9")) break;
-         // No accelerator.
-         Accel = "";
+         // Uncomment the below so as not to add the illegal accelerators.
+         // Accel = "";
          //if( entry->key.StartsWith("Space" )) break;
-         // These ones appear to be illegal and mess up accelerator processing.
+         // These ones appear to be illegal already and mess up accelerator processing.
          if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
          if( entry->key.StartsWith("Backspace" )) break;
          if( entry->key.StartsWith("Delete" )) break;
