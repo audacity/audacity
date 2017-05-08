@@ -1037,7 +1037,7 @@ bool SpecCache::CalculateOneSpectrum
    return result;
 }
 
-void SpecCache::Resize(size_t len_, const SpectrogramSettings& settings,
+void SpecCache::Grow(size_t len_, const SpectrogramSettings& settings,
                        double pixelsPerSecond, double start_)
 {
    settings.CacheWindows();
@@ -1053,7 +1053,7 @@ void SpecCache::Resize(size_t len_, const SpectrogramSettings& settings,
    len = len_;
    algorithm = settings.algorithm;
    pps = pixelsPerSecond;
-   start_ = start_;
+   start = start_;
    windowType = settings.windowType;
    windowSize = settings.WindowSize();
    zeroPaddingFactor = settings.ZeroPaddingFactor();
@@ -1172,7 +1172,6 @@ void SpecCache::Populate
 #endif
          for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
             float *const results = &freq[nBins * xx];
-            const auto hFFT = settings.hFFT.get();
             for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
@@ -1198,14 +1197,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 {
    const WaveTrack *const track = waveTrackCache.GetTrack();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
-   const int &frequencyGain = settings.frequencyGain;
-   const size_t windowSize = settings.WindowSize();
-   const int &windowType = settings.windowType;
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
-#else
-   const size_t zeroPaddingFactor = 1;
-#endif
 
    bool match =
       mSpecCache &&
@@ -1220,6 +1211,23 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       where = &mSpecCache->where[0];
 
       return false;  //hit cache completely
+   }
+
+   // Caching is not implemented for reassignment, unless for
+   // a complete hit, because of the complications of time reassignment
+   if (settings.algorithm == SpectrogramSettings::algReassignment)
+      match = false;
+
+   // Free the cache when it won't cause a major stutter.
+   // If the window size changed, we know there is nothing to be copied
+   // If we zoomed out, or resized, we can give up memory. But not too much -
+   // up to 2x extra is needed at the end of the clip to prevent stutter.
+   if (mSpecCache->freq.capacity() > 2.1 * mSpecCache->freq.size() ||
+       mSpecCache->windowSize*mSpecCache->zeroPaddingFactor <
+       settings.WindowSize()*settings.ZeroPaddingFactor())
+   {
+      match = false;
+      mSpecCache = std::make_unique<SpecCache>();
    }
 
    const double tstep = 1.0 / pixelsPerSecond;
@@ -1242,9 +1250,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       ));
    }
 
-   // Resize the cache, keep the contents unchanged
-   mSpecCache->Resize(numPixels, settings, pixelsPerSecond, t0);
-
+   // Resize the cache, keep the contents unchanged.
+   mSpecCache->Grow(numPixels, settings, pixelsPerSecond, t0);
    auto nBins = settings.NBins();
 
    // Optimization: if the old cache is good and overlaps
@@ -1252,8 +1259,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // possible
    if (copyEnd > copyBegin)
    {
-       // memmove is required since dst/src overlap
-       memmove(&mSpecCache->freq[nBins * copyBegin],
+      // memmove is required since dst/src overlap
+      memmove(&mSpecCache->freq[nBins * copyBegin],
                &mSpecCache->freq[nBins * (copyBegin + oldX0)],
                nBins * (copyEnd - copyBegin) * sizeof(float));
    }
@@ -1261,10 +1268,19 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // Reassignment accumulates, so it needs a zeroed buffer
    if (settings.algorithm == SpectrogramSettings::algReassignment)
    {
-       int zeroBegin = copyBegin > 0 ? 0 : copyEnd-copyBegin;
-       int zeroEnd = copyBegin > 0 ? copyBegin : numPixels;
+      // The cache could theoretically copy from the middle, resulting
+      // in two regions to update. This won't happen in zoom, since
+      // old cache doesn't match. It won't happen in resize, since the
+      // spectrum view is pinned to left side of window.
+      wxASSERT(
+         (copyBegin >= 0 && copyEnd == numPixels) || // copied the end
+         (copyBegin == 0 && copyEnd <= numPixels)    // copied the beginning
+      );
 
-       memset(&mSpecCache->freq[nBins*zeroBegin], 0, nBins*(zeroEnd-zeroBegin)*sizeof(float));
+      int zeroBegin = copyBegin > 0 ? 0 : copyEnd-copyBegin;
+      int zeroEnd = copyBegin > 0 ? copyBegin : numPixels;
+
+      memset(&mSpecCache->freq[nBins*zeroBegin], 0, nBins*(zeroEnd-zeroBegin)*sizeof(float));
    }
 
    // purposely offset the display 1/2 sample to the left (as compared

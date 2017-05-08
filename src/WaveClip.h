@@ -68,8 +68,8 @@ public:
        float* __restrict scratch,
        float* __restrict out) const;
 
-   // Resize the cache while preserving the (possibly now invalid!) contents
-   void Resize(size_t len_, const SpectrogramSettings& settings,
+   // Grow the cache while preserving the (possibly now invalid!) contents
+   void Grow(size_t len_, const SpectrogramSettings& settings,
                double pixelsPerSecond, double start_);
 
    // Calculate the dirty columns at the begin and end of the cache
