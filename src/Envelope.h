@@ -36,12 +36,13 @@ class ZoomInfo;
 class EnvPoint final : public XMLTagHandler {
 
 public:
-   inline EnvPoint(Envelope *envelope, double t, double val);
+   EnvPoint() {}
+   inline EnvPoint( double t, double val ) : mT{ t }, mVal{ val } {}
 
    double GetT() const { return mT; }
    void SetT(double t) { mT = t; }
    double GetVal() const { return mVal; }
-   inline void SetVal(double val);
+   inline void SetVal( Envelope *pEnvelope, double val );
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override
    {
@@ -52,7 +53,7 @@ public:
             if (!wxStrcmp(attr, wxT("t")))
                SetT(Internat::CompatibleToDouble(value));
             else if (!wxStrcmp(attr, wxT("val")))
-               SetVal(Internat::CompatibleToDouble(value));
+               SetVal( nullptr, Internat::CompatibleToDouble(value) );
          }
          return true;
       }
@@ -66,9 +67,8 @@ public:
    }
 
 private:
-   Envelope *mEnvelope;
-   double mT;
-   double mVal;
+   double mT {};
+   double mVal {};
 
 };
 
@@ -118,8 +118,11 @@ public:
       float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
-   void CollapseRegion(double t0, double t1);
+   // sampleTime determines when the endpoint of the collapse is near enough
+   // to an endpoint of the domain, that an extra control point is not needed.
+   void CollapseRegion(double t0, double t1, double sampleTime);
    void Paste(double t0, const Envelope *e);
+
    void InsertSpace(double t0, double tlen);
    void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 
@@ -145,6 +148,9 @@ public:
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
 private:
+   double GetValueRelative(double t) const;
+   void GetValuesRelative
+      (double *buffer, int len, double t0, double tstep) const;
    // relative time
    int NumberOfPointsAfter(double t) const;
    // relative time
@@ -212,7 +218,7 @@ private:
    void MoveDragPoint(double newWhen, double value);
    // May delete the drag point.  Restores envelope consistency.
    void ClearDragPoint();
-   EnvPoint *  AddPointAtEnd( double t, double val );
+   void AddPointAtEnd( double t, double val );
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
    // relative time
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
@@ -243,16 +249,11 @@ private:
    mutable int mSearchGuess { -2 };
 };
 
-inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)
+inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
 {
-   mEnvelope = envelope;
-   mT = t;
-   mVal = mEnvelope->ClampValue(val);
-}
-
-inline void EnvPoint::SetVal(double val)
-{
-   mVal = mEnvelope->ClampValue(val);
+   if ( pEnvelope )
+      val = pEnvelope->ClampValue(val);
+   mVal = val;
 }
 
 // A class that holds state for the duration of dragging

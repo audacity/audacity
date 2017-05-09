@@ -1138,26 +1138,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                clipsToDelete.push_back( clip.get() );
                auto newClip = make_movable<WaveClip>( *clip, mDirManager, true );
 
-               /* We are going to DELETE part of the clip here. The clip may
-                * have envelope points, and we need to ensure that the envelope
-                * outside of the cleared region is not affected. This means
-                * putting in "glue" points where the clip enters and leaves the
-                * region being cleared. If one of the ends of the clip is inside
-                * the region, then one of the glue points will be redundant. */
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
-               if (clip->GetEnvelope()->GetNumberOfPoints() > 0) {   // don't insert env pts if none exist
-                  double val;
-                  if (clip->WithinClip(t0)) {
-                     // start of region within clip
-                     val = clip->GetEnvelope()->GetValue(t0);
-                     newClip->GetEnvelope()->InsertOrReplace(t0 - 1.0 / clip->GetRate(), val);
-                     }
-                  if (clip->WithinClip(t1))
-                     {  // end of region within clip
-                     val = clip->GetEnvelope()->GetValue(t1);
-                     newClip->GetEnvelope()->InsertOrReplace(t1 , val);
-                     }
-               }
                newClip->Clear(t0,t1);
                newClip->GetEnvelope()->RemoveUnneededPoints(t0);
 
@@ -1583,12 +1564,15 @@ void WaveTrack::Join(double t0, double t1)
       if (clip->GetOffset() - t > (1.0 / mRate)) {
          double addedSilence = (clip->GetOffset() - t);
          //printf("Adding %.6f seconds of silence\n");
-         newClip->InsertSilence(t, addedSilence);
+         auto offset = clip->GetOffset();
+         auto value = clip->GetEnvelope()->GetValue( offset );
+         newClip->AppendSilence( addedSilence, value );
          t += addedSilence;
       }
 
       //printf("Pasting at %.6f\n", t);
       newClip->Paste(t, clip);
+
       t = newClip->GetEndTime();
 
       auto it = FindClip(mClips, clip);
@@ -2398,12 +2382,6 @@ void WaveTrack::SplitAt(double t)
       {
          double val;
          t = LongSamplesToTime(TimeToLongSamples(t)); // put t on a sample
-         val = c->GetEnvelope()->GetValue(t);
-         //make two envelope points to preserve the value.
-         //handle the case where we split on the 1st sample (without this we hit an assert)
-         if(t - 1.0/c->GetRate() >= c->GetOffset())
-            c->GetEnvelope()->InsertOrReplace(t - 1.0 / c->GetRate(), val);  // frame end points
-         c->GetEnvelope()->InsertOrReplace(t, val);
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          c->Clear(t, c->GetEndTime());
          newClip->Clear(c->GetStartTime(), t);
