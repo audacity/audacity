@@ -196,8 +196,8 @@ void SelectionBar::Populate()
 
    bool showSelectionStart = false;
    bool showSelectionLength = false;
-   gPrefs->Read(wxT("/ShowSelectionStart"), &showSelectionStart);
-   gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
+   gPrefs->Read(wxT("/ShowSelectionStart"), &showSelectionStart, true);
+   gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength, false);
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
@@ -446,7 +446,7 @@ void SelectionBar::OnStartRadio(wxCommandEvent & WXUNUSED(event))
 }
 void SelectionBar::OnCenterRadio(wxCommandEvent & WXUNUSED(event))
 {
-   gPrefs->Write(wxT("/ShowSelectionStart"), true);
+   gPrefs->Write(wxT("/ShowSelectionStart"), false);
    gPrefs->Flush();
    mLeftTime->SetName(wxString(_("Selection Center")));
 
@@ -541,10 +541,12 @@ void SelectionBar::ValuesToControls()
       samples += (sampleCount)floor(mStart * mRate + 0.5);
       auto t = samples.as_double() / mRate;
       // An odd thing here is that we could allow the center to be at half a sample.
-      // in which case length must be odd, or at a sample, in which case length
-      // must be even.  Same fo rany selection granularity.
-      // For now, don't care.  User gets benefit from having center, even if
-      // it is slightly peculiar when used close up to the granularity.
+      // If center is at a half sample length must be odd.
+      // If center is at a sample length must be even.  
+      // Similarly  for any selection granularity.
+      // For now, we don't care, and don't do anything to ensure that.
+      // The user gets the benefit from having the option of center, even if
+      // it is slightly peculiar in its interactions with selection granularity.
       left = t/2.0;
    }
 
