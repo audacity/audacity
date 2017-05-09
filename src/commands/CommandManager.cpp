@@ -981,6 +981,7 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
       {
          // Dummy accelerator that looks Ok in menus but is non functional.
          // Note the space before the key.
+#ifdef __WXMSW__
          Accel = wxString("\t ") + entry->key;
          if( entry->key.StartsWith("Left" )) break;
          if( entry->key.StartsWith("Right")) break;
@@ -1006,6 +1007,7 @@ wxString CommandManager::GetLabelWithDisabledAccel(const CommandListEntry *entry
          if( entry->key.StartsWith("NUMPAD_ENTER" )) break;
          if( entry->key.StartsWith("Backspace" )) break;
          if( entry->key.StartsWith("Delete" )) break;
+#endif
          //wxLogDebug("Added Accel:[%s][%s]", entry->label, entry->key );
          // Normal accelerator.
          Accel = wxString("\t") + entry->key;
