@@ -147,6 +147,9 @@ public:
    void GetValues
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
+   // Guarantee an envelope point at the end of the domain.
+   void Cap( double sampleTime );
+
 private:
    double GetValueRelative(double t) const;
    void GetValuesRelative

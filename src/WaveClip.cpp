@@ -1626,9 +1626,8 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 
       // Preserve limit value at the end
       auto oldLen = pEnvelope->GetTrackLen();
-      auto oldT = pEnvelope->GetOffset() + oldLen;
       auto newLen = oldLen + len;
-      pEnvelope->InsertOrReplace( oldT, pEnvelope->GetValue( oldT ) );
+      pEnvelope->Cap( sampleTime );
 
       // Ramp across the silence to the given value
       pEnvelope->SetTrackLen( newLen );

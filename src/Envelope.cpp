@@ -701,7 +701,7 @@ void Envelope::Paste(double t0, const Envelope *e)
    unsigned int len = mEnv.size();
 
    // get values to perform framing of the insertion
-   double splitval = GetValue(t0 + mOffset);
+   const double splitval = GetValueRelative( t0 );
 
 /*
 Old analysis of cases:
@@ -852,8 +852,8 @@ Old analysis of cases:
       // Add end points in case they are not not in e.
       // If they are in e, no harm, because the repeated Insert
       // calls for the start and end times will have no effect.
-      const double leftval = e->GetValue(0 + e->mOffset);
-      const double rightval = e->GetValue(e->mTrackLen + e->mOffset);
+      const double leftval = e->GetValueRelative( 0 );
+      const double rightval = e->GetValueRelative( e->mTrackLen );
       InsertOrReplaceRelative(t0, leftval);
       InsertOrReplaceRelative(t0 + e->mTrackLen, rightval);
    }
@@ -981,6 +981,13 @@ void Envelope::GetPoints(double *bufferWhen,
       bufferWhen[i] = mEnv[i].GetT() - mOffset;
       bufferValue[i] = mEnv[i].GetVal();
    }
+}
+
+void Envelope::Cap( double sampleTime )
+{
+   auto range = EqualRange( mTrackLen, sampleTime );
+   if ( range.first == range.second )
+      InsertOrReplaceRelative( mTrackLen, GetValueRelative( mTrackLen ) );
 }
 
 // Private methods
