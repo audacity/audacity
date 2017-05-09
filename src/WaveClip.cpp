@@ -1345,7 +1345,8 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format)
 void WaveClip::UpdateEnvelopeTrackLen()
 // NOFAIL-GUARANTEE
 {
-   mEnvelope->SetTrackLen((mSequence->GetNumSamples().as_double()) / mRate);
+   mEnvelope->SetTrackLen
+      ((mSequence->GetNumSamples().as_double()) / mRate, 1.0 / GetRate());
 }
 
 void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
@@ -1630,7 +1631,7 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
       pEnvelope->Cap( sampleTime );
 
       // Ramp across the silence to the given value
-      pEnvelope->SetTrackLen( newLen );
+      pEnvelope->SetTrackLen( newLen, sampleTime );
       pEnvelope->InsertOrReplace
          ( pEnvelope->GetOffset() + newLen, *pEnvelopeValue );
    }

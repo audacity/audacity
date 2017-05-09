@@ -1090,17 +1090,21 @@ void Envelope::SetOffset(double newOffset)
    mOffset = newOffset;
 }
 
-void Envelope::SetTrackLen(double trackLen)
+void Envelope::SetTrackLen( double trackLen, double sampleTime )
 // NOFAIL-GUARANTEE
 {
-   // Preserve the right-side limit at trackLen.
-   bool needPoint = ( trackLen < mTrackLen );
+   // Preserve the left-side limit at trackLen.
+   auto range = EqualRange( trackLen, sampleTime );
+   bool needPoint = ( range.first == range.second && trackLen < mTrackLen );
    double value;
    if ( needPoint )
       value = GetValueRelative( trackLen );
 
    mTrackLen = trackLen;
-   int newLen = EqualRange( trackLen, 0 ).second;
+
+   // Shrink the array.
+   // If more than one point already at the end, keep only the first of them.
+   int newLen = std::min( 1 + range.first, range.second );
    mEnv.resize( newLen );
 
    if ( needPoint )

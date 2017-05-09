@@ -128,7 +128,7 @@ public:
 
    // Control
    void SetOffset(double newOffset);
-   void SetTrackLen(double trackLen);
+   void SetTrackLen( double trackLen, double sampleTime = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );
 
