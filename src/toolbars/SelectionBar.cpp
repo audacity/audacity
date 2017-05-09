@@ -66,6 +66,8 @@ enum {
    SelectionBarFirstID = 2700,
    OnRateID,
    OnSnapToID,
+   OnStartRadioID,
+   OnCenterRadioID,
    OnLengthRadioID,
    OnEndRadioID,
    OnLeftTimeID,
@@ -76,6 +78,8 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_SIZE(SelectionBar::OnSize)
    EVT_TEXT(OnLeftTimeID, SelectionBar::OnLeftTime)
    EVT_TEXT(OnRightTimeID, SelectionBar::OnRightTime)
+   EVT_RADIOBUTTON(OnStartRadioID, SelectionBar::OnStartRadio)
+   EVT_RADIOBUTTON(OnCenterRadioID, SelectionBar::OnCenterRadio)
    EVT_RADIOBUTTON(OnLengthRadioID, SelectionBar::OnLengthRadio)
    EVT_RADIOBUTTON(OnEndRadioID, SelectionBar::OnEndRadio)
    EVT_CHOICE(OnSnapToID, SelectionBar::OnSnapTo)
@@ -109,6 +113,39 @@ void SelectionBar::Create(wxWindow * parent)
    ToolBar::Create(parent);
 }
 
+
+// Can't set textcolour of radio buttons.
+// so instead if we want to them, we make the text empty and add in a wxStaticText
+// and we can set the colour of that.
+// Slight regression relative ot Audacity, in that this text is not 
+// clickable/active.  You have to click on the actual button.
+// And you can't tab between and hear the labels with voice over.
+// So VI users should use blend themes (which is the default).
+// Should not be a hardship for them, as themes make little difference 
+// for them, except Hi-Contrast, which should be used with blend thems
+// and a windows theme that is close enough to actually blend.
+
+wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name, 
+   int id, std::unique_ptr<wxBoxSizer>& pSizer, long style )
+{
+   bool bUseNativeRadioButton = theTheme.IsUsingSyestemTextColour();
+   wxRadioButton * pBtn;
+   // Safenew because the button is being create dinto this window.
+   pBtn = safenew wxRadioButton(this, id,bUseNativeRadioButton ? Name : wxT(""),
+      wxDefaultPosition, wxDefaultSize, style);
+   pBtn->SetName(Name);
+   pBtn->SetForegroundColour( theTheme.Colour( clrTrackPanelText ));
+
+   pSizer->Add(pBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   if( !bUseNativeRadioButton )
+   {
+      wxStaticText * pText = safenew wxStaticText(this, -1, Name);
+      pText->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
+      pSizer->Add(pText, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+   }
+   return pBtn;
+}
+
 void SelectionBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
@@ -138,7 +175,7 @@ void SelectionBar::Populate()
    // Top row (mostly labels)
    //
 
-   wxColour clrText = theTheme.Colour( clrTrackPanelText );
+   wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
    wxStaticText * pProjRate = safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
    // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines
@@ -156,56 +193,31 @@ void SelectionBar::Populate()
    pSnapTo->SetForegroundColour( clrText );
    mainSizer->Add( pSnapTo, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   wxStaticText * pSelStart = safenew wxStaticText(this, -1, _("Selection Start:"));
-   pSelStart->SetForegroundColour( clrText );
-   mainSizer->Add( pSelStart,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
+   bool showSelectionStart = false;
    bool showSelectionLength = false;
-   gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
+   gPrefs->Read(wxT("/ShowSelectionStart"), &showSelectionStart, true);
+   gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength, false);
 
    {
-      bool bSysTextColour = theTheme.IsUsingSyestemTextColour();
-      // Can't set textcolour of radio buttons.
-      // so instead we make the text empty and add in two wxStaticTexts
-      // and we can set the colour of those.
-      // Slight regression relative ot Audacity, in that this text is not 
-      // clickable/active.  You have to click on the actual button.
-      // And can't tab between and hear the labels with voice over.
-      // So VI users should use blend themes (which is the default).
-      // Should not be a hardship for them, as themes make little difference 
-      // for them, except Hi-Contrast, which should be used with recolouring.
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      mRightEndButton = safenew wxRadioButton(this, OnEndRadioID, bSysTextColour ? _("End") : wxT("") ,
-         wxDefaultPosition, wxDefaultSize,
-         wxRB_GROUP);
-      mRightEndButton->SetName(_("End"));
-      mRightEndButton->SetForegroundColour( clrText );
-      mRightEndButton->SetValue(!showSelectionLength);
-      hSizer->Add(mRightEndButton,
-         0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      if( !bSysTextColour )
-      {
-         wxStaticText * pEndText = safenew wxStaticText(this, -1, _("End"));
-         pEndText->SetForegroundColour( clrText );
-         hSizer->Add(pEndText,
-            0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      }
 
-      mRightLengthButton = safenew wxRadioButton(this, OnLengthRadioID,bSysTextColour ? _("Length") : wxT("") );
-      mRightLengthButton->SetName(_("Length"));
-      mRightLengthButton->SetForegroundColour( clrText );
-      mRightLengthButton->SetValue(showSelectionLength);
-      hSizer->Add(mRightLengthButton,
-         0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-      if( !bSysTextColour )
-      {
-         wxStaticText * pLengthText = safenew wxStaticText(this, -1, _("Length"));
-         pLengthText->SetForegroundColour( clrText );
-         hSizer->Add(pLengthText,
-            0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
-      }
+      wxStaticText * pSelStart = safenew wxStaticText(this, -1, _("Selection:"));
+      pSelStart->SetForegroundColour( clrText );
+      hSizer->Add( pSelStart,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-#if defined(__WXMSW__)
+      mSelStartButton = AddRadioButton( _("Start"), OnStartRadioID, hSizer, wxRB_GROUP);
+      mSelStartButton->SetValue(showSelectionStart);
+      AddRadioButton( _("Center"), OnCenterRadioID, hSizer, 0)->SetValue(!showSelectionStart);
+      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+
+      hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      mSelEndButton = AddRadioButton( _("End"), OnEndRadioID, hSizer, wxRB_GROUP);
+      mSelEndButton->SetValue(!showSelectionLength);
+      AddRadioButton( _("Length"), OnLengthRadioID, hSizer, 0)->SetValue(showSelectionLength);
+
+#if 0
+      // was #if defined(__WXMSW__)
       // Refer to Microsoft KB article 261192 for an explanation as
       // to why this is needed.  We've only experienced it under Win2k
       // so it's probably been fixed.  But, it doesn't hurt to have this
@@ -373,18 +385,44 @@ void SelectionBar::OnSize(wxSizeEvent &evt)
 
 void SelectionBar::ModifySelection(bool done)
 {
-   mStart = mLeftTime->GetValue();
+   double left = mLeftTime->GetValue();
    double right = mRightTime->GetValue();
 
-   if (mRightEndButton->GetValue()) {
-      if(mStart > right)
-         mEnd = mStart;
-      else
-         mEnd = right;
-   }
-   else
-      mEnd = mStart + right;
+   // Four combinations:
 
+   const int kStart = 0;
+   const int kCenter = 1;
+   const int kEnd = 0;
+   const int kLength = 2;
+
+   int option = (mSelStartButton->GetValue()? kStart:kCenter) + (mSelEndButton->GetValue()? kEnd:kLength);
+
+   switch( option ){
+   case kStart+kEnd:
+      if( right < left )
+         right = left;
+      mStart = wxMin( left, right );
+      mEnd = wxMax( left, right);
+      break;
+   case kCenter+kEnd:
+      if( right < left )
+         right = left;
+      mStart = left - fabs( right-left );
+      mEnd = left + fabs( right-left);
+      break;
+   case kStart+kLength:
+      if( right < 0 )
+         right = 0;
+      mStart = wxMin( left, left+right );
+      mEnd = wxMax( left, left+right);
+      break;
+   case kCenter+kLength:
+      if( right < 0 )
+         right = 0;
+      mStart = left - fabs( right)/2.0;
+      mEnd = left + fabs( right)/2.0;
+      break;
+   }
    mListener->AS_ModifySelection(mStart, mEnd, done);
 }
 
@@ -398,6 +436,24 @@ void SelectionBar::OnRightTime(wxCommandEvent & event)
    ModifySelection(event.GetInt() != 0);
 }
 
+void SelectionBar::OnStartRadio(wxCommandEvent & WXUNUSED(event))
+{
+   gPrefs->Write(wxT("/ShowSelectionStart"), true);
+   gPrefs->Flush();
+   mLeftTime->SetName(wxString(_("Selection Start")));
+
+   ValuesToControls();
+}
+void SelectionBar::OnCenterRadio(wxCommandEvent & WXUNUSED(event))
+{
+   gPrefs->Write(wxT("/ShowSelectionStart"), false);
+   gPrefs->Flush();
+   mLeftTime->SetName(wxString(_("Selection Center")));
+
+   ValuesToControls();
+}
+
+
 void SelectionBar::OnLengthRadio(wxCommandEvent & WXUNUSED(event))
 {
    gPrefs->Write(wxT("/ShowSelectionLength"), true);
@@ -410,6 +466,7 @@ void SelectionBar::OnLengthRadio(wxCommandEvent & WXUNUSED(event))
 void SelectionBar::OnEndRadio(wxCommandEvent & WXUNUSED(event))
 {
    gPrefs->Write(wxT("/ShowSelectionLength"), false);
+   gPrefs->Flush();
    mRightTime->SetName(wxString(_("Selection End")));
 
    ValuesToControls();
@@ -439,8 +496,8 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    mRightTime =
    mAudioTime = NULL;
 
-   mRightEndButton =
-   mRightLengthButton = NULL;
+   mSelStartButton = NULL;
+   mSelEndButton = NULL;
 
    mRateBox = NULL;
    mRateText = NULL;
@@ -469,19 +526,45 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
 void SelectionBar::ValuesToControls()
 {
-   mLeftTime->SetValue(mStart);
+   double left;
+   double right;
 
-   if (mRightEndButton->GetValue())
-      mRightTime->SetValue(mEnd);
+   // Start or center?
+   if (mSelStartButton->GetValue())
+      left = mStart;
    else
-   {  // mRightTime is the length.
-      // Be sure to take into account the sub-sample offset.
+   {
+      // TODO: Doing rounding calcs here, as in the length case, but
+      // not sure that is needed.
+      //left = (mStart+mEnd)/2.0;
+      auto samples = (sampleCount)floor(mEnd * mRate + 0.5);
+      samples += (sampleCount)floor(mStart * mRate + 0.5);
+      auto t = samples.as_double() / mRate;
+      // An odd thing here is that we could allow the center to be at half a sample.
+      // If center is at a half sample length must be odd.
+      // If center is at a sample length must be even.  
+      // Similarly  for any selection granularity.
+      // For now, we don't care, and don't do anything to ensure that.
+      // The user gets the benefit from having the option of center, even if
+      // it is slightly peculiar in its interactions with selection granularity.
+      left = t/2.0;
+   }
+
+   // End or length?
+   if (mSelEndButton->GetValue())
+      right = mEnd;
+   else
+   {  // Be sure to take into account the sub-sample offset.
       // See TimeToLongSamples and LongSamplesToTime but here at the project rate.
       auto samples = (sampleCount)floor(mEnd * mRate + 0.5);
       samples -= (sampleCount)floor(mStart * mRate + 0.5);
       auto t = samples.as_double() / mRate;
-      mRightTime->SetValue(t);
+      right = t;
    }
+
+   mLeftTime->SetValue(left);
+   mRightTime->SetValue(right);
+
 
    mAudioTime->SetValue(mAudio);
 }
@@ -502,7 +585,7 @@ double SelectionBar::GetLeftTime()
 
 double SelectionBar::GetRightTime()
 {
-   if (mRightEndButton->GetValue())
+   if (mSelEndButton->GetValue())
       return mRightTime->GetValue();
    else {
       // What would be shown if we were showing the end time

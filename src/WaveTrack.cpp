@@ -1150,12 +1150,12 @@ void WaveTrack::HandleClear(double t0, double t1,
                   if (clip->WithinClip(t0)) {
                      // start of region within clip
                      val = clip->GetEnvelope()->GetValue(t0);
-                     newClip->GetEnvelope()->InsertOrReplace(t0 - clip->GetOffset() - 1.0 / clip->GetRate(), val);
+                     newClip->GetEnvelope()->InsertOrReplace(t0 - 1.0 / clip->GetRate(), val);
                      }
                   if (clip->WithinClip(t1))
                      {  // end of region within clip
                      val = clip->GetEnvelope()->GetValue(t1);
-                     newClip->GetEnvelope()->InsertOrReplace(t1 - clip->GetOffset(), val);
+                     newClip->GetEnvelope()->InsertOrReplace(t1 , val);
                      }
                }
                newClip->Clear(t0,t1);
@@ -1430,6 +1430,10 @@ void WaveTrack::Silence(double t0, double t1)
 void WaveTrack::InsertSilence(double t, double len)
 // STRONG-GUARANTEE
 {
+   // Nothing to do, if length is zero.
+   // Fixes Bug 1626
+   if( len == 0 )
+      return;
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 

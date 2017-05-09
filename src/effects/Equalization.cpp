@@ -1613,8 +1613,8 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
 void EffectEqualization::setCurve(int currentCurve)
 {
    // Set current choice
-   Select(currentCurve);
    wxASSERT( currentCurve < (int) mCurves.GetCount() );
+   Select(currentCurve);
 
    Envelope *env;
    int numPoints = (int) mCurves[currentCurve].points.GetCount();
@@ -2660,6 +2660,7 @@ void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
    // Select NEW curve
+   wxASSERT( mCurve != NULL );
    setCurve( mCurve->GetCurrentSelection() );
    if( !mDrawMode )
       UpdateGraphic();
