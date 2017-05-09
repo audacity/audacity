@@ -1107,35 +1107,20 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
 #endif
 
    int len = mEnv.size();
+   when = std::max( 0.0, std::min( mTrackLen, when ) );
 
-   if (len && when < 0.0)
-      return 0;
-   if ((len > 1) && when > mTrackLen)
-      return len - 1;
+   auto range = EqualRange( when, 0 );
+   int index = range.first;
 
-   if (when < 0.0)
-      when = 0.0;
-   if ((len>1) && when > mTrackLen)
-      when = mTrackLen;
-
-   int i = 0;
-
-   while (i < len && when > mEnv[i].GetT())
-      i++;
-
-   if(i < len && when == mEnv[i].GetT())
-     // modify existing
-     mEnv[i].SetVal( this, value );
-   else {
+   if ( index < range.second )
+      // modify existing
+      // In case of a discontinuity, ALWAYS CHANGING LEFT LIMIT ONLY!
+      mEnv[ index ].SetVal( this, value );
+   else
      // Add NEW
-     EnvPoint e{ when, value };
-     if (i < len) {
-        Insert(i, e);
-     } else {
-        mEnv.push_back(e);
-     }
-   }
-   return i;
+      Insert( index, EnvPoint { when, value } );
+
+   return index;
 }
 
 std::pair<int, int> Envelope::EqualRange( double when, double sampleDur ) const

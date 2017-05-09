@@ -196,6 +196,7 @@ public:
 
 private:
    int InsertOrReplaceRelative(double when, double value);
+
    friend class EnvelopeEditor;
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
