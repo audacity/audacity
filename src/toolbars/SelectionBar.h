@@ -52,12 +52,16 @@ class SelectionBar final : public ToolBar {
    void RegenerateTooltips() override;
 
  private:
+   wxRadioButton * AddRadioButton( const wxString & Name, int id, 
+      std::unique_ptr<wxBoxSizer>& pSizer, long style);
 
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
    void OnLeftTime(wxCommandEvent &evt);
    void OnRightTime(wxCommandEvent &evt);
 
+   void OnStartRadio(wxCommandEvent &evt);
+   void OnCenterRadio(wxCommandEvent &evt);
    void OnEndRadio(wxCommandEvent &evt);
    void OnLengthRadio(wxCommandEvent &evt);
 
@@ -79,10 +83,12 @@ class SelectionBar final : public ToolBar {
    double mStart, mEnd, mAudio;
    wxString mField[10];
 
+   bool mbUseNativeRadioButton;
+
    NumericTextCtrl   *mLeftTime;
    NumericTextCtrl   *mRightTime;
-   wxRadioButton  *mRightEndButton;
-   wxRadioButton  *mRightLengthButton;
+   wxRadioButton  *mSelStartButton;   // for start/center
+   wxRadioButton  *mSelEndButton;     // for end/length
    NumericTextCtrl   *mAudioTime;
 
    wxComboBox     *mRateBox;
