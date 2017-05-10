@@ -999,7 +999,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
       c->AddCheck(wxT("MoveSelectionWithTracks"), _("&Move Selection with Tracks (on/off)"), 
          FN(OnMoveSelectionWithTracks), 
-         gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 1L),
+         gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->EndSubMenu();
 
@@ -6940,7 +6940,7 @@ void AudacityProject::OnAlignNoSync(int index)
 void AudacityProject::OnAlign(int index)
 {
    bool bMoveWith;
-   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, true);
+   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, false);
    HandleAlign(index, bMoveWith);
 }
 /*
@@ -7446,7 +7446,7 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 void AudacityProject::OnMoveSelectionWithTracks()
 {
    bool bMoveWith;
-   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, true);
+   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, false);
    gPrefs->Write(wxT("/GUI/MoveSelectionWithTracks"), !bMoveWith);
    gPrefs->Flush();
 
