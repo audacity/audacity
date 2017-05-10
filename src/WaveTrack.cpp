@@ -2212,15 +2212,27 @@ WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
    return NULL;
 }
 
+// When the time is both the end of a clip and the start of the next clip, the
+// latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
 {
-   // When the time is both the end of a clip and the start of the next clip, the
-   // latter clip is returned.
+   
    const auto clips = SortedClipArray();
-   auto result = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
+   auto p = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
       return time >= clip->GetStartTime() && time <= clip->GetEndTime(); });
 
-   return result != clips.rend() ? *result : nullptr;
+   // When two clips are immediately next to each other, the GetEndTime() of the first clip
+   // and the GetStartTime() of the second clip may not be exactly equal due to rounding errors.
+   // If "time" is the end time of the first of two such clips, and the end time is slightly
+   // less than the start time of the second clip, then the first rather than the
+   // second clip is found by the above code. So correct this.
+   if (p != clips.rend() & p != clips.rbegin() &&
+      time == (*p)->GetEndTime() &&
+      (*p)->GetEndSample() == (*(p-1))->GetStartSample()) {
+      p--;
+   }
+
+   return p != clips.rend() ? *p : nullptr;
 }
 
 Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)

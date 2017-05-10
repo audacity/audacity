@@ -5524,6 +5524,8 @@ AudacityProject::FoundClip AudacityProject::FindNextClip(const WaveTrack* wt, do
    result.waveTrack = wt;
    const auto clips = wt->SortedClipArray();
 
+   t0 = AdjustForFindingStartTimes(clips, t0);
+
    auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() == t0; });
    if (p != clips.end() && (*p)->GetEndTime() > t1) {
@@ -5551,6 +5553,8 @@ AudacityProject::FoundClip AudacityProject::FindPrevClip(const WaveTrack* wt, do
    AudacityProject::FoundClip result{};
    result.waveTrack = wt;
    const auto clips = wt->SortedClipArray();
+
+   t0 = AdjustForFindingStartTimes(clips, t0);
 
    auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() == t0; });
@@ -6527,33 +6531,37 @@ AudacityProject::FoundClipBoundary AudacityProject::FindNextClipBoundary(const W
 {
    AudacityProject::FoundClipBoundary result{};
    result.waveTrack = wt;
-
    const auto clips = wt->SortedClipArray();
+   double timeStart = AdjustForFindingStartTimes(clips, time);
+   double timeEnd = AdjustForFindingEndTimes(clips, time);
+
    auto pStart = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
-      return clip->GetStartTime() > time; });
+      return clip->GetStartTime() > timeStart; });
    auto pEnd = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
-      return clip->GetEndTime() > time; });
+      return clip->GetEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
-      if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
-         result.index1 = std::distance(clips.begin(), pStart);
-         result.clipStart1 = true;
-      }
-      else if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
-         result.index1 = std::distance(clips.begin(), pEnd);
-         result.clipStart1 = false;
-      }
-      else {                     // both the end of one clip and the start of the next clip
+      if ((*pStart)->GetStartSample() == (*pEnd)->GetEndSample()) {
+         // boundary between two clips which are immediately next to each other. Tested for
+         // using samples rather than times because of rounding errors
          result.nFound = 2;
          result.time = (*pEnd)->GetEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
          result.clipStart1 = false;
          result.index2 = std::distance(clips.begin(), pStart);
          result.clipStart2 = true;
+      }
+      else if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
+         result.nFound = 1;
+         result.time = (*pStart)->GetStartTime();
+         result.index1 = std::distance(clips.begin(), pStart);
+         result.clipStart1 = true;
+      }
+      else  {
+         result.nFound = 1;
+         result.time = (*pEnd)->GetEndTime();
+         result.index1 = std::distance(clips.begin(), pEnd);
+         result.clipStart1 = false;
       }
    }
    else if (pEnd != clips.end()) {
@@ -6570,33 +6578,37 @@ AudacityProject::FoundClipBoundary AudacityProject::FindPrevClipBoundary(const W
 {
    AudacityProject::FoundClipBoundary result{};
    result.waveTrack = wt;
-
    const auto clips = wt->SortedClipArray();
+   double timeStart = AdjustForFindingStartTimes(clips, time);
+   double timeEnd = AdjustForFindingEndTimes(clips, time);
+
    auto pStart = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
-      return clip->GetStartTime() < time; });
+      return clip->GetStartTime() < timeStart; });
    auto pEnd = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
-      return clip->GetEndTime() < time; });
+      return clip->GetEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
-      if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
-         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
-         result.clipStart1 = true;
-      }
-      else if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
-         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pEnd);
-         result.clipStart1 = false;
-      }
-      else {
-         result.nFound = 2;               // both the start of one clip and the end of the previous clip
+      if ((*pStart)->GetStartSample() == (*pEnd)->GetEndSample()) {
+         // boundary between two clips which are immediately next to each other. Tested for
+         // using samples rather than times because of rounding errors
+         result.nFound = 2;
          result.time = (*pStart)->GetStartTime();
          result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
          result.clipStart1 = true;
          result.index2 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pEnd);
          result.clipStart2 = false;
+      }
+      else if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
+         result.nFound = 1;
+         result.time = (*pStart)->GetStartTime();
+         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
+         result.clipStart1 = true;
+      }
+      else {
+         result.nFound = 1;
+         result.time = (*pEnd)->GetEndTime();
+         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pEnd);
+         result.clipStart1 = false;
       }
    }
    else if (pStart != clips.rend()) {
@@ -6607,6 +6619,42 @@ AudacityProject::FoundClipBoundary AudacityProject::FindPrevClipBoundary(const W
    }
 
    return result;
+}
+
+// When two clips are immediately next to each other, the GetEndTime() of the first clip and the
+// GetStartTime() of the second clip may not be exactly equal due to rounding errors. When searching
+// for the next/prev start time from a given time, the following function adjusts that given time if
+// necessary to take this into account. If the given time is the end time of the first of two clips which
+// are next to each other, then the given time is changed to the start time of the second clip.
+// This ensures that the correct next/prev start time is found.
+double AudacityProject::AdjustForFindingStartTimes(const std::vector<const WaveClip*> & clips, double time)
+{
+   auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+      return clip->GetEndTime() == time; });
+   if (q <= clips.end() - 2 &&
+      (*q)->GetEndSample() == (*(q+1))->GetStartSample()) {
+      time = (*(q+1))->GetStartTime();
+   }
+
+   return time;
+}
+
+// When two clips are immediately next to each other, the GetEndTime() of the first clip and the
+// GetStartTime() of the second clip may not be exactly equal due to rounding errors. When searching
+// for the next/prev end time from a given time, the following function adjusts that given time if
+// necessary to take this into account. If the given time is the start time of the second of two clips which
+// are next to each other, then the given time is changed to the end time of the first clip.
+// This ensures that the correct next/prev end time is found.
+double AudacityProject::AdjustForFindingEndTimes(const std::vector<const WaveClip*>& clips, double time)
+{
+   auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+      return clip->GetStartTime() == time; });
+   if (q != clips.end() && q != clips.begin() &&
+      (*(q - 1))->GetEndSample() == (*q)->GetStartSample()) {
+      time = (*(q-1))->GetEndTime();
+   }
+
+   return time;
 }
 
 int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& finalResults)
