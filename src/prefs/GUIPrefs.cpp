@@ -215,8 +215,8 @@ bool GUIPrefs::Apply()
    // If language has changed, we want to change it now, not on the next reboot.
    wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
    wxString usedLang = wxGetApp().InitLang(lang);
-   if (lang != usedLang) {
-      // lang was not usable.  We got overridden.
+   if (!(lang.empty()) && (lang != usedLang)) {
+      // lang was not usable and is not system language.  We got overridden.
       gPrefs->Write(wxT("/Locale/Language"), usedLang);
       gPrefs->Flush();
    }
