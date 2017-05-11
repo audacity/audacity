@@ -326,11 +326,13 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    };
    struct StretchState {
       StretchEnum mMode { stretchCenter }; // remembers what to drag
+
+      using QuantizedTimeAndBeat = std::pair< double, double >;
+
       bool mStretching {}; // true between mouse down and mouse up
-      double mStart {}; // time of initial mouse position, quantized
-      // to the nearest beat
-      double mSel0 {};  // initial sel0 (left) quantized to nearest beat
-      double mSel1 {};  // initial sel1 (left) quantized to nearest beat
+      QuantizedTimeAndBeat mBeatCenter { 0, 0 };
+      QuantizedTimeAndBeat mBeat0 { 0, 0 };
+      QuantizedTimeAndBeat mBeat1 { 0, 0 };
       double mLeftBeats {}; // how many beats from left to cursor
       double mRightBeats {}; // how many beats from cursor to right
    } mStretchState;

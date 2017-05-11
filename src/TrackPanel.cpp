@@ -2238,22 +2238,29 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       const auto nt = static_cast<NoteTrack *>(pTrack);
       // find nearest beat to sel0, sel1
       double minPeriod = 0.05; // minimum beat period
-      double qBeat0, qBeat1;
-      double centerBeat = 0.0f;
-      mStretchState.mSel0 = nt->NearestBeatTime(mViewInfo->selectedRegion.t0(), &qBeat0);
-      mStretchState.mSel1 = nt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
+      mStretchState.mBeatCenter = { 0, 0 };
+
+      mStretchState.mBeat0 =
+         nt->NearestBeatTime( mViewInfo->selectedRegion.t0() );
+      mStretchState.mBeat1 =
+         nt->NearestBeatTime( mViewInfo->selectedRegion.t1() );
 
       // If there is not (almost) a beat to stretch that is slower
       // than 20 beats per second, don't stretch
-      if (within(qBeat0, qBeat1, 0.9) ||
-          (mStretchState.mSel1 - mStretchState.mSel0) / (qBeat1 - qBeat0) < minPeriod) return;
+      if ( within( mStretchState.mBeat0.second,
+                   mStretchState.mBeat1.second, 0.9 ) ||
+          ( mStretchState.mBeat1.first - mStretchState.mBeat0.first ) /
+          ( mStretchState.mBeat1.second - mStretchState.mBeat0.second )
+            < minPeriod )
+         return;
 
       if (startNewSelection) { // mouse is not at an edge, but after
          // quantization, we could be indicating the selection edge
          mSelStartValid = true;
          mSelStart = std::max(0.0, mViewInfo->PositionToTime(event.m_x, rect.x));
-         mStretchState.mStart = nt->NearestBeatTime(mSelStart, &centerBeat);
-         if (within(qBeat0, centerBeat, 0.1)) {
+         mStretchState.mBeatCenter = nt->NearestBeatTime( mSelStart );
+         if ( within( mStretchState.mBeat0.second,
+                      mStretchState.mBeatCenter.second, 0.1 ) ) {
             mListener->TP_DisplayStatusMessage(
                     _("Click and drag to stretch selected region."));
             SetCursor(*mStretchLeftCursor);
@@ -2261,7 +2268,9 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             mSelStart = mViewInfo->selectedRegion.t1();
             // condition that implies stretchLeft
             startNewSelection = false;
-         } else if (within(qBeat1, centerBeat, 0.1)) {
+         }
+         else if ( within( mStretchState.mBeat1.second,
+                           mStretchState.mBeatCenter.second, 0.1 ) ) {
             mListener->TP_DisplayStatusMessage(
                     _("Click and drag to stretch selected region."));
             SetCursor(*mStretchRightCursor);
@@ -2274,22 +2283,28 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       if (startNewSelection) {
          mStretchState.mMode = stretchCenter;
-         mStretchState.mLeftBeats = qBeat1 - centerBeat;
-         mStretchState.mRightBeats = centerBeat - qBeat0;
-      } else if (mSelStartValid && mViewInfo->selectedRegion.t1() == mSelStart) {
+         mStretchState.mLeftBeats =
+            mStretchState.mBeat1.second - mStretchState.mBeatCenter.second;
+         mStretchState.mRightBeats =
+            mStretchState.mBeatCenter.second - mStretchState.mBeat0.second;
+      }
+      else if (mSelStartValid && mViewInfo->selectedRegion.t1() == mSelStart) {
          // note that at this point, mSelStart is at the opposite
          // end of the selection from the cursor. If the cursor is
          // over sel0, then mSelStart is at sel1.
          mStretchState.mMode = stretchLeft;
-      } else {
+      }
+      else {
          mStretchState.mMode = stretchRight;
       }
 
       if (mStretchState.mMode == stretchLeft) {
          mStretchState.mLeftBeats = 0;
-         mStretchState.mRightBeats = qBeat1 - qBeat0;
+         mStretchState.mRightBeats =
+            mStretchState.mBeat1.second - mStretchState.mBeat0.second;
       } else if (mStretchState.mMode == stretchRight) {
-         mStretchState.mLeftBeats = qBeat1 - qBeat0;
+         mStretchState.mLeftBeats =
+            mStretchState.mBeat1.second - mStretchState.mBeat0.second;
          mStretchState.mRightBeats = 0;
       }
 
@@ -2297,7 +2312,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       MakeParentModifyState( false );
 
       mViewInfo->selectedRegion.setTimes
-         (mStretchState.mSel0, mStretchState.mSel1);
+         ( mStretchState.mBeat0.first, mStretchState.mBeat1.first );
       mStretchState.mStretching = true;
 
       // Full refresh since the label area may need to indicate
@@ -2784,65 +2799,62 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       return;
    }
 
-   NoteTrack *pNt = (NoteTrack *) pTrack;
-   double moveto = std::max(0.0, mViewInfo->PositionToTime(mouseXCoordinate, trackLeftEdge));
+   NoteTrack *pNt = static_cast< NoteTrack * >( pTrack );
+
+   double moveto =
+      std::max(0.0, mViewInfo->PositionToTime(mouseXCoordinate, trackLeftEdge));
+
+   auto t1 = mViewInfo->selectedRegion.t1();
+   auto t0 = mViewInfo->selectedRegion.t0();
+   double dur, left_dur, right_dur;
 
    // check to make sure tempo is not higher than 20 beats per second
    // (In principle, tempo can be higher, but not infinity.)
-   double minPeriod = 0.05; // minimum beat period
-   double qBeat0, qBeat1;
-   pNt->NearestBeatTime(mViewInfo->selectedRegion.t0(), &qBeat0); // get beat
-   pNt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
+   const double minPeriod = 0.05; // minimum beat period
 
-   // We could be moving 3 things: left edge, right edge, a point between
+   // make sure target duration is not too short
+   // Take quick exit if so, without changing the selection.
    switch (mStretchState.mMode) {
    case stretchLeft: {
-      // make sure target duration is not too short
-      double dur = mViewInfo->selectedRegion.t1() - moveto;
-      if (dur < mStretchState.mRightBeats * minPeriod) {
-         dur = mStretchState.mRightBeats * minPeriod;
-         moveto = mViewInfo->selectedRegion.t1() - dur;
-      }
-      if (pNt->StretchRegion(mStretchState.mSel0, mStretchState.mSel1, dur)) {
-         pNt->SetOffset(pNt->GetOffset() + moveto - mStretchState.mSel0);
-         mViewInfo->selectedRegion.setT0(moveto);
-      }
+      dur = t1 - moveto;
+      if (dur < mStretchState.mRightBeats * minPeriod)
+         return;
+      pNt->StretchRegion
+         ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+      pNt->Offset( moveto - t0 );
+      mStretchState.mBeat0.first = moveto;
+      mViewInfo->selectedRegion.setT0(moveto);
       break;
    }
    case stretchRight: {
-      // make sure target duration is not too short
-      double dur = moveto - mViewInfo->selectedRegion.t0();
-      if (dur < mStretchState.mLeftBeats * minPeriod) {
-         dur = mStretchState.mLeftBeats * minPeriod;
-         moveto = mStretchState.mSel0 + dur;
-      }
-      if (pNt->StretchRegion(mStretchState.mSel0, mStretchState.mSel1, dur)) {
-         mViewInfo->selectedRegion.setT1(moveto);
-      }
+      dur = moveto - t0;
+      if (dur < mStretchState.mLeftBeats * minPeriod)
+         return;
+      pNt->StretchRegion
+         ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+      mViewInfo->selectedRegion.setT1(moveto);
+      mStretchState.mBeat1.first = moveto;
       break;
    }
    case stretchCenter: {
-      // make sure both left and right target durations are not too short
-      double left_dur = moveto - mViewInfo->selectedRegion.t0();
-      double right_dur = mViewInfo->selectedRegion.t1() - moveto;
-      double centerBeat;
-      pNt->NearestBeatTime(mSelStart, &centerBeat);
-      if (left_dur < mStretchState.mLeftBeats * minPeriod) {
-         left_dur = mStretchState.mLeftBeats * minPeriod;
-         moveto = mStretchState.mSel0 + left_dur;
-      }
-      if (right_dur < mStretchState.mRightBeats * minPeriod) {
-         right_dur = mStretchState.mRightBeats * minPeriod;
-         moveto = mStretchState.mSel1 - right_dur;
-      }
-      pNt->StretchRegion(mStretchState.mStart, mStretchState.mSel1, right_dur);
-      pNt->StretchRegion(mStretchState.mSel0, mStretchState.mStart, left_dur);
+      left_dur = moveto - t0;
+      right_dur = t1 - moveto;
+
+      if (left_dur < mStretchState.mLeftBeats * minPeriod ||
+          right_dur < mStretchState.mRightBeats * minPeriod)
+         return;
+      pNt->StretchRegion
+         ( mStretchState.mBeatCenter, mStretchState.mBeat1, right_dur );
+      pNt->StretchRegion
+         ( mStretchState.mBeat0, mStretchState.mBeatCenter, left_dur );
+      mStretchState.mBeatCenter.first = moveto;
       break;
    }
    default:
       wxASSERT(false);
       break;
    }
+
    Refresh(false);
 }
 #endif
