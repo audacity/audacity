@@ -480,10 +480,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #endif
 
 #ifdef USE_MIDI
-   mStretchMode = stretchCenter;
-   mStretching = false;
-   mStretched = false;
-   mStretchStart = 0;
    mStretchCursor = MakeCursor( wxCURSOR_BULLSEYE,  StretchCursorXpm, 16, 16);
    mStretchLeftCursor = MakeCursor( wxCURSOR_BULLSEYE,
                                     StretchLeftCursorXpm, 16, 16);
@@ -2065,7 +2061,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    mSnapLeft = mSnapRight = -1;
 
 #ifdef USE_MIDI
-   mStretching = false;
+   mStretchState = StretchState{};
    bool stretch = HitTestStretch(pTrack, rect, event);
 #endif
 
@@ -2236,19 +2232,19 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       double minPeriod = 0.05; // minimum beat period
       double qBeat0, qBeat1;
       double centerBeat = 0.0f;
-      mStretchSel0 = nt->NearestBeatTime(mViewInfo->selectedRegion.t0(), &qBeat0);
-      mStretchSel1 = nt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
+      mStretchState.mSel0 = nt->NearestBeatTime(mViewInfo->selectedRegion.t0(), &qBeat0);
+      mStretchState.mSel1 = nt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
 
       // If there is not (almost) a beat to stretch that is slower
       // than 20 beats per second, don't stretch
       if (within(qBeat0, qBeat1, 0.9) ||
-          (mStretchSel1 - mStretchSel0) / (qBeat1 - qBeat0) < minPeriod) return;
+          (mStretchState.mSel1 - mStretchState.mSel0) / (qBeat1 - qBeat0) < minPeriod) return;
 
       if (startNewSelection) { // mouse is not at an edge, but after
          // quantization, we could be indicating the selection edge
          mSelStartValid = true;
          mSelStart = std::max(0.0, mViewInfo->PositionToTime(event.m_x, rect.x));
-         mStretchStart = nt->NearestBeatTime(mSelStart, &centerBeat);
+         mStretchState.mStart = nt->NearestBeatTime(mSelStart, &centerBeat);
          if (within(qBeat0, centerBeat, 0.1)) {
             mListener->TP_DisplayStatusMessage(
                     _("Click and drag to stretch selected region."));
@@ -2269,28 +2265,28 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       }
 
       if (startNewSelection) {
-         mStretchMode = stretchCenter;
-         mStretchLeftBeats = qBeat1 - centerBeat;
-         mStretchRightBeats = centerBeat - qBeat0;
+         mStretchState.mMode = stretchCenter;
+         mStretchState.mLeftBeats = qBeat1 - centerBeat;
+         mStretchState.mRightBeats = centerBeat - qBeat0;
       } else if (mSelStartValid && mViewInfo->selectedRegion.t1() == mSelStart) {
          // note that at this point, mSelStart is at the opposite
          // end of the selection from the cursor. If the cursor is
          // over sel0, then mSelStart is at sel1.
-         mStretchMode = stretchLeft;
+         mStretchState.mMode = stretchLeft;
       } else {
-         mStretchMode = stretchRight;
+         mStretchState.mMode = stretchRight;
       }
 
-      if (mStretchMode == stretchLeft) {
-         mStretchLeftBeats = 0;
-         mStretchRightBeats = qBeat1 - qBeat0;
-      } else if (mStretchMode == stretchRight) {
-         mStretchLeftBeats = qBeat1 - qBeat0;
-         mStretchRightBeats = 0;
+      if (mStretchState.mMode == stretchLeft) {
+         mStretchState.mLeftBeats = 0;
+         mStretchState.mRightBeats = qBeat1 - qBeat0;
+      } else if (mStretchState.mMode == stretchRight) {
+         mStretchState.mLeftBeats = qBeat1 - qBeat0;
+         mStretchState.mRightBeats = 0;
       }
-      mViewInfo->selectedRegion.setTimes(mStretchSel0, mStretchSel1);
-      mStretching = true;
-      mStretched = false;
+      mViewInfo->selectedRegion.setTimes(mStretchState.mSel0, mStretchState.mSel1);
+      mStretchState.mStretching = true;
+      mStretchState.mStretched = false;
 
       /* i18n-hint: (noun) The track that is used for MIDI notes which can be
       dragged to change their duration.*/
@@ -2778,7 +2774,7 @@ void TrackPanel::ResetFreqSelectionPin(double hintFrequency, bool logF)
 void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
                          Track *pTrack)
 {
-   if (mStretched) { // Undo stretch and redo it with NEW mouse coordinates
+   if (mStretchState.mStretched) { // Undo stretch and redo it with NEW mouse coordinates
       // Drag handling was not originally implemented with Undo in mind --
       // there are saved pointers to tracks that are not supposed to change.
       // Undo will change tracks, so convert pTrack, mCapturedTrack to index
@@ -2793,9 +2789,10 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       // Undo brings us back to the pre-click state, but we want to
       // quantize selected region to integer beat boundaries. These
       // were saved in mStretchSel[12] variables:
-      mViewInfo->selectedRegion.setTimes(mStretchSel0, mStretchSel1);
+      mViewInfo->selectedRegion.setTimes
+         (mStretchState.mSel0, mStretchState.mSel1);
 
-      mStretched = false;
+      mStretchState.mStretched = false;
       int index = 0;
       for (Track *t = iter.First(GetTracks()); t; t = iter.Next()) {
          if (index == pTrackIndex) pTrack = t;
@@ -2822,16 +2819,16 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
    pNt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
 
    // We could be moving 3 things: left edge, right edge, a point between
-   switch (mStretchMode) {
+   switch (mStretchState.mMode) {
    case stretchLeft: {
       // make sure target duration is not too short
       double dur = mViewInfo->selectedRegion.t1() - moveto;
-      if (dur < mStretchRightBeats * minPeriod) {
-         dur = mStretchRightBeats * minPeriod;
+      if (dur < mStretchState.mRightBeats * minPeriod) {
+         dur = mStretchState.mRightBeats * minPeriod;
          moveto = mViewInfo->selectedRegion.t1() - dur;
       }
-      if (pNt->StretchRegion(mStretchSel0, mStretchSel1, dur)) {
-         pNt->SetOffset(pNt->GetOffset() + moveto - mStretchSel0);
+      if (pNt->StretchRegion(mStretchState.mSel0, mStretchState.mSel1, dur)) {
+         pNt->SetOffset(pNt->GetOffset() + moveto - mStretchState.mSel0);
          mViewInfo->selectedRegion.setT0(moveto);
       }
       break;
@@ -2839,11 +2836,11 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
    case stretchRight: {
       // make sure target duration is not too short
       double dur = moveto - mViewInfo->selectedRegion.t0();
-      if (dur < mStretchLeftBeats * minPeriod) {
-         dur = mStretchLeftBeats * minPeriod;
-         moveto = mStretchSel0 + dur;
+      if (dur < mStretchState.mLeftBeats * minPeriod) {
+         dur = mStretchState.mLeftBeats * minPeriod;
+         moveto = mStretchState.mSel0 + dur;
       }
-      if (pNt->StretchRegion(mStretchSel0, mStretchSel1, dur)) {
+      if (pNt->StretchRegion(mStretchState.mSel0, mStretchState.mSel1, dur)) {
          mViewInfo->selectedRegion.setT1(moveto);
       }
       break;
@@ -2854,16 +2851,16 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       double right_dur = mViewInfo->selectedRegion.t1() - moveto;
       double centerBeat;
       pNt->NearestBeatTime(mSelStart, &centerBeat);
-      if (left_dur < mStretchLeftBeats * minPeriod) {
-         left_dur = mStretchLeftBeats * minPeriod;
-         moveto = mStretchSel0 + left_dur;
+      if (left_dur < mStretchState.mLeftBeats * minPeriod) {
+         left_dur = mStretchState.mLeftBeats * minPeriod;
+         moveto = mStretchState.mSel0 + left_dur;
       }
-      if (right_dur < mStretchRightBeats * minPeriod) {
-         right_dur = mStretchRightBeats * minPeriod;
-         moveto = mStretchSel1 - right_dur;
+      if (right_dur < mStretchState.mRightBeats * minPeriod) {
+         right_dur = mStretchState.mRightBeats * minPeriod;
+         moveto = mStretchState.mSel1 - right_dur;
       }
-      pNt->StretchRegion(mStretchStart, mStretchSel1, right_dur);
-      pNt->StretchRegion(mStretchSel0, mStretchStart, left_dur);
+      pNt->StretchRegion(mStretchState.mStart, mStretchState.mSel1, right_dur);
+      pNt->StretchRegion(mStretchState.mSel0, mStretchState.mStart, left_dur);
       break;
    }
    default:
@@ -2872,7 +2869,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
    }
    MakeParentPushState(_("Stretch Note Track"), _("Stretch"),
       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
-   mStretched = true;
+   mStretchState.mStretched = true;
    Refresh(false);
 }
 #endif
@@ -2920,7 +2917,7 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
       // Abandon this drag if selecting < 5 pixels.
       if (wxLongLong(SelStart-x).Abs() < minimumSizedSelection
 #ifdef USE_MIDI        // limiting selection size is good, and not starting
-          && !mStretching // stretch unless mouse moves 5 pixels is good, but
+          && !mStretchState.mStretching // stretch unless mouse moves 5 pixels is good, but
 #endif                 // once stretching starts, it's ok to move even 1 pixel
           )
           return;
@@ -2933,7 +2930,7 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
       SelectRangeOfTracks(sTrack, eTrack);
 
 #ifdef USE_MIDI
-   if (mStretching) {
+   if (mStretchState.mStretching) {
       // the following is also in ExtendSelection, called below
       // probably a good idea to "hoist" the code to before this "if" stmt
       if (clickedTrack == NULL && mCapturedTrack != NULL)

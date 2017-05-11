@@ -324,15 +324,18 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
       stretchCenter,
       stretchRight
    };
-   StretchEnum mStretchMode; // remembers what to drag
-   bool mStretching; // true between mouse down and mouse up
-   bool mStretched; // true after drag has pushed state
-   double mStretchStart; // time of initial mouse position, quantized
-                         // to the nearest beat
-   double mStretchSel0;  // initial sel0 (left) quantized to nearest beat
-   double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
-   double mStretchLeftBeats; // how many beats from left to cursor
-   double mStretchRightBeats; // how many beats from cursor to right
+   struct StretchState {
+      StretchEnum mMode { stretchCenter }; // remembers what to drag
+      bool mStretching {}; // true between mouse down and mouse up
+      bool mStretched {}; // true after drag has pushed state
+      double mStart {}; // time of initial mouse position, quantized
+      // to the nearest beat
+      double mSel0 {};  // initial sel0 (left) quantized to nearest beat
+      double mSel1 {};  // initial sel1 (left) quantized to nearest beat
+      double mLeftBeats {}; // how many beats from left to cursor
+      double mRightBeats {}; // how many beats from cursor to right
+   } mStretchState;
+
    virtual bool HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event);
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
