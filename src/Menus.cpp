@@ -6631,7 +6631,7 @@ double AudacityProject::AdjustForFindingStartTimes(const std::vector<const WaveC
 {
    auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetEndTime() == time; });
-   if (q <= clips.end() - 2 &&
+   if (q != clips.end() && q + 1 != clips.end() &&
       (*q)->GetEndSample() == (*(q+1))->GetStartSample()) {
       time = (*(q+1))->GetStartTime();
    }
