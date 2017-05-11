@@ -2795,7 +2795,7 @@ auto TrackPanel::ChooseStretchMode
       pState->mBeat1 =
          nt->NearestBeatTime( viewInfo.selectedRegion.t1() );
 
-      auto selStart = std::max(0.0, viewInfo.PositionToTime(event.m_x, rect.x));
+      auto selStart = viewInfo.PositionToTime(event.m_x, rect.x);
       pState->mBeatCenter = nt->NearestBeatTime( selStart );
 
       if ( within( pState->mBeat0.second, pState->mBeatCenter.second, 0.1 ) )
