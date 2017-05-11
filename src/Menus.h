@@ -276,6 +276,7 @@ void OnJoinLabels();
 void OnDisjoinLabels();
 
 void OnSelectAll();
+void OnSelectSomething();
 void OnSelectNone();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnToggleSpectralSelection();

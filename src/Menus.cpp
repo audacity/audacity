@@ -2082,7 +2082,7 @@ void AudacityProject::SelectAllIfNone()
    auto flags = GetUpdateFlags();
    if(!(flags & TracksSelectedFlag) ||
       (mViewInfo.selectedRegion.isPoint()))
-      OnSelectAll();
+      OnSelectSomething();
 }
 
 void AudacityProject::StopIfPaused()
@@ -5374,20 +5374,43 @@ void AudacityProject::OnSplitNew()
    RedrawProject();
 }
 
+void AudacityProject::OnSelectSomething()
+{
+   if( mViewInfo.selectedRegion.isPoint() )
+      OnSelectAll();
+   else
+      OnSelectAllTracks();
+}
+
 void AudacityProject::OnSelectAll()
 {
-   TrackListIterator iter(GetTracks());
-
-   Track *t = iter.First();
-   while (t) {
-      t->SetSelected(true);
-      t = iter.Next();
-   }
    mViewInfo.selectedRegion.setTimes(
       mTracks->GetMinOffset(), mTracks->GetEndTime());
+   OnSelectAllTracks();
+}
+
+void AudacityProject::OnSelectAllTracks()
+{
+   TrackListIterator iter(GetTracks());
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      t->SetSelected(true);
+   }
 
    ModifyState(false);
 
+   mTrackPanel->Refresh(false);
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
+}
+
+void AudacityProject::SelectNone()
+{
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+   while (t) {
+      t->SetSelected(false);
+      t = iter.Next();
+   }
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
       mMixerBoard->Refresh(false);
@@ -5717,20 +5740,6 @@ void AudacityProject::OnSelectSyncLockSel()
 
    if (selected)
       ModifyState(false);
-
-   mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
-}
-
-void AudacityProject::OnSelectAllTracks()
-{
-   TrackListIterator iter(GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      t->SetSelected(true);
-   }
-
-   ModifyState(false);
 
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
