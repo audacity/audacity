@@ -5681,10 +5681,10 @@ void AudacityProject::OnSelectClip(bool next)
 
             message += temp;
          }
-         if (result.waveTrack->GetNumClips() > 1 || nTracksSearched == 1) {
-            temp.Printf(wxT("%d %s %d "), result.index + 1, _("of"), result.waveTrack->GetNumClips());
-            message += temp;
-         }
+         temp.Printf(wxT("%d %s %d %s "), result.index + 1, _("of"), result.waveTrack->GetNumClips(),
+            result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+         message += temp;
+
          message += wxT(", ");
       }
       mTrackPanel->MessageForScreenReader(message);
@@ -6745,10 +6745,11 @@ wxString AudacityProject::ClipBoundaryMessage(int nTracksSearched, const std::ve
          message += temp;
       }
       message += (result.clipStart1 ? _("start") : _("end")) + wxT(" ");
-      if (result.waveTrack->GetNumClips() > 1 ) {
-         temp.Printf(wxT("%d %s %d "), result.index1 + 1, _("of"), result.waveTrack->GetNumClips());
-         message += temp;
-      }
+
+      temp.Printf(wxT("%d %s %d %s "), result.index1 + 1, _("of"), result.waveTrack->GetNumClips(),
+         result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+      message += temp;
+
       if (result.nFound == 2) {
          temp.Printf(wxT("%s %s %d "), _("and"), result.clipStart2 ? _("start") : _("end"),
             result.index2 + 1);
