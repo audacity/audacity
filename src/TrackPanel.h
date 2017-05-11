@@ -320,6 +320,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // part shrinks, keeping the leftmost and rightmost boundaries
    // fixed.
    enum StretchEnum {
+      stretchNone = 0, // false value!
       stretchLeft,
       stretchCenter,
       stretchRight
@@ -337,7 +338,13 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
       double mRightBeats {}; // how many beats from cursor to right
    } mStretchState;
 
-   virtual bool HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event);
+   virtual StretchEnum HitTestStretch
+      ( const Track *track, const wxRect &rect, const wxMouseEvent & event,
+        StretchState *pState = nullptr );
+   wxCursor *ChooseStretchCursor( StretchEnum mode );
+   static StretchEnum ChooseStretchMode
+      ( const wxMouseEvent &event, const wxRect &rect, const ViewInfo &viewInfo,
+        const NoteTrack *nt, StretchState *pState = nullptr );
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 

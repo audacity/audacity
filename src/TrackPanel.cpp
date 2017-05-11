@@ -1359,7 +1359,9 @@ bool TrackPanel::SetCursorByActivity( )
       return true;
 #ifdef USE_MIDI
    case IsStretching:
-      SetCursor( unsafe ? *mDisabledCursor : *mStretchCursor);
+      SetCursor( unsafe
+         ? *mDisabledCursor
+         : *ChooseStretchCursor( mStretchState.mMode ) );
       return true;
 #endif
    default:
@@ -1627,13 +1629,14 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    switch( boundary) {
       case SBNone:
       case SBLeft:
-      case SBRight:
-         if ( HitTestStretch(t, rect, event)) {
+      case SBRight: {
+         if ( auto stretchMode = HitTestStretch( t, rect, event ) ) {
             tip = _("Click and drag to stretch within selected region.");
-            *ppCursor = mStretchCursor.get();
+            *ppCursor = ChooseStretchCursor( stretchMode );
             return;
          }
          break;
+      }
       default:
          break;
    }
@@ -2070,7 +2073,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
 #ifdef USE_MIDI
    mStretchState = StretchState{};
-   bool stretch = HitTestStretch(pTrack, rect, event);
+   auto stretch = HitTestStretch( pTrack, rect, event, &mStretchState );
 #endif
 
    bool bShiftDown = event.ShiftDown();
@@ -2238,12 +2241,6 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       const auto nt = static_cast<NoteTrack *>(pTrack);
       // find nearest beat to sel0, sel1
       double minPeriod = 0.05; // minimum beat period
-      mStretchState.mBeatCenter = { 0, 0 };
-
-      mStretchState.mBeat0 =
-         nt->NearestBeatTime( mViewInfo->selectedRegion.t0() );
-      mStretchState.mBeat1 =
-         nt->NearestBeatTime( mViewInfo->selectedRegion.t1() );
 
       // If there is not (almost) a beat to stretch that is slower
       // than 20 beats per second, don't stretch
@@ -2256,49 +2253,30 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       if (startNewSelection) { // mouse is not at an edge, but after
          // quantization, we could be indicating the selection edge
-         mSelStartValid = true;
-         mSelStart = std::max(0.0, mViewInfo->PositionToTime(event.m_x, rect.x));
-         mStretchState.mBeatCenter = nt->NearestBeatTime( mSelStart );
-         if ( within( mStretchState.mBeat0.second,
-                      mStretchState.mBeatCenter.second, 0.1 ) ) {
+         if ( stretch == stretchLeft ) {
             mListener->TP_DisplayStatusMessage(
                     _("Click and drag to stretch selected region."));
             SetCursor(*mStretchLeftCursor);
             // mStretchMode = stretchLeft;
-            mSelStart = mViewInfo->selectedRegion.t1();
-            // condition that implies stretchLeft
             startNewSelection = false;
          }
-         else if ( within( mStretchState.mBeat1.second,
-                           mStretchState.mBeatCenter.second, 0.1 ) ) {
+         else if ( stretchRight ) {
             mListener->TP_DisplayStatusMessage(
                     _("Click and drag to stretch selected region."));
             SetCursor(*mStretchRightCursor);
             // mStretchMode = stretchRight;
-            mSelStart = mViewInfo->selectedRegion.t0();
-            // condition that implies stretchRight
             startNewSelection = false;
          }
       }
 
-      if (startNewSelection) {
-         mStretchState.mMode = stretchCenter;
+      mStretchState.mMode = stretch;
+      if ( mStretchState.mMode == stretchCenter ) {
          mStretchState.mLeftBeats =
             mStretchState.mBeat1.second - mStretchState.mBeatCenter.second;
          mStretchState.mRightBeats =
             mStretchState.mBeatCenter.second - mStretchState.mBeat0.second;
       }
-      else if (mSelStartValid && mViewInfo->selectedRegion.t1() == mSelStart) {
-         // note that at this point, mSelStart is at the opposite
-         // end of the selection from the cursor. If the cursor is
-         // over sel0, then mSelStart is at sel1.
-         mStretchState.mMode = stretchLeft;
-      }
-      else {
-         mStretchState.mMode = stretchRight;
-      }
-
-      if (mStretchState.mMode == stretchLeft) {
+      else if (mStretchState.mMode == stretchLeft) {
          mStretchState.mLeftBeats = 0;
          mStretchState.mRightBeats =
             mStretchState.mBeat1.second - mStretchState.mBeat0.second;
@@ -2789,6 +2767,50 @@ void TrackPanel::ResetFreqSelectionPin(double hintFrequency, bool logF)
 #endif
 
 #ifdef USE_MIDI
+
+wxCursor *TrackPanel::ChooseStretchCursor( StretchEnum mode )
+{
+   switch ( mode ) {
+      case stretchCenter: return mStretchCursor.get();
+      case stretchLeft:   return mStretchLeftCursor.get();
+      case stretchRight:  return mStretchRightCursor.get();
+      default:            return nullptr;
+   }
+}
+
+auto TrackPanel::ChooseStretchMode
+   ( const wxMouseEvent &event, const wxRect &rect, const ViewInfo &viewInfo,
+     const NoteTrack *nt, StretchState *pState ) -> StretchEnum
+{
+   // Assume x coordinate is in the selection and y is appropriate for stretch
+   // -- and then decide whether x is near enough to either edge or neither.
+
+   Maybe< StretchState > state;
+   if ( !pState )
+      state.create(), pState = state.get();
+
+   if ( nt ) {
+      pState->mBeat0 =
+         nt->NearestBeatTime( viewInfo.selectedRegion.t0() );
+      pState->mBeat1 =
+         nt->NearestBeatTime( viewInfo.selectedRegion.t1() );
+
+      auto selStart = std::max(0.0, viewInfo.PositionToTime(event.m_x, rect.x));
+      pState->mBeatCenter = nt->NearestBeatTime( selStart );
+
+      if ( within( pState->mBeat0.second, pState->mBeatCenter.second, 0.1 ) )
+         return stretchLeft;
+      else if ( within( pState->mBeat1.second, pState->mBeatCenter.second, 0.1 ) )
+         return stretchRight;
+   }
+   else {
+      pState->mBeat0 = pState->mBeat1 = pState->mBeatCenter = { 0, 0 };
+      return stretchNone;
+   }
+
+   return stretchCenter;
+}
+
 void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
                          Track *pTrack)
 {
@@ -6799,14 +6821,17 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, const wxMouseEvent & ev
 
 
 #ifdef USE_MIDI
-bool TrackPanel::HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event)
+auto TrackPanel::HitTestStretch
+   ( const Track *track, const wxRect &rect, const wxMouseEvent & event,
+     StretchState *pState )
+      -> StretchEnum
 {
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
    // within the selection
    if (!track || !track->GetSelected() || track->GetKind() != Track::Note ||
        IsUnsafe()) {
-      return false;
+      return stretchNone;
    }
    int center = rect.y + rect.height / 2;
    int distance = abs(event.m_y - center);
@@ -6815,8 +6840,14 @@ bool TrackPanel::HitTestStretch(Track *track, const wxRect &rect, const wxMouseE
    wxInt64 rightSel = mViewInfo->TimeToPosition(mViewInfo->selectedRegion.t1(), rect.x);
    // Something is wrong if right edge comes before left edge
    wxASSERT(!(rightSel < leftSel));
-   return (leftSel <= event.m_x && event.m_x <= rightSel &&
-           distance < yTolerance);
+
+   if (leftSel <= event.m_x && event.m_x <= rightSel &&
+       distance < yTolerance)
+      return ChooseStretchMode
+         ( event, rect, *mViewInfo,
+           static_cast< const NoteTrack * >( track ), pState );
+
+   return stretchNone;
 }
 #endif
 
