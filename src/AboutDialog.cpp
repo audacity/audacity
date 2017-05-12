@@ -683,6 +683,23 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, _("Build type:"), _("Release build"));
 #endif
 
+#ifdef _MSC_FULL_VER
+   AddBuildinfoRow(&informationStr, _("Compiler:"),
+	   wxString::Format(wxT("MSVC %02d.%02d.%05d.%02d"), _MSC_VER / 100, _MSC_VER % 100, _MSC_FULL_VER % 100000, _MSC_BUILD));
+#endif
+
+#ifdef __GNUC_PATCHLEVEL__
+#ifdef __MINGW32__
+   AddBuildinfoRow(&informationStr, _("Compiler:"), _("MinGW ") + wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+#else
+   AddBuildinfoRow(&informationStr, _("Compiler:"), _("GCC ") + wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+#endif
+#endif
+
+#ifdef __clang_version__
+   AddBuildinfoRow(&informationStr, _("Compiler:"), _("clang " __clang_version__));
+#endif
+
    // Install prefix
    /* i18n-hint: The directory audacity is installed into (on *nix systems) */
 #ifdef __WXGTK__
