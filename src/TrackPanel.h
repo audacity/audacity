@@ -331,6 +331,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
       using QuantizedTimeAndBeat = std::pair< double, double >;
 
       bool mStretching {}; // true between mouse down and mouse up
+      double mOrigT0 {};
+      double mOrigT1 {};
       QuantizedTimeAndBeat mBeatCenter { 0, 0 };
       QuantizedTimeAndBeat mBeat0 { 0, 0 };
       QuantizedTimeAndBeat mBeat1 { 0, 0 };

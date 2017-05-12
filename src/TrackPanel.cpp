@@ -1840,6 +1840,34 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          SelectionHandleClick(event, t, rect);
    } else if (event.LeftUp() || event.RightUp()) {
       mSnapManager.reset();
+
+      bool left;
+      if ( GetProject()->IsSyncLocked() &&
+           ( ( left = mStretchState.mMode == stretchLeft ) ||
+             mStretchState.mMode == stretchRight ) ) {
+         auto pNt = static_cast< NoteTrack * >( mCapturedTrack );
+         SyncLockedTracksIterator syncIter( GetTracks() );
+         for ( auto track = syncIter.StartWith(pNt); track != nullptr;
+              track = syncIter.Next() ) {
+            if ( track != pNt ) {
+               if ( left ) {
+                  auto origT0 = mStretchState.mOrigT0;
+                  auto diff = mViewInfo->selectedRegion.t0() - origT0;
+                  if ( diff > 0)
+                     track->SyncLockAdjust( origT0 + diff, origT0 );
+                  else
+                     track->SyncLockAdjust( origT0, origT0 - diff );
+                  track->Offset( diff );
+               }
+               else {
+                  auto origT1 = mStretchState.mOrigT1;
+                  auto diff = mViewInfo->selectedRegion.t1() - origT1;
+                  track->SyncLockAdjust( origT1, origT1 + diff );
+               }
+            }
+         }
+      }
+
       if ( mStretchState.mStretching ) {
          MakeParentPushState(_("Stretch Note Track"), _("Stretch"),
                              UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
@@ -2792,8 +2820,10 @@ auto TrackPanel::ChooseStretchMode
    if ( nt ) {
       pState->mBeat0 =
          nt->NearestBeatTime( viewInfo.selectedRegion.t0() );
+      pState->mOrigT0 = pState->mBeat0.first;
       pState->mBeat1 =
          nt->NearestBeatTime( viewInfo.selectedRegion.t1() );
+      pState->mOrigT1 = pState->mBeat1.first;
 
       auto selStart = viewInfo.PositionToTime(event.m_x, rect.x);
       pState->mBeatCenter = nt->NearestBeatTime( selStart );
@@ -2843,8 +2873,8 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
          return;
       pNt->StretchRegion
          ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
-      pNt->Offset( moveto - t0 );
       mStretchState.mBeat0.first = moveto;
+      pNt->Offset( moveto - t0 );
       mViewInfo->selectedRegion.setT0(moveto);
       break;
    }
@@ -2854,6 +2884,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
          return;
       pNt->StretchRegion
          ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
+
       mViewInfo->selectedRegion.setT1(moveto);
       mStretchState.mBeat1.first = moveto;
       break;
