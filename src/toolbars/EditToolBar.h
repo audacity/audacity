@@ -63,6 +63,12 @@ enum {
    ETBNumButtons
 };
 
+// flags so 1,2,4,8 etc.
+enum {
+   ETBActTooltips = 1,
+   ETBActEnableDisable = 2,
+};
+
 class EditToolBar final : public ToolBar {
 
  public:
@@ -89,6 +95,7 @@ class EditToolBar final : public ToolBar {
    void MakeButtons();
 
    void RegenerateTooltips() override;
+   void ForAllButtons(int Action);
 
    AButton *mButtons[ETBNumButtons];
 

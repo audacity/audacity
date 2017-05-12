@@ -2268,6 +2268,19 @@ void AudacityProject::DoScroll()
    }
 }
 
+bool AudacityProject::ReportIfActionNotAllowed
+   ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+{
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, mask );
+   if( bAllowed )
+      return true;
+   CommandManager* cm = GetCommandManager();
+      if (!cm) return false;
+   cm->TellUserWhyDisallowed( Name, flags & mask, flagsRqd & mask);
+   return false;
+}
+
+
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
@@ -2311,6 +2324,9 @@ bool AudacityProject::TryToMakeActionAllowed
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
+#ifdef EXPERIMENTAL_DA
+   return false;
+#endif
    // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
    // selecting all tracks is enough, we just do that.
    OnSelectSomething();
