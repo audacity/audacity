@@ -2311,7 +2311,9 @@ bool AudacityProject::TryToMakeActionAllowed
    if( (MissingFlags & ~( TimeSelectedFlag | WaveTracksSelectedFlag)) )
       return false;
 
-   OnSelectAll();
+   // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
+   // selecting all tracks is enough, we just do that.
+   OnSelectSomething();
    flags = GetUpdateFlags();
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
@@ -4605,19 +4607,6 @@ void AudacityProject::Clear()
              _("Delete"));
 
    RedrawProject();
-}
-
-void AudacityProject::SelectNone()
-{
-   TrackListIterator iter(GetTracks());
-   Track *t = iter.First();
-   while (t) {
-      t->SetSelected(false);
-      t = iter.Next();
-   }
-   mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
 }
 
 // Utility function called by other zoom methods

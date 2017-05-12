@@ -100,6 +100,7 @@ class UndoManager;
 enum class UndoPush : unsigned char;
 
 class Track;
+class WaveClip;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();

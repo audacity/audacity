@@ -394,9 +394,14 @@ double WaveTrack::GetRate() const
 
 void WaveTrack::SetRate(double newRate)
 {
+   wxASSERT( newRate > 0 );
+   newRate = std::max( 1.0, newRate );
+   auto ratio = mRate / newRate;
    mRate = (int) newRate;
-   for (const auto &clip : mClips)
+   for (const auto &clip : mClips) {
       clip->SetRate((int)newRate);
+      clip->SetOffset( clip->GetOffset() * ratio );
+   }
 }
 
 float WaveTrack::GetGain() const
@@ -1133,26 +1138,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                clipsToDelete.push_back( clip.get() );
                auto newClip = make_movable<WaveClip>( *clip, mDirManager, true );
 
-               /* We are going to DELETE part of the clip here. The clip may
-                * have envelope points, and we need to ensure that the envelope
-                * outside of the cleared region is not affected. This means
-                * putting in "glue" points where the clip enters and leaves the
-                * region being cleared. If one of the ends of the clip is inside
-                * the region, then one of the glue points will be redundant. */
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
-               if (clip->GetEnvelope()->GetNumberOfPoints() > 0) {   // don't insert env pts if none exist
-                  double val;
-                  if (clip->WithinClip(t0)) {
-                     // start of region within clip
-                     val = clip->GetEnvelope()->GetValue(t0);
-                     newClip->GetEnvelope()->Insert(t0 - clip->GetOffset() - 1.0/clip->GetRate(), val);
-                  }
-                  if (clip->WithinClip(t1)) {
-                     // end of region within clip
-                     val = clip->GetEnvelope()->GetValue(t1);
-                     newClip->GetEnvelope()->Insert(t1 - clip->GetOffset(), val);
-                  }
-               }
                newClip->Clear(t0,t1);
                newClip->GetEnvelope()->RemoveUnneededPoints(t0);
 
@@ -1425,6 +1411,10 @@ void WaveTrack::Silence(double t0, double t1)
 void WaveTrack::InsertSilence(double t, double len)
 // STRONG-GUARANTEE
 {
+   // Nothing to do, if length is zero.
+   // Fixes Bug 1626
+   if( len == 0 )
+      return;
    if (len <= 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -1574,12 +1564,15 @@ void WaveTrack::Join(double t0, double t1)
       if (clip->GetOffset() - t > (1.0 / mRate)) {
          double addedSilence = (clip->GetOffset() - t);
          //printf("Adding %.6f seconds of silence\n");
-         newClip->InsertSilence(t, addedSilence);
+         auto offset = clip->GetOffset();
+         auto value = clip->GetEnvelope()->GetValue( offset );
+         newClip->AppendSilence( addedSilence, value );
          t += addedSilence;
       }
 
       //printf("Pasting at %.6f\n", t);
       newClip->Paste(t, clip);
+
       t = newClip->GetEndTime();
 
       auto it = FindClip(mClips, clip);
@@ -2219,15 +2212,27 @@ WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
    return NULL;
 }
 
+// When the time is both the end of a clip and the start of the next clip, the
+// latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
 {
-   // When the time is both the end of a clip and the start of the next clip, the
-   // latter clip is returned.
+   
    const auto clips = SortedClipArray();
-   auto result = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
+   auto p = std::find_if(clips.rbegin(), clips.rend(), [&] (WaveClip* const& clip) {
       return time >= clip->GetStartTime() && time <= clip->GetEndTime(); });
 
-   return result != clips.rend() ? *result : nullptr;
+   // When two clips are immediately next to each other, the GetEndTime() of the first clip
+   // and the GetStartTime() of the second clip may not be exactly equal due to rounding errors.
+   // If "time" is the end time of the first of two such clips, and the end time is slightly
+   // less than the start time of the second clip, then the first rather than the
+   // second clip is found by the above code. So correct this.
+   if (p != clips.rend() & p != clips.rbegin() &&
+      time == (*p)->GetEndTime() &&
+      (*p)->GetEndSample() == (*(p-1))->GetStartSample()) {
+      p--;
+   }
+
+   return p != clips.rend() ? *p : nullptr;
 }
 
 Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)
@@ -2389,12 +2394,6 @@ void WaveTrack::SplitAt(double t)
       {
          double val;
          t = LongSamplesToTime(TimeToLongSamples(t)); // put t on a sample
-         val = c->GetEnvelope()->GetValue(t);
-         //make two envelope points to preserve the value.
-         //handle the case where we split on the 1st sample (without this we hit an assert)
-         if(t - 1.0/c->GetRate() >= c->GetOffset())
-            c->GetEnvelope()->Insert(t - c->GetOffset() - 1.0/c->GetRate(), val);  // frame end points
-         c->GetEnvelope()->Insert(t - c->GetOffset(), val);
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          c->Clear(t, c->GetEndTime());
          newClip->Clear(c->GetStartTime(), t);

@@ -321,7 +321,11 @@ public:
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
-   void InsertSilence(double t, double len);
+   void InsertSilence( double t, double len, double *pEnvelopeValue = nullptr );
+
+   /** Insert silence at the end, and causes the envelope to ramp
+       linearly to the given value */
+   void AppendSilence( double len, double envelopeValue );
 
    /// Get access to cut lines list
    WaveClipHolders &GetCutLines() { return mCutLines; }

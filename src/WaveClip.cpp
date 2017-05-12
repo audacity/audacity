@@ -309,7 +309,7 @@ WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
    mRate = rate;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
 
-   mEnvelope = std::make_unique<Envelope>();
+   mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
 
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
@@ -328,10 +328,7 @@ WaveClip::WaveClip(const WaveClip& orig,
    mRate = orig.mRate;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
 
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->Paste(0.0, orig.mEnvelope.get());
-   mEnvelope->SetOffset(orig.GetOffset());
-   mEnvelope->SetTrackLen((orig.mSequence->GetNumSamples().as_double()) / orig.mRate);
+   mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
@@ -345,7 +342,6 @@ WaveClip::WaveClip(const WaveClip& orig,
    mIsPlaceholder = orig.GetIsPlaceholder();
 }
 
-// to do
 WaveClip::WaveClip(const WaveClip& orig,
                    const std::shared_ptr<DirManager> &projDirManager,
                    bool copyCutlines,
@@ -369,10 +365,11 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mSequence = orig.mSequence->Copy(s0, s1);
 
-   mEnvelope = std::make_unique<Envelope>();
-   mEnvelope->CopyFrom(orig.mEnvelope.get(),
-                       mOffset + s0.as_double()/mRate,
-                       mOffset + s1.as_double()/mRate);
+   mEnvelope = std::make_unique<Envelope>(
+      *orig.mEnvelope,
+      mOffset + s0.as_double()/mRate,
+      mOffset + s1.as_double()/mRate
+   );
 
    if ( copyCutlines )
       // Copy cutline clips that fall in the range
@@ -1610,7 +1607,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
       mCutLines.push_back(std::move(holder));
 }
 
-void WaveClip::InsertSilence(double t, double len)
+void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 // STRONG-GUARANTEE
 {
    sampleCount s0;
@@ -1622,8 +1619,33 @@ void WaveClip::InsertSilence(double t, double len)
 
    // use NOFAIL-GUARANTEE
    OffsetCutLines(t, len);
-   GetEnvelope()->InsertSpace(t, len);
+
+   const auto sampleTime = 1.0 / GetRate();
+   auto pEnvelope = GetEnvelope();
+   if ( pEnvelopeValue ) {
+
+      // Preserve limit value at the end
+      auto oldLen = pEnvelope->GetTrackLen();
+      auto oldT = pEnvelope->GetOffset() + oldLen;
+      auto newLen = oldLen + len;
+      pEnvelope->InsertOrReplace( oldT, pEnvelope->GetValue( oldT ) );
+
+      // Ramp across the silence to the given value
+      pEnvelope->SetTrackLen( newLen );
+      pEnvelope->InsertOrReplace
+         ( pEnvelope->GetOffset() + newLen, *pEnvelopeValue );
+   }
+   else
+      pEnvelope->InsertSpace( t, len );
+
    MarkChanged();
+}
+
+void WaveClip::AppendSilence( double len, double envelopeValue )
+// STRONG-GUARANTEE
+{
+   auto t = GetEndTime();
+   InsertSilence( t, len, &envelopeValue );
 }
 
 void WaveClip::Clear(double t0, double t1)
@@ -1679,7 +1701,8 @@ void WaveClip::Clear(double t0, double t1)
    }
 
    // Collapse envelope
-   GetEnvelope()->CollapseRegion(t0, t1);
+   auto sampleTime = 1.0 / GetRate();
+   GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
    if (t0 < GetStartTime())
       Offset(-(GetStartTime() - t0));
 
@@ -1731,7 +1754,8 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    GetSequence()->Delete(s0, s1-s0);
 
    // Collapse envelope
-   GetEnvelope()->CollapseRegion(t0, t1);
+   auto sampleTime = 1.0 / GetRate();
+   GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
    if (t0 < GetStartTime())
       Offset(-(GetStartTime() - t0));
 
@@ -1835,7 +1859,8 @@ void WaveClip::Unlock()
 void WaveClip::SetRate(int rate)
 {
    mRate = rate;
-   UpdateEnvelopeTrackLen();
+   auto newLength = mSequence->GetNumSamples().as_double() / mRate;
+   mEnvelope->RescaleTimes( newLength );
    MarkChanged();
 }
 

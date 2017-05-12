@@ -276,6 +276,7 @@ void OnJoinLabels();
 void OnDisjoinLabels();
 
 void OnSelectAll();
+void OnSelectSomething();
 void OnSelectNone();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnToggleSpectralSelection();
@@ -411,6 +412,8 @@ typedef struct FoundClipBoundary {
 } FoundClipBoundary;
 FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
 FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
+double AdjustForFindingStartTimes(const std::vector<const WaveClip*>& clips, double time);
+double AdjustForFindingEndTimes(const std::vector<const WaveClip*>& clips, double time);
 int FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& results);
 void OnCursorNextClipBoundary();
 void OnCursorPrevClipBoundary();

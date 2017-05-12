@@ -36,12 +36,13 @@ class ZoomInfo;
 class EnvPoint final : public XMLTagHandler {
 
 public:
-   inline EnvPoint(Envelope *envelope, double t, double val);
+   EnvPoint() {}
+   inline EnvPoint( double t, double val ) : mT{ t }, mVal{ val } {}
 
    double GetT() const { return mT; }
    void SetT(double t) { mT = t; }
    double GetVal() const { return mVal; }
-   inline void SetVal(double val);
+   inline void SetVal( Envelope *pEnvelope, double val );
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override
    {
@@ -52,7 +53,7 @@ public:
             if (!wxStrcmp(attr, wxT("t")))
                SetT(Internat::CompatibleToDouble(value));
             else if (!wxStrcmp(attr, wxT("val")))
-               SetVal(Internat::CompatibleToDouble(value));
+               SetVal( nullptr, Internat::CompatibleToDouble(value) );
          }
          return true;
       }
@@ -66,17 +67,23 @@ public:
    }
 
 private:
-   Envelope *mEnvelope;
-   double mT;
-   double mVal;
+   double mT {};
+   double mVal {};
 
 };
 
 typedef std::vector<EnvPoint> EnvArray;
 
 class Envelope final : public XMLTagHandler {
- public:
-   Envelope();
+public:
+   // Envelope can define a piecewise linear function, or piecewise exponential.
+   Envelope(bool exponential, double minValue, double maxValue, double defaultValue);
+
+   Envelope(const Envelope &orig);
+
+   // Create from a subrange of another envelope.
+   Envelope(const Envelope &orig, double t0, double t1);
+
    void Initialize(int numPoints);
 
    virtual ~ Envelope();
@@ -84,9 +91,8 @@ class Envelope final : public XMLTagHandler {
    double GetOffset() const { return mOffset; }
    double GetTrackLen() const { return mTrackLen; }
 
-   bool GetInterpolateDB() { return mDB; }
-   void SetInterpolateDB(bool db) { mDB = db; }
-   void Rescale(double minValue, double maxValue);
+   bool GetExponential() const { return mDB; }
+   void SetExponential(bool db) { mDB = db; }
 
    void Flatten(double value);
 
@@ -112,16 +118,19 @@ class Envelope final : public XMLTagHandler {
       float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
-   void CollapseRegion(double t0, double t1);
-   // Takes absolute times, NOT offset-relative:
-   void CopyFrom(const Envelope * e, double t0, double t1);
+   // sampleTime determines when the endpoint of the collapse is near enough
+   // to an endpoint of the domain, that an extra control point is not needed.
+   void CollapseRegion(double t0, double t1, double sampleTime);
    void Paste(double t0, const Envelope *e);
+
    void InsertSpace(double t0, double tlen);
    void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 
    // Control
    void SetOffset(double newOffset);
    void SetTrackLen(double trackLen);
+   void RescaleValues(double minValue, double maxValue);
+   void RescaleTimes( double newLength );
 
    // Accessors
    /** \brief Get envelope value at time t */
@@ -138,9 +147,16 @@ class Envelope final : public XMLTagHandler {
    void GetValues
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
+private:
+   double GetValueRelative(double t) const;
+   void GetValuesRelative
+      (double *buffer, int len, double t0, double tstep) const;
+   // relative time
    int NumberOfPointsAfter(double t) const;
+   // relative time
    double NextPointAfter(double t) const;
 
+public:
    double Average( double t0, double t1 ) const;
    double AverageOfInverse( double t0, double t1 ) const;
    double Integral( double t0, double t1 ) const;
@@ -152,13 +168,14 @@ class Envelope final : public XMLTagHandler {
 
    bool IsDirty() const;
 
-   /** \brief Add a point at a particular spot */
-   int Insert(double when, double value);
+   /** \brief Add a point at a particular absolute time coordinate */
+   int InsertOrReplace(double when, double value)
+   { return InsertOrReplaceRelative( when - mOffset, value ); }
 
    /** \brief Move a point at when to value
     *
     * Returns 0 if point moved, -1 if not found.*/
-   int Move(double when, double value);
+   int Reassign(double when, double value);
 
    /** \brief DELETE a point by its position in array */
    void Delete(int point);
@@ -170,12 +187,15 @@ class Envelope final : public XMLTagHandler {
    size_t GetNumberOfPoints() const;
 
 private:
+   int InsertOrReplaceRelative(double when, double value);
    friend class EnvelopeEditor;
    /** \brief Accessor for points */
-   EnvPoint &operator[] (int index)
+   const EnvPoint &operator[] (int index) const
    {
       return mEnv[index];
    }
+
+   std::pair<int, int> EqualRange( double when, double sampleTime ) const;
 
 public:
    /** \brief Returns the sets of when and value pairs */
@@ -193,59 +213,47 @@ public:
    bool GetDragPointValid() const { return mDragPointValid; }
    // Modify the dragged point and change its value.
    // But consistency constraints may move it less then you ask for.
+
+private:
    void MoveDragPoint(double newWhen, double value);
    // May delete the drag point.  Restores envelope consistency.
    void ClearDragPoint();
-
-private:
-   EnvPoint *  AddPointAtEnd( double t, double val );
+   void AddPointAtEnd( double t, double val );
+   void CopyRange(const Envelope &orig, size_t begin, size_t end);
+   // relative time
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
-
-   // Possibly inline functions:
-   // This function resets them integral memoizers (call whenever the Envelope changes)
-   void resetIntegralMemoizer() { lastIntegral_t0=0; lastIntegral_t1=0; lastIntegral_result=0; }
 
    // The list of envelope control points.
    EnvArray mEnv;
 
    /** \brief The time at which the envelope starts, i.e. the start offset */
-   double mOffset;
+   double mOffset { 0.0 };
    /** \brief The length of the envelope, which is the same as the length of the
     * underlying track (normally) */
-   double mTrackLen;
+   double mTrackLen { 0.0 };
 
    // TODO: mTrackEpsilon based on assumption of 200KHz.  Needs review if/when
    // we support higher sample rates.
    /** \brief The shortest distance appart that points on an envelope can be
     * before being considered the same point */
-   double mTrackEpsilon;
-   double mDefaultValue;
+   double mTrackEpsilon { 1.0 / 200000.0 };
    bool mDB;
    double mMinValue, mMaxValue;
-
-   // These are memoizing variables for Integral()
-   double lastIntegral_t0;
-   double lastIntegral_t1;
-   double lastIntegral_result;
+   double mDefaultValue;
 
    // UI stuff
-   bool mDragPointValid;
-   int mDragPoint;
+   bool mDragPointValid { false };
+   int mDragPoint { -1 };
 
-   mutable int mSearchGuess;
+   mutable int mSearchGuess { -2 };
 };
 
-inline EnvPoint::EnvPoint(Envelope *envelope, double t, double val)
+inline void EnvPoint::SetVal( Envelope *pEnvelope, double val )
 {
-   mEnvelope = envelope;
-   mT = t;
-   mVal = mEnvelope->ClampValue(val);
-}
-
-inline void EnvPoint::SetVal(double val)
-{
-   mVal = mEnvelope->ClampValue(val);
+   if ( pEnvelope )
+      val = pEnvelope->ClampValue(val);
+   mVal = val;
 }
 
 // A class that holds state for the duration of dragging
