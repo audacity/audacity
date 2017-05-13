@@ -275,9 +275,16 @@ void OnSplitLabels();
 void OnJoinLabels();
 void OnDisjoinLabels();
 
+void OnSelectTimeAndTracks(bool bAllTime, bool bAllTracks);
+void OnSelectAllTime();
+void OnSelectAllTracks();
 void OnSelectAll();
 void OnSelectSomething();
 void OnSelectNone();
+private:
+int CountSelectedWaveTracks();
+int CountSelectedTracks();
+public:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnToggleSpectralSelection();
 void DoNextPeakFrequency(bool up);
@@ -304,7 +311,6 @@ void OnSelectNextClip();
 void OnSelectClip(bool next);
 void OnSelectCursorStoredCursor();
 void OnSelectSyncLockSel();
-void OnSelectAllTracks();
 
         // View Menu
 

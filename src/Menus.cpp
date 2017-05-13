@@ -5374,33 +5374,77 @@ void AudacityProject::OnSplitNew()
    RedrawProject();
 }
 
-void AudacityProject::OnSelectSomething()
+int AudacityProject::CountSelectedWaveTracks() 
 {
-   if( mViewInfo.selectedRegion.isPoint() )
-      OnSelectAll();
-   else
-      OnSelectAllTracks();
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+
+   int count =0;
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      if( (t->GetKind() == Track::Wave) && t->GetSelected() )
+         count++;
+   }
+   return count;
 }
 
-void AudacityProject::OnSelectAll()
+int AudacityProject::CountSelectedTracks() 
 {
-   mViewInfo.selectedRegion.setTimes(
-      mTracks->GetMinOffset(), mTracks->GetEndTime());
-   OnSelectAllTracks();
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+
+   int count =0;
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      if( t->GetSelected() )
+         count++;
+   }
+   return count;
+}
+
+void AudacityProject::OnSelectTimeAndTracks(bool bAllTime, bool bAllTracks)
+{
+   if( bAllTime )
+      mViewInfo.selectedRegion.setTimes(
+         mTracks->GetMinOffset(), mTracks->GetEndTime());
+
+   if( bAllTracks ){
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         t->SetSelected(true);
+   }
+
+   ModifyState(false);
+   mTrackPanel->Refresh(false);
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);}
+}
+
+void AudacityProject::OnSelectAllTime()
+{
+   OnSelectTimeAndTracks( true, false );
 }
 
 void AudacityProject::OnSelectAllTracks()
 {
-   TrackListIterator iter(GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      t->SetSelected(true);
-   }
+   OnSelectTimeAndTracks( false, true );
+}
 
-   ModifyState(false);
+void AudacityProject::OnSelectAll()
+{
+   OnSelectTimeAndTracks( true, true );
+}
 
-   mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
+// This function selects all tracks if no tracks selected,
+// and all time if no time selected.
+// There is an argument for making it just count wave tracks,
+// However you could then not select a label and cut it, 
+// without this function selecting all tracks.
+void AudacityProject::OnSelectSomething()
+{
+   bool bTime = mViewInfo.selectedRegion.isPoint();
+   bool bTracks = CountSelectedTracks() == 0;
+
+   if( bTime || bTracks )
+      OnSelectTimeAndTracks(bTime,bTracks);
 }
 
 void AudacityProject::SelectNone()
