@@ -241,7 +241,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpTopFrequencyCursor, wxImage( 32, 32 ), wxT("TopFrequencyCursor"));
    DEFINE_IMAGE( bmpBandWidthCursor, wxImage(32, 32), wxT("BandWidthCursor"));
    
-   SET_THEME_FLAGS(  resFlagNewLine  );
+   //SET_THEME_FLAGS(  resFlagNewLine  );
 
 // DA: The logo with name xpm has a different width.
 #ifdef EXPERIMENTAL_DA
@@ -251,6 +251,11 @@ from there.  Audacity will look for a file called "Pause.png".
 #endif
 
 #define LOGOWITHNAME_HEIGHT 200
+
+   SET_THEME_FLAGS( resFlagSkip | resFlagNewLine );
+   DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo"));
+   DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
+
 
    DEFINE_COLOUR( clrBlank,      wxColour( 64,  64,  64), wxT("Blank"));
    DEFINE_COLOUR( clrUnselected, wxColour( 30,  30,  30), wxT("Unselected"));
