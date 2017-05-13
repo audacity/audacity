@@ -490,6 +490,7 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
 
    mBitmapNames.Add( Name );
    mBitmapFlags.Add( mFlow.mFlags );
+   mFlow.mFlags &= ~resFlagSkip;
    iIndex = mBitmaps.GetCount()-1;
 }
 
@@ -541,7 +542,7 @@ void FlowPacker::GetNextPosition( int xSize, int ySize )
    xSize += 2*mBorderWidth;
    ySize += 2*mBorderWidth;
    // if the height has increased, then we are on a NEW group.
-   if(( ySize > myHeight )||(mFlags != mOldFlags ))
+   if(( ySize > myHeight )||(((mFlags ^ mOldFlags )& ~resFlagSkip)!=0))
    {
       SetNewGroup( ((mFlags & resFlagPaired)!=0) ? 2 : 1 );
       myHeight = ySize;
@@ -690,9 +691,12 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       {
          mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          ImageCache.SetRGB( mFlow.Rect(), 0xf2, 0xb0, 0x27 );
-         PasteSubImage( &ImageCache, &SrcImage, 
-            mFlow.mxPos + mFlow.mBorderWidth, 
-            mFlow.myPos + mFlow.mBorderWidth);
+         if( (mFlow.mFlags & resFlagSkip) == 0 )
+            PasteSubImage( &ImageCache, &SrcImage, 
+               mFlow.mxPos + mFlow.mBorderWidth, 
+               mFlow.myPos + mFlow.mBorderWidth);
+         else
+            ImageCache.SetRGB( mFlow.RectInner(), 1,1,1);
 #ifdef IMAGE_MAP
          // No href in html.  Uses title not alt.
          wxRect R( mFlow.Rect() );
