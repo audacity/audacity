@@ -160,6 +160,8 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
 
 bool TracksPrefs::Apply()
 {
+   // Bug 1583: Clear the caching of the preference pinned state.
+   iPreferencePinned = -1;
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
