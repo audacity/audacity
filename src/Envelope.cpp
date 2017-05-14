@@ -933,14 +933,15 @@ void Envelope::InsertSpace( double t0, double tlen )
       point.SetT( point.GetT() + tlen );
    }
 
+   // increase track len, before insert or replace,
+   // since it range chacks the values.
+   mTrackLen += tlen;
    // Preserve the right-side limit.
    if ( 1 + range.first < range.second )
       // There was a control point already.
       ;
    else
       InsertOrReplaceRelative( t0 + tlen, val );
-
-   mTrackLen += tlen;
 }
 
 int Envelope::Reassign(double when, double value)
