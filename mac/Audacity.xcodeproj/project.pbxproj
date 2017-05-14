@@ -1222,6 +1222,7 @@
 		5E15126E1DB0010C00702E29 /* TrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512681DB0010C00702E29 /* TrackControls.cpp */; };
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
+		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
 		5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */; };
 		5E73963E1DAFD86000BA0A4D /* ZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */; };
 		5E7396441DAFD8C600BA0A4D /* TimeShiftHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396421DAFD8C600BA0A4D /* TimeShiftHandle.cpp */; };
@@ -3044,6 +3045,8 @@
 		5E15126A1DB0010C00702E29 /* TrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackUI.cpp; sourceTree = "<group>"; };
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
+		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
+		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
 		5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupMenuTable.cpp; sourceTree = "<group>"; };
@@ -5806,6 +5809,8 @@
 		5EA0181B1EC7B226001F2996 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */,
+				5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */,
 				5EA0181C1EC7B226001F2996 /* NoteTrackControls.cpp */,
 				5EA0181D1EC7B226001F2996 /* NoteTrackControls.h */,
 				5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */,
@@ -7662,6 +7667,7 @@
 				2806EF7A1B32532A00D1AB9A /* FileDialogPrivate.mm in Sources */,
 				1790B18509883BFD008A330A /* MousePrefs.cpp in Sources */,
 				1790B18609883BFD008A330A /* PrefsDialog.cpp in Sources */,
+				5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */,
 				1790B18709883BFD008A330A /* QualityPrefs.cpp in Sources */,
 				1790B18809883BFD008A330A /* SpectrumPrefs.cpp in Sources */,
 				1790B18909883BFD008A330A /* Prefs.cpp in Sources */,

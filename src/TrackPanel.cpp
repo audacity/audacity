@@ -1147,8 +1147,7 @@ void TrackPanel::HandleInterruptedDrag()
     IsClosing,
     IsAdjustingLabel,
     IsRearranging,
-    IsStretching,
-    IsVelocitySliding
+    IsStretching
     */
 
    if (sendEvent) {
@@ -3574,39 +3573,6 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
    }
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-void TrackPanel::HandleVelocitySlider(wxMouseEvent &event)
-{
-   wxASSERT(mCapturedTrack->GetKind() == Track::Note);
-   NoteTrack *capturedTrack = static_cast<NoteTrack *>(mCapturedTrack);
-
-   auto rect = FindTrackRect( capturedTrack, true );
-   wxRect sliderRect;
-   TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
-   auto slider = mTrackInfo.VelocitySlider(sliderRect, capturedTrack, true, this);
-
-   slider->OnMouseEvent(event);
-
-   //If we have a double-click, do this...
-   if (event.LeftDClick())
-      mMouseCapture = IsUncaptured;
-
-   float newValue = slider->Get();
-   capturedTrack->SetVelocity(newValue);
-
-   MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
-
-   if (pMixerBoard) {
-      pMixerBoard->UpdateVelocity(capturedTrack);
-   }
-   RefreshTrack(capturedTrack);
-   if (event.ButtonUp()) {
-      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), UndoPush::CONSOLIDATE);
-      SetCapturedTrack(NULL);
-   }
-}
-#endif
-
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
 void TrackPanel::OnTrackListResized(wxCommandEvent & e)
@@ -3882,8 +3848,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       else if (t->GetKind() == Track::Note)
       {
 #ifdef EXPERIMENTAL_MIDI_OUT
-         if (isleft && VelocityFunc(t, rect, event, event.m_x, event.m_y))
-            return;
          wxRect midiRect;
          mTrackInfo.GetMidiControlsRect(rect, midiRect);
 
@@ -3994,25 +3958,6 @@ void TrackPanel::CalculateRearrangingThresholds(wxMouseEvent & event)
    else
       mMoveDownThreshold = INT_MAX;
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-bool TrackPanel::VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
-   int x, int y)
-{
-   wxRect sliderRect;
-   mTrackInfo.GetVelocityRect(rect.GetTopLeft(), sliderRect);
-   if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      return false;
-   if (!sliderRect.Contains(x, y))
-      return false;
-
-   SetCapturedTrack(t, IsVelocitySliding);
-   mCapturedRect = rect;
-   HandleVelocitySlider(event);
-
-   return true;
-}
-#endif
 
 bool TrackPanel::MinimizeFunc(Track * t, wxRect rect, int x, int y)
 {
@@ -4936,11 +4881,6 @@ try
    case IsRearranging:
       HandleRearrange(event);
       break;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   case IsVelocitySliding:
-      HandleVelocitySlider(event);
-      break;
-#endif
    case IsMinimizing:
       HandleMinimizing(event);
       break;

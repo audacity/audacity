@@ -494,9 +494,6 @@ protected:
    virtual void HandleClosing(wxMouseEvent & event);
    virtual void HandlePopping(wxMouseEvent & event);
    virtual void HandleMinimizing(wxMouseEvent & event);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   virtual void HandleVelocitySlider(wxMouseEvent &event);
-#endif
 
 
    // These *Func methods are used in TrackPanel::HandleLabelClick to set up
@@ -506,11 +503,6 @@ protected:
    virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
 
    virtual bool MinimizeFunc(Track *t, wxRect rect, int x, int f);
-#ifdef EXPERIMENTAL_MIDI_OUT
-   virtual bool VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
-      int x, int y);
-#endif
-
 
 public:
    virtual void MakeParentRedrawScrollbars();
@@ -803,10 +795,6 @@ public:
       IsSoloing,
       IsMinimizing,
       IsPopping,
-#ifdef EXPERIMENTAL_MIDI_OUT
-      IsVelocitySliding,
-#endif
-
    };
 
 protected:

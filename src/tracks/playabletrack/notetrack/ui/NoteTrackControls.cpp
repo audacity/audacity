@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "NoteTrackControls.h"
 #include "../../ui/PlayableTrackButtonHandles.h"
+#include "NoteTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
 #include "../../../../Track.h"
@@ -52,6 +53,11 @@ HitTestResult NoteTrackControls::HitTest
              (result = SoloButtonHandle::HitTest
                  (event, rect, pProject, track)).handle)
             return result;
+#ifdef EXPERIMENTAL_MIDI_OUT
+         if (NULL != (result =
+             VelocitySliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
+            return result;
+#endif
       }
    }
 

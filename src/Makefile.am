@@ -556,6 +556,8 @@ audacity_SOURCES = \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
