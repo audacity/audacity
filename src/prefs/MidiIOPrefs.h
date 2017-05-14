@@ -33,6 +33,7 @@ class MidiIOPrefs final : public PrefsPanel
    virtual ~MidiIOPrefs();
    bool Apply() override;
    bool Validate() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();
