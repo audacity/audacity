@@ -435,6 +435,7 @@ void ControlToolBar::EnableDisableButtons()
    AudacityProject *p = GetActiveProject();
    bool tracks = false;
 
+   bool paused = mPause->IsDown();
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
    bool busy = gAudioIO->IsBusy();
@@ -459,8 +460,8 @@ void ControlToolBar::EnableDisableButtons()
    mPlay->SetEnabled(CanStopAudioStream() && tracks && !recording);
    mRecord->SetEnabled(
       CanStopAudioStream() &&
-      !(busy && !recording) &&
-      !playing
+      !(busy && !recording && !paused) &&
+      !(playing && !paused)
    );
    mStop->SetEnabled(CanStopAudioStream() && (playing || recording));
    mRewind->SetEnabled(IsPauseDown() || (!playing && !recording));
@@ -876,6 +877,29 @@ void ControlToolBar::Pause()
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
 // STRONG-GUARANTEE (for state of current project's tracks)
 {
+   // TODO: It would be neater if Menu items and Toolbar buttons used the same code for
+   // enabling/disabling, and all fell into the same action routines.
+   // Here instead we reduplicate some logic (from CommandHandler) because it isn't
+   // normally used for buttons.
+
+   // Code from CommandHandler start...
+   AudacityProject * proj = GetActiveProject();
+   wxASSERT( proj );
+   if( !proj )
+      return;
+
+   CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
+
+   // NB: The call may have the side effect of changing flags.
+   bool allowed = proj->TryToMakeActionAllowed(
+      flags, 
+      AudioIONotBusyFlag | CanStopAudioStreamFlag, 
+      AudioIONotBusyFlag | CanStopAudioStreamFlag);
+
+   if( !allowed )
+      return;
+   // ...end of code from CommandHandler.
+
    if (gAudioIO->IsBusy()) {
       if (!CanStopAudioStream() || 0 == gAudioIO->GetNumCaptureChannels())
          mRecord->PopUp();
