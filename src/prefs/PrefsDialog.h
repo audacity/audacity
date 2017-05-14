@@ -60,6 +60,7 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
    void OnOK(wxCommandEvent & e);
    void OnCancel(wxCommandEvent & e);
    void OnApply(wxCommandEvent & e);
+   void OnHelp(wxCommandEvent & e);
    void OnTreeKeyDown(wxTreeEvent & e); // Used to dismiss the dialog when enter is pressed with focus on tree
 
    void SelectPageByName(const wxString &pageName);

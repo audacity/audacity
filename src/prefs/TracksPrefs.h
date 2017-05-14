@@ -28,6 +28,7 @@ class TracksPrefs final : public PrefsPanel
    TracksPrefs(wxWindow * parent);
    ~TracksPrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
    static bool GetPinnedHeadPreference();
    static void SetPinnedHeadPreference(bool value, bool flush = false);

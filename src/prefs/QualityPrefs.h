@@ -30,6 +30,7 @@ class QualityPrefs final : public PrefsPanel
    virtual ~QualityPrefs();
 
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

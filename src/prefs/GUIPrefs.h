@@ -28,6 +28,7 @@ class GUIPrefs final : public PrefsPanel
    GUIPrefs(wxWindow * parent);
    ~GUIPrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
    static void GetRangeChoices(wxArrayString *pChoices, wxArrayString *pCodes);
 

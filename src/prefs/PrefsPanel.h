@@ -59,6 +59,10 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    // Default returns false
    virtual bool ShowsApplyButton();
 
+   // If not empty string, the Help button is added below the panel
+   // Default returns empty string.
+   virtual wxString HelpPageName();
+
    virtual void Cancel();
 };
 

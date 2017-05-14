@@ -29,6 +29,7 @@ class DevicePrefs final : public PrefsPanel
    DevicePrefs(wxWindow * parent);
    virtual ~DevicePrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

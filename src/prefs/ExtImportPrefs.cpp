@@ -668,6 +668,11 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    event.Skip();
 }
 
+wxString ExtImportPrefs::HelpPageName()
+{
+   return "Extended_Import_Preferences";
+}
+
 ExtImportPrefsDropTarget::ExtImportPrefsDropTarget(wxDataObject *dataObject)
    : wxDropTarget(dataObject)
 {

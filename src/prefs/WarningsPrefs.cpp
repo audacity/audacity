@@ -87,6 +87,11 @@ bool WarningsPrefs::Apply()
    return true;
 }
 
+wxString WarningsPrefs::HelpPageName()
+{
+   return "Warnings_Preferences";
+}
+
 PrefsPanel *WarningsPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

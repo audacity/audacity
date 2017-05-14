@@ -197,6 +197,11 @@ bool MousePrefs::Apply()
    return true;
 }
 
+wxString MousePrefs::HelpPageName()
+{
+   return "Mouse_Preferences";
+}
+
 PrefsPanel *MousePrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

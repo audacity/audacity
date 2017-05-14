@@ -70,11 +70,13 @@
 #endif
 
 #include "../Theme.h"
+#include "../widgets/HelpSystem.h"
 
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
    EVT_BUTTON(wxID_APPLY, PrefsDialog::OnApply)
+   EVT_BUTTON(wxID_HELP, PrefsDialog::OnHelp)
    EVT_TREE_KEY_DOWN(wxID_ANY, PrefsDialog::OnTreeKeyDown) // Handles key events when tree has focus
 END_EVENT_TABLE()
 
@@ -110,8 +112,30 @@ int wxTreebookExt::SetSelection(size_t n)
    static_cast<wxDialog*>(GetParent())->SetName( Temp );
 
    PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
+   const bool showHelp = (panel->HelpPageName() != wxEmptyString);
    const bool showApply = panel->ShowsApplyButton();
+   wxWindow *const helpButton = wxWindow::FindWindowById(wxID_HELP, GetParent());
    wxWindow *const applyButton = wxWindow::FindWindowById(wxID_APPLY, GetParent());
+
+   if (helpButton) {
+#if defined(__WXMAC__)
+      // We don't appear to have accelerators on wxMac
+#else
+      if (showHelp) {
+         wxAcceleratorEntry entries[1];
+         entries[0].Set(wxACCEL_ALT, (int) 'H', wxID_HELP);
+         wxAcceleratorTable accel(1, entries);
+         this->SetAcceleratorTable(accel);
+      }
+      else {
+         this->SetAcceleratorTable(wxNullAcceleratorTable);
+      }
+#endif
+      const bool changed = helpButton->Show(showHelp);
+      if (changed)
+         GetParent()->Layout();
+   }
+
    if (applyButton) { // might still be NULL during population
       const bool changed = applyButton->Show(showApply);
       if (changed)
@@ -265,7 +289,7 @@ PrefsDialog::PrefsDialog
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton);
+   S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton | eHelpButton);
    static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
    if (mUniquePage && !mUniquePage->ShowsApplyButton()) {
@@ -368,6 +392,12 @@ void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
       static_cast<PrefsPanel*>(mCategories->GetCurrentPage())->Apply();
    else
       mUniquePage->Apply();
+}
+
+void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   PrefsPanel* panel = static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
+   HelpSystem::ShowHelpDialog(this, panel->HelpPageName(), true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
@@ -525,4 +555,9 @@ void PrefsPanel::Cancel()
 bool PrefsPanel::ShowsApplyButton()
 {
    return false;
+}
+
+wxString PrefsPanel::HelpPageName()
+{
+   return wxEmptyString;
 }

@@ -225,6 +225,11 @@ bool GUIPrefs::Apply()
    return true;
 }
 
+wxString GUIPrefs::HelpPageName()
+{
+   return "Interface_Preferences";
+}
+
 PrefsPanel *GUIPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

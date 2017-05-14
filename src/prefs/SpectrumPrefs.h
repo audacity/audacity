@@ -46,6 +46,7 @@ class SpectrumPrefs final : public PrefsPanel
    bool Apply() override;
    bool ShowsApplyButton() override;
    bool Validate() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate(size_t windowSize);

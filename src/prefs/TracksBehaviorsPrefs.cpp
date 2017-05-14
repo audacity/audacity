@@ -109,6 +109,11 @@ bool TracksBehaviorsPrefs::Apply()
    return true;
 }
 
+wxString TracksBehaviorsPrefs::HelpPageName()
+{
+   return "Tracks_Behaviors_Preferences";
+}
+
 TracksBehaviorsPrefsFactory::TracksBehaviorsPrefsFactory()
 {
 }

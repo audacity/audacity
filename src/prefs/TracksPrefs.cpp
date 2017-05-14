@@ -166,6 +166,11 @@ bool TracksPrefs::Apply()
    return true;
 }
 
+wxString TracksPrefs::HelpPageName()
+{
+   return "Tracks_Preferences";
+}
+
 PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

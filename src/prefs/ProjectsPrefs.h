@@ -27,6 +27,7 @@ class ProjectsPrefs final : public PrefsPanel
    ProjectsPrefs(wxWindow * parent);
    ~ProjectsPrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();
