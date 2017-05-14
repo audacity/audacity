@@ -1512,7 +1512,8 @@ MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
 #endif
       SetIcon(ic);
    }
-   #endif
+#endif
+   Center();
 }
 
 MixerBoardFrame::~MixerBoardFrame()

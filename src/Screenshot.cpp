@@ -120,7 +120,7 @@ ScreenFramePtr mFrame;
 void OpenScreenshotTools()
 {
    if (!mFrame) {
-      mFrame = ScreenFramePtr{ safenew ScreenFrame(NULL, -1) };
+      mFrame = ScreenFramePtr{ safenew ScreenFrame(wxGetApp().GetTopWindow(), -1) };
    }
    mFrame->Show();
    mFrame->Raise();
@@ -298,6 +298,7 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // The monitoring will switch off temporarily
    // because we've switched monitor mid play.
    mContext.GetProject()->GetToolManager()->Reset();
+   Center();
 }
 
 ScreenFrame::~ScreenFrame()
