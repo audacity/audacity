@@ -256,10 +256,18 @@ void ControlToolBar::RegenerateTooltips()
             commands.push_back(wxT("Stop"));
             break;
          case ID_FF_BUTTON:
-            commands.push_back(wxT("SkipEnd"));
+            commands.push_back(wxT("CursProjectEnd"));
+            // With shift
+            commands.push_back(_("Select to End"));
+            // For the shortcut tooltip.
+            commands.push_back(wxT("SelCursorEnd"));
             break;
          case ID_REW_BUTTON:
-            commands.push_back(wxT("SkipStart"));
+            commands.push_back(wxT("CursProjectStart"));
+            // With shift
+            commands.push_back(_("Select to Start"));
+            // For the shortcut tooltip.
+            commands.push_back(wxT("SelStartCursor"));
             break;
       }
       ToolBar::SetButtonToolTip(*pCtrl, commands);
