@@ -1204,12 +1204,17 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    {
       wxWindow * pWnd = wxWindow::FindFocus();
       wxWindow * pTrackPanel = (wxWindow*)GetActiveProject()->GetTrackPanel();
+      bool bIntercept = pWnd !=  pTrackPanel;
+      // Intercept keys from windows that are NOT panels
+      if( bIntercept ){
+         bIntercept = pWnd && ( dynamic_cast<wxPanel*>(pWnd) == NULL );
+      }
       //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
       // We allow the keystrokes below to be handled by wxWidgets controls IF we are 
       // in some sub window rather than in the TrackPanel itself.
       // Otherwise they will go to our command handler and if it handles them 
       // they will NOT be available to wxWidgets.
-      if( pWnd !=  pTrackPanel ){
+      if( bIntercept ){
          switch( evt.GetKeyCode() ){
          case WXK_LEFT:
          case WXK_RIGHT:
