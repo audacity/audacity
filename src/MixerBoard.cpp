@@ -776,11 +776,9 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
       // Have to refresh all tracks.
       mMixerBoard->UpdateMute();
       mMixerBoard->UpdateSolo();
-      mProject->RedrawProject();
    }
-   else
-      // Update only the changed track.
-      mProject->RefreshTPTrack(mTrack);
+   // Bug 509: Must repaint all, as many tracks can change with one Solo change.
+   mProject->RedrawProject();
 }
 
 
