@@ -19,6 +19,8 @@ addons:
         packages:
             - g++-4.9
             - gcc-4.9
+            - gettext
+            - autopoint
 env:
    matrix:
       - TARGET=linux-x86_64
@@ -34,4 +36,5 @@ before_script:
    - ./scripts/travis.sh before_script
 
 script:
+   - autoreconf --no-recursive --install --force
    - ./scripts/travis.sh script

@@ -18,8 +18,6 @@ linux-*)
    ;;
    script)
       set -ex
-      aclocal --install -I m4
-      automake
       CXX="g++-4.9" CC="gcc-4.9" ./configure --enable-openmp
       make -j2
    ;;
@@ -44,7 +42,7 @@ windows-*)
       sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D43A795B73B16ABE9643FE1AFD8FFF16DB45C6AB
       sudo apt-get update -qq
       PKG_PREFIX="mxe-${HOST//_/-}"
-      PKG_LIST=" gcc expat ogg vorbis wxwidgets libsndfile"
+      PKG_LIST=" gcc expat ogg vorbis wxwidgets libsndfile portmidi"
       sudo apt-get install -y ${PKG_LIST// / $PKG_PREFIX-}
    ;;
    before_script)
