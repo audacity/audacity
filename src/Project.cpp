@@ -2052,8 +2052,10 @@ void AudacityProject::UpdateLayout()
    if (!mTrackPanel)
       return;
 
-   mToolManager->LayoutToolBars();
+   // Layout first to get our new width,
+   // Then and only then we can arrange the toolbars.
    Layout();
+   mToolManager->LayoutToolBars();
 
    // Retrieve size of this projects window
    wxSize mainsz = GetSize();
@@ -2107,7 +2109,6 @@ void AudacityProject::RefreshAllTitles(bool bShowProjectNumbers )
 
 void AudacityProject::OnIconize(wxIconizeEvent &event)
 {
-
    int VisibleProjectCount = 0;
 
    //JKC: On Iconizing we get called twice.  Don't know
