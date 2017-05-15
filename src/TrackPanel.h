@@ -256,7 +256,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
 
-   virtual void OnClipMove(bool right);
+   virtual void OnClipMove(bool right, bool keyUp);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -681,6 +681,8 @@ protected:
    // The amount that clips are sliding horizontally; this allows
    // us to undo the slide and then slide it by another amount
    double mHSlideAmount;
+
+   double mHSlideAmountTotal;       // used for sliding horizontally using the keyboard
 
    bool mDidSlideVertically;
 
