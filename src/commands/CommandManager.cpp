@@ -448,7 +448,7 @@ void CommandManager::PurgeData()
    mCommandIDHash.clear();
 
    mCurrentMenuName = COMMAND;
-   mCurrentID = 0;
+   mCurrentID = 17000;
 }
 
 
