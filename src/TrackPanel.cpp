@@ -534,8 +534,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    // This is used to snap the cursor to the nearest track that
    // lines up with it.
    mSnapManager = NULL;
-   mSnapLeft = -1;
-   mSnapRight = -1;
 
    // Register for tracklist updates
    mTracks->Connect(EVT_TRACKLIST_RESIZED,
@@ -2064,8 +2062,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    // We create a NEW snap manager in case any snap-points have changed
    mSnapManager = std::make_unique<SnapManager>(GetTracks(), mViewInfo);
 
-   mSnapLeft = -1;
-   mSnapRight = -1;
+   mSnapLeft = mSnapRight = -1;
 
 #ifdef USE_MIDI
    mStretching = false;
@@ -2346,8 +2343,7 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
    double s = mSelStart;
 
    if (mSnapManager) {
-      mSnapLeft = -1;
-      mSnapRight = -1;
+      mSnapLeft = mSnapRight = -1;
       bool snappedPoint, snappedTime;
       if (mSnapManager->Snap(mCapturedTrack, mSelStart, false,
                              &s, &snappedPoint, &snappedTime)) {
@@ -2393,8 +2389,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
    origSel1 = sel1;
 
    if (mSnapManager) {
-      mSnapLeft = -1;
-      mSnapRight = -1;
+      mSnapLeft = mSnapRight = -1;
       bool snappedPoint, snappedTime;
       if (mSnapManager->Snap(mCapturedTrack, sel0, false,
                              &sel0, &snappedPoint, &snappedTime)) {
@@ -2413,8 +2408,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
             !snappedTime) {
          sel0 = origSel0;
          sel1 = origSel1;
-         mSnapLeft = -1;
-         mSnapRight = -1;
+         mSnapLeft = mSnapRight = -1;
       }
    }
 
@@ -7192,13 +7186,13 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
    }
 
    // Draw snap guidelines if we have any
-   if (mSnapManager && (mSnapLeft >= 0 || mSnapRight >= 0)) {
+   if ( mSnapManager && ( GetSnapLeft() >= 0 || GetSnapRight() >= 0 )) {
       AColor::SnapGuidePen(dc);
-      if (mSnapLeft >= 0) {
-         AColor::Line(*dc, (int)mSnapLeft, 0, mSnapLeft, 30000);
+      if ( GetSnapLeft() >= 0 ) {
+         AColor::Line(*dc, (int)GetSnapLeft(), 0, GetSnapLeft(), 30000);
       }
-      if (mSnapRight >= 0) {
-         AColor::Line(*dc, (int)mSnapRight, 0, mSnapRight, 30000);
+      if ( GetSnapRight() >= 0 ) {
+         AColor::Line(*dc, (int)GetSnapRight(), 0, GetSnapRight(), 30000);
       }
    }
 }

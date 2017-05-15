@@ -702,9 +702,15 @@ protected:
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
    std::unique_ptr<SnapManager> mSnapManager;
-   wxInt64 mSnapLeft;
-   wxInt64 mSnapRight;
+   wxInt64 mSnapLeft { -1 };
+   wxInt64 mSnapRight { -1 };
    bool mSnapPreferRightEdge;
+
+public:
+   wxInt64 GetSnapLeft () const { return mSnapLeft ; }
+   wxInt64 GetSnapRight() const { return mSnapRight; }
+
+protected:
 
    NumericConverter mConverter;
 
