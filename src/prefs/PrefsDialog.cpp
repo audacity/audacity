@@ -118,19 +118,20 @@ int wxTreebookExt::SetSelection(size_t n)
    wxWindow *const applyButton = wxWindow::FindWindowById(wxID_APPLY, GetParent());
 
    if (helpButton) {
-#if defined(__WXMAC__)
-      // We don't appear to have accelerators on wxMac
-#else
       if (showHelp) {
          wxAcceleratorEntry entries[1];
-         entries[0].Set(wxACCEL_ALT, (int) 'H', wxID_HELP);
+#if defined(__WXMAC__)
+         entries[0].Set(wxACCEL_CTRL, (int) '?', wxID_HELP);
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
          wxAcceleratorTable accel(1, entries);
          this->SetAcceleratorTable(accel);
       }
       else {
          this->SetAcceleratorTable(wxNullAcceleratorTable);
       }
-#endif
+
       const bool changed = helpButton->Show(showHelp);
       if (changed)
          GetParent()->Layout();

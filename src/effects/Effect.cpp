@@ -53,6 +53,7 @@ greater use in future.
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
 #include "nyquist/Nyquist.h"
+#include "../widgets/HelpSystem.h"
 
 #if defined(__WXMAC__)
 #include <Cocoa/Cocoa.h>
@@ -1095,6 +1096,11 @@ wxString Effect::GetPreset(wxWindow * parent, const wxString & parms)
       return dlg.GetSelected();
    }
 
+   return wxEmptyString;
+}
+
+wxString Effect::HelpPageName()
+{
    return wxEmptyString;
 }
 
@@ -2767,6 +2773,7 @@ BEGIN_EVENT_TABLE(EffectUIHost, wxDialogWrapper)
    EVT_CLOSE(EffectUIHost::OnClose)
    EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
    EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
+   EVT_BUTTON(wxID_HELP, EffectUIHost::OnHelp)
    EVT_BUTTON(eDebugID, EffectUIHost::OnDebug)
    EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
    EVT_CHECKBOX(kEnableID, EffectUIHost::OnEnable)
@@ -3039,13 +3046,23 @@ bool EffectUIHost::Initialize()
          bar->SetSizerAndFit(bs.release());
       }
 
-      // TODO: Add Help button
-      // long buttons = eApplyButton + eCloseButton + eHelpButton;
-      long buttons = eApplyButton + eCloseButton;
-      if (mEffect->mUIDebug)
-      {
-         buttons += eDebugButton;
+      long buttons;
+      if ( !(mEffect->HelpPageName().IsEmpty())) {
+         buttons = eApplyButton + eCloseButton + eHelpButton;
+         wxAcceleratorEntry entries[1];
+#if defined(__WXMAC__)
+         entries[0].Set(wxACCEL_CTRL, (int) '?', wxID_HELP);
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
+         wxAcceleratorTable accel(1, entries);
+         this->SetAcceleratorTable(accel);
       }
+      else {
+         buttons = eApplyButton + eCloseButton;
+         this->SetAcceleratorTable(wxNullAcceleratorTable);
+      }
+
 
       buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar).release());
       vs->Add(buttonPanel, 0, wxEXPAND);
@@ -3203,6 +3220,11 @@ void EffectUIHost::OnCancel(wxCommandEvent & evt)
    Close();
 
    return;
+}
+
+void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   HelpSystem::ShowHelpDialog(this, mEffect->HelpPageName(), true);
 }
 
 void EffectUIHost::OnDebug(wxCommandEvent & evt)

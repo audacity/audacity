@@ -79,6 +79,7 @@ public:
    wxString GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
+   wxString HelpPageName() override;
 
    // EffectIdentInterface implementation
 
@@ -194,6 +195,7 @@ private:
    wxString          mInfo;
    wxString          mAuthor;
    wxString          mCopyright;
+   wxString          mHelpFile;
    EffectType        mType;
 
    bool              mEnablePreview;

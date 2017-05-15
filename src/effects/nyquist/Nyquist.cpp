@@ -212,6 +212,11 @@ wxString NyquistEffect::GetDescription()
    return mCopyright;
 }
 
+wxString NyquistEffect::HelpPageName()
+{
+   return mHelpFile;
+}
+
 // EffectIdentInterface implementation
 
 EffectType NyquistEffect::GetType()
@@ -1607,6 +1612,11 @@ void NyquistEffect::Parse(const wxString &line)
       return;
    }
 
+   if (len >= 2 && tokens[0] == wxT("help")) {
+      mHelpFile = UnQuote(tokens[1]);
+      return;
+   }
+
    if (len >= 6 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
 
@@ -1719,6 +1729,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mControls.Clear();
    mCategories.Clear();
    mIsSpectral = false;
+   mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
