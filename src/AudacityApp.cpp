@@ -1508,15 +1508,26 @@ bool AudacityApp::OnInit()
 
    AudacityProject *project;
    {
+      // Bug 718: Position splash screen on same screen 
+      // as where Audacity project will appear.
+      wxRect wndRect;
+      bool bMaximized = false;
+      bool bIconized = false;
+      GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
+
       wxSplashScreen temporarywindow(
          logo,
-         wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
+         wxSPLASH_NO_CENTRE | wxSPLASH_NO_TIMEOUT,
          0,
          NULL,
          wxID_ANY,
          wxDefaultPosition,
          wxDefaultSize,
          wxSTAY_ON_TOP);
+      // Possibly move it on to the second screen...
+      temporarywindow.SetPosition( wndRect.GetTopLeft() );
+      // Centered on whichever screen it is on.
+      temporarywindow.Center();
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
 
