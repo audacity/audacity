@@ -273,7 +273,7 @@ TrackArtist::TrackArtist()
 
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
-   mSampleDisplay = 0;
+   mSampleDisplay = 1;// Stem plots by default.
    UpdatePrefs();
 
    SetColours();
@@ -3214,7 +3214,7 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 0);
+   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 1);
    SetColours();
 }
 

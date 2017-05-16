@@ -120,7 +120,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.TieChoice(_("Display &samples:"),
                      wxT("/GUI/SampleView"),
-                     0,
+                     1,
                      mSampleDisplayChoice,
                      mSampleDisplayCodes);
          S.SetSizeHints(mSampleDisplayChoice);
