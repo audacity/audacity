@@ -6606,9 +6606,8 @@ AudacityProject::FoundClipBoundary AudacityProject::FindNextClipBoundary(const W
       return clip->GetEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
-      if ((*pStart)->GetStartSample() == (*pEnd)->GetEndSample()) {
-         // boundary between two clips which are immediately next to each other. Tested for
-         // using samples rather than times because of rounding errors
+      if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
+         // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
          result.time = (*pEnd)->GetEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
@@ -6653,9 +6652,8 @@ AudacityProject::FoundClipBoundary AudacityProject::FindPrevClipBoundary(const W
       return clip->GetEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
-      if ((*pStart)->GetStartSample() == (*pEnd)->GetEndSample()) {
-         // boundary between two clips which are immediately next to each other. Tested for
-         // using samples rather than times because of rounding errors
+      if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
+         // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
          result.time = (*pStart)->GetStartTime();
          result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
@@ -6697,7 +6695,7 @@ double AudacityProject::AdjustForFindingStartTimes(const std::vector<const WaveC
    auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetEndTime() == time; });
    if (q != clips.end() && q + 1 != clips.end() &&
-      (*q)->GetEndSample() == (*(q+1))->GetStartSample()) {
+      (*q)->SharesBoundaryWithNextClip(*(q+1))) {
       time = (*(q+1))->GetStartTime();
    }
 
@@ -6715,7 +6713,7 @@ double AudacityProject::AdjustForFindingEndTimes(const std::vector<const WaveCli
    auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() == time; });
    if (q != clips.end() && q != clips.begin() &&
-      (*(q - 1))->GetEndSample() == (*q)->GetStartSample()) {
+      (*(q - 1))->SharesBoundaryWithNextClip(*q)) {
       time = (*(q-1))->GetEndTime();
    }
 

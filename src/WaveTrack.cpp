@@ -2228,7 +2228,7 @@ WaveClip* WaveTrack::GetClipAtTime(double time)
    // second clip is found by the above code. So correct this.
    if (p != clips.rend() & p != clips.rbegin() &&
       time == (*p)->GetEndTime() &&
-      (*p)->GetEndSample() == (*(p-1))->GetStartSample()) {
+      (*p)->SharesBoundaryWithNextClip(*(p-1))) {
       p--;
    }
 
