@@ -155,6 +155,15 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
+struct ClipMoveState {
+   WaveClip *capturedClip {};
+   bool capturedClipIsSelection {};
+   TrackArray trackExclusions {};
+   double hSlideAmount {};
+   TrackClipArray capturedClipArray {};
+   wxInt64 snapLeft { -1 }, snapRight { -1 };
+};
+
 class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
  public:
 
@@ -658,10 +667,7 @@ protected:
 
    Track *mCapturedTrack;
    Envelope *mCapturedEnvelope;
-   WaveClip *mCapturedClip;
-   TrackClipArray mCapturedClipArray;
-   TrackArray mTrackExclusions;
-   bool mCapturedClipIsSelection;
+   ClipMoveState mClipMoveState;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
@@ -677,10 +683,6 @@ protected:
    wxBaseArrayDouble mSlideSnapFromPoints;
    wxBaseArrayDouble mSlideSnapToPoints;
    wxArrayInt mSlideSnapLinePixels;
-
-   // The amount that clips are sliding horizontally; this allows
-   // us to undo the slide and then slide it by another amount
-   double mHSlideAmount;
 
    bool mDidSlideVertically;
 
@@ -707,8 +709,20 @@ protected:
    bool mSnapPreferRightEdge;
 
 public:
-   wxInt64 GetSnapLeft () const { return mSnapLeft ; }
-   wxInt64 GetSnapRight() const { return mSnapRight; }
+   wxInt64 GetSnapLeft () const
+   {
+      if ( mMouseCapture == IsSliding )
+         return mClipMoveState.snapLeft ;
+      else
+         return mSnapLeft ;
+   }
+   wxInt64 GetSnapRight() const
+   {
+      if ( mMouseCapture == IsSliding )
+         return mClipMoveState.snapRight;
+      else
+         return mSnapRight;
+   }
 
 protected:
 
