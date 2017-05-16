@@ -3081,14 +3081,29 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
    OnCursorLeft( true, true, bKeyUp );
 }
 
+void AudacityProject::DoClipLeftOrRight( bool right )
+{
+   auto &panel = *GetTrackPanel();
+
+   auto amount = TrackPanel::OnClipMove
+      ( mViewInfo, panel.GetFocusedTrack(),
+        *GetTracks(), IsSyncLocked(), right );
+
+   panel.ScrollIntoView(mViewInfo.selectedRegion.t0());
+   panel.Refresh(false);
+
+   if ( amount == 0.0 )
+      panel.MessageForScreenReader( _("clip not moved"));
+}
+
 void AudacityProject::OnClipLeft()
 {
-   mTrackPanel->OnClipMove(false);
+   DoClipLeftOrRight( false );
 }
 
 void AudacityProject::OnClipRight()
 {
-   mTrackPanel->OnClipMove(true);
+   DoClipLeftOrRight( true );
 }
 
 //this pops up a dialog which allows the left selection to be set.

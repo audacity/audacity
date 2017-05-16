@@ -265,7 +265,9 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
 
-   virtual void OnClipMove(bool right);
+   static double OnClipMove
+      (ViewInfo &viewInfo, Track *track,
+       TrackList &trackList, bool syncLocked, bool right);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -392,10 +394,16 @@ protected:
    virtual void HandleSlide(wxMouseEvent & event);
    virtual void StartSlide(wxMouseEvent &event);
    virtual void DoSlide(wxMouseEvent &event);
-   virtual void DoSlideHorizontal();
-   virtual void CreateListOfCapturedClips(double clickTime);
-   virtual void AddClipsToCaptured(Track *t, bool withinSelection);
-   virtual void AddClipsToCaptured(Track *t, double t0, double t1);
+   static void DoSlideHorizontal
+      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
+   static void CreateListOfCapturedClips
+      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+        TrackList &trackList, bool syncLocked, double clickTime );
+   static void AddClipsToCaptured
+      ( ClipMoveState &state, const ViewInfo &viewInfo,
+        Track *t, bool withinSelection );
+   static void AddClipsToCaptured
+      ( ClipMoveState &state, Track *t, double t0, double t1 );
 
    // AS: Handle zooming into tracks
    virtual void HandleZoom(wxMouseEvent & event);

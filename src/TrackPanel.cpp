@@ -3484,7 +3484,9 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       }
 
       mCapturedTrack = vt;
-      CreateListOfCapturedClips(clickTime);
+      CreateListOfCapturedClips
+         ( mClipMoveState, *mViewInfo, *mCapturedTrack, *GetTracks(),
+           GetProject()->IsSyncLocked(), clickTime );
 
    } else {
       mClipMoveState.capturedClip = NULL;
@@ -3519,12 +3521,10 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mMouseCapture = IsSliding;
 }
 
-void TrackPanel::CreateListOfCapturedClips(double clickTime)
+void TrackPanel::CreateListOfCapturedClips
+   ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+     TrackList &trackList, bool syncLocked, double clickTime )
 {
-   auto &state = mClipMoveState;
-   auto &trackList = *GetTracks();
-   auto &capturedTrack = *mCapturedTrack;
-
 // The captured clip is the focus, but we need to create a list
    // of all clips that have to move, also...
 
@@ -3536,7 +3536,7 @@ void TrackPanel::CreateListOfCapturedClips(double clickTime)
       TrackListIterator iter( &trackList );
       for (Track *t = iter.First(); t; t = iter.Next()) {
          if (t->GetSelected()) {
-            AddClipsToCaptured(t, true);
+            AddClipsToCaptured( state, viewInfo, t, true );
             if (t->GetKind() != Track::Wave)
                state.trackExclusions.push_back(t);
          }
@@ -3561,7 +3561,7 @@ void TrackPanel::CreateListOfCapturedClips(double clickTime)
 
    // Now, if sync-lock is enabled, capture any clip that's linked to a
    // captured clip.
-   if (GetProject()->IsSyncLocked()) {
+   if ( syncLocked ) {
       // AWD: mCapturedClipArray expands as the loop runs, so newly-added
       // clips are considered (the effect is like recursion and terminates
       // because AddClipsToCaptured doesn't add duplicate clips); to remove
@@ -3576,7 +3576,7 @@ void TrackPanel::CreateListOfCapturedClips(double clickTime)
             for (Track *t = git.StartWith( state.capturedClipArray[i].track  );
                   t; t = git.Next() )
             {
-               AddClipsToCaptured(t,
+               AddClipsToCaptured(state, t,
                      state.capturedClipArray[i].clip->GetStartTime(),
                      state.capturedClipArray[i].clip->GetEndTime() );
                if (t->GetKind() != Track::Wave)
@@ -3591,7 +3591,8 @@ void TrackPanel::CreateListOfCapturedClips(double clickTime)
             SyncLockedTracksIterator git( &trackList );
             for (Track *t = git.StartWith(nt); t; t = git.Next())
             {
-               AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+               AddClipsToCaptured
+                  ( state, t, nt->GetStartTime(), nt->GetEndTime() );
                if (t->GetKind() != Track::Wave)
                   state.trackExclusions.push_back(t);
             }
@@ -3603,20 +3604,21 @@ void TrackPanel::CreateListOfCapturedClips(double clickTime)
 
 // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
 // duplication of this logic)
-void TrackPanel::AddClipsToCaptured(Track *t, bool withinSelection)
+void TrackPanel::AddClipsToCaptured
+   ( ClipMoveState &state, const ViewInfo &viewInfo,
+     Track *t, bool withinSelection )
 {
    if (withinSelection)
-      AddClipsToCaptured(t, mViewInfo->selectedRegion.t0(),
-                         mViewInfo->selectedRegion.t1());
+      AddClipsToCaptured( state, t, viewInfo.selectedRegion.t0(),
+                         viewInfo.selectedRegion.t1() );
    else
-      AddClipsToCaptured(t, t->GetStartTime(), t->GetEndTime());
+      AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
 }
 
 // Adds a track's clips to mCapturedClipArray within a specified time
-void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
+void TrackPanel::AddClipsToCaptured
+   ( ClipMoveState &state, Track *t, double t0, double t1 )
 {
-   auto &state = mClipMoveState;
-
    if (t->GetKind() == Track::Wave)
    {
       for(const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
@@ -3903,7 +3905,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    mClipMoveState.hSlideAmount = desiredSlideAmount;
 
-   DoSlideHorizontal();
+   DoSlideHorizontal( mClipMoveState, *GetTracks(), *mCapturedTrack );
 
 
    if ( mClipMoveState.capturedClipIsSelection ) {
@@ -3919,12 +3921,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    Refresh(false);
 }
 
-void TrackPanel::DoSlideHorizontal()
+void TrackPanel::DoSlideHorizontal
+   ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack )
 {
-   auto &state = mClipMoveState;
-   auto &trackList = *GetTracks();
-   auto &capturedTrack = *mCapturedTrack;
-
 #ifdef USE_MIDI
    if ( state.capturedClipArray.size() )
 #else
@@ -3997,15 +3996,14 @@ void TrackPanel::DoSlideHorizontal()
    }
 }
 
-void TrackPanel::OnClipMove(bool right)
+double TrackPanel::OnClipMove
+   ( ViewInfo &viewInfo, Track *track,
+     TrackList &trackList, bool syncLocked, bool right )
 {
-   auto &viewInfo = *mViewInfo;
-   auto &state = mClipMoveState;
-   auto track = GetFocusedTrack();
-
-
    // just dealing with clips in wave tracks for the moment. Note tracks??
    if (track && track->GetKind() == Track::Wave) {
+      ClipMoveState state;
+
       auto wt = static_cast<WaveTrack*>(track);
       auto t0 = viewInfo.selectedRegion.t0();
 
@@ -4013,12 +4011,12 @@ void TrackPanel::OnClipMove(bool right)
       if (state.capturedClip == nullptr)
          return;
       
-      mCapturedTrack = track;
       state.capturedClipIsSelection =
          track->GetSelected() && !viewInfo.selectedRegion.isPoint();
       state.trackExclusions.clear();
 
-      CreateListOfCapturedClips( t0 );
+      CreateListOfCapturedClips
+         ( state, viewInfo, *track, trackList, syncLocked, t0 );
 
       auto newT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = newT0 - t0;
@@ -4033,7 +4031,7 @@ void TrackPanel::OnClipMove(bool right)
          desiredSlideAmount *= -1;
 
       state.hSlideAmount = desiredSlideAmount;
-      DoSlideHorizontal();
+      DoSlideHorizontal( state, trackList, *track );
 
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
@@ -4045,12 +4043,10 @@ void TrackPanel::OnClipMove(bool right)
       double diff = viewInfo.selectedRegion.duration();
       viewInfo.selectedRegion.setTimes(newT0, newT0 + diff);
 
-      ScrollIntoView( newT0 );
-      Refresh(false);
-
-      if (state.hSlideAmount == 0.0)
-         MessageForScreenReader( _("clip not moved"));
+      return state.hSlideAmount;
    }
+
+   return 0.0;
 }
 
 
