@@ -4017,17 +4017,21 @@ void TrackPanel::OnClipMove(bool right, bool keyUp)
       mCapturedClipIsSelection = track->GetSelected() && !mViewInfo->selectedRegion.isPoint();
       mTrackExclusions.clear();
 
-      CreateListOfCapturedClips(mViewInfo->selectedRegion.t0());
+      auto t0 = mViewInfo->selectedRegion.t0();
+      CreateListOfCapturedClips( t0 );
 
-      double desiredSlideAmount = mViewInfo->OffsetTimeByPixels(0.0, 1);
+      auto newT0 = mViewInfo->OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
+      auto desiredSlideAmount = newT0 - t0;
 
       // set it to a sample point, and minimum of 1 sample point
+      if (!right)
+         desiredSlideAmount *= -1;
       double nSamples = rint(wt->GetRate() * desiredSlideAmount);
       nSamples = std::max(nSamples, 1.0);
       desiredSlideAmount = nSamples / wt->GetRate();
-
       if (!right)
          desiredSlideAmount *= -1;
+
       mHSlideAmount = desiredSlideAmount;
       DoSlideHorizontal();
       mHSlideAmountTotal += mHSlideAmount;
@@ -4035,12 +4039,11 @@ void TrackPanel::OnClipMove(bool right, bool keyUp)
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
       // so t0 is adjusted so that it is.
-      double newT0 = mViewInfo->selectedRegion.t0() + mHSlideAmount;
       if (newT0 < mCapturedClip->GetStartTime())
          newT0 = mCapturedClip->GetStartTime();
       if (newT0 > mCapturedClip->GetEndTime())
          newT0 = mCapturedClip->GetEndTime();
-      double diff = mViewInfo->selectedRegion.t1() - mViewInfo->selectedRegion.t0();
+      double diff = mViewInfo->selectedRegion.duration();
       mViewInfo->selectedRegion.setTimes(newT0, newT0 + diff);
 
       ScrollIntoView(mViewInfo->selectedRegion.t0());
