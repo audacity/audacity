@@ -6777,7 +6777,8 @@ void AudacityProject::OnCursorPrevClipBoundary()
 void AudacityProject::OnCursorClipBoundary(bool next)
 {
    std::vector<FoundClipBoundary> results;
-   int nTracksSearched = FindClipBoundaries(mViewInfo.selectedRegion.t0(), next, results);
+   int nTracksSearched = FindClipBoundaries(next ? mViewInfo.selectedRegion.t1() :
+      mViewInfo.selectedRegion.t0(), next, results);
 
    if (results.size() > 0) {
       // note that if there is more than one result, each has the same time value.
