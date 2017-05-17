@@ -33,6 +33,7 @@ for drawing different aspects of the label and its text box.
 
 #include <stdio.h>
 #include <algorithm>
+#include <limits.h>
 
 #include <wx/bitmap.h>
 #include <wx/brush.h>
@@ -473,7 +474,9 @@ void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const
    // Initially none of the rows have been used.
    // So set a value that is less than any valid value.
    {
-      const int xStart = zoomInfo.TimeToPosition(0.0, r.x) - 100;
+      // Bug 502: With dragging left of zeros, labels can be in 
+      // negative space.  So set least possible value as starting point.
+      const int xStart = INT_MIN;
       for (auto &x : xUsed)
          x = xStart;
    }

@@ -3039,6 +3039,8 @@ bool EffectUIHost::Initialize()
          bar->SetSizerAndFit(bs.release());
       }
 
+      // TODO: Add Help button
+      // long buttons = eApplyButton + eCloseButton + eHelpButton;
       long buttons = eApplyButton + eCloseButton;
       if (mEffect->mUIDebug)
       {

@@ -172,6 +172,11 @@ bool EffectsPrefs::Apply()
    return true;
 }
 
+wxString EffectsPrefs::HelpPageName()
+{
+   return "Effects_Preferences";
+}
+
 PrefsPanel *EffectsPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

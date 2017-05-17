@@ -28,6 +28,7 @@ class LibraryPrefs final : public PrefsPanel
    LibraryPrefs(wxWindow * parent);
    ~LibraryPrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

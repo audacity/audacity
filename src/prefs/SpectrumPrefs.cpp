@@ -490,6 +490,11 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 #endif
 }
 
+wxString SpectrumPrefs::HelpPageName()
+{
+   return "Spectrograms_Preferences";
+}
+
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
    EVT_CHECKBOX(ID_DEFAULTS, SpectrumPrefs::OnDefaults)

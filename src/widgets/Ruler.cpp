@@ -2853,11 +2853,10 @@ void AdornedRulerPanel::UpdateButtonStates()
       else
          pinButton->PushDown();
       pinButton->SetAlternateIdx(state ? 0 : 1);
+      // Bug 1584: Toltip now shows what clicking will do.
       const auto label = state
-      // Label descibes the present state, not what the click does
-      // (which is, to toggle the state)
-      ? _("Pinned Record/Play head")
-      : _("Unpinned Record/Play head");
+      ? _("Click to unpin")
+      : _("Click to pin");
       common(*pinButton, wxT("PinnedHead"), label);
    }
 }

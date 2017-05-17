@@ -286,6 +286,11 @@ bool MidiIOPrefs::Validate()
    return true;
 }
 
+wxString MidiIOPrefs::HelpPageName()
+{
+   return "MIDI_Devices_Preferences";
+}
+
 PrefsPanel *MidiIOPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

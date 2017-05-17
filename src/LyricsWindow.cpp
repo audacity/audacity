@@ -130,6 +130,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
       wxCommandEventHandler(LyricsWindow::OnTimer),
       NULL,
       this);
+   Center();
 }
 
 LyricsWindow::~LyricsWindow()

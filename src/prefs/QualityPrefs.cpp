@@ -228,6 +228,11 @@ bool QualityPrefs::Apply()
    return true;
 }
 
+wxString QualityPrefs::HelpPageName()
+{
+   return "Quality_Preferences";
+}
+
 PrefsPanel *QualityPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

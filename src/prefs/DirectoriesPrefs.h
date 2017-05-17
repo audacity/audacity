@@ -25,6 +25,7 @@ class DirectoriesPrefs final : public PrefsPanel
    ~DirectoriesPrefs();
    bool Apply() override;
    bool Validate() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

@@ -656,6 +656,11 @@ void KeyConfigPrefs::Cancel()
    return;
 }
 
+wxString KeyConfigPrefs::HelpPageName()
+{
+   return "Keyboard_Preferences";
+}
+
 #else
 //
 // KeyConfigPrefs
@@ -1185,6 +1190,11 @@ void KeyConfigPrefs::Cancel()
    }
 
    return;
+}
+
+wxString KeyConfigPrefs::HelpPageName()
+{
+   return "Keyboard_Preferences";
 }
 
 #endif

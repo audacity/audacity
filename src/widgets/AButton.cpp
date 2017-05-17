@@ -536,7 +536,13 @@ void AButton::Enable()
 
 void AButton::Disable()
 {
+   // Bug 1565: Tooltips not showing on disabled buttons.
+   // The fix is to NOT tell windows that the button is disabled.
+   // The button's appearance will still change to show it is disabled
+   // since we control that rather than windows.
+#ifndef __WXMSW__
    wxWindow::Enable(false);
+#endif
    mEnabled = false;
    if (GetCapture()==this)
       ReleaseMouse();

@@ -302,8 +302,12 @@ void TranscriptionToolBar::RegenerateTooltips()
       int tool;
       wxString commandName;
       wxString untranslatedLabel;
+      wxString commandName2;
+      wxString untranslatedLabel2;
    } table[] = {
-      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed")  },
+      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed"),
+      wxT("PlayAtSpeedLooped"),    XO("Looped-Play-at-Speed")
+      },
    };
 
    std::vector<wxString> commands;
@@ -311,6 +315,8 @@ void TranscriptionToolBar::RegenerateTooltips()
       commands.clear();
       commands.push_back(wxGetTranslation(entry.untranslatedLabel));
       commands.push_back(entry.commandName);
+      commands.push_back(wxGetTranslation(entry.untranslatedLabel2));
+      commands.push_back(entry.commandName2);
       ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
    }
 

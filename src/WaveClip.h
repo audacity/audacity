@@ -378,6 +378,9 @@ public:
    bool GetIsPlaceholder() const { return mIsPlaceholder; }
    void SetIsPlaceholder(bool val) { mIsPlaceholder = val; }
 
+   // used by commands which interact with clips using the keyboard
+   bool SharesBoundaryWithNextClip(const WaveClip* next) const;
+
 public:
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
    mutable std::unique_ptr<SpecPxCache> mSpecPxCache;

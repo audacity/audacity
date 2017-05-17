@@ -239,6 +239,11 @@ bool LibraryPrefs::Apply()
    return true;
 }
 
+wxString LibraryPrefs::HelpPageName()
+{
+   return "Libraries_Preferences";
+}
+
 PrefsPanel *LibraryPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

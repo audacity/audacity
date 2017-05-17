@@ -85,11 +85,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpMic, wxImage( 25, 25 ), wxT("Mic"));
    DEFINE_IMAGE( bmpSpeaker, wxImage( 25, 25 ), wxT("Speaker"));
 
-   DEFINE_IMAGE( bmpPinnedPlayHead, wxImage( 27, 27 ), wxT("PinnedPlayHead"));
-   DEFINE_IMAGE( bmpUnpinnedPlayHead, wxImage( 27, 27 ), wxT("UnpinnedPlayHead"));
-   DEFINE_IMAGE( bmpPinnedRecordHead, wxImage( 27, 27 ), wxT("PinnedRecordHead"));
-   DEFINE_IMAGE( bmpUnpinnedRecordHead, wxImage( 27, 27 ), wxT("UnpinnedRecordHead"));
-
    SET_THEME_FLAGS(  resFlagPaired  );
    DEFINE_IMAGE( bmpZoomFit, wxImage( 27, 27 ), wxT("ZoomFit"));
    DEFINE_IMAGE( bmpZoomFitDisabled, wxImage( 27, 27 ), wxT("ZoomFitDisabled"));
@@ -161,13 +156,21 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpPostfishLoop, wxImage( 29, 17 ), wxT("PostfishLoop"));
 
    SET_THEME_FLAGS(  resFlagNone  );
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpDockDown, wxImage( 15, 55 ), wxT("DockDown"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpDockDownShort, wxImage( 15, 27 ), wxT("DockDownShort"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpDockOver, wxImage( 15, 55 ), wxT("DockOver"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpDockOverShort, wxImage( 15, 27 ), wxT("DockOverShort"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpDockUp, wxImage( 15, 55 ), wxT("DockUp"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpDockUpShort, wxImage( 15, 27 ), wxT("DockUpShort"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpPinnedPlayRecordHead, wxImage( 27, 27 ), wxT("PinnedPlayRecordHead"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpUnpinnedPlayRecordHead, wxImage( 27, 27 ), wxT("UnpinnedPlayRecordHead"));
 
    DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
@@ -176,7 +179,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpSyncLockTracksUp, wxImage( 20, 20 ), wxT("SyncLockTracksUp"));
    DEFINE_IMAGE( bmpSyncLockTracksDisabled, wxImage( 20, 20 ), wxT("SyncLockTracksDisabled"));
    DEFINE_IMAGE( bmpToggleScrubRuler, wxImage( 20, 20 ), wxT("ToggleScrubRuler"));
-//   DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 14 ), wxT("SliderThumb"));
    DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
@@ -189,7 +191,9 @@ from there.  Audacity will look for a file called "Pause.png".
 
    SET_THEME_FLAGS(  resFlagNone  );
    DEFINE_IMAGE( bmpSliderThumb, wxImage( 11, 20 ), wxT("SliderThumb"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpSlider, wxImage( 80, 20 ), wxT("Slider"));
+   SET_THEME_FLAGS( resFlagSkip );
    DEFINE_IMAGE( bmpHiliteSlider, wxImage( 80, 20 ), wxT("HiliteSlider"));
    DEFINE_IMAGE( bmpUpButtonExpandSel, wxImage( 96, 18 ), wxT("UpButtonExpandSel"));
    DEFINE_IMAGE( bmpDownButtonExpandSel, wxImage( 96, 18 ), wxT("DownButtonExpandSel"));
@@ -206,8 +210,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpUpButtonSmall, wxImage( 27, 27 ), wxT("UpButtonSmall"));
    DEFINE_IMAGE( bmpDownButtonSmall, wxImage( 27, 27 ), wxT("DownButtonSmall"));
    DEFINE_IMAGE( bmpHiliteButtonSmall, wxImage( 27, 27 ), wxT("HiliteButtonSmall"));
-   //DEFINE_IMAGE( bmpVolumeSlider, wxImage( 100, 28 ), wxT("VolumeSlider"));
-   //DEFINE_IMAGE( bmpVolumeSliderThumb, wxImage( 10, 28 ), wxT("VolumeSliderThumb"));
 
    SET_THEME_FLAGS(  resFlagNone  );
    DEFINE_IMAGE( bmpMacUpButton, wxImage( 36, 36 ), wxT("MacUpButton"));
@@ -216,8 +218,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpMacUpButtonSmall, wxImage( 27, 27 ), wxT("MacUpButtonSmall"));
    DEFINE_IMAGE( bmpMacDownButtonSmall, wxImage( 27, 27 ), wxT("MacDownButtonSmall"));
    DEFINE_IMAGE( bmpMacHiliteButtonSmall, wxImage( 27, 27 ), wxT("MacHiliteButtonSmall"));
-   DEFINE_IMAGE( bmpMacSlider, wxImage( 100, 28 ), wxT("MacSlider"));
-   DEFINE_IMAGE( bmpMacSliderThumb, wxImage( 17, 28 ), wxT("MacSliderThumb"));
 
    SET_THEME_FLAGS(  resFlagInternal  );
    DEFINE_IMAGE( bmpRecoloredUpLarge, wxImage( 48, 48 ), wxT("RecoloredUpLarge"));
@@ -240,20 +240,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpBottomFrequencyCursor, wxImage( 32, 32 ), wxT("BottomFrequencyCursor"));
    DEFINE_IMAGE( bmpTopFrequencyCursor, wxImage( 32, 32 ), wxT("TopFrequencyCursor"));
    DEFINE_IMAGE( bmpBandWidthCursor, wxImage(32, 32), wxT("BandWidthCursor"));
-
-
    
-   /*
-   DEFINE_IMAGE( bmpToolBarToggle, wxImage( 43, 35 ), wxT("ToolBarToggle"));
-   DEFINE_IMAGE( bmpToolBarTarget, wxImage( 17, 26 ), wxT("ToolBarTarget"));
-   DEFINE_IMAGE( bmpToolBarGrabber, wxImage( 17, 8 ), wxT("ToolBarGrabber"));
-   DEFINE_IMAGE( bmpArrow, wxImage( 9, 16 ), wxT("Arrow"));
-   DEFINE_IMAGE( bmpUploadFile, wxImage( 16, 16 ), wxT("UploadFile"));
-   DEFINE_IMAGE( bmpUploadFolder, wxImage( 16, 16 ), wxT("UploadFolder"));
-   DEFINE_IMAGE( bmpUploadMp3, wxImage( 16, 16 ), wxT("UploadMp3"));
-   DEFINE_IMAGE( bmpUploadUp, wxImage( 16, 16 ), wxT("UploadUp"));
-*/
-   SET_THEME_FLAGS(  resFlagNewLine  );
+   //SET_THEME_FLAGS(  resFlagNewLine  );
 
 // DA: The logo with name xpm has a different width.
 #ifdef EXPERIMENTAL_DA
@@ -264,8 +252,10 @@ from there.  Audacity will look for a file called "Pause.png".
 
 #define LOGOWITHNAME_HEIGHT 200
 
+   SET_THEME_FLAGS( resFlagSkip | resFlagNewLine );
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo"));
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
+
 
    DEFINE_COLOUR( clrBlank,      wxColour( 64,  64,  64), wxT("Blank"));
    DEFINE_COLOUR( clrUnselected, wxColour( 30,  30,  30), wxT("Unselected"));

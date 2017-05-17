@@ -1948,3 +1948,17 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
       mRate = rate;
    }
 }
+
+// Used by commands which interact with clips using the keyboard.
+// When two clips are immediately next to each other, the GetEndTime()
+// of the first clip and the GetStartTime() of the second clip may not
+// be exactly equal due to rounding errors.
+bool WaveClip::SharesBoundaryWithNextClip(const WaveClip* next) const
+{
+   double endThis = GetRate() * GetOffset() + GetNumSamples().as_double();
+   double startNext = next->GetRate() * next->GetOffset();
+
+   // given that a double has about 15 significant digits, using a criterion
+   // of half a sample should be safe in all normal usage.
+   return fabs(startNext - endThis) < 0.5;
+}

@@ -24,6 +24,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
    TracksBehaviorsPrefs(wxWindow * parent);
    ~TracksBehaviorsPrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

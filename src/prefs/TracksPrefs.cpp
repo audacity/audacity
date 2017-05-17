@@ -132,7 +132,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.TieChoice(_("Display &samples:"),
                      wxT("/GUI/SampleView"),
-                     0,
+                     1,
                      mSampleDisplayChoice,
                      mSampleDisplayCodes);
          S.SetSizeHints(mSampleDisplayChoice);
@@ -172,10 +172,17 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
 
 bool TracksPrefs::Apply()
 {
+   // Bug 1583: Clear the caching of the preference pinned state.
+   iPreferencePinned = -1;
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
    return true;
+}
+
+wxString TracksPrefs::HelpPageName()
+{
+   return "Tracks_Preferences";
 }
 
 PrefsPanel *TracksPrefsFactory::Create(wxWindow *parent)

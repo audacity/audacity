@@ -123,6 +123,11 @@ bool PlaybackPrefs::Apply()
    return true;
 }
 
+wxString PlaybackPrefs::HelpPageName()
+{
+   return "Playback_Preferences";
+}
+
 PrefsPanel *PlaybackPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

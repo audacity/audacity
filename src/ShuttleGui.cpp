@@ -103,14 +103,20 @@ for registering for changes.
 #include <wx/notebook.h>
 #include <wx/treectrl.h>
 #include <wx/spinctrl.h>
+#include <wx/bmpbuttn.h>
 #include "Internat.h"
 #include "Experimental.h"
 #include "Shuttle.h"
 #include "WrappedType.h"
 #include "widgets/wxPanelWrapper.h"
 
+#include "../images/Help.xpm"
+
 ShuttleGuiBase::ShuttleGuiBase(wxWindow * pParent, teShuttleMode ShuttleMode )
 {
+   // Suppress warnings about the header file
+   wxUnusedVar(Help_xpm);
+
    wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
 
    mpParent = pParent;
@@ -2168,7 +2174,11 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
 
    if( buttons & eHelpButton )
    {
-      bs->AddButton(safenew wxButton(parent, wxID_HELP));
+      // Replace standard Help button with smaller icon button.
+      // bs->AddButton(safenew wxButton(parent, wxID_HELP));
+      b = new wxBitmapButton(parent, wxID_HELP, Help_xpm);
+      b->SetToolTip( _("Help") );
+      bs->AddButton( b );
    }
 
    if (buttons & ePreviewButton)
