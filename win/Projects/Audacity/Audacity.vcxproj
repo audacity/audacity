@@ -452,6 +452,7 @@
     <ClInclude Include="..\..\..\src\NumberScale.h" />
     <ClInclude Include="..\..\..\src\prefs\GUISettings.h" />
     <ClInclude Include="..\..\..\src\prefs\SpectrogramSettings.h" />
+    <ClInclude Include="..\..\..\src\prefs\TracksBehaviorsPrefs.h" />
     <ClInclude Include="..\..\..\src\prefs\WaveformPrefs.h" />
     <ClInclude Include="..\..\..\src\prefs\WaveformSettings.h" />
     <ClInclude Include="..\..\..\src\RealFFTf48x.h" />

@@ -71,7 +71,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Playthrough"));
    {
-      S.TieCheckBox(_("Overdub: &Play other tracks while recording new one"),
+      S.TieCheckBox(_("Overdub"),
                     wxT("/AudioIO/Duplex"),
                     true);
 #if defined(__WXMAC__)
@@ -79,18 +79,18 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/AudioIO/Playthrough"),
                     false);
 #endif
-      S.TieCheckBox(_("&Software Playthrough: Listen to input while recording or monitoring"),
+      S.TieCheckBox(_("&Software Playthrough"),
                     wxT("/AudioIO/SWPlaythrough"),
                     false);
 #if !defined(__WXMAC__)
-      S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
+      //S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
 #endif
    }
    S.EndStatic();
 
    S.StartStatic(_("Sound Activated Recording"));
    {
-      S.TieCheckBox(_("Sound Activated &Recording"),
+      S.TieCheckBox(_("&Enable"),
                     wxT("/AudioIO/SoundActivatedRecord"),
                     false);
 
@@ -99,7 +99,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(1);
 
          int dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
-         S.TieSlider(_("Sound Activation Le&vel (dB):"),
+         S.TieSlider(_("Le&vel (dB):"),
                      wxT("/AudioIO/SilenceLevel"),
                      -50,
                      0,
@@ -155,7 +155,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Options"));
    {
-       S.TieCheckBox(_("Record &appends, instead of recording new track"),
+       S.TieCheckBox(_("Record &appends"),
                     wxT("/GUI/PreferAppendRecord"),
                     true);
    }

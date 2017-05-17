@@ -139,7 +139,9 @@ PrefsDialog::Factories
    static TracksPrefsFactory tracksPrefsFactory;
    static ImportExportPrefsFactory importExportPrefsFactory;
    static ExtImportPrefsFactory extImportPrefsFactory;
+#ifndef EXPERIMENTAL_DA
    static ProjectsPrefsFactory projectsPrefsFactory;
+#endif
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
    static LibraryPrefsFactory libraryPrefsFactory;
 #endif
@@ -178,8 +180,9 @@ PrefsDialog::Factories
       // Group one other page
       PrefsNode(&importExportPrefsFactory, 1),
       &extImportPrefsFactory,
-
+#ifndef EXPERIMENTAL_DA
       &projectsPrefsFactory,
+#endif
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
       &libraryPrefsFactory,
 #endif

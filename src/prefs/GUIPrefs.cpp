@@ -169,12 +169,9 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Show / Hide"));
+   S.StartStatic(_("Show"));
    {
-      S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
-                    wxT("/GUI/ShowSplashScreen"),
-                    true);
-      S.TieCheckBox(_("Show e&xtra menus"),
+      S.TieCheckBox(_("E&xtra menus"),
                     wxT("/GUI/ShowExtraMenus"),
                     false);
 #ifdef EXPERIMENTAL_THEME_PREFS

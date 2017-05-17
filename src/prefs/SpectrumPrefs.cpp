@@ -189,7 +189,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Colors"));
+   S.StartStatic(_("Spectrogram Colors"));
    {
       S.StartTwoColumn();
       {
@@ -209,7 +209,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             4);
       }
 
-      S.Id(ID_GRAYSCALE).TieCheckBox(_("S&how the spectrum using grayscale colors"),
+      S.Id(ID_GRAYSCALE).TieCheckBox(_("&Grayscale"),
          mTempSettings.isGrayscale);
 
       S.EndTwoColumn();

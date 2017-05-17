@@ -55,14 +55,14 @@ void ProjectsPrefs::Populate()
 void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
-
+#if 0
    S.StartStatic(_("When saving a project that depends on other audio files"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/SaveProjectWithDependencies"), wxT("ask"));
       {
-         S.TieRadioButton(_("&Always copy all audio into project (safest)"),
+         S.TieRadioButton(_("&Copy audio into project"),
                           wxT("copy"));
-         S.TieRadioButton(_("Do &not copy any audio"),
+         S.TieRadioButton(_("Do &not copy"),
                           wxT("never"));
          S.TieRadioButton(_("As&k user"),
                           wxT("ask"));
@@ -70,6 +70,7 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndRadioButtonGroup();
    }
    S.EndStatic();
+#endif
 }
 
 bool ProjectsPrefs::Apply()

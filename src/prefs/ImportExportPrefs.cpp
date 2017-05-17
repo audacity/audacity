@@ -50,35 +50,37 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
+#if 0
    S.StartStatic(_("When importing audio files"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
       {
-         S.TieRadioButton(_("&Make a copy of uncompressed audio files before editing (safer)"),
+         S.TieRadioButton(_("&Copy before editing"),
                           wxT("copy"));
-         S.TieRadioButton(_("&Read uncompressed audio files directly from the original (faster)"),
+         S.TieRadioButton(_("&Don't copy"),
                           wxT("edit"));
       }
       S.EndRadioButtonGroup();
 
-      S.TieCheckBox(_("&Normalize all tracks in project"),
+      S.TieCheckBox(_("&Normalize tracks"),
                     wxT("/AudioFiles/NormalizeOnLoad"),
                     false);
    }
    S.EndStatic();
+#endif
 
    S.StartStatic(_("When exporting tracks to an audio file"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/ExportDownMix"), true);
       {
-         S.TieRadioButton(_("&Always mix all tracks down to Stereo or Mono channel(s)"),
+         S.TieRadioButton(_("&Mix down to Stereo or Mono"),
                           true);
-         S.TieRadioButton(_("&Use custom mix (for example to export a 5.1 multichannel file)"),
+         S.TieRadioButton(_("&Use custom mix"),
                           false);
       }
       S.EndRadioButtonGroup();
 
-      S.TieCheckBox(_("S&how Metadata Tags editor prior to export step"),
+      S.TieCheckBox(_("S&how Metadata Tags editor before export"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
       // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog.
@@ -87,13 +89,13 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #ifdef USE_MIDI
-   S.StartStatic(_("When exporting track to an Allegro (.gro) file"));
+   S.StartStatic(_("In Allegro (.gro) files show time in:"));
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/AllegroStyle"), true);
       {
-         S.TieRadioButton(_("Represent times and durations in &seconds"),
+         S.TieRadioButton(_("&seconds"),
                           true);
-         S.TieRadioButton(_("Represent times and durations in &beats"),
+         S.TieRadioButton(_("&beats"),
                           false);
       }
       S.EndRadioButtonGroup();

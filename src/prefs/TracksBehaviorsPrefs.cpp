@@ -31,12 +31,6 @@ TracksBehaviorsPrefs::~TracksBehaviorsPrefs()
 {
 }
 
-const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
-{
-   static auto string = wxT("/GUI/ScrollBeyondZero");
-   return string;
-}
-
 void TracksBehaviorsPrefs::Populate()
 {
    mSoloCodes.Add(wxT("Simple"));
@@ -60,30 +54,30 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("&Select then act on entire project, if no audio selected"),
+      /* i18n-hint: auto-select makes a selection if there was none.*/
+      S.TieCheckBox(_("&Auto-select"),
                     wxT("/GUI/SelectAllOnNone"),
                     true);
+      /* i18n-hint: auto-move moves clips out the way if necessary.*/
+      S.TieCheckBox(_("&Auto-move for clips"),
+                    wxT("/GUI/EditClipCanMove"),
+                    true);
       /* i18n-hint: cut-lines are a lines indicating where to cut.*/
-      S.TieCheckBox(_("Enable cut &lines"),
+      S.TieCheckBox(_("Cut &lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
-      S.TieCheckBox(_("Enable &dragging of left and right selection edges"),
+      S.TieCheckBox(_("&Drag selection edges"),
                     wxT("/GUI/AdjustSelectionEdges"),
                     true);
+/* Stopping at either end is best (DA decision) 
+   Works for VI users and regular users alike.
       S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
                     wxT("/GUI/CircularTrackNavigation"),
                     false);
-      S.TieCheckBox(_("Editing a clip can &move other clips"),
-                    wxT("/GUI/EditClipCanMove"),
-                    true);
+*/
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
                     true);
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-      S.TieCheckBox(_("Enable scrolling left of &zero"),
-                    ScrollingPreferenceKey(),
-                    ScrollingPreferenceDefault());
-#endif
 
       S.AddSpace(10);
 

@@ -1834,6 +1834,9 @@
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h">
       <Filter>src\blockfile</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\TracksBehaviorsPrefs.h">
+      <Filter>src\prefs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">
