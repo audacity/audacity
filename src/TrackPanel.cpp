@@ -3996,6 +3996,7 @@ void TrackPanel::DoSlideHorizontal
    }
 }
 
+// This function returns the amount moved.  Possibly 0.0.
 double TrackPanel::OnClipMove
    ( ViewInfo &viewInfo, Track *track,
      TrackList &trackList, bool syncLocked, bool right )
@@ -4009,7 +4010,7 @@ double TrackPanel::OnClipMove
 
       state.capturedClip = wt->GetClipAtTime( t0 );
       if (state.capturedClip == nullptr)
-         return;
+         return 0.0;
       
       state.capturedClipIsSelection =
          track->GetSelected() && !viewInfo.selectedRegion.isPoint();
@@ -4045,7 +4046,6 @@ double TrackPanel::OnClipMove
 
       return state.hSlideAmount;
    }
-
    return 0.0;
 }
 
@@ -8300,7 +8300,7 @@ void TrackPanel::OnSpectrogramSettings(wxCommandEvent &)
    // Get here only from the wave track menu
    const auto wt = static_cast<WaveTrack*>(mPopupMenuTarget);
    // WaveformPrefsFactory waveformFactory(wt);
-   TracksBehaviorsPrefsFactory tracksBehaviorsFactory();
+   //TracksBehaviorsPrefsFactory tracksBehaviorsFactory();
    SpectrumPrefsFactory spectrumFactory(wt);
 
    PrefsDialog::Factories factories;
