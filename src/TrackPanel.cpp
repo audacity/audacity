@@ -455,7 +455,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mMouseCapture = IsUncaptured;
    mSlideUpDownOnly = false;
-   mHSlideAmountTotal = 0.0;
    mLabelTrackStartXPos=-1;
    mCircularTrackNavigation = false;
 
@@ -3984,27 +3983,10 @@ void TrackPanel::DoSlideHorizontal()
    }
 }
 
-void TrackPanel::OnClipMove(bool right, bool keyUp)
+void TrackPanel::OnClipMove(bool right)
 {
-   if (keyUp) {
-      if (mHSlideAmountTotal != 0.0) {
-         wxString message;
-         message.Printf(wxT("%s %s %.03f %s"),
-            _("Time shifted clips"),
-            mHSlideAmountTotal > 0 ?
-            /* i18n-hint: a direction as in left or right */
-            _("right") :
-            /* i18n-hint: a direction as in left or right */
-            _("left"),
-            fabs(mHSlideAmountTotal),
-            _("seconds"));
-         MakeParentPushState(message, _("Time-Shift"), UndoPush::CONSOLIDATE);
-         mHSlideAmountTotal = 0.0;
-      }
-      return;
-   }
-
    auto track = GetFocusedTrack();
+
 
    // just dealing with clips in wave tracks for the moment. Note tracks??
    if (track && track->GetKind() == Track::Wave) {
@@ -4034,7 +4016,6 @@ void TrackPanel::OnClipMove(bool right, bool keyUp)
 
       mHSlideAmount = desiredSlideAmount;
       DoSlideHorizontal();
-      mHSlideAmountTotal += mHSlideAmount;
 
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
