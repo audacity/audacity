@@ -1438,8 +1438,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
       c->AddItem(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
 
-      c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT("\twantKeyup"));
-      c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT("\twantKeyup"));
+      c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT(""));
+      c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -3081,26 +3081,29 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
    OnCursorLeft( true, true, bKeyUp );
 }
 
-void AudacityProject::OnClipLeft(const wxEvent* evt)
+void AudacityProject::DoClipLeftOrRight( bool right )
 {
-   if (evt) {
-      mTrackPanel->OnClipMove(false, evt->GetEventType() == wxEVT_KEY_UP);
-   }
-   else {            // called from menu item, so simulate keydown and keyup
-      mTrackPanel->OnClipMove(false, false);
-      mTrackPanel->OnClipMove(false, true);
-   }
+   auto &panel = *GetTrackPanel();
+
+   auto amount = TrackPanel::OnClipMove
+      ( mViewInfo, panel.GetFocusedTrack(),
+        *GetTracks(), IsSyncLocked(), right );
+
+   panel.ScrollIntoView(mViewInfo.selectedRegion.t0());
+   panel.Refresh(false);
+
+   if ( amount == 0.0 )
+      panel.MessageForScreenReader( _("clip not moved"));
 }
 
-void AudacityProject::OnClipRight(const wxEvent* evt)
+void AudacityProject::OnClipLeft()
 {
-   if (evt) {
-      mTrackPanel->OnClipMove(true, evt->GetEventType() == wxEVT_KEY_UP);
-   }
-   else {            // called from menu item, so simulate keydown and keyup
-      mTrackPanel->OnClipMove(true, false);
-      mTrackPanel->OnClipMove(true, true);
-   }
+   DoClipLeftOrRight( false );
+}
+
+void AudacityProject::OnClipRight()
+{
+   DoClipLeftOrRight( true );
 }
 
 //this pops up a dialog which allows the left selection to be set.

@@ -455,7 +455,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mMouseCapture = IsUncaptured;
    mSlideUpDownOnly = false;
-   mHSlideAmountTotal = 0.0;
    mLabelTrackStartXPos=-1;
    mCircularTrackNavigation = false;
 
@@ -535,8 +534,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    // This is used to snap the cursor to the nearest track that
    // lines up with it.
    mSnapManager = NULL;
-   mSnapLeft = -1;
-   mSnapRight = -1;
 
    // Register for tracklist updates
    mTracks->Connect(EVT_TRACKLIST_RESIZED,
@@ -1884,7 +1881,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
          //Also, capture this track for dragging until we up-click.
-         mCapturedClipArray.push_back(TrackClip(w, selectedClip));
+         mClipMoveState.capturedClipArray.push_back(TrackClip(w, selectedClip));
 
          mMouseCapture = IsSliding;
 
@@ -2065,8 +2062,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    // We create a NEW snap manager in case any snap-points have changed
    mSnapManager = std::make_unique<SnapManager>(GetTracks(), mViewInfo);
 
-   mSnapLeft = -1;
-   mSnapRight = -1;
+   mSnapLeft = mSnapRight = -1;
 
 #ifdef USE_MIDI
    mStretching = false;
@@ -2347,8 +2343,7 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
    double s = mSelStart;
 
    if (mSnapManager) {
-      mSnapLeft = -1;
-      mSnapRight = -1;
+      mSnapLeft = mSnapRight = -1;
       bool snappedPoint, snappedTime;
       if (mSnapManager->Snap(mCapturedTrack, mSelStart, false,
                              &s, &snappedPoint, &snappedTime)) {
@@ -2394,8 +2389,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
    origSel1 = sel1;
 
    if (mSnapManager) {
-      mSnapLeft = -1;
-      mSnapRight = -1;
+      mSnapLeft = mSnapRight = -1;
       bool snappedPoint, snappedTime;
       if (mSnapManager->Snap(mCapturedTrack, sel0, false,
                              &sel0, &snappedPoint, &snappedTime)) {
@@ -2414,8 +2408,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
             !snappedTime) {
          sel0 = origSel0;
          sel1 = origSel1;
-         mSnapLeft = -1;
-         mSnapRight = -1;
+         mSnapLeft = mSnapRight = -1;
       }
    }
 
@@ -3332,7 +3325,7 @@ void TrackPanel::ForwardEventToEnvelope(wxMouseEvent & event)
    }
 }
 
-void TrackPanel::HandleSlide(wxMouseEvent & event)
+void TrackPanel::HandleSlide( wxMouseEvent & event )
 {
    if (event.LeftDown())
       StartSlide(event);
@@ -3350,17 +3343,17 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       mSnapManager.reset();
 
       // Do not draw yellow lines
-      if (mSnapLeft != -1 || mSnapRight != -1) {
-         mSnapLeft = mSnapRight = -1;
+      if ( mClipMoveState.snapLeft != -1 || mClipMoveState.snapRight != -1) {
+         mClipMoveState.snapLeft = mClipMoveState.snapRight = -1;
          Refresh(false);
       }
 
-      if (!mDidSlideVertically && mHSlideAmount==0)
+      if (!mDidSlideVertically && mClipMoveState.hSlideAmount == 0)
          return;
 
-      for (size_t i = 0; i < mCapturedClipArray.size(); i++)
+      for (size_t i = 0; i < mClipMoveState.capturedClipArray.size(); i++)
       {
-         TrackClip &trackClip = mCapturedClipArray[i];
+         TrackClip &trackClip = mClipMoveState.capturedClipArray[i];
          WaveClip* pWaveClip = trackClip.clip;
          // Note that per TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1),
          // in the non-WaveTrack case, the code adds a NULL clip to mCapturedClipArray,
@@ -3387,14 +3380,14 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
          consolidate = false;
       }
       else {
-         wxString direction = mHSlideAmount>0 ?
+         wxString direction = mClipMoveState.hSlideAmount > 0 ?
             /* i18n-hint: a direction as in left or right.*/
             _("right") :
             /* i18n-hint: a direction as in left or right.*/
             _("left");
          /* i18n-hint: %s is a direction like left or right */
          msg.Printf(_("Time shifted tracks/clips %s %.02f seconds"),
-                    direction.c_str(), fabs(mHSlideAmount));
+                    direction.c_str(), fabs( mClipMoveState.hSlideAmount ));
          consolidate = true;
       }
       MakeParentPushState(msg, _("Time-Shift"),
@@ -3450,10 +3443,9 @@ namespace {
 /// Prepare for sliding.
 void TrackPanel::StartSlide(wxMouseEvent & event)
 {
-   mHSlideAmount = 0.0;
-   mDidSlideVertically = false;
+   mClipMoveState = ClipMoveState{};
 
-   mTrackExclusions.clear();
+   mDidSlideVertically = false;
 
    const auto foundCell = FindCell(event.m_x, event.m_y);
    auto &vt = foundCell.pTrack;
@@ -3466,7 +3458,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
    double clickTime =
       mViewInfo->PositionToTime(event.m_x, GetLeftOffset());
-   mCapturedClipIsSelection =
+   mClipMoveState.capturedClipIsSelection =
       (vt->GetSelected() &&
       clickTime > mViewInfo->selectedRegion.t0() &&
       clickTime < mViewInfo->selectedRegion.t1());
@@ -3482,21 +3474,23 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    {
 #ifdef USE_MIDI
       if (!wt)
-         mCapturedClip = NULL;
+         mClipMoveState.capturedClip = NULL;
       else
 #endif
       {
-         mCapturedClip = wt->GetClipAtX(event.m_x);
-         if (mCapturedClip == NULL)
+         mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x);
+         if (mClipMoveState.capturedClip == NULL)
             return;
       }
 
       mCapturedTrack = vt;
-      CreateListOfCapturedClips(clickTime);
+      CreateListOfCapturedClips
+         ( mClipMoveState, *mViewInfo, *mCapturedTrack, *GetTracks(),
+           GetProject()->IsSyncLocked(), clickTime );
 
    } else {
-      mCapturedClip = NULL;
-      mCapturedClipArray.clear();
+      mClipMoveState.capturedClip = NULL;
+      mClipMoveState.capturedClipArray.clear();
       mCapturedTrack = vt;
    }
 
@@ -3512,91 +3506,95 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
    mSnapManager = std::make_unique<SnapManager>(GetTracks(),
                                   mViewInfo,
-                                  &mCapturedClipArray,
-                                  &mTrackExclusions,
+                                  &mClipMoveState.capturedClipArray,
+                                  &mClipMoveState.trackExclusions,
                                   true); // don't snap to time
-   mSnapLeft = -1;
-   mSnapRight = -1;
+   mClipMoveState.snapLeft = -1;
+   mClipMoveState.snapRight = -1;
    mSnapPreferRightEdge = false;
-   if (mCapturedClip) {
-      if (fabs(mSelStart - mCapturedClip->GetEndTime()) <
-          fabs(mSelStart - mCapturedClip->GetStartTime()))
+   if (mClipMoveState.capturedClip) {
+      if (fabs(mSelStart - mClipMoveState.capturedClip->GetEndTime()) <
+          fabs(mSelStart - mClipMoveState.capturedClip->GetStartTime()))
          mSnapPreferRightEdge = true;
    }
 
    mMouseCapture = IsSliding;
 }
 
-void TrackPanel::CreateListOfCapturedClips(double clickTime)
+void TrackPanel::CreateListOfCapturedClips
+   ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+     TrackList &trackList, bool syncLocked, double clickTime )
 {
 // The captured clip is the focus, but we need to create a list
    // of all clips that have to move, also...
 
-   mCapturedClipArray.clear();
+   state.capturedClipArray.clear();
 
    // First, if click was in selection, capture selected clips; otherwise
    // just the clicked-on clip
-   if (mCapturedClipIsSelection) {
-      TrackListIterator iter(GetTracks());
+   if ( state.capturedClipIsSelection ) {
+      TrackListIterator iter( &trackList );
       for (Track *t = iter.First(); t; t = iter.Next()) {
          if (t->GetSelected()) {
-            AddClipsToCaptured(t, true);
+            AddClipsToCaptured( state, viewInfo, t, true );
             if (t->GetKind() != Track::Wave)
-               mTrackExclusions.push_back(t);
+               state.trackExclusions.push_back(t);
          }
       }
    }
    else {
-      mCapturedClipArray.push_back(TrackClip(mCapturedTrack, mCapturedClip));
+      state.capturedClipArray.push_back
+         (TrackClip( &capturedTrack, state.capturedClip ));
 
       // Check for stereo partner
-      Track *partner = mCapturedTrack->GetLink();
+      Track *partner = capturedTrack.GetLink();
       WaveTrack *wt;
-      if (mCapturedClip &&
+      if (state.capturedClip &&
             // Assume linked track is wave or null
             nullptr != (wt = static_cast<WaveTrack*>(partner))) {
          WaveClip *const clip = FindClipAtTime(wt, clickTime);
 
          if (clip)
-            mCapturedClipArray.push_back(TrackClip(partner, clip));
+            state.capturedClipArray.push_back(TrackClip(partner, clip));
       }
    }
 
    // Now, if sync-lock is enabled, capture any clip that's linked to a
    // captured clip.
-   if (GetProject()->IsSyncLocked()) {
+   if ( syncLocked ) {
       // AWD: mCapturedClipArray expands as the loop runs, so newly-added
       // clips are considered (the effect is like recursion and terminates
       // because AddClipsToCaptured doesn't add duplicate clips); to remove
       // this behavior just store the array size beforehand.
-      for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
+      for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
          // Capture based on tracks that have clips -- that means we
          // don't capture based on links to label tracks for now (until
          // we can treat individual labels as clips)
-         if (mCapturedClipArray[i].clip) {
+         if ( state.capturedClipArray[i].clip ) {
             // Iterate over sync-lock group tracks.
-            SyncLockedTracksIterator git(GetTracks());
-            for (Track *t = git.StartWith(mCapturedClipArray[i].track);
+            SyncLockedTracksIterator git( &trackList );
+            for (Track *t = git.StartWith( state.capturedClipArray[i].track  );
                   t; t = git.Next() )
             {
-               AddClipsToCaptured(t,
-                     mCapturedClipArray[i].clip->GetStartTime(),
-                     mCapturedClipArray[i].clip->GetEndTime() );
+               AddClipsToCaptured(state, t,
+                     state.capturedClipArray[i].clip->GetStartTime(),
+                     state.capturedClipArray[i].clip->GetEndTime() );
                if (t->GetKind() != Track::Wave)
-                  mTrackExclusions.push_back(t);
+                  state.trackExclusions.push_back(t);
             }
          }
 #ifdef USE_MIDI
          // Capture additional clips from NoteTracks
-         Track *nt = mCapturedClipArray[i].track;
+         Track *nt = state.capturedClipArray[i].track;
          if (nt->GetKind() == Track::Note) {
             // Iterate over sync-lock group tracks.
-            SyncLockedTracksIterator git(GetTracks());
+            SyncLockedTracksIterator git( &trackList );
             for (Track *t = git.StartWith(nt); t; t = git.Next())
             {
-               AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+               AddClipsToCaptured
+                  ( state, t, nt->GetStartTime(), nt->GetEndTime() );
                if (t->GetKind() != Track::Wave)
-                  mTrackExclusions.push_back(t);
+                  state.trackExclusions.push_back(t);
             }
          }
 #endif
@@ -3606,17 +3604,20 @@ void TrackPanel::CreateListOfCapturedClips(double clickTime)
 
 // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
 // duplication of this logic)
-void TrackPanel::AddClipsToCaptured(Track *t, bool withinSelection)
+void TrackPanel::AddClipsToCaptured
+   ( ClipMoveState &state, const ViewInfo &viewInfo,
+     Track *t, bool withinSelection )
 {
    if (withinSelection)
-      AddClipsToCaptured(t, mViewInfo->selectedRegion.t0(),
-                         mViewInfo->selectedRegion.t1());
+      AddClipsToCaptured( state, t, viewInfo.selectedRegion.t0(),
+                         viewInfo.selectedRegion.t1() );
    else
-      AddClipsToCaptured(t, t->GetStartTime(), t->GetEndTime());
+      AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
 }
 
 // Adds a track's clips to mCapturedClipArray within a specified time
-void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
+void TrackPanel::AddClipsToCaptured
+   ( ClipMoveState &state, Track *t, double t0, double t1 )
 {
    if (t->GetKind() == Track::Wave)
    {
@@ -3626,15 +3627,15 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
          {
             // Avoid getting clips that were already captured
             bool newClip = true;
-            for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-               if (mCapturedClipArray[i].clip == clip.get()) {
+            for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
+               if ( state.capturedClipArray[i].clip == clip.get() ) {
                   newClip = false;
                   break;
                }
             }
 
             if (newClip)
-               mCapturedClipArray.push_back(TrackClip(t, clip.get()));
+               state.capturedClipArray.push_back( TrackClip(t, clip.get()) );
          }
       }
    }
@@ -3645,8 +3646,8 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
 
       // Avoid adding a track twice
       bool newClip = true;
-      for (unsigned int i = 0; i < mCapturedClipArray.size(); ++i) {
-         if (mCapturedClipArray[i].track == t) {
+      for ( unsigned int i = 0; i < state.capturedClipArray.size(); ++i ) {
+         if ( state.capturedClipArray[i].track == t ) {
             newClip = false;
             break;
          }
@@ -3660,7 +3661,7 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
                return;
          }
 #endif
-         mCapturedClipArray.push_back(TrackClip(t, NULL));
+         state.capturedClipArray.push_back(TrackClip(t, NULL));
       }
    }
 }
@@ -3693,30 +3694,32 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    // happens relative to the original horizontal position of
    // each clip...
 #ifdef USE_MIDI
-   if (mCapturedClipArray.size())
+   if ( mClipMoveState.capturedClipArray.size() )
 #else
-   if (mCapturedClip)
+   if ( mClipMoveState.capturedClip )
 #endif
    {
-      for(i=0; i<mCapturedClipArray.size(); i++) {
-         if (mCapturedClipArray[i].clip)
-            mCapturedClipArray[i].clip->Offset(-mHSlideAmount);
+      for ( i = 0; i < mClipMoveState.capturedClipArray.size(); ++i ) {
+         if ( mClipMoveState.capturedClipArray[i].clip )
+            mClipMoveState.capturedClipArray[i].clip->Offset
+               ( -mClipMoveState.hSlideAmount );
          else
-            mCapturedClipArray[i].track->Offset(-mHSlideAmount);
+            mClipMoveState.capturedClipArray[i].track->Offset
+               ( -mClipMoveState.hSlideAmount );
       }
    }
    else {
-      mCapturedTrack->Offset(-mHSlideAmount);
+      mCapturedTrack->Offset( -mClipMoveState.hSlideAmount );
       Track* link = mCapturedTrack->GetLink();
       if (link)
-         link->Offset(-mHSlideAmount);
+         link->Offset( -mClipMoveState.hSlideAmount );
    }
 
-   if (mCapturedClipIsSelection) {
+   if ( mClipMoveState.capturedClipIsSelection ) {
       // Slide the selection, too
-      mViewInfo->selectedRegion.move(-mHSlideAmount);
+      mViewInfo->selectedRegion.move( -mClipMoveState.hSlideAmount );
    }
-   mHSlideAmount = 0.0;
+   mClipMoveState.hSlideAmount = 0.0;
 
    // Implement sliding within the track(s)
    double desiredSlideAmount;
@@ -3736,11 +3739,13 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             mtw->GetRate();  // set it to a sample point
       }
       // Adjust desiredSlideAmount using SnapManager
-      if (mSnapManager && mCapturedClipArray.size()) {
+      if (mSnapManager && mClipMoveState.capturedClipArray.size()) {
          trySnap = true;
-         if (mCapturedClip) {
-            clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
-            clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
+         if ( mClipMoveState.capturedClip ) {
+            clipLeft = mClipMoveState.capturedClip->GetStartTime()
+               + desiredSlideAmount;
+            clipRight = mClipMoveState.capturedClip->GetEndTime()
+               + desiredSlideAmount;
          }
          else {
             clipLeft = mCapturedTrack->GetStartTime() + desiredSlideAmount;
@@ -3755,9 +3760,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) /
                mtw->GetRate();  // set it to a sample point
          }
-         if (mSnapManager && mCapturedClip) {
-            clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
-            clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
+         if (mSnapManager && mClipMoveState.capturedClip) {
+            clipLeft = mClipMoveState.capturedClip->GetStartTime() + desiredSlideAmount;
+            clipRight = mClipMoveState.capturedClip->GetEndTime() + desiredSlideAmount;
          }
       }
 #endif
@@ -3780,17 +3785,19 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
          }
 
          // Take whichever one snapped (if any) and compute the NEW desiredSlideAmount
-         mSnapLeft = -1;
-         mSnapRight = -1;
+         mClipMoveState.snapLeft = -1;
+         mClipMoveState.snapRight = -1;
          if (newClipLeft != clipLeft) {
             double difference = (newClipLeft - clipLeft);
             desiredSlideAmount += difference;
-            mSnapLeft = mViewInfo->TimeToPosition(newClipLeft, GetLeftOffset());
+            mClipMoveState.snapLeft =
+               mViewInfo->TimeToPosition(newClipLeft, GetLeftOffset());
          }
          else if (newClipRight != clipRight) {
             double difference = (newClipRight - clipRight);
             desiredSlideAmount += difference;
-            mSnapRight = mViewInfo->TimeToPosition(newClipRight, GetLeftOffset());
+            mClipMoveState.snapRight =
+               mViewInfo->TimeToPosition(newClipRight, GetLeftOffset());
          }
       }
    }
@@ -3801,14 +3808,14 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // If the mouse is over a track that isn't the captured track,
    // decide which tracks the captured clips should go to.
-   if (mCapturedClip && mouseTrack != mCapturedTrack /*&&
-       !mCapturedClipIsSelection*/)
+   if ( mClipMoveState.capturedClip && mouseTrack != mCapturedTrack /*&&
+       !mCapturedClipIsSelection*/ )
    {
       const int diff =
          TrackPosition(*mTracks, mouseTrack) -
          TrackPosition(*mTracks, mCapturedTrack);
-      for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn; ++ii) {
-         TrackClip &trackClip = mCapturedClipArray[ii];
+      for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size(); ii < nn; ++ii ) {
+         TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
          if (trackClip.clip) {
             // Move all clips up or down by an equal count of audio tracks.
             Track *const pSrcTrack = trackClip.track;
@@ -3833,8 +3840,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       // Having passed that test, remove clips temporarily from their
       // tracks, so moving clips don't interfere with each other
       // when we call CanInsertClip()
-      for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn;  ++ii) {
-         TrackClip &trackClip = mCapturedClipArray[ii];
+      for ( unsigned ii = 0,
+            nn = mClipMoveState.capturedClipArray.size(); ii < nn;  ++ii ) {
+         TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
          WaveClip *const pSrcClip = trackClip.clip;
          if (pSrcClip)
             trackClip.holder =
@@ -3845,8 +3853,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
       // Now check that the move is possible
       bool ok = true;
-      for (unsigned ii = 0, nn = mCapturedClipArray.size(); ok && ii < nn; ++ii) {
-         TrackClip &trackClip = mCapturedClipArray[ii];
+      for ( unsigned ii = 0,
+            nn = mClipMoveState.capturedClipArray.size(); ok && ii < nn; ++ii) {
+         TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
          WaveClip *const pSrcClip = trackClip.clip;
          if (pSrcClip)
             ok = trackClip.dstTrack->CanInsertClip(pSrcClip);
@@ -3854,8 +3863,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       
       if (!ok) {
          // Failure -- put clips back where they were
-         for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn;  ++ii) {
-            TrackClip &trackClip = mCapturedClipArray[ii];
+         for ( unsigned ii = 0,
+               nn = mClipMoveState.capturedClipArray.size(); ii < nn; ++ii) {
+            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip)
                // Assume track is wave because it has a clip
@@ -3866,8 +3876,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       }
       else {
          // Do the vertical moves of clips
-         for (unsigned ii = 0, nn = mCapturedClipArray.size(); ii < nn; ++ii) {
-            TrackClip &trackClip = mCapturedClipArray[ii];
+         for ( unsigned ii = 0,
+               nn = mClipMoveState.capturedClipArray.size(); ii < nn; ++ii) {
+            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                const auto dstTrack = trackClip.dstTrack;
@@ -3892,135 +3903,122 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       return;
    }
 
-   mHSlideAmount = desiredSlideAmount;
+   mClipMoveState.hSlideAmount = desiredSlideAmount;
 
-   DoSlideHorizontal();
+   DoSlideHorizontal( mClipMoveState, *GetTracks(), *mCapturedTrack );
 
 
-   if (mCapturedClipIsSelection) {
+   if ( mClipMoveState.capturedClipIsSelection ) {
       // Slide the selection, too
-      mViewInfo->selectedRegion.move(mHSlideAmount);
+      mViewInfo->selectedRegion.move( mClipMoveState.hSlideAmount );
    }
 
    if (slidVertically) {
       // NEW origin
-      mHSlideAmount = 0;
+      mClipMoveState.hSlideAmount = 0;
    }
 
    Refresh(false);
 }
 
-void TrackPanel::DoSlideHorizontal()
+void TrackPanel::DoSlideHorizontal
+   ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack )
 {
 #ifdef USE_MIDI
-   if (mCapturedClipArray.size())
+   if ( state.capturedClipArray.size() )
 #else
-   if (mCapturedClip)
+   if ( state.capturedClip )
 #endif
    {
       double allowed;
       double initialAllowed;
-      double safeBigDistance = 1000 + 2.0 * (mTracks->GetEndTime() -
-                                             mTracks->GetStartTime());
+      double safeBigDistance = 1000 + 2.0 * ( trackList.GetEndTime() -
+                                              trackList.GetStartTime() );
 
       do { // loop to compute allowed, does not actually move anything yet
-         initialAllowed = mHSlideAmount;
+         initialAllowed = state.hSlideAmount;
 
          unsigned int i, j;
-         for(i=0; i<mCapturedClipArray.size(); i++) {
-            WaveTrack *track = (WaveTrack *)mCapturedClipArray[i].track;
-            WaveClip *clip = mCapturedClipArray[i].clip;
+         for ( i = 0; i < state.capturedClipArray.size(); ++i ) {
+            WaveTrack *track = (WaveTrack *)state.capturedClipArray[i].track;
+            WaveClip *clip = state. capturedClipArray[i].clip;
 
             if (clip) { // only audio clips are used to compute allowed
                // Move all other selected clips totally out of the way
                // temporarily because they're all moving together and
                // we want to find out if OTHER clips are in the way,
                // not one of the moving ones
-               for(j=0; j<mCapturedClipArray.size(); j++) {
-                  WaveClip *clip2 = mCapturedClipArray[j].clip;
+               for ( j = 0; j < state.capturedClipArray.size(); j++ ) {
+                  WaveClip *clip2 = state.capturedClipArray[j].clip;
                   if (clip2 && clip2 != clip)
                      clip2->Offset(-safeBigDistance);
                }
 
-               if (track->CanOffsetClip(clip, mHSlideAmount, &allowed)) {
-                  if (mHSlideAmount != allowed) {
-                     mHSlideAmount = allowed;
-                     mSnapLeft = mSnapRight = -1; // see bug 1067
+               if ( track->CanOffsetClip(clip, state.hSlideAmount, &allowed) ) {
+                  if ( state.hSlideAmount != allowed ) {
+                     state.hSlideAmount = allowed;
+                     state.snapLeft = state.snapRight = -1; // see bug 1067
                   }
                }
                else {
-                  mHSlideAmount = 0.0;
-                  mSnapLeft = mSnapRight = -1; // see bug 1067
+                  state.hSlideAmount = 0.0;
+                  state.snapLeft = state.snapRight = -1; // see bug 1067
                }
 
-               for(j=0; j<mCapturedClipArray.size(); j++) {
-                  WaveClip *clip2 = mCapturedClipArray[j].clip;
+               for ( j = 0; j < state.capturedClipArray.size(); ++j ) {
+                  WaveClip *clip2 = state.capturedClipArray[j].clip;
                   if (clip2 && clip2 != clip)
                      clip2->Offset(safeBigDistance);
                }
             }
          }
-      } while (mHSlideAmount != initialAllowed);
+      } while ( state.hSlideAmount != initialAllowed );
 
-      if (mHSlideAmount != 0.0) { // finally, here is where clips are moved
+      if ( state.hSlideAmount != 0.0 ) { // finally, here is where clips are moved
          unsigned int i;
-         for(i=0; i<mCapturedClipArray.size(); i++) {
-            Track *track = mCapturedClipArray[i].track;
-            WaveClip *clip = mCapturedClipArray[i].clip;
+         for ( i = 0; i < state.capturedClipArray.size(); ++i ) {
+            Track *track = state.capturedClipArray[i].track;
+            WaveClip *clip = state.capturedClipArray[i].clip;
             if (clip)
-               clip->Offset(mHSlideAmount);
+               clip->Offset( state.hSlideAmount );
             else
-               track->Offset(mHSlideAmount);
+               track->Offset( state.hSlideAmount );
          }
       }
    }
    else {
       // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
-      mCapturedTrack->Offset(mHSlideAmount);
-      Track* link = mCapturedTrack->GetLink();
+      capturedTrack.Offset( state.hSlideAmount );
+      Track* link = capturedTrack.GetLink();
       if (link)
-         link->Offset(mHSlideAmount);
+         link->Offset( state.hSlideAmount );
    }
 }
 
-void TrackPanel::OnClipMove(bool right, bool keyUp)
+double TrackPanel::OnClipMove
+   ( ViewInfo &viewInfo, Track *track,
+     TrackList &trackList, bool syncLocked, bool right )
 {
-   if (keyUp) {
-      if (mHSlideAmountTotal != 0.0) {
-         wxString message;
-         message.Printf(wxT("%s %s %.03f %s"),
-            _("Time shifted clips"),
-            mHSlideAmountTotal > 0 ?
-            /* i18n-hint: a direction as in left or right */
-            _("right") :
-            /* i18n-hint: a direction as in left or right */
-            _("left"),
-            fabs(mHSlideAmountTotal),
-            _("seconds"));
-         MakeParentPushState(message, _("Time-Shift"), UndoPush::CONSOLIDATE);
-         mHSlideAmountTotal = 0.0;
-      }
-      return;
-   }
-
-   auto track = GetFocusedTrack();
-
    // just dealing with clips in wave tracks for the moment. Note tracks??
    if (track && track->GetKind() == Track::Wave) {
+      ClipMoveState state;
+
       auto wt = static_cast<WaveTrack*>(track);
-      mCapturedClip = wt->GetClipAtTime(mViewInfo->selectedRegion.t0());
-      if (mCapturedClip == nullptr)
+      auto t0 = viewInfo.selectedRegion.t0();
+
+      state.capturedClip = wt->GetClipAtTime( t0 );
+      if (state.capturedClip == nullptr)
          return;
       
-      mCapturedTrack = track;
-      mCapturedClipIsSelection = track->GetSelected() && !mViewInfo->selectedRegion.isPoint();
-      mTrackExclusions.clear();
+      state.capturedClipIsSelection =
+         track->GetSelected() && !viewInfo.selectedRegion.isPoint();
+      state.trackExclusions.clear();
 
-      auto t0 = mViewInfo->selectedRegion.t0();
-      CreateListOfCapturedClips( t0 );
+      CreateListOfCapturedClips
+         ( state, viewInfo, *track, trackList, syncLocked, t0 );
 
-      auto newT0 = mViewInfo->OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
+      auto newT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = newT0 - t0;
 
       // set it to a sample point, and minimum of 1 sample point
@@ -4032,26 +4030,23 @@ void TrackPanel::OnClipMove(bool right, bool keyUp)
       if (!right)
          desiredSlideAmount *= -1;
 
-      mHSlideAmount = desiredSlideAmount;
-      DoSlideHorizontal();
-      mHSlideAmountTotal += mHSlideAmount;
+      state.hSlideAmount = desiredSlideAmount;
+      DoSlideHorizontal( state, trackList, *track );
 
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
       // so t0 is adjusted so that it is.
-      if (newT0 < mCapturedClip->GetStartTime())
-         newT0 = mCapturedClip->GetStartTime();
-      if (newT0 > mCapturedClip->GetEndTime())
-         newT0 = mCapturedClip->GetEndTime();
-      double diff = mViewInfo->selectedRegion.duration();
-      mViewInfo->selectedRegion.setTimes(newT0, newT0 + diff);
+      if (newT0 < state.capturedClip->GetStartTime())
+         newT0 = state.capturedClip->GetStartTime();
+      if (newT0 > state.capturedClip->GetEndTime())
+         newT0 = state.capturedClip->GetEndTime();
+      double diff = viewInfo.selectedRegion.duration();
+      viewInfo.selectedRegion.setTimes(newT0, newT0 + diff);
 
-      ScrollIntoView(mViewInfo->selectedRegion.t0());
-      Refresh(false);
-
-      if (mHSlideAmount == 0.0)
-         MessageForScreenReader( _("clip not moved"));
+      return state.hSlideAmount;
    }
+
+   return 0.0;
 }
 
 
@@ -7211,13 +7206,13 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
    }
 
    // Draw snap guidelines if we have any
-   if (mSnapManager && (mSnapLeft >= 0 || mSnapRight >= 0)) {
+   if ( mSnapManager && ( GetSnapLeft() >= 0 || GetSnapRight() >= 0 )) {
       AColor::SnapGuidePen(dc);
-      if (mSnapLeft >= 0) {
-         AColor::Line(*dc, (int)mSnapLeft, 0, mSnapLeft, 30000);
+      if ( GetSnapLeft() >= 0 ) {
+         AColor::Line(*dc, (int)GetSnapLeft(), 0, GetSnapLeft(), 30000);
       }
-      if (mSnapRight >= 0) {
-         AColor::Line(*dc, (int)mSnapRight, 0, mSnapRight, 30000);
+      if ( GetSnapRight() >= 0 ) {
+         AColor::Line(*dc, (int)GetSnapRight(), 0, GetSnapRight(), 30000);
       }
    }
 }
