@@ -3443,7 +3443,7 @@ namespace {
 /// Prepare for sliding.
 void TrackPanel::StartSlide(wxMouseEvent & event)
 {
-   mClipMoveState = ClipMoveState{};
+   mClipMoveState.clear();
 
    mDidSlideVertically = false;
 

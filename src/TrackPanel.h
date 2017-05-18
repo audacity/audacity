@@ -162,6 +162,16 @@ struct ClipMoveState {
    double hSlideAmount {};
    TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
+
+   void clear()
+   {
+      capturedClip = nullptr;
+      capturedClipIsSelection = false;
+      trackExclusions.clear();
+      hSlideAmount = 0;
+      capturedClipArray.clear();
+      snapLeft = snapRight = -1;
+   }
 };
 
 class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
