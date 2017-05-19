@@ -4,6 +4,7 @@
 ;preview linear
 ;categories "http://lv2plug.in/ns/lv2core#ModulatorPlugin"
 ;name "Tremolo..."
+;manpage "Tremolo"
 ;action "Applying Tremolo..."
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"

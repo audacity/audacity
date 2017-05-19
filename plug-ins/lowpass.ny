@@ -3,6 +3,7 @@
 ;type process
 ;preview linear
 ;name "Low Pass Filter..."
+;manpage "Low_Pass_Filter"
 ;action "Performing Low Pass Filter..."
 ;author "Dominic Mazzoni"
 ;copyright "Released under terms of the GNU General Public License version 2"

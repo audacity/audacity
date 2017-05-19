@@ -4,6 +4,7 @@
 ;mergeclips 1
 ;restoresplits 0
 ;name "Crossfade Clips"
+;manpage "Crossfade_Clips"
 ;action "Crossfading..."
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2" 

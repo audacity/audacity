@@ -121,7 +121,7 @@ int wxTreebookExt::SetSelection(size_t n)
       if (showHelp) {
          wxAcceleratorEntry entries[1];
 #if defined(__WXMAC__)
-         entries[0].Set(wxACCEL_CTRL, (int) '?', wxID_HELP);
+         // Is there a standard shortcut on Mac?
 #else
          entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
 #endif

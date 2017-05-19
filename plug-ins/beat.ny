@@ -3,6 +3,7 @@
 ;type analyze
 ;categories "http://audacityteam.org/namespace#OnsetDetector"
 ;name "Beat Finder..."
+;manpage "Beat_Finder"
 ;action "Finding beats..."
 ;author "Audacity"
 ;copyright "Released under terms of the GNU General Public License version 2"

@@ -2,6 +2,7 @@
 ;version 4
 ;type generate
 ;name "Sample Data Import..."
+;manpage "Sample_Data_Import"
 ;action "Reading and rendering samples..."
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"

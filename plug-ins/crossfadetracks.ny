@@ -2,6 +2,7 @@
 ;version 4
 ;type process
 ;name "Crossfade Tracks..."
+;manpage "Crossfade_Tracks"
 ;action "Crossfading..."
 ;preview selection
 ;author "Steve Daulton"
