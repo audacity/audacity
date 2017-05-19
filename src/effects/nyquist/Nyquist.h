@@ -79,7 +79,9 @@ public:
    wxString GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
-   wxString HelpPageName() override;
+   
+   wxString ManualPage() override;
+   wxString HelpPage() override;
 
    // EffectIdentInterface implementation
 
@@ -195,6 +197,7 @@ private:
    wxString          mInfo;
    wxString          mAuthor;
    wxString          mCopyright;
+   wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
    EffectType        mType;
 

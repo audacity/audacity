@@ -212,8 +212,15 @@ wxString NyquistEffect::GetDescription()
    return mCopyright;
 }
 
-wxString NyquistEffect::HelpPageName()
+wxString NyquistEffect::ManualPage()
 {
+      return mManPage;
+}
+
+wxString NyquistEffect::HelpPage()
+{
+   // TODO: Get the full path for the help page
+   // Return empty string and give debug info if it does not exist
    return mHelpFile;
 }
 
@@ -1612,7 +1619,16 @@ void NyquistEffect::Parse(const wxString &line)
       return;
    }
 
-   if (len >= 2 && tokens[0] == wxT("help")) {
+   // TODO: Document.
+   // Page name in Audacity development manual
+   if (len >= 2 && tokens[0] == wxT("manpage")) {
+      mManPage = UnQuote(tokens[1]);
+      return;
+   }
+
+   // TODO: Document.
+   // Local Help file
+   if (len >= 2 && tokens[0] == wxT("helpfile")) {
       mHelpFile = UnQuote(tokens[1]);
       return;
    }
@@ -1729,6 +1745,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mControls.Clear();
    mCategories.Clear();
    mIsSpectral = false;
+   mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
    mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
 
    mFoundType = false;

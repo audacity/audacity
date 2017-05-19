@@ -1099,7 +1099,12 @@ wxString Effect::GetPreset(wxWindow * parent, const wxString & parms)
    return wxEmptyString;
 }
 
-wxString Effect::HelpPageName()
+wxString Effect::ManualPage()
+{
+   return wxEmptyString;
+}
+
+wxString Effect::HelpPage()
 {
    return wxEmptyString;
 }
@@ -3047,7 +3052,11 @@ bool EffectUIHost::Initialize()
       }
 
       long buttons;
-      if ( !(mEffect->HelpPageName().IsEmpty())) {
+      if ( mEffect->ManualPage().IsEmpty() && mEffect->HelpPage().IsEmpty()) {
+         buttons = eApplyButton + eCloseButton;
+         this->SetAcceleratorTable(wxNullAcceleratorTable);
+      }
+      else {
          buttons = eApplyButton + eCloseButton + eHelpButton;
          wxAcceleratorEntry entries[1];
 #if defined(__WXMAC__)
@@ -3057,10 +3066,6 @@ bool EffectUIHost::Initialize()
 #endif
          wxAcceleratorTable accel(1, entries);
          this->SetAcceleratorTable(accel);
-      }
-      else {
-         buttons = eApplyButton + eCloseButton;
-         this->SetAcceleratorTable(wxNullAcceleratorTable);
       }
 
 
@@ -3224,7 +3229,16 @@ void EffectUIHost::OnCancel(wxCommandEvent & evt)
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelpDialog(this, mEffect->HelpPageName(), true);
+   if (mEffect->GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
+      // Old ShowHelpDialog required when there is no on-line manual.
+      // Always use default web browser to allow full-featured HTML pages.
+      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
+   }
+   else {
+      // otherwise use the new ShowHelpDialog
+      wxLogDebug(mEffect->ManualPage());
+      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
+   }
 }
 
 void EffectUIHost::OnDebug(wxCommandEvent & evt)

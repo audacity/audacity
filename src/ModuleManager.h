@@ -95,7 +95,9 @@ public:
    // PluginManager use
    bool DiscoverProviders();
 
+   // Seems we don't currently use FindAllPlugins
    void FindAllPlugins(PluginIDList & providers, wxArrayString & paths);
+
    wxArrayString FindPluginsForProvider(const PluginID & provider, const wxString & path);
    bool RegisterPlugin(const PluginID & provider, const wxString & path);
 

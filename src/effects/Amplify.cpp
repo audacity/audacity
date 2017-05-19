@@ -90,7 +90,7 @@ wxString EffectAmplify::GetDescription()
    return XO("Increases or decreases the volume of the audio you have selected");
 }
 
-wxString EffectAmplify::HelpPageName()
+wxString EffectAmplify::ManualPage()
 {
    return wxT("Amplify");
 }

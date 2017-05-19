@@ -57,10 +57,13 @@ public:
    /// file names containing a '#' are not (on any platform).
    /// @param bModal Whether the resulting dialogue should be modal or not.
    /// Default is modeless dialogue
+   /// @param alwaysDefaultBrowser Force use of default web browser.
+   /// Default allows built in browser for local files.
    static void ShowHelpDialog(wxWindow *parent,
                      const wxString &localFileName,
                      const wxString &remoteURL,
-                     bool bModal = false);
+                     bool bModal = false,
+                     bool alwaysDefaultBrowser = false);
 
    /// Displays a page from the Audacity manual  in your browser, if
    /// it's available locally, OR else links to the internet.

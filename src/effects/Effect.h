@@ -226,7 +226,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual bool HasFactoryDefaults();
    virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
 
-   virtual wxString HelpPageName();
+   // Name of page in the Audacity alpha manual
+   virtual wxString ManualPage();
+   // Fully qualified local help file name
+   virtual wxString HelpPage();
 
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
