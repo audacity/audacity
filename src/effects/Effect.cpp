@@ -54,6 +54,9 @@ greater use in future.
 #include "TimeWarper.h"
 #include "nyquist/Nyquist.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/ErrorDialog.h"
+#include "../FileNames.h"
 
 #if defined(__WXMAC__)
 #include <Cocoa/Cocoa.h>
@@ -2615,8 +2618,9 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
-                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
+         ShowErrorDialog(FocusDialog, _("Error"),
+                         _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
       }
    }
 }

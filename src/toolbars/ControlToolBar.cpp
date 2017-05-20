@@ -67,6 +67,9 @@
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Meter.h"
+#include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/ErrorDialog.h"
+#include "../FileNames.h"
 
 #include "../tracks/ui/Scrubbing.h"
 #include "../prefs/TracksPrefs.h"
@@ -697,11 +700,10 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #endif
       }
       else {
-         // msmeyer: Show error message if stream could not be opened
-         wxMessageBox(
-            _("Error opening sound device. "
-            "Try changing the audio host, playback device and the project sample rate."),
-            _("Error"), wxOK | wxICON_EXCLAMATION, this);
+         // Show error message if stream could not be opened
+         ShowErrorDialog(this, _("Error"),
+                         _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
       }
    }
 
@@ -1173,9 +1175,10 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          StartScrollingIfPreferred();
       }
       else {
-         // msmeyer: Show error message if stream could not be opened
-         wxMessageBox(_("Error opening sound device. Try changing the audio host, recording device and the project sample rate."),
-                      _("Error"), wxOK | wxICON_EXCLAMATION, this);
+         // Show error message if stream could not be opened
+         ShowErrorDialog(this, _("Error"),
+                         _("Error opening sound device.\nTry changing the audio host, recording device and the project sample rate."),
+                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
       }
    }
 }
