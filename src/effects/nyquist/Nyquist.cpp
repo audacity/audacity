@@ -214,7 +214,9 @@ wxString NyquistEffect::GetDescription()
 
 wxString NyquistEffect::ManualPage()
 {
-      return mManPage;
+      return mIsPrompt
+         ? wxT("Nyquist_Prompt")
+         : mManPage;
 }
 
 wxString NyquistEffect::HelpPage()
