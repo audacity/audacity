@@ -4019,8 +4019,8 @@ double TrackPanel::OnClipMove
       CreateListOfCapturedClips
          ( state, viewInfo, *track, trackList, syncLocked, t0 );
 
-      auto newT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
-      auto desiredSlideAmount = newT0 - t0;
+      auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
+      auto desiredSlideAmount = desiredT0 - t0;
 
       // set it to a sample point, and minimum of 1 sample point
       if (!right)
@@ -4037,6 +4037,7 @@ double TrackPanel::OnClipMove
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
       // so t0 is adjusted so that it is.
+      double newT0 = t0 + state.hSlideAmount;
       if (newT0 < state.capturedClip->GetStartTime())
          newT0 = state.capturedClip->GetStartTime();
       if (newT0 > state.capturedClip->GetEndTime())
