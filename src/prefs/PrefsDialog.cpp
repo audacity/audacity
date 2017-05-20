@@ -282,7 +282,7 @@ PrefsDialog::PrefsDialog
       else {
          // TODO: Look into getting rid of mUniquePage and instead
          // adding into mCategories, so there is just one page in mCategories.
-         // And then hiding the trrebook.
+         // And then hiding the treebook.
 
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
@@ -408,7 +408,16 @@ void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelpDialog(this, GetCurrentPanel()->HelpPageName(), true);
+   wxString page = GetCurrentPanel()->HelpPageName();
+   // Currently (May2017) Spectrum Settings is the only preferences
+   // we ever display in a dialog on its own without others.
+   // We do so when it is configuring spectrums for a track.
+   // It is called 'settings' rather than 'preferences' in this context.
+   // Because this happens, we want to visit a different help page.
+   // So we modify the page name in the case of a page on its own.
+   if( !mCategories) 
+      page.Replace( "Preferences", "Settings" );
+   HelpSystem::ShowHelpDialog(this, page, true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
