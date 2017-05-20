@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 
 
 BrowserDialog::BrowserDialog(wxWindow *pParent, const wxString &title)
-   : wxDialogWrapper{ pParent, ID, title }
+   : wxDialogWrapper{ pParent, ID, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER /*| wxMAXIMIZE_BOX */  }
 {
 
 }
