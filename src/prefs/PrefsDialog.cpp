@@ -280,6 +280,10 @@ PrefsDialog::PrefsDialog
          S.EndHorizontalLay();
       }
       else {
+         // TODO: Look into getting rid of mUniquePage and instead
+         // adding into mCategories, so there is just one page in mCategories.
+         // And then hiding the trrebook.
+
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
@@ -386,18 +390,25 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    EndModal(false);
 }
 
+PrefsPanel * PrefsDialog::GetCurrentPanel()
+{
+   if( mCategories) 
+      return static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
+   else
+   {
+      wxASSERT( mUniquePage );
+      return mUniquePage;
+   }
+}
+
 void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 {
-   if (mCategories)
-      static_cast<PrefsPanel*>(mCategories->GetCurrentPage())->Apply();
-   else
-      mUniquePage->Apply();
+   GetCurrentPanel()->Apply();
 }
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   PrefsPanel* panel = static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
-   HelpSystem::ShowHelpDialog(this, panel->HelpPageName(), true);
+   HelpSystem::ShowHelpDialog(this, GetCurrentPanel()->HelpPageName(), true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
