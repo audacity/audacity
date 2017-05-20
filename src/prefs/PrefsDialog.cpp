@@ -417,7 +417,7 @@ void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    // Because this happens, we want to visit a different help page.
    // So we modify the page name in the case of a page on its own.
    if( !mCategories) 
-      page.Replace( "Preferences", "Settings" );
+      page.Replace( "Spectrograms_Preferences", "Spectrogram_View#spectrogram_settings" );
    HelpSystem::ShowHelpDialog(this, page, true);
 }
 
