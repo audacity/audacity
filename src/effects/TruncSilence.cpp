@@ -486,6 +486,10 @@ bool EffectTruncSilence::DoRemoval
          if (t->GetEndTime() < r->start)
             continue;
 
+         // Don't waste time cutting nothing.
+         if( cutLen == 0.0 )
+            continue;
+
          double cutStart = (r->start + r->end - cutLen) / 2;
          double cutEnd = cutStart + cutLen;
          if (t->GetKind() == Track::Wave)
