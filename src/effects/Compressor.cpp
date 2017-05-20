@@ -107,6 +107,11 @@ wxString EffectCompressor::GetDescription()
    return XO("Compresses the dynamic range of audio");
 }
 
+wxString EffectCompressor::ManualPage()
+{
+   return wxT("Compressor");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectCompressor::GetType()

@@ -61,6 +61,11 @@ wxString EffectFindClipping::GetDescription()
    return XO("Creates labels where clipping is detected");
 }
 
+wxString EffectFindClipping::ManualPage()
+{
+   return wxT("Find_Clipping");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectFindClipping::GetType()

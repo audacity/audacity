@@ -60,6 +60,11 @@ wxString EffectEcho::GetDescription()
    return XO("Repeats the selected audio again and again");
 }
 
+wxString EffectEcho::ManualPage()
+{
+   return wxT("Echo");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectEcho::GetType()

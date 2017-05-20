@@ -102,6 +102,11 @@ wxString EffectChangeTempo::GetDescription()
    return XO("Change the tempo of a selection without changing its pitch");
 }
 
+wxString EffectChangeTempo::ManualPage()
+{
+   return wxT("Change_Tempo");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectChangeTempo::GetType()

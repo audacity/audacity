@@ -119,6 +119,11 @@ wxString EffectTruncSilence::GetDescription()
    return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
+wxString EffectTruncSilence::ManualPage()
+{
+   return wxT("Truncate_Silence");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectTruncSilence::GetType()

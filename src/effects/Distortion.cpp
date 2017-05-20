@@ -192,6 +192,11 @@ wxString EffectDistortion::GetDescription()
    return XO("Waveshaping distortion effect");
 }
 
+wxString EffectDistortion::ManualPage()
+{
+   return wxT("Distortion");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectDistortion::GetType()

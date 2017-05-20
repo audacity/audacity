@@ -32,6 +32,7 @@ public:
 
    wxString GetSymbol() override;
    wxString GetDescription() override;
+   wxString ManualPage() override;
 
    // EffectIdentInterface implementation
 

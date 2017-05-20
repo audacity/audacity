@@ -78,6 +78,11 @@ wxString EffectNoise::GetDescription()
    return XO("Generates one of three different types of noise");
 }
 
+wxString EffectNoise::ManualPage()
+{
+   return wxT("Generate_Menu#noise");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectNoise::GetType()

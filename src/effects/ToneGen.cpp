@@ -133,6 +133,13 @@ wxString EffectToneGen::GetDescription()
       : XO("Generates a constant frequency tone of one of four types");
 }
 
+wxString EffectToneGen::ManualPage()
+{
+   return mChirp
+      ? wxT("Generate_Menu#chirp")
+      : wxT("Generate_Menu#tone");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectToneGen::GetType()

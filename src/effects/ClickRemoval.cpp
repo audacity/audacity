@@ -85,6 +85,11 @@ wxString EffectClickRemoval::GetDescription()
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
+wxString EffectClickRemoval::ManualPage()
+{
+   return wxT("Click_Removal");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectClickRemoval::GetType()

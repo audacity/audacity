@@ -67,6 +67,11 @@ wxString EffectRepeat::GetDescription()
    return XO("Repeats the selection the specified number of times");
 }
 
+wxString EffectRepeat::ManualPage()
+{
+   return wxT("Repeat");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectRepeat::GetType()
