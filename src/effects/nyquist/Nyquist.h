@@ -199,10 +199,13 @@ private:
    wxString          mCopyright;
    wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
+   bool              mHelpFileExists;
    EffectType        mType;
 
    bool              mEnablePreview;
-   bool              mDebug;
+   bool              mEnableDebug;  // Set to false to disable Debug button.
+
+   bool              mDebug;  // Is true when Debug button clicked.
    bool              mRedirectOutput;
    bool              mProjectChanged;
    wxString          mDebugOutput;

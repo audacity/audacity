@@ -3072,6 +3072,9 @@ bool EffectUIHost::Initialize()
          this->SetAcceleratorTable(accel);
       }
 
+      if (mEffect->mUIDebug) {
+         buttons += eDebugButton;
+      }
 
       buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar).release());
       vs->Add(buttonPanel, 0, wxEXPAND);
@@ -3240,7 +3243,6 @@ void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
    }
    else {
       // otherwise use the new ShowHelpDialog
-      wxLogDebug(mEffect->ManualPage());
       HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
    }
 }
