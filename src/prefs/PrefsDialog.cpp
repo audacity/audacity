@@ -289,7 +289,16 @@ PrefsDialog::PrefsDialog
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
          mUniquePage = factory.Create(this);
-         S.AddWindow(mUniquePage, wxEXPAND);
+         wxWindow * uniquePageWindow = S.AddWindow(mUniquePage, wxEXPAND);
+         // We're not in the wxTreebook, so add the accelerator here
+         wxAcceleratorEntry entries[1];
+#if defined(__WXMAC__)
+         // Is there a standard shortcut on Mac?
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
+         wxAcceleratorTable accel(1, entries);
+         uniquePageWindow->SetAcceleratorTable(accel);
       }
    }
    S.EndVerticalLay();
@@ -413,11 +422,10 @@ void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    // Currently (May2017) Spectrum Settings is the only preferences
    // we ever display in a dialog on its own without others.
    // We do so when it is configuring spectrums for a track.
-   // It is called 'settings' rather than 'preferences' in this context.
    // Because this happens, we want to visit a different help page.
-   // So we modify the page name in the case of a page on its own.
-   if( !mCategories) 
-      page.Replace( "Spectrograms_Preferences", "Spectrogram_View#spectrogram_settings" );
+   // So we change the page name in the case of a page on its own.
+   if( !mCategories)
+      page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
    HelpSystem::ShowHelpDialog(this, page, true);
 }
 
