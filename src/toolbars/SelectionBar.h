@@ -23,6 +23,7 @@ class wxCommandEvent;
 class wxDC;
 class wxRadioButton;
 class wxSizeEvent;
+class wxStaticText;
 
 class SelectionBarListener;
 class NumericTextCtrl;

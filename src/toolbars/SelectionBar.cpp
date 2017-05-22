@@ -40,8 +40,10 @@ with changes in the SelectionBar.
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/valtext.h>
+#include <wx/stattext.h>
 #endif
 #include <wx/statline.h>
+
 
 #include "SelectionBarListener.h"
 #include "SelectionBar.h"
