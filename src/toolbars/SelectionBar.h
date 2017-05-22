@@ -68,6 +68,11 @@ class SelectionBar final : public ToolBar {
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
    void OnChangedTime(wxCommandEvent &evt);
+   void OnTitleClicked(int newDriver );
+   void OnStartTitleClicked(wxMouseEvent & event);
+   void OnCenterTitleClicked(wxMouseEvent & event);
+   void OnLengthTitleClicked(wxMouseEvent & event);
+   void OnEndTitleClicked(wxMouseEvent & event);
    void OnRate(wxCommandEvent & event);
    void OnSnapTo(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);

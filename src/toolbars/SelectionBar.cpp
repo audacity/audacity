@@ -67,27 +67,34 @@ const static wxChar *numbers[] =
 
 enum {
    SelectionBarFirstID = 2700,
-   OnRateID,
-   OnSnapToID,
+   RateID,
+   SnapToID,
    //OnMenuId,
-   OnStartTimeID,
-   OnCenterTimeID,
-   OnLengthTimeID,
-   OnEndTimeID,
-   OnAudioTimeID,
+
+   StartTitleID,
+   CenterTitleID,
+   LengthTitleID,
+   EndTitleID,
+   AudioTitleID,
+
+   StartTimeID,
+   CenterTimeID,
+   LengthTimeID,
+   EndTimeID,
+   AudioTimeID,
    SelTBFirstButton,
    SelTBMenuID = SelTBFirstButton,
 };
 
 BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_SIZE(SelectionBar::OnSize)
-   EVT_TEXT(OnStartTimeID, SelectionBar::OnChangedTime)
-   EVT_TEXT(OnEndTimeID, SelectionBar::OnChangedTime)
-   EVT_TEXT(OnLengthTimeID, SelectionBar::OnChangedTime)
-   EVT_TEXT(OnCenterTimeID, SelectionBar::OnChangedTime)
-   EVT_CHOICE(OnSnapToID, SelectionBar::OnSnapTo)
-   EVT_COMBOBOX(OnRateID, SelectionBar::OnRate)
-   EVT_TEXT(OnRateID, SelectionBar::OnRate)
+   EVT_TEXT(StartTimeID, SelectionBar::OnChangedTime)
+   EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
+   EVT_TEXT(LengthTimeID, SelectionBar::OnChangedTime)
+   EVT_TEXT(CenterTimeID, SelectionBar::OnChangedTime)
+   EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
+   EVT_COMBOBOX(RateID, SelectionBar::OnRate)
+   EVT_TEXT(RateID, SelectionBar::OnRate)
 
    EVT_COMMAND_RANGE( SelTBMenuID,
                       SelTBMenuID,
@@ -105,7 +112,7 @@ SelectionBar::SelectionBar()
   mStartTime(NULL), mEndTime(NULL), mLengthTime(NULL), mCenterTime(NULL), 
   mAudioTime(NULL),
   mStartTitle(NULL), mCenterTitle(NULL), mLengthTitle(NULL), mEndTitle(NULL),
-  mDrive1( OnStartTimeID), mDrive2( OnEndTimeID ),
+  mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0)
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
@@ -129,51 +136,6 @@ void SelectionBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
 }
-
-// There currently is only one clickable AButton
-// so we just do what it needs.
-void SelectionBar::OnButton(wxCommandEvent & event)
-{
-   AudacityProject *p = GetActiveProject();
-   if (!p) return;
-
-   AButton * pBtn = mButtons[ SelTBMenuID-SelTBFirstButton];// use event.GetId();
-
-   auto cleanup = finally( [&] { pBtn->InteractionOver();}
-   );
-   wxLogDebug( "Clicked");
-   SetFocus();
-
-   wxMenu Menu;
-   Menu.AppendRadioItem( 0, _("Start - End") );
-   Menu.AppendRadioItem( 1, _("Start - Length") );
-   Menu.AppendRadioItem( 2, _("Length - End") );
-   Menu.AppendRadioItem( 3, _("Center - Length") );
-   Menu.AppendRadioItem( 4, _("Start - Length - End") );
-   Menu.AppendRadioItem( 5, _("Start - Center - Length") );
-   Menu.AppendRadioItem( 6, _("Start - Center - End") );
-   Menu.AppendRadioItem( 7, _("Start - Center - Length - End") );
-   Menu.Check( mSelectionMode, true );
-   // Pop it up where the mouse is.
-   pBtn->PopupMenu(&Menu);//, wxPoint(0, 0));
-
-   // only one radio button should be checked.
-   for( int i=0;i<8;i++)
-      if( Menu.IsChecked(i))
-         SetSelectionMode( i );
-
-   // We just changed the mode.  Remember it.
-   gPrefs->Write(wxT("/SelectionToolbarMode"), mSelectionMode);
-   gPrefs->Flush();
-
-   wxSize sz = GetMinSize();
-   sz.SetWidth( 10 );
-   SetMinSize( sz );
-   Fit();
-   Layout();
-   Updated();
-}
-
 
 // Add Radio Button function is not used anymore.
 // But maybe we will need it again in the future.
@@ -281,11 +243,16 @@ void SelectionBar::Populate()
    mainSizer->Add(5, 1);
    AddTitle( _("Audio Position"), mainSizer );
 
+   mStartTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnStartTitleClicked,this );
+   mCenterTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnCenterTitleClicked,this );
+   mLengthTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnLengthTitleClicked,this );
+   mEndTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnEndTitleClicked,this );
+
    //
    // Middle row (mostly time controls)
    //
 
-   mRateBox = safenew wxComboBox(this, OnRateID,
+   mRateBox = safenew wxComboBox(this, RateID,
                              wxT(""),
                              wxDefaultPosition, wxSize(80, -1));
    mRateBox->SetName(_("Project Rate (Hz):"));
@@ -331,7 +298,7 @@ void SelectionBar::Populate()
                                    wxLI_VERTICAL),
                   0,  wxRIGHT, 5);
 
-   mSnapTo = safenew wxChoice(this, OnSnapToID,
+   mSnapTo = safenew wxChoice(this, SnapToID,
                           wxDefaultPosition, wxDefaultSize,
                           SnapManager::GetSnapLabels());
    mainSizer->Add(mSnapTo,
@@ -362,17 +329,17 @@ void SelectionBar::Populate()
    pBtn->SetToolTip("Selection options");
    mainSizer->Add( pBtn, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mStartTime  = AddTime(_("Start"), OnStartTimeID, mainSizer );
-   mCenterTime = AddTime(_("Center"), OnCenterTimeID, mainSizer );
-   mLengthTime = AddTime(_("Length"), OnLengthTimeID, mainSizer );
-   mEndTime    = AddTime(_("End"), OnEndTimeID, mainSizer );
+   mStartTime  = AddTime(_("Start"), StartTimeID, mainSizer );
+   mCenterTime = AddTime(_("Center"), CenterTimeID, mainSizer );
+   mLengthTime = AddTime(_("Length"), LengthTimeID, mainSizer );
+   mEndTime    = AddTime(_("End"), EndTimeID, mainSizer );
 
    mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
                   0, wxRIGHT, 5);
 
-   mAudioTime = AddTime(_("Audio Position"), OnAudioTimeID, mainSizer );
+   mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
 
    // This shows/hides controls.
    // Do this before layout so that we are sized right.
@@ -439,60 +406,60 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
    // Only update a value if user typed something in.
    // The reason is the controls may be less accurate than 
    // the values.
-   if( newDriver == OnStartTimeID )
+   if( newDriver == StartTimeID )
       mStart = mStartTime->GetValue();
-   if( newDriver == OnEndTimeID )
+   if( newDriver == EndTimeID )
       mEnd = mEndTime->GetValue();
-   if( newDriver == OnLengthTimeID )
+   if( newDriver == LengthTimeID )
       mLength = mLengthTime->GetValue();
-   if( newDriver == OnCenterTimeID )
+   if( newDriver == CenterTimeID )
       mCenter = mCenterTime->GetValue();
 
    int i = mDrive1 + 4 * mDrive2;
    switch(i){
-   case OnStartTimeID + 4 * OnEndTimeID:
+   case StartTimeID + 4 * EndTimeID:
       if( mEnd < mStart )
          mEnd = mStart;
-   case OnStartTimeID * 4 + OnEndTimeID:
+   case StartTimeID * 4 + EndTimeID:
       if( mStart > mEnd )
          mStart = mEnd;
       mLength = mEnd - mStart;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case OnStartTimeID + 4 * OnLengthTimeID:
-   case OnStartTimeID * 4 + OnLengthTimeID:
+   case StartTimeID + 4 * LengthTimeID:
+   case StartTimeID * 4 + LengthTimeID:
       if( mLength < 0 )
          mLength = 0;
       mEnd = mStart+mLength;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case OnStartTimeID + 4 * OnCenterTimeID:
+   case StartTimeID + 4 * CenterTimeID:
       if( mCenter < mStart )
          mCenter = mStart;
-   case OnStartTimeID * 4 + OnCenterTimeID:
+   case StartTimeID * 4 + CenterTimeID:
       if( mStart > mCenter )
          mStart = mCenter;
       mEnd = mCenter * 2 - mStart;
       mLength = mStart - mEnd;
       break;
-   case OnEndTimeID + 4 * OnLengthTimeID:
-   case OnEndTimeID * 4 + OnLengthTimeID:
+   case EndTimeID + 4 * LengthTimeID:
+   case EndTimeID * 4 + LengthTimeID:
       if( mLength < 0 )
          mLength = 0;
       mStart = mEnd - mLength;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case OnEndTimeID + 4 * OnCenterTimeID:
+   case EndTimeID + 4 * CenterTimeID:
       if( mCenter > mEnd )
          mCenter = mEnd;
-   case OnEndTimeID * 4 + OnCenterTimeID:
+   case EndTimeID * 4 + CenterTimeID:
       if( mEnd < mCenter )
          mEnd = mCenter;
       mStart = mCenter * 2.0 - mEnd;
       mLength = mEnd - mStart;
       break;
-   case OnLengthTimeID + 4 * OnCenterTimeID:
-   case OnLengthTimeID * 4 + OnCenterTimeID:
+   case LengthTimeID + 4 * CenterTimeID:
+   case LengthTimeID * 4 + CenterTimeID:
       if( mLength < 0 )
          mLength = 0;
       mStart = mCenter - mLength/2.0;
@@ -511,6 +478,21 @@ void SelectionBar::OnChangedTime(wxCommandEvent & event)
 {
    ModifySelection(event.GetId(), event.GetInt() != 0);
 }
+
+
+void SelectionBar::OnTitleClicked(int newDriver)
+{
+   // Ensure newDriver is the most recent driver.
+   if( newDriver != mDrive2 )
+      SetDrivers( mDrive2, newDriver);
+}
+
+// These functions give the IDs of the associated control, NOT the ID of the title.
+void SelectionBar::OnStartTitleClicked(wxMouseEvent & event){ OnTitleClicked( StartTimeID );};
+void SelectionBar::OnCenterTitleClicked(wxMouseEvent & event){ OnTitleClicked( CenterTimeID );};
+void SelectionBar::OnLengthTitleClicked(wxMouseEvent & event){ OnTitleClicked( LengthTimeID );};
+void SelectionBar::OnEndTitleClicked(wxMouseEvent & event){ OnTitleClicked( EndTimeID );};
+
 
 // Called when one of the format drop downs is changed.
 void SelectionBar::OnUpdate(wxCommandEvent &evt)
@@ -567,7 +549,7 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
    wxString Text[4] = { _("Start"), _("Center"), _("Length"),  _("End")  };
 
    for(int i=0;i<4;i++){
-      int id = i + OnStartTimeID;
+      int id = i + StartTimeID;
       if( (id!=mDrive1) && (id!=mDrive2 ) )
          // i18n-hint: This is an indicator that a parameter is set (driven) from other parameters.
          Text[i] += _(" - driven");
@@ -581,6 +563,49 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
 }
 
 
+// There currently is only one clickable AButton
+// so we just do what it needs.
+void SelectionBar::OnButton(wxCommandEvent & event)
+{
+   AudacityProject *p = GetActiveProject();
+   if (!p) return;
+
+   AButton * pBtn = mButtons[ SelTBMenuID-SelTBFirstButton];// use event.GetId();
+
+   auto cleanup = finally( [&] { pBtn->InteractionOver();}
+   );
+   SetFocus();
+
+   wxMenu Menu;
+   Menu.AppendRadioItem( 0, _("Start - End") );
+   Menu.AppendRadioItem( 1, _("Start - Length") );
+   Menu.AppendRadioItem( 2, _("Length - End") );
+   Menu.AppendRadioItem( 3, _("Center - Length") );
+   Menu.AppendRadioItem( 4, _("Start - Length - End") );
+   Menu.AppendRadioItem( 5, _("Start - Center - Length") );
+   Menu.AppendRadioItem( 6, _("Start - Center - End") );
+   Menu.AppendRadioItem( 7, _("Start - Center - Length - End") );
+   Menu.Check( mSelectionMode, true );
+   // Pop it up where the mouse is.
+   pBtn->PopupMenu(&Menu);//, wxPoint(0, 0));
+
+   // only one radio button should be checked.
+   for( int i=0;i<8;i++)
+      if( Menu.IsChecked(i))
+         SetSelectionMode( i );
+
+   // We just changed the mode.  Remember it.
+   gPrefs->Write(wxT("/SelectionToolbarMode"), mSelectionMode);
+   gPrefs->Flush();
+
+   wxSize sz = GetMinSize();
+   sz.SetWidth( 10 );
+   SetMinSize( sz );
+   Fit();
+   Layout();
+   Updated();
+}
+
 void SelectionBar::SetSelectionMode(int mode)
 {
    mSelectionMode = mode;
@@ -588,10 +613,10 @@ void SelectionBar::SetSelectionMode(int mode)
    // First decide which two controls drive the others...
    // For example the last option is with all controls shown, and in that mode we 
    // initially have start and end driving.
-   int Drive2[] = { OnStartTimeID, OnStartTimeID, OnLengthTimeID, OnCenterTimeID, 
-                     OnStartTimeID, OnStartTimeID, OnStartTimeID, OnStartTimeID};
-   int Drive1[] = { OnEndTimeID,   OnLengthTimeID, OnEndTimeID, OnLengthTimeID, 
-                     OnEndTimeID, OnLengthTimeID, OnEndTimeID, OnEndTimeID};
+   int Drive2[] = { StartTimeID, StartTimeID,  LengthTimeID, CenterTimeID, 
+                    StartTimeID, StartTimeID,  StartTimeID,  StartTimeID};
+   int Drive1[] = { EndTimeID,   LengthTimeID, EndTimeID,    LengthTimeID, 
+                    EndTimeID,   LengthTimeID, EndTimeID,    EndTimeID};
 
    SetDrivers( Drive1[mode], Drive2[mode] );
 
@@ -609,8 +634,8 @@ void SelectionBar::ShowHideControls(int mode)
       15};
    int mask = masks[mode];
 
-   NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mCenterTime, &mLengthTime, &mEndTime};
-   wxStaticText ** Titles[4] = { &mStartTitle, &mCenterTitle, &mLengthTitle, &mEndTitle};
+   NumericTextCtrl ** Ctrls[4]  = { &mStartTime,  &mCenterTime,  &mLengthTime,  &mEndTime};
+   wxStaticText    ** Titles[4] = { &mStartTitle, &mCenterTitle, &mLengthTitle, &mEndTitle};
    for(int i=0;i<4;i++){
       if( *Ctrls[i]) 
          (*Ctrls[i])->Show( (mask & (1<<i))!=0 );
