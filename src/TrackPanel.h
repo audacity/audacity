@@ -327,7 +327,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    struct StretchState {
       StretchEnum mMode { stretchCenter }; // remembers what to drag
       bool mStretching {}; // true between mouse down and mouse up
-      bool mStretched {}; // true after drag has pushed state
       double mStart {}; // time of initial mouse position, quantized
       // to the nearest beat
       double mSel0 {};  // initial sel0 (left) quantized to nearest beat

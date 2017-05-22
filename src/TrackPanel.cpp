@@ -1837,20 +1837,28 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          SelectionHandleClick(event, t, rect);
    } else if (event.LeftUp() || event.RightUp()) {
       mSnapManager.reset();
-      // Do not draw yellow lines
-      if (mSnapLeft != -1 || mSnapRight != -1) {
-         mSnapLeft = mSnapRight = -1;
+      if ( mStretchState.mStretching ) {
+         MakeParentPushState(_("Stretch Note Track"), _("Stretch"),
+                             UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
          Refresh(false);
+         SetCapturedTrack( NULL );
       }
+      else {
+         // Do not draw yellow lines
+         if (mSnapLeft != -1 || mSnapRight != -1) {
+            mSnapLeft = mSnapRight = -1;
+            Refresh(false);
+         }
 
-      SetCapturedTrack( NULL );
-      //Send the NEW selection state to the undo/redo stack:
-      MakeParentModifyState(false);
+         SetCapturedTrack( NULL );
+         //Send the NEW selection state to the undo/redo stack:
+         MakeParentModifyState(false);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      // This stops center snapping with mouse movement
-      mFreqSelMode = FREQ_SEL_INVALID;
+         // This stops center snapping with mouse movement
+         mFreqSelMode = FREQ_SEL_INVALID;
 #endif
+      }
 
    } else if (event.LeftDClick() && !event.ShiftDown()) {
       if (!mCapturedTrack) {
@@ -2284,18 +2292,13 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          mStretchState.mLeftBeats = qBeat1 - qBeat0;
          mStretchState.mRightBeats = 0;
       }
-      mViewInfo->selectedRegion.setTimes(mStretchState.mSel0, mStretchState.mSel1);
-      mStretchState.mStretching = true;
-      mStretchState.mStretched = false;
 
-      /* i18n-hint: (noun) The track that is used for MIDI notes which can be
-      dragged to change their duration.*/
-      MakeParentPushState(_("Stretch Note Track"),
-      /* i18n-hint: In the history list, indicates a MIDI note has
-      been dragged to change its duration (stretch it). Using either past
-      or present tense is fine here.  If unsure, go for whichever is
-      shorter.*/
-      _("Stretch"));
+      // Do this before we change the selection
+      MakeParentModifyState( false );
+
+      mViewInfo->selectedRegion.setTimes
+         (mStretchState.mSel0, mStretchState.mSel1);
+      mStretchState.mStretching = true;
 
       // Full refresh since the label area may need to indicate
       // newly selected tracks. (I'm really not sure if the label area
@@ -2774,33 +2777,6 @@ void TrackPanel::ResetFreqSelectionPin(double hintFrequency, bool logF)
 void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
                          Track *pTrack)
 {
-   if (mStretchState.mStretched) { // Undo stretch and redo it with NEW mouse coordinates
-      // Drag handling was not originally implemented with Undo in mind --
-      // there are saved pointers to tracks that are not supposed to change.
-      // Undo will change tracks, so convert pTrack, mCapturedTrack to index
-      // values, then look them up after the Undo
-      TrackListIterator iter(GetTracks());
-      int pTrackIndex = pTrack->GetIndex();
-      int capturedTrackIndex =
-         (mCapturedTrack ? mCapturedTrack->GetIndex() : 0);
-
-      GetProject()->OnUndo();
-
-      // Undo brings us back to the pre-click state, but we want to
-      // quantize selected region to integer beat boundaries. These
-      // were saved in mStretchSel[12] variables:
-      mViewInfo->selectedRegion.setTimes
-         (mStretchState.mSel0, mStretchState.mSel1);
-
-      mStretchState.mStretched = false;
-      int index = 0;
-      for (Track *t = iter.First(GetTracks()); t; t = iter.Next()) {
-         if (index == pTrackIndex) pTrack = t;
-         if (mCapturedTrack && index == capturedTrackIndex) mCapturedTrack = t;
-         index++;
-      }
-   }
-
    if (pTrack == NULL && mCapturedTrack != NULL)
       pTrack = mCapturedTrack;
 
@@ -2867,9 +2843,6 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       wxASSERT(false);
       break;
    }
-   MakeParentPushState(_("Stretch Note Track"), _("Stretch"),
-      UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
-   mStretchState.mStretched = true;
    Refresh(false);
 }
 #endif
