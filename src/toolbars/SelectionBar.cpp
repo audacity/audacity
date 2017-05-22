@@ -550,14 +550,22 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
 
    for(int i=0;i<4;i++){
       int id = i + StartTimeID;
-      if( (id!=mDrive1) && (id!=mDrive2 ) )
-         // i18n-hint: This is an indicator that a parameter is set (driven) from other parameters.
-         Text[i] += _(" - driven");
+      int fixed = (( id == mDrive2 )?mDrive1:mDrive2)-StartTimeID;
+
+      wxString Temp = Text[i];
+      // i18n-hint: %s is replaced e.g by 'Length', to indicate that it will be calculated from other parameters.
+      wxString Format = ( (id!=mDrive1) && (id!=mDrive2 ) ) ? _("%s - driven") : "%s";
+      wxString Title= wxString::Format( Format, Temp );
+      // i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
+      wxString VoiceOverText = wxString::Format(_("Selection %s.  %s won't change."), Temp, Text[fixed]);
+      // i18n-hint: %s is replaced e.g by 'Length'.  This is a tooltip on a numerical control.
+      //wxString Tooltip = wxString::Format( _(" With %s fixed.  (Use context menu to change format.) "),  Text[fixed] );
       if( *Titles[i] ){
-         (*Titles[i])->SetLabelText( Text[i] );
+         (*Titles[i])->SetLabelText( Title );
       }
       if( *Ctrls[i] ){
-         (*Ctrls[i])->SetName( Text[i] );
+         (*Ctrls[i])->SetName( VoiceOverText );
+         //(*Ctrls[i])->SetToolTip( Tooltip );
       }
    }
 }
