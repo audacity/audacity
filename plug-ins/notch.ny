@@ -4,6 +4,7 @@
 ;preview linear
 ;name "Notch Filter..."
 ;manpage "Notch_Filter"
+;debug false
 ;action "Applying Notch Filter..."
 ;author "Steve Daulton and Bill Wharrie"
 ;copyright "Released under terms of the GNU General Public License version 2"

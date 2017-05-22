@@ -4,6 +4,7 @@
 ;categories "http://lv2plug.in/ns/lv2core/#DynamicsPlugin"
 ;name "Limiter..."
 ;manpage "Limiter"
+;debug false
 ;action "Limiting..."
 ;preview enabled
 ;author "Steve Daulton"
