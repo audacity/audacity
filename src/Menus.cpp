@@ -3084,11 +3084,11 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
 void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 {
    if (keyUp) {
-      nKeyDown = 0;
+      mNKeyDown = 0;
       return;
    }
    else
-      nKeyDown++;
+      mNKeyDown++;
 
    auto &panel = *GetTrackPanel();
 
@@ -3108,7 +3108,7 @@ void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
       // (multiple keydowns followed by a keyup) result in a single
       // entry in Audacity's history dialog.
       PushState(message, _("Time-Shift"),
-         nKeyDown == 1 ? UndoPush::MINIMAL : UndoPush::CONSOLIDATE);
+         mNKeyDown == 1 ? UndoPush::MINIMAL : UndoPush::CONSOLIDATE);
    }
 
    if ( amount == 0.0 )

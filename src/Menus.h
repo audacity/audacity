@@ -161,7 +161,7 @@ void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
 private:
-   int nKeyDown{};
+   int mNKeyDown{};
 public:
 void DoClipLeftOrRight(bool right, bool keyUp );
 void OnClipLeft(const wxEvent* evt);
