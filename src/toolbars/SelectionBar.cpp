@@ -69,32 +69,44 @@ enum {
    SelectionBarFirstID = 2700,
    RateID,
    SnapToID,
-   //OnMenuId,
+   OnMenuID,
+
 
    StartTitleID,
-   CenterTitleID,
    LengthTitleID,
+   CenterTitleID,
    EndTitleID,
    AudioTitleID,
 
-   StartTimeID,
-   CenterTimeID,
-   LengthTimeID,
-   EndTimeID,
-   AudioTimeID,
+   StartEndRadioID,
+   StartLengthRadioID,
+   LengthEndRadioID,
+   LengthCenterRadioID,
+
    SelTBFirstButton,
    SelTBMenuID = SelTBFirstButton,
+
+   id2,
+   StartTimeID,
+   LengthTimeID,
+   CenterTimeID,
+   EndTimeID,
+   AudioTimeID,
 };
 
 BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_SIZE(SelectionBar::OnSize)
    EVT_TEXT(StartTimeID, SelectionBar::OnChangedTime)
-   EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(LengthTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(CenterTimeID, SelectionBar::OnChangedTime)
+   EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
    EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
    EVT_COMBOBOX(RateID, SelectionBar::OnRate)
    EVT_TEXT(RateID, SelectionBar::OnRate)
+   EVT_RADIOBUTTON(StartEndRadioID, SelectionBar::OnFieldChoice )
+   EVT_RADIOBUTTON(StartLengthRadioID, SelectionBar::OnFieldChoice )
+   EVT_RADIOBUTTON(LengthEndRadioID, SelectionBar::OnFieldChoice )
+   EVT_RADIOBUTTON(LengthCenterRadioID, SelectionBar::OnFieldChoice )
 
    EVT_COMMAND_RANGE( SelTBMenuID,
                       SelTBMenuID,
@@ -152,7 +164,7 @@ void SelectionBar::Create(wxWindow * parent)
 // and a windows theme that is close enough to actually blend.
 
 wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name, 
-   int id, std::unique_ptr<wxBoxSizer>& pSizer, long style )
+   int id, wxSizer *pSizer, long style )
 {
    bool bUseNativeRadioButton = theTheme.IsUsingSyestemTextColour();
    wxRadioButton * pBtn;
@@ -213,7 +225,7 @@ void SelectionBar::Populate()
     * look-ups static because they depend on translations which are done at
     * runtime */
 
-   Add((mainSizer = safenew wxFlexGridSizer(10, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
+   Add((mainSizer = safenew wxFlexGridSizer(7, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
 
    //
    // Top row (mostly labels)
@@ -236,17 +248,34 @@ void SelectionBar::Populate()
    AddTitle( _("Snap-To"), mainSizer );
    // Not enough room to say 'Selection Options".  There is a tooltip instead.
    AddTitle( wxT(""), mainSizer );
+
+   {
+      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      (mStartEndRadBtn = AddRadioButton( _("Start-End"), StartEndRadioID, hSizer.get(), wxRB_GROUP))
+         ->SetValue( mSelectionMode == 0 );
+      (mStartLengthRadBtn  = AddRadioButton( _("Start-Length"), StartLengthRadioID, hSizer.get(), 0))
+         ->SetValue( mSelectionMode == 1 );
+      (mLengthEndRadBtn    = AddRadioButton( _("Length-End"), LengthEndRadioID, hSizer.get(), 0))
+         ->SetValue( mSelectionMode == 2 );
+      (mLengthCenterRadBtn = AddRadioButton( _("Length-Center"), LengthCenterRadioID, hSizer.get(), 0))
+         ->SetValue( mSelectionMode == 3 );
+      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   }
+
+#if 0
    mStartTitle = AddTitle( _("Start"), mainSizer );
-   mCenterTitle = AddTitle( _("Center"), mainSizer );
    mLengthTitle = AddTitle( _("Length"), mainSizer );
+   mCenterTitle = AddTitle( _("Center"), mainSizer );
    mEndTitle = AddTitle( _("End"), mainSizer );
-   mainSizer->Add(5, 1);
-   AddTitle( _("Audio Position"), mainSizer );
 
    mStartTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnStartTitleClicked,this );
-   mCenterTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnCenterTitleClicked,this );
    mLengthTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnLengthTitleClicked,this );
+   mCenterTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnCenterTitleClicked,this );
    mEndTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnEndTitleClicked,this );
+#endif
+
+   mainSizer->Add(5, 1);
+   AddTitle( _("Audio Position"), mainSizer );
 
    //
    // Middle row (mostly time controls)
@@ -315,7 +344,7 @@ void SelectionBar::Populate()
                     wxFocusEventHandler(SelectionBar::OnFocus),
                     NULL,
                     this);
-
+/*
    AButton *& pBtn = mButtons[ SelTBMenuID - SelTBFirstButton];
    pBtn = ToolBar::MakeButton(this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -328,11 +357,26 @@ void SelectionBar::Populate()
    pBtn->SetLabel("Selection options");
    pBtn->SetToolTip("Selection options");
    mainSizer->Add( pBtn, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+*/
+   wxCheckBox * pCheck = new wxCheckBox(this, id2, "Checkbox");
+   mainSizer->Add( pCheck, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mStartTime  = AddTime(_("Start"), StartTimeID, mainSizer );
-   mCenterTime = AddTime(_("Center"), CenterTimeID, mainSizer );
-   mLengthTime = AddTime(_("Length"), LengthTimeID, mainSizer );
-   mEndTime    = AddTime(_("End"), EndTimeID, mainSizer );
+   {
+      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+      mStartTime  = AddTime(_("Start"), StartTimeID, hSizer.get() );
+      mLengthTime = AddTime(_("Length"), LengthTimeID, hSizer.get() );
+      mCenterTime = AddTime(_("Center"), CenterTimeID, hSizer.get() );
+      mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
+      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      // Put choice of what fields to show immediately before the fields.
+#if 1
+      mStartEndRadBtn->MoveBeforeInTabOrder( mStartTime );
+      mStartLengthRadBtn->MoveAfterInTabOrder( mStartEndRadBtn );
+      mLengthEndRadBtn->MoveAfterInTabOrder( mStartLengthRadBtn );
+      mLengthCenterRadBtn->MoveAfterInTabOrder( mLengthEndRadBtn );
+#endif
+   }
 
    mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
@@ -489,8 +533,8 @@ void SelectionBar::OnTitleClicked(int newDriver)
 
 // These functions give the IDs of the associated control, NOT the ID of the title.
 void SelectionBar::OnStartTitleClicked(wxMouseEvent & event){ OnTitleClicked( StartTimeID );};
-void SelectionBar::OnCenterTitleClicked(wxMouseEvent & event){ OnTitleClicked( CenterTimeID );};
 void SelectionBar::OnLengthTitleClicked(wxMouseEvent & event){ OnTitleClicked( LengthTimeID );};
+void SelectionBar::OnCenterTitleClicked(wxMouseEvent & event){ OnTitleClicked( CenterTimeID );};
 void SelectionBar::OnEndTitleClicked(wxMouseEvent & event){ OnTitleClicked( EndTimeID );};
 
 
@@ -564,7 +608,7 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
          (*Titles[i])->SetLabelText( Title );
       }
       if( *Ctrls[i] ){
-         (*Ctrls[i])->SetName( VoiceOverText );
+         (*Ctrls[i])->SetName( Temp );
          //(*Ctrls[i])->SetToolTip( Tooltip );
       }
    }
@@ -588,17 +632,20 @@ void SelectionBar::OnButton(wxCommandEvent & event)
    Menu.AppendRadioItem( 0, _("Start - End") );
    Menu.AppendRadioItem( 1, _("Start - Length") );
    Menu.AppendRadioItem( 2, _("Length - End") );
-   Menu.AppendRadioItem( 3, _("Center - Length") );
+   Menu.AppendRadioItem( 3, _("Length - Center") );
+#if 0
+   // These four options were found to be too confusing.
    Menu.AppendRadioItem( 4, _("Start - Length - End") );
    Menu.AppendRadioItem( 5, _("Start - Center - Length") );
    Menu.AppendRadioItem( 6, _("Start - Center - End") );
-   Menu.AppendRadioItem( 7, _("Start - Center - Length - End") );
+   Menu.AppendRadioItem( 7, _("Start - Length - Center - End") );
+#endif
    Menu.Check( mSelectionMode, true );
    // Pop it up where the mouse is.
    pBtn->PopupMenu(&Menu);//, wxPoint(0, 0));
 
    // only one radio button should be checked.
-   for( int i=0;i<8;i++)
+   for( int i=0;i<4;i++)
       if( Menu.IsChecked(i))
          SetSelectionMode( i );
 
@@ -614,16 +661,45 @@ void SelectionBar::OnButton(wxCommandEvent & event)
    Updated();
 }
 
+void SelectionBar::OnFieldChoice(wxCommandEvent &event)
+{
+   int id = event.GetId();
+   SetSelectionMode( id - StartEndRadioID );
+   // We just changed the mode.  Remember it.
+   gPrefs->Write(wxT("/SelectionToolbarMode"), mSelectionMode);
+   gPrefs->Flush();
+
+   wxSize sz = GetMinSize();
+   sz.SetWidth( 10 );
+   SetMinSize( sz );
+   Fit();
+   Layout();
+   Updated();
+   event.Skip();
+}
+
+
 void SelectionBar::SetSelectionMode(int mode)
 {
    mSelectionMode = mode;
 
+   int id = mode + StartEndRadioID;
+   mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      "Start - End" : "S-E" );
+   mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   "Start - Length" : "S-L" );
+   mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     "Length - End" : "L-E" );
+   mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  "Length - Center" : "L-C" );
+
+   mStartEndRadBtn->SetValue(     id == StartEndRadioID     );
+   mStartLengthRadBtn->SetValue(  id == StartLengthRadioID  );
+   mLengthEndRadBtn->SetValue(    id == LengthEndRadioID    );
+   mLengthCenterRadBtn->SetValue( id == LengthCenterRadioID );
+
    // First decide which two controls drive the others...
    // For example the last option is with all controls shown, and in that mode we 
    // initially have start and end driving.
-   int Drive2[] = { StartTimeID, StartTimeID,  LengthTimeID, CenterTimeID, 
+   int Drive2[] = { StartTimeID, StartTimeID,  LengthTimeID, LengthTimeID, 
                     StartTimeID, StartTimeID,  StartTimeID,  StartTimeID};
-   int Drive1[] = { EndTimeID,   LengthTimeID, EndTimeID,    LengthTimeID, 
+   int Drive1[] = { EndTimeID,   LengthTimeID, EndTimeID,    CenterTimeID, 
                     EndTimeID,   LengthTimeID, EndTimeID,    EndTimeID};
 
    SetDrivers( Drive1[mode], Drive2[mode] );

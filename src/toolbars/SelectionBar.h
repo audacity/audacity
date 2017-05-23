@@ -57,7 +57,7 @@ class SelectionBar final : public ToolBar {
 
  private:
    wxRadioButton * AddRadioButton( const wxString & Name, int id, 
-      std::unique_ptr<wxBoxSizer>& pSizer, long style);
+      wxSizer * pSizer, long style);
    wxStaticText * AddTitle( const wxString & Title, 
       wxSizer * pSizer );
    NumericTextCtrl * AddTime( const wxString Name, int id, wxSizer * pSizer );
@@ -78,6 +78,7 @@ class SelectionBar final : public ToolBar {
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
+   void OnFieldChoice(wxCommandEvent &event);
 
    void ModifySelection(int newDriver, bool done = false);
    void UpdateRates();
@@ -107,6 +108,11 @@ class SelectionBar final : public ToolBar {
    wxStaticText * mCenterTitle;
    wxStaticText * mLengthTitle;
    wxStaticText * mEndTitle;
+
+   wxRadioButton * mStartEndRadBtn;
+   wxRadioButton * mStartLengthRadBtn;
+   wxRadioButton * mLengthEndRadBtn;
+   wxRadioButton * mLengthCenterRadBtn;
 
    wxComboBox     *mRateBox;
    wxChoice       *mSnapTo;
