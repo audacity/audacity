@@ -1438,8 +1438,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
       c->AddItem(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
 
-      c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT(""));
-      c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
+      c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT("\twantKeyup"));
+      c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT("\twantKeyup"));
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -3081,8 +3081,15 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
    OnCursorLeft( true, true, bKeyUp );
 }
 
-void AudacityProject::DoClipLeftOrRight( bool right )
+void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 {
+   if (keyUp) {
+      nKeyDown = 0;
+      return;
+   }
+   else
+      nKeyDown++;
+
    auto &panel = *GetTrackPanel();
 
    auto amount = TrackPanel::OnClipMove
@@ -3092,18 +3099,40 @@ void AudacityProject::DoClipLeftOrRight( bool right )
    panel.ScrollIntoView(mViewInfo.selectedRegion.t0());
    panel.Refresh(false);
 
+   if (amount != 0.0) {
+      wxString message = right? _("Time shifted clips to the right") :
+         _("Time shifted clips to the left");
+      
+      // The following use of the UndoPush flags is so that both a single
+      // keypress (keydown, then keyup), and holding down a key
+      // (multiple keydowns followed by a keyup) result in a single
+      // entry in Audacity's history dialog.
+      PushState(message, _("Time-Shift"),
+         nKeyDown == 1 ? UndoPush::MINIMAL : UndoPush::CONSOLIDATE);
+   }
+
    if ( amount == 0.0 )
       panel.MessageForScreenReader( _("clip not moved"));
 }
 
-void AudacityProject::OnClipLeft()
+void AudacityProject::OnClipLeft(const wxEvent* evt)
 {
-   DoClipLeftOrRight( false );
+   if (evt)
+      DoClipLeftOrRight( false, evt->GetEventType() == wxEVT_KEY_UP );
+   else  {              // called from menu, so simulate keydown and keyup
+      DoClipLeftOrRight( false, false );
+      DoClipLeftOrRight( false, true );
+   }
 }
 
-void AudacityProject::OnClipRight()
+void AudacityProject::OnClipRight(const wxEvent* evt)
 {
-   DoClipLeftOrRight( true );
+   if (evt)
+      DoClipLeftOrRight( true, evt->GetEventType() == wxEVT_KEY_UP );
+   else  {              // called from menu, so simulate keydown and keyup
+      DoClipLeftOrRight( true, false );
+      DoClipLeftOrRight( true, true );
+   }
 }
 
 //this pops up a dialog which allows the left selection to be set.

@@ -160,9 +160,12 @@ void OnSelExtendRight(const wxEvent * evt);
 void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
-void DoClipLeftOrRight( bool right );
-void OnClipLeft();
-void OnClipRight();
+private:
+   int nKeyDown{};
+public:
+void DoClipLeftOrRight(bool right, bool keyUp );
+void OnClipLeft(const wxEvent* evt);
+void OnClipRight(const wxEvent* evt);
 
 void OnCursorShortJumpLeft();
 void OnCursorShortJumpRight();
