@@ -320,20 +320,33 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // part shrinks, keeping the leftmost and rightmost boundaries
    // fixed.
    enum StretchEnum {
+      stretchNone = 0, // false value!
       stretchLeft,
       stretchCenter,
       stretchRight
    };
-   StretchEnum mStretchMode; // remembers what to drag
-   bool mStretching; // true between mouse down and mouse up
-   bool mStretched; // true after drag has pushed state
-   double mStretchStart; // time of initial mouse position, quantized
-                         // to the nearest beat
-   double mStretchSel0;  // initial sel0 (left) quantized to nearest beat
-   double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
-   double mStretchLeftBeats; // how many beats from left to cursor
-   double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event);
+   struct StretchState {
+      StretchEnum mMode { stretchCenter }; // remembers what to drag
+
+      using QuantizedTimeAndBeat = std::pair< double, double >;
+
+      bool mStretching {}; // true between mouse down and mouse up
+      double mOrigT0 {};
+      double mOrigT1 {};
+      QuantizedTimeAndBeat mBeatCenter { 0, 0 };
+      QuantizedTimeAndBeat mBeat0 { 0, 0 };
+      QuantizedTimeAndBeat mBeat1 { 0, 0 };
+      double mLeftBeats {}; // how many beats from left to cursor
+      double mRightBeats {}; // how many beats from cursor to right
+   } mStretchState;
+
+   virtual StretchEnum HitTestStretch
+      ( const Track *track, const wxRect &rect, const wxMouseEvent & event,
+        StretchState *pState = nullptr );
+   wxCursor *ChooseStretchCursor( StretchEnum mode );
+   static StretchEnum ChooseStretchMode
+      ( const wxMouseEvent &event, const wxRect &rect, const ViewInfo &viewInfo,
+        const NoteTrack *nt, StretchState *pState = nullptr );
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 

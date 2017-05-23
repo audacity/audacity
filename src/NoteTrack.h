@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_NOTETRACK__
 #define __AUDACITY_NOTETRACK__
 
+#include <utility>
 #include <wx/string.h>
 #include "Audacity.h"
 #include "Experimental.h"
@@ -57,6 +58,8 @@ using NoteTrackBase =
    AudioTrack
 #endif
    ;
+
+using QuantizedTimeAndBeat = std::pair< double, double >;
 
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
@@ -112,8 +115,9 @@ class AUDACITY_DLL_API NoteTrack final
    void SetVelocity(float velocity) { mVelocity = velocity; }
 #endif
 
-   double NearestBeatTime(double time, double *beat) const;
-   bool StretchRegion(double b0, double b1, double dur);
+   QuantizedTimeAndBeat NearestBeatTime( double time ) const;
+   bool StretchRegion
+      ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur );
 
    int GetBottomNote() const { return mBottomNote; }
    int GetPitchHeight() const { return mPitchHeight; }

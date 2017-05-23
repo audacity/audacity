@@ -562,29 +562,30 @@ bool NoteTrack::Shift(double t) // t is always seconds
    return true;
 }
 
-double NoteTrack::NearestBeatTime(double time, double *beat) const
+QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
 {
    wxASSERT(mSeq);
    // Alg_seq knows nothing about offset, so remove offset time
    double seq_time = time - GetOffset();
-   seq_time = mSeq->nearest_beat_time(seq_time, beat);
+   double beat;
+   seq_time = mSeq->nearest_beat_time(seq_time, &beat);
    // add the offset back in to get "actual" audacity track time
-   return seq_time + GetOffset();
+   return { seq_time + GetOffset(), beat };
 }
 
-bool NoteTrack::StretchRegion(double t0, double t1, double dur)
+bool NoteTrack::StretchRegion
+   ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur )
 {
-   wxASSERT(mSeq);
-   // Alg_seq::stretch_region uses beats, so we translate time
-   // to beats first:
-   t0 -= GetOffset();
-   t1 -= GetOffset();
-   double b0 = mSeq->get_time_map()->time_to_beat(t0);
-   double b1 = mSeq->get_time_map()->time_to_beat(t1);
-   bool result = mSeq->stretch_region(b0, b1, dur);
+   bool result = mSeq->stretch_region( t0.second, t1.second, newDur );
    if (result) {
+      const auto oldDur = t1.first - t0.first;
+#if 0
+      // PRL:  Would this be better ?
+      mSeq->set_real_dur(mSeq->get_real_dur() + newDur - oldDur);
+#else
       mSeq->convert_to_seconds();
-      mSeq->set_dur(mSeq->get_dur() + dur - (t1 - t0));
+      mSeq->set_dur(mSeq->get_dur() + newDur - oldDur);
+#endif
    }
    return result;
 }
