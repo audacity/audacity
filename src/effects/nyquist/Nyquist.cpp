@@ -147,13 +147,17 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist
-   if (fName == NYQUIST_PROMPT_ID)
-   {
+   if (fName == NYQUIST_PROMPT_ID) {
       mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
       mIsPrompt = true;
 
+      return;
+   }
+
+   if (fName == NYQUIST_WORKER_ID) {
+      // Effect spawned from Nyquist Prompt
       return;
    }
 
