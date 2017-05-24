@@ -344,7 +344,8 @@ void SelectionBar::Populate()
                     wxFocusEventHandler(SelectionBar::OnFocus),
                     NULL,
                     this);
-/*
+
+#if 0
    AButton *& pBtn = mButtons[ SelTBMenuID - SelTBFirstButton];
    pBtn = ToolBar::MakeButton(this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -356,10 +357,18 @@ void SelectionBar::Populate()
 
    pBtn->SetLabel("Selection options");
    pBtn->SetToolTip("Selection options");
+   pBtn->Disable();
    mainSizer->Add( pBtn, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-*/
-   wxCheckBox * pCheck = new wxCheckBox(this, id2, "Checkbox");
-   mainSizer->Add( pCheck, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+#endif 
+
+//   wxCheckBox * pCheck = new wxCheckBox(this, id2, "Checkbox");
+//   pCheck->Enable( false );
+ //  mainSizer->Add( pCheck, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+
+   mainSizer->Add(safenew wxStaticLine(this, id2, wxDefaultPosition,
+                                   wxSize(1, toolbarSingle),
+                                   wxLI_VERTICAL),
+                  0, wxRIGHT, 5);
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
