@@ -367,8 +367,8 @@ void SelectionBar::Populate()
       false,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
 
-   pBtn->SetLabel("Selection options");
-   pBtn->SetToolTip("Selection options");
+   pBtn->SetLabel(_("Selection options"));
+   pBtn->SetToolTip(_("Selection options"));
    pBtn->Disable();
    mainSizer->Add( pBtn, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 #endif 
@@ -704,17 +704,21 @@ void SelectionBar::SetSelectionMode(int mode)
 
    int id = mode + StartEndRadioID;
    if( mStartEndProxy == NULL ){
-      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      "Start - End" : "S-E" );
-      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   "Start - Length" : "S-L" );
-      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     "Length - End" : "L-E" );
-      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  "Length - Center" : "L-C" );
+      // i18n-hint: S-E is an abbreviation of Start-End
+      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : _("S-E") );
+      // i18n-hint: S-L is an abbreviation of Start-Length
+      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : _("S-L") );
+      // i18n-hint: L-E is an abbreviation of Length-End
+      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : _("L-E") );
+      // i18n-hint: L-C is an abbreviation of Length-Center
+      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : _("L-C") );
    }
    else
    {
-      mStartEndProxy->SetLabelText(     (id == StartEndRadioID) ?      "Start - End" : "S-E" );
-      mStartLengthProxy->SetLabelText(  (id == StartLengthRadioID) ?   "Start - Length" : "S-L" );
-      mLengthEndProxy->SetLabelText(    (id == LengthEndRadioID) ?     "Length - End" : "L-E" );
-      mLengthCenterProxy->SetLabelText( (id == LengthCenterRadioID) ?  "Length - Center" : "L-C" );
+      mStartEndProxy->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : _("S-E") );
+      mStartLengthProxy->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : _("S-L") );
+      mLengthEndProxy->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : _("L-E") );
+      mLengthCenterProxy->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : _("L-C") );
    }
 
    mStartEndRadBtn->SetValue(     id == StartEndRadioID     );
