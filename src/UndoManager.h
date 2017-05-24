@@ -108,6 +108,8 @@ class AUDACITY_DLL_API UndoManager {
    unsigned int GetNumStates();
    unsigned int GetCurrentState();
 
+   void StopConsolidating() { mayConsolidate = false; }
+
    void GetShortDescription(unsigned int n, wxString *desc);
    // Return value must first be calculated by CalculateSpaceUsage():
    wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
