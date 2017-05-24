@@ -82,6 +82,7 @@ class SelectionBar final : public ToolBar {
 
    void ModifySelection(int newDriver, bool done = false);
    void UpdateRates();
+   void SelectionModeUpdated();
 
    SelectionBarListener * mListener;
    double mRate;
@@ -108,6 +109,12 @@ class SelectionBar final : public ToolBar {
    wxStaticText * mCenterTitle;
    wxStaticText * mLengthTitle;
    wxStaticText * mEndTitle;
+
+   wxStaticText * mProxy;
+   wxStaticText * mStartEndProxy;
+   wxStaticText * mStartLengthProxy;
+   wxStaticText * mLengthEndProxy;
+   wxStaticText * mLengthCenterProxy;
 
    wxRadioButton * mStartEndRadBtn;
    wxRadioButton * mStartLengthRadBtn;

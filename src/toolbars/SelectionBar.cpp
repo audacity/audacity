@@ -124,6 +124,7 @@ SelectionBar::SelectionBar()
   mStartTime(NULL), mEndTime(NULL), mLengthTime(NULL), mCenterTime(NULL), 
   mAudioTime(NULL),
   mStartTitle(NULL), mCenterTitle(NULL), mLengthTitle(NULL), mEndTitle(NULL),
+  mStartEndProxy(NULL), mStartLengthProxy(NULL), mLengthEndProxy(NULL), mLengthCenterProxy(NULL),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0)
 {
@@ -175,11 +176,14 @@ wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name,
    pBtn->SetForegroundColour( theTheme.Colour( clrTrackPanelText ));
 
    pSizer->Add(pBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   // Hacky code to return a second optional value via the variable mProxy.
+   // If not NULL, we made a new proxy label
+   mProxy = NULL;
    if( !bUseNativeRadioButton )
    {
-      wxStaticText * pText = safenew wxStaticText(this, -1, Name);
-      pText->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-      pSizer->Add(pText, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
+      mProxy = safenew wxStaticText(this, -1, Name);
+      mProxy->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
+      pSizer->Add(mProxy, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
    }
    return pBtn;
 }
@@ -208,6 +212,8 @@ void SelectionBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    mStartTime = mEndTime = mLengthTime = mCenterTime = mAudioTime = nullptr;
+   mStartEndProxy = mStartLengthProxy = mLengthEndProxy = mLengthCenterProxy = nullptr;
+
    // This will be inherited by all children:
    SetFont(wxFont(
 #ifdef __WXMAC__
@@ -251,14 +257,18 @@ void SelectionBar::Populate()
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      (mStartEndRadBtn = AddRadioButton( _("Start-End"), StartEndRadioID, hSizer.get(), wxRB_GROUP))
+      (mStartEndRadBtn = AddRadioButton(  _("Start-End"), StartEndRadioID, hSizer.get(), wxRB_GROUP))
          ->SetValue( mSelectionMode == 0 );
+      mStartEndProxy = mProxy;
       (mStartLengthRadBtn  = AddRadioButton( _("Start-Length"), StartLengthRadioID, hSizer.get(), 0))
          ->SetValue( mSelectionMode == 1 );
+      mStartLengthProxy = mProxy;
       (mLengthEndRadBtn    = AddRadioButton( _("Length-End"), LengthEndRadioID, hSizer.get(), 0))
          ->SetValue( mSelectionMode == 2 );
+      mLengthEndProxy = mProxy;
       (mLengthCenterRadBtn = AddRadioButton( _("Length-Center"), LengthCenterRadioID, hSizer.get(), 0))
          ->SetValue( mSelectionMode == 3 );
+      mLengthCenterProxy = mProxy;
       mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
    }
 
@@ -346,6 +356,8 @@ void SelectionBar::Populate()
                     this);
 
 #if 0
+   // Old code which placed a button from which to select options.
+   // Retained in case we want a button for selection-toolbar options at a future date.
    AButton *& pBtn = mButtons[ SelTBMenuID - SelTBFirstButton];
    pBtn = ToolBar::MakeButton(this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
@@ -361,10 +373,15 @@ void SelectionBar::Populate()
    mainSizer->Add( pBtn, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 #endif 
 
-//   wxCheckBox * pCheck = new wxCheckBox(this, id2, "Checkbox");
-//   pCheck->Enable( false );
- //  mainSizer->Add( pCheck, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
+   // This vertical line is NOT just for decoration!
+   // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
+   // into the radiobutton group jumps to selecting the first item in the 
+   // group even if some other item had been selected.
+   // It is an important bug to work around for sceen reader users, who use TAB 
+   // a lot in navigation.
+   // More about the bug here:
+   // https://forums.wxwidgets.org/viewtopic.php?t=41120
    mainSizer->Add(safenew wxStaticLine(this, id2, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
@@ -379,12 +396,10 @@ void SelectionBar::Populate()
       mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
       mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
       // Put choice of what fields to show immediately before the fields.
-#if 1
       mStartEndRadBtn->MoveBeforeInTabOrder( mStartTime );
       mStartLengthRadBtn->MoveAfterInTabOrder( mStartEndRadBtn );
       mLengthEndRadBtn->MoveAfterInTabOrder( mStartLengthRadBtn );
       mLengthCenterRadBtn->MoveAfterInTabOrder( mLengthEndRadBtn );
-#endif
    }
 
    mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
@@ -658,22 +673,18 @@ void SelectionBar::OnButton(wxCommandEvent & event)
       if( Menu.IsChecked(i))
          SetSelectionMode( i );
 
-   // We just changed the mode.  Remember it.
-   gPrefs->Write(wxT("/SelectionToolbarMode"), mSelectionMode);
-   gPrefs->Flush();
-
-   wxSize sz = GetMinSize();
-   sz.SetWidth( 10 );
-   SetMinSize( sz );
-   Fit();
-   Layout();
-   Updated();
+   SelectionModeUpdated();
 }
 
 void SelectionBar::OnFieldChoice(wxCommandEvent &event)
 {
    int id = event.GetId();
    SetSelectionMode( id - StartEndRadioID );
+   SelectionModeUpdated();
+}
+
+void SelectionBar::SelectionModeUpdated()
+{
    // We just changed the mode.  Remember it.
    gPrefs->Write(wxT("/SelectionToolbarMode"), mSelectionMode);
    gPrefs->Flush();
@@ -684,7 +695,6 @@ void SelectionBar::OnFieldChoice(wxCommandEvent &event)
    Fit();
    Layout();
    Updated();
-   event.Skip();
 }
 
 
@@ -693,10 +703,19 @@ void SelectionBar::SetSelectionMode(int mode)
    mSelectionMode = mode;
 
    int id = mode + StartEndRadioID;
-   mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      "Start - End" : "S-E" );
-   mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   "Start - Length" : "S-L" );
-   mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     "Length - End" : "L-E" );
-   mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  "Length - Center" : "L-C" );
+   if( mStartEndProxy == NULL ){
+      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      "Start - End" : "S-E" );
+      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   "Start - Length" : "S-L" );
+      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     "Length - End" : "L-E" );
+      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  "Length - Center" : "L-C" );
+   }
+   else
+   {
+      mStartEndProxy->SetLabelText(     (id == StartEndRadioID) ?      "Start - End" : "S-E" );
+      mStartLengthProxy->SetLabelText(  (id == StartLengthRadioID) ?   "Start - Length" : "S-L" );
+      mLengthEndProxy->SetLabelText(    (id == LengthEndRadioID) ?     "Length - End" : "L-E" );
+      mLengthCenterProxy->SetLabelText( (id == LengthCenterRadioID) ?  "Length - Center" : "L-C" );
+   }
 
    mStartEndRadBtn->SetValue(     id == StartEndRadioID     );
    mStartLengthRadBtn->SetValue(  id == StartLengthRadioID  );
