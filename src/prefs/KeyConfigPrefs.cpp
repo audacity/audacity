@@ -142,7 +142,9 @@ void KeyConfigPrefs::Populate()
 
    mManager = project->GetCommandManager();
 
-   RefreshBindings();
+   // For speed, don't sort here.  We're just creating.
+   // Instead sort when we do SetView later in this function.
+   RefreshBindings(false);
 
    if (mViewByTree->GetValue()) {
       mViewType = ViewByTree;
@@ -294,7 +296,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
    Layout();
 }
 
-void KeyConfigPrefs::RefreshBindings()
+void KeyConfigPrefs::RefreshBindings(bool bSort)
 {
    wxArrayString Labels;
    wxArrayString Categories;
@@ -316,8 +318,10 @@ void KeyConfigPrefs::RefreshBindings()
                           Categories,
                           Prefixes,
                           Labels,
-                          mKeys);
-   mView->ExpandAll();
+                          mKeys,
+                          bSort);
+   //Not needed as new nodes are already shown expanded.
+   //mView->ExpandAll();
 
    mNewKeys = mKeys;
 }
@@ -351,7 +355,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
                    wxOK | wxCENTRE, this);
    }
 
-   RefreshBindings();
+   RefreshBindings(true);
 }
 
 void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
@@ -391,7 +395,7 @@ void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
       mManager->SetKeyFromIndex(i, mNewKeys[i]);
    }
 
-   RefreshBindings();
+   RefreshBindings(true);
 }
 
 void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
