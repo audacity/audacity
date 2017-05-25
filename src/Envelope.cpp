@@ -701,7 +701,7 @@ void Envelope::Paste(double t0, const Envelope *e)
    unsigned int len = mEnv.size();
 
    // get values to perform framing of the insertion
-   double splitval = GetValue(t0 + mOffset);
+   const double splitval = GetValueRelative( t0 );
 
 /*
 Old analysis of cases:
@@ -852,8 +852,8 @@ Old analysis of cases:
       // Add end points in case they are not not in e.
       // If they are in e, no harm, because the repeated Insert
       // calls for the start and end times will have no effect.
-      const double leftval = e->GetValue(0 + e->mOffset);
-      const double rightval = e->GetValue(e->mTrackLen + e->mOffset);
+      const double leftval = e->GetValueRelative( 0 );
+      const double rightval = e->GetValueRelative( e->mTrackLen );
       InsertOrReplaceRelative(t0, leftval);
       InsertOrReplaceRelative(t0 + e->mTrackLen, rightval);
    }
@@ -983,6 +983,13 @@ void Envelope::GetPoints(double *bufferWhen,
    }
 }
 
+void Envelope::Cap( double sampleTime )
+{
+   auto range = EqualRange( mTrackLen, sampleTime );
+   if ( range.first == range.second )
+      InsertOrReplaceRelative( mTrackLen, GetValueRelative( mTrackLen ) );
+}
+
 // Private methods
 
 // We no longer tolerate multiple envelope control points at the exact
@@ -1083,17 +1090,21 @@ void Envelope::SetOffset(double newOffset)
    mOffset = newOffset;
 }
 
-void Envelope::SetTrackLen(double trackLen)
+void Envelope::SetTrackLen( double trackLen, double sampleTime )
 // NOFAIL-GUARANTEE
 {
-   // Preserve the right-side limit at trackLen.
-   bool needPoint = ( trackLen < mTrackLen );
+   // Preserve the left-side limit at trackLen.
+   auto range = EqualRange( trackLen, sampleTime );
+   bool needPoint = ( range.first == range.second && trackLen < mTrackLen );
    double value;
    if ( needPoint )
       value = GetValueRelative( trackLen );
 
    mTrackLen = trackLen;
-   int newLen = EqualRange( trackLen, 0 ).second;
+
+   // Shrink the array.
+   // If more than one point already at the end, keep only the first of them.
+   int newLen = std::min( 1 + range.first, range.second );
    mEnv.resize( newLen );
 
    if ( needPoint )

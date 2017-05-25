@@ -128,7 +128,7 @@ public:
 
    // Control
    void SetOffset(double newOffset);
-   void SetTrackLen(double trackLen);
+   void SetTrackLen( double trackLen, double sampleTime = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );
 
@@ -146,6 +146,9 @@ public:
    */
    void GetValues
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
+
+   // Guarantee an envelope point at the end of the domain.
+   void Cap( double sampleTime );
 
 private:
    double GetValueRelative(double t) const;
