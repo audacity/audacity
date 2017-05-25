@@ -7240,14 +7240,6 @@ void AudacityProject::OnScoreAlign()
    // Make a copy of the note track in case alignment is canceled or fails
    auto holder = nt->Duplicate();
    auto alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
-   // Duplicate() on note tracks serializes seq to a buffer, but we need
-   // the seq, so Duplicate again and discard the track with buffer. The
-   // test is here in case Duplicate() is changed in the future.
-   if (alignedNoteTrack->GetSequence() == NULL) {
-      holder = alignedNoteTrack->Duplicate();
-      alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
-      wxASSERT(alignedNoteTrack->GetSequence());
-   }
    // Remove offset from NoteTrack because audio is
    // mixed starting at zero and incorporating clip offsets.
    if (alignedNoteTrack->GetOffset() < 0) {
@@ -7287,7 +7279,7 @@ void AudacityProject::OnScoreAlign()
 #ifndef SKIP_ACTUAL_SCORE_ALIGNMENT
       result = scorealign((void *) &mix, &mixer_process,
          2 /* channels */, 44100.0 /* srate */, endTime,
-         alignedNoteTrack->GetSequence(), &progress, params);
+         &alignedNoteTrack->GetSeq(), &progress, params);
 #else
       result = SA_SUCCESS;
 #endif

@@ -62,7 +62,7 @@ bool ImportMIDI(const wxString &fName, NoteTrack * dest)
    dest->SetName(trackNameBase);
    mf.Close();
    // the mean pitch should be somewhere in the middle of the display
-   Alg_iterator iterator(dest->GetSequence(), false);
+   Alg_iterator iterator( &dest->GetSeq(), false );
    iterator.begin();
    // for every event
    Alg_event_ptr evt;

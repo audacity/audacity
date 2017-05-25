@@ -2130,7 +2130,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    // Iterator not yet intialized, must add each track...
    for (i = 0; i < nTracks; i++) {
       NoteTrack *t = mMidiPlaybackTracks[i];
-      Alg_seq_ptr seq = t->GetSequence();
+      Alg_seq_ptr seq = &t->GetSeq();
       // mark sequence tracks as "in use" since we're handing this
       // off to another thread and want to make sure nothing happens
       // to the data until playback finishes. This is just a sanity check.
@@ -2387,7 +2387,7 @@ void AudioIO::StopStream()
       int nTracks = mMidiPlaybackTracks.size();
       for (int i = 0; i < nTracks; i++) {
          NoteTrack *t = mMidiPlaybackTracks[i];
-         Alg_seq_ptr seq = t->GetSequence();
+         Alg_seq_ptr seq = &t->GetSeq();
          seq->set_in_use(false);
       }
 

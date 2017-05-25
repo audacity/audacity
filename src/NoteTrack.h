@@ -65,8 +65,6 @@ class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
  public:
-   friend class TrackArtist;
-
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
@@ -79,6 +77,8 @@ class AUDACITY_DLL_API NoteTrack final
    double GetStartTime() const override;
    double GetEndTime() const override;
 
+   Alg_seq &GetSeq() const;
+
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
@@ -86,7 +86,6 @@ class AUDACITY_DLL_API NoteTrack final
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
-   Alg_seq* GetSequence();
    void PrintSequence();
 
    Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const;
@@ -208,21 +207,17 @@ class AUDACITY_DLL_API NoteTrack final
       else
          mVisibleChannels = CHANNEL_BIT(c);
    }
+
  private:
-   std::unique_ptr<Alg_seq> mSeq; // NULL means no sequence
-   // when Duplicate() is called, assume that it is to put a copy
-   // of the track into the undo stack or to redo/copy from the
-   // stack to the project object. We want copies to the stack
-   // to be serialized (therefore compact) representations, so
-   // copy will set mSeq to NULL and serialize to the following
-   // variables. If this design is correct, the track will be
-   // duplicated again (in the event of redo) back to the project
-   // at which point we will unserialize the data back to the
-   // mSeq variable. (TrackArtist should check to make sure this
-   // flip-flop from mSeq to mSerializationBuffer happened an
-   // even number of times, otherwise mSeq will be NULL).
-   mutable std::unique_ptr<char[]> mSerializationBuffer; // NULL means no buffer
-   long mSerializationLength;
+   void AddToDuration( double delta );
+
+   // These are mutable to allow NoteTrack to switch details of representation
+   // in logically const methods
+   // At most one of the two pointers is not null at any time.
+   // Both are null in a newly constructed NoteTrack.
+   mutable std::unique_ptr<Alg_seq> mSeq;
+   mutable std::unique_ptr<char[]> mSerializationBuffer;
+   mutable long mSerializationLength;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    float mVelocity; // velocity offset
