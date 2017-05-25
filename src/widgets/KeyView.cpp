@@ -47,6 +47,9 @@ BEGIN_EVENT_TABLE(KeyView, wxVListBox)
    EVT_SCROLLWIN(KeyView::OnScroll)
 END_EVENT_TABLE();
 
+wxString    KeyView::CommandTranslated="Command";
+
+
 // ============================================================================
 // KeyView class
 // ============================================================================
@@ -915,6 +918,12 @@ KeyView::RefreshLines()
          mLines.Add(&node);
       }
    }
+   //To see how many lines are being sorted (and how often).
+   //wxLogDebug("Sorting %i lines", mLines.GetCount());
+
+   // Speed up the comparison function used in sorting
+   // by only translating this string once.
+   CommandTranslated = _("Command");
 
    // Sort list based on type
    switch (mViewType)
@@ -1544,48 +1553,30 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
 {
    KeyNode *t1 = (**n1);
    KeyNode *t2 = (**n2);
-   wxString k1 = t1->label;
-   wxString k2 = t2->label;
+
+   unsigned int k1UInt= 0xffffffff;
+   unsigned int k2UInt= 0xffffffff;
 
    // This is a "command" node if its category is "Command"
    // and it is a child of the "Command" category.  This latter
    // test ensures that the "Command" parent will be handled
    // as a "menu" node and remain at the bottom of the list.
-   if (t1->category == _("Command") && !t1->isparent)
-   {
-      // A "command" node, so prepend the highest hex value
-      k1.Printf(wxT("ffffffff%s"), t1->label.c_str());
-   }
-   else
-   {
-      // A "menu" node, so prepend the line number
-      k1.Printf(wxT("%08x%s"), (unsigned int) t1->line, t1->label.c_str());
-   }
+   if (t1->category != CommandTranslated || t1->isparent)
+      k1UInt = (unsigned int) t1->line;
 
    // See above for explanation
-   if (t2->category == _("Command") && !t2->isparent)
-   {
-      // A "command" node, so prepend the highest hex value
-      k2.Printf(wxT("ffffffff%s"), t2->label.c_str());
-   }
-   else
-   {
-      // A "menu" node, so prepend the line number
-      k2.Printf(wxT("%08x%s"), (unsigned int) t2->line, t2->label.c_str());
-   }
+   if (t2->category != CommandTranslated || t2->isparent)
+      k2UInt = (unsigned int) t2->line;
 
-   // See wxWidgets documentation for explanation of comparison results.
-   // These will produce an ascending order.
-   if (k1 < k2)
-   {
+   if( k1UInt < k2UInt ) 
       return -1;
-   }
+   if( k1UInt > k2UInt )
+      return +1;
 
-   if (k1 > k2)
-   {
+   if( t1->label < t2->label )
+      return -1;
+   if( t1->label > t2->label )
       return 1;
-   }
-
    return 0;
 }
 

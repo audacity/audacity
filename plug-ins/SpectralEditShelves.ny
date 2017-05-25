@@ -3,6 +3,7 @@
 ;type process spectral
 ;preview linear
 ;name "Spectral edit shelves..."
+;manpage "Spectral_edit_shelves"
 ;action "Filtering..."
 ;author "Paul Licameli"
 ;copyright "Released under terms of the GNU General Public License version 2"

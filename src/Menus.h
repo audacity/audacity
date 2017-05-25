@@ -160,8 +160,10 @@ void OnSelExtendRight(const wxEvent * evt);
 void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
-void OnClipLeft();
-void OnClipRight();
+public:
+void DoClipLeftOrRight(bool right, bool keyUp );
+void OnClipLeft(const wxEvent* evt);
+void OnClipRight(const wxEvent* evt);
 
 void OnCursorShortJumpLeft();
 void OnCursorShortJumpRight();
@@ -275,8 +277,16 @@ void OnSplitLabels();
 void OnJoinLabels();
 void OnDisjoinLabels();
 
+void OnSelectTimeAndTracks(bool bAllTime, bool bAllTracks);
+void OnSelectAllTime();
+void OnSelectAllTracks();
 void OnSelectAll();
+void OnSelectSomething();
 void OnSelectNone();
+private:
+int CountSelectedWaveTracks();
+int CountSelectedTracks();
+public:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnToggleSpectralSelection();
 void DoNextPeakFrequency(bool up);
@@ -303,7 +313,6 @@ void OnSelectNextClip();
 void OnSelectClip(bool next);
 void OnSelectCursorStoredCursor();
 void OnSelectSyncLockSel();
-void OnSelectAllTracks();
 
         // View Menu
 
@@ -411,6 +420,8 @@ typedef struct FoundClipBoundary {
 } FoundClipBoundary;
 FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time);
 FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time);
+double AdjustForFindingStartTimes(const std::vector<const WaveClip*>& clips, double time);
+double AdjustForFindingEndTimes(const std::vector<const WaveClip*>& clips, double time);
 int FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& results);
 void OnCursorNextClipBoundary();
 void OnCursorPrevClipBoundary();

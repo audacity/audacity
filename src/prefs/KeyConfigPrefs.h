@@ -41,6 +41,7 @@ public:
    ~KeyConfigPrefs();
    bool Apply() override;
    void Cancel() override;
+   wxString HelpPageName() override;
 
 private:
    void Populate();
@@ -109,6 +110,7 @@ class KeyConfigPrefs final : public PrefsPanel
    ~KeyConfigPrefs();
    bool Apply() override;
    void Cancel() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

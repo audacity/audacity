@@ -3,6 +3,7 @@
 ;type process
 ;preview linear
 ;name "Vocal Remover..."
+;manpage "Vocal_Remover"
 ;action "Removing center-panned audio..."
 ;info "For reducing center-panned vocals"
 ;author "Steve Daulton"

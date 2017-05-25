@@ -115,6 +115,11 @@ wxString EffectAutoDuck::GetDescription()
    return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }
 
+wxString EffectAutoDuck::ManualPage()
+{
+   return wxT("Auto_Duck");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectAutoDuck::GetType()

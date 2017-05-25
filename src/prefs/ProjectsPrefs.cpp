@@ -80,6 +80,11 @@ bool ProjectsPrefs::Apply()
    return true;
 }
 
+wxString ProjectsPrefs::HelpPageName()
+{
+   return "Projects_Preferences";
+}
+
 PrefsPanel *ProjectsPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

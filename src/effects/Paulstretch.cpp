@@ -107,6 +107,11 @@ wxString EffectPaulstretch::GetDescription()
    return XO("Use Paulstretch only for an extreme time-stretch or \"stasis\" effect");
 }
 
+wxString EffectPaulstretch::ManualPage()
+{
+   return wxT("Paulstretch");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectPaulstretch::GetType()

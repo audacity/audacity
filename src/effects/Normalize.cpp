@@ -68,6 +68,11 @@ wxString EffectNormalize::GetDescription()
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
+wxString EffectNormalize::ManualPage()
+{
+   return wxT("Normalize");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectNormalize::GetType()

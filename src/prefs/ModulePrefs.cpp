@@ -161,6 +161,11 @@ void ModulePrefs::SetModuleStatus(const wxString &fname, int iStatus){
    gPrefs->Flush();
 }
 
+wxString ModulePrefs::HelpPageName()
+{
+   return "Modules_Preferences";
+}
+
 PrefsPanel *ModulePrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

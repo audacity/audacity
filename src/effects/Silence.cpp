@@ -42,6 +42,12 @@ wxString EffectSilence::GetDescription()
    return XO("Creates audio of zero amplitude");
 }
 
+wxString EffectSilence::ManualPage()
+{
+   return wxT("Generate_Menu#silence");
+}
+
+
 // EffectIdentInterface implementation
 
 EffectType EffectSilence::GetType()

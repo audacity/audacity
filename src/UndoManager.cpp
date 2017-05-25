@@ -61,7 +61,6 @@ UndoManager::UndoManager()
 {
    current = -1;
    saved = -1;
-   consolidationCount = 0;
    ResetODChangesFlag();
 }
 
@@ -257,10 +256,9 @@ void UndoManager::PushState(const TrackList * l,
 {
    unsigned int i;
 
-   // If consolidate is set to true, group up to 3 identical operations.
-   if (((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) && lastAction == longDescription &&
-       consolidationCount < 2) {
-      consolidationCount++;
+   if ( ((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) &&
+       lastAction == longDescription &&
+       mayConsolidate ) {
       ModifyState(l, selectedRegion, tags);
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
@@ -270,7 +268,7 @@ void UndoManager::PushState(const TrackList * l,
       return;
    }
 
-   consolidationCount = 0;
+   mayConsolidate = true;
 
    i = current + 1;
    while (i < stack.size()) {
@@ -319,7 +317,7 @@ const UndoState &UndoManager::SetStateTo
    }
 
    lastAction = wxT("");
-   consolidationCount = 0;
+   mayConsolidate = false;
 
    return stack[current]->state;
 }
@@ -333,7 +331,7 @@ const UndoState &UndoManager::Undo(SelectedRegion *selectedRegion)
    *selectedRegion = stack[current]->state.selectedRegion;
 
    lastAction = wxT("");
-   consolidationCount = 0;
+   mayConsolidate = false;
 
    return stack[current]->state;
 }
@@ -360,7 +358,7 @@ const UndoState &UndoManager::Redo(SelectedRegion *selectedRegion)
    */
 
    lastAction = wxT("");
-   consolidationCount = 0;
+   mayConsolidate = false;
 
    return stack[current]->state;
 }

@@ -250,7 +250,7 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
    bool IsSyncLockSelected() const;
 };
 
-class AudioTrack /* not final */ : public Track
+class AUDACITY_DLL_API AudioTrack /* not final */ : public Track
 {
 public:
    AudioTrack(const std::shared_ptr<DirManager> &projDirManager)
@@ -265,7 +265,7 @@ public:
    { return false; }
 };
 
-class PlayableTrack /* not final */ : public AudioTrack
+class AUDACITY_DLL_API PlayableTrack /* not final */ : public AudioTrack
 {
 public:
    PlayableTrack(const std::shared_ptr<DirManager> &projDirManager)

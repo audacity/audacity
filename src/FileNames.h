@@ -53,7 +53,7 @@ public:
     * This returns the string path to where the user may have put plug-ins
     * if they don't have system admin rights. Under default settings, it's
     * <DataDir>/Plug-Ins/ */
-   static wxString PlugInDir();
+   static wxString PlugInDir();  // Windows and Mac only
    static wxString ThemeDir();
    static wxString ThemeComponentsDir();
    static wxString ThemeCachePng();

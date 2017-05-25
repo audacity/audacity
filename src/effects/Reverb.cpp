@@ -153,6 +153,11 @@ wxString EffectReverb::GetDescription()
    return XO("Adds ambience or a \"hall effect\"");
 }
 
+wxString EffectReverb::ManualPage()
+{
+   return wxT("Reverb");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectReverb::GetType()

@@ -155,6 +155,25 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
+struct ClipMoveState {
+   WaveClip *capturedClip {};
+   bool capturedClipIsSelection {};
+   TrackArray trackExclusions {};
+   double hSlideAmount {};
+   TrackClipArray capturedClipArray {};
+   wxInt64 snapLeft { -1 }, snapRight { -1 };
+
+   void clear()
+   {
+      capturedClip = nullptr;
+      capturedClipIsSelection = false;
+      trackExclusions.clear();
+      hSlideAmount = 0;
+      capturedClipArray.clear();
+      snapLeft = snapRight = -1;
+   }
+};
+
 class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
  public:
 
@@ -256,7 +275,9 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
 
-   virtual void OnClipMove(bool right);
+   static double OnClipMove
+      (ViewInfo &viewInfo, Track *track,
+       TrackList &trackList, bool syncLocked, bool right);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -299,20 +320,33 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // part shrinks, keeping the leftmost and rightmost boundaries
    // fixed.
    enum StretchEnum {
+      stretchNone = 0, // false value!
       stretchLeft,
       stretchCenter,
       stretchRight
    };
-   StretchEnum mStretchMode; // remembers what to drag
-   bool mStretching; // true between mouse down and mouse up
-   bool mStretched; // true after drag has pushed state
-   double mStretchStart; // time of initial mouse position, quantized
-                         // to the nearest beat
-   double mStretchSel0;  // initial sel0 (left) quantized to nearest beat
-   double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
-   double mStretchLeftBeats; // how many beats from left to cursor
-   double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event);
+   struct StretchState {
+      StretchEnum mMode { stretchCenter }; // remembers what to drag
+
+      using QuantizedTimeAndBeat = std::pair< double, double >;
+
+      bool mStretching {}; // true between mouse down and mouse up
+      double mOrigT0 {};
+      double mOrigT1 {};
+      QuantizedTimeAndBeat mBeatCenter { 0, 0 };
+      QuantizedTimeAndBeat mBeat0 { 0, 0 };
+      QuantizedTimeAndBeat mBeat1 { 0, 0 };
+      double mLeftBeats {}; // how many beats from left to cursor
+      double mRightBeats {}; // how many beats from cursor to right
+   } mStretchState;
+
+   virtual StretchEnum HitTestStretch
+      ( const Track *track, const wxRect &rect, const wxMouseEvent & event,
+        StretchState *pState = nullptr );
+   wxCursor *ChooseStretchCursor( StretchEnum mode );
+   static StretchEnum ChooseStretchMode
+      ( const wxMouseEvent &event, const wxRect &rect, const ViewInfo &viewInfo,
+        const NoteTrack *nt, StretchState *pState = nullptr );
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -383,10 +417,16 @@ protected:
    virtual void HandleSlide(wxMouseEvent & event);
    virtual void StartSlide(wxMouseEvent &event);
    virtual void DoSlide(wxMouseEvent &event);
-   virtual void DoSlideHorizontal();
-   virtual void CreateListOfCapturedClips(double clickTime);
-   virtual void AddClipsToCaptured(Track *t, bool withinSelection);
-   virtual void AddClipsToCaptured(Track *t, double t0, double t1);
+   static void DoSlideHorizontal
+      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
+   static void CreateListOfCapturedClips
+      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+        TrackList &trackList, bool syncLocked, double clickTime );
+   static void AddClipsToCaptured
+      ( ClipMoveState &state, const ViewInfo &viewInfo,
+        Track *t, bool withinSelection );
+   static void AddClipsToCaptured
+      ( ClipMoveState &state, Track *t, double t0, double t1 );
 
    // AS: Handle zooming into tracks
    virtual void HandleZoom(wxMouseEvent & event);
@@ -658,10 +698,7 @@ protected:
 
    Track *mCapturedTrack;
    Envelope *mCapturedEnvelope;
-   WaveClip *mCapturedClip;
-   TrackClipArray mCapturedClipArray;
-   TrackArray mTrackExclusions;
-   bool mCapturedClipIsSelection;
+   ClipMoveState mClipMoveState;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
@@ -677,10 +714,6 @@ protected:
    wxBaseArrayDouble mSlideSnapFromPoints;
    wxBaseArrayDouble mSlideSnapToPoints;
    wxArrayInt mSlideSnapLinePixels;
-
-   // The amount that clips are sliding horizontally; this allows
-   // us to undo the slide and then slide it by another amount
-   double mHSlideAmount;
 
    bool mDidSlideVertically;
 
@@ -702,9 +735,27 @@ protected:
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
    std::unique_ptr<SnapManager> mSnapManager;
-   wxInt64 mSnapLeft;
-   wxInt64 mSnapRight;
+   wxInt64 mSnapLeft { -1 };
+   wxInt64 mSnapRight { -1 };
    bool mSnapPreferRightEdge;
+
+public:
+   wxInt64 GetSnapLeft () const
+   {
+      if ( mMouseCapture == IsSliding )
+         return mClipMoveState.snapLeft ;
+      else
+         return mSnapLeft ;
+   }
+   wxInt64 GetSnapRight() const
+   {
+      if ( mMouseCapture == IsSliding )
+         return mClipMoveState.snapRight;
+      else
+         return mSnapRight;
+   }
+
+protected:
 
    NumericConverter mConverter;
 

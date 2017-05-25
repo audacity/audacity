@@ -126,6 +126,11 @@ wxString EffectChangePitch::GetDescription()
    return XO("Change the pitch of a track without changing its tempo");
 }
 
+wxString EffectChangePitch::ManualPage()
+{
+   return wxT("Change_Pitch");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectChangePitch::GetType()

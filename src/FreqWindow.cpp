@@ -493,6 +493,9 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    Layout();
    Fit();
+   // Bug 1607:
+   Center();
+
    SetMinSize(GetSize());
    mAlgChoice->SetFocus();
 

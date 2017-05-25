@@ -277,7 +277,11 @@ void Scrubber::MarkScrubStart(
    ControlToolBar * const ctb = mProject->GetControlToolBar();
 
    // Stop any play in progress
+   // Bug 1492: mCancelled to stop us collapsing the selected region.
+   mCancelled = true;
    ctb->StopPlaying();
+   mCancelled = false;
+
    // Usually the timer handler of TrackPanel does this, but we do this now,
    // so that same timer does not StopPlaying() again after this function and destroy
    // scrubber state
@@ -495,7 +499,8 @@ void Scrubber::ContinueScrubbingUI()
    if (mDragging && !state.LeftIsDown()) {
       // Dragging scrub can stop with mouse up
       // Stop and set cursor
-      mProject->DoPlayStopSelect(true, state.ShiftDown());
+      bool bShift = state.ShiftDown();
+      mProject->DoPlayStopSelect(true, bShift);
       wxCommandEvent evt;
       mProject->GetControlToolBar()->OnStop(evt);
       return;
@@ -538,7 +543,8 @@ void Scrubber::StopScrubbing()
    if (HasStartedScrubbing() && !mCancelled) {
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
-      mProject->DoPlayStopSelect(true, state.ShiftDown());
+      bool bShift = state.ShiftDown();
+      mProject->DoPlayStopSelect(true, bShift);
    }
 
    mScrubStartPosition = -1;

@@ -70,11 +70,13 @@
 #endif
 
 #include "../Theme.h"
+#include "../widgets/HelpSystem.h"
 
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
    EVT_BUTTON(wxID_APPLY, PrefsDialog::OnApply)
+   EVT_BUTTON(wxID_HELP, PrefsDialog::OnHelp)
    EVT_TREE_KEY_DOWN(wxID_ANY, PrefsDialog::OnTreeKeyDown) // Handles key events when tree has focus
 END_EVENT_TABLE()
 
@@ -110,8 +112,31 @@ int wxTreebookExt::SetSelection(size_t n)
    static_cast<wxDialog*>(GetParent())->SetName( Temp );
 
    PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
+   const bool showHelp = (panel->HelpPageName() != wxEmptyString);
    const bool showApply = panel->ShowsApplyButton();
+   wxWindow *const helpButton = wxWindow::FindWindowById(wxID_HELP, GetParent());
    wxWindow *const applyButton = wxWindow::FindWindowById(wxID_APPLY, GetParent());
+
+   if (helpButton) {
+      if (showHelp) {
+         wxAcceleratorEntry entries[1];
+#if defined(__WXMAC__)
+         // Is there a standard shortcut on Mac?
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
+         wxAcceleratorTable accel(1, entries);
+         this->SetAcceleratorTable(accel);
+      }
+      else {
+         this->SetAcceleratorTable(wxNullAcceleratorTable);
+      }
+
+      const bool changed = helpButton->Show(showHelp);
+      if (changed)
+         GetParent()->Layout();
+   }
+
    if (applyButton) { // might still be NULL during population
       const bool changed = applyButton->Show(showApply);
       if (changed)
@@ -256,16 +281,29 @@ PrefsDialog::PrefsDialog
          S.EndHorizontalLay();
       }
       else {
+         // TODO: Look into getting rid of mUniquePage and instead
+         // adding into mCategories, so there is just one page in mCategories.
+         // And then hiding the treebook.
+
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
          mUniquePage = factory.Create(this);
-         S.AddWindow(mUniquePage, wxEXPAND);
+         wxWindow * uniquePageWindow = S.AddWindow(mUniquePage, wxEXPAND);
+         // We're not in the wxTreebook, so add the accelerator here
+         wxAcceleratorEntry entries[1];
+#if defined(__WXMAC__)
+         // Is there a standard shortcut on Mac?
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
+         wxAcceleratorTable accel(1, entries);
+         uniquePageWindow->SetAcceleratorTable(accel);
       }
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton);
+   S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton | eHelpButton);
    static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
    if (mUniquePage && !mUniquePage->ShowsApplyButton()) {
@@ -362,12 +400,33 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    EndModal(false);
 }
 
+PrefsPanel * PrefsDialog::GetCurrentPanel()
+{
+   if( mCategories) 
+      return static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
+   else
+   {
+      wxASSERT( mUniquePage );
+      return mUniquePage;
+   }
+}
+
 void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 {
-   if (mCategories)
-      static_cast<PrefsPanel*>(mCategories->GetCurrentPage())->Apply();
-   else
-      mUniquePage->Apply();
+   GetCurrentPanel()->Apply();
+}
+
+void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   wxString page = GetCurrentPanel()->HelpPageName();
+   // Currently (May2017) Spectrum Settings is the only preferences
+   // we ever display in a dialog on its own without others.
+   // We do so when it is configuring spectrums for a track.
+   // Because this happens, we want to visit a different help page.
+   // So we change the page name in the case of a page on its own.
+   if( !mCategories)
+      page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
+   HelpSystem::ShowHelpDialog(this, page, true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
@@ -525,4 +584,9 @@ void PrefsPanel::Cancel()
 bool PrefsPanel::ShowsApplyButton()
 {
    return false;
+}
+
+wxString PrefsPanel::HelpPageName()
+{
+   return wxEmptyString;
 }

@@ -136,6 +136,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mRestoreSplits = true;  // Default: Restore split lines. 
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
 
+   mEnableDebug = true; // Debug button enabled by default.
+
    mVersion = 4;
 
    mStop = false;
@@ -145,13 +147,17 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist
-   if (fName == NYQUIST_PROMPT_ID)
-   {
+   if (fName == NYQUIST_PROMPT_ID) {
       mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
       mIsPrompt = true;
 
+      return;
+   }
+
+   if (fName == NYQUIST_WORKER_ID) {
+      // Effect spawned from Nyquist Prompt
       return;
    }
 
@@ -210,6 +216,28 @@ wxString NyquistEffect::GetVersion()
 wxString NyquistEffect::GetDescription()
 {
    return mCopyright;
+}
+
+wxString NyquistEffect::ManualPage()
+{
+      return mIsPrompt
+         ? wxT("Nyquist_Prompt")
+         : mManPage;
+}
+
+wxString NyquistEffect::HelpPage()
+{
+   wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
+   wxString fileName;
+
+   for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++) {
+      fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
+      if (wxFileExists(fileName)) {
+         mHelpFileExists = true;
+         return fileName;
+      }
+   }
+   return wxEmptyString;
 }
 
 // EffectIdentInterface implementation
@@ -365,7 +393,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         int val;
+         int val {0};
          wxArrayString choices = ParseChoice(ctrl);
          parms.ReadEnum(ctrl.var, &val, choices);
          ctrl.val = (double) val;
@@ -385,8 +413,10 @@ bool NyquistEffect::Init()
 {
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
-   if (mIsPrompt)
+   if (mIsPrompt) {
       mType = EffectTypeProcess;
+      mEnableDebug = true; // Debug button always enabled for Nyquist Prompt.
+   }
 
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
    // the selected track(s) are in a spectrogram view, and there is at
@@ -487,6 +517,9 @@ bool NyquistEffect::Process()
    }
 
    mDebugOutput.Clear();
+   if (!mHelpFile.IsEmpty() && !mHelpFileExists) {
+      mDebugOutput = wxString::Format(wxT("error: File \"%s\" specified in header but not found in plug-in path.\n"), mHelpFile);
+   }
 
    if (mVersion >= 4)
    {
@@ -793,7 +826,7 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
       BuildEffectWindow(S);
    }
 
-   EnableDebug();
+   EnableDebug(mEnableDebug);
 }
 
 bool NyquistEffect::TransferDataToWindow()
@@ -1233,7 +1266,7 @@ bool NyquistEffect::ProcessOne()
    std::unique_ptr<WaveTrack> outputTrack[2];
 
    double rate = mCurTrack[0]->GetRate();
-   for (size_t i = 0; i < outChannels; i++) {
+   for (int i = 0; i < outChannels; i++) {
       sampleFormat format = mCurTrack[i]->GetSampleFormat();
 
       if (outChannels == (int)mCurNumChannels) {
@@ -1269,7 +1302,7 @@ bool NyquistEffect::ProcessOne()
    if (!success)
       return false;
 
-   for (size_t i = 0; i < outChannels; i++) {
+   for (int i = 0; i < outChannels; i++) {
       outputTrack[i]->Flush();
       mOutputTime = outputTrack[i]->GetEndTime();
 
@@ -1300,7 +1333,7 @@ bool NyquistEffect::ProcessOne()
       else {
          mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips != 0);
       }
-         
+
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
          SyncLockedTracksIterator git(mOutputTracks.get());
@@ -1607,6 +1640,29 @@ void NyquistEffect::Parse(const wxString &line)
       return;
    }
 
+   // TODO: Document.
+   // Page name in Audacity development manual
+   if (len >= 2 && tokens[0] == wxT("manpage")) {
+      mManPage = UnQuote(tokens[1]);
+      return;
+   }
+
+   // TODO: Document.
+   // Local Help file
+   if (len >= 2 && tokens[0] == wxT("helpfile")) {
+      mHelpFile = UnQuote(tokens[1]);
+      return;
+   }
+
+   // TODO: Document.
+   // Debug button may be disabled for release plug-ins.
+   if (len >= 2 && tokens[0] == wxT("debug")) {
+      if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
+         mEnableDebug = false;
+      }
+      return;
+   }
+
    if (len >= 6 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
 
@@ -1719,6 +1775,9 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mControls.Clear();
    mCategories.Clear();
    mIsSpectral = false;
+   mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
+   mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
+   mHelpFileExists = false;
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
@@ -1761,8 +1820,6 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
 
 void NyquistEffect::ParseFile()
 {
-   mEnablePreview = true;
-
    wxFileInputStream stream(mFileName.GetFullPath());
 
    ParseProgram(stream);
@@ -1800,7 +1857,7 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
       mCurBufferStart[ch] = (mCurStart[ch] + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
-      if (mCurBufferLen[ch] < len) {
+      if (mCurBufferLen[ch] < (size_t) len) {
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
       }
 

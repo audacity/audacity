@@ -41,7 +41,8 @@ enum teResourceFlags
    resFlagPaired =0x01,
    resFlagCursor =0x02,
    resFlagNewLine = 0x04,
-   resFlagInternal = 0x08  // For image manipulation.  Don't save or load.
+   resFlagInternal = 0x08,  // For image manipulation.  Don't save or load.
+   resFlagSkip = 0x10
 };
 
 enum teThemeType

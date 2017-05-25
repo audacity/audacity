@@ -273,7 +273,7 @@ TrackArtist::TrackArtist()
 
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
-   mSampleDisplay = 0;
+   mSampleDisplay = 1;// Stem plots by default.
    UpdatePrefs();
 
    SetColours();
@@ -2730,7 +2730,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    int left = TIME_TO_X(track->GetOffset());
    if (left < sel.x) left = sel.x; // clip on left
 
-   int right = TIME_TO_X(track->GetOffset() + track->mSeq->get_real_dur());
+   int right = TIME_TO_X(track->GetOffset() + track->GetSeq().get_real_dur());
    if (right > sel.x + sel.width) right = sel.x + sel.width; // clip on right
 
    // need overlap between MIDI data and the background region
@@ -2772,7 +2772,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    }
 
    // draw bar lines
-   Alg_seq_ptr seq = track->mSeq.get();
+   Alg_seq_ptr seq = &track->GetSeq();
    // We assume that sliding a NoteTrack around slides the barlines
    // along with the notes. This means that when we write out a track
    // as Allegro or MIDI without the offset, we'll need to insert an
@@ -2824,19 +2824,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    const double h = X_TO_TIME(rect.x);
    const double h1 = X_TO_TIME(rect.x + rect.width);
 
-   Alg_seq_ptr seq = track->mSeq.get();
-   if (!seq) {
-      wxASSERT(track->mSerializationBuffer);
-      // JKC: Previously this indirected via seq->, a NULL pointer.
-      // This was actually OK, since unserialize is a static function.
-      // Alg_seq:: is clearer.
-      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(track->mSerializationBuffer.get(),
-            track->mSerializationLength) };
-      wxASSERT(alg_track->get_type() == 's');
-      const_cast<NoteTrack*>(track)->mSeq.reset(seq = static_cast<Alg_seq*>(alg_track.release()));
-      track->mSerializationBuffer.reset();
-   }
-   wxASSERT(seq);
+   Alg_seq_ptr seq = &track->GetSeq();
 
    if (!track->GetSelected())
       sel0 = sel1 = 0.0;
@@ -3214,7 +3202,7 @@ void TrackArtist::UpdatePrefs()
 {
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 0);
+   gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 1);
    SetColours();
 }
 

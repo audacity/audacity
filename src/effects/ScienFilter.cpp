@@ -189,6 +189,12 @@ wxString EffectScienFilter::GetDescription()
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
+wxString EffectScienFilter::ManualPage()
+{
+   return wxT("Classic_Filters");
+}
+
+
 // EffectIdentInterface implementation
 
 EffectType EffectScienFilter::GetType()

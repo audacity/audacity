@@ -1326,6 +1326,7 @@ ExportMixerDialog::ExportMixerDialog( const TrackList *tracks, bool selectedOnly
    SetSizeHints( 640, 480, 20000, 20000 );
 
    SetSize( 640, 480 );
+   Center();
 }
 
 ExportMixerDialog::~ExportMixerDialog()

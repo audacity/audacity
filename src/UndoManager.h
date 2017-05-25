@@ -30,8 +30,9 @@
 
   UndoManager can also automatically consolidate actions into
   a single state change.  If the "consolidate" argument to
-  PushState is true, then up to 3 identical events in a row
-  will result in one PushState and 2 ModifyStates.
+  PushState is true, then new changes may accumulate into the most
+  recent Undo state, if descriptions match and if no Undo or Redo or rollback
+  operation intervened since that state was pushed.
 
   Undo() temporarily moves down one state and returns the track
   hierarchy.  If another PushState is called, the redo information
@@ -107,6 +108,8 @@ class AUDACITY_DLL_API UndoManager {
    unsigned int GetNumStates();
    unsigned int GetCurrentState();
 
+   void StopConsolidating() { mayConsolidate = false; }
+
    void GetShortDescription(unsigned int n, wxString *desc);
    // Return value must first be calculated by CalculateSpaceUsage():
    wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
@@ -143,7 +146,7 @@ class AUDACITY_DLL_API UndoManager {
    UndoStack stack;
 
    wxString lastAction;
-   int consolidationCount;
+   bool mayConsolidate { false };
 
    SpaceArray space;
    unsigned long long mClipboardSpaceUsage {};

@@ -103,6 +103,11 @@ wxString EffectWahwah::GetDescription()
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
+wxString EffectWahwah::ManualPage()
+{
+   return wxT("Wahwah");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectWahwah::GetType()

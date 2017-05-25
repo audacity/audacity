@@ -245,6 +245,11 @@ void RecordingPrefs::OnToggleCustomName(wxCommandEvent & /* Evt */)
    mToggleCustomName->Enable(mUseCustomTrackName);
 }
 
+wxString RecordingPrefs::HelpPageName()
+{
+   return "Recording_Preferences";
+}
+
 PrefsPanel *RecordingPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

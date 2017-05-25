@@ -28,6 +28,7 @@ class EffectsPrefs final : public PrefsPanel
    EffectsPrefs(wxWindow * parent);
    ~EffectsPrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

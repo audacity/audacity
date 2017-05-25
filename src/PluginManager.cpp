@@ -1437,11 +1437,13 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
 
    wxArrayString paths;
 
-   // Add the "per-user" plug-ins directory
+   // Add the "per-user" plug-ins directory Windows / Mac
+#if defined(__WXMAC__) || defined(__WXMSW__)
    {
       const wxFileName &ff = FileNames::PlugInDir();
       paths.Add(ff.GetFullPath());
    }
+#endif
  
    // Add the "Audacity" plug-ins directory
    wxFileName ff = PlatformCompatibility::GetExecutablePath();

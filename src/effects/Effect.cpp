@@ -53,6 +53,10 @@ greater use in future.
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
 #include "nyquist/Nyquist.h"
+#include "../widgets/HelpSystem.h"
+#include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/ErrorDialog.h"
+#include "../FileNames.h"
 
 #if defined(__WXMAC__)
 #include <Cocoa/Cocoa.h>
@@ -1095,6 +1099,16 @@ wxString Effect::GetPreset(wxWindow * parent, const wxString & parms)
       return dlg.GetSelected();
    }
 
+   return wxEmptyString;
+}
+
+wxString Effect::ManualPage()
+{
+   return wxEmptyString;
+}
+
+wxString Effect::HelpPage()
+{
    return wxEmptyString;
 }
 
@@ -2604,8 +2618,9 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         wxMessageBox(_("Error opening sound device. Try changing the audio host, playback device and the project sample rate."),
-                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
+         ShowErrorDialog(FocusDialog, _("Error"),
+                         _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
       }
    }
 }
@@ -2767,6 +2782,7 @@ BEGIN_EVENT_TABLE(EffectUIHost, wxDialogWrapper)
    EVT_CLOSE(EffectUIHost::OnClose)
    EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
    EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
+   EVT_BUTTON(wxID_HELP, EffectUIHost::OnHelp)
    EVT_BUTTON(eDebugID, EffectUIHost::OnDebug)
    EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
    EVT_CHECKBOX(kEnableID, EffectUIHost::OnEnable)
@@ -3039,9 +3055,24 @@ bool EffectUIHost::Initialize()
          bar->SetSizerAndFit(bs.release());
       }
 
-      long buttons = eApplyButton + eCloseButton;
-      if (mEffect->mUIDebug)
-      {
+      long buttons;
+      if ( mEffect->ManualPage().IsEmpty() && mEffect->HelpPage().IsEmpty()) {
+         buttons = eApplyButton + eCloseButton;
+         this->SetAcceleratorTable(wxNullAcceleratorTable);
+      }
+      else {
+         buttons = eApplyButton + eCloseButton + eHelpButton;
+         wxAcceleratorEntry entries[1];
+#if defined(__WXMAC__)
+         // Is there a standard shortcut on Mac?
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
+         wxAcceleratorTable accel(1, entries);
+         this->SetAcceleratorTable(accel);
+      }
+
+      if (mEffect->mUIDebug) {
          buttons += eDebugButton;
       }
 
@@ -3201,6 +3232,19 @@ void EffectUIHost::OnCancel(wxCommandEvent & evt)
    Close();
 
    return;
+}
+
+void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
+{
+   if (mEffect->GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
+      // Old ShowHelpDialog required when there is no on-line manual.
+      // Always use default web browser to allow full-featured HTML pages.
+      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
+   }
+   else {
+      // otherwise use the new ShowHelpDialog
+      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
+   }
 }
 
 void EffectUIHost::OnDebug(wxCommandEvent & evt)

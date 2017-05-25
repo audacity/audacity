@@ -999,7 +999,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
       c->AddCheck(wxT("MoveSelectionWithTracks"), _("&Move Selection with Tracks (on/off)"), 
          FN(OnMoveSelectionWithTracks), 
-         gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 1L),
+         gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), 0L),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->EndSubMenu();
 
@@ -1240,7 +1240,7 @@ void AudacityProject::CreateMenusAndCommands()
       // Ext-Bar Menu
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginMenu("Ext-Bar");
+      c->BeginMenu("Ext-&Bar");
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1399,7 +1399,7 @@ void AudacityProject::CreateMenusAndCommands()
       /////////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
-      c->BeginMenu("Ext-Command");
+      c->BeginMenu("Ext-Co&mmand");
 
       c->AddGlobalCommand(wxT("PrevWindow"), _("Move backward thru active windows"), FN(PrevWindow), wxT("Alt+Shift+F6"));
       c->AddGlobalCommand(wxT("NextWindow"), _("Move forward thru active windows"), FN(NextWindow), wxT("Alt+F6"));
@@ -1438,8 +1438,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
       c->AddItem(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
 
-      c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT(""));
-      c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT(""));
+      c->AddItem(wxT("ClipLeft"), _("Clip Left"), FN(OnClipLeft), wxT("\twantKeyup"));
+      c->AddItem(wxT("ClipRight"), _("Clip Right"), FN(OnClipRight), wxT("\twantKeyup"));
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -2082,7 +2082,7 @@ void AudacityProject::SelectAllIfNone()
    auto flags = GetUpdateFlags();
    if(!(flags & TracksSelectedFlag) ||
       (mViewInfo.selectedRegion.isPoint()))
-      OnSelectAll();
+      OnSelectSomething();
 }
 
 void AudacityProject::StopIfPaused()
@@ -3081,14 +3081,55 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
    OnCursorLeft( true, true, bKeyUp );
 }
 
-void AudacityProject::OnClipLeft()
+void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 {
-   mTrackPanel->OnClipMove(false);
+   if (keyUp) {
+      GetUndoManager()->StopConsolidating();
+      return;
+   }
+
+   auto &panel = *GetTrackPanel();
+
+   auto amount = TrackPanel::OnClipMove
+      ( mViewInfo, panel.GetFocusedTrack(),
+        *GetTracks(), IsSyncLocked(), right );
+
+   panel.ScrollIntoView(mViewInfo.selectedRegion.t0());
+   panel.Refresh(false);
+
+   if (amount != 0.0) {
+      wxString message = right? _("Time shifted clips to the right") :
+         _("Time shifted clips to the left");
+      
+      // The following use of the UndoPush flags is so that both a single
+      // keypress (keydown, then keyup), and holding down a key
+      // (multiple keydowns followed by a keyup) result in a single
+      // entry in Audacity's history dialog.
+      PushState(message, _("Time-Shift"), UndoPush::CONSOLIDATE);
+   }
+
+   if ( amount == 0.0 )
+      panel.MessageForScreenReader( _("clip not moved"));
 }
 
-void AudacityProject::OnClipRight()
+void AudacityProject::OnClipLeft(const wxEvent* evt)
 {
-   mTrackPanel->OnClipMove(true);
+   if (evt)
+      DoClipLeftOrRight( false, evt->GetEventType() == wxEVT_KEY_UP );
+   else  {              // called from menu, so simulate keydown and keyup
+      DoClipLeftOrRight( false, false );
+      DoClipLeftOrRight( false, true );
+   }
+}
+
+void AudacityProject::OnClipRight(const wxEvent* evt)
+{
+   if (evt)
+      DoClipLeftOrRight( true, evt->GetEventType() == wxEVT_KEY_UP );
+   else  {              // called from menu, so simulate keydown and keyup
+      DoClipLeftOrRight( true, false );
+      DoClipLeftOrRight( true, true );
+   }
 }
 
 //this pops up a dialog which allows the left selection to be set.
@@ -5374,20 +5415,87 @@ void AudacityProject::OnSplitNew()
    RedrawProject();
 }
 
-void AudacityProject::OnSelectAll()
+int AudacityProject::CountSelectedWaveTracks() 
 {
    TrackListIterator iter(GetTracks());
-
    Track *t = iter.First();
-   while (t) {
-      t->SetSelected(true);
-      t = iter.Next();
+
+   int count =0;
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      if( (t->GetKind() == Track::Wave) && t->GetSelected() )
+         count++;
    }
-   mViewInfo.selectedRegion.setTimes(
-      mTracks->GetMinOffset(), mTracks->GetEndTime());
+   return count;
+}
+
+int AudacityProject::CountSelectedTracks() 
+{
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+
+   int count =0;
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      if( t->GetSelected() )
+         count++;
+   }
+   return count;
+}
+
+void AudacityProject::OnSelectTimeAndTracks(bool bAllTime, bool bAllTracks)
+{
+   if( bAllTime )
+      mViewInfo.selectedRegion.setTimes(
+         mTracks->GetMinOffset(), mTracks->GetEndTime());
+
+   if( bAllTracks ){
+      TrackListIterator iter(GetTracks());
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         t->SetSelected(true);
+   }
 
    ModifyState(false);
+   mTrackPanel->Refresh(false);
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);}
+}
 
+void AudacityProject::OnSelectAllTime()
+{
+   OnSelectTimeAndTracks( true, false );
+}
+
+void AudacityProject::OnSelectAllTracks()
+{
+   OnSelectTimeAndTracks( false, true );
+}
+
+void AudacityProject::OnSelectAll()
+{
+   OnSelectTimeAndTracks( true, true );
+}
+
+// This function selects all tracks if no tracks selected,
+// and all time if no time selected.
+// There is an argument for making it just count wave tracks,
+// However you could then not select a label and cut it, 
+// without this function selecting all tracks.
+void AudacityProject::OnSelectSomething()
+{
+   bool bTime = mViewInfo.selectedRegion.isPoint();
+   bool bTracks = CountSelectedTracks() == 0;
+
+   if( bTime || bTracks )
+      OnSelectTimeAndTracks(bTime,bTracks);
+}
+
+void AudacityProject::SelectNone()
+{
+   TrackListIterator iter(GetTracks());
+   Track *t = iter.First();
+   while (t) {
+      t->SetSelected(false);
+      t = iter.Next();
+   }
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
       mMixerBoard->Refresh(false);
@@ -5524,6 +5632,8 @@ AudacityProject::FoundClip AudacityProject::FindNextClip(const WaveTrack* wt, do
    result.waveTrack = wt;
    const auto clips = wt->SortedClipArray();
 
+   t0 = AdjustForFindingStartTimes(clips, t0);
+
    auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() == t0; });
    if (p != clips.end() && (*p)->GetEndTime() > t1) {
@@ -5551,6 +5661,8 @@ AudacityProject::FoundClip AudacityProject::FindPrevClip(const WaveTrack* wt, do
    AudacityProject::FoundClip result{};
    result.waveTrack = wt;
    const auto clips = wt->SortedClipArray();
+
+   t0 = AdjustForFindingStartTimes(clips, t0);
 
    auto p = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
       return clip->GetStartTime() == t0; });
@@ -5677,10 +5789,10 @@ void AudacityProject::OnSelectClip(bool next)
 
             message += temp;
          }
-         if (result.waveTrack->GetNumClips() > 1 || nTracksSearched == 1) {
-            temp.Printf(wxT("%d %s %d "), result.index + 1, _("of"), result.waveTrack->GetNumClips());
-            message += temp;
-         }
+         temp.Printf(wxT("%d %s %d %s "), result.index + 1, _("of"), result.waveTrack->GetNumClips(),
+            result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+         message += temp;
+
          message += wxT(", ");
       }
       mTrackPanel->MessageForScreenReader(message);
@@ -5713,20 +5825,6 @@ void AudacityProject::OnSelectSyncLockSel()
 
    if (selected)
       ModifyState(false);
-
-   mTrackPanel->Refresh(false);
-   if (mMixerBoard)
-      mMixerBoard->Refresh(false);
-}
-
-void AudacityProject::OnSelectAllTracks()
-{
-   TrackListIterator iter(GetTracks());
-   for (Track *t = iter.First(); t; t = iter.Next()) {
-      t->SetSelected(true);
-   }
-
-   ModifyState(false);
 
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
@@ -6527,33 +6625,36 @@ AudacityProject::FoundClipBoundary AudacityProject::FindNextClipBoundary(const W
 {
    AudacityProject::FoundClipBoundary result{};
    result.waveTrack = wt;
-
    const auto clips = wt->SortedClipArray();
+   double timeStart = AdjustForFindingStartTimes(clips, time);
+   double timeEnd = AdjustForFindingEndTimes(clips, time);
+
    auto pStart = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
-      return clip->GetStartTime() > time; });
+      return clip->GetStartTime() > timeStart; });
    auto pEnd = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
-      return clip->GetEndTime() > time; });
+      return clip->GetEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
-      if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
-         result.index1 = std::distance(clips.begin(), pStart);
-         result.clipStart1 = true;
-      }
-      else if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
-         result.index1 = std::distance(clips.begin(), pEnd);
-         result.clipStart1 = false;
-      }
-      else {                     // both the end of one clip and the start of the next clip
+      if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
+         // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
          result.time = (*pEnd)->GetEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
          result.clipStart1 = false;
          result.index2 = std::distance(clips.begin(), pStart);
          result.clipStart2 = true;
+      }
+      else if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
+         result.nFound = 1;
+         result.time = (*pStart)->GetStartTime();
+         result.index1 = std::distance(clips.begin(), pStart);
+         result.clipStart1 = true;
+      }
+      else  {
+         result.nFound = 1;
+         result.time = (*pEnd)->GetEndTime();
+         result.index1 = std::distance(clips.begin(), pEnd);
+         result.clipStart1 = false;
       }
    }
    else if (pEnd != clips.end()) {
@@ -6570,33 +6671,36 @@ AudacityProject::FoundClipBoundary AudacityProject::FindPrevClipBoundary(const W
 {
    AudacityProject::FoundClipBoundary result{};
    result.waveTrack = wt;
-
    const auto clips = wt->SortedClipArray();
+   double timeStart = AdjustForFindingStartTimes(clips, time);
+   double timeEnd = AdjustForFindingEndTimes(clips, time);
+
    auto pStart = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
-      return clip->GetStartTime() < time; });
+      return clip->GetStartTime() < timeStart; });
    auto pEnd = std::find_if(clips.rbegin(), clips.rend(), [&] (const WaveClip* const& clip) {
-      return clip->GetEndTime() < time; });
+      return clip->GetEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
-      if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
-         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
-         result.clipStart1 = true;
-      }
-      else if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
-         result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
-         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pEnd);
-         result.clipStart1 = false;
-      }
-      else {
-         result.nFound = 2;               // both the start of one clip and the end of the previous clip
+      if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
+         // boundary between two clips which are immediately next to each other.
+         result.nFound = 2;
          result.time = (*pStart)->GetStartTime();
          result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
          result.clipStart1 = true;
          result.index2 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pEnd);
          result.clipStart2 = false;
+      }
+      else if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
+         result.nFound = 1;
+         result.time = (*pStart)->GetStartTime();
+         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pStart);
+         result.clipStart1 = true;
+      }
+      else {
+         result.nFound = 1;
+         result.time = (*pEnd)->GetEndTime();
+         result.index1 = static_cast<int>(clips.size()) - 1 - std::distance(clips.rbegin(), pEnd);
+         result.clipStart1 = false;
       }
    }
    else if (pStart != clips.rend()) {
@@ -6607,6 +6711,42 @@ AudacityProject::FoundClipBoundary AudacityProject::FindPrevClipBoundary(const W
    }
 
    return result;
+}
+
+// When two clips are immediately next to each other, the GetEndTime() of the first clip and the
+// GetStartTime() of the second clip may not be exactly equal due to rounding errors. When searching
+// for the next/prev start time from a given time, the following function adjusts that given time if
+// necessary to take this into account. If the given time is the end time of the first of two clips which
+// are next to each other, then the given time is changed to the start time of the second clip.
+// This ensures that the correct next/prev start time is found.
+double AudacityProject::AdjustForFindingStartTimes(const std::vector<const WaveClip*> & clips, double time)
+{
+   auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+      return clip->GetEndTime() == time; });
+   if (q != clips.end() && q + 1 != clips.end() &&
+      (*q)->SharesBoundaryWithNextClip(*(q+1))) {
+      time = (*(q+1))->GetStartTime();
+   }
+
+   return time;
+}
+
+// When two clips are immediately next to each other, the GetEndTime() of the first clip and the
+// GetStartTime() of the second clip may not be exactly equal due to rounding errors. When searching
+// for the next/prev end time from a given time, the following function adjusts that given time if
+// necessary to take this into account. If the given time is the start time of the second of two clips which
+// are next to each other, then the given time is changed to the end time of the first clip.
+// This ensures that the correct next/prev end time is found.
+double AudacityProject::AdjustForFindingEndTimes(const std::vector<const WaveClip*>& clips, double time)
+{
+   auto q = std::find_if(clips.begin(), clips.end(), [&] (const WaveClip* const& clip) {
+      return clip->GetStartTime() == time; });
+   if (q != clips.end() && q != clips.begin() &&
+      (*(q - 1))->SharesBoundaryWithNextClip(*q)) {
+      time = (*(q-1))->GetEndTime();
+   }
+
+   return time;
 }
 
 int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& finalResults)
@@ -6664,7 +6804,8 @@ void AudacityProject::OnCursorPrevClipBoundary()
 void AudacityProject::OnCursorClipBoundary(bool next)
 {
    std::vector<FoundClipBoundary> results;
-   int nTracksSearched = FindClipBoundaries(mViewInfo.selectedRegion.t0(), next, results);
+   int nTracksSearched = FindClipBoundaries(next ? mViewInfo.selectedRegion.t1() :
+      mViewInfo.selectedRegion.t0(), next, results);
 
    if (results.size() > 0) {
       // note that if there is more than one result, each has the same time value.
@@ -6697,10 +6838,11 @@ wxString AudacityProject::ClipBoundaryMessage(int nTracksSearched, const std::ve
          message += temp;
       }
       message += (result.clipStart1 ? _("start") : _("end")) + wxT(" ");
-      if (result.waveTrack->GetNumClips() > 1 ) {
-         temp.Printf(wxT("%d %s %d "), result.index1 + 1, _("of"), result.waveTrack->GetNumClips());
-         message += temp;
-      }
+
+      temp.Printf(wxT("%d %s %d %s "), result.index1 + 1, _("of"), result.waveTrack->GetNumClips(),
+         result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+      message += temp;
+
       if (result.nFound == 2) {
          temp.Printf(wxT("%s %s %d "), _("and"), result.clipStart2 ? _("start") : _("end"),
             result.index2 + 1);
@@ -6892,7 +7034,7 @@ void AudacityProject::OnAlignNoSync(int index)
 void AudacityProject::OnAlign(int index)
 {
    bool bMoveWith;
-   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, true);
+   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, false);
    HandleAlign(index, bMoveWith);
 }
 /*
@@ -7098,14 +7240,6 @@ void AudacityProject::OnScoreAlign()
    // Make a copy of the note track in case alignment is canceled or fails
    auto holder = nt->Duplicate();
    auto alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
-   // Duplicate() on note tracks serializes seq to a buffer, but we need
-   // the seq, so Duplicate again and discard the track with buffer. The
-   // test is here in case Duplicate() is changed in the future.
-   if (alignedNoteTrack->GetSequence() == NULL) {
-      holder = alignedNoteTrack->Duplicate();
-      alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
-      wxASSERT(alignedNoteTrack->GetSequence());
-   }
    // Remove offset from NoteTrack because audio is
    // mixed starting at zero and incorporating clip offsets.
    if (alignedNoteTrack->GetOffset() < 0) {
@@ -7145,7 +7279,7 @@ void AudacityProject::OnScoreAlign()
 #ifndef SKIP_ACTUAL_SCORE_ALIGNMENT
       result = scorealign((void *) &mix, &mixer_process,
          2 /* channels */, 44100.0 /* srate */, endTime,
-         alignedNoteTrack->GetSequence(), &progress, params);
+         &alignedNoteTrack->GetSeq(), &progress, params);
 #else
       result = SA_SUCCESS;
 #endif
@@ -7398,7 +7532,7 @@ int AudacityProject::DoAddLabel(const SelectedRegion &region, bool preserveFocus
 void AudacityProject::OnMoveSelectionWithTracks()
 {
    bool bMoveWith;
-   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, true);
+   gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, false);
    gPrefs->Write(wxT("/GUI/MoveSelectionWithTracks"), !bMoveWith);
    gPrefs->Flush();
 
@@ -7878,6 +8012,7 @@ void AudacityProject::OnResample()
       }
    }
 
+   GetUndoManager()->StopConsolidating();
    RedrawProject();
 
    // Need to reset

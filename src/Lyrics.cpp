@@ -461,6 +461,7 @@ void Lyrics::OnKeyEvent(wxKeyEvent & event)
 {
    AudacityProject *project = GetActiveProject();
    project->GetCommandManager()->FilterKeyEvent(project, event, true);
+   event.Skip();
 }
 
 void Lyrics::OnPaint(wxPaintEvent & WXUNUSED(event))

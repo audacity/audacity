@@ -79,6 +79,9 @@ public:
    wxString GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
+   
+   wxString ManualPage() override;
+   wxString HelpPage() override;
 
    // EffectIdentInterface implementation
 
@@ -194,10 +197,15 @@ private:
    wxString          mInfo;
    wxString          mAuthor;
    wxString          mCopyright;
+   wxString          mManPage;   // ONLY use if a help page exists in the manual.
+   wxString          mHelpFile;
+   bool              mHelpFileExists;
    EffectType        mType;
 
    bool              mEnablePreview;
-   bool              mDebug;
+   bool              mEnableDebug;  // Set to false to disable Debug button.
+
+   bool              mDebug;  // Is true when Debug button clicked.
    bool              mRedirectOutput;
    bool              mProjectChanged;
    wxString          mDebugOutput;

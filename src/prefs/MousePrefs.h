@@ -25,6 +25,7 @@ class MousePrefs final : public PrefsPanel
    MousePrefs(wxWindow * parent);
    ~MousePrefs();
    bool Apply() override;
+   wxString HelpPageName() override;
 
  private:
    void Populate();

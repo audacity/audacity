@@ -264,6 +264,11 @@ bool DirectoriesPrefs::Apply()
    return true;
 }
 
+wxString DirectoriesPrefs::HelpPageName()
+{
+   return "Directories_Preferences";
+}
+
 PrefsPanel *DirectoriesPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

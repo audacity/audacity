@@ -128,6 +128,8 @@ private:
    void OnKeyDown(wxKeyEvent & event);
    void OnLeftDown(wxMouseEvent & event);
 
+
+   static wxString CommandTranslated;
    static int CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2);
    static int CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2);
    static int CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2);

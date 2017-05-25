@@ -4,6 +4,7 @@
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;preview linear
 ;name "Risset Drum..."
+;manpage "Risset_Drum"
 ;action "Generating Risset Drum..."
 ;author "Steven Jones"
 ;copyright "Released under terms of the GNU General Public License version 2"

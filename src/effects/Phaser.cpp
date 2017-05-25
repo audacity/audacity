@@ -112,6 +112,11 @@ wxString EffectPhaser::GetDescription()
    return XO("Combines phase-shifted signals with the original signal");
 }
 
+wxString EffectPhaser::ManualPage()
+{
+   return wxT("Phaser");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectPhaser::GetType()

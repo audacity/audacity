@@ -127,15 +127,35 @@ NoteTrack::~NoteTrack()
 {
 }
 
+Alg_seq &NoteTrack::GetSeq() const
+{
+   if (!mSeq) {
+      if (!mSerializationBuffer)
+         mSeq = std::make_unique<Alg_seq>();
+      else {
+         std::unique_ptr<Alg_track> alg_track
+         { Alg_seq::unserialize
+            ( mSerializationBuffer.get(), mSerializationLength ) };
+         wxASSERT(alg_track->get_type() == 's');
+         mSeq.reset( static_cast<Alg_seq*>(alg_track.release()) );
+
+         // Preserve the invariant that at most one of the representations is
+         // valid
+         mSerializationBuffer.reset();
+         mSerializationLength = 0;
+      }
+   }
+   wxASSERT(mSeq);
+   return *mSeq;
+}
+
 Track::Holder NoteTrack::Duplicate() const
 {
    auto duplicate = std::make_unique<NoteTrack>(mDirManager);
    duplicate->Init(*this);
-   // Duplicate on NoteTrack moves data from mSeq to mSerializationBuffer
-   // and from mSerializationBuffer to mSeq on alternate calls. Duplicate
-   // to the undo stack and Duplicate back to the project should result
-   // in serialized blobs on the undo stack and traversable data in the
-   // project object.
+   // The duplicate begins life in serialized state.  Often the duplicate is
+   // pushed on the Undo stack.  Then we want to un-serialize it (or a further
+   // copy) only on demand after an Undo.
    if (mSeq) {
       SonifyBeginSerialize();
       wxASSERT(!mSerializationBuffer);
@@ -145,15 +165,19 @@ Track::Holder NoteTrack::Duplicate() const
                       &duplicate->mSerializationLength);
       duplicate->mSerializationBuffer.reset( (char*)buffer );
       SonifyEndSerialize();
-   } else if (mSerializationBuffer) {
-      SonifyBeginUnserialize();
+   }
+   else if (mSerializationBuffer) {
+      // Copy already serialized data.
       wxASSERT(!mSeq);
-      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(mSerializationBuffer.get(),
-                                                      mSerializationLength) };
-      wxASSERT(alg_track->get_type() == 's');
-      duplicate->mSeq.reset(static_cast<Alg_seq*>(alg_track.release()));
-      SonifyEndUnserialize();
-   } else wxFAIL_MSG("neither mSeq nor mSerializationBuffer were present"); // bug if neither mSeq nor mSerializationBuffer
+      duplicate->mSerializationLength = this->mSerializationLength;
+      duplicate->mSerializationBuffer.reset
+         ( new char[ this->mSerializationLength ] );
+      memcpy( duplicate->mSerializationBuffer.get(),
+              this->mSerializationBuffer.get(), this->mSerializationLength );
+   }
+   else {
+      // We are duplicating a default-constructed NoteTrack, and that's okay
+   }
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetPitchHeight(mPitchHeight);
@@ -180,7 +204,7 @@ double NoteTrack::GetStartTime() const
 
 double NoteTrack::GetEndTime() const
 {
-   return GetStartTime() + (mSeq ? mSeq->get_real_dur() : 0.0);
+   return GetStartTime() + GetSeq().get_real_dur();
 }
 
 
@@ -188,25 +212,13 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
                                       const TimeWarper &warper,
                                       double semitones)
 {
-   // Since this is a duplicate and duplicates convert mSeq to
-   // a text string for saving as XML, we probably have to
-   // duplicate again to get back an mSeq
    double offset = this->GetOffset(); // track is shifted this amount
-   if (!mSeq) { // replace saveme with an (unserialized) duplicate
-      Track::Holder unt{ Duplicate() };
-      const auto nt = static_cast<NoteTrack*>(unt.get());
-      wxASSERT(!mSeq && nt->mSeq && !nt->mSerializationBuffer);
-      // swap mSeq and Buffer between this and nt
-      nt->mSerializationBuffer = std::move(mSerializationBuffer);
-      nt->mSerializationLength = mSerializationLength;
-      mSerializationLength = 0;
-      mSeq = std::move(nt->mSeq);
-   }
-   mSeq->convert_to_seconds(); // make sure time units are right
+   auto &seq = GetSeq();
+   seq.convert_to_seconds(); // make sure time units are right
    t1 -= offset; // adjust time range to compensate for track offset
    t0 -= offset;
-   if (t1 > mSeq->get_dur()) { // make sure t0, t1 are within sequence
-      t1 = mSeq->get_dur();
+   if (t1 > seq.get_dur()) { // make sure t0, t1 are within sequence
+      t1 = seq.get_dur();
       if (t0 >= t1) return;
    }
    Alg_iterator iter(mSeq.get(), false);
@@ -219,8 +231,8 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    }
    iter.end();
    // now, use warper to warp the tempo map
-   mSeq->convert_to_beats(); // beats remain the same
-   Alg_time_map_ptr map = mSeq->get_time_map();
+   seq.convert_to_beats(); // beats remain the same
+   Alg_time_map_ptr map = seq.get_time_map();
    map->insert_beat(t0, map->time_to_beat(t0));
    map->insert_beat(t1, map->time_to_beat(t1));
    int i, len = map->length();
@@ -229,7 +241,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
       beat.time = warper.Warp(beat.time + offset) - offset;
    }
    // about to redisplay, so might as well convert back to time now
-   mSeq->convert_to_seconds();
+   seq.convert_to_seconds();
 }
 
 // Draws the midi channel toggle buttons within the given rect.
@@ -348,11 +360,6 @@ void NoteTrack::SetSequence(std::unique_ptr<Alg_seq> &&seq)
    mSeq = std::move(seq);
 }
 
-Alg_seq* NoteTrack::GetSequence()
-{
-   return mSeq.get();
-}
-
 void NoteTrack::PrintSequence()
 {
    FILE *debugOutput;
@@ -360,6 +367,8 @@ void NoteTrack::PrintSequence()
    debugOutput = fopen("debugOutput.txt", "wt");
    fprintf(debugOutput, "Importing MIDI...\n");
 
+   // This is called for debugging purposes.  Do not compute mSeq on demand
+   // with GetSeq()
    if (mSeq) {
       int i = 0;
 
@@ -416,14 +425,22 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
       THROW_INCONSISTENCY_EXCEPTION;
 
    double len = t1-t0;
+   //auto delta = -(
+      //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
+   //);
 
    auto newTrack = std::make_unique<NoteTrack>(mDirManager);
 
    newTrack->Init(*this);
 
-   mSeq->convert_to_seconds();
-   newTrack->mSeq.reset(mSeq->cut(t0 - GetOffset(), len, false));
+   auto &seq = GetSeq();
+   seq.convert_to_seconds();
+   newTrack->mSeq.reset(seq.cut(t0 - GetOffset(), len, false));
    newTrack->SetOffset(GetOffset());
+
+   // Not needed
+   // Alg_seq::cut seems to handle this
+   //AddToDuration( delta );
 
    // What should be done with the rest of newTrack's members?
    //(mBottomNote, mDirManager, mLastMidiPosition,
@@ -444,8 +461,9 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 
    newTrack->Init(*this);
 
-   mSeq->convert_to_seconds();
-   newTrack->mSeq.reset(mSeq->copy(t0 - GetOffset(), len, false));
+   auto &seq = GetSeq();
+   seq.convert_to_seconds();
+   newTrack->mSeq.reset(seq.copy(t0 - GetOffset(), len, false));
    newTrack->SetOffset(GetOffset());
 
    // What should be done with the rest of newTrack's members?
@@ -460,13 +478,23 @@ bool NoteTrack::Trim(double t0, double t1)
 {
    if (t1 < t0)
       return false;
-   mSeq->convert_to_seconds();
+   auto &seq = GetSeq();
+   //auto delta = -(
+      //( GetEndTime() - std::min( GetEndTime(), t1 ) ) +
+      //( std::max(t0, GetStartTime()) - GetStartTime() )
+   //);
+   seq.convert_to_seconds();
    // DELETE way beyond duration just in case something is out there:
-   mSeq->clear(t1 - GetOffset(), mSeq->get_dur() + 10000.0, false);
+   seq.clear(t1 - GetOffset(), seq.get_dur() + 10000.0, false);
    // Now that stuff beyond selection is cleared, clear before selection:
-   mSeq->clear(0.0, t0 - GetOffset(), false);
+   seq.clear(0.0, t0 - GetOffset(), false);
    // want starting time to be t0
    SetOffset(t0);
+
+   // Not needed
+   // Alg_seq::clear seems to handle this
+   //AddToDuration( delta );
+
    return true;
 }
 
@@ -477,8 +505,15 @@ void NoteTrack::Clear(double t0, double t1)
 
    double len = t1-t0;
 
-   if (mSeq)
-      mSeq->clear(t0 - GetOffset(), len, false);
+   auto &seq = GetSeq();
+   //auto delta = -(
+      //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
+   //);
+   seq.clear(t0 - GetOffset(), len, false);
+
+   // Not needed
+   // Alg_seq::clear seems to handle this
+   // AddToDuration( delta );
 }
 
 void NoteTrack::Paste(double t, const Track *src)
@@ -497,19 +532,27 @@ void NoteTrack::Paste(double t, const Track *src)
       return;
 
    NoteTrack* other = (NoteTrack*)src;
-   if (other->mSeq == NULL)
-      // THROW_INCONSISTENCY_EXCEPTION; // ?
-      return;
 
-   if(!mSeq)
-      mSeq = std::make_unique<Alg_seq>();
-
-   if (other->GetOffset() > 0) {
-      mSeq->convert_to_seconds();
-      mSeq->insert_silence(t - GetOffset(), other->GetOffset());
-      t += other->GetOffset();
+   double delta = 0.0;
+   auto &seq = GetSeq();
+   auto offset = other->GetOffset();
+   if ( offset > 0 ) {
+      seq.convert_to_seconds();
+      seq.insert_silence( t - GetOffset(), offset );
+      t += offset;
+      // Is this needed or does Alg_seq::insert_silence take care of it?
+      //delta += offset;
    }
-   mSeq->paste(t - GetOffset(), other->mSeq.get());
+
+   // This seems to be needed:
+   delta += std::max( 0.0, t - GetEndTime() );
+
+   // This, not:
+   //delta += other->GetSeq().get_real_dur();
+
+   seq.paste(t - GetOffset(), &other->GetSeq());
+
+   AddToDuration( delta );
 }
 
 void NoteTrack::Silence(double t0, double t1)
@@ -519,20 +562,25 @@ void NoteTrack::Silence(double t0, double t1)
 
    auto len = t1 - t0;
 
-   mSeq->convert_to_seconds();
+   auto &seq = GetSeq();
+   seq.convert_to_seconds();
    // XXX: do we want to set the all param?
    // If it's set, then it seems like notes are silenced if they start or end in the range,
    // otherwise only if they start in the range. --Poke
-   mSeq->silence(t0 - GetOffset(), len, false);
+   seq.silence(t0 - GetOffset(), len, false);
 }
 
 void NoteTrack::InsertSilence(double t, double len)
 {
-   if (len <= 0)
+   if (len < 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   mSeq->convert_to_seconds();
-   mSeq->insert_silence(t - GetOffset(), len);
+   auto &seq = GetSeq();
+   seq.convert_to_seconds();
+   seq.insert_silence(t - GetOffset(), len);
+
+   // is this needed?
+   // AddToDuration( len );
 }
 
 // Call this function to manipulate the underlying sequence data. This is
@@ -540,51 +588,61 @@ void NoteTrack::InsertSilence(double t, double len)
 bool NoteTrack::Shift(double t) // t is always seconds
 {
    if (t > 0) {
+      auto &seq = GetSeq();
       // insert an even number of measures
-      mSeq->convert_to_beats();
+      seq.convert_to_beats();
       // get initial tempo
-      double tempo = mSeq->get_tempo(0.0);
-      double beats_per_measure = mSeq->get_bar_len(0.0);
+      double tempo = seq.get_tempo(0.0);
+      double beats_per_measure = seq.get_bar_len(0.0);
       int m = ROUND(t * tempo / beats_per_measure);
       // need at least 1 measure, so if we rounded down to zero, fix it
       if (m == 0) m = 1;
       // compute NEW tempo so that m measures at NEW tempo take t seconds
       tempo = beats_per_measure * m / t; // in beats per second
-      mSeq->insert_silence(0.0, beats_per_measure * m);
-      mSeq->set_tempo(tempo * 60.0 /* bpm */, 0.0, beats_per_measure * m);
-      mSeq->write("afterShift.gro");
+      seq.insert_silence(0.0, beats_per_measure * m);
+      seq.set_tempo(tempo * 60.0 /* bpm */, 0.0, beats_per_measure * m);
+      seq.write("afterShift.gro");
    } else if (t < 0) {
-      mSeq->convert_to_seconds();
-      mSeq->clear(0, t, true);
+      auto &seq = GetSeq();
+      seq.convert_to_seconds();
+      seq.clear(0, t, true);
    } else { // offset is zero, no modifications
       return false;
    }
    return true;
 }
 
-double NoteTrack::NearestBeatTime(double time, double *beat) const
+QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
 {
-   wxASSERT(mSeq);
    // Alg_seq knows nothing about offset, so remove offset time
    double seq_time = time - GetOffset();
-   seq_time = mSeq->nearest_beat_time(seq_time, beat);
+   double beat;
+   auto &seq = GetSeq();
+   seq_time = seq.nearest_beat_time(seq_time, &beat);
    // add the offset back in to get "actual" audacity track time
-   return seq_time + GetOffset();
+   return { seq_time + GetOffset(), beat };
 }
 
-bool NoteTrack::StretchRegion(double t0, double t1, double dur)
+void NoteTrack::AddToDuration( double delta )
 {
-   wxASSERT(mSeq);
-   // Alg_seq::stretch_region uses beats, so we translate time
-   // to beats first:
-   t0 -= GetOffset();
-   t1 -= GetOffset();
-   double b0 = mSeq->get_time_map()->time_to_beat(t0);
-   double b1 = mSeq->get_time_map()->time_to_beat(t1);
-   bool result = mSeq->stretch_region(b0, b1, dur);
+   auto &seq = GetSeq();
+#if 0
+   // PRL:  Would this be better ?
+   seq.set_real_dur( seq.get_real_dur() + delta );
+#else
+   seq.convert_to_seconds();
+   seq.set_dur( seq.get_dur() + delta );
+#endif
+}
+
+bool NoteTrack::StretchRegion
+   ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur )
+{
+   auto &seq = GetSeq();
+   bool result = seq.stretch_region( t0.second, t1.second, newDur );
    if (result) {
-      mSeq->convert_to_seconds();
-      mSeq->set_dur(mSeq->get_dur() + dur - (t1 - t0));
+      const auto oldDur = t1.first - t0.first;
+      AddToDuration( newDur - oldDur );
    }
    return result;
 }
@@ -604,24 +662,21 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const
    cleanup.reset();
    double offset = GetOffset();
    if (offset == 0)
-      return mSeq.get();
+      return &GetSeq();
    // make a copy, deleting events that are shifted before time 0
    double start = -offset;
    if (start < 0) start = 0;
    // notes that begin before "start" are not included even if they
    // extend past "start" (because "all" parameter is set to false)
-   cleanup.reset( mSeq->copy(start, mSeq->get_dur() - start, false) );
+   cleanup.reset( GetSeq().copy(start, GetSeq().get_dur() - start, false) );
    auto seq = cleanup.get();
    if (offset > 0) {
       {
-         // Cheat a little
-         NoteTrack *pMutable = const_cast< NoteTrack * >(this);
-
          // swap cleanup and mSeq so that Shift operates on the NEW copy
-         swap(pMutable->mSeq, cleanup);
-         auto cleanup2 = finally( [&] { swap(pMutable->mSeq, cleanup); } );
+         swap( this->mSeq, cleanup );
+         auto cleanup2 = finally( [&] { swap( this->mSeq, cleanup ); } );
 
-         pMutable->Shift(offset);
+         const_cast< NoteTrack *>( this )->Shift(offset);
       }
 #ifdef OLD_CODE
       // now shift events by offset. This must be done with an integer
@@ -664,27 +719,28 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const
       seq->set_tempo(bps * 60.0, 0, beats_per_measure * n);
 #endif
    } else {
+      auto &mySeq = GetSeq();
       // if offset is negative, it might not be a multiple of beats, but
       // we want to preserve the relative positions of measures. I.e. we
       // should shift barlines and time signatures as well as notes.
       // Insert a time signature at the first bar-line if necessary.
 
       // Translate start from seconds to beats and call it beat:
-      double beat = mSeq->get_time_map()->time_to_beat(start);
-      // Find the time signature in mSeq in effect at start (beat):
-      int i = mSeq->time_sig.find_beat(beat);
+      double beat = mySeq.get_time_map()->time_to_beat(start);
+      // Find the time signature in mySeq in effect at start (beat):
+      int i = mySeq.time_sig.find_beat(beat);
       // i is where you would insert a NEW time sig at beat,
       // Case 1: beat coincides with a time sig at i. Time signature
       // at beat means that there is a barline at beat, so when beat
       // is shifted to 0, the relative barline positions are preserved
-      if (mSeq->time_sig.length() > 0 &&
-          within(beat, mSeq->time_sig[i].beat, ALG_EPS)) {
+      if (mySeq.time_sig.length() > 0 &&
+          within(beat, mySeq.time_sig[i].beat, ALG_EPS)) {
          // beat coincides with time signature change, so offset must
          // be a multiple of beats
          /* do nothing */ ;
       // Case 2: there is no time signature before beat.
-      } else if (i == 0 && (mSeq->time_sig.length() == 0 ||
-                            mSeq->time_sig[i].beat > beat)) {
+      } else if (i == 0 && (mySeq.time_sig.length() == 0 ||
+                            mySeq.time_sig[i].beat > beat)) {
          // If beat does not fall on an implied barline, we need to
          // insert a time signature.
          double measures = beat / 4.0;
@@ -701,7 +757,7 @@ Alg_seq *NoteTrack::MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const
       // Case 3: i-1 must be the effective time sig position
       } else {
          i -= 1; // index the time signature in effect at beat
-         Alg_time_sig_ptr tsp = &(mSeq->time_sig[i]);
+         Alg_time_sig_ptr tsp = &(mySeq.time_sig[i]);
          double beats_per_measure = (tsp->num * 4) / tsp->den;
          double measures = (beat - tsp->beat) / beats_per_measure;
          int imeasures = ROUND(measures);
@@ -737,12 +793,13 @@ bool NoteTrack::ExportAllegro(const wxString &f) const
    double offset = GetOffset();
    bool in_seconds;
    gPrefs->Read(wxT("/FileFormats/AllegroStyle"), &in_seconds, true);
+   auto &seq = GetSeq();
    if (in_seconds) {
-       mSeq->convert_to_seconds();
+       seq.convert_to_seconds();
    } else {
-       mSeq->convert_to_beats();
+       seq.convert_to_beats();
    }
-   return mSeq->write(f.mb_str(), offset);
+   return seq.write(f.mb_str(), offset);
 }
 
 
@@ -810,28 +867,15 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    std::ostringstream data;
-   // Normally, Duplicate is called in pairs -- once to put NoteTrack
-   // on the Undo stack, and again to move from the Undo stack to an
-   // "active" editable state. For efficiency, we do not do a "real"
-   // Duplicate followed by serialization into a binary blob. Instead,
-   // we combine the Duplicate with serialization or unserialization.
-   // Serialization and Unserialization happen on alternate calls to
-   // Duplicate and (usually) produce the right results at the right
-   // time.
-   // It turns out that this optimized Duplicate is a little too
-   // clever. There is at least one case where a track can be duplicated
-   // and then AutoSave'd. (E.g. do an "Insert Silence" effect on a
-   // NoteTrack.) In this case, mSeq will be NULL. To avoid a crash
-   // and perform WriteXML, we may need to restore NoteTracks from binary
-   // blobs to regular data structures (with an Alg_seq member).
    Track::Holder holder;
    const NoteTrack *saveme = this;
-   if (!mSeq) { // replace saveme with an (unserialized) duplicate
+   if (!mSeq) {
+      // replace saveme with an (unserialized) duplicate, which is
+      // destroyed at end of function.
       holder = Duplicate();
       saveme = static_cast<NoteTrack*>(holder.get());
-      wxASSERT(saveme->mSeq);
    }
-   saveme->mSeq->write(data, true);
+   saveme->GetSeq().write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
    xmlFile.WriteAttr(wxT("name"), saveme->mName);
    this->NoteTrackBase::WriteXMLAttributes(xmlFile);

@@ -407,6 +407,11 @@ bool DevicePrefs::Apply()
    return true;
 }
 
+wxString DevicePrefs::HelpPageName()
+{
+   return "Devices_Preferences";
+}
+
 PrefsPanel *DevicePrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew

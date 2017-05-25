@@ -200,7 +200,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 void HelpSystem::ShowHelpDialog(wxWindow *parent,
                     const wxString &localFileName,
                     const wxString &remoteURL,
-                    bool bModal)
+                    bool bModal,
+                    bool alwaysDefaultBrowser)
 {
    wxASSERT(parent); // to justify safenew
    AudacityProject * pProj = GetActiveProject();
@@ -250,7 +251,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       Text.Replace( wxT("*URL*"), remoteURL );
       ShowHtmlText( parent, _("Help on the Internet"), Text, false, bModal );
    }
-   else if( HelpMode == wxT("Local") )
+   else if( HelpMode == wxT("Local") || alwaysDefaultBrowser)
    {
       // Local file, External browser
       OpenInDefaultBrowser( wxString(wxT("file:"))+localFileName );
