@@ -770,8 +770,8 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
 
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
-                               _("Nyquist"),
-                               _("Nyquist Output: "),
+                               mName,
+                               _("Debug Output: "),
                                mDebugOutput.c_str());
       dlog.CentreOnParent();
       dlog.ShowModal();
@@ -1175,8 +1175,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_string) {
       wxMessageBox(NyquistToWxString(nyx_get_string()),
-                   wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+                   mName, wxOK | wxCENTRE, mUIParent);
 
       // True if not process type.
       // If not returning audio from process effect,
@@ -2382,7 +2381,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        const wxString & title,
                                        const wxString & prompt,
                                        const wxString &message)
-:  wxDialogWrapper(parent, id, title)
+: wxDialogWrapper{ parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
 {
    SetName(GetTitle());
 
@@ -2399,10 +2398,10 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
-      item = safenew wxTextCtrl(this, -1, message,
-         wxDefaultPosition, wxSize(400, 200),
-         wxTE_MULTILINE | wxTE_READONLY);
-      mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 10);
+      item = new wxTextCtrl(this, -1, message,
+                            wxDefaultPosition, wxSize(480, 250),
+                            wxTE_MULTILINE | wxTE_READONLY);
+      mainSizer->Add(item, 1, wxEXPAND | wxALL, 10);
 
       {
          auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
