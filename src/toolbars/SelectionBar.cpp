@@ -136,7 +136,7 @@ SelectionBar::SelectionBar()
    // Audacity to fail.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
       AudioIO::GetOptimalSupportedSampleRate());
-
+   
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
 }
@@ -191,7 +191,7 @@ wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name,
 wxStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer ){
    wxStaticText * pTitle = safenew wxStaticText(this, -1,Title );
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
-   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.Length() == 1 ) ? 0:5);
    return pTitle;
 }
 
@@ -391,8 +391,11 @@ void SelectionBar::Populate()
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       mStartTime  = AddTime(_("Start"), StartTimeID, hSizer.get() );
+      mHyphen[0] = AddTitle( "-", hSizer.get() );
       mLengthTime = AddTime(_("Length"), LengthTimeID, hSizer.get() );
+      mHyphen[1] = AddTitle( "-", hSizer.get() );
       mCenterTime = AddTime(_("Center"), CenterTimeID, hSizer.get() );
+      mHyphen[2] = AddTitle( "-", hSizer.get() );
       mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
       mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
       // Put choice of what fields to show immediately before the fields.
@@ -721,6 +724,12 @@ void SelectionBar::SetSelectionMode(int mode)
       mLengthCenterProxy->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : _("L-C") );
    }
 
+   mStartEndRadBtn->SetToolTip(     (id != StartEndRadioID) ?      _("Show start time and end time") : "" );
+   mStartLengthRadBtn->SetToolTip(  (id != StartLengthRadioID) ?   _("Show start time and length") : "" );
+   mLengthEndRadBtn->SetToolTip(    (id != LengthEndRadioID) ?     _("Show length and end time") : "" );
+   mLengthCenterRadBtn->SetToolTip( (id != LengthCenterRadioID) ?  _("Show length and center") : "" );
+
+
    mStartEndRadBtn->SetValue(     id == StartEndRadioID     );
    mStartLengthRadBtn->SetValue(  id == StartLengthRadioID  );
    mLengthEndRadBtn->SetValue(    id == LengthEndRadioID    );
@@ -735,6 +744,10 @@ void SelectionBar::SetSelectionMode(int mode)
                     EndTimeID,   LengthTimeID, EndTimeID,    EndTimeID};
 
    SetDrivers( Drive1[mode], Drive2[mode] );
+   // Show just the hyphen after the first of the items.
+   for(int i=0;i<3;i++){
+      mHyphen[i]->SetLabel( ((i+StartTimeID) == Drive2[mode]) ? "-  " : "" );
+   }
 
    // Then show/hide the relevant controls.
    ShowHideControls( mode );

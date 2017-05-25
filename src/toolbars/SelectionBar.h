@@ -110,6 +110,8 @@ class SelectionBar final : public ToolBar {
    wxStaticText * mLengthTitle;
    wxStaticText * mEndTitle;
 
+   wxStaticText * mHyphen[3];
+
    wxStaticText * mProxy;
    wxStaticText * mStartEndProxy;
    wxStaticText * mStartLengthProxy;
