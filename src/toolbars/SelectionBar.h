@@ -15,6 +15,12 @@
 
 #include "ToolBar.h"
 
+// PLAIN_TITLES give Start Length Center End above each field.
+// RADIO_TITLES give ()SE (*)Start-Length ()LE ()LC style.
+// BUTTON_TITLES give    < Start - Length >  style.
+//#define SEL_RADIO_TITLES
+#define SEL_BUTTON_TITLES
+
 class wxBitmap;
 class wxCheckBox;
 class wxChoice;
@@ -58,7 +64,7 @@ class SelectionBar final : public ToolBar {
  private:
    wxRadioButton * AddRadioButton( const wxString & Name, int id, 
       wxSizer * pSizer, long style);
-   wxStaticText * AddTitle( const wxString & Title, 
+   wxStaticText * AddTitle( const wxString & Title, int id, 
       wxSizer * pSizer );
    NumericTextCtrl * AddTime( const wxString Name, int id, wxSizer * pSizer );
 
@@ -73,6 +79,10 @@ class SelectionBar final : public ToolBar {
    void OnCenterTitleClicked(wxMouseEvent & event);
    void OnLengthTitleClicked(wxMouseEvent & event);
    void OnEndTitleClicked(wxMouseEvent & event);
+
+   void OnModeDecClicked(wxMouseEvent & event);
+   void OnModeIncClicked(wxMouseEvent & event);
+
    void OnRate(wxCommandEvent & event);
    void OnSnapTo(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);
@@ -105,24 +115,38 @@ class SelectionBar final : public ToolBar {
    NumericTextCtrl   *mEndTime;
    NumericTextCtrl   *mAudioTime;
 
+#ifdef PLAIN_TITLES
    wxStaticText * mStartTitle;
    wxStaticText * mCenterTitle;
    wxStaticText * mLengthTitle;
    wxStaticText * mEndTitle;
 
-   wxStaticText * mHyphen[3];
+#endif
 
-   wxStaticText * mProxy;
-   wxStaticText * mStartEndProxy;
-   wxStaticText * mStartLengthProxy;
-   wxStaticText * mLengthEndProxy;
-   wxStaticText * mLengthCenterProxy;
-
+#ifdef SEL_RADIO_TITLES
+   // These are the radio buttons
    wxRadioButton * mStartEndRadBtn;
    wxRadioButton * mStartLengthRadBtn;
    wxRadioButton * mLengthEndRadBtn;
    wxRadioButton * mLengthCenterRadBtn;
 
+   // These provide proxy themable text for
+   // Radio buttons that couldn't be themed.
+   wxStaticText * mStartEndProxy;
+   wxStaticText * mStartLengthProxy;
+   wxStaticText * mLengthEndProxy;
+   wxStaticText * mLengthCenterProxy;
+
+#endif
+
+#ifdef SEL_BUTTON_TITLES
+   wxStaticText * mButtonTitles[3];
+#endif
+
+   wxStaticText * mProxy;
+
+
+   wxStaticText * mHyphen[3];
    wxComboBox     *mRateBox;
    wxChoice       *mSnapTo;
 
