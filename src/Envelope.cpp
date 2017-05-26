@@ -1306,10 +1306,45 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
 }
 
 void Envelope::GetValues
-   (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const
+   ( double alignedTime, double sampleDur,
+     double *buffer, int bufferLen, int leftOffset,
+     const ZoomInfo &zoomInfo )
+   const
 {
-   for (int xx = 0; xx < bufferLen; ++xx)
-      buffer[xx] = GetValue(zoomInfo.PositionToTime(xx, -leftOffset));
+   // Getting many envelope values, corresponding to pixel columns, which may
+   // not be uniformly spaced in time when there is a fisheye.
+
+   double prevDiscreteTime, prevSampleVal, nextSampleVal;
+   for ( int xx = 0; xx < bufferLen; ++xx ) {
+      auto time = zoomInfo.PositionToTime( xx, -leftOffset );
+      if ( sampleDur <= 0 )
+         // Sample interval not defined (as for time track)
+         buffer[xx] = GetValue( time );
+      else {
+         // The level of zoom-in may resolve individual samples.
+         // If so, then instead of evaluating the envelope directly,
+         // we draw a piecewise curve with knees at each sample time.
+         // This actually makes clearer what happens as you drag envelope
+         // points and make discontinuities.
+         auto leftDiscreteTime = alignedTime +
+            sampleDur * floor( ( time - alignedTime ) / sampleDur );
+         if ( xx == 0 || leftDiscreteTime != prevDiscreteTime ) {
+            prevDiscreteTime = leftDiscreteTime;
+            prevSampleVal =
+               GetValue( prevDiscreteTime, sampleDur );
+            nextSampleVal =
+               GetValue( prevDiscreteTime + sampleDur, sampleDur );
+         }
+         auto ratio = ( time - leftDiscreteTime ) / sampleDur;
+         if ( GetExponential() )
+            buffer[ xx ] = exp(
+               ( 1.0 - ratio ) * log( prevSampleVal )
+                  + ratio * log( nextSampleVal ) );
+         else
+            buffer[ xx ] =
+               ( 1.0 - ratio ) * prevSampleVal + ratio * nextSampleVal;
+      }
+   }
 }
 
 // relative time

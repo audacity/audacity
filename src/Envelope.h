@@ -142,10 +142,13 @@ public:
     * more than one value in a row. */
    void GetValues(double *buffer, int len, double t0, double tstep) const;
 
-   /** \brief Get many envelope points at once, but don't assume uniform time step.
+   /** \brief Get many envelope points for pixel columns at once,
+    * but don't assume uniform time per pixel.
    */
    void GetValues
-      (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
+      ( double aligned_time, double sampleDur,
+        double *buffer, int bufferLen, int leftOffset,
+        const ZoomInfo &zoomInfo) const;
 
    // Guarantee an envelope point at the end of the domain.
    void Cap( double sampleDur );
