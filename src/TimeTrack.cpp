@@ -281,7 +281,8 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
    mRuler->Draw(dc, this);
 
    Doubles envValues{ size_t(mid.width) };
-   GetEnvelope()->GetValues(envValues.get(), mid.width, 0, zoomInfo);
+   GetEnvelope()->GetValues
+      ( 0, 0, envValues.get(), mid.width, 0, zoomInfo );
 
    dc.SetPen(AColor::envelopePen);
 

@@ -606,7 +606,7 @@ bool EnvelopeEditor::MouseEvent(const wxMouseEvent & event, wxRect & r,
    return false;
 }
 
-void Envelope::CollapseRegion( double t0, double t1, double sampleTime )
+void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // NOFAIL-GUARANTEE
 {
    // This gets called when somebody clears samples.
@@ -615,7 +615,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleTime )
    // For the boundaries of the interval, preserve the left-side limit at the
    // start and right-side limit at the end.
 
-   const auto epsilon = sampleTime / 2;
+   const auto epsilon = sampleDur / 2;
    t0 = std::max( 0.0, std::min( mTrackLen, t0 - mOffset ) );
    t1 = std::max( 0.0, std::min( mTrackLen, t1 - mOffset ) );
 
@@ -983,27 +983,14 @@ void Envelope::GetPoints(double *bufferWhen,
    }
 }
 
-void Envelope::Cap( double sampleTime )
+void Envelope::Cap( double sampleDur )
 {
-   auto range = EqualRange( mTrackLen, sampleTime );
+   auto range = EqualRange( mTrackLen, sampleDur );
    if ( range.first == range.second )
       InsertOrReplaceRelative( mTrackLen, GetValueRelative( mTrackLen ) );
 }
 
 // Private methods
-
-// We no longer tolerate multiple envelope control points at the exact
-// same t; the behavior can be well-defined, but it is still incorrect
-// in that it vastly complicates paste operations behaving as a user
-// reasonably expects.  The most common problem occurs pasting an
-// envelope into another track; the boundary behavior causes the
-// t=insert_point envelope level of the insertee to apply to sample 0
-// of the inserted sample, causing a pop.  This most visibly manifests
-// itself in undo and mixing when a v=1.0 sample magically shows
-// up at boundaries causing a pop.
-
-// Although this renders the name a slight misnomer, a duplicate
-// 'replaces' the current control point.
 
 /** @brief Add a control point to the envelope
  *
@@ -1061,13 +1048,13 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
    return i;
 }
 
-std::pair<int, int> Envelope::EqualRange( double when, double sampleTime ) const
+std::pair<int, int> Envelope::EqualRange( double when, double sampleDur ) const
 {
    // Find range of envelope points matching the given time coordinate
-   // (within an interval of length sampleTime)
+   // (within an interval of length sampleDur)
    // by binary search; if empty, it still indicates where to
    // insert.
-   const auto tolerance = sampleTime / 2;
+   const auto tolerance = sampleDur / 2;
    auto begin = mEnv.begin();
    auto end = mEnv.end();
    auto first = std::lower_bound(
@@ -1090,11 +1077,11 @@ void Envelope::SetOffset(double newOffset)
    mOffset = newOffset;
 }
 
-void Envelope::SetTrackLen( double trackLen, double sampleTime )
+void Envelope::SetTrackLen( double trackLen, double sampleDur )
 // NOFAIL-GUARANTEE
 {
    // Preserve the left-side limit at trackLen.
-   auto range = EqualRange( trackLen, sampleTime );
+   auto range = EqualRange( trackLen, sampleDur );
    bool needPoint = ( range.first == range.second && trackLen < mTrackLen );
    double value;
    if ( needPoint )
@@ -1127,12 +1114,12 @@ void Envelope::RescaleTimes( double newLength )
 }
 
 // Accessors
-double Envelope::GetValue(double t) const
+double Envelope::GetValue( double t, double sampleDur ) const
 {
    // t is absolute time
    double temp;
 
-   GetValues(&temp, 1, t, 1.0);
+   GetValues( &temp, 1, t, sampleDur );
    return temp;
 }
 
@@ -1140,7 +1127,7 @@ double Envelope::GetValueRelative(double t) const
 {
    double temp;
 
-   GetValuesRelative(&temp, 1, t, 1.0);
+   GetValuesRelative(&temp, 1, t, 0.0);
    return temp;
 }
 
@@ -1205,8 +1192,8 @@ double Envelope::GetInterpolationStartValueAtPoint( int iPoint ) const
       return log10(v);
 }
 
-void Envelope::GetValues(double *buffer, int bufferLen,
-                         double t0, double tstep) const
+void Envelope::GetValues( double *buffer, int bufferLen,
+                          double t0, double tstep ) const
 {
    // Convert t0 from absolute to clip-relative time
    t0 -= mOffset;
@@ -1219,9 +1206,14 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
    // wxASSERT( bufferLen > 0 );
 
+   const auto epsilon = tstep / 2;
    int len = mEnv.size();
 
    double t = t0;
+   double increment = 0;
+   if ( len > 0 && t <= mEnv[0].GetT() && mEnv[0].GetT() == mEnv[1].GetT() )
+      increment = epsilon;
+
    double tprev, vprev, tnext = 0, vnext, vstep = 0;
 
    for (int b = 0; b < bufferLen; b++) {
@@ -1233,20 +1225,24 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
          t += tstep;
          continue;
       }
+
+      auto tplus = t + increment;
+
       // IF before envelope THEN first value
-      if (t <= mEnv[0].GetT()) {
+      if ( tplus <= mEnv[0].GetT() ) {
          buffer[b] = mEnv[0].GetVal();
          t += tstep;
          continue;
       }
       // IF after envelope THEN last value
-      if (t >= mEnv[len - 1].GetT()) {
+      if ( tplus >= mEnv[len - 1].GetT() ) {
          buffer[b] = mEnv[len - 1].GetVal();
          t += tstep;
          continue;
       }
 
-      if (b == 0 || t > tnext) {
+      // Note >= not > , to get the right limit in case epsilon == 0
+      if ( b == 0 || tplus >= tnext ) {
 
          // We're beyond our tnext, so find the next one.
          // Don't just increment lo or hi because we might
@@ -1254,11 +1250,22 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
          // points to move over.  That's why we binary search.
 
          int lo,hi;
-         BinarySearchForTime( lo, hi, t );
-         // mEnv[0] is before t because of eliminations above, therefore lo >= 0
-         // mEnv[len - 1] is after t, therefore hi <= len - 1
+         BinarySearchForTime( lo, hi, tplus );
+         // mEnv[0] is before tplus because of eliminations above, therefore lo >= 0
+         // mEnv[len - 1] is after tplus, therefore hi <= len - 1
+
          tprev = mEnv[lo].GetT();
          tnext = mEnv[hi].GetT();
+
+         if ( hi + 1 < len && tnext == mEnv[ hi + 1 ].GetT() )
+            // There is a discontinuity after this point-to-point interval.
+            // Will stop evaluating in this interval when time is slightly
+            // before tNext, then use the right limit.  This is the right intent
+            // in case small roundoff errors cause a sample time to be a little
+            // before the envelope point time.
+            increment = epsilon;
+         else
+            increment = 0;
 
          vprev = GetInterpolationStartValueAtPoint( lo );
          vnext = GetInterpolationStartValueAtPoint( hi );
@@ -1299,10 +1306,45 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
 }
 
 void Envelope::GetValues
-   (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const
+   ( double alignedTime, double sampleDur,
+     double *buffer, int bufferLen, int leftOffset,
+     const ZoomInfo &zoomInfo )
+   const
 {
-   for (int xx = 0; xx < bufferLen; ++xx)
-      buffer[xx] = GetValue(zoomInfo.PositionToTime(xx, -leftOffset));
+   // Getting many envelope values, corresponding to pixel columns, which may
+   // not be uniformly spaced in time when there is a fisheye.
+
+   double prevDiscreteTime, prevSampleVal, nextSampleVal;
+   for ( int xx = 0; xx < bufferLen; ++xx ) {
+      auto time = zoomInfo.PositionToTime( xx, -leftOffset );
+      if ( sampleDur <= 0 )
+         // Sample interval not defined (as for time track)
+         buffer[xx] = GetValue( time );
+      else {
+         // The level of zoom-in may resolve individual samples.
+         // If so, then instead of evaluating the envelope directly,
+         // we draw a piecewise curve with knees at each sample time.
+         // This actually makes clearer what happens as you drag envelope
+         // points and make discontinuities.
+         auto leftDiscreteTime = alignedTime +
+            sampleDur * floor( ( time - alignedTime ) / sampleDur );
+         if ( xx == 0 || leftDiscreteTime != prevDiscreteTime ) {
+            prevDiscreteTime = leftDiscreteTime;
+            prevSampleVal =
+               GetValue( prevDiscreteTime, sampleDur );
+            nextSampleVal =
+               GetValue( prevDiscreteTime + sampleDur, sampleDur );
+         }
+         auto ratio = ( time - leftDiscreteTime ) / sampleDur;
+         if ( GetExponential() )
+            buffer[ xx ] = exp(
+               ( 1.0 - ratio ) * log( prevSampleVal )
+                  + ratio * log( nextSampleVal ) );
+         else
+            buffer[ xx ] =
+               ( 1.0 - ratio ) * prevSampleVal + ratio * nextSampleVal;
+      }
+   }
 }
 
 // relative time

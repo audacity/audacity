@@ -118,9 +118,9 @@ public:
       float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
-   // sampleTime determines when the endpoint of the collapse is near enough
+   // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
-   void CollapseRegion(double t0, double t1, double sampleTime);
+   void CollapseRegion(double t0, double t1, double sampleDur);
    void Paste(double t0, const Envelope *e);
 
    void InsertSpace(double t0, double tlen);
@@ -128,13 +128,13 @@ public:
 
    // Control
    void SetOffset(double newOffset);
-   void SetTrackLen( double trackLen, double sampleTime = 0.0 );
+   void SetTrackLen( double trackLen, double sampleDur = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );
 
    // Accessors
    /** \brief Get envelope value at time t */
-   double GetValue(double t) const;
+   double GetValue( double t, double sampleDur = 0 ) const;
 
    /** \brief Get many envelope points at once.
     *
@@ -142,13 +142,16 @@ public:
     * more than one value in a row. */
    void GetValues(double *buffer, int len, double t0, double tstep) const;
 
-   /** \brief Get many envelope points at once, but don't assume uniform time step.
+   /** \brief Get many envelope points for pixel columns at once,
+    * but don't assume uniform time per pixel.
    */
    void GetValues
-      (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
+      ( double aligned_time, double sampleDur,
+        double *buffer, int bufferLen, int leftOffset,
+        const ZoomInfo &zoomInfo) const;
 
    // Guarantee an envelope point at the end of the domain.
-   void Cap( double sampleTime );
+   void Cap( double sampleDur );
 
 private:
    double GetValueRelative(double t) const;
@@ -198,7 +201,7 @@ private:
       return mEnv[index];
    }
 
-   std::pair<int, int> EqualRange( double when, double sampleTime ) const;
+   std::pair<int, int> EqualRange( double when, double sampleDur ) const;
 
 public:
    /** \brief Returns the sets of when and value pairs */

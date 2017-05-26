@@ -1352,7 +1352,10 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
             (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
       xpos[s] = xx;
 
-      const double tt = buffer[s] * clip->GetEnvelope()->GetValue(time);
+      // Calculate sample as it would be rendered, so quantize time
+      double value =
+         clip->GetEnvelope()->GetValue( time, 1.0 / clip->GetRate() );
+      const double tt = buffer[s] * value;
 
       if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
          clipped[clipcnt++] = xx;
@@ -1778,7 +1781,8 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   clip->GetEnvelope()->GetValues(env, mid.width, leftOffset, zoomInfo);
+   clip->GetEnvelope()->GetValues
+      ( tOffset, 1.0 / rate, env, mid.width, leftOffset, zoomInfo );
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -1909,7 +1913,8 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rect.width);
             double *const env2 = &vEnv2[0];
-            clip->GetEnvelope()->GetValues(env2, rect.width, leftOffset, zoomInfo);
+            clip->GetEnvelope()->GetValues
+               ( tOffset, 1.0 / rate, env2, rect.width, leftOffset, zoomInfo );
             DrawMinMaxRMS(dc, rect, env2,
                zoomMin, zoomMax,
                dB, dBRange,

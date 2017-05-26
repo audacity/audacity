@@ -259,8 +259,12 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
                    fillFormat fill = fillZero, bool mayThrow = true) const;
    void Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
+
+   // Fetch envelope values corresponding to uniformly separated sample times
+   // starting at the given time.
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
+
    std::pair<float, float> GetMinMax(
       double t0, double t1, bool mayThrow = true) const;
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
