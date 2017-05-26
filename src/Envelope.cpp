@@ -606,7 +606,7 @@ bool EnvelopeEditor::MouseEvent(const wxMouseEvent & event, wxRect & r,
    return false;
 }
 
-void Envelope::CollapseRegion( double t0, double t1, double sampleTime )
+void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // NOFAIL-GUARANTEE
 {
    // This gets called when somebody clears samples.
@@ -615,7 +615,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleTime )
    // For the boundaries of the interval, preserve the left-side limit at the
    // start and right-side limit at the end.
 
-   const auto epsilon = sampleTime / 2;
+   const auto epsilon = sampleDur / 2;
    t0 = std::max( 0.0, std::min( mTrackLen, t0 - mOffset ) );
    t1 = std::max( 0.0, std::min( mTrackLen, t1 - mOffset ) );
 
@@ -983,9 +983,9 @@ void Envelope::GetPoints(double *bufferWhen,
    }
 }
 
-void Envelope::Cap( double sampleTime )
+void Envelope::Cap( double sampleDur )
 {
-   auto range = EqualRange( mTrackLen, sampleTime );
+   auto range = EqualRange( mTrackLen, sampleDur );
    if ( range.first == range.second )
       InsertOrReplaceRelative( mTrackLen, GetValueRelative( mTrackLen ) );
 }
@@ -1061,13 +1061,13 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
    return i;
 }
 
-std::pair<int, int> Envelope::EqualRange( double when, double sampleTime ) const
+std::pair<int, int> Envelope::EqualRange( double when, double sampleDur ) const
 {
    // Find range of envelope points matching the given time coordinate
-   // (within an interval of length sampleTime)
+   // (within an interval of length sampleDur)
    // by binary search; if empty, it still indicates where to
    // insert.
-   const auto tolerance = sampleTime / 2;
+   const auto tolerance = sampleDur / 2;
    auto begin = mEnv.begin();
    auto end = mEnv.end();
    auto first = std::lower_bound(
@@ -1090,11 +1090,11 @@ void Envelope::SetOffset(double newOffset)
    mOffset = newOffset;
 }
 
-void Envelope::SetTrackLen( double trackLen, double sampleTime )
+void Envelope::SetTrackLen( double trackLen, double sampleDur )
 // NOFAIL-GUARANTEE
 {
    // Preserve the left-side limit at trackLen.
-   auto range = EqualRange( trackLen, sampleTime );
+   auto range = EqualRange( trackLen, sampleDur );
    bool needPoint = ( range.first == range.second && trackLen < mTrackLen );
    double value;
    if ( needPoint )

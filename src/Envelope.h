@@ -118,9 +118,9 @@ public:
       float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
-   // sampleTime determines when the endpoint of the collapse is near enough
+   // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
-   void CollapseRegion(double t0, double t1, double sampleTime);
+   void CollapseRegion(double t0, double t1, double sampleDur);
    void Paste(double t0, const Envelope *e);
 
    void InsertSpace(double t0, double tlen);
@@ -128,7 +128,7 @@ public:
 
    // Control
    void SetOffset(double newOffset);
-   void SetTrackLen( double trackLen, double sampleTime = 0.0 );
+   void SetTrackLen( double trackLen, double sampleDur = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );
 
@@ -148,7 +148,7 @@ public:
       (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
 
    // Guarantee an envelope point at the end of the domain.
-   void Cap( double sampleTime );
+   void Cap( double sampleDur );
 
 private:
    double GetValueRelative(double t) const;
@@ -198,7 +198,7 @@ private:
       return mEnv[index];
    }
 
-   std::pair<int, int> EqualRange( double when, double sampleTime ) const;
+   std::pair<int, int> EqualRange( double when, double sampleDur ) const;
 
 public:
    /** \brief Returns the sets of when and value pairs */
