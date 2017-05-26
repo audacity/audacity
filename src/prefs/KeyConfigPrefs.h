@@ -46,7 +46,7 @@ public:
 private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
-   void RefreshBindings();
+   void RefreshBindings(bool bSort);
    wxString NameFromKey(const wxString & key);
    void SetKeyForSelected(const wxString & key);
 

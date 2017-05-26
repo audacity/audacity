@@ -531,7 +531,9 @@ KeyView::RefreshBindings(const wxArrayString & names,
                          const wxArrayString & categories,
                          const wxArrayString & prefixes,
                          const wxArrayString & labels,
-                         const wxArrayString & keys)
+                         const wxArrayString & keys,
+                         bool bSort
+                         )
 {
    bool firsttime = mNodes.GetCount() == 0;
 
@@ -604,6 +606,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
             node.iscat = true;
             node.isparent = true;
             node.depth = depth++;
+            node.isopen = true;
 
             // Add it to the tree
             mNodes.Add(node);
@@ -643,6 +646,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
             node.ispfx = true;
             node.isparent = true;
             node.depth = depth++;
+            node.isopen = true;
 
             // Add it to the tree
             mNodes.Add(node);
@@ -724,10 +728,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
    UpdateHScroll();
 
    // Refresh the view lines
-   RefreshLines();
+   RefreshLines(bSort);
 
-   // Set the selected node if this was the first time through
-   if (firsttime)
+   // Set the selected node if we've just reprepared the list and nothing was selected.
+   if ((GetSelection()==wxNOT_FOUND) && bSort )
    {
       SelectNode(LineToIndex(0));
    }
@@ -737,7 +741,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
 // Refresh the list of lines within the current view
 //
 void
-KeyView::RefreshLines()
+KeyView::RefreshLines(bool bSort)
 {
    int cnt = (int) mNodes.GetCount();
    int linecnt = 0;
@@ -918,27 +922,34 @@ KeyView::RefreshLines()
          mLines.Add(&node);
       }
    }
-   //To see how many lines are being sorted (and how often).
-   //wxLogDebug("Sorting %i lines", mLines.GetCount());
 
-   // Speed up the comparison function used in sorting
-   // by only translating this string once.
-   CommandTranslated = _("Command");
-
-   // Sort list based on type
-   switch (mViewType)
+   // Sorting is costly.  If bSort is false, we do not have to sort.
+   // bSort false means we know that the list will be updated again before
+   // the user needs to see it.
+   if( bSort )
    {
-      case ViewByTree:
-         mLines.Sort(CmpKeyNodeByTree);
-      break;
+      //To see how many lines are being sorted (and how often).
+      //wxLogDebug("Sorting %i lines for type %i", mLines.GetCount(), mViewType);
 
-      case ViewByName:
-         mLines.Sort(CmpKeyNodeByName);
-      break;
+      // Speed up the comparison function used in sorting
+      // by only translating this string once.
+      CommandTranslated = _("Command");
 
-      case ViewByKey:
-         mLines.Sort(CmpKeyNodeByKey);
-      break;
+      // Sort list based on type
+      switch (mViewType)
+      {
+         case ViewByTree:
+            mLines.Sort(CmpKeyNodeByTree);
+         break;
+
+         case ViewByName:
+            mLines.Sort(CmpKeyNodeByName);
+         break;
+
+         case ViewByKey:
+            mLines.Sort(CmpKeyNodeByKey);
+         break;
+      }
    }
 
    // Now, reassign the line numbers
@@ -973,7 +984,8 @@ KeyView::RefreshLines()
 
 #if wxUSE_ACCESSIBILITY
    // Let accessibility know that the list has changed
-   mAx->ListUpdated();
+   if( bSort )
+      mAx->ListUpdated();
 #endif
 }
 

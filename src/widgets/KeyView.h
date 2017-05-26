@@ -82,7 +82,8 @@ public:
                         const wxArrayString & categories,
                         const wxArrayString & prefixes,
                         const wxArrayString & labels,
-                        const wxArrayString & keys);
+                        const wxArrayString & keys,
+                        bool bSort);
 
    int GetSelected() const;
 
@@ -109,7 +110,7 @@ public:
 private:
    void RecalcExtents();
    void UpdateHScroll();
-   void RefreshLines();
+   void RefreshLines(bool bSort = true);
 
    void SelectNode(int index);
 
