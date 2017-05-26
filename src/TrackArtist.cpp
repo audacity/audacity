@@ -1352,7 +1352,10 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
             (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
       xpos[s] = xx;
 
-      const double tt = buffer[s] * clip->GetEnvelope()->GetValue(time);
+      // Calculate sample as it would be rendered, so quantize time
+      double value =
+         clip->GetEnvelope()->GetValue( time, 1.0 / clip->GetRate() );
+      const double tt = buffer[s] * value;
 
       if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
          clipped[clipcnt++] = xx;

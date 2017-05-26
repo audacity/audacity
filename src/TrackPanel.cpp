@@ -4625,7 +4625,8 @@ float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double dBRange, do
    Envelope *const env = mDrawingTrack->GetEnvelopeAtX(event.m_x);
    if (env)
    {
-      double envValue = env->GetValue(t0);
+      // Calculate sample as it would be rendered, so quantize time
+      double envValue = env->GetValue( t0, 1.0 / mDrawingTrack->GetRate() );
       if (envValue > 0)
          newLevel /= envValue;
       else
@@ -6904,7 +6905,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, const wxRect &rect, const wxMouse
 
    // Get envelope point, range 0.0 to 1.0
    const bool dB = !wavetrack->GetWaveformSettings().isLinear();
-   // Convert x to time.
+
    const double envValue = envelope->GetValue(mViewInfo->PositionToTime(event.m_x, rect.x));
 
    float zoomMin, zoomMax;
@@ -6992,7 +6993,8 @@ bool TrackPanel::HitTestSamples(Track *track, const wxRect &rect, const wxMouseE
    double envValue = 1.0;
    Envelope* env = wavetrack->GetEnvelopeAtX(event.GetX());
    if (env)
-      envValue = env->GetValue(tt);
+      // Calculate sample as it would be rendered, so quantize time
+      envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
 
    int yValue = GetWaveYPos( oneSample * envValue,
       zoomMin, zoomMax,

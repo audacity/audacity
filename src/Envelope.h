@@ -134,7 +134,7 @@ public:
 
    // Accessors
    /** \brief Get envelope value at time t */
-   double GetValue(double t) const;
+   double GetValue( double t, double sampleDur = 0 ) const;
 
    /** \brief Get many envelope points at once.
     *
