@@ -387,12 +387,44 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    } );
 }
 
-void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
+
+
+// There currently is only one clickable AButton
+// so we just do what it needs.
+void KeyConfigPrefs::OnDefaults(wxCommandEvent & event)
 {
+   wxMenu Menu;
+   Menu.Append( 0, _("Import Standard Defaults") );
+   Menu.Append( 1, _("Import Max Defaults") );
+   Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
+   // Pop it up where the mouse is.
+   PopupMenu(&Menu);//, wxPoint(0, 0));
+}
+
+void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
+{
+   int id = event.GetId();
    mNewKeys = mDefaultKeys;
 
    for (size_t i = 0; i < mNewKeys.GetCount(); i++) {
-      mManager->SetKeyFromIndex(i, mNewKeys[i]);
+      // Proof of concept for idea for freeing up some unwanted bindings.
+      // There will be neater code idioms we can use.
+      bool bDeleteBinding = false;
+      if( id == 0 ){
+         bDeleteBinding |= ( mNewKeys[i] == "A" );
+         bDeleteBinding |= ( mNewKeys[i] == "D" );
+         bDeleteBinding |= ( mNewKeys[i] == "Ctrl+Shift+A" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+X" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+K" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+X" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+K" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+L" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+C" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+I" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+J" );
+         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+J" );
+      }
+      mManager->SetKeyFromIndex(i, bDeleteBinding ? "" : mNewKeys[i]);
    }
 
    RefreshBindings(true);

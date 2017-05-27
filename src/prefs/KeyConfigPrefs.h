@@ -52,6 +52,7 @@ private:
 
    void OnViewBy(wxCommandEvent & e);
    void OnDefaults(wxCommandEvent & e);
+   void OnImportDefaults(wxCommandEvent & e);
    void OnImport(wxCommandEvent & e);
    void OnExport(wxCommandEvent & e);
    void OnSet(wxCommandEvent & e);
