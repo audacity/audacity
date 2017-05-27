@@ -291,6 +291,7 @@ void SelectionBar::Populate()
       mButtonTitles[1] = AddTitle( "Start - End ", CentralNameID, hSizer.get() );
       mButtonTitles[2] = AddTitle( " >", RightID, hSizer.get() );
       mButtonTitles[0]->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnModeDecClicked,this );
+      mButtonTitles[1]->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnChooserTitleClicked, this );
       mButtonTitles[2]->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnModeIncClicked,this );
       vSizer->Add( hSizer.release(), 0, wxALIGN_CENTER, 0);
       mainSizer->Add(vSizer.release(), 0, wxALIGN_CENTER, 0 );
@@ -596,12 +597,18 @@ void SelectionBar::OnEndTitleClicked(wxMouseEvent & event){ OnTitleClicked( EndT
 void SelectionBar::OnModeDecClicked(wxMouseEvent & event){
    SetSelectionMode( (mSelectionMode +3)%4 );
    SelectionModeUpdated();
-
 }
+
 void SelectionBar::OnModeIncClicked(wxMouseEvent & event){
    SetSelectionMode( (mSelectionMode +1)%4 );
    SelectionModeUpdated();
 }
+
+void SelectionBar::OnChooserTitleClicked(wxMouseEvent & event){
+   wxCommandEvent evt;
+   OnButton( evt );
+}
+
 
 // Called when one of the format drop downs is changed.
 void SelectionBar::OnUpdate(wxCommandEvent &evt)
@@ -780,7 +787,7 @@ void SelectionBar::SetSelectionMode(int mode)
 #endif
 
 #ifdef SEL_BUTTON_TITLES
-   wxString CenterNames[] = { "Start - End ", "  Start  - Length", "Length - End    ", "Length - Center" };
+   wxString CenterNames[] = { "       Start  -  End        ", "       Start  -  Length   ", "   Length  -  End        ", "   Length  -  Center   " };
    mButtonTitles[1]->SetLabel( CenterNames[mode] );
 #endif
 

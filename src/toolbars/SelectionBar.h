@@ -82,6 +82,7 @@ class SelectionBar final : public ToolBar {
 
    void OnModeDecClicked(wxMouseEvent & event);
    void OnModeIncClicked(wxMouseEvent & event);
+   void OnChooserTitleClicked(wxMouseEvent & event);
 
    void OnRate(wxCommandEvent & event);
    void OnSnapTo(wxCommandEvent & event);
