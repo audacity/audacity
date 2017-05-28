@@ -408,7 +408,7 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    wxSortedArrayString MaxListOnly;
 
    // These short cuts are for the max list only....
-   MaxListOnly.Add( "Ctrl+I" );
+   //MaxListOnly.Add( "Ctrl+I" );
    MaxListOnly.Add( "Ctrl+Alt+I" );
    MaxListOnly.Add( "Ctrl+J" );
    MaxListOnly.Add( "Ctrl+Alt+J" );
@@ -426,8 +426,8 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    MaxListOnly.Add( "Q" );
    MaxListOnly.Add( "Shift+J" );
    MaxListOnly.Add( "Shift+K" );
-   MaxListOnly.Add( "Shift+Home" );
-   MaxListOnly.Add( "Shift+End" );
+   //MaxListOnly.Add( "Shift+Home" );
+   //MaxListOnly.Add( "Shift+End" );
    MaxListOnly.Add( "Ctrl+[" );
    MaxListOnly.Add( "Ctrl+]" );
    MaxListOnly.Add( "1" );
