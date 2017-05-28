@@ -405,25 +405,68 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 {
    int id = event.GetId();
    mNewKeys = mDefaultKeys;
+   wxSortedArrayString MaxListOnly;
+
+   // These short cuts are for the max list only....
+   MaxListOnly.Add( "Ctrl+I" );
+   MaxListOnly.Add( "Ctrl+Alt+I" );
+   MaxListOnly.Add( "Ctrl+J" );
+   MaxListOnly.Add( "Ctrl+Alt+J" );
+   MaxListOnly.Add( "Ctrl+Alt+V" );
+   MaxListOnly.Add( "Alt+X" );
+   MaxListOnly.Add( "Alt+K" );
+   MaxListOnly.Add( "Shift+Alt+X" );
+   MaxListOnly.Add( "Shift+Alt+K" );
+   MaxListOnly.Add( "Alt+L" );
+   MaxListOnly.Add( "Shift+Alt+C" );
+   MaxListOnly.Add( "Alt+I" );
+   MaxListOnly.Add( "Alt+J" );
+   MaxListOnly.Add( "Shift+Alt+J" );
+   MaxListOnly.Add( "Ctrl+Shift+A" );
+   MaxListOnly.Add( "Q" );
+   MaxListOnly.Add( "Shift+J" );
+   MaxListOnly.Add( "Shift+K" );
+   MaxListOnly.Add( "Shift+Home" );
+   MaxListOnly.Add( "Shift+End" );
+   MaxListOnly.Add( "Ctrl+[" );
+   MaxListOnly.Add( "Ctrl+]" );
+   MaxListOnly.Add( "1" );
+   MaxListOnly.Add( "Shift+F5" );
+   MaxListOnly.Add( "Shift+F6" );
+   MaxListOnly.Add( "Shift+F7" );
+   MaxListOnly.Add( "Shift+F8" );
+   MaxListOnly.Add( "Ctrl+Shift+F5" );
+   MaxListOnly.Add( "Ctrl+Shift+F7" );
+   MaxListOnly.Add( "Ctrl+Shift+N" );
+   MaxListOnly.Add( "Ctrl+Shift+M" );
+   MaxListOnly.Add( "Ctrl+Home" );
+   MaxListOnly.Add( "Ctrl+End" );
+   MaxListOnly.Add( "Shift+C" );
+   MaxListOnly.Add( "Alt+Shift+Up" );
+   MaxListOnly.Add( "Alt+Shift+Down" );
+   MaxListOnly.Add( "Shift+P" );
+   MaxListOnly.Add( "Alt+Shift+Left" );
+   MaxListOnly.Add( "Alt+Shift+Right" );
+   MaxListOnly.Add( "Ctrl+Shift+T" );
+   MaxListOnly.Add( "Command+M" );
+   MaxListOnly.Add( "Option+Command+M" );
+   MaxListOnly.Add( "Shift+H" );
+   MaxListOnly.Add( "Shift+O" );
+   MaxListOnly.Add( "Shift+I" );
+   MaxListOnly.Add( "Shift+N" );
+   MaxListOnly.Add( "D" );
+   MaxListOnly.Add( "A" );
+   MaxListOnly.Add( "Alt+Shift+F6" );
+   MaxListOnly.Add( "Alt+F6" );
+
+   MaxListOnly.Sort();
 
    for (size_t i = 0; i < mNewKeys.GetCount(); i++) {
       // Proof of concept for idea for freeing up some unwanted bindings.
       // There will be neater code idioms we can use.
       bool bDeleteBinding = false;
-      if( id == 0 ){
-         bDeleteBinding |= ( mNewKeys[i] == "A" );
-         bDeleteBinding |= ( mNewKeys[i] == "D" );
-         bDeleteBinding |= ( mNewKeys[i] == "Ctrl+Shift+A" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+X" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+K" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+X" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+K" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+L" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+C" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+I" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+J" );
-         bDeleteBinding |= ( mNewKeys[i] == "Alt+Shift+J" );
-      }
+      if( id == 0 )
+         bDeleteBinding |= ( MaxListOnly.Index( mNewKeys[i] ) != wxNOT_FOUND );
       mManager->SetKeyFromIndex(i, bDeleteBinding ? "" : mNewKeys[i]);
    }
 
