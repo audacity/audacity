@@ -999,39 +999,66 @@ void Envelope::RemoveUnneededPoints(double time, double tolerence)
    }
 }
 
-void Envelope::InsertSpace( double t0, double tlen )
+std::pair< int, int > Envelope::ExpandRegion
+   ( double t0, double tlen, double *pLeftVal, double *pRightVal )
 // NOFAIL-GUARANTEE
 {
-   t0 -= mOffset;
+   // t0 is relative time
 
-   // Preserve the left-side limit at the split.
-   auto val = GetValueRelative( t0 );
-   auto range = EqualRange( t0, 0 );
+   double val;
+   const auto range = EqualRange( t0, 0 );
 
-   size_t index;
-   if ( range.first < range.second )
+   // Preserve the left-side limit.
+   int index = 1 + range.first;
+   if ( index <= range.second )
       // There is already a control point.
-      index = 1 + range.first;
-   else
+      ;
+   else {
       // Make a control point.
-      index = 1 + InsertOrReplaceRelative( t0, val );
+      val = GetValueRelative( t0 );
+      Insert( range.first, EnvPoint{ t0, val } );
+   }
 
    // Shift points.
    auto len = mEnv.size();
-   for ( ; index < len; ++index ) {
-      auto &point = mEnv[ index ];
+   for ( int ii = index; ii < len; ++ii ) {
+      auto &point = mEnv[ ii ];
       point.SetT( point.GetT() + tlen );
    }
 
-   // increase track len, before insert or replace,
-   // since it range chacks the values.
    mTrackLen += tlen;
+   
    // Preserve the right-side limit.
-   if ( 1 + range.first < range.second )
+   if ( index < range.second )
       // There was a control point already.
       ;
    else
-      InsertOrReplaceRelative( t0 + tlen, val );
+      // Make a control point.
+      Insert( index, EnvPoint{ t0 + tlen, val } );
+
+   // Make discontinuities at ends, maybe:
+
+   if ( pLeftVal )
+      // Make a discontinuity at the left side of the expansion
+      Insert( index++, EnvPoint{ t0, *pLeftVal } );
+
+   if ( pRightVal )
+      // Make a discontinuity at the right side of the expansion
+      Insert( index++, EnvPoint{ t0 + tlen, *pRightVal } );
+
+   // Return the range of indices that includes the inside limiting points,
+   // none, one, or two
+   return { 1 + range.first, index };
+}
+
+void Envelope::InsertSpace( double t0, double tlen )
+// NOFAIL-GUARANTEE
+{
+   auto range = ExpandRegion( t0 - mOffset, tlen, nullptr, nullptr );
+
+   // Simplify the boundaries if possible
+   RemoveUnneededPoints( range.second, true );
+   RemoveUnneededPoints( range.first - 1, false );
 }
 
 int Envelope::Reassign(double when, double value)

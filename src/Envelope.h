@@ -154,6 +154,9 @@ public:
    void Cap( double sampleDur );
 
 private:
+   std::pair< int, int > ExpandRegion
+      ( double t0, double tlen, double *pLeftVal, double *pRightVal );
+
    void RemoveUnneededPoints( size_t startAt, bool rightward );
 
    double GetValueRelative(double t) const;
