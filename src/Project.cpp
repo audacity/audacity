@@ -2527,9 +2527,14 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // MY: Use routine here so other processes can make same check
    bool bHasTracks = ProjectHasTracks();
 
+   // Check to see if the user has opted to prompt for Project Save on Exit
+   // or not
+   bool bAskToSaveOnExit;
+   gPrefs->Read(wxT("/Warnings/ProjectSaveExit"), &bAskToSaveOnExit, true);
+
    // We may not bother to prompt the user to save, if the
    // project is now empty.
-   if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
+   if ( bAskToSaveOnExit && event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
       if (GetUndoManager()->UnsavedChanges()) {
          TitleRestorer Restorer( this );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
@@ -2706,7 +2711,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
-         QuitAudacity();
+         QuitAudacity(!bAskToSaveOnExit);
       }
       else {
          wxGetApp().SetWindowRectAlreadySaved(FALSE);
