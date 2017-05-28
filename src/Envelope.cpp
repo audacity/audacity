@@ -42,6 +42,8 @@ a draggable point type.
 #include "DirManager.h"
 #include "TrackArtist.h"
 
+static const double VALUE_TOLERANCE = 0.001;
+
 Envelope::Envelope(bool exponential, double minValue, double maxValue, double defaultValue)
    : mDB(exponential)
    , mMinValue(minValue)
@@ -513,7 +515,7 @@ bool EnvelopeEditor::HandleMouseButtonDown(const wxMouseEvent & event, wxRect & 
       double newVal = ValueOfPixel(clip_y, r.height, upper, dB, dBRange,
                                    zoomMin, zoomMax);
 
-      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplaceRelative(when, newVal));
+      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplace(when, newVal));
       mDirty = true;
    }
 
@@ -609,6 +611,9 @@ bool EnvelopeEditor::MouseEvent(const wxMouseEvent & event, wxRect & r,
 void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // NOFAIL-GUARANTEE
 {
+   if ( t1 <= t0 )
+      return;
+
    // This gets called when somebody clears samples.
 
    // Snip points in the interval (t0, t1), shift values left at times after t1.
@@ -618,6 +623,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    const auto epsilon = sampleDur / 2;
    t0 = std::max( 0.0, std::min( mTrackLen, t0 - mOffset ) );
    t1 = std::max( 0.0, std::min( mTrackLen, t1 - mOffset ) );
+   bool leftPoint = true, rightPoint = true;
 
    // Determine the start of the range of points to remove from the array.
    auto range0 = EqualRange( t0, 0 );
@@ -630,6 +636,8 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
          InsertOrReplaceRelative( t0, val );
          ++begin;
       }
+      else
+         leftPoint = false;
    }
    else
       // We will keep the first (or only) point that was at t0.
@@ -647,6 +655,8 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
          InsertOrReplaceRelative( t1, val );
          // end is now the index of this NEW point and that is correct.
       }
+      else
+         rightPoint = false;
    }
    else
       // We will keep the last (or only) point that was at t1.
@@ -660,6 +670,12 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
       auto &point = mEnv[i];
       point.SetT( point.GetT() - (t1 - t0) );
    }
+
+   // See if the discontinuity is removable.
+   if ( rightPoint )
+      RemoveUnneededPoints( begin, true );
+   if ( leftPoint )
+      RemoveUnneededPoints( begin - 1, false );
 
    mTrackLen -= ( t1 - t0 );
 }
@@ -865,6 +881,80 @@ Old analysis of cases:
 /*   if(len != 0)
       for (i = 0; i < mEnv.size(); i++)
          wxLogDebug(wxT("Fixed i %d when %.18f val %f"),i,mEnv[i].GetT(),mEnv[i].GetVal()); */
+}
+
+void Envelope::RemoveUnneededPoints( size_t startAt, bool rightward )
+// NOFAIL-GUARANTEE
+{
+   // startAt is the index of a recently inserted point which might make no
+   // difference in envelope evaluation, or else might cause nearby points to
+   // make no difference.
+
+   auto isDiscontinuity = [this]( size_t index ) {
+      // Assume array accesses are in-bounds
+      const EnvPoint &point1 = mEnv[ index ];
+      const EnvPoint &point2 = mEnv[ index + 1 ];
+      return point1.GetT() == point2.GetT() &&
+         fabs( point1.GetVal() - point2.GetVal() ) > VALUE_TOLERANCE;
+   };
+
+   auto remove = [this]( size_t index ) {
+      // Assume array accesses are in-bounds
+      const auto &point = mEnv[ index ];
+      auto when = point.GetT();
+      auto val = point.GetVal();
+      Delete( index );  // try it to see if it's doing anything
+      auto val1 = GetValueRelative ( when );
+      if( fabs( val - val1 ) > VALUE_TOLERANCE ) {
+         // put it back, we needed it
+         Insert( index, EnvPoint{ when, val } );
+         return false;
+      }
+      else
+         return true;
+   };
+
+   auto len = mEnv.size();
+
+   bool leftLimit =
+      !rightward && startAt + 1 < len && isDiscontinuity( startAt );
+
+   double rightT, rightVal;
+   if ( leftLimit ) {
+      // Remove the right point before evaluating in remove()
+      auto &rightPoint = mEnv[ 1 + startAt ];
+      rightT = rightPoint.GetT(), rightVal = rightPoint.GetVal();
+      Delete( 1 + startAt );
+   }
+
+   bool removed = remove( startAt );
+
+   if ( leftLimit )
+      // Restore the right point
+      Insert( ( removed ? 0 : 1 ) + startAt, EnvPoint{ rightT, rightVal } );
+
+   if ( removed )
+      // The given point was removable.  Done!
+      return;
+
+   // The given point was not removable.  But did its insertion make nearby
+   // points removable?
+
+   int index = startAt + ( rightward ? 1 : -1 );
+   while ( index >= 0 && index < len ) {
+      // Stop at any discontinuity
+      if ( index > 0       && isDiscontinuity( index - 1 ) )
+         break;
+      if ( index + 1 < len && isDiscontinuity( index ) )
+         break;
+
+      if ( ! remove( index ) )
+         break;
+
+      --len;
+      if ( ! rightward )
+         --index;
+   }
 }
 
 // Deletes 'unneeded' points, starting from the left.

@@ -65,11 +65,14 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
-   if (pT0 && pT1)
+   auto len = DBL_MAX;
+   if (pT0 && pT1) {
+      len = *pT1 - *pT0;
       mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope, *pT0, *pT1 );
+   }
    else
       mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope );
-   mEnvelope->SetTrackLen(DBL_MAX);
+   mEnvelope->SetTrackLen( len );
    mEnvelope->SetOffset(0);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?

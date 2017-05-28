@@ -154,6 +154,8 @@ public:
    void Cap( double sampleDur );
 
 private:
+   void RemoveUnneededPoints( size_t startAt, bool rightward );
+
    double GetValueRelative(double t) const;
    void GetValuesRelative
       (double *buffer, int len, double t0, double tstep) const;

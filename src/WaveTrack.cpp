@@ -1140,7 +1140,6 @@ void WaveTrack::HandleClear(double t0, double t1,
 
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
                newClip->Clear(t0,t1);
-               newClip->GetEnvelope()->RemoveUnneededPoints(t0);
 
                clipsToAdd.push_back( std::move( newClip ) );
             }
