@@ -337,10 +337,20 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
    ReadAndVerifyBool(InterpLin);
    ReadAndVerifyEnum(InterpMeth, interpolations);
 
+   ReadAndVerifyBool(DrawMode);
+   ReadAndVerifyBool(DrawGrid);
+   ReadAndVerifyFloat(dBMin);
+   ReadAndVerifyFloat(dBMax);
+
    mM = FilterLength;
    mCurveName = CurveName;
    mLin = InterpLin;
    mInterp = InterpMeth;
+
+   mDrawMode = DrawMode;
+   mDrawGrid = DrawGrid;
+   mdBMin = dBMin;
+   mdBMax = dBMax;
 
    if (InterpMeth >= kNumInterpolations)
    {
