@@ -32,6 +32,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/Ruler.h"
 
 #include <algorithm>
+#include <functional>
 
 #include <wx/app.h>
 #include <wx/dc.h>
