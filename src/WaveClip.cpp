@@ -1603,7 +1603,6 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    auto sampleTime = 1.0 / GetRate();
    mEnvelope->Paste
       (s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get(), sampleTime);
-   mEnvelope->RemoveUnneededPoints();
    OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
 
    for (auto &holder : newCutlines)

@@ -132,7 +132,6 @@ public:
    void Paste(double t0, const Envelope *e, double sampleDur);
 
    void InsertSpace(double t0, double tlen);
-   void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 
    // Control
    void SetOffset(double newOffset);
@@ -165,7 +164,8 @@ private:
    std::pair< int, int > ExpandRegion
       ( double t0, double tlen, double *pLeftVal, double *pRightVal );
 
-   void RemoveUnneededPoints( size_t startAt, bool rightward );
+   void RemoveUnneededPoints
+      ( size_t startAt, bool rightward, bool testNeighbors = true );
 
    double GetValueRelative(double t) const;
    void GetValuesRelative
