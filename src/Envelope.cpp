@@ -513,7 +513,7 @@ bool EnvelopeEditor::HandleMouseButtonDown(const wxMouseEvent & event, wxRect & 
       double newVal = ValueOfPixel(clip_y, r.height, upper, dB, dBRange,
                                    zoomMin, zoomMax);
 
-      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplaceRelative(when, newVal));
+      mEnvelope.SetDragPoint(mEnvelope.InsertOrReplace(when, newVal));
       mDirty = true;
    }
 
