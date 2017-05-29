@@ -614,7 +614,7 @@ wxString Ruler::LabelString(double d, bool major)
    wxString s;
 
    // Replace -0 with 0
-   if (d < 0.0 && d+mMinor > 0.0)
+   if (d < 0.0 && (d+mMinor > 0.0) && ( mFormat != RealLogFormat ))
       d = 0.0;
 
    switch(mFormat) {
