@@ -86,7 +86,11 @@ public:
 
    void Initialize(int numPoints);
 
-   virtual ~ Envelope();
+   virtual ~Envelope();
+
+   // Return true if violations of point ordering invariants were detected
+   // and repaired
+   bool ConsistencyCheck();
 
    double GetOffset() const { return mOffset; }
    double GetTrackLen() const { return mTrackLen; }
@@ -121,10 +125,13 @@ public:
    // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
    void CollapseRegion(double t0, double t1, double sampleDur);
-   void Paste(double t0, const Envelope *e);
+
+   // Envelope has no notion of rate and control point times are not quantized;
+   // but a tolerance is needed in the Paste routine, and better to inform it
+   // of an appropriate number, than use hidden arbitrary constants.
+   void Paste(double t0, const Envelope *e, double sampleDur);
 
    void InsertSpace(double t0, double tlen);
-   void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 
    // Control
    void SetOffset(double newOffset);
@@ -154,7 +161,11 @@ public:
    void Cap( double sampleDur );
 
 private:
-   void RemoveUnneededPoints( size_t startAt, bool rightward );
+   std::pair< int, int > ExpandRegion
+      ( double t0, double tlen, double *pLeftVal, double *pRightVal );
+
+   void RemoveUnneededPoints
+      ( size_t startAt, bool rightward, bool testNeighbors = true );
 
    double GetValueRelative(double t) const;
    void GetValuesRelative
@@ -196,6 +207,7 @@ public:
 
 private:
    int InsertOrReplaceRelative(double when, double value);
+
    friend class EnvelopeEditor;
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
