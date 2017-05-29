@@ -394,8 +394,8 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & event)
 {
    wxMenu Menu;
-   Menu.Append( 0, _("Import Standard Defaults") );
-   Menu.Append( 1, _("Import Max Defaults") );
+   Menu.Append( 0, _("Standard") );
+   Menu.Append( 1, _("Full") );
    Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
    // Pop it up where the mouse is.
    PopupMenu(&Menu);//, wxPoint(0, 0));
@@ -448,8 +448,8 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    MaxListOnly.Add( "Alt+Shift+Left" );
    MaxListOnly.Add( "Alt+Shift+Right" );
    MaxListOnly.Add( "Ctrl+Shift+T" );
-   MaxListOnly.Add( "Command+M" );
-   MaxListOnly.Add( "Option+Command+M" );
+   //MaxListOnly.Add( "Command+M" );
+   //MaxListOnly.Add( "Option+Command+M" );
    MaxListOnly.Add( "Shift+H" );
    MaxListOnly.Add( "Shift+O" );
    MaxListOnly.Add( "Shift+I" );
