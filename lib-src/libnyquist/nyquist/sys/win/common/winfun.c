@@ -6,7 +6,7 @@
 //#include <Windows.h>
 //#include <Memory.h>
 #include <windows.h>
-#include <switches.h>
+#include "switches.h"
 #include "xlisp.h"
 #include "sound.h"
 
@@ -17,23 +17,21 @@ LVAL xsetdir() {
     int verbose = TRUE;
 
     strcpy(ssCurDir, getstring(xlgastring()));
-    if (moreargs()) {
+    if (moreargs())
         verbose = (xlgetarg() != NIL);
-    }
+    
     xllastarg();
     if (ok_to_open(ssCurDir, "r"))
-        if (SetCurrentDirectory(ssCurDir)) {
-            if (GetCurrentDirectory(
-                sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
+        if (SetCurrentDirectory(ssCurDir))
+            if (GetCurrentDirectory(sizeof(szCurDir)/sizeof(TCHAR), szCurDir))
                 return cvstring(szCurDir);
             /* create the result string
                 stdputstr("Current Directory: ");
                 stdputstr(szCurDir);
                 stdputstr("\n"); */
-	    }
-        }	
-    }
-    if (verbose) stdputstr("Directory Setting Error\n");
+
+    if (verbose)
+		stdputstr("Directory Setting Error\n");
 
     /* return nil on error*/
     return NIL;
