@@ -246,6 +246,8 @@ PrefsDialog::PrefsDialog
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
          mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+         // RJH: Prevent NVDA from reading "treeCtrl"
+         mCategories->GetTreeCtrl()->SetName(_("Category"));
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
          {
             S.Prop(1);
