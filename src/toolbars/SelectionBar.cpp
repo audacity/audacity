@@ -142,7 +142,16 @@ SelectionBar::SelectionBar()
    // Audacity to fail.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
       AudioIO::GetOptimalSupportedSampleRate());
-   
+
+#ifdef SEL_BUTTON_TITLES
+   mButtonTitles[0]=NULL;
+   mButtonTitles[1]=NULL;
+   mButtonTitles[2]=NULL; 
+#endif
+   mHyphen[0]=NULL;
+   mHyphen[1]=NULL;
+   mHyphen[2]=NULL;
+
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
 }
@@ -752,6 +761,18 @@ void SelectionBar::SelectionModeUpdated()
 
 void SelectionBar::SetSelectionMode(int mode)
 {
+#ifdef SEL_BUTTON_TITLES
+   // With SEL_BUTTON_TITLES only modes 0 to 3 are supported,
+   // so fix up a mode that could have come from the config.
+   const int maxMode = 3;
+#else 
+   const int maxMode = 7;
+#endif
+
+   if( mode > maxMode )
+      mode = 0;
+   if( mode < 0 )
+      mode = 0;
    mSelectionMode = mode;
 
    int id = mode + StartEndRadioID;
