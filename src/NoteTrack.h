@@ -199,8 +199,10 @@ class AUDACITY_DLL_API NoteTrack final
    // map all channel numbers mod 16. This will have no effect
    // on MIDI files, but it will allow users to at least select
    // all channels on non-MIDI event sequence data.
-#define ALL_CHANNELS 0xFFFF
-#define CHANNEL_BIT(c) (1 << (c & ALL_CHANNELS))
+#define NUM_CHANNELS 16
+   // Bitmask with all NUM_CHANNELS bits set
+#define ALL_CHANNELS (1 << NUM_CHANNELS) - 1
+#define CHANNEL_BIT(c) (1 << (c % NUM_CHANNELS))
    bool IsVisibleChan(int c) const {
       return (mVisibleChannels & CHANNEL_BIT(c)) != 0;
    }
