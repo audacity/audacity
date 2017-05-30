@@ -181,6 +181,7 @@ private:
 
    bool              mFoundType;
    bool              mCompiler;
+   bool              mTrace;   // True when *tracenable* or *sal-traceback* are enabled
    bool              mIsSal;
    bool              mExternal;
    bool              mIsSpectral;
@@ -203,9 +204,9 @@ private:
    EffectType        mType;
 
    bool              mEnablePreview;
-   bool              mEnableDebug;  // Set to false to disable Debug button.
+   bool              mDebugButton;  // Set to false to disable Debug button.
 
-   bool              mDebug;  // Is true when Debug button clicked.
+   bool              mDebug;        // When true, debug window is shown.
    bool              mRedirectOutput;
    bool              mProjectChanged;
    wxString          mDebugOutput;

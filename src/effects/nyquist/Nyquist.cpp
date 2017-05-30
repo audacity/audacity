@@ -125,6 +125,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
+   mTrace = false;
    mRedirectOutput = false;
    mDebug = false;
    mIsSal = false;
@@ -136,7 +137,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mRestoreSplits = true;  // Default: Restore split lines. 
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
 
-   mEnableDebug = true; // Debug button enabled by default.
+   mDebugButton = true; // Debug button enabled by default.
 
    mVersion = 4;
 
@@ -411,11 +412,15 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool NyquistEffect::Init()
 {
+   // TODO: Document: Init() is called each time the effect is called but
+   // AFTER the UI (if any) has been created, so headers that affect the UI
+   // are only initialised at the start of the session.
+
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
    if (mIsPrompt) {
       mType = EffectTypeProcess;
-      mEnableDebug = true; // Debug button always enabled for Nyquist Prompt.
+      mDebugButton = true; // Debug button always enabled for Nyquist Prompt.
    }
 
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
@@ -768,6 +773,9 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
 
  finish:
 
+   // Show debug window if trace set in plug-in header and something to show.
+   mDebug = (mTrace && !mDebugOutput.IsEmpty())? true : mDebug;
+
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
                                mName,
@@ -826,7 +834,7 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
       BuildEffectWindow(S);
    }
 
-   EnableDebug(mEnableDebug);
+   EnableDebug(mDebugButton);
 }
 
 bool NyquistEffect::TransferDataToWindow()
@@ -1064,7 +1072,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf s 0.25)\n");
    }
 
-   if (mDebug) {
+   if (mDebug || mTrace) {
       cmd += wxT("(setf *tracenable* T)\n");
       if (mExternal) {
          cmd += wxT("(setf *breakenable* T)\n");
@@ -1113,7 +1121,7 @@ bool NyquistEffect::ProcessOne()
       // error occurs, we will grab the value with a LISP expression
       str += wxT("\nset aud:result = main()\n");
 
-      if (mDebug) {
+      if (mDebug || mTrace) {
          // since we're about to evaluate SAL, remove LISP trace enable and
          // break enable (which stops SAL processing) and turn on SAL stack
          // trace
@@ -1154,6 +1162,21 @@ bool NyquistEffect::ProcessOne()
    // Evaluate the expression, which may invoke the get callback, but often does
    // not, leaving that to delayed evaluation of the output sound
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
+
+   // Always show debug window when return value is a nyx_error.
+   // Note that this does not happen for plug-ins that have an interface
+   // because there will be a return value from the final control.
+   if (rval == nyx_error) {
+      /* i18n-hint: "%s" is replaced by name of plug-in.*/
+      mDebugOutput = wxString::Format(_("Nyquist error returned from %s:\n"), mName) + mDebugOutput;
+      mDebug = true;
+   }
+
+   // If we're not showing debug window, log errors and warnings:
+   if (!mDebugOutput.IsEmpty() && !mDebug && !mTrace) {
+      /* i18n-hint: An effect "returned" a message.*/
+      wxLogWarning(mName + wxT(" ") + _("returned:") + wxT("\n") + mDebugOutput);
+   }
 
    // Audacity has no idea how long Nyquist processing will take, but
    // can monitor audio being returned.
@@ -1530,15 +1553,17 @@ void NyquistEffect::Parse(const wxString &line)
       return;
    }
 
+   // TODO: Update documentation.
+
    if (len >= 2 && tokens[0] == wxT("debugflags")) {
       for (int i = 1; i < len; i++) {
-         // Note: "trace" and "notrace" are overridden by "Debug" and "OK"
-         // buttons if the plug-in generates a dialog box by using controls
+         // "trace" sets *tracenable* (LISP) or *sal-traceback* (SAL)
+         // and displays debug window IF there is anything to show.
          if (tokens[i] == wxT("trace")) {
-            mDebug = true;
+            mTrace = true;
          }
          else if (tokens[i] == wxT("notrace")) {
-            mDebug = false;
+            mTrace = false;
          }
          else if (tokens[i] == wxT("compiler")) {
             mCompiler = true;
@@ -1657,7 +1682,7 @@ void NyquistEffect::Parse(const wxString &line)
    // Debug button may be disabled for release plug-ins.
    if (len >= 2 && tokens[0] == wxT("debugbutton")) {
       if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
-         mEnableDebug = false;
+         mDebugButton = false;
       }
       return;
    }
@@ -1943,7 +1968,8 @@ void NyquistEffect::StaticOutputCallback(int c, void *This)
 
 void NyquistEffect::OutputCallback(int c)
 {
-   if (mDebug && !mRedirectOutput) {
+   // Always collect Nyquist error messages for normal plug-ins
+   if (!mRedirectOutput) {
       mDebugOutput += (char)c;
       return;
    }
