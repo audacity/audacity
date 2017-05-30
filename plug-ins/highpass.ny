@@ -4,7 +4,7 @@
 ;preview linear
 ;name "High Pass Filter..."
 ;manpage "High_Pass_Filter"
-;debug disabled
+;debugbutton disabled
 ;action "Performing High Pass Filter..."
 ;author "Dominic Mazzoni"
 ;copyright "Released under terms of the GNU General Public License version 2"

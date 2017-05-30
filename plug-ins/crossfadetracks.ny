@@ -3,7 +3,7 @@
 ;type process
 ;name "Crossfade Tracks..."
 ;manpage "Crossfade_Tracks"
-;debug disabled
+;debugbutton disabled
 ;action "Crossfading..."
 ;preview selection
 ;author "Steve Daulton"

@@ -1655,7 +1655,7 @@ void NyquistEffect::Parse(const wxString &line)
 
    // TODO: Document.
    // Debug button may be disabled for release plug-ins.
-   if (len >= 2 && tokens[0] == wxT("debug")) {
+   if (len >= 2 && tokens[0] == wxT("debugbutton")) {
       if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
          mEnableDebug = false;
       }

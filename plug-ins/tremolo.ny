@@ -5,7 +5,7 @@
 ;categories "http://lv2plug.in/ns/lv2core#ModulatorPlugin"
 ;name "Tremolo..."
 ;manpage "Tremolo"
-;debug disabled
+;debugbutton disabled
 ;action "Applying Tremolo..."
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
