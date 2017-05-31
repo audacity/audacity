@@ -1157,6 +1157,12 @@ void CommandManager::TellUserWhyDisallowed( CommandFlag flagsGot, CommandMask fl
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
    else if( missingFlags == TracksExistFlag )
       return;
+   // Likewise return if it was just no tracks, and track panel did not have focus.  (e.g. up-arrow to move track)
+   else if( missingFlags == (TracksExistFlag | TrackPanelHasFocus) )
+      return;
+   // Likewise as above too...
+   else if( missingFlags == TrackPanelHasFocus )
+      return;
 
    wxMessageBox(reason, _("Disallowed"),  wxICON_WARNING | wxOK );
 }
