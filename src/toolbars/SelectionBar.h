@@ -18,8 +18,27 @@
 // PLAIN_TITLES give Start Length Center End above each field.
 // RADIO_TITLES give ()SE (*)Start-Length ()LE ()LC style.
 // BUTTON_TITLES give    < Start - Length >  style.
+// CHOICE gives a choice control
 //#define SEL_RADIO_TITLES
-#define SEL_BUTTON_TITLES
+//#define SEL_BUTTON_TITLES
+#define SEL_CHOICE
+
+// OPTIONS_BUTTON gives a button with three dots to select the option.
+
+// Column for 
+//   Project rate
+//   Snap To
+//   Option Button
+//   Vertical Line
+//   Selection fields
+//   Vertical Line
+//   Cursor position
+
+#ifdef OPTIONS_BUTTON
+#define SIZER_COLS 8
+#else
+#define SIZER_COLS 7
+#endif
 
 class wxBitmap;
 class wxCheckBox;
@@ -86,6 +105,7 @@ class SelectionBar final : public ToolBar {
 
    void OnRate(wxCommandEvent & event);
    void OnSnapTo(wxCommandEvent & event);
+   void OnChoice(wxCommandEvent & event);
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
    void OnSize(wxSizeEvent &evt);
@@ -115,6 +135,10 @@ class SelectionBar final : public ToolBar {
    NumericTextCtrl   *mLengthTime;
    NumericTextCtrl   *mEndTime;
    NumericTextCtrl   *mAudioTime;
+
+#ifdef SEL_CHOICE
+   wxChoice * mChoice;
+#endif
 
 #ifdef PLAIN_TITLES
    wxStaticText * mStartTitle;

@@ -71,6 +71,7 @@ enum {
    SnapToID,
    OnMenuID,
 
+   ChoiceID,
 
    StartTitleID,
    LengthTitleID,
@@ -105,6 +106,7 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(CenterTimeID, SelectionBar::OnChangedTime)
    EVT_TEXT(EndTimeID, SelectionBar::OnChangedTime)
    EVT_CHOICE(SnapToID, SelectionBar::OnSnapTo)
+   EVT_CHOICE(ChoiceID, SelectionBar::OnChoice )
    EVT_COMBOBOX(RateID, SelectionBar::OnRate)
    EVT_TEXT(RateID, SelectionBar::OnRate)
    EVT_RADIOBUTTON(StartEndRadioID, SelectionBar::OnFieldChoice )
@@ -130,6 +132,9 @@ SelectionBar::SelectionBar()
 #ifdef SEL_RADIO_TITLES
   mStartTitle(NULL), mCenterTitle(NULL), mLengthTitle(NULL), mEndTitle(NULL),
   mStartEndProxy(NULL), mStartLengthProxy(NULL), mLengthEndProxy(NULL), mLengthCenterProxy(NULL),
+#endif
+#ifdef SEL_CHOICE
+  mChoice(NULL),
 #endif
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0)
@@ -249,7 +254,7 @@ void SelectionBar::Populate()
     * look-ups static because they depend on translations which are done at
     * runtime */
 
-   Add((mainSizer = safenew wxFlexGridSizer(8, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
+   Add((mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
 
    //
    // Top row (mostly labels)
@@ -270,8 +275,12 @@ void SelectionBar::Populate()
    mainSizer->Add(5, 1);
 
    AddTitle( _("Snap-To"), -1, mainSizer );
+
+#ifdef OPTIONS_BUTTON
    // Not enough room to say 'Selection Options".  There is a tooltip instead.
    AddTitle( wxT(""), -1, mainSizer );
+#endif
+
    // This is for the vertical line.
    AddTitle( wxT(""), -1, mainSizer );
 
@@ -305,6 +314,21 @@ void SelectionBar::Populate()
       vSizer->Add( hSizer.release(), 0, wxALIGN_CENTER, 0);
       mainSizer->Add(vSizer.release(), 0, wxALIGN_CENTER, 0 );
 #endif
+
+#ifdef SEL_CHOICE
+   const wxString choices[4] = {
+      _("Start and End of Selection"),
+      _("Start and Length of Selection"),
+      _("Length and End of Selection"),
+      _("Length and Center of Selection"),
+   };
+   mChoice = safenew wxChoice
+      (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
+       0, wxDefaultValidator, "");
+   mChoice->SetSelection(0);
+   mainSizer->Add(mChoice, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+#endif
+
    }
 
 #ifdef SEL_PLAIN_TITLES
@@ -391,7 +415,7 @@ void SelectionBar::Populate()
                     NULL,
                     this);
 
-#if 1
+#ifdef OPTION_BUTTON
    // Old code which placed a button from which to select options.
    // Retained in case we want a button for selection-toolbar options at a future date.
    AButton *& pBtn = mButtons[ SelTBMenuID - SelTBFirstButton];
@@ -443,6 +467,10 @@ void SelectionBar::Populate()
       mLengthCenterRadBtn->MoveAfterInTabOrder( mLengthEndRadBtn );
 #endif
    }
+
+#ifdef SEL_CHOICE
+   mChoice->MoveBeforeInTabOrder( mStartTime );
+#endif
 
    mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
                                    wxSize(1, toolbarSingle),
@@ -744,6 +772,13 @@ void SelectionBar::OnFieldChoice(wxCommandEvent &event)
    SelectionModeUpdated();
 }
 
+void SelectionBar::OnChoice(wxCommandEvent & WXUNUSED(event))
+{
+   int mode = mChoice->GetSelection();
+   SetSelectionMode( mode );
+   SelectionModeUpdated();
+}
+
 void SelectionBar::SelectionModeUpdated()
 {
    // We just changed the mode.  Remember it.
@@ -761,7 +796,7 @@ void SelectionBar::SelectionModeUpdated()
 
 void SelectionBar::SetSelectionMode(int mode)
 {
-#ifdef SEL_BUTTON_TITLES
+#if defined(SEL_BUTTON_TITLES) || defined( SEL_CHOICE)
    // With SEL_BUTTON_TITLES only modes 0 to 3 are supported,
    // so fix up a mode that could have come from the config.
    const int maxMode = 3;
@@ -810,6 +845,9 @@ void SelectionBar::SetSelectionMode(int mode)
 #ifdef SEL_BUTTON_TITLES
    wxString CenterNames[] = { "       Start  -  End        ", "       Start  -  Length   ", "   Length  -  End        ", "   Length  -  Center   " };
    mButtonTitles[1]->SetLabel( CenterNames[mode] );
+#endif
+#ifdef SEL_CHOICE
+   mChoice->SetSelection( mode ); 
 #endif
 
    // First decide which two controls drive the others...
