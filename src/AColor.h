@@ -86,6 +86,10 @@ class AColor {
    static void Mute(wxDC * dc, bool on, bool selected, bool soloing);
    static void Solo(wxDC * dc, bool on, bool selected);
 
+   // In all of these, channel is 1-indexed (1 through 16); if out of bounds
+   // (either due to being explicitly set to 0 or due to an allegro file with
+   // more than 16 channels) a gray color is returned.
+
    static void MIDIChannel(wxDC * dc, int channel /* 1 - 16 */ );
    static void LightMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ );
    static void DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ );
