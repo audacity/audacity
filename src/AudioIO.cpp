@@ -3520,6 +3520,22 @@ wxString AudioIO::GetMidiDeviceInfo()
       s << wxT("No MIDI playback device found for '") << playDevice << wxT("'.") << e;
    }
 
+#ifdef IS_ALPHA
+
+   s << wxT("==============================") << e;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled") << e;
+#else
+   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled") << e;
+#endif
+#ifdef EXPERIMENTAL_MIDI_IN
+   s << wxT("EXPERIMENTAL_MIDI_IN is enabled") << e;
+#else
+   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled") << e;
+#endif
+
+#endif
+
    return o.GetString();
 }
 #endif
