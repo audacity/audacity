@@ -152,10 +152,10 @@ SelectionBar::SelectionBar()
    mButtonTitles[0]=NULL;
    mButtonTitles[1]=NULL;
    mButtonTitles[2]=NULL; 
-#endif
    mHyphen[0]=NULL;
    mHyphen[1]=NULL;
    mHyphen[2]=NULL;
+#endif
 
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
@@ -451,11 +451,17 @@ void SelectionBar::Populate()
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       mStartTime  = AddTime(_("Start"), StartTimeID, hSizer.get() );
+#ifdef SEL_BUTTON_TITLES
       mHyphen[0] = AddTitle( "-", -1, hSizer.get() );
+#endif
       mLengthTime = AddTime(_("Length"), LengthTimeID, hSizer.get() );
+#ifdef SEL_BUTTON_TITLES
       mHyphen[1] = AddTitle( "-", -1, hSizer.get() );
+#endif
       mCenterTime = AddTime(_("Center"), CenterTimeID, hSizer.get() );
+#ifdef SEL_BUTTON_TITLES
       mHyphen[2] = AddTitle( "-", -1, hSizer.get() );
+#endif
       mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
       mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
@@ -859,11 +865,12 @@ void SelectionBar::SetSelectionMode(int mode)
                     EndTimeID,   LengthTimeID, EndTimeID,    EndTimeID};
 
    SetDrivers( Drive1[mode], Drive2[mode] );
+#ifdef SEL_BUTTON_TITLES
    // Show just the hyphen after the first of the items.
    for(int i=0;i<3;i++){
       mHyphen[i]->SetLabel( ((i+StartTimeID) == Drive2[mode]) ? "-  " : "" );
    }
-
+#endif
    // Then show/hide the relevant controls.
    ShowHideControls( mode );
 }

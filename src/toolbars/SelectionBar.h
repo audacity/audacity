@@ -166,12 +166,12 @@ class SelectionBar final : public ToolBar {
 
 #ifdef SEL_BUTTON_TITLES
    wxStaticText * mButtonTitles[3];
+   wxStaticText * mHyphen[3];
 #endif
 
    wxStaticText * mProxy;
 
 
-   wxStaticText * mHyphen[3];
    wxComboBox     *mRateBox;
    wxChoice       *mSnapTo;
 
