@@ -3283,12 +3283,12 @@ wxString AudioIO::GetDeviceInfo()
    if(haveRecDevice){
       s << wxT("Selected recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
    }else{
-      s << wxT("No recording device found.") << e;
+      s << wxT("No recording device found for '") << recDevice << wxT("'.") << e;
    }
    if(havePlayDevice){
       s << wxT("Selected playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
    }else{
-      s << wxT("No playback device found.") << e;
+      s << wxT("No playback device found for '") << playDevice << wxT("'.") << e;
    }
 
    wxArrayLong supportedSampleRates;
@@ -3436,6 +3436,93 @@ wxString AudioIO::GetDeviceInfo()
 #endif
    return o.GetString();
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+// FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke
+wxString AudioIO::GetMidiDeviceInfo()
+{
+   wxStringOutputStream o;
+   wxTextOutputStream s(o, wxEOL_UNIX);
+   wxString e(wxT("\n"));
+
+   if (IsStreamActive()) {
+      return wxT("Stream is active ... unable to gather information.");
+   }
+
+
+   // XXX: May need to trap errors as with the normal device info
+   int recDeviceNum = Pm_GetDefaultInputDeviceID();
+   int playDeviceNum = Pm_GetDefaultOutputDeviceID();
+   int cnt = Pm_CountDevices();
+
+   wxLogDebug(wxT("PortMidi reports %d MIDI devices"), cnt);
+
+   s << wxT("==============================") << e;
+   s << wxT("Default recording device number: ") << recDeviceNum << e;
+   s << wxT("Default playback device number: ") << playDeviceNum << e;
+
+   wxString recDevice = gPrefs->Read(wxT("/MidiIO/RecordingDevice"), wxT(""));
+   wxString playDevice = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"), wxT(""));
+
+   // This gets info on all available audio devices (input and output)
+   if (cnt <= 0) {
+      s << wxT("No devices found\n");
+      return o.GetString();
+   }
+
+   for (int i = 0; i < cnt; i++) {
+      s << wxT("==============================") << e;
+
+      const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+      if (!info) {
+         s << wxT("Device info unavailable for: ") << i << e;
+         continue;
+      }
+
+      wxString name = wxSafeConvertMB2WX(info->name);
+      wxString hostName = wxSafeConvertMB2WX(info->interf);
+
+      s << wxT("Device ID: ") << i << e;
+      s << wxT("Device name: ") << name << e;
+      s << wxT("Host name: ") << hostName << e;
+      s << wxT("Supports output: ") << info->output << e;
+      s << wxT("Supports input: ") << info->input << e;
+      s << wxT("Opened: ") << info->opened << e;
+
+      if (name == playDevice && info->output)
+         playDeviceNum = i;
+
+      if (name == recDevice && info->input)
+         recDeviceNum = i;
+
+      // XXX: This is only done because the same was applied with PortAudio
+      // If PortMidi returns -1 for the default device, use the first one
+      if (recDeviceNum < 0 && info->input){
+         recDeviceNum = i;
+      }
+      if (playDeviceNum < 0 && info->output){
+         playDeviceNum = i;
+      }
+   }
+
+   bool haveRecDevice = (recDeviceNum >= 0);
+   bool havePlayDevice = (playDeviceNum >= 0);
+
+   s << wxT("==============================") << e;
+   if (haveRecDevice) {
+      s << wxT("Selected MIDI recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
+   } else {
+      s << wxT("No MIDI recording device found for '") << recDevice << wxT("'.") << e;
+   }
+   if (havePlayDevice) {
+      s << wxT("Selected MIDI playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
+   } else {
+      s << wxT("No MIDI playback device found for '") << playDevice << wxT("'.") << e;
+   }
+
+   return o.GetString();
+}
+#endif
 
 // This method is the data gateway between the audio thread (which
 // communicates with the disk) and the PortAudio callback thread

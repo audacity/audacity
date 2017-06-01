@@ -372,6 +372,11 @@ class AUDACITY_DLL_API AudioIO final {
     */
    wxString GetDeviceInfo();
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+   /** \brief Get diagnostic information on all the available MIDI I/O devices */
+   wxString GetMidiDeviceInfo();
+#endif
+
    /** \brief Ensure selected device names are valid
     *
     */

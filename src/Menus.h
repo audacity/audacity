@@ -511,6 +511,9 @@ void OnCrashReport();
 #endif
 void OnScreenshot();
 void OnAudioDeviceInfo();
+#ifdef EXPERIMENTAL_MIDI_OUT
+void OnMidiDeviceInfo();
+#endif
 
        //
 

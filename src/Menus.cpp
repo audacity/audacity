@@ -1217,6 +1217,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
+#ifdef EXPERIMENTAL_MIDI_OUT
+      c->AddItem(wxT("MidiDeviceInfo"), _("&MIDI Device Info..."), FN(OnMidiDeviceInfo),
+         AudioIONotBusyFlag,
+         AudioIONotBusyFlag);
+#endif
 
       c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
 
@@ -8236,6 +8241,47 @@ void AudacityProject::OnAudioDeviceInfo()
       }
    }
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void AudacityProject::OnMidiDeviceInfo()
+{
+   wxString info = gAudioIO->GetMidiDeviceInfo();
+
+   wxDialogWrapper dlg(this, wxID_ANY, wxString(_("MIDI Device Info")));
+   dlg.SetName(dlg.GetTitle());
+   ShuttleGui S(&dlg, eIsCreating);
+
+   wxTextCtrl *text;
+   S.StartVerticalLay();
+   {
+      S.SetStyle(wxTE_MULTILINE | wxTE_READONLY);
+      text = S.Id(wxID_STATIC).AddTextWindow(info);
+      S.AddStandardButtons(eOkButton | eCancelButton);
+   }
+   S.EndVerticalLay();
+
+   dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
+   dlg.SetSize(350, 450);
+
+   if (dlg.ShowModal() == wxID_OK)
+   {
+      wxString fName = FileSelector(_("Save MIDI Device Info"),
+         wxEmptyString,
+         wxT("midideviceinfo.txt"),
+         wxT("txt"),
+         wxT("*.txt"),
+         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+         this);
+      if (!fName.IsEmpty())
+      {
+         if (!text->SaveFile(fName))
+         {
+            wxMessageBox(_("Unable to save MIDI device info"), _("Save MIDI Device Info"));
+         }
+      }
+   }
+}
+#endif
 
 void AudacityProject::OnSeparator()
 {
