@@ -1915,13 +1915,8 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
             mViewInfo->selectedRegion.setTimes(
                selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
-         //Also, capture this track for dragging until we up-click.
-         mClipMoveState.capturedClipArray.push_back(TrackClip(w, selectedClip));
-
-         mMouseCapture = IsSliding;
 
          Refresh(false);
-         StartSlide(event);
          goto done;
       }
 
