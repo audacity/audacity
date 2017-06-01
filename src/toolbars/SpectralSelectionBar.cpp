@@ -133,7 +133,7 @@ void SpectralSelectionBar::Populate()
       : wxString(wxEmptyString);
 
    wxFlexGridSizer *mainSizer;
-   Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
+   Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0,wxALIGN_TOP | wxLEFT | wxTOP, 5);
 
    //
    // Top row, choice box
@@ -147,7 +147,7 @@ void SpectralSelectionBar::Populate()
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
        0, wxDefaultValidator, _("Spectral Selection"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
-   mainSizer->Add(mChoice, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+   mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND |wxRIGHT, 6);
 
    //
    // Bottom row, split into two columns, each with one control
@@ -168,7 +168,7 @@ void SpectralSelectionBar::Populate()
       mWidthCtrl->SetInvalidValue(-1.0);
       mWidthCtrl->SetName(wxString(_("Bandwidth:")));
       mWidthCtrl->EnableMenu();
-      subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mLowCtrl = safenew NumericTextCtrl(
          NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
@@ -182,14 +182,14 @@ void SpectralSelectionBar::Populate()
       mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
       mHighCtrl->SetName(wxString(_("High Frequency:")));
       mHighCtrl->EnableMenu();
-      subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mCenterCtrl->Show(mbCenterAndWidth);
       mWidthCtrl->Show(mbCenterAndWidth);
       mLowCtrl->Show(!mbCenterAndWidth);
       mHighCtrl->Show(!mbCenterAndWidth);
 
-      mainSizer->Add(subSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mainSizer->Add(subSizer.release(), 0, wxALIGN_CENTER_VERTICAL, 0);
    }
 
    mainSizer->Layout();

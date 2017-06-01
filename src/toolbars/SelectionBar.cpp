@@ -224,8 +224,15 @@ NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * 
    pCtrl->SetName(Name);
    pCtrl->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pCtrl->EnableMenu();
-   pSizer->Add(pCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
    return pCtrl;
+}
+
+void SelectionBar::AddVLine(  wxSizer * pSizer ){
+   pSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
+                                   wxSize(1, toolbarSingle-10),
+                                   wxLI_VERTICAL),
+                  0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 }
 
 void SelectionBar::Populate()
@@ -254,7 +261,11 @@ void SelectionBar::Populate()
     * look-ups static because they depend on translations which are done at
     * runtime */
 
-   Add((mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1)), 0, wxALIGN_CENTER_VERTICAL);
+   // Outer sizer has space top and left.
+   // Inner sizers have space on right only.
+   // This choice makes for a nice border and internal spacing and places clear responsibility
+   // on each sizer as to what spacings it creates.
+   Add((mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1)), 0, wxALIGN_TOP | wxLEFT | wxTOP, 5);
 
    //
    // Top row (mostly labels)
@@ -272,17 +283,17 @@ void SelectionBar::Populate()
 #endif
    pProjRate->SetForegroundColour( clrText );
    mainSizer->Add(pProjRate,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-   mainSizer->Add(5, 1);
+   AddVLine( mainSizer );
 
    AddTitle( _("Snap-To"), -1, mainSizer );
-
 #ifdef OPTIONS_BUTTON
    // Not enough room to say 'Selection Options".  There is a tooltip instead.
    AddTitle( wxT(""), -1, mainSizer );
 #endif
+   AddVLine( mainSizer );
 
-   // This is for the vertical line.
-   AddTitle( wxT(""), -1, mainSizer );
+   AddTitle( _("Audio Position"), -1, mainSizer );
+   AddVLine( mainSizer );
 
    {
 #ifdef SEL_RADIO_TITLE
@@ -299,7 +310,7 @@ void SelectionBar::Populate()
       (mLengthCenterRadBtn = AddRadioButton( _("Length-Center"), LengthCenterRadioID, hSizer.get(), 0))
          ->SetValue( mSelectionMode == 3 );
       mLengthCenterProxy = mProxy;
-      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP| wxRIGHT, 0);
 #endif
 
 #ifdef SEL_BUTTON_TITLES
@@ -326,7 +337,7 @@ void SelectionBar::Populate()
       (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
        0, wxDefaultValidator, "");
    mChoice->SetSelection(0);
-   mainSizer->Add(mChoice, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+   mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
 #endif
 
    }
@@ -343,12 +354,8 @@ void SelectionBar::Populate()
    mEndTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnEndTitleClicked,this );
 #endif
 
-
-   mainSizer->Add(5, 1);
-   AddTitle( _("Audio Position"), -1, mainSizer );
-
    //
-   // Middle row (mostly time controls)
+   // Botton row, (mostly time controls)
    //
 
    mRateBox = safenew wxComboBox(this, RateID,
@@ -390,18 +397,14 @@ void SelectionBar::Populate()
                       NULL,
                       this);
 
-   mainSizer->Add(mRateBox, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-
-   mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
-                                   wxSize(1, toolbarSingle),
-                                   wxLI_VERTICAL),
-                  0,  wxRIGHT, 5);
+   mainSizer->Add(mRateBox, 0, wxALIGN_TOP | wxRIGHT, 5);
+   AddVLine( mainSizer );
 
    mSnapTo = safenew wxChoice(this, SnapToID,
                           wxDefaultPosition, wxDefaultSize,
                           SnapManager::GetSnapLabels());
    mainSizer->Add(mSnapTo,
-                  0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+                  0, wxALIGN_TOP | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
    //mSnapTo->SetForegroundColour( clrText2 );
    mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
@@ -430,10 +433,11 @@ void SelectionBar::Populate()
    pBtn->SetLabel(_("Selection options"));
    pBtn->SetToolTip(_("Selection options"));
    //pBtn->Disable();
-   mainSizer->Add( pBtn, 0,  wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   mainSizer->Add( pBtn, 0,  wxALIGN_TOP | wxRIGHT, 5);
 #endif 
+   AddVLine( mainSizer );
 
-
+   mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
    // This vertical line is NOT just for decoration!
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
    // into the radiobutton group jumps to selecting the first item in the 
@@ -442,10 +446,7 @@ void SelectionBar::Populate()
    // a lot in navigation.
    // More about the bug here:
    // https://forums.wxwidgets.org/viewtopic.php?t=41120
-   mainSizer->Add(safenew wxStaticLine(this, id2, wxDefaultPosition,
-                                   wxSize(1, toolbarSingle),
-                                   wxLI_VERTICAL),
-                  0, wxRIGHT, 5);
+   AddVLine( mainSizer );
 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
@@ -463,7 +464,7 @@ void SelectionBar::Populate()
       mHyphen[2] = AddTitle( "-", -1, hSizer.get() );
 #endif
       mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
-      mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
 
 #ifdef SEL_RADIO_TITLES
       // Put choice of what fields to show immediately before the fields.
@@ -477,22 +478,11 @@ void SelectionBar::Populate()
 #ifdef SEL_CHOICE
    mChoice->MoveBeforeInTabOrder( mStartTime );
 #endif
-
-   mainSizer->Add(safenew wxStaticLine(this, -1, wxDefaultPosition,
-                                   wxSize(1, toolbarSingle),
-                                   wxLI_VERTICAL),
-                  0, wxRIGHT, 5);
-
-   mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
-
    // This shows/hides controls.
    // Do this before layout so that we are sized right.
    SetSelectionMode(mSelectionMode);
-
    mainSizer->Layout();
-
    RegenerateTooltips();
-
    Layout();
 
    SetMinSize( GetSizer()->GetMinSize() );

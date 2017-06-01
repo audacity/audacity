@@ -86,6 +86,7 @@ class SelectionBar final : public ToolBar {
    wxStaticText * AddTitle( const wxString & Title, int id, 
       wxSizer * pSizer );
    NumericTextCtrl * AddTime( const wxString Name, int id, wxSizer * pSizer );
+   void AddVLine(  wxSizer * pSizer );
 
    void SetSelectionMode(int mode);
    void ShowHideControls(int mode);
