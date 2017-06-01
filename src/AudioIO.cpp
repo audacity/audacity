@@ -851,10 +851,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           const PaStreamCallbackTimeInfo *timeInfo,
                           PaStreamCallbackFlags statusFlags, void *userData );
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-int compareTime( const void* a, const void* b );
-#endif
-
 //////////////////////////////////////////////////////////////////////
 //
 //     class AudioThread - declaration and glue code
@@ -4891,11 +4887,4 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
    return callbackReturn;
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-int compareTime( const void* a, const void* b )
-{
-   return( (int)((*(PmEvent*)a).timestamp - (*(PmEvent*)b).timestamp ) );
-}
-#endif
 

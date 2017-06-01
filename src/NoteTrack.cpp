@@ -124,7 +124,6 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
    mPitchHeight = 5;
 
    mVisibleChannels = ALL_CHANNELS;
-   mLastMidiPosition = 0;
 }
 
 NoteTrack::~NoteTrack()
@@ -185,7 +184,6 @@ Track::Holder NoteTrack::Duplicate() const
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
    duplicate->SetPitchHeight(mPitchHeight);
-   duplicate->mLastMidiPosition = mLastMidiPosition;
    duplicate->mVisibleChannels = mVisibleChannels;
    duplicate->SetOffset(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -461,7 +459,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    //AddToDuration( delta );
 
    // What should be done with the rest of newTrack's members?
-   //(mBottomNote, mDirManager, mLastMidiPosition,
+   //(mBottomNote, mDirManager,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
    // This std::move is needed to "upcast" the pointer type
@@ -485,8 +483,8 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    newTrack->SetOffset(GetOffset());
 
    // What should be done with the rest of newTrack's members?
-   //(mBottomNote, mDirManager, mLastMidiPosition,
-   // mSerializationBuffer, mSerializationLength, mVisibleChannels)
+   // (mBottomNote, mDirManager, mSerializationBuffer,
+   // mSerializationLength, mVisibleChannels)
 
    // This std::move is needed to "upcast" the pointer type
    return std::move(newTrack);
