@@ -856,6 +856,9 @@ void TrackList::UpdatedEvent(TrackNodePointer node)
    else {
       e.SetClientData(NULL);
    }
+
+   // PRL:  ProcessEvent, not QueueEvent!  Listeners may need their last
+   // chance to examine some removed tracks that are about to be destroyed.
    ProcessEvent(e);
 }
 
@@ -951,6 +954,9 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
       *node = std::move(with);
       pTrack->SetOwner(this, node);
       RecalcPositions(node);
+
+      // PRL:  Note:  Send the event while t (now in holder) is not yet
+      // destroyed, so pointers to t that listeners may have are not dangling.
       UpdatedEvent(node);
       ResizedEvent(node);
    }
@@ -964,11 +970,15 @@ TrackNodePointer TrackList::Remove(Track *t)
       auto node = t->GetNode();
 
       if (!isNull(node)) {
+         value_type holder = std::move( *node );
+
          result = erase(node);
          if (!isNull(result)) {
             RecalcPositions(result);
          }
 
+         // PRL:  Note:  Send the event while t (now in holder) is not yet
+         // destroyed, so pointers to t that listeners may have are not dangling.
          UpdatedEvent(end());
          ResizedEvent(result);
       }
@@ -978,8 +988,12 @@ TrackNodePointer TrackList::Remove(Track *t)
 
 void TrackList::Clear(bool sendEvent)
 {
-   ListOfTracks::clear();
+   ListOfTracks tempList;
+   tempList.swap( *this );
    if (sendEvent)
+      // PRL:  Note:  Send the event while tempList is not yet
+      // destroyed, so pointers to tracks that listeners may have are not
+      // dangling.
       UpdatedEvent(end());
 }
 

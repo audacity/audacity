@@ -444,6 +444,11 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
 // Posted when tracks have been added or deleted from a tracklist.  The pointer
 // wxCommandEvent::GetClientData() returns will be NULL for deletions or the
 // track that was added.
+// Also posted when one track replaces another
+// Also posted when the list of tracks is permuted, but no addition or deletion
+// When a track has been removed, the event is processed before the track
+// is destroyed, so that listeners that stored a pointer to the track can still
+// use it and correctly check whether the list still contains it.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
