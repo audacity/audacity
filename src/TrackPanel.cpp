@@ -6484,17 +6484,6 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, const wxRect &
       return true;
    }
 
-   if( event.LeftDown() ){
-      bool bShift = event.ShiftDown();
-      bool bCtrlDown = event.ControlDown();
-      bool unsafe = IsUnsafe();
-      bCtrlDown = false;
-      if( /*bShift ||*/ bCtrlDown ){
-
-         HandleListSelection(track, bShift, bCtrlDown, !unsafe);
-         return true;
-      }
-   }
    return false;
 }
 
