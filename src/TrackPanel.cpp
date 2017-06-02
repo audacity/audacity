@@ -8813,8 +8813,9 @@ void TrackPanel::OnSetName(wxCommandEvent & WXUNUSED(event))
             t->GetLink()->SetName(newName);
 
          MixerBoard* pMixerBoard = this->GetMixerBoard();
-         if (pMixerBoard && (t->GetKind() == Track::Wave))
-            pMixerBoard->UpdateName((WaveTrack*)t);
+         auto pt = dynamic_cast<PlayableTrack*>(t);
+         if (pMixerBoard && pt)
+            pMixerBoard->UpdateName(pt);
 
          MakeParentPushState(wxString::Format(_("Renamed '%s' to '%s'"),
                                               oldName.c_str(),
