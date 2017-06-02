@@ -88,6 +88,9 @@ const wxString Effect::kFactoryPresetIdent = wxT("Factory Preset:");
 const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
 const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
 
+// static member variable.
+void (*Effect::mIdleHandler)(wxIdleEvent& event) = NULL;
+
 WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
 
 Effect::Effect()
@@ -541,11 +544,19 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
       return false;
    }
 
+
    mUIDialog->Layout();
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   if (SupportsRealtime() && !forceModal)
+   // Idle event handler is used for example to take a screenshot.
+   if( mIdleHandler != NULL ){
+      mUIDialog->Bind( wxEVT_IDLE, mIdleHandler );
+      mIdleHandler = NULL;
+      forceModal = true;
+   }
+
+   if( SupportsRealtime() && !forceModal )
    {
       mUIDialog->Show();
       cleanup.release();
@@ -2828,7 +2839,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mEnabled = true;
 
    mPlayPos = 0.0;
-
    mClient->SetHostUI(this);
 }
 

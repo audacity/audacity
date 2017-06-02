@@ -1316,12 +1316,15 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 /// code to run.
 bool CommandManager::HandleTextualCommand(wxString & Str, CommandFlag flags, CommandMask mask)
 {
+   if( Str.IsEmpty() )
+      return false;
    // Linear search for now...
    for (const auto &entry : mCommandList)
    {
       if (!entry->multi)
       {
-         if( Str.IsSameAs( entry->name ))
+         // Testing against labelPrefix too allows us to call Nyquist functions by name.
+         if( Str.IsSameAs( entry->name ) || Str.IsSameAs( entry->labelPrefix ))
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }

@@ -15,6 +15,11 @@ project window.
 
 *//*******************************************************************/
 
+/* TODO: JKC: The screenshot code is very verbose and should be made 
+   much shorter.  It could work from a single list of function 
+   names and functors.
+  */
+
 #include "ScreenshotCommand.h"
 #include "CommandTargets.h"
 #include "../Project.h"
@@ -93,6 +98,23 @@ static wxBitmap DoGetAsBitmap(const wxRect *subrect)
     return bmp;
 }
 #endif
+
+// This static variable is used to get from an idle event to the screenshot
+// command that caused the idle event interception to be set up.
+ScreenshotCommand * ScreenshotCommand::mpShooter=NULL;
+
+// IdleHandler is expected to be called from EVT_IDLE when a dialog has been 
+// fully created.  Usually the dialog will have been created by invoking
+// an effects gui.
+void IdleHandler(wxIdleEvent& event){
+   wxWindow * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
+   wxASSERT( pWin );
+   pWin->Unbind(wxEVT_IDLE, IdleHandler);
+   // We have the relevant window, so go and capture it.
+   if( ScreenshotCommand::mpShooter )
+      ScreenshotCommand::mpShooter->CaptureWindowOnIdle( pWin );
+}
+
 
 wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(AudacityProject *project)
 {
@@ -331,6 +353,138 @@ void ScreenshotCommand::CaptureMenus(wxMenuBar*pBar, const wxString &fileName)
 #endif
 }
 
+
+void ScreenshotCommand::CaptureWindowOnIdle( wxWindow * pWin )
+{
+   wxDialog * pDlg = dynamic_cast<wxDialog*>(pWin);
+   if( !pDlg ){
+      wxLogDebug("Event from bogus dlg" );
+      return;
+   }
+
+   wxPoint Pos = pDlg->GetScreenPosition();
+   wxSize Siz = pDlg->GetSize();
+   wxString Name = mDirToWriteTo;
+   wxString Title = pDlg->GetTitle();
+
+   // Remove '/' from "Sliding Time Scale/Pitch Shift..."
+   // and any other effects that have illegal filename chanracters.
+   Title.Replace( "/", "" );
+   Name.Replace( "effects000", Title );
+
+   int x = 0, y = 0;
+   int width, height;
+
+   wxLogDebug("Taking screenshot of window %s (%i,%i,%i,%i)", Name, 
+         Pos.x, Pos.y, Siz.x, Siz.y );
+   // This delay is needed, as dialogs take a moment or two to fade in.
+   wxMilliSleep( 200 );
+   // JKC: The border of 7 pixels was determined from a trial capture and then measuring
+   // in the GIMP.  I'm unsure where the border comes from.
+   Capture( Name, pDlg, (int)Pos.x+7, (int)Pos.y, (int)Siz.x-14, (int)Siz.y-7 );
+
+   // We've captured the dialog, so now dismiss the dialog.
+   wxCommandEvent Evt( wxEVT_BUTTON, wxID_CANCEL );
+   pDlg->GetEventHandler()->AddPendingEvent( Evt );
+}
+
+void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxString &fileName ){
+   fileName;//compiler food.
+   CommandManager * pMan = pProject->GetCommandManager();
+   wxString Str;
+   // Yucky static variables.  Is there a better way?  The problem is that we need the
+   // idle callback to know more about what to do.
+   mDirToWriteTo = fileName;
+   mpShooter = this;
+
+#define CAPTURE_NYQUIST_TOO
+   // Commented out the effects that don't have dialogs.
+   // Also any problematic ones, 
+   const wxString EffectNames[] = {
+      "Amplify...",
+      //"Auto Duck...",  // needs a track below.
+      "Bass and Treble...",
+      "Change Pitch...",
+      "Change Speed...",
+      "Change Tempo...",
+      "Click Removal...",
+      "Compressor...",
+      "Distortion...",
+      "Echo...",
+      "Equalization...",
+      //"Fade In",
+      //"Fade Out",
+      //"Invert",
+      //"Noise Reduction...", // Exits twice...
+      "Normalize...",
+      "Paulstretch...",
+      "Phaser...",
+      //"Repair",
+      "Repeat...",
+      "Reverb...",
+      //"Reverse",
+      "Sliding Time Scale/Pitch Shift...",
+      "Truncate Silence...",
+      "Wahwah...",
+      // Sole LADSPA effect...
+      //"SC4...", //Has 'Close' rather than 'Cancel'.
+#ifdef CAPTURE_NYQUIST_TOO
+      "Adjustable Fade...",
+      "Clip Fix...",
+      //"Crossfade Clips",
+      "Crossfade Tracks...",
+      "Delay...",
+      "High Pass Filter...",
+      "Limiter...",
+      "Low Pass Filter...",
+      "Notch Filter...",
+      "Nyquist Prompt...",
+      //"Spectral edit multi tool",
+      //"Spectral edit parametric EQ...", // Needs a spectral selection.
+      //"Spectral edit shelves...",
+      //"Studio Fade Out",
+      "Tremolo...",
+      "Vocal Reduction and Isolation...",
+      "Vocal Remover...",
+      "Vocoder..."
+#endif
+      // Generators.....
+      "Chirp...",
+      "DTMF Tones...",
+      "Noise...",
+      "Silence...",
+      "Tone...",
+#ifdef CAPTURE_NYQUIST_TOO
+      "Pluck...",
+      "Rhythm Track...",
+      "Risset Drum...",
+      "Sample Data Import...",
+#endif
+      // Analyzers...
+      "Contrast...",
+      "Plot Spectrum...",
+      "Find Clipping...",
+#ifdef CAPTURE_NYQUIST_TOO
+      "Beat Finder...",
+      "Regular Interval Labels...",
+      "Sample Data Export...",
+      "Silence Finder...",
+      "Sound Finder...",
+#endif
+   };
+
+   for( int i=0;i<sizeof(EffectNames)/sizeof(EffectNames[0]);i++){
+      // The handler is cleared each time it is used.
+      Effect::SetIdleHandler( IdleHandler );
+      Str = EffectNames[i];
+      pMan->HandleTextualCommand( Str, AlwaysEnabledFlag, AlwaysEnabledFlag );
+      // This sleep is not needed, but gives user a chance to see the
+      // dialogs as they whizz by.
+      wxMilliSleep( 200 );
+   }
+}
+
+
 wxString ScreenshotCommandType::BuildName()
 {
    return wxT("Screenshot");
@@ -345,6 +499,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    captureModeValidator->AddOption(wxT("fullscreen"));
    captureModeValidator->AddOption(wxT("toolbars"));
    captureModeValidator->AddOption(wxT("menus"));
+   captureModeValidator->AddOption(wxT("effects"));
    captureModeValidator->AddOption(wxT("selectionbar"));
    captureModeValidator->AddOption(wxT("tools"));
    captureModeValidator->AddOption(wxT("transport"));
@@ -492,6 +647,10 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    else if (captureMode.IsSameAs(wxT("menus")))
    {
       CaptureMenus(context.GetProject()->GetMenuBar(), fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("effects")))
+   {
+      CaptureEffects(context.GetProject(), fileName);
    }
    else if (captureMode.IsSameAs(wxT("selectionbar")))
    {
