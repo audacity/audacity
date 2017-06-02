@@ -164,6 +164,10 @@ void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
 public:
+static double OnClipMove
+   (ViewInfo &viewInfo, Track *track,
+    TrackList &trackList, bool syncLocked, bool right);
+
 void DoClipLeftOrRight(bool right, bool keyUp );
 void OnClipLeft(const wxEvent* evt);
 void OnClipRight(const wxEvent* evt);

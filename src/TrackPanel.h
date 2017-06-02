@@ -21,8 +21,6 @@
 #include "SelectedRegion.h"
 #include "WaveTrackLocation.h"
 
-#include "Track.h"
-#include "Snap.h"
 #include "widgets/OverlayPanel.h"
 
 #include "SelectionState.h"
@@ -256,27 +254,6 @@ private:
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
 
-struct ClipMoveState {
-   // non-NULL only if click was in a WaveTrack and without Shift key:
-   WaveClip *capturedClip {};
-
-   bool capturedClipIsSelection {};
-   TrackArray trackExclusions {};
-   double hSlideAmount {};
-   TrackClipArray capturedClipArray {};
-   wxInt64 snapLeft { -1 }, snapRight { -1 };
-
-   void clear()
-   {
-      capturedClip = nullptr;
-      capturedClipIsSelection = false;
-      trackExclusions.clear();
-      hSlideAmount = 0;
-      capturedClipArray.clear();
-      snapLeft = snapRight = -1;
-   }
-};
-
 class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
  public:
 
@@ -370,10 +347,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
-
-   static double OnClipMove
-      (ViewInfo &viewInfo, Track *track,
-       TrackList &trackList, bool syncLocked, bool right);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -503,19 +476,6 @@ protected:
    virtual void ForwardEventToWaveTrackEnvelope(wxMouseEvent & event);
    virtual void ForwardEventToEnvelope(wxMouseEvent &event);
 
-public:
-   static void DoSlideHorizontal
-      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
-   static void CreateListOfCapturedClips
-      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-        TrackList &trackList, bool syncLocked, double clickTime );
-   static void AddClipsToCaptured
-      ( ClipMoveState &state, const ViewInfo &viewInfo,
-        Track *t, bool withinSelection );
-   static void AddClipsToCaptured
-      ( ClipMoveState &state, Track *t, double t0, double t1 );
-
-protected:
    static bool IsDragZooming(int zoomStart, int zoomEnd);
    virtual bool IsDragZooming() { return IsDragZooming(mZoomStart, mZoomEnd); }
 

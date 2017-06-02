@@ -18,10 +18,29 @@ Paul Licameli
 #include "../../Snap.h"
 #include "../../Track.h"
 
-#include "../../TrackPanel.h" // for ClipMoveState
-
 struct HitTestResult;
 class WaveClip;
+
+struct ClipMoveState {
+   // non-NULL only if click was in a WaveTrack and without Shift key:
+   WaveClip *capturedClip {};
+
+   bool capturedClipIsSelection {};
+   TrackArray trackExclusions {};
+   double hSlideAmount {};
+   TrackClipArray capturedClipArray {};
+   wxInt64 snapLeft { -1 }, snapRight { -1 };
+
+   void clear()
+   {
+      capturedClip = nullptr;
+      capturedClipIsSelection = false;
+      trackExclusions.clear();
+      hSlideAmount = 0;
+      capturedClipArray.clear();
+      snapLeft = snapRight = -1;
+   }
+};
 
 class TimeShiftHandle final : public UIHandle
 {
@@ -33,6 +52,15 @@ class TimeShiftHandle final : public UIHandle
       (const AudacityProject *pProject, bool unsafe);
 
 public:
+   // A utility function also used by menu commands
+   static void CreateListOfCapturedClips
+      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+        TrackList &trackList, bool syncLocked, double clickTime );
+
+   // A utility function also used by menu commands
+   static void DoSlideHorizontal
+      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
+
    static HitTestResult HitAnywhere(const AudacityProject *pProject);
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject);

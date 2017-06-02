@@ -89,7 +89,127 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
-namespace {
+namespace
+{
+   // Adds a track's clips to mCapturedClipArray within a specified time
+   void AddClipsToCaptured
+      (TrackClipArray &capturedClipArray, Track *pTrack, double t0, double t1)
+   {
+      if (pTrack->GetKind() == Track::Wave)
+      {
+         for(const auto &clip: static_cast<WaveTrack*>(pTrack)->GetClips())
+         {
+            if (!clip->AfterClip(t0) && !clip->BeforeClip(t1))
+            {
+               // Avoid getting clips that were already captured
+               bool newClip = true;
+               for (unsigned int ii = 0; newClip && ii < capturedClipArray.size(); ++ii)
+                  newClip = (capturedClipArray[ii].clip != clip.get());
+               if (newClip)
+                  capturedClipArray.push_back(TrackClip(pTrack, clip.get()));
+            }
+         }
+      }
+      else
+      {
+         // This handles label tracks rather heavy-handedly -- it would be nice to
+         // treat individual labels like clips
+
+         // Avoid adding a track twice
+         bool newClip = true;
+         for (unsigned int ii = 0; newClip && ii < capturedClipArray.size(); ++ii)
+            newClip = (capturedClipArray[ii].track != pTrack);
+         if (newClip) {
+#ifdef USE_MIDI
+            // do not add NoteTrack if the data is outside of time bounds
+            if (pTrack->GetKind() == Track::Note) {
+               if (pTrack->GetEndTime() < t0 || pTrack->GetStartTime() > t1)
+                  return;
+            }
+#endif
+            capturedClipArray.push_back(TrackClip(pTrack, NULL));
+         }
+      }
+   }
+
+   // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
+   // duplication of this logic)
+   void AddClipsToCaptured
+      (TrackClipArray &capturedClipArray,
+       const ViewInfo &viewInfo, Track *pTrack, bool withinSelection)
+   {
+      if (withinSelection)
+         AddClipsToCaptured(capturedClipArray, pTrack,
+            viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
+      else
+         AddClipsToCaptured(capturedClipArray, pTrack,
+            pTrack->GetStartTime(), pTrack->GetEndTime());
+   }
+
+   // Adds a track's clips to state.capturedClipArray within a specified time
+   void AddClipsToCaptured
+      ( ClipMoveState &state, Track *t, double t0, double t1 )
+   {
+      if (t->GetKind() == Track::Wave)
+      {
+         for(const auto &clip: static_cast<WaveTrack*>(t)->GetClips())
+         {
+            if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) )
+            {
+               // Avoid getting clips that were already captured
+               bool newClip = true;
+               for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
+                  if ( state.capturedClipArray[i].clip == clip.get() ) {
+                     newClip = false;
+                     break;
+                  }
+               }
+
+               if (newClip)
+                  state.capturedClipArray.push_back( TrackClip(t, clip.get()) );
+            }
+         }
+      }
+      else
+      {
+         // This handles label tracks rather heavy-handedly -- it would be nice to
+         // treat individual labels like clips
+
+         // Avoid adding a track twice
+         bool newClip = true;
+         for ( unsigned int i = 0; i < state.capturedClipArray.size(); ++i ) {
+            if ( state.capturedClipArray[i].track == t ) {
+               newClip = false;
+               break;
+            }
+         }
+
+         if (newClip) {
+   #ifdef USE_MIDI
+            // do not add NoteTrack if the data is outside of time bounds
+            if (t->GetKind() == Track::Note) {
+               if (t->GetEndTime() < t0 || t->GetStartTime() > t1)
+                  return;
+            }
+   #endif
+            state.capturedClipArray.push_back(TrackClip(t, NULL));
+         }
+      }
+   }
+
+   // Helper for the above, adds a track's clips to mCapturedClipArray (eliminates
+   // duplication of this logic)
+   void AddClipsToCaptured
+      ( ClipMoveState &state, const ViewInfo &viewInfo,
+        Track *t, bool withinSelection )
+   {
+      if (withinSelection)
+         AddClipsToCaptured( state, t, viewInfo.selectedRegion.t0(),
+                            viewInfo.selectedRegion.t1() );
+      else
+         AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
+   }
+
    // Don't count right channels.
    WaveTrack *NthAudioTrack(TrackList &list, int nn)
    {
@@ -116,6 +236,177 @@ namespace {
             return nn;
       }
       return -1;
+   }
+
+   WaveClip *FindClipAtTime(WaveTrack *pTrack, double time)
+   {
+      if (pTrack) {
+         // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
+         // instead calculate the time manually
+         double rate = pTrack->GetRate();
+         auto s0 = (sampleCount)(time * rate + 0.5);
+
+         if (s0 >= 0)
+            return pTrack->GetClipAtSample(s0);
+      }
+
+      return 0;
+   }
+}
+
+void TimeShiftHandle::CreateListOfCapturedClips
+   ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+     TrackList &trackList, bool syncLocked, double clickTime )
+{
+// The captured clip is the focus, but we need to create a list
+   // of all clips that have to move, also...
+
+   state.capturedClipArray.clear();
+
+   // First, if click was in selection, capture selected clips; otherwise
+   // just the clicked-on clip
+   if ( state.capturedClipIsSelection ) {
+      TrackListIterator iter( &trackList );
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         if (t->GetSelected()) {
+            AddClipsToCaptured( state, viewInfo, t, true );
+            if (t->GetKind() != Track::Wave)
+               state.trackExclusions.push_back(t);
+         }
+      }
+   }
+   else {
+      state.capturedClipArray.push_back
+         (TrackClip( &capturedTrack, state.capturedClip ));
+
+      // Check for stereo partner
+      Track *partner = capturedTrack.GetLink();
+      WaveTrack *wt;
+      if (state.capturedClip &&
+            // Assume linked track is wave or null
+            nullptr != (wt = static_cast<WaveTrack*>(partner))) {
+         WaveClip *const clip = FindClipAtTime(wt, clickTime);
+
+         if (clip)
+            state.capturedClipArray.push_back(TrackClip(partner, clip));
+      }
+   }
+
+   // Now, if sync-lock is enabled, capture any clip that's linked to a
+   // captured clip.
+   if ( syncLocked ) {
+      // AWD: mCapturedClipArray expands as the loop runs, so newly-added
+      // clips are considered (the effect is like recursion and terminates
+      // because AddClipsToCaptured doesn't add duplicate clips); to remove
+      // this behavior just store the array size beforehand.
+      for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
+         // Capture based on tracks that have clips -- that means we
+         // don't capture based on links to label tracks for now (until
+         // we can treat individual labels as clips)
+         if ( state.capturedClipArray[i].clip ) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git( &trackList );
+            for (Track *t = git.StartWith( state.capturedClipArray[i].track  );
+                  t; t = git.Next() )
+            {
+               AddClipsToCaptured(state, t,
+                     state.capturedClipArray[i].clip->GetStartTime(),
+                     state.capturedClipArray[i].clip->GetEndTime() );
+               if (t->GetKind() != Track::Wave)
+                  state.trackExclusions.push_back(t);
+            }
+         }
+#ifdef USE_MIDI
+         // Capture additional clips from NoteTracks
+         Track *nt = state.capturedClipArray[i].track;
+         if (nt->GetKind() == Track::Note) {
+            // Iterate over sync-lock group tracks.
+            SyncLockedTracksIterator git( &trackList );
+            for (Track *t = git.StartWith(nt); t; t = git.Next())
+            {
+               AddClipsToCaptured
+                  ( state, t, nt->GetStartTime(), nt->GetEndTime() );
+               if (t->GetKind() != Track::Wave)
+                  state.trackExclusions.push_back(t);
+            }
+         }
+#endif
+      }
+   }
+}
+
+void TimeShiftHandle::DoSlideHorizontal
+   ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack )
+{
+#ifdef USE_MIDI
+   if ( state.capturedClipArray.size() )
+#else
+   if ( state.capturedClip )
+#endif
+   {
+      double allowed;
+      double initialAllowed;
+      double safeBigDistance = 1000 + 2.0 * ( trackList.GetEndTime() -
+                                              trackList.GetStartTime() );
+
+      do { // loop to compute allowed, does not actually move anything yet
+         initialAllowed = state.hSlideAmount;
+
+         unsigned int i, j;
+         for ( i = 0; i < state.capturedClipArray.size(); ++i ) {
+            WaveTrack *track = (WaveTrack *)state.capturedClipArray[i].track;
+            WaveClip *clip = state. capturedClipArray[i].clip;
+
+            if (clip) { // only audio clips are used to compute allowed
+               // Move all other selected clips totally out of the way
+               // temporarily because they're all moving together and
+               // we want to find out if OTHER clips are in the way,
+               // not one of the moving ones
+               for ( j = 0; j < state.capturedClipArray.size(); j++ ) {
+                  WaveClip *clip2 = state.capturedClipArray[j].clip;
+                  if (clip2 && clip2 != clip)
+                     clip2->Offset(-safeBigDistance);
+               }
+
+               if ( track->CanOffsetClip(clip, state.hSlideAmount, &allowed) ) {
+                  if ( state.hSlideAmount != allowed ) {
+                     state.hSlideAmount = allowed;
+                     state.snapLeft = state.snapRight = -1; // see bug 1067
+                  }
+               }
+               else {
+                  state.hSlideAmount = 0.0;
+                  state.snapLeft = state.snapRight = -1; // see bug 1067
+               }
+
+               for ( j = 0; j < state.capturedClipArray.size(); ++j ) {
+                  WaveClip *clip2 = state.capturedClipArray[j].clip;
+                  if (clip2 && clip2 != clip)
+                     clip2->Offset(safeBigDistance);
+               }
+            }
+         }
+      } while ( state.hSlideAmount != initialAllowed );
+
+      if ( state.hSlideAmount != 0.0 ) { // finally, here is where clips are moved
+         unsigned int i;
+         for ( i = 0; i < state.capturedClipArray.size(); ++i ) {
+            Track *track = state.capturedClipArray[i].track;
+            WaveClip *clip = state.capturedClipArray[i].clip;
+            if (clip)
+               clip->Offset( state.hSlideAmount );
+            else
+               track->Offset( state.hSlideAmount );
+         }
+      }
+   }
+   else {
+      // For Shift key down, or
+      // For non wavetracks, specifically label tracks ...
+      capturedTrack.Offset( state.hSlideAmount );
+      Track* link = capturedTrack.GetLink();
+      if (link)
+         link->Offset( state.hSlideAmount );
    }
 }
 
@@ -169,7 +460,7 @@ UIHandle::Result TimeShiftHandle::Click
             return Cancelled;
       }
 
-      TrackPanel::CreateListOfCapturedClips
+      CreateListOfCapturedClips
          ( mClipMoveState, viewInfo, *pTrack, *trackList,
            pProject->IsSyncLocked(), clickTime );
    }
@@ -459,7 +750,7 @@ UIHandle::Result TimeShiftHandle::Drag
 
    mClipMoveState.hSlideAmount = desiredSlideAmount;
 
-   TrackPanel::DoSlideHorizontal( mClipMoveState, *trackList, *mCapturedTrack );
+   DoSlideHorizontal( mClipMoveState, *trackList, *mCapturedTrack );
 
    if (mClipMoveState.capturedClipIsSelection) {
       // Slide the selection, too
