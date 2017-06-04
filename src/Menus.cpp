@@ -164,6 +164,7 @@ enum {
 };
 
 #include "commands/CommandFunctors.h"
+#include "commands/ScreenshotCommand.h"
 //
 // Effects menu arrays
 //
@@ -6137,6 +6138,8 @@ void AudacityProject::OnPlotSpectrum()
          this, -1, _("Frequency Analysis"), where ) );
    }
 
+   if( ScreenshotCommand::MayCapture( mFreqWindow.get() ) )
+      return;
    mFreqWindow->Show(true);
    mFreqWindow->Raise();
    mFreqWindow->SetFocus();
@@ -6156,6 +6159,8 @@ void AudacityProject::OnContrast()
    }
 
    mContrastDialog->CentreOnParent();
+   if( ScreenshotCommand::MayCapture( mContrastDialog.get() ) )
+      return;
    mContrastDialog->Show();
 }
 

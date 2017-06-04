@@ -99,6 +99,8 @@ static wxBitmap DoGetAsBitmap(const wxRect *subrect)
 }
 #endif
 
+// static member variable.
+void (*ScreenshotCommand::mIdleHandler)(wxIdleEvent& event) = NULL;
 // This static variable is used to get from an idle event to the screenshot
 // command that caused the idle event interception to be set up.
 ScreenshotCommand * ScreenshotCommand::mpShooter=NULL;
@@ -353,6 +355,16 @@ void ScreenshotCommand::CaptureMenus(wxMenuBar*pBar, const wxString &fileName)
 #endif
 }
 
+// Handed a dialog, which it is given the option to capture.
+bool ScreenshotCommand::MayCapture( wxDialog * pDlg )
+{
+   if( mIdleHandler == NULL )
+      return false;
+   pDlg->Bind( wxEVT_IDLE, mIdleHandler );
+   mIdleHandler = NULL;
+   pDlg->ShowModal();
+   return true;
+}
 
 void ScreenshotCommand::CaptureWindowOnIdle( wxWindow * pWin )
 {
@@ -397,12 +409,27 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
    mDirToWriteTo = fileName;
    mpShooter = this;
 
+#define TRICKY_CAPTURE
 #define CAPTURE_NYQUIST_TOO
    // Commented out the effects that don't have dialogs.
    // Also any problematic ones, 
    const wxString EffectNames[] = {
+
+#ifdef TRICKY_CAPTURE
+      //"Contrast...", // renamed
+      "ContrastAnalyser",
+      //"Plot Spectrum...", // renamed
+      "PlotSpectrum",
+
+      "Auto Duck...",  // needs a track below.
+      //"Spectral edit multi tool",
+      "Spectral edit parametric EQ...", // Needs a spectral selection.
+      "Spectral edit shelves...",
+
+      //"Noise Reduction...", // Exits twice...
+      //"SC4...", //Has 'Close' rather than 'Cancel'.
+#endif
       "Amplify...",
-      //"Auto Duck...",  // needs a track below.
       "Bass and Treble...",
       "Change Pitch...",
       "Change Speed...",
@@ -415,7 +442,6 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
       //"Fade In",
       //"Fade Out",
       //"Invert",
-      //"Noise Reduction...", // Exits twice...
       "Normalize...",
       "Paulstretch...",
       "Phaser...",
@@ -427,7 +453,6 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
       "Truncate Silence...",
       "Wahwah...",
       // Sole LADSPA effect...
-      //"SC4...", //Has 'Close' rather than 'Cancel'.
 #ifdef CAPTURE_NYQUIST_TOO
       "Adjustable Fade...",
       "Clip Fix...",
@@ -439,14 +464,11 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
       "Low Pass Filter...",
       "Notch Filter...",
       "Nyquist Prompt...",
-      //"Spectral edit multi tool",
-      //"Spectral edit parametric EQ...", // Needs a spectral selection.
-      //"Spectral edit shelves...",
       //"Studio Fade Out",
       "Tremolo...",
       "Vocal Reduction and Isolation...",
       "Vocal Remover...",
-      "Vocoder..."
+      "Vocoder...",
 #endif
       // Generators.....
       "Chirp...",
@@ -461,8 +483,6 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
       "Sample Data Import...",
 #endif
       // Analyzers...
-      "Contrast...",
-      "Plot Spectrum...",
       "Find Clipping...",
 #ifdef CAPTURE_NYQUIST_TOO
       "Beat Finder...",
@@ -475,9 +495,12 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
 
    for( int i=0;i<sizeof(EffectNames)/sizeof(EffectNames[0]);i++){
       // The handler is cleared each time it is used.
-      Effect::SetIdleHandler( IdleHandler );
+      SetIdleHandler( IdleHandler );
       Str = EffectNames[i];
-      pMan->HandleTextualCommand( Str, AlwaysEnabledFlag, AlwaysEnabledFlag );
+      if( !pMan->HandleTextualCommand( Str, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      {
+         wxLogDebug("Command %s not found", Str);
+      }
       // This sleep is not needed, but gives user a chance to see the
       // dialogs as they whizz by.
       wxMilliSleep( 200 );

@@ -260,8 +260,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    /* not virtual */ bool IsRealtimeActive();
 
    virtual bool IsHidden();
-   static void SetIdleHandler( void (*pHandler)(wxIdleEvent& event) ){mIdleHandler=pHandler;};
-
 //
 // protected virtual methods
 //
@@ -439,7 +437,6 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-   static void (*mIdleHandler)(wxIdleEvent& event);
 
    ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate; // Sample rate of the project - NEW tracks should

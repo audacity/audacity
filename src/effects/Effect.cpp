@@ -63,6 +63,7 @@ greater use in future.
 #endif
 
 #include "../Experimental.h"
+#include "../commands/ScreenshotCommand.h"
 
 static const int kDummyID = 20000;
 static const int kSaveAsID = 20001;
@@ -87,9 +88,6 @@ const wxString Effect::kUserPresetIdent = wxT("User Preset:");
 const wxString Effect::kFactoryPresetIdent = wxT("Factory Preset:");
 const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
 const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
-
-// static member variable.
-void (*Effect::mIdleHandler)(wxIdleEvent& event) = NULL;
 
 WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
 
@@ -549,12 +547,8 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   // Idle event handler is used for example to take a screenshot.
-   if( mIdleHandler != NULL ){
-      mUIDialog->Bind( wxEVT_IDLE, mIdleHandler );
-      mIdleHandler = NULL;
-      forceModal = true;
-   }
+   if( ScreenshotCommand::MayCapture( mUIDialog ) )
+      return false;
 
    if( SupportsRealtime() && !forceModal )
    {

@@ -56,6 +56,9 @@ private:
 
 public:
    static ScreenshotCommand * mpShooter;
+   static void (*mIdleHandler)(wxIdleEvent& event);
+   static void SetIdleHandler( void (*pHandler)(wxIdleEvent& event) ){mIdleHandler=pHandler;};
+   static bool MayCapture( wxDialog * pDlg );
 
    void CaptureWindowOnIdle( wxWindow * pWin );
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
