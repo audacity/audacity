@@ -169,12 +169,12 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(_("Show / Hide"));
+   S.StartStatic(_("Show"));
    {
-      S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
+      S.TieCheckBox(_("'How to Get &Help' at launch"),
                     wxT("/GUI/ShowSplashScreen"),
                     true);
-      S.TieCheckBox(_("Show e&xtra menus"),
+      S.TieCheckBox(_("E&xtra menus"),
                     wxT("/GUI/ShowExtraMenus"),
                     false);
 #ifdef EXPERIMENTAL_THEME_PREFS
@@ -192,7 +192,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
-      S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
+      S.TieCheckBox(_("Re&tain labels if selection snaps to a label"),
                     wxT("/GUI/RetainLabels"),
                     false);
       S.TieCheckBox(_("B&lend system and Audacity theme"),

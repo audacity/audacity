@@ -116,14 +116,14 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
          prefsgroups.Add(wxT("groupby:publisher"));
          prefsgroups.Add(wxT("groupby:type"));
 
-         wxChoice *c = S.TieChoice(_("Effects in menus are:"),
+         wxChoice *c = S.TieChoice(_("S&ort or Group:"),
                                    wxT("/Effects/GroupBy"),
                                    wxT("name"),
                                    visualgroups,
                                    prefsgroups);
          c->SetMinSize(c->GetBestSize());
                      
-         S.TieNumericTextBox(_("Maximum effects per group (0 to disable):"),
+         S.TieNumericTextBox(_("&Maximum effects per group (0 to disable):"),
                              wxT("/Effects/MaxPerGroup"),
 #if defined(__WXGTK__)
                              15,

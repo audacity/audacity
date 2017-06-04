@@ -60,22 +60,22 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("&Select then act on entire project, if no audio selected"),
+      S.TieCheckBox(_("A&uto-select audio for editing"),
                     wxT("/GUI/SelectAllOnNone"),
                     true);
-      /* i18n-hint: cut-lines are a lines indicating where to cut.*/
+      /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
       S.TieCheckBox(_("Enable cut &lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
-      S.TieCheckBox(_("Enable &dragging of left and right selection edges"),
+      S.TieCheckBox(_("Enable &dragging selection edges"),
                     wxT("/GUI/AdjustSelectionEdges"),
+                    true);
+      S.TieCheckBox(_("Editing a clip can &move other clips"),
+                    wxT("/GUI/EditClipCanMove"),
                     true);
       S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
                     wxT("/GUI/CircularTrackNavigation"),
                     false);
-      S.TieCheckBox(_("Editing a clip can &move other clips"),
-                    wxT("/GUI/EditClipCanMove"),
-                    true);
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
                     true);

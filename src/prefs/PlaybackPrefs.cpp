@@ -58,7 +58,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartThreeColumn();
       {
-         w = S.TieNumericTextBox(_("&Length of preview:"),
+         w = S.TieNumericTextBox(_("&Length:"),
                                  wxT("/AudioIO/EffectsPreviewLen"),
                                  6.0,
                                  9);
@@ -74,14 +74,14 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartThreeColumn();
       {
-         w = S.TieNumericTextBox(_("Preview &before cut region:"),
+         w = S.TieNumericTextBox(_("&Before cut region:"),
                                  wxT("/AudioIO/CutPreviewBeforeLen"),
                                  2.0,
                                  9);
          S.AddUnits(_("seconds"));
          w->SetName(w->GetName() + wxT(" ") + _("seconds"));
 
-         w = S.TieNumericTextBox(_("Preview &after cut region:"),
+         w = S.TieNumericTextBox(_("&After cut region:"),
                                  wxT("/AudioIO/CutPreviewAfterLen"),
                                  1.0,
                                  9);

@@ -71,26 +71,26 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Playthrough"));
    {
-      S.TieCheckBox(_("Overdub: &Play other tracks while recording new one"),
+      S.TieCheckBox(_("&Other tracks while recording"),
                     wxT("/AudioIO/Duplex"),
                     true);
 #if defined(__WXMAC__)
-      S.TieCheckBox(_("&Hardware Playthrough: Listen to input while recording or monitoring"),
+      S.TieCheckBox(_("&Hardware Playthrough of input"),
                     wxT("/AudioIO/Playthrough"),
                     false);
 #endif
-      S.TieCheckBox(_("&Software Playthrough: Listen to input while recording or monitoring"),
+      S.TieCheckBox(_("&Software Playthrough of input"),
                     wxT("/AudioIO/SWPlaythrough"),
                     false);
 #if !defined(__WXMAC__)
-      S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
+      //S.AddUnits(wxString(wxT("     ")) + _("(uncheck when recording computer playback)"));
 #endif
    }
    S.EndStatic();
 
    S.StartStatic(_("Sound Activated Recording"));
    {
-      S.TieCheckBox(_("Sound Activated &Recording"),
+      S.TieCheckBox(_("&Enable"),
                     wxT("/AudioIO/SoundActivatedRecord"),
                     false);
 
@@ -99,7 +99,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(1);
 
          int dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
-         S.TieSlider(_("Sound Activation Le&vel (dB):"),
+         S.TieSlider(_("Le&vel (dB):"),
                      wxT("/AudioIO/SilenceLevel"),
                      -50,
                      0,
