@@ -557,8 +557,10 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
 {
    auto FindRectangle = []( TrackPanel &panel, Track &t )
    {
-      // This rectangle omits the focus ring about the track
-      wxRect rect = panel.FindTrackRect( &t, true );
+      // This rectangle omits the focus ring about the track, and
+      // also within that, a narrow black border with a "shadow" below and
+      // to the right
+      wxRect rect = panel.FindTrackRect( &t, false );
 
       // Enlarge horizontally.
       // PRL:  perhaps it's one pixel too much each side, including some gray
@@ -573,7 +575,8 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
       // rectangle allotted to the track, according to Track::GetY() and
       // Track::GetHeight(), but also over the margin of the next track.)
 
-      int dy = kTopInset - 1;
+      rect.height += kBottomMargin;
+      int dy = kTopMargin - 1;
       rect.Inflate( 0, dy );
 
       // Reposition it relative to parent of panel

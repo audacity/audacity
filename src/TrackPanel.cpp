@@ -7899,8 +7899,9 @@ void TrackPanel::OnTrackMenu(Track *t)
 
       //We need to find the location of the menu rectangle.
       wxRect rect = FindTrackRect(t,true);
+      rect.Inflate(1, 1); // TODO remove this
       wxRect titleRect;
-      mTrackInfo.GetTitleBarRect(rect,titleRect);
+      mTrackInfo.GetTitleBarRect(rect, titleRect);
 
       PopupMenu(theMenu, titleRect.x + 1,
                   titleRect.y + titleRect.height + 1);
@@ -7947,7 +7948,8 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    else {
       // If no event given, pop up the menu at the same height
       // as for the track control menu
-      const wxRect rect = FindTrackRect(wt, true);
+      wxRect rect = FindTrackRect(wt, true);
+      rect.Inflate(1, 1); // TODO remove this
       wxRect titleRect;
       mTrackInfo.GetTitleBarRect(rect, titleRect);
       x = GetVRulerOffset(), y = titleRect.y + titleRect.height + 1;
@@ -9032,13 +9034,15 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 wxRect TrackPanel::FindTrackRect(Track * target, bool label)
 {
    if (!target) {
-      return wxRect(0,0,0,0);
+      return { 0, 0, 0, 0 };
    }
 
-   wxRect rect(0,
-            target->GetY() - mViewInfo->vpos,
-            GetSize().GetWidth(),
-            target->GetHeight());
+   wxRect rect{
+      0,
+      target->GetY() - mViewInfo->vpos,
+      GetSize().GetWidth(),
+      target->GetHeight()
+   };
 
    // The check for a null linked track is necessary because there's
    // a possible race condition between the time the 2 linked tracks
@@ -9048,12 +9052,14 @@ wxRect TrackPanel::FindTrackRect(Track * target, bool label)
       rect.height += target->GetLink()->GetHeight();
    }
 
-   if (label) {
-      rect.x += kLeftInset;
-      rect.width -= kLeftInset;
-      rect.y += kTopInset;
-      rect.height -= kTopInset;
-   }
+   rect.x += kLeftMargin;
+   if (label)
+      rect.width = GetVRulerOffset() - kLeftMargin;
+   else
+      rect.width -= (kLeftMargin + kRightMargin);
+
+   rect.y += kTopMargin;
+   rect.height -= (kTopMargin + kBottomMargin);
 
    return rect;
 }

@@ -563,6 +563,9 @@ protected:
    };
    virtual FoundCell FindCell(int mouseX, int mouseY);
 
+   // If label, rectangle includes track control panel only.
+   // If !label, rectangle includes all of that, and the vertical ruler, and
+   // the proper track area.
    virtual wxRect FindTrackRect(Track * target, bool label);
 
    virtual int GetVRulerWidth() const;
