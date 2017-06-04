@@ -2024,6 +2024,7 @@ wxArrayString NyquistEffect::GetNyquistSearchPath()
       wxGetApp().AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
       wxGetApp().AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);
    }
+   pathList.Add(FileNames::PlugInDir());
 
    return pathList;
 }
