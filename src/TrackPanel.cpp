@@ -7091,7 +7091,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 {
    wxRegion region = GetUpdateRegion();
 
-   wxRect clip = GetRect();
+   const wxRect clip = GetRect();
 
    wxRect panelRect = clip;
    panelRect.y = -mViewInfo->vpos;

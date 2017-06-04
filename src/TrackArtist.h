@@ -53,8 +53,8 @@ class AUDACITY_DLL_API TrackArtist {
 
    void SetColours();
    void DrawTracks(TrackList *tracks, Track *start,
-                   wxDC & dc, wxRegion & reg,
-                   wxRect & rect, wxRect & clip,
+                   wxDC & dc, const wxRegion & reg,
+                   const wxRect & rect, const wxRect & clip,
                    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                    bool drawEnvelope, bool bigPoints, bool drawSliders);
 
