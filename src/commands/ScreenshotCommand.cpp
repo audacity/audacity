@@ -555,6 +555,36 @@ wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &b
 
 bool ScreenshotCommand::Apply(CommandExecutionContext context)
 {
+   auto FindRectangle = []( TrackPanel &panel, Track &t )
+   {
+      // This rectangle omits the focus ring about the track
+      wxRect rect = panel.FindTrackRect( &t, true );
+
+      // Enlarge horizontally.
+      // PRL:  perhaps it's one pixel too much each side, including some gray
+      // beyond the yellow?
+      rect.x = 0;
+      panel.GetClientSize(&rect.width, nullptr);
+
+      // Enlarge vertically, enough to enclose the yellow focus border pixels
+      // Omit the outermost ring of gray pixels
+
+      // (Note that TrackPanel paints its focus over the "top margin" of the
+      // rectangle allotted to the track, according to Track::GetY() and
+      // Track::GetHeight(), but also over the margin of the next track.)
+
+      int dy = kTopInset - 1;
+      rect.Inflate( 0, dy );
+
+      // Reposition it relative to parent of panel
+      rect.SetPosition(
+         panel.GetParent()->ScreenToClient(
+            panel.ClientToScreen(
+               rect.GetPosition())));
+
+      return rect;
+   };
+
    // Read the parameters that were passed in
    wxString filePath    = GetString(wxT("FilePath"));
    wxString captureMode = GetString(wxT("CaptureMode"));
@@ -739,17 +769,8 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
       if (!t) {
          return false;
       }
-      wxRect r = panel->FindTrackRect(t, true);
-
-      int x = 0, y = r.y - 3;
-      int width, height;
-
-      panel->ClientToScreen(&x, &y);
-      panel->GetParent()->ScreenToClient(&x, &y);
-      panel->GetClientSize(&width, &height);
-
-      Capture(fileName, panel, x, y, width, r.height + 6);
-
+      wxRect r = FindRectangle( *panel, *t );
+      Capture(fileName, panel, r.x, r.y, r.width, r.height);
    }
    else if (captureMode.IsSameAs(wxT("secondtrack")))
    {
@@ -766,16 +787,8 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
       if (!t) {
          return false;
       }
-      wxRect r = panel->FindTrackRect(t, true);
-
-      int x = 0, y = r.y - 3;
-      int width, height;
-
-      panel->ClientToScreen(&x, &y);
-      panel->GetParent()->ScreenToClient(&x, &y);
-      panel->GetClientSize(&width, &height);
-
-      Capture(fileName, panel, x, y, width, r.height + 6);
+      wxRect r = FindRectangle( *panel, *t );
+      Capture(fileName, panel, r.x, r.y, r.width, r.height);
    }
    else
    {
