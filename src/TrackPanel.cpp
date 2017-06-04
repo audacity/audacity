@@ -4348,7 +4348,7 @@ void TrackPanel::HandleWaveTrackVZoom
    // Assume linked track is wave or null
    const auto partner = static_cast<WaveTrack *>(track->GetLink());
    int height = track->GetHeight() - (kTopMargin + kBottomMargin);
-   int ypos = rect.y + kBorderThickness;
+   int ypos = rect.y;
 
    // Ensure start and end are in order (swap if not).
    if (zoomEnd < zoomStart)
@@ -8954,7 +8954,8 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
    }
 
    auto output = [&](Track *pTrack) -> FoundCell {
-      // If label or vruler, resulting rectangle OMITS left and top insets.
+      // If label, resulting rectangle OMITS left and top insets.
+      // If ruler, resulting rectangle OMITS top margin.
       // If track, resulting rectangle INCLUDES right and top insets.
       if (pTrack) {
          rect.y -= kTopInset;
@@ -8966,8 +8967,8 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
                rect.height -= kTopInset;
                break;
             case CellType::VRuler:
-               rect.y += kTopInset;
-               rect.height -= kTopInset;
+               rect.y += kTopMargin;
+               rect.height -= kTopMargin;
                break;
             case CellType::Track:
             default:
