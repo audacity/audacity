@@ -118,10 +118,10 @@ private:
    void GetTitleBarRect(const wxRect & rect, wxRect &dest) const;
    void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
                         const Track *pTrack) const;
-   void GetGainRect(const wxRect & rect, wxRect &dest) const;
-   void GetPanRect(const wxRect & rect, wxRect &dest) const;
+   void GetGainRect(const wxPoint & topLeft, wxRect &dest) const;
+   void GetPanRect(const wxPoint & topLeft, wxRect &dest) const;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void GetVelocityRect(const wxRect & rect, wxRect &dest) const;
+   void GetVelocityRect(const wxPoint & topLeft, wxRect &dest) const;
 #endif
    void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;

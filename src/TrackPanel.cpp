@@ -5383,7 +5383,7 @@ bool TrackPanel::GainFunc(Track * t, wxRect rect, wxMouseEvent &event,
                           int x, int y)
 {
    wxRect sliderRect;
-   mTrackInfo.GetGainRect(rect, sliderRect);
+   mTrackInfo.GetGainRect(rect.GetTopLeft(), sliderRect);
    if (!sliderRect.Contains(x, y))
       return false;
 
@@ -5398,7 +5398,7 @@ bool TrackPanel::PanFunc(Track * t, wxRect rect, wxMouseEvent &event,
                          int x, int y)
 {
    wxRect sliderRect;
-   mTrackInfo.GetPanRect(rect, sliderRect);
+   mTrackInfo.GetPanRect(rect.GetTopLeft(), sliderRect);
    if (!sliderRect.Contains(x, y))
       return false;
 
@@ -5414,7 +5414,7 @@ bool TrackPanel::VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
    int x, int y)
 {
    wxRect sliderRect;
-   mTrackInfo.GetVelocityRect(rect, sliderRect);
+   mTrackInfo.GetVelocityRect(rect.GetTopLeft(), sliderRect);
    if (!sliderRect.Contains(x, y))
       return false;
 
@@ -9137,9 +9137,9 @@ TrackInfo::~TrackInfo()
 }
 
 void TrackInfo::ReCreateSliders(){
-   wxRect rect(0, 0, 1000, 1000);
+   wxPoint point{ 0, 0 };
    wxRect sliderRect;
-   GetGainRect(rect, sliderRect);
+   GetGainRect(point, sliderRect);
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
@@ -9155,7 +9155,7 @@ void TrackInfo::ReCreateSliders(){
                                 DB_SLIDER);
    mGainCaptured->SetDefaultValue(defPos);
 
-   GetPanRect(rect, sliderRect);
+   GetPanRect(point, sliderRect);
 
    defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
@@ -9172,7 +9172,7 @@ void TrackInfo::ReCreateSliders(){
    mPanCaptured->SetDefaultValue(defPos);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   GetVelocityRect(rect, sliderRect);
+   GetVelocityRect(point, sliderRect);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
    mVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
@@ -9296,25 +9296,25 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 }
 
-void TrackInfo::GetGainRect(const wxRect & rect, wxRect & dest) const
+void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
 {
-   dest.x = rect.x + 7;
-   dest.y = rect.y + CalcItemY( kItemGain );
+   dest.x = topleft.x + 7;
+   dest.y = topleft.y + CalcItemY( kItemGain );
    dest.width = 84;
    dest.height = 25;
 }
 
-void TrackInfo::GetPanRect(const wxRect & rect, wxRect & dest) const
+void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
 {
-   GetGainRect( rect, dest );
-   dest.y = rect.y + CalcItemY( kItemPan );
+   GetGainRect( topleft, dest );
+   dest.y = topleft.y + CalcItemY( kItemPan );
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::GetVelocityRect(const wxRect & rect, wxRect & dest) const
+void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 {
-   dest.x = rect.x + 7;
-   dest.y = rect.y + 100;
+   dest.x = topleft.x + 7;
+   dest.y = topleft.y + 100;
    dest.width = 84;
    dest.height = 25;
 }
@@ -9592,12 +9592,12 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) 
    // Larger slidermargin means it disappears sooner on collapsing track.
    const int sliderMargin = 14;
 
-   GetGainRect(rect, sliderRect);
+   GetGainRect(rect.GetTopLeft(), sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       GainSlider(t, captured)->OnPaint(*dc);
    }
 
-   GetPanRect(rect, sliderRect);
+   GetPanRect(rect.GetTopLeft(), sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - sliderMargin) {
       PanSlider(t, captured)->OnPaint(*dc);
    }
@@ -9608,7 +9608,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 {
    wxRect sliderRect;
 
-   GetVelocityRect(rect, sliderRect);
+   GetVelocityRect(rect.GetTopLeft(), sliderRect);
    if (sliderRect.y + sliderRect.height < rect.y + rect.height - 19) {
       VelocitySlider(t, captured)->OnPaint(*dc);
    }
@@ -9618,9 +9618,10 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
    // PRL:  Add the inset, but why not also the border?
-   wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
+   wxPoint topLeft{
+      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
    wxRect sliderRect;
-   GetGainRect(rect, sliderRect);
+   GetGainRect(topLeft, sliderRect);
 
    wxPoint pos = sliderRect.GetPosition();
    float gain = t->GetGain();
@@ -9636,9 +9637,10 @@ LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 {
    // PRL:  Add the inset, but why not also the border?
-   wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
+   wxPoint topLeft{
+      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
    wxRect sliderRect;
-   GetPanRect(rect, sliderRect);
+   GetPanRect(topLeft, sliderRect);
 
    wxPoint pos = sliderRect.GetPosition();
    float pan = t->GetPan();
@@ -9655,9 +9657,10 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
 {
    // PRL:  Add the inset, but why not also the border?
-   wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
+   wxPoint topLeft{
+      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
    wxRect sliderRect;
-   GetVelocityRect(rect, sliderRect);
+   GetVelocityRect(topLeft, sliderRect);
 
    wxPoint pos = sliderRect.GetPosition();
    float velocity = t->GetVelocity();
