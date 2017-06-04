@@ -4289,12 +4289,18 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    // which we then return
    if (mCapturedTrack->GetKind() == Track::Note) {
       NoteTrack *nt = (NoteTrack *) mCapturedTrack;
+      const wxRect rect{
+         GetLeftOffset(),
+         mCapturedTrack->GetY() + kTopMargin,
+         GetSize().GetWidth() - GetLeftOffset(),
+         mCapturedTrack->GetHeight() - (kTopMargin + kBottomMargin)
+      };
       if (IsDragZooming()) {
-         nt->ZoomTo(mZoomStart, mZoomEnd);
+         nt->ZoomTo(rect, mZoomStart, mZoomEnd);
       } else if (event.ShiftDown() || event.RightUp()) {
-         nt->ZoomOut(mZoomEnd);
+         nt->ZoomOut(rect, mZoomEnd);
       } else {
-         nt->ZoomIn(mZoomEnd);
+         nt->ZoomIn(rect, mZoomEnd);
       }
       mZoomEnd = mZoomStart = 0;
       Refresh(false);
@@ -9611,6 +9617,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
+   // PRL:  Add the inset, but why not also the border?
    wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
    wxRect sliderRect;
    GetGainRect(rect, sliderRect);
@@ -9628,6 +9635,7 @@ LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 
 LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 {
+   // PRL:  Add the inset, but why not also the border?
    wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
    wxRect sliderRect;
    GetPanRect(rect, sliderRect);
@@ -9646,6 +9654,7 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 #ifdef EXPERIMENTAL_MIDI_OUT
 LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
 {
+   // PRL:  Add the inset, but why not also the border?
    wxRect rect(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
    wxRect sliderRect;
    GetVelocityRect(rect, sliderRect);

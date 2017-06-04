@@ -121,10 +121,10 @@ class AUDACITY_DLL_API NoteTrack final
    int GetBottomNote() const { return mBottomNote; }
    int GetPitchHeight() const { return mPitchHeight; }
    void SetPitchHeight(int h) { mPitchHeight = h; }
-   void ZoomOut(int y) { Zoom(y, -1); }
-   void ZoomIn(int y) { Zoom(y, 1); }
-   void Zoom(int centerY, int amount);
-   void ZoomTo(int start, int end);
+   void ZoomOut(const wxRect &rect, int y) { Zoom(rect, y, -1); }
+   void ZoomIn(const wxRect &rect, int y) { Zoom(rect, y, 1); }
+   void Zoom(const wxRect &rect, int centerY, int amount);
+   void ZoomTo(const wxRect &rect, int start, int end);
    int GetNoteMargin() const { return (mPitchHeight + 1) / 2; }
    int GetOctaveHeight() const { return mPitchHeight * 12 + 2; }
    // call this once before a series of calls to IPitchToY(). It

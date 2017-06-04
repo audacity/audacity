@@ -2009,7 +2009,8 @@ Track *AudacityProject::GetFirstVisible()
       for (Track *t = iter.First(); t; t = iter.Next()) {
          int y = t->GetY();
          int h = t->GetHeight();
-         if (y >= mViewInfo.vpos || y + h >= mViewInfo.vpos) {
+         if (y + h - 1 >= mViewInfo.vpos) {
+            // At least the bottom row of pixels is not scrolled away above
             mViewInfo.track = t;
             break;
          }
@@ -2028,8 +2029,8 @@ void AudacityProject::UpdateFirstVisible()
    Track *t = mViewInfo.track;
    mViewInfo.track = NULL;
 
-   if (t->GetY() > mViewInfo.vpos) {
-      while (t && t->GetY() > mViewInfo.vpos) {
+   if (t->GetY() >= mViewInfo.vpos) {
+      while (t && t->GetY() >= mViewInfo.vpos) {
          t = mTracks->GetPrev(t);
       }
    }
@@ -2037,7 +2038,8 @@ void AudacityProject::UpdateFirstVisible()
    while (t) {
       int y = t->GetY();
       int h = t->GetHeight();
-      if (y >= mViewInfo.vpos || y + h >= mViewInfo.vpos) {
+      if (y + h - 1 >= mViewInfo.vpos) {
+         // At least the bottom row of pixels is not scrolled away above
          mViewInfo.track = t;
          return;
       }

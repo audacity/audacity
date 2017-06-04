@@ -907,26 +907,26 @@ void NoteTrack::VScroll(int start, int end)
 
 // Zoom the note track, centering the pitch at centerY,
 // amount is 1 for zoom in, and -1 for zoom out
-void NoteTrack::Zoom(int centerY, int amount)
+void NoteTrack::Zoom(const wxRect &rect, int centerY, int amount)
 {
    // Construct track rectangle to map pitch to screen coordinates
    // Only y and height are needed:
-   wxRect trackRect(0, GetY(), 1, GetHeight());
+   wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
    PrepareIPitchToY(trackRect);
    int centerPitch = YToIPitch(centerY);
    // zoom out by changing the pitch height -- a small integer
    mPitchHeight += amount;
    if (mPitchHeight <= 0) mPitchHeight = 1;
    PrepareIPitchToY(trackRect); // update because mPitchHeight changed
-   int newCenterPitch = YToIPitch(GetY() + GetHeight() / 2);
+   int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
    // center the pitch that the user clicked on
    SetBottomNote(mBottomNote + (centerPitch - newCenterPitch));
 }
 
 
-void NoteTrack::ZoomTo(int start, int end)
+void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
 {
-   wxRect trackRect(0, GetY(), 1, GetHeight());
+   wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
    PrepareIPitchToY(trackRect);
    int topPitch = YToIPitch(start);
    int botPitch = YToIPitch(end);
@@ -934,7 +934,7 @@ void NoteTrack::ZoomTo(int start, int end)
       int temp = topPitch; topPitch = botPitch; botPitch = temp;
    }
    if (topPitch == botPitch) { // can't divide by zero, do something else
-      Zoom(start, 1);
+      Zoom(rect, start, 1);
       return;
    }
    int trialPitchHeight = trackRect.height / (topPitch - botPitch);
@@ -943,7 +943,7 @@ void NoteTrack::ZoomTo(int start, int end)
    } else if (trialPitchHeight == 0) {
       trialPitchHeight = 1;
    }
-   Zoom((start + end) / 2, trialPitchHeight - mPitchHeight);
+   Zoom(rect, (start + end) / 2, trialPitchHeight - mPitchHeight);
 }
 
 int NoteTrack::YToIPitch(int y)

@@ -122,10 +122,11 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
             if (MONO_WAVE_PAN(pTrack)){
-               auto y = pTrack->GetY(true) - viewInfo.vpos + 1;
-               auto top = y + kTopInset;
-               auto bottom = y + pTrack->GetHeight(true) - kTopInset;
-               AColor::Line(dc, mLastCursorX, top, mLastCursorX, bottom);
+               auto y = pTrack->GetY(true) - viewInfo.vpos;
+               auto top = y + kTopMargin;
+               auto height = pTrack->GetHeight(true) - (kTopMargin + kBottomMargin);
+               // - 1 because AColor::Line is inclusive of endpoint
+               AColor::Line(dc, mLastCursorX, top, mLastCursorX, top + height - 1);
             }
 #endif
 
