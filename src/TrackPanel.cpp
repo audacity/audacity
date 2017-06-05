@@ -5186,6 +5186,8 @@ enum : unsigned {
    kItemSolo             = 1 << 3,
    kItemGain             = 1 << 4,
    kItemPan              = 1 << 5,
+   kItemVelocity         = 1 << 6,
+   kItemMidiControlsRect = 1 << 7,
 };
 
 struct TCPLine {
@@ -5236,6 +5238,8 @@ const TCPLine waveTrackTCPLines[] = {
 const TCPLine noteTrackTCPLines[] = {
    COMMON_ITEMS(0)
    MUTE_SOLO_ITEMS(0)
+   { kItemMidiControlsRect, kMidiCellHeight * 4, 0 },
+   { kItemVelocity, kTrackInfoSliderHeight, 5 },
    { 0, 0, 0 }
 };
 
@@ -9365,9 +9369,10 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
 void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 {
    dest.x = topleft.x + 7;
-   dest.y = topleft.y + 100;
+   auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
+   dest.y = topleft.y + results.first;
    dest.width = 84;
-   dest.height = 25;
+   dest.height = results.second;
 }
 #endif
 
@@ -9394,8 +9399,9 @@ void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + 2; // To center slightly
    dest.width = kMidiCellWidth * 4;
-   dest.y = rect.y + 34;
-   dest.height = kMidiCellHeight * 4;
+   auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
+   dest.y = rect.y + results.first;
+   dest.height = results.second;
 }
 #endif
 
