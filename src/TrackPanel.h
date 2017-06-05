@@ -584,8 +584,7 @@ protected:
 
    virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
                            const wxRect & clip);
-   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
-                    const wxRect &trackRect);
+   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
    virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);

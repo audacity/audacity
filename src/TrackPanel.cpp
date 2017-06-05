@@ -7294,16 +7294,16 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
       // (and thus would have been skipped by VisibleTrackIterator) we need to
       // draw that track's border instead.
       Track *borderTrack = t;
-      wxRect borderRect = rect, borderTrackRect = trackRect;
+      wxRect borderRect = rect;
 
       if (l && !t->GetLinked() && trackRect.y < 0)
       {
          borderTrack = l;
 
-         borderTrackRect.y = l->GetY() - mViewInfo->vpos;
-         borderTrackRect.height = l->GetHeight();
+         borderRect = trackRect;
+         borderRect.y = l->GetY() - mViewInfo->vpos;
+         borderRect.height = l->GetHeight();
 
-         borderRect = borderTrackRect;
          borderRect.height += t->GetHeight();
       }
 
@@ -7311,7 +7311,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          if (mAx->IsFocused(t)) {
             focusRect = borderRect;
          }
-         DrawOutside(borderTrack, dc, borderRect, borderTrackRect);
+         DrawOutside(borderTrack, dc, borderRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -7420,8 +7420,7 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
    dc->DrawRectangle(rect);
 }
 
-void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
-                             const wxRect & trackRect)
+void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    wxRect rect = rec;
    int labelw = GetLabelWidth();
