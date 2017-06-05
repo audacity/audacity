@@ -5218,7 +5218,7 @@ struct TCPLine {
       { kItemBarButtons, kTrackInfoBtnSize, extra },
    #define STATUS_ITEMS \
       { kItemStatusInfo1, 12, 4 }, \
-      { kItemStatusInfo2, 12, 4 },
+      { kItemStatusInfo2, 12, 2 },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
 
@@ -5233,7 +5233,7 @@ const TCPLine commonTrackTCPLines[] = {
 };
 
 const TCPLine waveTrackTCPLines[] = {
-   COMMON_ITEMS(0)
+   COMMON_ITEMS(2)
    STATUS_ITEMS
    MUTE_SOLO_ITEMS(2)
    { kItemGain, kTrackInfoSliderHeight, 5 },
