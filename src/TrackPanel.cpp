@@ -5188,6 +5188,8 @@ enum : unsigned {
    kItemPan              = 1 << 5,
    kItemVelocity         = 1 << 6,
    kItemMidiControlsRect = 1 << 7,
+   kItemMinimize         = 1 << 8,
+   kItemSyncLock         = 1 << 9,
 };
 
 struct TCPLine {
@@ -5266,6 +5268,26 @@ std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
       ++pLines;
    }
    return { y, pLines->height };
+}
+
+// Items for the bottom of the panel, listed bottom-upwards
+// As also with the top items, the extra space is below the item
+const TCPLine commonTrackTCPBottomLines[] = {
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 1 },
+   { 0, 0, 0 }
+};
+
+// return y value and height
+std::pair< int, int > CalcBottomItemY
+   ( const TCPLine *pLines, unsigned iItem, int height )
+{
+   int y = height;
+   while ( pLines->items &&
+           0 == (pLines->items & iItem) ) {
+      y -= pLines->height + pLines->extraSpace;
+      ++pLines;
+   }
+   return { y - (pLines->height + pLines->extraSpace ), pLines->height };
 }
 
 }
@@ -7377,7 +7399,6 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
    dc->DrawRectangle(rect);
 }
 
-
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                              const wxRect & trackRect)
 {
@@ -9380,18 +9401,22 @@ void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
    dest.x = rect.x + 4;
-   dest.y = rect.y + rect.height - 19;
+   auto results = CalcBottomItemY
+      ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
+   dest.y = rect.y + results.first;
    // Width is kTrackInfoWidth less space on left for track select and on right for sync-lock icon.
    dest.width = kTrackInfoWidth - (1.2 * kBlankWidth);
-   dest.height = kTrackInfoBtnSize;
+   dest.height = results.second;
 }
 
 void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 {
    dest.x = rect.x + kTrackInfoWidth - kTrackInfoBtnSize - 4; // to right of minimize button
-   dest.y = rect.y + rect.height - 19;
+   auto results = CalcBottomItemY
+      ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
+   dest.y = rect.y + results.first;
    dest.width = kTrackInfoBtnSize;
-   dest.height = kTrackInfoBtnSize;
+   dest.height = results.second;
 }
 
 #ifdef USE_MIDI
