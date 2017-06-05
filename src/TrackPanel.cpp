@@ -7475,7 +7475,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
                      true);
    }
 
-   //mTrackInfo.DrawBordersWithin( dc, rect, bIsWave );
+   //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 
    auto wt = bIsWave ? static_cast<WaveTrack*>(t) : nullptr;
    if (bIsWave) {
@@ -7509,12 +7509,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 
       if ( !HideTopItem( rect, midiRect ) )
          static_cast<NoteTrack *>(t)->DrawLabelControls(*dc, midiRect);
-      // Draw some lines for MuteSolo buttons (normally handled by DrawBordersWithin but not done for note tracks)
-      if (rect.height > 48) {
-         // Note: offset up by 34 units
-         AColor::Line(*dc, rect.x + 48, rect.y + 16, rect.x + 48, rect.y + 32);    // between mute/solo
-         AColor::Line(*dc, rect.x, rect.y + 32, kTrackInfoWidth, rect.y + 32);   // below mute/solo
-      }
       mTrackInfo.DrawMuteSolo(dc, rect, t,
             (captured && mMouseCapture == IsMuting), false, HasSoloButton());
       mTrackInfo.DrawMuteSolo(dc, rect, t,
@@ -9455,30 +9449,55 @@ void TrackInfo::SetTrackInfoFont(wxDC * dc) const
    dc->SetFont(mFont);
 }
 
-void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & rect, bool bHasMuteSolo) const
+void TrackInfo::DrawBordersWithin
+   ( wxDC* dc, const wxRect & rect, const Track &track ) const
 {
    AColor::Dark(dc, false); // same color as border of toolbars (ToolBar::OnPaint())
 
    // below close box and title bar
-   AColor::Line(*dc, rect.x, rect.y + kTrackInfoBtnSize, kTrackInfoWidth, rect.y + kTrackInfoBtnSize);
+   wxRect buttonRect;
+   GetTitleBarRect( rect, buttonRect );
+   AColor::Line
+      (*dc, rect.x,          buttonRect.y + buttonRect.height,
+            kTrackInfoWidth, buttonRect.y + buttonRect.height);
 
    // between close box and title bar
-   AColor::Line(*dc, rect.x + kTrackInfoBtnSize, rect.y, rect.x + kTrackInfoBtnSize, rect.y + kTrackInfoBtnSize);
+   AColor::Line
+      (*dc, buttonRect.x, buttonRect.y,
+            buttonRect.x, buttonRect.y + buttonRect.height);
 
-   if( bHasMuteSolo && (rect.height > (66+18) ))
+   GetMuteSoloRect( rect, buttonRect, false, true, &track );
+
+   bool bHasMuteSolo = dynamic_cast<const PlayableTrack*>( &track );
+   if( bHasMuteSolo && !HideTopItem( rect, buttonRect ) )
    {
-      AColor::Line(*dc, rect.x, rect.y + 50, kTrackInfoWidth, rect.y + 50);   // above mute/solo
-      AColor::Line(*dc, rect.x + 48 , rect.y + 50, rect.x + 48, rect.y + 66);    // between mute/solo
-      AColor::Line(*dc, rect.x, rect.y + 66, kTrackInfoWidth, rect.y + 66);   // below mute/solo
+      // above mute/solo
+      AColor::Line
+         (*dc, rect.x,          buttonRect.y,
+               kTrackInfoWidth, buttonRect.y);
+
+      // between mute/solo
+      // Draw this little line; if there is no solo, wide mute button will
+      // overpaint it later:
+      AColor::Line
+         (*dc, buttonRect.x + buttonRect.width, buttonRect.y,
+               buttonRect.x + buttonRect.width, buttonRect.y + buttonRect.height);
+
+      // below mute/solo
+      AColor::Line
+         (*dc, rect.x,          buttonRect.y + buttonRect.height,
+               kTrackInfoWidth, buttonRect.y + buttonRect.height);
    }
 
    // left of and above minimize button
    wxRect minimizeRect;
    this->GetMinimizeRect(rect, minimizeRect);
-   AColor::Line(*dc, minimizeRect.x - 1, minimizeRect.y,
-                  minimizeRect.x - 1, minimizeRect.y + minimizeRect.height);
-   AColor::Line(*dc, minimizeRect.x, minimizeRect.y - 1,
-                  minimizeRect.x + minimizeRect.width, minimizeRect.y - 1);
+   AColor::Line
+      (*dc, minimizeRect.x - 1, minimizeRect.y,
+            minimizeRect.x - 1, minimizeRect.y + minimizeRect.height);
+   AColor::Line
+      (*dc, minimizeRect.x,                      minimizeRect.y - 1,
+            minimizeRect.x + minimizeRect.width, minimizeRect.y - 1);
 }
 
 //#define USE_BEVELS

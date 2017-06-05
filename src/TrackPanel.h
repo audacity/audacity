@@ -89,7 +89,7 @@ private:
 
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
-   void DrawBordersWithin(wxDC * dc, const wxRect & rect, bool bHasMuteSolo ) const;
+   void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
    void DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
