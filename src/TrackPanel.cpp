@@ -5181,7 +5181,7 @@ namespace {
 enum : unsigned {
    // The sequence is not significant, just keep bits distinct
    kItemBarButtons       = 1 << 0,
-   kItemStatusInfo       = 1 << 1,
+   kItemStatusInfo1      = 1 << 1,
    kItemMute             = 1 << 2,
    kItemSolo             = 1 << 3,
    kItemGain             = 1 << 4,
@@ -5190,6 +5190,7 @@ enum : unsigned {
    kItemMidiControlsRect = 1 << 7,
    kItemMinimize         = 1 << 8,
    kItemSyncLock         = 1 << 9,
+   kItemStatusInfo2      = 1 << 10,
 
    kHighestBottomItem = kItemMinimize,
 };
@@ -5216,7 +5217,8 @@ struct TCPLine {
    #define TITLE_ITEMS(extra) \
       { kItemBarButtons, kTrackInfoBtnSize, extra },
    #define STATUS_ITEMS \
-      { kItemStatusInfo, 32, 0 },
+      { kItemStatusInfo1, 12, 4 }, \
+      { kItemStatusInfo2, 12, 4 },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
 
@@ -7488,16 +7490,24 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
 #ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
 
-         int offset = 8;
-         if (rect.y + 22 + 12 < rec.y + rec.height - 19)
+         int offset = 4;
+         auto pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo1 );
+         wxRect textRect {
+            rect.x + offset, rect.y + pair.first,
+            rect.width, pair.second
+         };
+         if ( !HideTopItem( rect, textRect ) )
             dc->DrawText(TrackSubText(wt),
-                         trackRect.x + offset,
-                         trackRect.y + 22);
+                         textRect.x, textRect.y);
 
-         if (rect.y + 38 + 12 < rec.y + rec.height - 19)
+         pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo2 );
+         textRect = {
+            rect.x + offset, rect.y + pair.first,
+            rect.width, pair.second
+         };
+         if ( !HideTopItem( rect, textRect ) )
             dc->DrawText(GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
-                         trackRect.x + offset,
-                         trackRect.y + 38);
+                         textRect.x, textRect.y );
       }
 #endif
    }
