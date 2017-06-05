@@ -5176,6 +5176,96 @@ void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
    OnTrackMenu();
 }
 
+namespace {
+
+enum : unsigned {
+   // The sequence is not significant, just keep bits distinct
+   kItemBarButtons       = 1 << 0,
+   kItemStatusInfo       = 1 << 1,
+   kItemMute             = 1 << 2,
+   kItemSolo             = 1 << 3,
+   kItemGain             = 1 << 4,
+   kItemPan              = 1 << 5,
+};
+
+struct TCPLine {
+   unsigned items; // a bitwise OR of values of the enum above
+   int height;
+   int extraSpace;
+};
+
+#ifdef EXPERIMENTAL_DA
+
+   #define TITLE_ITEMS(extra) \
+      { kItemBarButtons, kTrackInfoBtnSize, 4 },
+   // DA: Does not have status information for a track.
+   #define STATUS_ITEMS
+   // DA: Has Mute and Solo on separate lines.
+   #define MUTE_SOLO_ITEMS(extra) \
+      { kItemMute, kTrackInfoBtnSize + 1, 1 }, \
+      { kItemSolo, kTrackInfoBtnSize + 1, extra },
+
+#else
+
+   #define TITLE_ITEMS(extra) \
+      { kItemBarButtons, kTrackInfoBtnSize, extra },
+   #define STATUS_ITEMS \
+      { kItemStatusInfo, 32, 0 },
+   #define MUTE_SOLO_ITEMS(extra) \
+      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
+
+#endif
+
+#define COMMON_ITEMS(extra) \
+   TITLE_ITEMS(extra)
+
+const TCPLine commonTrackTCPLines[] = {
+   COMMON_ITEMS(0)
+   { 0, 0, 0 }
+};
+
+const TCPLine waveTrackTCPLines[] = {
+   COMMON_ITEMS(0)
+   STATUS_ITEMS
+   MUTE_SOLO_ITEMS(2)
+   { kItemGain, kTrackInfoSliderHeight, 5 },
+   { kItemPan, kTrackInfoSliderHeight, 5 },
+   { 0, 0, 0 }
+};
+
+const TCPLine noteTrackTCPLines[] = {
+   COMMON_ITEMS(0)
+   MUTE_SOLO_ITEMS(0)
+   { 0, 0, 0 }
+};
+
+const TCPLine *getTCPLines( const Track &track )
+{
+#ifdef USE_MIDI
+   if ( track.GetKind() == Track::Note )
+      return noteTrackTCPLines;
+#endif
+
+   if ( track.GetKind() == Track::Wave )
+      return waveTrackTCPLines;
+
+   return commonTrackTCPLines;
+}
+
+// return y value and height
+std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
+{
+   int y = 1;
+   while ( pLines->items &&
+           0 == (pLines->items & iItem) ) {
+      y += pLines->height + pLines->extraSpace;
+      ++pLines;
+   }
+   return { y, pLines->height };
+}
+
+}
+
 /// This handles when the user clicks on the "Label" area
 /// of a track, ie the part with all the buttons and the drop
 /// down menu, etc.
@@ -9201,83 +9291,35 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
-int TrackInfo::CalcItemY( int iItem ) const
-{
-   int y = 1;
-   if( iItem == kItemBarButtons )
-      return y;
-   y+= kTrackInfoBtnSize +2;
-   if( iItem == kItemStatusInfo )
-      return y;
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   int y1=y;
-   if( iItem == kItemNoteMute )
-      return y;
-   if( iItem == kItemNoteSolo )
-      return y;
-   y=y1;
-#endif
-
-// DA: Does not have status information for a track.
-#ifndef EXPERIMENTAL_DA 
-   y+= 30;
-#else
-   y+= 2;
-#endif
-
-   if( iItem == kItemMute )
-      return y;
-
-// DA: Has Mute and Solo on separate lines.
-#ifdef EXPERIMENTAL_DA 
-   y+= kTrackInfoBtnSize + 2;
-#endif
-
-   if( iItem == kItemSolo )
-      return y;
-   y+= kTrackInfoBtnSize + 3;
-
-   if( iItem == kItemGain )
-      return y;
-   y+= 30;
-   if( iItem == kItemPan )
-      return y;
-   y+= 30;
-   return y;
-}
-
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x+1;
-   dest.y = rect.y + CalcItemY( kItemBarButtons );
+   auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
+   dest.y = rect.y + results.first;
    dest.width = kTrackInfoBtnSize;
-   dest.height = kTrackInfoBtnSize;
+   dest.height = results.second;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + kTrackInfoBtnSize+2; // to right of CloseBoxRect
-   dest.y = rect.y + CalcItemY( kItemBarButtons );
+   auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
+   dest.y = rect.y + results.first;
    dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
-   dest.height = kTrackInfoBtnSize;
+   dest.height = results.second;
 }
 
 void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
 {
 
-   dest.height = kTrackInfoBtnSize +1;
    dest.x = rect.x+1;
 
-   int MuteSoloType = 0;
+   auto resultsM = CalcItemY( getTCPLines( *pTrack ), kItemMute );
+   auto resultsS = CalcItemY( getTCPLines( *pTrack ), kItemSolo );
+   dest.height = resultsS.second;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   if (pTrack->GetKind() == Track::Note)
-      MuteSoloType = kItemNoteMute - kItemMute;
-#endif
-
-   int yMute = CalcItemY( kItemMute + MuteSoloType );
-   int ySolo = CalcItemY( kItemSolo + MuteSoloType );
+   int yMute = resultsM.first;
+   int ySolo = resultsS.first;
 
    bool bSameRow = ( yMute == ySolo );
    bool bNarrow = bSameRow && bHasSoloButton;
@@ -9306,15 +9348,17 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
 {
    dest.x = topleft.x + 7;
-   dest.y = topleft.y + CalcItemY( kItemGain );
+   auto results = CalcItemY( waveTrackTCPLines, kItemGain );
+   dest.y = topleft.y + results.first;
    dest.width = 84;
-   dest.height = 25;
+   dest.height = results.second;
 }
 
 void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
 {
    GetGainRect( topleft, dest );
-   dest.y = topleft.y + CalcItemY( kItemPan );
+   auto results = CalcItemY( waveTrackTCPLines, kItemPan );
+   dest.y = topleft.y + results.first;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT

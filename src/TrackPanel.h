@@ -76,17 +76,6 @@ enum {
    kTimerInterval = 50, // milliseconds
 };
 
-enum {
-   kItemBarButtons = 0,
-   kItemStatusInfo = 1,
-   kItemMute = 2,
-   kItemSolo = 3,
-   kItemNoteMute = 4,
-   kItemNoteSolo = 5,
-   kItemGain = 6,
-   kItemPan = 7,
-};
-
 class AUDACITY_DLL_API TrackInfo
 {
 public:
@@ -95,7 +84,6 @@ public:
    void ReCreateSliders();
 
 private:
-   int CalcItemY( int iItem ) const;
    int GetTrackInfoWidth() const;
    void SetTrackInfoFont(wxDC *dc) const;
 
@@ -934,7 +922,8 @@ enum : int {
 
 enum : int {
    kTrackInfoWidth = 100,
-   kTrackInfoBtnSize = 18 // widely used dimension, usually height
+   kTrackInfoBtnSize = 18, // widely used dimension, usually height
+   kTrackInfoSliderHeight = 25,
 };
 
 #ifdef USE_MIDI
