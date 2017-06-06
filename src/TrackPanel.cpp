@@ -231,7 +231,8 @@ but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindCell() for label returns a rectangle that OMITS left and top insets
+FindCell() for label returns a rectangle that OMITS left, top, and bottom
+margins
 
 FindCell() for vruler returns a rectangle up to and including the One Pixel
 column, and OMITS top and bottom margins
@@ -1760,7 +1761,7 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    // (Add margin back to bottom of the rectangle)
    if (within(event.m_y,
               (trackRect.GetBottom()
-                  + (foundCell.type == CellType::VRuler ? kBottomMargin : 0) ),
+                  + (foundCell.type != CellType::Track ? kBottomMargin : 0) ),
               TRACK_RESIZE_REGION))
    {
       SetCursorAndTipWhenInVResizeArea(
@@ -5274,7 +5275,7 @@ const TCPLine *getTCPLines( const Track &track )
 // return y value and height
 std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
 {
-   int y = 1;
+   int y = 0;
    while ( pLines->items &&
            0 == (pLines->items & iItem) ) {
       y += pLines->height + pLines->extraSpace;
@@ -5286,7 +5287,9 @@ std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
 const TCPLine commonTrackTCPBottomLines[] = {
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 1 },
+   // PRL:  -1!!  This preserves present 2.2.0 behavior.  The increase of
+   // kTrackInfoBtnSize by 2 made the button impinge on the border of TCP.
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, -1 },
    { 0, 0, 0 }
 };
 
@@ -6817,7 +6820,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
        pTrack &&
           (within(event.m_y,
                   (rect.GetBottom()
-                      + (foundCell.type == CellType::VRuler ? kBottomMargin : 0) ),
+                      + (foundCell.type != CellType::Track ? kBottomMargin : 0) ),
                   TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
@@ -7450,10 +7453,10 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 
    // Draw things within the track control panel
    wxRect rect = rec;
-   rect.x += kLeftInset;
+   rect.x += kLeftMargin;
    rect.width = mTrackInfo.GetTrackInfoWidth();
-   rect.y += kTopInset;
-   rect.height -= kTopInset;
+   rect.y += kTopMargin;
+   rect.height -= (kBottomMargin + kTopMargin);
 
    bool captured = (t == mCapturedTrack);
    mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
@@ -7487,7 +7490,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 #ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
 
-         int offset = 4;
+         int offset = 3;
          auto pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo1 );
          wxRect textRect {
             rect.x + offset, rect.y + pair.first,
@@ -8037,8 +8040,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnMoveBottomID, mTracks->CanMoveDown(t));
 
       //We need to find the location of the menu rectangle.
-      wxRect rect = FindTrackRect(t,true);
-      rect.Inflate(1, 1); // TODO remove this
+      const wxRect rect = FindTrackRect(t,true);
       wxRect titleRect;
       mTrackInfo.GetTitleBarRect(rect, titleRect);
 
@@ -8087,8 +8089,7 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    else {
       // If no event given, pop up the menu at the same height
       // as for the track control menu
-      wxRect rect = FindTrackRect(wt, true);
-      rect.Inflate(1, 1); // TODO remove this
+      const wxRect rect = FindTrackRect(wt, true);
       wxRect titleRect;
       mTrackInfo.GetTitleBarRect(rect, titleRect);
       x = GetVRulerOffset(), y = titleRect.y + titleRect.height + 1;
@@ -9114,10 +9115,10 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
          rect.y -= kTopInset;
          switch (type) {
             case CellType::Label:
-               rect.x += kLeftInset;
-               rect.width -= kLeftInset;
-               rect.y += kTopInset;
-               rect.height -= kTopInset;
+               rect.x += kLeftMargin;
+               rect.width -= kLeftMargin;
+               rect.y += kTopMargin;
+               rect.height -= (kTopMargin + kBottomMargin);
                break;
             case CellType::VRuler:
                rect.y += kTopMargin;
@@ -9354,7 +9355,7 @@ int TrackInfo::GetTrackInfoWidth() const
 
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x+1;
+   dest.x = rect.x;
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.width = kTrackInfoBtnSize;
@@ -9363,7 +9364,7 @@ void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + kTrackInfoBtnSize+2; // to right of CloseBoxRect
+   dest.x = rect.x + kTrackInfoBtnSize + 1; // to right of CloseBoxRect
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
@@ -9373,7 +9374,7 @@ void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
 {
 
-   dest.x = rect.x+1;
+   dest.x = rect.x;
 
    auto resultsM = CalcItemY( getTCPLines( *pTrack ), kItemMute );
    auto resultsS = CalcItemY( getTCPLines( *pTrack ), kItemSolo );
@@ -9385,9 +9386,14 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
    bool bSameRow = ( yMute == ySolo );
    bool bNarrow = bSameRow && bHasSoloButton;
 
+   // PRL: add back kBorderThickness to preserve old behavior
+   // But maybe we shouldn't
+   auto width = rect.width + kBorderThickness;
+   auto x = rect.x + kBorderThickness;
+
    if( bNarrow )
    {
-      dest.width = rect.width / 2-2;
+      dest.width = width / 2 - 2;
       if( solo ){
          dest.x+=dest.width;
          dest.width-=1;
@@ -9395,8 +9401,8 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
    }
    else
    {
-      dest.width = rect.width - 2 * kTrackInfoBtnSize;
-      dest.x = rect.x + kTrackInfoBtnSize;
+      dest.width = width - 2 * kTrackInfoBtnSize;
+      dest.x = x + kTrackInfoBtnSize;
    }
 
    if( bSameRow || !solo )
@@ -9408,7 +9414,7 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
 {
-   dest.x = topleft.x + 7;
+   dest.x = topleft.x + 6;
    auto results = CalcItemY( waveTrackTCPLines, kItemGain );
    dest.y = topleft.y + results.first;
    dest.width = kTrackInfoSliderWidth;
@@ -9425,7 +9431,7 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
 #ifdef EXPERIMENTAL_MIDI_OUT
 void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 {
-   dest.x = topleft.x + 7;
+   dest.x = topleft.x + 6;
    auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
    dest.y = topleft.y + results.first;
    dest.width = kTrackInfoSliderWidth;
@@ -9436,7 +9442,7 @@ void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
-   dest.x = rect.x + 4;
+   dest.x = rect.x + 3;
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
@@ -9447,7 +9453,7 @@ void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 
 void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 {
-   dest.x = rect.x + kTrackInfoWidth - kTrackInfoBtnSize - 4; // to right of minimize button
+   dest.x = rect.x + kTrackInfoWidth - kTrackInfoBtnSize - 5; // to right of minimize button
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
    dest.y = rect.y + results.first;
@@ -9458,7 +9464,7 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 #ifdef USE_MIDI
 void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + 2; // To center slightly
+   dest.x = rect.x + 1; // To center slightly
    dest.width = kMidiCellWidth * 4;
    auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
    dest.y = rect.y + results.first;
@@ -9759,9 +9765,8 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
-   // PRL:  Add the inset, but why not also the border?
    wxPoint topLeft{
-      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
+      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
    wxRect sliderRect;
    GetGainRect(topLeft, sliderRect);
 
@@ -9778,9 +9783,8 @@ LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 
 LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 {
-   // PRL:  Add the inset, but why not also the border?
    wxPoint topLeft{
-      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
+      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
    wxRect sliderRect;
    GetPanRect(topLeft, sliderRect);
 
@@ -9798,9 +9802,8 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 #ifdef EXPERIMENTAL_MIDI_OUT
 LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
 {
-   // PRL:  Add the inset, but why not also the border?
    wxPoint topLeft{
-      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
+      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
    wxRect sliderRect;
    GetVelocityRect(topLeft, sliderRect);
 
