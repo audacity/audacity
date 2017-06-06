@@ -76,17 +76,6 @@ enum {
    kTimerInterval = 50, // milliseconds
 };
 
-enum {
-   kItemBarButtons = 0,
-   kItemStatusInfo = 1,
-   kItemMute = 2,
-   kItemSolo = 3,
-   kItemNoteMute = 4,
-   kItemNoteSolo = 5,
-   kItemGain = 6,
-   kItemPan = 7,
-};
-
 class AUDACITY_DLL_API TrackInfo
 {
 public:
@@ -95,13 +84,12 @@ public:
    void ReCreateSliders();
 
 private:
-   int CalcItemY( int iItem ) const;
    int GetTrackInfoWidth() const;
    void SetTrackInfoFont(wxDC *dc) const;
 
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
-   void DrawBordersWithin(wxDC * dc, const wxRect & rect, bool bHasMuteSolo ) const;
+   void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
    void DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
@@ -596,8 +584,7 @@ protected:
 
    virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
                            const wxRect & clip);
-   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
-                    const wxRect &trackRect);
+   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
    virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
@@ -934,7 +921,8 @@ enum : int {
 
 enum : int {
    kTrackInfoWidth = 100,
-   kTrackInfoBtnSize = 18 // widely used dimension, usually height
+   kTrackInfoBtnSize = 18, // widely used dimension, usually height
+   kTrackInfoSliderHeight = 25,
 };
 
 #ifdef USE_MIDI
