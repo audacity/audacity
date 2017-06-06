@@ -219,6 +219,9 @@ Inset space of this track, and top inset of the next track, are used to draw the
 Top inset of the right channel of a stereo track, and bottom shadow line of the
 left channel, are used for the channel separator.
 
+"Margin" is a term used for inset plus border (top and left) or inset plus
+shadow plus border (right and bottom).
+
 TrackInfo::GetTrackInfoWidth() == GetVRulerOffset()
 counts columns from the left edge up to and including controls, and is a constant.
 
@@ -7399,41 +7402,49 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
 
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
-   wxRect rect = rec;
-   int labelw = GetLabelWidth();
-   int vrul = GetVRulerOffset();
-
-   DrawOutsideOfTrack(t, dc, rect);
-
-   rect.x += kLeftInset;
-   rect.y += kTopInset;
-   rect.width -= kLeftInset * 2;
-   rect.height -= kTopInset;
-
    mTrackInfo.SetTrackInfoFont(dc);
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
-
    bool bIsWave = (t->GetKind() == Track::Wave);
 #ifdef USE_MIDI
    bool bIsNote = (t->GetKind() == Track::Note);
 #endif
-   // don't enable bHasMuteSolo for Note track because it will draw in the
-   // wrong place.
-   mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), bIsWave, labelw, vrul);
 
-   // Vaughan, 2010-08-24: No longer doing this.
-   // Draw sync-lock tiles in ruler area.
-   //if (t->IsSyncLockSelected()) {
-   //   wxRect tileFill = rect;
-   //   tileFill.x = GetVRulerOffset();
-   //   tileFill.width = GetVRulerWidth();
-   //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
-   //}
+   // Draw things that extend right of track control panel
+   {
+      // Start with whole track rect
+      wxRect rect = rec;
+      DrawOutsideOfTrack(t, dc, rect);
 
-   DrawBordersAroundTrack(t, dc, rect, labelw, vrul);
-   DrawShadow(t, dc, rect);
+      // Now exclude left, right, and top insets
+      rect.x += kLeftInset;
+      rect.y += kTopInset;
+      rect.width -= kLeftInset * 2;
+      rect.height -= kTopInset;
 
+      int labelw = GetLabelWidth();
+      int vrul = GetVRulerOffset();
+      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), bIsWave, labelw, vrul);
+
+      // Vaughan, 2010-08-24: No longer doing this.
+      // Draw sync-lock tiles in ruler area.
+      //if (t->IsSyncLockSelected()) {
+      //   wxRect tileFill = rect;
+      //   tileFill.x = GetVRulerOffset();
+      //   tileFill.width = GetVRulerWidth();
+      //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
+      //}
+
+      DrawBordersAroundTrack(t, dc, rect, labelw, vrul);
+      DrawShadow(t, dc, rect);
+   }
+
+   // Draw things within the track control panel
+   wxRect rect = rec;
+   rect.x += kLeftInset;
    rect.width = mTrackInfo.GetTrackInfoWidth();
+   rect.y += kTopInset;
+   rect.height -= kTopInset;
+
    bool captured = (t == mCapturedTrack);
    mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
@@ -7507,6 +7518,10 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 #endif // EXPERIMENTAL_MIDI_OUT
 }
 
+// Given rectangle should be the whole track rectangle
+// Paint the inset areas left, top, and right in a background color
+// If linked to a following channel, also paint the separator area, which
+// overlaps the next track rectangle's top
 void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
 {
    // Fill in area outside of the track
@@ -8156,14 +8171,20 @@ void TrackPanel::EnsureVisible(Track * t)
    Refresh(false);
 }
 
+// Given rectangle excludes the insets left, right, and top
+// Draw a rectangular border and also a vertical separator of track controls
+// from the rest (ruler and proper track area)
 void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
                                         const wxRect & rect, const int vrul,
                                         const int labelw)
 {
    // Border around track and label area
+   // leaving room for the shadow
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
    dc->SetPen(*wxBLACK_PEN);
-   dc->DrawRectangle(rect.x, rect.y, rect.width - 1, rect.height - 1);
+   dc->DrawRectangle(rect.x, rect.y,
+                     rect.width - kShadowThickness,
+                     rect.height - kShadowThickness);
 
    AColor::Line(*dc, labelw, rect.y, labelw, rect.y + rect.height - 1);       // between vruler and TrackInfo
 
@@ -8178,17 +8199,22 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
       int h1 = rect.y + t->GetHeight() - kTopInset;
       // h1 is the top coordinate of the second tracks' rectangle
       // Draw (part of) the bottom border of the top channel and top border of the bottom
+      // At left it extends between the vertical rulers too
+      // These lines stroke over what is otherwise "border" of each channel
       AColor::Line(*dc, vrul, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
       AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
    }
 }
 
+// Given rectangle has insets subtracted left, right, and top
+// Stroke lines along bottom and right, which are slightly short at
+// bottom-left and top-right
 void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
 {
    int right = rect.x + rect.width - 1;
    int bottom = rect.y + rect.height - 1;
 
-   // shadow
+   // shadow color for lines
    dc->SetPen(*wxBLACK_PEN);
 
    // bottom
@@ -8196,12 +8222,12 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
    // right
    AColor::Line(*dc, right, rect.y, right, bottom);
 
-   // background
+   // background color erases small parts of those lines
    AColor::Dark(dc, false);
 
-   // bottom
+   // bottom-left
    AColor::Line(*dc, rect.x, bottom, rect.x + 1, bottom);
-   // right
+   // top-right
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
 }
 
@@ -9258,7 +9284,7 @@ TrackInfo::~TrackInfo()
 }
 
 void TrackInfo::ReCreateSliders(){
-   wxPoint point{ 0, 0 };
+   const wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetGainRect(point, sliderRect);
 
@@ -9374,7 +9400,7 @@ void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
    dest.x = topleft.x + 7;
    auto results = CalcItemY( waveTrackTCPLines, kItemGain );
    dest.y = topleft.y + results.first;
-   dest.width = 84;
+   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 
@@ -9391,7 +9417,7 @@ void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
    dest.x = topleft.x + 7;
    auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
    dest.y = topleft.y + results.first;
-   dest.width = 84;
+   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 #endif
@@ -9488,6 +9514,7 @@ void TrackInfo::DrawBordersWithin
 
 //#define USE_BEVELS
 
+// Paint the whole given rectangle some fill color
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool bHasMuteSolo, const int labelw, const int vrul) const
 {
@@ -9502,6 +9529,8 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    dc->DrawRectangle(fill);
 
 #ifdef USE_BEVELS
+   // This branch is not now used
+   // PRL:  todo:  banish magic numbers
    if( bHasMuteSolo )
    {
       int ylast = rect.height-20;
