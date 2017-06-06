@@ -7454,7 +7454,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    // Draw things within the track control panel
    wxRect rect = rec;
    rect.x += kLeftMargin;
-   rect.width = mTrackInfo.GetTrackInfoWidth();
+   rect.width = kTrackInfoWidth - kLeftMargin;
    rect.y += kTopMargin;
    rect.height -= (kBottomMargin + kTopMargin);
 
@@ -9364,10 +9364,12 @@ void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + kTrackInfoBtnSize + 1; // to right of CloseBoxRect
+   // to right of CloseBoxRect, plus a little more
+   dest.x = rect.x + kTrackInfoBtnSize + 1;
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
-   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize; // to right of CloseBoxRect
+   // PRL:  + 1?  Really?
+   dest.width = rect.x + rect.width - dest.x + 1;
    dest.height = results.second;
 }
 
@@ -9386,23 +9388,20 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
    bool bSameRow = ( yMute == ySolo );
    bool bNarrow = bSameRow && bHasSoloButton;
 
-   // PRL: add back kBorderThickness to preserve old behavior
-   // But maybe we shouldn't
-   auto width = rect.width + kBorderThickness;
-   auto x = rect.x + kBorderThickness;
-
    if( bNarrow )
    {
-      dest.width = width / 2 - 2;
-      if( solo ){
-         dest.x+=dest.width;
-         dest.width-=1;
+      dest.width = rect.width / 2 + 1;
+      if( solo ) {
+         dest.x += dest.width;
+         dest.width = rect.width - dest.width;
       }
    }
    else
    {
-      dest.width = width - 2 * kTrackInfoBtnSize;
-      dest.x = x + kTrackInfoBtnSize;
+      // PRL:  Was symmetry within the TCP borders intended?
+      // If so, get rid of + 6 and + 1
+      dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
+      dest.x = rect.x + kTrackInfoBtnSize + 1;
    }
 
    if( bSameRow || !solo )
@@ -9441,19 +9440,20 @@ void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
-   const int kBlankWidth = kTrackInfoBtnSize + 4;
-   dest.x = rect.x + 3;
+   const int space = 3;
+   dest.x = rect.x + space;
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
-   // Width is kTrackInfoWidth less space on left for track select and on right for sync-lock icon.
-   dest.width = kTrackInfoWidth - (1.2 * kBlankWidth);
+   // Width is rect.width less space on left for track select
+   // and on right for sync-lock icon.
+   dest.width = rect.width - (space + kTrackInfoBtnSize);
    dest.height = results.second;
 }
 
 void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 {
-   dest.x = rect.x + kTrackInfoWidth - kTrackInfoBtnSize - 5; // to right of minimize button
+   dest.x = rect.x + rect.width - kTrackInfoBtnSize; // to right of minimize button
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
    dest.y = rect.y + results.first;
@@ -9465,6 +9465,9 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest) const
 {
    dest.x = rect.x + 1; // To center slightly
+   // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
+   // kTrackInfoWidth but I am trying to avoid use of that constant.
+   // Can cell width be computed from dest.width instead?
    dest.width = kMidiCellWidth * 4;
    auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
    dest.y = rect.y + results.first;
@@ -9610,7 +9613,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
    // Draw title text
    SetTrackInfoFont(dc);
    wxString titleStr = t->GetName();
-   int allowableWidth = kTrackInfoWidth - 38 - kLeftInset;
+   int allowableWidth = rect.width - 38;
 
    wxCoord textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
