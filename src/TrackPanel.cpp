@@ -219,6 +219,9 @@ Inset space of this track, and top inset of the next track, are used to draw the
 Top inset of the right channel of a stereo track, and bottom shadow line of the
 left channel, are used for the channel separator.
 
+"Margin" is a term used for inset plus border (top and left) or inset plus
+shadow plus border (right and bottom).
+
 TrackInfo::GetTrackInfoWidth() == GetVRulerOffset()
 counts columns from the left edge up to and including controls, and is a constant.
 
@@ -228,8 +231,11 @@ but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindCell() for label or vruler returns a rectangle up to and including the One Pixel column,
-but OMITS left and top insets
+FindCell() for label returns a rectangle that OMITS left, top, and bottom
+margins
+
+FindCell() for vruler returns a rectangle up to and including the One Pixel
+column, and OMITS top and bottom margins
 
 FindCell() for track returns a rectangle with x == GetLeftOffset(), and INCLUDES
 right and top insets
@@ -506,7 +512,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTrackArtist = std::make_unique<TrackArtist>();
 
-   mTrackArtist->SetInset(1, kTopMargin, kRightMargin, kBottomMargin);
+   mTrackArtist->SetMargins(1, kTopMargin, kRightMargin, kBottomMargin);
 
    mCapturedTrack = NULL;
    mPopupMenuTarget = NULL;
@@ -1752,7 +1758,11 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    wxString tip;
 
    // Are we within the vertical resize area?
-   if (within(event.m_y, trackRect.GetBottom(), TRACK_RESIZE_REGION))
+   // (Add margin back to bottom of the rectangle)
+   if (within(event.m_y,
+              (trackRect.GetBottom()
+                  + (foundCell.type != CellType::Track ? kBottomMargin : 0) ),
+              TRACK_RESIZE_REGION))
    {
       SetCursorAndTipWhenInVResizeArea(
          track->GetLinked() && foundCell.type != CellType::Label, tip);
@@ -5265,7 +5275,7 @@ const TCPLine *getTCPLines( const Track &track )
 // return y value and height
 std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
 {
-   int y = 1;
+   int y = 0;
    while ( pLines->items &&
            0 == (pLines->items & iItem) ) {
       y += pLines->height + pLines->extraSpace;
@@ -5277,7 +5287,9 @@ std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
 const TCPLine commonTrackTCPBottomLines[] = {
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 1 },
+   // PRL:  -1!!  This preserves present 2.2.0 behavior.  The increase of
+   // kTrackInfoBtnSize by 2 made the button impinge on the border of TCP.
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, -1 },
    { 0, 0, 0 }
 };
 
@@ -6803,9 +6815,13 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    bool unsafe = IsUnsafe();
 
    //call HandleResize if I'm over the border area
+   // (Add margin back to bottom of the rectangle)
    if (event.LeftDown() &&
        pTrack &&
-          (within(event.m_y, rect.GetBottom(), TRACK_RESIZE_REGION))) {
+          (within(event.m_y,
+                  (rect.GetBottom()
+                      + (foundCell.type != CellType::Track ? kBottomMargin : 0) ),
+                  TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
       return;
@@ -7399,41 +7415,49 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
 
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
-   wxRect rect = rec;
-   int labelw = GetLabelWidth();
-   int vrul = GetVRulerOffset();
-
-   DrawOutsideOfTrack(t, dc, rect);
-
-   rect.x += kLeftInset;
-   rect.y += kTopInset;
-   rect.width -= kLeftInset * 2;
-   rect.height -= kTopInset;
-
    mTrackInfo.SetTrackInfoFont(dc);
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
-
    bool bIsWave = (t->GetKind() == Track::Wave);
 #ifdef USE_MIDI
    bool bIsNote = (t->GetKind() == Track::Note);
 #endif
-   // don't enable bHasMuteSolo for Note track because it will draw in the
-   // wrong place.
-   mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), bIsWave, labelw, vrul);
 
-   // Vaughan, 2010-08-24: No longer doing this.
-   // Draw sync-lock tiles in ruler area.
-   //if (t->IsSyncLockSelected()) {
-   //   wxRect tileFill = rect;
-   //   tileFill.x = GetVRulerOffset();
-   //   tileFill.width = GetVRulerWidth();
-   //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
-   //}
+   // Draw things that extend right of track control panel
+   {
+      // Start with whole track rect
+      wxRect rect = rec;
+      DrawOutsideOfTrack(t, dc, rect);
 
-   DrawBordersAroundTrack(t, dc, rect, labelw, vrul);
-   DrawShadow(t, dc, rect);
+      // Now exclude left, right, and top insets
+      rect.x += kLeftInset;
+      rect.y += kTopInset;
+      rect.width -= kLeftInset * 2;
+      rect.height -= kTopInset;
 
+      int labelw = GetLabelWidth();
+      int vrul = GetVRulerOffset();
+      mTrackInfo.DrawBackground(dc, rect, t->GetSelected(), bIsWave, labelw, vrul);
+
+      // Vaughan, 2010-08-24: No longer doing this.
+      // Draw sync-lock tiles in ruler area.
+      //if (t->IsSyncLockSelected()) {
+      //   wxRect tileFill = rect;
+      //   tileFill.x = GetVRulerOffset();
+      //   tileFill.width = GetVRulerWidth();
+      //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
+      //}
+
+      DrawBordersAroundTrack(t, dc, rect, labelw, vrul);
+      DrawShadow(t, dc, rect);
+   }
+
+   // Draw things within the track control panel
+   wxRect rect = rec;
+   rect.x += kLeftMargin;
    rect.width = mTrackInfo.GetTrackInfoWidth();
+   rect.y += kTopMargin;
+   rect.height -= (kBottomMargin + kTopMargin);
+
    bool captured = (t == mCapturedTrack);
    mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
@@ -7466,7 +7490,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 #ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
 
-         int offset = 4;
+         int offset = 3;
          auto pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo1 );
          wxRect textRect {
             rect.x + offset, rect.y + pair.first,
@@ -7507,6 +7531,10 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 #endif // EXPERIMENTAL_MIDI_OUT
 }
 
+// Given rectangle should be the whole track rectangle
+// Paint the inset areas left, top, and right in a background color
+// If linked to a following channel, also paint the separator area, which
+// overlaps the next track rectangle's top
 void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
 {
    // Fill in area outside of the track
@@ -8012,8 +8040,7 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnMoveBottomID, mTracks->CanMoveDown(t));
 
       //We need to find the location of the menu rectangle.
-      wxRect rect = FindTrackRect(t,true);
-      rect.Inflate(1, 1); // TODO remove this
+      const wxRect rect = FindTrackRect(t,true);
       wxRect titleRect;
       mTrackInfo.GetTitleBarRect(rect, titleRect);
 
@@ -8062,8 +8089,7 @@ void TrackPanel::OnVRulerMenu(Track *t, wxMouseEvent *pEvent)
    else {
       // If no event given, pop up the menu at the same height
       // as for the track control menu
-      wxRect rect = FindTrackRect(wt, true);
-      rect.Inflate(1, 1); // TODO remove this
+      const wxRect rect = FindTrackRect(wt, true);
       wxRect titleRect;
       mTrackInfo.GetTitleBarRect(rect, titleRect);
       x = GetVRulerOffset(), y = titleRect.y + titleRect.height + 1;
@@ -8156,16 +8182,23 @@ void TrackPanel::EnsureVisible(Track * t)
    Refresh(false);
 }
 
+// Given rectangle excludes the insets left, right, and top
+// Draw a rectangular border and also a vertical separator of track controls
+// from the rest (ruler and proper track area)
 void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
-                                        const wxRect & rect, const int vrul,
-                                        const int labelw)
+                                        const wxRect & rect, const int labelw,
+                                        const int vrul)
 {
    // Border around track and label area
+   // leaving room for the shadow
    dc->SetBrush(*wxTRANSPARENT_BRUSH);
    dc->SetPen(*wxBLACK_PEN);
-   dc->DrawRectangle(rect.x, rect.y, rect.width - 1, rect.height - 1);
+   dc->DrawRectangle(rect.x, rect.y,
+                     rect.width - kShadowThickness,
+                     rect.height - kShadowThickness);
 
-   AColor::Line(*dc, labelw, rect.y, labelw, rect.y + rect.height - 1);       // between vruler and TrackInfo
+   // between vruler and TrackInfo
+   AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
 
    // The lines at bottom of 1st track and top of second track of stereo group
    // Possibly replace with DrawRectangle to add left border.
@@ -8178,17 +8211,22 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
       int h1 = rect.y + t->GetHeight() - kTopInset;
       // h1 is the top coordinate of the second tracks' rectangle
       // Draw (part of) the bottom border of the top channel and top border of the bottom
-      AColor::Line(*dc, vrul, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
-      AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
+      // At left it extends between the vertical rulers too
+      // These lines stroke over what is otherwise "border" of each channel
+      AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
+      AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
    }
 }
 
+// Given rectangle has insets subtracted left, right, and top
+// Stroke lines along bottom and right, which are slightly short at
+// bottom-left and top-right
 void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
 {
    int right = rect.x + rect.width - 1;
    int bottom = rect.y + rect.height - 1;
 
-   // shadow
+   // shadow color for lines
    dc->SetPen(*wxBLACK_PEN);
 
    // bottom
@@ -8196,12 +8234,12 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
    // right
    AColor::Line(*dc, right, rect.y, right, bottom);
 
-   // background
+   // background color erases small parts of those lines
    AColor::Dark(dc, false);
 
-   // bottom
+   // bottom-left
    AColor::Line(*dc, rect.x, bottom, rect.x + 1, bottom);
-   // right
+   // top-right
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
 }
 
@@ -9077,14 +9115,14 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
          rect.y -= kTopInset;
          switch (type) {
             case CellType::Label:
-               rect.x += kLeftInset;
-               rect.width -= kLeftInset;
-               rect.y += kTopInset;
-               rect.height -= kTopInset;
+               rect.x += kLeftMargin;
+               rect.width -= kLeftMargin;
+               rect.y += kTopMargin;
+               rect.height -= (kTopMargin + kBottomMargin);
                break;
             case CellType::VRuler:
                rect.y += kTopMargin;
-               rect.height -= kTopMargin;
+               rect.height -= (kTopMargin + kBottomMargin);
                break;
             case CellType::Track:
             default:
@@ -9258,7 +9296,7 @@ TrackInfo::~TrackInfo()
 }
 
 void TrackInfo::ReCreateSliders(){
-   wxPoint point{ 0, 0 };
+   const wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetGainRect(point, sliderRect);
 
@@ -9317,7 +9355,7 @@ int TrackInfo::GetTrackInfoWidth() const
 
 void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x+1;
+   dest.x = rect.x;
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.width = kTrackInfoBtnSize;
@@ -9326,7 +9364,7 @@ void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + kTrackInfoBtnSize+2; // to right of CloseBoxRect
+   dest.x = rect.x + kTrackInfoBtnSize + 1; // to right of CloseBoxRect
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
@@ -9336,7 +9374,7 @@ void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
 void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
 {
 
-   dest.x = rect.x+1;
+   dest.x = rect.x;
 
    auto resultsM = CalcItemY( getTCPLines( *pTrack ), kItemMute );
    auto resultsS = CalcItemY( getTCPLines( *pTrack ), kItemSolo );
@@ -9348,9 +9386,14 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
    bool bSameRow = ( yMute == ySolo );
    bool bNarrow = bSameRow && bHasSoloButton;
 
+   // PRL: add back kBorderThickness to preserve old behavior
+   // But maybe we shouldn't
+   auto width = rect.width + kBorderThickness;
+   auto x = rect.x + kBorderThickness;
+
    if( bNarrow )
    {
-      dest.width = rect.width / 2-2;
+      dest.width = width / 2 - 2;
       if( solo ){
          dest.x+=dest.width;
          dest.width-=1;
@@ -9358,8 +9401,8 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
    }
    else
    {
-      dest.width = rect.width - 2 * kTrackInfoBtnSize;
-      dest.x = rect.x + kTrackInfoBtnSize;
+      dest.width = width - 2 * kTrackInfoBtnSize;
+      dest.x = x + kTrackInfoBtnSize;
    }
 
    if( bSameRow || !solo )
@@ -9371,10 +9414,10 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
 {
-   dest.x = topleft.x + 7;
+   dest.x = topleft.x + 6;
    auto results = CalcItemY( waveTrackTCPLines, kItemGain );
    dest.y = topleft.y + results.first;
-   dest.width = 84;
+   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 
@@ -9388,10 +9431,10 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
 #ifdef EXPERIMENTAL_MIDI_OUT
 void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 {
-   dest.x = topleft.x + 7;
+   dest.x = topleft.x + 6;
    auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
    dest.y = topleft.y + results.first;
-   dest.width = 84;
+   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 #endif
@@ -9399,7 +9442,7 @@ void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
-   dest.x = rect.x + 4;
+   dest.x = rect.x + 3;
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
@@ -9410,7 +9453,7 @@ void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 
 void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 {
-   dest.x = rect.x + kTrackInfoWidth - kTrackInfoBtnSize - 4; // to right of minimize button
+   dest.x = rect.x + kTrackInfoWidth - kTrackInfoBtnSize - 5; // to right of minimize button
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
    dest.y = rect.y + results.first;
@@ -9421,7 +9464,7 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 #ifdef USE_MIDI
 void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest) const
 {
-   dest.x = rect.x + 2; // To center slightly
+   dest.x = rect.x + 1; // To center slightly
    dest.width = kMidiCellWidth * 4;
    auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
    dest.y = rect.y + results.first;
@@ -9488,6 +9531,7 @@ void TrackInfo::DrawBordersWithin
 
 //#define USE_BEVELS
 
+// Paint the whole given rectangle some fill color
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    bool bHasMuteSolo, const int labelw, const int vrul) const
 {
@@ -9502,6 +9546,8 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected,
    dc->DrawRectangle(fill);
 
 #ifdef USE_BEVELS
+   // This branch is not now used
+   // PRL:  todo:  banish magic numbers
    if( bHasMuteSolo )
    {
       int ylast = rect.height-20;
@@ -9719,9 +9765,8 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
-   // PRL:  Add the inset, but why not also the border?
    wxPoint topLeft{
-      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
+      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
    wxRect sliderRect;
    GetGainRect(topLeft, sliderRect);
 
@@ -9738,9 +9783,8 @@ LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 
 LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 {
-   // PRL:  Add the inset, but why not also the border?
    wxPoint topLeft{
-      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
+      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
    wxRect sliderRect;
    GetPanRect(topLeft, sliderRect);
 
@@ -9758,9 +9802,8 @@ LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
 #ifdef EXPERIMENTAL_MIDI_OUT
 LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
 {
-   // PRL:  Add the inset, but why not also the border?
    wxPoint topLeft{
-      kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset };
+      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
    wxRect sliderRect;
    GetVelocityRect(topLeft, sliderRect);
 

@@ -68,7 +68,7 @@ class AUDACITY_DLL_API TrackArtist {
 
    void UpdateVRuler(const Track *t, wxRect & rect);
 
-   void SetInset(int left, int top, int right, int bottom);
+   void SetMargins(int left, int top, int right, int bottom);
 
    void UpdatePrefs();
 
@@ -175,10 +175,10 @@ class AUDACITY_DLL_API TrackArtist {
    int  mSampleDisplay;       // "/GUI/SampleView"
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
 
-   int mInsetLeft;
-   int mInsetTop;
-   int mInsetRight;
-   int mInsetBottom;
+   int mMarginLeft;
+   int mMarginTop;
+   int mMarginRight;
+   int mMarginBottom;
 
    wxBrush blankBrush;
    wxBrush unselectedBrush;

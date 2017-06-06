@@ -918,6 +918,7 @@ enum : int {
    kTrackInfoWidth = 100,
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
    kTrackInfoSliderHeight = 25,
+   kTrackInfoSliderWidth = 84,
 };
 
 #ifdef USE_MIDI
