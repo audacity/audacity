@@ -482,11 +482,6 @@ protected:
    virtual bool CloseFunc(Track * t, wxRect rect, int x, int y);
    virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
 
-   // TrackSelFunc, unlike the other *Func methods, returns true if the click is not
-   // set up to be handled, but click is on the sync-lock icon or the blank area to
-   // the left of the minimize button, and we want to pass it forward to be a track select.
-   virtual bool TrackSelFunc(Track * t, wxRect rect, int x, int y);
-
    virtual bool MuteSoloFunc(Track *t, wxRect rect, int x, int f, bool solo);
    virtual bool MinimizeFunc(Track *t, wxRect rect, int x, int f);
    virtual bool GainFunc(Track * t, wxRect rect, wxMouseEvent &event,

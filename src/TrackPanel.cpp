@@ -5333,12 +5333,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    if (isleft && PopupFunc(t, rect, event.m_x, event.m_y))
       return;
 
-   // VJ: Check sync-lock icon and the blank area to the left of the minimize button.
-   // Have to do it here, because if track is shrunk such that these areas occlude controls,
-   // e.g., mute/solo, don't want the "Funcs" below to set up handling.
-   // Only result of doing so is to select the track. Don't care whether isleft.
-   bool bTrackSelClick = this->TrackSelFunc(t, rect, event.m_x, event.m_y);
-   if (!bTrackSelClick)
    {
       // MM: Check minimize buttons on WaveTracks. Must be before
       //     solo/mute buttons, sliders etc.
@@ -5581,23 +5575,6 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect rect, int x, int y,
 
    mTrackInfo.DrawMuteSolo(&dc, rect, t, true, solo, HasSoloButton());
    return true;
-}
-
-bool TrackPanel::TrackSelFunc(Track * WXUNUSED(t), wxRect rect, int x, int y)
-{
-   // First check the blank space to left of minimize button.
-   wxRect selRect;
-   mTrackInfo.GetMinimizeRect(rect, selRect); // for y and height
-   selRect.x = rect.x;
-   selRect.width = 16; // (kTrackInfoBtnSize)
-   selRect.height++;
-   if (selRect.Contains(x, y))
-      return true;
-
-   // Try the sync-lock rect.
-   mTrackInfo.GetSyncLockIconRect(rect, selRect);
-   selRect.height++;
-   return selRect.Contains(x, y);
 }
 
 bool TrackPanel::MinimizeFunc(Track * t, wxRect rect, int x, int y)
