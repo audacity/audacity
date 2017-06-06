@@ -231,8 +231,10 @@ but that width may be adjusted when tracks change their vertical scales.
 GetLabelWidth() counts columns up to and including the VRuler.
 GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 
-FindCell() for label or vruler returns a rectangle up to and including the One Pixel column,
-but OMITS left and top insets
+FindCell() for label returns a rectangle that OMITS left and top insets
+
+FindCell() for vruler returns a rectangle up to and including the One Pixel
+column, and OMITS top and bottom margins
 
 FindCell() for track returns a rectangle with x == GetLeftOffset(), and INCLUDES
 right and top insets
@@ -1755,7 +1757,11 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    wxString tip;
 
    // Are we within the vertical resize area?
-   if (within(event.m_y, trackRect.GetBottom(), TRACK_RESIZE_REGION))
+   // (Add margin back to bottom of the rectangle)
+   if (within(event.m_y,
+              (trackRect.GetBottom()
+                  + (foundCell.type == CellType::VRuler ? kBottomMargin : 0) ),
+              TRACK_RESIZE_REGION))
    {
       SetCursorAndTipWhenInVResizeArea(
          track->GetLinked() && foundCell.type != CellType::Label, tip);
@@ -6806,9 +6812,13 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    bool unsafe = IsUnsafe();
 
    //call HandleResize if I'm over the border area
+   // (Add margin back to bottom of the rectangle)
    if (event.LeftDown() &&
        pTrack &&
-          (within(event.m_y, rect.GetBottom(), TRACK_RESIZE_REGION))) {
+          (within(event.m_y,
+                  (rect.GetBottom()
+                      + (foundCell.type == CellType::VRuler ? kBottomMargin : 0) ),
+                  TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
       return;
@@ -9111,7 +9121,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
                break;
             case CellType::VRuler:
                rect.y += kTopMargin;
-               rect.height -= kTopMargin;
+               rect.height -= (kTopMargin + kBottomMargin);
                break;
             case CellType::Track:
             default:
