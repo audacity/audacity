@@ -8175,8 +8175,8 @@ void TrackPanel::EnsureVisible(Track * t)
 // Draw a rectangular border and also a vertical separator of track controls
 // from the rest (ruler and proper track area)
 void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
-                                        const wxRect & rect, const int vrul,
-                                        const int labelw)
+                                        const wxRect & rect, const int labelw,
+                                        const int vrul)
 {
    // Border around track and label area
    // leaving room for the shadow
@@ -8186,7 +8186,8 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
                      rect.width - kShadowThickness,
                      rect.height - kShadowThickness);
 
-   AColor::Line(*dc, labelw, rect.y, labelw, rect.y + rect.height - 1);       // between vruler and TrackInfo
+   // between vruler and TrackInfo
+   AColor::Line(*dc, vrul, rect.y, vrul, rect.y + rect.height - 1);
 
    // The lines at bottom of 1st track and top of second track of stereo group
    // Possibly replace with DrawRectangle to add left border.
@@ -8201,8 +8202,8 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
       // Draw (part of) the bottom border of the top channel and top border of the bottom
       // At left it extends between the vertical rulers too
       // These lines stroke over what is otherwise "border" of each channel
-      AColor::Line(*dc, vrul, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
-      AColor::Line(*dc, vrul, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
+      AColor::Line(*dc, labelw, h1 - kBottomMargin, rect.x + rect.width - 1, h1 - kBottomMargin);
+      AColor::Line(*dc, labelw, h1 + kTopInset, rect.x + rect.width - 1, h1 + kTopInset);
    }
 }
 
