@@ -9367,7 +9367,7 @@ void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
    dest.x = rect.x + kTrackInfoBtnSize + 1; // to right of CloseBoxRect
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
-   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize-1; // to right of CloseBoxRect
+   dest.width = kTrackInfoWidth - rect.x - kTrackInfoBtnSize; // to right of CloseBoxRect
    dest.height = results.second;
 }
 
