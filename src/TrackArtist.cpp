@@ -266,10 +266,10 @@ int TrackArtist::GetBottom(NoteTrack *t, const wxRect &rect)
 
 TrackArtist::TrackArtist()
 {
-   mInsetLeft   = 0;
-   mInsetTop    = 0;
-   mInsetRight  = 0;
-   mInsetBottom = 0;
+   mMarginLeft   = 0;
+   mMarginTop    = 0;
+   mMarginRight  = 0;
+   mMarginBottom = 0;
 
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
@@ -310,12 +310,12 @@ void TrackArtist::SetColours()
    theTheme.SetPenColour(   blankSelectedPen,clrBlankSelected);
 }
 
-void TrackArtist::SetInset(int left, int top, int right, int bottom)
+void TrackArtist::SetMargins(int left, int top, int right, int bottom)
 {
-   mInsetLeft   = left;
-   mInsetTop    = top;
-   mInsetRight  = right;
-   mInsetBottom = bottom;
+   mMarginLeft   = left;
+   mMarginTop    = top;
+   mMarginRight  = right;
+   mMarginBottom = bottom;
 }
 
 void TrackArtist::DrawTracks(TrackList * tracks,
@@ -346,7 +346,7 @@ void TrackArtist::DrawTracks(TrackList * tracks,
 
 #if defined(DEBUG_CLIENT_AREA)
    // Change the +0 to +1 or +2 to see the bounding box
-   mInsetLeft = 1+0; mInsetTop = 5+0; mInsetRight = 6+0; mInsetBottom = 2+0;
+   mMarginLeft = 1+0; mMarginTop = 5+0; mMarginRight = 6+0; mMarginBottom = 2+0;
 
    // This just shows what the passed in rectangles enclose
    dc.SetPen(wxColour(*wxGREEN));
@@ -408,10 +408,10 @@ void TrackArtist::DrawTracks(TrackList * tracks,
 
       if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
          wxRect rr = trackRect;
-         rr.x += mInsetLeft;
-         rr.y += mInsetTop;
-         rr.width -= (mInsetLeft + mInsetRight);
-         rr.height -= (mInsetTop + mInsetBottom);
+         rr.x += mMarginLeft;
+         rr.y += mMarginTop;
+         rr.width -= (mMarginLeft + mMarginRight);
+         rr.height -= (mMarginTop + mMarginBottom);
          DrawTrack(t, dc, rr,
                    selectedRegion, zoomInfo,
                    drawEnvelope, bigPoints, drawSliders, hasSolo);
@@ -427,10 +427,10 @@ void TrackArtist::DrawTracks(TrackList * tracks,
          t->SetVirtualStereo(true);
          if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
             wxRect rr = trackRect;
-            rr.x += mInsetLeft;
-            rr.y += mInsetTop;
-            rr.width -= (mInsetLeft + mInsetRight);
-            rr.height -= (mInsetTop + mInsetBottom);
+            rr.x += mMarginLeft;
+            rr.y += mMarginTop;
+            rr.width -= (mMarginLeft + mMarginRight);
+            rr.height -= (mMarginTop + mMarginBottom);
             DrawTrack(t, dc, rr, selectedRegion, zoomInfo,
                       drawEnvelope, bigPoints, drawSliders, hasSolo);
          }

@@ -512,7 +512,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTrackArtist = std::make_unique<TrackArtist>();
 
-   mTrackArtist->SetInset(1, kTopMargin, kRightMargin, kBottomMargin);
+   mTrackArtist->SetMargins(1, kTopMargin, kRightMargin, kBottomMargin);
 
    mCapturedTrack = NULL;
    mPopupMenuTarget = NULL;
