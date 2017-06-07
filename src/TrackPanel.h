@@ -118,6 +118,9 @@ private:
 #endif
 
 public:
+   static bool HideTopItem( const wxRect &rect, const wxRect &subRect,
+                               int allowance = 0 );
+
    static unsigned DefaultNoteTrackHeight();
    static unsigned DefaultWaveTrackHeight();
 

@@ -5324,15 +5324,15 @@ std::pair< int, int > CalcBottomItemY
    return { y - (pLines->height + pLines->extraSpace ), pLines->height };
 }
 
-bool HideTopItem( const wxRect &rect, const wxRect &subRect,
-                  int allowance = 0 ) {
+}
+
+bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
+                 int allowance ) {
    auto limit = CalcBottomItemY
-      ( commonTrackTCPBottomLines, kHighestBottomItem, rect.height).first;
+   ( commonTrackTCPBottomLines, kHighestBottomItem, rect.height).first;
    // Return true if the rectangle is even touching the limit
    // without an overlap.  That was the behavior as of 2.1.3.
    return subRect.y + subRect.height - allowance >= rect.y + limit;
-}
-
 }
 
 /// This handles when the user clicks on the "Label" area
@@ -5399,7 +5399,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 
          bool isright = event.Button(wxMOUSE_BTN_RIGHT);
 
-         if ( !HideTopItem( rect, midiRect ) &&
+         if ( !TrackInfo::HideTopItem( rect, midiRect ) &&
              (isleft || isright) && midiRect.Contains(event.m_x, event.m_y) &&
                static_cast<NoteTrack *>(t)->LabelClick(midiRect, event.m_x, event.m_y, isright)) {
             MakeParentModifyState(false);
@@ -5538,7 +5538,7 @@ bool TrackPanel::GainFunc(Track * t, wxRect rect, wxMouseEvent &event,
 {
    wxRect sliderRect;
    mTrackInfo.GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return false;
    if (!sliderRect.Contains(x, y))
       return false;
@@ -5555,7 +5555,7 @@ bool TrackPanel::PanFunc(Track * t, wxRect rect, wxMouseEvent &event,
 {
    wxRect sliderRect;
    mTrackInfo.GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return false;
    if (!sliderRect.Contains(x, y))
       return false;
@@ -5573,7 +5573,7 @@ bool TrackPanel::VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
 {
    wxRect sliderRect;
    mTrackInfo.GetVelocityRect(rect.GetTopLeft(), sliderRect);
-   if ( HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return false;
    if (!sliderRect.Contains(x, y))
       return false;
@@ -5595,7 +5595,7 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect rect, int x, int y,
    wxRect buttonRect;
    rect.width +=4;
    mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton(), t);
-   if ( HideTopItem( rect, buttonRect ) )
+   if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return false;
    if (!buttonRect.Contains(x, y))
       return false;
@@ -7515,7 +7515,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
             rect.x + offset, rect.y + pair.first,
             rect.width, pair.second
          };
-         if ( !HideTopItem( rect, textRect ) )
+         if ( !TrackInfo::HideTopItem( rect, textRect ) )
             dc->DrawText(TrackSubText(wt),
                          textRect.x, textRect.y);
 
@@ -7524,7 +7524,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
             rect.x + offset, rect.y + pair.first,
             rect.width, pair.second
          };
-         if ( !HideTopItem( rect, textRect ) )
+         if ( !TrackInfo::HideTopItem( rect, textRect ) )
             dc->DrawText(GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
                          textRect.x, textRect.y );
       }
@@ -7536,7 +7536,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
       wxRect midiRect;
       mTrackInfo.GetMidiControlsRect(rect, midiRect);
 
-      if ( !HideTopItem( rect, midiRect ) )
+      if ( !TrackInfo::HideTopItem( rect, midiRect ) )
          static_cast<NoteTrack *>(t)->DrawLabelControls(*dc, midiRect);
       mTrackInfo.DrawMuteSolo(dc, rect, t,
             (captured && mMouseCapture == IsMuting), false, HasSoloButton());
@@ -9520,7 +9520,7 @@ void TrackInfo::DrawBordersWithin
    GetMuteSoloRect( rect, buttonRect, false, true, &track );
 
    bool bHasMuteSolo = dynamic_cast<const PlayableTrack*>( &track );
-   if( bHasMuteSolo && !HideTopItem( rect, buttonRect ) )
+   if( bHasMuteSolo && !TrackInfo::HideTopItem( rect, buttonRect ) )
    {
       // above mute/solo
       AColor::Line
@@ -9681,7 +9681,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
       return;
    GetMuteSoloRect(rect, bev, solo, bHasSoloButton, t);
    //bev.Inflate(-1, -1);
-   if ( HideTopItem( rect, bev ) )
+   if ( TrackInfo::HideTopItem( rect, bev ) )
       return; // don't draw mute and solo buttons, because they don't fit into track label
    auto pt = dynamic_cast<const PlayableTrack *>(t);
 
@@ -9765,11 +9765,11 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) 
    wxRect sliderRect;
 
    GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( !HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       GainSlider(t, captured)->OnPaint(*dc);
 
    GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( !HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
+   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       PanSlider(t, captured)->OnPaint(*dc);
 }
 
@@ -9779,7 +9779,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
    wxRect sliderRect;
 
    GetVelocityRect( rect.GetTopLeft(), sliderRect );
-   if ( !HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) ) {
+   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) ) {
       VelocitySlider(t, captured)->OnPaint(*dc);
    }
 }
