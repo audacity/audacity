@@ -36,6 +36,8 @@
 
 #include "InconsistencyException.h"
 
+#include "TrackPanel.h" // For TrackInfo
+
 #ifdef SONIFY
 #include "../lib-src/portmidi/pm_common/portmidi.h"
 
@@ -109,6 +111,8 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
 {
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
+
+   SetHeight( TrackInfo::DefaultNoteTrackHeight() );
 
    mSeq = NULL;
    mSerializationLength = 0;

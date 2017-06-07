@@ -118,6 +118,9 @@ private:
 #endif
 
 public:
+   static unsigned DefaultNoteTrackHeight();
+   static unsigned DefaultWaveTrackHeight();
+
    LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
    LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
 
@@ -919,6 +922,8 @@ enum : int {
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
    kTrackInfoSliderHeight = 25,
    kTrackInfoSliderWidth = 84,
+   kTrackInfoSliderAllowance = 5,
+   kTrackInfoSliderExtra = 5,
 };
 
 #ifdef USE_MIDI

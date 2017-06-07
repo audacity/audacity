@@ -167,6 +167,8 @@ class AUDACITY_DLL_API Track /* not final */ : public XMLTagHandler
       All
    };
 
+   enum : unsigned { DefaultHeight = 150 };
+
    Track(const std::shared_ptr<DirManager> &projDirManager);
    Track(const Track &orig);
 

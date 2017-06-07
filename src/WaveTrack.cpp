@@ -59,6 +59,8 @@ Track classes.
 
 #include "Experimental.h"
 
+#include "TrackPanel.h" // for TrackInfo
+
 using std::max;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -113,6 +115,8 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mLastScaleType = -1;
    mLastdBRange = -1;
    mAutoSaveIdent = 0;
+
+   SetHeight( TrackInfo::DefaultWaveTrackHeight() );
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):
