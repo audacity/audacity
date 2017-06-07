@@ -1202,7 +1202,7 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
 
    double t = t0;
    double increment = 0;
-   if ( len > 0 && t <= mEnv[0].GetT() && mEnv[0].GetT() == mEnv[1].GetT() )
+   if ( len > 1 && t <= mEnv[0].GetT() && mEnv[0].GetT() == mEnv[1].GetT() )
       increment = epsilon;
 
    double tprev, vprev, tnext = 0, vnext, vstep = 0;
