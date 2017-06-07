@@ -6186,7 +6186,9 @@ void TrackPanel::HandleWheelRotationInVRuler
 /// Filter captured keys typed into LabelTracks.
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 {
-   HandleInterruptedDrag();
+   wxKeyEvent *kevent = static_cast<wxKeyEvent *>(event.GetEventObject());
+   if ( WXK_ESCAPE != kevent->GetKeyCode() )
+      HandleInterruptedDrag();
 
    // Only deal with LabelTracks
    Track *t = GetFocusedTrack();
@@ -6194,7 +6196,6 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
       event.Skip();
       return;
    }
-   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
 
    event.Skip(!((LabelTrack *)t)->CaptureKey(*kevent));
 }
