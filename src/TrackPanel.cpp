@@ -5308,12 +5308,13 @@ std::pair< int, int > CalcBottomItemY
    return { y - (pLines->height + pLines->extraSpace ), pLines->height };
 }
 
-bool HideTopItem( const wxRect &rect, const wxRect &subRect ) {
+bool HideTopItem( const wxRect &rect, const wxRect &subRect,
+                  int allowance = 0 ) {
    auto limit = CalcBottomItemY
       ( commonTrackTCPBottomLines, kHighestBottomItem, rect.height).first;
    // Return true if the rectangle is even touching the limit
    // without an overlap.  That was the behavior as of 2.1.3.
-   return subRect.y + subRect.height >= rect.y + limit;
+   return subRect.y + subRect.height - allowance >= rect.y + limit;
 }
 
 }
@@ -5521,7 +5522,7 @@ bool TrackPanel::GainFunc(Track * t, wxRect rect, wxMouseEvent &event,
 {
    wxRect sliderRect;
    mTrackInfo.GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( HideTopItem( rect, sliderRect ) )
+   if ( HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return false;
    if (!sliderRect.Contains(x, y))
       return false;
@@ -5538,7 +5539,7 @@ bool TrackPanel::PanFunc(Track * t, wxRect rect, wxMouseEvent &event,
 {
    wxRect sliderRect;
    mTrackInfo.GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( HideTopItem( rect, sliderRect ) )
+   if ( HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return false;
    if (!sliderRect.Contains(x, y))
       return false;
@@ -9748,11 +9749,11 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) 
    wxRect sliderRect;
 
    GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( !HideTopItem( rect, sliderRect ) )
+   if ( !HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       GainSlider(t, captured)->OnPaint(*dc);
 
    GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( !HideTopItem( rect, sliderRect ) )
+   if ( !HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       PanSlider(t, captured)->OnPaint(*dc);
 }
 
