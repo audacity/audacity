@@ -5253,9 +5253,11 @@ const TCPLine waveTrackTCPLines[] = {
 
 const TCPLine noteTrackTCPLines[] = {
    COMMON_ITEMS(0)
+#ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
    { kItemMidiControlsRect, kMidiCellHeight * 4, 0 },
    { kItemVelocity, kTrackInfoSliderHeight, 5 },
+#endif
    { 0, 0, 0 }
 };
 
@@ -5375,7 +5377,6 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 
          if (isleft && VelocityFunc(t, rect, event, event.m_x, event.m_y))
             return;
-#endif
          wxRect midiRect;
          mTrackInfo.GetMidiControlsRect(rect, midiRect);
 
@@ -5388,6 +5389,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
             Refresh(false);
             return;
          }
+#endif
       }
 #endif // USE_MIDI
 
