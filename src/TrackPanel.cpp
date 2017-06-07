@@ -5211,6 +5211,12 @@ struct TCPLine {
    int extraSpace;
 };
 
+#ifdef __WXMAC__
+   #define STATUS_ITEM_SHIFT 3
+#else
+   #define STATUS_ITEM_SHIFT 0
+#endif
+
 #ifdef EXPERIMENTAL_DA
 
    #define TITLE_ITEMS(extra) \
@@ -5228,7 +5234,7 @@ struct TCPLine {
       { kItemBarButtons, kTrackInfoBtnSize, extra },
    #define STATUS_ITEMS \
       { kItemStatusInfo1, 12, 4 }, \
-      { kItemStatusInfo2, 12, 2 },
+      { kItemStatusInfo2, 12, (4 - STATUS_ITEM_SHIFT) },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
 
@@ -5243,7 +5249,7 @@ const TCPLine commonTrackTCPLines[] = {
 };
 
 const TCPLine waveTrackTCPLines[] = {
-   COMMON_ITEMS(2)
+   COMMON_ITEMS(STATUS_ITEM_SHIFT)
    STATUS_ITEMS
    MUTE_SOLO_ITEMS(2)
    { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
