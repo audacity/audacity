@@ -894,7 +894,7 @@ std::pair< int, int > Envelope::ExpandRegion
 {
    // t0 is relative time
 
-   double val;
+   double val = GetValueRelative( t0 );
    const auto range = EqualRange( t0, 0 );
 
    // Preserve the left-side limit.
@@ -904,7 +904,6 @@ std::pair< int, int > Envelope::ExpandRegion
       ;
    else {
       // Make a control point.
-      val = GetValueRelative( t0 );
       Insert( range.first, EnvPoint{ t0, val } );
    }
 
