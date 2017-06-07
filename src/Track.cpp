@@ -52,7 +52,7 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
    mLinked    = false;
 
    mY = 0;
-   mHeight = 150;
+   mHeight = DefaultHeight;
    mIndex = 0;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    mYv = mHeight;

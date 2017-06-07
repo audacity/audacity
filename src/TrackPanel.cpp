@@ -5246,8 +5246,8 @@ const TCPLine waveTrackTCPLines[] = {
    COMMON_ITEMS(2)
    STATUS_ITEMS
    MUTE_SOLO_ITEMS(2)
-   { kItemGain, kTrackInfoSliderHeight, 5 },
-   { kItemPan, kTrackInfoSliderHeight, 5 },
+   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
+   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
    { 0, 0, 0 }
 };
 
@@ -5256,10 +5256,20 @@ const TCPLine noteTrackTCPLines[] = {
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
    { kItemMidiControlsRect, kMidiCellHeight * 4, 0 },
-   { kItemVelocity, kTrackInfoSliderHeight, 5 },
+   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
 #endif
    { 0, 0, 0 }
 };
+
+int totalTCPLines( const TCPLine *pLines )
+{
+   int total = 0;
+   while ( pLines->items ) {
+      total += pLines->height + pLines->extraSpace;
+      ++pLines;
+   }
+   return total;
+}
 
 const TCPLine *getTCPLines( const Track &track )
 {
@@ -5557,7 +5567,7 @@ bool TrackPanel::VelocityFunc(Track * t, wxRect rect, wxMouseEvent &event,
 {
    wxRect sliderRect;
    mTrackInfo.GetVelocityRect(rect.GetTopLeft(), sliderRect);
-   if ( HideTopItem( rect, sliderRect ) )
+   if ( HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return false;
    if (!sliderRect.Contains(x, y))
       return false;
@@ -9762,12 +9772,24 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 {
    wxRect sliderRect;
 
-   GetVelocityRect(rect.GetTopLeft(), sliderRect);
-   if ( !HideTopItem( rect, sliderRect ) ) {
+   GetVelocityRect( rect.GetTopLeft(), sliderRect );
+   if ( !HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) ) {
       VelocitySlider(t, captured)->OnPaint(*dc);
    }
 }
 #endif
+
+unsigned TrackInfo::DefaultNoteTrackHeight()
+{
+   // Just high enough that the velocity slider is just above the Minimize
+   // button, as for default sized Wave track
+   int needed =
+      kTopMargin + kBottomMargin +
+      totalTCPLines( noteTrackTCPLines ) +
+      totalTCPLines( commonTrackTCPBottomLines ) -
+      kTrackInfoSliderExtra;
+   return (unsigned) std::max( needed, (int) Track::DefaultHeight );
+}
 
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
