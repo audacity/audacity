@@ -4231,6 +4231,9 @@ void AudacityProject::OnPreferences()
 {
    GlobalPrefsDialog dialog(this /* parent */ );
 
+   if( ScreenshotCommand::MayCapture( &dialog ) )
+      return;
+
    if (!dialog.ShowModal()) {
       // Canceled
       return;

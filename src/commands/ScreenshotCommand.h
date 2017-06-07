@@ -49,6 +49,7 @@ private:
    void CaptureDock(wxWindow *win, const wxString &fileName);
    void CaptureMenus(wxMenuBar*pBar, const wxString &fileName);
    void CaptureEffects( AudacityProject * pProject, const wxString &fileName );
+   void CapturePreferences( AudacityProject * pProject, const wxString &fileName );
    void Capture(const wxString &basename,
          wxWindow *window,
          int x, int y, int width, int height,

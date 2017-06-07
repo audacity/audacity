@@ -42,6 +42,7 @@ project window.
 #include "../toolbars/ToolsToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../widgets/Ruler.h"
+#include "../Prefs.h"
 
 #if defined(__WXMAC__) && !wxCHECK_VERSION(3, 0, 0)
 //
@@ -376,16 +377,13 @@ void ScreenshotCommand::CaptureWindowOnIdle( wxWindow * pWin )
 
    wxPoint Pos = pDlg->GetScreenPosition();
    wxSize Siz = pDlg->GetSize();
-   wxString Name = mDirToWriteTo;
    wxString Title = pDlg->GetTitle();
 
    // Remove '/' from "Sliding Time Scale/Pitch Shift..."
    // and any other effects that have illegal filename chanracters.
    Title.Replace( "/", "" );
-   Name.Replace( "effects000", Title );
-
-   int x = 0, y = 0;
-   int width, height;
+   Title.Replace( ":", "" );
+   wxString Name = mDirToWriteTo + Title + ".png";
 
    wxLogDebug("Taking screenshot of window %s (%i,%i,%i,%i)", Name, 
          Pos.x, Pos.y, Siz.x, Siz.y );
@@ -400,13 +398,39 @@ void ScreenshotCommand::CaptureWindowOnIdle( wxWindow * pWin )
    pDlg->GetEventHandler()->AddPendingEvent( Evt );
 }
 
+void ScreenshotCommand::CapturePreferences( AudacityProject * pProject, const wxString &fileName ){
+   fileName;//compiler food.
+   CommandManager * pMan = pProject->GetCommandManager();
+
+   // Yucky static variables.  Is there a better way?  The problem is that we need the
+   // idle callback to know more about what to do.
+   mDirToWriteTo = fileName.BeforeLast('\\') + "\\";
+   mpShooter = this;
+   const int nPrefsPages = 19;
+
+   for( int i=0;i<nPrefsPages;i++){
+      // The handler is cleared each time it is used.
+      SetIdleHandler( IdleHandler );
+      gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)i);
+      gPrefs->Flush();
+      wxString Command = "Preferences";
+      if( !pMan->HandleTextualCommand( Command, AlwaysEnabledFlag, AlwaysEnabledFlag ) )
+      {
+         wxLogDebug("Command %s not found", Command );
+      }
+      // This sleep is not needed, but gives user a chance to see the
+      // dialogs as they whizz by.
+      wxMilliSleep( 200 );
+   }
+}
+
 void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxString &fileName ){
    fileName;//compiler food.
    CommandManager * pMan = pProject->GetCommandManager();
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
-   mDirToWriteTo = fileName;
+   mDirToWriteTo = fileName.BeforeLast('/') + "/";
    mpShooter = this;
 
 #define TRICKY_CAPTURE
@@ -523,6 +547,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    captureModeValidator->AddOption(wxT("toolbars"));
    captureModeValidator->AddOption(wxT("menus"));
    captureModeValidator->AddOption(wxT("effects"));
+   captureModeValidator->AddOption(wxT("preferences"));
    captureModeValidator->AddOption(wxT("selectionbar"));
    captureModeValidator->AddOption(wxT("tools"));
    captureModeValidator->AddOption(wxT("transport"));
@@ -707,6 +732,10 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    else if (captureMode.IsSameAs(wxT("effects")))
    {
       CaptureEffects(context.GetProject(), fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("preferences")))
+   {
+      CapturePreferences(context.GetProject(), fileName);
    }
    else if (captureMode.IsSameAs(wxT("selectionbar")))
    {
