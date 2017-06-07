@@ -430,7 +430,7 @@ void ScreenshotCommand::CaptureEffects( AudacityProject * pProject, const wxStri
    wxString Str;
    // Yucky static variables.  Is there a better way?  The problem is that we need the
    // idle callback to know more about what to do.
-   mDirToWriteTo = fileName.BeforeLast('/') + "/";
+   mDirToWriteTo = fileName.BeforeLast('\\') + "\\";
    mpShooter = this;
 
 #define TRICKY_CAPTURE
