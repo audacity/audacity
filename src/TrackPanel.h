@@ -119,6 +119,7 @@ private:
 
 public:
    static unsigned DefaultNoteTrackHeight();
+   static unsigned DefaultWaveTrackHeight();
 
    LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
    LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;

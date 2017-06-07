@@ -9791,6 +9791,16 @@ unsigned TrackInfo::DefaultNoteTrackHeight()
    return (unsigned) std::max( needed, (int) Track::DefaultHeight );
 }
 
+unsigned TrackInfo::DefaultWaveTrackHeight()
+{
+   int needed =
+      kTopMargin + kBottomMargin +
+      totalTCPLines( waveTrackTCPLines ) +
+      totalTCPLines( commonTrackTCPBottomLines ) -
+      kTrackInfoSliderExtra;
+   return (unsigned) std::max( needed, (int) Track::DefaultHeight );
+}
+
 LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
 {
    wxPoint topLeft{
