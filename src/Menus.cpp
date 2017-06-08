@@ -635,9 +635,6 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("SelRestore"), _("Retrieve Selectio&n"), FN(OnSelectionRestore),
          TracksExistFlag,
          TracksExistFlag);
-      c->AddSeparator();
-      // GA: Likewise zero crossings can be just the cursor, so this doesn't belong here. 
-      c->AddItem(wxT("ZeroCross"), _("Ends to &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
 
       c->EndSubMenu();
 
@@ -672,6 +669,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
       /////////////////////////////////////////////////////////////////////////////
 
+      c->AddSeparator();
 
       c->AddItem(wxT("SelCursorStoredCursor"), _("Cursor to Stored &Cursor Position"), FN(OnSelectCursorStoredCursor),
          wxT(""), TracksExistFlag, TracksExistFlag);
@@ -682,6 +680,9 @@ void AudacityProject::CreateMenusAndCommands()
       // Save cursor position is used in some selections.
       // Maybe there should be a restore for it?
 
+      c->AddSeparator();
+
+      c->AddItem(wxT("ZeroCross"), _("At &Zero Crossings"), FN(OnZeroCrossing), wxT("Z"));
 
       c->EndMenu();
 

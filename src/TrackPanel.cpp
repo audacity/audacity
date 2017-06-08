@@ -4595,7 +4595,7 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent &event, const WaveTrack *
 
    if (WaveTrack::Waveform != display)
    {
-      wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), _("Draw Tool"));
+      wxMessageBox(_("To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."), _("Draw Tool"));
       return false;
    }
 
