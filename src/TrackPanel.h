@@ -44,6 +44,7 @@ class MixerBoard;
 class AudacityProject;
 
 class TrackPanelAx;
+struct TrackPanelMouseEvent;
 
 class ViewInfo;
 
@@ -302,6 +303,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // void SetSnapTo(int snapto)
 
    void HandleInterruptedDrag();
+   void Uncapture( wxMouseEvent *pEvent = nullptr );
    void CancelDragging();
    bool HandleEscapeKey(bool down);
    void HandleAltKey(bool down);
@@ -336,7 +338,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
  protected:
    bool IsAudioActive();
-   void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
+   void HandleClick( const TrackPanelMouseEvent &tpmEvent );
 
 public:
    size_t GetTrackCount() const;
@@ -349,10 +351,8 @@ public:
    void UpdateAccessibility();
    void MessageForScreenReader(const wxString& message);
 
-   void HandleCursor(wxMouseEvent & event);
-
    // MM: Handle mouse wheel rotation
-   void HandleWheelRotation(wxMouseEvent & event);
+   void HandleWheelRotation( TrackPanelMouseEvent &tpmEvent );
 
    void MakeParentRedrawScrollbars();
 
@@ -369,6 +369,11 @@ protected:
       wxRect rect;
    };
    FoundCell FindCell(int mouseX, int mouseY);
+
+   void HandleCursor( wxMouseEvent *pEvent );
+   void HandleCursor
+      ( const TrackPanelMouseEvent &tpmEvent,
+        CellType cellType = CellType::Background );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
