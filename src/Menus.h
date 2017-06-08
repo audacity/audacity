@@ -288,6 +288,9 @@ int CountSelectedWaveTracks();
 int CountSelectedTracks();
 public:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+// For toggling of spectral seletion
+double mLastF0;
+double mLastF1;
 void OnToggleSpectralSelection();
 void DoNextPeakFrequency(bool up);
 void OnNextHigherPeakFrequency();

@@ -546,8 +546,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mFreqSelMode = FREQ_SEL_INVALID;
    mFrequencySnapper = std::make_unique<SpectrumAnalyst>();
-
-   mLastF0 = mLastF1 = SelectedRegion::UndefinedFrequency;
 #endif
 
    mSelStartValid = false;
@@ -2707,25 +2705,6 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
          mViewInfo->selectedRegion.setF1(mFreqSelPin);
       }
    }
-}
-
-void TrackPanel::ToggleSpectralSelection()
-{
-   SelectedRegion &region = mViewInfo->selectedRegion;
-   const double f0 = region.f0();
-   const double f1 = region.f1();
-   const bool haveSpectralSelection =
-      !(f0 == SelectedRegion::UndefinedFrequency &&
-        f1 == SelectedRegion::UndefinedFrequency);
-   if (haveSpectralSelection)
-   {
-      mLastF0 = f0;
-      mLastF1 = f1;
-      region.setFrequencies
-         (SelectedRegion::UndefinedFrequency, SelectedRegion::UndefinedFrequency);
-   }
-   else
-      region.setFrequencies(mLastF0, mLastF1);
 }
 
 void TrackPanel::ResetFreqSelectionPin(double hintFrequency, bool logF)

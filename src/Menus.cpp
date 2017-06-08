@@ -5516,7 +5516,22 @@ void AudacityProject::OnSelectNone()
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void AudacityProject::OnToggleSpectralSelection()
 {
-   mTrackPanel->ToggleSpectralSelection();
+   SelectedRegion &region = mViewInfo.selectedRegion;
+   const double f0 = region.f0();
+   const double f1 = region.f1();
+   const bool haveSpectralSelection =
+   !(f0 == SelectedRegion::UndefinedFrequency &&
+     f1 == SelectedRegion::UndefinedFrequency);
+   if (haveSpectralSelection)
+   {
+      mLastF0 = f0;
+      mLastF1 = f1;
+      region.setFrequencies
+      (SelectedRegion::UndefinedFrequency, SelectedRegion::UndefinedFrequency);
+   }
+   else
+      region.setFrequencies(mLastF0, mLastF1);
+
    mTrackPanel->Refresh(false);
    ModifyState(false);
 }

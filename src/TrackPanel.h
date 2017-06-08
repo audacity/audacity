@@ -675,12 +675,6 @@ protected:
    const WaveTrack *mFreqSelTrack = NULL;
    std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
-   // For toggling of spectral seletion
-   double mLastF0;
-   double mLastF1;
-
-public:
-   void ToggleSpectralSelection();
 protected:
 
 #endif

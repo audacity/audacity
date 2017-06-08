@@ -1228,6 +1228,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
 #endif
+   mLastF0 = mLastF1 = SelectedRegion::UndefinedFrequency;
 }
 
 AudacityProject::~AudacityProject()
