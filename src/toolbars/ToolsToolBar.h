@@ -55,7 +55,7 @@ class ToolsToolBar final : public ToolBar {
 
    void OnTool(wxCommandEvent & evt);
 
-   void SetCurrentTool(int tool, bool show);
+   void SetCurrentTool(int tool);
 
    //These interrogate the state of the buttons or controls.
    int GetCurrentTool() const;

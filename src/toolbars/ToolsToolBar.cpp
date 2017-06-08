@@ -225,24 +225,21 @@ int ToolsToolBar::GetCurrentTool() const
 
 /// Sets the currently active tool
 /// @param tool - The index of the tool to be used.
-/// @param show - should we update the button display?
-void ToolsToolBar::SetCurrentTool(int tool, bool show)
+void ToolsToolBar::SetCurrentTool(int tool)
 {
    //In multi-mode the current tool is shown by the
    //cursor icon.  The buttons are not updated.
 
    bool leavingMulticlipMode =
-      IsDown(multiTool) && show && tool != multiTool;
+      IsDown(multiTool) && tool != multiTool;
 
    if (leavingMulticlipMode)
       mTool[multiTool]->PopUp();
 
    if (tool != mCurrentTool || leavingMulticlipMode) {
-      if (show)
-         mTool[mCurrentTool]->PopUp();
+      mTool[mCurrentTool]->PopUp();
       mCurrentTool=tool;
-      if (show)
-         mTool[mCurrentTool]->PushDown();
+      mTool[mCurrentTool]->PushDown();
    }
    //JKC: ANSWER-ME: Why is this RedrawAllProjects() line required?
    //msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
@@ -250,14 +247,11 @@ void ToolsToolBar::SetCurrentTool(int tool, bool show)
    // RedrawAllProjects();
 
    //msmeyer: But we instruct the projects to handle the cursor shape again
-   if (show)
-   {
-      RefreshCursorForAllProjects();
+   RefreshCursorForAllProjects();
 
-      gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
-                    IsDown(multiTool));
-      gPrefs->Flush();
-   }
+   gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
+                 IsDown(multiTool));
+   gPrefs->Flush();
 }
 
 bool ToolsToolBar::IsDown(int tool) const
