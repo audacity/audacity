@@ -5439,7 +5439,9 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    if (event.LeftUp()) {
       if (mRearrangeCount != 0) {
          wxString dir;
+         /* i18n-hint: a direction as in up or down.*/
          dir = mRearrangeCount < 0 ? _("up") : _("down");
+/* i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.*/
          MakeParentPushState(wxString::Format(_("Moved '%s' %s"),
             mCapturedTrack->GetName().c_str(),
             dir.c_str()),
@@ -5467,7 +5469,6 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
       ++mRearrangeCount;
-      /* i18n-hint: a direction as in up or down.*/
       if (pMixerBoard)
          if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mCapturedTrack ))
             pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
