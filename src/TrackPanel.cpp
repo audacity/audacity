@@ -526,8 +526,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    //drawing track.
    mDrawingTrack =NULL;
 
-   //More initializations, some of these for no other reason than
-   //to prevent runtime memory check warnings
    mZoomStart = -1;
    mZoomEnd = -1;
 
