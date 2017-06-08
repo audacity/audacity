@@ -826,13 +826,13 @@ void Envelope::RemoveUnneededPoints
          fabs( point1.GetVal() - point2.GetVal() ) > VALUE_TOLERANCE;
    };
 
-   auto remove = [this]( size_t index ) {
+   auto remove = [this]( size_t index, bool leftLimit ) {
       // Assume array accesses are in-bounds
       const auto &point = mEnv[ index ];
       auto when = point.GetT();
       auto val = point.GetVal();
       Delete( index );  // try it to see if it's doing anything
-      auto val1 = GetValueRelative ( when );
+      auto val1 = GetValueRelative ( when, leftLimit );
       if( fabs( val - val1 ) > VALUE_TOLERANCE ) {
          // put it back, we needed it
          Insert( index, EnvPoint{ when, val } );
@@ -847,19 +847,7 @@ void Envelope::RemoveUnneededPoints
    bool leftLimit =
       !rightward && startAt + 1 < len && isDiscontinuity( startAt );
 
-   double rightT, rightVal;
-   if ( leftLimit ) {
-      // Remove the right point before evaluating in remove()
-      auto &rightPoint = mEnv[ 1 + startAt ];
-      rightT = rightPoint.GetT(), rightVal = rightPoint.GetVal();
-      Delete( 1 + startAt );
-   }
-
-   bool removed = remove( startAt );
-
-   if ( leftLimit )
-      // Restore the right point
-      Insert( ( removed ? 0 : 1 ) + startAt, EnvPoint{ rightT, rightVal } );
+   bool removed = remove( startAt, leftLimit );
 
    if ( removed )
       // The given point was removable.  Done!
@@ -879,7 +867,7 @@ void Envelope::RemoveUnneededPoints
       if ( index + 1 < len && isDiscontinuity( index ) )
          break;
 
-      if ( ! remove( index ) )
+      if ( ! remove( index, false ) )
          break;
 
       --len;
@@ -1113,11 +1101,11 @@ double Envelope::GetValue( double t, double sampleDur ) const
    return temp;
 }
 
-double Envelope::GetValueRelative(double t) const
+double Envelope::GetValueRelative(double t, bool leftLimit) const
 {
    double temp;
 
-   GetValuesRelative(&temp, 1, t, 0.0);
+   GetValuesRelative(&temp, 1, t, 0.0, leftLimit);
    return temp;
 }
 
@@ -1190,8 +1178,9 @@ void Envelope::GetValues( double *buffer, int bufferLen,
    GetValuesRelative( buffer, bufferLen, t0, tstep);
 }
 
-void Envelope::GetValuesRelative(double *buffer, int bufferLen,
-                         double t0, double tstep) const
+void Envelope::GetValuesRelative
+   (double *buffer, int bufferLen, double t0, double tstep, bool leftLimit)
+   const
 {
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
    // wxASSERT( bufferLen > 0 );
@@ -1202,7 +1191,7 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
    double t = t0;
    double increment = 0;
    if ( len > 1 && t <= mEnv[0].GetT() && mEnv[0].GetT() == mEnv[1].GetT() )
-      increment = epsilon;
+      increment = leftLimit ? -epsilon : epsilon;
 
    double tprev, vprev, tnext = 0, vnext, vstep = 0;
 
@@ -1225,14 +1214,16 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
          continue;
       }
       // IF after envelope THEN last value
-      if ( tplus >= mEnv[len - 1].GetT() ) {
+      if ( leftLimit
+            ? tplus > mEnv[len - 1].GetT() : tplus >= mEnv[len - 1].GetT() ) {
          buffer[b] = mEnv[len - 1].GetVal();
          t += tstep;
          continue;
       }
 
-      // Note >= not > , to get the right limit in case epsilon == 0
-      if ( b == 0 || tplus >= tnext ) {
+      // be careful to get the correct limit even in case epsilon == 0
+      if ( b == 0 ||
+           ( leftLimit ? tplus > tnext : tplus >= tnext ) ) {
 
          // We're beyond our tnext, so find the next one.
          // Don't just increment lo or hi because we might
@@ -1249,11 +1240,14 @@ void Envelope::GetValuesRelative(double *buffer, int bufferLen,
 
          if ( hi + 1 < len && tnext == mEnv[ hi + 1 ].GetT() )
             // There is a discontinuity after this point-to-point interval.
-            // Will stop evaluating in this interval when time is slightly
-            // before tNext, then use the right limit.  This is the right intent
+            // Usually will stop evaluating in this interval when time is slightly
+            // before tNext, then use the right limit.
+            // This is the right intent
             // in case small roundoff errors cause a sample time to be a little
             // before the envelope point time.
-            increment = epsilon;
+            // Less commonly we want a left limit, so we continue evaluating in
+            // this interval until shortly after the discontinuity.
+            increment = leftLimit ? -epsilon : epsilon;
          else
             increment = 0;
 

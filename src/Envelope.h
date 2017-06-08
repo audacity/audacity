@@ -167,9 +167,10 @@ private:
    void RemoveUnneededPoints
       ( size_t startAt, bool rightward, bool testNeighbors = true );
 
-   double GetValueRelative(double t) const;
+   double GetValueRelative(double t, bool leftLimit = false) const;
    void GetValuesRelative
-      (double *buffer, int len, double t0, double tstep) const;
+      (double *buffer, int len, double t0, double tstep, bool leftLimit = false)
+      const;
    // relative time
    int NumberOfPointsAfter(double t) const;
    // relative time
