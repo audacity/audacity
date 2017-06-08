@@ -1377,8 +1377,10 @@ bool TrackPanel::SetCursorForCutline(WaveTrack * track, const wxRect &rect, cons
 }
 
 #if defined(__WXMAC__)
+/* i18n-hint: Command names a modifier key on Macintosh keyboards */
 #define CTRL_CLICK _("Command-Click")
 #else
+/* i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards */
 #define CTRL_CLICK _("Ctrl-Click")
 #endif
 
