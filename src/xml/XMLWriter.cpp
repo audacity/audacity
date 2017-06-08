@@ -50,6 +50,16 @@ static int charXMLCompatiblity[] =
 /* 0x1C */ 0, 0, 0, 0,
   };
 
+// These are used by XMLEsc to handle surrogate pairs and filter invalid characters outside the ASCII range.
+#define MIN_HIGH_SURROGATE static_cast<wxUChar>(0xD800)
+#define MAX_HIGH_SURROGATE static_cast<wxUChar>(0xDCFF)
+#define MIN_LOW_SURROGATE static_cast<wxUChar>(0xDC00)
+#define MAX_LOW_SURROGATE static_cast<wxUChar>(0xDFFF)
+
+// Unicode defines other noncharacters, but only these two are invalid in XML.
+#define NONCHARACTER_FFFE static_cast<wxUChar>(0xFFFE)
+#define NONCHARACTER_FFFF static_cast<wxUChar>(0xFFFF)
+
 
 ///
 /// XMLWriter base class
@@ -243,13 +253,31 @@ wxString XMLWriter::XMLEsc(const wxString & s)
          break;
 
          default:
-            if (!wxIsprint(c)) {
+            if (sizeof(c) == 2 && c >= MIN_HIGH_SURROGATE && c <= MAX_HIGH_SURROGATE && i < len - 1) {
+               // If wxUChar is 2 bytes, then supplementary characters (those greater than U+FFFF) are represented
+               // with a high surrogate (U+D800..U+DBFF) followed by a low surrogate (U+DC00..U+DFFF).
+               // Handle those here.
+               wxUChar c2 = s.GetChar(++i);
+               if (c2 >= MIN_LOW_SURROGATE && c2 <= MAX_LOW_SURROGATE) {
+                  // Surrogate pair found; simply add it to the output string.
+                  result += c;
+                  result += c2;
+               }
+               else {
+                  // That high surrogate isn't paired, so ignore it.
+                  i--;
+               }
+            }
+            else if (!wxIsprint(c)) {
                //ignore several characters such ase eot (0x04) and stx (0x02) because it makes expat parser bail
                //see xmltok.c in expat checkCharRefNumber() to see how expat bails on these chars.
                //also see wxWidgets-2.8.12/src/expat/lib/asciitab.h to see which characters are nonxml compatible
                //post decode (we can still encode '&' and '<' with this table, but it prevents us from encoding eot)
-               //everything is compatible past ascii 0x20, so we don't check higher than this.
-               if(c> 0x1F || charXMLCompatiblity[c]!=0)
+               //everything is compatible past ascii 0x20 except for surrogates and the noncharacters U+FFFE and U+FFFF,
+               //so we don't check the compatibility table higher than this.
+               if((c> 0x1F || charXMLCompatiblity[c]!=0) &&
+                     (c < MIN_HIGH_SURROGATE || c > MAX_LOW_SURROGATE) &&
+                     c != NONCHARACTER_FFFE && c != NONCHARACTER_FFFF)
                   result += wxString::Format(wxT("&#x%04x;"), c);
             }
             else {
