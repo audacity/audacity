@@ -643,8 +643,6 @@ protected:
    int mTimeCount;
 
    bool mRefreshBacking;
-   int mPrevWidth;
-   int mPrevHeight;
 
    SelectedRegion mInitialSelection;
    std::vector<bool> mInitialTrackSelection;

@@ -530,8 +530,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    //to prevent runtime memory check warnings
    mZoomStart = -1;
    mZoomEnd = -1;
-   mPrevWidth = -1;
-   mPrevHeight = -1;
 
    // This is used to snap the cursor to the nearest track that
    // lines up with it.
