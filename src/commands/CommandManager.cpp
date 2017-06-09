@@ -93,6 +93,8 @@ CommandManager.  It holds the callback for one command.
 #include "Keyboard.h"
 #include "../PluginManager.h"
 #include "../effects/EffectManager.h"
+#include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/ErrorDialog.h"
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
@@ -1139,19 +1141,39 @@ void CommandManager::SetKeyFromIndex(int i, const wxString &key)
    entry->key = KeyStringNormalize(key);
 }
 
-void CommandManager::TellUserWhyDisallowed( CommandFlag flagsGot, CommandMask flagsRequired )
+void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag flagsGot, CommandMask flagsRequired )
 {
    // The default string for 'reason' is a catch all.  I hope it won't ever be seen
    // and that we will get something more specific.
    wxString reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
+   // The default title string is 'Disallowed'.
+   wxString title = _("Disallowed");
+   wxString help_url ="";
 
    auto missingFlags = flagsRequired & (~flagsGot );
    if( missingFlags & AudioIONotBusyFlag )
       reason = _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
    else if( missingFlags & StereoRequiredFlag )
       reason = _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
-   else if( missingFlags & TimeSelectedFlag )
-      reason = _("You must first select some audio to perform this action.");
+   // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
+   else if(( missingFlags & TimeSelectedFlag ) || (missingFlags &CutCopyAvailableFlag )){
+      title = _("No Audio Selected");
+#ifdef EXPERIMENTAL_DA
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      reason = wxString::Format( _("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio."), Name );
+#else
+#ifdef __WXMAC__
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      reason = wxString::Format( _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again.\n\n"
+"Click the Help button to learn more about selection methods."), Name );
+#else
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      reason = wxString::Format( _("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.\n\n"
+"Click the Help button to learn more about selection methods."), Name );
+#endif
+#endif
+      help_url = "http://alphamanual.audacityteam.org/man/Selecting_Audio_-_the_basics";
+   }
    else if( missingFlags & WaveTracksSelectedFlag)
       reason = _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
@@ -1164,7 +1186,30 @@ void CommandManager::TellUserWhyDisallowed( CommandFlag flagsGot, CommandMask fl
    else if( missingFlags == TrackPanelHasFocus )
       return;
 
-   wxMessageBox(reason, _("Disallowed"),  wxICON_WARNING | wxOK );
+
+#if 0
+   // Does not have the warning icon...
+   ShowErrorDialog(
+      NULL,
+      title,
+      reason, 
+      help_url,
+      false);
+#endif
+
+   // JKC: I tried building a custom error dialog with the warning icon, and a 
+   // help button linking to our html (without closing).
+   // In the end I decided it was easier (more portable across different
+   // OS's) to use the stock one.
+   int result = ::wxMessageBox(reason, title,  wxICON_WARNING | wxOK | 
+      (help_url.IsEmpty() ? 0 : wxHELP) );
+   // if they click help, we fetch that help, and pop the dialog (without a
+   // help button) up again.
+   if( result == wxHELP ){
+      wxHtmlLinkInfo link( help_url );
+      OpenInDefaultBrowser(link);
+      ::wxMessageBox(reason, title,  wxICON_WARNING | wxOK );
+   }
 }
 
 ///
@@ -1285,14 +1330,14 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       if( !proj )
          return false;
 
+      wxString NiceName = entry->label;
+      NiceName.Replace("&", "");// remove &
+      NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
-      bool allowed = proj->TryToMakeActionAllowed( flags, entry->flags, combinedMask );
+      bool allowed = proj->ReportIfActionNotAllowed( 
+         NiceName, flags, entry->flags, combinedMask );
       if (!allowed)
-      {
-         TellUserWhyDisallowed(
-            flags & combinedMask, entry->flags & combinedMask);
          return false;
-      }
    }
 
    (*(entry->callback))(entry->index, evt);
@@ -1314,7 +1359,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 /// HandleTextualCommand() allows us a limitted version of script/batch
 /// behavior, since we can get from a string command name to the actual
 /// code to run.
-bool CommandManager::HandleTextualCommand(wxString & Str, CommandFlag flags, CommandMask mask)
+bool CommandManager::HandleTextualCommand(const wxString & Str, CommandFlag flags, CommandMask mask)
 {
    if( Str.IsEmpty() )
       return false;

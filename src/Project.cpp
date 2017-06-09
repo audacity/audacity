@@ -1284,7 +1284,16 @@ void AudacityProject::UpdatePrefsVariables()
 #else
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("Local") );
 #endif
-   gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &mSelectAllOnNone, true);
+   bool bSelectAllIfNone;
+   gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &bSelectAllIfNone, false);
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+#ifdef EXPERIMENTAL_DA
+   // DA warns or greys out.
+   mWhatIfNoSelection = bSelectAllIfNone ? 2 : 0;
+#else
+   // Audacity autoselects or warns.
+   mWhatIfNoSelection = bSelectAllIfNone ? 1 : 2;
+#endif
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
    gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
@@ -2272,6 +2281,19 @@ void AudacityProject::DoScroll()
    }
 }
 
+bool AudacityProject::ReportIfActionNotAllowed
+   ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+{
+   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, mask );
+   if( bAllowed )
+      return true;
+   CommandManager* cm = GetCommandManager();
+      if (!cm) return false;
+   cm->TellUserWhyDisallowed( Name, flags & mask, flagsRqd & mask);
+   return false;
+}
+
+
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
@@ -2300,12 +2322,14 @@ bool AudacityProject::TryToMakeActionAllowed
          return true;
    }
 
+   //We can only make the action allowed if we select audio when no selection.
+   // IF not set up to select all audio when none, THEN return with failure.
+   if( mWhatIfNoSelection != 1 )
+      return false;
+
    // Why is action still not allowed?
    // 0's wherever a required flag is missing (or is don't care)
    MissingFlags = (flags & ~flagsRqd) & mask;
-   // IF not set up to select all audio in that case, THEN return with failure.
-   if( !mSelectAllOnNone )
-      return false;
 
    // IF selecting all audio won't do any good, THEN return with failure.
    if( !(flags & WaveTracksExistFlag) )

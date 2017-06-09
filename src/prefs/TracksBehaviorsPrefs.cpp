@@ -62,7 +62,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieCheckBox(_("A&uto-select audio for editing"),
                     wxT("/GUI/SelectAllOnNone"),
-                    true);
+                    false);
       /* i18n-hint: Cut-lines are lines that can expand to show the cut audio.*/
       S.TieCheckBox(_("Enable cut &lines"),
                     wxT("/GUI/EnableCutLines"),

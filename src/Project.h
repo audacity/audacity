@@ -541,6 +541,8 @@ public:
    void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) override;
 
    // Command Handling
+   bool ReportIfActionNotAllowed
+      ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
    bool TryToMakeActionAllowed
       ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask );
 
@@ -688,7 +690,8 @@ private:
    bool mShowId3Dialog{ true }; //lda
    bool mEmptyCanBeDirty;
 
-   bool mSelectAllOnNone;
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+   int  mWhatIfNoSelection;
    bool mStopIfWasPaused;
 
    bool mIsSyncLocked;

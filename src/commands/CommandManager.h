@@ -225,7 +225,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(int id, CommandFlag flags, CommandMask mask);
-   bool HandleTextualCommand(wxString & Str, CommandFlag flags, CommandMask mask);
+   bool HandleTextualCommand(const wxString & Str, CommandFlag flags, CommandMask mask);
 
    //
    // Accessing
@@ -259,6 +259,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    //
 
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
+   void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired);
 
 protected:
 
@@ -288,7 +289,6 @@ protected:
    //
 
    bool HandleCommandEntry(const CommandListEntry * entry, CommandFlag flags, CommandMask mask, const wxEvent * evt = NULL);
-   void TellUserWhyDisallowed(CommandFlag flagsGot, CommandFlag flagsRequired);
 
    //
    // Modifying

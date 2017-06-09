@@ -3171,14 +3171,13 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    if (!mIsBatch && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
-      bool allowed = mProject->TryToMakeActionAllowed(flags,
-                                                      WaveTracksSelectedFlag | TimeSelectedFlag,
-                                                      WaveTracksSelectedFlag | TimeSelectedFlag);
+      bool allowed = mProject->ReportIfActionNotAllowed(
+         mEffect->GetName(),
+         flags,
+         WaveTracksSelectedFlag | TimeSelectedFlag,
+         WaveTracksSelectedFlag | TimeSelectedFlag);
       if (!allowed)
-      {
-         wxMessageBox(_("You must select audio in the project window."));
          return;
-      }
    }
 
    if (!mClient->ValidateUI())

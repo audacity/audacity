@@ -39,17 +39,16 @@ void ModifyAllProjectToolbarMenus();
 
 CommandFlag GetFocusedFrame();
 
+public:
 // If checkActive, do not do complete flags testing on an
 // inactive project as it is needlessly expensive.
 CommandFlag GetUpdateFlags(bool checkActive = false);
 
-double NearestZeroCrossing(double t0);
-
-public:
 //Adds label and returns index of label in labeltrack.
 int DoAddLabel(const SelectedRegion& region, bool preserveFocus = false);
 
 private:
+double NearestZeroCrossing(double t0);
 
         // Selecting a tool from the keyboard
 
