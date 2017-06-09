@@ -1517,13 +1517,21 @@ bool AudacityApp::OnInit()
 
       wxSplashScreen temporarywindow(
          logo,
-         wxSPLASH_NO_CENTRE | wxSPLASH_NO_TIMEOUT,
+         wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
          0,
          NULL,
          wxID_ANY,
-         wxDefaultPosition,
+         wndRect.GetTopLeft(),
          wxDefaultSize,
          wxSTAY_ON_TOP);
+      
+      // Unfortunately with the Windows 10 Creators update, the splash screen 
+      // now appears before setting its position.
+      // On a dual monitor screen it will appear on one screen and then 
+      // possibly jump to the second.
+      // We could fix this by writing outr own splash screen and using Hide() 
+      // until the splash scren was correctly positioned, then Show()
+
       // Possibly move it on to the second screen...
       temporarywindow.SetPosition( wndRect.GetTopLeft() );
       // Centered on whichever screen it is on.
