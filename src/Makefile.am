@@ -791,6 +791,11 @@ audacity_SOURCES += \
 	$(NULL)
 endif
 
+if USE_PORTMIDI
+audacity_CPPFLAGS += $(PORTMIDI_CFLAGS)
+audacity_LDADD += $(PORTMIDI_LIBS)
+endif
+
 if USE_QUICKTIME
 audacity_CPPFLAGS += $(QUICKTIME_CFLAGS)
 audacity_LDADD += $(QUICKTIME_LIBS)
