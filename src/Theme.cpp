@@ -290,7 +290,7 @@ ThemeBase::~ThemeBase(void)
 {
 }
 
-char * ThemeNames [] =
+const char * ThemeNames [] =
 {  "Classic",
    "Dark",
    "Light",
