@@ -1167,6 +1167,12 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
    else if( missingFlags == TracksExistFlag )
       return;
+   // Likewise return if it was just no tracks, and track panel did not have focus.  (e.g. up-arrow to move track)
+   else if( missingFlags == (TracksExistFlag | TrackPanelHasFocus) )
+      return;
+   // Likewise as above too...
+   else if( missingFlags == TrackPanelHasFocus )
+      return;
 
 
 #if 0
@@ -1343,12 +1349,15 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
 /// code to run.
 bool CommandManager::HandleTextualCommand(const wxString & Str, CommandFlag flags, CommandMask mask)
 {
+   if( Str.IsEmpty() )
+      return false;
    // Linear search for now...
    for (const auto &entry : mCommandList)
    {
       if (!entry->multi)
       {
-         if( Str.IsSameAs( entry->name ))
+         // Testing against labelPrefix too allows us to call Nyquist functions by name.
+         if( Str.IsSameAs( entry->name ) || Str.IsSameAs( entry->labelPrefix ))
          {
             return HandleCommandEntry( entry.get(), flags, mask);
          }
@@ -1368,7 +1377,7 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, CommandFlag flag
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (em.GetEffectByIdentifier(plug->GetID()).IsSameAs(Str))
+      if (em.GetEffectIdentifier(plug->GetID()).IsSameAs(Str))
       {
          return proj->OnEffect(plug->GetID(), AudacityProject::OnEffectFlags::kConfigured);
       }

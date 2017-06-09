@@ -209,7 +209,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             4);
       }
 
-      S.Id(ID_GRAYSCALE).TieCheckBox(_("&Grayscale"),
+      S.Id(ID_GRAYSCALE).TieCheckBox(_("Gra&yscale"),
          mTempSettings.isGrayscale);
 
       S.EndTwoColumn();

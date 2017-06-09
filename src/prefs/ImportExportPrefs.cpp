@@ -93,9 +93,9 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartRadioButtonGroup(wxT("/FileFormats/AllegroStyle"), true);
       {
-         S.TieRadioButton(_("&seconds"),
+         S.TieRadioButton(_("&Seconds"),
                           true);
-         S.TieRadioButton(_("&beats"),
+         S.TieRadioButton(_("&Beats"),
                           false);
       }
       S.EndRadioButtonGroup();

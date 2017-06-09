@@ -64,7 +64,7 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
                           wxT("copy"));
          S.TieRadioButton(_("Do &not copy"),
                           wxT("never"));
-         S.TieRadioButton(_("As&k user"),
+         S.TieRadioButton(_("As&k"),
                           wxT("ask"));
       }
       S.EndRadioButtonGroup();

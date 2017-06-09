@@ -159,6 +159,8 @@ void OnSelExtendRight(const wxEvent * evt);
 void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
+public:
+void DoClipLeftOrRight(bool right, bool keyUp );
 void OnClipLeft(const wxEvent* evt);
 void OnClipRight(const wxEvent* evt);
 
@@ -285,6 +287,9 @@ int CountSelectedWaveTracks();
 int CountSelectedTracks();
 public:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+// For toggling of spectral seletion
+double mLastF0;
+double mLastF1;
 void OnToggleSpectralSelection();
 void DoNextPeakFrequency(bool up);
 void OnNextHigherPeakFrequency();

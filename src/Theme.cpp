@@ -757,12 +757,14 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          return;
       }
 #endif
+#if 0
       // Deliberate policy to use the fast/cheap blocky pixel-multiplication
       // algorithm, as this introduces no artifacts on repeated scale up/down.
       ImageCache.Rescale( 
-         ImageCache.GetWidth() * 4,
-         ImageCache.GetHeight() *4,
+         ImageCache.GetWidth()*4,
+         ImageCache.GetHeight()*4,
          wxIMAGE_QUALITY_NEAREST );
+#endif
       if( !ImageCache.SaveFile( FileName, wxBITMAP_TYPE_PNG ))
       {
          wxMessageBox(

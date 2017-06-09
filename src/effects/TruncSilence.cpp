@@ -119,6 +119,11 @@ wxString EffectTruncSilence::GetDescription()
    return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
+wxString EffectTruncSilence::ManualPage()
+{
+   return wxT("Truncate_Silence");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectTruncSilence::GetType()
@@ -479,6 +484,10 @@ bool EffectTruncSilence::DoRemoval
 
          // Don't waste time past the end of a track
          if (t->GetEndTime() < r->start)
+            continue;
+
+         // Don't waste time cutting nothing.
+         if( cutLen == 0.0 )
             continue;
 
          double cutStart = (r->start + r->end - cutLen) / 2;

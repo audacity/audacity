@@ -118,19 +118,20 @@ int wxTreebookExt::SetSelection(size_t n)
    wxWindow *const applyButton = wxWindow::FindWindowById(wxID_APPLY, GetParent());
 
    if (helpButton) {
-#if defined(__WXMAC__)
-      // We don't appear to have accelerators on wxMac
-#else
       if (showHelp) {
          wxAcceleratorEntry entries[1];
-         entries[0].Set(wxACCEL_ALT, (int) 'H', wxID_HELP);
+#if defined(__WXMAC__)
+         // Is there a standard shortcut on Mac?
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
          wxAcceleratorTable accel(1, entries);
          this->SetAcceleratorTable(accel);
       }
       else {
          this->SetAcceleratorTable(wxNullAcceleratorTable);
       }
-#endif
+
       const bool changed = helpButton->Show(showHelp);
       if (changed)
          GetParent()->Layout();
@@ -248,6 +249,8 @@ PrefsDialog::PrefsDialog
       wxASSERT(factories.size() > 0);
       if (!uniquePage) {
          mCategories = safenew wxTreebookExt(this, wxID_ANY, mTitlePrefix);
+         // RJH: Prevent NVDA from reading "treeCtrl"
+         mCategories->GetTreeCtrl()->SetName(_("Category"));
          S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
          {
             S.Prop(1);
@@ -283,11 +286,24 @@ PrefsDialog::PrefsDialog
          S.EndHorizontalLay();
       }
       else {
+         // TODO: Look into getting rid of mUniquePage and instead
+         // adding into mCategories, so there is just one page in mCategories.
+         // And then hiding the treebook.
+
          // Unique page, don't show the factory
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
          mUniquePage = factory.Create(this);
-         S.AddWindow(mUniquePage, wxEXPAND);
+         wxWindow * uniquePageWindow = S.AddWindow(mUniquePage, wxEXPAND);
+         // We're not in the wxTreebook, so add the accelerator here
+         wxAcceleratorEntry entries[1];
+#if defined(__WXMAC__)
+         // Is there a standard shortcut on Mac?
+#else
+         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+#endif
+         wxAcceleratorTable accel(1, entries);
+         uniquePageWindow->SetAcceleratorTable(accel);
       }
    }
    S.EndVerticalLay();
@@ -389,18 +405,33 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    EndModal(false);
 }
 
+PrefsPanel * PrefsDialog::GetCurrentPanel()
+{
+   if( mCategories) 
+      return static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
+   else
+   {
+      wxASSERT( mUniquePage );
+      return mUniquePage;
+   }
+}
+
 void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 {
-   if (mCategories)
-      static_cast<PrefsPanel*>(mCategories->GetCurrentPage())->Apply();
-   else
-      mUniquePage->Apply();
+   GetCurrentPanel()->Apply();
 }
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   PrefsPanel* panel = static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
-   HelpSystem::ShowHelpDialog(this, panel->HelpPageName(), true);
+   wxString page = GetCurrentPanel()->HelpPageName();
+   // Currently (May2017) Spectrum Settings is the only preferences
+   // we ever display in a dialog on its own without others.
+   // We do so when it is configuring spectrums for a track.
+   // Because this happens, we want to visit a different help page.
+   // So we change the page name in the case of a page on its own.
+   if( !mCategories)
+      page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
+   HelpSystem::ShowHelpDialog(this, page, true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)

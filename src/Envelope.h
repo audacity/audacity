@@ -86,7 +86,11 @@ public:
 
    void Initialize(int numPoints);
 
-   virtual ~ Envelope();
+   virtual ~Envelope();
+
+   // Return true if violations of point ordering invariants were detected
+   // and repaired
+   bool ConsistencyCheck();
 
    double GetOffset() const { return mOffset; }
    double GetTrackLen() const { return mTrackLen; }
@@ -118,23 +122,26 @@ public:
       float zoomMin, float zoomMax, bool mirrored) const;
 
    // Handling Cut/Copy/Paste events
-   // sampleTime determines when the endpoint of the collapse is near enough
+   // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
-   void CollapseRegion(double t0, double t1, double sampleTime);
-   void Paste(double t0, const Envelope *e);
+   void CollapseRegion(double t0, double t1, double sampleDur);
+
+   // Envelope has no notion of rate and control point times are not quantized;
+   // but a tolerance is needed in the Paste routine, and better to inform it
+   // of an appropriate number, than use hidden arbitrary constants.
+   void Paste(double t0, const Envelope *e, double sampleDur);
 
    void InsertSpace(double t0, double tlen);
-   void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 
    // Control
    void SetOffset(double newOffset);
-   void SetTrackLen(double trackLen);
+   void SetTrackLen( double trackLen, double sampleDur = 0.0 );
    void RescaleValues(double minValue, double maxValue);
    void RescaleTimes( double newLength );
 
    // Accessors
    /** \brief Get envelope value at time t */
-   double GetValue(double t) const;
+   double GetValue( double t, double sampleDur = 0 ) const;
 
    /** \brief Get many envelope points at once.
     *
@@ -142,15 +149,28 @@ public:
     * more than one value in a row. */
    void GetValues(double *buffer, int len, double t0, double tstep) const;
 
-   /** \brief Get many envelope points at once, but don't assume uniform time step.
+   /** \brief Get many envelope points for pixel columns at once,
+    * but don't assume uniform time per pixel.
    */
    void GetValues
-      (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
+      ( double aligned_time, double sampleDur,
+        double *buffer, int bufferLen, int leftOffset,
+        const ZoomInfo &zoomInfo) const;
+
+   // Guarantee an envelope point at the end of the domain.
+   void Cap( double sampleDur );
 
 private:
-   double GetValueRelative(double t) const;
+   std::pair< int, int > ExpandRegion
+      ( double t0, double tlen, double *pLeftVal, double *pRightVal );
+
+   void RemoveUnneededPoints
+      ( size_t startAt, bool rightward, bool testNeighbors = true );
+
+   double GetValueRelative(double t, bool leftLimit = false) const;
    void GetValuesRelative
-      (double *buffer, int len, double t0, double tstep) const;
+      (double *buffer, int len, double t0, double tstep, bool leftLimit = false)
+      const;
    // relative time
    int NumberOfPointsAfter(double t) const;
    // relative time
@@ -188,6 +208,7 @@ public:
 
 private:
    int InsertOrReplaceRelative(double when, double value);
+
    friend class EnvelopeEditor;
    /** \brief Accessor for points */
    const EnvPoint &operator[] (int index) const
@@ -195,7 +216,7 @@ private:
       return mEnv[index];
    }
 
-   std::pair<int, int> EqualRange( double when, double sampleTime ) const;
+   std::pair<int, int> EqualRange( double when, double sampleDur ) const;
 
 public:
    /** \brief Returns the sets of when and value pairs */

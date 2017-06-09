@@ -59,6 +59,8 @@ Track classes.
 
 #include "Experimental.h"
 
+#include "TrackPanel.h" // for TrackInfo
+
 using std::max;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -113,6 +115,8 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mLastScaleType = -1;
    mLastdBRange = -1;
    mAutoSaveIdent = 0;
+
+   SetHeight( TrackInfo::DefaultWaveTrackHeight() );
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig):
@@ -1140,7 +1144,6 @@ void WaveTrack::HandleClear(double t0, double t1,
 
                // clip->Clear keeps points < t0 and >= t1 via Envelope::CollapseRegion
                newClip->Clear(t0,t1);
-               newClip->GetEnvelope()->RemoveUnneededPoints(t0);
 
                clipsToAdd.push_back( std::move( newClip ) );
             }
@@ -2130,7 +2133,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    // Since this does not guarantee that the entire buffer is filled with values we need
    // to initialize the entire buffer to a default value.
    //
-   // This does mean that, in the cases where a usuable clip is located, the buffer value will
+   // This does mean that, in the cases where a usable clip is located, the buffer value will
    // be set twice.  Unfortunately, there is no easy way around this since the clips are not
    // stored in increasing time order.  If they were, we could just track the time as the
    // buffer is filled.
@@ -2180,6 +2183,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
             rlen = limitSampleBufferSize( rlen, nClipLen );
             rlen = std::min(rlen, size_t(floor(0.5 + (dClipEndTime - rt0) / tstep)));
          }
+         // Samples are obtained for the purpose of rendering a wave track,
+         // so quantize time
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }

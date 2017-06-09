@@ -3,6 +3,8 @@
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;name "Pluck..."
+;manpage "Pluck"
+;debugbutton false
 ;preview linear
 ;action "Generating pluck sound..."
 ;info "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."

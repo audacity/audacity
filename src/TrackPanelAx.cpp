@@ -306,7 +306,15 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
          return wxACC_FAIL;
       }
 
-      rect = mTrackPanel->FindTrackRect( t, true );
+      rect = mTrackPanel->FindTrackRect( t, false );
+      // Inflate the screen reader's rectangle so it overpaints Audacity's own
+      // yellow focus rectangle.
+#ifdef __WXMAC__
+      const int dx = 2;
+#else
+      const int dx = 1;
+#endif
+      rect.Inflate(dx, dx);
    }
 
    rect.SetPosition( mTrackPanel->GetParent()->ClientToScreen( rect.GetPosition() ) );

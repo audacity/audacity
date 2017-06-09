@@ -115,6 +115,12 @@ wxString EffectChangeSpeed::GetDescription()
    return XO("Change the speed of a track, also changing its pitch");
 }
 
+wxString EffectChangeSpeed::ManualPage()
+{
+   return wxT("Change_Speed");
+}
+
+
 // EffectIdentInterface implementation
 
 EffectType EffectChangeSpeed::GetType()

@@ -125,6 +125,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
+   mTrace = false;
    mRedirectOutput = false;
    mDebug = false;
    mIsSal = false;
@@ -136,6 +137,8 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mRestoreSplits = true;  // Default: Restore split lines. 
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
 
+   mDebugButton = true; // Debug button enabled by default.
+
    mVersion = 4;
 
    mStop = false;
@@ -145,13 +148,17 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mMaxLen = NYQ_MAX_LEN;
 
    // Interactive Nyquist
-   if (fName == NYQUIST_PROMPT_ID)
-   {
+   if (fName == NYQUIST_PROMPT_ID) {
       mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
       mIsPrompt = true;
 
+      return;
+   }
+
+   if (fName == NYQUIST_WORKER_ID) {
+      // Effect spawned from Nyquist Prompt
       return;
    }
 
@@ -210,6 +217,28 @@ wxString NyquistEffect::GetVersion()
 wxString NyquistEffect::GetDescription()
 {
    return mCopyright;
+}
+
+wxString NyquistEffect::ManualPage()
+{
+      return mIsPrompt
+         ? wxT("Nyquist_Prompt")
+         : mManPage;
+}
+
+wxString NyquistEffect::HelpPage()
+{
+   wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
+   wxString fileName;
+
+   for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++) {
+      fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
+      if (wxFileExists(fileName)) {
+         mHelpFileExists = true;
+         return fileName;
+      }
+   }
+   return wxEmptyString;
 }
 
 // EffectIdentInterface implementation
@@ -365,7 +394,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         int val;
+         int val {0};
          wxArrayString choices = ParseChoice(ctrl);
          parms.ReadEnum(ctrl.var, &val, choices);
          ctrl.val = (double) val;
@@ -383,10 +412,16 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool NyquistEffect::Init()
 {
+   // TODO: Document: Init() is called each time the effect is called but
+   // AFTER the UI (if any) has been created, so headers that affect the UI
+   // are only initialised at the start of the session.
+
    // EffectType may not be defined in script, so
    // reset each time we call the Nyquist Prompt.
-   if (mIsPrompt)
+   if (mIsPrompt) {
       mType = EffectTypeProcess;
+      mDebugButton = true; // Debug button always enabled for Nyquist Prompt.
+   }
 
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
    // the selected track(s) are in a spectrogram view, and there is at
@@ -487,6 +522,9 @@ bool NyquistEffect::Process()
    }
 
    mDebugOutput.Clear();
+   if (!mHelpFile.IsEmpty() && !mHelpFileExists) {
+      mDebugOutput = wxString::Format(wxT("error: File \"%s\" specified in header but not found in plug-in path.\n"), mHelpFile);
+   }
 
    if (mVersion >= 4)
    {
@@ -735,10 +773,13 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
 
  finish:
 
+   // Show debug window if trace set in plug-in header and something to show.
+   mDebug = (mTrace && !mDebugOutput.IsEmpty())? true : mDebug;
+
    if (mDebug && !mRedirectOutput) {
       NyquistOutputDialog dlog(mUIParent, -1,
-                               _("Nyquist"),
-                               _("Nyquist Output: "),
+                               mName,
+                               _("Debug Output: "),
                                mDebugOutput.c_str());
       dlog.CentreOnParent();
       dlog.ShowModal();
@@ -793,7 +834,7 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
       BuildEffectWindow(S);
    }
 
-   EnableDebug();
+   EnableDebug(mDebugButton);
 }
 
 bool NyquistEffect::TransferDataToWindow()
@@ -1031,7 +1072,7 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf s 0.25)\n");
    }
 
-   if (mDebug) {
+   if (mDebug || mTrace) {
       cmd += wxT("(setf *tracenable* T)\n");
       if (mExternal) {
          cmd += wxT("(setf *breakenable* T)\n");
@@ -1080,7 +1121,7 @@ bool NyquistEffect::ProcessOne()
       // error occurs, we will grab the value with a LISP expression
       str += wxT("\nset aud:result = main()\n");
 
-      if (mDebug) {
+      if (mDebug || mTrace) {
          // since we're about to evaluate SAL, remove LISP trace enable and
          // break enable (which stops SAL processing) and turn on SAL stack
          // trace
@@ -1122,6 +1163,21 @@ bool NyquistEffect::ProcessOne()
    // not, leaving that to delayed evaluation of the output sound
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
+   // Always show debug window when return value is a nyx_error.
+   // Note that this does not happen for plug-ins that have an interface
+   // because there will be a return value from the final control.
+   if (rval == nyx_error) {
+      /* i18n-hint: "%s" is replaced by name of plug-in.*/
+      mDebugOutput = wxString::Format(_("Nyquist error returned from %s:\n"), mName) + mDebugOutput;
+      mDebug = true;
+   }
+
+   // If we're not showing debug window, log errors and warnings:
+   if (!mDebugOutput.IsEmpty() && !mDebug && !mTrace) {
+      /* i18n-hint: An effect "returned" a message.*/
+      wxLogWarning(mName + wxT(" ") + _("returned:") + wxT("\n") + mDebugOutput);
+   }
+
    // Audacity has no idea how long Nyquist processing will take, but
    // can monitor audio being returned.
    // Anything other than audio should be returned almost instantly
@@ -1142,8 +1198,7 @@ bool NyquistEffect::ProcessOne()
 
    if (rval == nyx_string) {
       wxMessageBox(NyquistToWxString(nyx_get_string()),
-                   wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+                   mName, wxOK | wxCENTRE, mUIParent);
 
       // True if not process type.
       // If not returning audio from process effect,
@@ -1233,7 +1288,7 @@ bool NyquistEffect::ProcessOne()
    std::unique_ptr<WaveTrack> outputTrack[2];
 
    double rate = mCurTrack[0]->GetRate();
-   for (size_t i = 0; i < outChannels; i++) {
+   for (int i = 0; i < outChannels; i++) {
       sampleFormat format = mCurTrack[i]->GetSampleFormat();
 
       if (outChannels == (int)mCurNumChannels) {
@@ -1269,7 +1324,7 @@ bool NyquistEffect::ProcessOne()
    if (!success)
       return false;
 
-   for (size_t i = 0; i < outChannels; i++) {
+   for (int i = 0; i < outChannels; i++) {
       outputTrack[i]->Flush();
       mOutputTime = outputTrack[i]->GetEndTime();
 
@@ -1300,7 +1355,7 @@ bool NyquistEffect::ProcessOne()
       else {
          mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips != 0);
       }
-         
+
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
          SyncLockedTracksIterator git(mOutputTracks.get());
@@ -1498,15 +1553,17 @@ void NyquistEffect::Parse(const wxString &line)
       return;
    }
 
+   // TODO: Update documentation.
+
    if (len >= 2 && tokens[0] == wxT("debugflags")) {
       for (int i = 1; i < len; i++) {
-         // Note: "trace" and "notrace" are overridden by "Debug" and "OK"
-         // buttons if the plug-in generates a dialog box by using controls
+         // "trace" sets *tracenable* (LISP) or *sal-traceback* (SAL)
+         // and displays debug window IF there is anything to show.
          if (tokens[i] == wxT("trace")) {
-            mDebug = true;
+            mTrace = true;
          }
          else if (tokens[i] == wxT("notrace")) {
-            mDebug = false;
+            mTrace = false;
          }
          else if (tokens[i] == wxT("compiler")) {
             mCompiler = true;
@@ -1604,6 +1661,29 @@ void NyquistEffect::Parse(const wxString &line)
 
    if (len >= 2 && tokens[0] == wxT("copyright")) {
       mCopyright = UnQuote(tokens[1]);
+      return;
+   }
+
+   // TODO: Document.
+   // Page name in Audacity development manual
+   if (len >= 2 && tokens[0] == wxT("manpage")) {
+      mManPage = UnQuote(tokens[1]);
+      return;
+   }
+
+   // TODO: Document.
+   // Local Help file
+   if (len >= 2 && tokens[0] == wxT("helpfile")) {
+      mHelpFile = UnQuote(tokens[1]);
+      return;
+   }
+
+   // TODO: Document.
+   // Debug button may be disabled for release plug-ins.
+   if (len >= 2 && tokens[0] == wxT("debugbutton")) {
+      if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
+         mDebugButton = false;
+      }
       return;
    }
 
@@ -1719,6 +1799,9 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mControls.Clear();
    mCategories.Clear();
    mIsSpectral = false;
+   mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
+   mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
+   mHelpFileExists = false;
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
@@ -1761,8 +1844,6 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
 
 void NyquistEffect::ParseFile()
 {
-   mEnablePreview = true;
-
    wxFileInputStream stream(mFileName.GetFullPath());
 
    ParseProgram(stream);
@@ -1800,7 +1881,7 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
       mCurBufferStart[ch] = (mCurStart[ch] + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
-      if (mCurBufferLen[ch] < len) {
+      if (mCurBufferLen[ch] < (size_t) len) {
          mCurBufferLen[ch] = mCurTrack[ch]->GetIdealBlockSize();
       }
 
@@ -1887,7 +1968,8 @@ void NyquistEffect::StaticOutputCallback(int c, void *This)
 
 void NyquistEffect::OutputCallback(int c)
 {
-   if (mDebug && !mRedirectOutput) {
+   // Always collect Nyquist error messages for normal plug-ins
+   if (!mRedirectOutput) {
       mDebugOutput += (char)c;
       return;
    }
@@ -1942,6 +2024,7 @@ wxArrayString NyquistEffect::GetNyquistSearchPath()
       wxGetApp().AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
       wxGetApp().AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);
    }
+   pathList.Add(FileNames::PlugInDir());
 
    return pathList;
 }
@@ -2325,7 +2408,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        const wxString & title,
                                        const wxString & prompt,
                                        const wxString &message)
-:  wxDialogWrapper(parent, id, title)
+: wxDialogWrapper{ parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
 {
    SetName(GetTitle());
 
@@ -2342,10 +2425,10 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
-      item = safenew wxTextCtrl(this, -1, message,
-         wxDefaultPosition, wxSize(400, 200),
-         wxTE_MULTILINE | wxTE_READONLY);
-      mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 10);
+      item = new wxTextCtrl(this, -1, message,
+                            wxDefaultPosition, wxSize(480, 250),
+                            wxTE_MULTILINE | wxTE_READONLY);
+      mainSizer->Add(item, 1, wxEXPAND | wxALL, 10);
 
       {
          auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);

@@ -62,7 +62,6 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Auto-move for clips"),
                     wxT("/GUI/EditClipCanMove"),
                     true);
-      /* i18n-hint: cut-lines are a lines indicating where to cut.*/
       S.TieCheckBox(_("Cut &lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
@@ -71,10 +70,10 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
 /* Stopping at either end is best (DA decision) 
    Works for VI users and regular users alike.
+*/
       S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
                     wxT("/GUI/CircularTrackNavigation"),
                     false);
-*/
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
                     true);

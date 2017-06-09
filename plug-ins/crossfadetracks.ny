@@ -2,6 +2,8 @@
 ;version 4
 ;type process
 ;name "Crossfade Tracks..."
+;manpage "Crossfade_Tracks"
+;debugbutton disabled
 ;action "Crossfading..."
 ;preview selection
 ;author "Steve Daulton"
@@ -69,4 +71,6 @@ audio clip, fade in, otherwise fade out."
       (setf out-dist (min out-dist (abs (- end (second (nth i clips)))))))
     (if (< in-dist out-dist) 'in 'out)))
 
-(crossfade type direction curve)
+(if (< (length (get '*selection* 'tracks)) 2)
+    "Error.\nSelect 2 (or more) tracks to crossfade."
+    (crossfade type direction curve))

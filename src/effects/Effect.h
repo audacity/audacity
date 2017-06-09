@@ -22,6 +22,7 @@
 #include <wx/intl.h>
 #include <wx/string.h>
 #include <wx/tglbtn.h>
+#include <wx/event.h> // for idle event.
 
 class wxCheckBox;
 class wxChoice;
@@ -226,6 +227,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual bool HasFactoryDefaults();
    virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
 
+   // Name of page in the Audacity alpha manual
+   virtual wxString ManualPage();
+   // Fully qualified local help file name
+   virtual wxString HelpPage();
+
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
 
@@ -254,7 +260,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    /* not virtual */ bool IsRealtimeActive();
 
    virtual bool IsHidden();
-
 //
 // protected virtual methods
 //
@@ -432,6 +437,7 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
+
    ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
@@ -593,6 +599,7 @@ private:
    void OnApply(wxCommandEvent & evt);
    void DoCancel();
    void OnCancel(wxCommandEvent & evt);
+   void OnHelp(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);

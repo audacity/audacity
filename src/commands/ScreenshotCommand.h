@@ -39,19 +39,29 @@ private:
 
    bool mBackground;
    wxColour mBackColor;
+   wxString mDirToWriteTo;
 
    wxString MakeFileName(const wxString &path, const wxString &basename);
 
    wxRect GetBackgroundRect();
+
+   void CaptureToolbar(ToolManager *man, int type, const wxString &name);
+   void CaptureDock(wxWindow *win, const wxString &fileName);
+   void CaptureMenus(wxMenuBar*pBar, const wxString &fileName);
+   void CaptureEffects( AudacityProject * pProject, const wxString &fileName );
+   void CapturePreferences( AudacityProject * pProject, const wxString &fileName );
    void Capture(const wxString &basename,
          wxWindow *window,
          int x, int y, int width, int height,
          bool bg = false);
-   void CaptureToolbar(ToolManager *man, int type, const wxString &name);
-   void CaptureDock(wxWindow *win, const wxString &fileName);
-   void CaptureMenus(wxMenuBar*pBar, const wxString &fileName);
 
 public:
+   static ScreenshotCommand * mpShooter;
+   static void (*mIdleHandler)(wxIdleEvent& event);
+   static void SetIdleHandler( void (*pHandler)(wxIdleEvent& event) ){mIdleHandler=pHandler;};
+   static bool MayCapture( wxDialog * pDlg );
+
+   void CaptureWindowOnIdle( wxWindow * pWin );
    wxTopLevelWindow *GetFrontWindow(AudacityProject *project);
    ScreenshotCommand(CommandType &type,
                      std::unique_ptr<CommandOutputTarget> &&output,

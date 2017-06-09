@@ -58,7 +58,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartThreeColumn();
       {
-         w = S.TieNumericTextBox(_("&Length of preview:"),
+         w = S.TieNumericTextBox(_("&Length:"),
                                  wxT("/AudioIO/EffectsPreviewLen"),
                                  6.0,
                                  9);

@@ -82,7 +82,8 @@ public:
                         const wxArrayString & categories,
                         const wxArrayString & prefixes,
                         const wxArrayString & labels,
-                        const wxArrayString & keys);
+                        const wxArrayString & keys,
+                        bool bSort);
 
    int GetSelected() const;
 
@@ -109,7 +110,7 @@ public:
 private:
    void RecalcExtents();
    void UpdateHScroll();
-   void RefreshLines();
+   void RefreshLines(bool bSort = true);
 
    void SelectNode(int index);
 
@@ -128,6 +129,8 @@ private:
    void OnKeyDown(wxKeyEvent & event);
    void OnLeftDown(wxMouseEvent & event);
 
+
+   static wxString CommandTranslated;
    static int CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2);
    static int CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2);
    static int CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2);

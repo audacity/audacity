@@ -142,7 +142,9 @@ void KeyConfigPrefs::Populate()
 
    mManager = project->GetCommandManager();
 
-   RefreshBindings();
+   // For speed, don't sort here.  We're just creating.
+   // Instead sort when we do SetView later in this function.
+   RefreshBindings(false);
 
    if (mViewByTree->GetValue()) {
       mViewType = ViewByTree;
@@ -294,7 +296,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
    Layout();
 }
 
-void KeyConfigPrefs::RefreshBindings()
+void KeyConfigPrefs::RefreshBindings(bool bSort)
 {
    wxArrayString Labels;
    wxArrayString Categories;
@@ -316,8 +318,10 @@ void KeyConfigPrefs::RefreshBindings()
                           Categories,
                           Prefixes,
                           Labels,
-                          mKeys);
-   mView->ExpandAll();
+                          mKeys,
+                          bSort);
+   //Not needed as new nodes are already shown expanded.
+   //mView->ExpandAll();
 
    mNewKeys = mKeys;
 }
@@ -351,7 +355,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
                    wxOK | wxCENTRE, this);
    }
 
-   RefreshBindings();
+   RefreshBindings(true);
 }
 
 void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
@@ -383,15 +387,90 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    } );
 }
 
-void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
+
+
+// There currently is only one clickable AButton
+// so we just do what it needs.
+void KeyConfigPrefs::OnDefaults(wxCommandEvent & event)
 {
+   wxMenu Menu;
+   Menu.Append( 0, _("Standard") );
+   Menu.Append( 1, _("Full") );
+   Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
+   // Pop it up where the mouse is.
+   PopupMenu(&Menu);//, wxPoint(0, 0));
+}
+
+void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
+{
+   int id = event.GetId();
    mNewKeys = mDefaultKeys;
+   wxSortedArrayString MaxListOnly;
+
+   // These short cuts are for the max list only....
+   //MaxListOnly.Add( "Ctrl+I" );
+   MaxListOnly.Add( "Ctrl+Alt+I" );
+   MaxListOnly.Add( "Ctrl+J" );
+   MaxListOnly.Add( "Ctrl+Alt+J" );
+   MaxListOnly.Add( "Ctrl+Alt+V" );
+   MaxListOnly.Add( "Alt+X" );
+   MaxListOnly.Add( "Alt+K" );
+   MaxListOnly.Add( "Shift+Alt+X" );
+   MaxListOnly.Add( "Shift+Alt+K" );
+   MaxListOnly.Add( "Alt+L" );
+   MaxListOnly.Add( "Shift+Alt+C" );
+   MaxListOnly.Add( "Alt+I" );
+   MaxListOnly.Add( "Alt+J" );
+   MaxListOnly.Add( "Shift+Alt+J" );
+   MaxListOnly.Add( "Ctrl+Shift+A" );
+   MaxListOnly.Add( "Q" );
+   MaxListOnly.Add( "Shift+J" );
+   MaxListOnly.Add( "Shift+K" );
+   //MaxListOnly.Add( "Shift+Home" );
+   //MaxListOnly.Add( "Shift+End" );
+   MaxListOnly.Add( "Ctrl+[" );
+   MaxListOnly.Add( "Ctrl+]" );
+   MaxListOnly.Add( "1" );
+   MaxListOnly.Add( "Shift+F5" );
+   MaxListOnly.Add( "Shift+F6" );
+   MaxListOnly.Add( "Shift+F7" );
+   MaxListOnly.Add( "Shift+F8" );
+   MaxListOnly.Add( "Ctrl+Shift+F5" );
+   MaxListOnly.Add( "Ctrl+Shift+F7" );
+   MaxListOnly.Add( "Ctrl+Shift+N" );
+   MaxListOnly.Add( "Ctrl+Shift+M" );
+   MaxListOnly.Add( "Ctrl+Home" );
+   MaxListOnly.Add( "Ctrl+End" );
+   MaxListOnly.Add( "Shift+C" );
+   MaxListOnly.Add( "Alt+Shift+Up" );
+   MaxListOnly.Add( "Alt+Shift+Down" );
+   MaxListOnly.Add( "Shift+P" );
+   MaxListOnly.Add( "Alt+Shift+Left" );
+   MaxListOnly.Add( "Alt+Shift+Right" );
+   MaxListOnly.Add( "Ctrl+Shift+T" );
+   //MaxListOnly.Add( "Command+M" );
+   //MaxListOnly.Add( "Option+Command+M" );
+   MaxListOnly.Add( "Shift+H" );
+   MaxListOnly.Add( "Shift+O" );
+   MaxListOnly.Add( "Shift+I" );
+   MaxListOnly.Add( "Shift+N" );
+   MaxListOnly.Add( "D" );
+   MaxListOnly.Add( "A" );
+   MaxListOnly.Add( "Alt+Shift+F6" );
+   MaxListOnly.Add( "Alt+F6" );
+
+   MaxListOnly.Sort();
 
    for (size_t i = 0; i < mNewKeys.GetCount(); i++) {
-      mManager->SetKeyFromIndex(i, mNewKeys[i]);
+      // Proof of concept for idea for freeing up some unwanted bindings.
+      // There will be neater code idioms we can use.
+      bool bDeleteBinding = false;
+      if( id == 0 )
+         bDeleteBinding |= ( MaxListOnly.Index( mNewKeys[i] ) != wxNOT_FOUND );
+      mManager->SetKeyFromIndex(i, bDeleteBinding ? "" : mNewKeys[i]);
    }
 
-   RefreshBindings();
+   RefreshBindings(true);
 }
 
 void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)

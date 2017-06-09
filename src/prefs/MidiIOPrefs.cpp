@@ -120,7 +120,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice(_("Host:"),
+         mHost = S.TieChoice(_("&Host:"),
                              wxT("/MidiIO/Host"),
                              wxT(""),
                              mHostNames,
@@ -156,13 +156,13 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.StartMultiColumn(2);
       {
          S.Id(RecordID);
-         mRecord = S.AddChoice(_("Device:"),
+         mRecord = S.AddChoice(_("De&vice:"),
                                wxEmptyString,
                                &empty);
 
          S.Id(ChannelsID);
          /*
-         mChannels = S.AddChoice(_("Channels:"),
+         mChannels = S.AddChoice(_("&Channels:"),
                                  wxEmptyString,
                                  &empty);
          */

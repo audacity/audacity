@@ -78,6 +78,7 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
 
 private:
    void RecordExpansionState();
+   PrefsPanel * GetCurrentPanel();
    wxTreebook *mCategories{};
    PrefsPanel *mUniquePage{};
    Factories &mFactories;

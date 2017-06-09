@@ -65,11 +65,14 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
 {
    Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
-   if (pT0 && pT1)
+   auto len = DBL_MAX;
+   if (pT0 && pT1) {
+      len = *pT1 - *pT0;
       mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope, *pT0, *pT1 );
+   }
    else
       mEnvelope = std::make_unique<Envelope>( *orig.mEnvelope );
-   mEnvelope->SetTrackLen(DBL_MAX);
+   mEnvelope->SetTrackLen( len );
    mEnvelope->SetOffset(0);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
@@ -119,7 +122,9 @@ void TimeTrack::Paste(double t, const Track * src)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       return;
 
-   mEnvelope->Paste(t, static_cast<const TimeTrack*>(src)->mEnvelope.get());
+   auto sampleTime = 1.0 / GetActiveProject()->GetRate();
+   mEnvelope->Paste
+      (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
 }
 
 void TimeTrack::Silence(double t0, double t1)
@@ -281,7 +286,8 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) cons
    mRuler->Draw(dc, this);
 
    Doubles envValues{ size_t(mid.width) };
-   GetEnvelope()->GetValues(envValues.get(), mid.width, 0, zoomInfo);
+   GetEnvelope()->GetValues
+      ( 0, 0, envValues.get(), mid.width, 0, zoomInfo );
 
    dc.SetPen(AColor::envelopePen);
 

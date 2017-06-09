@@ -172,7 +172,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          wxTextCtrl *w;
          // only show the following controls if we use Portaudio v19, because
          // for Portaudio v18 we always use default buffer sizes
-         w = S.TieNumericTextBox(_("&Buffer Size:"),
+         w = S.TieNumericTextBox(_("&Buffer length:"),
                                  wxT("/AudioIO/LatencyDuration"),
                                  DEFAULT_LATENCY_DURATION,
                                  9);

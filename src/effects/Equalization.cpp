@@ -298,6 +298,11 @@ wxString EffectEqualization::GetDescription()
    return XO("Adjusts the volume levels of particular frequencies");
 }
 
+wxString EffectEqualization::ManualPage()
+{
+   return wxT("Equalization");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectEqualization::GetType()

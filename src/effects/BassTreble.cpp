@@ -92,6 +92,11 @@ wxString EffectBassTreble::GetDescription()
    return XO("Simple tone control effect");
 }
 
+wxString EffectBassTreble::ManualPage()
+{
+   return wxT("Bass_and_Treble");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectBassTreble::GetType()

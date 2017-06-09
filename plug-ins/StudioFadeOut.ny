@@ -3,6 +3,7 @@
 ;type process
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
 ;name "Studio Fade Out"
+;manpage "Fades#studio_fadeout"
 ;action "Applying Fade..."
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"

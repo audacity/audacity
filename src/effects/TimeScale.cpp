@@ -101,6 +101,11 @@ wxString EffectTimeScale::GetDescription()
    return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
+wxString EffectTimeScale::ManualPage()
+{
+   return wxT("Sliding_Time_Scale_-_Pitch_Shift");
+}
+
 // EffectIdentInterface implementation
 
 EffectType EffectTimeScale::GetType()

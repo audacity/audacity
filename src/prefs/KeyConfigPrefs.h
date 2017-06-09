@@ -46,12 +46,13 @@ public:
 private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
-   void RefreshBindings();
+   void RefreshBindings(bool bSort);
    wxString NameFromKey(const wxString & key);
    void SetKeyForSelected(const wxString & key);
 
    void OnViewBy(wxCommandEvent & e);
    void OnDefaults(wxCommandEvent & e);
+   void OnImportDefaults(wxCommandEvent & e);
    void OnImport(wxCommandEvent & e);
    void OnExport(wxCommandEvent & e);
    void OnSet(wxCommandEvent & e);

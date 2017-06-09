@@ -79,6 +79,9 @@ public:
    wxString GetVendor() override;
    wxString GetVersion() override;
    wxString GetDescription() override;
+   
+   wxString ManualPage() override;
+   wxString HelpPage() override;
 
    // EffectIdentInterface implementation
 
@@ -178,6 +181,7 @@ private:
 
    bool              mFoundType;
    bool              mCompiler;
+   bool              mTrace;   // True when *tracenable* or *sal-traceback* are enabled
    bool              mIsSal;
    bool              mExternal;
    bool              mIsSpectral;
@@ -194,10 +198,15 @@ private:
    wxString          mInfo;
    wxString          mAuthor;
    wxString          mCopyright;
+   wxString          mManPage;   // ONLY use if a help page exists in the manual.
+   wxString          mHelpFile;
+   bool              mHelpFileExists;
    EffectType        mType;
 
    bool              mEnablePreview;
-   bool              mDebug;
+   bool              mDebugButton;  // Set to false to disable Debug button.
+
+   bool              mDebug;        // When true, debug window is shown.
    bool              mRedirectOutput;
    bool              mProjectChanged;
    wxString          mDebugOutput;

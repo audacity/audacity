@@ -266,10 +266,10 @@ int TrackArtist::GetBottom(NoteTrack *t, const wxRect &rect)
 
 TrackArtist::TrackArtist()
 {
-   mInsetLeft   = 0;
-   mInsetTop    = 0;
-   mInsetRight  = 0;
-   mInsetBottom = 0;
+   mMarginLeft   = 0;
+   mMarginTop    = 0;
+   mMarginRight  = 0;
+   mMarginBottom = 0;
 
    mdBrange = ENV_DB_RANGE;
    mShowClipping = false;
@@ -310,20 +310,20 @@ void TrackArtist::SetColours()
    theTheme.SetPenColour(   blankSelectedPen,clrBlankSelected);
 }
 
-void TrackArtist::SetInset(int left, int top, int right, int bottom)
+void TrackArtist::SetMargins(int left, int top, int right, int bottom)
 {
-   mInsetLeft   = left;
-   mInsetTop    = top;
-   mInsetRight  = right;
-   mInsetBottom = bottom;
+   mMarginLeft   = left;
+   mMarginTop    = top;
+   mMarginRight  = right;
+   mMarginBottom = bottom;
 }
 
 void TrackArtist::DrawTracks(TrackList * tracks,
                              Track * start,
                              wxDC & dc,
-                             wxRegion & reg,
-                             wxRect & rect,
-                             wxRect & clip,
+                             const wxRegion & reg,
+                             const wxRect & rect,
+                             const wxRect & clip,
                              const SelectedRegion &selectedRegion,
                              const ZoomInfo &zoomInfo,
                              bool drawEnvelope,
@@ -346,7 +346,7 @@ void TrackArtist::DrawTracks(TrackList * tracks,
 
 #if defined(DEBUG_CLIENT_AREA)
    // Change the +0 to +1 or +2 to see the bounding box
-   mInsetLeft = 1+0; mInsetTop = 5+0; mInsetRight = 6+0; mInsetBottom = 2+0;
+   mMarginLeft = 1+0; mMarginTop = 5+0; mMarginRight = 6+0; mMarginBottom = 2+0;
 
    // This just shows what the passed in rectangles enclose
    dc.SetPen(wxColour(*wxGREEN));
@@ -408,10 +408,10 @@ void TrackArtist::DrawTracks(TrackList * tracks,
 
       if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
          wxRect rr = trackRect;
-         rr.x += mInsetLeft;
-         rr.y += mInsetTop;
-         rr.width -= (mInsetLeft + mInsetRight);
-         rr.height -= (mInsetTop + mInsetBottom);
+         rr.x += mMarginLeft;
+         rr.y += mMarginTop;
+         rr.width -= (mMarginLeft + mMarginRight);
+         rr.height -= (mMarginTop + mMarginBottom);
          DrawTrack(t, dc, rr,
                    selectedRegion, zoomInfo,
                    drawEnvelope, bigPoints, drawSliders, hasSolo);
@@ -427,10 +427,10 @@ void TrackArtist::DrawTracks(TrackList * tracks,
          t->SetVirtualStereo(true);
          if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
             wxRect rr = trackRect;
-            rr.x += mInsetLeft;
-            rr.y += mInsetTop;
-            rr.width -= (mInsetLeft + mInsetRight);
-            rr.height -= (mInsetTop + mInsetBottom);
+            rr.x += mMarginLeft;
+            rr.y += mMarginTop;
+            rr.width -= (mMarginLeft + mMarginRight);
+            rr.height -= (mMarginTop + mMarginBottom);
             DrawTrack(t, dc, rr, selectedRegion, zoomInfo,
                       drawEnvelope, bigPoints, drawSliders, hasSolo);
          }
@@ -1352,7 +1352,10 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
             (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
       xpos[s] = xx;
 
-      const double tt = buffer[s] * clip->GetEnvelope()->GetValue(time);
+      // Calculate sample as it would be rendered, so quantize time
+      double value =
+         clip->GetEnvelope()->GetValue( time, 1.0 / clip->GetRate() );
+      const double tt = buffer[s] * value;
 
       if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
          clipped[clipcnt++] = xx;
@@ -1778,7 +1781,14 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   clip->GetEnvelope()->GetValues(env, mid.width, leftOffset, zoomInfo);
+   clip->GetEnvelope()->GetValues
+      ( tOffset,
+
+        // PRL: change back to make envelope evaluate only at sample times
+        // and then interpolate the display
+        0, // 1.0 / rate,
+
+        env, mid.width, leftOffset, zoomInfo );
 
    // Draw the background of the track, outlining the shape of
    // the envelope and using a colored pen for the selected
@@ -1909,7 +1919,14 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rect.width);
             double *const env2 = &vEnv2[0];
-            clip->GetEnvelope()->GetValues(env2, rect.width, leftOffset, zoomInfo);
+            clip->GetEnvelope()->GetValues
+               ( tOffset,
+
+                 // PRL: change back to make envelope evaluate only at sample times
+                 // and then interpolate the display
+                 0, // 1.0 / rate,
+
+                 env2, rect.width, leftOffset, zoomInfo );
             DrawMinMaxRMS(dc, rect, env2,
                zoomMin, zoomMax,
                dB, dBRange,
@@ -2430,11 +2447,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
       ? 0
       : std::min(mid.width, (int)(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
    const size_t numPixels = std::max(0, end - begin);
-   const size_t zeroPaddingFactor = settings.ZeroPaddingFactor();
-   SpecCache specCache
-      (numPixels, settings.algorithm, -1,
-       t0, settings.windowType,
-       settings.WindowSize(), zeroPaddingFactor, settings.frequencyGain);
+
+   SpecCache specCache;
+
+   // need explicit resize since specCache.where[] accessed before Populate()
+   specCache.Grow(numPixels, settings, -1, t0);
+
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {
          const double time = zoomInfo.PositionToTime(ii, -leftOffset) - tOffset;
@@ -2730,7 +2748,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    int left = TIME_TO_X(track->GetOffset());
    if (left < sel.x) left = sel.x; // clip on left
 
-   int right = TIME_TO_X(track->GetOffset() + track->mSeq->get_real_dur());
+   int right = TIME_TO_X(track->GetOffset() + track->GetSeq().get_real_dur());
    if (right > sel.x + sel.width) right = sel.x + sel.width; // clip on right
 
    // need overlap between MIDI data and the background region
@@ -2772,7 +2790,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    }
 
    // draw bar lines
-   Alg_seq_ptr seq = track->mSeq.get();
+   Alg_seq_ptr seq = &track->GetSeq();
    // We assume that sliding a NoteTrack around slides the barlines
    // along with the notes. This means that when we write out a track
    // as Allegro or MIDI without the offset, we'll need to insert an
@@ -2824,19 +2842,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    const double h = X_TO_TIME(rect.x);
    const double h1 = X_TO_TIME(rect.x + rect.width);
 
-   Alg_seq_ptr seq = track->mSeq.get();
-   if (!seq) {
-      wxASSERT(track->mSerializationBuffer);
-      // JKC: Previously this indirected via seq->, a NULL pointer.
-      // This was actually OK, since unserialize is a static function.
-      // Alg_seq:: is clearer.
-      std::unique_ptr<Alg_track> alg_track{ Alg_seq::unserialize(track->mSerializationBuffer.get(),
-            track->mSerializationLength) };
-      wxASSERT(alg_track->get_type() == 's');
-      const_cast<NoteTrack*>(track)->mSeq.reset(seq = static_cast<Alg_seq*>(alg_track.release()));
-      track->mSerializationBuffer.reset();
-   }
-   wxASSERT(seq);
+   Alg_seq_ptr seq = &track->GetSeq();
 
    if (!track->GetSelected())
       sel0 = sel1 = 0.0;

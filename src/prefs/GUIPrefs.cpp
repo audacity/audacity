@@ -189,7 +189,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);
-      S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
+      S.TieCheckBox(_("Re&tain labels if selection snaps to a label"),
                     wxT("/GUI/RetainLabels"),
                     false);
       S.TieCheckBox(_("B&lend system and Audacity theme"),

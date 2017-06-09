@@ -4,6 +4,8 @@
 ;preview linear
 ;categories "http://lv2plug.in/ns/lv2core#ModulatorPlugin"
 ;name "Tremolo..."
+;manpage "Tremolo"
+;debugbutton disabled
 ;action "Applying Tremolo..."
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
@@ -18,11 +20,8 @@
 
 ;control wave "Waveform type" choice "sine,triangle,sawtooth,inverse sawtooth,square" 0
 ;control phase "Starting phase (degrees)" int "" 0 -180 180
-;control wet "Wet level (percent)" int "" 40 0 100
-;control lfo "Frequency (Hz)" real "" 4 0 10
-
-; Limit to sensible range
-(setq lfo (min 1000 (max lfo (/ (get-duration 1)))))
+;control wet "Wet level (percent)" int "" 40 1 100
+;control lfo "Frequency (Hz)" float-text "" 4 0.001 1000
 
 ; Convert % to linear
 (setq wet (/ wet 200.0))

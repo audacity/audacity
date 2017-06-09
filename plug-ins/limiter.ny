@@ -3,6 +3,8 @@
 ;type process
 ;categories "http://lv2plug.in/ns/lv2core/#DynamicsPlugin"
 ;name "Limiter..."
+;manpage "Limiter"
+;debugbutton false
 ;action "Limiting..."
 ;preview enabled
 ;author "Steve Daulton"

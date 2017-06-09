@@ -76,17 +76,6 @@ enum {
    kTimerInterval = 50, // milliseconds
 };
 
-enum {
-   kItemBarButtons = 0,
-   kItemStatusInfo = 1,
-   kItemMute = 2,
-   kItemSolo = 3,
-   kItemNoteMute = 4,
-   kItemNoteSolo = 5,
-   kItemGain = 6,
-   kItemPan = 7,
-};
-
 class AUDACITY_DLL_API TrackInfo
 {
 public:
@@ -95,13 +84,12 @@ public:
    void ReCreateSliders();
 
 private:
-   int CalcItemY( int iItem ) const;
    int GetTrackInfoWidth() const;
    void SetTrackInfoFont(wxDC *dc) const;
 
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
-   void DrawBordersWithin(wxDC * dc, const wxRect & rect, bool bHasMuteSolo ) const;
+   void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
    void DrawCloseBox(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
@@ -118,10 +106,10 @@ private:
    void GetTitleBarRect(const wxRect & rect, wxRect &dest) const;
    void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
                         const Track *pTrack) const;
-   void GetGainRect(const wxRect & rect, wxRect &dest) const;
-   void GetPanRect(const wxRect & rect, wxRect &dest) const;
+   void GetGainRect(const wxPoint & topLeft, wxRect &dest) const;
+   void GetPanRect(const wxPoint & topLeft, wxRect &dest) const;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void GetVelocityRect(const wxRect & rect, wxRect &dest) const;
+   void GetVelocityRect(const wxPoint & topLeft, wxRect &dest) const;
 #endif
    void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
@@ -130,6 +118,12 @@ private:
 #endif
 
 public:
+   static bool HideTopItem( const wxRect &rect, const wxRect &subRect,
+                               int allowance = 0 );
+
+   static unsigned DefaultNoteTrackHeight();
+   static unsigned DefaultWaveTrackHeight();
+
    LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
    LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
 
@@ -154,6 +148,25 @@ private:
 
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
+
+struct ClipMoveState {
+   WaveClip *capturedClip {};
+   bool capturedClipIsSelection {};
+   TrackArray trackExclusions {};
+   double hSlideAmount {};
+   TrackClipArray capturedClipArray {};
+   wxInt64 snapLeft { -1 }, snapRight { -1 };
+
+   void clear()
+   {
+      capturedClip = nullptr;
+      capturedClipIsSelection = false;
+      trackExclusions.clear();
+      hSlideAmount = 0;
+      capturedClipArray.clear();
+      snapLeft = snapRight = -1;
+   }
+};
 
 class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
  public:
@@ -256,7 +269,9 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // (ignoring any fisheye)
    virtual double GetScreenEndTime() const;
 
-   virtual void OnClipMove(bool right, bool keyUp);
+   static double OnClipMove
+      (ViewInfo &viewInfo, Track *track,
+       TrackList &trackList, bool syncLocked, bool right);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -299,20 +314,33 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // part shrinks, keeping the leftmost and rightmost boundaries
    // fixed.
    enum StretchEnum {
+      stretchNone = 0, // false value!
       stretchLeft,
       stretchCenter,
       stretchRight
    };
-   StretchEnum mStretchMode; // remembers what to drag
-   bool mStretching; // true between mouse down and mouse up
-   bool mStretched; // true after drag has pushed state
-   double mStretchStart; // time of initial mouse position, quantized
-                         // to the nearest beat
-   double mStretchSel0;  // initial sel0 (left) quantized to nearest beat
-   double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
-   double mStretchLeftBeats; // how many beats from left to cursor
-   double mStretchRightBeats; // how many beats from cursor to right
-   virtual bool HitTestStretch(Track *track, const wxRect &rect, const wxMouseEvent & event);
+   struct StretchState {
+      StretchEnum mMode { stretchCenter }; // remembers what to drag
+
+      using QuantizedTimeAndBeat = std::pair< double, double >;
+
+      bool mStretching {}; // true between mouse down and mouse up
+      double mOrigT0 {};
+      double mOrigT1 {};
+      QuantizedTimeAndBeat mBeatCenter { 0, 0 };
+      QuantizedTimeAndBeat mBeat0 { 0, 0 };
+      QuantizedTimeAndBeat mBeat1 { 0, 0 };
+      double mLeftBeats {}; // how many beats from left to cursor
+      double mRightBeats {}; // how many beats from cursor to right
+   } mStretchState;
+
+   virtual StretchEnum HitTestStretch
+      ( const Track *track, const wxRect &rect, const wxMouseEvent & event,
+        StretchState *pState = nullptr );
+   wxCursor *ChooseStretchCursor( StretchEnum mode );
+   static StretchEnum ChooseStretchMode
+      ( const wxMouseEvent &event, const wxRect &rect, const ViewInfo &viewInfo,
+        const NoteTrack *nt, StretchState *pState = nullptr );
    virtual void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 #endif
 
@@ -383,10 +411,16 @@ protected:
    virtual void HandleSlide(wxMouseEvent & event);
    virtual void StartSlide(wxMouseEvent &event);
    virtual void DoSlide(wxMouseEvent &event);
-   virtual void DoSlideHorizontal();
-   virtual void CreateListOfCapturedClips(double clickTime);
-   virtual void AddClipsToCaptured(Track *t, bool withinSelection);
-   virtual void AddClipsToCaptured(Track *t, double t0, double t1);
+   static void DoSlideHorizontal
+      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
+   static void CreateListOfCapturedClips
+      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
+        TrackList &trackList, bool syncLocked, double clickTime );
+   static void AddClipsToCaptured
+      ( ClipMoveState &state, const ViewInfo &viewInfo,
+        Track *t, bool withinSelection );
+   static void AddClipsToCaptured
+      ( ClipMoveState &state, Track *t, double t0, double t1 );
 
    // AS: Handle zooming into tracks
    virtual void HandleZoom(wxMouseEvent & event);
@@ -454,11 +488,6 @@ protected:
    virtual bool CloseFunc(Track * t, wxRect rect, int x, int y);
    virtual bool PopupFunc(Track * t, wxRect rect, int x, int y);
 
-   // TrackSelFunc, unlike the other *Func methods, returns true if the click is not
-   // set up to be handled, but click is on the sync-lock icon or the blank area to
-   // the left of the minimize button, and we want to pass it forward to be a track select.
-   virtual bool TrackSelFunc(Track * t, wxRect rect, int x, int y);
-
    virtual bool MuteSoloFunc(Track *t, wxRect rect, int x, int f, bool solo);
    virtual bool MinimizeFunc(Track *t, wxRect rect, int x, int f);
    virtual bool GainFunc(Track * t, wxRect rect, wxMouseEvent &event,
@@ -523,6 +552,9 @@ protected:
    };
    virtual FoundCell FindCell(int mouseX, int mouseY);
 
+   // If label, rectangle includes track control panel only.
+   // If !label, rectangle includes all of that, and the vertical ruler, and
+   // the proper track area.
    virtual wxRect FindTrackRect(Track * target, bool label);
 
    virtual int GetVRulerWidth() const;
@@ -553,8 +585,7 @@ protected:
 
    virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
                            const wxRect & clip);
-   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
-                    const wxRect &trackRect);
+   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
    virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
@@ -612,8 +643,6 @@ protected:
    int mTimeCount;
 
    bool mRefreshBacking;
-   int mPrevWidth;
-   int mPrevHeight;
 
    SelectedRegion mInitialSelection;
    std::vector<bool> mInitialTrackSelection;
@@ -646,43 +675,16 @@ protected:
    const WaveTrack *mFreqSelTrack = NULL;
    std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
-   // For toggling of spectral seletion
-   double mLastF0;
-   double mLastF1;
-
-public:
-   void ToggleSpectralSelection();
 protected:
 
 #endif
 
    Track *mCapturedTrack;
    Envelope *mCapturedEnvelope;
-   WaveClip *mCapturedClip;
-   TrackClipArray mCapturedClipArray;
-   TrackArray mTrackExclusions;
-   bool mCapturedClipIsSelection;
+   ClipMoveState mClipMoveState;
    WaveTrackLocation mCapturedTrackLocation;
    wxRect mCapturedTrackLocationRect;
    wxRect mCapturedRect;
-
-   // When sliding horizontally, the moving clip may automatically
-   // snap to the beginning and ending of other clips, or to label
-   // starts and stops.  When you start sliding, SlideSnapFromPoints
-   // gets populated with the start and stop times of selected clips,
-   // and SlideSnapToPoints gets populated with the start and stop times
-   // of other clips.  In both cases, times that are within 3 pixels
-   // of another at the same zoom level are eliminated; you can't snap
-   // when there are two things arbitrarily close at that zoom level.
-   wxBaseArrayDouble mSlideSnapFromPoints;
-   wxBaseArrayDouble mSlideSnapToPoints;
-   wxArrayInt mSlideSnapLinePixels;
-
-   // The amount that clips are sliding horizontally; this allows
-   // us to undo the slide and then slide it by another amount
-   double mHSlideAmount;
-
-   double mHSlideAmountTotal;       // used for sliding horizontally using the keyboard
 
    bool mDidSlideVertically;
 
@@ -704,11 +706,27 @@ protected:
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
    std::unique_ptr<SnapManager> mSnapManager;
-   wxInt64 mSnapLeft;
-   wxInt64 mSnapRight;
+   wxInt64 mSnapLeft { -1 };
+   wxInt64 mSnapRight { -1 };
    bool mSnapPreferRightEdge;
 
-   NumericConverter mConverter;
+public:
+   wxInt64 GetSnapLeft () const
+   {
+      if ( mMouseCapture == IsSliding )
+         return mClipMoveState.snapLeft ;
+      else
+         return mSnapLeft ;
+   }
+   wxInt64 GetSnapRight() const
+   {
+      if ( mMouseCapture == IsSliding )
+         return mClipMoveState.snapRight;
+      else
+         return mSnapRight;
+   }
+
+protected:
 
    WaveTrack * mDrawingTrack;          // Keeps track of which track you are drawing on between events cf. HandleDraw()
    int mDrawingTrackTop;           // Keeps track of the top position of the drawing track.
@@ -780,9 +798,6 @@ protected:
       IsMinimizing,
       WasOverCutLine,
       IsPopping,
-#ifdef USE_MIDI
-      IsStretching,
-#endif
       IsZooming,
 #ifdef EXPERIMENTAL_MIDI_OUT
       IsVelocitySliding,
@@ -793,7 +808,6 @@ protected:
    enum MouseCaptureEnum mMouseCapture;
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
-   bool mAdjustSelectionEdges;
    bool mSlideUpDownOnly;
    bool mCircularTrackNavigation;
 
@@ -808,7 +822,7 @@ protected:
       mResizeCursor, mSlideCursor, mEnvelopeCursor, // doubles as the center frequency cursor
                               // for spectral selection
       mSmoothCursor, mZoomInCursor, mZoomOutCursor,
-      mLabelCursorLeft, mLabelCursorRight, mRearrangeCursor,
+      mRearrangeCursor,
       mDisabledCursor, mAdjustLeftSelectionCursor, mAdjustRightSelectionCursor;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    std::unique_ptr<wxCursor>
@@ -882,7 +896,11 @@ enum : int {
 
 enum : int {
    kTrackInfoWidth = 100,
-   kTrackInfoBtnSize = 18 // widely used dimension, usually height
+   kTrackInfoBtnSize = 18, // widely used dimension, usually height
+   kTrackInfoSliderHeight = 25,
+   kTrackInfoSliderWidth = 84,
+   kTrackInfoSliderAllowance = 5,
+   kTrackInfoSliderExtra = 5,
 };
 
 #ifdef USE_MIDI
