@@ -443,9 +443,11 @@ void AudacityProject::CreateMenusAndCommands()
       // Basic Edit coomands
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Cut"), _("Cu&t"), FN(OnCut), wxT("Ctrl+X"),
-         AudioIONotBusyFlag | CutCopyAvailableFlag,
+         AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
          AudioIONotBusyFlag | CutCopyAvailableFlag);
-      c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"));
+      c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"),
+         AudioIONotBusyFlag | NoAutoSelect,
+         AudioIONotBusyFlag );
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Copy"), _("&Copy"), FN(OnCopy), wxT("Ctrl+C"),
          AudioIONotBusyFlag | CutCopyAvailableFlag,
@@ -1313,11 +1315,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu("&Edit");
 
       c->AddItem(wxT("DeleteKey"), _("&DeleteKey"), FN(OnDelete), wxT("Backspace"),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
+         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
 
       c->AddItem(wxT("DeleteKey2"), _("DeleteKey&2"), FN(OnDelete), wxT("Delete"),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
+         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
       c->EndSubMenu();
 

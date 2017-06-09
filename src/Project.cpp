@@ -2327,6 +2327,10 @@ bool AudacityProject::TryToMakeActionAllowed
    if( mWhatIfNoSelection != 1 )
       return false;
 
+   // Some effects disallow autoselection.
+   if( flagsRqd & NoAutoSelect )
+      return false;
+
    // Why is action still not allowed?
    // 0's wherever a required flag is missing (or is don't care)
    MissingFlags = (flags & ~flagsRqd) & mask;

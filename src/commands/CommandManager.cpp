@@ -1336,8 +1336,11 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       // NB: The call may have the side effect of changing flags.
       bool allowed = proj->ReportIfActionNotAllowed( 
          NiceName, flags, entry->flags, combinedMask );
+      // If the function was disallowed, it STILL should count as having been
+      // handled (by doing nothing or by telling the user of the problem).
+      // Otherwise we may get other handlers having a go at obeying the command.
       if (!allowed)
-         return false;
+         return true;
    }
 
    (*(entry->callback))(entry->index, evt);

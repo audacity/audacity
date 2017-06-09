@@ -56,6 +56,7 @@ enum CommandFlag : unsigned long long
    HasWaveDataFlag       = 0x800000000ULL, // jkc
    PlayableTracksExistFlag = 0x1000000000ULL,
    AudioTracksSelectedFlag = 0x2000000000ULL,
+   NoAutoSelect            = 0x4000000000ULL, // jkc
 
    NoFlagsSpecifed        = ~0ULL
 };
