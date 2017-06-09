@@ -690,7 +690,8 @@ private:
    bool mShowId3Dialog{ true }; //lda
    bool mEmptyCanBeDirty;
 
-   bool mSelectAllOnNone;
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+   int  mWhatIfNoSelection;
    bool mStopIfWasPaused;
 
    bool mIsSyncLocked;

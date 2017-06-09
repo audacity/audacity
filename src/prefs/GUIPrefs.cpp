@@ -126,7 +126,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef EXPERIMENTAL_DA
          const wxString defaultTheme = wxT("dark");
 #else
-         const wxString defaultTheme = wxT("classic");
+         const wxString defaultTheme = wxT("light");
 #endif
          const wxString defaultRange = wxString::Format(wxT("%d"), ENV_DB_RANGE);
 

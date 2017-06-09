@@ -2184,7 +2184,7 @@ void AudacityProject::UpdateMenus(bool checkActive)
    //ANSWER: Because flags2 is used in the menu enable/disable.
    //The effect still needs flags to determine whether it will need
    //to actually do the 'select all' to make the command valid.
-   if (mSelectAllOnNone)
+   if (mWhatIfNoSelection != 0)
    {
       if ((flags & TracksExistFlag))
       {
@@ -2215,7 +2215,8 @@ void AudacityProject::UpdateMenus(bool checkActive)
 
    // With select-all-on-none, some items that we don't want enabled may have
    // been enabled, since we changed the flags.  Here we manually disable them.
-   if (mSelectAllOnNone)
+   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
+   if (mWhatIfNoSelection != 0)
    {
       if (!(flags & TimeSelectedFlag) | !(flags & TracksSelectedFlag))
       {

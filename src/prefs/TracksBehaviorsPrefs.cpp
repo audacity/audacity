@@ -57,7 +57,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       /* i18n-hint: auto-select makes a selection if there was none.*/
       S.TieCheckBox(_("&Auto-select"),
                     wxT("/GUI/SelectAllOnNone"),
-                    true);
+                    false);
       /* i18n-hint: auto-move moves clips out the way if necessary.*/
       S.TieCheckBox(_("&Auto-move for clips"),
                     wxT("/GUI/EditClipCanMove"),

@@ -240,7 +240,7 @@ bool ThemeBase::LoadPreferredTheme()
 #ifdef EXPERIMENTAL_DA
    wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("dark"));
 #else
-   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("classic"));
+   wxString theme = gPrefs->Read(wxT("/GUI/Theme"), wxT("light"));
 #endif
 
    theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
@@ -290,7 +290,7 @@ ThemeBase::~ThemeBase(void)
 {
 }
 
-char * ThemeNames [] =
+const char * ThemeNames [] =
 {  "Classic",
    "Dark",
    "Light",
@@ -907,7 +907,7 @@ teThemeType ThemeBase::GetFallbackThemeType(){
 #ifdef EXPERIMENTAL_DA
    return themeDark;
 #else
-   return themeClassic;
+   return themeLight;
 #endif
 }
 
