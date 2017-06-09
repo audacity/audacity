@@ -5566,7 +5566,7 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect rect, int x, int y,
                               bool solo)
 {
    wxRect buttonRect;
-   rect.width +=4;
+   //rect.width +=4;
    mTrackInfo.GetMuteSoloRect(rect, buttonRect, solo, HasSoloButton(), t);
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return false;
@@ -9386,15 +9386,15 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
       dest.width = rect.width / 2 + 1;
       if( solo ) {
          dest.x += dest.width;
-         dest.width = rect.width - dest.width;
+         dest.width = rect.width - dest.width+1;
       }
    }
    else
    {
-      // PRL:  Was symmetry within the TCP borders intended?
-      // If so, get rid of + 6 and + 1
+      // Larger button, symmetrically placed intended.
+      // On windows this gives 15 pixels each side.
       dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
-      dest.x = rect.x + kTrackInfoBtnSize + 1;
+      dest.x = rect.x + kTrackInfoBtnSize -3;
    }
 
    if( bSameRow || !solo )
