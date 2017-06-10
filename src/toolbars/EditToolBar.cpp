@@ -238,7 +238,7 @@ static const struct Entry {
 void EditToolBar::ForAllButtons(int Action)
 {
    AudacityProject *p;
-   CommandManager* cm;
+   CommandManager* cm = nullptr;
 
    if( Action & ETBActEnableDisable ){
       p = GetActiveProject();
@@ -267,7 +267,7 @@ void EditToolBar::ForAllButtons(int Action)
          ToolBar::SetButtonToolTip(*mButtons[entry.tool], commands);
       }
 #endif
-      if( Action & ETBActEnableDisable ){
+      if (cm) {
          mButtons[entry.tool]->SetEnabled(cm->GetEnabled(entry.commandName));
       }
    }
