@@ -258,10 +258,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual ~ TrackPanel();
 
-   virtual void BuildMenus(void);
-
-   virtual void DeleteMenus(void);
-
    virtual void UpdatePrefs();
    virtual void ApplyUpdatedTheme();
 
@@ -733,8 +729,6 @@ protected:
    std::unique_ptr<wxCursor>
       mStretchCursor, mStretchLeftCursor, mStretchRightCursor;
 #endif
-
-   Track *mPopupMenuTarget {};
 
    friend class TrackPanelAx;
 

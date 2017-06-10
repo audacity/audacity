@@ -277,10 +277,6 @@ template < class CLIPPEE, class CLIPVAL >
       clippee = val;
 }
 
-enum {
-   TrackPanelFirstID = 2000,
-};
-
 BEGIN_EVENT_TABLE(TrackPanel, OverlayPanel)
     EVT_MOUSE_EVENTS(TrackPanel::OnMouseEvent)
     EVT_MOUSE_CAPTURE_LOST(TrackPanel::OnCaptureLost)
@@ -395,7 +391,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mTrackArtist->SetMargins(1, kTopMargin, kRightMargin, kBottomMargin);
 
    mCapturedTrack = NULL;
-   mPopupMenuTarget = NULL;
 
    mTimeCount = 0;
    mTimer.parent = this;
@@ -444,8 +439,6 @@ TrackPanel::~TrackPanel()
    // ALT+F4 or Command+Q
    if (HasCapture())
       ReleaseMouse();
-
-   DeleteMenus();
 }
 
 LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
@@ -477,16 +470,6 @@ LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
 SelectionState &TrackPanel::GetSelectionState()
 {
    return GetProject()->GetSelectionState();
-}
-
-void TrackPanel::BuildMenus(void)
-{
-   // Get rid of existing menus
-   DeleteMenus();
-}
-
-void TrackPanel::DeleteMenus(void)
-{
 }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -2896,13 +2879,6 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
          ReleaseMouse();
    }
 
-   if (mPopupMenuTarget &&
-       !mTracks->Contains(mPopupMenuTarget)) {
-      mPopupMenuTarget = nullptr;
-      if (HasCapture())
-         ReleaseMouse();
-   }
-
    GetSelectionState().TrackListUpdated( *mTracks );
 
    if (e.GetClientData()) {
@@ -5171,34 +5147,11 @@ void TrackPanel::OnTrackMenu(Track *t)
          return;
    }
 
-   {
-      TrackPanelCell *const pCell = t->GetTrackControl();
-      const wxRect rect(FindTrackRect(t, true));
-      const UIHandle::Result refreshResult =
-         pCell->DoContextMenu(rect, this, NULL);
-      ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
-      // TODO:  Hide following lines inside the above.
-   }
-
-   mPopupMenuTarget = t;
-
-   wxMenu *theMenu = NULL;
-
-   if (theMenu) {
-      //We need to find the location of the menu rectangle.
-      const wxRect rect = FindTrackRect(t,true);
-      wxRect titleRect;
-      mTrackInfo.GetTitleBarRect(rect, titleRect);
-
-      PopupMenu(theMenu, titleRect.x + 1,
-                  titleRect.y + titleRect.height + 1);
-   }
-
-   mPopupMenuTarget = NULL;
-
-   SetCapturedTrack(NULL);
-
-   Refresh(false);
+   TrackPanelCell *const pCell = t->GetTrackControl();
+   const wxRect rect(FindTrackRect(t, true));
+   const UIHandle::Result refreshResult =
+      pCell->DoContextMenu(rect, this, NULL);
+   ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
 }
 
 Track * TrackPanel::GetFirstSelectedTrack()
