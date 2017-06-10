@@ -178,7 +178,6 @@ is time to refresh some aspect of the screen.
 #include "NoteTrack.h"
 #include "NumberScale.h"
 #include "Prefs.h"
-#include "Snap.h"
 #include "ShuttleGui.h"
 #include "TimeTrack.h"
 #include "TrackArtist.h"
