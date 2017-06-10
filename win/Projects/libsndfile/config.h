@@ -14,61 +14,10 @@
 #define ssize_t           SSIZE_T
 #define __func__          __FUNCTION__
 
-/*	Win32 doesn't seem to have these functions. 
-**	Therefore implement inline versions of these functions here.
-*/
-#if (_MSC_VER == 1500)
-__inline long int 
-lrint (double flt)
-{	int intgr;
-
-	_asm
-	{	fld flt
-		fistp intgr
-		} ;
-		
-	return intgr ;
-} 
-
-__inline long int 
-lrintf (float flt)
-{	int intgr;
-
-	_asm
-	{	fld flt
-		fistp intgr
-		} ;
-		
-	return intgr ;
-}
-
-__inline long long int 
-llrint (double flt)
-{	long long int intgr;
-
-	_asm
-	{	fld flt
-		fistp intgr
-		} ;
-		
-	return intgr ;
-} 
-
-__inline long long int 
-llrintf (float flt)
-{	long long int intgr;
-
-	_asm
-	{	fld flt
-		fistp intgr
-		} ;
-		
-	return intgr ;
-}
-#endif
-
+#if _MSC_VER < 1900
 /* Nor does it have the snprintf function */
 #define snprintf _snprintf
+#endif
 
 /* The above was added to provide the necessary support on Windows */
 
