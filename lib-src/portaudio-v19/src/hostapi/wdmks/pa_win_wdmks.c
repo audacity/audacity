@@ -99,7 +99,7 @@ of a device for the duration of active stream using those devices
 
 #include <math.h>
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #endif
