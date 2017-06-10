@@ -65,22 +65,7 @@ class ScreenFrame final : public wxFrame
    void OnToggleBackgroundWhite(wxCommandEvent & event);
 
    void DoCapture(wxString captureMode);
-   void OnCaptureWindowContents(wxCommandEvent & event);
-   void OnCaptureFullWindow(wxCommandEvent & event);
-   void OnCaptureWindowPlus(wxCommandEvent & event);
-   void OnCaptureFullScreen(wxCommandEvent & event);
-   void OnCaptureToolbars(wxCommandEvent & event);
-   void OnCaptureMenus(wxCommandEvent & event);
-   void OnCaptureEffects(wxCommandEvent & event);
-   void OnCapturePreferences(wxCommandEvent & event);
-   void OnCaptureSelectionBar(wxCommandEvent & event);
-   void OnCaptureTools(wxCommandEvent & event);
-   void OnCaptureTransport(wxCommandEvent & event);
-   void OnCaptureMixer(wxCommandEvent & event);
-   void OnCaptureMeter(wxCommandEvent & event);
-   void OnCaptureEdit(wxCommandEvent & event);
-   void OnCaptureDevice(wxCommandEvent & event);
-   void OnCaptureTranscription(wxCommandEvent & event);
+   void OnCaptureSomething(wxCommandEvent & event);
 
    void TimeZoom(double seconds);
    void OnOneSec(wxCommandEvent & event);
@@ -93,12 +78,6 @@ class ScreenFrame final : public wxFrame
    void OnShortTracks(wxCommandEvent & event);
    void OnMedTracks(wxCommandEvent & event);
    void OnTallTracks(wxCommandEvent & event);
-
-   void OnCaptureTrackPanel(wxCommandEvent & event);
-   void OnCaptureRuler(wxCommandEvent & event);
-   void OnCaptureTracks(wxCommandEvent & event);
-   void OnCaptureFirstTrack(wxCommandEvent & event);
-   void OnCaptureSecondTrack(wxCommandEvent & event);
 
    std::unique_ptr<ScreenshotCommand> CreateCommand();
 
@@ -180,24 +159,35 @@ enum
 
    IdDelayCheckBox,
 
+   IdCaptureFirst,
+   IdCaptureWindowContents = IdCaptureFirst,
+   IdCaptureFullWindow,
+   IdCaptureWindowPlus,
+   IdCaptureFullScreen,
+  
    IdCaptureToolbars,
    IdCaptureMenus,
    IdCaptureEffects,
    IdCapturePreferences,
    IdCaptureSelectionBar,
+   IdCaptureSpectralSelection,
    IdCaptureTools,
    IdCaptureTransport,
    IdCaptureMixer,
    IdCaptureMeter,
+   IdCapturePlayMeter,
+   IdCaptureRecordMeter,
    IdCaptureEdit,
    IdCaptureDevice,
    IdCaptureTranscription,
+   IdCaptureScrub,
 
    IdCaptureTrackPanel,
    IdCaptureRuler,
    IdCaptureTracks,
    IdCaptureFirstTrack,
    IdCaptureSecondTrack,
+   IdCaptureLast = IdCaptureSecondTrack,
 
    IdToggleBackgroundBlue,
    IdToggleBackgroundWhite,
@@ -205,10 +195,6 @@ enum
    // Put all events that might need delay below:
    IdAllDelayedEvents,
 
-   IdCaptureWindowContents,
-   IdCaptureFullWindow,
-   IdCaptureWindowPlus,
-   IdCaptureFullScreen,
 
    IdLastDelayedEvent,
 };
@@ -222,23 +208,7 @@ BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
    EVT_BUTTON(IdMainWindowLarge,        ScreenFrame::OnMainWindowLarge)
    EVT_TOGGLEBUTTON(IdToggleBackgroundBlue,   ScreenFrame::OnToggleBackgroundBlue)
    EVT_TOGGLEBUTTON(IdToggleBackgroundWhite,  ScreenFrame::OnToggleBackgroundWhite)
-   EVT_BUTTON(IdCaptureWindowContents,  ScreenFrame::OnCaptureWindowContents)
-   EVT_BUTTON(IdCaptureFullWindow,      ScreenFrame::OnCaptureFullWindow)
-   EVT_BUTTON(IdCaptureWindowPlus,      ScreenFrame::OnCaptureWindowPlus)
-   EVT_BUTTON(IdCaptureFullScreen,      ScreenFrame::OnCaptureFullScreen)
-
-   EVT_BUTTON(IdCaptureToolbars,        ScreenFrame::OnCaptureToolbars)
-   EVT_BUTTON(IdCaptureMenus,           ScreenFrame::OnCaptureMenus)
-   EVT_BUTTON(IdCaptureEffects,         ScreenFrame::OnCaptureEffects)
-   EVT_BUTTON(IdCapturePreferences,     ScreenFrame::OnCapturePreferences)
-   EVT_BUTTON(IdCaptureSelectionBar,    ScreenFrame::OnCaptureSelectionBar)
-   EVT_BUTTON(IdCaptureTools,           ScreenFrame::OnCaptureTools)
-   EVT_BUTTON(IdCaptureTransport,       ScreenFrame::OnCaptureTransport)
-   EVT_BUTTON(IdCaptureMixer,           ScreenFrame::OnCaptureMixer)
-   EVT_BUTTON(IdCaptureMeter,           ScreenFrame::OnCaptureMeter)
-   EVT_BUTTON(IdCaptureEdit,            ScreenFrame::OnCaptureEdit)
-   EVT_BUTTON(IdCaptureDevice,          ScreenFrame::OnCaptureDevice)
-   EVT_BUTTON(IdCaptureTranscription,   ScreenFrame::OnCaptureTranscription)
+   EVT_COMMAND_RANGE(IdCaptureFirst, IdCaptureLast, wxEVT_COMMAND_BUTTON_CLICKED, ScreenFrame::OnCaptureSomething)
 
    EVT_BUTTON(IdOneSec,                 ScreenFrame::OnOneSec)
    EVT_BUTTON(IdTenSec,                 ScreenFrame::OnTenSec)
@@ -249,12 +219,6 @@ BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
    EVT_BUTTON(IdShortTracks,            ScreenFrame::OnShortTracks)
    EVT_BUTTON(IdMedTracks,              ScreenFrame::OnMedTracks)
    EVT_BUTTON(IdTallTracks,             ScreenFrame::OnTallTracks)
-
-   EVT_BUTTON(IdCaptureTrackPanel,      ScreenFrame::OnCaptureTrackPanel)
-   EVT_BUTTON(IdCaptureRuler,           ScreenFrame::OnCaptureRuler)
-   EVT_BUTTON(IdCaptureTracks,          ScreenFrame::OnCaptureTracks)
-   EVT_BUTTON(IdCaptureFirstTrack,      ScreenFrame::OnCaptureFirstTrack)
-   EVT_BUTTON(IdCaptureSecondTrack,     ScreenFrame::OnCaptureSecondTrack)
 
    EVT_BUTTON(IdDirChoose,              ScreenFrame::OnDirChoose)
 END_EVENT_TABLE();
@@ -403,10 +367,18 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay();
          {
             S.Id(IdCaptureSelectionBar).AddButton(_("SelectionBar"));
+            S.Id(IdCaptureSpectralSelection).AddButton(_("Spectral Selection"));
             S.Id(IdCaptureTools).AddButton(_("Tools"));
             S.Id(IdCaptureTransport).AddButton(_("Transport"));
+         }
+         S.EndHorizontalLay();
+
+         S.StartHorizontalLay();
+         {
             S.Id(IdCaptureMixer).AddButton(_("Mixer"));
             S.Id(IdCaptureMeter).AddButton(_("Meter"));
+            S.Id(IdCapturePlayMeter).AddButton(_("Play Meter"));
+            S.Id(IdCaptureRecordMeter).AddButton(_("Record Meter"));
          }
          S.EndHorizontalLay();
 
@@ -415,6 +387,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
             S.Id(IdCaptureEdit).AddButton(_("Edit"));
             S.Id(IdCaptureDevice).AddButton(_("Device"));
             S.Id(IdCaptureTranscription).AddButton(_("Transcription"));
+            S.Id(IdCaptureScrub).AddButton(_("Scrub"));
          }
          S.EndHorizontalLay();
 
@@ -598,109 +571,39 @@ void ScreenFrame::DoCapture(wxString captureMode)
    Show();
 }
 
-void ScreenFrame::OnCaptureWindowContents(wxCommandEvent & WXUNUSED(event))
+void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 {
-   DoCapture(wxT("window"));
-}
+   int i = event.GetId() - IdCaptureFirst;
 
-void ScreenFrame::OnCaptureFullWindow(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("fullwindow"));
-}
+   wxArrayString Names;
 
-void ScreenFrame::OnCaptureWindowPlus(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("windowplus"));
-}
+   Names.Add(wxT("window"));
+   Names.Add(wxT("fullwindow"));
+   Names.Add(wxT("windowplus"));
+   Names.Add(wxT("fullscreen"));
+   Names.Add(wxT("toolbars"));
+   Names.Add(wxT("menus"));
+   Names.Add(wxT("effects"));
+   Names.Add(wxT("preferences"));
+   Names.Add(wxT("selectionbar"));
+   Names.Add(wxT("spectralselection"));
+   Names.Add(wxT("tools"));
+   Names.Add(wxT("transport"));
+   Names.Add(wxT("mixer"));
+   Names.Add(wxT("meter"));
+   Names.Add(wxT("playmeter"));
+   Names.Add(wxT("recordmeter"));
+   Names.Add(wxT("edit"));
+   Names.Add(wxT("device"));
+   Names.Add(wxT("transcription"));
+   Names.Add(wxT("scrub"));
+   Names.Add(wxT("trackpanel"));
+   Names.Add(wxT("ruler"));
+   Names.Add(wxT("tracks"));
+   Names.Add(wxT("firsttrack"));
+   Names.Add(wxT("secondtrack"));
 
-void ScreenFrame::OnCaptureFullScreen(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("fullscreen"));
-}
-
-void ScreenFrame::OnCaptureToolbars(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("toolbars"));
-}
-
-void ScreenFrame::OnCaptureMenus(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("menus"));
-}
-
-void ScreenFrame::OnCaptureEffects(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("effects"));
-}
-
-void ScreenFrame::OnCapturePreferences(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("preferences"));
-}
-
-void ScreenFrame::OnCaptureSelectionBar(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("selectionbar"));
-}
-
-void ScreenFrame::OnCaptureTools(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("tools"));
-}
-
-void ScreenFrame::OnCaptureTransport(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("transport"));
-}
-
-void ScreenFrame::OnCaptureMixer(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("mixer"));
-}
-
-void ScreenFrame::OnCaptureMeter(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("meter"));
-}
-
-void ScreenFrame::OnCaptureEdit(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("edit"));
-}
-
-void ScreenFrame::OnCaptureDevice(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("device"));
-}
-
-void ScreenFrame::OnCaptureTranscription(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("transcription"));
-}
-
-void ScreenFrame::OnCaptureTrackPanel(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("trackpanel"));
-}
-
-void ScreenFrame::OnCaptureRuler(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("ruler"));
-}
-
-void ScreenFrame::OnCaptureTracks(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("tracks"));
-}
-
-void ScreenFrame::OnCaptureFirstTrack(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("firsttrack"));
-}
-
-void ScreenFrame::OnCaptureSecondTrack(wxCommandEvent & WXUNUSED(event))
-{
-   DoCapture(wxT("secondtrack"));
+   DoCapture(Names[i]);
 }
 
 void ScreenFrame::TimeZoom(double seconds)
