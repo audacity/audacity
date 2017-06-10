@@ -17,8 +17,6 @@
 #include <wx/timer.h>
 
 #include "Experimental.h"
-#include "audacity/Types.h"
-#include "widgets/NumericTextCtrl.h"
 
 #include "SelectedRegion.h"
 #include "WaveTrackLocation.h"
