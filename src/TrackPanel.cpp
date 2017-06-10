@@ -4968,7 +4968,6 @@ void TrackPanel::HandleMutingSoloing(wxMouseEvent & event, bool solo)
             GetProject()->DoTrackMute(t, event.ShiftDown());
       }
       SetCapturedTrack( NULL );
-      // mTrackInfo.DrawMuteSolo(&dc, rect, t, false, solo);
       Refresh(false);
    }
 }
@@ -9697,12 +9696,6 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
    SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
-
-   if (solo && !down) {
-      // Update the mute button, which may be grayed out depending on
-      // the state of the solo button.
-      DrawMuteSolo(dc, rect, t, false, false, bHasSoloButton);
-   }
 }
 
 // Draw the minimize button *and* the sync-lock track icon, if necessary.
