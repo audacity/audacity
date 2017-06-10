@@ -1022,6 +1022,9 @@
     <ClCompile Include="..\..\..\src\tracks\ui\TrackButtonHandles.cpp">
       <Filter>src\tracks\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\tracks\ui\BackgroundCell.cpp">
+      <Filter>src\tracks\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2033,6 +2036,9 @@
       <Filter>src\tracks\playabletrack\wavetrack\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tracks\ui\TrackButtonHandles.h">
+      <Filter>src\tracks\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tracks\ui\BackgroundCell.h">
       <Filter>src\tracks\ui</Filter>
     </ClInclude>
   </ItemGroup>

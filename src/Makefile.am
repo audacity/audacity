@@ -579,6 +579,8 @@ audacity_SOURCES = \
 	tracks/timetrack/ui/TimeTrackUI.cpp \
 	tracks/timetrack/ui/TimeTrackVRulerControls.cpp \
 	tracks/timetrack/ui/TimeTrackVRulerControls.h \
+	tracks/ui/BackgroundCell.cpp \
+	tracks/ui/BackgroundCell.h \
 	tracks/ui/ButtonHandle.h \
 	tracks/ui/ButtonHandle.cpp \
 	tracks/ui/CommonTrackPanelCell.cpp \

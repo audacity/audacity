@@ -102,6 +102,7 @@ enum class UndoPush : unsigned char;
 
 class Track;
 class WaveClip;
+class BackgroundCell;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -763,6 +764,8 @@ private:
    // TrackPanelOverlay objects
    std::unique_ptr<Overlay>
       mIndicatorOverlay, mCursorOverlay;
+
+   std::shared_ptr<BackgroundCell> mBackgroundCell;
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    std::unique_ptr<Overlay> mScrubOverlay;
