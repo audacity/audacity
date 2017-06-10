@@ -9682,9 +9682,9 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t,
 
    wxCoord textWidth, textHeight;
    wxString str = (solo) ?
-      /* i18n-hint: This is on a button that will silence this track.*/
-      _("Solo") :
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
+      _("Solo") :
+      /* i18n-hint: This is on a button that will silence this track.*/
       _("Mute");
 
    AColor::Bevel2(
