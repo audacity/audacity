@@ -5277,9 +5277,9 @@ std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
 const TCPLine commonTrackTCPBottomLines[] = {
-   // PRL:  -1!!  This preserves present 2.2.0 behavior.  The increase of
-   // kTrackInfoBtnSize by 2 made the button impinge on the border of TCP.
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, -1 },
+   // The '0' avoids impinging on bottom line of TCP
+   // Use -1 if you do want to do so.
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0 },
    { 0, 0, 0 }
 };
 
@@ -9433,7 +9433,7 @@ void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 
 void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
 {
-   const int space = 3;
+   const int space = 0;// was 3.
    dest.x = rect.x + space;
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
