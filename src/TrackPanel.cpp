@@ -1963,8 +1963,9 @@ void TrackPanel::SelectTrack(Track *pTrack, bool selected, bool updateLastPicked
    // Update mixer board, but only as needed so it does not flicker.
    if (!wasCorrect) {
       MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard && (pTrack->GetKind() == Track::Wave))
-         pMixerBoard->RefreshTrackCluster(static_cast<WaveTrack*>(pTrack));
+      auto pt = dynamic_cast< PlayableTrack* >( pTrack );
+      if (pMixerBoard && pt)
+         pMixerBoard->RefreshTrackCluster( pt );
    }
 }
 
