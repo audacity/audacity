@@ -905,6 +905,9 @@
     <ClCompile Include="..\..\..\src\blockfile\NotYetAvailableException.cpp">
       <Filter>src\blockfile</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\SelectionState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1833,6 +1836,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\blockfile\NotYetAvailableException.h">
       <Filter>src\blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SelectionState.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

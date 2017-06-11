@@ -206,6 +206,8 @@ audacity_SOURCES = \
 	Screenshot.h \
 	SelectedRegion.cpp \
 	SelectedRegion.h \
+	SelectionState.cpp \
+	SelectionState.h \
 	Shuttle.cpp \
 	Shuttle.h \
 	ShuttleGui.cpp \

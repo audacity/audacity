@@ -25,6 +25,8 @@
 #include "Track.h"
 #include "widgets/OverlayPanel.h"
 
+#include "SelectionState.h"
+
 class wxMenu;
 class wxRect;
 
@@ -216,8 +218,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Either argument may be NULL
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
-   virtual void SelectNone();
-
    virtual void Refresh(bool eraseBackground = true,
                         const wxRect *rect = (const wxRect *) NULL);
    virtual void RefreshTrack(Track *trk, bool refreshbacking = true);
@@ -343,8 +343,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 #endif
 
    // AS: Selection handling
-   void SelectTrack(Track *track, bool selected, bool updateLastPicked = true);
-   void SelectRangeOfTracks(Track *sTrack, Track *eTrack);
    size_t GetTrackCount();
    size_t GetSelectedTrackCount();
    virtual void HandleSelect(wxMouseEvent & event);
@@ -352,7 +350,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
 protected:
 
-   virtual void ChangeSelectionOnShiftClick(Track * pTrack);
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect rect);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
@@ -381,7 +378,6 @@ protected:
 #endif
 
    virtual void SelectTracksByLabel( LabelTrack *t );
-   virtual void SelectTrackLength(Track *t);
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
@@ -644,12 +640,12 @@ protected:
 
    SelectedRegion mInitialSelection;
    std::vector<bool> mInitialTrackSelection;
+   SelectionState mSelectionState{};
+   SelectionState &GetSelectionState() { return mSelectionState; }
    Track *mInitialLastPickedTrack {};
 
    bool mSelStartValid;
    double mSelStart;
-
-   Track *mLastPickedTrack {};
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    enum eFreqSelMode {

@@ -315,8 +315,9 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
 	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
 	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
-	SelectedRegion.h Shuttle.cpp Shuttle.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	SelectedRegion.h SelectionState.cpp SelectionState.h \
+	Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
+	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -575,7 +576,8 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-RealFFTf.$(OBJEXT) audacity-RealFFTf48x.$(OBJEXT) \
 	audacity-Resample.$(OBJEXT) audacity-RingBuffer.$(OBJEXT) \
 	audacity-Screenshot.$(OBJEXT) \
-	audacity-SelectedRegion.$(OBJEXT) audacity-Shuttle.$(OBJEXT) \
+	audacity-SelectedRegion.$(OBJEXT) \
+	audacity-SelectionState.$(OBJEXT) audacity-Shuttle.$(OBJEXT) \
 	audacity-ShuttleGui.$(OBJEXT) audacity-ShuttlePrefs.$(OBJEXT) \
 	audacity-Snap.$(OBJEXT) \
 	audacity-SoundActivatedRecord.$(OBJEXT) \
@@ -1018,6 +1020,8 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
 PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
 PORTMIXER_LIBS = @PORTMIXER_LIBS@
@@ -1095,7 +1099,6 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -1219,8 +1222,9 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
 	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
 	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
-	SelectedRegion.h Shuttle.cpp Shuttle.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
+	SelectedRegion.h SelectionState.cpp SelectionState.h \
+	Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
+	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
 	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
 	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
@@ -2126,6 +2130,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SampleFormat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Screenshot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SelectedRegion.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-SelectionState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Sequence.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Shuttle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ShuttleGui.Po@am__quote@
@@ -3454,6 +3459,20 @@ audacity-SelectedRegion.obj: SelectedRegion.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SelectedRegion.cpp' object='audacity-SelectedRegion.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SelectedRegion.obj `if test -f 'SelectedRegion.cpp'; then $(CYGPATH_W) 'SelectedRegion.cpp'; else $(CYGPATH_W) '$(srcdir)/SelectedRegion.cpp'; fi`
+
+audacity-SelectionState.o: SelectionState.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SelectionState.o -MD -MP -MF $(DEPDIR)/audacity-SelectionState.Tpo -c -o audacity-SelectionState.o `test -f 'SelectionState.cpp' || echo '$(srcdir)/'`SelectionState.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SelectionState.Tpo $(DEPDIR)/audacity-SelectionState.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SelectionState.cpp' object='audacity-SelectionState.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SelectionState.o `test -f 'SelectionState.cpp' || echo '$(srcdir)/'`SelectionState.cpp
+
+audacity-SelectionState.obj: SelectionState.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-SelectionState.obj -MD -MP -MF $(DEPDIR)/audacity-SelectionState.Tpo -c -o audacity-SelectionState.obj `if test -f 'SelectionState.cpp'; then $(CYGPATH_W) 'SelectionState.cpp'; else $(CYGPATH_W) '$(srcdir)/SelectionState.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-SelectionState.Tpo $(DEPDIR)/audacity-SelectionState.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='SelectionState.cpp' object='audacity-SelectionState.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-SelectionState.obj `if test -f 'SelectionState.cpp'; then $(CYGPATH_W) 'SelectionState.cpp'; else $(CYGPATH_W) '$(srcdir)/SelectionState.cpp'; fi`
 
 audacity-Shuttle.o: Shuttle.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Shuttle.o -MD -MP -MF $(DEPDIR)/audacity-Shuttle.Tpo -c -o audacity-Shuttle.o `test -f 'Shuttle.cpp' || echo '$(srcdir)/'`Shuttle.cpp
