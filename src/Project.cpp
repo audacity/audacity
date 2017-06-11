@@ -1316,6 +1316,9 @@ void AudacityProject::UpdatePrefs()
 
    SetProjectTitle();
 
+   gPrefs->Read(wxT("/GUI/CircularTrackNavigation"), &mCircularTrackNavigation,
+                false);
+
    if (mTrackPanel) {
       mTrackPanel->UpdatePrefs();
    }

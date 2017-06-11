@@ -638,6 +638,7 @@ private:
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
    SelectionState mSelectionState{};
+   bool mCircularTrackNavigation{};
    std::unique_ptr<TrackFactory> mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
