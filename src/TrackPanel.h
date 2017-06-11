@@ -639,8 +639,7 @@ protected:
    bool mRefreshBacking;
 
    SelectedRegion mInitialSelection;
-   SelectionState mSelectionState{};
-   SelectionState &GetSelectionState() { return mSelectionState; }
+   SelectionState &GetSelectionState();
    std::unique_ptr<SelectionStateChanger> mSelectionStateChanger{};
 
    bool mSelStartValid;

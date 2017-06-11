@@ -571,6 +571,11 @@ TrackPanel::~TrackPanel()
    DeleteMenus();
 }
 
+SelectionState &TrackPanel::GetSelectionState()
+{
+   return GetProject()->GetSelectionState();
+}
+
 void TrackPanel::BuildMenusIfNeeded(void)
 {
    if (!mRateMenu)

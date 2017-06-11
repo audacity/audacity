@@ -24,6 +24,7 @@
 #include "widgets/OverlayPanel.h"
 
 #include "DirManager.h"
+#include "SelectionState.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
@@ -281,6 +282,7 @@ public:
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
    const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
+   SelectionState &GetSelectionState() { return mSelectionState; }
 
    bool GetIsEmpty();
 
@@ -635,6 +637,7 @@ private:
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
+   SelectionState mSelectionState{};
    std::unique_ptr<TrackFactory> mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
