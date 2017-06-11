@@ -4073,7 +4073,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       {
          if (pTrack->GetKind() == Track::Wave)
          {
-            auto wasSelected = pTrack->GetSelected();
+            SelectionStateChanger changer{ GetSelectionState(), *GetTracks() };
             pTrack->SetSelected(true);
             if (pTrack->GetLinked())
             {
@@ -4082,14 +4082,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
             }
             else
                pRightTrack = NULL;
-
-            auto cleanup = finally( [&] {
-               if (!wasSelected) {
-                  pTrack->SetSelected(false);
-                  if (pRightTrack)
-                     pRightTrack->SetSelected(false);
-               }
-            } );
 
             uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), wxT("ogg"));
             FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);
