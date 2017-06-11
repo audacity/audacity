@@ -639,10 +639,9 @@ protected:
    bool mRefreshBacking;
 
    SelectedRegion mInitialSelection;
-   std::vector<bool> mInitialTrackSelection;
    SelectionState mSelectionState{};
    SelectionState &GetSelectionState() { return mSelectionState; }
-   Track *mInitialLastPickedTrack {};
+   std::unique_ptr<SelectionStateChanger> mSelectionStateChanger{};
 
    bool mSelStartValid;
    double mSelStart;

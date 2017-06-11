@@ -188,3 +188,39 @@ void SelectionState::TrackListUpdated( const TrackList &tracks )
    if (mLastPickedTrack && !tracks.Contains(mLastPickedTrack))
       mLastPickedTrack = nullptr;
 }
+
+SelectionStateChanger::SelectionStateChanger
+( SelectionState &state, TrackList &tracks )
+   : mpState{ &state }
+   , mTracks{ tracks }
+   , mInitialLastPickedTrack{ state.mLastPickedTrack }
+{
+   // Save initial state of track selections
+   mInitialTrackSelection.clear();
+   TrackListIterator iter( &mTracks );
+   for (Track *track = iter.First(); track; track = iter.Next()) {
+      const bool isSelected = track->GetSelected();
+      mInitialTrackSelection.push_back(isSelected);
+   }
+}
+
+SelectionStateChanger::~SelectionStateChanger()
+{
+   if ( mpState ) {
+      // roll back changes
+      mpState->mLastPickedTrack = mInitialLastPickedTrack;
+      TrackListIterator iter( &mTracks );
+      std::vector<bool>::const_iterator
+         it = mInitialTrackSelection.begin(),
+         end = mInitialTrackSelection.end();
+      for (Track *track = iter.First(); track && it != end; track = iter.Next()) {
+         // wxASSERT(it != end);
+         track->SetSelected( *it++ );
+      }
+   }
+}
+
+void SelectionStateChanger::Commit()
+{
+   mpState = nullptr;
+}

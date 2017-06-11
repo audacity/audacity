@@ -1151,15 +1151,7 @@ bool TrackPanel::HandleEscapeKey(bool down)
    {
    case IsSelecting:
    {
-      TrackListIterator iter(GetTracks());
-      std::vector<bool>::const_iterator
-         it = mInitialTrackSelection.begin(),
-         end = mInitialTrackSelection.end();
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         wxASSERT(it != end);
-         t->SetSelected(*it++);
-      }
-      GetSelectionState().mLastPickedTrack = mInitialLastPickedTrack;
+      mSelectionStateChanger.reset();
       mViewInfo->selectedRegion = mInitialSelection;
 
       // Refresh mixer board for change of set of selected tracks
@@ -1789,6 +1781,10 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          SelectionHandleClick(event, t, rect);
    } else if (event.LeftUp() || event.RightUp()) {
       mSnapManager.reset();
+      if (mSelectionStateChanger) {
+         mSelectionStateChanger->Commit();
+         mSelectionStateChanger.reset();
+      }
 
       bool left;
       if ( GetProject()->IsSyncLocked() &&
@@ -1931,17 +1927,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
    mMouseCapture=IsSelecting;
    mInitialSelection = mViewInfo->selectedRegion;
-   mInitialLastPickedTrack = GetSelectionState().mLastPickedTrack;
-
-   // Save initial state of track selections
-   mInitialTrackSelection.clear();
-   {
-      TrackListIterator iter(GetTracks());
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         const bool isSelected = t->GetSelected();
-         mInitialTrackSelection.push_back(isSelected);
-      }
-   }
+   mSelectionStateChanger = std::make_unique< SelectionStateChanger >
+      ( GetSelectionState(), *mTracks );
 
    // We create a NEW snap manager in case any snap-points have changed
    mSnapManager = std::make_unique<SnapManager>(GetTracks(), mViewInfo);
