@@ -1208,6 +1208,7 @@
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
 		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
+		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E74D2E31CC4429700D88B0B /* EditCursorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DD1CC4429700D88B0B /* EditCursorOverlay.cpp */; };
 		5E74D2E41CC4429700D88B0B /* PlayIndicatorOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2DF1CC4429700D88B0B /* PlayIndicatorOverlay.cpp */; };
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
@@ -2988,6 +2989,8 @@
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
 		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
+		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
+		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
 		5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelCell.h; sourceTree = "<group>"; };
@@ -3909,6 +3912,7 @@
 				1790B0D609883BFD008A330A /* SampleFormat.cpp */,
 				285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */,
 				28D8425B1AD8D69D00551353 /* SelectedRegion.cpp */,
+				5E2A19921EED688500217B58 /* SelectionState.cpp */,
 				1790B0DA09883BFD008A330A /* Sequence.cpp */,
 				1790B0DC09883BFD008A330A /* Shuttle.cpp */,
 				283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */,
@@ -4005,6 +4009,7 @@
 				1790B0D709883BFD008A330A /* SampleFormat.h */,
 				285DE1F90BF03C7800A20DF0 /* Screenshot.h */,
 				2813897919E6163C004111ED /* SelectedRegion.h */,
+				5E2A19931EED688500217B58 /* SelectionState.h */,
 				1790B0DB09883BFD008A330A /* Sequence.h */,
 				1790B0DD09883BFD008A330A /* Shuttle.h */,
 				283A11A70A2C0E15004372C4 /* ShuttleGui.h */,
@@ -7472,6 +7477,7 @@
 				1790B1A709883BFD008A330A /* Warning.cpp in Sources */,
 				1790B1A909883BFD008A330A /* XMLFileReader.cpp in Sources */,
 				1790B1AA09883BFD008A330A /* XMLTagHandler.cpp in Sources */,
+				5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */,
 				17190D24098A3F0B004583C6 /* AColor.cpp in Sources */,
 				17190D25098A3F15004583C6 /* AboutDialog.cpp in Sources */,
 				174D9031098C78AF00D5909F /* CommandManager.cpp in Sources */,

@@ -197,6 +197,7 @@
     <ClCompile Include="..\..\..\src\SampleFormat.cpp" />
     <ClCompile Include="..\..\..\src\Screenshot.cpp" />
     <ClCompile Include="..\..\..\src\SelectedRegion.cpp" />
+    <ClCompile Include="..\..\..\src\SelectionState.cpp" />
     <ClCompile Include="..\..\..\src\Sequence.cpp" />
     <ClCompile Include="..\..\..\src\Shuttle.cpp" />
     <ClCompile Include="..\..\..\src\ShuttleGui.cpp" />
@@ -457,6 +458,7 @@
     <ClInclude Include="..\..\..\src\RealFFTf48x.h" />
     <ClInclude Include="..\..\..\src\RevisionIdent.h" />
     <ClInclude Include="..\..\..\src\SelectedRegion.h" />
+    <ClInclude Include="..\..\..\src\SelectionState.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
     <ClInclude Include="..\..\..\src\toolbars\ScrubbingToolBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />

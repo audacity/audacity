@@ -141,6 +141,8 @@ void OnPlaySpeedDec();
 
         // Moving track focus commands
 
+void OnPrevTrack( bool shift );
+void OnNextTrack( bool shift );
 void OnCursorUp();
 void OnCursorDown();
 void OnFirstTrack();

@@ -28,6 +28,7 @@ class wxTextCtrl;
 
 class AudacityProject;
 class LabelTrack;
+class SelectionState;
 class ShuttleGui;
 class Track;
 
@@ -159,6 +160,8 @@ private:
    wxButton      *mExport;
 
    wxSimplebook   *mBook;
+
+   SelectionState &mSelectionState;
 
    DECLARE_EVENT_TABLE()
 

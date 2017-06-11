@@ -25,6 +25,8 @@
 #include "Track.h"
 #include "widgets/OverlayPanel.h"
 
+#include "SelectionState.h"
+
 class wxMenu;
 class wxRect;
 
@@ -216,8 +218,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Either argument may be NULL
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
-   virtual void SelectNone();
-
    virtual void Refresh(bool eraseBackground = true,
                         const wxRect *rect = (const wxRect *) NULL);
    virtual void RefreshTrack(Track *trk, bool refreshbacking = true);
@@ -236,12 +236,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual void HandlePageUpKey();
    virtual void HandlePageDownKey();
    virtual AudacityProject * GetProject() const;
-
-   virtual void OnPrevTrack(bool shift = false);
-   virtual void OnNextTrack(bool shift = false);
-   virtual void OnFirstTrack();
-   virtual void OnLastTrack();
-   virtual void OnToggle();
 
    virtual void ScrollIntoView(double pos);
    virtual void ScrollIntoView(int x);
@@ -343,8 +337,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 #endif
 
    // AS: Selection handling
-   void SelectTrack(Track *track, bool selected, bool updateLastPicked = true);
-   void SelectRangeOfTracks(Track *sTrack, Track *eTrack);
    size_t GetTrackCount();
    size_t GetSelectedTrackCount();
    virtual void HandleSelect(wxMouseEvent & event);
@@ -352,7 +344,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
 protected:
 
-   virtual void ChangeSelectionOnShiftClick(Track * pTrack);
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect rect);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
@@ -381,7 +372,6 @@ protected:
 #endif
 
    virtual void SelectTracksByLabel( LabelTrack *t );
-   virtual void SelectTrackLength(Track *t);
 
    // AS: Cursor handling
    virtual bool SetCursorByActivity( );
@@ -643,13 +633,11 @@ protected:
    bool mRefreshBacking;
 
    SelectedRegion mInitialSelection;
-   std::vector<bool> mInitialTrackSelection;
-   Track *mInitialLastPickedTrack {};
+   SelectionState &GetSelectionState();
+   std::unique_ptr<SelectionStateChanger> mSelectionStateChanger{};
 
    bool mSelStartValid;
    double mSelStart;
-
-   Track *mLastPickedTrack {};
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    enum eFreqSelMode {
@@ -807,7 +795,6 @@ protected:
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
    bool mSlideUpDownOnly;
-   bool mCircularTrackNavigation;
 
    // JH: if the user is dragging a track, at what y
    //   coordinate should the dragging track move up or down?
