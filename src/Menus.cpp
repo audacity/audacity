@@ -3277,6 +3277,20 @@ void AudacityProject::OnToggle()
    return;
 }
 
+void AudacityProject::HandleListSelection(Track *t, bool shift, bool ctrl,
+                                     bool modifyState)
+{
+   GetSelectionState().HandleListSelection
+      ( *GetTracks(), mViewInfo, *t,
+        shift, ctrl, IsSyncLocked(), GetMixerBoard() );
+
+   if (! ctrl )
+      mTrackPanel->SetFocusedTrack(t);
+   Refresh(false);
+   if (modifyState)
+      ModifyState(true);
+}
+
 
 void AudacityProject::OnCursorLeft(const wxEvent * evt)
 {

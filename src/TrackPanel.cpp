@@ -5242,21 +5242,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       TrackPanel::CalculateRearrangingThresholds(event);
    }
 
-   HandleListSelection(t, event.ShiftDown(), event.ControlDown(), !unsafe);
-}
-
-void TrackPanel::HandleListSelection(Track *t, bool shift, bool ctrl,
-                                     bool modifyState)
-{
-   GetSelectionState().HandleListSelection
-      ( *mTracks, *mViewInfo, *t, shift, ctrl, GetProject()->IsSyncLocked(),
-        GetMixerBoard() );
-
-   if (! ctrl )
-      SetFocusedTrack(t);
-   Refresh(false);
-   if (modifyState)
-      MakeParentModifyState(true);
+   GetProject()->HandleListSelection(t, event.ShiftDown(), event.ControlDown(), !unsafe);
 }
 
 /// The user is dragging one of the tracks: change the track order
@@ -6509,7 +6495,7 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, 
 
       if( /*bShift ||*/ bCtrlDown ){
 
-         HandleListSelection(lTrack, bShift, bCtrlDown, !unsafe);
+         GetProject()->HandleListSelection(lTrack, bShift, bCtrlDown, !unsafe);
          return true;
       }
    }

@@ -154,6 +154,8 @@ void OnShiftUp();
 void OnShiftDown();
 void OnToggle();
 
+void HandleListSelection(Track *t, bool shift, bool ctrl, bool modifyState);
+
 void OnCursorLeft(const wxEvent * evt);
 void OnCursorRight(const wxEvent * evt);
 void OnSelExtendLeft(const wxEvent * evt);
