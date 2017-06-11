@@ -408,3 +408,16 @@ bool SnapManager::Snap(Track *currentTrack,
 
    return SNAP_OFF;
 }
+
+#include "AColor.h"
+
+void SnapManager::Draw( wxDC *dc, wxInt64 left, wxInt64 right )
+{
+   AColor::SnapGuidePen(dc);
+   if ( left >= 0 ) {
+      AColor::Line(*dc, (int)left, 0, (int)left, 30000);
+   }
+   if ( right >= 0 ) {
+      AColor::Line(*dc, (int)right, 0, (int)right, 30000);
+   }
+}

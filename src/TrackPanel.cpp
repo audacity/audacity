@@ -7364,15 +7364,8 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
    }
 
    // Draw snap guidelines if we have any
-   if ( mSnapManager && ( GetSnapLeft() >= 0 || GetSnapRight() >= 0 )) {
-      AColor::SnapGuidePen(dc);
-      if ( GetSnapLeft() >= 0 ) {
-         AColor::Line(*dc, (int)GetSnapLeft(), 0, GetSnapLeft(), 30000);
-      }
-      if ( GetSnapRight() >= 0 ) {
-         AColor::Line(*dc, (int)GetSnapRight(), 0, GetSnapRight(), 30000);
-      }
-   }
+   if ( mSnapManager )
+      mSnapManager->Draw( dc, GetSnapLeft(), GetSnapRight() );
 }
 
 /// Draw zooming indicator that shows the region that will
