@@ -156,6 +156,8 @@ class LWSlider
 
    static void DeleteSharedTipPanel();
 
+   void SetParent(wxWindow *parent) { mParent = parent; }
+
  private:
 
    wxString GetTip(float value) const;

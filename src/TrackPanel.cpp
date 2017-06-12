@@ -570,6 +570,32 @@ TrackPanel::~TrackPanel()
    DeleteMenus();
 }
 
+LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
+{
+   auto rect = FindTrackRect( wt, true );
+   wxRect sliderRect;
+   TrackInfo::GetGainRect( rect.GetTopLeft(), sliderRect );
+   return TrackInfo::GainSlider(sliderRect, wt, false, this);
+}
+
+LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
+{
+   auto rect = FindTrackRect( wt, true );
+   wxRect sliderRect;
+   TrackInfo::GetPanRect( rect.GetTopLeft(), sliderRect );
+   return TrackInfo::PanSlider(sliderRect, wt, false, this);
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
+{
+   auto rect = FindTrackRect( nt, true );
+   wxRect sliderRect;
+   TrackInfo::GetVelocityRect( rect.GetTopLeft(), sliderRect );
+   return TrackInfo::VelocitySlider(sliderRect, nt, false, this);
+}
+#endif
+
 SelectionState &TrackPanel::GetSelectionState()
 {
    return GetProject()->GetSelectionState();
@@ -4865,10 +4891,17 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    // is displayed, but it doesn't hurt to do this for all plats.
    WaveTrack *capturedTrack = (WaveTrack *) mCapturedTrack;
 
-   if (pan)
-      slider = mTrackInfo.PanSlider(capturedTrack, true);
-   else
-      slider = mTrackInfo.GainSlider(capturedTrack, true);
+   auto rect = FindTrackRect( capturedTrack, true );
+   if (pan) {
+      wxRect sliderRect;
+      TrackInfo::GetPanRect(rect.GetTopLeft(), sliderRect);
+      slider = mTrackInfo.PanSlider(sliderRect, capturedTrack, true, this);
+   }
+   else {
+      wxRect sliderRect;
+      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
+      slider = mTrackInfo.GainSlider(sliderRect, capturedTrack, true, this);
+   }
 
    slider->OnMouseEvent(event);
 
@@ -4923,7 +4956,10 @@ void TrackPanel::HandleVelocitySlider(wxMouseEvent &event)
    wxASSERT(mCapturedTrack->GetKind() == Track::Note);
    NoteTrack *capturedTrack = static_cast<NoteTrack *>(mCapturedTrack);
 
-   LWSlider *slider = mTrackInfo.VelocitySlider(capturedTrack, true);
+   auto rect = FindTrackRect( capturedTrack, true );
+   wxRect sliderRect;
+   TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
+   auto slider = mTrackInfo.VelocitySlider(sliderRect, capturedTrack, true, this);
 
    slider->OnMouseEvent(event);
 
@@ -8715,7 +8751,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 
 /// This finds the rectangle of a given track, either the
 /// of the label 'adornment' or the track itself
-wxRect TrackPanel::FindTrackRect(Track * target, bool label)
+wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
 {
    if (!target) {
       return { 0, 0, 0, 0 };
@@ -8813,11 +8849,6 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 {
    pParent = pParentIn;
 
-   mGain = NULL;
-   mGainCaptured=NULL;
-   mPan = NULL;
-   mPanCaptured=NULL;
-
    ReCreateSliders();
 
    UpdatePrefs();
@@ -8834,48 +8865,48 @@ void TrackInfo::ReCreateSliders(){
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
+   gGain = std::make_unique<LWSlider>(pParent, _("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
-   mGain->SetDefaultValue(defPos);
+   gGain->SetDefaultValue(defPos);
 
-   mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
+   gGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
-   mGainCaptured->SetDefaultValue(defPos);
+   gGainCaptured->SetDefaultValue(defPos);
 
    GetPanRect(point, sliderRect);
 
    defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
+   gPan = std::make_unique<LWSlider>(pParent, _("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
-   mPan->SetDefaultValue(defPos);
+   gPan->SetDefaultValue(defPos);
 
-   mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
+   gPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);
-   mPanCaptured->SetDefaultValue(defPos);
+   gPanCaptured->SetDefaultValue(defPos);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    GetVelocityRect(point, sliderRect);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
-   mVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
+   gVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
-   mVelocity->SetDefaultValue(0.0);
-   mVelocityCaptured = std::make_unique<LWSlider>(pParent, _("Velocity"),
+   gVelocity->SetDefaultValue(0.0);
+   gVelocityCaptured = std::make_unique<LWSlider>(pParent, _("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
-   mVelocityCaptured->SetDefaultValue(0.0);
+   gVelocityCaptured->SetDefaultValue(0.0);
 #endif
 
 }
@@ -9275,11 +9306,11 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) 
 
    GetGainRect(rect.GetTopLeft(), sliderRect);
    if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      GainSlider(t, captured)->OnPaint(*dc);
+      GainSlider(sliderRect, t, captured, pParent)->OnPaint(*dc);
 
    GetPanRect(rect.GetTopLeft(), sliderRect);
    if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      PanSlider(t, captured)->OnPaint(*dc);
+      PanSlider(sliderRect, t, captured, pParent)->OnPaint(*dc);
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -9289,7 +9320,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 
    GetVelocityRect( rect.GetTopLeft(), sliderRect );
    if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) ) {
-      VelocitySlider(t, captured)->OnPaint(*dc);
+      VelocitySlider(sliderRect, t, captured, pParent)->OnPaint(*dc);
    }
 }
 #endif
@@ -9315,59 +9346,64 @@ unsigned TrackInfo::DefaultWaveTrackHeight()
    return (unsigned) std::max( needed, (int) Track::DefaultHeight );
 }
 
-LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
-{
-   wxPoint topLeft{
-      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
-   wxRect sliderRect;
-   GetGainRect(topLeft, sliderRect);
+std::unique_ptr<LWSlider>
+   TrackInfo::gGainCaptured
+   , TrackInfo::gPanCaptured
+   , TrackInfo::gGain
+   , TrackInfo::gPan
+#ifdef EXPERIMENTAL_MIDI_OUT
+   , TrackInfo::gVelocityCaptured
+   , TrackInfo::gVelocity
+#endif
+;
 
+LWSlider * TrackInfo::GainSlider
+(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
+{
    wxPoint pos = sliderRect.GetPosition();
    float gain = t->GetGain();
 
-   mGain->Move(pos);
-   mGain->Set(gain);
-   mGainCaptured->Move(pos);
-   mGainCaptured->Set(gain);
+   gGain->Move(pos);
+   gGain->Set(gain);
+   gGainCaptured->Move(pos);
+   gGainCaptured->Set(gain);
 
-   return (captured ? mGainCaptured : mGain).get();
+   auto slider = (captured ? gGainCaptured : gGain).get();
+   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   return slider;
 }
 
-LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
+LWSlider * TrackInfo::PanSlider
+(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
-   wxPoint topLeft{
-      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
-   wxRect sliderRect;
-   GetPanRect(topLeft, sliderRect);
-
    wxPoint pos = sliderRect.GetPosition();
    float pan = t->GetPan();
 
-   mPan->Move(pos);
-   mPan->Set(pan);
-   mPanCaptured->Move(pos);
-   mPanCaptured->Set(pan);
+   gPan->Move(pos);
+   gPan->Set(pan);
+   gPanCaptured->Move(pos);
+   gPanCaptured->Set(pan);
 
-   return (captured ? mPanCaptured : mPan).get();
+   auto slider = (captured ? gPanCaptured : gPan).get();
+   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   return slider;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
+LWSlider * TrackInfo::VelocitySlider
+(const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
 {
-   wxPoint topLeft{
-      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
-   wxRect sliderRect;
-   GetVelocityRect(topLeft, sliderRect);
-
    wxPoint pos = sliderRect.GetPosition();
    float velocity = t->GetVelocity();
 
-   mVelocity->Move(pos);
-   mVelocity->Set(velocity);
-   mVelocityCaptured->Move(pos);
-   mVelocityCaptured->Set(velocity);
+   gVelocity->Move(pos);
+   gVelocity->Set(velocity);
+   gVelocityCaptured->Move(pos);
+   gVelocityCaptured->Set(velocity);
 
-   return (captured ? mVelocityCaptured : mVelocity).get();
+   auto slider = (captured ? gVelocityCaptured : gVelocity).get();
+   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   return slider;
 }
 #endif
 

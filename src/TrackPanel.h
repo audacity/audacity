@@ -124,11 +124,17 @@ public:
    static unsigned DefaultNoteTrackHeight();
    static unsigned DefaultWaveTrackHeight();
 
-   LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
-   LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
+   static LWSlider * GainSlider
+      (const wxRect &sliderRect, const WaveTrack *t, bool captured,
+       wxWindow *pParent);
+   static LWSlider * PanSlider
+      (const wxRect &sliderRect, const WaveTrack *t, bool captured,
+       wxWindow *pParent);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   LWSlider * VelocitySlider(NoteTrack *t, bool captured = false) const;
+   static LWSlider * VelocitySlider
+      (const wxRect &sliderRect, const NoteTrack *t, bool captured,
+       wxWindow *pParent);
 #endif
 
 private:
@@ -136,10 +142,10 @@ private:
 
    TrackPanel * pParent;
    static wxFont gFont;
-   std::unique_ptr<LWSlider>
-      mGainCaptured, mPanCaptured, mGain, mPan;
+   static std::unique_ptr<LWSlider>
+      gGainCaptured, gPanCaptured, gGain, gPan;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   std::unique_ptr<LWSlider> mVelocityCaptured, mVelocity;
+   static std::unique_ptr<LWSlider> gVelocityCaptured, gVelocity;
 #endif
 
    friend class TrackPanel;
@@ -538,7 +544,7 @@ protected:
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
    // the proper track area.
-   virtual wxRect FindTrackRect(Track * target, bool label);
+   virtual wxRect FindTrackRect( const Track * target, bool label );
 
    virtual int GetVRulerWidth() const;
    virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
@@ -593,9 +599,17 @@ protected:
    virtual wxString TrackSubText(WaveTrack *t);
 
    TrackInfo mTrackInfo;
- public:
-    TrackInfo *GetTrackInfo() { return &mTrackInfo; }
-    const TrackInfo *GetTrackInfo() const { return &mTrackInfo; }
+
+public:
+
+   LWSlider *GainSlider( const WaveTrack *wt );
+   LWSlider *PanSlider( const WaveTrack *wt );
+#ifdef EXPERIMENTAL_MIDI_OUT
+   LWSlider *VelocitySlider( const NoteTrack *nt );
+#endif
+
+   TrackInfo *GetTrackInfo() { return &mTrackInfo; }
+   const TrackInfo *GetTrackInfo() const { return &mTrackInfo; }
 
 protected:
    TrackPanelListener *mListener;
