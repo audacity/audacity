@@ -107,6 +107,27 @@ public:
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
         bool captured );
 
+   template<typename TrackClass>
+   static void SliderDrawFunction
+      ( LWSlider *(*Selector)
+           (const wxRect &sliderRect, const TrackClass *t, bool captured,
+            wxWindow*),
+        wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured );
+
+   static void PanSliderDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void GainSliderDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   static void VelocitySliderDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+#endif
+
 private:
    int GetTrackInfoWidth() const;
    static void SetTrackInfoFont(wxDC *dc);
@@ -118,10 +139,6 @@ private:
    void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
    void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
-   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect, bool captured) const;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect, bool captured) const;
-#endif
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;

@@ -5110,8 +5110,10 @@ const TrackInfo::TCPLine commonTrackTCPLines[] = {
 const TrackInfo::TCPLine waveTrackTCPLines[] = {
    COMMON_ITEMS
    MUTE_SOLO_ITEMS(2)
-   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
-   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
+   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+     &TrackInfo::GainSliderDrawFunction },
+   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+     &TrackInfo::PanSliderDrawFunction },
    STATUS_ITEMS
    { 0, 0, 0, nullptr }
 };
@@ -5122,7 +5124,8 @@ const TrackInfo::TCPLine noteTrackTCPLines[] = {
    MUTE_SOLO_ITEMS(0)
    { kItemMidiControlsRect, kMidiCellHeight * 4, 0,
      &TrackInfo::MidiControlsDrawFunction },
-   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
+   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+     &TrackInfo::VelocitySliderDrawFunction },
 #endif
    { 0, 0, 0, nullptr }
 };
@@ -7456,6 +7459,41 @@ void TrackInfo::MidiControlsDrawFunction
 #endif // EXPERIMENTAL_MIDI_OUT
 }
 
+template<typename TrackClass>
+void TrackInfo::SliderDrawFunction
+( LWSlider *(*Selector)
+    (const wxRect &sliderRect, const TrackClass *t, bool captured, wxWindow*),
+  wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured )
+{
+   wxRect sliderRect = rect;
+   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   auto wt = static_cast<const TrackClass*>( pTrack );
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc);
+}
+
+void TrackInfo::PanSliderDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+{
+   SliderDrawFunction<WaveTrack>
+      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured);
+}
+
+void TrackInfo::GainSliderDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+{
+   SliderDrawFunction<WaveTrack>
+      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured);
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void TrackInfo::VelocitySliderDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+{
+   SliderDrawFunction<NoteTrack>
+      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured);
+}
+#endif
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -7510,8 +7548,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
       mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
-      mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
-
 // DA: For classic Audacity, show stero/mono and rate.
 #ifndef EXPERIMENTAL_DA
       if (!t->GetMinimized()) {
@@ -7544,10 +7580,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
             (captured && mMouseCapture == IsMuting), false, HasSoloButton());
       mTrackInfo.DrawMuteSolo(dc, rect, t,
             (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
-
-      // Place a volume control below channel buttons (this will
-      // control an offset to midi velocity).
-      mTrackInfo.DrawVelocitySlider(dc, static_cast<NoteTrack *>(t), rect, captured);
    }
 #endif // EXPERIMENTAL_MIDI_OUT
 }
@@ -9543,31 +9575,6 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
 
 }
 
-void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) const
-{
-   wxRect sliderRect;
-
-   GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      GainSlider(sliderRect, t, captured, pParent)->OnPaint(*dc);
-
-   GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      PanSlider(sliderRect, t, captured, pParent)->OnPaint(*dc);
-}
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool captured) const
-{
-   wxRect sliderRect;
-
-   GetVelocityRect( rect.GetTopLeft(), sliderRect );
-   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) ) {
-      VelocitySlider(sliderRect, t, captured, pParent)->OnPaint(*dc);
-   }
-}
-#endif
-
 namespace {
 unsigned DefaultTrackHeight( const TrackInfo::TCPLine topLines[] )
 {
@@ -9604,7 +9611,7 @@ LWSlider * TrackInfo::GainSlider
 (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
    wxPoint pos = sliderRect.GetPosition();
-   float gain = t->GetGain();
+   float gain = t ? t->GetGain() : 1.0;
 
    gGain->Move(pos);
    gGain->Set(gain);
@@ -9620,7 +9627,7 @@ LWSlider * TrackInfo::PanSlider
 (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
    wxPoint pos = sliderRect.GetPosition();
-   float pan = t->GetPan();
+   float pan = t ? t->GetPan() : 0.0;
 
    gPan->Move(pos);
    gPan->Set(pan);
@@ -9637,7 +9644,7 @@ LWSlider * TrackInfo::VelocitySlider
 (const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
 {
    wxPoint pos = sliderRect.GetPosition();
-   float velocity = t->GetVelocity();
+   float velocity = t ? t->GetVelocity() : 0.0;
 
    gVelocity->Move(pos);
    gVelocity->Set(velocity);
