@@ -103,6 +103,10 @@ public:
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
         bool captured );
 
+   static void MidiControlsDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
 private:
    int GetTrackInfoWidth() const;
    static void SetTrackInfoFont(wxDC *dc);

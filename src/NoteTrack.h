@@ -82,7 +82,8 @@ class AUDACITY_DLL_API NoteTrack final
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
-   void DrawLabelControls(wxDC & dc, const wxRect &rect);
+   static void DrawLabelControls
+      ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect );
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);

@@ -5120,7 +5120,8 @@ const TrackInfo::TCPLine noteTrackTCPLines[] = {
    COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
-   { kItemMidiControlsRect, kMidiCellHeight * 4, 0, nullptr },
+   { kItemMidiControlsRect, kMidiCellHeight * 4, 0,
+     &TrackInfo::MidiControlsDrawFunction },
    { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
 #endif
    { 0, 0, 0, nullptr }
@@ -7444,6 +7445,17 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
+void TrackInfo::MidiControlsDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+{
+#ifdef EXPERIMENTAL_MIDI_OUT
+   wxRect midiRect = rect;
+   GetMidiControlsHorizontalBounds(rect, midiRect);
+   NoteTrack::DrawLabelControls
+      ( static_cast<const NoteTrack *>(pTrack), *dc, midiRect );
+#endif // EXPERIMENTAL_MIDI_OUT
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -7528,11 +7540,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    else if (bIsNote) {
-      wxRect midiRect;
-      mTrackInfo.GetMidiControlsRect(rect, midiRect);
-
-      if ( !TrackInfo::HideTopItem( rect, midiRect ) )
-         static_cast<NoteTrack *>(t)->DrawLabelControls(*dc, midiRect);
       mTrackInfo.DrawMuteSolo(dc, rect, t,
             (captured && mMouseCapture == IsMuting), false, HasSoloButton());
       mTrackInfo.DrawMuteSolo(dc, rect, t,
