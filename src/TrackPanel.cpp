@@ -8891,7 +8891,7 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
-void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
+void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
 {
    dest.x = rect.x;
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
@@ -8900,7 +8900,7 @@ void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest) const
    dest.height = results.second;
 }
 
-void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
+void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
 {
    // to right of CloseBoxRect, plus a little more
    dest.x = rect.x + kTrackInfoBtnSize + 1;
@@ -8911,7 +8911,7 @@ void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest) const
    dest.height = results.second;
 }
 
-void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack) const
+void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack)
 {
 
    dest.x = rect.x;
@@ -8949,7 +8949,7 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 }
 
-void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
+void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
 {
    dest.x = topleft.x + 6;
    auto results = CalcItemY( waveTrackTCPLines, kItemGain );
@@ -8958,7 +8958,7 @@ void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest) const
    dest.height = results.second;
 }
 
-void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
+void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest)
 {
    GetGainRect( topleft, dest );
    auto results = CalcItemY( waveTrackTCPLines, kItemPan );
@@ -8966,7 +8966,7 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest) const
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
+void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
 {
    dest.x = topleft.x + 6;
    auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
@@ -8976,7 +8976,7 @@ void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest) const
 }
 #endif
 
-void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
+void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
 {
    const int space = 0;// was 3.
    dest.x = rect.x + space;
@@ -8989,7 +8989,7 @@ void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest) const
    dest.height = results.second;
 }
 
-void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
+void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 {
    dest.x = rect.x + rect.width - kTrackInfoBtnSize; // to right of minimize button
    auto results = CalcBottomItemY
@@ -9000,7 +9000,7 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const
 }
 
 #ifdef USE_MIDI
-void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest) const
+void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
 {
    dest.x = rect.x + 1; // To center slightly
    // PRL: TODO: kMidiCellWidth is defined in terms of the other constant

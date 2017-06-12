@@ -102,19 +102,19 @@ private:
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
 
-   void GetCloseBoxRect(const wxRect & rect, wxRect &dest) const;
-   void GetTitleBarRect(const wxRect & rect, wxRect &dest) const;
-   void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
-                        const Track *pTrack) const;
-   void GetGainRect(const wxPoint & topLeft, wxRect &dest) const;
-   void GetPanRect(const wxPoint & topLeft, wxRect &dest) const;
+   static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
+   static void GetTitleBarRect(const wxRect & rect, wxRect &dest);
+   static void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
+                        const Track *pTrack);
+   static void GetGainRect(const wxPoint & topLeft, wxRect &dest);
+   static void GetPanRect(const wxPoint & topLeft, wxRect &dest);
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void GetVelocityRect(const wxPoint & topLeft, wxRect &dest) const;
+   static void GetVelocityRect(const wxPoint & topLeft, wxRect &dest);
 #endif
-   void GetMinimizeRect(const wxRect & rect, wxRect &dest) const;
-   void GetSyncLockIconRect(const wxRect & rect, wxRect &dest) const;
+   static void GetMinimizeRect(const wxRect & rect, wxRect &dest);
+   static void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
 #ifdef USE_MIDI
-   void GetMidiControlsRect(const wxRect & rect, wxRect &dest) const;
+   static void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
 #endif
 
 public:
