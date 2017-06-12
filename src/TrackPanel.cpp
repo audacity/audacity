@@ -5170,7 +5170,8 @@ std::pair< int, int > CalcItemY( const TrackInfo::TCPLine *pLines, unsigned iIte
 const TrackInfo::TCPLine commonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0, nullptr },
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0,
+     &TrackInfo::MinimizeSyncLockDrawFunction },
    { 0, 0, 0, nullptr }
 };
 
@@ -7396,6 +7397,53 @@ void TrackInfo::CloseTitleDrawFunction
    }
 }
 
+void TrackInfo::MinimizeSyncLockDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   bool syncLockSelected = pTrack ? pTrack->IsSyncLockSelected() : true;
+   bool minimized = pTrack ? pTrack->GetMinimized() : false;
+   {
+      bool down = captured && (pressed == TrackPanel::IsMinimizing);
+      wxRect bev = rect;
+      GetMinimizeHorizontalBounds(rect, bev);
+
+      // Clear background to get rid of previous arrow
+      //AColor::MediumTrackInfo(dc, t->GetSelected());
+      //dc->DrawRectangle(bev);
+
+      AColor::Bevel2(*dc, !down, bev, selected);
+
+#ifdef EXPERIMENTAL_THEMING
+      wxColour c = theTheme.Colour(clrTrackPanelText);
+      dc->SetBrush(c);
+      dc->SetPen(c);
+#else
+      AColor::Dark(dc, selected);
+#endif
+
+      AColor::Arrow(*dc,
+                    bev.x - 5 + bev.width / 2,
+                    bev.y - 2 + bev.height / 2,
+                    10,
+                    minimized);
+   }
+
+   // Draw the sync-lock indicator if this track is in a sync-lock selected group.
+   if (syncLockSelected)
+   {
+      wxRect syncLockIconRect = rect;
+	
+      GetSyncLockHorizontalBounds( rect, syncLockIconRect );
+      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon));
+      // Icon is 12x12 and syncLockIconRect is 16x16.
+      dc->DrawBitmap(syncLockBitmap,
+                     syncLockIconRect.x + 3,
+                     syncLockIconRect.y + 2,
+                     true);
+   }
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -7441,22 +7489,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 
    bool captured = (t == mCapturedTrack);
 
-   mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
-
    TrackInfo::DrawItems( dc, rect, *t, mMouseCapture, captured );
-
-   // Draw the sync-lock indicator if this track is in a sync-lock selected group.
-   if (t->IsSyncLockSelected())
-   {
-      wxRect syncLockIconRect;
-      mTrackInfo.GetSyncLockIconRect(rect, syncLockIconRect);
-      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon));
-      // Icon is 12x12 and syncLockIconRect is 16x16.
-      dc->DrawBitmap(syncLockBitmap,
-                     syncLockIconRect.x + 3,
-                     syncLockIconRect.y + 2,
-                     true);
-   }
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 
