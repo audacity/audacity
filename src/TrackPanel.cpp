@@ -5077,7 +5077,8 @@ enum : unsigned {
 #ifdef EXPERIMENTAL_DA
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 4, nullptr },
+      { kItemBarButtons, kTrackInfoBtnSize, 4, \
+        &TrackInfo::CloseTitleDrawFunction },
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute, kTrackInfoBtnSize + 1, 1, nullptr }, \
@@ -5088,7 +5089,8 @@ enum : unsigned {
 #else
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 0, nullptr },
+      { kItemBarButtons, kTrackInfoBtnSize, 0, \
+        &TrackInfo::CloseTitleDrawFunction },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, nullptr },
    #define STATUS_ITEMS \
@@ -7308,6 +7310,92 @@ void TrackInfo::DrawItems
    }
 }
 
+void TrackInfo::CloseTitleDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   {
+      bool down = captured && (pressed == TrackPanel::IsClosing);
+      wxRect bev = rect;
+      GetCloseBoxHorizontalBounds( rect, bev );
+      AColor::Bevel2(*dc, !down, bev, selected );
+
+#ifdef EXPERIMENTAL_THEMING
+      wxPen pen( theTheme.Colour( clrTrackPanelText ));
+      dc->SetPen( pen );
+#else
+      dc->SetPen(*wxBLACK_PEN);
+#endif
+      bev.Inflate( -1, -1 );
+      // Draw the "X"
+      const int s = 6;
+
+      int ls = bev.x + ((bev.width - s) / 2);
+      int ts = bev.y + ((bev.height - s) / 2);
+      int rs = ls + s;
+      int bs = ts + s;
+
+      AColor::Line(*dc, ls,     ts, rs,     bs);
+      AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
+      AColor::Line(*dc, rs,     ts, ls,     bs);
+      AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
+
+      //   bev.Inflate(-1, -1);
+   }
+
+   {
+      wxString titleStr =
+         pTrack ? pTrack->GetName() : _("Name");
+
+      bool down = captured && (pressed == TrackPanel::IsPopping);
+      wxRect bev = rect;
+      GetTitleBarHorizontalBounds( rect, bev );
+      //bev.Inflate(-1, -1);
+      AColor::Bevel2(*dc, !down, bev, selected);
+
+      // Draw title text
+      SetTrackInfoFont(dc);
+      int allowableWidth = rect.width - 42;
+
+      wxCoord textWidth, textHeight;
+      dc->GetTextExtent(titleStr, &textWidth, &textHeight);
+      while (textWidth > allowableWidth) {
+         titleStr = titleStr.Left(titleStr.Length() - 1);
+         dc->GetTextExtent(titleStr, &textWidth, &textHeight);
+      }
+
+      // Pop-up triangle
+   #ifdef EXPERIMENTAL_THEMING
+      wxColour c = theTheme.Colour( clrTrackPanelText );
+   #else
+      wxColour c = *wxBLACK;
+   #endif
+
+      // wxGTK leaves little scraps (antialiasing?) of the
+      // characters if they are repeatedly drawn.  This
+      // happens when holding down mouse button and moving
+      // in and out of the title bar.  So clear it first.
+   //   AColor::MediumTrackInfo(dc, t->GetSelected());
+   //   dc->DrawRectangle(bev);
+
+      dc->SetTextForeground( c );
+      dc->SetTextBackground( wxTRANSPARENT );
+      dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+
+
+
+      dc->SetPen(c);
+      dc->SetBrush(c);
+
+      int s = 10; // Width of dropdown arrow...height is half of width
+      AColor::Arrow(*dc,
+                    bev.GetRight() - s - 3, // 3 to offset from right border
+                    bev.y + ((bev.height - (s / 2)) / 2),
+                    s);
+
+   }
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -7352,8 +7440,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    rect.height -= (kBottomMargin + kTopMargin);
 
    bool captured = (t == mCapturedTrack);
-   mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
-   mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
 

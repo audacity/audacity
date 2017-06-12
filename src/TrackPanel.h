@@ -95,6 +95,10 @@ public:
         const TCPLine topLines[], const TCPLine bottomLines[],
         int mouseCapture, bool captured );
 
+   static void CloseTitleDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
 private:
    int GetTrackInfoWidth() const;
    static void SetTrackInfoFont(wxDC *dc);
@@ -809,6 +813,7 @@ protected:
    int mInitialUpperActualHeight;
    bool mAutoScrolling;
 
+public:
    enum   MouseCaptureEnum
    {
       IsUncaptured=0,   // This is the normal state for the mouse
@@ -838,6 +843,7 @@ protected:
 
    };
 
+protected:
    enum MouseCaptureEnum mMouseCapture;
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
