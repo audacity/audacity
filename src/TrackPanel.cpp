@@ -5046,7 +5046,7 @@ struct TCPLine {
 #else
 
    #define TITLE_ITEMS(extra) \
-      { kItemBarButtons, kTrackInfoBtnSize, extra },
+      { kItemBarButtons, kTrackInfoBtnSize, 0 },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
    #define STATUS_ITEMS \
@@ -9315,8 +9315,7 @@ unsigned TrackInfo::DefaultWaveTrackHeight()
    int needed =
       kTopMargin + kBottomMargin +
       totalTCPLines( waveTrackTCPLines ) +
-      totalTCPLines( commonTrackTCPBottomLines ) -
-      kTrackInfoSliderExtra;
+      totalTCPLines( commonTrackTCPBottomLines );
    return (unsigned) std::max( needed, (int) Track::DefaultHeight );
 }
 
