@@ -85,7 +85,7 @@ public:
 
 private:
    int GetTrackInfoWidth() const;
-   void SetTrackInfoFont(wxDC *dc) const;
+   static void SetTrackInfoFont(wxDC *dc);
 
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
@@ -135,7 +135,7 @@ private:
    void UpdatePrefs();
 
    TrackPanel * pParent;
-   wxFont mFont;
+   static wxFont gFont;
    std::unique_ptr<LWSlider>
       mGainCaptured, mPanCaptured, mGain, mPan;
 #ifdef EXPERIMENTAL_MIDI_OUT

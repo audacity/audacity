@@ -9007,10 +9007,12 @@ void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
 }
 #endif
 
+wxFont TrackInfo::gFont;
+
 /// \todo Probably should move to 'Utils.cpp'.
-void TrackInfo::SetTrackInfoFont(wxDC * dc) const
+void TrackInfo::SetTrackInfoFont(wxDC * dc)
 {
-   dc->SetFont(mFont);
+   dc->SetFont(gFont);
 }
 
 void TrackInfo::DrawBordersWithin
@@ -9375,18 +9377,18 @@ void TrackInfo::UpdatePrefs()
    // the language preference changed.
 
    int fontSize = 10;
-   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
    int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
    int textWidth, textHeight;
    do {
-      mFont.SetPointSize(fontSize);
+      gFont.SetPointSize(fontSize);
       pParent->GetTextExtent(_("Stereo, 999999Hz"),
                              &textWidth,
                              &textHeight,
                              NULL,
                              NULL,
-                             &mFont);
+                             &gFont);
       fontSize--;
    } while (textWidth >= allowableWidth);
 }
