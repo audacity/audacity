@@ -5112,13 +5112,17 @@ const TCPLine noteTrackTCPLines[] = {
    { 0, 0, 0 }
 };
 
-int totalTCPLines( const TCPLine *pLines )
+int totalTCPLines( const TCPLine *pLines, bool omitLastExtra )
 {
    int total = 0;
+   int lastExtra = 0;
    while ( pLines->items ) {
-      total += pLines->height + pLines->extraSpace;
+      lastExtra = pLines->extraSpace;
+      total += pLines->height + lastExtra;
       ++pLines;
    }
+   if (omitLastExtra)
+      total -= lastExtra;
    return total;
 }
 
@@ -9378,25 +9382,25 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 }
 #endif
 
-unsigned TrackInfo::DefaultNoteTrackHeight()
+namespace {
+unsigned DefaultTrackHeight( const TCPLine topLines[] )
 {
-   // Just high enough that the velocity slider is just above the Minimize
-   // button, as for default sized Wave track
    int needed =
       kTopMargin + kBottomMargin +
-      totalTCPLines( noteTrackTCPLines ) +
-      totalTCPLines( commonTrackTCPBottomLines ) -
-      kTrackInfoSliderExtra;
+      totalTCPLines( topLines, true ) +
+      totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) Track::DefaultHeight );
+}
+}
+
+unsigned TrackInfo::DefaultNoteTrackHeight()
+{
+   return DefaultTrackHeight( noteTrackTCPLines );
 }
 
 unsigned TrackInfo::DefaultWaveTrackHeight()
 {
-   int needed =
-      kTopMargin + kBottomMargin +
-      totalTCPLines( waveTrackTCPLines ) +
-      totalTCPLines( commonTrackTCPBottomLines );
-   return (unsigned) std::max( needed, (int) Track::DefaultHeight );
+   return DefaultTrackHeight( waveTrackTCPLines );
 }
 
 std::unique_ptr<LWSlider>
