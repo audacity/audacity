@@ -5039,6 +5039,21 @@ void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
    OnTrackMenu();
 }
 
+struct TrackInfo::TCPLine {
+   using DrawFunction = void (*)(
+      wxDC *dc,
+      const wxRect &rect,
+      const Track *maybeNULL,
+      int pressed, // a value from MouseCaptureEnum; TODO: make it bool
+      bool captured
+   );
+
+   unsigned items; // a bitwise OR of values of the enum above
+   int height;
+   int extraSpace;
+   DrawFunction drawFunction;
+};
+
 namespace {
 
 enum : unsigned {
@@ -5058,63 +5073,58 @@ enum : unsigned {
    kHighestBottomItem = kItemMinimize,
 };
 
-struct TCPLine {
-   unsigned items; // a bitwise OR of values of the enum above
-   int height;
-   int extraSpace;
-};
 
 #ifdef EXPERIMENTAL_DA
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 4 },
+      { kItemBarButtons, kTrackInfoBtnSize, 4, nullptr },
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute, kTrackInfoBtnSize + 1, 1 }, \
-      { kItemSolo, kTrackInfoBtnSize + 1, extra },
+      { kItemMute, kTrackInfoBtnSize + 1, 1, nullptr }, \
+      { kItemSolo, kTrackInfoBtnSize + 1, extra, nullptr },
    // DA: Does not have status information for a track.
    #define STATUS_ITEMS
 
 #else
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 0 },
+      { kItemBarButtons, kTrackInfoBtnSize, 0, nullptr },
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
+      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, nullptr },
    #define STATUS_ITEMS \
-      { kItemStatusInfo1, 12, 0 }, \
-      { kItemStatusInfo2, 12, 0 },
+      { kItemStatusInfo1, 12, 0, nullptr }, \
+      { kItemStatusInfo2, 12, 0, nullptr },
 
 #endif
 
 #define COMMON_ITEMS \
    TITLE_ITEMS
 
-const TCPLine commonTrackTCPLines[] = {
+const TrackInfo::TCPLine commonTrackTCPLines[] = {
    COMMON_ITEMS
-   { 0, 0, 0 }
+   { 0, 0, 0, nullptr }
 };
 
-const TCPLine waveTrackTCPLines[] = {
+const TrackInfo::TCPLine waveTrackTCPLines[] = {
    COMMON_ITEMS
    MUTE_SOLO_ITEMS(2)
-   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
-   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
+   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
+   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
    STATUS_ITEMS
-   { 0, 0, 0 }
+   { 0, 0, 0, nullptr }
 };
 
-const TCPLine noteTrackTCPLines[] = {
+const TrackInfo::TCPLine noteTrackTCPLines[] = {
    COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
-   { kItemMidiControlsRect, kMidiCellHeight * 4, 0 },
-   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
+   { kItemMidiControlsRect, kMidiCellHeight * 4, 0, nullptr },
+   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra, nullptr },
 #endif
-   { 0, 0, 0 }
+   { 0, 0, 0, nullptr }
 };
 
-int totalTCPLines( const TCPLine *pLines, bool omitLastExtra )
+int totalTCPLines( const TrackInfo::TCPLine *pLines, bool omitLastExtra )
 {
    int total = 0;
    int lastExtra = 0;
@@ -5128,7 +5138,7 @@ int totalTCPLines( const TCPLine *pLines, bool omitLastExtra )
    return total;
 }
 
-const TCPLine *getTCPLines( const Track &track )
+const TrackInfo::TCPLine *getTCPLines( const Track &track )
 {
 #ifdef USE_MIDI
    if ( track.GetKind() == Track::Note )
@@ -5142,7 +5152,7 @@ const TCPLine *getTCPLines( const Track &track )
 }
 
 // return y value and height
-std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
+std::pair< int, int > CalcItemY( const TrackInfo::TCPLine *pLines, unsigned iItem )
 {
    int y = 0;
    while ( pLines->items &&
@@ -5155,16 +5165,16 @@ std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
 
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
-const TCPLine commonTrackTCPBottomLines[] = {
+const TrackInfo::TCPLine commonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0 },
-   { 0, 0, 0 }
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0, nullptr },
+   { 0, 0, 0, nullptr }
 };
 
 // return y value and height
 std::pair< int, int > CalcBottomItemY
-   ( const TCPLine *pLines, unsigned iItem, int height )
+   ( const TrackInfo::TCPLine *pLines, unsigned iItem, int height )
 {
    int y = height;
    while ( pLines->items &&
@@ -7250,10 +7260,56 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
    dc->DrawRectangle(rect);
 }
 
+void TrackInfo::DrawItems
+( wxDC *dc, const wxRect &rect, const Track &track,
+  int mouseCapture, bool captured )
+{
+   const auto topLines = getTCPLines( track );
+   const auto bottomLines = commonTrackTCPBottomLines;
+   DrawItems
+      ( dc, rect, &track, topLines, bottomLines, mouseCapture, captured );
+}
+
+void TrackInfo::DrawItems
+( wxDC *dc, const wxRect &rect, const Track *pTrack,
+  const TCPLine topLines[], const TCPLine bottomLines[],
+  int mouseCapture, bool captured )
+{
+   TrackInfo::SetTrackInfoFont(dc);
+   dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
+
+   {
+      const auto table = topLines;
+      int yy = 0;
+      for ( auto line = table; line->items; ++line ) {
+         wxRect itemRect{
+            rect.x, rect.y + yy,
+            rect.width, line->height
+         };
+         if ( !TrackInfo::HideTopItem( rect, itemRect ) &&
+              line->drawFunction )
+            line->drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+         yy += line->height + line->extraSpace;
+      }
+   }
+   {
+      const auto table = bottomLines;
+      int yy = rect.height;
+      for ( auto line = table; line->items; ++line ) {
+         yy -= line->height + line->extraSpace;
+         if ( line->drawFunction ) {
+            wxRect itemRect{
+               rect.x, rect.y + yy,
+               rect.width, line->height
+            };
+            line->drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+         }
+      }
+   }
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
-   mTrackInfo.SetTrackInfoFont(dc);
-   dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
    bool bIsWave = (t->GetKind() == Track::Wave);
 #ifdef USE_MIDI
    bool bIsNote = (t->GetKind() == Track::Note);
@@ -7300,6 +7356,8 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
+
+   TrackInfo::DrawItems( dc, rect, *t, mMouseCapture, captured );
 
    // Draw the sync-lock indicator if this track is in a sync-lock selected group.
    if (t->IsSyncLockSelected())
@@ -9385,7 +9443,7 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool cap
 #endif
 
 namespace {
-unsigned DefaultTrackHeight( const TCPLine topLines[] )
+unsigned DefaultTrackHeight( const TrackInfo::TCPLine topLines[] )
 {
    int needed =
       kTopMargin + kBottomMargin +

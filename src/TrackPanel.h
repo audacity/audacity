@@ -76,12 +76,24 @@ enum {
    kTimerInterval = 50, // milliseconds
 };
 
+
 class AUDACITY_DLL_API TrackInfo
 {
 public:
    TrackInfo(TrackPanel * pParentIn);
    ~TrackInfo();
    void ReCreateSliders();
+
+   struct TCPLine;
+
+   static void DrawItems
+      ( wxDC *dc, const wxRect &rect, const Track &track, int mouseCapture,
+        bool captured );
+
+   static void DrawItems
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack,
+        const TCPLine topLines[], const TCPLine bottomLines[],
+        int mouseCapture, bool captured );
 
 private:
    int GetTrackInfoWidth() const;
