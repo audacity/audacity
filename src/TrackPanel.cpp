@@ -5036,22 +5036,22 @@ struct TCPLine {
 
    #define TITLE_ITEMS(extra) \
       { kItemBarButtons, kTrackInfoBtnSize, 4 },
-   // DA: Does not have status information for a track.
-   #define STATUS_ITEMS
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute, kTrackInfoBtnSize + 1, 1 }, \
       { kItemSolo, kTrackInfoBtnSize + 1, extra },
+   // DA: Does not have status information for a track.
+   #define STATUS_ITEMS
 
 #else
 
    #define TITLE_ITEMS(extra) \
       { kItemBarButtons, kTrackInfoBtnSize, extra },
-   #define STATUS_ITEMS \
-      { kItemStatusInfo1, 12, 4 }, \
-      { kItemStatusInfo2, 12, (4 - STATUS_ITEM_SHIFT) },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
+   #define STATUS_ITEMS \
+      { kItemStatusInfo1, 12, 0 }, \
+      { kItemStatusInfo2, 12, 0 },
 
 #endif
 
@@ -5065,10 +5065,10 @@ const TCPLine commonTrackTCPLines[] = {
 
 const TCPLine waveTrackTCPLines[] = {
    COMMON_ITEMS(STATUS_ITEM_SHIFT)
-   STATUS_ITEMS
    MUTE_SOLO_ITEMS(2)
    { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
    { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
+   STATUS_ITEMS
    { 0, 0, 0 }
 };
 
