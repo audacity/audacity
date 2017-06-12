@@ -8916,30 +8916,65 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
-void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
+void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    dest.x = rect.x;
+   dest.width = kTrackInfoBtnSize;
+}
+
+void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
+{
+   GetCloseBoxHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
-   dest.width = kTrackInfoBtnSize;
    dest.height = results.second;
+}
+
+static const int TitleSoloBorderOverlap = 1;
+
+void TrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
+{
+   // to right of CloseBoxRect, plus a little more
+   wxRect closeRect;
+   GetCloseBoxHorizontalBounds( rect, closeRect );
+   dest.x = rect.x + closeRect.width + 1;
+   dest.width = rect.x + rect.width - dest.x + TitleSoloBorderOverlap;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
 {
-   // to right of CloseBoxRect, plus a little more
-   dest.x = rect.x + kTrackInfoBtnSize + 1;
+   GetTitleBarHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
-   // PRL:  + 1?  Really?
-   dest.width = rect.x + rect.width - dest.x + 1;
    dest.height = results.second;
 }
 
-void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack)
+void TrackInfo::GetNarrowMuteHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
-
    dest.x = rect.x;
+   dest.width = rect.width / 2 + 1;
+}
+
+void TrackInfo::GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
+{
+   wxRect muteRect;
+   GetNarrowMuteHorizontalBounds( rect, muteRect );
+   dest.x = rect.x + muteRect.width;
+   dest.width = rect.width - muteRect.width + TitleSoloBorderOverlap;
+}
+
+void TrackInfo::GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
+{
+   // Larger button, symmetrically placed intended.
+   // On windows this gives 15 pixels each side.
+   dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
+   dest.x = rect.x + kTrackInfoBtnSize -3;
+}
+
+void TrackInfo::GetMuteSoloRect
+(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
+ const Track *pTrack)
+{
 
    auto resultsM = CalcItemY( getTCPLines( *pTrack ), kItemMute );
    auto resultsS = CalcItemY( getTCPLines( *pTrack ), kItemSolo );
@@ -8953,19 +8988,13 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
    if( bNarrow )
    {
-      dest.width = rect.width / 2 + 1;
-      if( solo ) {
-         dest.x += dest.width;
-         dest.width = rect.width - dest.width+1;
-      }
+      if( solo )
+         GetNarrowSoloHorizontalBounds( rect, dest );
+      else
+         GetNarrowMuteHorizontalBounds( rect, dest );
    }
    else
-   {
-      // Larger button, symmetrically placed intended.
-      // On windows this gives 15 pixels each side.
-      dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
-      dest.x = rect.x + kTrackInfoBtnSize -3;
-   }
+      GetWideMuteSoloHorizontalBounds( rect, dest );
 
    if( bSameRow || !solo )
       dest.y = rect.y + yMute;
@@ -8974,12 +9003,17 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 }
 
-void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
+void TrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest )
 {
    dest.x = topleft.x + 6;
+   dest.width = kTrackInfoSliderWidth;
+}
+
+void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
+{
+   GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( waveTrackTCPLines, kItemGain );
    dest.y = topleft.y + results.first;
-   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 
@@ -8993,45 +9027,64 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest)
 #ifdef EXPERIMENTAL_MIDI_OUT
 void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
 {
-   dest.x = topleft.x + 6;
+   GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
    dest.y = topleft.y + results.first;
-   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 #endif
 
-void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
+void TrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
    const int space = 0;// was 3.
    dest.x = rect.x + space;
+
+   wxRect syncLockRect;
+   GetSyncLockHorizontalBounds( rect, syncLockRect );
+
+   // Width is rect.width less space on left for track select
+   // and on right for sync-lock icon.
+   dest.width = rect.width - (space + syncLockRect.width);
+}
+
+void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
+{
+   GetMinimizeHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
-   // Width is rect.width less space on left for track select
-   // and on right for sync-lock icon.
-   dest.width = rect.width - (space + kTrackInfoBtnSize);
    dest.height = results.second;
+}
+
+void TrackInfo::GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest )
+{
+   dest.width = kTrackInfoBtnSize;
+   dest.x = rect.x + rect.width - dest.width;
 }
 
 void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 {
-   dest.x = rect.x + rect.width - kTrackInfoBtnSize; // to right of minimize button
+   GetSyncLockHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
    dest.y = rect.y + results.first;
-   dest.width = kTrackInfoBtnSize;
    dest.height = results.second;
 }
 
 #ifdef USE_MIDI
-void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+void TrackInfo::GetMidiControlsHorizontalBounds
+( const wxRect &rect, wxRect &dest )
 {
    dest.x = rect.x + 1; // To center slightly
    // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
    // kTrackInfoWidth but I am trying to avoid use of that constant.
    // Can cell width be computed from dest.width instead?
    dest.width = kMidiCellWidth * 4;
+}
+
+void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+{
+   GetMidiControlsHorizontalBounds( rect, dest );
    auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
    dest.y = rect.y + results.first;
    dest.height = results.second;

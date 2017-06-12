@@ -102,18 +102,41 @@ private:
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
 
+   static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
+
+   static void GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetTitleBarRect(const wxRect & rect, wxRect &dest);
-   static void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
-                        const Track *pTrack);
+
+   static void GetNarrowMuteHorizontalBounds
+      ( const wxRect & rect, wxRect &dest );
+   static void GetNarrowSoloHorizontalBounds
+      ( const wxRect & rect, wxRect &dest );
+   static void GetWideMuteSoloHorizontalBounds
+      ( const wxRect & rect, wxRect &dest );
+   static void GetMuteSoloRect
+      (const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
+       const Track *pTrack);
+
+   static void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
+
    static void GetGainRect(const wxPoint & topLeft, wxRect &dest);
+
    static void GetPanRect(const wxPoint & topLeft, wxRect &dest);
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    static void GetVelocityRect(const wxPoint & topLeft, wxRect &dest);
 #endif
+
+   static void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
    static void GetMinimizeRect(const wxRect & rect, wxRect &dest);
+
+   static void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
    static void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
+
 #ifdef USE_MIDI
+   static void GetMidiControlsHorizontalBounds
+      ( const wxRect &rect, wxRect &dest );
    static void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
 #endif
 
