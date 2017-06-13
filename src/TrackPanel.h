@@ -144,6 +144,17 @@ public:
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
         bool captured );
 
+   static void StatusDrawFunction
+      ( const wxString &string, wxDC *dc, const wxRect &rect );
+
+   static void Status1DrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void Status2DrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
 private:
    int GetTrackInfoWidth() const;
    static void SetTrackInfoFont(wxDC *dc);
@@ -678,8 +689,6 @@ protected:
    //JKC: These two belong in the label track.
    int mLabelTrackStartXPos;
    int mLabelTrackStartYPos;
-
-   virtual wxString TrackSubText(WaveTrack *t);
 
    TrackInfo mTrackInfo;
 

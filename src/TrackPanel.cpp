@@ -5097,8 +5097,10 @@ enum : unsigned {
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, \
         &TrackInfo::MuteAndSoloDrawFunction },
    #define STATUS_ITEMS \
-      { kItemStatusInfo1, 12, 0, nullptr }, \
-      { kItemStatusInfo2, 12, 0, nullptr },
+      { kItemStatusInfo1, 12, 0, \
+        &TrackInfo::Status1DrawFunction }, \
+      { kItemStatusInfo2, 12, 0, \
+        &TrackInfo::Status2DrawFunction },
 
 #endif
 
@@ -7584,6 +7586,50 @@ void TrackInfo::MuteAndSoloDrawFunction
    MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
 }
 
+void TrackInfo::StatusDrawFunction
+   ( const wxString &string, wxDC *dc, const wxRect &rect )
+{
+   static const int offset = 3;
+   dc->DrawText(string, rect.x + offset, rect.y);
+}
+
+void TrackInfo::Status1DrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+{
+   auto wt = static_cast<const WaveTrack*>(pTrack);
+
+   /// Returns the string to be displayed in the track label
+   /// indicating whether the track is mono, left, right, or
+   /// stereo and what sample rate it's using.
+   auto rate = wt ? wt->GetRate() : 44100.0;
+   wxString s = wxString::Format(wxT("%dHz"), (int) (rate + 0.5));
+   if (!wt || (wt->GetLinked()
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+       && wt->GetChannel() != Track::MonoChannel
+#endif
+   ))
+      s = _("Stereo, ") + s;
+   else {
+      if (wt->GetChannel() == Track::MonoChannel)
+         s = _("Mono, ") + s;
+      else if (wt->GetChannel() == Track::LeftChannel)
+         s = _("Left, ") + s;
+      else if (wt->GetChannel() == Track::RightChannel)
+         s = _("Right, ") + s;
+   }
+
+   StatusDrawFunction( s, dc, rect );
+}
+
+void TrackInfo::Status2DrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+{
+   auto wt = static_cast<const WaveTrack*>(pTrack);
+   auto format = wt ? wt->GetSampleFormat() : floatSample;
+   auto s = GetSampleFormatStr(format);
+   StatusDrawFunction( s, dc, rect );
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -7629,35 +7675,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    TrackInfo::DrawItems( dc, rect, *t, mMouseCapture, captured );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
-
-   auto wt = bIsWave ? static_cast<WaveTrack*>(t) : nullptr;
-   if (bIsWave) {
-
-// DA: For classic Audacity, show stero/mono and rate.
-#ifndef EXPERIMENTAL_DA
-      if (!t->GetMinimized()) {
-
-         int offset = 3;
-         auto pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo1 );
-         wxRect textRect {
-            rect.x + offset, rect.y + pair.first,
-            rect.width, pair.second
-         };
-         if ( !TrackInfo::HideTopItem( rect, textRect ) )
-            dc->DrawText(TrackSubText(wt),
-                         textRect.x, textRect.y);
-
-         pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo2 );
-         textRect = {
-            rect.x + offset, rect.y + pair.first,
-            rect.width, pair.second
-         };
-         if ( !TrackInfo::HideTopItem( rect, textRect ) )
-            dc->DrawText(GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
-                         textRect.x, textRect.y );
-      }
-#endif
-   }
 }
 
 // Given rectangle should be the whole track rectangle
@@ -8107,30 +8124,6 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
    AColor::Line(*dc, rect.x, bottom, rect.x + 1, bottom);
    // top-right
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
-}
-
-/// Returns the string to be displayed in the track label
-/// indicating whether the track is mono, left, right, or
-/// stereo and what sample rate it's using.
-wxString TrackPanel::TrackSubText(WaveTrack * t)
-{
-   wxString s = wxString::Format(wxT("%dHz"), (int) (t->GetRate() + 0.5));
-   if (t->GetLinked()
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-       && t->GetChannel() != Track::MonoChannel
-#endif
-   )
-      s = _("Stereo, ") + s;
-   else {
-      if (t->GetChannel() == Track::MonoChannel)
-         s = _("Mono, ") + s;
-      else if (t->GetChannel() == Track::LeftChannel)
-         s = _("Left, ") + s;
-      else if (t->GetChannel() == Track::RightChannel)
-         s = _("Right, ") + s;
-   }
-
-   return s;
 }
 
 /// Handle the menu options that change a track between
