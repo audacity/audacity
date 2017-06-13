@@ -773,11 +773,13 @@ void TrackPanel::UpdateVirtualStereoOrder()
 }
 #endif
 
+wxString TrackPanel::gSoloPref;
+
 void TrackPanel::UpdatePrefs()
 {
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
       true);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
+   gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool temp = WaveTrack::mMonoAsVirtualStereo;

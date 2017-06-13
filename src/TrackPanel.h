@@ -612,9 +612,12 @@ protected:
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void UpdateVirtualStereoOrder();
 #endif
-   // Accessors...
-   virtual bool HasSoloButton(){  return mSoloPref!=wxT("None");}
 
+public:
+   // Accessors...
+   static bool HasSoloButton(){  return gSoloPref!=wxT("None");}
+
+protected:
    //JKC: These two belong in the label track.
    int mLabelTrackStartXPos;
    int mLabelTrackStartYPos;
@@ -876,7 +879,7 @@ public:
 
 protected:
 
-   wxString mSoloPref;
+   static wxString gSoloPref;
 
    // Keeps track of extra fractional vertical scroll steps
    double mVertScrollRemainder;
