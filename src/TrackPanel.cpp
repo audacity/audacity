@@ -5026,15 +5026,9 @@ struct TCPLine {
    int extraSpace;
 };
 
-#ifdef __WXMAC__
-   #define STATUS_ITEM_SHIFT 3
-#else
-   #define STATUS_ITEM_SHIFT 0
-#endif
-
 #ifdef EXPERIMENTAL_DA
 
-   #define TITLE_ITEMS(extra) \
+   #define TITLE_ITEMS \
       { kItemBarButtons, kTrackInfoBtnSize, 4 },
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
@@ -5045,7 +5039,7 @@ struct TCPLine {
 
 #else
 
-   #define TITLE_ITEMS(extra) \
+   #define TITLE_ITEMS \
       { kItemBarButtons, kTrackInfoBtnSize, 0 },
    #define MUTE_SOLO_ITEMS(extra) \
       { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
@@ -5055,16 +5049,16 @@ struct TCPLine {
 
 #endif
 
-#define COMMON_ITEMS(extra) \
-   TITLE_ITEMS(extra)
+#define COMMON_ITEMS \
+   TITLE_ITEMS
 
 const TCPLine commonTrackTCPLines[] = {
-   COMMON_ITEMS(0)
+   COMMON_ITEMS
    { 0, 0, 0 }
 };
 
 const TCPLine waveTrackTCPLines[] = {
-   COMMON_ITEMS(STATUS_ITEM_SHIFT)
+   COMMON_ITEMS
    MUTE_SOLO_ITEMS(2)
    { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
    { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
@@ -5073,7 +5067,7 @@ const TCPLine waveTrackTCPLines[] = {
 };
 
 const TCPLine noteTrackTCPLines[] = {
-   COMMON_ITEMS(0)
+   COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
    { kItemMidiControlsRect, kMidiCellHeight * 4, 0 },
