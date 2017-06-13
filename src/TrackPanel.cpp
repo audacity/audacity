@@ -5081,8 +5081,10 @@ enum : unsigned {
         &TrackInfo::CloseTitleDrawFunction },
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute, kTrackInfoBtnSize + 1, 1, nullptr }, \
-      { kItemSolo, kTrackInfoBtnSize + 1, extra, nullptr },
+      { kItemMute, kTrackInfoBtnSize + 1, 1, \
+        &TrackInfo::WideMuteDrawFunction }, \
+      { kItemSolo, kTrackInfoBtnSize + 1, extra, \
+        &TrackInfo::WideSoloDrawFunction },
    // DA: Does not have status information for a track.
    #define STATUS_ITEMS
 
@@ -5092,7 +5094,8 @@ enum : unsigned {
       { kItemBarButtons, kTrackInfoBtnSize, 0, \
         &TrackInfo::CloseTitleDrawFunction },
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, nullptr },
+      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, \
+        &TrackInfo::MuteAndSoloDrawFunction },
    #define STATUS_ITEMS \
       { kItemStatusInfo1, 12, 0, nullptr }, \
       { kItemStatusInfo2, 12, 0, nullptr },
@@ -7494,12 +7497,96 @@ void TrackInfo::VelocitySliderDrawFunction
 }
 #endif
 
+void TrackInfo::MuteOrSoloDrawFunction
+( wxDC *dc, const wxRect &bev, const Track *pTrack, int pressed, bool captured,
+  bool solo )
+{
+   bool down = captured &&
+      (pressed == ( solo ? TrackPanel::IsSoloing : TrackPanel::IsMuting ));
+   //bev.Inflate(-1, -1);
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   auto pt = dynamic_cast<const PlayableTrack *>(pTrack);
+   bool value = pt ? (solo ? pt->GetSolo() : pt->GetMute()) : false;
+
+#if 0
+   AColor::MediumTrackInfo( dc, t->GetSelected());
+   if( solo )
+   {
+      if( pt && pt->GetSolo() )
+      {
+         AColor::Solo(dc, pt->GetSolo(), t->GetSelected());
+      }
+   }
+   else
+   {
+      if( pt && pt->GetMute() )
+      {
+         AColor::Mute(dc, pt->GetMute(), t->GetSelected(), pt->GetSolo());
+      }
+   }
+   //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
+   //    AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
+   dc->SetPen( *wxTRANSPARENT_PEN );//No border!
+   dc->DrawRectangle(bev);
+#endif
+
+   wxCoord textWidth, textHeight;
+   wxString str = (solo) ?
+      /* i18n-hint: This is on a button that will silence all the other tracks.*/
+      _("Solo") :
+      /* i18n-hint: This is on a button that will silence this track.*/
+      _("Mute");
+
+   AColor::Bevel2(
+      *dc,
+      value == down,
+      bev,
+      selected
+   );
+
+   SetTrackInfoFont(dc);
+   dc->GetTextExtent(str, &textWidth, &textHeight);
+   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
+}
+
+void TrackInfo::WideMuteDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   wxRect bev = rect;
+   GetWideMuteSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+}
+
+void TrackInfo::WideSoloDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   wxRect bev = rect;
+   GetWideMuteSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+}
+
+void TrackInfo::MuteAndSoloDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   bool bHasSoloButton = TrackPanel::HasSoloButton();
+
+   wxRect bev = rect;
+   if ( bHasSoloButton )
+      GetNarrowMuteHorizontalBounds( rect, bev );
+   else
+      GetWideMuteSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+
+   if( !bHasSoloButton )
+      return;
+
+   GetNarrowSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
    bool bIsWave = (t->GetKind() == Track::Wave);
-#ifdef USE_MIDI
-   bool bIsNote = (t->GetKind() == Track::Note);
-#endif
 
    // Draw things that extend right of track control panel
    {
@@ -7545,8 +7632,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 
    auto wt = bIsWave ? static_cast<WaveTrack*>(t) : nullptr;
    if (bIsWave) {
-      mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
-      mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
 
 // DA: For classic Audacity, show stero/mono and rate.
 #ifndef EXPERIMENTAL_DA
@@ -7573,15 +7658,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
       }
 #endif
    }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   else if (bIsNote) {
-      mTrackInfo.DrawMuteSolo(dc, rect, t,
-            (captured && mMouseCapture == IsMuting), false, HasSoloButton());
-      mTrackInfo.DrawMuteSolo(dc, rect, t,
-            (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
-   }
-#endif // EXPERIMENTAL_MIDI_OUT
 }
 
 // Given rectangle should be the whole track rectangle

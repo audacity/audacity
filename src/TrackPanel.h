@@ -128,6 +128,22 @@ public:
         bool captured );
 #endif
 
+   static void MuteOrSoloDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured, bool solo );
+
+   static void WideMuteDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void WideSoloDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void MuteAndSoloDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
 private:
    int GetTrackInfoWidth() const;
    static void SetTrackInfoFont(wxDC *dc);
