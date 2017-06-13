@@ -1164,7 +1164,7 @@ bool NyquistEffect::ProcessOne()
    // If we're not showing debug window, log errors and warnings:
    if (!mDebugOutput.IsEmpty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogWarning(mName + wxT(" ") + _("returned:") + wxT("\n") + mDebugOutput);
+      wxLogMessage(wxT("\'") + mName + wxT("\' ") + _("returned:") + wxT("\n") + mDebugOutput);
    }
 
    // Audacity has no idea how long Nyquist processing will take, but
@@ -1191,14 +1191,15 @@ bool NyquistEffect::ProcessOne()
          return false;
       }
       else {
-         wxLogWarning(wxT("Nyquist returned nyx_error."));
+         wxLogMessage(wxT("Nyquist returned nyx_error."));
       }
       return true;
    }
 
    if (rval == nyx_string) {
-      wxMessageBox(NyquistToWxString(nyx_get_string()),
-                   mName, wxOK | wxCENTRE, mUIParent);
+      wxString msg = NyquistToWxString(nyx_get_string());
+      if (!msg.IsEmpty())  // Not currently a documented feature, but could be useful as a No-Op.
+         wxMessageBox(msg, mName, wxOK | wxCENTRE, mUIParent);
 
       // True if not process type.
       // If not returning audio from process effect,
