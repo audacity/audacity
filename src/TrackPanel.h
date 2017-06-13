@@ -92,7 +92,8 @@ public:
 
    static void DrawItems
       ( wxDC *dc, const wxRect &rect, const Track *pTrack,
-        const TCPLine topLines[], const TCPLine bottomLines[],
+        const std::vector<TCPLine> &topLines,
+        const std::vector<TCPLine> &bottomLines,
         int mouseCapture, bool captured );
 
    static void CloseTitleDrawFunction

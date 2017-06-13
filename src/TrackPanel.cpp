@@ -5056,6 +5056,9 @@ struct TrackInfo::TCPLine {
 
 namespace {
 
+#define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
+using TCPLines = std::vector< TrackInfo::TCPLine >;
+
 enum : unsigned {
    // The sequence is not significant, just keep bits distinct
    kItemBarButtons       = 1 << 0,
@@ -5107,12 +5110,12 @@ enum : unsigned {
 #define COMMON_ITEMS \
    TITLE_ITEMS
 
-const TrackInfo::TCPLine commonTrackTCPLines[] = {
+const TrackInfo::TCPLine defaultCommonTrackTCPLines[] = {
    COMMON_ITEMS
-   { 0, 0, 0, nullptr }
 };
+TCPLines commonTrackTCPLines{ RANGE(defaultCommonTrackTCPLines) };
 
-const TrackInfo::TCPLine waveTrackTCPLines[] = {
+const TrackInfo::TCPLine defaultWaveTrackTCPLines[] = {
    COMMON_ITEMS
    MUTE_SOLO_ITEMS(2)
    { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
@@ -5120,10 +5123,10 @@ const TrackInfo::TCPLine waveTrackTCPLines[] = {
    { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
      &TrackInfo::PanSliderDrawFunction },
    STATUS_ITEMS
-   { 0, 0, 0, nullptr }
 };
+TCPLines waveTrackTCPLines{ RANGE(defaultWaveTrackTCPLines) };
 
-const TrackInfo::TCPLine noteTrackTCPLines[] = {
+const TrackInfo::TCPLine defaultNoteTrackTCPLines[] = {
    COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
@@ -5132,24 +5135,23 @@ const TrackInfo::TCPLine noteTrackTCPLines[] = {
    { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
      &TrackInfo::VelocitySliderDrawFunction },
 #endif
-   { 0, 0, 0, nullptr }
 };
+TCPLines noteTrackTCPLines{ RANGE(defaultNoteTrackTCPLines) };
 
-int totalTCPLines( const TrackInfo::TCPLine *pLines, bool omitLastExtra )
+int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 {
    int total = 0;
    int lastExtra = 0;
-   while ( pLines->items ) {
-      lastExtra = pLines->extraSpace;
-      total += pLines->height + lastExtra;
-      ++pLines;
+   for ( const auto line : lines ) {
+      lastExtra = line.extraSpace;
+      total += line.height + lastExtra;
    }
    if (omitLastExtra)
       total -= lastExtra;
    return total;
 }
 
-const TrackInfo::TCPLine *getTCPLines( const Track &track )
+const TCPLines &getTCPLines( const Track &track )
 {
 #ifdef USE_MIDI
    if ( track.GetKind() == Track::Note )
@@ -5163,38 +5165,45 @@ const TrackInfo::TCPLine *getTCPLines( const Track &track )
 }
 
 // return y value and height
-std::pair< int, int > CalcItemY( const TrackInfo::TCPLine *pLines, unsigned iItem )
+std::pair< int, int > CalcItemY( const TCPLines &lines, unsigned iItem )
 {
    int y = 0;
-   while ( pLines->items &&
+   auto pLines = lines.begin();
+   while ( pLines != lines.end() &&
            0 == (pLines->items & iItem) ) {
       y += pLines->height + pLines->extraSpace;
       ++pLines;
    }
-   return { y, pLines->height };
+   int height = 0;
+   if ( pLines != lines.end() )
+      height = pLines->height;
+   return { y, height };
 }
 
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
-const TrackInfo::TCPLine commonTrackTCPBottomLines[] = {
+const TrackInfo::TCPLine defaultCommonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
    { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0,
      &TrackInfo::MinimizeSyncLockDrawFunction },
-   { 0, 0, 0, nullptr }
 };
+TCPLines commonTrackTCPBottomLines{ RANGE(defaultCommonTrackTCPBottomLines) };
 
 // return y value and height
 std::pair< int, int > CalcBottomItemY
-   ( const TrackInfo::TCPLine *pLines, unsigned iItem, int height )
+   ( const TCPLines &lines, unsigned iItem, int height )
 {
    int y = height;
-   while ( pLines->items &&
+   auto pLines = lines.begin();
+   while ( pLines != lines.end() &&
            0 == (pLines->items & iItem) ) {
       y -= pLines->height + pLines->extraSpace;
       ++pLines;
    }
-   return { y - (pLines->height + pLines->extraSpace ), pLines->height };
+   if (pLines != lines.end())
+      y -= (pLines->height + pLines->extraSpace );
+   return { y, pLines->height };
 }
 
 }
@@ -7284,37 +7293,35 @@ void TrackInfo::DrawItems
 
 void TrackInfo::DrawItems
 ( wxDC *dc, const wxRect &rect, const Track *pTrack,
-  const TCPLine topLines[], const TCPLine bottomLines[],
+  const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines,
   int mouseCapture, bool captured )
 {
    TrackInfo::SetTrackInfoFont(dc);
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
    {
-      const auto table = topLines;
       int yy = 0;
-      for ( auto line = table; line->items; ++line ) {
+      for ( const auto &line : topLines ) {
          wxRect itemRect{
             rect.x, rect.y + yy,
-            rect.width, line->height
+            rect.width, line.height
          };
          if ( !TrackInfo::HideTopItem( rect, itemRect ) &&
-              line->drawFunction )
-            line->drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
-         yy += line->height + line->extraSpace;
+              line.drawFunction )
+            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+         yy += line.height + line.extraSpace;
       }
    }
    {
-      const auto table = bottomLines;
       int yy = rect.height;
-      for ( auto line = table; line->items; ++line ) {
-         yy -= line->height + line->extraSpace;
-         if ( line->drawFunction ) {
+      for ( const auto &line : bottomLines ) {
+         yy -= line.height + line.extraSpace;
+         if ( line.drawFunction ) {
             wxRect itemRect{
                rect.x, rect.y + yy,
-               rect.width, line->height
+               rect.width, line.height
             };
-            line->drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
          }
       }
    }
@@ -9645,7 +9652,7 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
 }
 
 namespace {
-unsigned DefaultTrackHeight( const TrackInfo::TCPLine topLines[] )
+unsigned DefaultTrackHeight( const TCPLines &topLines )
 {
    int needed =
       kTopMargin + kBottomMargin +
