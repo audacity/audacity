@@ -9145,7 +9145,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t,
    // Draw title text
    SetTrackInfoFont(dc);
    wxString titleStr = t->GetName();
-   int allowableWidth = rect.width - 38;
+   int allowableWidth = rect.width - 42;
 
    wxCoord textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
