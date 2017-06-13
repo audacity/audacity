@@ -250,7 +250,8 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
 
 // Draws the midi channel toggle buttons within the given rect.
 // The rect should be evenly divisible by 4 on both axis.
-void NoteTrack::DrawLabelControls(wxDC & dc, const wxRect &rect)
+void NoteTrack::DrawLabelControls
+( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect )
 {
    wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
    wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
@@ -270,7 +271,8 @@ void NoteTrack::DrawLabelControls(wxDC & dc, const wxRect &rect)
          box.width = cellWidth;
          box.height = cellHeight;
 
-         if (IsVisibleChan(chanName - 1)) {
+         bool visible = pTrack ? pTrack->IsVisibleChan(chanName - 1) : true;
+         if (visible) {
             AColor::MIDIChannel(&dc, chanName);
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in

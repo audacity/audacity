@@ -570,6 +570,32 @@ TrackPanel::~TrackPanel()
    DeleteMenus();
 }
 
+LWSlider *TrackPanel::GainSlider( const WaveTrack *wt )
+{
+   auto rect = FindTrackRect( wt, true );
+   wxRect sliderRect;
+   TrackInfo::GetGainRect( rect.GetTopLeft(), sliderRect );
+   return TrackInfo::GainSlider(sliderRect, wt, false, this);
+}
+
+LWSlider *TrackPanel::PanSlider( const WaveTrack *wt )
+{
+   auto rect = FindTrackRect( wt, true );
+   wxRect sliderRect;
+   TrackInfo::GetPanRect( rect.GetTopLeft(), sliderRect );
+   return TrackInfo::PanSlider(sliderRect, wt, false, this);
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+LWSlider *TrackPanel::VelocitySlider( const NoteTrack *nt )
+{
+   auto rect = FindTrackRect( nt, true );
+   wxRect sliderRect;
+   TrackInfo::GetVelocityRect( rect.GetTopLeft(), sliderRect );
+   return TrackInfo::VelocitySlider(sliderRect, nt, false, this);
+}
+#endif
+
 SelectionState &TrackPanel::GetSelectionState()
 {
    return GetProject()->GetSelectionState();
@@ -747,11 +773,13 @@ void TrackPanel::UpdateVirtualStereoOrder()
 }
 #endif
 
+wxString TrackPanel::gSoloPref;
+
 void TrackPanel::UpdatePrefs()
 {
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
       true);
-   gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
+   gPrefs->Read(wxT("/GUI/Solo"), &gSoloPref, wxT("Simple"));
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool temp = WaveTrack::mMonoAsVirtualStereo;
@@ -4865,10 +4893,17 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    // is displayed, but it doesn't hurt to do this for all plats.
    WaveTrack *capturedTrack = (WaveTrack *) mCapturedTrack;
 
-   if (pan)
-      slider = mTrackInfo.PanSlider(capturedTrack, true);
-   else
-      slider = mTrackInfo.GainSlider(capturedTrack, true);
+   auto rect = FindTrackRect( capturedTrack, true );
+   if (pan) {
+      wxRect sliderRect;
+      TrackInfo::GetPanRect(rect.GetTopLeft(), sliderRect);
+      slider = mTrackInfo.PanSlider(sliderRect, capturedTrack, true, this);
+   }
+   else {
+      wxRect sliderRect;
+      TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
+      slider = mTrackInfo.GainSlider(sliderRect, capturedTrack, true, this);
+   }
 
    slider->OnMouseEvent(event);
 
@@ -4923,7 +4958,10 @@ void TrackPanel::HandleVelocitySlider(wxMouseEvent &event)
    wxASSERT(mCapturedTrack->GetKind() == Track::Note);
    NoteTrack *capturedTrack = static_cast<NoteTrack *>(mCapturedTrack);
 
-   LWSlider *slider = mTrackInfo.VelocitySlider(capturedTrack, true);
+   auto rect = FindTrackRect( capturedTrack, true );
+   wxRect sliderRect;
+   TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
+   auto slider = mTrackInfo.VelocitySlider(sliderRect, capturedTrack, true, this);
 
    slider->OnMouseEvent(event);
 
@@ -5001,7 +5039,25 @@ void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
    OnTrackMenu();
 }
 
+struct TrackInfo::TCPLine {
+   using DrawFunction = void (*)(
+      wxDC *dc,
+      const wxRect &rect,
+      const Track *maybeNULL,
+      int pressed, // a value from MouseCaptureEnum; TODO: make it bool
+      bool captured
+   );
+
+   unsigned items; // a bitwise OR of values of the enum above
+   int height;
+   int extraSpace;
+   DrawFunction drawFunction;
+};
+
 namespace {
+
+#define RANGE(array) (array), (array) + sizeof(array)/sizeof(*(array))
+using TCPLines = std::vector< TrackInfo::TCPLine >;
 
 enum : unsigned {
    // The sequence is not significant, just keep bits distinct
@@ -5020,73 +5076,82 @@ enum : unsigned {
    kHighestBottomItem = kItemMinimize,
 };
 
-struct TCPLine {
-   unsigned items; // a bitwise OR of values of the enum above
-   int height;
-   int extraSpace;
-};
 
 #ifdef EXPERIMENTAL_DA
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 4 },
+      { kItemBarButtons, kTrackInfoBtnSize, 4, \
+        &TrackInfo::CloseTitleDrawFunction },
    // DA: Has Mute and Solo on separate lines.
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute, kTrackInfoBtnSize + 1, 1 }, \
-      { kItemSolo, kTrackInfoBtnSize + 1, extra },
+      { kItemMute, kTrackInfoBtnSize + 1, 1, \
+        &TrackInfo::WideMuteDrawFunction }, \
+      { kItemSolo, kTrackInfoBtnSize + 1, extra, \
+        &TrackInfo::WideSoloDrawFunction },
    // DA: Does not have status information for a track.
    #define STATUS_ITEMS
 
 #else
 
    #define TITLE_ITEMS \
-      { kItemBarButtons, kTrackInfoBtnSize, 0 },
+      { kItemBarButtons, kTrackInfoBtnSize, 0, \
+        &TrackInfo::CloseTitleDrawFunction },
    #define MUTE_SOLO_ITEMS(extra) \
-      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra },
+      { kItemMute | kItemSolo, kTrackInfoBtnSize + 1, extra, \
+        &TrackInfo::MuteAndSoloDrawFunction },
    #define STATUS_ITEMS \
-      { kItemStatusInfo1, 12, 0 }, \
-      { kItemStatusInfo2, 12, 0 },
+      { kItemStatusInfo1, 12, 0, \
+        &TrackInfo::Status1DrawFunction }, \
+      { kItemStatusInfo2, 12, 0, \
+        &TrackInfo::Status2DrawFunction },
 
 #endif
 
 #define COMMON_ITEMS \
    TITLE_ITEMS
 
-const TCPLine commonTrackTCPLines[] = {
+const TrackInfo::TCPLine defaultCommonTrackTCPLines[] = {
    COMMON_ITEMS
-   { 0, 0, 0 }
 };
+TCPLines commonTrackTCPLines{ RANGE(defaultCommonTrackTCPLines) };
 
-const TCPLine waveTrackTCPLines[] = {
+const TrackInfo::TCPLine defaultWaveTrackTCPLines[] = {
    COMMON_ITEMS
    MUTE_SOLO_ITEMS(2)
-   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
-   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
+   { kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+     &TrackInfo::GainSliderDrawFunction },
+   { kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+     &TrackInfo::PanSliderDrawFunction },
    STATUS_ITEMS
-   { 0, 0, 0 }
 };
+TCPLines waveTrackTCPLines{ RANGE(defaultWaveTrackTCPLines) };
 
-const TCPLine noteTrackTCPLines[] = {
+const TrackInfo::TCPLine defaultNoteTrackTCPLines[] = {
    COMMON_ITEMS
 #ifdef EXPERIMENTAL_MIDI_OUT
    MUTE_SOLO_ITEMS(0)
-   { kItemMidiControlsRect, kMidiCellHeight * 4, 0 },
-   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra },
+   { kItemMidiControlsRect, kMidiCellHeight * 4, 0,
+     &TrackInfo::MidiControlsDrawFunction },
+   { kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+     &TrackInfo::VelocitySliderDrawFunction },
 #endif
-   { 0, 0, 0 }
 };
+TCPLines noteTrackTCPLines{ RANGE(defaultNoteTrackTCPLines) };
 
-int totalTCPLines( const TCPLine *pLines )
+int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 {
    int total = 0;
-   while ( pLines->items ) {
-      total += pLines->height + pLines->extraSpace;
-      ++pLines;
+   int lastExtra = 0;
+   for ( const auto line : lines ) {
+      lastExtra = line.extraSpace;
+      total += line.height + lastExtra;
    }
+   if (omitLastExtra)
+      total -= lastExtra;
    return total;
 }
 
-const TCPLine *getTCPLines( const Track &track )
+const TCPLines &getTCPLines( const Track &track )
 {
 #ifdef USE_MIDI
    if ( track.GetKind() == Track::Note )
@@ -5100,37 +5165,45 @@ const TCPLine *getTCPLines( const Track &track )
 }
 
 // return y value and height
-std::pair< int, int > CalcItemY( const TCPLine *pLines, unsigned iItem )
+std::pair< int, int > CalcItemY( const TCPLines &lines, unsigned iItem )
 {
    int y = 0;
-   while ( pLines->items &&
+   auto pLines = lines.begin();
+   while ( pLines != lines.end() &&
            0 == (pLines->items & iItem) ) {
       y += pLines->height + pLines->extraSpace;
       ++pLines;
    }
-   return { y, pLines->height };
+   int height = 0;
+   if ( pLines != lines.end() )
+      height = pLines->height;
+   return { y, height };
 }
 
 // Items for the bottom of the panel, listed bottom-upwards
 // As also with the top items, the extra space is below the item
-const TCPLine commonTrackTCPBottomLines[] = {
+const TrackInfo::TCPLine defaultCommonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
-   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0 },
-   { 0, 0, 0 }
+   { kItemSyncLock | kItemMinimize, kTrackInfoBtnSize, 0,
+     &TrackInfo::MinimizeSyncLockDrawFunction },
 };
+TCPLines commonTrackTCPBottomLines{ RANGE(defaultCommonTrackTCPBottomLines) };
 
 // return y value and height
 std::pair< int, int > CalcBottomItemY
-   ( const TCPLine *pLines, unsigned iItem, int height )
+   ( const TCPLines &lines, unsigned iItem, int height )
 {
    int y = height;
-   while ( pLines->items &&
+   auto pLines = lines.begin();
+   while ( pLines != lines.end() &&
            0 == (pLines->items & iItem) ) {
       y -= pLines->height + pLines->extraSpace;
       ++pLines;
    }
-   return { y - (pLines->height + pLines->extraSpace ), pLines->height };
+   if (pLines != lines.end())
+      y -= (pLines->height + pLines->extraSpace );
+   return { y, pLines->height };
 }
 
 }
@@ -7208,14 +7281,365 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
    dc->DrawRectangle(rect);
 }
 
+void TrackInfo::DrawItems
+( wxDC *dc, const wxRect &rect, const Track &track,
+  int mouseCapture, bool captured )
+{
+   const auto topLines = getTCPLines( track );
+   const auto bottomLines = commonTrackTCPBottomLines;
+   DrawItems
+      ( dc, rect, &track, topLines, bottomLines, mouseCapture, captured );
+}
+
+void TrackInfo::DrawItems
+( wxDC *dc, const wxRect &rect, const Track *pTrack,
+  const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines,
+  int mouseCapture, bool captured )
+{
+   TrackInfo::SetTrackInfoFont(dc);
+   dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
+
+   {
+      int yy = 0;
+      for ( const auto &line : topLines ) {
+         wxRect itemRect{
+            rect.x, rect.y + yy,
+            rect.width, line.height
+         };
+         if ( !TrackInfo::HideTopItem( rect, itemRect ) &&
+              line.drawFunction )
+            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+         yy += line.height + line.extraSpace;
+      }
+   }
+   {
+      int yy = rect.height;
+      for ( const auto &line : bottomLines ) {
+         yy -= line.height + line.extraSpace;
+         if ( line.drawFunction ) {
+            wxRect itemRect{
+               rect.x, rect.y + yy,
+               rect.width, line.height
+            };
+            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+         }
+      }
+   }
+}
+
+void TrackInfo::CloseTitleDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   {
+      bool down = captured && (pressed == TrackPanel::IsClosing);
+      wxRect bev = rect;
+      GetCloseBoxHorizontalBounds( rect, bev );
+      AColor::Bevel2(*dc, !down, bev, selected );
+
+#ifdef EXPERIMENTAL_THEMING
+      wxPen pen( theTheme.Colour( clrTrackPanelText ));
+      dc->SetPen( pen );
+#else
+      dc->SetPen(*wxBLACK_PEN);
+#endif
+      bev.Inflate( -1, -1 );
+      // Draw the "X"
+      const int s = 6;
+
+      int ls = bev.x + ((bev.width - s) / 2);
+      int ts = bev.y + ((bev.height - s) / 2);
+      int rs = ls + s;
+      int bs = ts + s;
+
+      AColor::Line(*dc, ls,     ts, rs,     bs);
+      AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
+      AColor::Line(*dc, rs,     ts, ls,     bs);
+      AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
+
+      //   bev.Inflate(-1, -1);
+   }
+
+   {
+      wxString titleStr =
+         pTrack ? pTrack->GetName() : _("Name");
+
+      bool down = captured && (pressed == TrackPanel::IsPopping);
+      wxRect bev = rect;
+      GetTitleBarHorizontalBounds( rect, bev );
+      //bev.Inflate(-1, -1);
+      AColor::Bevel2(*dc, !down, bev, selected);
+
+      // Draw title text
+      SetTrackInfoFont(dc);
+      int allowableWidth = rect.width - 42;
+
+      wxCoord textWidth, textHeight;
+      dc->GetTextExtent(titleStr, &textWidth, &textHeight);
+      while (textWidth > allowableWidth) {
+         titleStr = titleStr.Left(titleStr.Length() - 1);
+         dc->GetTextExtent(titleStr, &textWidth, &textHeight);
+      }
+
+      // Pop-up triangle
+   #ifdef EXPERIMENTAL_THEMING
+      wxColour c = theTheme.Colour( clrTrackPanelText );
+   #else
+      wxColour c = *wxBLACK;
+   #endif
+
+      // wxGTK leaves little scraps (antialiasing?) of the
+      // characters if they are repeatedly drawn.  This
+      // happens when holding down mouse button and moving
+      // in and out of the title bar.  So clear it first.
+   //   AColor::MediumTrackInfo(dc, t->GetSelected());
+   //   dc->DrawRectangle(bev);
+
+      dc->SetTextForeground( c );
+      dc->SetTextBackground( wxTRANSPARENT );
+      dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+
+
+
+      dc->SetPen(c);
+      dc->SetBrush(c);
+
+      int s = 10; // Width of dropdown arrow...height is half of width
+      AColor::Arrow(*dc,
+                    bev.GetRight() - s - 3, // 3 to offset from right border
+                    bev.y + ((bev.height - (s / 2)) / 2),
+                    s);
+
+   }
+}
+
+void TrackInfo::MinimizeSyncLockDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   bool syncLockSelected = pTrack ? pTrack->IsSyncLockSelected() : true;
+   bool minimized = pTrack ? pTrack->GetMinimized() : false;
+   {
+      bool down = captured && (pressed == TrackPanel::IsMinimizing);
+      wxRect bev = rect;
+      GetMinimizeHorizontalBounds(rect, bev);
+
+      // Clear background to get rid of previous arrow
+      //AColor::MediumTrackInfo(dc, t->GetSelected());
+      //dc->DrawRectangle(bev);
+
+      AColor::Bevel2(*dc, !down, bev, selected);
+
+#ifdef EXPERIMENTAL_THEMING
+      wxColour c = theTheme.Colour(clrTrackPanelText);
+      dc->SetBrush(c);
+      dc->SetPen(c);
+#else
+      AColor::Dark(dc, selected);
+#endif
+
+      AColor::Arrow(*dc,
+                    bev.x - 5 + bev.width / 2,
+                    bev.y - 2 + bev.height / 2,
+                    10,
+                    minimized);
+   }
+
+   // Draw the sync-lock indicator if this track is in a sync-lock selected group.
+   if (syncLockSelected)
+   {
+      wxRect syncLockIconRect = rect;
+	
+      GetSyncLockHorizontalBounds( rect, syncLockIconRect );
+      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon));
+      // Icon is 12x12 and syncLockIconRect is 16x16.
+      dc->DrawBitmap(syncLockBitmap,
+                     syncLockIconRect.x + 3,
+                     syncLockIconRect.y + 2,
+                     true);
+   }
+}
+
+void TrackInfo::MidiControlsDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+{
+#ifdef EXPERIMENTAL_MIDI_OUT
+   wxRect midiRect = rect;
+   GetMidiControlsHorizontalBounds(rect, midiRect);
+   NoteTrack::DrawLabelControls
+      ( static_cast<const NoteTrack *>(pTrack), *dc, midiRect );
+#endif // EXPERIMENTAL_MIDI_OUT
+}
+
+template<typename TrackClass>
+void TrackInfo::SliderDrawFunction
+( LWSlider *(*Selector)
+    (const wxRect &sliderRect, const TrackClass *t, bool captured, wxWindow*),
+  wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured )
+{
+   wxRect sliderRect = rect;
+   TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   auto wt = static_cast<const TrackClass*>( pTrack );
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc);
+}
+
+void TrackInfo::PanSliderDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+{
+   SliderDrawFunction<WaveTrack>
+      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured);
+}
+
+void TrackInfo::GainSliderDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+{
+   SliderDrawFunction<WaveTrack>
+      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured);
+}
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+void TrackInfo::VelocitySliderDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+{
+   SliderDrawFunction<NoteTrack>
+      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured);
+}
+#endif
+
+void TrackInfo::MuteOrSoloDrawFunction
+( wxDC *dc, const wxRect &bev, const Track *pTrack, int pressed, bool captured,
+  bool solo )
+{
+   bool down = captured &&
+      (pressed == ( solo ? TrackPanel::IsSoloing : TrackPanel::IsMuting ));
+   //bev.Inflate(-1, -1);
+   bool selected = pTrack ? pTrack->GetSelected() : true;
+   auto pt = dynamic_cast<const PlayableTrack *>(pTrack);
+   bool value = pt ? (solo ? pt->GetSolo() : pt->GetMute()) : false;
+
+#if 0
+   AColor::MediumTrackInfo( dc, t->GetSelected());
+   if( solo )
+   {
+      if( pt && pt->GetSolo() )
+      {
+         AColor::Solo(dc, pt->GetSolo(), t->GetSelected());
+      }
+   }
+   else
+   {
+      if( pt && pt->GetMute() )
+      {
+         AColor::Mute(dc, pt->GetMute(), t->GetSelected(), pt->GetSolo());
+      }
+   }
+   //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
+   //    AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
+   dc->SetPen( *wxTRANSPARENT_PEN );//No border!
+   dc->DrawRectangle(bev);
+#endif
+
+   wxCoord textWidth, textHeight;
+   wxString str = (solo) ?
+      /* i18n-hint: This is on a button that will silence all the other tracks.*/
+      _("Solo") :
+      /* i18n-hint: This is on a button that will silence this track.*/
+      _("Mute");
+
+   AColor::Bevel2(
+      *dc,
+      value == down,
+      bev,
+      selected
+   );
+
+   SetTrackInfoFont(dc);
+   dc->GetTextExtent(str, &textWidth, &textHeight);
+   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
+}
+
+void TrackInfo::WideMuteDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   wxRect bev = rect;
+   GetWideMuteSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+}
+
+void TrackInfo::WideSoloDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   wxRect bev = rect;
+   GetWideMuteSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+}
+
+void TrackInfo::MuteAndSoloDrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+{
+   bool bHasSoloButton = TrackPanel::HasSoloButton();
+
+   wxRect bev = rect;
+   if ( bHasSoloButton )
+      GetNarrowMuteHorizontalBounds( rect, bev );
+   else
+      GetWideMuteSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+
+   if( !bHasSoloButton )
+      return;
+
+   GetNarrowSoloHorizontalBounds( rect, bev );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+}
+
+void TrackInfo::StatusDrawFunction
+   ( const wxString &string, wxDC *dc, const wxRect &rect )
+{
+   static const int offset = 3;
+   dc->DrawText(string, rect.x + offset, rect.y);
+}
+
+void TrackInfo::Status1DrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+{
+   auto wt = static_cast<const WaveTrack*>(pTrack);
+
+   /// Returns the string to be displayed in the track label
+   /// indicating whether the track is mono, left, right, or
+   /// stereo and what sample rate it's using.
+   auto rate = wt ? wt->GetRate() : 44100.0;
+   wxString s = wxString::Format(wxT("%dHz"), (int) (rate + 0.5));
+   if (!wt || (wt->GetLinked()
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+       && wt->GetChannel() != Track::MonoChannel
+#endif
+   ))
+      s = _("Stereo, ") + s;
+   else {
+      if (wt->GetChannel() == Track::MonoChannel)
+         s = _("Mono, ") + s;
+      else if (wt->GetChannel() == Track::LeftChannel)
+         s = _("Left, ") + s;
+      else if (wt->GetChannel() == Track::RightChannel)
+         s = _("Right, ") + s;
+   }
+
+   StatusDrawFunction( s, dc, rect );
+}
+
+void TrackInfo::Status2DrawFunction
+( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+{
+   auto wt = static_cast<const WaveTrack*>(pTrack);
+   auto format = wt ? wt->GetSampleFormat() : floatSample;
+   auto s = GetSampleFormatStr(format);
+   StatusDrawFunction( s, dc, rect );
+}
+
 void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 {
-   mTrackInfo.SetTrackInfoFont(dc);
-   dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
    bool bIsWave = (t->GetKind() == Track::Wave);
-#ifdef USE_MIDI
-   bool bIsNote = (t->GetKind() == Track::Note);
-#endif
 
    // Draw things that extend right of track control panel
    {
@@ -7254,76 +7678,10 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    rect.height -= (kBottomMargin + kTopMargin);
 
    bool captured = (t == mCapturedTrack);
-   mTrackInfo.DrawCloseBox(dc, rect, t, (captured && mMouseCapture==IsClosing));
-   mTrackInfo.DrawTitleBar(dc, rect, t, (captured && mMouseCapture==IsPopping));
 
-   mTrackInfo.DrawMinimize(dc, rect, t, (captured && mMouseCapture==IsMinimizing));
-
-   // Draw the sync-lock indicator if this track is in a sync-lock selected group.
-   if (t->IsSyncLockSelected())
-   {
-      wxRect syncLockIconRect;
-      mTrackInfo.GetSyncLockIconRect(rect, syncLockIconRect);
-      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon));
-      // Icon is 12x12 and syncLockIconRect is 16x16.
-      dc->DrawBitmap(syncLockBitmap,
-                     syncLockIconRect.x + 3,
-                     syncLockIconRect.y + 2,
-                     true);
-   }
+   TrackInfo::DrawItems( dc, rect, *t, mMouseCapture, captured );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
-
-   auto wt = bIsWave ? static_cast<WaveTrack*>(t) : nullptr;
-   if (bIsWave) {
-      mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
-      mTrackInfo.DrawMuteSolo(dc, rect, t, (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
-
-      mTrackInfo.DrawSliders(dc, (WaveTrack *)t, rect, captured);
-
-// DA: For classic Audacity, show stero/mono and rate.
-#ifndef EXPERIMENTAL_DA
-      if (!t->GetMinimized()) {
-
-         int offset = 3;
-         auto pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo1 );
-         wxRect textRect {
-            rect.x + offset, rect.y + pair.first,
-            rect.width, pair.second
-         };
-         if ( !TrackInfo::HideTopItem( rect, textRect ) )
-            dc->DrawText(TrackSubText(wt),
-                         textRect.x, textRect.y);
-
-         pair = CalcItemY( waveTrackTCPLines, kItemStatusInfo2 );
-         textRect = {
-            rect.x + offset, rect.y + pair.first,
-            rect.width, pair.second
-         };
-         if ( !TrackInfo::HideTopItem( rect, textRect ) )
-            dc->DrawText(GetSampleFormatStr(((WaveTrack *) t)->GetSampleFormat()),
-                         textRect.x, textRect.y );
-      }
-#endif
-   }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   else if (bIsNote) {
-      wxRect midiRect;
-      mTrackInfo.GetMidiControlsRect(rect, midiRect);
-
-      if ( !TrackInfo::HideTopItem( rect, midiRect ) )
-         static_cast<NoteTrack *>(t)->DrawLabelControls(*dc, midiRect);
-      mTrackInfo.DrawMuteSolo(dc, rect, t,
-            (captured && mMouseCapture == IsMuting), false, HasSoloButton());
-      mTrackInfo.DrawMuteSolo(dc, rect, t,
-            (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
-
-      // Place a volume control below channel buttons (this will
-      // control an offset to midi velocity).
-      mTrackInfo.DrawVelocitySlider(dc, static_cast<NoteTrack *>(t), rect, captured);
-   }
-#endif // EXPERIMENTAL_MIDI_OUT
 }
 
 // Given rectangle should be the whole track rectangle
@@ -7773,30 +8131,6 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
    AColor::Line(*dc, rect.x, bottom, rect.x + 1, bottom);
    // top-right
    AColor::Line(*dc, right, rect.y, right, rect.y + 1);
-}
-
-/// Returns the string to be displayed in the track label
-/// indicating whether the track is mono, left, right, or
-/// stereo and what sample rate it's using.
-wxString TrackPanel::TrackSubText(WaveTrack * t)
-{
-   wxString s = wxString::Format(wxT("%dHz"), (int) (t->GetRate() + 0.5));
-   if (t->GetLinked()
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-       && t->GetChannel() != Track::MonoChannel
-#endif
-   )
-      s = _("Stereo, ") + s;
-   else {
-      if (t->GetChannel() == Track::MonoChannel)
-         s = _("Mono, ") + s;
-      else if (t->GetChannel() == Track::LeftChannel)
-         s = _("Left, ") + s;
-      else if (t->GetChannel() == Track::RightChannel)
-         s = _("Right, ") + s;
-   }
-
-   return s;
 }
 
 /// Handle the menu options that change a track between
@@ -8715,7 +9049,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 
 /// This finds the rectangle of a given track, either the
 /// of the label 'adornment' or the track itself
-wxRect TrackPanel::FindTrackRect(Track * target, bool label)
+wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
 {
    if (!target) {
       return { 0, 0, 0, 0 };
@@ -8813,11 +9147,6 @@ TrackInfo::TrackInfo(TrackPanel * pParentIn)
 {
    pParent = pParentIn;
 
-   mGain = NULL;
-   mGainCaptured=NULL;
-   mPan = NULL;
-   mPanCaptured=NULL;
-
    ReCreateSliders();
 
    UpdatePrefs();
@@ -8834,48 +9163,48 @@ void TrackInfo::ReCreateSliders(){
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   mGain = std::make_unique<LWSlider>(pParent, _("Gain"),
+   gGain = std::make_unique<LWSlider>(pParent, _("Gain"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
-   mGain->SetDefaultValue(defPos);
+   gGain->SetDefaultValue(defPos);
 
-   mGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
+   gGainCaptured = std::make_unique<LWSlider>(pParent, _("Gain"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
-   mGainCaptured->SetDefaultValue(defPos);
+   gGainCaptured->SetDefaultValue(defPos);
 
    GetPanRect(point, sliderRect);
 
    defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   mPan = std::make_unique<LWSlider>(pParent, _("Pan"),
+   gPan = std::make_unique<LWSlider>(pParent, _("Pan"),
                        wxPoint(sliderRect.x, sliderRect.y),
                        wxSize(sliderRect.width, sliderRect.height),
                        PAN_SLIDER);
-   mPan->SetDefaultValue(defPos);
+   gPan->SetDefaultValue(defPos);
 
-   mPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
+   gPanCaptured = std::make_unique<LWSlider>(pParent, _("Pan"),
                                wxPoint(sliderRect.x, sliderRect.y),
                                wxSize(sliderRect.width, sliderRect.height),
                                PAN_SLIDER);
-   mPanCaptured->SetDefaultValue(defPos);
+   gPanCaptured->SetDefaultValue(defPos);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    GetVelocityRect(point, sliderRect);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
-   mVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
+   gVelocity = std::make_unique<LWSlider>(pParent, _("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
-   mVelocity->SetDefaultValue(0.0);
-   mVelocityCaptured = std::make_unique<LWSlider>(pParent, _("Velocity"),
+   gVelocity->SetDefaultValue(0.0);
+   gVelocityCaptured = std::make_unique<LWSlider>(pParent, _("Velocity"),
       wxPoint(sliderRect.x, sliderRect.y),
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
-   mVelocityCaptured->SetDefaultValue(0.0);
+   gVelocityCaptured->SetDefaultValue(0.0);
 #endif
 
 }
@@ -8885,30 +9214,65 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
-void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
+void TrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    dest.x = rect.x;
+   dest.width = kTrackInfoBtnSize;
+}
+
+void TrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
+{
+   GetCloseBoxHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
-   dest.width = kTrackInfoBtnSize;
    dest.height = results.second;
+}
+
+static const int TitleSoloBorderOverlap = 1;
+
+void TrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
+{
+   // to right of CloseBoxRect, plus a little more
+   wxRect closeRect;
+   GetCloseBoxHorizontalBounds( rect, closeRect );
+   dest.x = rect.x + closeRect.width + 1;
+   dest.width = rect.x + rect.width - dest.x + TitleSoloBorderOverlap;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
 {
-   // to right of CloseBoxRect, plus a little more
-   dest.x = rect.x + kTrackInfoBtnSize + 1;
+   GetTitleBarHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines, kItemBarButtons );
    dest.y = rect.y + results.first;
-   // PRL:  + 1?  Really?
-   dest.width = rect.x + rect.width - dest.x + 1;
    dest.height = results.second;
 }
 
-void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton, const Track *pTrack)
+void TrackInfo::GetNarrowMuteHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
-
    dest.x = rect.x;
+   dest.width = rect.width / 2 + 1;
+}
+
+void TrackInfo::GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
+{
+   wxRect muteRect;
+   GetNarrowMuteHorizontalBounds( rect, muteRect );
+   dest.x = rect.x + muteRect.width;
+   dest.width = rect.width - muteRect.width + TitleSoloBorderOverlap;
+}
+
+void TrackInfo::GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
+{
+   // Larger button, symmetrically placed intended.
+   // On windows this gives 15 pixels each side.
+   dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
+   dest.x = rect.x + kTrackInfoBtnSize -3;
+}
+
+void TrackInfo::GetMuteSoloRect
+(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
+ const Track *pTrack)
+{
 
    auto resultsM = CalcItemY( getTCPLines( *pTrack ), kItemMute );
    auto resultsS = CalcItemY( getTCPLines( *pTrack ), kItemSolo );
@@ -8922,19 +9286,13 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
    if( bNarrow )
    {
-      dest.width = rect.width / 2 + 1;
-      if( solo ) {
-         dest.x += dest.width;
-         dest.width = rect.width - dest.width+1;
-      }
+      if( solo )
+         GetNarrowSoloHorizontalBounds( rect, dest );
+      else
+         GetNarrowMuteHorizontalBounds( rect, dest );
    }
    else
-   {
-      // Larger button, symmetrically placed intended.
-      // On windows this gives 15 pixels each side.
-      dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
-      dest.x = rect.x + kTrackInfoBtnSize -3;
-   }
+      GetWideMuteSoloHorizontalBounds( rect, dest );
 
    if( bSameRow || !solo )
       dest.y = rect.y + yMute;
@@ -8943,12 +9301,17 @@ void TrackInfo::GetMuteSoloRect(const wxRect & rect, wxRect & dest, bool solo, b
 
 }
 
-void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
+void TrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest )
 {
    dest.x = topleft.x + 6;
+   dest.width = kTrackInfoSliderWidth;
+}
+
+void TrackInfo::GetGainRect(const wxPoint &topleft, wxRect & dest)
+{
+   GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( waveTrackTCPLines, kItemGain );
    dest.y = topleft.y + results.first;
-   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 
@@ -8962,55 +9325,76 @@ void TrackInfo::GetPanRect(const wxPoint &topleft, wxRect & dest)
 #ifdef EXPERIMENTAL_MIDI_OUT
 void TrackInfo::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
 {
-   dest.x = topleft.x + 6;
+   GetSliderHorizontalBounds( topleft, dest );
    auto results = CalcItemY( noteTrackTCPLines, kItemVelocity );
    dest.y = topleft.y + results.first;
-   dest.width = kTrackInfoSliderWidth;
    dest.height = results.second;
 }
 #endif
 
-void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
+void TrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
    const int space = 0;// was 3.
    dest.x = rect.x + space;
+
+   wxRect syncLockRect;
+   GetSyncLockHorizontalBounds( rect, syncLockRect );
+
+   // Width is rect.width less space on left for track select
+   // and on right for sync-lock icon.
+   dest.width = rect.width - (space + syncLockRect.width);
+}
+
+void TrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
+{
+   GetMinimizeHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
-   // Width is rect.width less space on left for track select
-   // and on right for sync-lock icon.
-   dest.width = rect.width - (space + kTrackInfoBtnSize);
    dest.height = results.second;
+}
+
+void TrackInfo::GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest )
+{
+   dest.width = kTrackInfoBtnSize;
+   dest.x = rect.x + rect.width - dest.width;
 }
 
 void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 {
-   dest.x = rect.x + rect.width - kTrackInfoBtnSize; // to right of minimize button
+   GetSyncLockHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, kItemSyncLock, rect.height);
    dest.y = rect.y + results.first;
-   dest.width = kTrackInfoBtnSize;
    dest.height = results.second;
 }
 
 #ifdef USE_MIDI
-void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+void TrackInfo::GetMidiControlsHorizontalBounds
+( const wxRect &rect, wxRect &dest )
 {
    dest.x = rect.x + 1; // To center slightly
    // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
    // kTrackInfoWidth but I am trying to avoid use of that constant.
    // Can cell width be computed from dest.width instead?
    dest.width = kMidiCellWidth * 4;
+}
+
+void TrackInfo::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+{
+   GetMidiControlsHorizontalBounds( rect, dest );
    auto results = CalcItemY( noteTrackTCPLines, kItemMidiControlsRect );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
 #endif
 
+wxFont TrackInfo::gFont;
+
 /// \todo Probably should move to 'Utils.cpp'.
-void TrackInfo::SetTrackInfoFont(wxDC * dc) const
+void TrackInfo::SetTrackInfoFont(wxDC * dc)
 {
-   dc->SetFont(mFont);
+   dc->SetFont(gFont);
 }
 
 void TrackInfo::DrawBordersWithin
@@ -9267,105 +9651,85 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool dow
 
 }
 
-void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect rect, bool captured) const
+namespace {
+unsigned DefaultTrackHeight( const TCPLines &topLines )
 {
-   wxRect sliderRect;
-
-   GetGainRect(rect.GetTopLeft(), sliderRect);
-   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      GainSlider(t, captured)->OnPaint(*dc);
-
-   GetPanRect(rect.GetTopLeft(), sliderRect);
-   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
-      PanSlider(t, captured)->OnPaint(*dc);
+   int needed =
+      kTopMargin + kBottomMargin +
+      totalTCPLines( topLines, true ) +
+      totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
+   return (unsigned) std::max( needed, (int) Track::DefaultHeight );
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect rect, bool captured) const
-{
-   wxRect sliderRect;
-
-   GetVelocityRect( rect.GetTopLeft(), sliderRect );
-   if ( !TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) ) {
-      VelocitySlider(t, captured)->OnPaint(*dc);
-   }
 }
-#endif
 
 unsigned TrackInfo::DefaultNoteTrackHeight()
 {
-   // Just high enough that the velocity slider is just above the Minimize
-   // button, as for default sized Wave track
-   int needed =
-      kTopMargin + kBottomMargin +
-      totalTCPLines( noteTrackTCPLines ) +
-      totalTCPLines( commonTrackTCPBottomLines ) -
-      kTrackInfoSliderExtra;
-   return (unsigned) std::max( needed, (int) Track::DefaultHeight );
+   return DefaultTrackHeight( noteTrackTCPLines );
 }
 
 unsigned TrackInfo::DefaultWaveTrackHeight()
 {
-   int needed =
-      kTopMargin + kBottomMargin +
-      totalTCPLines( waveTrackTCPLines ) +
-      totalTCPLines( commonTrackTCPBottomLines );
-   return (unsigned) std::max( needed, (int) Track::DefaultHeight );
+   return DefaultTrackHeight( waveTrackTCPLines );
 }
 
-LWSlider * TrackInfo::GainSlider(WaveTrack *t, bool captured) const
+std::unique_ptr<LWSlider>
+   TrackInfo::gGainCaptured
+   , TrackInfo::gPanCaptured
+   , TrackInfo::gGain
+   , TrackInfo::gPan
+#ifdef EXPERIMENTAL_MIDI_OUT
+   , TrackInfo::gVelocityCaptured
+   , TrackInfo::gVelocity
+#endif
+;
+
+LWSlider * TrackInfo::GainSlider
+(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
-   wxPoint topLeft{
-      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
-   wxRect sliderRect;
-   GetGainRect(topLeft, sliderRect);
-
    wxPoint pos = sliderRect.GetPosition();
-   float gain = t->GetGain();
+   float gain = t ? t->GetGain() : 1.0;
 
-   mGain->Move(pos);
-   mGain->Set(gain);
-   mGainCaptured->Move(pos);
-   mGainCaptured->Set(gain);
+   gGain->Move(pos);
+   gGain->Set(gain);
+   gGainCaptured->Move(pos);
+   gGainCaptured->Set(gain);
 
-   return (captured ? mGainCaptured : mGain).get();
+   auto slider = (captured ? gGainCaptured : gGain).get();
+   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   return slider;
 }
 
-LWSlider * TrackInfo::PanSlider(WaveTrack *t, bool captured) const
+LWSlider * TrackInfo::PanSlider
+(const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
-   wxPoint topLeft{
-      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
-   wxRect sliderRect;
-   GetPanRect(topLeft, sliderRect);
-
    wxPoint pos = sliderRect.GetPosition();
-   float pan = t->GetPan();
+   float pan = t ? t->GetPan() : 0.0;
 
-   mPan->Move(pos);
-   mPan->Set(pan);
-   mPanCaptured->Move(pos);
-   mPanCaptured->Set(pan);
+   gPan->Move(pos);
+   gPan->Set(pan);
+   gPanCaptured->Move(pos);
+   gPanCaptured->Set(pan);
 
-   return (captured ? mPanCaptured : mPan).get();
+   auto slider = (captured ? gPanCaptured : gPan).get();
+   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   return slider;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-LWSlider * TrackInfo::VelocitySlider(NoteTrack *t, bool captured) const
+LWSlider * TrackInfo::VelocitySlider
+(const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
 {
-   wxPoint topLeft{
-      kLeftMargin, t->GetY() - pParent->GetViewInfo()->vpos + kTopMargin };
-   wxRect sliderRect;
-   GetVelocityRect(topLeft, sliderRect);
-
    wxPoint pos = sliderRect.GetPosition();
-   float velocity = t->GetVelocity();
+   float velocity = t ? t->GetVelocity() : 0.0;
 
-   mVelocity->Move(pos);
-   mVelocity->Set(velocity);
-   mVelocityCaptured->Move(pos);
-   mVelocityCaptured->Set(velocity);
+   gVelocity->Move(pos);
+   gVelocity->Set(velocity);
+   gVelocityCaptured->Move(pos);
+   gVelocityCaptured->Set(velocity);
 
-   return (captured ? mVelocityCaptured : mVelocity).get();
+   auto slider = (captured ? gVelocityCaptured : gVelocity).get();
+   slider->SetParent( pParent ? pParent : ::GetActiveProject() );
+   return slider;
 }
 #endif
 
@@ -9375,18 +9739,18 @@ void TrackInfo::UpdatePrefs()
    // the language preference changed.
 
    int fontSize = 10;
-   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
    int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
    int textWidth, textHeight;
    do {
-      mFont.SetPointSize(fontSize);
+      gFont.SetPointSize(fontSize);
       pParent->GetTextExtent(_("Stereo, 999999Hz"),
                              &textWidth,
                              &textHeight,
                              NULL,
                              NULL,
-                             &mFont);
+                             &gFont);
       fontSize--;
    } while (textWidth >= allowableWidth);
 }

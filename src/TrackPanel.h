@@ -76,6 +76,7 @@ enum {
    kTimerInterval = 50, // milliseconds
 };
 
+
 class AUDACITY_DLL_API TrackInfo
 {
 public:
@@ -83,9 +84,81 @@ public:
    ~TrackInfo();
    void ReCreateSliders();
 
+   struct TCPLine;
+
+   static void DrawItems
+      ( wxDC *dc, const wxRect &rect, const Track &track, int mouseCapture,
+        bool captured );
+
+   static void DrawItems
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack,
+        const std::vector<TCPLine> &topLines,
+        const std::vector<TCPLine> &bottomLines,
+        int mouseCapture, bool captured );
+
+   static void CloseTitleDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void MinimizeSyncLockDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void MidiControlsDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   template<typename TrackClass>
+   static void SliderDrawFunction
+      ( LWSlider *(*Selector)
+           (const wxRect &sliderRect, const TrackClass *t, bool captured,
+            wxWindow*),
+        wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured );
+
+   static void PanSliderDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void GainSliderDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   static void VelocitySliderDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+#endif
+
+   static void MuteOrSoloDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured, bool solo );
+
+   static void WideMuteDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void WideSoloDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void MuteAndSoloDrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void StatusDrawFunction
+      ( const wxString &string, wxDC *dc, const wxRect &rect );
+
+   static void Status1DrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
+   static void Status2DrawFunction
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+        bool captured );
+
 private:
    int GetTrackInfoWidth() const;
-   void SetTrackInfoFont(wxDC *dc) const;
+   static void SetTrackInfoFont(wxDC *dc);
 
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
@@ -94,26 +167,45 @@ private:
    void DrawTitleBar(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
    void DrawMuteSolo(wxDC * dc, const wxRect & rect, Track * t, bool down, bool solo, bool bHasSoloButton) const;
    void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
-   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect rect, bool captured) const;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect rect, bool captured) const;
-#endif
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect & rect, Track * t, bool down) const;
 
+   static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
+
+   static void GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetTitleBarRect(const wxRect & rect, wxRect &dest);
-   static void GetMuteSoloRect(const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
-                        const Track *pTrack);
+
+   static void GetNarrowMuteHorizontalBounds
+      ( const wxRect & rect, wxRect &dest );
+   static void GetNarrowSoloHorizontalBounds
+      ( const wxRect & rect, wxRect &dest );
+   static void GetWideMuteSoloHorizontalBounds
+      ( const wxRect & rect, wxRect &dest );
+   static void GetMuteSoloRect
+      (const wxRect & rect, wxRect &dest, bool solo, bool bHasSoloButton,
+       const Track *pTrack);
+
+   static void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
+
    static void GetGainRect(const wxPoint & topLeft, wxRect &dest);
+
    static void GetPanRect(const wxPoint & topLeft, wxRect &dest);
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    static void GetVelocityRect(const wxPoint & topLeft, wxRect &dest);
 #endif
+
+   static void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
    static void GetMinimizeRect(const wxRect & rect, wxRect &dest);
+
+   static void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
    static void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);
+
 #ifdef USE_MIDI
+   static void GetMidiControlsHorizontalBounds
+      ( const wxRect &rect, wxRect &dest );
    static void GetMidiControlsRect(const wxRect & rect, wxRect &dest);
 #endif
 
@@ -124,22 +216,28 @@ public:
    static unsigned DefaultNoteTrackHeight();
    static unsigned DefaultWaveTrackHeight();
 
-   LWSlider * GainSlider(WaveTrack *t, bool captured = false) const;
-   LWSlider * PanSlider(WaveTrack *t, bool captured = false) const;
+   static LWSlider * GainSlider
+      (const wxRect &sliderRect, const WaveTrack *t, bool captured,
+       wxWindow *pParent);
+   static LWSlider * PanSlider
+      (const wxRect &sliderRect, const WaveTrack *t, bool captured,
+       wxWindow *pParent);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   LWSlider * VelocitySlider(NoteTrack *t, bool captured = false) const;
+   static LWSlider * VelocitySlider
+      (const wxRect &sliderRect, const NoteTrack *t, bool captured,
+       wxWindow *pParent);
 #endif
 
 private:
    void UpdatePrefs();
 
    TrackPanel * pParent;
-   wxFont mFont;
-   std::unique_ptr<LWSlider>
-      mGainCaptured, mPanCaptured, mGain, mPan;
+   static wxFont gFont;
+   static std::unique_ptr<LWSlider>
+      gGainCaptured, gPanCaptured, gGain, gPan;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   std::unique_ptr<LWSlider> mVelocityCaptured, mVelocity;
+   static std::unique_ptr<LWSlider> gVelocityCaptured, gVelocity;
 #endif
 
    friend class TrackPanel;
@@ -538,7 +636,7 @@ protected:
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
    // the proper track area.
-   virtual wxRect FindTrackRect(Track * target, bool label);
+   virtual wxRect FindTrackRect( const Track * target, bool label );
 
    virtual int GetVRulerWidth() const;
    virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
@@ -583,19 +681,28 @@ protected:
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void UpdateVirtualStereoOrder();
 #endif
-   // Accessors...
-   virtual bool HasSoloButton(){  return mSoloPref!=wxT("None");}
 
+public:
+   // Accessors...
+   static bool HasSoloButton(){  return gSoloPref!=wxT("None");}
+
+protected:
    //JKC: These two belong in the label track.
    int mLabelTrackStartXPos;
    int mLabelTrackStartYPos;
 
-   virtual wxString TrackSubText(WaveTrack *t);
-
    TrackInfo mTrackInfo;
- public:
-    TrackInfo *GetTrackInfo() { return &mTrackInfo; }
-    const TrackInfo *GetTrackInfo() const { return &mTrackInfo; }
+
+public:
+
+   LWSlider *GainSlider( const WaveTrack *wt );
+   LWSlider *PanSlider( const WaveTrack *wt );
+#ifdef EXPERIMENTAL_MIDI_OUT
+   LWSlider *VelocitySlider( const NoteTrack *nt );
+#endif
+
+   TrackInfo *GetTrackInfo() { return &mTrackInfo; }
+   const TrackInfo *GetTrackInfo() const { return &mTrackInfo; }
 
 protected:
    TrackPanelListener *mListener;
@@ -757,6 +864,7 @@ protected:
    int mInitialUpperActualHeight;
    bool mAutoScrolling;
 
+public:
    enum   MouseCaptureEnum
    {
       IsUncaptured=0,   // This is the normal state for the mouse
@@ -786,6 +894,7 @@ protected:
 
    };
 
+protected:
    enum MouseCaptureEnum mMouseCapture;
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
@@ -839,7 +948,7 @@ public:
 
 protected:
 
-   wxString mSoloPref;
+   static wxString gSoloPref;
 
    // Keeps track of extra fractional vertical scroll steps
    double mVertScrollRemainder;
