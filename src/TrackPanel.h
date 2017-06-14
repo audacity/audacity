@@ -234,10 +234,14 @@ private:
 
    TrackPanel * pParent;
    static wxFont gFont;
-   static std::unique_ptr<LWSlider>
-      gGainCaptured, gPanCaptured, gGain, gPan;
+   // These are on separate lines to work around an MSVC 2013 compiler bug.
+   static std::unique_ptr<LWSlider> gGainCaptured;
+   static std::unique_ptr<LWSlider> gPanCaptured;
+   static std::unique_ptr<LWSlider> gGain;
+   static std::unique_ptr<LWSlider> gPan;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   static std::unique_ptr<LWSlider> gVelocityCaptured, gVelocity;
+   static std::unique_ptr<LWSlider> gVelocityCaptured;
+   static std::unique_ptr<LWSlider> gVelocity;
 #endif
 
    friend class TrackPanel;
