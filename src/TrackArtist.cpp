@@ -70,9 +70,6 @@ TrackPanel::DrawTracks(), calls
                                TrackPanel::DrawOutsideOfTrack();
                                TrackPanel::DrawBordersAroundTrack();
                                TrackPanel::DrawShadow();
-                               TrackInfo::DrawCloseBox();
-                               TrackInfo::DrawTitleBar();
-                               TrackInfo::DrawMinimize();
                                TrackInfo::DrawBordersWithin();
                                various TrackInfo sliders and buttons
                        TrackArtist::DrawVRuler();
