@@ -1763,9 +1763,7 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
       // practice (on a P500).
       int tool = DetermineToolToUse( ttb, event );
 
-      tip = GetProject()->GetScrubber().StatusMessageForWave();
-      if( tip.IsEmpty() )
-         tip = ttb->GetMessageForTool(tool);
+      tip = ttb->GetMessageForTool(tool);
 
       if( tool != selectTool )
       {
