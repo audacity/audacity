@@ -1814,6 +1814,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          mSelectionStateChanger.reset();
       }
 
+#ifdef USE_MIDI
       bool left;
       if ( GetProject()->IsSyncLocked() &&
            ( ( left = mStretchState.mMode == stretchLeft ) ||
@@ -1847,7 +1848,9 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          Refresh(false);
          SetCapturedTrack( NULL );
       }
-      else {
+      else
+#endif
+      {
          // Do not draw yellow lines
          if (mSnapLeft != -1 || mSnapRight != -1) {
             mSnapLeft = mSnapRight = -1;
