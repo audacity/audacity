@@ -147,10 +147,26 @@ static int portaudio_error(PaError err, char *problem)
 LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
 {
     PaStreamParameters output_parameters;
-    int i;
+    int i, j = -1;
     int num_devices;
-    const PaDeviceInfo *device_info;
+
+    const PaDeviceInfo *device_info = NULL;
     const PaHostApiInfo *host_info;
+
+    // list tells us to list devices
+    LVAL list = xlenter("*SND-LIST-DEVICES*");
+
+    // pref tells us which device to open
+    LVAL pref = xlenter("*SND-DEVICE*");
+
+    int pref_num = -1;
+    unsigned char *pref_string = NULL;
+    list = getvalue(list);
+    if (list == s_unbound) list = NULL;
+    pref = getvalue(pref);
+    if (pref == s_unbound) pref = NULL;
+    if (stringp(pref)) pref_string = getstring(pref);
+    else if (fixp(pref)) pref_num = getfixnum(pref);
 
     if (!portaudio_initialized) {
         if (portaudio_error(Pa_Initialize(), 
@@ -159,7 +175,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
         }
         portaudio_initialized = TRUE;
     }
-        
+
     output_parameters.device = Pa_GetDefaultOutputDevice(); 
     output_parameters.channelCount = sf_info->channels;
     output_parameters.sampleFormat = paFloat32;
@@ -168,28 +184,49 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info, PaStream **audio_stream)
     output_parameters.suggestedLatency = sound_latency;
 
     // Initialize the audio stream for output
-    // If this is Linux, prefer to open ALSA device
     num_devices = Pa_GetDeviceCount();
     for (i = 0; i < num_devices; i++) {
         device_info = Pa_GetDeviceInfo(i);
         host_info = Pa_GetHostApiInfo(device_info->hostApi);
-        if (host_info->type == paALSA) {
-            output_parameters.device = i;
-            break;
+
+        if (list) {
+            gprintf(TRANS, "PortAudio %d: %s -- %s\n", i,
+                            device_info->name, host_info->name);
+        }
+        if (j == -1) {
+            if (pref_num >= 0 && pref_num == i) j = i;
+            else if (pref_string &&
+                strstr(device_info->name, (char *) pref_string)) j = i;
         }
     }
 
-    if (portaudio_error(
-         Pa_OpenStream(audio_stream, NULL /* input */, &output_parameters,
-                   sf_info->samplerate, max_sample_block_len, 
-                   paClipOff, NULL /* callback */, NULL /* userdata */),
-         "could not open audio")) {
+    if (j != -1) {
+        output_parameters.device = j;
+    }
+    if (list) {
+        gprintf(TRANS, "... Default device is %d\n",
+                        Pa_GetDefaultOutputDevice());
+        gprintf(TRANS, "... Selected device %d for output\n",
+                        output_parameters.device);
+    }
+    if (device_info) {
+        if (portaudio_error(
+                Pa_OpenStream(audio_stream, NULL /* input */, &output_parameters,
+                        sf_info->samplerate, max_sample_block_len, 
+                        paClipOff, NULL /* callback */, NULL /* userdata */),
+                "could not open audio")) {
+            return NIL;
+        }
+    } else {
+        gprintf(TRANS, "warning: no audio device found\n");
         return NIL;
     }
     flush_count = (long) (sf_info->samplerate * (sound_latency + 0.2));
 
-    if (portaudio_error(Pa_StartStream(*audio_stream), 
+    if (portaudio_error(Pa_StartStream(*audio_stream),
                         "could not start audio")) {
+        gprintf(TRANS, "Could not start audio with: %s\n", device_info->name);
+        audio_stream = NULL;
         return NIL;
     }
 
