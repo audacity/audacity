@@ -241,7 +241,7 @@ typedef double promoted_sample_type;
  */
 #define MAX_SND_CHANNELS 24
 
-#define max_table_len 100000
+#define max_table_len 1000001
 /* Set to 4 for debugging block allocation stuff, 1012? for
    production
 */
