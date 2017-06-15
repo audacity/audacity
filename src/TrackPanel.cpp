@@ -233,11 +233,11 @@ GetLeftOffset() is yet one more -- it counts the "one pixel" column.
 FindCell() for label returns a rectangle that OMITS left, top, and bottom
 margins
 
-FindCell() for vruler returns a rectangle up to and including the One Pixel
-column, and OMITS top and bottom margins
+FindCell() for vruler returns a rectangle right of the label,
+up to and including the One Pixel column, and OMITS top and bottom margins
 
-FindCell() for track returns a rectangle with x == GetLeftOffset(), and INCLUDES
-right and top insets
+FindCell() for track returns a rectangle with x == GetLeftOffset(), and OMITS
+right top, and bottom margins
 
 +--------------- ... ------ ... --------------------- ...       ... -------------+
 | Top Inset                                                                      |
@@ -1721,8 +1721,7 @@ void TrackPanel::HandleCursor(const wxMouseEvent & event)
    // Are we within the vertical resize area?
    // (Add margin back to bottom of the rectangle)
    if (within(event.m_y,
-              (trackRect.GetBottom()
-                  + (foundCell.type != CellType::Track ? kBottomMargin : 0) ),
+              (trackRect.GetBottom() + (kBottomMargin + kTopMargin) / 2),
               TRACK_RESIZE_REGION))
    {
       SetCursorAndTipWhenInVResizeArea(
@@ -6695,8 +6694,7 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    if (event.LeftDown() &&
        pTrack &&
           (within(event.m_y,
-                  (rect.GetBottom()
-                      + (foundCell.type != CellType::Track ? kBottomMargin : 0) ),
+                  (rect.GetBottom() + (kBottomMargin + kTopMargin) / 2),
                   TRACK_RESIZE_REGION))) {
       HandleResize(event);
       HandleCursor(event);
@@ -8947,63 +8945,47 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
    Refresh(false);
 }
 
-/// Determines which track is under the mouse
+/// Determines which cell is under the mouse
 ///  @param mouseX - mouse X position.
 ///  @param mouseY - mouse Y position.
 TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 {
-   wxRect rect;
-   rect.x = 0;
-   rect.y = -mViewInfo->vpos;
-   rect.y += kTopInset;
-   GetSize(&rect.width, &rect.height);
+   auto size = GetSize();
+   size.x -= kRightMargin;
+   wxRect rect { 0, 0, 0, 0 };
 
    // The type of cell that may be found is determined by the x coordinate.
    CellType type = CellType::Track;
-   if (mouseX >= 0 && mouseX < rect.width) {
-      if (mouseX < GetVRulerOffset())
-         type = CellType::Label,
-         rect.width = GetVRulerOffset();
-      else if (mouseX < GetLeftOffset())
-         type = CellType::VRuler,
-         rect.x = GetVRulerOffset(),
-         rect.width = GetLeftOffset() - GetVRulerOffset();
-      else
-         type = CellType::Track,
-         rect.x = GetLeftOffset(),
-         rect.width -= GetLeftOffset();
-   }
+   if (mouseX < kLeftMargin)
+      ;
+   else if (mouseX < GetVRulerOffset())
+      type = CellType::Label,
+      rect.x = kLeftMargin,
+      rect.width = GetVRulerOffset() - kLeftMargin;
+   else if (mouseX < GetLeftOffset())
+      type = CellType::VRuler,
+      rect.x = GetVRulerOffset(),
+      rect.width = GetLeftOffset() - GetVRulerOffset();
+   else if (mouseX < size.x)
+      type = CellType::Track,
+      rect.x = GetLeftOffset(),
+      rect.width = size.x - GetLeftOffset();
 
    auto output = [&](Track *pTrack) -> FoundCell {
-      // If label, resulting rectangle OMITS left and top insets.
-      // If ruler, resulting rectangle OMITS top margin.
-      // If track, resulting rectangle INCLUDES right and top insets.
-      if (pTrack) {
-         rect.y -= kTopInset;
-         switch (type) {
-            case CellType::Label:
-               rect.x += kLeftMargin;
-               rect.width -= kLeftMargin;
-               rect.y += kTopMargin;
-               rect.height -= (kTopMargin + kBottomMargin);
-               break;
-            case CellType::VRuler:
-               rect.y += kTopMargin;
-               rect.height -= (kTopMargin + kBottomMargin);
-               break;
-            case CellType::Track:
-            default:
-               break;
-         }
+      // Undo the bias mentioned below.
+      rect.y -= kTopMargin;
+      if (pTrack)
          return { pTrack, type, rect };
-      }
       else
          return { nullptr, type, {} };
    };
 
    VisibleTrackIterator iter(GetProject());
    for (Track * t = iter.First(); t; t = iter.Next()) {
-      rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
+      // The zone to hit the track is biased to exclude the margin above
+      // but include the top margin of the track below.  That makes the change
+      // to the track resizing cursor work right.
+      rect.y = t->GetY() - mViewInfo->vpos + kTopMargin;
       rect.height = t->GetHeight();
 
       if (type == CellType::Label) {
@@ -9012,7 +8994,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
             int h = l->GetHeight();
             if (!t->GetLinked()) {
                t = l;
-               rect.y = t->GetY() - mViewInfo->vpos + kTopInset;
+               rect.y = t->GetY() - mViewInfo->vpos + kTopMargin;
             }
             rect.height += h;
          }
@@ -9023,8 +9005,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       }
 
       //Determine whether the mouse is inside
-      //the current rectangle.  If so, recalculate
-      //the proper dimensions and return.
+      //the current rectangle.  If so, return.
       if (rect.Contains(mouseX, mouseY)) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
          // PRL:  Is it good to have a side effect in a hit-testing routine?
@@ -9034,7 +9015,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if(type != CellType::Label && MONO_WAVE_PAN(t)){
-         rect.y = t->GetY(true) - mViewInfo->vpos + kTopInset;
+         rect.y = t->GetY(true) - mViewInfo->vpos + kTopMargin;
          rect.height = t->GetHeight(true);
          if (rect.Contains(mouseX, mouseY)) {
             // PRL:  Is it good to have a side effect in a hit-testing routine?
