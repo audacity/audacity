@@ -6583,6 +6583,11 @@ bool TrackPanel::HandleLabelTrackClick(LabelTrack * lTrack, const wxRect &rect, 
          SetCapturedTrack(lTrack, IsSelectingLabelText);
 
       RefreshTrack(lTrack);
+
+      // PRL: bug1659 -- make selection change undo correctly
+      if (!IsUnsafe())
+         MakeParentModifyState(false);
+
       return true;
    }
 
