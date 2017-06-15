@@ -299,22 +299,22 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
 	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
 	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h ImageManipulation.cpp \
-	ImageManipulation.h InconsistencyException.cpp \
-	InconsistencyException.h InterpolateAudio.cpp \
-	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
-	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
-	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
-	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
-	Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h Mix.cpp Mix.h \
-	MixerBoard.cpp MixerBoard.h ModuleManager.cpp ModuleManager.h \
-	NumberScale.h PitchName.cpp PitchName.h \
+	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
+	ImageManipulation.cpp ImageManipulation.h \
+	InconsistencyException.cpp InconsistencyException.h \
+	InterpolateAudio.cpp InterpolateAudio.h LabelDialog.cpp \
+	LabelDialog.h LabelTrack.cpp LabelTrack.h LangChoice.cpp \
+	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
+	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
+	MacroMagic.h Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h \
+	Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
-	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
-	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
-	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
+	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h \
+	Resample.cpp Resample.h RevisionIdent.h RingBuffer.cpp \
+	RingBuffer.h Screenshot.cpp Screenshot.h SelectedRegion.cpp \
 	SelectedRegion.h SelectionState.cpp SelectionState.h \
 	Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
 	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
@@ -326,10 +326,12 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
 	TrackPanelCell.h TrackPanelCellIterator.h TrackPanelListener.h \
-	TranslatableStringArray.h UndoManager.cpp UndoManager.h \
-	UserException.cpp UserException.h ViewInfo.cpp ViewInfo.h \
-	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
-	WaveTrack.h WaveTrackLocation.h WrappedType.cpp WrappedType.h \
+	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
+	TrackPanelResizeHandle.h TranslatableStringArray.h UIHandle.h \
+	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
+	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
+	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
+	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
 	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h commands/Command.cpp \
@@ -462,10 +464,62 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	toolbars/ToolsToolBar.cpp toolbars/ToolsToolBar.h \
 	toolbars/TranscriptionToolBar.cpp \
 	toolbars/TranscriptionToolBar.h \
+	tracks/labeltrack/ui/LabelDefaultClickHandle.cpp \
+	tracks/labeltrack/ui/LabelDefaultClickHandle.h \
+	tracks/labeltrack/ui/LabelGlyphHandle.cpp \
+	tracks/labeltrack/ui/LabelGlyphHandle.h \
+	tracks/labeltrack/ui/LabelTextHandle.cpp \
+	tracks/labeltrack/ui/LabelTextHandle.h \
+	tracks/labeltrack/ui/LabelTrackControls.cpp \
+	tracks/labeltrack/ui/LabelTrackControls.h \
+	tracks/labeltrack/ui/LabelTrackUI.cpp \
+	tracks/labeltrack/ui/LabelTrackVRulerControls.cpp \
+	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/StretchHandle.cpp \
+	tracks/playabletrack/notetrack/ui/StretchHandle.h \
+	tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp \
+	tracks/playabletrack/ui/PlayableTrackButtonHandles.h \
+	tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/CutlineHandle.h \
+	tracks/playabletrack/wavetrack/ui/SampleHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/SampleHandle.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackControls.cpp \
+	tracks/timetrack/ui/TimeTrackControls.h \
+	tracks/timetrack/ui/TimeTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackVRulerControls.cpp \
+	tracks/timetrack/ui/TimeTrackVRulerControls.h \
+	tracks/ui/BackgroundCell.cpp tracks/ui/BackgroundCell.h \
+	tracks/ui/ButtonHandle.h tracks/ui/ButtonHandle.cpp \
+	tracks/ui/CommonTrackPanelCell.cpp \
+	tracks/ui/CommonTrackPanelCell.h \
 	tracks/ui/EditCursorOverlay.cpp tracks/ui/EditCursorOverlay.h \
+	tracks/ui/EnvelopeHandle.cpp tracks/ui/EnvelopeHandle.h \
 	tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h tracks/ui/Scrubbing.cpp \
-	tracks/ui/Scrubbing.h widgets/AButton.cpp widgets/AButton.h \
+	tracks/ui/Scrubbing.h tracks/ui/SelectHandle.cpp \
+	tracks/ui/SelectHandle.h tracks/ui/SliderHandle.cpp \
+	tracks/ui/SliderHandle.h tracks/ui/TimeShiftHandle.cpp \
+	tracks/ui/TimeShiftHandle.h tracks/ui/TrackButtonHandles.cpp \
+	tracks/ui/TrackButtonHandles.h tracks/ui/TrackControls.cpp \
+	tracks/ui/TrackControls.h tracks/ui/TrackSelectHandle.cpp \
+	tracks/ui/TrackSelectHandle.h tracks/ui/TrackUI.cpp \
+	tracks/ui/TrackVRulerControls.cpp \
+	tracks/ui/TrackVRulerControls.h tracks/ui/ZoomHandle.cpp \
+	tracks/ui/ZoomHandle.h widgets/AButton.cpp widgets/AButton.h \
 	widgets/ASlider.cpp widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp widgets/AttachableScrollBar.h \
 	widgets/BackedPanel.cpp widgets/BackedPanel.h \
@@ -482,7 +536,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	widgets/NumericTextCtrl.cpp widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp widgets/numformatter.h \
 	widgets/Overlay.cpp widgets/Overlay.h widgets/OverlayPanel.cpp \
-	widgets/OverlayPanel.h widgets/ProgressDialog.cpp \
+	widgets/OverlayPanel.h widgets/PopupMenuTable.cpp \
+	widgets/PopupMenuTable.h widgets/ProgressDialog.cpp \
 	widgets/ProgressDialog.h widgets/Ruler.cpp widgets/Ruler.h \
 	widgets/valnum.cpp widgets/valnum.h widgets/Warning.cpp \
 	widgets/Warning.h widgets/wxPanelWrapper.cpp \
@@ -587,7 +642,9 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-TimerRecordDialog.$(OBJEXT) \
 	audacity-TimeTrack.$(OBJEXT) audacity-Track.$(OBJEXT) \
 	audacity-TrackArtist.$(OBJEXT) audacity-TrackPanel.$(OBJEXT) \
-	audacity-TrackPanelAx.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
+	audacity-TrackPanelAx.$(OBJEXT) \
+	audacity-TrackPanelResizeHandle.$(OBJEXT) \
+	audacity-UIHandle.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
 	audacity-UserException.$(OBJEXT) audacity-ViewInfo.$(OBJEXT) \
 	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
 	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
@@ -726,9 +783,43 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	toolbars/audacity-ToolManager.$(OBJEXT) \
 	toolbars/audacity-ToolsToolBar.$(OBJEXT) \
 	toolbars/audacity-TranscriptionToolBar.$(OBJEXT) \
+	tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.$(OBJEXT) \
+	tracks/labeltrack/ui/audacity-LabelGlyphHandle.$(OBJEXT) \
+	tracks/labeltrack/ui/audacity-LabelTextHandle.$(OBJEXT) \
+	tracks/labeltrack/ui/audacity-LabelTrackControls.$(OBJEXT) \
+	tracks/labeltrack/ui/audacity-LabelTrackUI.$(OBJEXT) \
+	tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.$(OBJEXT) \
+	tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.$(OBJEXT) \
+	tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.$(OBJEXT) \
+	tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.$(OBJEXT) \
+	tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.$(OBJEXT) \
+	tracks/playabletrack/notetrack/ui/audacity-StretchHandle.$(OBJEXT) \
+	tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.$(OBJEXT) \
+	tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.$(OBJEXT) \
+	tracks/timetrack/ui/audacity-TimeTrackControls.$(OBJEXT) \
+	tracks/timetrack/ui/audacity-TimeTrackUI.$(OBJEXT) \
+	tracks/timetrack/ui/audacity-TimeTrackVRulerControls.$(OBJEXT) \
+	tracks/ui/audacity-BackgroundCell.$(OBJEXT) \
+	tracks/ui/audacity-ButtonHandle.$(OBJEXT) \
+	tracks/ui/audacity-CommonTrackPanelCell.$(OBJEXT) \
 	tracks/ui/audacity-EditCursorOverlay.$(OBJEXT) \
+	tracks/ui/audacity-EnvelopeHandle.$(OBJEXT) \
 	tracks/ui/audacity-PlayIndicatorOverlay.$(OBJEXT) \
 	tracks/ui/audacity-Scrubbing.$(OBJEXT) \
+	tracks/ui/audacity-SelectHandle.$(OBJEXT) \
+	tracks/ui/audacity-SliderHandle.$(OBJEXT) \
+	tracks/ui/audacity-TimeShiftHandle.$(OBJEXT) \
+	tracks/ui/audacity-TrackButtonHandles.$(OBJEXT) \
+	tracks/ui/audacity-TrackControls.$(OBJEXT) \
+	tracks/ui/audacity-TrackSelectHandle.$(OBJEXT) \
+	tracks/ui/audacity-TrackUI.$(OBJEXT) \
+	tracks/ui/audacity-TrackVRulerControls.$(OBJEXT) \
+	tracks/ui/audacity-ZoomHandle.$(OBJEXT) \
 	widgets/audacity-AButton.$(OBJEXT) \
 	widgets/audacity-ASlider.$(OBJEXT) \
 	widgets/audacity-AttachableScrollBar.$(OBJEXT) \
@@ -749,6 +840,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	widgets/audacity-numformatter.$(OBJEXT) \
 	widgets/audacity-Overlay.$(OBJEXT) \
 	widgets/audacity-OverlayPanel.$(OBJEXT) \
+	widgets/audacity-PopupMenuTable.$(OBJEXT) \
 	widgets/audacity-ProgressDialog.$(OBJEXT) \
 	widgets/audacity-Ruler.$(OBJEXT) \
 	widgets/audacity-valnum.$(OBJEXT) \
@@ -1206,22 +1298,22 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	FFmpeg.h FFT.cpp FFT.h FileException.cpp FileException.h \
 	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
 	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h ImageManipulation.cpp \
-	ImageManipulation.h InconsistencyException.cpp \
-	InconsistencyException.h InterpolateAudio.cpp \
-	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
-	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
-	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
-	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
-	Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h Mix.cpp Mix.h \
-	MixerBoard.cpp MixerBoard.h ModuleManager.cpp ModuleManager.h \
-	NumberScale.h PitchName.cpp PitchName.h \
+	HistoryWindow.cpp HistoryWindow.h HitTestResult.h \
+	ImageManipulation.cpp ImageManipulation.h \
+	InconsistencyException.cpp InconsistencyException.h \
+	InterpolateAudio.cpp InterpolateAudio.h LabelDialog.cpp \
+	LabelDialog.h LabelTrack.cpp LabelTrack.h LangChoice.cpp \
+	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
+	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
+	MacroMagic.h Matrix.cpp Matrix.h MemoryX.h Menus.cpp Menus.h \
+	Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h NumberScale.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
-	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
-	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
-	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
+	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h RefreshCode.h \
+	Resample.cpp Resample.h RevisionIdent.h RingBuffer.cpp \
+	RingBuffer.h Screenshot.cpp Screenshot.h SelectedRegion.cpp \
 	SelectedRegion.h SelectionState.cpp SelectionState.h \
 	Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
 	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
@@ -1233,10 +1325,12 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
 	TrackPanelCell.h TrackPanelCellIterator.h TrackPanelListener.h \
-	TranslatableStringArray.h UndoManager.cpp UndoManager.h \
-	UserException.cpp UserException.h ViewInfo.cpp ViewInfo.h \
-	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
-	WaveTrack.h WaveTrackLocation.h WrappedType.cpp WrappedType.h \
+	TrackPanelMouseEvent.h TrackPanelResizeHandle.cpp \
+	TrackPanelResizeHandle.h TranslatableStringArray.h UIHandle.h \
+	UIHandle.cpp UndoManager.cpp UndoManager.h UserException.cpp \
+	UserException.h ViewInfo.cpp ViewInfo.h VoiceKey.cpp \
+	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
+	WaveTrackLocation.h WrappedType.cpp WrappedType.h \
 	wxFileNameWrapper.h commands/AppCommandEvent.cpp \
 	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
 	commands/BatchEvalCommand.h commands/Command.cpp \
@@ -1369,10 +1463,62 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	toolbars/ToolsToolBar.cpp toolbars/ToolsToolBar.h \
 	toolbars/TranscriptionToolBar.cpp \
 	toolbars/TranscriptionToolBar.h \
+	tracks/labeltrack/ui/LabelDefaultClickHandle.cpp \
+	tracks/labeltrack/ui/LabelDefaultClickHandle.h \
+	tracks/labeltrack/ui/LabelGlyphHandle.cpp \
+	tracks/labeltrack/ui/LabelGlyphHandle.h \
+	tracks/labeltrack/ui/LabelTextHandle.cpp \
+	tracks/labeltrack/ui/LabelTextHandle.h \
+	tracks/labeltrack/ui/LabelTrackControls.cpp \
+	tracks/labeltrack/ui/LabelTrackControls.h \
+	tracks/labeltrack/ui/LabelTrackUI.cpp \
+	tracks/labeltrack/ui/LabelTrackVRulerControls.cpp \
+	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/StretchHandle.cpp \
+	tracks/playabletrack/notetrack/ui/StretchHandle.h \
+	tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp \
+	tracks/playabletrack/ui/PlayableTrackButtonHandles.h \
+	tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/CutlineHandle.h \
+	tracks/playabletrack/wavetrack/ui/SampleHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/SampleHandle.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackControls.cpp \
+	tracks/timetrack/ui/TimeTrackControls.h \
+	tracks/timetrack/ui/TimeTrackUI.cpp \
+	tracks/timetrack/ui/TimeTrackVRulerControls.cpp \
+	tracks/timetrack/ui/TimeTrackVRulerControls.h \
+	tracks/ui/BackgroundCell.cpp tracks/ui/BackgroundCell.h \
+	tracks/ui/ButtonHandle.h tracks/ui/ButtonHandle.cpp \
+	tracks/ui/CommonTrackPanelCell.cpp \
+	tracks/ui/CommonTrackPanelCell.h \
 	tracks/ui/EditCursorOverlay.cpp tracks/ui/EditCursorOverlay.h \
+	tracks/ui/EnvelopeHandle.cpp tracks/ui/EnvelopeHandle.h \
 	tracks/ui/PlayIndicatorOverlay.cpp \
 	tracks/ui/PlayIndicatorOverlay.h tracks/ui/Scrubbing.cpp \
-	tracks/ui/Scrubbing.h widgets/AButton.cpp widgets/AButton.h \
+	tracks/ui/Scrubbing.h tracks/ui/SelectHandle.cpp \
+	tracks/ui/SelectHandle.h tracks/ui/SliderHandle.cpp \
+	tracks/ui/SliderHandle.h tracks/ui/TimeShiftHandle.cpp \
+	tracks/ui/TimeShiftHandle.h tracks/ui/TrackButtonHandles.cpp \
+	tracks/ui/TrackButtonHandles.h tracks/ui/TrackControls.cpp \
+	tracks/ui/TrackControls.h tracks/ui/TrackSelectHandle.cpp \
+	tracks/ui/TrackSelectHandle.h tracks/ui/TrackUI.cpp \
+	tracks/ui/TrackVRulerControls.cpp \
+	tracks/ui/TrackVRulerControls.h tracks/ui/ZoomHandle.cpp \
+	tracks/ui/ZoomHandle.h widgets/AButton.cpp widgets/AButton.h \
 	widgets/ASlider.cpp widgets/ASlider.h \
 	widgets/AttachableScrollBar.cpp widgets/AttachableScrollBar.h \
 	widgets/BackedPanel.cpp widgets/BackedPanel.h \
@@ -1389,7 +1535,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	widgets/NumericTextCtrl.cpp widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp widgets/numformatter.h \
 	widgets/Overlay.cpp widgets/Overlay.h widgets/OverlayPanel.cpp \
-	widgets/OverlayPanel.h widgets/ProgressDialog.cpp \
+	widgets/OverlayPanel.h widgets/PopupMenuTable.cpp \
+	widgets/PopupMenuTable.h widgets/ProgressDialog.cpp \
 	widgets/ProgressDialog.h widgets/Ruler.cpp widgets/Ruler.h \
 	widgets/valnum.cpp widgets/valnum.h widgets/Warning.cpp \
 	widgets/Warning.h widgets/wxPanelWrapper.cpp \
@@ -1892,17 +2039,136 @@ toolbars/audacity-ToolsToolBar.$(OBJEXT): toolbars/$(am__dirstamp) \
 	toolbars/$(DEPDIR)/$(am__dirstamp)
 toolbars/audacity-TranscriptionToolBar.$(OBJEXT):  \
 	toolbars/$(am__dirstamp) toolbars/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/$(am__dirstamp):
+	@$(MKDIR_P) tracks/labeltrack/ui
+	@: > tracks/labeltrack/ui/$(am__dirstamp)
+tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tracks/labeltrack/ui/$(DEPDIR)
+	@: > tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.$(OBJEXT):  \
+	tracks/labeltrack/ui/$(am__dirstamp) \
+	tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/audacity-LabelGlyphHandle.$(OBJEXT):  \
+	tracks/labeltrack/ui/$(am__dirstamp) \
+	tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/audacity-LabelTextHandle.$(OBJEXT):  \
+	tracks/labeltrack/ui/$(am__dirstamp) \
+	tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/audacity-LabelTrackControls.$(OBJEXT):  \
+	tracks/labeltrack/ui/$(am__dirstamp) \
+	tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/audacity-LabelTrackUI.$(OBJEXT):  \
+	tracks/labeltrack/ui/$(am__dirstamp) \
+	tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.$(OBJEXT):  \
+	tracks/labeltrack/ui/$(am__dirstamp) \
+	tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/$(am__dirstamp):
+	@$(MKDIR_P) tracks/playabletrack/notetrack/ui
+	@: > tracks/playabletrack/notetrack/ui/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tracks/playabletrack/notetrack/ui/$(DEPDIR)
+	@: > tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.$(OBJEXT):  \
+	tracks/playabletrack/notetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.$(OBJEXT):  \
+	tracks/playabletrack/notetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.$(OBJEXT):  \
+	tracks/playabletrack/notetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.$(OBJEXT):  \
+	tracks/playabletrack/notetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/notetrack/ui/audacity-StretchHandle.$(OBJEXT):  \
+	tracks/playabletrack/notetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/ui/$(am__dirstamp):
+	@$(MKDIR_P) tracks/playabletrack/ui
+	@: > tracks/playabletrack/ui/$(am__dirstamp)
+tracks/playabletrack/ui/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tracks/playabletrack/ui/$(DEPDIR)
+	@: > tracks/playabletrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.$(OBJEXT):  \
+	tracks/playabletrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/$(am__dirstamp):
+	@$(MKDIR_P) tracks/playabletrack/wavetrack/ui
+	@: > tracks/playabletrack/wavetrack/ui/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tracks/playabletrack/wavetrack/ui/$(DEPDIR)
+	@: > tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.$(OBJEXT):  \
+	tracks/playabletrack/wavetrack/ui/$(am__dirstamp) \
+	tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/timetrack/ui/$(am__dirstamp):
+	@$(MKDIR_P) tracks/timetrack/ui
+	@: > tracks/timetrack/ui/$(am__dirstamp)
+tracks/timetrack/ui/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) tracks/timetrack/ui/$(DEPDIR)
+	@: > tracks/timetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/timetrack/ui/audacity-TimeTrackControls.$(OBJEXT):  \
+	tracks/timetrack/ui/$(am__dirstamp) \
+	tracks/timetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/timetrack/ui/audacity-TimeTrackUI.$(OBJEXT):  \
+	tracks/timetrack/ui/$(am__dirstamp) \
+	tracks/timetrack/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/timetrack/ui/audacity-TimeTrackVRulerControls.$(OBJEXT):  \
+	tracks/timetrack/ui/$(am__dirstamp) \
+	tracks/timetrack/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/$(am__dirstamp):
 	@$(MKDIR_P) tracks/ui
 	@: > tracks/ui/$(am__dirstamp)
 tracks/ui/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) tracks/ui/$(DEPDIR)
 	@: > tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-BackgroundCell.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-ButtonHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-CommonTrackPanelCell.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-EditCursorOverlay.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-EnvelopeHandle.$(OBJEXT):  \
 	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-PlayIndicatorOverlay.$(OBJEXT):  \
 	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
 tracks/ui/audacity-Scrubbing.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-SelectHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-SliderHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-TimeShiftHandle.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-TrackButtonHandles.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-TrackControls.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-TrackSelectHandle.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-TrackUI.$(OBJEXT): tracks/ui/$(am__dirstamp) \
+	tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-TrackVRulerControls.$(OBJEXT):  \
+	tracks/ui/$(am__dirstamp) tracks/ui/$(DEPDIR)/$(am__dirstamp)
+tracks/ui/audacity-ZoomHandle.$(OBJEXT): tracks/ui/$(am__dirstamp) \
 	tracks/ui/$(DEPDIR)/$(am__dirstamp)
 widgets/$(am__dirstamp):
 	@$(MKDIR_P) widgets
@@ -1949,6 +2215,8 @@ widgets/audacity-numformatter.$(OBJEXT): widgets/$(am__dirstamp) \
 widgets/audacity-Overlay.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-OverlayPanel.$(OBJEXT): widgets/$(am__dirstamp) \
+	widgets/$(DEPDIR)/$(am__dirstamp)
+widgets/audacity-PopupMenuTable.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-ProgressDialog.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
@@ -2063,6 +2331,11 @@ mostlyclean-compile:
 	-rm -f ondemand/*.$(OBJEXT)
 	-rm -f prefs/*.$(OBJEXT)
 	-rm -f toolbars/*.$(OBJEXT)
+	-rm -f tracks/labeltrack/ui/*.$(OBJEXT)
+	-rm -f tracks/playabletrack/notetrack/ui/*.$(OBJEXT)
+	-rm -f tracks/playabletrack/ui/*.$(OBJEXT)
+	-rm -f tracks/playabletrack/wavetrack/ui/*.$(OBJEXT)
+	-rm -f tracks/timetrack/ui/*.$(OBJEXT)
 	-rm -f tracks/ui/*.$(OBJEXT)
 	-rm -f widgets/*.$(OBJEXT)
 	-rm -f xml/*.$(OBJEXT)
@@ -2149,6 +2422,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackArtist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelAx.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelResizeHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UIHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UndoManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UserException.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ViewInfo.Po@am__quote@
@@ -2332,9 +2607,43 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ToolManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-ToolsToolBar.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@toolbars/$(DEPDIR)/audacity-TranscriptionToolBar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-EditCursorOverlay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-PlayIndicatorOverlay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-Scrubbing.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-SelectHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-SliderHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-TrackControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-TrackUI.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AButton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ASlider.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-AttachableScrollBar.Po@am__quote@
@@ -2354,6 +2663,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-NumericTextCtrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Overlay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-OverlayPanel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-PopupMenuTable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ProgressDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Ruler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Warning.Po@am__quote@
@@ -3711,6 +4021,34 @@ audacity-TrackPanelAx.obj: TrackPanelAx.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackPanelAx.cpp' object='audacity-TrackPanelAx.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackPanelAx.obj `if test -f 'TrackPanelAx.cpp'; then $(CYGPATH_W) 'TrackPanelAx.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackPanelAx.cpp'; fi`
+
+audacity-TrackPanelResizeHandle.o: TrackPanelResizeHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackPanelResizeHandle.o -MD -MP -MF $(DEPDIR)/audacity-TrackPanelResizeHandle.Tpo -c -o audacity-TrackPanelResizeHandle.o `test -f 'TrackPanelResizeHandle.cpp' || echo '$(srcdir)/'`TrackPanelResizeHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-TrackPanelResizeHandle.Tpo $(DEPDIR)/audacity-TrackPanelResizeHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackPanelResizeHandle.cpp' object='audacity-TrackPanelResizeHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackPanelResizeHandle.o `test -f 'TrackPanelResizeHandle.cpp' || echo '$(srcdir)/'`TrackPanelResizeHandle.cpp
+
+audacity-TrackPanelResizeHandle.obj: TrackPanelResizeHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-TrackPanelResizeHandle.obj -MD -MP -MF $(DEPDIR)/audacity-TrackPanelResizeHandle.Tpo -c -o audacity-TrackPanelResizeHandle.obj `if test -f 'TrackPanelResizeHandle.cpp'; then $(CYGPATH_W) 'TrackPanelResizeHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackPanelResizeHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-TrackPanelResizeHandle.Tpo $(DEPDIR)/audacity-TrackPanelResizeHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TrackPanelResizeHandle.cpp' object='audacity-TrackPanelResizeHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-TrackPanelResizeHandle.obj `if test -f 'TrackPanelResizeHandle.cpp'; then $(CYGPATH_W) 'TrackPanelResizeHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/TrackPanelResizeHandle.cpp'; fi`
+
+audacity-UIHandle.o: UIHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-UIHandle.o -MD -MP -MF $(DEPDIR)/audacity-UIHandle.Tpo -c -o audacity-UIHandle.o `test -f 'UIHandle.cpp' || echo '$(srcdir)/'`UIHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-UIHandle.Tpo $(DEPDIR)/audacity-UIHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='UIHandle.cpp' object='audacity-UIHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UIHandle.o `test -f 'UIHandle.cpp' || echo '$(srcdir)/'`UIHandle.cpp
+
+audacity-UIHandle.obj: UIHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-UIHandle.obj -MD -MP -MF $(DEPDIR)/audacity-UIHandle.Tpo -c -o audacity-UIHandle.obj `if test -f 'UIHandle.cpp'; then $(CYGPATH_W) 'UIHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/UIHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-UIHandle.Tpo $(DEPDIR)/audacity-UIHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='UIHandle.cpp' object='audacity-UIHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UIHandle.obj `if test -f 'UIHandle.cpp'; then $(CYGPATH_W) 'UIHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/UIHandle.cpp'; fi`
 
 audacity-UndoManager.o: UndoManager.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-UndoManager.o -MD -MP -MF $(DEPDIR)/audacity-UndoManager.Tpo -c -o audacity-UndoManager.o `test -f 'UndoManager.cpp' || echo '$(srcdir)/'`UndoManager.cpp
@@ -5700,6 +6038,342 @@ toolbars/audacity-TranscriptionToolBar.obj: toolbars/TranscriptionToolBar.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o toolbars/audacity-TranscriptionToolBar.obj `if test -f 'toolbars/TranscriptionToolBar.cpp'; then $(CYGPATH_W) 'toolbars/TranscriptionToolBar.cpp'; else $(CYGPATH_W) '$(srcdir)/toolbars/TranscriptionToolBar.cpp'; fi`
 
+tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.o: tracks/labeltrack/ui/LabelDefaultClickHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.o -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Tpo -c -o tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.o `test -f 'tracks/labeltrack/ui/LabelDefaultClickHandle.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelDefaultClickHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelDefaultClickHandle.cpp' object='tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.o `test -f 'tracks/labeltrack/ui/LabelDefaultClickHandle.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelDefaultClickHandle.cpp
+
+tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.obj: tracks/labeltrack/ui/LabelDefaultClickHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.obj -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Tpo -c -o tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.obj `if test -f 'tracks/labeltrack/ui/LabelDefaultClickHandle.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelDefaultClickHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelDefaultClickHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelDefaultClickHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelDefaultClickHandle.cpp' object='tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelDefaultClickHandle.obj `if test -f 'tracks/labeltrack/ui/LabelDefaultClickHandle.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelDefaultClickHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelDefaultClickHandle.cpp'; fi`
+
+tracks/labeltrack/ui/audacity-LabelGlyphHandle.o: tracks/labeltrack/ui/LabelGlyphHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelGlyphHandle.o -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Tpo -c -o tracks/labeltrack/ui/audacity-LabelGlyphHandle.o `test -f 'tracks/labeltrack/ui/LabelGlyphHandle.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelGlyphHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelGlyphHandle.cpp' object='tracks/labeltrack/ui/audacity-LabelGlyphHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelGlyphHandle.o `test -f 'tracks/labeltrack/ui/LabelGlyphHandle.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelGlyphHandle.cpp
+
+tracks/labeltrack/ui/audacity-LabelGlyphHandle.obj: tracks/labeltrack/ui/LabelGlyphHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelGlyphHandle.obj -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Tpo -c -o tracks/labeltrack/ui/audacity-LabelGlyphHandle.obj `if test -f 'tracks/labeltrack/ui/LabelGlyphHandle.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelGlyphHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelGlyphHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelGlyphHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelGlyphHandle.cpp' object='tracks/labeltrack/ui/audacity-LabelGlyphHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelGlyphHandle.obj `if test -f 'tracks/labeltrack/ui/LabelGlyphHandle.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelGlyphHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelGlyphHandle.cpp'; fi`
+
+tracks/labeltrack/ui/audacity-LabelTextHandle.o: tracks/labeltrack/ui/LabelTextHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTextHandle.o -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTextHandle.o `test -f 'tracks/labeltrack/ui/LabelTextHandle.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTextHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTextHandle.cpp' object='tracks/labeltrack/ui/audacity-LabelTextHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTextHandle.o `test -f 'tracks/labeltrack/ui/LabelTextHandle.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTextHandle.cpp
+
+tracks/labeltrack/ui/audacity-LabelTextHandle.obj: tracks/labeltrack/ui/LabelTextHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTextHandle.obj -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTextHandle.obj `if test -f 'tracks/labeltrack/ui/LabelTextHandle.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTextHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTextHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTextHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTextHandle.cpp' object='tracks/labeltrack/ui/audacity-LabelTextHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTextHandle.obj `if test -f 'tracks/labeltrack/ui/LabelTextHandle.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTextHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTextHandle.cpp'; fi`
+
+tracks/labeltrack/ui/audacity-LabelTrackControls.o: tracks/labeltrack/ui/LabelTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTrackControls.o -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTrackControls.o `test -f 'tracks/labeltrack/ui/LabelTrackControls.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTrackControls.cpp' object='tracks/labeltrack/ui/audacity-LabelTrackControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTrackControls.o `test -f 'tracks/labeltrack/ui/LabelTrackControls.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTrackControls.cpp
+
+tracks/labeltrack/ui/audacity-LabelTrackControls.obj: tracks/labeltrack/ui/LabelTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTrackControls.obj -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTrackControls.obj `if test -f 'tracks/labeltrack/ui/LabelTrackControls.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTrackControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTrackControls.cpp' object='tracks/labeltrack/ui/audacity-LabelTrackControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTrackControls.obj `if test -f 'tracks/labeltrack/ui/LabelTrackControls.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTrackControls.cpp'; fi`
+
+tracks/labeltrack/ui/audacity-LabelTrackUI.o: tracks/labeltrack/ui/LabelTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTrackUI.o -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTrackUI.o `test -f 'tracks/labeltrack/ui/LabelTrackUI.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTrackUI.cpp' object='tracks/labeltrack/ui/audacity-LabelTrackUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTrackUI.o `test -f 'tracks/labeltrack/ui/LabelTrackUI.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTrackUI.cpp
+
+tracks/labeltrack/ui/audacity-LabelTrackUI.obj: tracks/labeltrack/ui/LabelTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTrackUI.obj -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTrackUI.obj `if test -f 'tracks/labeltrack/ui/LabelTrackUI.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTrackUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTrackUI.cpp' object='tracks/labeltrack/ui/audacity-LabelTrackUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTrackUI.obj `if test -f 'tracks/labeltrack/ui/LabelTrackUI.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTrackUI.cpp'; fi`
+
+tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.o: tracks/labeltrack/ui/LabelTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.o -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.o `test -f 'tracks/labeltrack/ui/LabelTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTrackVRulerControls.cpp' object='tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.o `test -f 'tracks/labeltrack/ui/LabelTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/labeltrack/ui/LabelTrackVRulerControls.cpp
+
+tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.obj: tracks/labeltrack/ui/LabelTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.obj -MD -MP -MF tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Tpo -c -o tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.obj `if test -f 'tracks/labeltrack/ui/LabelTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTrackVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Tpo tracks/labeltrack/ui/$(DEPDIR)/audacity-LabelTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/labeltrack/ui/LabelTrackVRulerControls.cpp' object='tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/labeltrack/ui/audacity-LabelTrackVRulerControls.obj `if test -f 'tracks/labeltrack/ui/LabelTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/labeltrack/ui/LabelTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/labeltrack/ui/LabelTrackVRulerControls.cpp'; fi`
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.o: tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.o -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.obj: tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.obj -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackControls.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp'; fi`
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.o: tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.o -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.obj: tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.obj -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackSliderHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackSliderHandles.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp'; fi`
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.o: tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.o -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.obj: tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.obj -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackUI.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp'; fi`
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.o: tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.o -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.o `test -f 'tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp
+
+tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.obj: tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.obj -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-NoteTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp' object='tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-NoteTrackVRulerControls.obj `if test -f 'tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp'; fi`
+
+tracks/playabletrack/notetrack/ui/audacity-StretchHandle.o: tracks/playabletrack/notetrack/ui/StretchHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-StretchHandle.o -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-StretchHandle.o `test -f 'tracks/playabletrack/notetrack/ui/StretchHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/StretchHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/StretchHandle.cpp' object='tracks/playabletrack/notetrack/ui/audacity-StretchHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-StretchHandle.o `test -f 'tracks/playabletrack/notetrack/ui/StretchHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/notetrack/ui/StretchHandle.cpp
+
+tracks/playabletrack/notetrack/ui/audacity-StretchHandle.obj: tracks/playabletrack/notetrack/ui/StretchHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/notetrack/ui/audacity-StretchHandle.obj -MD -MP -MF tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Tpo -c -o tracks/playabletrack/notetrack/ui/audacity-StretchHandle.obj `if test -f 'tracks/playabletrack/notetrack/ui/StretchHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/StretchHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/StretchHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Tpo tracks/playabletrack/notetrack/ui/$(DEPDIR)/audacity-StretchHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/notetrack/ui/StretchHandle.cpp' object='tracks/playabletrack/notetrack/ui/audacity-StretchHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/notetrack/ui/audacity-StretchHandle.obj `if test -f 'tracks/playabletrack/notetrack/ui/StretchHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/notetrack/ui/StretchHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/notetrack/ui/StretchHandle.cpp'; fi`
+
+tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.o: tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.o -MD -MP -MF tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Tpo -c -o tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.o `test -f 'tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp' || echo '$(srcdir)/'`tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Tpo tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp' object='tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.o `test -f 'tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp' || echo '$(srcdir)/'`tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+
+tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.obj: tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.obj -MD -MP -MF tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Tpo -c -o tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.obj `if test -f 'tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Tpo tracks/playabletrack/ui/$(DEPDIR)/audacity-PlayableTrackButtonHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp' object='tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/ui/audacity-PlayableTrackButtonHandles.obj `if test -f 'tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.o: tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.obj: tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-CutlineHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-CutlineHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.o: tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SampleHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.o `test -f 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj: tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-SampleHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/SampleHandle.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-SampleHandle.obj `if test -f 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o: tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.obj: tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.o: tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.obj: tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackSliderHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackSliderHandles.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o: tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.obj: tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackVRulerControls.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp'; fi`
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.o: tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.o -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.o `test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp' || echo '$(srcdir)/'`tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp
+
+tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.obj: tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.obj -MD -MP -MF tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Tpo -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Tpo tracks/playabletrack/wavetrack/ui/$(DEPDIR)/audacity-WaveTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp' object='tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/playabletrack/wavetrack/ui/audacity-WaveTrackUI.obj `if test -f 'tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp'; then $(CYGPATH_W) 'tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp'; fi`
+
+tracks/timetrack/ui/audacity-TimeTrackControls.o: tracks/timetrack/ui/TimeTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/timetrack/ui/audacity-TimeTrackControls.o -MD -MP -MF tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Tpo -c -o tracks/timetrack/ui/audacity-TimeTrackControls.o `test -f 'tracks/timetrack/ui/TimeTrackControls.cpp' || echo '$(srcdir)/'`tracks/timetrack/ui/TimeTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Tpo tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/timetrack/ui/TimeTrackControls.cpp' object='tracks/timetrack/ui/audacity-TimeTrackControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/timetrack/ui/audacity-TimeTrackControls.o `test -f 'tracks/timetrack/ui/TimeTrackControls.cpp' || echo '$(srcdir)/'`tracks/timetrack/ui/TimeTrackControls.cpp
+
+tracks/timetrack/ui/audacity-TimeTrackControls.obj: tracks/timetrack/ui/TimeTrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/timetrack/ui/audacity-TimeTrackControls.obj -MD -MP -MF tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Tpo -c -o tracks/timetrack/ui/audacity-TimeTrackControls.obj `if test -f 'tracks/timetrack/ui/TimeTrackControls.cpp'; then $(CYGPATH_W) 'tracks/timetrack/ui/TimeTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/timetrack/ui/TimeTrackControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Tpo tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/timetrack/ui/TimeTrackControls.cpp' object='tracks/timetrack/ui/audacity-TimeTrackControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/timetrack/ui/audacity-TimeTrackControls.obj `if test -f 'tracks/timetrack/ui/TimeTrackControls.cpp'; then $(CYGPATH_W) 'tracks/timetrack/ui/TimeTrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/timetrack/ui/TimeTrackControls.cpp'; fi`
+
+tracks/timetrack/ui/audacity-TimeTrackUI.o: tracks/timetrack/ui/TimeTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/timetrack/ui/audacity-TimeTrackUI.o -MD -MP -MF tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Tpo -c -o tracks/timetrack/ui/audacity-TimeTrackUI.o `test -f 'tracks/timetrack/ui/TimeTrackUI.cpp' || echo '$(srcdir)/'`tracks/timetrack/ui/TimeTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Tpo tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/timetrack/ui/TimeTrackUI.cpp' object='tracks/timetrack/ui/audacity-TimeTrackUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/timetrack/ui/audacity-TimeTrackUI.o `test -f 'tracks/timetrack/ui/TimeTrackUI.cpp' || echo '$(srcdir)/'`tracks/timetrack/ui/TimeTrackUI.cpp
+
+tracks/timetrack/ui/audacity-TimeTrackUI.obj: tracks/timetrack/ui/TimeTrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/timetrack/ui/audacity-TimeTrackUI.obj -MD -MP -MF tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Tpo -c -o tracks/timetrack/ui/audacity-TimeTrackUI.obj `if test -f 'tracks/timetrack/ui/TimeTrackUI.cpp'; then $(CYGPATH_W) 'tracks/timetrack/ui/TimeTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/timetrack/ui/TimeTrackUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Tpo tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/timetrack/ui/TimeTrackUI.cpp' object='tracks/timetrack/ui/audacity-TimeTrackUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/timetrack/ui/audacity-TimeTrackUI.obj `if test -f 'tracks/timetrack/ui/TimeTrackUI.cpp'; then $(CYGPATH_W) 'tracks/timetrack/ui/TimeTrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/timetrack/ui/TimeTrackUI.cpp'; fi`
+
+tracks/timetrack/ui/audacity-TimeTrackVRulerControls.o: tracks/timetrack/ui/TimeTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/timetrack/ui/audacity-TimeTrackVRulerControls.o -MD -MP -MF tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Tpo -c -o tracks/timetrack/ui/audacity-TimeTrackVRulerControls.o `test -f 'tracks/timetrack/ui/TimeTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/timetrack/ui/TimeTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Tpo tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/timetrack/ui/TimeTrackVRulerControls.cpp' object='tracks/timetrack/ui/audacity-TimeTrackVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/timetrack/ui/audacity-TimeTrackVRulerControls.o `test -f 'tracks/timetrack/ui/TimeTrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/timetrack/ui/TimeTrackVRulerControls.cpp
+
+tracks/timetrack/ui/audacity-TimeTrackVRulerControls.obj: tracks/timetrack/ui/TimeTrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/timetrack/ui/audacity-TimeTrackVRulerControls.obj -MD -MP -MF tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Tpo -c -o tracks/timetrack/ui/audacity-TimeTrackVRulerControls.obj `if test -f 'tracks/timetrack/ui/TimeTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/timetrack/ui/TimeTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/timetrack/ui/TimeTrackVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Tpo tracks/timetrack/ui/$(DEPDIR)/audacity-TimeTrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/timetrack/ui/TimeTrackVRulerControls.cpp' object='tracks/timetrack/ui/audacity-TimeTrackVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/timetrack/ui/audacity-TimeTrackVRulerControls.obj `if test -f 'tracks/timetrack/ui/TimeTrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/timetrack/ui/TimeTrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/timetrack/ui/TimeTrackVRulerControls.cpp'; fi`
+
+tracks/ui/audacity-BackgroundCell.o: tracks/ui/BackgroundCell.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-BackgroundCell.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Tpo -c -o tracks/ui/audacity-BackgroundCell.o `test -f 'tracks/ui/BackgroundCell.cpp' || echo '$(srcdir)/'`tracks/ui/BackgroundCell.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Tpo tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/BackgroundCell.cpp' object='tracks/ui/audacity-BackgroundCell.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-BackgroundCell.o `test -f 'tracks/ui/BackgroundCell.cpp' || echo '$(srcdir)/'`tracks/ui/BackgroundCell.cpp
+
+tracks/ui/audacity-BackgroundCell.obj: tracks/ui/BackgroundCell.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-BackgroundCell.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Tpo -c -o tracks/ui/audacity-BackgroundCell.obj `if test -f 'tracks/ui/BackgroundCell.cpp'; then $(CYGPATH_W) 'tracks/ui/BackgroundCell.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/BackgroundCell.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Tpo tracks/ui/$(DEPDIR)/audacity-BackgroundCell.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/BackgroundCell.cpp' object='tracks/ui/audacity-BackgroundCell.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-BackgroundCell.obj `if test -f 'tracks/ui/BackgroundCell.cpp'; then $(CYGPATH_W) 'tracks/ui/BackgroundCell.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/BackgroundCell.cpp'; fi`
+
+tracks/ui/audacity-ButtonHandle.o: tracks/ui/ButtonHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ButtonHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Tpo -c -o tracks/ui/audacity-ButtonHandle.o `test -f 'tracks/ui/ButtonHandle.cpp' || echo '$(srcdir)/'`tracks/ui/ButtonHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Tpo tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ButtonHandle.cpp' object='tracks/ui/audacity-ButtonHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ButtonHandle.o `test -f 'tracks/ui/ButtonHandle.cpp' || echo '$(srcdir)/'`tracks/ui/ButtonHandle.cpp
+
+tracks/ui/audacity-ButtonHandle.obj: tracks/ui/ButtonHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ButtonHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Tpo -c -o tracks/ui/audacity-ButtonHandle.obj `if test -f 'tracks/ui/ButtonHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/ButtonHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ButtonHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Tpo tracks/ui/$(DEPDIR)/audacity-ButtonHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ButtonHandle.cpp' object='tracks/ui/audacity-ButtonHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ButtonHandle.obj `if test -f 'tracks/ui/ButtonHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/ButtonHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ButtonHandle.cpp'; fi`
+
+tracks/ui/audacity-CommonTrackPanelCell.o: tracks/ui/CommonTrackPanelCell.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-CommonTrackPanelCell.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Tpo -c -o tracks/ui/audacity-CommonTrackPanelCell.o `test -f 'tracks/ui/CommonTrackPanelCell.cpp' || echo '$(srcdir)/'`tracks/ui/CommonTrackPanelCell.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Tpo tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/CommonTrackPanelCell.cpp' object='tracks/ui/audacity-CommonTrackPanelCell.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-CommonTrackPanelCell.o `test -f 'tracks/ui/CommonTrackPanelCell.cpp' || echo '$(srcdir)/'`tracks/ui/CommonTrackPanelCell.cpp
+
+tracks/ui/audacity-CommonTrackPanelCell.obj: tracks/ui/CommonTrackPanelCell.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-CommonTrackPanelCell.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Tpo -c -o tracks/ui/audacity-CommonTrackPanelCell.obj `if test -f 'tracks/ui/CommonTrackPanelCell.cpp'; then $(CYGPATH_W) 'tracks/ui/CommonTrackPanelCell.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/CommonTrackPanelCell.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Tpo tracks/ui/$(DEPDIR)/audacity-CommonTrackPanelCell.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/CommonTrackPanelCell.cpp' object='tracks/ui/audacity-CommonTrackPanelCell.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-CommonTrackPanelCell.obj `if test -f 'tracks/ui/CommonTrackPanelCell.cpp'; then $(CYGPATH_W) 'tracks/ui/CommonTrackPanelCell.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/CommonTrackPanelCell.cpp'; fi`
+
 tracks/ui/audacity-EditCursorOverlay.o: tracks/ui/EditCursorOverlay.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-EditCursorOverlay.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-EditCursorOverlay.Tpo -c -o tracks/ui/audacity-EditCursorOverlay.o `test -f 'tracks/ui/EditCursorOverlay.cpp' || echo '$(srcdir)/'`tracks/ui/EditCursorOverlay.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-EditCursorOverlay.Tpo tracks/ui/$(DEPDIR)/audacity-EditCursorOverlay.Po
@@ -5713,6 +6387,20 @@ tracks/ui/audacity-EditCursorOverlay.obj: tracks/ui/EditCursorOverlay.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/EditCursorOverlay.cpp' object='tracks/ui/audacity-EditCursorOverlay.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-EditCursorOverlay.obj `if test -f 'tracks/ui/EditCursorOverlay.cpp'; then $(CYGPATH_W) 'tracks/ui/EditCursorOverlay.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/EditCursorOverlay.cpp'; fi`
+
+tracks/ui/audacity-EnvelopeHandle.o: tracks/ui/EnvelopeHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-EnvelopeHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Tpo -c -o tracks/ui/audacity-EnvelopeHandle.o `test -f 'tracks/ui/EnvelopeHandle.cpp' || echo '$(srcdir)/'`tracks/ui/EnvelopeHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Tpo tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/EnvelopeHandle.cpp' object='tracks/ui/audacity-EnvelopeHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-EnvelopeHandle.o `test -f 'tracks/ui/EnvelopeHandle.cpp' || echo '$(srcdir)/'`tracks/ui/EnvelopeHandle.cpp
+
+tracks/ui/audacity-EnvelopeHandle.obj: tracks/ui/EnvelopeHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-EnvelopeHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Tpo -c -o tracks/ui/audacity-EnvelopeHandle.obj `if test -f 'tracks/ui/EnvelopeHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/EnvelopeHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/EnvelopeHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Tpo tracks/ui/$(DEPDIR)/audacity-EnvelopeHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/EnvelopeHandle.cpp' object='tracks/ui/audacity-EnvelopeHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-EnvelopeHandle.obj `if test -f 'tracks/ui/EnvelopeHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/EnvelopeHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/EnvelopeHandle.cpp'; fi`
 
 tracks/ui/audacity-PlayIndicatorOverlay.o: tracks/ui/PlayIndicatorOverlay.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-PlayIndicatorOverlay.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-PlayIndicatorOverlay.Tpo -c -o tracks/ui/audacity-PlayIndicatorOverlay.o `test -f 'tracks/ui/PlayIndicatorOverlay.cpp' || echo '$(srcdir)/'`tracks/ui/PlayIndicatorOverlay.cpp
@@ -5741,6 +6429,132 @@ tracks/ui/audacity-Scrubbing.obj: tracks/ui/Scrubbing.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/Scrubbing.cpp' object='tracks/ui/audacity-Scrubbing.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-Scrubbing.obj `if test -f 'tracks/ui/Scrubbing.cpp'; then $(CYGPATH_W) 'tracks/ui/Scrubbing.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/Scrubbing.cpp'; fi`
+
+tracks/ui/audacity-SelectHandle.o: tracks/ui/SelectHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-SelectHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-SelectHandle.Tpo -c -o tracks/ui/audacity-SelectHandle.o `test -f 'tracks/ui/SelectHandle.cpp' || echo '$(srcdir)/'`tracks/ui/SelectHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-SelectHandle.Tpo tracks/ui/$(DEPDIR)/audacity-SelectHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/SelectHandle.cpp' object='tracks/ui/audacity-SelectHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-SelectHandle.o `test -f 'tracks/ui/SelectHandle.cpp' || echo '$(srcdir)/'`tracks/ui/SelectHandle.cpp
+
+tracks/ui/audacity-SelectHandle.obj: tracks/ui/SelectHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-SelectHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-SelectHandle.Tpo -c -o tracks/ui/audacity-SelectHandle.obj `if test -f 'tracks/ui/SelectHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/SelectHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/SelectHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-SelectHandle.Tpo tracks/ui/$(DEPDIR)/audacity-SelectHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/SelectHandle.cpp' object='tracks/ui/audacity-SelectHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-SelectHandle.obj `if test -f 'tracks/ui/SelectHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/SelectHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/SelectHandle.cpp'; fi`
+
+tracks/ui/audacity-SliderHandle.o: tracks/ui/SliderHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-SliderHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-SliderHandle.Tpo -c -o tracks/ui/audacity-SliderHandle.o `test -f 'tracks/ui/SliderHandle.cpp' || echo '$(srcdir)/'`tracks/ui/SliderHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-SliderHandle.Tpo tracks/ui/$(DEPDIR)/audacity-SliderHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/SliderHandle.cpp' object='tracks/ui/audacity-SliderHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-SliderHandle.o `test -f 'tracks/ui/SliderHandle.cpp' || echo '$(srcdir)/'`tracks/ui/SliderHandle.cpp
+
+tracks/ui/audacity-SliderHandle.obj: tracks/ui/SliderHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-SliderHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-SliderHandle.Tpo -c -o tracks/ui/audacity-SliderHandle.obj `if test -f 'tracks/ui/SliderHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/SliderHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/SliderHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-SliderHandle.Tpo tracks/ui/$(DEPDIR)/audacity-SliderHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/SliderHandle.cpp' object='tracks/ui/audacity-SliderHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-SliderHandle.obj `if test -f 'tracks/ui/SliderHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/SliderHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/SliderHandle.cpp'; fi`
+
+tracks/ui/audacity-TimeShiftHandle.o: tracks/ui/TimeShiftHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TimeShiftHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Tpo -c -o tracks/ui/audacity-TimeShiftHandle.o `test -f 'tracks/ui/TimeShiftHandle.cpp' || echo '$(srcdir)/'`tracks/ui/TimeShiftHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Tpo tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TimeShiftHandle.cpp' object='tracks/ui/audacity-TimeShiftHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TimeShiftHandle.o `test -f 'tracks/ui/TimeShiftHandle.cpp' || echo '$(srcdir)/'`tracks/ui/TimeShiftHandle.cpp
+
+tracks/ui/audacity-TimeShiftHandle.obj: tracks/ui/TimeShiftHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TimeShiftHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Tpo -c -o tracks/ui/audacity-TimeShiftHandle.obj `if test -f 'tracks/ui/TimeShiftHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/TimeShiftHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TimeShiftHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Tpo tracks/ui/$(DEPDIR)/audacity-TimeShiftHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TimeShiftHandle.cpp' object='tracks/ui/audacity-TimeShiftHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TimeShiftHandle.obj `if test -f 'tracks/ui/TimeShiftHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/TimeShiftHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TimeShiftHandle.cpp'; fi`
+
+tracks/ui/audacity-TrackButtonHandles.o: tracks/ui/TrackButtonHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackButtonHandles.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Tpo -c -o tracks/ui/audacity-TrackButtonHandles.o `test -f 'tracks/ui/TrackButtonHandles.cpp' || echo '$(srcdir)/'`tracks/ui/TrackButtonHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Tpo tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackButtonHandles.cpp' object='tracks/ui/audacity-TrackButtonHandles.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackButtonHandles.o `test -f 'tracks/ui/TrackButtonHandles.cpp' || echo '$(srcdir)/'`tracks/ui/TrackButtonHandles.cpp
+
+tracks/ui/audacity-TrackButtonHandles.obj: tracks/ui/TrackButtonHandles.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackButtonHandles.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Tpo -c -o tracks/ui/audacity-TrackButtonHandles.obj `if test -f 'tracks/ui/TrackButtonHandles.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackButtonHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackButtonHandles.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Tpo tracks/ui/$(DEPDIR)/audacity-TrackButtonHandles.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackButtonHandles.cpp' object='tracks/ui/audacity-TrackButtonHandles.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackButtonHandles.obj `if test -f 'tracks/ui/TrackButtonHandles.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackButtonHandles.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackButtonHandles.cpp'; fi`
+
+tracks/ui/audacity-TrackControls.o: tracks/ui/TrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackControls.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackControls.Tpo -c -o tracks/ui/audacity-TrackControls.o `test -f 'tracks/ui/TrackControls.cpp' || echo '$(srcdir)/'`tracks/ui/TrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackControls.Tpo tracks/ui/$(DEPDIR)/audacity-TrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackControls.cpp' object='tracks/ui/audacity-TrackControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackControls.o `test -f 'tracks/ui/TrackControls.cpp' || echo '$(srcdir)/'`tracks/ui/TrackControls.cpp
+
+tracks/ui/audacity-TrackControls.obj: tracks/ui/TrackControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackControls.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackControls.Tpo -c -o tracks/ui/audacity-TrackControls.obj `if test -f 'tracks/ui/TrackControls.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackControls.Tpo tracks/ui/$(DEPDIR)/audacity-TrackControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackControls.cpp' object='tracks/ui/audacity-TrackControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackControls.obj `if test -f 'tracks/ui/TrackControls.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackControls.cpp'; fi`
+
+tracks/ui/audacity-TrackSelectHandle.o: tracks/ui/TrackSelectHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackSelectHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Tpo -c -o tracks/ui/audacity-TrackSelectHandle.o `test -f 'tracks/ui/TrackSelectHandle.cpp' || echo '$(srcdir)/'`tracks/ui/TrackSelectHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Tpo tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackSelectHandle.cpp' object='tracks/ui/audacity-TrackSelectHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackSelectHandle.o `test -f 'tracks/ui/TrackSelectHandle.cpp' || echo '$(srcdir)/'`tracks/ui/TrackSelectHandle.cpp
+
+tracks/ui/audacity-TrackSelectHandle.obj: tracks/ui/TrackSelectHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackSelectHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Tpo -c -o tracks/ui/audacity-TrackSelectHandle.obj `if test -f 'tracks/ui/TrackSelectHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackSelectHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackSelectHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Tpo tracks/ui/$(DEPDIR)/audacity-TrackSelectHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackSelectHandle.cpp' object='tracks/ui/audacity-TrackSelectHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackSelectHandle.obj `if test -f 'tracks/ui/TrackSelectHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackSelectHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackSelectHandle.cpp'; fi`
+
+tracks/ui/audacity-TrackUI.o: tracks/ui/TrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackUI.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackUI.Tpo -c -o tracks/ui/audacity-TrackUI.o `test -f 'tracks/ui/TrackUI.cpp' || echo '$(srcdir)/'`tracks/ui/TrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackUI.Tpo tracks/ui/$(DEPDIR)/audacity-TrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackUI.cpp' object='tracks/ui/audacity-TrackUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackUI.o `test -f 'tracks/ui/TrackUI.cpp' || echo '$(srcdir)/'`tracks/ui/TrackUI.cpp
+
+tracks/ui/audacity-TrackUI.obj: tracks/ui/TrackUI.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackUI.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackUI.Tpo -c -o tracks/ui/audacity-TrackUI.obj `if test -f 'tracks/ui/TrackUI.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackUI.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackUI.Tpo tracks/ui/$(DEPDIR)/audacity-TrackUI.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackUI.cpp' object='tracks/ui/audacity-TrackUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackUI.obj `if test -f 'tracks/ui/TrackUI.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackUI.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackUI.cpp'; fi`
+
+tracks/ui/audacity-TrackVRulerControls.o: tracks/ui/TrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackVRulerControls.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Tpo -c -o tracks/ui/audacity-TrackVRulerControls.o `test -f 'tracks/ui/TrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/ui/TrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Tpo tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackVRulerControls.cpp' object='tracks/ui/audacity-TrackVRulerControls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackVRulerControls.o `test -f 'tracks/ui/TrackVRulerControls.cpp' || echo '$(srcdir)/'`tracks/ui/TrackVRulerControls.cpp
+
+tracks/ui/audacity-TrackVRulerControls.obj: tracks/ui/TrackVRulerControls.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-TrackVRulerControls.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Tpo -c -o tracks/ui/audacity-TrackVRulerControls.obj `if test -f 'tracks/ui/TrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackVRulerControls.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Tpo tracks/ui/$(DEPDIR)/audacity-TrackVRulerControls.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/TrackVRulerControls.cpp' object='tracks/ui/audacity-TrackVRulerControls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-TrackVRulerControls.obj `if test -f 'tracks/ui/TrackVRulerControls.cpp'; then $(CYGPATH_W) 'tracks/ui/TrackVRulerControls.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/TrackVRulerControls.cpp'; fi`
+
+tracks/ui/audacity-ZoomHandle.o: tracks/ui/ZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ZoomHandle.o -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Tpo -c -o tracks/ui/audacity-ZoomHandle.o `test -f 'tracks/ui/ZoomHandle.cpp' || echo '$(srcdir)/'`tracks/ui/ZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Tpo tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ZoomHandle.cpp' object='tracks/ui/audacity-ZoomHandle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ZoomHandle.o `test -f 'tracks/ui/ZoomHandle.cpp' || echo '$(srcdir)/'`tracks/ui/ZoomHandle.cpp
+
+tracks/ui/audacity-ZoomHandle.obj: tracks/ui/ZoomHandle.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT tracks/ui/audacity-ZoomHandle.obj -MD -MP -MF tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Tpo -c -o tracks/ui/audacity-ZoomHandle.obj `if test -f 'tracks/ui/ZoomHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/ZoomHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ZoomHandle.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Tpo tracks/ui/$(DEPDIR)/audacity-ZoomHandle.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tracks/ui/ZoomHandle.cpp' object='tracks/ui/audacity-ZoomHandle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o tracks/ui/audacity-ZoomHandle.obj `if test -f 'tracks/ui/ZoomHandle.cpp'; then $(CYGPATH_W) 'tracks/ui/ZoomHandle.cpp'; else $(CYGPATH_W) '$(srcdir)/tracks/ui/ZoomHandle.cpp'; fi`
 
 widgets/audacity-AButton.o: widgets/AButton.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-AButton.o -MD -MP -MF widgets/$(DEPDIR)/audacity-AButton.Tpo -c -o widgets/audacity-AButton.o `test -f 'widgets/AButton.cpp' || echo '$(srcdir)/'`widgets/AButton.cpp
@@ -6021,6 +6835,20 @@ widgets/audacity-OverlayPanel.obj: widgets/OverlayPanel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/OverlayPanel.cpp' object='widgets/audacity-OverlayPanel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-OverlayPanel.obj `if test -f 'widgets/OverlayPanel.cpp'; then $(CYGPATH_W) 'widgets/OverlayPanel.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/OverlayPanel.cpp'; fi`
+
+widgets/audacity-PopupMenuTable.o: widgets/PopupMenuTable.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-PopupMenuTable.o -MD -MP -MF widgets/$(DEPDIR)/audacity-PopupMenuTable.Tpo -c -o widgets/audacity-PopupMenuTable.o `test -f 'widgets/PopupMenuTable.cpp' || echo '$(srcdir)/'`widgets/PopupMenuTable.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-PopupMenuTable.Tpo widgets/$(DEPDIR)/audacity-PopupMenuTable.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/PopupMenuTable.cpp' object='widgets/audacity-PopupMenuTable.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-PopupMenuTable.o `test -f 'widgets/PopupMenuTable.cpp' || echo '$(srcdir)/'`widgets/PopupMenuTable.cpp
+
+widgets/audacity-PopupMenuTable.obj: widgets/PopupMenuTable.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-PopupMenuTable.obj -MD -MP -MF widgets/$(DEPDIR)/audacity-PopupMenuTable.Tpo -c -o widgets/audacity-PopupMenuTable.obj `if test -f 'widgets/PopupMenuTable.cpp'; then $(CYGPATH_W) 'widgets/PopupMenuTable.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/PopupMenuTable.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-PopupMenuTable.Tpo widgets/$(DEPDIR)/audacity-PopupMenuTable.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/PopupMenuTable.cpp' object='widgets/audacity-PopupMenuTable.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-PopupMenuTable.obj `if test -f 'widgets/PopupMenuTable.cpp'; then $(CYGPATH_W) 'widgets/PopupMenuTable.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/PopupMenuTable.cpp'; fi`
 
 widgets/audacity-ProgressDialog.o: widgets/ProgressDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-ProgressDialog.o -MD -MP -MF widgets/$(DEPDIR)/audacity-ProgressDialog.Tpo -c -o widgets/audacity-ProgressDialog.o `test -f 'widgets/ProgressDialog.cpp' || echo '$(srcdir)/'`widgets/ProgressDialog.cpp
@@ -6566,6 +7394,16 @@ distclean-generic:
 	-rm -f prefs/$(am__dirstamp)
 	-rm -f toolbars/$(DEPDIR)/$(am__dirstamp)
 	-rm -f toolbars/$(am__dirstamp)
+	-rm -f tracks/labeltrack/ui/$(DEPDIR)/$(am__dirstamp)
+	-rm -f tracks/labeltrack/ui/$(am__dirstamp)
+	-rm -f tracks/playabletrack/notetrack/ui/$(DEPDIR)/$(am__dirstamp)
+	-rm -f tracks/playabletrack/notetrack/ui/$(am__dirstamp)
+	-rm -f tracks/playabletrack/ui/$(DEPDIR)/$(am__dirstamp)
+	-rm -f tracks/playabletrack/ui/$(am__dirstamp)
+	-rm -f tracks/playabletrack/wavetrack/ui/$(DEPDIR)/$(am__dirstamp)
+	-rm -f tracks/playabletrack/wavetrack/ui/$(am__dirstamp)
+	-rm -f tracks/timetrack/ui/$(DEPDIR)/$(am__dirstamp)
+	-rm -f tracks/timetrack/ui/$(am__dirstamp)
 	-rm -f tracks/ui/$(DEPDIR)/$(am__dirstamp)
 	-rm -f tracks/ui/$(am__dirstamp)
 	-rm -f widgets/$(DEPDIR)/$(am__dirstamp)
@@ -6582,7 +7420,7 @@ clean-am: clean-binPROGRAMS clean-checkLTLIBRARIES clean-generic \
 	clean-libtool mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/labeltrack/ui/$(DEPDIR) tracks/playabletrack/notetrack/ui/$(DEPDIR) tracks/playabletrack/ui/$(DEPDIR) tracks/playabletrack/wavetrack/ui/$(DEPDIR) tracks/timetrack/ui/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -6628,7 +7466,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) blockfile/$(DEPDIR) commands/$(DEPDIR) effects/$(DEPDIR) effects/VST/$(DEPDIR) effects/audiounits/$(DEPDIR) effects/ladspa/$(DEPDIR) effects/lv2/$(DEPDIR) effects/nyquist/$(DEPDIR) effects/vamp/$(DEPDIR) export/$(DEPDIR) import/$(DEPDIR) ondemand/$(DEPDIR) prefs/$(DEPDIR) toolbars/$(DEPDIR) tracks/labeltrack/ui/$(DEPDIR) tracks/playabletrack/notetrack/ui/$(DEPDIR) tracks/playabletrack/ui/$(DEPDIR) tracks/playabletrack/wavetrack/ui/$(DEPDIR) tracks/timetrack/ui/$(DEPDIR) tracks/ui/$(DEPDIR) widgets/$(DEPDIR) xml/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

@@ -104,6 +104,9 @@ simplifies construction of menu items.
 #include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
+
+#include "tracks/ui/SelectHandle.h"
+
 #include "widgets/LinkingHtmlWindow.h"
 
 #include "Experimental.h"
@@ -1886,9 +1889,6 @@ void AudacityProject::RebuildMenuBar()
 
 void AudacityProject::RebuildOtherMenus()
 {
-   if (mTrackPanel) {
-      mTrackPanel->BuildMenus();
-   }
 }
 
 CommandFlag AudacityProject::GetFocusedFrame()
@@ -3358,6 +3358,62 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
    OnCursorLeft( true, true, bKeyUp );
 }
 
+#include "tracks/ui/TimeShiftHandle.h"
+
+// This function returns the amount moved.  Possibly 0.0.
+double AudacityProject::OnClipMove
+   ( ViewInfo &viewInfo, Track *track,
+     TrackList &trackList, bool syncLocked, bool right )
+{
+   // just dealing with clips in wave tracks for the moment. Note tracks??
+   if (track && track->GetKind() == Track::Wave) {
+      ClipMoveState state;
+
+      auto wt = static_cast<WaveTrack*>(track);
+      auto t0 = viewInfo.selectedRegion.t0();
+
+      state.capturedClip = wt->GetClipAtTime( t0 );
+      if (state.capturedClip == nullptr)
+         return 0.0;
+
+      state.capturedClipIsSelection =
+         track->GetSelected() && !viewInfo.selectedRegion.isPoint();
+      state.trackExclusions.clear();
+
+      TimeShiftHandle::CreateListOfCapturedClips
+         ( state, viewInfo, *track, trackList, syncLocked, t0 );
+
+      auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
+      auto desiredSlideAmount = desiredT0 - t0;
+
+      // set it to a sample point, and minimum of 1 sample point
+      if (!right)
+         desiredSlideAmount *= -1;
+      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
+      nSamples = std::max(nSamples, 1.0);
+      desiredSlideAmount = nSamples / wt->GetRate();
+      if (!right)
+         desiredSlideAmount *= -1;
+
+      state.hSlideAmount = desiredSlideAmount;
+      TimeShiftHandle::DoSlideHorizontal( state, trackList, *track );
+
+      // update t0 and t1. There is the possibility that the updated
+      // t0 may no longer be within the clip due to rounding errors,
+      // so t0 is adjusted so that it is.
+      double newT0 = t0 + state.hSlideAmount;
+      if (newT0 < state.capturedClip->GetStartTime())
+         newT0 = state.capturedClip->GetStartTime();
+      if (newT0 > state.capturedClip->GetEndTime())
+         newT0 = state.capturedClip->GetEndTime();
+      double diff = viewInfo.selectedRegion.duration();
+      viewInfo.selectedRegion.setTimes(newT0, newT0 + diff);
+
+      return state.hSlideAmount;
+   }
+   return 0.0;
+}
+
 void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 {
    if (keyUp) {
@@ -3367,7 +3423,7 @@ void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 
    auto &panel = *GetTrackPanel();
 
-   auto amount = TrackPanel::OnClipMove
+   auto amount = OnClipMove
       ( mViewInfo, panel.GetFocusedTrack(),
         *GetTracks(), IsSyncLocked(), right );
 
@@ -5826,7 +5882,7 @@ void AudacityProject::DoNextPeakFrequency(bool up)
    }
 
    if (pTrack) {
-      mTrackPanel->SnapCenterOnce(pTrack, up);
+      SelectHandle::Instance().SnapCenterOnce(mViewInfo, pTrack, up);
       mTrackPanel->Refresh(false);
       ModifyState(false);
    }

@@ -76,7 +76,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       for (; begin != end; ++begin)
       {
          TrackPanelCellIterator::value_type data(*begin);
-         Track *const pTrack = data.first;
+         Track *const pTrack = dynamic_cast<Track*>(data.first);
          if (!pTrack)
             continue;
 

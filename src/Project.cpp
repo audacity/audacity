@@ -158,6 +158,7 @@ scroll information.  It also has some status flags.
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
+#include "tracks/ui/BackgroundCell.h"
 #include "tracks/ui/EditCursorOverlay.h"
 #include "tracks/ui/PlayIndicatorOverlay.h"
 #include "tracks/ui/Scrubbing.h"
@@ -1078,6 +1079,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
 
+   mBackgroundCell = std::make_shared<BackgroundCell>(this);
+
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
    mScrubber = std::make_unique<Scrubber>(this);
@@ -1106,6 +1109,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
 
    CreateMenusAndCommands();
+
+   mTrackPanel->SetBackgroundCell(mBackgroundCell);
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
@@ -2219,6 +2224,8 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
 // The projects tracklist has been updated
 void AudacityProject::OnTrackListUpdated(wxCommandEvent & event)
 {
+   GetSelectionState().TrackListUpdated( *GetTracks() );
+
    mViewInfo.track = NULL;
 
    event.Skip();

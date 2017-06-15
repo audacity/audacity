@@ -13,8 +13,7 @@ Paul Licameli
 
 #include "Track.h"
 
-class Track;
-typedef Track TrackPanelCell;
+class TrackPanelCell;
 
 class TrackPanel;
 
