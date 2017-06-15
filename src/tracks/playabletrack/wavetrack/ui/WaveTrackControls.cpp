@@ -97,7 +97,7 @@ HitTestResult WaveTrackControls::HitTest
 }
 
 enum {
-   OnRate8ID = 2001,       // <---
+   OnRate8ID = 30000,      // <---
    OnRate11ID,             //    |
    OnRate16ID,             //    |
    OnRate22ID,             //    |
@@ -555,8 +555,8 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    pMenu->Enable(OnSplitStereoID, !isMono && !unsafe);
 
    // Several menu items no longer needed....
-#if 0
    pMenu->Enable(OnSplitStereoMonoID, !isMono && !unsafe);
+#if 0
    pMenu->Enable(OnChannelMonoID, isMono);
    pMenu->Enable(OnChannelLeftID, isMono);
    pMenu->Enable(OnChannelRightID, isMono);
@@ -575,13 +575,13 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 //   POPUP_MENU_RADIO_ITEM(OnChannelMonoID, _("&Mono"), OnChannelChange)
 //   POPUP_MENU_RADIO_ITEM(OnChannelLeftID, _("&Left Channel"), OnChannelChange)
 //   POPUP_MENU_RADIO_ITEM(OnChannelRightID, _("R&ight Channel"), OnChannelChange)
-   POPUP_MENU_ITEM(OnMergeStereoID, _("Make &Stereo"), OnMergeStereo)
+   POPUP_MENU_ITEM(OnMergeStereoID, _("Ma&ke Stereo Track"), OnMergeStereo)
 
-   POPUP_MENU_ITEM(OnSwapChannelsID, _("S&wap"), OnSwapChannels)
-   POPUP_MENU_ITEM(OnSplitStereoID, _("S&plit"), OnSplitStereo)
+   POPUP_MENU_ITEM(OnSwapChannelsID, _("Swap Stereo &Channels"), OnSwapChannels)
+   POPUP_MENU_ITEM(OnSplitStereoID, _("Spl&it Stereo Track"), OnSplitStereo)
 // DA: Uses split stereo track and then drag pan sliders for split-stereo-to-mono
 #ifndef EXPERIMENTAL_DA
-   POPUP_MENU_ITEM(OnSplitStereoMonoID, _("Split Stereo to &Mono"), OnSplitStereoMono)
+   POPUP_MENU_ITEM(OnSplitStereoMonoID, _("Split Stereo to Mo&no"), OnSplitStereoMono)
 #endif
    POPUP_MENU_SEPARATOR()
 
