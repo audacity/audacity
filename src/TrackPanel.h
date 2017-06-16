@@ -275,6 +275,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    void OnContextMenu(wxContextMenuEvent & event);
 
+   void OnPlayback(wxCommandEvent &);
    void OnTrackListResized(wxCommandEvent & event);
    void OnTrackListUpdated(wxCommandEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().

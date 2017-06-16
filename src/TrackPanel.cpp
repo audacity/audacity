@@ -349,6 +349,10 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                     wxCommandEventHandler(TrackPanel::OnTrackListUpdated),
                     NULL,
                     this);
+   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
+                     wxCommandEventHandler(TrackPanel::OnPlayback),
+                     NULL,
+                     this);
 }
 
 
@@ -365,6 +369,10 @@ TrackPanel::~TrackPanel()
                        wxCommandEventHandler(TrackPanel::OnTrackListResized),
                        NULL,
                        this);
+   wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
+                        wxCommandEventHandler(TrackPanel::OnPlayback),
+                        NULL,
+                        this);
 
    // This can happen if a label is being edited and the user presses
    // ALT+F4 or Command+Q
@@ -984,6 +992,12 @@ void TrackPanel::UpdateViewIfNoTracks()
    }
 }
 
+void TrackPanel::OnPlayback(wxCommandEvent &e)
+{
+   e.Skip();
+   CallAfter( [this] { HandleCursorForLastMouseEvent(); } );
+}
+
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
 void TrackPanel::OnTrackListResized(wxCommandEvent & e)
@@ -1548,7 +1562,6 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          mUIHandle = &TrackPanelResizeHandle::Instance();
    }
 
-   //Determine if user clicked on the track's left-hand label or ruler
    if ( !mUIHandle && pCell )
       mUIHandle =
          pCell->HitTest( tpmEvent, GetProject() ).handle;
