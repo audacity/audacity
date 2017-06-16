@@ -2634,7 +2634,6 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
             std::max( 0,
                rect.y - kTopMargin + rect.height ) );
       rect.height = size.y - rect.y;
-      GetSize(&rect.width, &rect.height);
       return {
          nullptr, mpBackground.get(),
          CellType::Background, rect
