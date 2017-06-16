@@ -164,7 +164,6 @@ is time to refresh some aspect of the screen.
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "float_cast.h"
-#include "MixerBoard.h"
 
 #include "Prefs.h"
 #include "RefreshCode.h"
@@ -819,13 +818,6 @@ void TrackPanel::HandlePageDownKey()
 void TrackPanel::HandleCursorForLastMouseEvent()
 {
    HandleCursor(mLastMouseEvent);
-}
-
-MixerBoard* TrackPanel::GetMixerBoard()
-{
-   AudacityProject *p = GetProject();
-   wxASSERT(p);
-   return p->GetMixerBoard();
 }
 
 bool TrackPanel::IsAudioActive()

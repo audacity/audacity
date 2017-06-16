@@ -333,8 +333,6 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    virtual double GetScreenEndTime() const;
 
  protected:
-   virtual MixerBoard* GetMixerBoard();
-
    virtual bool IsAudioActive();
    virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
 
