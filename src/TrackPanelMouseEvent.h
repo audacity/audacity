@@ -22,12 +22,12 @@ struct TrackPanelMouseEvent
 {
    TrackPanelMouseEvent
       ( wxMouseEvent &event_, const wxRect &rect_, const wxSize &whole_,
-        TrackPanelCell *pCell_ = NULL, double steps_ = 0.0 )
+        TrackPanelCell *pCell_ )
       : event{ event_ }
       , rect{ rect_ }
       , whole{ whole_ }
       , pCell{ pCell_ }
-      , steps{ steps_ }
+      , steps{ 0 }
    {
    }
 

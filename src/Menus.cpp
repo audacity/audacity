@@ -2258,7 +2258,7 @@ void AudacityProject::SetTool(int tool)
 {
    ToolsToolBar *toolbar = GetToolsToolBar();
    if (toolbar) {
-      toolbar->SetCurrentTool(tool, true);
+      toolbar->SetCurrentTool(tool);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2300,7 +2300,7 @@ void AudacityProject::OnNextTool()
    if (toolbar) {
       // Use GetDownTool() here since GetCurrentTool() can return a value that
       // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+1)%numTools, true);
+      toolbar->SetCurrentTool((toolbar->GetDownTool()+1)%numTools);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2311,7 +2311,7 @@ void AudacityProject::OnPrevTool()
    if (toolbar) {
       // Use GetDownTool() here since GetCurrentTool() can return a value that
       // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+(numTools-1))%numTools, true);
+      toolbar->SetCurrentTool((toolbar->GetDownTool()+(numTools-1))%numTools);
       mTrackPanel->Refresh(false);
    }
 }

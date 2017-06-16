@@ -44,6 +44,7 @@ class MixerBoard;
 class AudacityProject;
 
 class TrackPanelAx;
+struct TrackPanelMouseEvent;
 
 class ViewInfo;
 
@@ -258,127 +259,128 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual ~ TrackPanel();
 
-   virtual void UpdatePrefs();
-   virtual void ApplyUpdatedTheme();
+   void UpdatePrefs();
+   void ApplyUpdatedTheme();
 
-   virtual void OnPaint(wxPaintEvent & event);
-   virtual void OnMouseEvent(wxMouseEvent & event);
-   virtual void OnCaptureLost(wxMouseCaptureLostEvent & event);
-   virtual void OnCaptureKey(wxCommandEvent & event);
-   virtual void OnKeyDown(wxKeyEvent & event);
-   virtual void OnChar(wxKeyEvent & event);
-   virtual void OnKeyUp(wxKeyEvent & event);
+   void OnPaint(wxPaintEvent & event);
+   void OnMouseEvent(wxMouseEvent & event);
+   void OnCaptureLost(wxMouseCaptureLostEvent & event);
+   void OnCaptureKey(wxCommandEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
+   void OnChar(wxKeyEvent & event);
+   void OnKeyUp(wxKeyEvent & event);
 
-   virtual void OnSetFocus(wxFocusEvent & event);
-   virtual void OnKillFocus(wxFocusEvent & event);
+   void OnSetFocus(wxFocusEvent & event);
+   void OnKillFocus(wxFocusEvent & event);
 
-   virtual void OnContextMenu(wxContextMenuEvent & event);
+   void OnContextMenu(wxContextMenuEvent & event);
 
-   virtual void OnTrackListResized(wxCommandEvent & event);
-   virtual void OnTrackListUpdated(wxCommandEvent & event);
-   virtual void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
+   void OnPlayback(wxCommandEvent &);
+   void OnTrackListResized(wxCommandEvent & event);
+   void OnTrackListUpdated(wxCommandEvent & event);
+   void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
-   virtual double GetMostRecentXPos();
+   double GetMostRecentXPos();
 
-   virtual void OnIdle(wxIdleEvent & event);
-   virtual void OnTimer(wxTimerEvent& event);
+   void OnIdle(wxIdleEvent & event);
+   void OnTimer(wxTimerEvent& event);
 
-   virtual int GetLeftOffset() const { return GetLabelWidth() + 1;}
+   int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
    // Width and height, relative to upper left corner at (GetLeftOffset(), 0)
    // Either argument may be NULL
-   virtual void GetTracksUsableArea(int *width, int *height) const;
+   void GetTracksUsableArea(int *width, int *height) const;
 
-   virtual void Refresh(bool eraseBackground = true,
-                        const wxRect *rect = (const wxRect *) NULL);
-   virtual void RefreshTrack(Track *trk, bool refreshbacking = true);
+   void Refresh
+      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
+      override;
 
-   virtual void DisplaySelection();
+   void RefreshTrack(Track *trk, bool refreshbacking = true);
+
+   void DisplaySelection();
 
    // These two are neither used nor defined as of Nov-2011
-   //virtual void SetSelectionFormat(int iformat)
-   //virtual void SetSnapTo(int snapto)
+   // void SetSelectionFormat(int iformat)
+   // void SetSnapTo(int snapto)
 
-   virtual void HandleInterruptedDrag();
-   virtual void CancelDragging();
-   virtual bool HandleEscapeKey(bool down);
-   virtual void HandleAltKey(bool down);
-   virtual void HandleShiftKey(bool down);
-   virtual void HandleControlKey(bool down);
-   virtual void HandlePageUpKey();
-   virtual void HandlePageDownKey();
-   virtual AudacityProject * GetProject() const;
+   void HandleInterruptedDrag();
+   void Uncapture( wxMouseEvent *pEvent = nullptr );
+   void CancelDragging();
+   bool HandleEscapeKey(bool down);
+   void HandleAltKey(bool down);
+   void HandleShiftKey(bool down);
+   void HandleControlKey(bool down);
+   void HandlePageUpKey();
+   void HandlePageDownKey();
+   AudacityProject * GetProject() const;
 
-   virtual void ScrollIntoView(double pos);
-   virtual void ScrollIntoView(int x);
+   void ScrollIntoView(double pos);
+   void ScrollIntoView(int x);
 
-   virtual void OnTrackMenu(Track *t = NULL);
-   virtual Track * GetFirstSelectedTrack();
-   virtual bool IsMouseCaptured();
+   void OnTrackMenu(Track *t = NULL);
+   Track * GetFirstSelectedTrack();
+   bool IsMouseCaptured();
 
-   virtual void EnsureVisible(Track * t);
+   void EnsureVisible(Track * t);
 
-   virtual Track *GetFocusedTrack();
-   virtual void SetFocusedTrack(Track *t);
+   Track *GetFocusedTrack();
+   void SetFocusedTrack(Track *t);
 
-   virtual void HandleCursorForLastMouseEvent();
+   void HandleCursorForLastMouseEvent();
 
-   virtual void UpdateVRulers();
-   virtual void UpdateVRuler(Track *t);
-   virtual void UpdateTrackVRuler(const Track *t);
-   virtual void UpdateVRulerSize();
+   void UpdateVRulers();
+   void UpdateVRuler(Track *t);
+   void UpdateTrackVRuler(const Track *t);
+   void UpdateVRulerSize();
 
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
-   virtual double GetScreenEndTime() const;
+   double GetScreenEndTime() const;
 
  protected:
-   virtual MixerBoard* GetMixerBoard();
-
-   virtual bool IsAudioActive();
-   virtual void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
+   bool IsAudioActive();
+   void HandleClick( const TrackPanelMouseEvent &tpmEvent );
 
 public:
    size_t GetTrackCount() const;
    size_t GetSelectedTrackCount() const;
 
 protected:
-   virtual void UpdateSelectionDisplay();
+   void UpdateSelectionDisplay();
 
 public:
-   virtual void UpdateAccessibility();
+   void UpdateAccessibility();
    void MessageForScreenReader(const wxString& message);
 
-   virtual void HandleCursor(wxMouseEvent & event);
-
    // MM: Handle mouse wheel rotation
-   virtual void HandleWheelRotation(wxMouseEvent & event);
+   void HandleWheelRotation( TrackPanelMouseEvent &tpmEvent );
 
-   virtual void MakeParentRedrawScrollbars();
+   void MakeParentRedrawScrollbars();
 
 protected:
-   virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
+   void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
    // Find track info by coordinate
-   enum class CellType { Label, Track, VRuler, Background };
    struct FoundCell {
       Track *pTrack;
       TrackPanelCell *pCell;
-      CellType type;
       wxRect rect;
    };
-   virtual FoundCell FindCell(int mouseX, int mouseY);
+   FoundCell FindCell(int mouseX, int mouseY);
+
+   void HandleCursor( wxMouseEvent *pEvent );
+   void HandleCursor( const TrackPanelMouseEvent &tpmEvent );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
    // the proper track area.
-   virtual wxRect FindTrackRect( const Track * target, bool label );
+   wxRect FindTrackRect( const Track * target, bool label );
 
-   virtual int GetVRulerWidth() const;
-   virtual int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
+   int GetVRulerWidth() const;
+   int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); }
 
-   virtual int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); }
+   int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); }
 
 // JKC Nov-2011: These four functions only used from within a dll such as mod-track-panel
 // They work around some messy problems with constructors.
@@ -400,21 +402,21 @@ public:
               AdornedRulerPanel * ruler);
 
 protected:
-   virtual void DrawTracks(wxDC * dc);
+   void DrawTracks(wxDC * dc);
 
-   virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
+   void DrawEverythingElse(wxDC *dc, const wxRegion & region,
                            const wxRect & clip);
-   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
+   void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
 
-   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
-   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
-   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
-   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
+   void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
+   void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
+   void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
+   void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
 
 public:
    // Set the object that performs catch-all event handling when the pointer
    // is not in any track or ruler or control panel.
-   virtual void SetBackgroundCell
+   void SetBackgroundCell
       (const std::shared_ptr< TrackPanelCell > &pCell);
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -562,10 +564,5 @@ enum : int {
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
-
-
-//This constant determines the size of the vertical region (in pixels) around
-//the bottom of a track that can be used for vertical track resizing.
-#define TRACK_RESIZE_REGION 5
 
 #endif
