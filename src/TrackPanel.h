@@ -289,8 +289,10 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // Either argument may be NULL
    virtual void GetTracksUsableArea(int *width, int *height) const;
 
-   virtual void Refresh(bool eraseBackground = true,
-                        const wxRect *rect = (const wxRect *) NULL);
+   void Refresh
+      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
+      override;
+
    virtual void RefreshTrack(Track *trk, bool refreshbacking = true);
 
    virtual void DisplaySelection();
