@@ -1239,6 +1239,7 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
       const unsigned refreshResult =
          ((TrackPanelCell*)t)->CaptureKey(*kevent, *mViewInfo, this);
       ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
+      event.Skip(kevent->GetSkipped());
    }
    else
       event.Skip();
