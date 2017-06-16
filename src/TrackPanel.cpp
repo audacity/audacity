@@ -854,11 +854,10 @@ void TrackPanel::HandleCursor( wxMouseEvent *pEvent )
    auto &pCell = foundCell.pCell;
    const auto size = GetSize();
    const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
-   HandleCursor( tpmEvent, foundCell.type );
+   HandleCursor( tpmEvent );
 }
 
-void TrackPanel::HandleCursor
-   ( const TrackPanelMouseEvent &tpmEvent, CellType cellType )
+void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
 {
    if ( mUIHandle ) {
       // UIHANDLE PREVIEW
@@ -875,22 +874,8 @@ void TrackPanel::HandleCursor
 
       // Are we within the vertical resize area?
       // (Add margin back to bottom of the rectangle)
-      auto &event = tpmEvent.event;
       auto pCell = tpmEvent.pCell;
       auto track = static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
-      auto &rect = tpmEvent.rect;
-      if (track &&
-          within(event.m_y, rect.GetBottom() + kBorderThickness, TRACK_RESIZE_REGION))
-      {
-         HitTestPreview preview
-         ( TrackPanelResizeHandle::HitPreview(
-            ( cellType != CellType::Label) && track->GetLinked() ) );
-         tip = preview.message;
-         wxCursor *const pCursor = preview.cursor;
-         if (pCursor)
-            SetCursor(*pCursor);
-      }
-
       if (pCell && pCursor == NULL && tip == wxString()) {
          const auto size = GetSize();
          HitTestResult hitTest( pCell->HitTest(tpmEvent, GetProject()) );
@@ -1524,9 +1509,7 @@ try
 
       const auto foundCell = FindCell(event.m_x, event.m_y);
       auto t = foundCell.pTrack;
-      if (t
-          && foundCell.type == CellType::Track
-      )
+      if ( t )
          EnsureVisible(t);
    }
 }
@@ -1548,19 +1531,6 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    auto pCell = tpmEvent.pCell;
    const auto &rect = tpmEvent.rect;
    auto pTrack = static_cast<CommonTrackPanelCell *>( pCell )->FindTrack();
-
-   // see if I'm over the border area.
-   // TrackPanelResizeHandle is the UIHandle subclass that TrackPanel knows
-   // and uses directly, because allocating area to cells is TrackPanel's business,
-   // and we implement a "hit test" directly here.
-   if (mUIHandle == NULL &&
-       event.LeftDown()) {
-      if (pCell &&
-          (within(event.m_y,
-                  (rect.GetBottom() + (kBottomMargin + kTopMargin) / 2),
-                  TRACK_RESIZE_REGION)))
-         mUIHandle = &TrackPanelResizeHandle::Instance();
-   }
 
    if ( !mUIHandle && pCell )
       mUIHandle =
@@ -2518,9 +2488,11 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
 ///  @param mouseY - mouse Y position.
 TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 {
+   enum class CellType { Label, Track, VRuler, Background };
    auto size = GetSize();
    size.x -= kRightMargin;
    wxRect rect { 0, 0, 0, 0 };
+   bool betweenTracks = false;
 
    // The type of cell that may be found is determined by the x coordinate.
    CellType type = CellType::Track;
@@ -2540,9 +2512,25 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       rect.width = size.x - GetLeftOffset();
 
    auto output = [&](Track *pTrack) -> FoundCell {
+      TrackPanelCell *pCell {};
+
+      // Did we actually hit in the resizer region, which encompasses the
+      // bottom margin proper to "this" track, plus the top margin of the
+      // "next" track (or, an equally wide zone below, in case there is no
+      // next track)?
+      const auto margin = kBottomMargin + kTopMargin;
+      if ( rect.y + rect.height - mouseY <= margin ) {
+         auto instance = &TrackPanelResizerCell::Instance();
+         instance->mpTrack = pTrack;
+         instance->mBetweenTracks = betweenTracks;
+         pCell = instance;
+         rect.y = rect.y + rect.height - kTopMargin;
+         rect.height = margin;
+         return { pTrack, pCell, rect };
+      }
+
       // Undo the bias mentioned below.
       rect.y -= kTopMargin;
-      TrackPanelCell *pCell {};
       if (pTrack) switch (type) {
          case CellType::Label:
             pCell = pTrack->GetTrackControl(); break;
@@ -2552,9 +2540,9 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
             pCell = pTrack; break;
       }
       if (pTrack)
-         return { pTrack, pCell, type, rect };
+         return { pTrack, pCell, rect };
       else
-         return { nullptr, nullptr, type, {} };
+         return { nullptr, nullptr, {} };
    };
 
    VisibleTrackIterator iter(GetProject());
@@ -2569,16 +2557,24 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
          if (t->GetLink()) {
             Track *l = t->GetLink();
             int h = l->GetHeight();
-            if (!t->GetLinked()) {
+            if (!t->GetLinked())
+               rect.y = l->GetY() - mViewInfo->vpos + kTopMargin;
+            else
                t = l;
-               rect.y = t->GetY() - mViewInfo->vpos + kTopMargin;
-            }
             rect.height += h;
          }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
          else if( MONO_WAVE_PAN(t) )
             rect.height += t->GetHeight(true);
 #endif
+      }
+      else {
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+         if( MONO_WAVE_PAN(t) )
+            betweenTracks = true;
+         else
+#endif
+            betweenTracks = t->GetLinked();
       }
 
       //Determine whether the mouse is inside
@@ -2592,6 +2588,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if(type != CellType::Label && MONO_WAVE_PAN(t)){
+         betweenTracks = false;
          rect.y = t->GetY(true) - mViewInfo->vpos + kTopMargin;
          rect.height = t->GetHeight(true);
          if (rect.Contains(mouseX, mouseY)) {
@@ -2612,15 +2609,12 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       rect.y =
          std::min( size.y,
             std::max( 0,
-               rect.y - kTopMargin + rect.height ) );
+               rect.y + rect.height ) );
       rect.height = size.y - rect.y;
-      return {
-         nullptr, mpBackground.get(),
-         CellType::Background, rect
-      };
+      return { nullptr, mpBackground.get(), rect };
    }
    else
-      return { nullptr, nullptr, type, {} };
+      return { nullptr, nullptr, {} };
 }
 
 /// This finds the rectangle of a given track, either the

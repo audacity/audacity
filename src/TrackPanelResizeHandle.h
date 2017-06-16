@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 #define __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 
+#include "CommonTrackPanelCell.h"
 #include "UIHandle.h"
 
 struct HitTestResult;
@@ -63,6 +64,25 @@ private:
    int mInitialUpperActualHeight{};
 
    int mMouseClickY{};
+};
+
+class TrackPanelResizerCell : public CommonTrackPanelCell
+{
+   TrackPanelResizerCell() {}
+   TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
+   TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
+public:
+   static TrackPanelResizerCell &Instance();
+
+   HitTestResult HitTest
+      (const TrackPanelMouseEvent &event,
+       const AudacityProject *pProject) override;
+
+   Track *FindTrack() override { return mpTrack; };
+private:
+   friend class TrackPanel;
+   Track *mpTrack {};
+   bool mBetweenTracks {};
 };
 
 #endif

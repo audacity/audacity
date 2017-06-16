@@ -362,19 +362,15 @@ protected:
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
 
    // Find track info by coordinate
-   enum class CellType { Label, Track, VRuler, Background };
    struct FoundCell {
       Track *pTrack;
       TrackPanelCell *pCell;
-      CellType type;
       wxRect rect;
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
    void HandleCursor( wxMouseEvent *pEvent );
-   void HandleCursor
-      ( const TrackPanelMouseEvent &tpmEvent,
-        CellType cellType = CellType::Background );
+   void HandleCursor( const TrackPanelMouseEvent &tpmEvent );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
@@ -568,10 +564,5 @@ enum : int {
 #ifdef _MSC_VER
 #pragma warning( pop )
 #endif
-
-
-//This constant determines the size of the vertical region (in pixels) around
-//the bottom of a track that can be used for vertical track resizing.
-#define TRACK_RESIZE_REGION 5
 
 #endif

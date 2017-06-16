@@ -391,3 +391,17 @@ void TrackPanelResizeHandle::OnProjectChange(AudacityProject *pProject)
    UIHandle::OnProjectChange(pProject);
 }
 
+TrackPanelResizerCell &TrackPanelResizerCell::Instance()
+{
+   static TrackPanelResizerCell instance;
+   return instance;
+}
+
+HitTestResult TrackPanelResizerCell::HitTest
+(const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+{
+   return {
+      TrackPanelResizeHandle::HitPreview( mBetweenTracks ),
+      &TrackPanelResizeHandle::Instance()
+   };
+}
