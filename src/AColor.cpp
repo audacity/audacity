@@ -179,13 +179,14 @@ void AColor::DrawFocus(wxDC & dc, wxRect & rect)
    // Why must this be different?
    // Otherwise nothing is visible if you do as for the
    // other platforms.
-   dc.SetPen(wxPen(wxT("MEDIUM GREY"), 1, wxSOLID));
+   UseThemeColour( &dc, clrTrackPanelText );
 
+   //dc.SetPen(wxPen(wxT("MEDIUM GREY"), 1, wxSOLID));
    //dc.SetLogicalFunction(wxCOPY);
 #else
    UseThemeColour( &dc, clrTrackPanelText );
-   //dc.SetPen(wxPen(wxT("MEDIUM GREY"), 0, wxSOLID));
 
+   //dc.SetPen(wxPen(wxT("MEDIUM GREY"), 0, wxSOLID));
    // this seems to be closer than what Windows does than wxINVERT although
    // I'm still not sure if it's correct
    //dc.SetLogicalFunction(wxAND_REVERSE);
