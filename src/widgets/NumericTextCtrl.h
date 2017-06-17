@@ -107,6 +107,9 @@ public:
    void Increment();
    void Decrement();
 
+public:
+   float mScaleFactor;
+
 protected:
    Type           mType;
 
@@ -158,6 +161,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
 
    bool Layout() override;
    void Fit() override;
+   void SetScaleFactor( float f );
 
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -199,6 +203,9 @@ private:
    void UpdateAutoFocus();
 
    void Updated(bool keyup = false);
+
+public:
+   float mScaleFactor;
 
 private:
 

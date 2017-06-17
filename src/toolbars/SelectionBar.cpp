@@ -438,6 +438,7 @@ void SelectionBar::Populate()
    AddVLine( mainSizer );
 
    mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
+   mAudioTime->SetScaleFactor( 2.0 );
    // This vertical line is NOT just for decoration!
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
    // into the radiobutton group jumps to selecting the first item in the 

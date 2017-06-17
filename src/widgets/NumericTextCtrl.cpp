@@ -1179,8 +1179,9 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    mDigitFont{},
    mLabelFont{},
    mLastField(1),
-   mAutoPos(autoPos)
-   , mType(type)
+   mAutoPos(autoPos),
+   mScaleFactor(1.0),
+   mType(type)
 {
    mAllowInvalidValue = false;
 
@@ -1211,6 +1212,16 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
 
 NumericTextCtrl::~NumericTextCtrl()
 {
+}
+
+void NumericTextCtrl::SetScaleFactor( float f )
+{
+   mScaleFactor = f;
+   mDigitBoxW = 10 * f;
+   mDigitBoxH = 16 * f;
+   Layout();
+   Fit();
+   ValueToControls();
 }
 
 // Set the focus to the first (left-most) non-zero digit
