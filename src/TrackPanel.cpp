@@ -1494,13 +1494,12 @@ try
    }
    else if ( event.GetEventType() == wxEVT_MOTION )
       // Update status message and cursor, not during drag
-      // (consider it not a drag, even if button is down during motion, if
+      // consider it not a drag, even if button is down during motion, if
       // mUIHandle is null, as it becomes during interrupted drag
       // (e.g. by hitting space to play while dragging an envelope point)
       HandleCursor( &event );
-   else if ( event.ButtonDown() || event.ButtonDClick() ) {
+   else if ( event.ButtonDown() || event.ButtonDClick() )
       HandleClick( tpmEvent );
-   }
 
    if (event.ButtonDown() && IsMouseCaptured()) {
       if (!HasCapture())
