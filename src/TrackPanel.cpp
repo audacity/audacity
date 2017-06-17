@@ -3182,7 +3182,7 @@ void TrackPanelCellIterator::UpdateRect()
             // tall zone below, in case there is no next track)
             auto partner = mpTrack->GetLink();
             if ( partner && mpTrack->GetLinked() )
-               mRect.x = mPanel->GetLeftOffset();
+               mRect.x = kTrackInfoWidth;
             else
                mRect.x = kLeftMargin;
             mRect.width -= (mRect.x + kRightMargin);
