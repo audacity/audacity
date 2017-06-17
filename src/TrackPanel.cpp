@@ -1480,10 +1480,14 @@ try
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
+         auto uiHandle = mUIHandle;
+         // Null this pointer out first before calling Release -- because on Windows, we can
+         // come back recursively to this place during handling of the context menu,
+         // because of a capture lost event.
+         mUIHandle = nullptr;
          UIHandle::Result refreshResult =
-            mUIHandle->Release( tpmEvent, GetProject(), this );
+            uiHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
-         mUIHandle = NULL;
          mpClickedTrack = NULL; 
          // will also Uncapture() below
       }
