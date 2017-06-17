@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelCell.h"
-#include "../../TrackPanelCellIterator.h"
 #include "../../commands/CommandFunctors.h"
 #include "../../prefs/TracksPrefs.h"
 #include "../../toolbars/ControlToolBar.h"

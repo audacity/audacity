@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 struct HitTestResult;
 class Track;
+class TrackPanelCellIterator;
 
 class TrackPanelResizeHandle final : public UIHandle
 {
@@ -80,7 +81,7 @@ public:
 
    Track *FindTrack() override { return mpTrack; };
 private:
-   friend class TrackPanel;
+   friend class TrackPanelCellIterator;
    Track *mpTrack {};
    bool mBetweenTracks {};
 };

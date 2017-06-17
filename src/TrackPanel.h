@@ -44,6 +44,7 @@ class MixerBoard;
 class AudacityProject;
 
 class TrackPanelAx;
+class TrackPanelCellIterator;
 struct TrackPanelMouseEvent;
 
 class ViewInfo;
@@ -259,6 +260,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    virtual ~ TrackPanel();
 
+   IteratorRange< TrackPanelCellIterator > Cells();
+
    void UpdatePrefs();
    void ApplyUpdatedTheme();
 
@@ -418,6 +421,7 @@ public:
    // is not in any track or ruler or control panel.
    void SetBackgroundCell
       (const std::shared_ptr< TrackPanelCell > &pCell);
+   std::shared_ptr< TrackPanelCell > GetBackgroundCell();
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void UpdateVirtualStereoOrder();
