@@ -41,12 +41,17 @@ class TimeTrack final : public Track {
 
    virtual ~TimeTrack();
 
+
    Holder Cut( double t0, double t1 ) override;
    Holder Copy( double t0, double t1, bool forClipboard ) const override;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track * src) override;
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
+
+   HitTestResult HitTest
+      (const TrackPanelMouseEvent &event,
+       const AudacityProject *pProject) override;
 
    // Identifying the type of track
    int GetKind() const override { return Time; }
@@ -146,6 +151,10 @@ class TimeTrack final : public Track {
    Track::Holder Duplicate() const override;
 
    friend class TrackFactory;
+
+protected:
+   TrackControls *GetControls() override;
+   TrackVRulerControls *GetVRulerControls() override;
 };
 
 

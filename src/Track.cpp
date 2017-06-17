@@ -17,12 +17,13 @@ and TimeTrack.
 
 #include <algorithm>
 #include <numeric>
+#include "Track.h"
+
 #include <float.h>
 #include <wx/file.h>
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "Track.h"
 #include "TimeTrack.h"
 #include "WaveTrack.h"
 #include "NoteTrack.h"
@@ -133,10 +134,10 @@ void Track::SetOwner(TrackList *list, TrackNodePointer node)
 int Track::GetMinimizedHeight() const
 {
    if (GetLink()) {
-      return 21;
+      return 22;
    }
 
-   return 42;
+   return 44;
 }
 
 int Track::GetIndex() const
@@ -316,6 +317,11 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
       // Remove from the track
       Clear(newT1, oldT1);
    }
+}
+
+Track *Track::FindTrack()
+{
+   return this;
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
@@ -594,7 +600,11 @@ VisibleTrackIterator::VisibleTrackIterator(AudacityProject *project)
 bool VisibleTrackIterator::Condition(Track *t)
 {
    wxRect r(0, t->GetY(), 1, t->GetHeight());
-   return r.Intersects(mPanelRect);
+   if( r.Intersects(mPanelRect) )
+      return true;
+   auto partner = t->GetLink();
+   if ( partner && t->GetLinked() )
+      return Condition( partner );
 }
 
 // SyncLockedTracksIterator

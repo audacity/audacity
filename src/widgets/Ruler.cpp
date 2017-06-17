@@ -1826,10 +1826,6 @@ std::pair<wxRect, bool> QuickPlayIndicatorOverlay::DoGetRectangle(wxSize size)
 
 void QuickPlayIndicatorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
 {
-   TrackPanel &tp = static_cast<TrackPanel&>(panel);
-   TrackPanelCellIterator begin(&tp, true);
-   TrackPanelCellIterator end(&tp, false);
-
    mOldQPIndicatorPos = mNewQPIndicatorPos;
    mOldQPIndicatorSnapped = mNewQPIndicatorSnapped;
    mOldPreviewingScrub = mNewPreviewingScrub;
@@ -1843,9 +1839,8 @@ void QuickPlayIndicatorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       ;
 
       // Draw indicator in all visible tracks
-      for (; begin != end; ++begin)
+      for ( const auto &data : static_cast<TrackPanel&>(panel).Cells() )
       {
-         TrackPanelCellIterator::value_type data(*begin);
          Track *const pTrack = dynamic_cast<Track*>(data.first);
          if (!pTrack)
             continue;

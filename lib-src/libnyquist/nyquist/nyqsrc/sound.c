@@ -408,7 +408,7 @@ table_type sound_to_table(sound_type s)
 
     if (len >= max_table_len) {
         char emsg[100];
-        sprintf(emsg, "maximum table size (%d) exceeded", max_table_len);
+        sprintf(emsg, "maximum table size (%d) exceeded", max_table_len - 1);
         xlcerror("use truncated sound for table", emsg, NIL);
     } else if (len == 0) {
         xlabort("table size must be greater than 0");

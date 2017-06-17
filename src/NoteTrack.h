@@ -68,6 +68,10 @@ class AUDACITY_DLL_API NoteTrack final
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
+   HitTestResult HitTest
+      (const TrackPanelMouseEvent &event,
+       const AudacityProject *pProject) override;
+
    using Holder = std::unique_ptr<NoteTrack>;
    Track::Holder Duplicate() const override;
 
@@ -82,7 +86,8 @@ class AUDACITY_DLL_API NoteTrack final
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
-   void DrawLabelControls(wxDC & dc, const wxRect &rect);
+   static void DrawLabelControls
+      ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect );
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
@@ -230,6 +235,10 @@ class AUDACITY_DLL_API NoteTrack final
    int mPitchHeight;
    int mVisibleChannels; // bit set of visible channels
    int mLastMidiPosition;
+
+protected:
+   TrackControls *GetControls() override;
+   TrackVRulerControls *GetVRulerControls() override;
 };
 
 #endif // USE_MIDI

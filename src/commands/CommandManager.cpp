@@ -1164,12 +1164,17 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
 #else
 #ifdef __WXMAC__
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      reason = wxString::Format( _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again.\n\n"
-"Click the Help button to learn more about selection methods."), Name );
+      reason = wxString::Format( _("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+      // No need to explain what a help button is for.
+      // "\n\nClick the Help button to learn more about selection methods."
+      ), Name );
+
 #else
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      reason = wxString::Format( _("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.\n\n"
-"Click the Help button to learn more about selection methods."), Name );
+      reason = wxString::Format( _("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+      // No need to explain what a help button is for.
+      // "\n\nClick the Help button to learn more about selection methods."
+      ), Name );
 #endif
 #endif
       help_url = "http://alphamanual.audacityteam.org/man/Selecting_Audio_-_the_basics";
@@ -1336,8 +1341,11 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       // NB: The call may have the side effect of changing flags.
       bool allowed = proj->ReportIfActionNotAllowed( 
          NiceName, flags, entry->flags, combinedMask );
+      // If the function was disallowed, it STILL should count as having been
+      // handled (by doing nothing or by telling the user of the problem).
+      // Otherwise we may get other handlers having a go at obeying the command.
       if (!allowed)
-         return false;
+         return true;
    }
 
    (*(entry->callback))(entry->index, evt);

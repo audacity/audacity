@@ -141,6 +141,8 @@ void OnPlaySpeedDec();
 
         // Moving track focus commands
 
+void OnPrevTrack( bool shift );
+void OnNextTrack( bool shift );
 void OnCursorUp();
 void OnCursorDown();
 void OnFirstTrack();
@@ -152,6 +154,8 @@ void OnShiftUp();
 void OnShiftDown();
 void OnToggle();
 
+void HandleListSelection(Track *t, bool shift, bool ctrl, bool modifyState);
+
 void OnCursorLeft(const wxEvent * evt);
 void OnCursorRight(const wxEvent * evt);
 void OnSelExtendLeft(const wxEvent * evt);
@@ -160,6 +164,10 @@ void OnSelContractLeft(const wxEvent * evt);
 void OnSelContractRight(const wxEvent * evt);
 
 public:
+static double OnClipMove
+   (ViewInfo &viewInfo, Track *track,
+    TrackList &trackList, bool syncLocked, bool right);
+
 void DoClipLeftOrRight(bool right, bool keyUp );
 void OnClipLeft(const wxEvent* evt);
 void OnClipRight(const wxEvent* evt);

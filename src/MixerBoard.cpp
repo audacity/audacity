@@ -675,7 +675,8 @@ wxColour MixerTrackCluster::GetTrackColor()
 
 void MixerTrackCluster::HandleSelect(bool bShiftDown, bool bControlDown)
 {
-   mProject->GetTrackPanel()->HandleListSelection(mTrack, bShiftDown, bControlDown);
+   mProject->HandleListSelection( mTrack, bShiftDown, bControlDown, true
+                                 );
 }
 
 void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
@@ -1300,7 +1301,7 @@ void MixerBoard::UpdateWidth()
 
 void MixerBoard::CreateMuteSoloImages()
 {
-   // Much of this is taken from TrackLabel::DrawMuteSolo.
+   // Much of this is similar to TrackInfo::MuteOrSoloDrawFunction.
    wxMemoryDC dc;
    dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    wxString str = _("Mute");

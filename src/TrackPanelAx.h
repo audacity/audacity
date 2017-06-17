@@ -18,6 +18,8 @@
 #include <wx/access.h>
 #endif
 
+#include "Snap.h"
+#include "Track.h"
 #include "TrackPanel.h"
 
 class TrackPanelAx final

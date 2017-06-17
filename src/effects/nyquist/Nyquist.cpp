@@ -787,8 +787,6 @@ _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld sample
 
    ReplaceProcessedTracks(success);
 
-   mDebug = false;
-
    if (!mProjectChanged)
       em.SetSkipStateFlag(true);
 
@@ -1163,19 +1161,10 @@ bool NyquistEffect::ProcessOne()
    // not, leaving that to delayed evaluation of the output sound
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
-   // Always show debug window when return value is a nyx_error.
-   // Note that this does not happen for plug-ins that have an interface
-   // because there will be a return value from the final control.
-   if (rval == nyx_error) {
-      /* i18n-hint: "%s" is replaced by name of plug-in.*/
-      mDebugOutput = wxString::Format(_("Nyquist error returned from %s:\n"), mName) + mDebugOutput;
-      mDebug = true;
-   }
-
    // If we're not showing debug window, log errors and warnings:
    if (!mDebugOutput.IsEmpty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogWarning(mName + wxT(" ") + _("returned:") + wxT("\n") + mDebugOutput);
+      wxLogMessage(wxT("\'") + mName + wxT("\' ") + _("returned:") + wxT("\n") + mDebugOutput);
    }
 
    // Audacity has no idea how long Nyquist processing will take, but
@@ -1191,14 +1180,26 @@ bool NyquistEffect::ProcessOne()
       }
    }
 
-   if (!rval) {
-      wxLogWarning(wxT("Nyquist returned NIL"));
+   if (rval == nyx_error) {
+      // Return value is not valid type.
+      // Show error in debug window if trace enabled, otherwise log.
+      if (mTrace) {
+         /* i18n-hint: "%s" is replaced by name of plug-in.*/
+         mDebugOutput = wxString::Format(_("nyx_error returned from %s.\n"),
+                                         mName.IsEmpty()? _("plug-in") : mName) + mDebugOutput;
+         mDebug = true;
+         return false;
+      }
+      else {
+         wxLogMessage(wxT("Nyquist returned nyx_error."));
+      }
       return true;
    }
 
    if (rval == nyx_string) {
-      wxMessageBox(NyquistToWxString(nyx_get_string()),
-                   mName, wxOK | wxCENTRE, mUIParent);
+      wxString msg = NyquistToWxString(nyx_get_string());
+      if (!msg.IsEmpty())  // Not currently a documented feature, but could be useful as a No-Op.
+         wxMessageBox(msg, mName, wxOK | wxCENTRE, mUIParent);
 
       // True if not process type.
       // If not returning audio from process effect,
@@ -1256,12 +1257,7 @@ bool NyquistEffect::ProcessOne()
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
-   if (rval != nyx_audio) {
-      // This should not happen, but leaving in for now just in case (Dec 2014)
-      wxMessageBox(_("Undefined return value.\n"), wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
-      return false;
-   }
+   wxASSERT(rval == nyx_audio);
 
    int outChannels = nyx_get_audio_num_channels();
    if (outChannels > (int)mCurNumChannels) {
@@ -1329,7 +1325,7 @@ bool NyquistEffect::ProcessOne()
       mOutputTime = outputTrack[i]->GetEndTime();
 
       if (mOutputTime <= 0) {
-         wxMessageBox(_("Nyquist did not return audio.\n"),
+         wxMessageBox(_("Nyquist returned nil audio.\n"),
                       wxT("Nyquist"),
                       wxOK | wxCENTRE, mUIParent);
          return true;
@@ -1802,6 +1798,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
    mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
    mHelpFileExists = false;
+   mDebug = false;
+   mTrace = false;
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())

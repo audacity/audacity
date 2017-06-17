@@ -158,6 +158,7 @@ scroll information.  It also has some status flags.
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
+#include "tracks/ui/BackgroundCell.h"
 #include "tracks/ui/EditCursorOverlay.h"
 #include "tracks/ui/PlayIndicatorOverlay.h"
 #include "tracks/ui/Scrubbing.h"
@@ -1078,6 +1079,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mCursorOverlay = std::make_unique<EditCursorOverlay>(this);
 
+   mBackgroundCell = std::make_shared<BackgroundCell>(this);
+
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    mScrubOverlay = std::make_unique<ScrubbingOverlay>(this);
    mScrubber = std::make_unique<Scrubber>(this);
@@ -1106,6 +1109,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif
 
    CreateMenusAndCommands();
+
+   mTrackPanel->SetBackgroundCell(mBackgroundCell);
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
@@ -1315,6 +1320,9 @@ void AudacityProject::UpdatePrefs()
    UpdatePrefsVariables();
 
    SetProjectTitle();
+
+   gPrefs->Read(wxT("/GUI/CircularTrackNavigation"), &mCircularTrackNavigation,
+                false);
 
    if (mTrackPanel) {
       mTrackPanel->UpdatePrefs();
@@ -2216,6 +2224,8 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
 // The projects tracklist has been updated
 void AudacityProject::OnTrackListUpdated(wxCommandEvent & event)
 {
+   GetSelectionState().TrackListUpdated( *GetTracks() );
+
    mViewInfo.track = NULL;
 
    event.Skip();
@@ -2325,6 +2335,10 @@ bool AudacityProject::TryToMakeActionAllowed
    //We can only make the action allowed if we select audio when no selection.
    // IF not set up to select all audio when none, THEN return with failure.
    if( mWhatIfNoSelection != 1 )
+      return false;
+
+   // Some effects disallow autoselection.
+   if( flagsRqd & NoAutoSelect )
       return false;
 
    // Why is action still not allowed?
@@ -4069,7 +4083,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       {
          if (pTrack->GetKind() == Track::Wave)
          {
-            auto wasSelected = pTrack->GetSelected();
+            SelectionStateChanger changer{ GetSelectionState(), *GetTracks() };
             pTrack->SetSelected(true);
             if (pTrack->GetLinked())
             {
@@ -4078,14 +4092,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
             }
             else
                pRightTrack = NULL;
-
-            auto cleanup = finally( [&] {
-               if (!wasSelected) {
-                  pTrack->SetSelected(false);
-                  if (pRightTrack)
-                     pRightTrack->SetSelected(false);
-               }
-            } );
 
             uniqueTrackFileName = wxFileName(strDataDirPathName, pTrack->GetName(), wxT("ogg"));
             FileNames::MakeNameUnique(mStrOtherNamesArray, uniqueTrackFileName);

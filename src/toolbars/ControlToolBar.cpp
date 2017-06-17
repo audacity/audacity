@@ -144,7 +144,7 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
    r->SetLabel(label);
    enum { deflation =
 #ifdef __WXMAC__
-      3
+      6
 #else
       12
 #endif

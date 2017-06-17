@@ -28,6 +28,7 @@ class WaveClip;
 class WaveTrack;
 class TrackList;
 class ZoomInfo;
+class wxDC;
 
 class TrackClip
 {
@@ -100,6 +101,8 @@ public:
    static wxArrayString GetSnapValues();
    static const wxString & GetSnapValue(int index);
    static int GetSnapIndex(const wxString & value);
+
+   static void Draw( wxDC *dc, wxInt64 left, wxInt64 right );
 
 private:
 

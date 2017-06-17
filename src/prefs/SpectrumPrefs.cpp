@@ -26,6 +26,8 @@
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../Snap.h"
+
 #include "../TrackPanel.h"
 
 #include <algorithm>

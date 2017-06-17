@@ -52,6 +52,7 @@
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"
+#include "../tracks/ui/Scrubbing.h"
 #include "../Theme.h"
 
 #include "../Experimental.h"
@@ -86,8 +87,14 @@ ToolsToolBar::ToolsToolBar()
 
    mMessageOfTool[selectTool] = _("Click and drag to select audio");
 
+   // TODO: this message isn't appropriate for time track
    mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
+
+   // TODO:  message should also mention the brush.  Describing the modifier key
+   // (alt, or other) varies with operating system.
    mMessageOfTool[drawTool] = _("Click and drag to edit the samples");
+
+   // TODO:  Why not mention middle click to zoom normal on Windows too?
 #if defined( __WXMAC__ )
    mMessageOfTool[zoomTool] = _("Click to Zoom In, Shift-Click to Zoom Out");
 #elif defined( __WXMSW__ )
@@ -95,7 +102,12 @@ ToolsToolBar::ToolsToolBar()
 #elif defined( __WXGTK__ )
    mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
 #endif
+
+   // TODO: Should it say "track or clip" ?  Non-wave tracks can move, or clips in a wave track.
+   // TODO: mention effects of shift (move all clips of selected wave track) and ctrl (move vertically only) ?
+   //  -- but not all of that is available in multi tool.
    mMessageOfTool[slideTool] = _("Click and drag to move a track in time");
+
    mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
 
    bool multiToolActive = false;
@@ -213,24 +225,21 @@ int ToolsToolBar::GetCurrentTool() const
 
 /// Sets the currently active tool
 /// @param tool - The index of the tool to be used.
-/// @param show - should we update the button display?
-void ToolsToolBar::SetCurrentTool(int tool, bool show)
+void ToolsToolBar::SetCurrentTool(int tool)
 {
    //In multi-mode the current tool is shown by the
    //cursor icon.  The buttons are not updated.
 
    bool leavingMulticlipMode =
-      IsDown(multiTool) && show && tool != multiTool;
+      IsDown(multiTool) && tool != multiTool;
 
    if (leavingMulticlipMode)
       mTool[multiTool]->PopUp();
 
    if (tool != mCurrentTool || leavingMulticlipMode) {
-      if (show)
-         mTool[mCurrentTool]->PopUp();
+      mTool[mCurrentTool]->PopUp();
       mCurrentTool=tool;
-      if (show)
-         mTool[mCurrentTool]->PushDown();
+      mTool[mCurrentTool]->PushDown();
    }
    //JKC: ANSWER-ME: Why is this RedrawAllProjects() line required?
    //msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
@@ -238,14 +247,11 @@ void ToolsToolBar::SetCurrentTool(int tool, bool show)
    // RedrawAllProjects();
 
    //msmeyer: But we instruct the projects to handle the cursor shape again
-   if (show)
-   {
-      RefreshCursorForAllProjects();
+   RefreshCursorForAllProjects();
 
-      gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
-                    IsDown(multiTool));
-      gPrefs->Flush();
-   }
+   gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
+                 IsDown(multiTool));
+   gPrefs->Flush();
 }
 
 bool ToolsToolBar::IsDown(int tool) const
@@ -269,7 +275,11 @@ const wxChar * ToolsToolBar::GetMessageForTool( int ToolNumber ) const
    wxASSERT( ToolNumber >= 0 );
    wxASSERT( ToolNumber < numTools );
 
-   return mMessageOfTool[ToolNumber];
+   auto tip = ::GetActiveProject()->GetScrubber().StatusMessageForWave();
+   if( tip.IsEmpty() )
+      return mMessageOfTool[ToolNumber];
+   else
+      return tip;
 }
 
 

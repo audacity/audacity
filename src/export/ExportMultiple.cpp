@@ -105,6 +105,7 @@ END_EVENT_TABLE()
 
 ExportMultiple::ExportMultiple(AudacityProject *project)
 : wxDialogWrapper(project, wxID_ANY, wxString(_("Export Multiple")))
+, mSelectionState{ project->GetSelectionState() }
 {
    SetName(GetTitle());
 
@@ -777,8 +778,6 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    int l = 0;     // track counter
    auto ok = ProgressResult::Success;
    wxArrayString otherNames;
-   std::vector<Track*> selected; /**< Array of pointers to the tracks which were
-                                selected when we started */
    ExportKitArray exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
    exportSettings.Alloc(mNumWaveTracks);   // Allocate some guessed space to use.
@@ -790,23 +789,16 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    wxString title;   // un-messed-with title of file for tagging with
 
    /* Remember which tracks were selected, and set them to unselected */
+   SelectionStateChanger changer{ mSelectionState, *mTracks };
    TrackListIterator iter;
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
       if (tr->GetKind() != Track::Wave) {
          continue;
       }
 
-      if (tr->GetSelected()) {
-         selected.push_back(tr);
+      if (tr->GetSelected())
          tr->SetSelected(false);
-      }
    }
-
-   auto cleanup = finally( [&] {
-      // Restore the selection states
-      for (auto pTrack : selected)
-         pTrack->SetSelected(true);
-   } );
 
    /* Examine all tracks in turn, collecting export information */
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
@@ -922,22 +914,11 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
       }
 
       /* Select the track */
-      auto wasSelected = tr->GetSelected();
+      SelectionStateChanger changer2{ mSelectionState, *mTracks };
       tr->SetSelected(true);
-      if (tr2) {
+      if (tr2)
          // Select it also
          tr2->SetSelected(true);
-      }
-
-      auto cleanup = finally( [&] {
-         if (!wasSelected) {
-            // Reset selection state
-            tr->SetSelected(false);
-            if (tr2) {
-               tr2->SetSelected(false);
-            }
-         }
-      } );
 
       // Export the data. "channels" are per track.
       ok = DoExport(activeSetting.channels, activeSetting.destfile, true, activeSetting.t0, activeSetting.t1, activeSetting.filetags);

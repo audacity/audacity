@@ -549,12 +549,16 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    captureModeValidator->AddOption(wxT("effects"));
    captureModeValidator->AddOption(wxT("preferences"));
    captureModeValidator->AddOption(wxT("selectionbar"));
+   captureModeValidator->AddOption(wxT("spectralselection"));
    captureModeValidator->AddOption(wxT("tools"));
    captureModeValidator->AddOption(wxT("transport"));
    captureModeValidator->AddOption(wxT("mixer"));
    captureModeValidator->AddOption(wxT("meter"));
+   captureModeValidator->AddOption(wxT("playmeter"));
+   captureModeValidator->AddOption(wxT("recordmeter"));
    captureModeValidator->AddOption(wxT("edit"));
    captureModeValidator->AddOption(wxT("device"));
+   captureModeValidator->AddOption(wxT("scrub"));
    captureModeValidator->AddOption(wxT("transcription"));
    captureModeValidator->AddOption(wxT("trackpanel"));
    captureModeValidator->AddOption(wxT("ruler"));
@@ -659,8 +663,9 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
       mBackground = false;
    }
 
-   // Reset the toolbars to a known state
-   context.GetProject()->GetToolManager()->Reset();
+   //Don't reset the toolbars to a known state.
+   //We wil lbe capturing variations of them.
+   //context.GetProject()->GetToolManager()->Reset();
 
    wxTopLevelWindow *w = GetFrontWindow(context.GetProject());
    if (!w)
@@ -739,7 +744,11 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
    else if (captureMode.IsSameAs(wxT("selectionbar")))
    {
-      CaptureDock(context.GetProject()->GetToolManager()->GetBotDock(), fileName);
+      CaptureToolbar(context.GetProject()->GetToolManager(), SelectionBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("spectralselection")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), SpectralSelectionBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("tools")))
    {
@@ -757,6 +766,14 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    {
       CaptureToolbar(context.GetProject()->GetToolManager(), MeterBarID, fileName);
    }
+   else if (captureMode.IsSameAs(wxT("recordmeter")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), RecordMeterBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("playmeter")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), PlayMeterBarID, fileName);
+   }
    else if (captureMode.IsSameAs(wxT("edit")))
    {
       CaptureToolbar(context.GetProject()->GetToolManager(), EditBarID, fileName);
@@ -769,7 +786,7 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    {
       CaptureToolbar(context.GetProject()->GetToolManager(), TranscriptionBarID, fileName);
    }
-   else if (captureMode.IsSameAs(wxT("scrubbing")))
+   else if (captureMode.IsSameAs(wxT("scrub")))
    {
       CaptureToolbar(context.GetProject()->GetToolManager(), ScrubbingBarID, fileName);
    }

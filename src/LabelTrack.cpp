@@ -30,6 +30,7 @@ for drawing different aspects of the label and its text box.
 
 #include "Audacity.h"
 #include "LabelTrack.h"
+#include "TrackPanel.h"
 
 #include <stdio.h>
 #include <algorithm>
@@ -55,11 +56,13 @@ for drawing different aspects of the label and its text box.
 #include "DirManager.h"
 #include "Internat.h"
 #include "Prefs.h"
+#include "RefreshCode.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "Project.h"
 #include "TrackArtist.h"
+#include "Snap.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
@@ -277,6 +280,15 @@ void LabelTrack::ResetFlags()
    mCurrentCursorPos = 1;
    mRightDragging = false;
    mDrawCursor = false;
+}
+
+void LabelTrack::RestoreFlags( const Flags& flags )
+{
+   mInitialCursorPos = flags.mInitialCursorPos;
+   mCurrentCursorPos = flags.mCurrentCursorPos;
+   mSelIndex = flags.mSelIndex;
+   mRightDragging = flags.mRightDragging;
+   mDrawCursor = flags.mDrawCursor;
 }
 
 wxFont LabelTrack::GetFont(const wxString &faceName, int size)
@@ -1544,7 +1556,7 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
    return;
 }
 
-void LabelTrack::HandleClick(const wxMouseEvent & evt,
+void LabelTrack::HandleGlyphClick(const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
@@ -1595,6 +1607,15 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          mxMouseDisplacement = zoomInfo.TimeToPosition(t, r.x) - evt.m_x;
          return;
       }
+   }
+}
+
+void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
+   const wxRect & r, const ZoomInfo &zoomInfo,
+   SelectedRegion *newSel)
+{
+   if (evt.ButtonDown())
+   {
 
       mSelIndex = OverATextBox(evt.m_x, evt.m_y);
       if (mSelIndex != -1) {
@@ -1659,7 +1680,6 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
          }
 #endif
       }
-
 #if defined(__WXGTK__) && (HAVE_GTK)
       if (evt.MiddleDown()) {
          // Paste text, making a NEW label if none is selected.
@@ -1672,7 +1692,7 @@ void LabelTrack::HandleClick(const wxMouseEvent & evt,
 }
 
 // Check for keys that we will process
-bool LabelTrack::CaptureKey(wxKeyEvent & event)
+bool LabelTrack::DoCaptureKey(wxKeyEvent & event)
 {
    // Check for modifiers and only allow shift
    int mods = event.GetModifiers();
@@ -1722,6 +1742,69 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
    }
 
    return false;
+}
+
+unsigned LabelTrack::CaptureKey(wxKeyEvent & event, ViewInfo &, wxWindow *)
+{
+   event.Skip(!DoCaptureKey(event));
+   return RefreshCode::RefreshNone;
+}
+
+unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent)
+{
+   double bkpSel0 = viewInfo.selectedRegion.t0(),
+      bkpSel1 = viewInfo.selectedRegion.t1();
+
+   AudacityProject *const pProj = GetActiveProject();
+
+   // Pass keystroke to labeltrack's handler and add to history if any
+   // updates were done
+   if (OnKeyDown(viewInfo.selectedRegion, event)) {
+      pProj->PushState(_("Modified Label"),
+         _("Label Edit"),
+         UndoPush::CONSOLIDATE);
+   }
+
+   // Make sure caret is in view
+   int x;
+   if (CalcCursorX(&x)) {
+      pProj->GetTrackPanel()->ScrollIntoView(x);
+   }
+
+   // If selection modified, refresh
+   // Otherwise, refresh track display if the keystroke was handled
+   if (bkpSel0 != viewInfo.selectedRegion.t0() ||
+      bkpSel1 != viewInfo.selectedRegion.t1())
+      return RefreshCode::RefreshAll;
+   else if (!event.GetSkipped())
+      return RefreshCode::RefreshCell;
+
+   return RefreshCode::RefreshNone;
+}
+
+unsigned LabelTrack::Char(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *)
+{
+   double bkpSel0 = viewInfo.selectedRegion.t0(),
+      bkpSel1 = viewInfo.selectedRegion.t1();
+   // Pass keystroke to labeltrack's handler and add to history if any
+   // updates were done
+
+   AudacityProject *const pProj = GetActiveProject();
+
+   if (OnChar(viewInfo.selectedRegion, event))
+      pProj->PushState(_("Modified Label"),
+      _("Label Edit"),
+      UndoPush::CONSOLIDATE);
+
+   // If selection modified, refresh
+   // Otherwise, refresh track display if the keystroke was handled
+   if (bkpSel0 != viewInfo.selectedRegion.t0() ||
+      bkpSel1 != viewInfo.selectedRegion.t1())
+      return RefreshCode::RefreshAll;
+   else if (!event.GetSkipped())
+      return RefreshCode::RefreshCell;
+
+   return RefreshCode::RefreshNone;
 }
 
 /// KeyEvent is called for every keypress when over the label track.

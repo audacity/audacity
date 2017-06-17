@@ -24,6 +24,7 @@
 #include "widgets/OverlayPanel.h"
 
 #include "DirManager.h"
+#include "SelectionState.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
 #include "AudioIOListener.h"
@@ -101,6 +102,7 @@ enum class UndoPush : unsigned char;
 
 class Track;
 class WaveClip;
+class BackgroundCell;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -281,6 +283,7 @@ public:
    wxPanel *GetTopPanel() { return mTopPanel; }
    TrackPanel * GetTrackPanel() {return mTrackPanel;}
    const TrackPanel * GetTrackPanel() const {return mTrackPanel;}
+   SelectionState &GetSelectionState() { return mSelectionState; }
 
    bool GetIsEmpty();
 
@@ -555,8 +558,11 @@ public:
 
    void OnCapture(wxCommandEvent & evt);
    void InitialState();
+
+ public:
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
+private:
    void PopState(const UndoState &state);
 
    void UpdateLyrics();
@@ -635,6 +641,8 @@ private:
    AdornedRulerPanel *mRuler{};
    wxPanel *mTopPanel{};
    TrackPanel *mTrackPanel{};
+   SelectionState mSelectionState{};
+   bool mCircularTrackNavigation{};
    std::unique_ptr<TrackFactory> mTrackFactory{};
    wxPanel * mMainPanel;
    wxScrollBar *mHsbar;
@@ -756,6 +764,8 @@ private:
    // TrackPanelOverlay objects
    std::unique_ptr<Overlay>
       mIndicatorOverlay, mCursorOverlay;
+
+   std::shared_ptr<BackgroundCell> mBackgroundCell;
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    std::unique_ptr<Overlay> mScrubOverlay;

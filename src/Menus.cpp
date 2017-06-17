@@ -104,6 +104,9 @@ simplifies construction of menu items.
 #include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
+
+#include "tracks/ui/SelectHandle.h"
+
 #include "widgets/LinkingHtmlWindow.h"
 
 #include "Experimental.h"
@@ -443,9 +446,11 @@ void AudacityProject::CreateMenusAndCommands()
       // Basic Edit coomands
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Cut"), _("Cu&t"), FN(OnCut), wxT("Ctrl+X"),
-         AudioIONotBusyFlag | CutCopyAvailableFlag,
+         AudioIONotBusyFlag | CutCopyAvailableFlag | NoAutoSelect,
          AudioIONotBusyFlag | CutCopyAvailableFlag);
-      c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"));
+      c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"),
+         AudioIONotBusyFlag | NoAutoSelect,
+         AudioIONotBusyFlag );
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("Copy"), _("&Copy"), FN(OnCopy), wxT("Ctrl+C"),
          AudioIONotBusyFlag | CutCopyAvailableFlag,
@@ -1313,11 +1318,11 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu("&Edit");
 
       c->AddItem(wxT("DeleteKey"), _("&DeleteKey"), FN(OnDelete), wxT("Backspace"),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
+         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
 
       c->AddItem(wxT("DeleteKey2"), _("DeleteKey&2"), FN(OnDelete), wxT("Delete"),
-         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag,
+         AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag | NoAutoSelect,
          AudioIONotBusyFlag | TracksSelectedFlag | TimeSelectedFlag);
       c->EndSubMenu();
 
@@ -1884,9 +1889,6 @@ void AudacityProject::RebuildMenuBar()
 
 void AudacityProject::RebuildOtherMenus()
 {
-   if (mTrackPanel) {
-      mTrackPanel->BuildMenus();
-   }
 }
 
 CommandFlag AudacityProject::GetFocusedFrame()
@@ -2256,7 +2258,7 @@ void AudacityProject::SetTool(int tool)
 {
    ToolsToolBar *toolbar = GetToolsToolBar();
    if (toolbar) {
-      toolbar->SetCurrentTool(tool, true);
+      toolbar->SetCurrentTool(tool);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2298,7 +2300,7 @@ void AudacityProject::OnNextTool()
    if (toolbar) {
       // Use GetDownTool() here since GetCurrentTool() can return a value that
       // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+1)%numTools, true);
+      toolbar->SetCurrentTool((toolbar->GetDownTool()+1)%numTools);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2309,7 +2311,7 @@ void AudacityProject::OnPrevTool()
    if (toolbar) {
       // Use GetDownTool() here since GetCurrentTool() can return a value that
       // doesn't represent the real tool if the Multi-tool is being used.
-      toolbar->SetCurrentTool((toolbar->GetDownTool()+(numTools-1))%numTools, true);
+      toolbar->SetCurrentTool((toolbar->GetDownTool()+(numTools-1))%numTools);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2983,40 +2985,312 @@ void AudacityProject::OnMoveToLabel(bool next)
    }
 }
 
+/// The following method moves to the previous track
+/// selecting and unselecting depending if you are on the start of a
+/// block or not.
+
+/// \todo Merge related methods, OnPrevTrack and OnNextTrack.
+void AudacityProject::OnPrevTrack( bool shift )
+{
+   TrackListIterator iter( GetTracks() );
+   Track* t = mTrackPanel->GetFocusedTrack();
+   if( t == NULL )   // if there isn't one, focus on last
+   {
+      t = iter.Last();
+      mTrackPanel->SetFocusedTrack( t );
+      mTrackPanel->EnsureVisible( t );
+      ModifyState(false);
+      return;
+   }
+
+   Track* p = NULL;
+   bool tSelected = false;
+   bool pSelected = false;
+   if( shift )
+   {
+      p = mTracks->GetPrev( t, true ); // Get previous track
+      if( p == NULL )   // On first track
+      {
+         // JKC: wxBell() is probably for accessibility, so a blind
+         // user knows they were at the top track.
+         wxBell();
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( GetTracks() );
+            p = iter.Last();
+         }
+         else
+         {
+            mTrackPanel->EnsureVisible( t );
+            return;
+         }
+      }
+      tSelected = t->GetSelected();
+      if (p)
+         pSelected = p->GetSelected();
+      if( tSelected && pSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *t, false, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( p );   // move focus to next track down
+         mTrackPanel->EnsureVisible( p );
+         ModifyState(false);
+         return;
+      }
+      if( tSelected && !pSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *p, true, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( p );   // move focus to next track down
+         mTrackPanel->EnsureVisible( p );
+         ModifyState(false);
+         return;
+      }
+      if( !tSelected && pSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *p, false, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( p );   // move focus to next track down
+         mTrackPanel->EnsureVisible( p );
+         ModifyState(false);
+         return;
+      }
+      if( !tSelected && !pSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *t, true, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( p );   // move focus to next track down
+         mTrackPanel->EnsureVisible( p );
+         ModifyState(false);
+         return;
+      }
+   }
+   else
+   {
+      p = mTracks->GetPrev( t, true ); // Get next track
+      if( p == NULL )   // On last track so stay there?
+      {
+         wxBell();
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( GetTracks() );
+            for( Track *d = iter.First(); d; d = iter.Next( true ) )
+            {
+               p = d;
+            }
+            mTrackPanel->SetFocusedTrack( p );   // Wrap to the first track
+            mTrackPanel->EnsureVisible( p );
+            ModifyState(false);
+            return;
+         }
+         else
+         {
+            mTrackPanel->EnsureVisible( t );
+            return;
+         }
+      }
+      else
+      {
+         mTrackPanel->SetFocusedTrack( p );   // move focus to next track down
+         mTrackPanel->EnsureVisible( p );
+         ModifyState(false);
+         return;
+      }
+   }
+}
+
+/// The following method moves to the next track,
+/// selecting and unselecting depending if you are on the start of a
+/// block or not.
+void AudacityProject::OnNextTrack( bool shift )
+{
+   Track *t;
+   Track *n;
+   TrackListIterator iter( GetTracks() );
+   bool tSelected,nSelected;
+
+   t = mTrackPanel->GetFocusedTrack();   // Get currently focused track
+   if( t == NULL )   // if there isn't one, focus on first
+   {
+      t = iter.First();
+      mTrackPanel->SetFocusedTrack( t );
+      mTrackPanel->EnsureVisible( t );
+      ModifyState(false);
+      return;
+   }
+
+   if( shift )
+   {
+      n = mTracks->GetNext( t, true ); // Get next track
+      if( n == NULL )   // On last track so stay there
+      {
+         wxBell();
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( GetTracks() );
+            n = iter.First();
+         }
+         else
+         {
+            mTrackPanel->EnsureVisible( t );
+            return;
+         }
+      }
+      tSelected = t->GetSelected();
+      nSelected = n->GetSelected();
+      if( tSelected && nSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *t, false, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( n );   // move focus to next track down
+         mTrackPanel->EnsureVisible( n );
+         ModifyState(false);
+         return;
+      }
+      if( tSelected && !nSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *n, true, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( n );   // move focus to next track down
+         mTrackPanel->EnsureVisible( n );
+         ModifyState(false);
+         return;
+      }
+      if( !tSelected && nSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *n, false, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( n );   // move focus to next track down
+         mTrackPanel->EnsureVisible( n );
+         ModifyState(false);
+         return;
+      }
+      if( !tSelected && !nSelected )
+      {
+         GetSelectionState().SelectTrack
+            ( *mTracks, *t, true, false, GetMixerBoard() );
+         mTrackPanel->SetFocusedTrack( n );   // move focus to next track down
+         mTrackPanel->EnsureVisible( n );
+         ModifyState(false);
+         return;
+      }
+   }
+   else
+   {
+      n = mTracks->GetNext( t, true ); // Get next track
+      if( n == NULL )   // On last track so stay there
+      {
+         wxBell();
+         if( mCircularTrackNavigation )
+         {
+            TrackListIterator iter( GetTracks() );
+            n = iter.First();
+            mTrackPanel->SetFocusedTrack( n );   // Wrap to the first track
+            mTrackPanel->EnsureVisible( n );
+            ModifyState(false);
+            return;
+         }
+         else
+         {
+            mTrackPanel->EnsureVisible( t );
+            return;
+         }
+      }
+      else
+      {
+         mTrackPanel->SetFocusedTrack( n );   // move focus to next track down
+         mTrackPanel->EnsureVisible( n );
+         ModifyState(false);
+         return;
+      }
+   }
+}
+
 void AudacityProject::OnCursorUp()
 {
-   mTrackPanel->OnPrevTrack( false );
+   OnPrevTrack( false );
 }
 
 void AudacityProject::OnCursorDown()
 {
-   mTrackPanel->OnNextTrack( false );
+   OnNextTrack( false );
 }
 
 void AudacityProject::OnFirstTrack()
 {
-   mTrackPanel->OnFirstTrack();
+   Track *t = mTrackPanel->GetFocusedTrack();
+   if (!t)
+      return;
+
+   TrackListIterator iter(GetTracks());
+   Track *f = iter.First();
+   if (t != f)
+   {
+      mTrackPanel->SetFocusedTrack(f);
+      ModifyState(false);
+   }
+   mTrackPanel->EnsureVisible(f);
 }
 
 void AudacityProject::OnLastTrack()
 {
-   mTrackPanel->OnLastTrack();
+   Track *t = mTrackPanel->GetFocusedTrack();
+   if (!t)
+      return;
+
+   TrackListIterator iter(GetTracks());
+   Track *l = iter.Last();
+   if (t != l)
+   {
+      mTrackPanel->SetFocusedTrack(l);
+      ModifyState(false);
+   }
+   mTrackPanel->EnsureVisible(l);
 }
 
 void AudacityProject::OnShiftUp()
 {
-   mTrackPanel->OnPrevTrack( true );
+   OnPrevTrack( true );
 }
 
 void AudacityProject::OnShiftDown()
 {
-   mTrackPanel->OnNextTrack( true );
+   OnNextTrack( true );
 }
 
+#include "TrackPanelAx.h"
 void AudacityProject::OnToggle()
 {
-   mTrackPanel->OnToggle( );
+   Track *t;
+
+   t = mTrackPanel->GetFocusedTrack();   // Get currently focused track
+   if (!t)
+      return;
+
+   GetSelectionState().SelectTrack
+      ( *mTracks, *t, !t->GetSelected(), true, GetMixerBoard() );
+   mTrackPanel->EnsureVisible( t );
+   ModifyState(false);
+
+   mTrackPanel->GetAx().Updated();
+
+   return;
 }
+
+void AudacityProject::HandleListSelection(Track *t, bool shift, bool ctrl,
+                                     bool modifyState)
+{
+   GetSelectionState().HandleListSelection
+      ( *GetTracks(), mViewInfo, *t,
+        shift, ctrl, IsSyncLocked(), GetMixerBoard() );
+
+   if (! ctrl )
+      mTrackPanel->SetFocusedTrack(t);
+   Refresh(false);
+   if (modifyState)
+      ModifyState(true);
+}
+
 
 void AudacityProject::OnCursorLeft(const wxEvent * evt)
 {
@@ -3084,6 +3358,62 @@ void AudacityProject::OnSelContractRight(const wxEvent * evt)
    OnCursorLeft( true, true, bKeyUp );
 }
 
+#include "tracks/ui/TimeShiftHandle.h"
+
+// This function returns the amount moved.  Possibly 0.0.
+double AudacityProject::OnClipMove
+   ( ViewInfo &viewInfo, Track *track,
+     TrackList &trackList, bool syncLocked, bool right )
+{
+   // just dealing with clips in wave tracks for the moment. Note tracks??
+   if (track && track->GetKind() == Track::Wave) {
+      ClipMoveState state;
+
+      auto wt = static_cast<WaveTrack*>(track);
+      auto t0 = viewInfo.selectedRegion.t0();
+
+      state.capturedClip = wt->GetClipAtTime( t0 );
+      if (state.capturedClip == nullptr)
+         return 0.0;
+
+      state.capturedClipIsSelection =
+         track->GetSelected() && !viewInfo.selectedRegion.isPoint();
+      state.trackExclusions.clear();
+
+      TimeShiftHandle::CreateListOfCapturedClips
+         ( state, viewInfo, *track, trackList, syncLocked, t0 );
+
+      auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
+      auto desiredSlideAmount = desiredT0 - t0;
+
+      // set it to a sample point, and minimum of 1 sample point
+      if (!right)
+         desiredSlideAmount *= -1;
+      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
+      nSamples = std::max(nSamples, 1.0);
+      desiredSlideAmount = nSamples / wt->GetRate();
+      if (!right)
+         desiredSlideAmount *= -1;
+
+      state.hSlideAmount = desiredSlideAmount;
+      TimeShiftHandle::DoSlideHorizontal( state, trackList, *track );
+
+      // update t0 and t1. There is the possibility that the updated
+      // t0 may no longer be within the clip due to rounding errors,
+      // so t0 is adjusted so that it is.
+      double newT0 = t0 + state.hSlideAmount;
+      if (newT0 < state.capturedClip->GetStartTime())
+         newT0 = state.capturedClip->GetStartTime();
+      if (newT0 > state.capturedClip->GetEndTime())
+         newT0 = state.capturedClip->GetEndTime();
+      double diff = viewInfo.selectedRegion.duration();
+      viewInfo.selectedRegion.setTimes(newT0, newT0 + diff);
+
+      return state.hSlideAmount;
+   }
+   return 0.0;
+}
+
 void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 {
    if (keyUp) {
@@ -3093,7 +3423,7 @@ void AudacityProject::DoClipLeftOrRight(bool right, bool keyUp )
 
    auto &panel = *GetTrackPanel();
 
-   auto amount = TrackPanel::OnClipMove
+   auto amount = OnClipMove
       ( mViewInfo, panel.GetFocusedTrack(),
         *GetTracks(), IsSyncLocked(), right );
 
@@ -3383,7 +3713,7 @@ void AudacityProject::OnTrackPan()
    }
    const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
+   LWSlider *slider = mTrackPanel->PanSlider(wt);
    if (slider->ShowDialog()) {
       SetTrackPan(wt, slider);
    }
@@ -3397,7 +3727,7 @@ void AudacityProject::OnTrackPanLeft()
    }
    const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
+   LWSlider *slider = mTrackPanel->PanSlider(wt);
    slider->Decrease(1);
    SetTrackPan(wt, slider);
 }
@@ -3410,7 +3740,7 @@ void AudacityProject::OnTrackPanRight()
    }
    const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->PanSlider(wt);
+   LWSlider *slider = mTrackPanel->PanSlider(wt);
    slider->Increase(1);
    SetTrackPan(wt, slider);
 }
@@ -3424,7 +3754,7 @@ void AudacityProject::OnTrackGain()
    }
    const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
+   LWSlider *slider = mTrackPanel->GainSlider(wt);
    if (slider->ShowDialog()) {
       SetTrackGain(wt, slider);
    }
@@ -3438,7 +3768,7 @@ void AudacityProject::OnTrackGainInc()
    }
    const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
+   LWSlider *slider = mTrackPanel->GainSlider(wt);
    slider->Increase(1);
    SetTrackGain(wt, slider);
 }
@@ -3451,7 +3781,7 @@ void AudacityProject::OnTrackGainDec()
    }
    const auto wt = static_cast<WaveTrack*>(track);
 
-   LWSlider *slider = mTrackPanel->GetTrackInfo()->GainSlider(wt);
+   LWSlider *slider = mTrackPanel->GainSlider(wt);
    slider->Decrease(1);
    SetTrackGain(wt, slider);
 }
@@ -5552,7 +5882,7 @@ void AudacityProject::DoNextPeakFrequency(bool up)
    }
 
    if (pTrack) {
-      mTrackPanel->SnapCenterOnce(pTrack, up);
+      SelectHandle::Instance().SnapCenterOnce(mViewInfo, pTrack, up);
       mTrackPanel->Refresh(false);
       ModifyState(false);
    }
