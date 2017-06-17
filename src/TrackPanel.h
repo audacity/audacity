@@ -421,6 +421,7 @@ public:
    // is not in any track or ruler or control panel.
    void SetBackgroundCell
       (const std::shared_ptr< TrackPanelCell > &pCell);
+   std::shared_ptr< TrackPanelCell > GetBackgroundCell();
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void UpdateVirtualStereoOrder();

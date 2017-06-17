@@ -600,7 +600,11 @@ VisibleTrackIterator::VisibleTrackIterator(AudacityProject *project)
 bool VisibleTrackIterator::Condition(Track *t)
 {
    wxRect r(0, t->GetY(), 1, t->GetHeight());
-   return r.Intersects(mPanelRect);
+   if( r.Intersects(mPanelRect) )
+      return true;
+   auto partner = t->GetLink();
+   if ( partner && t->GetLinked() )
+      return Condition( partner );
 }
 
 // SyncLockedTracksIterator

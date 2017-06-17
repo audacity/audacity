@@ -2229,6 +2229,11 @@ void TrackPanel::SetBackgroundCell
    mpBackground = pCell;
 }
 
+std::shared_ptr< TrackPanelCell > TrackPanel::GetBackgroundCell()
+{
+   return mpBackground;
+}
+
 /// Draw a three-level highlight gradient around the focused track.
 void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & rect)
 {
@@ -2490,133 +2495,23 @@ void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & rect)
 ///  @param mouseY - mouse Y position.
 TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
 {
-   enum class CellType { Label, Track, VRuler, Background };
-   auto size = GetSize();
-   size.x -= kRightMargin;
-   wxRect rect { 0, 0, 0, 0 };
-   bool betweenTracks = false;
-
-   // The type of cell that may be found is determined by the x coordinate.
-   CellType type = CellType::Track;
-   if (mouseX < kLeftMargin)
-      ;
-   else if (mouseX < GetVRulerOffset())
-      type = CellType::Label,
-      rect.x = kLeftMargin,
-      rect.width = GetVRulerOffset() - kLeftMargin;
-   else if (mouseX < GetLeftOffset())
-      type = CellType::VRuler,
-      rect.x = GetVRulerOffset(),
-      rect.width = GetLeftOffset() - GetVRulerOffset();
-   else if (mouseX < size.x)
-      type = CellType::Track,
-      rect.x = GetLeftOffset(),
-      rect.width = size.x - GetLeftOffset();
-
-   auto output = [&](Track *pTrack) -> FoundCell {
-      TrackPanelCell *pCell {};
-
-      // Did we actually hit in the resizer region, which encompasses the
-      // bottom margin proper to "this" track, plus the top margin of the
-      // "next" track (or, an equally wide zone below, in case there is no
-      // next track)?
-      const auto margin = kBottomMargin + kTopMargin;
-      if ( rect.y + rect.height - mouseY <= margin ) {
-         auto instance = &TrackPanelResizerCell::Instance();
-         instance->mpTrack = pTrack;
-         instance->mBetweenTracks = betweenTracks;
-         pCell = instance;
-         rect.y = rect.y + rect.height - kTopMargin;
-         rect.height = margin;
-         return { pTrack, pCell, rect };
-      }
-
-      // Undo the bias mentioned below.
-      rect.y -= kTopMargin;
-      if (pTrack) switch (type) {
-         case CellType::Label:
-            pCell = pTrack->GetTrackControl(); break;
-         case CellType::VRuler:
-            pCell = pTrack->GetVRulerControl(); break;
-         default:
-            pCell = pTrack; break;
-      }
-      if (pTrack)
-         return { pTrack, pCell, rect };
-      else
-         return { nullptr, nullptr, {} };
+   auto range = Cells();
+   auto &iter = range.first, &end = range.second;
+   auto prev = iter;
+   while
+      ( iter != end &&
+        !(*iter).second.Contains( mouseX, mouseY ) )
+      prev = iter++;
+   if ( iter == end )
+      // Default to the background cell, which is always last in the sequence,
+      // even if it does not contain the point
+      iter = prev;
+   auto found = *iter;
+   return {
+      static_cast<CommonTrackPanelCell*>( found.first )->FindTrack(),
+      found.first,
+      found.second
    };
-
-   VisibleTrackIterator iter(GetProject());
-   for (Track * t = iter.First(); t; t = iter.Next()) {
-      // The zone to hit the track is biased to exclude the margin above
-      // but include the top margin of the track below.  That makes the change
-      // to the track resizing cursor work right.
-      rect.y = t->GetY() - mViewInfo->vpos + kTopMargin;
-      rect.height = t->GetHeight();
-
-      if (type == CellType::Label) {
-         if (t->GetLink()) {
-            Track *l = t->GetLink();
-            int h = l->GetHeight();
-            if (!t->GetLinked())
-               rect.y = l->GetY() - mViewInfo->vpos + kTopMargin;
-            else
-               t = l;
-            rect.height += h;
-         }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-         else if( MONO_WAVE_PAN(t) )
-            rect.height += t->GetHeight(true);
-#endif
-      }
-      else {
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-         if( MONO_WAVE_PAN(t) )
-            betweenTracks = true;
-         else
-#endif
-            betweenTracks = t->GetLinked();
-      }
-
-      //Determine whether the mouse is inside
-      //the current rectangle.  If so, return.
-      if (rect.Contains(mouseX, mouseY)) {
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-         // PRL:  Is it good to have a side effect in a hit-testing routine?
-         t->SetVirtualStereo(false);
-#endif
-         return output(t);
-      }
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if(type != CellType::Label && MONO_WAVE_PAN(t)){
-         betweenTracks = false;
-         rect.y = t->GetY(true) - mViewInfo->vpos + kTopMargin;
-         rect.height = t->GetHeight(true);
-         if (rect.Contains(mouseX, mouseY)) {
-            // PRL:  Is it good to have a side effect in a hit-testing routine?
-            t->SetVirtualStereo(true);
-            return output(t);
-         }
-      }
-#endif // EXPERIMENTAL_OUTPUT_DISPLAY
-   }
-
-   if (mpBackground) {
-      // In default of hits on any other cells
-      // Find a disjoint, maybe empty, rectangle
-      // for the empty space appearing at bottom
-      rect.x = kLeftMargin;
-      rect.width = size.x - rect.x;
-      rect.y =
-         std::min( size.y,
-            std::max( 0,
-               rect.y + rect.height ) );
-      rect.height = size.y - rect.y;
-      return { nullptr, mpBackground.get(), rect };
-   }
-   else
-      return { nullptr, nullptr, {} };
 }
 
 // This finds the rectangle of a given track (including all channels),
@@ -3175,16 +3070,59 @@ IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
 }
 
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
-   : mPanel(trackPanel)
-   , mIter(trackPanel->GetProject())
-   , mpCell(begin ? mIter.First() : NULL)
+   : mPanel{ trackPanel }
+   , mIter{ trackPanel->GetProject() }
+   , mpTrack{ begin ? mIter.First() : nullptr }
+   , mpCell{ begin
+      ? ( mpTrack ? mpTrack : trackPanel->GetBackgroundCell().get() )
+      : nullptr
+   }
 {
+   const auto size = mPanel->GetSize();
+   mRect = { 0, 0, size.x, size.y };
+   UpdateRect();
 }
 
 TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
 {
-   // To do, iterate over the other cells that are not tracks
-   mpCell = mIter.Next();
+   if ( mpTrack ) {
+      if ( ++ mType == CellType::Background )
+         mType = CellType::Track, mpTrack = mIter.Next();
+   }
+   if ( mpTrack ) {
+      if ( mType == CellType::Label &&
+           mpTrack->GetLink() && !mpTrack->GetLinked() )
+         // Visit label of stereo track only once
+         ++mType;
+      switch ( mType ) {
+         case CellType::Track:
+            mpCell = mpTrack;
+            break;
+         case CellType::Label:
+            mpCell = mpTrack->GetTrackControl();
+            break;
+         case CellType::VRuler:
+            mpCell = mpTrack->GetVRulerControl();
+            break;
+         case CellType::Resizer: {
+            auto instance = &TrackPanelResizerCell::Instance();
+            instance->mpTrack = mpTrack;
+            mpCell = instance;
+            break;
+         }
+         default:
+            // should not happen
+            mpCell = nullptr;
+            break;
+      }
+   }
+   else if ( !mDidBackground )
+      mpCell = mPanel->GetBackgroundCell().get(), mDidBackground = true;
+   else
+      mpCell = nullptr;
+
+   UpdateRect();
+
    return *this;
 }
 
@@ -3197,24 +3135,79 @@ TrackPanelCellIterator TrackPanelCellIterator::operator++ (int)
 
 auto TrackPanelCellIterator::operator* () const -> value_type
 {
-   Track *const pTrack = dynamic_cast<Track*>(mpCell);
-   if (!pTrack)
-      // to do: handle cells that are not tracks
-      return std::make_pair((Track*)nullptr, wxRect());
+   return { mpCell, mRect };
+}
 
-   // Convert virtual coordinate to physical
-   int width;
-   mPanel->GetTracksUsableArea(&width, NULL);
-   int y = pTrack->GetY() - mPanel->GetViewInfo()->vpos;
-   return std::make_pair(
-      mpCell,
-      wxRect(
-         mPanel->GetLeftOffset(),
-         y + kTopMargin,
-         width,
-         pTrack->GetHeight() - (kTopMargin + kBottomMargin)
-      )
-   );
+void TrackPanelCellIterator::UpdateRect()
+{
+   // TODO:  cooperate with EXPERIMENTAL_OUTPUT_DISPLAY
+   const auto size = mPanel->GetSize();
+   if ( mpTrack ) {
+      mRect = {
+         0,
+         mpTrack->GetY() - mPanel->GetViewInfo()->vpos,
+         size.x,
+         mpTrack->GetHeight()
+      };
+      switch ( mType ) {
+         case CellType::Track:
+            mRect.x = mPanel->GetLeftOffset();
+            mRect.width -= (mRect.x + kRightMargin);
+            mRect.y += kTopMargin;
+            mRect.height -= (kBottomMargin + kTopMargin);
+            break;
+         case CellType::Label: {
+            mRect.x = kLeftMargin;
+            mRect.width = kTrackInfoWidth - mRect.x;
+            mRect.y += kTopMargin;
+            mRect.height -= (kBottomMargin + kTopMargin);
+            auto partner = mpTrack->GetLink();
+            if ( partner && mpTrack->GetLinked() )
+               mRect.height += partner->GetHeight();
+            break;
+         }
+         case CellType::VRuler:
+            mRect.x = kTrackInfoWidth;
+            mRect.width = mPanel->GetLeftOffset() - mRect.x;
+            mRect.y += kTopMargin;
+            mRect.height -= (kBottomMargin + kTopMargin);
+            break;
+         case CellType::Resizer: {
+            // The resizer region encompasses the bottom margin proper to this
+            // track, plus the top margin of the next track (or, an equally
+            // tall zone below, in case there is no next track)
+            auto partner = mpTrack->GetLink();
+            if ( partner && mpTrack->GetLinked() )
+               mRect.x = mPanel->GetLeftOffset();
+            else
+               mRect.x = kLeftMargin;
+            mRect.width -= (mRect.x + kRightMargin);
+            mRect.y += (mRect.height - kBottomMargin);
+            mRect.height = (kBottomMargin + kTopMargin);
+            break;
+         }
+         default:
+            // should not happen
+            break;
+      }
+   }
+   else if ( mpCell ) {
+      // Find a disjoint, maybe empty, rectangle
+      // for the empty space appearing at bottom
+
+      mRect.x = kLeftMargin;
+      mRect.width = size.x - (mRect.x + kRightMargin);
+
+      // Use previous value of the bottom, either the whole area if
+      // there were no tracks, or else the resizer of the last track
+      mRect.y =
+         std::min( size.y,
+            std::max( 0,
+               mRect.y + mRect.height ) );
+      mRect.height = size.y - mRect.y;
+   }
+   else
+      mRect = {};
 }
 
 static TrackPanel * TrackPanelFactory(wxWindow * parent,
