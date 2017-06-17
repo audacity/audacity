@@ -825,7 +825,9 @@ void TrackPanel::HandlePageDownKey()
 
 void TrackPanel::HandleCursorForLastMouseEvent()
 {
-   // Come here on modifier key transitions and change the cursor appropriately.
+   // Come here on modifier key transitions,
+   // or on starting or stopping of play or record,
+   // and change the cursor appropriately.
    HandleCursor( &mLastMouseEvent );
 }
 
@@ -2617,8 +2619,9 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       return { nullptr, nullptr, {} };
 }
 
-/// This finds the rectangle of a given track, either the
-/// of the label 'adornment' or the track itself
+// This finds the rectangle of a given track (including all channels),
+// either that of the label 'adornment' or the track itself
+// The given track is assumed to be the first channel
 wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
 {
    if (!target) {
