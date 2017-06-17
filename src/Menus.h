@@ -367,6 +367,7 @@ void OnShowRecordMeterToolBar();
 void OnShowPlayMeterToolBar();
 void OnShowMixerToolBar();
 void OnShowSelectionToolBar();
+void OnShowTimeToolBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnShowSpectralSelectionToolBar();
 #endif

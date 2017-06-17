@@ -154,6 +154,7 @@ scroll information.  It also has some status flags.
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/ScrubbingToolBar.h"
 #include "toolbars/SelectionBar.h"
+#include "toolbars/TimeToolbar.h"
 #include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
@@ -992,6 +993,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    mToolManager = std::make_unique<ToolManager>( this, mTopPanel );
    GetSelectionBar()->SetListener(this);
+   GetTimeToolBar()->SetListener( this );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetListener(this);
 #endif
@@ -1523,6 +1525,26 @@ double AudacityProject::AS_GetRate()
 void AudacityProject::AS_SetRate(double rate)
 {
    mRate = rate;
+}
+
+double AudacityProject::ATTB_GetRate()
+{
+   return mRate;
+}
+
+void AudacityProject::ATTB_SetRate(double rate)
+{
+   mRate = rate;
+}
+
+const wxString & AudacityProject::ATTB_GetSelectionFormat()
+{
+   return GetSelectionFormat();
+}
+
+void AudacityProject::ATTB_SetSelectionFormat(const wxString & format)
+{
+   AS_SetSelectionFormat( format );
 }
 
 int AudacityProject::AS_GetSnapTo()
@@ -4769,6 +4791,14 @@ SelectionBar *AudacityProject::GetSelectionBar()
       NULL);
 }
 
+TimeToolbar *AudacityProject::GetTimeToolBar()
+{
+   return (TimeToolbar *)
+      (mToolManager ?
+      mToolManager->GetToolBar(TimeBarID) :
+      NULL);
+}
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 SpectralSelectionBar *AudacityProject::GetSpectralSelectionBar()
 {
@@ -5115,6 +5145,7 @@ void AudacityProject::TP_DisplaySelection()
 
    GetSelectionBar()->SetTimes(mViewInfo.selectedRegion.t0(),
                                mViewInfo.selectedRegion.t1(), audioTime);
+   GetTimeToolBar()->SetTimes( audioTime );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    GetSpectralSelectionBar()->SetFrequencies
       (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());

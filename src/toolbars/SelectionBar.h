@@ -35,9 +35,9 @@
 //   Cursor position
 
 #ifdef OPTIONS_BUTTON
-#define SIZER_COLS 8
+#define SIZER_COLS 6
 #else
-#define SIZER_COLS 7
+#define SIZER_COLS 5
 #endif
 
 class wxBitmap;
@@ -118,7 +118,7 @@ class SelectionBar final : public ToolBar {
 
    SelectionBarListener * mListener;
    double mRate;
-   double mStart, mEnd, mLength, mCenter,  mAudio;
+   double mStart, mEnd, mLength, mCenter;
    wxString mField[10];
 
    // Only used if we use radio buttons.
@@ -135,7 +135,6 @@ class SelectionBar final : public ToolBar {
    NumericTextCtrl   *mCenterTime;
    NumericTextCtrl   *mLengthTime;
    NumericTextCtrl   *mEndTime;
-   NumericTextCtrl   *mAudioTime;
 
 #ifdef SEL_CHOICE
    wxChoice * mChoice;

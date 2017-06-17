@@ -32,6 +32,7 @@
 #include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
+#include "toolbars/TimeToolbarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
 
 #include "MemoryX.h"
@@ -79,6 +80,7 @@ class MixerToolBar;
 class Scrubber;
 class ScrubbingToolBar;
 class SelectionBar;
+class TimeToolbar;
 class SpectralSelectionBar;
 class ToolManager;
 class ToolsToolBar;
@@ -161,6 +163,7 @@ class ImportXMLTagHandler final : public XMLTagHandler
 class AUDACITY_DLL_API AudacityProject final : public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
+                                     public TimeToolbarListener,
                                      public SpectralSelectionBarListener,
                                      public XMLTagHandler,
                                      public AudioIOListener
@@ -480,6 +483,7 @@ public:
    MixerToolBar *GetMixerToolBar();
    ScrubbingToolBar *GetScrubbingToolBar();
    SelectionBar *GetSelectionBar();
+   TimeToolbar *GetTimeToolBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBar *GetSpectralSelectionBar();
 #endif
@@ -510,6 +514,11 @@ public:
    const wxString & AS_GetSelectionFormat() override;
    void AS_SetSelectionFormat(const wxString & format) override;
    void AS_ModifySelection(double &start, double &end, bool done) override;
+
+   double ATTB_GetRate() override;
+   void ATTB_SetRate(double rate) override;
+   const wxString & ATTB_GetSelectionFormat() override;
+   void ATTB_SetSelectionFormat(const wxString & format) override;
 
    // SpectralSelectionBarListener callback methods
 

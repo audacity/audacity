@@ -75,6 +75,7 @@ enum
    ScrubbingBarID,
    DeviceBarID,
    SelectionBarID,
+   TimeBarID,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBarID,
 #endif

@@ -220,6 +220,7 @@
     <ClCompile Include="..\..\..\src\TimeTrack.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\ScrubbingToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\SpectralSelectionBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\TimeToolbar.cpp" />
     <ClCompile Include="..\..\..\src\Track.cpp" />
     <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
@@ -503,6 +504,7 @@
     <ClInclude Include="..\..\..\src\toolbars\ScrubbingToolBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
+    <ClInclude Include="..\..\..\src\toolbars\TimeToolbarListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />

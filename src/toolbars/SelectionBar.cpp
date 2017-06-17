@@ -126,9 +126,8 @@ END_EVENT_TABLE()
 SelectionBar::SelectionBar()
 : ToolBar(SelectionBarID, _("Selection"), wxT("Selection")),
   mListener(NULL), mRate(0.0), 
-  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
+  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
   mStartTime(NULL), mEndTime(NULL), mLengthTime(NULL), mCenterTime(NULL), 
-  mAudioTime(NULL),
 #ifdef SEL_RADIO_TITLES
   mStartTitle(NULL), mCenterTitle(NULL), mLengthTitle(NULL), mEndTitle(NULL),
   mStartEndProxy(NULL), mStartLengthProxy(NULL), mLengthEndProxy(NULL), mLengthCenterProxy(NULL),
@@ -238,7 +237,7 @@ void SelectionBar::AddVLine(  wxSizer * pSizer ){
 void SelectionBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   mStartTime = mEndTime = mLengthTime = mCenterTime = mAudioTime = nullptr;
+   mStartTime = mEndTime = mLengthTime = mCenterTime = nullptr;
 #ifdef SEL_RADIO_TITLE
    mStartEndProxy = mStartLengthProxy = mLengthEndProxy = mLengthCenterProxy = nullptr;
 #endif
@@ -290,9 +289,6 @@ void SelectionBar::Populate()
    // Not enough room to say 'Selection Options".  There is a tooltip instead.
    AddTitle( wxT(""), -1, mainSizer );
 #endif
-   AddVLine( mainSizer );
-
-   AddTitle( _("Audio Position"), -1, mainSizer );
    AddVLine( mainSizer );
 
    {
@@ -435,10 +431,7 @@ void SelectionBar::Populate()
    //pBtn->Disable();
    mainSizer->Add( pBtn, 0,  wxALIGN_TOP | wxRIGHT, 5);
 #endif 
-   AddVLine( mainSizer );
 
-   mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
-   mAudioTime->SetScaleFactor( 2.0 );
    // This vertical line is NOT just for decoration!
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
    // into the radiobutton group jumps to selecting the first item in the 
@@ -649,10 +642,10 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 {
    int index = evt.GetInt();
    wxWindow *w = FindFocus();
-   NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
+   NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime };
    int i;
    int iFocus = -1;
-   for(i=0;i<5;i++)
+   for(i=0;i<4;i++)
       if( w == *Ctrls[i] )
          iFocus = i;
 
@@ -668,7 +661,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
-   for( i=0;i<5;i++)
+   for( i=0;i<4;i++)
       *Ctrls[i]=NULL;
 
    mRateBox = NULL;
@@ -679,7 +672,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    ValuesToControls();
 
    format = mStartTime->GetBuiltinFormat(index);
-   for( i=0;i<5;i++)
+   for( i=0;i<4;i++)
       (*Ctrls[i])->SetFormatString( format );
 
    if( iFocus >=0 )
@@ -892,10 +885,10 @@ void SelectionBar::ShowHideControls(int mode)
 
 void SelectionBar::ValuesToControls()
 {
-   NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
-   double Values[5] = {mStart, mEnd, mLength, mCenter, mAudio };
+   NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime };
+   double Values[4] = {mStart, mEnd, mLength, mCenter};
    int i;
-   for(i=0;i<5;i++)
+   for(i=0;i<4;i++)
       if( *Ctrls[i] )
          (*Ctrls[i])->SetValue( Values[i] );
 }
@@ -906,8 +899,6 @@ void SelectionBar::SetTimes(double start, double end, double audio)
    mEnd = end;
    mLength = end-start;
    mCenter = (end+start)/2.0;
-   mAudio = audio;
-
    ValuesToControls();
 }
 
@@ -943,9 +934,9 @@ void SelectionBar::SetRate(double rate)
       mRate = rate;   // update the stored rate
       mRateBox->SetValue(wxString::Format(wxT("%d"), (int)rate));
       // update the TimeTextCtrls if they exist
-      NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
+      NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime };
       int i;
-      for(i=0;i<5;i++)
+      for(i=0;i<4;i++)
          if( *Ctrls[i] )
             (*Ctrls[i])->SetSampleRate( rate );
    }
@@ -956,9 +947,9 @@ void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
    if (mRateBox->GetValue().ToDouble(&mRate) && // is a numeric value
          (mRate != 0.0))
    {
-      NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
+      NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime };
       int i;
-      for(i=0;i<5;i++)
+      for(i=0;i<4;i++)
          if( *Ctrls[i] )
             (*Ctrls[i])->SetSampleRate( mRate );
       if (mListener) mListener->AS_SetRate(mRate);

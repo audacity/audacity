@@ -1049,6 +1049,9 @@
     <ClCompile Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackSliderHandles.cpp">
       <Filter>src\tracks\playabletrack\notetrack\ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\TimeToolbar.cpp">
+      <Filter>src\toolbars</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -2091,6 +2094,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\prefs\TracksBehaviorsPrefs.h">
       <Filter>src\prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\TimeToolbarListener.h">
+      <Filter>src\toolbars</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

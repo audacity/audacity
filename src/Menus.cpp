@@ -787,6 +787,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddCheck(wxT("ShowDeviceTB"), _("&Device Toolbar"), FN(OnShowDeviceToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio*/
       c->AddCheck(wxT("ShowSelectionTB"), _("&Selection Toolbar"), FN(OnShowSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddCheck(wxT("ShowTimeTB"), _("&Time Toolbar"), FN(OnShowTimeToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       /* i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio*/
       c->AddCheck(wxT("ShowSpectralSelectionTB"), _("Spe&ctral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
@@ -2128,6 +2129,8 @@ void AudacityProject::ModifyToolbarMenus()
                          mToolManager->IsVisible(MixerBarID));
    mCommandManager.Check(wxT("ShowSelectionTB"),
                          mToolManager->IsVisible(SelectionBarID));
+   mCommandManager.Check(wxT("ShowSTimeTB"),
+                         mToolManager->IsVisible(TimeBarID));
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mCommandManager.Check(wxT("ShowSpectralSelectionTB"),
                          mToolManager->IsVisible(SpectralSelectionBarID));
@@ -6579,6 +6582,12 @@ void AudacityProject::OnShowScrubbingToolBar()
 void AudacityProject::OnShowSelectionToolBar()
 {
    mToolManager->ShowHide( SelectionBarID );
+   ModifyToolbarMenus();
+}
+
+void AudacityProject::OnShowTimeToolBar()
+{
+   mToolManager->ShowHide( TimeBarID );
    ModifyToolbarMenus();
 }
 

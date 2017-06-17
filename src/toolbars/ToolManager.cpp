@@ -55,6 +55,7 @@
 #include "MixerToolBar.h"
 #include "ScrubbingToolBar.h"
 #include "SelectionBar.h"
+#include "TimeToolbar.h"
 #include "SpectralSelectionBar.h"
 #include "ToolsToolBar.h"
 #include "TranscriptionToolBar.h"
@@ -423,6 +424,7 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
    mBars[ MixerBarID ]         =  ToolBar::Holder{ safenew MixerToolBar() };
    mBars[ TranscriptionBarID ] =  ToolBar::Holder{ safenew TranscriptionToolBar() };
    mBars[ SelectionBarID ]     =  ToolBar::Holder{ safenew SelectionBar() };
+   mBars[ TimeBarID ]          =  ToolBar::Holder{ safenew TimeToolbar() };
    mBars[ DeviceBarID ]        =  ToolBar::Holder{ safenew DeviceToolBar() };
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mBars[SpectralSelectionBarID] =  ToolBar::Holder{ safenew SpectralSelectionBar() };
@@ -509,6 +511,9 @@ static struct DefaultConfigEntry {
    // Bottom dock
    { SelectionBarID,         NoBarID,                NoBarID                },
 
+   // Bottom dock
+   { TimeBarID,              SelectionBarID,         NoBarID                },
+
    // Hidden by default in bottom dock
    { SpectralSelectionBarID, NoBarID,                NoBarID                },
 };
@@ -544,6 +549,7 @@ void ToolManager::Reset()
 
       // Decide which dock.
       if (ndx == SelectionBarID 
+         || ndx == TimeBarID
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          || ndx == SpectralSelectionBarID
 #endif
@@ -573,7 +579,7 @@ void ToolManager::Reset()
 #ifdef EXPERIMENTAL_DA
          || ndx == DeviceBarID
          || ndx == TranscriptionBarID
-         || ndx == SelectionBarID
+        // || ndx == SelectionBarID
 #endif
          )
          expose = false;
