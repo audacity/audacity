@@ -3166,6 +3166,14 @@ void TrackInfo::UpdatePrefs()
    } while (textWidth >= allowableWidth);
 }
 
+IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
+{
+   return {
+      TrackPanelCellIterator( this, true ),
+      TrackPanelCellIterator( this, false )
+   };
+}
+
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
    : mPanel(trackPanel)
    , mIter(trackPanel->GetProject())

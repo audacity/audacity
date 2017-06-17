@@ -102,13 +102,10 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (auto tp = dynamic_cast<TrackPanel*>(&panel)) {
       wxASSERT(mIsMaster);
       AColor::CursorColor(&dc);
-      TrackPanelCellIterator begin(tp, true);
-      TrackPanelCellIterator end(tp, false);
 
       // Draw cursor in all selected tracks
-      for (; begin != end; ++begin)
+      for ( const auto &data : tp->Cells() )
       {
-         TrackPanelCellIterator::value_type data(*begin);
          Track *const pTrack = dynamic_cast<Track*>(data.first);
          if (!pTrack)
             continue;

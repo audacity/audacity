@@ -44,6 +44,7 @@ class MixerBoard;
 class AudacityProject;
 
 class TrackPanelAx;
+class TrackPanelCellIterator;
 struct TrackPanelMouseEvent;
 
 class ViewInfo;
@@ -258,6 +259,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
               AdornedRulerPanel * ruler );
 
    virtual ~ TrackPanel();
+
+   IteratorRange< TrackPanelCellIterator > Cells();
 
    void UpdatePrefs();
    void ApplyUpdatedTheme();
