@@ -24,17 +24,12 @@ struct HitTestPreview
    HitTestPreview()
    {}
 
-   HitTestPreview(const wxString &message_, wxCursor *cursor_
-      , unsigned refreshCode_ = 0)
-      : message(message_), cursor(cursor_), refreshCode(refreshCode_)
+   HitTestPreview(const wxString &message_, wxCursor *cursor_)
+      : message(message_), cursor(cursor_)
    {}
 
    wxString message {};
    wxCursor *cursor {};
-
-   // Making this non-zero allows mouse-over highlighting
-   // See RefreshCode.h for bit flags:
-   unsigned refreshCode {};
 };
 
 struct HitTestResult

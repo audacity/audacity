@@ -39,6 +39,8 @@ class TimeWarper;
 class ZoomInfo;
 
 
+struct LabelTrackHit;
+
 class LabelStruct
 {
 public:
@@ -150,7 +152,6 @@ class AUDACITY_DLL_API LabelTrack final : public Track
              const ZoomInfo &zoomInfo) const;
 
    int getSelectedIndex() const { return mSelIndex; }
-   bool IsAdjustingLabel() const { return mIsAdjustingLabel; }
 
    int GetKind() const override { return Label; }
 
@@ -180,7 +181,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
-   int OverGlyph(int x, int y);
+   void OverGlyph(LabelTrackHit &hit, int x, int y) const;
    static wxBitmap & GetGlyph( int i);
 
 
@@ -206,13 +207,16 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    static bool IsTextClipSupported();
 
    void HandleGlyphClick
-      (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
+      (LabelTrackHit &hit,
+       const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
    void HandleTextClick
       (const wxMouseEvent & evt, const wxRect & r, const ZoomInfo &zoomInfo,
        SelectedRegion *newSel);
-   bool HandleGlyphDragRelease(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
-      SelectedRegion *newSel);
+   bool HandleGlyphDragRelease
+      (LabelTrackHit &hit,
+       const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
+       SelectedRegion *newSel);
    void HandleTextDragRelease(const wxMouseEvent & evt);
 
    bool OnKeyDown(SelectedRegion &sel, wxKeyEvent & event);
@@ -243,7 +247,9 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    void CalcHighlightXs(int *x1, int *x2) const;
 
-   void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
+   void MayAdjustLabel
+      ( LabelTrackHit &hit,
+        int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
    // This pastes labels without shifting existing ones
@@ -266,19 +272,12 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    int FindPrevLabel(const SelectedRegion& currentSelection);
 
  public:
-   void SortLabels();
-   //These two are used by a TrackPanel KLUDGE, which is why they are public.
-   bool mbHitCenter;
-   //The edge variable tells us what state the icon is in.
-   //mOldEdge is useful for telling us when there has been a state change.
-   int mOldEdge;
+   void SortLabels(LabelTrackHit *pHit = nullptr);
  private:
    void ShowContextMenu();
    void OnContextMenu(wxCommandEvent & evt);
 
    int mSelIndex;              /// Keeps track of the currently selected label
-   int mMouseOverLabelLeft;    /// Keeps track of which left label the mouse is currently over.
-   int mMouseOverLabelRight;   /// Keeps track of which right label the mouse is currently over.
    int mxMouseDisplacement;    /// Displacement of mouse cursor from the centre being dragged.
    LabelArray mLabels;
 
@@ -313,9 +312,6 @@ public:
 private:
    void calculateFontHeight(wxDC & dc) const;
    void RemoveSelectedText();
-
-   bool mIsAdjustingLabel;
-   bool mbIsMoving;
 
    static wxFont msFont;
 

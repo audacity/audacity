@@ -18,6 +18,8 @@
 
 #include "Experimental.h"
 
+#include "HitTestResult.h"
+
 #include "SelectedRegion.h"
 
 #include "widgets/OverlayPanel.h"
@@ -373,8 +375,8 @@ protected:
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
-   void HandleCursor( wxMouseState *pState );
-   void HandleCursor( const TrackPanelMouseState &tpmState );
+   void HandleMotion( wxMouseState *pState );
+   void HandleMotion( const TrackPanelMouseState &tpmState );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
@@ -528,6 +530,31 @@ protected:
    wxSize vrulerSize;
 
  protected:
+   std::weak_ptr<TrackPanelCell> mLastCell;
+   HitTestResult mLastHitTest{};
+   bool mLastHitTestValid{};
+   unsigned mMouseOverUpdateFlags{};
+
+ public:
+   HitTestResult *Target()
+   {
+      if ( mLastHitTestValid )
+         return &mLastHitTest;
+      else
+         return nullptr;
+   }
+
+ protected:
+   void ClearTargets()
+   {
+      // Forget the rotation of hit test candidates when the mouse moves from
+      // cell to cell or outside of the TrackPanel entirely.
+      mLastCell.reset();
+      mLastHitTestValid = false;
+      mLastHitTest = {};
+      mMouseOverUpdateFlags = 0;
+   }
+
    std::weak_ptr<Track> mpClickedTrack;
    UIHandlePtr mUIHandle;
 

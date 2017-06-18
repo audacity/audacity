@@ -60,7 +60,9 @@ public:
    virtual Result Drag
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) = 0;
 
-   // Update the cursor and status message.
+   // Can be called when the handle has been hit but not yet clicked,
+   // or called after Drag().
+   // Specifies cursor and status bar message.
    virtual HitTestPreview Preview
       (const TrackPanelMouseState &state, const AudacityProject *pProject) = 0;
 
@@ -99,11 +101,35 @@ public:
    // to avoid dangling pointers to tracks.  But maybe there will be a future
    // use?
    virtual void OnProjectChange(AudacityProject *pProject);
+
+public:
+   Result GetChangeHighlight() const { return mChangeHighlight; }
+   void SetChangeHighlight(Result val) { mChangeHighlight = val; }
+
+   // If AssignUIHandlePtr is used, then this function is also called before any
+   // overwrite.
+   // Make overloads of this for other subclasses, to cause refresh
+   // of the cell during mouse motion within it.
+   static UIHandle::Result NeedChangeHighlight
+   (const UIHandle &/*oldState*/, const UIHandle &/*newState*/)
+   {
+      return 0;
+   }
+
+protected:
+   // Derived classes can set this nonzero in a constructor, which is enough
+   // to cause repaint of the cell whenever the pointer hits the target,
+   // or leaves it without clicking, or releases or escapes from a drag.
+   Result mChangeHighlight { 0 };
+
 };
 
 using UIHandlePtr = std::shared_ptr<UIHandle>;
 
-// A frequent convenience
+// A frequent convenience for defining a hit test.
+// Construct a NEW handle as if hit the first time; then either keep it, or
+// use it to overwrite the state of a previously constructed handle that has not
+// yet been released.
 template<typename Subclass>
 std::shared_ptr<Subclass> AssignUIHandlePtr
 ( std::weak_ptr<Subclass> &holder, const std::shared_ptr<Subclass> &pNew )
@@ -118,7 +144,9 @@ std::shared_ptr<Subclass> AssignUIHandlePtr
       return pNew;
    }
    else {
+      auto code = Subclass::NeedChangeHighlight( *ptr, *pNew );
       *ptr = std::move(*pNew);
+      ptr->SetChangeHighlight( code );
       return ptr;
    }
 }
