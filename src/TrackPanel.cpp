@@ -1867,7 +1867,12 @@ void TrackInfo::CloseTitleDrawFunction
 
       // Draw title text
       SetTrackInfoFont(dc);
-      int allowableWidth = rect.width - 42;
+
+      // Bug 1660 The 'k' of 'Audio Track' was being truncated.
+      // Constant of 32 found by counting pixels on a windows machine.
+      // I believe it's the size of the X close button + the size of the 
+      // drop down arrow.
+      int allowableWidth = rect.width - 32;
 
       wxCoord textWidth, textHeight;
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
