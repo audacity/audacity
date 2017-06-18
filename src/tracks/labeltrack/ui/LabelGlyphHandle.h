@@ -11,14 +11,14 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_LABEL_GLYPH_HANDLE__
 #define __AUDACITY_LABEL_GLYPH_HANDLE__
 
-#include "../../../UIHandle.h"
+#include "LabelDefaultClickHandle.h"
 #include <wx/gdicmn.h>
 
 class wxMouseEvent;
 struct HitTestResult;
 class LabelTrack;
 
-class LabelGlyphHandle final : public UIHandle
+class LabelGlyphHandle final : public LabelDefaultClickHandle
 {
    LabelGlyphHandle();
    LabelGlyphHandle(const LabelGlyphHandle&) = delete;

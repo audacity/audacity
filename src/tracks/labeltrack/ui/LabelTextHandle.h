@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_LABEL_TEXT_HANDLE__
 #define __AUDACITY_LABEL_TEXT_HANDLE__
 
-#include "../../../UIHandle.h"
+#include "LabelDefaultClickHandle.h"
 #include "../../../MemoryX.h"
 #include "../../../SelectedRegion.h"
 #include <wx/gdicmn.h>
@@ -21,7 +21,7 @@ struct HitTestResult;
 class LabelTrack;
 class SelectionStateChanger;
 
-class LabelTextHandle final : public UIHandle
+class LabelTextHandle final : public LabelDefaultClickHandle
 {
    LabelTextHandle();
    LabelTextHandle(const LabelTextHandle&) = delete;

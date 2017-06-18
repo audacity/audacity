@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../../Audacity.h"
 #include "LabelGlyphHandle.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
@@ -90,6 +91,8 @@ LabelGlyphHandle::~LabelGlyphHandle()
 UIHandle::Result LabelGlyphHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   auto result = LabelDefaultClickHandle::Click( evt, pProject );
+
    TrackPanelCell *const pCell = evt.pCell;
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
@@ -104,11 +107,11 @@ UIHandle::Result LabelGlyphHandle::Click
    {
       // The positive hit test should have ensured otherwise
       //wxASSERT(false);
-      return RefreshCode::Cancelled;
+      result |= RefreshCode::Cancelled;
    }
-
-   // redraw the track.
-   return RefreshCode::RefreshCell;
+   else
+      // redraw the track.
+      result |= RefreshCode::RefreshCell;
 
    // handle shift+ctrl down
    /*if (event.ShiftDown()) { // && event.ControlDown()) {
@@ -117,19 +120,20 @@ UIHandle::Result LabelGlyphHandle::Click
       return;
    }*/
 
-
-   return RefreshCode::RefreshNone;
+   return result;
 }
 
 UIHandle::Result LabelGlyphHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   auto result = LabelDefaultClickHandle::Drag( evt, pProject );
+
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
    mpLT->HandleGlyphDragRelease(event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    // Refresh all so that the change of selection is redrawn in all tracks
-   return RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
+   return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
 }
 
 HitTestPreview LabelGlyphHandle::Preview
@@ -142,6 +146,7 @@ UIHandle::Result LabelGlyphHandle::Release
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject,
  wxWindow *pParent)
 {
+   auto result = LabelDefaultClickHandle::Release( evt, pProject, pParent );
    mpLT->mOldEdge = 0;
 
    const wxMouseEvent &event = evt.event;
@@ -153,12 +158,13 @@ UIHandle::Result LabelGlyphHandle::Release
    }
 
    // Refresh all so that the change of selection is redrawn in all tracks
-   return RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
+   return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
 }
 
 UIHandle::Result LabelGlyphHandle::Cancel(AudacityProject *pProject)
 {
    mpLT->mOldEdge = 0;
    pProject->RollbackState();
-   return RefreshCode::RefreshAll;
+   auto result = LabelDefaultClickHandle::Cancel( pProject );
+   return result | RefreshCode::RefreshAll;
 }

@@ -45,6 +45,8 @@ LabelTextHandle::~LabelTextHandle()
 UIHandle::Result LabelTextHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   auto result = LabelDefaultClickHandle::Click( evt, pProject );
+
    auto &selectionState = pProject->GetSelectionState();
    TrackList *const tracks = pProject->GetTracks();
    mChanger =
@@ -98,14 +100,14 @@ UIHandle::Result LabelTextHandle::Click
    if (!unsafe)
       pProject->ModifyState(false);
 
-   return RefreshCode::RefreshCell | RefreshCode::UpdateSelection;
+   return result | RefreshCode::RefreshCell | RefreshCode::UpdateSelection;
 }
 
 UIHandle::Result LabelTextHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   Result result = RefreshNone;
+   auto result = LabelDefaultClickHandle::Drag( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
    auto pLT = mpLT.lock();
@@ -145,6 +147,8 @@ UIHandle::Result LabelTextHandle::Release
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject,
  wxWindow *pParent)
 {
+   auto result = LabelDefaultClickHandle::Release( evt, pProject, pParent );
+
    // Only selected a part of a text string and changed track selectedness.
    // No undoable effects.
 
@@ -162,7 +166,7 @@ UIHandle::Result LabelTextHandle::Release
    if (event.LeftUp())
       mLabelTrackStartXPos = -1;
 
-   return RefreshCode::RefreshNone;
+   return result | RefreshCode::RefreshNone;
 }
 
 UIHandle::Result LabelTextHandle::Cancel( AudacityProject *pProject )
@@ -173,5 +177,6 @@ UIHandle::Result LabelTextHandle::Cancel( AudacityProject *pProject )
    mChanger.release();
    ViewInfo &viewInfo = pProject->GetViewInfo();
    viewInfo.selectedRegion = mSelectedRegion;
-   return RefreshCode::RefreshAll;
+   auto result = LabelDefaultClickHandle::Cancel( pProject );
+   return result | RefreshCode::RefreshAll;
 }
