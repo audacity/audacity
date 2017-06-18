@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../ViewInfo.h"
+#include "../../../images/Cursors.h"
 
 LabelTextHandle::LabelTextHandle()
 {
@@ -27,13 +28,23 @@ LabelTextHandle &LabelTextHandle::Instance()
    return instance;
 }
 
+HitTestPreview LabelTextHandle::HitPreview()
+{
+   static auto ibeamCursor =
+      ::MakeCursor(wxCURSOR_IBEAM, IBeamCursorXpm, 17, 16);
+   return {
+      _("Click to edit label text"),
+      ibeamCursor.get()
+   };
+}
+
 HitTestResult LabelTextHandle::HitTest(const wxMouseEvent &event, LabelTrack *pLT)
 {
    // If Control is down, let the select handle be hit instead
    if (!event.ControlDown() &&
        pLT->OverATextBox(event.m_x, event.m_y) >= 0)
       // There was no cursor change or status message for mousing over a label text box
-      return { {}, &Instance() };
+      return { HitPreview(), &Instance() };
 
    return {};
 }
@@ -140,7 +151,7 @@ UIHandle::Result LabelTextHandle::Drag
 HitTestPreview LabelTextHandle::Preview
 (const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
 {
-   return {};
+   return HitPreview();
 }
 
 UIHandle::Result LabelTextHandle::Release

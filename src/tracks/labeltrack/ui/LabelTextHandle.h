@@ -28,6 +28,8 @@ class LabelTextHandle final : public LabelDefaultClickHandle
    LabelTextHandle &operator=(const LabelTextHandle&) = delete;
    static LabelTextHandle& Instance();
 
+   static HitTestPreview HitPreview();
+
 public:
    static HitTestResult HitTest(const wxMouseEvent &event, LabelTrack *pLT);
 
