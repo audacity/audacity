@@ -1480,23 +1480,26 @@ try
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
+         auto uiHandle = mUIHandle;
+         // Null this pointer out first before calling Release -- because on Windows, we can
+         // come back recursively to this place during handling of the context menu,
+         // because of a capture lost event.
+         mUIHandle = nullptr;
          UIHandle::Result refreshResult =
-            mUIHandle->Release( tpmEvent, GetProject(), this );
+            uiHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
-         mUIHandle = NULL;
          mpClickedTrack = NULL; 
          // will also Uncapture() below
       }
    }
    else if ( event.GetEventType() == wxEVT_MOTION )
       // Update status message and cursor, not during drag
-      // (consider it not a drag, even if button is down during motion, if
+      // consider it not a drag, even if button is down during motion, if
       // mUIHandle is null, as it becomes during interrupted drag
       // (e.g. by hitting space to play while dragging an envelope point)
       HandleCursor( &event );
-   else if ( event.ButtonDown() || event.ButtonDClick() ) {
+   else if ( event.ButtonDown() || event.ButtonDClick() )
       HandleClick( tpmEvent );
-   }
 
    if (event.ButtonDown() && IsMouseCaptured()) {
       if (!HasCapture())
@@ -3178,7 +3181,7 @@ void TrackPanelCellIterator::UpdateRect()
             // tall zone below, in case there is no next track)
             auto partner = mpTrack->GetLink();
             if ( partner && mpTrack->GetLinked() )
-               mRect.x = mPanel->GetLeftOffset();
+               mRect.x = kTrackInfoWidth;
             else
                mRect.x = kLeftMargin;
             mRect.width -= (mRect.x + kRightMargin);
