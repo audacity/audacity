@@ -83,6 +83,9 @@ TrackSelectHandle::~TrackSelectHandle()
 UIHandle::Result TrackSelectHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   // If unsafe to drag, still, it does harmlessly change the selected track
+   // set on button down.
+
    using namespace RefreshCode;
    Result result = RefreshNone;
 
@@ -165,19 +168,30 @@ UIHandle::Result TrackSelectHandle::Drag
 HitTestPreview TrackSelectHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *project)
 {
-   // Note that this differs from HitPreview.
+   const auto trackCount = project->GetTrackPanel()->GetTrackCount();
+   if (mpTrack) {
+      // Has been clicked
+      static auto disabledCursor =
+         ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+      static wxCursor rearrangeCursor{ wxCURSOR_HAND };
 
-   static auto disabledCursor =
-      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
-   static wxCursor rearrangeCursor{ wxCURSOR_HAND };
-
-   const bool unsafe = GetActiveProject()->IsAudioActive();
-   return {
-      Message(project->GetTrackPanel()->GetTrackCount()),
-      (unsafe
-         ? &*disabledCursor
-         : &rearrangeCursor)
-   };
+      const bool unsafe = GetActiveProject()->IsAudioActive();
+      return {
+         Message(trackCount),
+         (unsafe
+          ? &*disabledCursor
+          : &rearrangeCursor)
+      };
+   }
+   else {
+      // Only mouse-over
+      // Don't test safety, because the click to change selection is allowed
+      static wxCursor arrowCursor{ wxCURSOR_ARROW };
+      return {
+         Message(trackCount),
+         &arrowCursor
+      };
+   }
 }
 
 UIHandle::Result TrackSelectHandle::Release

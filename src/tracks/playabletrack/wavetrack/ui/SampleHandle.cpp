@@ -67,12 +67,7 @@ HitTestResult SampleHandle::HitAnywhere
 (const wxMouseState &state, const AudacityProject *pProject)
 {
    const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(state, pProject, unsafe),
-      (unsafe
-      ? NULL
-      : &Instance())
-   };
+   return { HitPreview(state, pProject, unsafe), &Instance() };
 }
 
 namespace {
@@ -206,17 +201,17 @@ namespace {
 UIHandle::Result SampleHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    const auto pTrack = std::static_pointer_cast<WaveTrack>(evt.pCell);
 
-   using namespace RefreshCode;
-
    /// Someone has just clicked the mouse.  What do we do?
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
    if (!IsSampleEditingPossible(
          event, rect, viewInfo, pTrack.get(), rect.width))
       return Cancelled;
@@ -419,7 +414,8 @@ UIHandle::Result SampleHandle::Drag
 HitTestPreview SampleHandle::Preview
 (const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   return HitPreview(st.state, pProject, false);
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview(st.state, pProject, unsafe);
 }
 
 UIHandle::Result SampleHandle::Release

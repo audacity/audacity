@@ -155,10 +155,12 @@ UIHandle::Result StretchHandle::Click
 {
    using namespace RefreshCode;
    const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
 
-   if (unsafe ||
-       event.LeftDClick() ||
+   if (event.LeftDClick() ||
        !event.LeftDown() ||
        evt.pCell == NULL)
       return Cancelled;

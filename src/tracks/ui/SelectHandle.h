@@ -45,6 +45,8 @@ public:
 
    virtual ~SelectHandle();
 
+   bool IsClicked() const;
+
    virtual Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject);
 

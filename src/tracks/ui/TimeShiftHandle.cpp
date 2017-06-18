@@ -54,12 +54,7 @@ HitTestResult TimeShiftHandle::HitAnywhere(const AudacityProject *pProject)
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."
    const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(pProject, unsafe),
-      (unsafe
-       ? NULL
-       : &Instance())
-   };
+   return { HitPreview(pProject, unsafe), &Instance() };
 }
 
 HitTestResult TimeShiftHandle::HitTest
@@ -413,17 +408,16 @@ void TimeShiftHandle::DoSlideHorizontal
 UIHandle::Result TimeShiftHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
    const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
-
-   using namespace RefreshCode;
-
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
 
    TrackList *const trackList = pProject->GetTracks();
 
@@ -771,7 +765,10 @@ UIHandle::Result TimeShiftHandle::Drag
 HitTestPreview TimeShiftHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   return HitPreview(pProject, false);
+   // After all that, it still may be unsafe to drag.
+   // Even if so, make an informative cursor change from default to "banned."
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview(pProject, unsafe);
 }
 
 UIHandle::Result TimeShiftHandle::Release

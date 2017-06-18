@@ -50,12 +50,7 @@ HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
 HitTestResult CutlineHandle::HitAnywhere(const AudacityProject *pProject, bool cutline)
 {
    const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(cutline, unsafe),
-      (unsafe
-      ? NULL
-      : &Instance())
-   };
+   return { HitPreview(cutline, unsafe), &Instance() };
 }
 
 namespace
@@ -131,6 +126,11 @@ CutlineHandle::~CutlineHandle()
 UIHandle::Result CutlineHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
    const auto pTrack = static_cast<Track*>(evt.pCell.get());
@@ -138,12 +138,8 @@ UIHandle::Result CutlineHandle::Click
    // Can affect the track by merging clips, expanding a cutline, or
    // deleting a cutline.
    // All the change is done at button-down.  Button-up just commits the undo item.
-   using namespace RefreshCode;
 
    /// Someone has just clicked the mouse.  What do we do?
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
 
    WaveTrackLocation capturedTrackLocation;
 
@@ -222,9 +218,10 @@ UIHandle::Result CutlineHandle::Drag
 }
 
 HitTestPreview CutlineHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   return HitPreview(mbCutline, false);
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview( mbCutline, unsafe );
 }
 
 UIHandle::Result CutlineHandle::Release

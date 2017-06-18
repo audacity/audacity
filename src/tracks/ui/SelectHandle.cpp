@@ -49,6 +49,11 @@ enum {
 
 // #define SPECTRAL_EDITING_ESC_KEY
 
+bool SelectHandle::IsClicked() const
+{
+   return mSelectionStateChanger.get();
+}
+
 SelectHandle::SelectHandle()
 {
 }
@@ -888,14 +893,95 @@ UIHandle::Result SelectHandle::Drag
 }
 
 HitTestPreview SelectHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
+   auto pTrack = mpTrack.lock();
+   if (!pTrack)
+      return {};
+
    wxString tip;
-   wxCursor *pCursor;
-   SetTipAndCursorForBoundary
-      (SelectionBoundary(mSelectionBoundary),
-       (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER),
-       tip, pCursor);
+   wxCursor *pCursor = SelectCursor();
+   if ( IsClicked() )
+      // Use same cursor as at the clck
+      SetTipAndCursorForBoundary
+         (SelectionBoundary(mSelectionBoundary),
+          (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER),
+          tip, pCursor);
+   else {
+      // Choose one of many cursors for mouse-over
+
+      const ViewInfo &viewInfo = pProject->GetViewInfo();
+
+      const bool bMultiToolMode =
+         pProject->GetToolsToolBar()->IsDown(multiTool);
+
+      //In Multi-tool mode, give multitool prompt if no-special-hit.
+      if (bMultiToolMode) {
+         // Look up the current key binding for Preferences.
+         // (Don't assume it's the default!)
+         wxString keyStr
+            (pProject->GetCommandManager()->GetKeyFromName(wxT("Preferences")));
+         if (keyStr.IsEmpty())
+            // No keyboard preference defined for opening Preferences dialog
+            /* i18n-hint: These are the names of a menu and a command in that menu */
+            keyStr = _("Edit, Preferences...");
+         else
+            keyStr = KeyStringDisplay(keyStr);
+         /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
+         tip = wxString::Format(
+            _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
+            keyStr.c_str());
+         // Later in this function we may point to some other string instead.
+         if (!pTrack->GetSelected() ||
+             !viewInfo.bAdjustSelectionEdges)
+            ;
+         else {
+            const auto &state = st.state;
+            const wxRect &rect = st.rect;
+            const bool bShiftDown = state.ShiftDown();
+            const bool bCtrlDown = state.ControlDown();
+            const bool bModifierDown = bShiftDown || bCtrlDown;
+
+            // If not shift-down and not snapping center, then
+            // choose boundaries only in snapping tolerance,
+            // and may choose center.
+            SelectionBoundary boundary =
+            ChooseBoundary(viewInfo, state, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+
+            SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
+         }
+      }
+
+#if 0
+      // This is a vestige of an idea in the prototype version.
+      // Center would snap without mouse button down, click would pin the center
+      // and drag width.
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      if ((mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
+         isSpectralSelectionTrack(pTrack)) {
+         // Not shift-down, but center frequency snapping toggle is on
+         tip = _("Click and drag to set frequency bandwidth.");
+         pCursor = &*envelopeCursor;
+         return {};
+      }
+#endif
+#endif
+
+      if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+         ;
+      else {
+         const auto &state = st.state;
+         const wxRect &rect = st.rect;
+         const bool bShiftDown = state.ShiftDown();
+         const bool bCtrlDown = state.ControlDown();
+         const bool bModifierDown = bShiftDown || bCtrlDown;
+         SelectionBoundary boundary = ChooseBoundary(
+            viewInfo, state, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+         SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
+      }
+
+      MaySetOnDemandTip(pTrack.get(), tip);
+   }
    if (tip == "") {
       const auto ttb = pProject->GetToolsToolBar();
       if (ttb)

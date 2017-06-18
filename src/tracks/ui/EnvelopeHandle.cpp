@@ -54,12 +54,7 @@ HitTestPreview EnvelopeHandle::HitPreview(const AudacityProject *pProject, bool 
 HitTestResult EnvelopeHandle::HitAnywhere(const AudacityProject *pProject)
 {
    const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(pProject, unsafe),
-      (unsafe
-       ? NULL
-       : &Instance())
-   };
+   return { HitPreview(pProject, unsafe), &Instance() };
 }
 
 namespace {
@@ -182,14 +177,14 @@ EnvelopeHandle::~EnvelopeHandle()
 UIHandle::Result EnvelopeHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    const auto pTrack = static_cast<Track*>(evt.pCell.get());
-
-   using namespace RefreshCode;
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
 
    if (pTrack->GetKind() == Track::Wave) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
@@ -257,7 +252,8 @@ UIHandle::Result EnvelopeHandle::Drag
 HitTestPreview EnvelopeHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   return HitPreview(pProject, false);
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview(pProject, unsafe);
 }
 
 UIHandle::Result EnvelopeHandle::Release
