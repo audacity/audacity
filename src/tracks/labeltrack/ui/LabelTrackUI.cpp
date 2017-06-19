@@ -20,11 +20,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "../../../Project.h"
 #include "../../../TrackPanelMouseEvent.h"
-#include "../../../toolbars/ToolsToolBar.h"
 
-HitTestResult LabelTrack::HitTest
+HitTestResult LabelTrack::DetailedHitTest
 (const TrackPanelMouseEvent &evt,
- const AudacityProject *pProject)
+ const AudacityProject *pProject, int, bool)
 {
    HitTestResult result;
    const wxMouseEvent &event = evt.event;
@@ -35,16 +34,6 @@ HitTestResult LabelTrack::HitTest
    if ( !result.handle )
       // Missed glyph, try text box
       result = LabelTextHandle::HitTest(event, this);
-
-   if ( !result.handle )
-      result = Track::HitTest(evt, pProject);
-
-   if ( !result.handle ) {
-      // In case of multi tool, default to selection.
-      const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-      if (pTtb->IsDown(multiTool))
-         result = SelectHandle::HitTest(evt, pProject, this);
-   }
 
    return result;
 }

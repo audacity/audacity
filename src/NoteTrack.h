@@ -68,9 +68,10 @@ class AUDACITY_DLL_API NoteTrack final
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
-   HitTestResult HitTest
+   HitTestResult DetailedHitTest
       (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    using Holder = std::unique_ptr<NoteTrack>;
    Track::Holder Duplicate() const override;

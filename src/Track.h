@@ -108,7 +108,6 @@ class AUDACITY_DLL_API Track /* not final */
    bool           mMinimized;
 
  public:
-   mutable wxSize vrulerSize;
 
    // Given a bare pointer, find a shared_ptr.  But this is not possible for
    // a track not owned by any list, so the result can be null.
@@ -131,11 +130,22 @@ class AUDACITY_DLL_API Track /* not final */
       return {};
    }
 
-   // An implementation is defined for call-through from subclasses, but
-   // the inherited method is still marked pure virtual
+   // Cause certain overriding tool modes (Zoom; future ones?) to behave
+   // uniformly in all tracks, disregarding track contents.
+   // Do not further override this...
    HitTestResult HitTest
       (const TrackPanelMouseEvent &, const AudacityProject *pProject)
-      override = 0;
+      final;
+
+ public:
+
+   // Rather override this for subclasses:
+   virtual HitTestResult DetailedHitTest
+      (const TrackPanelMouseEvent &,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      = 0;
+
+   mutable wxSize vrulerSize;
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
