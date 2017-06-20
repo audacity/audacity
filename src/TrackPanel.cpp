@@ -874,8 +874,6 @@ void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
 
       wxString tip;
 
-      // Are we within the vertical resize area?
-      // (Add margin back to bottom of the rectangle)
       auto pCell = tpmEvent.pCell;
       auto track = static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
       if (pCell && pCursor == NULL && tip == wxString()) {
