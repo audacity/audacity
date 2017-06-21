@@ -48,7 +48,7 @@ HitTestResult WaveTrack::HitTest
       if (event.event.CmdDown())
          result = TimeShiftHandle::HitAnywhere(pProject);
       else if (NULL !=
-         (result = EnvelopeHandle::WaveTrackHitTest(event.event, event.rect, pProject, this))
+         (result = EnvelopeHandle::WaveTrackHitTest(event.event, event.rect, pProject, *this))
          .preview.cursor)
          ;
       else if (NULL != (result =

@@ -62,39 +62,76 @@ HitTestResult EnvelopeHandle::HitAnywhere(const AudacityProject *pProject)
    };
 }
 
+namespace {
+   void GetTimeTrackData
+      (const AudacityProject &project, const TimeTrack &tt,
+       double &dBRange, bool &dB, float &zoomMin, float &zoomMax)
+   {
+      const auto &viewInfo = project.GetViewInfo();
+      dBRange = viewInfo.dBr;
+      dB = tt.GetDisplayLog();
+      zoomMin = tt.GetRangeLower(), zoomMax = tt.GetRangeUpper();
+      if (dB) {
+         // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
+         zoomMin = LINEAR_TO_DB(std::max(1.0e-7, double(dBRange))) / dBRange + 1.0;
+         zoomMax = LINEAR_TO_DB(std::max(1.0e-7, double(zoomMax))) / dBRange + 1.0;
+      }
+   }
+}
+
+HitTestResult EnvelopeHandle::TimeTrackHitTest
+(const wxMouseEvent &event, const wxRect &rect,
+ const AudacityProject *pProject, TimeTrack &tt)
+{
+   auto envelope = tt.GetEnvelope();
+   if (!envelope)
+      return {};
+   bool dB;
+   double dBRange;
+   float zoomMin, zoomMax;
+   GetTimeTrackData( *pProject, tt, dBRange, dB, zoomMin, zoomMax);
+   return EnvelopeHandle::HitEnvelope
+      (event, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+}
+
 HitTestResult EnvelopeHandle::WaveTrackHitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Cell *pCell)
+ const AudacityProject *pProject, WaveTrack &wt)
 {
-   const ViewInfo &viewInfo = pProject->GetViewInfo();
-   Track *const pTrack = static_cast<Track*>(pCell);
-
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
-   if (pTrack->GetKind() != Track::Wave)
-      return {};
-
-   WaveTrack *const wavetrack = static_cast<WaveTrack*>(pTrack);
-   Envelope *const envelope = wavetrack->GetEnvelopeAtX(event.GetX());
+   const Envelope *const envelope = wt.GetEnvelopeAtX(event.GetX());
 
    if (!envelope)
       return {};
 
-   const int displayType = wavetrack->GetDisplay();
+   const int displayType = wt.GetDisplay();
    // Not an envelope hit, unless we're using a type of wavetrack display
    // suitable for envelopes operations, ie one of the Wave displays.
    if (displayType != WaveTrack::Waveform)
       return {};  // No envelope, not a hit, so return.
 
    // Get envelope point, range 0.0 to 1.0
-   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
-   const double envValue =
-      envelope->GetValue(viewInfo.PositionToTime(event.m_x, rect.x));
+   const bool dB = !wt.GetWaveformSettings().isLinear();
 
    float zoomMin, zoomMax;
-   wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
+   wt.GetDisplayBounds(&zoomMin, &zoomMax);
 
-   const float dBRange = wavetrack->GetWaveformSettings().dBRange;
+   const float dBRange = wt.GetWaveformSettings().dBRange;
+
+   return EnvelopeHandle::HitEnvelope
+       (event, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+}
+
+HitTestResult EnvelopeHandle::HitEnvelope
+(const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject,
+ const Envelope *envelope, float zoomMin, float zoomMax,
+ bool dB, float dBRange)
+{
+   const ViewInfo &viewInfo = pProject->GetViewInfo();
+
+   const double envValue =
+      envelope->GetValue(viewInfo.PositionToTime(event.m_x, rect.x));
 
    // Get y position of envelope point.
    int yValue = GetWaveYPos(envValue,
@@ -187,14 +224,7 @@ UIHandle::Result EnvelopeHandle::Click
       auto clickedEnvelope = tt->GetEnvelope();
       if (!clickedEnvelope)
          return Cancelled;
-      mLog = tt->GetDisplayLog();
-      mLower = tt->GetRangeLower(), mUpper = tt->GetRangeUpper();
-      if (mLog) {
-         // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
-         mdBRange = viewInfo.dBr;
-         mLower = LINEAR_TO_DB(std::max(1.0e-7, double(mLower))) / mdBRange + 1.0;
-         mUpper = LINEAR_TO_DB(std::max(1.0e-7, double(mUpper))) / mdBRange + 1.0;
-      }
+      GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
       mEnvelopeEditor =
          std::make_unique< EnvelopeEditor >( *clickedEnvelope, false );
       mEnvelopeEditorRight.reset();

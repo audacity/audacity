@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackVRulerControls.h"
 
 #include "../../../HitTestResult.h"
+#include "../../../TrackPanelMouseEvent.h"
 #include "../../../Project.h"
 #include "../../../toolbars/ToolsToolBar.h"
 
@@ -26,12 +27,8 @@ HitTestResult TimeTrack::HitTest
    if (result.preview.cursor)
       return result;
 
-   const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-   if (pTtb->IsDown(multiTool))
-      // No hit test --unconditional availability.
-      result = EnvelopeHandle::HitAnywhere(pProject);
-
-   return result;
+   return EnvelopeHandle::TimeTrackHitTest
+      ( event.event, event.rect, pProject, *this );
 }
 
 std::shared_ptr<TrackControls> TimeTrack::GetControls()

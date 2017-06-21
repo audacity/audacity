@@ -17,9 +17,11 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseEvent;
 #include <wx/gdicmn.h>
 
+class Envelope;
 class EnvelopeEditor;
 struct HitTestResult;
 class ViewInfo;
+class TimeTrack;
 class WaveTrack;
 
 class EnvelopeHandle final : public UIHandle
@@ -30,11 +32,20 @@ class EnvelopeHandle final : public UIHandle
    static EnvelopeHandle& Instance();
    static HitTestPreview HitPreview(const AudacityProject *pProject, bool unsafe);
 
+   static HitTestResult HitEnvelope
+      (const wxMouseEvent &event, const wxRect &rect,
+       const AudacityProject *pProject,
+       const Envelope *envelope, float zoomMin, float zoomMax,
+       bool dB, float dBRange);
+
 public:
    static HitTestResult HitAnywhere(const AudacityProject *pProject);
+   static HitTestResult TimeTrackHitTest
+      (const wxMouseEvent &event, const wxRect &rect,
+       const AudacityProject *pProject, TimeTrack &tt);
    static HitTestResult WaveTrackHitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Cell *pCell);
+       const AudacityProject *pProject, WaveTrack &wt);
 
    virtual ~EnvelopeHandle();
 
