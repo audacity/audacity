@@ -170,6 +170,7 @@ enum
    IdCaptureEffects,
    IdCapturePreferences,
    IdCaptureSelectionBar,
+   IdCaptureTimeBar,
    IdCaptureSpectralSelection,
    IdCaptureTools,
    IdCaptureTransport,
@@ -367,6 +368,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay();
          {
             S.Id(IdCaptureSelectionBar).AddButton(_("SelectionBar"));
+            S.Id(IdCaptureTimeBar).AddButton(_("TimeBar"));
             S.Id(IdCaptureSpectralSelection).AddButton(_("Spectral Selection"));
             S.Id(IdCaptureTools).AddButton(_("Tools"));
             S.Id(IdCaptureTransport).AddButton(_("Transport"));
@@ -586,6 +588,7 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
    Names.Add(wxT("effects"));
    Names.Add(wxT("preferences"));
    Names.Add(wxT("selectionbar"));
+   Names.Add(wxT("timebar"));
    Names.Add(wxT("spectralselection"));
    Names.Add(wxT("tools"));
    Names.Add(wxT("transport"));

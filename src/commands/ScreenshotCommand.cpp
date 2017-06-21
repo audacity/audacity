@@ -549,6 +549,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    captureModeValidator->AddOption(wxT("effects"));
    captureModeValidator->AddOption(wxT("preferences"));
    captureModeValidator->AddOption(wxT("selectionbar"));
+   captureModeValidator->AddOption(wxT("timebar"));
    captureModeValidator->AddOption(wxT("spectralselection"));
    captureModeValidator->AddOption(wxT("tools"));
    captureModeValidator->AddOption(wxT("transport"));
@@ -745,6 +746,10 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    else if (captureMode.IsSameAs(wxT("selectionbar")))
    {
       CaptureToolbar(context.GetProject()->GetToolManager(), SelectionBarID, fileName);
+   }
+   else if (captureMode.IsSameAs(wxT("timebar")))
+   {
+      CaptureToolbar(context.GetProject()->GetToolManager(), TimeBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("spectralselection")))
    {
