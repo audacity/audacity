@@ -4773,9 +4773,13 @@ void AudacityProject::OnCut()
 
    PushState(_("Cut to the clipboard"), _("Cut"));
 
-   RedrawProject();
+   // Bug 1663
+   //mRuler->ClearPlayRegion();
+   mRuler->DrawOverlays( true );
 
    mViewInfo.selectedRegion.collapseToT0();
+
+   RedrawProject();
 
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();

@@ -1480,23 +1480,26 @@ try
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
+         auto uiHandle = mUIHandle;
+         // Null this pointer out first before calling Release -- because on Windows, we can
+         // come back recursively to this place during handling of the context menu,
+         // because of a capture lost event.
+         mUIHandle = nullptr;
          UIHandle::Result refreshResult =
-            mUIHandle->Release( tpmEvent, GetProject(), this );
+            uiHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
-         mUIHandle = NULL;
          mpClickedTrack = NULL; 
          // will also Uncapture() below
       }
    }
    else if ( event.GetEventType() == wxEVT_MOTION )
       // Update status message and cursor, not during drag
-      // (consider it not a drag, even if button is down during motion, if
+      // consider it not a drag, even if button is down during motion, if
       // mUIHandle is null, as it becomes during interrupted drag
       // (e.g. by hitting space to play while dragging an envelope point)
       HandleCursor( &event );
-   else if ( event.ButtonDown() || event.ButtonDClick() ) {
+   else if ( event.ButtonDown() || event.ButtonDClick() )
       HandleClick( tpmEvent );
-   }
 
    if (event.ButtonDown() && IsMouseCaptured()) {
       if (!HasCapture())
@@ -1864,7 +1867,12 @@ void TrackInfo::CloseTitleDrawFunction
 
       // Draw title text
       SetTrackInfoFont(dc);
-      int allowableWidth = rect.width - 42;
+
+      // Bug 1660 The 'k' of 'Audio Track' was being truncated.
+      // Constant of 32 found by counting pixels on a windows machine.
+      // I believe it's the size of the X close button + the size of the 
+      // drop down arrow.
+      int allowableWidth = rect.width - 32;
 
       wxCoord textWidth, textHeight;
       dc->GetTextExtent(titleStr, &textWidth, &textHeight);
@@ -3178,7 +3186,7 @@ void TrackPanelCellIterator::UpdateRect()
             // tall zone below, in case there is no next track)
             auto partner = mpTrack->GetLink();
             if ( partner && mpTrack->GetLinked() )
-               mRect.x = mPanel->GetLeftOffset();
+               mRect.x = kTrackInfoWidth;
             else
                mRect.x = kLeftMargin;
             mRect.width -= (mRect.x + kRightMargin);
