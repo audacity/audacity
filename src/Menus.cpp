@@ -2129,7 +2129,7 @@ void AudacityProject::ModifyToolbarMenus()
                          mToolManager->IsVisible(MixerBarID));
    mCommandManager.Check(wxT("ShowSelectionTB"),
                          mToolManager->IsVisible(SelectionBarID));
-   mCommandManager.Check(wxT("ShowSTimeTB"),
+   mCommandManager.Check(wxT("ShowTimeTB"),
                          mToolManager->IsVisible(TimeBarID));
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mCommandManager.Check(wxT("ShowSpectralSelectionTB"),

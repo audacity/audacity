@@ -679,6 +679,8 @@ void ToolManager::ReadConfig()
       
       if( ndx == SelectionBarID )
          defaultDock = BotDockID;
+      if( ndx == TimeBarID )
+         defaultDock = BotDockID;
       if( ndx == MeterBarID )
          bShownByDefault = false;
       if( ndx == ScrubbingBarID )

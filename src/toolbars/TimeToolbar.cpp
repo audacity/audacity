@@ -80,7 +80,7 @@ BEGIN_EVENT_TABLE(TimeToolbar, ToolBar)
 END_EVENT_TABLE()
 
 TimeToolbar::TimeToolbar()
-: ToolBar(TimeBarID, _("Selection"), wxT("Selection")),
+: ToolBar(TimeBarID, _("Timer"), wxT("Timer")),
   mListener(NULL), 
   mAudioTime(NULL)
 {
