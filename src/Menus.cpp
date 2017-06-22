@@ -6048,7 +6048,7 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
 
    bool anyWaveTracksSelected =
       tracks->end() != std::find_if(tracks->begin(), tracks->end(),
-         [] (const movable_ptr<Track>& t) {
+         [] (const std::shared_ptr<Track>& t) {
             return t->GetSelected() && t->GetKind() == Track::Wave; });
 
    // first search the tracks individually
@@ -6136,7 +6136,7 @@ void AudacityProject::OnSelectClip(bool next)
          if (nTracksSearched > 1) {
             if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName()) {
                auto track = std::find_if(GetTracks()->begin(), GetTracks()->end(),
-                  [&] (const movable_ptr<Track>& t) { return t.get() == result.waveTrack; });
+                  [&] (const std::shared_ptr<Track>& t) { return t.get() == result.waveTrack; });
                temp.Printf(wxT("%s %d "), _("Track"), std::distance(GetTracks()->begin(), track) + 1);
             }
             else
@@ -7115,7 +7115,7 @@ int AudacityProject::FindClipBoundaries(double time, bool next, std::vector<Foun
 
    bool anyWaveTracksSelected =
       tracks->end() != std::find_if(tracks->begin(), tracks->end(),
-         [] (const movable_ptr<Track>& t) {
+         [] (const std::shared_ptr<Track>& t) {
             return t->GetSelected() && t->GetKind() == Track::Wave; });
 
    // first search the tracks individually
@@ -7188,7 +7188,7 @@ wxString AudacityProject::ClipBoundaryMessage(int nTracksSearched, const std::ve
       if (nTracksSearched > 1) {
          if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName()) {
             auto track = std::find_if(GetTracks()->begin(), GetTracks()->end(),
-               [&] (const movable_ptr<Track>& t) { return t.get() == result.waveTrack; });
+               [&] (const std::shared_ptr<Track>& t) { return t.get() == result.waveTrack; });
             temp.Printf(wxT("%s %d "), _("Track"), std::distance(GetTracks()->begin(), track) + 1);
          }
          else 

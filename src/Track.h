@@ -72,7 +72,7 @@ class NoteTrack;
 
 class TrackList;
 
-using ListOfTracks = std::list<movable_ptr<Track>>;
+using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
 using TrackNodePointer = ListOfTracks::iterator;
 
@@ -515,10 +515,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    template<typename TrackKind>
    Track *AddToHead(std::unique_ptr<TrackKind> &&t);
 
-#ifdef __AUDACITY_OLD_STD__
    template<typename TrackKind>
    Track *Add(std::shared_ptr<TrackKind> &&t);
-#endif
 
    /// Replace first track with second track, give back a holder
    value_type Replace(Track * t, value_type &&with);

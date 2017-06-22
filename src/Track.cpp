@@ -933,8 +933,6 @@ Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
 // Make instantiations for the linker to find
 template Track *TrackList::AddToHead<TimeTrack>(std::unique_ptr<TimeTrack> &&);
 
-#ifdef __AUDACITY_OLD_STD__
-
 template<typename TrackKind>
 Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 {
@@ -950,8 +948,6 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 // Make instantiations for the linker to find
 template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
 template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
-
-#endif
 
 auto TrackList::Replace(Track * t, value_type &&with) -> value_type
 {

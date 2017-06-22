@@ -415,7 +415,7 @@ protected:
    private:
       Effect *mpEffect{};
       LabelTrack *mpTrack{};
-      movable_ptr<Track> mpOrigTrack{};
+      std::shared_ptr<Track> mpOrigTrack{};
    };
 
    // Set name to given value if that is not empty, else use default name
