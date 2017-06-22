@@ -1019,7 +1019,7 @@ void MixerBoard::UpdateTrackClusters()
          }
          nClusterIndex++;
       }
-      pTrack = iterTracks.Next();
+      pTrack = iterTracks.Next(true);
    }
 
    if (pMixerTrackCluster)
