@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../Audacity.h"
 #include "LabelTextHandle.h"
+#include "../../Experimental.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../Project.h"
@@ -22,7 +23,11 @@ LabelTextHandle::LabelTextHandle
 ( const std::shared_ptr<LabelTrack> &pLT, int labelNum )
    : mpLT{ pLT }
    , mLabelNum{ labelNum }
-{}
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
 
 HitTestPreview LabelTextHandle::HitPreview()
 {

@@ -30,6 +30,7 @@ for drawing different aspects of the label and its text box.
 
 #include "Audacity.h"
 #include "LabelTrack.h"
+#include "Experimental.h"
 #include "TrackPanel.h"
 
 #include <stdio.h>
@@ -774,6 +775,7 @@ namespace {
 }
 
 #include "TrackPanelDrawingContext.h"
+#include "tracks/labeltrack/ui/LabelTextHandle.h"
 
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
@@ -840,13 +842,30 @@ void LabelTrack::Draw
    }}
 
    // Draw the label boxes.
-   { int i = -1; for (auto &labelStruct : mLabels) { ++i;
-      if( mSelIndex==i)
-         dc.SetBrush(AColor::labelTextEditBrush);
-      labelStruct.DrawTextBox( dc, r );
-      if( mSelIndex==i)
-         dc.SetBrush(AColor::labelTextNormalBrush);
-   }}
+   {
+      bool highlightTrack = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+      auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
+      highlightTrack = target && target->GetTrack().get() == this;
+#endif
+      int i = -1; for (auto &labelStruct : mLabels) { ++i;
+         bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+         highlight = highlightTrack && target->GetLabelNum() == i;
+#endif
+         bool selected = mSelIndex == i;
+         const wxBrush &brush = dc.GetBrush();
+
+         if( selected )
+            dc.SetBrush( AColor::labelTextEditBrush );
+         else if ( highlight )
+            dc.SetBrush( AColor::uglyBrush );
+         labelStruct.DrawTextBox( dc, r );
+
+         if (highlight || selected)
+            dc.SetBrush( brush );
+      }
+   }
 
    // Draw highlights
    if ((mInitialCursorPos != mCurrentCursorPos) && (mSelIndex >= 0 ))
