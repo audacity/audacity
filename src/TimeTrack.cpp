@@ -15,6 +15,7 @@
 
 #include "Audacity.h"
 #include "TimeTrack.h"
+#include "Experimental.h"
 
 #include <cfloat>
 #include <wx/intl.h>
@@ -258,11 +259,17 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 }
 
 #include "TrackPanelDrawingContext.h"
+#include "tracks/ui/EnvelopeHandle.h"
 
 void TimeTrack::Draw
 (TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo) const
 {
    auto &dc = context.dc;
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
+   highlight = target && target->GetEnvelope() == this->GetEnvelope();
+#endif
 
    double min = zoomInfo.PositionToTime(0);
    double max = zoomInfo.PositionToTime(r.width);
@@ -294,7 +301,8 @@ void TimeTrack::Draw
    GetEnvelope()->GetValues
       ( 0, 0, envValues.get(), mid.width, 0, zoomInfo );
 
-   dc.SetPen(AColor::envelopePen);
+   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
+   dc.SetPen( pen );
 
    double logLower = log(std::max(1.0e-7, mRangeLower)), logUpper = log(std::max(1.0e-7, mRangeUpper));
    for (int x = 0; x < mid.width; x++)

@@ -27,6 +27,7 @@ a draggable point type.
 *//*******************************************************************/
 
 #include "Envelope.h"
+#include "Experimental.h"
 #include "ViewInfo.h"
 
 #include <math.h>
@@ -312,6 +313,7 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 }
 
 #include "TrackPanelDrawingContext.h"
+#include "tracks/ui/EnvelopeHandle.h"
 
 /// TODO: This should probably move to track artist.
 void Envelope::DrawPoints
@@ -320,7 +322,13 @@ void Envelope::DrawPoints
  float zoomMin, float zoomMax, bool mirrored) const
 {
    auto &dc = context.dc;
-   dc.SetPen(AColor::envelopePen);
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
+   highlight = target && target->GetEnvelope() == this;
+#endif
+   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
+   dc.SetPen( pen );
    dc.SetBrush(*wxWHITE_BRUSH);
 
    for (int i = 0; i < (int)mEnv.size(); i++) {
@@ -329,7 +337,7 @@ void Envelope::DrawPoints
       if (position >= 0 && position < r.width) {
          // Change colour if this is the draggable point...
          if (i == mDragPoint) {
-            dc.SetPen(AColor::envelopePen);
+            dc.SetPen( pen );
             dc.SetBrush(AColor::envelopeBrush);
          }
 
@@ -371,7 +379,7 @@ void Envelope::DrawPoints
 
          // Change colour back again if was the draggable point.
          if (i == mDragPoint) {
-            dc.SetPen(AColor::envelopePen);
+            dc.SetPen( pen );
             dc.SetBrush(*wxWHITE_BRUSH);
          }
       }

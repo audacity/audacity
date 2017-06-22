@@ -1040,7 +1040,8 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
                                          bool dB, float dBRange,
                                          double t0, double t1,
                                          const ZoomInfo &zoomInfo,
-                                         bool drawEnvelope, bool bIsSyncLockSelected)
+                                         bool drawEnvelope, bool bIsSyncLockSelected,
+                                         bool highlightEnvelope)
 {
 
    // Visually (one vertical slice of the waveform background, on its side;
@@ -1115,6 +1116,11 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
          dc.DrawRectangle(l, rect.y + lmaxtop, w, lminbot - lmaxtop);
       }
 
+      if (highlightEnvelope && lmaxbot < lmintop - 1) {
+         dc.SetBrush( AColor::uglyBrush );
+         dc.DrawRectangle(l, rect.y + lmaxbot, w, lmintop - lmaxbot);
+      }
+
       lmaxtop = maxtop;
       lmintop = mintop;
       lmaxbot = maxbot;
@@ -1132,6 +1138,10 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, int leftOffset, const wxRect 
    }
    else {
       dc.DrawRectangle(l, rect.y + lmaxtop, w, lminbot - lmaxtop);
+   }
+   if (highlightEnvelope && lmaxbot < lmintop - 1) {
+      dc.SetBrush( AColor::uglyBrush );
+      dc.DrawRectangle(l, rect.y + lmaxbot, w, lmintop - lmaxbot);
    }
 
    // If sync-lock selected, draw in linked graphics.
@@ -1417,11 +1427,12 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
 
 void TrackArtist::DrawEnvelope(wxDC &dc, const wxRect &rect, const double env[],
                                float zoomMin, float zoomMax,
-                               bool dB, float dBRange)
+                               bool dB, float dBRange, bool highlight)
 {
    int h = rect.height;
 
-   dc.SetPen(AColor::envelopePen);
+   auto &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
+   dc.SetPen( pen );
 
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int cenvTop = GetWaveYPos(env[x0], zoomMin, zoomMax,
@@ -1743,6 +1754,7 @@ void FindWavePortions
 }
 }
 
+#include "tracks/ui/EnvelopeHandle.h"
 void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
                                    const WaveClip *clip,
@@ -1757,6 +1769,12 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
    auto &dc = context.dc;
 #ifdef PROFILE_WAVEFORM
    Profiler profiler;
+#endif
+
+   bool highlightEnvelope = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
+   highlightEnvelope = target && target->GetEnvelope() == clip->GetEnvelope();
 #endif
 
    const ClipParameters params(false, track, clip, rect, selectedRegion, zoomInfo);
@@ -1819,7 +1837,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
          track->ZeroLevelYCoordinate(mid),
          dB, dBRange,
          t0, t1, zoomInfo, drawEnvelope,
-         !track->GetSelected());
+         !track->GetSelected(), highlightEnvelope);
    }
 
    WaveDisplay display(hiddenMid.width);
@@ -1960,7 +1978,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
    }
 
    if (drawEnvelope) {
-      DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB, dBRange);
+      DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope);
       clip->GetEnvelope()->DrawPoints
          (context, rect, zoomInfo, dB, dBRange, zoomMin, zoomMax, true);
    }
