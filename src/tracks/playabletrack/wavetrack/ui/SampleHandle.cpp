@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Audacity.h"
 #include "SampleHandle.h"
+#include "../../Experimental.h"
 
 #include <algorithm>
 #include "../../../../MemoryX.h"
@@ -36,7 +37,11 @@ static const double SMOOTHING_PROPORTION_MIN = 0.0;
 
 SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
    : mClickedTrack{ pTrack }
-{}
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
 
 HitTestPreview SampleHandle::HitPreview
 (const wxMouseState &state, const AudacityProject *pProject, bool unsafe)

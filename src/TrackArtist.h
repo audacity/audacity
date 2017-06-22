@@ -170,7 +170,8 @@ class AUDACITY_DLL_API TrackArtist {
                               bool dB, float dBRange,
                               const WaveClip *clip,
                               const ZoomInfo &zoomInfo,
-                              bool bigPoints, bool showPoints, bool muted);
+                              bool bigPoints, bool showPoints, bool muted,
+                              bool highlight);
 
    void DrawNegativeOffsetTrackArrows(wxDC & dc, const wxRect & rect);
 

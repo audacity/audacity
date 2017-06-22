@@ -1322,7 +1322,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
                                         bool dB, float dBRange,
                                         const WaveClip *clip,
                                         const ZoomInfo &zoomInfo,
-                                        bool bigPoints, bool showPoints, bool muted)
+                                        bool bigPoints, bool showPoints, bool muted,
+                                        bool highlight)
 {
    const double toffset = clip->GetOffset();
    double rate = clip->GetRate();
@@ -1355,7 +1356,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
    if (mShowClipping)
       clipped.reinit( size_t(slen) );
 
-   dc.SetPen(muted ? muteSamplePen : samplePen);
+   auto &pen = highlight ? AColor::uglyPen : muted ? muteSamplePen : samplePen;
+   dc.SetPen( pen );
 
    for (decltype(slen) s = 0; s < slen; s++) {
       const double time = toffset + (s + s0).as_double() / rate;
@@ -1386,7 +1388,10 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, int leftOffset, const wxRect &
       pr.width = tickSize;
       pr.height = tickSize;
       //different colour when draggable.
-      dc.SetBrush( bigPoints ? dragsampleBrush : sampleBrush);
+      auto &brush = highlight
+         ? AColor::uglyBrush
+         : bigPoints ? dragsampleBrush : sampleBrush;
+      dc.SetBrush( brush );
       for (decltype(slen) s = 0; s < slen; s++) {
          if (ypos[s] >= 0 && ypos[s] < rect.height) {
             pr.x = rect.x + xpos[s] - tickSize/2;
@@ -1764,6 +1769,7 @@ void FindWavePortions
 }
 }
 
+#include "tracks/playabletrack/wavetrack/ui/SampleHandle.h"
 #include "tracks/ui/EnvelopeHandle.h"
 void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveTrack *track,
@@ -1977,11 +1983,17 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
 #endif
             );
          }
-         else
+         else {
+            bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+            auto target = dynamic_cast<SampleHandle*>(context.target.get());
+            highlight = target && target->GetTrack().get() == track;
+#endif
             DrawIndividualSamples(dc, leftOffset, rect, zoomMin, zoomMax,
                dB, dBRange,
                clip, zoomInfo,
-               bigPoints, showPoints, muted);
+               bigPoints, showPoints, muted, highlight);
+         }
       }
 
       leftOffset += rect.width + skippedRight;
