@@ -417,14 +417,14 @@ protected:
                            const wxRect & clip);
    void DrawOutside
       (TrackPanelDrawingContext &context,
-       Track *t, const wxRect & rec);
+       Track *t, Track *prev, const wxRect & rec);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
    void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
    void DrawOutsideOfTrack
       (TrackPanelDrawingContext &context,
-       Track *t, const wxRect & rect);
+       Track *t, Track *prev, const wxRect & rect);
 
 public:
    // Set the object that performs catch-all event handling when the pointer
