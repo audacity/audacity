@@ -883,6 +883,11 @@ bool NyquistEffect::ProcessOne()
 
    wxString cmd;
 
+   // TODO: Document.
+   // Nyquist default latency is 300 ms, which is rather conservative and
+   // too long when playback set to ALSA (bug 570), so we'll use 100 ms like Audacity.
+   cmd += wxT("(snd-set-latency  0.1)");
+
    if (mVersion >= 4) {
       nyx_set_audio_name("*TRACK*");
       cmd += wxT("(setf S 0.25)\n");
