@@ -267,7 +267,9 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // Note that the audio could be playing.
    // The monitoring will switch off temporarily
    // because we've switched monitor mid play.
-   mContext.GetProject()->GetToolManager()->Reset();
+   // Bug 383 - Resetting the toolbars is not wanted.
+   // Any that are invisible will be amde visible as/when needed.
+   //mContext.GetProject()->GetToolManager()->Reset();
    Center();
 }
 
