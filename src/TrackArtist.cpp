@@ -1490,6 +1490,7 @@ void TrackArtist::DrawEnvLine(wxDC &dc, const wxRect &rect, int x0, int y0, int 
 }
 
 #include "tracks/ui/TimeShiftHandle.h"
+#include "tracks/playabletrack/wavetrack/ui/CutlineHandle.h"
 void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
@@ -1523,27 +1524,36 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
    // Update cache for locations, e.g. cutlines and merge points
    track->UpdateLocationsCache();
 
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
+#endif
    for (const auto loc : track->GetCachedLocations()) {
+      bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+      highlight =
+         target2 && target2->GetTrack().get() == track &&
+         target2->GetLocation() == loc;
+#endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
       if (xx >= 0 && xx < rect.width) {
          // delta is used to adjust the top and bottom edge of a split line.
          int delta =0;
-         dc.SetPen(*wxGREY_PEN);
+         dc.SetPen( highlight ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
          if (loc.typ == WaveTrackLocation::locationCutLine) {
-            dc.SetPen(*wxRED_PEN);
+            dc.SetPen( highlight ? AColor::uglyPen : *wxRED_PEN );
          }
          else {
             delta = rect.height/3;
 #ifdef EXPERIMENTAL_DA
             // JKC Black does not show up enough.
-            dc.SetPen(*wxWHITE_PEN);
+            dc.SetPen(highlight ? AColor::uglyPen : *wxWHITE_PEN);
 #else
-            dc.SetPen(*wxBLACK_PEN);
+            dc.SetPen(highlight ? AColor::uglyPen : *wxBLACK_PEN);
 #endif
          }
          AColor::Line(dc, (int) (rect.x + xx), rect.y+delta, (int) (rect.x + xx), rect.y - delta + rect.height);
-         dc.SetPen(*wxGREY_PEN);
+         dc.SetPen( highlight ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx + 1), rect.y+delta, (int) (rect.x + xx + 1), rect.y - delta + rect.height);
       }
    }
