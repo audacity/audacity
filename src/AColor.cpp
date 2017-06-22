@@ -491,7 +491,6 @@ void AColor::Init()
    // been snapped to the nearest boundary.
    theTheme.SetPenColour(   snapGuidePen,      clrSnapGuide);
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    // unselected
    lightBrush[0].SetColour(light);
    mediumBrush[0].SetColour(med);
@@ -508,7 +507,8 @@ void AColor::Init()
    mediumPen[1].SetColour(medSelected);
    darkPen[1].SetColour(darkSelected);
 
-#else
+// Unthemed colours that used to be used for mac.
+#if 0
 
 #if defined(__WXMAC__)          // && defined(TARGET_CARBON)
 
