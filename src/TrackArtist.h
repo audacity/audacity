@@ -133,7 +133,7 @@ class AUDACITY_DLL_API TrackArtist {
                       const wxRect & rect, const ZoomInfo &zoomInfo);
 
    void DrawTimeSlider(wxDC & dc, const wxRect & rect,
-                       bool rightwards);
+                       bool rightwards, bool highlight);
 
    void DrawClipWaveform(TrackPanelDrawingContext &context,
                          const WaveTrack *track, const WaveClip *clip,

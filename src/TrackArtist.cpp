@@ -1484,6 +1484,7 @@ void TrackArtist::DrawEnvLine(wxDC &dc, const wxRect &rect, int x0, int y0, int 
    }
 }
 
+#include "tracks/ui/TimeShiftHandle.h"
 void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
                                const wxRect & rect,
@@ -1495,6 +1496,15 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
                                bool muted)
 {
    auto &dc = context.dc;
+
+   bool highlight = false;
+   bool gripHit = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<TimeShiftHandle*>(context.target.get());
+   gripHit = target && target->IsGripHit();
+   highlight = target && target->GetTrack().get() == track;
+#endif
+
    const bool dB = !track->GetWaveformSettings().isLinear();
 
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
@@ -1534,8 +1544,8 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
    }
 
    if (drawSliders) {
-      DrawTimeSlider(dc, rect, true);  // directed right
-      DrawTimeSlider(dc, rect, false); // directed left
+      DrawTimeSlider(dc, rect, true, highlight && gripHit);  // directed right
+      DrawTimeSlider(dc, rect, false, highlight && gripHit); // directed left
    }
 }
 
@@ -2006,7 +2016,7 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
 
 void TrackArtist::DrawTimeSlider(wxDC & dc,
                                  const wxRect & rect,
-                                 bool rightwards)
+                                 bool rightwards, bool highlight)
 {
    const int border = 3; // 3 pixels all round.
    const int width = 6; // width of the drag box.
@@ -2032,12 +2042,12 @@ void TrackArtist::DrawTimeSlider(wxDC & dc,
    int yTop  = rect.y + border;
    int yBot  = rect.y + rect.height - border - 1;
 
-   AColor::Light(&dc, false);
+   AColor::Light(&dc, false, highlight);
    AColor::Line(dc, xLeft,         yBot - leftTaper, xLeft,         yTop + leftTaper);
    AColor::Line(dc, xLeft,         yTop + leftTaper, xLeft + xFlat, yTop);
    AColor::Line(dc, xLeft + xFlat, yTop,             xLeft + width, yTop + rightTaper);
 
-   AColor::Dark(&dc, false);
+   AColor::Dark(&dc, false, highlight);
    AColor::Line(dc, xLeft + width,         yTop + rightTaper, xLeft + width,       yBot - rightTaper);
    AColor::Line(dc, xLeft + width,         yBot - rightTaper, xLeft + width-xFlat, yBot);
    AColor::Line(dc, xLeft + width - xFlat, yBot,              xLeft,               yBot - leftTaper);
@@ -2048,12 +2058,12 @@ void TrackArtist::DrawTimeSlider(wxDC & dc,
    int yy;
    int i;
 
-   AColor::Light(&dc, false);
+   AColor::Light(&dc, false, highlight);
    for (i = 0;i < nBars; i++) {
       yy = firstBar + barSpacing * i;
       AColor::Line(dc, xLeft, yy, xLeft + barWidth, yy);
    }
-   AColor::Dark(&dc, false);
+   AColor::Dark(&dc, false, highlight);
    for(i = 0;i < nBars; i++){
       yy = firstBar + barSpacing * i + 1;
       AColor::Line(dc, xLeft, yy, xLeft + barWidth, yy);

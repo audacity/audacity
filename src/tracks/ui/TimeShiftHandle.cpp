@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "TimeShiftHandle.h"
+#include "../../Experimental.h"
 
 #include "TrackControls.h"
 #include "../../AColor.h"
@@ -27,7 +28,11 @@ TimeShiftHandle::TimeShiftHandle
 ( const std::shared_ptr<Track> &pTrack, bool gripHit )
    : mCapturedTrack{ pTrack }
    , mGripHit{ gripHit }
-{}
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
 
 HitTestPreview TimeShiftHandle::HitPreview
 (const AudacityProject *pProject, bool unsafe)
