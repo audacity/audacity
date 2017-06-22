@@ -2056,16 +2056,19 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
+#include "tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h"
 void TrackInfo::MidiControlsDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
+   auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
+   auto channel = target ? target->GetChannel() : -1;
    auto &dc = context.dc;
    wxRect midiRect = rect;
    GetMidiControlsHorizontalBounds(rect, midiRect);
    NoteTrack::DrawLabelControls
-      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect );
+      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
 #endif // EXPERIMENTAL_MIDI_OUT
 }
 

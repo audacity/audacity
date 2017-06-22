@@ -24,10 +24,21 @@ NoteTrackButtonHandle::NoteTrackButtonHandle
    : mpTrack{ pTrack }
    , mChannel{ channel }
    , mRect{ rect }
-{}
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
+}
 
 NoteTrackButtonHandle::~NoteTrackButtonHandle()
 {
+}
+
+UIHandle::Result NoteTrackButtonHandle::NeedChangeHighlight
+(const NoteTrackButtonHandle &oldState, const NoteTrackButtonHandle &newState)
+{
+   if (oldState.GetChannel() != newState.GetChannel())
+      // Repaint whenever the highlighted button is different
+      return RefreshCode::RefreshCell;
+   return 0;
 }
 
 UIHandlePtr NoteTrackButtonHandle::HitTest
