@@ -1328,7 +1328,6 @@ void MixerBoard::CreateMuteSoloImages()
 {
    // Much of this is similar to TrackInfo::MuteOrSoloDrawFunction.
    wxMemoryDC dc;
-   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    wxString str = _("Mute");
    int textWidth, textHeight;
 
@@ -1353,6 +1352,7 @@ void MixerBoard::CreateMuteSoloImages()
    wxCoord x = bev.x + (bev.width - textWidth) / 2;
    wxCoord y = bev.y + (bev.height - textHeight) / 2;
    dc.SetFont(font);
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    dc.DrawText(str, x, y);
 
    AColor::Bevel(dc, true, bev);
