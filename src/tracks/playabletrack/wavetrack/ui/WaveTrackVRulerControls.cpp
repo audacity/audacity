@@ -169,7 +169,7 @@ void HandleWaveTrackVZoom
                ? 2.0
                : (LINEAR_TO_DB(2.0) + settings.dBRange) / settings.dBRange;
             if (min <= -1.0 && max >= 1.0) {
-               min = top;
+               min = -top;
                max = top;
             }
             else {
