@@ -72,7 +72,7 @@ UIHandle::Result GainSliderHandle::CommitChanges
 
 HitTestResult GainSliderHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+ const AudacityProject *, Track *pTrack)
 {
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return {};
@@ -82,14 +82,18 @@ HitTestResult GainSliderHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
    if (sliderRect.Contains(event.m_x, event.m_y)) {
-      WaveTrack *const wavetrack = static_cast<WaveTrack*>(pTrack);
       wxRect sliderRect;
       TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
-      auto slider = TrackInfo::GainSlider
-         (sliderRect, wavetrack, true,
-          const_cast<TrackPanel*>(pProject->GetTrackPanel()));
-      Instance().mpSlider = slider;
-      Instance().mpTrack = wavetrack;
+
+      Instance().mSliderFn =
+      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+         return TrackInfo::GainSlider
+            (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
+             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+      };
+      Instance().mRect = sliderRect;
+      Instance().mpTrack = pTrack;
+
       return {
          HitPreview(),
          &Instance()
@@ -174,12 +178,15 @@ HitTestResult PanSliderHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
    if (sliderRect.Contains(event.m_x, event.m_y)) {
-      WaveTrack *const wavetrack = static_cast<WaveTrack*>(pTrack);
-      auto slider = TrackInfo::PanSlider
-         (sliderRect, wavetrack, true,
-          const_cast<TrackPanel*>(pProject->GetTrackPanel()));
-      Instance().mpSlider = slider;
-      Instance().mpTrack = wavetrack;
+      Instance().mSliderFn =
+      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+         return TrackInfo::PanSlider
+            (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
+             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+      };
+      Instance().mRect = sliderRect;
+      Instance().mpTrack = pTrack;
+
       return {
          HitPreview(),
          &Instance()

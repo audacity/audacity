@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_SLIDER_HANDLE__
 
 #include "../../UIHandle.h"
+#include <wx/gdicmn.h>
 
 class wxMouseEvent;
 class LWSlider;
@@ -56,7 +57,11 @@ protected:
 
    // Derived track is expected to set these two before Click():
    Track *mpTrack {};
-   LWSlider *mpSlider {};
+   wxRect mRect{};
+   using SliderFn = LWSlider *(*)( AudacityProject*, const wxRect&, Track* );
+   SliderFn mSliderFn;
+   LWSlider *GetSlider( AudacityProject *pProject )
+   { return mSliderFn( pProject, mRect, mpTrack ); }
 
    float mStartingValue {};
 };

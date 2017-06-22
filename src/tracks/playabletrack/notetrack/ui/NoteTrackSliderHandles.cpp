@@ -79,12 +79,15 @@ HitTestResult VelocitySliderHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
    if (sliderRect.Contains(event.m_x, event.m_y)) {
-      NoteTrack *const notetrack = static_cast<NoteTrack*>(pTrack);
-      auto slider = TrackInfo::VelocitySlider
-         (sliderRect, notetrack, true,
-          const_cast<TrackPanel*>(pProject->GetTrackPanel()));
-      Instance().mpSlider = slider;
-      Instance().mpTrack = notetrack;
+      Instance().mSliderFn =
+      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+         return TrackInfo::VelocitySlider
+            (sliderRect, static_cast<NoteTrack*>( pTrack ), true,
+             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+      };
+      Instance().mRect = sliderRect;
+      Instance().mpTrack = pTrack;
+
       return { HitPreview(), &Instance() };
    }
    else

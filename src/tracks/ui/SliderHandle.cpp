@@ -30,7 +30,7 @@ HitTestPreview SliderHandle::HitPreview()
 }
 
 UIHandle::Result SliderHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
@@ -39,8 +39,8 @@ UIHandle::Result SliderHandle::Click
 
    // Come here for left click or double click
    mStartingValue = GetValue();
-   mpSlider->Set(mStartingValue);
-   mpSlider->OnMouseEvent(event);
+   GetSlider( pProject )->Set(mStartingValue);
+   GetSlider( pProject )->OnMouseEvent(event);
 
    if (event.ButtonDClick())
       // Just did a modal dialog in OnMouseEvent
@@ -55,8 +55,8 @@ UIHandle::Result SliderHandle::Drag
 {
    wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
-   mpSlider->OnMouseEvent(event);
-   const float newValue = mpSlider->Get();
+   GetSlider( pProject )->OnMouseEvent(event);
+   const float newValue = GetSlider( pProject )->Get();
 
    // Make a non-permanent change to the project data:
    return RefreshCell | SetValue(pProject, newValue);
@@ -75,22 +75,26 @@ UIHandle::Result SliderHandle::Release
 {
    using namespace RefreshCode;
    wxMouseEvent &event = evt.event;
-   mpSlider->OnMouseEvent(event);
-   const float newValue = mpSlider->Get();
+   GetSlider( pProject )->OnMouseEvent(event);
+   const float newValue = GetSlider( pProject )->Get();
 
    Result result = RefreshCell;
 
    // Commit changes to the project data:
    result |= SetValue(pProject, newValue);
    result |= CommitChanges(event, pProject);
+
+   mpTrack = nullptr;
    return result;
 }
 
 UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
 {
    wxMouseEvent event(wxEVT_LEFT_UP);
-   mpSlider->OnMouseEvent(event);
+   GetSlider( pProject )->OnMouseEvent(event);
 
    // Undo un-committed changes to project data:
-   return RefreshCode::RefreshCell | SetValue(pProject, mStartingValue);
+   auto result = SetValue(pProject, mStartingValue);
+   mpTrack = nullptr;
+   return RefreshCode::RefreshCell | result;
 }
