@@ -139,7 +139,7 @@ public:
 
    static void MuteOrSoloDrawFunction
       ( wxDC *dc, const wxRect &rect, const Track *pTrack, bool down,
-        bool captured, bool solo );
+        bool captured, bool solo, bool hit );
 
    static void WideMuteDrawFunction
       ( TrackPanelDrawingContext &context,

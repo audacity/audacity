@@ -24,7 +24,9 @@ ButtonHandle::ButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
    : mpTrack{ pTrack }
    , mRect{ rect }
-{}
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
+}
 
 ButtonHandle::~ButtonHandle()
 {

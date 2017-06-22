@@ -1918,7 +1918,7 @@ void TrackInfo::CloseTitleDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      AColor::Bevel2(*dc, !down, bev, selected );
+      AColor::Bevel2(*dc, !down, bev, selected, hit );
 
 #ifdef EXPERIMENTAL_THEMING
       wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -1954,7 +1954,7 @@ void TrackInfo::CloseTitleDrawFunction
          pTrack ? pTrack->GetName() : _("Name");
 
       //bev.Inflate(-1, -1);
-      AColor::Bevel2(*dc, !down, bev, selected);
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
 
       // Draw title text
       SetTrackInfoFont(dc);
@@ -2024,7 +2024,7 @@ void TrackInfo::MinimizeSyncLockDrawFunction
       //AColor::MediumTrackInfo(dc, t->GetSelected());
       //dc->DrawRectangle(bev);
 
-      AColor::Bevel2(*dc, !down, bev, selected);
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
 
 #ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour(clrTrackPanelText);
@@ -2123,7 +2123,7 @@ void TrackInfo::VelocitySliderDrawFunction
 
 void TrackInfo::MuteOrSoloDrawFunction
 ( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, bool captured,
-  bool solo )
+  bool solo, bool hit )
 {
    //bev.Inflate(-1, -1);
    bool selected = pTrack ? pTrack->GetSelected() : true;
@@ -2163,7 +2163,7 @@ void TrackInfo::MuteOrSoloDrawFunction
       *dc,
       value == down,
       bev,
-      selected
+      selected, hit
    );
 
    SetTrackInfoFont(dc);
@@ -2183,7 +2183,7 @@ void TrackInfo::WideMuteDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
-   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
 }
 
 void TrackInfo::WideSoloDrawFunction
@@ -2197,7 +2197,7 @@ void TrackInfo::WideSoloDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
-   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true );
+   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
 }
 
 void TrackInfo::MuteAndSoloDrawFunction
@@ -2217,7 +2217,7 @@ void TrackInfo::MuteAndSoloDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false );
+      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
    }
 
    if( !bHasSoloButton )
@@ -2229,7 +2229,7 @@ void TrackInfo::MuteAndSoloDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true );
+      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
    }
 }
 
