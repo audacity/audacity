@@ -518,6 +518,11 @@ void TrackArtist::DrawVRuler
 (TrackPanelDrawingContext &context, const Track *t, wxRect & rect)
 {
    auto dc = &context.dc;
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   highlight = rect.Contains(context.lastState.GetPosition());
+#endif
+
    int kind = t->GetKind();
 
    // Label and Time tracks do not have a vruler
@@ -560,7 +565,7 @@ void TrackArtist::DrawVRuler
       wxRect bev = rect;
       bev.Inflate(-1, 0);
       bev.width += 1;
-      AColor::BevelTrackInfo(*dc, true, bev);
+      AColor::BevelTrackInfo(*dc, true, bev, highlight);
 
       // Right align the ruler
       wxRect rr = rect;
@@ -583,7 +588,7 @@ void TrackArtist::DrawVRuler
    if (kind == Track::Note) {
       UpdateVRuler(t, rect);
 
-      dc->SetPen(*wxTRANSPARENT_PEN);
+      dc->SetPen(highlight ? AColor::uglyPen : *wxTRANSPARENT_PEN);
       dc->SetBrush(*wxWHITE_BRUSH);
       wxRect bev = rect;
       bev.x++;
