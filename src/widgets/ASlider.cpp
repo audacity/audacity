@@ -731,13 +731,13 @@ void LWSlider::Draw(wxDC & paintDC)
       dc.SetTextForeground( theTheme.Colour( clrTrackPanelText ));
 
       // TransparentColour should be same as clrTrackInfo.
+      // This may have been necessary at one time to avoid 
+      // antialiasing the font against white, even on dark background.
       dc.SetTextBackground( theTheme.Colour( clrTrackInfo ) );
       dc.SetBackground( theTheme.Colour( clrTrackInfo ) );
-      // HAVE to use solid and not transparent here,
-      // otherwise windows will do its clever font optimisation trick,
-      // but against a default colour of white, which is not OK on a dark
-      // background.
-      dc.SetBackgroundMode( wxSOLID );
+      // Used to use wxSOLID here, but wxTRANSPARENT is better for mac, and 
+      // works fine on windows.
+      dc.SetBackgroundMode( wxTRANSPARENT );
 #else
       dc.SetTextForeground(mEnabled ? wxColour(0, 0, 0) : wxColour(128, 128, 128));
       dc.SetTextBackground(wxColour(255,255,255));
