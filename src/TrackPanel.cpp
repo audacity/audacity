@@ -1976,7 +1976,7 @@ void TrackInfo::SliderDrawFunction
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const TrackClass*>( pTrack );
-   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc);
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, false);
 }
 
 void TrackInfo::PanSliderDrawFunction

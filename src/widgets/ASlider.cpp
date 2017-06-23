@@ -455,8 +455,9 @@ void LWSlider::Init(wxWindow * parent,
    mCurrentValue = 0.0f;
    mDefaultValue = 0.0f;
    mDefaultShortcut = false;
-   mBitmap = NULL;
-   mThumbBitmap = NULL;
+   mBitmap = nullptr;
+   mThumbBitmap = nullptr;
+   mThumbBitmapHilited = nullptr;
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
    mTipPanel = NULL;
@@ -545,9 +546,9 @@ void LWSlider::AdjustSize(const wxSize & sz)
    Refresh();
 }
 
-void LWSlider::OnPaint(wxDC &dc)
+void LWSlider::OnPaint(wxDC &dc, bool highlight)
 {
-   if (!mBitmap || !mThumbBitmap)
+   if (!mBitmap || !mThumbBitmap || !mThumbBitmapHilited)
    {
       Draw(dc);
    }
@@ -568,14 +569,16 @@ void LWSlider::OnPaint(wxDC &dc)
 #endif
 
    dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
+   const auto &thumbBitmap =
+      highlight ? *mThumbBitmapHilited : *mThumbBitmap;
    if (mOrientation == wxHORIZONTAL)
    {
-      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbPos, mTop+thumbOrtho, true);
+      dc.DrawBitmap(thumbBitmap, mLeft+thumbPos, mTop+thumbOrtho, true);
    }
    else
    {
       // TODO: Don't use pixel-count hack in positioning.  
-      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
+      dc.DrawBitmap(thumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
    }
 
    if (mTipPanel)
@@ -605,9 +608,12 @@ void LWSlider::Draw(wxDC & paintDC)
 //      wxImage img2 = img.Rotate90(false);
 //      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
       mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotated )));
+      mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotatedHilited )));
    }
-   else
+   else {
       mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
+      mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbHilited )));
+   }
 
 
 // This code draws the (old) slider thumb.
@@ -1500,6 +1506,7 @@ void LWSlider::SetEnabled(bool enabled)
    mEnabled = enabled;
 
    mThumbBitmap.reset();
+   mThumbBitmapHilited.reset();
 
    Refresh();
 }
@@ -1596,7 +1603,11 @@ void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
-   mLWSlider->OnPaint(dc);
+   bool highlighted =
+      GetClientRect().Contains(
+         ScreenToClient(
+            ::wxGetMousePosition() ) );
+   mLWSlider->OnPaint(dc, highlighted);
 
    if ( mSliderIsFocused )
    {
