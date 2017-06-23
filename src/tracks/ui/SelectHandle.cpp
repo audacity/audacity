@@ -808,35 +808,35 @@ UIHandle::Result SelectHandle::Drag
          return RefreshNone;
    }
 
-   Track *clickedTrack =
-      static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack();
-
-   // Handle which tracks are selected
-   Track *sTrack = pTrack.get();
-   Track *eTrack = clickedTrack;
-   auto trackList = pProject->GetTracks();
-   auto pMixerBoard = pProject->GetMixerBoard();
-   if ( sTrack && eTrack && !event.ControlDown() ) {
-      auto &selectionState = pProject->GetSelectionState();
-      selectionState.SelectRangeOfTracks
+   if ( auto clickedTrack =
+       static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack() ) {
+      // Handle which tracks are selected
+      Track *sTrack = pTrack.get();
+      Track *eTrack = clickedTrack;
+      auto trackList = pProject->GetTracks();
+      auto pMixerBoard = pProject->GetMixerBoard();
+      if ( sTrack && eTrack && !event.ControlDown() ) {
+         auto &selectionState = pProject->GetSelectionState();
+         selectionState.SelectRangeOfTracks
          ( *trackList, *sTrack, *eTrack, pMixerBoard );
-   }
+      }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 #ifndef SPECTRAL_EDITING_ESC_KEY
-   if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-      !viewInfo.selectedRegion.isPoint())
-      MoveSnappingFreqSelection
+      if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
+          !viewInfo.selectedRegion.isPoint())
+         MoveSnappingFreqSelection
          (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
-   else
+      else
 #endif
-      if (mFreqSelTrack.lock() == pTrack)
-         AdjustFreqSelection(
-            static_cast<WaveTrack*>(pTrack.get()),
-            viewInfo, y, mRect.y, mRect.height);
+         if (mFreqSelTrack.lock() == pTrack)
+            AdjustFreqSelection(
+                                static_cast<WaveTrack*>(pTrack.get()),
+                                viewInfo, y, mRect.y, mRect.height);
 #endif
-
-   AdjustSelection(viewInfo, x, mRect.x, clickedTrack);
+      
+      AdjustSelection(viewInfo, x, mRect.x, clickedTrack);
+   }
 
    return RefreshNone
 

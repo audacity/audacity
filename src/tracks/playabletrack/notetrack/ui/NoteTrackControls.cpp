@@ -151,7 +151,7 @@ HitTestResult NoteTrackControls::HitTest
    const wxRect &rect = evt.rect;
    if (event.ButtonDown() || event.ButtonDClick()) {
       auto track = FindTrack();
-      if (track->GetKind() == Track::Note) {
+      if (track && track->GetKind() == Track::Note) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest

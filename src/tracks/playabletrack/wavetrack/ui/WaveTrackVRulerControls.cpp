@@ -675,6 +675,8 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    evt.event.Skip(false);
 
    Track *const pTrack = FindTrack();
+   if (!pTrack)
+      return RefreshNone;
    wxASSERT(pTrack->GetKind() == Track::Wave);
    auto steps = evt.steps;
 

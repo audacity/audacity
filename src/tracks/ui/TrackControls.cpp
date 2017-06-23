@@ -203,6 +203,9 @@ unsigned TrackControls::DoContextMenu
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
    auto track = FindTrack();
+   if (!track)
+      return RefreshCode::RefreshNone;
+
    InitMenuData data{ track, pParent, RefreshCode::RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();

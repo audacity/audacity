@@ -61,7 +61,7 @@ HitTestResult WaveTrackControls::HitTest
    const wxRect &rect = evt.rect;
    if (event.Button(wxMOUSE_BTN_LEFT)) {
       auto track = FindTrack();
-      if (track->GetKind() == Track::Wave) {
+      if (track && track->GetKind() == Track::Wave) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
