@@ -1718,26 +1718,28 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
 
+   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
+
    // The track artist actually draws the stuff inside each track
    auto first = GetProject()->GetFirstVisible();
-   mTrackArtist->DrawTracks(GetTracks(), first.get(),
-                            *dc, region, tracksRect, clip,
+   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
+                            region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
 
-   DrawEverythingElse(dc, region, clip);
+   DrawEverythingElse(context, region, clip);
 }
 
 /// Draws 'Everything else'.  In particular it draws:
 ///  - Drop shadow for tracks and vertical rulers.
 ///  - Zooming Indicators.
 ///  - Fills in space below the tracks.
-void TrackPanel::DrawEverythingElse(wxDC * dc,
+void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
                                     const wxRegion &region,
                                     const wxRect & clip)
 {
    // We draw everything else
-
+   auto dc = &context.dc;
    wxRect focusRect(-1, -1, 0, 0);
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
@@ -1787,7 +1789,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          if (mAx->IsFocused(t)) {
             focusRect = borderRect;
          }
-         DrawOutside(borderTrack, dc, borderRect);
+         DrawOutside(context, borderTrack, borderRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -1806,7 +1808,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          rect.y += kTopMargin;
          rect.width = GetVRulerWidth();
          rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(t, dc, rect);
+         mTrackArtist->DrawVRuler(context, t, rect);
       }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1819,7 +1821,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
             rect.y += kTopMargin;
             rect.width = GetVRulerWidth();
             rect.height -= (kTopMargin + kBottomMargin);
-            mTrackArtist->DrawVRuler(t, dc, rect);
+            mTrackArtist->DrawVRuler(context, t, rect);
          }
       }
 #endif
@@ -2279,15 +2281,18 @@ void TrackInfo::Status2DrawFunction
    StatusDrawFunction( s, dc, rect );
 }
 
-void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
+void TrackPanel::DrawOutside
+(TrackPanelDrawingContext &context,
+ Track * t, const wxRect & rec)
 {
+   auto dc = &context.dc;
    bool bIsWave = (t->GetKind() == Track::Wave);
 
    // Draw things that extend right of track control panel
    {
       // Start with whole track rect
       wxRect rect = rec;
-      DrawOutsideOfTrack(t, dc, rect);
+      DrawOutsideOfTrack(context, t, rect);
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -2319,7 +2324,6 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    rect.y += kTopMargin;
    rect.height -= (kBottomMargin + kTopMargin);
 
-   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
    TrackInfo::DrawItems( context, rect, *t );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
@@ -2329,8 +2333,11 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 // Paint the inset areas left, top, and right in a background color
 // If linked to a following channel, also paint the separator area, which
 // overlaps the next track rectangle's top
-void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawOutsideOfTrack
+(TrackPanelDrawingContext &context, Track * t, const wxRect & rect)
 {
+   auto dc = &context.dc;
+
    // Fill in area outside of the track
    AColor::TrackPanelBackground(dc, false);
    wxRect side;

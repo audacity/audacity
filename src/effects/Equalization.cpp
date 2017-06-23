@@ -2871,6 +2871,7 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
    Refresh( false );
 }
 
+#include "TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
    wxPaintDC dc(this);
@@ -3038,8 +3039,10 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(*wxBLACK_PEN);
    if( mEffect->mDraw->GetValue() )
    {
-      mEffect->mEnvelope->DrawPoints(memDC, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
-                                     mEffect->mdBMin, mEffect->mdBMax, false);
+      TrackPanelDrawingContext context{ memDC, {}, {} };
+      mEffect->mEnvelope->DrawPoints(
+         context, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
+      mEffect->mdBMin, mEffect->mdBMax, false);
    }
 
    dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);

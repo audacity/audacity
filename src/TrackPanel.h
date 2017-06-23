@@ -171,7 +171,6 @@ public:
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
    void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
-   void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
 
    static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
@@ -412,14 +411,19 @@ public:
 protected:
    void DrawTracks(wxDC * dc);
 
-   void DrawEverythingElse(wxDC *dc, const wxRegion & region,
+   void DrawEverythingElse(TrackPanelDrawingContext &context,
+                           const wxRegion & region,
                            const wxRect & clip);
-   void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
+   void DrawOutside
+      (TrackPanelDrawingContext &context,
+       Track *t, const wxRect & rec);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
    void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
-   void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
+   void DrawOutsideOfTrack
+      (TrackPanelDrawingContext &context,
+       Track *t, const wxRect & rect);
 
 public:
    // Set the object that performs catch-all event handling when the pointer

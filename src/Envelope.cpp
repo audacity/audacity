@@ -311,11 +311,15 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
    }
 }
 
+#include "TrackPanelDrawingContext.h"
+
 /// TODO: This should probably move to track artist.
-void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
-                    bool dB, double dBRange,
-                    float zoomMin, float zoomMax, bool mirrored) const
+void Envelope::DrawPoints
+(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo,
+ bool dB, double dBRange,
+ float zoomMin, float zoomMax, bool mirrored) const
 {
+   auto &dc = context.dc;
    dc.SetPen(AColor::envelopePen);
    dc.SetBrush(*wxWHITE_BRUSH);
 

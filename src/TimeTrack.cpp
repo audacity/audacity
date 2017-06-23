@@ -257,8 +257,13 @@ void TimeTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("timetrack"));
 }
 
-void TimeTrack::Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) const
+#include "TrackPanelDrawingContext.h"
+
+void TimeTrack::Draw
+(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo) const
 {
+   auto &dc = context.dc;
+
    double min = zoomInfo.PositionToTime(0);
    double max = zoomInfo.PositionToTime(r.width);
    if (min > max)
