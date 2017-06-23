@@ -2348,7 +2348,7 @@ void TrackPanel::OnTrackMenu(Track *t)
          return;
    }
 
-   TrackPanelCell *const pCell = t->GetTrackControl();
+   const auto pCell = t->GetTrackControl();
    const wxRect rect(FindTrackRect(t, true));
    const UIHandle::Result refreshResult =
       pCell->DoContextMenu(rect, this, NULL);
@@ -3112,10 +3112,10 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
             mpCell = mpTrack;
             break;
          case CellType::Label:
-            mpCell = mpTrack->GetTrackControl();
+            mpCell = mpTrack->GetTrackControl().get();
             break;
          case CellType::VRuler:
-            mpCell = mpTrack->GetVRulerControl();
+            mpCell = mpTrack->GetVRulerControl().get();
             break;
          case CellType::Resizer: {
             auto instance = &TrackPanelResizerCell::Instance();

@@ -317,8 +317,8 @@ private:
    static wxFont msFont;
 
 protected:
-   TrackControls *GetControls() override;
-   TrackVRulerControls *GetVRulerControls() override;
+   std::shared_ptr<TrackControls> GetControls() override;
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
 };
 
 #endif

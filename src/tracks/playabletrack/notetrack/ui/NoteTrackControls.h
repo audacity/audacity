@@ -15,12 +15,13 @@ Paul Licameli split from TrackPanel.cpp
 
 class NoteTrackControls : public TrackControls
 {
-   NoteTrackControls();
    NoteTrackControls(const NoteTrackControls&) = delete;
    NoteTrackControls &operator=(const NoteTrackControls&) = delete;
 
 public:
-   static NoteTrackControls &Instance();
+   explicit
+   NoteTrackControls( std::shared_ptr<Track> pTrack )
+      : TrackControls( pTrack ) {}
    ~NoteTrackControls();
 
    HitTestResult HitTest

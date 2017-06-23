@@ -48,16 +48,6 @@ namespace
    }
 }
 
-WaveTrackControls::WaveTrackControls()
-{
-}
-
-WaveTrackControls &WaveTrackControls::Instance()
-{
-   static WaveTrackControls instance;
-   return instance;
-}
-
 WaveTrackControls::~WaveTrackControls()
 {
 }
@@ -70,8 +60,8 @@ HitTestResult WaveTrackControls::HitTest
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    if (event.Button(wxMOUSE_BTN_LEFT)) {
-      if (mpTrack->GetKind() == Track::Wave) {
-         auto track = GetTrack();
+      auto track = FindTrack();
+      if (track->GetKind() == Track::Wave) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
@@ -84,11 +74,11 @@ HitTestResult WaveTrackControls::HitTest
             return result;
 
          if (NULL != (result =
-            GainSliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
+            GainSliderHandle::HitTest(event, rect, pProject, track)).handle)
             return result;
 
          if (NULL != (result =
-            PanSliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
+            PanSliderHandle::HitTest(event, rect, pProject, track)).handle)
             return result;
       }
    }

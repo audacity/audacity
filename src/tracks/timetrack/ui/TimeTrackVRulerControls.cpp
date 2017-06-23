@@ -12,17 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackVRulerControls.h"
 #include "../../../HitTestResult.h"
 
-TimeTrackVRulerControls::TimeTrackVRulerControls()
-   : TrackVRulerControls()
-{
-}
-
-TimeTrackVRulerControls &TimeTrackVRulerControls::Instance()
-{
-   static TimeTrackVRulerControls instance;
-   return instance;
-}
-
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {
 }

@@ -34,12 +34,12 @@ HitTestResult TimeTrack::HitTest
    return result;
 }
 
-TrackControls *TimeTrack::GetControls()
+std::shared_ptr<TrackControls> TimeTrack::GetControls()
 {
-   return &TimeTrackControls::Instance();
+   return std::make_shared<TimeTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *TimeTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> TimeTrack::GetVRulerControls()
 {
-   return &TimeTrackVRulerControls::Instance();
+   return std::make_shared<TimeTrackVRulerControls>( Pointer( this ) );
 }

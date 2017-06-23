@@ -59,16 +59,18 @@ HitTestResult Track::HitTest
    return result;
 }
 
-TrackPanelCell *Track::GetTrackControl()
+std::shared_ptr<TrackPanelCell> Track::GetTrackControl()
 {
-   TrackControls *const result = GetControls();
-   result->mpTrack = this;
-   return result;
+   if (!mpControls)
+      // create on demand
+      mpControls = GetControls();
+   return mpControls;
 }
 
-TrackPanelCell *Track::GetVRulerControl()
+std::shared_ptr<TrackPanelCell> Track::GetVRulerControl()
 {
-   TrackVRulerControls *const result = GetVRulerControls();
-   result->mpTrack = this;
-   return result;
+   if (!mpVRulerContols)
+      // create on demand
+      mpVRulerContols = GetVRulerControls();
+   return mpVRulerContols;
 }

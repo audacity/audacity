@@ -46,7 +46,7 @@ UIHandle::Result ButtonHandle::Click
    // Come here for left click or double click
    if (mRect.Contains(event.m_x, event.m_y)) {
       mpTrack = Track::Pointer(
-         static_cast<TrackControls*>(evt.pCell)->GetTrack() );
+         static_cast<TrackControls*>(evt.pCell)->FindTrack() );
       TrackControls::gCaptureState = mDragCode;
       // Toggle visible button state
       return RefreshCell;

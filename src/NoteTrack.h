@@ -237,8 +237,8 @@ class AUDACITY_DLL_API NoteTrack final
    int mLastMidiPosition;
 
 protected:
-   TrackControls *GetControls() override;
-   TrackVRulerControls *GetVRulerControls() override;
+   std::shared_ptr<TrackControls> GetControls() override;
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
 };
 
 #endif // USE_MIDI

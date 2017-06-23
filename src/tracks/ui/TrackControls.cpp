@@ -23,8 +23,18 @@ Paul Licameli split from TrackPanel.cpp
 
 int TrackControls::gCaptureState;
 
+TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
+   : mwTrack{ pTrack }
+{
+}
+
 TrackControls::~TrackControls()
 {
+}
+
+Track *TrackControls::FindTrack()
+{
+   return mwTrack.lock().get();
 }
 
 HitTestResult TrackControls::HitTest
@@ -46,11 +56,6 @@ HitTestResult TrackControls::HitTest
 
    return TrackSelectHandle::HitAnywhere
       (project->GetTrackPanel()->GetTrackCount());
-}
-
-Track *TrackControls::FindTrack()
-{
-   return GetTrack();
 }
 
 enum
@@ -197,12 +202,13 @@ unsigned TrackControls::DoContextMenu
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
-   InitMenuData data{ mpTrack, pParent, RefreshCode::RefreshNone };
+   auto track = FindTrack();
+   InitMenuData data{ track, pParent, RefreshCode::RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
    auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
-   PopupMenuTable *const pExtension = GetMenuExtension(mpTrack);
+   PopupMenuTable *const pExtension = GetMenuExtension(track);
    if (pExtension)
       pMenu->Extend(pExtension);
 

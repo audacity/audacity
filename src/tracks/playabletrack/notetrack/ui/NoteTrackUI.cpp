@@ -62,13 +62,13 @@ HitTestResult NoteTrack::HitTest
    return result;
 }
 
-TrackControls *NoteTrack::GetControls()
+std::shared_ptr<TrackControls> NoteTrack::GetControls()
 {
-   return &NoteTrackControls::Instance();
+   return std::make_shared<NoteTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *NoteTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> NoteTrack::GetVRulerControls()
 {
-   return &NoteTrackVRulerControls::Instance();
+   return std::make_shared<NoteTrackVRulerControls>( Pointer( this ) );
 }
 #endif
