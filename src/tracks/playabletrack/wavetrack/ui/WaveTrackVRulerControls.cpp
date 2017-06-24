@@ -518,10 +518,8 @@ public:
       (DrawingPass pass,
       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
 private:
-   WaveTrack *mpTrack{};
+   std::weak_ptr<WaveTrack> mpTrack;
 
    int mZoomStart{}, mZoomEnd{};
    wxRect mRect{};
@@ -561,9 +559,8 @@ WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
 UIHandle::Result WaveTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
-   mpTrack = static_cast<WaveTrack*>(
-      static_cast<WaveTrackVRulerControls*>(evt.pCell)->GetTrack()
-   );
+   mpTrack = Track::Pointer<WaveTrack>(
+      static_cast<WaveTrackVRulerControls*>(evt.pCell)->GetTrack() );
    mRect = evt.rect;
 
    const wxMouseEvent &event = evt.event;
@@ -576,9 +573,12 @@ UIHandle::Result WaveTrackVZoomHandle::Click
 UIHandle::Result WaveTrackVZoomHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
+   using namespace RefreshCode;
+   if (!mpTrack.lock())
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    mZoomEnd = event.m_y;
-   using namespace RefreshCode;
    if (IsDragZooming(mZoomStart, mZoomEnd))
       return RefreshAll;
    return RefreshNone;
@@ -595,7 +595,8 @@ UIHandle::Result WaveTrackVZoomHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   if (!mpTrack)
+   auto pTrack = mpTrack.lock();
+   if (!pTrack)
       return RefreshNone;
 
    const wxMouseEvent &event = evt.event;
@@ -608,11 +609,11 @@ UIHandle::Result WaveTrackVZoomHandle::Release
        !(event.ShiftDown() || event.CmdDown()))
    {
       InitMenuData data {
-         mpTrack, mRect, RefreshCode::RefreshNone, event.m_y
+         pTrack.get(), mRect, RefreshCode::RefreshNone, event.m_y
       };
 
       PopupMenuTable *const pTable =
-         (mpTrack->GetDisplay() == WaveTrack::Spectrum)
+         (pTrack->GetDisplay() == WaveTrack::Spectrum)
          ? (PopupMenuTable *) &SpectrumVRulerMenuTable::Instance()
          : (PopupMenuTable *) &WaveformVRulerMenuTable::Instance();
       std::unique_ptr<PopupMenuTable::Menu>
@@ -623,7 +624,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       return data.result;
    }
    else
-      HandleWaveTrackVZoom(pProject, mpTrack, shiftDown, rightUp,
+      HandleWaveTrackVZoom(pProject, pTrack.get(), shiftDown, rightUp,
          mRect, mZoomStart, mZoomEnd, false);
 
    return UpdateVRuler | RefreshAll;
@@ -639,20 +640,13 @@ UIHandle::Result WaveTrackVZoomHandle::Cancel(AudacityProject*)
 void WaveTrackVZoomHandle::DrawExtras
 (DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
 {
+   if (!mpTrack.lock())
+      return;
+
    if ( pass == UIHandle::Cells &&
         IsDragZooming( mZoomStart, mZoomEnd ) )
       TrackVRulerControls::DrawZooming
          ( dc, mRect, panelRect, mZoomStart, mZoomEnd );
-}
-
-void WaveTrackVZoomHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-      mRect = {};
-   }
-
-   UIHandle::OnProjectChange(pProject);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

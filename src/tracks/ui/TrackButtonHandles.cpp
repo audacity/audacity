@@ -37,11 +37,12 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
 {
    using namespace RefreshCode;
 
-   if (mpTrack)
+   auto pTrack = mpTrack.lock();
+   if (pTrack)
    {
-      mpTrack->SetMinimized(!mpTrack->GetMinimized());
-      if (mpTrack->GetLink())
-         mpTrack->GetLink()->SetMinimized(mpTrack->GetMinimized());
+      pTrack->SetMinimized(!pTrack->GetMinimized());
+      if (pTrack->GetLink())
+         pTrack->GetLink()->SetMinimized(pTrack->GetMinimized());
       pProject->ModifyState(true);
 
       // Redraw all tracks when any one of them expands or contracts
@@ -93,12 +94,13 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    using namespace RefreshCode;
    Result result = RefreshNone;
 
-   if (mpTrack)
+   auto pTrack = mpTrack.lock();
+   if (pTrack)
    {
       pProject->StopIfPaused();
       if (!pProject->IsAudioActive()) {
          // This pushes an undo item:
-         pProject->RemoveTrack(mpTrack);
+         pProject->RemoveTrack(pTrack.get());
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

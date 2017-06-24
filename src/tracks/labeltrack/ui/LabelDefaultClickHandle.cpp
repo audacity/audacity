@@ -32,7 +32,7 @@ LabelDefaultClickHandle::~LabelDefaultClickHandle()
 }
 
 struct LabelDefaultClickHandle::LabelState {
-   std::vector< std::pair< LabelTrack*, LabelTrack::Flags > > mPairs;
+   std::vector< std::pair< std::weak_ptr<LabelTrack>, LabelTrack::Flags > > mPairs;
 };
 
 void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
@@ -46,24 +46,12 @@ void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
    while (n) {
       if (n->GetKind() == Track::Label) {
          LabelTrack *const lt = static_cast<LabelTrack*>(n);
-         pairs.push_back( std::make_pair( lt, lt->SaveFlags() ) );
+         pairs.push_back( std::make_pair(
+            Track::Pointer<LabelTrack>( lt ),
+            lt->SaveFlags() )
+         );
       }
       n = iter.Next();
-   }
-}
-
-void LabelDefaultClickHandle::UpdateState( AudacityProject *pProject )
-{
-   if ( mLabelState ) {
-      auto trackList = pProject->GetTracks();
-      auto &pairs = mLabelState->mPairs;
-      auto it = pairs.begin();
-      while ( it != pairs.end() ) {
-         if ( trackList->Contains( it->first ) )
-            ++it;
-         else
-            it = pairs.erase( it );
-      }
    }
 }
 
@@ -71,7 +59,8 @@ void LabelDefaultClickHandle::RestoreState( AudacityProject *pProject )
 {
    if ( mLabelState ) {
       for ( const auto &pair : mLabelState->mPairs )
-         pair.first->RestoreFlags( pair.second );
+         if (auto pLt = pair.first.lock())
+            pLt->RestoreFlags( pair.second );
       mLabelState.reset();
    }
 }
@@ -174,7 +163,6 @@ bool LabelDefaultClickHandle::StopsOnKeystroke()
 
 void LabelDefaultClickHandle::OnProjectChange(AudacityProject *pProject)
 {
-   UpdateState( pProject );
    if (mpForward)
       return mpForward->OnProjectChange(pProject);
    UIHandle::OnProjectChange(pProject);

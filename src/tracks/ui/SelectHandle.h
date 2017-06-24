@@ -63,8 +63,6 @@ public:
       (DrawingPass pass,
       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
    // Receives timer event notifications, to implement auto-scroll
    void OnTimer(wxCommandEvent &event);
 
@@ -82,7 +80,8 @@ private:
       (ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
       int trackHeight, Track *pTrack);
    void AdjustFreqSelection
-      (ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
+      (const WaveTrack *wt,
+       ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
        int trackHeight);
 
    void HandleCenterFrequencyClick
@@ -103,7 +102,7 @@ private:
    //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
 
 
-   Track *mpTrack;
+   std::weak_ptr<Track> mpTrack;
    wxRect mRect;
    SelectedRegion mInitialSelection;
 
@@ -131,7 +130,7 @@ private:
       FREQ_SEL_TOP_FREE,
       FREQ_SEL_BOTTOM_FREE,
    }  mFreqSelMode;
-   const WaveTrack *mFreqSelTrack {};
+   std::weak_ptr<const WaveTrack> mFreqSelTrack;
    // Following holds:
    // the center for FREQ_SEL_PINNED_CENTER,
    // the ratio of top to center (== center to bottom) for FREQ_SEL_DRAG_CENTER,

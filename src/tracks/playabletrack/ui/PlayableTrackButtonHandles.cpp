@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../../Audacity.h"
 #include "PlayableTrackButtonHandles.h"
 
 #include "../../../HitTestResult.h"
@@ -35,8 +36,9 @@ MuteButtonHandle &MuteButtonHandle::Instance()
 UIHandle::Result MuteButtonHandle::CommitChanges
    (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *)
 {
-   if ( dynamic_cast< PlayableTrack* >( mpTrack ) )
-      pProject->DoTrackMute(mpTrack, event.ShiftDown());
+   auto pTrack = mpTrack.lock();
+   if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
+      pProject->DoTrackMute(pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }
@@ -83,8 +85,9 @@ SoloButtonHandle &SoloButtonHandle::Instance()
 UIHandle::Result SoloButtonHandle::CommitChanges
 (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
 {
-   if ( dynamic_cast< PlayableTrack* >( mpTrack ) )
-      pProject->DoTrackSolo(mpTrack, event.ShiftDown());
+   auto pTrack = mpTrack.lock();
+   if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
+      pProject->DoTrackSolo(pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }

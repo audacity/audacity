@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 
 #include "tracks/ui/CommonTrackPanelCell.h"
+#include "MemoryX.h"
 #include "UIHandle.h"
 
 struct HitTestResult;
@@ -46,8 +47,6 @@ public:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
 private:
    enum Mode {
       IsResizing,
@@ -56,7 +55,7 @@ private:
    };
    Mode mMode{ IsResizing };
 
-   Track *mpTrack{};
+   std::weak_ptr<Track> mpTrack;
 
    bool mInitialMinimized{};
    int mInitialTrackHeight{};

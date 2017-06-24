@@ -49,11 +49,8 @@ public:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
 private:
-   LabelTrack *mpLT {};
-   wxRect mRect {};
+   std::weak_ptr<LabelTrack> mpLT {};
    int mLabelTrackStartXPos { -1 };
    int mLabelTrackStartYPos { -1 };
    SelectedRegion mSelectedRegion{};

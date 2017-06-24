@@ -57,9 +57,7 @@ protected:
 
    virtual Result Cancel(AudacityProject *pProject);
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
-   NoteTrack *mpTrack{};
+   std::weak_ptr<NoteTrack> mpTrack;
    wxRect mRect{};
 };
 
@@ -86,7 +84,7 @@ HitTestResult NoteTrackClickHandle::HitTest
       return {};
    if (pTrack->GetKind() == Track::Note &&
        midiRect.Contains(event.m_x, event.m_y)) {
-         Instance().mpTrack = static_cast<NoteTrack*>(pTrack);
+         Instance().mpTrack = Track::Pointer<NoteTrack>( pTrack );
          Instance().mRect = midiRect;
          return {
             HitTestPreview(),
@@ -121,11 +119,12 @@ UIHandle::Result NoteTrackClickHandle::Release
 {
    using namespace RefreshCode;
 
-   if (!mpTrack)
-      return RefreshNone;
+   auto pTrack = mpTrack.lock();
+   if (!pTrack)
+      return Cancelled;
 
    const wxMouseEvent &event = evt.event;
-   if (mpTrack->LabelClick(mRect, event.m_x, event.m_y,
+   if (pTrack->LabelClick(mRect, event.m_x, event.m_y,
       event.Button(wxMOUSE_BTN_RIGHT))) {
       // No undo items needed??
       pProject->ModifyState(false);
@@ -137,16 +136,6 @@ UIHandle::Result NoteTrackClickHandle::Release
 UIHandle::Result NoteTrackClickHandle::Cancel(AudacityProject *)
 {
    return RefreshCode::RefreshNone;
-}
-
-void NoteTrackClickHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-      mRect = {};
-   }
-
-   UIHandle::OnProjectChange(pProject);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

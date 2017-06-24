@@ -67,17 +67,15 @@ public:
       (DrawingPass pass,
       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
 private:
-   NoteTrack *mpTrack;
+   std::weak_ptr<NoteTrack> mpTrack;
 
    int mZoomStart, mZoomEnd;
    wxRect mRect;
 };
 
 NoteTrackVZoomHandle::NoteTrackVZoomHandle()
-   : mpTrack(NULL), mZoomStart(0), mZoomEnd(0), mRect()
+   : mZoomStart(0), mZoomEnd(0), mRect()
 {
 }
 
@@ -111,9 +109,8 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 UIHandle::Result NoteTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   mpTrack = static_cast<NoteTrack*>(
-      static_cast<NoteTrackVRulerControls*>(evt.pCell)->GetTrack()
-   );
+   mpTrack = Track::Pointer<NoteTrack>(
+      static_cast<NoteTrackVRulerControls*>(evt.pCell)->GetTrack() );
    mRect = evt.rect;
 
    const wxMouseEvent &event = evt.event;
@@ -129,9 +126,12 @@ UIHandle::Result NoteTrackVZoomHandle::Click
 UIHandle::Result NoteTrackVZoomHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   if (!mpTrack.lock())
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    mZoomEnd = event.m_y;
-   using namespace RefreshCode;
    if (IsDragZooming(mZoomStart, mZoomEnd)) {
       // changed Note track to work like audio track
       //         mpTrack->VScroll(mZoomStart, mZoomEnd);
@@ -151,18 +151,19 @@ UIHandle::Result NoteTrackVZoomHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   if (!mpTrack)
+   auto pTrack = mpTrack.lock();
+   if (!pTrack)
       return RefreshNone;
 
    const wxMouseEvent &event = evt.event;
    if (IsDragZooming(mZoomStart, mZoomEnd)) {
-      mpTrack->ZoomTo(evt.rect, mZoomStart, mZoomEnd);
+      pTrack->ZoomTo(evt.rect, mZoomStart, mZoomEnd);
    }
    else if (event.ShiftDown() || event.RightUp()) {
-      mpTrack->ZoomOut(evt.rect, mZoomEnd);
+      pTrack->ZoomOut(evt.rect, mZoomEnd);
    }
    else {
-      mpTrack->ZoomIn(evt.rect, mZoomEnd);
+      pTrack->ZoomIn(evt.rect, mZoomEnd);
    }
 
    // TODO:  shift-right click as in audio track?
@@ -183,20 +184,13 @@ UIHandle::Result NoteTrackVZoomHandle::Cancel(AudacityProject *pProject)
 void NoteTrackVZoomHandle::DrawExtras
 (DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
 {
+   if (!mpTrack.lock())
+      return;
+
    if ( pass == UIHandle::Cells &&
         IsDragZooming( mZoomStart, mZoomEnd ) )
       TrackVRulerControls::DrawZooming
          ( dc, mRect, panelRect, mZoomStart, mZoomEnd );
-}
-
-void NoteTrackVZoomHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-      mRect = {};
-   }
-
-   UIHandle::OnProjectChange(pProject);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
