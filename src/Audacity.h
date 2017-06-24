@@ -191,8 +191,9 @@ void QuitAudacity();
 
 
 #ifndef IN_RC
-#include <wx/defs.h>
-#include <wx/string.h>
+//#include <wx/defs.h>
+//#include <wx/string.h>
+class wxString;
 
 extern const wxString& GetCustomTranslation(const wxString& str1 );
 extern const wxString& GetCustomSubstitution(const wxString& str1 );
