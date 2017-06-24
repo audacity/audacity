@@ -1575,7 +1575,7 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
          // shouldn't throw, because XMLWriter is not XMLFileWriter
          static_cast< SimpleBlockFile * >( &*pFile )->SaveXML( *blockFileLog );
 
-      newBlock.push_back(SeqBlock(pFile, mNumSamples));
+      newBlock.push_back(SeqBlock(pFile, newNumSamples));
 
       buffer += addedLen * SAMPLE_SIZE(format);
       newNumSamples += addedLen;
