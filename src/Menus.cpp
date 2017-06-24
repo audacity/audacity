@@ -5741,8 +5741,10 @@ void AudacityProject::OnSplitNew()
                    mViewInfo.selectedRegion.t1());
          }
 #endif
-         dest->SetOffset(wxMax(newt0, offset));
-         FinishCopy(n, std::move(dest), *mTracks);
+         if (dest) {
+            dest->SetOffset(wxMax(newt0, offset));
+            FinishCopy(n, std::move(dest), *mTracks);
+         }
       }
 
       if (n == l) {
