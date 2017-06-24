@@ -3875,6 +3875,7 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
 {
    wxString direction;
 
+   auto pt = dynamic_cast<PlayableTrack*>(target);
    switch (choice)
    {
    case OnMoveTopID:
@@ -3884,8 +3885,8 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
       while (mTracks->CanMoveUp(target)) {
          if (mTracks->Move(target, true)) {
             MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
-            if (pMixerBoard && (target->GetKind() == Track::Wave))
-               pMixerBoard->MoveTrackCluster((WaveTrack*)target, true);
+            if (pMixerBoard && pt)
+               pMixerBoard->MoveTrackCluster(pt, true);
          }
       }
       break;
@@ -3896,8 +3897,8 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
       while (mTracks->CanMoveDown(target)) {
          if (mTracks->Move(target, false)) {
             MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
-            if (pMixerBoard && (target->GetKind() == Track::Wave))
-               pMixerBoard->MoveTrackCluster((WaveTrack*)target, false);
+            if (pMixerBoard && pt)
+               pMixerBoard->MoveTrackCluster(pt, false);
          }
       }
       break;
@@ -3908,9 +3909,8 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
 
       if (mTracks->Move(target, bUp)) {
          MixerBoard* pMixerBoard = this->GetMixerBoard();
-         if (pMixerBoard && (target->GetKind() == Track::Wave)) {
-            pMixerBoard->MoveTrackCluster((WaveTrack*)target, bUp);
-         }
+         if (pMixerBoard && pt)
+            pMixerBoard->MoveTrackCluster(pt, bUp);
       }
    }
 
