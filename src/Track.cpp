@@ -123,9 +123,6 @@ TrackNodePointer Track::GetNode() const
    return mNode;
 }
 
-// A track can only live on one list at a time, so if you're moving a
-// track from one list to another, you must call SetOwner() with NULL
-// pointers first and then with the real pointers.
 void Track::SetOwner(TrackList *list, TrackNodePointer node)
 {
    mList = list;
