@@ -1000,10 +1000,9 @@ void TrackPanel::OnTrackListDeletion(wxCommandEvent & e)
    if (mUIHandle)
       mUIHandle->OnProjectChange(GetProject());
 
-   // Tracks may have been deleted, so check to see if the focused track was on of them.
-   if (!mTracks->Contains(GetFocusedTrack())) {
-      SetFocusedTrack(NULL);
-   }
+   // If the focused track disappeared but there are still other tracks,
+   // this reassigns focus.
+   GetFocusedTrack();
 
    UpdateVRulerSize();
 
@@ -2573,7 +2572,7 @@ void TrackPanel::DisplaySelection()
 
 Track *TrackPanel::GetFocusedTrack()
 {
-   return mAx->GetFocus();
+   return mAx->GetFocus().get();
 }
 
 void TrackPanel::SetFocusedTrack( Track *t )
@@ -2590,7 +2589,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
       AudacityProject::CaptureKeyboard(this);
    }
 
-   mAx->SetFocus( t );
+   mAx->SetFocus( Track::Pointer( t ) );
    Refresh( false );
 }
 
