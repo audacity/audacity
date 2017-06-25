@@ -53,7 +53,7 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    virtual ~PrefsPanel();
 
    // NEW virtuals
-   virtual bool Preview() {} // Make tentative changes
+   virtual void Preview() {} // Make tentative changes
    virtual bool Commit() = 0; // used to be called "Apply"
 
    // If it returns True, the Preview button is added below the panel

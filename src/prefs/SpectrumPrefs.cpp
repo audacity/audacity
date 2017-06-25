@@ -416,7 +416,7 @@ void SpectrumPrefs::Rollback()
    }
 }
 
-bool SpectrumPrefs::Preview()
+void SpectrumPrefs::Preview()
 {
    if (!Validate())
       return false;
@@ -487,6 +487,8 @@ bool SpectrumPrefs::Commit()
       SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
       pSettings->SavePrefs();
    }
+
+   return true;
 }
 
 bool SpectrumPrefs::ShowsPreviewButton()
