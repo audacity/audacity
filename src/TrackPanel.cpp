@@ -2534,6 +2534,16 @@ wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
       target->GetHeight()
    };
 
+   // PRL:  I think the following very old comment misused the term "race
+   // condition" for a bug that happened with only a single thread.  I think the
+   // real problem referred to, was that this function could be reached, via
+   // TrackPanelAx callbacks, during low-level operations while the TrackList
+   // was not in a consistent state.  Therefore GetLinked() did not imply
+   // that GetLink() was not null.
+   // Now the problem is fixed by delaying the handling of events generated
+   // by TrackList.
+
+   // Old comment:
    // The check for a null linked track is necessary because there's
    // a possible race condition between the time the 2 linked tracks
    // are added and when wxAccessible methods are called.  This is

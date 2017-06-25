@@ -857,19 +857,18 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
 void TrackList::DeletionEvent()
 {
-   wxCommandEvent e(EVT_TRACKLIST_DELETION);
-
-   // PRL:  ProcessEvent, not QueueEvent!  Listeners may need their last
-   // chance to examine some removed tracks that are about to be destroyed.
-   ProcessEvent(e);
+   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_DELETION);
+   // wxWidgets will own the event object
+   QueueEvent(e.release());
 }
 
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   wxCommandEvent e(EVT_TRACKLIST_RESIZING);
+   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_RESIZING);
    if (!isNull(node))
-      e.SetClientData(node->get());
-   ProcessEvent(e);
+      e->SetClientData(node->get());
+   // wxWidgets will own the event object
+   QueueEvent(e.release());
 }
 
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
@@ -951,8 +950,6 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
       pTrack->SetOwner(this, node);
       RecalcPositions(node);
 
-      // PRL:  Note:  Send the event while t (now in holder) is not yet
-      // destroyed, so pointers to t that listeners may have are not dangling.
       DeletionEvent();
       ResizingEvent(node);
    }
@@ -974,8 +971,6 @@ TrackNodePointer TrackList::Remove(Track *t)
             RecalcPositions(result);
          }
 
-         // PRL:  Note:  Send the event while t (now in holder) is not yet
-         // destroyed, so pointers to t that listeners may have are not dangling.
          DeletionEvent();
       }
    }
@@ -987,9 +982,6 @@ void TrackList::Clear(bool sendEvent)
    ListOfTracks tempList;
    tempList.swap( *this );
    if (sendEvent)
-      // PRL:  Note:  Send the event while tempList is not yet
-      // destroyed, so pointers to tracks that listeners may have are not
-      // dangling.
       DeletionEvent();
 }
 

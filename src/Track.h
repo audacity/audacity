@@ -489,9 +489,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZING, -1);
 
 // Posted when a track has been deleted from a tracklist.
 // Also posted when one track replaces another
-// When a track has been removed, the event is processed before the track
-// is destroyed, so that listeners that stored a pointer to the track can still
-// use it and correctly check whether the list still contains it.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_DELETION, -1);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
