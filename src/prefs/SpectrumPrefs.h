@@ -26,6 +26,7 @@
 #include <wx/window.h>
 
 #include "../Experimental.h"
+#include "../WaveTrack.h"
 
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"
@@ -43,7 +44,9 @@ class SpectrumPrefs final : public PrefsPanel
  public:
    SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~SpectrumPrefs();
+   bool Preview() override;
    bool Commit() override;
+   void Rollback();
    bool ShowsPreviewButton() override;
    bool Validate() override;
    wxString HelpPageName() override;
@@ -62,7 +65,7 @@ class SpectrumPrefs final : public PrefsPanel
    void EnableDisableSTFTOnlyControls();
 
    WaveTrack *const mWt;
-   bool mDefaulted;
+   bool mDefaulted, mOrigDefaulted;
 
    wxTextCtrl *mMinFreq;
    wxTextCtrl *mMaxFreq;
@@ -92,9 +95,13 @@ class SpectrumPrefs final : public PrefsPanel
 
    wxCheckBox *mDefaultsCheckbox;
 
-   SpectrogramSettings mTempSettings;
+   SpectrogramSettings mTempSettings, mOrigSettings;
+
+   WaveTrack::WaveTrackDisplay mOrigDisplay;
+   float mOrigMin, mOrigMax;
 
    bool mPopulating;
+   bool mCommitted{};
 };
 
 class SpectrumPrefsFactory final : public PrefsPanelFactory

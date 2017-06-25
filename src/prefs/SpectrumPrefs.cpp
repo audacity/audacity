@@ -41,16 +41,16 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
 {
    if (mWt) {
       SpectrogramSettings &settings = wt->GetSpectrogramSettings();
-      mDefaulted = (&SpectrogramSettings::defaults() == &settings);
-      mTempSettings = settings;
-      float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
-      mTempSettings.maxFreq = maxFreq;
-      mTempSettings.minFreq = minFreq;
+      mOrigDefaulted = mDefaulted = (&SpectrogramSettings::defaults() == &settings);
+      mTempSettings = mOrigSettings = settings;
+      wt->GetSpectrumBounds(&mOrigMin, &mOrigMax);
+      mTempSettings.maxFreq = mOrigMax;
+      mTempSettings.minFreq = mOrigMin;
+      mOrigDisplay = mWt->GetDisplay();
    }
    else  {
-      mTempSettings = SpectrogramSettings::defaults();
-      mDefaulted = false;
+      mTempSettings = mOrigSettings = SpectrogramSettings::defaults();
+      mOrigDefaulted = mDefaulted = false;
    }
 
    const auto windowSize = mTempSettings.WindowSize();
@@ -60,6 +60,8 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
 
 SpectrumPrefs::~SpectrumPrefs()
 {
+   if (!mCommitted)
+      Rollback();
 }
 
 enum {
@@ -365,7 +367,56 @@ bool SpectrumPrefs::Validate()
    return result;
 }
 
-bool SpectrumPrefs::Commit()
+void SpectrumPrefs::Rollback()
+{
+   const auto partner =
+      mWt ?
+            // Assume linked track is wave or null
+            static_cast<WaveTrack*>(mWt->GetLink())
+          : nullptr;
+
+   if (mWt) {
+      if (mOrigDefaulted) {
+         mWt->SetSpectrogramSettings({});
+         mWt->SetSpectrumBounds(-1, -1);
+         if (partner) {
+            partner->SetSpectrogramSettings({});
+            partner->SetSpectrumBounds(-1, -1);
+         }
+      }
+      else {
+         SpectrogramSettings *pSettings =
+            &mWt->GetIndependentSpectrogramSettings();
+         mWt->SetSpectrumBounds(mOrigMin, mOrigMax);
+         *pSettings = mOrigSettings;
+         if (partner) {
+            pSettings = &partner->GetIndependentSpectrogramSettings();
+            partner->SetSpectrumBounds(mOrigMin, mOrigMax);
+            *pSettings = mOrigSettings;
+         }
+      }
+   }
+
+   if (!mWt || mOrigDefaulted) {
+      SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
+      *pSettings = mOrigSettings;
+   }
+
+   const bool isOpenPage = this->IsShown();
+   if (mWt && isOpenPage) {
+      mWt->SetDisplay(mOrigDisplay);
+      if (partner)
+         partner->SetDisplay(mOrigDisplay);
+   }
+
+   if (isOpenPage) {
+      TrackPanel *const tp = ::GetActiveProject()->GetTrackPanel();
+      tp->UpdateVRulers();
+      tp->Refresh(false);
+   }
+}
+
+bool SpectrumPrefs::Preview()
 {
    if (!Validate())
       return false;
@@ -383,7 +434,6 @@ bool SpectrumPrefs::Commit()
 
 
    mTempSettings.ConvertToActualWindowSizes();
-   SpectrogramSettings::Globals::Get().SavePrefs(); // always
 
    if (mWt) {
       if (mDefaulted) {
@@ -411,7 +461,6 @@ bool SpectrumPrefs::Commit()
    if (!mWt || mDefaulted) {
       SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
       *pSettings = mTempSettings;
-      pSettings->SavePrefs();
    }
    mTempSettings.ConvertToEnumeratedWindowSizes();
 
@@ -428,6 +477,16 @@ bool SpectrumPrefs::Commit()
    }
 
    return true;
+}
+
+bool SpectrumPrefs::Commit()
+{
+   mCommitted = true;
+   SpectrogramSettings::Globals::Get().SavePrefs(); // always
+   if (!mWt || mDefaulted) {
+      SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
+      pSettings->SavePrefs();
+   }
 }
 
 bool SpectrumPrefs::ShowsPreviewButton()
