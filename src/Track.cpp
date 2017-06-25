@@ -70,6 +70,7 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 }
 
 Track::Track(const Track &orig)
+: vrulerSize( orig.vrulerSize )
 {
    mList = NULL;
    mY = 0;
