@@ -23,7 +23,7 @@ class DirectoriesPrefs final : public PrefsPanel
  public:
    DirectoriesPrefs(wxWindow * parent);
    ~DirectoriesPrefs();
-   bool Apply() override;
+   bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;
 

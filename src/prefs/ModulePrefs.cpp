@@ -126,7 +126,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool ModulePrefs::Apply()
+bool ModulePrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

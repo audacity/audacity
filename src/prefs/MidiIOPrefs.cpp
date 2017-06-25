@@ -250,7 +250,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
 //   OnDevice(e);
 }
 
-bool MidiIOPrefs::Apply()
+bool MidiIOPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

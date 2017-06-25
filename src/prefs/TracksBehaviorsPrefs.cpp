@@ -101,7 +101,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool TracksBehaviorsPrefs::Apply()
+bool TracksBehaviorsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

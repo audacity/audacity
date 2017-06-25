@@ -79,7 +79,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool WarningsPrefs::Apply()
+bool WarningsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

@@ -102,7 +102,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 }
 
-bool ImportExportPrefs::Apply()
+bool ImportExportPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

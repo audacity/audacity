@@ -231,7 +231,7 @@ void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
    HelpSystem::ShowHelpDialog(this, wxT("FAQ:Installation_and_Plug-Ins#ffdown"), true);
 }
 
-bool LibraryPrefs::Apply()
+bool LibraryPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

@@ -25,7 +25,7 @@ class BatchPrefs final : public PrefsPanel
 public:
    BatchPrefs(wxWindow * parent);
    ~BatchPrefs();
-   bool Apply() override;
+   bool Commit() override;
 
 private:
    void Populate();

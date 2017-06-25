@@ -207,7 +207,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    #endif
 }
 
-bool RecordingPrefs::Apply()
+bool RecordingPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
