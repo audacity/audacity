@@ -603,6 +603,7 @@ bool VisibleTrackIterator::Condition(Track *t)
    auto partner = t->GetLink();
    if ( partner && t->GetLinked() )
       return Condition( partner );
+   return false;
 }
 
 // SyncLockedTracksIterator
