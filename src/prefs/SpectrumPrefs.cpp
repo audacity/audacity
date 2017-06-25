@@ -419,7 +419,7 @@ void SpectrumPrefs::Rollback()
 void SpectrumPrefs::Preview()
 {
    if (!Validate())
-      return false;
+      return;
 
    const bool isOpenPage = this->IsShown();
 
@@ -475,12 +475,13 @@ void SpectrumPrefs::Preview()
       tp->UpdateVRulers();
       tp->Refresh(false);
    }
-
-   return true;
 }
 
 bool SpectrumPrefs::Commit()
 {
+   if (!Validate())
+      return false;
+
    mCommitted = true;
    SpectrogramSettings::Globals::Get().SavePrefs(); // always
    if (!mWt || mDefaulted) {
