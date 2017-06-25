@@ -688,7 +688,7 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
    mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
 }
 
-bool KeyConfigPrefs::Apply()
+bool KeyConfigPrefs::Commit()
 {
    // On the Mac, preferences may be changed without any active
    // projects.  This means that the CommandManager isn't availabe
@@ -1233,7 +1233,7 @@ void KeyConfigPrefs::OnItemSelected(wxListEvent & e)
    mKey->AppendText(item.GetText());
 }
 
-bool KeyConfigPrefs::Apply()
+bool KeyConfigPrefs::Commit()
 {
    for (size_t i = 0; i < mNames.GetCount(); i++) {
 //    wxString dkey = KeyStringNormalize(mManager->GetDefaultKeyFromName(mNames[i]));

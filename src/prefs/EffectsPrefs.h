@@ -27,7 +27,7 @@ class EffectsPrefs final : public PrefsPanel
  public:
    EffectsPrefs(wxWindow * parent);
    ~EffectsPrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
  private:

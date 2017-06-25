@@ -25,7 +25,7 @@ class WaveformPrefs final : public PrefsPanel
 public:
    WaveformPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~WaveformPrefs();
-   bool Apply() override;
+   bool Commit() override;
    bool ShowsPreviewButton() override;
    bool Validate() override;
 

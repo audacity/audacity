@@ -207,7 +207,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool GUIPrefs::Apply()
+bool GUIPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

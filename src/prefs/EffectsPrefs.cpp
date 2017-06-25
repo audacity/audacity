@@ -160,7 +160,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 }
 
-bool EffectsPrefs::Apply()
+bool EffectsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

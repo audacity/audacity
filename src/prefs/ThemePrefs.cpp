@@ -186,7 +186,7 @@ void ThemePrefs::OnSaveThemeAsCode(wxCommandEvent & WXUNUSED(event))
 }
 
 /// Update the preferences stored on disk.
-bool ThemePrefs::Apply()
+bool ThemePrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

@@ -415,7 +415,7 @@ PrefsPanel * PrefsDialog::GetCurrentPanel()
 
 void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
-   GetCurrentPanel()->Apply();
+   GetCurrentPanel()->Preview();
 }
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
@@ -467,11 +467,14 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
          PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
 
-         panel->Apply();
+         panel->Preview();
+         panel->Commit();
       }
    }
-   else
-      mUniquePage->Apply();
+   else {
+      mUniquePage->Preview();
+      mUniquePage->Commit();
+   }
 
    gPrefs->Flush();
 

@@ -134,7 +134,7 @@ bool WaveformPrefs::Validate()
    return result;
 }
 
-bool WaveformPrefs::Apply()
+bool WaveformPrefs::Commit()
 {
    const bool isOpenPage = this->IsShown();
 

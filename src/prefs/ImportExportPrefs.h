@@ -26,7 +26,7 @@ class ImportExportPrefs final : public PrefsPanel
  public:
    ImportExportPrefs(wxWindow * parent);
    ~ImportExportPrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
  private:

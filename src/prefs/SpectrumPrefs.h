@@ -43,7 +43,7 @@ class SpectrumPrefs final : public PrefsPanel
  public:
    SpectrumPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~SpectrumPrefs();
-   bool Apply() override;
+   bool Commit() override;
    bool ShowsPreviewButton() override;
    bool Validate() override;
    wxString HelpPageName() override;

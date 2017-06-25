@@ -158,7 +158,7 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
       gPrefs->Flush();
 }
 
-bool TracksPrefs::Apply()
+bool TracksPrefs::Commit()
 {
    // Bug 1583: Clear the caching of the preference pinned state.
    iPreferencePinned = -1;

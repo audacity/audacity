@@ -39,7 +39,7 @@ class KeyConfigPrefs final : public PrefsPanel
 public:
    KeyConfigPrefs(wxWindow * parent);
    ~KeyConfigPrefs();
-   bool Apply() override;
+   bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
 
@@ -109,7 +109,7 @@ class KeyConfigPrefs final : public PrefsPanel
  public:
    KeyConfigPrefs(wxWindow * parent);
    ~KeyConfigPrefs();
-   bool Apply() override;
+   bool Commit() override;
    void Cancel() override;
    wxString HelpPageName() override;
 

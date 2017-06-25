@@ -115,7 +115,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool PlaybackPrefs::Apply()
+bool PlaybackPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

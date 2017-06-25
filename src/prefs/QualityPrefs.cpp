@@ -210,7 +210,7 @@ void QualityPrefs::OnSampleRateChoice(wxCommandEvent & WXUNUSED(e))
    mOtherSampleRate->Enable(sel == (int)mSampleRates->GetCount() - 1);
 }
 
-bool QualityPrefs::Apply()
+bool QualityPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

@@ -365,7 +365,7 @@ bool SpectrumPrefs::Validate()
    return result;
 }
 
-bool SpectrumPrefs::Apply()
+bool SpectrumPrefs::Commit()
 {
    if (!Validate())
       return false;

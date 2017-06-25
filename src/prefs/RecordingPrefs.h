@@ -26,7 +26,7 @@ class RecordingPrefs final : public PrefsPanel
  public:
    RecordingPrefs(wxWindow * parent);
    virtual ~RecordingPrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
  private:
