@@ -2076,12 +2076,13 @@ template<typename TrackClass>
 void TrackInfo::SliderDrawFunction
 ( LWSlider *(*Selector)
     (const wxRect &sliderRect, const TrackClass *t, bool captured, wxWindow*),
-  wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured )
+  wxDC *dc, const wxRect &rect, const Track *pTrack,
+  bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const TrackClass*>( pTrack );
-   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, false);
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
 }
 
 #include "tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h"
@@ -2094,7 +2095,7 @@ void TrackInfo::PanSliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured, hit);
 }
 
 void TrackInfo::GainSliderDrawFunction
@@ -2106,7 +2107,7 @@ void TrackInfo::GainSliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -2120,7 +2121,7 @@ void TrackInfo::VelocitySliderDrawFunction
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    SliderDrawFunction<NoteTrack>
-      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured, hit);
 }
 #endif
 

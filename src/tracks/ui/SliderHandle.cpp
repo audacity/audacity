@@ -21,7 +21,9 @@ SliderHandle::SliderHandle
    : mSliderFn{ sliderFn }
    , mRect{ rect }
    , mpTrack{ pTrack }
-{}
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
+}
 
 SliderHandle::~SliderHandle()
 {

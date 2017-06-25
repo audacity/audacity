@@ -121,7 +121,8 @@ public:
       ( LWSlider *(*Selector)
            (const wxRect &sliderRect, const TrackClass *t, bool captured,
             wxWindow*),
-        wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured );
+        wxDC *dc, const wxRect &rect, const Track *pTrack,
+        bool captured, bool highlight );
 
    static void PanSliderDrawFunction
       ( TrackPanelDrawingContext &context,
