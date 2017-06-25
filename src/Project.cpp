@@ -944,8 +944,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mLastSavedTracks = NULL;
 
    // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_UPDATED,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdated),
+   mTracks->Connect(EVT_TRACKLIST_DELETION,
+                    wxCommandEventHandler(AudacityProject::OnTrackListDeletion),
                     NULL,
                     this);
 
@@ -2222,7 +2222,7 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
 }
 
 // The projects tracklist has been updated
-void AudacityProject::OnTrackListUpdated(wxCommandEvent & event)
+void AudacityProject::OnTrackListDeletion(wxCommandEvent & event)
 {
    GetSelectionState().TrackListUpdated( *GetTracks() );
 
@@ -2694,8 +2694,8 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    mImportXMLTagHandler.reset();
 
    // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_UPDATED,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdated),
+   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
+                       wxCommandEventHandler(AudacityProject::OnTrackListDeletion),
                        NULL,
                        this);
 

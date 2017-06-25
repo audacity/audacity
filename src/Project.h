@@ -355,7 +355,7 @@ public:
    void OnOpenAudioFile(wxCommandEvent & event);
    void OnODTaskUpdate(wxCommandEvent & event);
    void OnODTaskComplete(wxCommandEvent & event);
-   void OnTrackListUpdated(wxCommandEvent & event);
+   void OnTrackListDeletion(wxCommandEvent & event);
 
    void HandleResize();
    void UpdateLayout();

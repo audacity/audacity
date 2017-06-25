@@ -341,12 +341,12 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_RESIZED,
-                    wxCommandEventHandler(TrackPanel::OnTrackListResized),
+   mTracks->Connect(EVT_TRACKLIST_RESIZING,
+                    wxCommandEventHandler(TrackPanel::OnTrackListResizing),
                     NULL,
                     this);
-   mTracks->Connect(EVT_TRACKLIST_UPDATED,
-                    wxCommandEventHandler(TrackPanel::OnTrackListUpdated),
+   mTracks->Connect(EVT_TRACKLIST_DELETION,
+                    wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
                     NULL,
                     this);
    wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
@@ -361,12 +361,12 @@ TrackPanel::~TrackPanel()
    mTimer.Stop();
 
    // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_UPDATED,
-                       wxCommandEventHandler(TrackPanel::OnTrackListUpdated),
+   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
+                       wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
                        NULL,
                        this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZED,
-                       wxCommandEventHandler(TrackPanel::OnTrackListResized),
+   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
+                       wxCommandEventHandler(TrackPanel::OnTrackListResizing),
                        NULL,
                        this);
    wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
@@ -987,16 +987,15 @@ void TrackPanel::OnPlayback(wxCommandEvent &e)
 
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
-void TrackPanel::OnTrackListResized(wxCommandEvent & e)
+void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
 {
    Track *t = (Track *) e.GetClientData();
    UpdateVRuler(t);
    e.Skip();
 }
 
-// Tracks have been added or removed from the list.  Handle adds as if
-// a resize has taken place.
-void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
+// Tracks have been removed from the list.
+void TrackPanel::OnTrackListDeletion(wxCommandEvent & e)
 {
    if (mUIHandle)
       mUIHandle->OnProjectChange(GetProject());
@@ -1006,10 +1005,7 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
       SetFocusedTrack(NULL);
    }
 
-   if (e.GetClientData()) {
-      OnTrackListResized(e);
-      return;
-   }
+   UpdateVRulerSize();
 
    e.Skip();
 }
@@ -2275,7 +2271,8 @@ void TrackPanel::UpdateVRulers()
 
 void TrackPanel::UpdateVRuler(Track *t)
 {
-   UpdateTrackVRuler(t);
+   if (t)
+      UpdateTrackVRuler(t);
 
    UpdateVRulerSize();
 }

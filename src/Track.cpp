@@ -212,7 +212,7 @@ void Track::SetHeight(int h)
    mHeight = h;
    if (mList) {
       mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
+      mList->ResizingEvent(mNode);
    }
 }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
@@ -227,7 +227,7 @@ void Track::SetMinimized(bool isMinimized)
    mMinimized = isMinimized;
    if (mList) {
       mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
+      mList->ResizingEvent(mNode);
    }
 }
 
@@ -236,7 +236,7 @@ void Track::SetLinked(bool l)
    mLinked = l;
    if (mList) {
       mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
+      mList->ResizingEvent(mNode);
    }
 }
 
@@ -739,12 +739,12 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 
 // TrackList
 //
-// The TrackList sends itself events whenever an update occurs to the list it
+// The TrackList sends events whenever certain updates occur to the list it
 // is managing.  Any other classes that may be interested in get these updates
 // should use TrackList::Connect() and TrackList::Disconnect().
 //
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZED);
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_UPDATED);
+DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);
+DEFINE_EVENT_TYPE(EVT_TRACKLIST_DELETION);
 
 TrackList::TrackList()
 :  wxEvtHandler()
@@ -858,28 +858,21 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
 
-void TrackList::UpdatedEvent(TrackNodePointer node)
+void TrackList::DeletionEvent()
 {
-   wxCommandEvent e(EVT_TRACKLIST_UPDATED);
-   if (!isNull(node)) {
-      e.SetClientData(node->get());
-   }
-   else {
-      e.SetClientData(NULL);
-   }
+   wxCommandEvent e(EVT_TRACKLIST_DELETION);
 
    // PRL:  ProcessEvent, not QueueEvent!  Listeners may need their last
    // chance to examine some removed tracks that are about to be destroyed.
    ProcessEvent(e);
 }
 
-void TrackList::ResizedEvent(TrackNodePointer node)
+void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   if (!isNull(node)) {
-      wxCommandEvent e(EVT_TRACKLIST_RESIZED);
+   wxCommandEvent e(EVT_TRACKLIST_RESIZING);
+   if (!isNull(node))
       e.SetClientData(node->get());
-      ProcessEvent(e);
-   }
+   ProcessEvent(e);
 }
 
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
@@ -892,8 +885,6 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
    }
    auto n = begin();
    RecalcPositions(n);
-   UpdatedEvent(n);
-   ResizedEvent(n);
 }
 
 template<typename TrackKind>
@@ -905,7 +896,7 @@ Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
    --n;
    pTrack->SetOwner(this, n);
    RecalcPositions(n);
-   UpdatedEvent(n);
+   ResizingEvent(n);
    return back().get();
 }
 
@@ -926,8 +917,7 @@ Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
    auto n = begin();
    pTrack->SetOwner(this, n);
    RecalcPositions(n);
-   UpdatedEvent(n);
-   ResizedEvent(n);
+   ResizingEvent(n);
    return front().get();
 }
 
@@ -942,7 +932,7 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
    --n;
    t->SetOwner(this, n);
    RecalcPositions(n);
-   UpdatedEvent(n);
+   ResizingEvent(n);
    return back().get();
 }
 
@@ -964,8 +954,8 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
 
       // PRL:  Note:  Send the event while t (now in holder) is not yet
       // destroyed, so pointers to t that listeners may have are not dangling.
-      UpdatedEvent(node);
-      ResizedEvent(node);
+      DeletionEvent();
+      ResizingEvent(node);
    }
    return holder;
 }
@@ -986,8 +976,7 @@ TrackNodePointer TrackList::Remove(Track *t)
 
          // PRL:  Note:  Send the event while t (now in holder) is not yet
          // destroyed, so pointers to t that listeners may have are not dangling.
-         UpdatedEvent(end());
-         ResizedEvent(result);
+         DeletionEvent();
       }
    }
    return result;
@@ -1001,7 +990,7 @@ void TrackList::Clear(bool sendEvent)
       // PRL:  Note:  Send the event while tempList is not yet
       // destroyed, so pointers to tracks that listeners may have are not
       // dangling.
-      UpdatedEvent(end());
+      DeletionEvent();
 }
 
 void TrackList::Select(Track * t, bool selected /* = true */ )
@@ -1170,8 +1159,6 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
-   UpdatedEvent(s1);
-   ResizedEvent(s1);
 }
 
 bool TrackList::MoveUp(Track * t)

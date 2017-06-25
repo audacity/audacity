@@ -462,21 +462,16 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
  * Clear, and Contains, plus serialization of the list of tracks.
  */
 
-// Posted when the horizontal positions within tracks have beed updated.  The
-// wxCommandEvent::GetClientData() method can be used to retrieve the first
-// track that was updated.  All positions following that track will have been
-// updated as well.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
+// Posted when some track was added or changed its height.
+// The wxCommandEvent::GetClientData() method can be used to retrieve it.
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZING, -1);
 
-// Posted when tracks have been added or deleted from a tracklist.  The pointer
-// wxCommandEvent::GetClientData() returns will be NULL for deletions or the
-// track that was added.
+// Posted when a track has been deleted from a tracklist.
 // Also posted when one track replaces another
-// Also posted when the list of tracks is permuted, but no addition or deletion
 // When a track has been removed, the event is processed before the track
 // is destroyed, so that listeners that stored a pointer to the track can still
 // use it and correctly check whether the list still contains it.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_DELETION, -1);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
 {
@@ -594,8 +589,8 @@ private:
    void DoAssign(const TrackList &that);
        
    void RecalcPositions(TrackNodePointer node);
-   void UpdatedEvent(TrackNodePointer node);
-   void ResizedEvent(TrackNodePointer node);
+   void DeletionEvent();
+   void ResizingEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
 };
