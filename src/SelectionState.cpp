@@ -61,7 +61,7 @@ void SelectionState::SelectTrack
 
    tracks.Select( &track, selected );
    if (updateLastPicked)
-      mLastPickedTrack = &track;
+      mLastPickedTrack = Track::Pointer( &track );
 
 //The older code below avoids an anchor on an unselected track.
 
@@ -70,12 +70,12 @@ void SelectionState::SelectTrack
       // This handles the case of linked tracks, selecting all channels
       mTracks->Select(pTrack, true);
       if (updateLastPicked)
-         mLastPickedTrack = pTrack;
+         mLastPickedTrack = Track::Pointer( pTrack );
    }
    else {
       mTracks->Select(pTrack, false);
-      if (updateLastPicked && pTrack == mLastPickedTrack)
-         mLastPickedTrack = nullptr;
+      if (updateLastPicked && pTrack == mLastPickedTrack.lock().get())
+         mLastPickedTrack.reset();
    }
 */
 
@@ -130,11 +130,9 @@ void SelectionState::ChangeSelectionOnShiftClick
    Track* pFirst = nullptr;
    Track* pLast = nullptr;
    // We will either extend from the first or from the last.
-   Track* pExtendFrom= nullptr;
+   auto pExtendFrom = mLastPickedTrack.lock();
 
-   if( mLastPickedTrack )
-      pExtendFrom = mLastPickedTrack;
-   else {
+   if( !pExtendFrom ) {
       TrackListIterator iter( &tracks );
       for (Track *t = iter.First(); t; t = iter.Next()) {
          const bool isSelected = t->GetSelected();
@@ -146,11 +144,11 @@ void SelectionState::ChangeSelectionOnShiftClick
          }
          // If our track is at or after the first, extend from the first.
          if( t == &track )
-            pExtendFrom = pFirst;
+            pExtendFrom = Track::Pointer( pFirst );
       }
       // Our track was earlier than the first.  Extend from the last.
       if( !pExtendFrom )
-         pExtendFrom = pLast;
+         pExtendFrom = Track::Pointer( pLast );
    }
 
    SelectNone( tracks, pMixerBoard );
@@ -170,7 +168,7 @@ void SelectionState::HandleListSelection
    if (ctrl)
       SelectTrack( tracks, track, !track.GetSelected(), true, pMixerBoard );
    else {
-      if (shift && mLastPickedTrack)
+      if (shift && mLastPickedTrack.lock())
          ChangeSelectionOnShiftClick( tracks, track, pMixerBoard );
       else {
          SelectNone( tracks, pMixerBoard );
@@ -181,12 +179,6 @@ void SelectionState::HandleListSelection
       if (pMixerBoard)
          pMixerBoard->RefreshTrackClusters();
    }
-}
-
-void SelectionState::TrackListUpdated( const TrackList &tracks )
-{
-   if (mLastPickedTrack && !tracks.Contains(mLastPickedTrack))
-      mLastPickedTrack = nullptr;
 }
 
 SelectionStateChanger::SelectionStateChanger
