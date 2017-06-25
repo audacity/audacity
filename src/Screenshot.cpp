@@ -549,7 +549,8 @@ void ScreenFrame::SizeMainWindow(int w, int h)
 
    mContext.GetProject()->Maximize(false);
    mContext.GetProject()->SetSize(16, 16 + top, w, h);
-   mContext.GetProject()->GetToolManager()->Reset();
+   //Bug383 - Toolbar Resets not wanted.
+   //mContext.GetProject()->GetToolManager()->Reset();
 }
 
 void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
