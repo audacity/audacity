@@ -55,9 +55,9 @@ class PrefsPanel /* not final */ : public wxPanelWrapper
    // NEW virtuals
    virtual bool Apply() = 0;
 
-   // If it returns True, the Apply button is added below the panel
+   // If it returns True, the Preview button is added below the panel
    // Default returns false
-   virtual bool ShowsApplyButton();
+   virtual bool ShowsPreviewButton();
 
    // If not empty string, the Help button is added below the panel
    // Default returns empty string.

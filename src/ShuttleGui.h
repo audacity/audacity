@@ -351,7 +351,10 @@ enum
 
 enum
 {
-   ePreviewID     = wxID_LOWEST - 1,
+   // ePreviewID     = wxID_LOWEST - 1,
+   // But there is a wxID_PREVIEW
+   ePreviewID     = wxID_PREVIEW,
+
    eDebugID       = wxID_LOWEST - 2,
    eSettingsID    = wxID_LOWEST - 3,
    ePreviewDryID  = wxID_LOWEST - 4,

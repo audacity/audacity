@@ -430,7 +430,7 @@ bool SpectrumPrefs::Apply()
    return true;
 }
 
-bool SpectrumPrefs::ShowsApplyButton()
+bool SpectrumPrefs::ShowsPreviewButton()
 {
    return true;
 }

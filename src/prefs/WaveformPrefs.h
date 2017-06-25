@@ -26,7 +26,7 @@ public:
    WaveformPrefs(wxWindow * parent, WaveTrack *wt);
    virtual ~WaveformPrefs();
    bool Apply() override;
-   bool ShowsApplyButton() override;
+   bool ShowsPreviewButton() override;
    bool Validate() override;
 
 private:

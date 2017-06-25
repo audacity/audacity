@@ -191,7 +191,7 @@ bool WaveformPrefs::Apply()
    return true;
 }
 
-bool WaveformPrefs::ShowsApplyButton()
+bool WaveformPrefs::ShowsPreviewButton()
 {
    return true;
 }
