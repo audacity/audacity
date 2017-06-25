@@ -85,11 +85,16 @@ public:
 
    // Whether to force Release (not Cancel!) of the drag when a
    // keystroke command is about to be dispatched.  Default is always false.
+   // When default is false, any remembered pointers to tracks should be
+   // weak_ptrs.
    virtual bool StopsOnKeystroke();
 
    // Notification after a command is dispatched; generally, it will need to
    // be overridden only in case StopsOnKeystroke() returns false.  Default
    // does nothing.
+   // PRL: all former uses of this are now accomplished with weak_ptr instead
+   // to avoid dangling pointers to tracks.  But maybe there will be a future
+   // use?
    virtual void OnProjectChange(AudacityProject *pProject);
 };
 

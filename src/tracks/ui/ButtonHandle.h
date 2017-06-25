@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_BUTTON_HANDLE__
 
 #include "../../UIHandle.h"
+#include "../../MemoryX.h"
 
 class wxMouseEvent;
 #include <wx/gdicmn.h>
@@ -53,10 +54,8 @@ protected:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
    wxRect mRect {};
-   Track *mpTrack {};
+   std::weak_ptr<Track> mpTrack;
    const int mDragCode;
 };
 

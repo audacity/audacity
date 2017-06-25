@@ -63,7 +63,6 @@ private:
    struct LabelState;
    std::unique_ptr< LabelState > mLabelState;
    void SaveState( AudacityProject *pProject );
-   void UpdateState( AudacityProject *pProject );
    void RestoreState( AudacityProject *pProject );
 };
 

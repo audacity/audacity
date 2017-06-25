@@ -109,6 +109,27 @@ class AUDACITY_DLL_API Track /* not final */
  public:
    mutable wxSize vrulerSize;
 
+   // Given a bare pointer, find a shared_ptr.  But this is not possible for
+   // a track not owned by any list, so the result can be null.
+   template<typename Subclass = Track>
+   inline static std::shared_ptr<Subclass> Pointer( Track *t )
+   {
+      if (t && t->mList)
+         return std::static_pointer_cast<Subclass>(*t->mNode);
+      return {};
+   }
+
+   template<typename Subclass = const Track>
+   inline static std::shared_ptr<Subclass> Pointer( const Track *t )
+   {
+      if (t && t->mList) {
+         std::shared_ptr<const Track> p{ *t->mNode };
+         // Let you change the type, but not cast away the const
+         return std::static_pointer_cast<Subclass>(p);
+      }
+      return {};
+   }
+
    // An implementation is defined for call-through from subclasses, but
    // the inherited method is still marked pure virtual
    HitTestResult HitTest

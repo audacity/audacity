@@ -123,9 +123,6 @@ TrackNodePointer Track::GetNode() const
    return mNode;
 }
 
-// A track can only live on one list at a time, so if you're moving a
-// track from one list to another, you must call SetOwner() with NULL
-// pointers first and then with the real pointers.
 void Track::SetOwner(TrackList *list, TrackNodePointer node)
 {
    mList = list;
@@ -945,6 +942,8 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
    value_type holder;
    if (t && with) {
       auto node = t->GetNode();
+      t->SetOwner(nullptr, {});
+
       holder = std::move(*node);
 
       Track *pTrack = with.get();
@@ -965,6 +964,7 @@ TrackNodePointer TrackList::Remove(Track *t)
    TrackNodePointer result(end());
    if (t) {
       auto node = t->GetNode();
+      t->SetOwner(nullptr, {});
 
       if (!isNull(node)) {
          value_type holder = std::move( *node );

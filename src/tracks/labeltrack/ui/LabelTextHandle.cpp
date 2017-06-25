@@ -54,10 +54,11 @@ UIHandle::Result LabelTextHandle::Click
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   mpLT = static_cast<LabelTrack*>(pCell);
+   auto pLT = Track::Pointer<LabelTrack>( static_cast<Track*>(pCell) );
+   mpLT = pLT;
    mSelectedRegion = viewInfo.selectedRegion;
-   mpLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
-   wxASSERT(mpLT->IsSelected());
+   pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
+   wxASSERT(pLT->IsSelected());
 
    {
       // IF the user clicked a label, THEN select all other tracks by Label
@@ -68,7 +69,7 @@ UIHandle::Result LabelTextHandle::Click
       //do nothing if at least one other track is selected
       bool done = false;
       while (!done && t) {
-         if (t->GetSelected() && t != mpLT)
+         if (t->GetSelected() && t != pLT.get())
             done = true;
          t = iter.Next();
       }
@@ -88,7 +89,7 @@ UIHandle::Result LabelTextHandle::Click
       // Do this after, for its effect on TrackPanel's memory of last selected
       // track (which affects shift-click actions)
       selectionState.SelectTrack
-         ( *pProject->GetTracks(), *mpLT, true, true,
+         ( *pProject->GetTracks(), *pLT, true, true,
            pProject->GetMixerBoard() );
    }
 
@@ -107,8 +108,9 @@ UIHandle::Result LabelTextHandle::Drag
    Result result = RefreshNone;
 
    const wxMouseEvent &event = evt.event;
-   if(mpLT)
-      mpLT->HandleTextDragRelease(event);
+   auto pLT = mpLT.lock();
+   if(pLT)
+      pLT->HandleTextDragRelease(event);
 
    // locate the initial mouse position
    if (event.LeftIsDown()) {
@@ -116,10 +118,10 @@ UIHandle::Result LabelTextHandle::Drag
          mLabelTrackStartXPos = event.m_x;
          mLabelTrackStartYPos = event.m_y;
 
-         if (mpLT &&
-            (mpLT->getSelectedIndex() != -1) &&
-             mpLT->OverTextBox(
-               mpLT->GetLabel(mpLT->getSelectedIndex()),
+         if (pLT &&
+            (pLT->getSelectedIndex() != -1) &&
+             pLT->OverTextBox(
+               pLT->GetLabel(pLT->getSelectedIndex()),
                mLabelTrackStartXPos,
                mLabelTrackStartYPos))
             mLabelTrackStartYPos = -1;
@@ -152,8 +154,9 @@ UIHandle::Result LabelTextHandle::Release
    }
 
    const wxMouseEvent &event = evt.event;
-   if (mpLT)
-      mpLT->HandleTextDragRelease(event);
+   auto pLT = mpLT.lock();
+   if (pLT)
+      pLT->HandleTextDragRelease(event);
 
    // handle mouse left button up
    if (event.LeftUp())
@@ -171,14 +174,4 @@ UIHandle::Result LabelTextHandle::Cancel( AudacityProject *pProject )
    ViewInfo &viewInfo = pProject->GetViewInfo();
    viewInfo.selectedRegion = mSelectedRegion;
    return RefreshCode::RefreshAll;
-}
-
-void LabelTextHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpLT)) {
-      mpLT = nullptr;
-      mRect = {};
-   }
-
-   UIHandle::OnProjectChange(pProject);
 }

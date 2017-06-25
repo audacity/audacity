@@ -50,8 +50,7 @@ enum {
 // #define SPECTRAL_EDITING_ESC_KEY
 
 SelectHandle::SelectHandle()
-   : mpTrack(0)
-   , mRect()
+   : mRect()
    , mInitialSelection()
 
    , mSnapManager()
@@ -64,7 +63,6 @@ SelectHandle::SelectHandle()
    , mSelectionBoundary(0)
 
    , mFreqSelMode(FREQ_SEL_INVALID)
-   , mFreqSelTrack(NULL)
    , mFreqSelPin(-1.0)
    , mFrequencySnapper(new SpectrumAnalyst)
 
@@ -559,7 +557,7 @@ UIHandle::Result SelectHandle::Click
    else if (!event.LeftDown())
       return Cancelled;
 
-   mpTrack = pTrack;
+   mpTrack = Track::Pointer( pTrack );
    mRect = evt.rect;
    mInitialSelection = viewInfo.selectedRegion;
 
@@ -599,7 +597,7 @@ UIHandle::Result SelectHandle::Click
       double value;
       // Shift-click, choose closest boundary
       SelectionBoundary boundary =
-         ChooseBoundary(viewInfo, event, mpTrack, mRect, false, false, &value);
+         ChooseBoundary(viewInfo, event, pTrack, mRect, false, false, &value);
       mSelectionBoundary = boundary;
       switch (boundary) {
          case SBLeft:
@@ -612,14 +610,14 @@ UIHandle::Result SelectHandle::Click
 #endif
             mSelStartValid = true;
             mSelStart = value;
-            AdjustSelection(viewInfo, event.m_x, mRect.x, mpTrack);
+            AdjustSelection(viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          case SBBottom:
          case SBTop:
          {
-            mFreqSelTrack = static_cast<const WaveTrack*>(mpTrack);
+            mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
             mFreqSelPin = value;
             mFreqSelMode =
                (boundary == SBBottom)
@@ -627,7 +625,9 @@ UIHandle::Result SelectHandle::Click
 
             // Drag frequency only, not time:
             mSelStartValid = false;
-            AdjustFreqSelection(viewInfo, event.m_y, mRect.y, mRect.height);
+            AdjustFreqSelection(
+               static_cast<WaveTrack*>(pTrack),
+               viewInfo, event.m_y, mRect.y, mRect.height);
             break;
          }
          case SBCenter:
@@ -656,13 +656,13 @@ UIHandle::Result SelectHandle::Click
 
    //Make sure you are within the selected track
    bool startNewSelection = true;
-   if (mpTrack && mpTrack->GetSelected()) {
+   if (pTrack && pTrack->GetSelected()) {
       // Adjusting selection edges can be turned off in the
       // preferences now
       if (viewInfo.bAdjustSelectionEdges) {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
          if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-            isSpectralSelectionTrack(mpTrack)) {
+            isSpectralSelectionTrack(pTrack)) {
             // This code is no longer reachable, but it had a place in the
             // spectral selection prototype.  It used to be that you could be
             // in a center-frequency-snapping mode that was not a mouse drag
@@ -672,11 +672,13 @@ UIHandle::Result SelectHandle::Click
             // Ignore whether we are inside the time selection.
             // Exit center-snapping, start dragging the width.
             mFreqSelMode = FREQ_SEL_PINNED_CENTER;
-            mFreqSelTrack = static_cast<WaveTrack*>(mpTrack);
+            mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
             mFreqSelPin = viewInfo.selectedRegion.fc();
             // Do not adjust time boundaries
             mSelStartValid = false;
-            AdjustFreqSelection(viewInfo, event.m_y, mRect.y, mRect.height);
+            AdjustFreqSelection(
+               static_cast<WaveTrack*>(pTrack),
+               viewInfo, event.m_y, mRect.y, mRect.height);
             // For persistence of the selection change:
             pProject->ModifyState(false);
             mSelectionBoundary = SBWidth;
@@ -688,7 +690,7 @@ UIHandle::Result SelectHandle::Click
             // Not shift-down, choose boundary only within snapping
             double value;
             SelectionBoundary boundary =
-               ChooseBoundary(viewInfo, event, mpTrack, mRect, true, true, &value);
+               ChooseBoundary(viewInfo, event, pTrack, mRect, true, true, &value);
             mSelectionBoundary = boundary;
             switch (boundary) {
             case SBNone:
@@ -711,7 +713,7 @@ UIHandle::Result SelectHandle::Click
                startNewSelection = false;
                // Disable time selection
                mSelStartValid = false;
-               mFreqSelTrack = static_cast<const WaveTrack*>(mpTrack);
+               mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
                mFreqSelPin = value;
                mFreqSelMode =
                   (boundary == SBWidth) ? FREQ_SEL_PINNED_CENTER :
@@ -739,17 +741,17 @@ UIHandle::Result SelectHandle::Click
       // If we didn't move a selection boundary, start a NEW selection
       selectionState.SelectNone( *trackList, pMixerBoard );
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height, mpTrack);
+      StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height, pTrack);
 #endif
       StartSelection(pProject, event.m_x, mRect.x);
       selectionState.SelectTrack
-         ( *trackList, *mpTrack, true, true, pMixerBoard );
-      trackPanel->SetFocusedTrack(mpTrack);
+         ( *trackList, *pTrack, true, true, pMixerBoard );
+      trackPanel->SetFocusedTrack(pTrack);
       //On-Demand: check to see if there is an OD thing associated with this track.
-      if (mpTrack->GetKind() == Track::Wave) {
+      if (pTrack->GetKind() == Track::Wave) {
          if(ODManager::IsInstanceCreated())
             ODManager::Instance()->DemandTrackUpdate
-               (static_cast<WaveTrack*>(mpTrack),mSelStart);
+               (static_cast<WaveTrack*>(pTrack),mSelStart);
       }
 
       Connect(pProject);
@@ -787,7 +789,8 @@ UIHandle::Result SelectHandle::Drag
    }
 
    // Also fuhggeddaboudit if not in a track.
-   if (!mpTrack)
+   auto pTrack = mpTrack.lock();
+   if (!pTrack)
       return RefreshNone;
 
    // JKC: Logic to prevent a selection smaller than 5 pixels to
@@ -809,7 +812,7 @@ UIHandle::Result SelectHandle::Drag
       static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack();
 
    // Handle which tracks are selected
-   Track *sTrack = mpTrack;
+   Track *sTrack = pTrack.get();
    Track *eTrack = clickedTrack;
    auto trackList = pProject->GetTracks();
    auto pMixerBoard = pProject->GetMixerBoard();
@@ -824,11 +827,13 @@ UIHandle::Result SelectHandle::Drag
    if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
       !viewInfo.selectedRegion.isPoint())
       MoveSnappingFreqSelection
-         (pProject, viewInfo, y, mRect.y, mRect.height, mpTrack);
+         (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
    else
 #endif
-      if (mFreqSelTrack == mpTrack)
-         AdjustFreqSelection(viewInfo, y, mRect.y, mRect.height);
+      if (mFreqSelTrack.lock() == pTrack)
+         AdjustFreqSelection(
+            static_cast<WaveTrack*>(pTrack.get()),
+            viewInfo, y, mRect.y, mRect.height);
 #endif
 
    AdjustSelection(viewInfo, x, mRect.x, clickedTrack);
@@ -902,20 +907,6 @@ void SelectHandle::DrawExtras
    }
 }
 
-void SelectHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-      mRect = {};
-   }
-
-   if (! pProject->GetTracks()->Contains(mFreqSelTrack)) {
-      mFreqSelTrack = nullptr;
-   }
-
-   UIHandle::OnProjectChange(pProject);
-}
-
 void SelectHandle::Connect(AudacityProject *pProject)
 {
    mConnectedProject = pProject;
@@ -934,8 +925,8 @@ void SelectHandle::Disconnect()
          this);
    mConnectedProject = NULL;
 
-   mpTrack = 0;
-   mFreqSelTrack = nullptr;
+   mpTrack.reset();
+   mFreqSelTrack.reset();
 
    mSnapManager.reset(NULL);
 
@@ -994,7 +985,8 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       }
    }
 
-   if (mAutoScrolling && mpTrack) {
+   auto pTrack = mpTrack.lock();
+   if (mAutoScrolling && pTrack) {
       // AS: To keep the selection working properly as we scroll,
       //  we fake a mouse event (remember, this method is called
       //  from a timer tick).
@@ -1002,7 +994,7 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       // AS: For some reason, GCC won't let us pass this directly.
       wxMouseEvent evt(wxEVT_MOTION);
       const auto size = trackPanel->GetSize();
-      Drag(TrackPanelMouseEvent{ evt, mRect, size, mpTrack }, project);
+      Drag(TrackPanelMouseEvent{ evt, mRect, size, pTrack.get() }, project);
       mAutoScrolling = false;
       mConnectedProject->GetTrackPanel()->Refresh(false);
    }
@@ -1022,7 +1014,8 @@ void SelectHandle::StartSelection
       mSnapLeft = -1;
       mSnapRight = -1;
       bool snappedPoint, snappedTime;
-      if (mSnapManager->Snap(mpTrack, mSelStart, false,
+      auto pTrack = mpTrack.lock();
+      if (mSnapManager->Snap(pTrack.get(), mSelStart, false,
          &s, &snappedPoint, &snappedTime)) {
          if (snappedPoint)
             mSnapLeft = viewInfo.TimeToPosition(s, trackLeftEdge);
@@ -1041,7 +1034,7 @@ void SelectHandle::StartSelection
 /// Extend or contract the existing selection
 void SelectHandle::AdjustSelection
 (ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
- Track *pTrack)
+ Track *track)
 {
    if (!mSelStartValid)
       // Must be dragging frequency bounds only.
@@ -1052,8 +1045,9 @@ void SelectHandle::AdjustSelection
    double origSel0, origSel1;
    double sel0, sel1;
 
-   if (pTrack == NULL && mpTrack != NULL)
-      pTrack = mpTrack;
+   auto pTrack = Track::Pointer( track );
+   if (!pTrack)
+      pTrack = mpTrack.lock();
 
    if (mSelStart < selend) {
       sel0 = mSelStart;
@@ -1071,14 +1065,14 @@ void SelectHandle::AdjustSelection
       mSnapLeft = -1;
       mSnapRight = -1;
       bool snappedPoint, snappedTime;
-      if (mpTrack &&
-          mSnapManager->Snap(mpTrack, sel0, false,
+      if (pTrack &&
+          mSnapManager->Snap(pTrack.get(), sel0, false,
                              &sel0, &snappedPoint, &snappedTime)) {
          if (snappedPoint)
             mSnapLeft = viewInfo.TimeToPosition(sel0, trackLeftEdge);
       }
-      if (mpTrack &&
-          mSnapManager->Snap(mpTrack, sel1, true,
+      if (pTrack &&
+          mSnapManager->Snap(pTrack.get(), sel1, true,
                              &sel1, &snappedPoint, &snappedTime)) {
          if (snappedPoint)
             mSnapRight = viewInfo.TimeToPosition(sel1, trackLeftEdge);
@@ -1100,29 +1094,31 @@ void SelectHandle::AdjustSelection
    //On-Demand: check to see if there is an OD thing associated with this track.  If so we want to update the focal point for the task.
    if (pTrack && (pTrack->GetKind() == Track::Wave) && ODManager::IsInstanceCreated())
       ODManager::Instance()->DemandTrackUpdate
-         (static_cast<WaveTrack*>(pTrack),sel0); //sel0 is sometimes less than mSelStart
+         (static_cast<WaveTrack*>(pTrack.get()),sel0); //sel0 is sometimes less than mSelStart
 }
 
 void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,
    int mouseYCoordinate, int trackTopEdge,
    int trackHeight, Track *pTrack)
 {
-   mFreqSelTrack = NULL;
+   mFreqSelTrack.reset();
    mFreqSelMode = FREQ_SEL_INVALID;
    mFreqSelPin = SelectedRegion::UndefinedFrequency;
 
    if (isSpectralSelectionTrack(pTrack)) {
       // Spectral selection track is always wave
-      mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
+      auto shTrack = Track::Pointer<const WaveTrack>( pTrack );
+      mFreqSelTrack = shTrack;
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =
-         PositionToFrequency(mFreqSelTrack, false, mouseYCoordinate,
+         PositionToFrequency(shTrack.get(), false, mouseYCoordinate,
          trackTopEdge, trackHeight);
       viewInfo.selectedRegion.setFrequencies(mFreqSelPin, mFreqSelPin);
    }
 }
 
-void SelectHandle::AdjustFreqSelection(ViewInfo &viewInfo,
+void SelectHandle::AdjustFreqSelection(
+   const WaveTrack *wt, ViewInfo &viewInfo,
    int mouseYCoordinate, int trackTopEdge,
    int trackHeight)
 {
@@ -1133,7 +1129,6 @@ void SelectHandle::AdjustFreqSelection(ViewInfo &viewInfo,
    // Extension happens only when dragging in the same track in which we
    // started, and that is of a spectrogram display type.
 
-   const WaveTrack *const wt = mFreqSelTrack;
    const double rate =  wt->GetRate();
    const double frequency =
       PositionToFrequency(wt, true, mouseYCoordinate,
@@ -1211,7 +1206,7 @@ void SelectHandle::HandleCenterFrequencyClick
    if (shiftDown) {
       // Disable time selection
       mSelStartValid = false;
-      mFreqSelTrack = pTrack;
+      mFreqSelTrack = Track::Pointer<const WaveTrack>( pTrack );
       mFreqSelPin = value;
       mFreqSelMode = FREQ_SEL_DRAG_CENTER;
    }
@@ -1310,7 +1305,7 @@ void SelectHandle::MoveSnappingFreqSelection
       // A change here would affect what AdjustFreqSelection() does
       // in the prototype version where you switch from moving center to
       // dragging width with a click.  No effect now.
-      mFreqSelTrack = wt;
+      mFreqSelTrack = Track::Pointer<const WaveTrack>( wt );
 
       // SelectNone();
       // SelectTrack(pTrack, true);

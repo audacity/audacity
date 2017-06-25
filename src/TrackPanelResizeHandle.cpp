@@ -82,7 +82,7 @@ UIHandle::Result TrackPanelResizeHandle::Click
    if (!track)
       return RefreshCode::Cancelled;
 
-   mpTrack = track;
+   mpTrack = Track::Pointer( track );
 
    ///  ButtonDown means they just clicked and haven't released yet.
    ///  We use this opportunity to save which track they clicked on,
@@ -153,7 +153,8 @@ UIHandle::Result TrackPanelResizeHandle::Click
 UIHandle::Result TrackPanelResizeHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   if ( !mpTrack )
+   auto pTrack = mpTrack.lock();
+   if ( !pTrack )
       return RefreshCode::Cancelled;
 
    const wxMouseEvent &event = evt.event;
@@ -166,11 +167,11 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    //
    // This used to be in HandleResizeClick(), but simply clicking
    // on a resize border would switch the minimized state.
-   if (mpTrack->GetMinimized()) {
-      Track *link = mpTrack->GetLink();
+   if (pTrack->GetMinimized()) {
+      Track *link = pTrack->GetLink();
 
-      mpTrack->SetHeight(mpTrack->GetHeight());
-      mpTrack->SetMinimized(false);
+      pTrack->SetHeight(pTrack->GetHeight());
+      pTrack->SetMinimized(false);
 
       if (link) {
          link->SetHeight(link->GetHeight());
@@ -178,7 +179,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
          // Initial values must be reset since they weren't based on the
          // minimized heights.
          mInitialUpperTrackHeight = link->GetHeight();
-         mInitialTrackHeight = mpTrack->GetHeight();
+         mInitialTrackHeight = pTrack->GetHeight();
       }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       else if (MONO_WAVE_PAN(mpTrack)){
@@ -201,12 +202,12 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       (mInitialUpperTrackHeight + delta * (1.0 - proportion));
 
       //make sure neither track is smaller than its minimum height
-      if (newTrackHeight < mpTrack->GetMinimizedHeight())
-         newTrackHeight = mpTrack->GetMinimizedHeight();
+      if (newTrackHeight < pTrack->GetMinimizedHeight())
+         newTrackHeight = pTrack->GetMinimizedHeight();
       if (newUpperTrackHeight < prev->GetMinimizedHeight())
          newUpperTrackHeight = prev->GetMinimizedHeight();
 
-      mpTrack->SetHeight(newTrackHeight
+      pTrack->SetHeight(newTrackHeight
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
                                 , vStereo
 #endif
@@ -224,10 +225,10 @@ UIHandle::Result TrackPanelResizeHandle::Drag
          newUpperTrackHeight =
          mInitialUpperTrackHeight + mInitialTrackHeight - next->GetMinimizedHeight();
       }
-      if (newUpperTrackHeight < mpTrack->GetMinimizedHeight()) {
-         newUpperTrackHeight = mpTrack->GetMinimizedHeight();
+      if (newUpperTrackHeight < pTrack->GetMinimizedHeight()) {
+         newUpperTrackHeight = pTrack->GetMinimizedHeight();
          newTrackHeight =
-         mInitialUpperTrackHeight + mInitialTrackHeight - mpTrack->GetMinimizedHeight();
+         mInitialUpperTrackHeight + mInitialTrackHeight - pTrack->GetMinimizedHeight();
       }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -239,7 +240,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       }
 #endif
 
-      mpTrack->SetHeight(newUpperTrackHeight);
+      pTrack->SetHeight(newUpperTrackHeight);
       next->SetHeight(newTrackHeight
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
                       , vStereo
@@ -249,9 +250,9 @@ UIHandle::Result TrackPanelResizeHandle::Drag
 
    auto doResize = [&] {
       int newTrackHeight = mInitialTrackHeight + delta;
-      if (newTrackHeight < mpTrack->GetMinimizedHeight())
-         newTrackHeight = mpTrack->GetMinimizedHeight();
-      mpTrack->SetHeight(newTrackHeight);
+      if (newTrackHeight < pTrack->GetMinimizedHeight())
+         newTrackHeight = pTrack->GetMinimizedHeight();
+      pTrack->SetHeight(newTrackHeight);
    };
 
    //STM: We may be dragging one or two (stereo) tracks.
@@ -291,13 +292,13 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       {
          case IsResizingBelowLinkedTracks:
          {
-            Track *prev = tracks->GetPrev(mpTrack);
+            Track *prev = tracks->GetPrev(pTrack.get());
             doResizeBelow(prev, false);
             break;
          }
          case IsResizingBetweenLinkedTracks:
          {
-            Track *next = tracks->GetNext(mpTrack);
+            Track *next = tracks->GetNext(pTrack.get());
             doResizeBetween(next, false);
             break;
          }
@@ -337,7 +338,8 @@ UIHandle::Result TrackPanelResizeHandle::Release
 
 UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
 {
-   if ( !mpTrack )
+   auto pTrack = mpTrack.lock();
+   if ( !pTrack )
       return RefreshCode::Cancelled;
 
    TrackList *const tracks = pProject->GetTracks();
@@ -345,15 +347,15 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    switch (mMode) {
    case IsResizing:
    {
-      mpTrack->SetHeight(mInitialActualHeight);
-      mpTrack->SetMinimized(mInitialMinimized);
+      pTrack->SetHeight(mInitialActualHeight);
+      pTrack->SetMinimized(mInitialMinimized);
    }
    break;
    case IsResizingBetweenLinkedTracks:
    {
-      Track *const next = tracks->GetNext(mpTrack);
-      mpTrack->SetHeight(mInitialUpperActualHeight);
-      mpTrack->SetMinimized(mInitialMinimized);
+      Track *const next = tracks->GetNext(pTrack.get());
+      pTrack->SetHeight(mInitialUpperActualHeight);
+      pTrack->SetMinimized(mInitialMinimized);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if( !MONO_WAVE_PAN(mpTrack) )
 #endif
@@ -365,9 +367,9 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    break;
    case IsResizingBelowLinkedTracks:
    {
-      Track *const prev = tracks->GetPrev(mpTrack);
-      mpTrack->SetHeight(mInitialActualHeight);
-      mpTrack->SetMinimized(mInitialMinimized);
+      Track *const prev = tracks->GetPrev(pTrack.get());
+      pTrack->SetHeight(mInitialActualHeight);
+      pTrack->SetMinimized(mInitialMinimized);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       if( !MONO_WAVE_PAN(mpTrack) )
 #endif
@@ -380,15 +382,6 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    }
 
    return RefreshCode::RefreshAll;
-}
-
-void TrackPanelResizeHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! ::GetActiveProject()->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-   }
-
-   UIHandle::OnProjectChange(pProject);
 }
 
 TrackPanelResizerCell &TrackPanelResizerCell::Instance()
