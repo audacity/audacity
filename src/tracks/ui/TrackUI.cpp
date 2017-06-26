@@ -75,7 +75,7 @@ std::shared_ptr<TrackPanelCell> Track::GetVRulerControl()
    return mpVRulerContols;
 }
 
-#include "TrackPanelResizeHandle.h"
+#include "../../TrackPanelResizeHandle.h"
 std::shared_ptr<TrackPanelCell> Track::GetResizer()
 {
    if (!mpResizer)
