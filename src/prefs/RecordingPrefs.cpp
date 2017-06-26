@@ -73,7 +73,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieCheckBox(_("&Other tracks while recording"),
                     wxT("/AudioIO/Duplex"),
-                    true);
+                    false);
 #if defined(__WXMAC__)
       S.TieCheckBox(_("&Hardware Playthrough of input"),
                     wxT("/AudioIO/Playthrough"),

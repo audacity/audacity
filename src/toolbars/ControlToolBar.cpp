@@ -981,7 +981,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       NoteTrackArray midiTracks;
 #endif
       bool duplex;
-      gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
+      gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, false);
 
       if(duplex){
          playbackTracks = trackList->GetWaveTrackConstArray(false);
@@ -1383,7 +1383,7 @@ void ControlToolBar::StartScrolling()
          // If you overdub, you may want to anticipate some context in existing tracks,
          // so center the head.  If not, put it rightmost to display as much wave as we can.
          bool duplex;
-         gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
+         gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, false);
 
          if (duplex) {
             // See if there is really anything being overdubbed
