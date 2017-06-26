@@ -3118,9 +3118,7 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
             mpCell = mpTrack->GetVRulerControl().get();
             break;
          case CellType::Resizer: {
-            auto instance = &TrackPanelResizerCell::Instance();
-            instance->mpTrack = mpTrack;
-            mpCell = instance;
+            mpCell = mpTrack->GetResizer().get();
             break;
          }
          default:

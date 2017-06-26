@@ -68,20 +68,21 @@ private:
 
 class TrackPanelResizerCell : public CommonTrackPanelCell
 {
-   TrackPanelResizerCell() {}
    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
    TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
 public:
-   static TrackPanelResizerCell &Instance();
+
+   explicit
+   TrackPanelResizerCell( std::shared_ptr<Track> pTrack );
 
    HitTestResult HitTest
       (const TrackPanelMouseEvent &event,
        const AudacityProject *pProject) override;
 
-   Track *FindTrack() override { return mpTrack; };
+   Track *FindTrack() override { return mpTrack.lock().get(); };
 private:
    friend class TrackPanelCellIterator;
-   Track *mpTrack {};
+   std::weak_ptr<Track> mpTrack;
    bool mBetweenTracks {};
 };
 
