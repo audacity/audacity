@@ -480,7 +480,7 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
       *state = wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
       if (t)
       {
-         if( t == mFocusedTrack )
+         if( t == mFocusedTrack.lock() )
          {
             *state |= wxACC_STATE_SYSTEM_FOCUSED;
          }
@@ -586,9 +586,10 @@ wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
 
    if (mTrackPanel == wxWindow::FindFocus())
    {
-      if (mFocusedTrack)
+      auto focusedTrack = mFocusedTrack.lock();
+      if (focusedTrack)
       {
-         *childId = TrackNum(mFocusedTrack);
+         *childId = TrackNum(focusedTrack);
       }
       else
       {
