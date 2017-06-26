@@ -2157,7 +2157,11 @@ void AudacityProject::ModifyToolbarMenus()
    active = TracksPrefs::GetPinnedHeadPreference();
    mCommandManager.Check(wxT("PinnedHead"), active);
 
+#ifdef EXPERIMENTAL_DA
    gPrefs->Read(wxT("/AudioIO/Duplex"),&active, false);
+#else
+   gPrefs->Read(wxT("/AudioIO/Duplex"),&active, true);
+#endif
    mCommandManager.Check(wxT("Duplex"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    mCommandManager.Check(wxT("SWPlaythrough"), active);
@@ -2721,7 +2725,11 @@ void AudacityProject::OnTogglePinnedHead()
 void AudacityProject::OnTogglePlayRecording()
 {
    bool Duplex;
+#ifdef EXPERIMENTAL_DA
    gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, false);
+#else
+   gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, true);
+#endif
    gPrefs->Write(wxT("/AudioIO/Duplex"), !Duplex);
    gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
