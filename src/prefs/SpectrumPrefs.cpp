@@ -89,9 +89,9 @@ void SpectrumPrefs::Populate(size_t windowSize)
    mSizeChoices.Add(wxT("32"));
    mSizeChoices.Add(wxT("64"));
    mSizeChoices.Add(wxT("128"));
-   mSizeChoices.Add(_("256 - default"));
+   mSizeChoices.Add(wxT("256"));
    mSizeChoices.Add(wxT("512"));
-   mSizeChoices.Add(wxT("1024"));
+   mSizeChoices.Add(_("1024 - default"));
    mSizeChoices.Add(wxT("2048"));
    mSizeChoices.Add(wxT("4096"));
    mSizeChoices.Add(wxT("8192"));
