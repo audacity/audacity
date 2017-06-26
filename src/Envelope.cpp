@@ -717,7 +717,13 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    auto len = mEnv.size();
    for ( size_t i = begin; i < len; ++i ) {
       auto &point = mEnv[i];
-      point.SetT( point.GetT() - (t1 - t0) );
+      if (rightPoint && i == begin)
+         // Avoid roundoff error.
+         // Make exactly equal times of neighboring points so that we have
+         // a real discontinuity.
+         point.SetT( t0 );
+      else
+         point.SetT( point.GetT() - (t1 - t0) );
    }
 
    // See if the discontinuity is removable.
