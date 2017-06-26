@@ -139,16 +139,6 @@ UIHandle::Result NoteTrackClickHandle::Cancel(AudacityProject *)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-NoteTrackControls::NoteTrackControls()
-{
-}
-
-NoteTrackControls &NoteTrackControls::Instance()
-{
-   static NoteTrackControls instance;
-   return instance;
-}
-
 NoteTrackControls::~NoteTrackControls()
 {
 }
@@ -160,8 +150,8 @@ HitTestResult NoteTrackControls::HitTest
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    if (event.ButtonDown() || event.ButtonDClick()) {
-      if (mpTrack->GetKind() == Track::Note) {
-         auto track = GetTrack();
+      auto track = FindTrack();
+      if (track && track->GetKind() == Track::Note) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
@@ -174,10 +164,10 @@ HitTestResult NoteTrackControls::HitTest
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
          if (NULL != (result =
-             VelocitySliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
+             VelocitySliderHandle::HitTest(event, rect, pProject, track)).handle)
             return result;
          if (NULL != (result =
-            NoteTrackClickHandle::HitTest(event, rect, GetTrack())).handle)
+            NoteTrackClickHandle::HitTest(event, rect, track)).handle)
             return result;
 #endif
       }

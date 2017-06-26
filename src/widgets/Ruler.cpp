@@ -1841,7 +1841,7 @@ void QuickPlayIndicatorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       // Draw indicator in all visible tracks
       for ( const auto &data : static_cast<TrackPanel&>(panel).Cells() )
       {
-         Track *const pTrack = dynamic_cast<Track*>(data.first);
+         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
          if (!pTrack)
             continue;
          const wxRect &rect = data.second;

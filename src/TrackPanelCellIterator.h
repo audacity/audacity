@@ -14,6 +14,7 @@ Paul Licameli
 #include "Track.h"
 #include <wx/gdicmn.h>
 #include <iterator>
+#include "MemoryX.h"
 
 class Track;
 class TrackPanelCell;
@@ -24,7 +25,7 @@ class TrackPanel;
 class TrackPanelCellIterator
    : public std::iterator<
       std::forward_iterator_tag,
-      const std::pair<TrackPanelCell*, wxRect>
+      const std::pair< std::shared_ptr< TrackPanelCell >, wxRect>
    >
 {
 public:
@@ -45,7 +46,6 @@ public:
       return lhs.mpCell == rhs.mpCell;
    }
 
-   using value_type = std::pair<TrackPanelCell*, wxRect>;
    value_type operator * () const;
 
 private:
@@ -53,8 +53,8 @@ private:
 
    TrackPanel *mPanel;
    VisibleTrackIterator mIter;
-   Track *mpTrack;
-   TrackPanelCell *mpCell;
+   std::shared_ptr<Track> mpTrack;
+   std::shared_ptr<TrackPanelCell> mpCell;
    CellType mType{ CellType::Track };
    bool mDidBackground{ false };
    wxRect mRect;

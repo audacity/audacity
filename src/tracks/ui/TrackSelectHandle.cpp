@@ -95,7 +95,9 @@ UIHandle::Result TrackSelectHandle::Click
       return Cancelled;
 
    TrackControls *const pControls = static_cast<TrackControls*>(evt.pCell);
-   Track *const pTrack = pControls->GetTrack();
+   Track *const pTrack = pControls->FindTrack();
+   if (!pTrack)
+      return Cancelled;
    TrackPanel *const trackPanel = pProject->GetTrackPanel();
    const bool unsafe = pProject->IsAudioActive();
 

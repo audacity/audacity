@@ -38,6 +38,7 @@ class LabelTrack;
 class TimeTrack;
 class TrackControls;
 class TrackVRulerControls;
+class TrackPanelResizerCell;
 class WaveTrack;
 class NoteTrack;
 class AudacityProject;
@@ -138,11 +139,15 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
-   TrackPanelCell *GetTrackControl();
+   std::shared_ptr<TrackPanelCell> GetTrackControl();
 
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
-   TrackPanelCell *GetVRulerControl();
+   std::shared_ptr<TrackPanelCell> GetVRulerControl();
+
+   // Return another, associated TrackPanelCell object that implements the
+   // click and drag to resize
+   std::shared_ptr<TrackPanelCell> GetResizer();
 
    // This just returns a constant and can be overriden by subclasses
    // to specify a different height for the case that the track is minimized.
@@ -294,8 +299,15 @@ class AUDACITY_DLL_API Track /* not final */
 
 protected:
    Track *FindTrack() override;
-   virtual TrackControls *GetControls() = 0;
-   virtual TrackVRulerControls *GetVRulerControls() = 0;
+
+   // These are called to create controls on demand:
+   virtual std::shared_ptr<TrackControls> GetControls() = 0;
+   virtual std::shared_ptr<TrackVRulerControls> GetVRulerControls() = 0;
+
+   // These hold the controls:
+   std::shared_ptr<TrackControls> mpControls;
+   std::shared_ptr<TrackVRulerControls> mpVRulerContols;
+   std::shared_ptr<TrackPanelResizerCell> mpResizer;
 };
 
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track

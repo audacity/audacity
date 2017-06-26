@@ -17,16 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../widgets/PopupMenuTable.h"
 #include <wx/numdlg.h>
 
-TimeTrackControls::TimeTrackControls()
-{
-}
-
-TimeTrackControls &TimeTrackControls::Instance()
-{
-   static TimeTrackControls instance;
-   return instance;
-}
-
 TimeTrackControls::~TimeTrackControls()
 {
 }

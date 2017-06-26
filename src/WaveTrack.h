@@ -636,8 +636,8 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 
 protected:
-   TrackControls *GetControls() override;
-   TrackVRulerControls *GetVRulerControls() override;
+   std::shared_ptr<TrackControls> GetControls() override;
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,

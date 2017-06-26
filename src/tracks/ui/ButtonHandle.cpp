@@ -38,15 +38,19 @@ HitTestPreview ButtonHandle::HitPreview()
 UIHandle::Result ButtonHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
-   const wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
+   auto pTrack = Track::Pointer(
+      static_cast<TrackControls*>(evt.pCell)->FindTrack() );
+   if ( !pTrack )
+      return Cancelled;
+
+   const wxMouseEvent &event = evt.event;
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return Cancelled;
 
    // Come here for left click or double click
    if (mRect.Contains(event.m_x, event.m_y)) {
-      mpTrack = Track::Pointer(
-         static_cast<TrackControls*>(evt.pCell)->GetTrack() );
+      mpTrack = pTrack;
       TrackControls::gCaptureState = mDragCode;
       // Toggle visible button state
       return RefreshCell;

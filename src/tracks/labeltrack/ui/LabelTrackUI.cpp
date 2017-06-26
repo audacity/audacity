@@ -67,12 +67,12 @@ HitTestResult LabelTrack::HitTest
    return result;
 }
 
-TrackControls *LabelTrack::GetControls()
+std::shared_ptr<TrackControls> LabelTrack::GetControls()
 {
-   return &LabelTrackControls::Instance();
+   return std::make_shared<LabelTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *LabelTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> LabelTrack::GetVRulerControls()
 {
-   return &LabelTrackVRulerControls::Instance();
+   return std::make_shared<LabelTrackVRulerControls>( Pointer( this ) );
 }

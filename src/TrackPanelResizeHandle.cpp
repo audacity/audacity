@@ -384,11 +384,9 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    return RefreshCode::RefreshAll;
 }
 
-TrackPanelResizerCell &TrackPanelResizerCell::Instance()
-{
-   static TrackPanelResizerCell instance;
-   return instance;
-}
+TrackPanelResizerCell::TrackPanelResizerCell( std::shared_ptr<Track> pTrack )
+   : mpTrack{ pTrack }
+{}
 
 HitTestResult TrackPanelResizerCell::HitTest
 (const TrackPanelMouseEvent &event, const AudacityProject *pProject)

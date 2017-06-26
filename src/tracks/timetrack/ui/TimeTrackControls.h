@@ -15,12 +15,13 @@ Paul Licameli split from TrackPanel.cpp
 
 class TimeTrackControls final : public TrackControls
 {
-   TimeTrackControls();
    TimeTrackControls(const TimeTrackControls&) = delete;
    TimeTrackControls &operator=(const TimeTrackControls&) = delete;
 
 public:
-   static TimeTrackControls &Instance();
+   explicit
+   TimeTrackControls( std::shared_ptr<Track> pTrack )
+      : TrackControls( pTrack ) {}
    ~TimeTrackControls();
 
    HitTestResult HitTest

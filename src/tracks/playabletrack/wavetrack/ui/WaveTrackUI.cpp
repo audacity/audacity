@@ -66,12 +66,12 @@ HitTestResult WaveTrack::HitTest
    return result;
 }
 
-TrackControls *WaveTrack::GetControls()
+std::shared_ptr<TrackControls> WaveTrack::GetControls()
 {
-   return &WaveTrackControls::Instance();
+   return std::make_shared<WaveTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *WaveTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> WaveTrack::GetVRulerControls()
 {
-   return &WaveTrackVRulerControls::Instance();
+   return std::make_shared<WaveTrackVRulerControls>( Pointer( this ) );
 }

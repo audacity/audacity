@@ -15,12 +15,13 @@ Paul Licameli split from TrackPanel.cpp
 
 class WaveTrackControls final : public TrackControls
 {
-   WaveTrackControls();
    WaveTrackControls(const WaveTrackControls&) = delete;
    WaveTrackControls &operator=(const WaveTrackControls&) = delete;
 
 public:
-   static WaveTrackControls &Instance();
+   explicit
+   WaveTrackControls( std::shared_ptr<Track> pTrack )
+      : TrackControls( pTrack ) {}
    ~WaveTrackControls();
 
    HitTestResult HitTest

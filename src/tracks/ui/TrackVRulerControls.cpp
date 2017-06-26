@@ -13,9 +13,15 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackVRulerControls.h"
 
 #include "../../TrackPanel.h"
+#include "../../Track.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>
+
+TrackVRulerControls::TrackVRulerControls( std::shared_ptr<Track> pTrack )
+  : mwTrack{ pTrack }
+{
+}
 
 TrackVRulerControls::~TrackVRulerControls()
 {
@@ -23,7 +29,7 @@ TrackVRulerControls::~TrackVRulerControls()
 
 Track *TrackVRulerControls::FindTrack()
 {
-   return GetTrack();
+   return mwTrack.lock().get();
 }
 
 HitTestResult TrackVRulerControls::HitTest

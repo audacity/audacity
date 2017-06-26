@@ -17,12 +17,13 @@ Paul Licameli split from TrackPanel.cpp
 // types, but it does nothing.
 class TimeTrackVRulerControls final : public TrackVRulerControls
 {
-   TimeTrackVRulerControls();
    TimeTrackVRulerControls(const TimeTrackVRulerControls&) = delete;
    TimeTrackVRulerControls &operator=(const TimeTrackVRulerControls&) = delete;
 
 public:
-   static TimeTrackVRulerControls &Instance();
+   explicit
+   TimeTrackVRulerControls( std::shared_ptr<Track> pTrack )
+      : TrackVRulerControls( pTrack ) {}
    ~TimeTrackVRulerControls();
 };
 

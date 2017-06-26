@@ -22,16 +22,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/listbox.h>
 #include <wx/spinctrl.h>
 
-LabelTrackControls::LabelTrackControls()
-{
-}
-
-LabelTrackControls &LabelTrackControls::Instance()
-{
-   static LabelTrackControls instance;
-   return instance;
-}
-
 LabelTrackControls::~LabelTrackControls()
 {
 }

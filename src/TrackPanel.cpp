@@ -855,7 +855,7 @@ void TrackPanel::HandleCursor( wxMouseEvent *pEvent )
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
    const auto size = GetSize();
-   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
+   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell.get() };
    HandleCursor( tpmEvent );
 }
 
@@ -874,8 +874,6 @@ void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
 
       wxString tip;
 
-      // Are we within the vertical resize area?
-      // (Add margin back to bottom of the rectangle)
       auto pCell = tpmEvent.pCell;
       auto track = static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
       if (pCell && pCursor == NULL && tip == wxString()) {
@@ -1384,7 +1382,7 @@ try
    auto &pTrack = foundCell.pTrack;
 
    const auto size = GetSize();
-   TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
+   TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell.get() };
 
 #if defined(__WXMAC__) && defined(EVT_MAGNIFY)
    // PRL:
@@ -1463,7 +1461,8 @@ try
          // UIHANDLE DRAG
          const UIHandle::Result refreshResult =
             mUIHandle->Drag( tpmEvent, GetProject() );
-         ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
+         ProcessUIHandleResult
+            (this, mRuler, mpClickedTrack, pTrack.get(), refreshResult);
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
             mUIHandle = NULL;
@@ -1482,7 +1481,8 @@ try
          mUIHandle = nullptr;
          UIHandle::Result refreshResult =
             uiHandle->Release( tpmEvent, GetProject(), this );
-         ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
+         ProcessUIHandleResult
+            (this, mRuler, mpClickedTrack, pTrack.get(), refreshResult);
          mpClickedTrack = NULL; 
          // will also Uncapture() below
       }
@@ -1510,7 +1510,7 @@ try
       const auto foundCell = FindCell(event.m_x, event.m_y);
       auto t = foundCell.pTrack;
       if ( t )
-         EnsureVisible(t);
+         EnsureVisible(t.get());
    }
 }
 catch( ... )
@@ -2350,7 +2350,7 @@ void TrackPanel::OnTrackMenu(Track *t)
          return;
    }
 
-   TrackPanelCell *const pCell = t->GetTrackControl();
+   const auto pCell = t->GetTrackControl();
    const wxRect rect(FindTrackRect(t, true));
    const UIHandle::Result refreshResult =
       pCell->DoContextMenu(rect, this, NULL);
@@ -2513,7 +2513,8 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       iter = prev;
    auto found = *iter;
    return {
-      static_cast<CommonTrackPanelCell*>( found.first )->FindTrack(),
+      Track::Pointer(
+         static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack() ),
       found.first,
       found.second
    };
@@ -3087,12 +3088,15 @@ IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
    : mPanel{ trackPanel }
    , mIter{ trackPanel->GetProject() }
-   , mpTrack{ begin ? mIter.First() : nullptr }
-   , mpCell{ begin
-      ? ( mpTrack ? mpTrack : trackPanel->GetBackgroundCell().get() )
-      : nullptr
-   }
 {
+   if (begin) {
+      mpTrack = Track::Pointer( mIter.First() );
+      if (mpTrack)
+         mpCell = mpTrack;
+      else
+         mpCell = trackPanel->GetBackgroundCell();
+      }
+
    const auto size = mPanel->GetSize();
    mRect = { 0, 0, size.x, size.y };
    UpdateRect();
@@ -3102,7 +3106,7 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
 {
    if ( mpTrack ) {
       if ( ++ mType == CellType::Background )
-         mType = CellType::Track, mpTrack = mIter.Next();
+         mType = CellType::Track, mpTrack = Track::Pointer( mIter.Next() );
    }
    if ( mpTrack ) {
       if ( mType == CellType::Label &&
@@ -3120,21 +3124,19 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
             mpCell = mpTrack->GetVRulerControl();
             break;
          case CellType::Resizer: {
-            auto instance = &TrackPanelResizerCell::Instance();
-            instance->mpTrack = mpTrack;
-            mpCell = instance;
+            mpCell = mpTrack->GetResizer();
             break;
          }
          default:
             // should not happen
-            mpCell = nullptr;
+            mpCell.reset();
             break;
       }
    }
    else if ( !mDidBackground )
-      mpCell = mPanel->GetBackgroundCell().get(), mDidBackground = true;
+      mpCell = mPanel->GetBackgroundCell(), mDidBackground = true;
    else
-      mpCell = nullptr;
+      mpCell.reset();
 
    UpdateRect();
 

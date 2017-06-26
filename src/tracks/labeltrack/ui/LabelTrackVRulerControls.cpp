@@ -12,17 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelTrackVRulerControls.h"
 #include "../../../HitTestResult.h"
 
-LabelTrackVRulerControls::LabelTrackVRulerControls()
-   : TrackVRulerControls()
-{
-}
-
-LabelTrackVRulerControls &LabelTrackVRulerControls::Instance()
-{
-   static LabelTrackVRulerControls instance;
-   return instance;
-}
-
 LabelTrackVRulerControls::~LabelTrackVRulerControls()
 {
 }
