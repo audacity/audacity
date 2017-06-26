@@ -366,8 +366,8 @@ protected:
 
    // Find track info by coordinate
    struct FoundCell {
-      Track *pTrack;
-      TrackPanelCell *pCell;
+      std::shared_ptr<Track> pTrack;
+      std::shared_ptr<TrackPanelCell> pCell;
       wxRect rect;
    };
    FoundCell FindCell(int mouseX, int mouseY);

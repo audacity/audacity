@@ -106,7 +106,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       // Draw cursor in all selected tracks
       for ( const auto &data : tp->Cells() )
       {
-         Track *const pTrack = dynamic_cast<Track*>(data.first);
+         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
          if (!pTrack)
             continue;
          if (pTrack->GetSelected() ||
