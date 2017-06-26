@@ -1636,7 +1636,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool sliderFlag     = bMultiToolDown;
 
    // The track artist actually draws the stuff inside each track
-   mTrackArtist->DrawTracks(GetTracks(), GetProject()->GetFirstVisible(),
+   auto first = GetProject()->GetFirstVisible();
+   mTrackArtist->DrawTracks(GetTracks(), first.get(),
                             *dc, region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);

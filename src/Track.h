@@ -483,6 +483,9 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
  * Clear, and Contains, plus serialization of the list of tracks.
  */
 
+// Posted when tracks are reordered but otherwise unchanged.
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_PERMUTED, -1);
+
 // Posted when some track was added or changed its height.
 // The wxCommandEvent::GetClientData() method can be used to retrieve it.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZING, -1);
@@ -607,6 +610,7 @@ private:
    void DoAssign(const TrackList &that);
        
    void RecalcPositions(TrackNodePointer node);
+   void PermutationEvent();
    void DeletionEvent();
    void ResizingEvent(TrackNodePointer node);
 

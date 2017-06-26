@@ -191,8 +191,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
 
-   Track *GetFirstVisible();
-   void UpdateFirstVisible();
+   std::shared_ptr<Track> GetFirstVisible();
+   void InvalidateFirstVisible();
 
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
@@ -355,7 +355,7 @@ public:
    void OnOpenAudioFile(wxCommandEvent & event);
    void OnODTaskUpdate(wxCommandEvent & event);
    void OnODTaskComplete(wxCommandEvent & event);
-   void OnTrackListDeletion(wxCommandEvent & event);
+   void OnTrackListUpdate(wxCommandEvent & event);
 
    void HandleResize();
    void UpdateLayout();

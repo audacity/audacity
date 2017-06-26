@@ -130,7 +130,6 @@ void ZoomInfo::FindIntervals
 ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
    : ZoomInfo(start, pixelsPerSecond)
    , selectedRegion()
-   , track(NULL)
    , total(screenDuration)
    , sbarH(0)
    , sbarScreen(1)

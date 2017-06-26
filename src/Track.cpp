@@ -741,6 +741,7 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 // is managing.  Any other classes that may be interested in get these updates
 // should use TrackList::Connect() and TrackList::Disconnect().
 //
+DEFINE_EVENT_TYPE(EVT_TRACKLIST_PERMUTED);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_DELETION);
 
@@ -856,6 +857,13 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
 
+void TrackList::PermutationEvent()
+{
+   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_PERMUTED);
+   // wxWidgets will own the event object
+   QueueEvent(e.release());
+}
+
 void TrackList::DeletionEvent()
 {
    auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_DELETION);
@@ -882,6 +890,7 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
    }
    auto n = begin();
    RecalcPositions(n);
+   PermutationEvent();
 }
 
 template<typename TrackKind>
@@ -1152,6 +1161,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
+   PermutationEvent();
 }
 
 bool TrackList::MoveUp(Track * t)

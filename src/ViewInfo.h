@@ -14,6 +14,7 @@
 #include <vector>
 #include <wx/event.h>
 #include "SelectedRegion.h"
+#include "MemoryX.h"
 
 
 class Track;
@@ -157,7 +158,7 @@ public:
 
    // Scroll info
 
-   Track *track;                // first visible track
+   std::weak_ptr<Track> track;                // first visible track
 
    double total;                // total width in secs
    // Current horizontal scroll bar positions, in pixels
