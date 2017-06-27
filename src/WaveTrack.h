@@ -103,9 +103,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    virtual ~WaveTrack();
 
-   HitTestResult HitTest
+   HitTestResult DetailedHitTest
       (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    double GetOffset() const override;
    void SetOffset(double o) override;

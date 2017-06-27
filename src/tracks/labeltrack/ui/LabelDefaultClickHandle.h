@@ -18,19 +18,16 @@ class wxMouseEvent;
 struct HitTestResult;
 class LabelTrack;
 
-// Adds some behavior to click, then calls through to other mouse handling.
-class LabelDefaultClickHandle final : public UIHandle
+// Used as a base class.
+// Adds some behavior to clicks.
+class LabelDefaultClickHandle /* not final */ : public UIHandle
 {
-   LabelDefaultClickHandle();
    LabelDefaultClickHandle(const LabelDefaultClickHandle&) = delete;
    LabelDefaultClickHandle &operator=(const LabelDefaultClickHandle&) = delete;
 
 public:
-   static LabelDefaultClickHandle& Instance();
+   LabelDefaultClickHandle();
    virtual ~LabelDefaultClickHandle();
-
-   void DoClick
-      (const wxMouseEvent &event, AudacityProject *pProject, TrackPanelCell *pCell);
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -38,26 +35,13 @@ public:
    Result Drag
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
-      override;
+   // does not override Preview()
 
    Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
        wxWindow *pParent) override;
 
    Result Cancel(AudacityProject *pProject) override;
-
-   void DrawExtras
-      (DrawingPass pass,
-       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
-       override;
-
-   bool StopsOnKeystroke() override;
-
-   void OnProjectChange(AudacityProject *pProject) override;
-
-   UIHandle *mpForward {};
 
 private:
    struct LabelState;

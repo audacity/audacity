@@ -49,9 +49,10 @@ class TimeTrack final : public Track {
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   HitTestResult HitTest
+   HitTestResult DetailedHitTest
       (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    // Identifying the type of track
    int GetKind() const override { return Time; }

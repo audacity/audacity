@@ -28,33 +28,33 @@ HitTestResult Track::HitTest
  const AudacityProject *pProject)
 {
    const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
-   // Unless in Multimode keep using the current tool.
    const bool isMultiTool = pTtb->IsDown(multiTool);
-   if (!isMultiTool) {
-      switch (pTtb->GetCurrentTool()) {
-      case envelopeTool:
-         // Pass "false" for unsafe -- let the tool decide to cancel itself
-         return EnvelopeHandle::HitAnywhere(pProject);
-      case drawTool:
-         return SampleHandle::HitAnywhere(event.event, pProject);
-      case zoomTool:
-         return ZoomHandle::HitAnywhere(event.event, pProject);
-      case slideTool:
-         return TimeShiftHandle::HitAnywhere(pProject);
-      case selectTool:
-         return SelectHandle::HitTest(event, pProject, this);
+   const auto currentTool = pTtb->GetCurrentTool();
 
-      default:
-         // fallthru
-         ;
-      }
-   }
+   if ( !isMultiTool && currentTool == zoomTool )
+      // Zoom tool is a non-selecting tool that takes precedence in all tracks
+      // over all other tools, no matter what detail you point at.
+      return ZoomHandle::HitAnywhere(event.event, pProject);
 
-   // Replicate some of the logic of TrackPanel::DetermineToolToUse
-   HitTestResult result;
+   // In other tools, let subclasses determine detailed hits.
+   HitTestResult result =
+      DetailedHitTest( event, pProject, currentTool, isMultiTool );
 
-   if (isMultiTool)
+   // If there is no detailed hit for the subclass, there are still some
+   // general cases.
+
+   // Sliding applies in more than one track type.
+   if ( !result.handle && !isMultiTool && currentTool == slideTool )
+      result = TimeShiftHandle::HitAnywhere(pProject);
+
+   // Let the multi-tool right-click handler apply only in default of all
+   // other detailed hits.
+   if ( !result.handle && isMultiTool )
       result = ZoomHandle::HitTest(event.event, pProject);
+
+   // Finally, default of all is adjustment of the selection box.
+   if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
+      result = SelectHandle::HitTest(event, pProject, this);
 
    return result;
 }

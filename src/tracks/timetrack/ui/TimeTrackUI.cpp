@@ -13,25 +13,17 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackVRulerControls.h"
 
 #include "../../../HitTestResult.h"
+#include "../../../TrackPanelMouseEvent.h"
 #include "../../../Project.h"
-#include "../../../toolbars/ToolsToolBar.h"
 
 #include "../../ui/EnvelopeHandle.h"
 
-HitTestResult TimeTrack::HitTest
+HitTestResult TimeTrack::DetailedHitTest
 (const TrackPanelMouseEvent &event,
- const AudacityProject *pProject)
+ const AudacityProject *pProject, int, bool)
 {
-   HitTestResult result = Track::HitTest(event, pProject);
-   if (result.preview.cursor)
-      return result;
-
-   const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-   if (pTtb->IsDown(multiTool))
-      // No hit test --unconditional availability.
-      result = EnvelopeHandle::HitAnywhere(pProject);
-
-   return result;
+   return EnvelopeHandle::TimeTrackHitTest
+      ( event.event, event.rect, pProject, *this );
 }
 
 std::shared_ptr<TrackControls> TimeTrack::GetControls()

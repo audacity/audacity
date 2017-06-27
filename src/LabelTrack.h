@@ -121,9 +121,10 @@ class AUDACITY_DLL_API LabelTrack final : public Track
 
    virtual ~ LabelTrack();
 
-   HitTestResult HitTest
+   HitTestResult DetailedHitTest
       (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    bool DoCaptureKey(wxKeyEvent &event);
    unsigned CaptureKey
