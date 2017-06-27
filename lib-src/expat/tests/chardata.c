@@ -7,11 +7,7 @@
 #ifdef HAVE_EXPAT_CONFIG_H
 #include <expat_config.h>
 #endif
-#ifdef HAVE_CHECK_H
-#include <check.h>
-#else
 #include "minicheck.h"
-#endif
 
 #include <assert.h>
 #include <stdio.h>
@@ -51,7 +47,7 @@ CharData_AppendString(CharData *storage, const char *s)
     if ((len + storage->count) > maxchars) {
         len = (maxchars - storage->count);
     }
-    if (len + storage->count < sizeof(storage->data)) {
+    if (len + storage->count < (int)sizeof(storage->data)) {
         memcpy(storage->data + storage->count, s, len);
         storage->count += len;
     }
@@ -72,7 +68,7 @@ CharData_AppendXMLChars(CharData *storage, const XML_Char *s, int len)
     if ((len + storage->count) > maxchars) {
         len = (maxchars - storage->count);
     }
-    if (len + storage->count < sizeof(storage->data)) {
+    if (len + storage->count < (int)sizeof(storage->data)) {
         memcpy(storage->data + storage->count, s,
                len * sizeof(storage->data[0]));
         storage->count += len;

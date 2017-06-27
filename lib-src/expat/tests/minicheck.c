@@ -10,10 +10,11 @@
 #include <setjmp.h>
 #include <assert.h>
 
+#include "internal.h"  /* for UNUSED_P only */
 #include "minicheck.h"
 
 Suite *
-suite_create(char *name)
+suite_create(const char *name)
 {
     Suite *suite = (Suite *) calloc(1, sizeof(Suite));
     if (suite != NULL) {
@@ -23,7 +24,7 @@ suite_create(char *name)
 }
 
 TCase *
-tcase_create(char *name)
+tcase_create(const char *name)
 {
     TCase *tc = (TCase *) calloc(1, sizeof(TCase));
     if (tc != NULL) {
@@ -62,10 +63,7 @@ tcase_add_test(TCase *tc, tcase_test_function test)
         size_t new_size = sizeof(tcase_test_function) * nalloc;
         tcase_test_function *new_tests = realloc(tc->tests, new_size);
         assert(new_tests != NULL);
-        if (new_tests != tc->tests) {
-            free(tc->tests);
-            tc->tests = new_tests;
-        }
+        tc->tests = new_tests;
         tc->allocated = nalloc;
     }
     tc->tests[tc->ntests] = test;
@@ -156,7 +154,7 @@ srunner_run_all(SRunner *runner, int verbosity)
 }
 
 void
-_fail_unless(int condition, const char *file, int line, char *msg)
+_fail_unless(int UNUSED_P(condition), const char *UNUSED_P(file), int UNUSED_P(line), const char *msg)
 {
     /* Always print the error message so it isn't lost.  In this case,
        we have a failure, so there's no reason to be quiet about what

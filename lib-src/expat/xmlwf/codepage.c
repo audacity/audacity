@@ -3,8 +3,9 @@
 */
 
 #include "codepage.h"
+#include "internal.h"  /* for UNUSED_P only */
 
-#if (defined(WIN32) || (defined(__WATCOMC__) && defined(__NT__)))
+#if defined(_WIN32)
 #define STRICT 1
 #define WIN32_LEAN_AND_MEAN 1
 
@@ -51,18 +52,18 @@ codepageConvert(int cp, const char *p)
   return -1;
 }
 
-#else /* not WIN32 */
+#else /* not _WIN32 */
 
 int
-codepageMap(int cp, int *map)
+codepageMap(int UNUSED_P(cp), int *UNUSED_P(map))
 {
   return 0;
 }
 
 int
-codepageConvert(int cp, const char *p)
+codepageConvert(int UNUSED_P(cp), const char *UNUSED_P(p))
 {
   return -1;
 }
 
-#endif /* not WIN32 */
+#endif /* not _WIN32 */

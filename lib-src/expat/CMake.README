@@ -3,25 +3,25 @@
 The cmake based buildsystem for expat works on Windows (cygwin, mingw, Visual 
 Studio) and should work on all other platform cmake supports.
 
-Assuming ~/expat-2.1.0 is the source directory of expat, add a subdirectory
+Assuming ~/expat-2.2.1 is the source directory of expat, add a subdirectory
 build and change into that directory:
-~/expat-2.1.0$ mkdir build && cd build
-~/expat-2.1.0/build$
+~/expat-2.2.1$ mkdir build && cd build
+~/expat-2.2.1/build$
 
 From that directory, call cmake first, then call make, make test and 
 make install in the usual way:
-~/expat-2.1.0/build$ cmake ..
+~/expat-2.2.1/build$ cmake ..
 -- The C compiler identification is GNU
 -- The CXX compiler identification is GNU
 ....
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/patrick/expat-2.1.0/build
+-- Build files have been written to: /home/patrick/expat-2.2.1/build
 
 If you want to specify the install location for your files, append 
 -DCMAKE_INSTALL_PREFIX=/your/install/path to the cmake call.
 
-~/expat-2.1.0/build$ make && make test && make install
+~/expat-2.2.1/build$ make && make test && make install
 Scanning dependencies of target expat
 [  5%] Building C object CMakeFiles/expat.dir/lib/xmlparse.c.o
 [ 11%] Building C object CMakeFiles/expat.dir/lib/xmlrole.c.o
