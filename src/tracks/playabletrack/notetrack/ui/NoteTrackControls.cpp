@@ -155,12 +155,12 @@ HitTestResult NoteTrackControls::HitTest
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (event, rect, pProject, track.get())).handle)
             return result;
 
          if (NULL !=
              (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (event, rect, pProject, track.get())).handle)
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
          if (NULL != (result =

@@ -559,7 +559,7 @@ WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
 UIHandle::Result WaveTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
-   mpTrack = Track::Pointer<WaveTrack>(
+   mpTrack = std::static_pointer_cast<WaveTrack>(
       static_cast<WaveTrackVRulerControls*>(evt.pCell)->FindTrack() );
    mRect = evt.rect;
 
@@ -674,13 +674,13 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    // is a narrow enough target.
    evt.event.Skip(false);
 
-   Track *const pTrack = FindTrack();
+   const auto pTrack = FindTrack();
    if (!pTrack)
       return RefreshNone;
    wxASSERT(pTrack->GetKind() == Track::Wave);
    auto steps = evt.steps;
 
-   WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
    // Assume linked track is wave or null
    const auto partner = static_cast<WaveTrack*>(wt->GetLink());
    const bool isDB =

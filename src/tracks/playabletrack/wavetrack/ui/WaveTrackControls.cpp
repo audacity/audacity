@@ -65,20 +65,20 @@ HitTestResult WaveTrackControls::HitTest
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (event, rect, pProject, track.get())).handle)
             return result;
 
          if (NULL !=
              (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (event, rect, pProject, track.get())).handle)
             return result;
 
          if (NULL != (result =
-            GainSliderHandle::HitTest(event, rect, pProject, track)).handle)
+            GainSliderHandle::HitTest(event, rect, pProject, track.get())).handle)
             return result;
 
          if (NULL != (result =
-            PanSliderHandle::HitTest(event, rect, pProject, track)).handle)
+            PanSliderHandle::HitTest(event, rect, pProject, track.get())).handle)
             return result;
       }
    }

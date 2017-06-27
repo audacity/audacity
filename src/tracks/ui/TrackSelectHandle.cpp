@@ -95,7 +95,7 @@ UIHandle::Result TrackSelectHandle::Click
       return Cancelled;
 
    TrackControls *const pControls = static_cast<TrackControls*>(evt.pCell);
-   Track *const pTrack = pControls->FindTrack();
+   const auto pTrack = pControls->FindTrack();
    if (!pTrack)
       return Cancelled;
    TrackPanel *const trackPanel = pProject->GetTrackPanel();
@@ -110,12 +110,12 @@ UIHandle::Result TrackSelectHandle::Click
       result |= Cancelled;
    else {
       mRearrangeCount = 0;
-      mpTrack = pTrack;
+      mpTrack = pTrack.get();
       CalculateRearrangingThresholds(event);
    }
 
    pProject->HandleListSelection
-      (pTrack, event.ShiftDown(), event.ControlDown(), !unsafe);
+      (pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 
    return result;
 }

@@ -72,7 +72,7 @@ UIHandle::Result TrackPanelResizeHandle::Click
    const wxMouseEvent &event = evt.event;
    CommonTrackPanelCell *const pCell =
       static_cast<CommonTrackPanelCell*>(evt.pCell);
-   Track *track = track = pCell->FindTrack();
+   auto track = pCell->FindTrack().get();
    if (track && dynamic_cast< TrackControls * >( pCell )) {
       // Clicked under a label;
       // if stereo, replace left channel with the right:

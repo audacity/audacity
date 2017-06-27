@@ -880,7 +880,8 @@ void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
          const auto size = GetSize();
          HitTestResult hitTest( pCell->HitTest(tpmEvent, GetProject()) );
          tip = hitTest.preview.message;
-         ProcessUIHandleResult(this, mRuler, track, track, hitTest.preview.refreshCode);
+         ProcessUIHandleResult
+            (this, mRuler, track.get(), track.get(), hitTest.preview.refreshCode);
          pCursor = hitTest.preview.cursor;
          if (pCursor)
             SetCursor(*pCursor);
@@ -1234,7 +1235,7 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
    unsigned result =
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
    auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
-   ProcessUIHandleResult(this, mRuler, pTrack, pTrack, result);
+   ProcessUIHandleResult(this, mRuler, pTrack.get(), pTrack.get(), result);
 }
 
 /// Filter captured keys typed into LabelTracks.
@@ -1543,8 +1544,9 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          mUIHandle = NULL;
       else
-         mpClickedTrack = pTrack;
-      ProcessUIHandleResult(this, mRuler, pTrack, pTrack, refreshResult);
+         mpClickedTrack = pTrack.get();
+      ProcessUIHandleResult
+         (this, mRuler, pTrack.get(), pTrack.get(), refreshResult);
       HandleCursor( tpmEvent );
    }
 }
@@ -2513,8 +2515,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       iter = prev;
    auto found = *iter;
    return {
-      Track::Pointer(
-         static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack() ),
+      static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack(),
       found.first,
       found.second
    };

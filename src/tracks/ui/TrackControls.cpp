@@ -32,9 +32,9 @@ TrackControls::~TrackControls()
 {
 }
 
-Track *TrackControls::FindTrack()
+std::shared_ptr<Track> TrackControls::FindTrack()
 {
-   return mwTrack.lock().get();
+   return mwTrack.lock();
 }
 
 HitTestResult TrackControls::HitTest
@@ -206,12 +206,12 @@ unsigned TrackControls::DoContextMenu
    if (!track)
       return RefreshCode::RefreshNone;
 
-   InitMenuData data{ track, pParent, RefreshCode::RefreshNone };
+   InitMenuData data{ track.get(), pParent, RefreshCode::RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
    auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
-   PopupMenuTable *const pExtension = GetMenuExtension(track);
+   PopupMenuTable *const pExtension = GetMenuExtension(track.get());
    if (pExtension)
       pMenu->Extend(pExtension);
 

@@ -109,7 +109,7 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 UIHandle::Result NoteTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   mpTrack = Track::Pointer<NoteTrack>(
+   mpTrack = std::static_pointer_cast<NoteTrack>(
       static_cast<NoteTrackVRulerControls*>(evt.pCell)->FindTrack() );
    mRect = evt.rect;
 

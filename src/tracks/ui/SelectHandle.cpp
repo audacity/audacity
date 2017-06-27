@@ -818,7 +818,7 @@ UIHandle::Result SelectHandle::Drag
        static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack() ) {
       // Handle which tracks are selected
       Track *sTrack = pTrack.get();
-      Track *eTrack = clickedTrack;
+      Track *eTrack = clickedTrack.get();
       auto trackList = pProject->GetTracks();
       auto pMixerBoard = pProject->GetMixerBoard();
       if ( sTrack && eTrack && !event.ControlDown() ) {
@@ -841,7 +841,7 @@ UIHandle::Result SelectHandle::Drag
                                 viewInfo, y, mRect.y, mRect.height);
 #endif
       
-      AdjustSelection(viewInfo, x, mRect.x, clickedTrack);
+      AdjustSelection(viewInfo, x, mRect.x, clickedTrack.get());
    }
 
    return RefreshNone

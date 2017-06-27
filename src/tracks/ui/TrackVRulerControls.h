@@ -25,7 +25,7 @@ public:
 
    virtual ~TrackVRulerControls() = 0;
 
-   Track *FindTrack() override;
+   std::shared_ptr<Track> FindTrack() override;
 
    // Define a default hit test method, just for message and cursor
    HitTestResult HitTest

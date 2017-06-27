@@ -79,7 +79,7 @@ public:
       (const TrackPanelMouseEvent &event,
        const AudacityProject *pProject) override;
 
-   Track *FindTrack() override { return mpTrack.lock().get(); };
+   std::shared_ptr<Track> FindTrack() override { return mpTrack.lock(); };
 private:
    friend class TrackPanelCellIterator;
    std::weak_ptr<Track> mpTrack;

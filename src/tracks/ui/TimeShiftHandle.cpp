@@ -501,7 +501,7 @@ UIHandle::Result TimeShiftHandle::Drag
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
-   pTrack = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack();
+   pTrack = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
    */
 
    if (!pTrack) {

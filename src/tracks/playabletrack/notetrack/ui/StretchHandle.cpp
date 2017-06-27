@@ -196,7 +196,7 @@ UIHandle::Result StretchHandle::Drag
    const int x = event.m_x;
 
    Track *clickedTrack =
-      static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack();
+      static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
 
    if (clickedTrack == NULL && mpTrack != NULL)
       clickedTrack = mpTrack;

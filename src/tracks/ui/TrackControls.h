@@ -25,7 +25,7 @@ public:
 
    virtual ~TrackControls() = 0;
 
-   Track *FindTrack() override;
+   std::shared_ptr<Track> FindTrack() override;
 
    // This is passed to the InitMenu() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:

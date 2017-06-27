@@ -317,9 +317,9 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
    }
 }
 
-Track *Track::FindTrack()
+std::shared_ptr<Track> Track::FindTrack()
 {
-   return this;
+   return Pointer( this );
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )

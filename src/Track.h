@@ -308,7 +308,7 @@ class AUDACITY_DLL_API Track /* not final */
    bool IsSyncLockSelected() const;
 
 protected:
-   Track *FindTrack() override;
+   std::shared_ptr<Track> FindTrack() override;
 
    // These are called to create controls on demand:
    virtual std::shared_ptr<TrackControls> GetControls() = 0;
