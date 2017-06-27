@@ -765,16 +765,11 @@ void TrackPanel::CancelDragging()
 {
    if (mUIHandle) {
       UIHandle::Result refreshResult = mUIHandle->Cancel(GetProject());
-      {
-         // TODO: avoid dangling pointers to mpClickedTrack
-         // when the undo stack management of the typical Cancel override
-         // causes it to relocate.  That is implement some means to
-         // re-fetch the track according to its position in the list.
-         // (Or should all Tracks be managed always by std::shared_ptr?)
-         mpClickedTrack = NULL;
-      }
-      ProcessUIHandleResult(this, mRuler, mpClickedTrack, NULL, refreshResult);
-      mpClickedTrack = NULL;
+      auto pTrack = GetTracks()->Lock(mpClickedTrack);
+      if (pTrack)
+         ProcessUIHandleResult(
+            this, mRuler, pTrack.get(), NULL, refreshResult);
+      mpClickedTrack.reset();
       mUIHandle = NULL;
       Uncapture();
    }
@@ -1458,16 +1453,17 @@ try
    }
 
    if (mUIHandle) {
+      auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
       if (event.Dragging()) {
          // UIHANDLE DRAG
          const UIHandle::Result refreshResult =
             mUIHandle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
-            (this, mRuler, mpClickedTrack, pTrack.get(), refreshResult);
+            (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
             mUIHandle = NULL;
-            mpClickedTrack = NULL;
+            mpClickedTrack.reset();
             Uncapture( &event );
          }
          else
@@ -1483,8 +1479,8 @@ try
          UIHandle::Result refreshResult =
             uiHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
-            (this, mRuler, mpClickedTrack, pTrack.get(), refreshResult);
-         mpClickedTrack = NULL; 
+            (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
+         mpClickedTrack.reset();
          // will also Uncapture() below
       }
    }
@@ -1544,7 +1540,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          mUIHandle = NULL;
       else
-         mpClickedTrack = pTrack.get();
+         mpClickedTrack = pTrack;
       ProcessUIHandleResult
          (this, mRuler, pTrack.get(), pTrack.get(), refreshResult);
       HandleCursor( tpmEvent );
@@ -2181,7 +2177,8 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
       // when TrackPanelCell gets a virtual function into which we move this
       // drawing code.
       MouseCaptureEnum(TrackControls::gCaptureState);
-   const bool captured = (t == mpClickedTrack);
+   auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
+   const bool captured = (t == pClickedTrack.get());
 
    TrackInfo::DrawItems( dc, rect, *t, mouseCapture, captured );
 

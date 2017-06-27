@@ -527,7 +527,7 @@ protected:
    wxSize vrulerSize;
 
  protected:
-   Track *mpClickedTrack {};
+   std::weak_ptr<Track> mpClickedTrack;
    // TrackPanel is not responsible for memory management:
    UIHandle *mUIHandle {};
 
