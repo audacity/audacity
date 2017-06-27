@@ -40,7 +40,8 @@ public:
    // This always hits, but details of the hit vary with mouse position and
    // key state.
    static HitTestResult HitTest
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject, const Track *pTrack);
+      (const TrackPanelMouseEvent &event, const AudacityProject *pProject,
+       const std::shared_ptr<Track> &pTrack);
 
    virtual ~SelectHandle();
 

@@ -94,7 +94,7 @@ UIHandle::Result TrackSelectHandle::Click
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return Cancelled;
 
-   TrackControls *const pControls = static_cast<TrackControls*>(evt.pCell);
+   const auto pControls = static_cast<TrackControls*>(evt.pCell.get());
    const auto pTrack = pControls->FindTrack();
    if (!pTrack)
       return Cancelled;
@@ -110,7 +110,7 @@ UIHandle::Result TrackSelectHandle::Click
       result |= Cancelled;
    else {
       mRearrangeCount = 0;
-      mpTrack = pTrack.get();
+      mpTrack = pTrack;
       CalculateRearrangingThresholds(event);
    }
 
@@ -137,18 +137,18 @@ UIHandle::Result TrackSelectHandle::Drag
 
    MixerBoard* pMixerBoard = pProject->GetMixerBoard(); // Update mixer board, too.
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
-      tracks->MoveUp(mpTrack);
+      tracks->MoveUp(mpTrack.get());
       --mRearrangeCount;
       if (pMixerBoard)
-         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack ))
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack.get() ))
             pMixerBoard->MoveTrackCluster(pPlayable, true /* up */);
    }
    else if ( event.m_y > mMoveDownThreshold
       || event.m_y > evt.whole.GetHeight() ) {
-      tracks->MoveDown(mpTrack);
+      tracks->MoveDown(mpTrack.get());
       ++mRearrangeCount;
       if (pMixerBoard)
-         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack ))
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack.get() ))
             pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
    }
    else
@@ -215,15 +215,15 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
    AudacityProject *const project = ::GetActiveProject();
    TrackList *const tracks = project->GetTracks();
 
-   if (tracks->CanMoveUp(mpTrack))
+   if (tracks->CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
-      event.m_y - tracks->GetGroupHeight(tracks->GetPrev(mpTrack, true));
+      event.m_y - tracks->GetGroupHeight(tracks->GetPrev(mpTrack.get(), true));
    else
       mMoveUpThreshold = INT_MIN;
 
-   if (tracks->CanMoveDown(mpTrack))
+   if (tracks->CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
-      event.m_y + tracks->GetGroupHeight(tracks->GetNext(mpTrack, true));
+      event.m_y + tracks->GetGroupHeight(tracks->GetNext(mpTrack.get(), true));
    else
       mMoveDownThreshold = INT_MAX;
 }

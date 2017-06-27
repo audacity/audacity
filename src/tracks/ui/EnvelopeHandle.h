@@ -42,10 +42,10 @@ public:
    static HitTestResult HitAnywhere(const AudacityProject *pProject);
    static HitTestResult TimeTrackHitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, TimeTrack &tt);
+       const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
    static HitTestResult WaveTrackHitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, WaveTrack &wt);
+       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
 
    virtual ~EnvelopeHandle();
 

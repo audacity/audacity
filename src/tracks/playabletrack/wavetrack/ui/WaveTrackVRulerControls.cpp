@@ -560,7 +560,7 @@ UIHandle::Result WaveTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
    mpTrack = std::static_pointer_cast<WaveTrack>(
-      static_cast<WaveTrackVRulerControls*>(evt.pCell)->FindTrack() );
+      static_cast<WaveTrackVRulerControls*>(evt.pCell.get())->FindTrack() );
    mRect = evt.rect;
 
    const wxMouseEvent &event = evt.event;

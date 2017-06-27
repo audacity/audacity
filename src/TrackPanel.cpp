@@ -855,7 +855,7 @@ void TrackPanel::HandleCursor( wxMouseEvent *pEvent )
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
    const auto size = GetSize();
-   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell.get() };
+   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
    HandleCursor( tpmEvent );
 }
 
@@ -875,7 +875,7 @@ void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
       wxString tip;
 
       auto pCell = tpmEvent.pCell;
-      auto track = static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
+      auto track = static_cast<CommonTrackPanelCell*>( pCell.get() )->FindTrack();
       if (pCell && pCursor == NULL && tip == wxString()) {
          const auto size = GetSize();
          HitTestResult hitTest( pCell->HitTest(tpmEvent, GetProject()) );
@@ -1234,7 +1234,7 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
 
    unsigned result =
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
-   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
    ProcessUIHandleResult(this, mRuler, pTrack.get(), pTrack.get(), result);
 }
 
@@ -1383,7 +1383,7 @@ try
    auto &pTrack = foundCell.pTrack;
 
    const auto size = GetSize();
-   TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell.get() };
+   TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
 
 #if defined(__WXMAC__) && defined(EVT_MAGNIFY)
    // PRL:
@@ -1531,7 +1531,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    const auto &event = tpmEvent.event;
    auto pCell = tpmEvent.pCell;
    const auto &rect = tpmEvent.rect;
-   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell )->FindTrack();
+   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell.get() )->FindTrack();
 
    if ( !mUIHandle && pCell )
       mUIHandle =

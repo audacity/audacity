@@ -13,6 +13,7 @@ Paul Licameli
 
 #include "../../../../UIHandle.h"
 #include "audacity/Types.h"
+#include "MemoryX.h"
 
 class wxMouseEvent;
 #include <wx/gdicmn.h>
@@ -36,7 +37,7 @@ public:
       (const wxMouseEvent &event, const AudacityProject *pProject);
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Track *pTrack);
+       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~SampleHandle();
 
@@ -62,7 +63,7 @@ private:
    float FindSampleEditingLevel
       (const wxMouseEvent &event, const ViewInfo &viewInfo, double t0);
 
-   WaveTrack *mClickedTrack{};
+   std::shared_ptr<WaveTrack> mClickedTrack;
    wxRect mRect{};
 
    sampleCount mClickedStartSample{};

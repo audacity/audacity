@@ -84,7 +84,7 @@ UIHandle::Result SliderHandle::Release
    result |= SetValue(pProject, newValue);
    result |= CommitChanges(event, pProject);
 
-   mpTrack = nullptr;
+   mpTrack.reset();
    return result;
 }
 
@@ -95,6 +95,6 @@ UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
 
    // Undo un-committed changes to project data:
    auto result = SetValue(pProject, mStartingValue);
-   mpTrack = nullptr;
+   mpTrack.reset();
    return RefreshCode::RefreshCell | result;
 }

@@ -30,7 +30,7 @@ class VelocitySliderHandle final : public SliderHandle
    virtual ~VelocitySliderHandle();
    static VelocitySliderHandle& Instance();
 
-   NoteTrack *GetTrack();
+   std::shared_ptr<NoteTrack> GetNoteTrack();
 
 protected:
    float GetValue() override;
@@ -44,7 +44,7 @@ protected:
 public:
    static HitTestResult HitTest
    (const wxMouseEvent &event, const wxRect &rect,
-    const AudacityProject *pProject, Track *pTrack);
+    const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

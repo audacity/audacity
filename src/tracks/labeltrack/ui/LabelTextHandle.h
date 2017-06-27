@@ -31,7 +31,8 @@ class LabelTextHandle final : public LabelDefaultClickHandle
    static HitTestPreview HitPreview();
 
 public:
-   static HitTestResult HitTest(const wxMouseEvent &event, LabelTrack *pLT);
+   static HitTestResult HitTest(
+      const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT);
 
    virtual ~LabelTextHandle();
 

@@ -39,7 +39,8 @@ class NoteTrackClickHandle : public UIHandle
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect, Track *pTrack);
+      (const wxMouseEvent &event, const wxRect &rect,
+       const std::shared_ptr<NoteTrack> &pTrack);
 
 protected:
    virtual Result Click
@@ -76,7 +77,8 @@ NoteTrackClickHandle &NoteTrackClickHandle::Instance()
 }
 
 HitTestResult NoteTrackClickHandle::HitTest
-   (const wxMouseEvent &event, const wxRect &rect, Track *pTrack)
+   (const wxMouseEvent &event, const wxRect &rect,
+    const std::shared_ptr<NoteTrack> &pTrack)
 {
    wxRect midiRect;
    TrackInfo::GetMidiControlsRect(rect, midiRect);
@@ -84,7 +86,7 @@ HitTestResult NoteTrackClickHandle::HitTest
       return {};
    if (pTrack->GetKind() == Track::Note &&
        midiRect.Contains(event.m_x, event.m_y)) {
-         Instance().mpTrack = Track::Pointer<NoteTrack>( pTrack );
+         Instance().mpTrack = pTrack;
          Instance().mRect = midiRect;
          return {
             HitTestPreview(),
@@ -150,17 +152,17 @@ HitTestResult NoteTrackControls::HitTest
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    if (event.ButtonDown() || event.ButtonDClick()) {
-      auto track = FindTrack();
+      auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
       if (track && track->GetKind() == Track::Note) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track.get())).handle)
+                 (event, rect, pProject, track)).handle)
             return result;
 
          if (NULL !=
              (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track.get())).handle)
+                 (event, rect, pProject, track)).handle)
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
          if (NULL != (result =

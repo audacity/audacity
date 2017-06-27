@@ -417,7 +417,7 @@ UIHandle::Result TimeShiftHandle::Click
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
+   const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
 
    using namespace RefreshCode;
 
@@ -441,7 +441,7 @@ UIHandle::Result TimeShiftHandle::Click
        clickTime < viewInfo.selectedRegion.t1());
 
    WaveTrack *wt = pTrack->GetKind() == Track::Wave
-      ? static_cast<WaveTrack*>(pTrack) : nullptr;
+      ? static_cast<WaveTrack*>(pTrack.get()) : nullptr;
 
    if ((wt
 #ifdef USE_MIDI
@@ -497,23 +497,25 @@ UIHandle::Result TimeShiftHandle::Drag
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
    // We may switch pTrack to its stereo partner below
-   Track *pTrack = dynamic_cast<Track*>(evt.pCell);
+   Track *track = dynamic_cast<Track*>(evt.pCell.get());
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
    pTrack = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
    */
 
-   if (!pTrack) {
+   if (!track) {
       // Allow sliding if the pointer is not over any track, but only if x is
       // within the bounds of the tracks area.
       if (event.m_x >= mRect.GetX() &&
          event.m_x < mRect.GetX() + mRect.GetWidth())
-          pTrack = mCapturedTrack;
+          track = mCapturedTrack.get();
    }
 
+   auto pTrack = Track::Pointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;
+
 
    using namespace RefreshCode;
    const bool unsafe = pProject->IsAudioActive();
@@ -571,7 +573,7 @@ UIHandle::Result TimeShiftHandle::Drag
       double clipLeft = 0, clipRight = 0;
 #ifdef USE_MIDI
       if (pTrack->GetKind() == Track::Wave) {
-         WaveTrack *const mtw = static_cast<WaveTrack*>(pTrack);
+         WaveTrack *const mtw = static_cast<WaveTrack*>(pTrack.get());
          const double rate = mtw->GetRate();
          // set it to a sample point
          desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
@@ -614,9 +616,9 @@ UIHandle::Result TimeShiftHandle::Drag
          double newClipRight = clipRight;
 
          bool dummy1, dummy2;
-         mSnapManager->Snap(mCapturedTrack, clipLeft, false, &newClipLeft,
+         mSnapManager->Snap(mCapturedTrack.get(), clipLeft, false, &newClipLeft,
             &dummy1, &dummy2);
-         mSnapManager->Snap(mCapturedTrack, clipRight, false, &newClipRight,
+         mSnapManager->Snap(mCapturedTrack.get(), clipRight, false, &newClipRight,
             &dummy1, &dummy2);
 
          // Only one of them is allowed to snap
@@ -658,8 +660,8 @@ UIHandle::Result TimeShiftHandle::Drag
        /* && !mCapturedClipIsSelection*/)
    {
       const int diff =
-         TrackPosition(*trackList, pTrack) -
-         TrackPosition(*trackList, mCapturedTrack);
+         TrackPosition(*trackList, pTrack.get()) -
+         TrackPosition(*trackList, mCapturedTrack.get());
       for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
             ii < nn; ++ii ) {
          TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
@@ -783,7 +785,7 @@ UIHandle::Result TimeShiftHandle::Release
 
    Result result = RefreshNone;
 
-   mCapturedTrack = NULL;
+   mCapturedTrack.reset();
    mSnapManager.reset(NULL);
    mClipMoveState.capturedClipArray.clear();
 
@@ -842,7 +844,7 @@ UIHandle::Result TimeShiftHandle::Release
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
-   mCapturedTrack = nullptr;
+   mCapturedTrack.reset();
    mSnapManager.reset();
    mClipMoveState.clear();
    return RefreshCode::RefreshAll;

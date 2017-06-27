@@ -69,7 +69,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
 
 HitTestResult StretchHandle::HitTest
    ( const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
-     NoteTrack *pTrack, StretchState &stretchState)
+     const std::shared_ptr<NoteTrack> &pTrack, StretchState &stretchState)
 {
    const wxMouseEvent &event = evt.event;
 
@@ -165,7 +165,7 @@ UIHandle::Result StretchHandle::Click
 
 
    mLeftEdge = evt.rect.GetLeft();
-   mpTrack = static_cast<NoteTrack*>(evt.pCell);
+   mpTrack = std::static_pointer_cast<NoteTrack>(evt.pCell);
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
    // We must have hit if we got here, but repeat some
@@ -196,10 +196,10 @@ UIHandle::Result StretchHandle::Drag
    const int x = event.m_x;
 
    Track *clickedTrack =
-      static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
+      static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
 
    if (clickedTrack == NULL && mpTrack != NULL)
-      clickedTrack = mpTrack;
+      clickedTrack = mpTrack.get();
    Stretch(pProject, x, mLeftEdge, clickedTrack);
    return RefreshAll;
 }
@@ -229,9 +229,9 @@ UIHandle::Result StretchHandle::Release
         ( ( left = mStretchState.mMode == stretchLeft ) ||
           mStretchState.mMode == stretchRight ) ) {
       SyncLockedTracksIterator syncIter( pProject->GetTracks() );
-      for ( auto track = syncIter.StartWith( mpTrack ); track != nullptr;
+      for ( auto track = syncIter.StartWith( mpTrack.get() ); track != nullptr;
            track = syncIter.Next() ) {
-         if ( track != mpTrack ) {
+         if ( track != mpTrack.get() ) {
             if ( left ) {
                auto origT0 = mStretchState.mOrigSel0Quantized;
                auto diff = viewInfo.selectedRegion.t0() - origT0;
@@ -275,7 +275,7 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
    TrackList *const trackList = pProject->GetTracks();
 
    if (pTrack == NULL && mpTrack != NULL)
-      pTrack = mpTrack;
+      pTrack = mpTrack.get();
 
    if (!pTrack || pTrack->GetKind() != Track::Note) {
       return;

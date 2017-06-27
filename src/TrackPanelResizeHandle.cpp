@@ -70,8 +70,8 @@ UIHandle::Result TrackPanelResizeHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    const wxMouseEvent &event = evt.event;
-   CommonTrackPanelCell *const pCell =
-      static_cast<CommonTrackPanelCell*>(evt.pCell);
+   const auto pCell =
+      static_cast<CommonTrackPanelCell*>(evt.pCell.get());
    auto track = pCell->FindTrack().get();
    if (track && dynamic_cast< TrackControls * >( pCell )) {
       // Clicked under a label;

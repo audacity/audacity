@@ -64,7 +64,7 @@ private:
 public:
    static HitTestResult HitTest
       ( const TrackPanelMouseEvent &event, const AudacityProject *pProject,
-        NoteTrack *pTrack, StretchState &state );
+        const std::shared_ptr<NoteTrack> &pTrack, StretchState &state );
 
    virtual ~StretchHandle();
 
@@ -89,7 +89,7 @@ private:
    void Stretch
       (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 
-   NoteTrack *mpTrack{};
+   std::shared_ptr<NoteTrack> mpTrack{};
    int mLeftEdge{ -1 };
 
    StretchState mStretchState{};

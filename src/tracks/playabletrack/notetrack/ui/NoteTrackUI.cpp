@@ -30,7 +30,7 @@ HitTestResult NoteTrack::DetailedHitTest
    HitTestResult result;
 #ifdef USE_MIDI
    StretchHandle::StretchState state;
-   result = StretchHandle::HitTest( event, pProject, this, state );
+   result = StretchHandle::HitTest( event, pProject, Pointer<NoteTrack>(this), state );
 #endif
 
    return result;

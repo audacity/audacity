@@ -394,7 +394,8 @@ namespace
 }
 
 HitTestResult SelectHandle::HitTest
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject, const Track *pTrack)
+(const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
+ const std::shared_ptr<Track> &pTrack)
 {
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
@@ -429,7 +430,7 @@ HitTestResult SelectHandle::HitTest
    // the preferences...
    if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
    {
-      MaySetOnDemandTip(pTrack, tip);
+      MaySetOnDemandTip(pTrack.get(), tip);
       return { { tip, pCursor }, &Instance() };
    }
 
@@ -463,11 +464,11 @@ HitTestResult SelectHandle::HitTest
    // choose boundaries only in snapping tolerance,
    // and may choose center.
    SelectionBoundary boundary =
-      ChooseBoundary(viewInfo, event, pTrack, rect, !bModifierDown, !bModifierDown);
+      ChooseBoundary(viewInfo, event, pTrack.get(), rect, !bModifierDown, !bModifierDown);
 
    SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
 
-   MaySetOnDemandTip(pTrack, tip);
+   MaySetOnDemandTip(pTrack.get(), tip);
 
    if (tip == "") {
       const auto ttb = pProject->GetToolsToolBar();
@@ -510,7 +511,7 @@ UIHandle::Result SelectHandle::Click
    using namespace RefreshCode;
 
    wxMouseEvent &event = evt.event;
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
+   const auto pTrack = static_cast<Track*>(evt.pCell.get());
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
    mMostRecentX = event.m_x;
@@ -815,7 +816,7 @@ UIHandle::Result SelectHandle::Drag
    }
 
    if ( auto clickedTrack =
-       static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack() ) {
+       static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
       // Handle which tracks are selected
       Track *sTrack = pTrack.get();
       Track *eTrack = clickedTrack.get();
@@ -1005,7 +1006,7 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       // AS: For some reason, GCC won't let us pass this directly.
       wxMouseEvent evt(wxEVT_MOTION);
       const auto size = trackPanel->GetSize();
-      Drag(TrackPanelMouseEvent{ evt, mRect, size, pTrack.get() }, project);
+      Drag(TrackPanelMouseEvent{ evt, mRect, size, pTrack }, project);
       mAutoScrolling = false;
       mConnectedProject->GetTrackPanel()->Refresh(false);
    }

@@ -106,7 +106,7 @@ namespace {
 
 HitTestResult SampleHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+ const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
@@ -115,7 +115,7 @@ HitTestResult SampleHandle::HitTest
    if (pTrack->GetKind() != Track::Wave)
       return {};
 
-   WaveTrack *wavetrack = static_cast<WaveTrack*>(pTrack);
+   WaveTrack *wavetrack = pTrack.get();
 
    const int displayType = wavetrack->GetDisplay();
    if (WaveTrack::Waveform != displayType)
@@ -209,7 +209,7 @@ UIHandle::Result SampleHandle::Click
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
+   const auto pTrack = std::static_pointer_cast<WaveTrack>(evt.pCell);
 
    using namespace RefreshCode;
 
@@ -217,18 +217,18 @@ UIHandle::Result SampleHandle::Click
    const bool unsafe = pProject->IsAudioActive();
    if (unsafe)
       return Cancelled;
-   if (!IsSampleEditingPossible
-      (event, rect, viewInfo, pTrack, rect.width))
+   if (!IsSampleEditingPossible(
+         event, rect, viewInfo, pTrack.get(), rect.width))
       return Cancelled;
 
    /// We're in a track view and zoomed enough to see the samples.
-   mClickedTrack = static_cast<WaveTrack*>(pTrack);
+   mClickedTrack = pTrack;
    mRect = rect;
 
    //If we are still around, we are drawing in earnest.  Set some member data structures up:
    //First, calculate the starting sample.  To get this, we need the time
    const double t0 =
-      adjustTime(mClickedTrack, viewInfo.PositionToTime(event.m_x, rect.x));
+      adjustTime(mClickedTrack.get(), viewInfo.PositionToTime(event.m_x, rect.x));
 
    //convert t0 to samples
    mClickedStartSample = mClickedTrack->TimeToLongSamples(t0);
@@ -434,7 +434,7 @@ UIHandle::Result SampleHandle::Release
    //***    UP-CLICK  (Finish drawing)             ***
    //*************************************************
    //On up-click, send the state to the undo stack
-   mClickedTrack = nullptr;       //Set this to NULL so it will catch improper drag events.
+   mClickedTrack.reset();       //Set this to NULL so it will catch improper drag events.
    pProject->PushState(_("Moved Samples"),
       _("Sample Edit"),
       UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
@@ -446,7 +446,7 @@ UIHandle::Result SampleHandle::Release
 UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
-   mClickedTrack = nullptr;
+   mClickedTrack.reset();
    return RefreshCode::RefreshCell;
 }
 

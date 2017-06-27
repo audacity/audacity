@@ -102,7 +102,8 @@ namespace
 }
 
 HitTestResult CutlineHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject, Track *pTrack)
+(const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject,
+ const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    /// method that tells us if the mouse event landed on an
@@ -110,7 +111,7 @@ HitTestResult CutlineHandle::HitTest
    if (pTrack->GetKind() != Track::Wave)
       return {};
 
-   WaveTrack *wavetrack = static_cast<WaveTrack*>(pTrack);
+   WaveTrack *wavetrack = pTrack.get();
    WaveTrackLocation location;
    if (!IsOverCutline(viewInfo, wavetrack, rect, event, &location))
       return {};
@@ -127,7 +128,7 @@ UIHandle::Result CutlineHandle::Click
 {
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
+   const auto pTrack = static_cast<Track*>(evt.pCell.get());
 
    // Can affect the track by merging clips, expanding a cutline, or
    // deleting a cutline.

@@ -36,24 +36,25 @@ VelocitySliderHandle &VelocitySliderHandle::Instance()
    return instance;
 }
 
-NoteTrack *VelocitySliderHandle::GetTrack()
+std::shared_ptr<NoteTrack> VelocitySliderHandle::GetNoteTrack()
 {
-   return static_cast<NoteTrack*>(mpTrack);
+   return std::static_pointer_cast<NoteTrack>(mpTrack.lock());
 }
 
 float VelocitySliderHandle::GetValue()
 {
-   return GetTrack()->GetVelocity();
+   return GetNoteTrack()->GetVelocity();
 }
 
 UIHandle::Result VelocitySliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
-   GetTrack()->SetVelocity(newValue);
+   auto pTrack = GetNoteTrack();
+   pTrack->SetVelocity(newValue);
 
    MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
    if (pMixerBoard)
-      pMixerBoard->UpdateVelocity(GetTrack());
+      pMixerBoard->UpdateVelocity(pTrack.get());
 
    return RefreshCode::RefreshCell;
 }
@@ -69,7 +70,7 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
 
 HitTestResult VelocitySliderHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+ const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return {};

@@ -90,7 +90,7 @@ public:
    bool StopsOnKeystroke() override { return true; }
 
 private:
-   Track *mCapturedTrack{};
+   std::shared_ptr<Track> mCapturedTrack;
    wxRect mRect{};
 
    bool mDidSlideVertically{};

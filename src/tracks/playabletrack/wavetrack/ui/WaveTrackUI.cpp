@@ -32,7 +32,7 @@ HitTestResult WaveTrack::DetailedHitTest
    // If that toolbar were eliminated, this could simplify to a sequence of
    // hit test routines describable by a table.
 
-   WaveTrack *const wavetrack = static_cast<WaveTrack*>(event.pCell);
+   const auto wavetrack = static_cast<WaveTrack*>(event.pCell.get());
    bool isWaveform = (wavetrack->GetDisplay() == WaveTrack::Waveform);
 
    if (bMultiTool && event.event.CmdDown())
@@ -47,7 +47,7 @@ HitTestResult WaveTrack::DetailedHitTest
       HitTestResult result;
       if (NULL !=
           (result = CutlineHandle::HitTest
-           (event.event, event.rect, pProject, this))
+           (event.event, event.rect, pProject, Pointer<WaveTrack>(this)))
            .preview.cursor)
           // This overriding test applies in all tools
           return result;
@@ -57,7 +57,7 @@ HitTestResult WaveTrack::DetailedHitTest
          // The priority of these, in case more than one might apply at one
          // point, seems arbitrary
          if (NULL != (result = EnvelopeHandle::WaveTrackHitTest
-              (event.event, event.rect, pProject, *this))
+              (event.event, event.rect, pProject, Pointer<WaveTrack>(this)))
              .preview.cursor)
             ;
          else if (NULL != (result = TimeShiftHandle::HitTest
@@ -66,7 +66,7 @@ HitTestResult WaveTrack::DetailedHitTest
             // right in Multi only
             ;
          else if (NULL != (result = SampleHandle::HitTest
-              (event.event, event.rect, pProject, this)).preview.cursor)
+              (event.event, event.rect, pProject, Pointer<WaveTrack>(this))).preview.cursor)
             ;
          return result;
       }

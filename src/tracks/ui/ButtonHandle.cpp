@@ -39,7 +39,7 @@ UIHandle::Result ButtonHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
    using namespace RefreshCode;
-   auto pTrack = static_cast<TrackControls*>(evt.pCell)->FindTrack();
+   auto pTrack = static_cast<TrackControls*>(evt.pCell.get())->FindTrack();
    if ( !pTrack )
       return Cancelled;
 

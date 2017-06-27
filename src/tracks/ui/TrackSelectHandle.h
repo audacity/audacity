@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_TRACK_SELECT_HANDLE__
 
 #include "../../UIHandle.h"
+#include "../../MemoryX.h"
 
 class wxMouseEvent;
 struct HitTestResult;
@@ -49,7 +50,7 @@ public:
    bool StopsOnKeystroke() override { return true; }
 
 private:
-   Track *mpTrack {};
+   std::shared_ptr<Track> mpTrack;
 
    // JH: if the user is dragging a track, at what y
    //   coordinate should the dragging track move up or down?

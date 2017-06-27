@@ -49,7 +49,7 @@ HitTestPreview LabelGlyphHandle::HitPreview
 }
 
 HitTestResult LabelGlyphHandle::HitTest
-(const wxMouseEvent &event, LabelTrack *pLT)
+(const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT)
 {
    using namespace RefreshCode;
    unsigned refreshResult = RefreshNone;
@@ -93,11 +93,11 @@ UIHandle::Result LabelGlyphHandle::Click
 {
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
-   TrackPanelCell *const pCell = evt.pCell;
+   const auto pCell = evt.pCell;
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
 
-   mpLT = static_cast<LabelTrack*>(pCell);
+   mpLT = std::static_pointer_cast<LabelTrack>(pCell);
    mRect = rect;
 
    ViewInfo &viewInfo = pProject->GetViewInfo();
