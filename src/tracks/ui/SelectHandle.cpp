@@ -50,28 +50,6 @@ enum {
 // #define SPECTRAL_EDITING_ESC_KEY
 
 SelectHandle::SelectHandle()
-   : mRect()
-   , mInitialSelection()
-
-   , mSnapManager()
-   , mSnapLeft(-1)
-   , mSnapRight(-1)
-
-   , mSelStartValid(false)
-   , mSelStart(0.0)
-
-   , mSelectionBoundary(0)
-
-   , mFreqSelMode(FREQ_SEL_INVALID)
-   , mFreqSelPin(-1.0)
-   , mFrequencySnapper(new SpectrumAnalyst)
-
-   , mMostRecentX(-1)
-   , mMostRecentY(-1)
-
-   , mAutoScrolling(false)
-
-   , mConnectedProject(NULL)
 {
 }
 
@@ -1230,13 +1208,15 @@ void SelectHandle::HandleCenterFrequencyClick
       mFreqSelMode = FREQ_SEL_SNAPPING_CENTER;
       // Disable time selection
       mSelStartValid = false;
-      StartSnappingFreqSelection(viewInfo, pTrack);
+      mFrequencySnapper = std::make_unique<SpectrumAnalyst>();
+      StartSnappingFreqSelection(*mFrequencySnapper, viewInfo, pTrack);
 #endif
    }
 }
 
 void SelectHandle::StartSnappingFreqSelection
-   (const ViewInfo &viewInfo, const WaveTrack *pTrack)
+   (SpectrumAnalyst &analyst,
+    const ViewInfo &viewInfo, const WaveTrack *pTrack)
 {
    static const size_t minLength = 8;
 
@@ -1270,7 +1250,7 @@ void SelectHandle::StartSnappingFreqSelection
       windowSize >>= 1;
    const int windowType = settings.windowType;
 
-   mFrequencySnapper->Calculate(
+   analyst.Calculate(
       SpectrumAnalyst::Spectrum, windowType, windowSize, rate,
       &frequencySnappingData[0], length);
 
@@ -1327,7 +1307,8 @@ void SelectHandle::MoveSnappingFreqSelection
 }
 
 void SelectHandle::SnapCenterOnce
-   (ViewInfo &viewInfo, const WaveTrack *pTrack, bool up)
+   (SpectrumAnalyst &analyst,
+    ViewInfo &viewInfo, const WaveTrack *pTrack, bool up)
 {
    const SpectrogramSettings &settings = pTrack->GetSpectrogramSettings();
    const auto windowSize = settings.GetFFTLength();
@@ -1349,18 +1330,18 @@ void SelectHandle::SnapCenterOnce
    // This is crude and wasteful, doing the FFT each time the command is called.
    // It would be better to cache the data, but then invalidation of the cache would
    // need doing in all places that change the time selection.
-   StartSnappingFreqSelection(viewInfo, pTrack);
+   StartSnappingFreqSelection(analyst, viewInfo, pTrack);
    double snappedFrequency = centerFrequency;
    int bin = originalBin;
    if (up) {
       while (snappedFrequency <= centerFrequency &&
          bin < limitingBin)
-         snappedFrequency = mFrequencySnapper->FindPeak(++bin * binFrequency, NULL);
+         snappedFrequency = analyst.FindPeak(++bin * binFrequency, NULL);
    }
    else {
       while (snappedFrequency >= centerFrequency &&
          bin > limitingBin)
-         snappedFrequency = mFrequencySnapper->FindPeak(--bin * binFrequency, NULL);
+         snappedFrequency = analyst.FindPeak(--bin * binFrequency, NULL);
    }
 
    // PRL:  added these two lines with the big TrackPanel refactor

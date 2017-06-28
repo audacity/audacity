@@ -5896,7 +5896,8 @@ void AudacityProject::DoNextPeakFrequency(bool up)
    }
 
    if (pTrack) {
-      SelectHandle::Instance().SnapCenterOnce(mViewInfo, pTrack, up);
+      SpectrumAnalyst analyst;
+      SelectHandle::SnapCenterOnce(analyst, mViewInfo, pTrack, up);
       mTrackPanel->Refresh(false);
       ModifyState(false);
    }

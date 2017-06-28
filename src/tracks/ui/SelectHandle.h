@@ -89,37 +89,39 @@ private:
    void HandleCenterFrequencyClick
       (const ViewInfo &viewInfo, bool shiftDown,
        const WaveTrack *pTrack, double value);
-   void StartSnappingFreqSelection
-      (const ViewInfo &viewInfo, const WaveTrack *pTrack);
+   static void StartSnappingFreqSelection
+      (SpectrumAnalyst &analyst,
+       const ViewInfo &viewInfo, const WaveTrack *pTrack);
    void MoveSnappingFreqSelection
       (AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
        int trackTopEdge,
        int trackHeight, Track *pTrack);
 public:
    // This is needed to implement a command assignable to keystrokes
-   void SnapCenterOnce
-      (ViewInfo &viewInfo, const WaveTrack *pTrack, bool up);
+   static void SnapCenterOnce
+      (SpectrumAnalyst &analyst,
+       ViewInfo &viewInfo, const WaveTrack *pTrack, bool up);
 private:
    //void ResetFreqSelectionPin
    //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
 
 
    std::weak_ptr<Track> mpTrack;
-   wxRect mRect;
-   SelectedRegion mInitialSelection;
+   wxRect mRect{};
+   SelectedRegion mInitialSelection{};
 
    // Handles snapping the selection boundaries or track boundaries to
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
    std::unique_ptr<SnapManager> mSnapManager;
-   wxInt64 mSnapLeft;
-   wxInt64 mSnapRight;
+   wxInt64 mSnapLeft{ -1 };
+   wxInt64 mSnapRight{ -1 };
 
-   bool mSelStartValid;
-   double mSelStart;
+   bool mSelStartValid{};
+   double mSelStart{ 0.0 };
 
-   int mSelectionBoundary;
+   int mSelectionBoundary{ 0 };
 
    enum eFreqSelMode {
       FREQ_SEL_INVALID,
@@ -131,7 +133,7 @@ private:
       FREQ_SEL_FREE,
       FREQ_SEL_TOP_FREE,
       FREQ_SEL_BOTTOM_FREE,
-   }  mFreqSelMode;
+   }  mFreqSelMode{ FREQ_SEL_INVALID };
    std::weak_ptr<const WaveTrack> mFreqSelTrack;
    // Following holds:
    // the center for FREQ_SEL_PINNED_CENTER,
@@ -139,16 +141,15 @@ private:
    // a frequency boundary for FREQ_SEL_FREE, FREQ_SEL_TOP_FREE, or
    // FREQ_SEL_BOTTOM_FREE,
    // and is ignored otherwise.
-   double mFreqSelPin;
+   double mFreqSelPin{ -1.0 };
    std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
 
-   int mMostRecentX, mMostRecentY;
+   int mMostRecentX{ -1 }, mMostRecentY{ -1 };
 
-   bool mAutoScrolling;
+   bool mAutoScrolling{};
 
-   AudacityProject *mConnectedProject;
+   AudacityProject *mConnectedProject{};
 
    std::unique_ptr<SelectionStateChanger> mSelectionStateChanger;
 };
-
 #endif
