@@ -105,6 +105,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    CommandManager(const CommandManager&) PROHIBITED;
    CommandManager &operator= (const CommandManager&) PROHIBITED;
 
+   void SetMaxList();
    void PurgeData();
 
    //
@@ -316,6 +317,9 @@ protected:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
 private:
+   // mMaxList only holds shortcuts that should not be added (by default).
+   wxSortedArrayString mMaxListOnly;
+
    MenuBarList  mMenuBarList;
    SubMenuList  mSubMenuList;
    CommandList  mCommandList;

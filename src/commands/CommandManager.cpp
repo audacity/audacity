@@ -425,6 +425,9 @@ CommandManager::CommandManager():
    bMakingOccultCommands( false )
 {
    mbSeparatorAllowed = false;
+   SetMaxList();
+
+
 }
 
 ///
@@ -435,6 +438,75 @@ CommandManager::~CommandManager()
    //WARNING: This removes menubars that could still be assigned to windows!
    PurgeData();
 }
+
+// CommandManager needs to know which defaults are standard and which are in the 
+// full (max) list.
+void CommandManager::SetMaxList()
+{
+
+   // This list is a DUPLICATE of the list in
+   // KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
+
+   // TODO: At a later date get rid of the maxList entirely and
+   // instead use flags in the menu entrys to indicate whether the default 
+   // shortcut is standard or full.
+
+   mMaxListOnly.Clear();
+   // These short cuts are for the max list only....
+   //mMaxListOnly.Add( "Ctrl+I" );
+   mMaxListOnly.Add( "Ctrl+Alt+I" );
+   mMaxListOnly.Add( "Ctrl+J" );
+   mMaxListOnly.Add( "Ctrl+Alt+J" );
+   mMaxListOnly.Add( "Ctrl+Alt+V" );
+   mMaxListOnly.Add( "Alt+X" );
+   mMaxListOnly.Add( "Alt+K" );
+   mMaxListOnly.Add( "Shift+Alt+X" );
+   mMaxListOnly.Add( "Shift+Alt+K" );
+   mMaxListOnly.Add( "Alt+L" );
+   mMaxListOnly.Add( "Shift+Alt+C" );
+   mMaxListOnly.Add( "Alt+I" );
+   mMaxListOnly.Add( "Alt+J" );
+   mMaxListOnly.Add( "Shift+Alt+J" );
+   mMaxListOnly.Add( "Ctrl+Shift+A" );
+   mMaxListOnly.Add( "Q" );
+   mMaxListOnly.Add( "Shift+J" );
+   mMaxListOnly.Add( "Shift+K" );
+   //mMaxListOnly.Add( "Shift+Home" );
+   //mMaxListOnly.Add( "Shift+End" );
+   mMaxListOnly.Add( "Ctrl+[" );
+   mMaxListOnly.Add( "Ctrl+]" );
+   mMaxListOnly.Add( "1" );
+   mMaxListOnly.Add( "Shift+F5" );
+   mMaxListOnly.Add( "Shift+F6" );
+   mMaxListOnly.Add( "Shift+F7" );
+   mMaxListOnly.Add( "Shift+F8" );
+   mMaxListOnly.Add( "Ctrl+Shift+F5" );
+   mMaxListOnly.Add( "Ctrl+Shift+F7" );
+   mMaxListOnly.Add( "Ctrl+Shift+N" );
+   mMaxListOnly.Add( "Ctrl+Shift+M" );
+   mMaxListOnly.Add( "Ctrl+Home" );
+   mMaxListOnly.Add( "Ctrl+End" );
+   mMaxListOnly.Add( "Shift+C" );
+   mMaxListOnly.Add( "Alt+Shift+Up" );
+   mMaxListOnly.Add( "Alt+Shift+Down" );
+   mMaxListOnly.Add( "Shift+P" );
+   mMaxListOnly.Add( "Alt+Shift+Left" );
+   mMaxListOnly.Add( "Alt+Shift+Right" );
+   mMaxListOnly.Add( "Ctrl+Shift+T" );
+   //mMaxListOnly.Add( "Command+M" );
+   //mMaxListOnly.Add( "Option+Command+M" );
+   mMaxListOnly.Add( "Shift+H" );
+   mMaxListOnly.Add( "Shift+O" );
+   mMaxListOnly.Add( "Shift+I" );
+   mMaxListOnly.Add( "Shift+N" );
+   mMaxListOnly.Add( "D" );
+   mMaxListOnly.Add( "A" );
+   mMaxListOnly.Add( "Alt+Shift+F6" );
+   mMaxListOnly.Add( "Alt+F6" );
+
+   mMaxListOnly.Sort();
+}
+
 
 void CommandManager::PurgeData()
 {
@@ -907,6 +979,14 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       entry->wantKeyup = (accel.Find(wxT("\twantKeyup")) != wxNOT_FOUND) || entry->skipKeydown;
       entry->isGlobal = false;
       entry->isOccult = bMakingOccultCommands;
+
+      // Exclude accelerators that are in the MaxList.
+      // Note that the default is unaffected, intentionally so.
+      // There are effectively two levels of default, the full (max) list
+      // and the normal reduced list.
+      if( mMaxListOnly.Index( entry->key ) !=-1) 
+         entry->key = wxT("");
+
 
       // For key bindings for commands with a list, such as effects,
       // the name in prefs is the category name plus the effect name.

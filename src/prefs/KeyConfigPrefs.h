@@ -47,6 +47,7 @@ private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void RefreshBindings(bool bSort);
+   void FilterKeys( wxArrayString & arr );
    wxString NameFromKey(const wxString & key);
    void SetKeyForSelected(const wxString & key);
 
@@ -86,7 +87,8 @@ private:
    int mCommandSelected;
 
    wxArrayString mNames;
-   wxArrayString mDefaultKeys;
+   wxArrayString mDefaultKeys; // The full set.
+   wxArrayString mStandardDefaultKeys; // The reduced set.
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.
 
