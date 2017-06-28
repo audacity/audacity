@@ -48,7 +48,8 @@ HitTestResult TrackControls::HitTest
    if (NULL != (result = CloseButtonHandle::HitTest(event, rect)).handle)
       return result;
 
-   if (NULL != (result = MenuButtonHandle::HitTest(event, rect, this)).handle)
+   if (NULL != (result = MenuButtonHandle::HitTest(event, rect,
+         this->FindTrack()->GetTrackControl())).handle)
       return result;
 
    if (NULL != (result = MinimizeButtonHandle::HitTest(event, rect)).handle)

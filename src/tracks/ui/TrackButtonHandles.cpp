@@ -148,11 +148,15 @@ MenuButtonHandle &MenuButtonHandle::Instance()
 UIHandle::Result MenuButtonHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *, wxWindow *pParent)
 {
-   return mpCell->DoContextMenu(mRect, pParent, NULL);
+   auto pCell = mpCell.lock();
+   if (!pCell)
+      return RefreshCode::Cancelled;
+   return pCell->DoContextMenu(mRect, pParent, NULL);
 }
 
 HitTestResult MenuButtonHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect, TrackPanelCell *pCell)
+(const wxMouseEvent &event, const wxRect &rect,
+ const std::shared_ptr<TrackPanelCell> &pCell)
 {
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);

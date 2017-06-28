@@ -76,10 +76,11 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect, TrackPanelCell *pCell);
+      (const wxMouseEvent &event, const wxRect &rect,
+       const std::shared_ptr<TrackPanelCell> &pCell);
 
 private:
-   TrackPanelCell *mpCell{};
+   std::weak_ptr<TrackPanelCell> mpCell;
 };
 
 #endif
