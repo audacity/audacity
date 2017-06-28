@@ -469,6 +469,12 @@ HitTestResult SelectHandle::HitTest
 
    MaySetOnDemandTip(pTrack, tip);
 
+   if (tip == "") {
+      const auto ttb = pProject->GetToolsToolBar();
+      if (ttb)
+         tip = ttb->GetMessageForTool(selectTool);
+   }
+   
    return HitTestResult{ { tip, pCursor }, &Instance() };
 }
 
@@ -852,7 +858,7 @@ UIHandle::Result SelectHandle::Drag
 }
 
 HitTestPreview SelectHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseEvent &, const AudacityProject *pProject)
 {
    wxString tip;
    wxCursor *pCursor;
@@ -860,6 +866,11 @@ HitTestPreview SelectHandle::Preview
       (SelectionBoundary(mSelectionBoundary),
        (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER),
        tip, pCursor);
+   if (tip == "") {
+      const auto ttb = pProject->GetToolsToolBar();
+      if (ttb)
+         tip = ttb->GetMessageForTool(selectTool);
+   }
    return { tip, pCursor };
 }
 
