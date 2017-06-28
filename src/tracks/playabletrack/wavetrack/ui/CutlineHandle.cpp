@@ -40,7 +40,7 @@ HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
    return {
       (cutline
        ? _("Left-Click to expand, Right-Click to remove")
-       : _("Left-Click to join clips")),
+       : _("Left-Click to join clips. Click & drag to the line to make it a selection edge.")),
       (unsafe
        ? &*disabledCursor
        : &arrowCursor)
