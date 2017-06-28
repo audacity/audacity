@@ -109,8 +109,8 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 UIHandle::Result NoteTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   mpTrack = Track::Pointer<NoteTrack>(
-      static_cast<NoteTrackVRulerControls*>(evt.pCell)->FindTrack() );
+   mpTrack = std::static_pointer_cast<NoteTrack>(
+      static_cast<NoteTrackVRulerControls*>(evt.pCell.get())->FindTrack() );
    mRect = evt.rect;
 
    const wxMouseEvent &event = evt.event;
@@ -127,14 +127,15 @@ UIHandle::Result NoteTrackVZoomHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (!mpTrack.lock())
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if (!pTrack)
       return Cancelled;
 
    const wxMouseEvent &event = evt.event;
    mZoomEnd = event.m_y;
    if (IsDragZooming(mZoomStart, mZoomEnd)) {
       // changed Note track to work like audio track
-      //         mpTrack->VScroll(mZoomStart, mZoomEnd);
+      //         pTrack->VScroll(mZoomStart, mZoomEnd);
       return RefreshAll;
    }
    return RefreshNone;
@@ -151,7 +152,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 
@@ -184,7 +185,7 @@ UIHandle::Result NoteTrackVZoomHandle::Cancel(AudacityProject *pProject)
 void NoteTrackVZoomHandle::DrawExtras
 (DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
 {
-   if (!mpTrack.lock())
+   if (!mpTrack.lock()) //? TrackList::Lock()
       return;
 
    if ( pass == UIHandle::Cells &&

@@ -1,5 +1,3 @@
-#include "WaveTrackSliderHandles.h"
-
 /**********************************************************************
 
 Audacity: A Digital Audio Editor
@@ -36,29 +34,30 @@ GainSliderHandle &GainSliderHandle::Instance()
    return instance;
 }
 
-WaveTrack *GainSliderHandle::GetTrack()
+std::shared_ptr<WaveTrack> GainSliderHandle::GetWaveTrack()
 {
-   return static_cast<WaveTrack*>(mpTrack);
+   return std::static_pointer_cast<WaveTrack>(mpTrack.lock());
 }
 
 float GainSliderHandle::GetValue()
 {
-   return static_cast<WaveTrack*>(mpTrack)->GetGain();
+   return GetWaveTrack()->GetGain();
 }
 
 UIHandle::Result GainSliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
-   GetTrack()->SetGain(newValue);
+   auto pTrack = GetWaveTrack();
+   pTrack->SetGain(newValue);
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mpTrack->GetLink());
+   const auto link = static_cast<WaveTrack*>(mpTrack.lock()->GetLink());
    if (link)
       link->SetGain(newValue);
 
    MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
    if (pMixerBoard)
-      pMixerBoard->UpdateGain(GetTrack());
+      pMixerBoard->UpdateGain(pTrack.get());
 
    return RefreshCode::RefreshNone;
 }
@@ -72,7 +71,7 @@ UIHandle::Result GainSliderHandle::CommitChanges
 
 HitTestResult GainSliderHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *, Track *pTrack)
+ const AudacityProject *, const std::shared_ptr<Track> &pTrack)
 {
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return {};
@@ -120,33 +119,34 @@ PanSliderHandle &PanSliderHandle::Instance()
    return instance;
 }
 
-WaveTrack *PanSliderHandle::GetTrack()
+std::shared_ptr<WaveTrack> PanSliderHandle::GetWaveTrack()
 {
-   return static_cast<WaveTrack*>(mpTrack);
+   return std::static_pointer_cast<WaveTrack>(mpTrack.lock());
 }
 
 float PanSliderHandle::GetValue()
 {
-   return GetTrack()->GetPan();
+   return GetWaveTrack()->GetPan();
 }
 
 UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newValue)
 {
+   auto pTrack = GetWaveTrack();
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    bool panZero = false;
    panZero = static_cast<WaveTrack*>(mpTrack)->SetPan(newValue);
 #else
-   mpTrack->SetPan(newValue);
+   pTrack->SetPan(newValue);
 #endif
 
    // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mpTrack->GetLink());
+   const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
    if (link)
       link->SetPan(newValue);
 
    MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
    if (pMixerBoard)
-      pMixerBoard->UpdatePan(GetTrack());
+      pMixerBoard->UpdatePan(pTrack.get());
 
    using namespace RefreshCode;
    Result result = RefreshNone;
@@ -168,7 +168,7 @@ UIHandle::Result PanSliderHandle::CommitChanges
 
 HitTestResult PanSliderHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+ const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return {};

@@ -765,16 +765,11 @@ void TrackPanel::CancelDragging()
 {
    if (mUIHandle) {
       UIHandle::Result refreshResult = mUIHandle->Cancel(GetProject());
-      {
-         // TODO: avoid dangling pointers to mpClickedTrack
-         // when the undo stack management of the typical Cancel override
-         // causes it to relocate.  That is implement some means to
-         // re-fetch the track according to its position in the list.
-         // (Or should all Tracks be managed always by std::shared_ptr?)
-         mpClickedTrack = NULL;
-      }
-      ProcessUIHandleResult(this, mRuler, mpClickedTrack, NULL, refreshResult);
-      mpClickedTrack = NULL;
+      auto pTrack = GetTracks()->Lock(mpClickedTrack);
+      if (pTrack)
+         ProcessUIHandleResult(
+            this, mRuler, pTrack.get(), NULL, refreshResult);
+      mpClickedTrack.reset();
       mUIHandle = NULL;
       Uncapture();
    }
@@ -855,7 +850,7 @@ void TrackPanel::HandleCursor( wxMouseEvent *pEvent )
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
    const auto size = GetSize();
-   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell.get() };
+   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
    HandleCursor( tpmEvent );
 }
 
@@ -875,12 +870,13 @@ void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
       wxString tip;
 
       auto pCell = tpmEvent.pCell;
-      auto track = static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
+      auto track = static_cast<CommonTrackPanelCell*>( pCell.get() )->FindTrack();
       if (pCell && pCursor == NULL && tip == wxString()) {
          const auto size = GetSize();
          HitTestResult hitTest( pCell->HitTest(tpmEvent, GetProject()) );
          tip = hitTest.preview.message;
-         ProcessUIHandleResult(this, mRuler, track, track, hitTest.preview.refreshCode);
+         ProcessUIHandleResult
+            (this, mRuler, track.get(), track.get(), hitTest.preview.refreshCode);
          pCursor = hitTest.preview.cursor;
          if (pCursor)
             SetCursor(*pCursor);
@@ -1233,8 +1229,8 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
 
    unsigned result =
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
-   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
-   ProcessUIHandleResult(this, mRuler, pTrack, pTrack, result);
+   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
+   ProcessUIHandleResult(this, mRuler, pTrack.get(), pTrack.get(), result);
 }
 
 /// Filter captured keys typed into LabelTracks.
@@ -1382,7 +1378,7 @@ try
    auto &pTrack = foundCell.pTrack;
 
    const auto size = GetSize();
-   TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell.get() };
+   TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
 
 #if defined(__WXMAC__) && defined(EVT_MAGNIFY)
    // PRL:
@@ -1457,16 +1453,17 @@ try
    }
 
    if (mUIHandle) {
+      auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
       if (event.Dragging()) {
          // UIHANDLE DRAG
          const UIHandle::Result refreshResult =
             mUIHandle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
-            (this, mRuler, mpClickedTrack, pTrack.get(), refreshResult);
+            (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
             mUIHandle = NULL;
-            mpClickedTrack = NULL;
+            mpClickedTrack.reset();
             Uncapture( &event );
          }
          else
@@ -1482,8 +1479,8 @@ try
          UIHandle::Result refreshResult =
             uiHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
-            (this, mRuler, mpClickedTrack, pTrack.get(), refreshResult);
-         mpClickedTrack = NULL; 
+            (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
+         mpClickedTrack.reset();
          // will also Uncapture() below
       }
    }
@@ -1530,7 +1527,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    const auto &event = tpmEvent.event;
    auto pCell = tpmEvent.pCell;
    const auto &rect = tpmEvent.rect;
-   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell )->FindTrack();
+   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell.get() )->FindTrack();
 
    if ( !mUIHandle && pCell )
       mUIHandle =
@@ -1544,7 +1541,8 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          mUIHandle = NULL;
       else
          mpClickedTrack = pTrack;
-      ProcessUIHandleResult(this, mRuler, pTrack, pTrack, refreshResult);
+      ProcessUIHandleResult
+         (this, mRuler, pTrack.get(), pTrack.get(), refreshResult);
       HandleCursor( tpmEvent );
    }
 }
@@ -2179,7 +2177,8 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
       // when TrackPanelCell gets a virtual function into which we move this
       // drawing code.
       MouseCaptureEnum(TrackControls::gCaptureState);
-   const bool captured = (t == mpClickedTrack);
+   auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
+   const bool captured = (t == pClickedTrack.get());
 
    TrackInfo::DrawItems( dc, rect, *t, mouseCapture, captured );
 
@@ -2513,8 +2512,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       iter = prev;
    auto found = *iter;
    return {
-      Track::Pointer(
-         static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack() ),
+      static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack(),
       found.first,
       found.second
    };

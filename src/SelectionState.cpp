@@ -130,7 +130,7 @@ void SelectionState::ChangeSelectionOnShiftClick
    Track* pFirst = nullptr;
    Track* pLast = nullptr;
    // We will either extend from the first or from the last.
-   auto pExtendFrom = mLastPickedTrack.lock();
+   auto pExtendFrom = tracks.Lock(mLastPickedTrack);
 
    if( !pExtendFrom ) {
       TrackListIterator iter( &tracks );

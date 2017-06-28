@@ -12,6 +12,7 @@ Paul Licameli
 #include "SliderHandle.h"
 #include "../../widgets/ASlider.h"
 #include "../../HitTestResult.h"
+#include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 
@@ -84,7 +85,7 @@ UIHandle::Result SliderHandle::Release
    result |= SetValue(pProject, newValue);
    result |= CommitChanges(event, pProject);
 
-   mpTrack = nullptr;
+   mpTrack.reset();
    return result;
 }
 
@@ -95,6 +96,12 @@ UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
 
    // Undo un-committed changes to project data:
    auto result = SetValue(pProject, mStartingValue);
-   mpTrack = nullptr;
+   mpTrack.reset();
    return RefreshCode::RefreshCell | result;
+}
+
+LWSlider *SliderHandle::GetSlider( AudacityProject *pProject )
+{
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   return mSliderFn( pProject, mRect, pTrack.get() );
 }

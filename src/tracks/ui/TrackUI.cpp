@@ -54,7 +54,7 @@ HitTestResult Track::HitTest
 
    // Finally, default of all is adjustment of the selection box.
    if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
-      result = SelectHandle::HitTest(event, pProject, this);
+      result = SelectHandle::HitTest(event, pProject, Pointer(this));
 
    return result;
 }

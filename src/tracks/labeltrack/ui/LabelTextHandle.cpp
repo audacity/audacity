@@ -38,7 +38,8 @@ HitTestPreview LabelTextHandle::HitPreview()
    };
 }
 
-HitTestResult LabelTextHandle::HitTest(const wxMouseEvent &event, LabelTrack *pLT)
+HitTestResult LabelTextHandle::HitTest
+(const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT)
 {
    // If Control is down, let the select handle be hit instead
    if (!event.ControlDown() &&
@@ -63,11 +64,11 @@ UIHandle::Result LabelTextHandle::Click
    mChanger =
       std::make_unique< SelectionStateChanger >( selectionState, *tracks );
 
-   TrackPanelCell *const pCell = evt.pCell;
+   const auto pCell = evt.pCell;
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   auto pLT = Track::Pointer<LabelTrack>( static_cast<Track*>(pCell) );
+   auto pLT = std::static_pointer_cast<LabelTrack>(pCell);
    mpLT = pLT;
    mSelectedRegion = viewInfo.selectedRegion;
    pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
@@ -121,7 +122,7 @@ UIHandle::Result LabelTextHandle::Drag
    auto result = LabelDefaultClickHandle::Drag( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
-   auto pLT = mpLT.lock();
+   auto pLT = pProject->GetTracks()->Lock(mpLT);
    if(pLT)
       pLT->HandleTextDragRelease(event);
 
@@ -169,7 +170,7 @@ UIHandle::Result LabelTextHandle::Release
    }
 
    const wxMouseEvent &event = evt.event;
-   auto pLT = mpLT.lock();
+   auto pLT = pProject->GetTracks()->Lock(mpLT);
    if (pLT)
       pLT->HandleTextDragRelease(event);
 

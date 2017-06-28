@@ -53,7 +53,7 @@ void LabelDefaultClickHandle::RestoreState( AudacityProject *pProject )
 {
    if ( mLabelState ) {
       for ( const auto &pair : mLabelState->mPairs )
-         if (auto pLt = pair.first.lock())
+         if (auto pLt = pProject->GetTracks()->Lock(pair.first))
             pLt->RestoreFlags( pair.second );
       mLabelState.reset();
    }
@@ -66,7 +66,7 @@ UIHandle::Result LabelDefaultClickHandle::Click
    // Redraw to show the change of text box selection status
    UIHandle::Result result = RefreshAll;
 
-   LabelTrack *pLT = static_cast<LabelTrack*>(evt.pCell);
+   auto pLT = static_cast<LabelTrack*>(evt.pCell.get());
 
    if (evt.event.LeftDown())
    {
@@ -77,7 +77,7 @@ UIHandle::Result LabelDefaultClickHandle::Click
       Track *n = iter.First();
 
       while (n) {
-         if (n->GetKind() == Track::Label && evt.pCell != n) {
+         if (n->GetKind() == Track::Label && evt.pCell.get() != n) {
             LabelTrack *const lt = static_cast<LabelTrack*>(n);
             lt->ResetFlags();
             lt->Unselect();

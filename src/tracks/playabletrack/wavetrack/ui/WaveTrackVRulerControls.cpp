@@ -559,8 +559,8 @@ WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
 UIHandle::Result WaveTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {
-   mpTrack = Track::Pointer<WaveTrack>(
-      static_cast<WaveTrackVRulerControls*>(evt.pCell)->FindTrack() );
+   mpTrack = std::static_pointer_cast<WaveTrack>(
+      static_cast<WaveTrackVRulerControls*>(evt.pCell.get())->FindTrack() );
    mRect = evt.rect;
 
    const wxMouseEvent &event = evt.event;
@@ -571,10 +571,11 @@ UIHandle::Result WaveTrackVZoomHandle::Click
 }
 
 UIHandle::Result WaveTrackVZoomHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (!mpTrack.lock())
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if (!pTrack)
       return Cancelled;
 
    const wxMouseEvent &event = evt.event;
@@ -595,7 +596,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 
@@ -640,7 +641,7 @@ UIHandle::Result WaveTrackVZoomHandle::Cancel(AudacityProject*)
 void WaveTrackVZoomHandle::DrawExtras
 (DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
 {
-   if (!mpTrack.lock())
+   if (!mpTrack.lock()) // TrackList::Lock()?
       return;
 
    if ( pass == UIHandle::Cells &&
@@ -674,13 +675,13 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    // is a narrow enough target.
    evt.event.Skip(false);
 
-   Track *const pTrack = FindTrack();
+   const auto pTrack = FindTrack();
    if (!pTrack)
       return RefreshNone;
    wxASSERT(pTrack->GetKind() == Track::Wave);
    auto steps = evt.steps;
 
-   WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
    // Assume linked track is wave or null
    const auto partner = static_cast<WaveTrack*>(wt->GetLink());
    const bool isDB =

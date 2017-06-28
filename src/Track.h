@@ -308,7 +308,7 @@ class AUDACITY_DLL_API Track /* not final */
    bool IsSyncLockSelected() const;
 
 protected:
-   Track *FindTrack() override;
+   std::shared_ptr<Track> FindTrack() override;
 
    // These are called to create controls on demand:
    virtual std::shared_ptr<TrackControls> GetControls() = 0;
@@ -605,6 +605,17 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 
    /// Mainly a test function. Uses a linear search, so could be slow.
    bool Contains(const Track * t) const;
+
+   // Return non-null only if the weak pointer is not, and the track is
+   // owned by this list; constant time.
+   template <typename Subclass>
+   std::shared_ptr<Subclass> Lock(const std::weak_ptr<Subclass> &wTrack)
+   {
+      auto pTrack = wTrack.lock();
+      if (pTrack && this == pTrack->mList)
+         return pTrack;
+      return {};
+   }
 
    bool IsEmpty() const;
    int GetCount() const;

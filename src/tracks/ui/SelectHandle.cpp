@@ -394,7 +394,8 @@ namespace
 }
 
 HitTestResult SelectHandle::HitTest
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject, const Track *pTrack)
+(const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
+ const std::shared_ptr<Track> &pTrack)
 {
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
@@ -429,7 +430,7 @@ HitTestResult SelectHandle::HitTest
    // the preferences...
    if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
    {
-      MaySetOnDemandTip(pTrack, tip);
+      MaySetOnDemandTip(pTrack.get(), tip);
       return { { tip, pCursor }, &Instance() };
    }
 
@@ -463,11 +464,11 @@ HitTestResult SelectHandle::HitTest
    // choose boundaries only in snapping tolerance,
    // and may choose center.
    SelectionBoundary boundary =
-      ChooseBoundary(viewInfo, event, pTrack, rect, !bModifierDown, !bModifierDown);
+      ChooseBoundary(viewInfo, event, pTrack.get(), rect, !bModifierDown, !bModifierDown);
 
    SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
 
-   MaySetOnDemandTip(pTrack, tip);
+   MaySetOnDemandTip(pTrack.get(), tip);
 
    if (tip == "") {
       const auto ttb = pProject->GetToolsToolBar();
@@ -510,7 +511,7 @@ UIHandle::Result SelectHandle::Click
    using namespace RefreshCode;
 
    wxMouseEvent &event = evt.event;
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
+   const auto pTrack = static_cast<Track*>(evt.pCell.get());
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
    mMostRecentX = event.m_x;
@@ -616,7 +617,7 @@ UIHandle::Result SelectHandle::Click
 #endif
             mSelStartValid = true;
             mSelStart = value;
-            AdjustSelection(viewInfo, event.m_x, mRect.x, pTrack);
+            AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -795,7 +796,7 @@ UIHandle::Result SelectHandle::Drag
    }
 
    // Also fuhggeddaboudit if not in a track.
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 
@@ -815,10 +816,10 @@ UIHandle::Result SelectHandle::Drag
    }
 
    if ( auto clickedTrack =
-       static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack() ) {
+       static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
       // Handle which tracks are selected
       Track *sTrack = pTrack.get();
-      Track *eTrack = clickedTrack;
+      Track *eTrack = clickedTrack.get();
       auto trackList = pProject->GetTracks();
       auto pMixerBoard = pProject->GetMixerBoard();
       if ( sTrack && eTrack && !event.ControlDown() ) {
@@ -835,13 +836,13 @@ UIHandle::Result SelectHandle::Drag
          (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
       else
 #endif
-         if (mFreqSelTrack.lock() == pTrack)
+         if (pProject->GetTracks()->Lock(mFreqSelTrack) == pTrack)
             AdjustFreqSelection(
                                 static_cast<WaveTrack*>(pTrack.get()),
                                 viewInfo, y, mRect.y, mRect.height);
 #endif
       
-      AdjustSelection(viewInfo, x, mRect.x, clickedTrack);
+      AdjustSelection(pProject, viewInfo, x, mRect.x, clickedTrack.get());
    }
 
    return RefreshNone
@@ -996,7 +997,7 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       }
    }
 
-   auto pTrack = mpTrack.lock();
+   auto pTrack = mpTrack.lock(); // TrackList::Lock() ?
    if (mAutoScrolling && pTrack) {
       // AS: To keep the selection working properly as we scroll,
       //  we fake a mouse event (remember, this method is called
@@ -1005,7 +1006,7 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       // AS: For some reason, GCC won't let us pass this directly.
       wxMouseEvent evt(wxEVT_MOTION);
       const auto size = trackPanel->GetSize();
-      Drag(TrackPanelMouseEvent{ evt, mRect, size, pTrack.get() }, project);
+      Drag(TrackPanelMouseEvent{ evt, mRect, size, pTrack }, project);
       mAutoScrolling = false;
       mConnectedProject->GetTrackPanel()->Refresh(false);
    }
@@ -1025,7 +1026,7 @@ void SelectHandle::StartSelection
       mSnapLeft = -1;
       mSnapRight = -1;
       bool snappedPoint, snappedTime;
-      auto pTrack = mpTrack.lock();
+      auto pTrack = pProject->GetTracks()->Lock(mpTrack);
       if (mSnapManager->Snap(pTrack.get(), mSelStart, false,
          &s, &snappedPoint, &snappedTime)) {
          if (snappedPoint)
@@ -1044,7 +1045,8 @@ void SelectHandle::StartSelection
 
 /// Extend or contract the existing selection
 void SelectHandle::AdjustSelection
-(ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
+(AudacityProject *pProject,
+ ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
  Track *track)
 {
    if (!mSelStartValid)
@@ -1058,7 +1060,7 @@ void SelectHandle::AdjustSelection
 
    auto pTrack = Track::Pointer( track );
    if (!pTrack)
-      pTrack = mpTrack.lock();
+      pTrack = pProject->GetTracks()->Lock(mpTrack);
 
    if (mSelStart < selend) {
       sel0 = mSelStart;

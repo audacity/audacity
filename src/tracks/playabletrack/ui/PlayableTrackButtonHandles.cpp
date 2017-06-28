@@ -45,12 +45,12 @@ UIHandle::Result MuteButtonHandle::CommitChanges
 
 HitTestResult MuteButtonHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, const Track *pTrack)
+ const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    wxRect buttonRect;
    if ( pTrack )
       TrackInfo::GetMuteSoloRect(rect, buttonRect, false,
-         !pProject->IsSoloNone(), pTrack);
+         !pProject->IsSoloNone(), pTrack.get());
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
@@ -94,12 +94,12 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 
 HitTestResult SoloButtonHandle::HitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, const Track *pTrack)
+ const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    wxRect buttonRect;
    if ( pTrack )
       TrackInfo::GetMuteSoloRect(rect, buttonRect, true,
-         !pProject->IsSoloNone(), pTrack);
+         !pProject->IsSoloNone(), pTrack.get());
 
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};

@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "LabelDefaultClickHandle.h"
 #include <wx/gdicmn.h>
+#include "../../../MemoryX.h"
 
 class wxMouseEvent;
 struct HitTestResult;
@@ -28,7 +29,7 @@ class LabelGlyphHandle final : public LabelDefaultClickHandle
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, LabelTrack *pLT);
+      (const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT);
 
    virtual ~LabelGlyphHandle();
 
@@ -51,7 +52,7 @@ public:
    bool StopsOnKeystroke() override { return true; }
 
 private:
-   LabelTrack *mpLT {};
+   std::shared_ptr<LabelTrack> mpLT {};
    wxRect mRect {};
 };
 

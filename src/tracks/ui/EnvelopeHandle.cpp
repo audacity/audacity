@@ -81,43 +81,43 @@ namespace {
 
 HitTestResult EnvelopeHandle::TimeTrackHitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, TimeTrack &tt)
+ const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt)
 {
-   auto envelope = tt.GetEnvelope();
+   auto envelope = tt->GetEnvelope();
    if (!envelope)
       return {};
    bool dB;
    double dBRange;
    float zoomMin, zoomMax;
-   GetTimeTrackData( *pProject, tt, dBRange, dB, zoomMin, zoomMax);
+   GetTimeTrackData( *pProject, *tt, dBRange, dB, zoomMin, zoomMax);
    return EnvelopeHandle::HitEnvelope
       (event, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
 HitTestResult EnvelopeHandle::WaveTrackHitTest
 (const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, WaveTrack &wt)
+ const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt)
 {
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
-   const Envelope *const envelope = wt.GetEnvelopeAtX(event.GetX());
+   const Envelope *const envelope = wt->GetEnvelopeAtX(event.GetX());
 
    if (!envelope)
       return {};
 
-   const int displayType = wt.GetDisplay();
+   const int displayType = wt->GetDisplay();
    // Not an envelope hit, unless we're using a type of wavetrack display
    // suitable for envelopes operations, ie one of the Wave displays.
    if (displayType != WaveTrack::Waveform)
       return {};  // No envelope, not a hit, so return.
 
    // Get envelope point, range 0.0 to 1.0
-   const bool dB = !wt.GetWaveformSettings().isLinear();
+   const bool dB = !wt->GetWaveformSettings().isLinear();
 
    float zoomMin, zoomMax;
-   wt.GetDisplayBounds(&zoomMin, &zoomMax);
+   wt->GetDisplayBounds(&zoomMin, &zoomMax);
 
-   const float dBRange = wt.GetWaveformSettings().dBRange;
+   const float dBRange = wt->GetWaveformSettings().dBRange;
 
    return EnvelopeHandle::HitEnvelope
        (event, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
@@ -184,7 +184,7 @@ UIHandle::Result EnvelopeHandle::Click
 {
    const wxMouseEvent &event = evt.event;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
+   const auto pTrack = static_cast<Track*>(evt.pCell.get());
 
    using namespace RefreshCode;
    const bool unsafe = pProject->IsAudioActive();

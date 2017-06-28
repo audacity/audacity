@@ -34,7 +34,7 @@ protected:
 public:
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, const Track *pTrack);
+       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ protected:
 public:
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, const Track *pTrack);
+       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

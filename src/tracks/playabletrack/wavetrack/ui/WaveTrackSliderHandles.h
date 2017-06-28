@@ -26,7 +26,7 @@ class GainSliderHandle final : public SliderHandle
    virtual ~GainSliderHandle();
    static GainSliderHandle& Instance();
 
-   WaveTrack *GetTrack();
+   std::shared_ptr<WaveTrack> GetWaveTrack();
 
 protected:
    float GetValue() override;
@@ -40,7 +40,7 @@ protected:
 public:
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Track *pTrack);
+       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ class PanSliderHandle final : public SliderHandle
    virtual ~PanSliderHandle();
    static PanSliderHandle& Instance();
 
-   WaveTrack *GetTrack();
+   std::shared_ptr<WaveTrack> GetWaveTrack();
 
 protected:
    float GetValue() override;
@@ -67,7 +67,7 @@ protected:
 public:
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Track *pTrack);
+       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

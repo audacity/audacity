@@ -29,11 +29,11 @@ HitTestResult LabelTrack::DetailedHitTest
    const wxMouseEvent &event = evt.event;
 
    // Try label movement handles first
-   result = LabelGlyphHandle::HitTest(event, this);
+   result = LabelGlyphHandle::HitTest(event, Pointer<LabelTrack>(this));
 
    if ( !result.handle )
       // Missed glyph, try text box
-      result = LabelTextHandle::HitTest(event, this);
+      result = LabelTextHandle::HitTest(event, Pointer<LabelTrack>(this));
 
    return result;
 }

@@ -11,6 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SLIDER_HANDLE__
 #define __AUDACITY_SLIDER_HANDLE__
 
+#include "../../MemoryX.h"
 #include "../../UIHandle.h"
 #include <wx/gdicmn.h>
 
@@ -55,13 +56,12 @@ protected:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   // Derived track is expected to set these two before Click():
-   Track *mpTrack {};
+   // Derived class is expected to set these two before Click():
+   std::weak_ptr<Track> mpTrack;
    wxRect mRect{};
    using SliderFn = LWSlider *(*)( AudacityProject*, const wxRect&, Track* );
    SliderFn mSliderFn;
-   LWSlider *GetSlider( AudacityProject *pProject )
-   { return mSliderFn( pProject, mRect, mpTrack ); }
+   LWSlider *GetSlider( AudacityProject *pProject );
 
    float mStartingValue {};
 };

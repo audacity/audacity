@@ -12,10 +12,11 @@ Paul Licameli
 #define __AUDACITY_CUTLINE_HANDLE__
 
 #include "../../../../UIHandle.h"
+#include "../../../../MemoryX.h"
 
 class wxMouseEvent;
 struct HitTestResult;
-class Track;
+class WaveTrack;
 
 class CutlineHandle final : public UIHandle
 {
@@ -29,7 +30,7 @@ public:
    static HitTestResult HitAnywhere(const AudacityProject *pProject, bool cutline);
    static HitTestResult HitTest
       (const wxMouseEvent &event, const wxRect &rect,
-      const AudacityProject *pProject, Track *pTrack);
+      const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~CutlineHandle();
 

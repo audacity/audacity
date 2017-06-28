@@ -15,6 +15,7 @@ class wxMouseEvent;
 class wxRect;
 class wxSize;
 class TrackPanelCell;
+#include "MemoryX.h"
 
 // Augment a mouse event with information about which track panel cell and
 // sub-rectangle was hit.
@@ -22,7 +23,7 @@ struct TrackPanelMouseEvent
 {
    TrackPanelMouseEvent
       ( wxMouseEvent &event_, const wxRect &rect_, const wxSize &whole_,
-        TrackPanelCell *pCell_ )
+        const std::shared_ptr<TrackPanelCell> &pCell_ )
       : event{ event_ }
       , rect{ rect_ }
       , whole{ whole_ }
@@ -34,7 +35,7 @@ struct TrackPanelMouseEvent
    wxMouseEvent &event;
    const wxRect &rect;
    const wxSize &whole;
-   TrackPanelCell *pCell; // may be NULL
+   std::shared_ptr<TrackPanelCell> pCell; // may be NULL
    double steps;  // for mouse wheel rotation
 };
 

@@ -102,8 +102,8 @@ HitTestResult BackgroundCell::HitTest
    return BackgroundHandle::HitAnywhere();
 }
 
-Track *BackgroundCell::FindTrack()
+std::shared_ptr<Track> BackgroundCell::FindTrack()
 {
-   return nullptr;
+   return {};
 }
 
