@@ -2654,6 +2654,12 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       mHistoryWindow = NULL;
    }
 
+   // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
+   // before the TrackPanel is destroyed. This change was needed to stop Audacity
+   // crashing when running with Jaws on Windows 10 1703.
+   if (mRuler)
+	   mRuler->Destroy();
+
    // Destroy the TrackPanel early so it's not around once we start
    // deleting things like tracks and such out from underneath it.
    // Check validity of mTrackPanel per bug 584 Comment 1.

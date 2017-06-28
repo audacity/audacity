@@ -444,6 +444,13 @@ ToolManager::~ToolManager()
    // Save the toolbar states
    WriteConfig();
 
+   // This function causes the toolbars to be destroyed, so
+   // clear the configuration of the ToolDocks which refer to
+   // these toolbars. This change was needed to stop Audacity
+   // crashing when running with Jaws on Windows 10 1703.
+   mTopDock->GetConfiguration().Clear();
+   mBotDock->GetConfiguration().Clear();
+
    // Remove handlers from parent
    mParent->Disconnect( wxEVT_LEFT_UP,
                         wxMouseEventHandler( ToolManager::OnMouse ),
