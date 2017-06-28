@@ -84,6 +84,7 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
       track = Track::Pointer( iter.First() );
    }
 
+   mFocusedTrack = track;
 
 #if wxUSE_ACCESSIBILITY
    if( track )
@@ -104,8 +105,6 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
       }
    }
 #endif
-
-   mFocusedTrack = track;
 
    return track;
 }
