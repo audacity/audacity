@@ -153,7 +153,7 @@ UIHandle::Result TrackPanelResizeHandle::Click
 UIHandle::Result TrackPanelResizeHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if ( !pTrack )
       return RefreshCode::Cancelled;
 
@@ -338,7 +338,7 @@ UIHandle::Result TrackPanelResizeHandle::Release
 
 UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
 {
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if ( !pTrack )
       return RefreshCode::Cancelled;
 
@@ -357,7 +357,7 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
       pTrack->SetHeight(mInitialUpperActualHeight);
       pTrack->SetMinimized(mInitialMinimized);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if( !MONO_WAVE_PAN(mpTrack) )
+      if( !MONO_WAVE_PAN(pTrack) )
 #endif
       {
          next->SetHeight(mInitialActualHeight);
@@ -371,7 +371,7 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
       pTrack->SetHeight(mInitialActualHeight);
       pTrack->SetMinimized(mInitialMinimized);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      if( !MONO_WAVE_PAN(mpTrack) )
+      if( !MONO_WAVE_PAN(pTrack) )
 #endif
       {
          prev->SetHeight(mInitialUpperActualHeight);

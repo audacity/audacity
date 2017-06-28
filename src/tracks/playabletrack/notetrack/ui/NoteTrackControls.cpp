@@ -121,7 +121,7 @@ UIHandle::Result NoteTrackClickHandle::Release
 {
    using namespace RefreshCode;
 
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
 

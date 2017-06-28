@@ -122,7 +122,7 @@ UIHandle::Result LabelTextHandle::Drag
    auto result = LabelDefaultClickHandle::Drag( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
-   auto pLT = mpLT.lock();
+   auto pLT = pProject->GetTracks()->Lock(mpLT);
    if(pLT)
       pLT->HandleTextDragRelease(event);
 
@@ -170,7 +170,7 @@ UIHandle::Result LabelTextHandle::Release
    }
 
    const wxMouseEvent &event = evt.event;
-   auto pLT = mpLT.lock();
+   auto pLT = pProject->GetTracks()->Lock(mpLT);
    if (pLT)
       pLT->HandleTextDragRelease(event);
 

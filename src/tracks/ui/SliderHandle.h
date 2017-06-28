@@ -61,8 +61,7 @@ protected:
    wxRect mRect{};
    using SliderFn = LWSlider *(*)( AudacityProject*, const wxRect&, Track* );
    SliderFn mSliderFn;
-   LWSlider *GetSlider( AudacityProject *pProject )
-   { return mSliderFn( pProject, mRect, mpTrack.lock().get() ); }
+   LWSlider *GetSlider( AudacityProject *pProject );
 
    float mStartingValue {};
 };

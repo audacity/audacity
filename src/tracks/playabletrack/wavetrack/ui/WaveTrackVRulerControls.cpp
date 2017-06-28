@@ -571,10 +571,11 @@ UIHandle::Result WaveTrackVZoomHandle::Click
 }
 
 UIHandle::Result WaveTrackVZoomHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (!mpTrack.lock())
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if (!pTrack)
       return Cancelled;
 
    const wxMouseEvent &event = evt.event;
@@ -595,7 +596,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 
@@ -640,7 +641,7 @@ UIHandle::Result WaveTrackVZoomHandle::Cancel(AudacityProject*)
 void WaveTrackVZoomHandle::DrawExtras
 (DrawingPass pass, wxDC * dc, const wxRegion &, const wxRect &panelRect)
 {
-   if (!mpTrack.lock())
+   if (!mpTrack.lock()) // TrackList::Lock()?
       return;
 
    if ( pass == UIHandle::Cells &&

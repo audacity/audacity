@@ -53,7 +53,7 @@ void LabelDefaultClickHandle::RestoreState( AudacityProject *pProject )
 {
    if ( mLabelState ) {
       for ( const auto &pair : mLabelState->mPairs )
-         if (auto pLt = pair.first.lock())
+         if (auto pLt = pProject->GetTracks()->Lock(pair.first))
             pLt->RestoreFlags( pair.second );
       mLabelState.reset();
    }

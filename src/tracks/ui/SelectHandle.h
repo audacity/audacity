@@ -74,7 +74,8 @@ private:
    void StartSelection
       (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge);
    void AdjustSelection
-      (ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
+      (AudacityProject *pProject,
+       ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
        Track *pTrack);
 
    void StartFreqSelection

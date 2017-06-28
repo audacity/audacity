@@ -59,11 +59,12 @@ UIHandle::Result ButtonHandle::Click
 }
 
 UIHandle::Result ButtonHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    const wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
-   if (!mpTrack.lock())
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if (!pTrack)
       return Cancelled;
 
    const int newState =
@@ -88,7 +89,7 @@ UIHandle::Result ButtonHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return Cancelled;
 

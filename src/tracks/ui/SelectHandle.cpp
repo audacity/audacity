@@ -617,7 +617,7 @@ UIHandle::Result SelectHandle::Click
 #endif
             mSelStartValid = true;
             mSelStart = value;
-            AdjustSelection(viewInfo, event.m_x, mRect.x, pTrack);
+            AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -796,7 +796,7 @@ UIHandle::Result SelectHandle::Drag
    }
 
    // Also fuhggeddaboudit if not in a track.
-   auto pTrack = mpTrack.lock();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if (!pTrack)
       return RefreshNone;
 
@@ -836,13 +836,13 @@ UIHandle::Result SelectHandle::Drag
          (pProject, viewInfo, y, mRect.y, mRect.height, pTrack.get());
       else
 #endif
-         if (mFreqSelTrack.lock() == pTrack)
+         if (pProject->GetTracks()->Lock(mFreqSelTrack) == pTrack)
             AdjustFreqSelection(
                                 static_cast<WaveTrack*>(pTrack.get()),
                                 viewInfo, y, mRect.y, mRect.height);
 #endif
       
-      AdjustSelection(viewInfo, x, mRect.x, clickedTrack.get());
+      AdjustSelection(pProject, viewInfo, x, mRect.x, clickedTrack.get());
    }
 
    return RefreshNone
@@ -997,7 +997,7 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       }
    }
 
-   auto pTrack = mpTrack.lock();
+   auto pTrack = mpTrack.lock(); // TrackList::Lock() ?
    if (mAutoScrolling && pTrack) {
       // AS: To keep the selection working properly as we scroll,
       //  we fake a mouse event (remember, this method is called
@@ -1026,7 +1026,7 @@ void SelectHandle::StartSelection
       mSnapLeft = -1;
       mSnapRight = -1;
       bool snappedPoint, snappedTime;
-      auto pTrack = mpTrack.lock();
+      auto pTrack = pProject->GetTracks()->Lock(mpTrack);
       if (mSnapManager->Snap(pTrack.get(), mSelStart, false,
          &s, &snappedPoint, &snappedTime)) {
          if (snappedPoint)
@@ -1045,7 +1045,8 @@ void SelectHandle::StartSelection
 
 /// Extend or contract the existing selection
 void SelectHandle::AdjustSelection
-(ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
+(AudacityProject *pProject,
+ ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
  Track *track)
 {
    if (!mSelStartValid)
@@ -1059,7 +1060,7 @@ void SelectHandle::AdjustSelection
 
    auto pTrack = Track::Pointer( track );
    if (!pTrack)
-      pTrack = mpTrack.lock();
+      pTrack = pProject->GetTracks()->Lock(mpTrack);
 
    if (mSelStart < selend) {
       sel0 = mSelStart;

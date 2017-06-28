@@ -12,6 +12,7 @@ Paul Licameli
 #include "SliderHandle.h"
 #include "../../widgets/ASlider.h"
 #include "../../HitTestResult.h"
+#include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 
@@ -97,4 +98,10 @@ UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
    auto result = SetValue(pProject, mStartingValue);
    mpTrack.reset();
    return RefreshCode::RefreshCell | result;
+}
+
+LWSlider *SliderHandle::GetSlider( AudacityProject *pProject )
+{
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   return mSliderFn( pProject, mRect, pTrack.get() );
 }
