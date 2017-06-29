@@ -60,7 +60,7 @@ HitTestResult MinimizeButtonHandle::HitTest
       auto result = std::make_shared<MinimizeButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return {
-         HitPreview(),
+         HitTestPreview{},
          result
       };
    }
@@ -114,7 +114,7 @@ HitTestResult CloseButtonHandle::HitTest
       auto result = std::make_shared<CloseButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return {
-         HitPreview(),
+         HitTestPreview{},
          result
       };
    }
@@ -157,7 +157,7 @@ HitTestResult MenuButtonHandle::HitTest
       auto result = std::make_shared<MenuButtonHandle>( pCell, pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return {
-         HitPreview(),
+         HitTestPreview{},
          result
       };
    }

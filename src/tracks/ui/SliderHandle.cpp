@@ -27,12 +27,6 @@ SliderHandle::~SliderHandle()
 {
 }
 
-HitTestPreview SliderHandle::HitPreview()
-{
-   // No special message or cursor
-   return {};
-}
-
 UIHandle::Result SliderHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

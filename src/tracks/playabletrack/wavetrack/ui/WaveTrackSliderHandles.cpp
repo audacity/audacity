@@ -89,7 +89,7 @@ HitTestResult GainSliderHandle::HitTest
       result = AssignUIHandlePtr(holder, result);
 
       return {
-         HitPreview(),
+         HitTestPreview{},
          result
       };
    }
@@ -179,7 +179,7 @@ HitTestResult PanSliderHandle::HitTest
       result = AssignUIHandlePtr(holder, result);
 
       return {
-         HitPreview(),
+         HitTestPreview{},
          result
       };
    }

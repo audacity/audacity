@@ -53,7 +53,7 @@ HitTestResult MuteButtonHandle::HitTest
       auto result = std::make_shared<MuteButtonHandle>(pTrack, buttonRect);
       result = AssignUIHandlePtr(holder, result);
       return {
-         HitPreview(),
+         HitTestPreview{},
          result
       };
    }
@@ -99,7 +99,7 @@ HitTestResult SoloButtonHandle::HitTest
       auto result = std::make_shared<SoloButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return HitTestResult(
-         HitPreview(),
+         HitTestPreview{},
          result
       );
    }

@@ -928,6 +928,10 @@ void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
       refreshCode |= code;
       mMouseOverUpdateFlags |= code;
    }
+   if (!pCursor) {
+      static wxCursor defaultCursor{ wxCURSOR_ARROW };
+      pCursor = &defaultCursor;
+   }
    mListener->TP_DisplayStatusMessage(tip);
    if (pCursor)
       SetCursor( *pCursor );

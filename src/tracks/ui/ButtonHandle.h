@@ -38,9 +38,6 @@ protected:
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent) = 0;
 
-   // For derived class to define hit tests
-   static HitTestPreview HitPreview();
-
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 

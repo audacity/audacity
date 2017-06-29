@@ -31,12 +31,6 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
-HitTestPreview ButtonHandle::HitPreview()
-{
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return { {}, &arrowCursor };
-}
-
 UIHandle::Result ButtonHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

@@ -86,7 +86,7 @@ HitTestResult VelocitySliderHandle::HitTest
          sliderFn, sliderRect, pTrack );
       result = AssignUIHandlePtr(holder, result);
 
-      return { HitPreview(), result };
+      return { HitTestPreview{}, result };
    }
    else
       return {};
