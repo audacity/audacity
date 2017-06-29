@@ -6,7 +6,11 @@
 */
 
 #include <stdio.h>
-#include <expat.h>
+#include "expat.h"
+
+#if defined(__amigaos__) && defined(__USE_INLINE__)
+#include <proto/expat.h>
+#endif
 
 #ifdef XML_LARGE_SIZE
 #if defined(XML_USE_MSC_EXTENSIONS) && _MSC_VER < 1400
@@ -23,8 +27,6 @@ startElement(void *userData, const char *name, const char **atts)
 {
   int i;
   int *depthPtr = (int *)userData;
-  (void)atts;
-
   for (i = 0; i < *depthPtr; i++)
     putchar('\t');
   puts(name);
@@ -35,8 +37,6 @@ static void XMLCALL
 endElement(void *userData, const char *name)
 {
   int *depthPtr = (int *)userData;
-  (void)name;
-
   *depthPtr -= 1;
 }
 
@@ -47,13 +47,10 @@ main(int argc, char *argv[])
   XML_Parser parser = XML_ParserCreate(NULL);
   int done;
   int depth = 0;
-  (void)argc;
-  (void)argv;
-
   XML_SetUserData(parser, &depth);
   XML_SetElementHandler(parser, startElement, endElement);
   do {
-    size_t len = fread(buf, 1, sizeof(buf), stdin);
+    int len = (int)fread(buf, 1, sizeof(buf), stdin);
     done = len < sizeof(buf);
     if (XML_Parse(parser, buf, len, done) == XML_STATUS_ERROR) {
       fprintf(stderr,

@@ -42,10 +42,6 @@ filemap(const char *name,
     fprintf(stderr, "%s: not a regular file\n", name);
     return 0;
   }
-  if (sb.st_size > XML_MAX_CHUNK_LEN) {
-    close(fd);
-    return 2;  /* Cannot be passed to XML_Parse in one go */
-  }
 
   nbytes = sb.st_size;
   /* mmap fails for zero length files */
@@ -55,7 +51,7 @@ filemap(const char *name,
     close(fd);
     return 1;
   }
-  p = (void *)mmap((void *)0, (size_t)nbytes, PROT_READ,
+  p = (void *)mmap((caddr_t)0, (size_t)nbytes, PROT_READ,
                    MAP_FILE|MAP_PRIVATE, fd, (off_t)0);
   if (p == (void *)-1) {
     perror(name);
@@ -63,7 +59,7 @@ filemap(const char *name,
     return 0;
   }
   processor(p, nbytes, name, arg);
-  munmap((void *)p, nbytes);
+  munmap((caddr_t)p, nbytes);
   close(fd);
   return 1;
 }

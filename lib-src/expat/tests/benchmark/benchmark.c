@@ -4,6 +4,10 @@
 #include <time.h>
 #include "expat.h"
 
+#if defined(__amigaos__) && defined(__USE_INLINE__)
+#include <proto/expat.h>
+#endif
+
 #ifdef XML_LARGE_SIZE
 #define XML_FMT_INT_MOD "ll"
 #else

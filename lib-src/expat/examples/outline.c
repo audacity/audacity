@@ -25,6 +25,10 @@
 #include <stdio.h>
 #include <expat.h>
 
+#if defined(__amigaos__) && defined(__USE_INLINE__)
+#include <proto/expat.h>
+#endif
+
 #ifdef XML_LARGE_SIZE
 #if defined(XML_USE_MSC_EXTENSIONS) && _MSC_VER < 1400
 #define XML_FMT_INT_MOD "I64"
@@ -45,7 +49,6 @@ static void XMLCALL
 start(void *data, const char *el, const char **attr)
 {
   int i;
-  (void)data;
 
   for (i = 0; i < Depth; i++)
     printf("  ");
@@ -63,9 +66,6 @@ start(void *data, const char *el, const char **attr)
 static void XMLCALL
 end(void *data, const char *el)
 {
-  (void)data;
-  (void)el;
-
   Depth--;
 }
 
@@ -73,9 +73,6 @@ int
 main(int argc, char *argv[])
 {
   XML_Parser p = XML_ParserCreate(NULL);
-  (void)argc;
-  (void)argv;
-
   if (! p) {
     fprintf(stderr, "Couldn't allocate memory for parser\n");
     exit(-1);
