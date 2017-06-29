@@ -88,6 +88,11 @@ namespace
             locRect.width = 11;
             locRect.y = rect.y;
             locRect.height = rect.height;
+            // Adjustment for split line, which only fills one third of track.
+            if( loc.typ != WaveTrackLocation::locationCutLine ){
+               locRect.y += rect.height/3;
+               locRect.height /= 3;
+            }
             if (locRect.Contains(event.m_x, event.m_y))
             {
                if (pCapturedTrackLocation)

@@ -5672,55 +5672,6 @@ void AudacityProject::OnSplit()
 
    PushState(_("Split"), _("Split"));
    mTrackPanel->Refresh(false);
-#if 0
-//ANSWER-ME: Do we need to keep this commented out OnSplit() code?
-// This whole section no longer used...
-   /*
-    * Previous (pre-multiclip) implementation of "Split" command
-    * This does work only when a range is selected!
-    *
-   TrackListIterator iter(mTracks);
-
-   Track *n = iter.First();
-   Track *dest;
-
-   TrackList newTracks;
-
-   while (n) {
-      if (n->GetSelected()) {
-         double sel0 = mViewInfo.selectedRegion.t0();
-         double sel1 = mViewInfo.selectedRegion.t1();
-
-         dest = n->Copy(sel0, sel1);
-         dest->Init(*n);
-         dest->SetOffset(wxMax(sel0, n->GetOffset()));
-
-         if (sel1 >= n->GetEndTime())
-            n->Clear(sel0, sel1);
-         else if (sel0 <= n->GetOffset()) {
-            n->Clear(sel0, sel1);
-            n->SetOffset(sel1);
-         } else
-            n->Silence(sel0, sel1);
-
-         newTracks.Add(dest);
-      }
-      n = iter.Next();
-   }
-
-   TrackListIterator nIter(&newTracks);
-   n = nIter.First();
-   while (n) {
-      mTracks->Add(n);
-      n = nIter.Next();
-   }
-
-   PushState(_("Split"), _("Split"));
-
-   FixScrollbars();
-   mTrackPanel->Refresh(false);
-   */
-#endif
 }
 
 void AudacityProject::OnSplitNew()
