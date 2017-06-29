@@ -667,7 +667,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                mCutPreviewTracks->GetWaveTrackConstArray(false),
                WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
-               NoteTrackArray(),
+               mCutPreviewTracks->GetNoteTrackArray(false),
 #endif
                tcp0, tcp1, myOptions);
          }
@@ -1257,7 +1257,12 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
       TrackListIterator it(p->GetTracks());
       for (Track *t = it.First(); t; t = it.Next())
       {
-         if (t->GetKind() == Track::Wave && t->GetSelected())
+         if (t->GetSelected() &&
+            (t->GetKind() == Track::Wave
+#ifdef EXPERIMENTAL_MIDI_OUT
+         || t->GetKind() == Track::Note
+#endif
+            ))
          {
             track1 = t;
             track2 = t->GetLink();
