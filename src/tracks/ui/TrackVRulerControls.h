@@ -28,7 +28,7 @@ public:
    std::shared_ptr<Track> FindTrack() override;
 
    // Define a default hit test method, just for message and cursor
-   UIHandlePtr HitTest
+   std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 

@@ -25,44 +25,57 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelResizerCell.h"
 #include "BackgroundCell.h"
 
-UIHandlePtr Track::HitTest
+std::vector<UIHandlePtr> Track::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
    const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
    const bool isMultiTool = pTtb->IsDown(multiTool);
    const auto currentTool = pTtb->GetCurrentTool();
 
-   if ( !isMultiTool && currentTool == zoomTool )
+   if ( !isMultiTool && currentTool == zoomTool ) {
       // Zoom tool is a non-selecting tool that takes precedence in all tracks
       // over all other tools, no matter what detail you point at.
-      return ZoomHandle::HitAnywhere(
+      result = ZoomHandle::HitAnywhere(
          pProject->GetBackgroundCell()->mZoomHandle);
+      results.push_back(result);
+      return results;
+   }
 
    // In other tools, let subclasses determine detailed hits.
-   auto result =
+   results =
       DetailedHitTest( st, pProject, currentTool, isMultiTool );
 
-   // If there is no detailed hit for the subclass, there are still some
-   // general cases.
+   // There are still some general cases.
 
    // Sliding applies in more than one track type.
-   if ( !result && !isMultiTool && currentTool == slideTool )
+   if ( !isMultiTool && currentTool == slideTool ) {
       result = TimeShiftHandle::HitAnywhere(
          mTimeShiftHandle, Pointer(this), false);
+      if (result)
+         results.push_back(result);
+   }
 
    // Let the multi-tool right-click handler apply only in default of all
    // other detailed hits.
-   if ( !result && isMultiTool )
+   if ( isMultiTool ) {
       result = ZoomHandle::HitTest(
          pProject->GetBackgroundCell()->mZoomHandle, st.state);
+      if (result)
+         results.push_back(result);
+   }
 
    // Finally, default of all is adjustment of the selection box.
-   if ( !result && ( isMultiTool || currentTool == selectTool) )
+   if ( isMultiTool || currentTool == selectTool ) {
       result = SelectHandle::HitTest(
          mSelectHandle, st, pProject, Pointer(this));
+      if (result)
+         results.push_back(result);
+   }
 
-   return result;
+   return results;
 }
 
 std::shared_ptr<TrackPanelCell> Track::GetTrackControl()

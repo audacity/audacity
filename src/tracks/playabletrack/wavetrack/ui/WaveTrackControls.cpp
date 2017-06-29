@@ -53,15 +53,17 @@ WaveTrackControls::~WaveTrackControls()
 }
 
 
-UIHandlePtr WaveTrackControls::HitTest
+std::vector<UIHandlePtr> WaveTrackControls::HitTest
 (const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
+   // Hits are mutually exclusive, results single
    const wxMouseState &state = st.state;
    const wxRect &rect = st.rect;
    if (state.ButtonIsDown(wxMOUSE_BTN_LEFT)) {
       auto track = FindTrack();
-      if (track && track->GetKind() == Track::Wave) {
+      std::vector<UIHandlePtr> results;
+      auto result = [&]{
          UIHandlePtr result;
          if (NULL != (result = MuteButtonHandle::HitTest(
             mMuteHandle, state, rect, pProject, track)))
@@ -78,6 +80,10 @@ UIHandlePtr WaveTrackControls::HitTest
          if (NULL != (result = PanSliderHandle::HitTest(
             mPanHandle, state, rect, track)))
             return result;
+      }();
+      if (result) {
+         results.push_back(result);
+         return results;
       }
    }
 

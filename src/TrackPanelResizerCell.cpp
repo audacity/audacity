@@ -21,15 +21,16 @@ TrackPanelResizerCell::TrackPanelResizerCell( std::shared_ptr<Track> pTrack )
 : mpTrack{ pTrack }
 {}
 
-UIHandlePtr TrackPanelResizerCell::HitTest
+std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
 (const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
+   std::vector<UIHandlePtr> results;
    auto pTrack = mpTrack.lock();
    if (pTrack) {
       auto result = std::make_shared<TrackPanelResizeHandle>(
          pTrack, st.state.m_y, pProject );
       result = AssignUIHandlePtr(mResizeHandle, result);
-      return result;
+      results.push_back(result);
    }
-   return {};
+   return results;
 }

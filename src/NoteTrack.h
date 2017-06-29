@@ -70,7 +70,7 @@ class AUDACITY_DLL_API NoteTrack final
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
-   UIHandlePtr DetailedHitTest
+   std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;

@@ -27,14 +27,22 @@ NoteTrackVRulerControls::~NoteTrackVRulerControls()
 {
 }
 
-UIHandlePtr NoteTrackVRulerControls::HitTest
+std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
+   std::vector<UIHandlePtr> results;
    UIHandlePtr result;
    auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
-   return NoteTrackVZoomHandle::HitTest(
+   result = NoteTrackVZoomHandle::HitTest(
       mVZoomHandle, st.state, track, st.rect);
+   if (result)
+      results.push_back(result);
+
+   auto more = TrackVRulerControls::HitTest(st, pProject);
+   std::copy(more.begin(), more.end(), std::back_inserter(results));
+
+   return results;
 }
 
 unsigned NoteTrackVRulerControls::HandleWheelRotation

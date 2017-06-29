@@ -32,10 +32,10 @@ std::shared_ptr<Track> TrackVRulerControls::FindTrack()
    return mwTrack.lock();
 }
 
-UIHandlePtr TrackVRulerControls::HitTest
+std::vector<UIHandlePtr> TrackVRulerControls::HitTest
 (const TrackPanelMouseState &, const AudacityProject *)
 {
-   return {};
+   return std::vector<UIHandlePtr>{};
 }
 
 void TrackVRulerControls::DrawZooming

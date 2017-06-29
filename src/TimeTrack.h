@@ -51,7 +51,7 @@ class TimeTrack final : public Track {
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   UIHandlePtr DetailedHitTest
+   std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;

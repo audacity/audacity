@@ -37,13 +37,16 @@ std::shared_ptr<Track> TrackControls::FindTrack()
    return mwTrack.lock();
 }
 
-UIHandlePtr TrackControls::HitTest
+std::vector<UIHandlePtr> TrackControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *project)
 {
+   // Hits are mutually exclusive, results single
+
    const wxMouseState &state = st.state;
    const wxRect &rect = st.rect;
    UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
 
    auto pTrack = FindTrack();
    // shared pointer to this:
@@ -51,18 +54,23 @@ UIHandlePtr TrackControls::HitTest
 
    if (NULL != (result = CloseButtonHandle::HitTest(
       mCloseHandle, state, rect, this)))
-      return result;
+      results.push_back(result);
 
    if (NULL != (result = MenuButtonHandle::HitTest(
       mMenuHandle, state, rect, sThis)))
-      return result;
+      results.push_back(result);
 
    if (NULL != (result = MinimizeButtonHandle::HitTest(
       mMinimizeHandle, state, rect, this)))
-      return result;
+      results.push_back(result);
 
-   return TrackSelectHandle::HitAnywhere(
-      mSelectHandle, pTrack);
+   if (results.empty()) {
+      if (NULL != (result = TrackSelectHandle::HitAnywhere(
+         mSelectHandle, pTrack)))
+         results.push_back(result);
+   }
+
+   return results;
 }
 
 enum

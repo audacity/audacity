@@ -35,7 +35,7 @@ public:
       : TrackControls( pTrack ) {}
    ~NoteTrackControls();
 
-   UIHandlePtr HitTest
+   std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 

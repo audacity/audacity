@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
 
-UIHandlePtr WaveTrack::DetailedHitTest
+std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int currentTool, bool bMultiTool)
 {
@@ -32,15 +32,20 @@ UIHandlePtr WaveTrack::DetailedHitTest
    // If that toolbar were eliminated, this could simplify to a sequence of
    // hit test routines describable by a table.
 
-   const auto wavetrack = static_cast<WaveTrack*>(st.pCell.get());
-   bool isWaveform = (wavetrack->GetDisplay() == WaveTrack::Waveform);
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
+   bool isWaveform = (GetDisplay() == WaveTrack::Waveform);
 
-   if (bMultiTool && st.state.CmdDown())
+   if (bMultiTool && st.state.CmdDown()) {
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
-      return TimeShiftHandle::HitAnywhere(
+      result = TimeShiftHandle::HitAnywhere(
          mTimeShiftHandle, Pointer(this), false);
+      if (result)
+         results.push_back(result);
+      return results;
+   }
 
    // Some special targets are not drawn in spectrogram,
    // so don't hit them in such views.
@@ -50,8 +55,8 @@ UIHandlePtr WaveTrack::DetailedHitTest
          mCutlineHandle, st.state, st.rect,
          pProject, Pointer<WaveTrack>(this))))
          // This overriding test applies in all tools
-         return result;
-      else if (bMultiTool) {
+         results.push_back(result);
+      if (bMultiTool) {
          // Conditional hit tests
          // If Tools toolbar were eliminated, we would keep these
          // The priority of these, in case more than one might apply at one
@@ -59,35 +64,39 @@ UIHandlePtr WaveTrack::DetailedHitTest
          if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
             mEnvelopeHandle, st.state, st.rect,
             pProject, Pointer<WaveTrack>(this))))
-            ;
-         else if (NULL != (result = TimeShiftHandle::HitTest(
+            results.push_back(result);
+         if (NULL != (result = TimeShiftHandle::HitTest(
             mTimeShiftHandle, st.state, st.rect, Pointer(this))))
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
-            ;
-         else if (NULL != (result = SampleHandle::HitTest(
+            results.push_back(result);
+         if (NULL != (result = SampleHandle::HitTest(
             mSampleHandle, st.state, st.rect,
             pProject, Pointer<WaveTrack>(this))))
-            ;
-         return result;
+            results.push_back(result);
       }
-      else switch ( currentTool ) {
-         // Unconditional hits appropriate to the tool
-         // If tools toolbar were eliminated, we would eliminate these
-         case envelopeTool: {
-            auto envelope = GetEnvelopeAtX( st.state.m_x );
-            return EnvelopeHandle::HitAnywhere(
-               mEnvelopeHandle, envelope);
+      else {
+         switch ( currentTool ) {
+               // Unconditional hits appropriate to the tool
+               // If tools toolbar were eliminated, we would eliminate these
+            case envelopeTool: {
+               auto envelope = GetEnvelopeAtX( st.state.m_x );
+               result = EnvelopeHandle::HitAnywhere(
+                  mEnvelopeHandle, envelope);
+               break;
+            }
+            case drawTool:
+               result = SampleHandle::HitAnywhere(
+                  mSampleHandle, st.state, Pointer<WaveTrack>(this));
+            default:
+               break;
          }
-         case drawTool:
-            return SampleHandle::HitAnywhere(
-               mSampleHandle, st.state, Pointer<WaveTrack>(this));
-         default:
-            break;
+         if (result)
+            results.push_back(result);
       }
    }
 
-   return {};
+   return results;
 }
 
 std::shared_ptr<TrackControls> WaveTrack::GetControls()

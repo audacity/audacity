@@ -79,14 +79,16 @@ BackgroundCell::~BackgroundCell()
 {
 }
 
-UIHandlePtr BackgroundCell::HitTest
+std::vector<UIHandlePtr> BackgroundCell::HitTest
 (const TrackPanelMouseState &,
  const AudacityProject *)
 {
+   std::vector<UIHandlePtr> results;
    auto result = mHandle.lock();
    if (!result)
       result = std::make_shared<BackgroundHandle>();
-   return result;
+   results.push_back(result);
+   return results;
 }
 
 std::shared_ptr<Track> BackgroundCell::FindTrack()

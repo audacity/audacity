@@ -29,7 +29,7 @@ public:
    virtual ~BackgroundCell();
 
 protected:
-   UIHandlePtr HitTest
+   std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *) override;
 

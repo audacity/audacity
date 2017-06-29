@@ -24,7 +24,7 @@ public:
       : TrackControls( pTrack ) {}
    ~LabelTrackControls();
 
-   UIHandlePtr HitTest
+   std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 

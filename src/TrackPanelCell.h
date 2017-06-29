@@ -25,6 +25,8 @@ class wxWindow;
 class UIHandle;
 using UIHandlePtr = std::shared_ptr<UIHandle>;
 
+#include <vector>
+
 // Abstract base class defining TrackPanel's access to specialist classes that
 // implement drawing and user interactions
 class AUDACITY_DLL_API TrackPanelCell /* not final */
@@ -32,12 +34,12 @@ class AUDACITY_DLL_API TrackPanelCell /* not final */
 public:
    virtual ~TrackPanelCell () = 0;
 
-   // Return null, or a pointer to an object that can be queried for a status
-   // bar message and cursor appropriate to the point, and that dispatches
+   // Return pointers to objects that can be queried for a status
+   // bar message and cursor appropriate to the point, and that dispatch
    // mouse button events.
    // The button-down state passed to the function is as it will be at click
    // time -- not necessarily as it is now.
-   virtual UIHandlePtr HitTest
+   virtual std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject) = 0;
 

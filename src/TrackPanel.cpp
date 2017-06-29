@@ -904,7 +904,10 @@ void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
 
       // Now do the
       // UIHANDLE HIT TEST !
-      handle = newCell->HitTest(tpmState, GetProject());
+      auto targets = newCell->HitTest(tpmState, GetProject());
+
+      // No use, yet, of any but the first target
+      handle = targets.empty() ? UIHandlePtr{} : targets[0];
 
       mLastCell = newCell;
       mLastHitTest = handle;

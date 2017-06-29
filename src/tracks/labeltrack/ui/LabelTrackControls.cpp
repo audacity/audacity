@@ -26,7 +26,7 @@ LabelTrackControls::~LabelTrackControls()
 {
 }
 
-UIHandlePtr LabelTrackControls::HitTest
+std::vector<UIHandlePtr> LabelTrackControls::HitTest
 (const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {

@@ -26,18 +26,23 @@ WaveTrackVRulerControls::~WaveTrackVRulerControls()
 {
 }
 
-UIHandlePtr WaveTrackVRulerControls::HitTest
+std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *)
+ const AudacityProject *pProject)
 {
+   std::vector<UIHandlePtr> results;
    auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
    if (pTrack) {
       auto result = std::make_shared<WaveTrackVZoomHandle>(
          pTrack, st.rect, st.state.m_y );
       result = AssignUIHandlePtr(mVZoomHandle, result);
-      return result;
+      results.push_back(result);
    }
-   return {};
+
+   auto more = TrackVRulerControls::HitTest(st, pProject);
+   std::copy(more.begin(), more.end(), std::back_inserter(results));
+
+   return results;
 }
 
 unsigned WaveTrackVRulerControls::HandleWheelRotation
