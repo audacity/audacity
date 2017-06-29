@@ -42,7 +42,7 @@ INSTALL_DATA = @INSTALL_DATA@
 mkinstalldirs = $(SHELL) $(top_srcdir)/conftools/mkinstalldirs
 
 MANFILE = $(srcdir)/doc/xmlwf.1
-APIHEADER = $(srcdir)/lib/expat.h $(srcdir)/lib/expat_external.h
+APIHEADER = $(srcdir)/lib/expat.h $(srcdir)/lib/expat_external.h expat_config.h
 LIBRARY = libexpat.la
 
 DESTDIR = $(INSTALL_ROOT)
@@ -51,14 +51,14 @@ default:  buildlib xmlwf/xmlwf@EXEEXT@
 
 buildlib: $(LIBRARY) expat.pc
 
-all: $(LIBRARY) expat.pc xmlwf/xmlwf@EXEEXT@ examples/elements examples/outline
+all: $(LIBRARY) expat.pc xmlwf/xmlwf@EXEEXT@ examples/elements examples/outline $(MANFILE)
 
 clean:
 	cd lib && rm -f $(LIBRARY) *.@OBJEXT@ *.lo && rm -rf .libs _libs
 	cd xmlwf && rm -f xmlwf *.@OBJEXT@ *.lo && rm -rf .libs _libs
 	cd examples && rm -f elements outline *.@OBJEXT@ *.lo && rm -rf .libs _libs
-	cd tests && rm -rf .libs runtests runtests.@OBJEXT@ runtestspp runtestspp.@OBJEXT@
-	cd tests && rm -f chardata.@OBJEXT@ minicheck.@OBJEXT@
+	cd tests && rm -rf .libs runtests@EXEEXT@ runtests.@OBJEXT@ runtestspp@EXEEXT@ runtestspp.@OBJEXT@
+	cd tests && rm -f chardata.@OBJEXT@ memcheck.@OBJEXT@ minicheck.@OBJEXT@
 	rm -rf .libs libexpat.la
 	rm -f examples/core tests/core xmlwf/core
 
@@ -73,11 +73,14 @@ extraclean: distclean
 	rm -f aclocal.m4 m4/*
 	rm -f conftools/ltmain.sh conftools/install-sh conftools/config.guess conftools/config.sub
 
-check: tests/runtests tests/runtestspp
-	tests/runtests
-	tests/runtestspp
+check: tests/runtests@EXEEXT@ tests/runtestspp@EXEEXT@
+	./run.sh tests/runtests@EXEEXT@
+	./run.sh tests/runtestspp@EXEEXT@
 
-install: xmlwf/xmlwf@EXEEXT@ installlib
+$(MANFILE):
+	$(MAKE) -C doc xmlwf.1
+
+install: xmlwf/xmlwf@EXEEXT@ installlib $(MANFILE)
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(man1dir)
 	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) xmlwf/xmlwf@EXEEXT@ $(DESTDIR)$(bindir)/xmlwf
 	$(INSTALL_DATA) $(MANFILE) $(DESTDIR)$(man1dir)
@@ -116,12 +119,12 @@ CXXFLAGS = @CXXFLAGS@
 VSNFLAG = -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
 
 ### autoconf this?
-LTFLAGS = --silent
+LTFLAGS = --verbose
 
 COMPILE = $(CC) $(INCLUDES) $(CFLAGS) $(DEFS) $(CPPFLAGS)
 CXXCOMPILE = $(CXX) $(INCLUDES) $(CXXFLAGS) $(DEFS) $(CPPFLAGS)
 LTCOMPILE = $(LIBTOOL) $(LTFLAGS) --mode=compile $(COMPILE)
-LINK_LIB = $(LIBTOOL) $(LTFLAGS) --mode=link $(COMPILE) -no-undefined $(VSNFLAG) -rpath $(libdir) $(LDFLAGS) -o $@
+LINK_LIB = $(LIBTOOL) $(LTFLAGS) --mode=link $(COMPILE) -no-undefined $(VSNFLAG) -rpath $(libdir) $(LDFLAGS) @LIBS@ -o $@
 LINK_EXE = $(LIBTOOL) $(LTFLAGS) --mode=link $(COMPILE) $(LDFLAGS) -o $@
 LINK_CXX_EXE = $(LIBTOOL) $(LTFLAGS) --mode=link $(CXXCOMPILE) $(LDFLAGS) -o $@
 
@@ -132,7 +135,7 @@ $(LIBRARY): $(LIB_OBJS)
 expat.pc: $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
-lib/xmlparse.lo: lib/xmlparse.c lib/expat.h lib/xmlrole.h lib/xmltok.h \
+lib/xmlparse.lo: lib/xmlparse.c lib/expat.h lib/siphash.h lib/xmlrole.h lib/xmltok.h \
 	$(top_builddir)/expat_config.h lib/expat_external.h lib/internal.h
 
 lib/xmlrole.lo: lib/xmlrole.c lib/ascii.h lib/xmlrole.h \
@@ -148,26 +151,27 @@ XMLWF_OBJS = xmlwf/xmlwf.@OBJEXT@ xmlwf/xmlfile.@OBJEXT@ xmlwf/codepage.@OBJEXT@
 xmlwf/xmlwf.@OBJEXT@: xmlwf/xmlwf.c
 xmlwf/xmlfile.@OBJEXT@: xmlwf/xmlfile.c
 xmlwf/codepage.@OBJEXT@: xmlwf/codepage.c
-xmlwf/@FILEMAP@.@OBJEXT@: xmlwf/@FILEMAP@.c
+xmlwf/@FILEMAP@.@OBJEXT@: xmlwf/@FILEMAP@.c xmlwf/filemap.h
 xmlwf/xmlwf@EXEEXT@: $(XMLWF_OBJS) $(LIBRARY)
 	$(LINK_EXE) $(XMLWF_OBJS) $(LIBRARY)
 
 examples/elements.@OBJEXT@: examples/elements.c
 examples/elements: examples/elements.@OBJEXT@ $(LIBRARY)
-	$(LINK_EXE) $< $(LIBRARY)
+	$(LINK_EXE) examples/elements.@OBJEXT@ $(LIBRARY)
 
 examples/outline.@OBJEXT@: examples/outline.c
 examples/outline: examples/outline.@OBJEXT@ $(LIBRARY)
-	$(LINK_EXE) $< $(LIBRARY)
+	$(LINK_EXE) examples/outline.@OBJEXT@ $(LIBRARY)
 
 tests/chardata.@OBJEXT@: tests/chardata.c tests/chardata.h
 tests/minicheck.@OBJEXT@: tests/minicheck.c tests/minicheck.h
-tests/runtests.@OBJEXT@: tests/runtests.c tests/chardata.h
-tests/runtests: tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
-	$(LINK_EXE) tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
-tests/runtestspp.@OBJEXT@: tests/runtestspp.cpp tests/runtests.c tests/chardata.h
-tests/runtestspp: tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
-	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
+tests/memcheck.@OBJEXT@: tests/memcheck.c tests/memcheck.h
+tests/runtests.@OBJEXT@: tests/runtests.c tests/chardata.h tests/memcheck.h lib/siphash.h
+tests/runtests@EXEEXT@: tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ $(LIBRARY)
+	$(LINK_EXE) tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ $(LIBRARY)
+tests/runtestspp.@OBJEXT@: tests/runtestspp.cpp tests/runtests.c tests/chardata.h tests/memcheck.h
+tests/runtestspp@EXEEXT@: tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ $(LIBRARY)
+	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ $(LIBRARY)
 
 tests/benchmark/benchmark.@OBJEXT@: tests/benchmark/benchmark.c
 tests/benchmark/benchmark: tests/benchmark/benchmark.@OBJEXT@ $(LIBRARY)
@@ -178,13 +182,21 @@ run-benchmark: tests/benchmark/benchmark
 
 tests/xmlts.zip:
 	wget --output-document=tests/xmlts.zip \
-		http://www.w3.org/XML/Test/xmlts20080827.zip
+		https://www.w3.org/XML/Test/xmlts20080827.zip
 
-tests/XML-Test-Suite: tests/xmlts.zip
+tests/xmlconf: tests/xmlts.zip
 	cd tests && unzip -q xmlts.zip
 
-run-xmltest: xmlwf/xmlwf@EXEEXT@ tests/XML-Test-Suite
-	tests/xmltest.sh
+run-xmltest: xmlwf/xmlwf@EXEEXT@ tests/xmlconf
+	tests/xmltest.sh "$(PWD)/run.sh $(PWD)/xmlwf/xmlwf@EXEEXT@" 2>&1 | tee tests/xmltest.log
+	diff -u -b tests/xmltest.log.expected tests/xmltest.log
+
+.PHONY: qa
+qa:
+	./qa.sh address
+	./qa.sh memory
+	./qa.sh undefined
+	./qa.sh coverage
 
 .SUFFIXES: .c .cpp .lo .@OBJEXT@
 

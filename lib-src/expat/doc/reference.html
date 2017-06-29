@@ -277,7 +277,7 @@ directions or Unix directions below.</p>
 <p>If you're using the GNU compiler under cygwin, follow the Unix
 directions in the next section. Otherwise if you have Microsoft's
 Developer Studio installed, then from Windows Explorer double-click on
-"expat.dsp" in the lib directory and build and install in the usual
+"expat.vcxproj" in the lib directory and build and install in the usual
 manner.</p>
 
 <p>Alternatively, you may download the Win32 binary package that
@@ -2151,8 +2151,12 @@ Helps in preventing DoS attacks based on predicting hash
 function behavior. In order to have an effect this must be called
 before parsing has started. Returns 1 if successful, 0 when called
 after <code>XML_Parse</code> or <code>XML_ParseBuffer</code>.
-<p><b>Note:</b> This call is optional, as the parser will auto-generate a new
-random salt value if no value has been set at the start of parsing.</p>
+<p><b>Note:</b>This call is optional, as the parser will auto-generate 
+a new random salt value if no value has been set at the start of parsing.
+<p><b>Note:</b>One should not call <code>XML_SetHashSalt</code> with a
+hash salt value of 0, as this value is used as sentinel value to indicate
+that <code>XML_SetHashSalt</code> has <b>not</b> been called. Consequently
+such a call will have no effect, even if it returns 1.</p>
 </div>
 
 <pre class="fcndec" id="XML_UseForeignDTD">

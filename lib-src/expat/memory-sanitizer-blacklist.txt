@@ -1,0 +1,6 @@
+# Line "hash_secret_salt = generate_hash_secret_salt(parser);"
+# is mis-reported as use-of-uninitialized-value because
+# its call to writeRandomBytes_getrandom uses syscall
+# SYS_getrandom and MemorySanitizer does not seem to understand that
+# as writing bytes to that memory (which it does).
+fun:startParsing

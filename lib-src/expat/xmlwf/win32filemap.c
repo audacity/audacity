@@ -42,11 +42,12 @@ filemap(const TCHAR *name,
   size = GetFileSize(f, &sizeHi);
   if (size == (DWORD)-1) {
     win32perror(name);
+    CloseHandle(f);
     return 0;
   }
-  if (sizeHi) {
-    _ftprintf(stderr, _T("%s: bigger than 2Gb\n"), name);
-    return 0;
+  if (sizeHi || (size > XML_MAX_CHUNK_LEN)) {
+    CloseHandle(f);
+    return 2;  /* Cannot be passed to XML_Parse in one go */
   }
   /* CreateFileMapping barfs on zero length files */
   if (size == 0) {

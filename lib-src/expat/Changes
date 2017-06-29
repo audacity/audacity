@@ -1,29 +1,213 @@
+NOTE: We are looking for help with a few things:
+      https://github.com/libexpat/libexpat/labels/help%20wanted
+      If you can help, please get in touch.  Thanks!
+
+Release 2.2.1 Sat June 17 2017
+        Security fixes:
+                  CVE-2017-9233 -- External entity infinite loop DoS
+                    Details: https://libexpat.github.io/doc/cve-2017-9233/
+                    Commit c4bf96bb51dd2a1b0e185374362ee136fe2c9d7f
+   [MOX-002]      CVE-2016-9063 -- Detect integer overflow; commit
+                    d4f735b88d9932bd5039df2335eefdd0723dbe20
+                    (Fixed version of existing downstream patches!)
+   (SF.net) #539  Fix regression from fix to CVE-2016-0718 cutting off
+                    longer tag names; commits
+                    * 896b6c1fd3b842f377d1b62135dccf0a579cf65d
+                    * af507cef2c93cb8d40062a0abe43a4f4e9158fb2
+             #16    * 0dbbf43fdb20f593ddf4fa1ff67288000dd4a7fd
+             #25  More integer overflow detection (function poolGrow); commits
+                    * 810b74e4703dcfdd8f404e3cb177d44684775143
+                    * 44178553f3539ce69d34abee77a05e879a7982ac
+   [MOX-002]      Detect overflow from len=INT_MAX call to XML_Parse; commits
+                    * 4be2cb5afcc018d996f34bbbce6374b7befad47f
+                    * 7e5b71b748491b6e459e5c9a1d090820f94544d8
+   [MOX-005] #30  Use high quality entropy for hash initialization:
+                    * arc4random_buf on BSD, systems with libbsd
+                      (when configured with --with-libbsd), CloudABI
+                    * RtlGenRandom on Windows XP / Server 2003 and later
+                    * getrandom on Linux 3.17+
+                    In a way, that's still part of CVE-2016-5300.
+                    https://github.com/libexpat/libexpat/pull/30/commits
+   [MOX-005]      For the low quality entropy extraction fallback code,
+                    the parser instance address can no longer leak, commit
+                    04ad658bd3079dd15cb60fc67087900f0ff4b083
+   [MOX-003]      Prevent use of uninitialised variable; commit
+   [MOX-004]        a4dc944f37b664a3ca7199c624a98ee37babdb4b
+                  Add missing parameter validation to public API functions
+                    and dedicated error code XML_ERROR_INVALID_ARGUMENT:
+   [MOX-006]        * NULL checks; commits
+                      * d37f74b2b7149a3a95a680c4c4cd2a451a51d60a (merge/many)
+                      * 9ed727064b675b7180c98cb3d4f75efba6966681
+                      * 6a747c837c50114dfa413994e07c0ba477be4534
+                    * Negative length (XML_Parse); commit
+   [MOX-002]          70db8d2538a10f4c022655d6895e4c3e78692e7f
+   [MOX-001] #35  Change hash algorithm to William Ahern's version of SipHash
+                    to go further with fixing CVE-2012-0876.
+                    https://github.com/libexpat/libexpat/pull/39/commits
+
+        Bug fixes:
+             #32  Fix sharing of hash salt across parsers;
+                    relevant where XML_ExternalEntityParserCreate is called
+                    prior to XML_Parse, in particular (e.g. FBReader)
+             #28  xmlwf: Auto-disable use of memory-mapping (and parsing
+                    as a single chunk) for files larger than ~1 GB (2^30 bytes)
+                    rather than failing with error "out of memory"
+              #3  Fix double free after malloc failure in DTD code; commit
+                    7ae9c3d3af433cd4defe95234eae7dc8ed15637f
+             #17  Fix memory leak on parser error for unbound XML attribute
+                    prefix with new namespaces defined in the same tag;
+                    found by Google's OSS-Fuzz; commits
+                    * 16f87daae5a16132e479e4f71862128c7a915c73
+                    * b47dbc9745932c160893d433220e462bd605f8cd
+                  xmlwf on Windows: Add missing calls to CloseHandle
+
+        New features:
+             #30  Introduced environment switch EXPAT_ENTROPY_DEBUG=1
+                    for runtime debugging of entropy extraction
+
+        Other changes:
+                  Increase code coverage
+             #33  Reject use of XML_UNICODE_WCHAR_T with sizeof(wchar_t) != 2;
+                    XML_UNICODE_WCHAR_T was never meant to be used outside
+                    of Windows; 4-byte wchar_t is common on Linux
+   (SF.net) #538  Start using -fno-strict-aliasing
+   (SF.net) #540  Support compilation against cloudlibc of CloudABI
+                  Allow MinGW cross-compilation
+   (SF.net) #534  CMake: Introduce option "BUILD_doc" (enabled by default)
+                    to bypass compilation of the xmlwf.1 man page
+   (SF.net)  pr2  CMake: Introduce option "INSTALL" (enabled by default)
+                    to bypass installation of expat files
+                  CMake: Fix ninja support
+                  Autotools: Add parameters --enable-xml-context [COUNT]
+                    and --disable-xml-context; default of context of 1024
+                    bytes enabled unchanged
+             #14  Drop AmigaOS 4.x code and includes
+             #14  Drop ancient build systems:
+                    * Borland C++ Builder
+                    * OpenVMS
+                    * Open Watcom
+                    * Visual Studio 6.0
+                    * Pre-X Mac OS (MPW Makefile)
+                    If you happen to rely on some of these, please get in
+                    touch for joining with maintenance.
+             #10  Move from WIN32 to _WIN32
+             #13  Fix "make run-xmltest" order instability
+                  Address compile warnings
+                  Bump version info from 7:2:6 to 7:3:6
+                  Add AUTHORS file
+
+        Infrastructure:
+              #1  Migrate from SourceForge to GitHub (except downloads):
+                    https://github.com/libexpat/
+              #1  Re-create http://libexpat.org/ project website
+                  Start utilizing Travis CI
+
+        Special thanks to:
+            Andy Wang
+            Don Lewis
+            Ed Schouten
+            Karl Waclawek
+            Pascal Cuoq
+            Rhodri James
+            Sergei Nikulov
+            Tobias Taschner
+            Viktor Szakats
+                 and
+            Core Infrastructure Initiative
+            Mozilla Foundation (MOSS Track 3: Secure Open Source)
+            Radically Open Security
+
+Release 2.2.0 Tue June 21 2016
+        Security fixes:
+            #537  CVE-2016-0718 -- Fix crash on malformed input
+                  CVE-2016-4472 -- Improve insufficient fix to CVE-2015-1283 /
+                                   CVE-2015-2716 introduced with Expat 2.1.1
+            #499  CVE-2016-5300 -- Use more entropy for hash initialization
+                                   than the original fix to CVE-2012-0876
+            #519  CVE-2012-6702 -- Resolve troublesome internal call to srand
+                                   that was introduced with Expat 2.1.0
+                                   when addressing CVE-2012-0876 (issue #496)
+
+        Bug fixes:
+                  Fix uninitialized reads of size 1
+                    (e.g. in little2_updatePosition)
+                  Fix detection of UTF-8 character boundaries
+
+        Other changes:
+            #532  Fix compilation for Visual Studio 2010 (keyword "C99")
+                  Autotools: Resolve use of "$<" to better support bmake
+                  Autotools: Add QA script "qa.sh" (and make target "qa")
+                  Autotools: Respect CXXFLAGS if given
+                  Autotools: Fix "make run-xmltest"
+                  Autotools: Have "make run-xmltest" check for expected output
+             p90  CMake: Fix static build (BUILD_shared=OFF) on Windows
+            #536  CMake: Add soversion, support -DNO_SONAME=yes to bypass
+            #323  CMake: Add suffix "d" to differentiate debug from release
+                  CMake: Define WIN32 with CMake on Windows
+                  Annotate memory allocators for GCC
+                  Address all currently known compile warnings
+                  Make sure that API symbols remain visible despite
+                    -fvisibility=hidden
+                  Remove executable flag from source files
+                  Resolve COMPILED_FROM_DSP in favor of WIN32
+
+        Special thanks to:
+            Björn Lindahl
+            Christian Heimes
+            Cristian Rodríguez
+            Daniel Krügler
+            Gustavo Grieco
+            Karl Waclawek
+            László Böszörményi
+            Marco Grassi
+            Pascal Cuoq
+            Sergei Nikulov
+            Thomas Beutlich
+            Warren Young
+            Yann Droneaud
+
+Release 2.1.1 Sat March 12 2016
+        Security fixes:
+            #582: CVE-2015-1283 - Multiple integer overflows in XML_GetBuffer
+
+        Bug fixes:
+            #502: Fix potential null pointer dereference
+            #520: Symbol XML_SetHashSalt was not exported
+            Output of "xmlwf -h" was incomplete
+
+        Other changes:
+            #503: Document behavior of calling XML_SetHashSalt with salt 0
+            Minor improvements to man page xmlwf(1)
+            Improvements to the experimental CMake build system
+            libtool now invoked with --verbose
+
 Release 2.1.0 Sat March 24 2012
+        - Security fixes:
+          #2958794: CVE-2012-1148 - Memory leak in poolGrow.
+          #2895533: CVE-2012-1147 - Resource leak in readfilemap.c.
+          #3496608: CVE-2012-0876 - Hash DOS attack.
+          #2894085: CVE-2009-3560 - Buffer over-read and crash in big2_toUtf8().
+          #1990430: CVE-2009-3720 - Parser crash with special UTF-8 sequences.
         - Bug Fixes:
           #1742315: Harmful XML_ParserCreateNS suggestion.
-          #2895533: CVE-2012-1147 - Resource leak in readfilemap.c.
           #1785430: Expat build fails on linux-amd64 with gcc version>=4.1 -O3.
           #1983953, 2517952, 2517962, 2649838: 
                 Build modifications using autoreconf instead of buildconf.sh.
           #2815947, #2884086: OBJEXT and EXEEXT support while building.
-          #1990430: CVE-2009-3720 - Parser crash with special UTF-8 sequences.
           #2517938: xmlwf should return non-zero exit status if not well-formed.
           #2517946: Wrong statement about XMLDecl in xmlwf.1 and xmlwf.sgml.
           #2855609: Dangling positionPtr after error.
-          #2894085: CVE-2009-3560 - Buffer over-read and crash in big2_toUtf8().
-          #2958794: CVE-2012-1148 - Memory leak in poolGrow.
           #2990652: CMake support.
           #3010819: UNEXPECTED_STATE with a trailing "%" in entity value.
           #3206497: Unitialized memory returned from XML_Parse.
           #3287849: make check fails on mingw-w64.
-          #3496608: CVE-2012-0876 - Hash DOS attack.
         - Patches:
           #1749198: pkg-config support.
           #3010222: Fix for bug #3010819.
           #3312568: CMake support.
           #3446384: Report byte offsets for attr names and values.
         - New Features / API changes:
-          Added new API member XML_SetHashSalt() that allows setting an intial
+          Added new API member XML_SetHashSalt() that allows setting an initial
                 value (salt) for hash calculations. This is part of the fix for
                 bug #3496608 to randomize hash parameters.
           When compiled with XML_ATTR_INFO defined, adds new API member

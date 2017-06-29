@@ -1,5 +1,5 @@
 
-                        Expat, Release 2.1.0
+                        Expat, Release 2.2.1
 
 This is Expat, a C library for parsing XML, written by James Clark.
 Expat is a stream-oriented XML parser.  This means that you register
@@ -114,7 +114,7 @@ Note for Solaris users:  The "ar" command is usually located in
 "/usr/ccs/bin", which is not in the default PATH.  You will need to
 add this to your path for the "make" command, and probably also switch
 to GNU make (the "make" found in /usr/ccs/bin does not seem to work
-properly -- appearantly it does not understand .PHONY directives).  If
+properly -- apparently it does not understand .PHONY directives).  If
 you're using ksh or bash, use this command to build:
 
         PATH=/usr/ccs/bin:$PATH make

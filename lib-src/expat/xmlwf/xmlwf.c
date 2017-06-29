@@ -9,15 +9,12 @@
 
 #include "expat.h"
 #include "codepage.h"
+#include "internal.h"  /* for UNUSED_P only */
 #include "xmlfile.h"
 #include "xmltchar.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
-#endif
-
-#if defined(__amigaos__) && defined(__USE_INLINE__)
-#include <proto/expat.h>
 #endif
 
 /* This ensures proper sorting. */
@@ -248,49 +245,49 @@ processingInstruction(void *userData, const XML_Char *target,
 #endif /* not W3C14N */
 
 static void XMLCALL
-defaultCharacterData(void *userData, const XML_Char *s, int len)
+defaultCharacterData(void *userData, const XML_Char *UNUSED_P(s), int UNUSED_P(len))
 {
   XML_DefaultCurrent((XML_Parser) userData);
 }
 
 static void XMLCALL
-defaultStartElement(void *userData, const XML_Char *name,
-                    const XML_Char **atts)
+defaultStartElement(void *userData, const XML_Char *UNUSED_P(name),
+                    const XML_Char **UNUSED_P(atts))
 {
   XML_DefaultCurrent((XML_Parser) userData);
 }
 
 static void XMLCALL
-defaultEndElement(void *userData, const XML_Char *name)
+defaultEndElement(void *userData, const XML_Char *UNUSED_P(name))
 {
   XML_DefaultCurrent((XML_Parser) userData);
 }
 
 static void XMLCALL
-defaultProcessingInstruction(void *userData, const XML_Char *target,
-                             const XML_Char *data)
+defaultProcessingInstruction(void *userData, const XML_Char *UNUSED_P(target),
+                             const XML_Char *UNUSED_P(data))
 {
   XML_DefaultCurrent((XML_Parser) userData);
 }
 
 static void XMLCALL
-nopCharacterData(void *userData, const XML_Char *s, int len)
+nopCharacterData(void *UNUSED_P(userData), const XML_Char *UNUSED_P(s), int UNUSED_P(len))
 {
 }
 
 static void XMLCALL
-nopStartElement(void *userData, const XML_Char *name, const XML_Char **atts)
+nopStartElement(void *UNUSED_P(userData), const XML_Char *UNUSED_P(name), const XML_Char **UNUSED_P(atts))
 {
 }
 
 static void XMLCALL
-nopEndElement(void *userData, const XML_Char *name)
+nopEndElement(void *UNUSED_P(userData), const XML_Char *UNUSED_P(name))
 {
 }
 
 static void XMLCALL
-nopProcessingInstruction(void *userData, const XML_Char *target,
-                         const XML_Char *data)
+nopProcessingInstruction(void *UNUSED_P(userData), const XML_Char *UNUSED_P(target),
+                         const XML_Char *UNUSED_P(data))
 {
 }
 
@@ -434,9 +431,9 @@ metaCharacterData(void *userData, const XML_Char *s, int len)
 static void XMLCALL
 metaStartDoctypeDecl(void *userData,
                      const XML_Char *doctypeName,
-                     const XML_Char *sysid,
-                     const XML_Char *pubid,
-                     int has_internal_subset)
+                     const XML_Char *UNUSED_P(sysid),
+                     const XML_Char *UNUSED_P(pubid),
+                     int UNUSED_P(has_internal_subset))
 {
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
@@ -458,7 +455,7 @@ metaEndDoctypeDecl(void *userData)
 static void XMLCALL
 metaNotationDecl(void *userData,
                  const XML_Char *notationName,
-                 const XML_Char *base,
+                 const XML_Char *UNUSED_P(base),
                  const XML_Char *systemId,
                  const XML_Char *publicId)
 {
@@ -480,10 +477,10 @@ metaNotationDecl(void *userData,
 static void XMLCALL
 metaEntityDecl(void *userData,
                const XML_Char *entityName,
-               int  is_param,
+               int  UNUSED_P(is_param),
                const XML_Char *value,
                int  value_length,
-               const XML_Char *base,
+               const XML_Char *UNUSED_P(base),
                const XML_Char *systemId,
                const XML_Char *publicId,
                const XML_Char *notationName)
@@ -558,7 +555,7 @@ unknownEncodingConvert(void *data, const char *p)
 }
 
 static int XMLCALL
-unknownEncoding(void *userData, const XML_Char *name, XML_Encoding *info)
+unknownEncoding(void *UNUSED_P(userData), const XML_Char *name, XML_Encoding *info)
 {
   int cp;
   static const XML_Char prefixL[] = T("windows-");
@@ -594,7 +591,7 @@ unknownEncoding(void *userData, const XML_Char *name, XML_Encoding *info)
 }
 
 static int XMLCALL
-notStandalone(void *userData)
+notStandalone(void *UNUSED_P(userData))
 {
   return 0;
 }
@@ -607,7 +604,7 @@ showVersion(XML_Char *prog)
   const XML_Feature *features = XML_GetFeatureList();
   while ((ch = *s) != 0) {
     if (ch == '/'
-#if (defined(WIN32) || defined(__WATCOMC__))
+#if defined(_WIN32)
         || ch == '\\'
 #endif
         )
@@ -634,8 +631,7 @@ static void
 usage(const XML_Char *prog, int rc)
 {
   ftprintf(stderr,
-           T("usage: %s [-n] [-p] [-r] [-s] [-w] [-x] [-d output-dir] "
-             "[-e encoding] file ...\n"), prog);
+           T("usage: %s [-s] [-n] [-p] [-x] [-e encoding] [-w] [-d output-dir] [-c] [-m] [-r] [-t] [file ...]\n"), prog);
   exit(rc);
 }
 
@@ -760,6 +756,12 @@ tmain(int argc, XML_Char **argv)
       parser = XML_ParserCreateNS(encoding, NSSEP);
     else
       parser = XML_ParserCreate(encoding);
+
+    if (! parser) {
+      tperror("Could not instantiate parser");
+      exit(1);
+    }
+
     if (requireStandalone)
       XML_SetNotStandaloneHandler(parser, notStandalone);
     XML_SetParamEntityParsing(parser, paramEntityParsing);
@@ -779,7 +781,7 @@ tmain(int argc, XML_Char **argv)
         const XML_Char * lastDelim = tcsrchr(file, delim[0]);
         if (lastDelim)
           file = lastDelim + 1;
-#if (defined(WIN32) || defined(__WATCOMC__))
+#if defined(_WIN32)
         else {
           const XML_Char * winDelim = T("\\");
           lastDelim = tcsrchr(file, winDelim[0]);

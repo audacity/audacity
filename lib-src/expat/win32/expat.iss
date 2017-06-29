@@ -7,17 +7,17 @@
 [Setup]
 AppName=Expat
 AppId=expat
-AppVersion=2.1.0
-AppVerName=Expat 2.1.0
-AppCopyright=Copyright © 1998-2012 Thai Open Source Software Center, Clark Cooper, and the Expat maintainers
+AppVersion=2.2.1
+AppVerName=Expat 2.2.1
+AppCopyright=Copyright ï¿½ 1998-2017 Thai Open Source Software Center, Clark Cooper, and the Expat maintainers
 AppPublisher=The Expat Developers
 AppPublisherURL=http://www.libexpat.org/
 AppSupportURL=http://www.libexpat.org/
 AppUpdatesURL=http://www.libexpat.org/
-UninstallDisplayName=Expat XML Parser 2.1.0
-VersionInfoVersion=2.1.0
+UninstallDisplayName=Expat XML Parser 2.2.1
+VersionInfoVersion=2.2.1
 
-DefaultDirName={pf}\Expat 2.1.0
+DefaultDirName={pf}\Expat 2.2.1
 UninstallFilesDir={app}\Uninstall
 
 Compression=lzma
@@ -32,6 +32,7 @@ DisableReadyPage=yes
 [Files]
 Flags: ignoreversion; Source: win32\bin\Release\xmlwf.exe;  DestDir: "{app}\Bin"
 Flags: ignoreversion; Source: win32\MANIFEST.txt;           DestDir: "{app}"
+Flags: ignoreversion; Source: AUTHORS;                      DestDir: "{app}"; DestName: AUTHORS.txt
 Flags: ignoreversion; Source: Changes;                      DestDir: "{app}"; DestName: Changes.txt
 Flags: ignoreversion; Source: COPYING;                      DestDir: "{app}"; DestName: COPYING.txt
 Flags: ignoreversion; Source: README;                       DestDir: "{app}"; DestName: README.txt
@@ -40,29 +41,31 @@ Flags: ignoreversion; Source: doc\*.css;                    DestDir: "{app}\Doc"
 Flags: ignoreversion; Source: doc\*.png;                    DestDir: "{app}\Doc"
 Flags: ignoreversion; Source: win32\bin\Release\*.dll;      DestDir: "{app}\Bin"
 Flags: ignoreversion; Source: win32\bin\Release\*.lib;      DestDir: "{app}\Bin"
-Flags: ignoreversion; Source: expat.dsw;                    DestDir: "{app}\Source"
+Flags: ignoreversion; Source: expat.sln;                    DestDir: "{app}\Source"
 Flags: ignoreversion; Source: win32\README.txt;             DestDir: "{app}\Source"
-Flags: ignoreversion; Source: bcb5\*.bp*;                   DestDir: "{app}\Source\bcb5"
-Flags: ignoreversion; Source: bcb5\*.mak;                   DestDir: "{app}\Source\bcb5"
-Flags: ignoreversion; Source: bcb5\*.def;                   DestDir: "{app}\Source\bcb5"
-Flags: ignoreversion; Source: bcb5\*.txt;                   DestDir: "{app}\Source\bcb5"
-Flags: ignoreversion; Source: bcb5\*.bat;                   DestDir: "{app}\Source\bcb5"
 Flags: ignoreversion; Source: lib\*.c;                      DestDir: "{app}\Source\lib"
 Flags: ignoreversion; Source: lib\*.h;                      DestDir: "{app}\Source\lib"
 Flags: ignoreversion; Source: lib\*.def;                    DestDir: "{app}\Source\lib"
-Flags: ignoreversion; Source: lib\*.dsp;                    DestDir: "{app}\Source\lib"
+Flags: ignoreversion; Source: lib\*.vcxproj;                DestDir: "{app}\Source\lib"
+Flags: ignoreversion; Source: lib\*.vcxproj.filters;        DestDir: "{app}\Source\lib"
 Flags: ignoreversion; Source: examples\*.c;                 DestDir: "{app}\Source\examples"
-Flags: ignoreversion; Source: examples\*.dsp;               DestDir: "{app}\Source\examples"
+Flags: ignoreversion; Source: examples\*.vcxproj;           DestDir: "{app}\Source\examples"
+Flags: ignoreversion; Source: examples\*.vcxproj.filters;   DestDir: "{app}\Source\examples"
 Flags: ignoreversion; Source: tests\*.c;                    DestDir: "{app}\Source\tests"
 Flags: ignoreversion; Source: tests\*.cpp;                  DestDir: "{app}\Source\tests"
 Flags: ignoreversion; Source: tests\*.h;                    DestDir: "{app}\Source\tests"
+Flags: ignoreversion; Source: tests\*.sln;                  DestDir: "{app}\Source\tests"
+Flags: ignoreversion; Source: tests\*.vcxproj;              DestDir: "{app}\Source\tests"
+Flags: ignoreversion; Source: tests\*.vcxproj.filters;      DestDir: "{app}\Source\tests"
 Flags: ignoreversion; Source: tests\README.txt;             DestDir: "{app}\Source\tests"
 Flags: ignoreversion; Source: tests\benchmark\*.c;          DestDir: "{app}\Source\tests\benchmark"
-Flags: ignoreversion; Source: tests\benchmark\*.ds*;        DestDir: "{app}\Source\tests\benchmark"
+Flags: ignoreversion; Source: tests\benchmark\*.sln;        DestDir: "{app}\Source\tests\benchmark"
+Flags: ignoreversion; Source: tests\benchmark\*.vcxproj;    DestDir: "{app}\Source\tests\benchmark"
 Flags: ignoreversion; Source: tests\benchmark\README.txt;   DestDir: "{app}\Source\tests\benchmark"
 Flags: ignoreversion; Source: xmlwf\*.c*;                   DestDir: "{app}\Source\xmlwf"
 Flags: ignoreversion; Source: xmlwf\*.h;                    DestDir: "{app}\Source\xmlwf"
-Flags: ignoreversion; Source: xmlwf\*.dsp;                  DestDir: "{app}\Source\xmlwf"
+Flags: ignoreversion; Source: xmlwf\*.vcxproj;              DestDir: "{app}\Source\xmlwf"
+Flags: ignoreversion; Source: xmlwf\*.vcxproj.filters;      DestDir: "{app}\Source\xmlwf"
 
 [Messages]
 WelcomeLabel1=Welcome to the Expat XML Parser Setup Wizard

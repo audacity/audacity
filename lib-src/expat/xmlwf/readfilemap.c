@@ -8,16 +8,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef __WATCOMC__
-#ifndef __LINUX__
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
-#endif
-
-#ifdef __BEOS__
-#include <unistd.h>
+/* Functions close(2) and read(2) */
+#if !defined(_WIN32) && !defined(_WIN64)
+# include <unistd.h>
 #endif
 
 #ifndef S_ISREG
@@ -66,6 +59,11 @@ filemap(const char *name,
     close(fd);
     return 0;
   }
+  if (sb.st_size > XML_MAX_CHUNK_LEN) {
+    close(fd);
+    return 2;  /* Cannot be passed to XML_Parse in one go */
+  }
+
   nbytes = sb.st_size;
   /* malloc will return NULL with nbytes == 0, handle files with size 0 */
   if (nbytes == 0) {

@@ -26,6 +26,12 @@ extern "C" {
 #define __func__ __FUNCTION__
 #endif
 
+/* ISO C90 does not support '__func__' predefined identifier */
+#if (defined(__STDC_VERSION__) && (__STDC_VERSION__ < 199901)) || \
+    (defined(__GNUC__) && !defined(__STDC_VERSION__))
+# define __func__ "(unknown)"
+#endif
+
 #define START_TEST(testname) static void testname(void) { \
     _check_set_test_info(__func__, __FILE__, __LINE__);   \
     {
@@ -48,12 +54,12 @@ struct SRunner {
 };
 
 struct Suite {
-    char *name;
+    const char *name;
     TCase *tests;
 };
 
 struct TCase {
-    char *name;
+    const char *name;
     tcase_setup_function setup;
     tcase_teardown_function teardown;
     tcase_test_function *tests;
@@ -72,9 +78,9 @@ void _check_set_test_info(char const *function,
  * Prototypes for the actual implementation.
  */
 
-void _fail_unless(int condition, const char *file, int line, char *msg);
-Suite *suite_create(char *name);
-TCase *tcase_create(char *name);
+void _fail_unless(int condition, const char *file, int line, const char *msg);
+Suite *suite_create(const char *name);
+TCase *tcase_create(const char *name);
 void suite_add_tcase(Suite *suite, TCase *tc);
 void tcase_add_checked_fixture(TCase *,
                                tcase_setup_function,

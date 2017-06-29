@@ -71,3 +71,6 @@ EXPORTS
   XML_StopParser @63
   XML_ResumeParser @64
   XML_GetParsingStatus @65
+; added with version 2.1.1
+; XML_GetAttributeInfo @66
+  XML_SetHashSalt @67@

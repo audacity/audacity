@@ -22,6 +22,4 @@ directory you specified to the installer.
                       formedness checker, and a couple of small sample
                       applications.
 
-  <top>\Source\bcb5\  Project files for Borland C++ Builder 5 and BCC 5.5.
-
 

@@ -1,0 +1,35 @@
+Output differs: ibm/valid/P02/ibm02v01.xml
+Output differs: ibm/valid/P28/ibm28v02.xml
+Output differs: ibm/valid/P29/ibm29v01.xml
+Output differs: ibm/valid/P29/ibm29v02.xml
+Output differs: ibm/valid/P54/ibm54v01.xml
+Output differs: ibm/valid/P56/ibm56v08.xml
+Output differs: ibm/valid/P57/ibm57v01.xml
+Output differs: ibm/valid/P58/ibm58v01.xml
+Output differs: ibm/valid/P58/ibm58v02.xml
+Output differs: ibm/valid/P70/ibm70v01.xml
+Output differs: ibm/valid/P82/ibm82v01.xml
+ibm49i02.dtd: No such file or directory
+Output differs: ibm/invalid/P58/ibm58i01.xml
+Output differs: ibm/invalid/P58/ibm58i02.xml
+Output differs: xmltest/valid/sa/069.xml
+Output differs: xmltest/valid/sa/076.xml
+Output differs: xmltest/valid/sa/090.xml
+Output differs: xmltest/valid/sa/091.xml
+Output differs: sun/valid/notation01.xml
+Output differs: sun/valid/not-sa01.xml
+Output differs: sun/valid/not-sa02.xml
+Output differs: sun/valid/not-sa03.xml
+Output differs: sun/valid/not-sa04.xml
+Output differs: sun/valid/sa02.xml
+Output differs: sun/valid/sa03.xml
+Output differs: sun/valid/sa04.xml
+Output differs: sun/valid/sa05.xml
+Expected not well-formed: ibm/not-wf/misc/432gewf.xml
+Expected not well-formed: xmltest/not-wf/not-sa/005.xml
+Expected not well-formed: sun/not-wf/uri01.xml
+Expected not well-formed: oasis/p06fail1.xml
+Expected not well-formed: oasis/p08fail1.xml
+Expected not well-formed: oasis/p08fail2.xml
+Passed: 1776
+Failed: 33
