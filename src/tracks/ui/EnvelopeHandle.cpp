@@ -80,7 +80,7 @@ namespace {
 }
 
 HitTestResult EnvelopeHandle::TimeTrackHitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt)
 {
    auto envelope = tt->GetEnvelope();
@@ -91,16 +91,16 @@ HitTestResult EnvelopeHandle::TimeTrackHitTest
    float zoomMin, zoomMax;
    GetTimeTrackData( *pProject, *tt, dBRange, dB, zoomMin, zoomMax);
    return EnvelopeHandle::HitEnvelope
-      (event, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+      (state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
 HitTestResult EnvelopeHandle::WaveTrackHitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt)
 {
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
-   const Envelope *const envelope = wt->GetEnvelopeAtX(event.GetX());
+   const Envelope *const envelope = wt->GetEnvelopeAtX(state.GetX());
 
    if (!envelope)
       return {};
@@ -120,18 +120,18 @@ HitTestResult EnvelopeHandle::WaveTrackHitTest
    const float dBRange = wt->GetWaveformSettings().dBRange;
 
    return EnvelopeHandle::HitEnvelope
-       (event, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+       (state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
 HitTestResult EnvelopeHandle::HitEnvelope
-(const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject,
+(const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
  const Envelope *envelope, float zoomMin, float zoomMax,
  bool dB, float dBRange)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
    const double envValue =
-      envelope->GetValue(viewInfo.PositionToTime(event.m_x, rect.x));
+      envelope->GetValue(viewInfo.PositionToTime(state.m_x, rect.x));
 
    // Get y position of envelope point.
    int yValue = GetWaveYPos(envValue,
@@ -144,7 +144,7 @@ HitTestResult EnvelopeHandle::HitEnvelope
       rect.height, dB, true, dBRange, false) + rect.y;
 
    // Get y distance of mouse from center line (in pixels).
-   int yMouse = abs(ctr - event.m_y);
+   int yMouse = abs(ctr - state.m_y);
    // Get y distance of envelope from center line (in pixels)
    yValue = abs(ctr - yValue);
 
@@ -255,7 +255,7 @@ UIHandle::Result EnvelopeHandle::Drag
 }
 
 HitTestPreview EnvelopeHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
    return HitPreview(pProject, false);
 }

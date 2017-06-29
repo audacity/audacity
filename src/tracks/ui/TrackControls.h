@@ -44,7 +44,7 @@ protected:
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
    virtual HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *) override = 0;
 
    unsigned DoContextMenu

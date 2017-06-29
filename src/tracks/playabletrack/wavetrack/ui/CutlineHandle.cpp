@@ -75,7 +75,7 @@ namespace
    
    bool IsOverCutline
       (const ViewInfo &viewInfo, WaveTrack * track,
-       const wxRect &rect, const wxMouseEvent &event,
+       const wxRect &rect, const wxMouseState &state,
        WaveTrackLocation *pCapturedTrackLocation)
    {
       for (auto loc: track->GetCachedLocations())
@@ -93,7 +93,7 @@ namespace
                locRect.y += rect.height/3;
                locRect.height /= 3;
             }
-            if (locRect.Contains(event.m_x, event.m_y))
+            if (locRect.Contains(state.m_x, state.m_y))
             {
                if (pCapturedTrackLocation)
                   *pCapturedTrackLocation = loc;
@@ -107,7 +107,7 @@ namespace
 }
 
 HitTestResult CutlineHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject,
+(const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
  const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
@@ -118,7 +118,7 @@ HitTestResult CutlineHandle::HitTest
 
    WaveTrack *wavetrack = pTrack.get();
    WaveTrackLocation location;
-   if (!IsOverCutline(viewInfo, wavetrack, rect, event, &location))
+   if (!IsOverCutline(viewInfo, wavetrack, rect, state, &location))
       return {};
 
    return HitAnywhere(pProject, location.typ == WaveTrackLocation::locationCutLine);
@@ -222,7 +222,7 @@ UIHandle::Result CutlineHandle::Drag
 }
 
 HitTestPreview CutlineHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return HitPreview(mbCutline, false);
 }

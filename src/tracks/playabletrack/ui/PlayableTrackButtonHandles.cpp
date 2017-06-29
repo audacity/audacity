@@ -44,7 +44,7 @@ UIHandle::Result MuteButtonHandle::CommitChanges
 }
 
 HitTestResult MuteButtonHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    wxRect buttonRect;
@@ -54,7 +54,7 @@ HitTestResult MuteButtonHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
-   if ( pTrack && buttonRect.Contains(event.m_x, event.m_y) ) {
+   if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
       Instance().mRect = buttonRect;
       return {
          HitPreview(),
@@ -93,7 +93,7 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 }
 
 HitTestResult SoloButtonHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    wxRect buttonRect;
@@ -104,7 +104,7 @@ HitTestResult SoloButtonHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
-   if ( pTrack && buttonRect.Contains(event.m_x, event.m_y) ) {
+   if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
       Instance().mRect = buttonRect;
       return HitTestResult(
          HitPreview(),

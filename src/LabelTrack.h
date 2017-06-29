@@ -122,7 +122,7 @@ class AUDACITY_DLL_API LabelTrack final : public Track
    virtual ~ LabelTrack();
 
    HitTestResult DetailedHitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 

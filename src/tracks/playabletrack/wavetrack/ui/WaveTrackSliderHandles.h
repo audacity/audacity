@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/SliderHandle.h"
 
+class wxMouseState;
 class WaveTrack;
 
 struct HitTestResult;
@@ -39,7 +40,7 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
@@ -66,7 +67,7 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 

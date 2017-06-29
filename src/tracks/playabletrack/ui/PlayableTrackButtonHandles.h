@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/ButtonHandle.h"
 
 struct HitTestResult;
+class wxMouseState;
 
 class MuteButtonHandle final : public ButtonHandle
 {
@@ -33,7 +34,7 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
@@ -57,7 +58,7 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 

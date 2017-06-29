@@ -63,7 +63,7 @@ HitTestResult TimeShiftHandle::HitAnywhere(const AudacityProject *pProject)
 }
 
 HitTestResult TimeShiftHandle::HitTest
-   (const wxMouseEvent & event, const wxRect &rect, const AudacityProject *pProject)
+   (const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject)
 {
    /// method that tells us if the mouse event landed on a
    /// time-slider that allows us to time shift the sequence.
@@ -78,8 +78,8 @@ HitTestResult TimeShiftHandle::HitTest
    const int hotspotOffset = 5;
 
    // We are doing an approximate test here - is the mouse in the right or left border?
-   if (!(event.m_x + hotspotOffset < rect.x + adjustedDragHandleWidth ||
-       event.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
+   if (!(state.m_x + hotspotOffset < rect.x + adjustedDragHandleWidth ||
+       state.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
       return {};
 
    return HitAnywhere(pProject);
@@ -769,7 +769,7 @@ UIHandle::Result TimeShiftHandle::Drag
 }
 
 HitTestPreview TimeShiftHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
    return HitPreview(pProject, false);
 }

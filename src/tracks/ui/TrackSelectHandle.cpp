@@ -163,7 +163,7 @@ UIHandle::Result TrackSelectHandle::Drag
 }
 
 HitTestPreview TrackSelectHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *project)
+(const TrackPanelMouseState &, const AudacityProject *project)
 {
    // Note that this differs from HitPreview.
 

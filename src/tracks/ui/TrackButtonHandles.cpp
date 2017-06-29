@@ -55,12 +55,12 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
 }
 
 HitTestResult MinimizeButtonHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect)
+(const wxMouseState &state, const wxRect &rect)
 {
    wxRect buttonRect;
    TrackInfo::GetMinimizeRect(rect, buttonRect);
 
-   if (buttonRect.Contains(event.m_x, event.m_y)) {
+   if (buttonRect.Contains(state.m_x, state.m_y)) {
       Instance().mRect = buttonRect;
       return {
          HitPreview(),
@@ -112,12 +112,12 @@ UIHandle::Result CloseButtonHandle::CommitChanges
 }
 
 HitTestResult CloseButtonHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect)
+(const wxMouseState &state, const wxRect &rect)
 {
    wxRect buttonRect;
    TrackInfo::GetCloseBoxRect(rect, buttonRect);
 
-   if (buttonRect.Contains(event.m_x, event.m_y)) {
+   if (buttonRect.Contains(state.m_x, state.m_y)) {
       Instance().mRect = buttonRect;
       return {
          HitPreview(),
@@ -155,13 +155,13 @@ UIHandle::Result MenuButtonHandle::CommitChanges
 }
 
 HitTestResult MenuButtonHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const std::shared_ptr<TrackPanelCell> &pCell)
 {
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
-   if (buttonRect.Contains(event.m_x, event.m_y)) {
+   if (buttonRect.Contains(state.m_x, state.m_y)) {
       Instance().mpCell = pCell;
       Instance().mRect = buttonRect;
       return {

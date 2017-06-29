@@ -38,21 +38,21 @@ std::shared_ptr<Track> TrackControls::FindTrack()
 }
 
 HitTestResult TrackControls::HitTest
-(const TrackPanelMouseEvent &evt,
+(const TrackPanelMouseState &st,
  const AudacityProject *project)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
    HitTestResult result;
 
-   if (NULL != (result = CloseButtonHandle::HitTest(event, rect)).handle)
+   if (NULL != (result = CloseButtonHandle::HitTest(state, rect)).handle)
       return result;
 
-   if (NULL != (result = MenuButtonHandle::HitTest(event, rect,
+   if (NULL != (result = MenuButtonHandle::HitTest(state, rect,
          this->FindTrack()->GetTrackControl())).handle)
       return result;
 
-   if (NULL != (result = MinimizeButtonHandle::HitTest(event, rect)).handle)
+   if (NULL != (result = MinimizeButtonHandle::HitTest(state, rect)).handle)
       return result;
 
    return TrackSelectHandle::HitAnywhere

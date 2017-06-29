@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelResizerCell.h"
 
 HitTestResult Track::HitTest
-(const TrackPanelMouseEvent &event,
+(const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
    const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
@@ -35,11 +35,11 @@ HitTestResult Track::HitTest
    if ( !isMultiTool && currentTool == zoomTool )
       // Zoom tool is a non-selecting tool that takes precedence in all tracks
       // over all other tools, no matter what detail you point at.
-      return ZoomHandle::HitAnywhere(event.event, pProject);
+      return ZoomHandle::HitAnywhere(st.state, pProject);
 
    // In other tools, let subclasses determine detailed hits.
    HitTestResult result =
-      DetailedHitTest( event, pProject, currentTool, isMultiTool );
+      DetailedHitTest( st, pProject, currentTool, isMultiTool );
 
    // If there is no detailed hit for the subclass, there are still some
    // general cases.
@@ -54,11 +54,11 @@ HitTestResult Track::HitTest
    // Let the multi-tool right-click handler apply only in default of all
    // other detailed hits.
    if ( !result.handle && isMultiTool )
-      result = ZoomHandle::HitTest(event.event, pProject);
+      result = ZoomHandle::HitTest(st.state, pProject);
 
    // Finally, default of all is adjustment of the selection box.
    if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
-      result = SelectHandle::HitTest(event, pProject, Pointer(this));
+      result = SelectHandle::HitTest(st, pProject, Pointer(this));
 
    result.preview.refreshCode |= refresh;
    return result;

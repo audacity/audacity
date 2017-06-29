@@ -78,7 +78,7 @@ namespace
       { return RefreshCode::RefreshNone; }
 
       HitTestPreview Preview
-         (const TrackPanelMouseEvent &, const AudacityProject *) override
+         (const TrackPanelMouseState &, const AudacityProject *) override
       { return HitPreview(); }
 
       Result Release
@@ -96,7 +96,7 @@ BackgroundCell::~BackgroundCell()
 }
 
 HitTestResult BackgroundCell::HitTest
-(const TrackPanelMouseEvent &,
+(const TrackPanelMouseState &,
  const AudacityProject *)
 {
    return BackgroundHandle::HitAnywhere();

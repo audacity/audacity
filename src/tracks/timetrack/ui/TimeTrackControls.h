@@ -25,7 +25,7 @@ public:
    ~TimeTrackControls();
 
    HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;

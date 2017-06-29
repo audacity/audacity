@@ -26,8 +26,8 @@ public:
 
 protected:
    HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
-      const AudacityProject *) override;
+      (const TrackPanelMouseState &state,
+      const AudacityProject *pProject) override;
 
    std::shared_ptr<Track> FindTrack() override;
 

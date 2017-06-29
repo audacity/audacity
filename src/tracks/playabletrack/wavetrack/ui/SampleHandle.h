@@ -16,6 +16,7 @@ Paul Licameli
 #include "../../../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
 struct HitTestResult;
@@ -30,13 +31,13 @@ class SampleHandle final : public UIHandle
    SampleHandle &operator=(const SampleHandle&) = delete;
    static SampleHandle& Instance();
    static HitTestPreview HitPreview
-      (const wxMouseEvent &event, const AudacityProject *pProject, bool unsafe);
+      (const wxMouseState &state, const AudacityProject *pProject, bool unsafe);
 
 public:
    static HitTestResult HitAnywhere
-      (const wxMouseEvent &event, const AudacityProject *pProject);
+      (const wxMouseState &state, const AudacityProject *pProject);
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~SampleHandle();
@@ -48,7 +49,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

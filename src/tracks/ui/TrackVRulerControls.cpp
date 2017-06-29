@@ -33,7 +33,7 @@ std::shared_ptr<Track> TrackVRulerControls::FindTrack()
 }
 
 HitTestResult TrackVRulerControls::HitTest
-   (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+   (const TrackPanelMouseState &, const AudacityProject *)
 {
    // Use a space for the tip, otherwise we get the default message.
    static wxCursor arrowCursor{ wxCURSOR_ARROW };

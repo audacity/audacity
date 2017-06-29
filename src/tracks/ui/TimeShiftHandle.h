@@ -63,7 +63,7 @@ public:
 
    static HitTestResult HitAnywhere(const AudacityProject *pProject);
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject);
+      (const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject);
 
    virtual ~TimeShiftHandle();
 
@@ -74,7 +74,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

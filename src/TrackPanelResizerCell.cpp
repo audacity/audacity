@@ -18,7 +18,7 @@ TrackPanelResizerCell::TrackPanelResizerCell( std::shared_ptr<Track> pTrack )
 {}
 
 HitTestResult TrackPanelResizerCell::HitTest
-(const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return {
       TrackPanelResizeHandle::HitPreview( mBetweenTracks ),

@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../ui/ButtonHandle.h"
 
+class wxMouseState;
 struct HitTestResult;
 
 class MinimizeButtonHandle final : public ButtonHandle
@@ -30,7 +31,7 @@ protected:
       override;
 
 public:
-   static HitTestResult HitTest(const wxMouseEvent &event, const wxRect &rect);
+   static HitTestResult HitTest(const wxMouseState &state, const wxRect &rect);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +53,7 @@ protected:
    bool StopsOnKeystroke () override { return true; }
    
 public:
-   static HitTestResult HitTest(const wxMouseEvent &event, const wxRect &rect);
+   static HitTestResult HitTest(const wxMouseState &state, const wxRect &rect);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +77,7 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const std::shared_ptr<TrackPanelCell> &pCell);
 
 private:

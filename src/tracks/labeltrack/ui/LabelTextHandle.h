@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../SelectedRegion.h"
 #include <wx/gdicmn.h>
 
-class wxMouseEvent;
+class wxMouseState;
 struct HitTestResult;
 class LabelTrack;
 class SelectionStateChanger;
@@ -32,7 +32,7 @@ class LabelTextHandle final : public LabelDefaultClickHandle
 
 public:
    static HitTestResult HitTest(
-      const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT);
+      const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
 
    virtual ~LabelTextHandle();
 
@@ -43,7 +43,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

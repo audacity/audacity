@@ -49,13 +49,13 @@ HitTestPreview LabelGlyphHandle::HitPreview
 }
 
 HitTestResult LabelGlyphHandle::HitTest
-(const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT)
+(const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT)
 {
    using namespace RefreshCode;
    unsigned refreshResult = RefreshNone;
 
    // Note: this has side effects on pLT!
-   int edge = pLT->OverGlyph(event.m_x, event.m_y);
+   int edge = pLT->OverGlyph(state.m_x, state.m_y);
 
    //KLUDGE: We refresh the whole Label track when the icon hovered over
    //changes colouration.  Inefficient.
@@ -137,7 +137,7 @@ UIHandle::Result LabelGlyphHandle::Drag
 }
 
 HitTestPreview LabelGlyphHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return HitPreview(mpLT->mbHitCenter, 0);
 }

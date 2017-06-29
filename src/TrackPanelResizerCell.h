@@ -23,8 +23,7 @@ public:
    TrackPanelResizerCell( std::shared_ptr<Track> pTrack );
 
    HitTestResult HitTest
-   (const TrackPanelMouseEvent &event,
-    const AudacityProject *pProject) override;
+      (const TrackPanelMouseState &, const AudacityProject *) override;
 
    std::shared_ptr<Track> FindTrack() override { return mpTrack.lock(); };
 private:

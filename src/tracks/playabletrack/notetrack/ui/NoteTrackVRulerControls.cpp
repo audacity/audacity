@@ -28,10 +28,10 @@ NoteTrackVRulerControls::~NoteTrackVRulerControls()
 }
 
 HitTestResult NoteTrackVRulerControls::HitTest
-(const TrackPanelMouseEvent &evt,
+(const TrackPanelMouseState &st,
  const AudacityProject *)
 {
-   return NoteTrackVZoomHandle::HitTest(evt.event);
+   return NoteTrackVZoomHandle::HitTest(st.state);
 }
 
 unsigned NoteTrackVRulerControls::HandleWheelRotation

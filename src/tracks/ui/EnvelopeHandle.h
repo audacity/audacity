@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
 class Envelope;
@@ -33,7 +34,7 @@ class EnvelopeHandle final : public UIHandle
    static HitTestPreview HitPreview(const AudacityProject *pProject, bool unsafe);
 
    static HitTestResult HitEnvelope
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject,
        const Envelope *envelope, float zoomMin, float zoomMax,
        bool dB, float dBRange);
@@ -41,10 +42,10 @@ class EnvelopeHandle final : public UIHandle
 public:
    static HitTestResult HitAnywhere(const AudacityProject *pProject);
    static HitTestResult TimeTrackHitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
    static HitTestResult WaveTrackHitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
 
    virtual ~EnvelopeHandle();
@@ -56,7 +57,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

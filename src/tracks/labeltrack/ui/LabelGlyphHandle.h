@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/gdicmn.h>
 #include "../../../MemoryX.h"
 
-class wxMouseEvent;
+class wxMouseState;
 struct HitTestResult;
 class LabelTrack;
 
@@ -29,7 +29,7 @@ class LabelGlyphHandle final : public LabelDefaultClickHandle
 
 public:
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT);
+      (const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
 
    virtual ~LabelGlyphHandle();
 
@@ -40,7 +40,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

@@ -22,6 +22,7 @@ class AudacityProject;
 struct HitTestPreview;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
 
 // A TrackPanelCell reports a handle object of some subclass, in response to a
 // hit test at a mouse position; then this handle processes certain events,
@@ -59,7 +60,7 @@ public:
 
    // Update the cursor and status message.
    virtual HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject) = 0;
+      (const TrackPanelMouseState &state, const AudacityProject *pProject) = 0;
 
    // Assume previously Clicked and not yet Released or Cancelled.
    // event.pCell may be other than for Click; may be NULL, and rect empty.

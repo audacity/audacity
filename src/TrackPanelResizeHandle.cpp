@@ -317,7 +317,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
 }
 
 HitTestPreview TrackPanelResizeHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return HitPreview(mMode == IsResizingBetweenLinkedTracks);
 }

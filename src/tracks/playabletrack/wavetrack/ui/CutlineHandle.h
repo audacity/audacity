@@ -15,6 +15,7 @@ Paul Licameli
 #include "../../../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 struct HitTestResult;
 class WaveTrack;
 
@@ -29,7 +30,7 @@ class CutlineHandle final : public UIHandle
 public:
    static HitTestResult HitAnywhere(const AudacityProject *pProject, bool cutline);
    static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
+      (const wxMouseState &state, const wxRect &rect,
       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~CutlineHandle();
@@ -41,7 +42,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

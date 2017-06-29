@@ -70,17 +70,17 @@ UIHandle::Result GainSliderHandle::CommitChanges
 }
 
 HitTestResult GainSliderHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *, const std::shared_ptr<Track> &pTrack)
 {
-   if (!event.Button(wxMOUSE_BTN_LEFT))
+   if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
 
    wxRect sliderRect;
    TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
-   if (sliderRect.Contains(event.m_x, event.m_y)) {
+   if (sliderRect.Contains(state.m_x, state.m_y)) {
       wxRect sliderRect;
       TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
 
@@ -167,17 +167,17 @@ UIHandle::Result PanSliderHandle::CommitChanges
 }
 
 HitTestResult PanSliderHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
-   if (!event.Button(wxMOUSE_BTN_LEFT))
+   if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
 
    wxRect sliderRect;
    TrackInfo::GetPanRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
-   if (sliderRect.Contains(event.m_x, event.m_y)) {
+   if (sliderRect.Contains(state.m_x, state.m_y)) {
       Instance().mSliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::PanSlider

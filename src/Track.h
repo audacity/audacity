@@ -134,14 +134,14 @@ class AUDACITY_DLL_API Track /* not final */
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
    HitTestResult HitTest
-      (const TrackPanelMouseEvent &, const AudacityProject *pProject)
+      (const TrackPanelMouseState &, const AudacityProject *pProject)
       final;
 
  public:
 
    // Rather override this for subclasses:
    virtual HitTestResult DetailedHitTest
-      (const TrackPanelMouseEvent &,
+      (const TrackPanelMouseState &,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       = 0;
 

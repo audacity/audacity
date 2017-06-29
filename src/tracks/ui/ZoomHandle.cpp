@@ -48,7 +48,7 @@ ZoomHandle &ZoomHandle::Instance()
 }
 
 HitTestPreview ZoomHandle::HitPreview
-   (const wxMouseEvent &event, const AudacityProject *pProject)
+   (const wxMouseState &state, const AudacityProject *pProject)
 {
    static auto zoomInCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
@@ -57,21 +57,21 @@ HitTestPreview ZoomHandle::HitPreview
    const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
    return {
       ttb->GetMessageForTool(zoomTool),
-      (event.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
+      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
    };
 }
 
 HitTestResult ZoomHandle::HitAnywhere
-(const wxMouseEvent &event, const AudacityProject *pProject)
+(const wxMouseState &state, const AudacityProject *pProject)
 {
-   return { HitPreview(event, pProject), &Instance() };
+   return { HitPreview(state, pProject), &Instance() };
 }
 
 HitTestResult ZoomHandle::HitTest
-(const wxMouseEvent &event, const AudacityProject *pProject)
+(const wxMouseState &state, const AudacityProject *pProject)
 {
-   if (event.ButtonIsDown(wxMOUSE_BTN_RIGHT) || event.RightUp())
-      return HitAnywhere(event, pProject);
+   if (state.ButtonIsDown(wxMOUSE_BTN_RIGHT))
+      return HitAnywhere(state, pProject);
    else
       return {};
 }
@@ -115,9 +115,9 @@ UIHandle::Result ZoomHandle::Drag
 }
 
 HitTestPreview ZoomHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   return HitPreview(evt.event, pProject);
+   return HitPreview(st.state, pProject);
 }
 
 UIHandle::Result ZoomHandle::Release

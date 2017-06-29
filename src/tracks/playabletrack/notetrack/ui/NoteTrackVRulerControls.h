@@ -25,7 +25,7 @@ public:
    ~NoteTrackVRulerControls();
 
    HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
    unsigned HandleWheelRotation

@@ -102,9 +102,9 @@ UIHandle::Result NoteTrackVZoomHandle::Drag
 }
 
 HitTestPreview NoteTrackVZoomHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *)
+(const TrackPanelMouseState &st, const AudacityProject *)
 {
-   return HitPreview(evt.event);
+   return HitPreview(st.state);
 }
 
 UIHandle::Result NoteTrackVZoomHandle::Release

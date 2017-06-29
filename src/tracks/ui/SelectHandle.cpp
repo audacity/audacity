@@ -150,7 +150,7 @@ namespace
 
    bool IsOverSplitline
       (const ViewInfo &viewInfo, const WaveTrack * track,
-       const wxRect &rect, const wxMouseEvent &event,
+       const wxRect &rect, const wxMouseState &state,
        WaveTrackLocation *pCapturedTrackLocation)
    {
       for (auto loc: track->GetCachedLocations())
@@ -167,7 +167,7 @@ namespace
                locRect.width = 1;
                locRect.y = rect.y;
                locRect.height = rect.height;
-               if (locRect.Contains(event.m_x, event.m_y))
+               if (locRect.Contains(state.m_x, state.m_y))
                {
                   if (pCapturedTrackLocation)
                      *pCapturedTrackLocation = loc;
@@ -222,7 +222,7 @@ namespace
 
    SelectionBoundary ChooseBoundary
       (const ViewInfo &viewInfo,
-       const wxMouseEvent & event, const Track *pTrack, const wxRect &rect,
+       const wxMouseState & state, const Track *pTrack, const wxRect &rect,
        bool mayDragWidth, bool onlyWithinSnapDistance,
        double *pPinValue = NULL)
    {
@@ -231,7 +231,7 @@ namespace
       // within the time boundaries.
       // May choose no boundary if onlyWithinSnapDistance is true.
       // Otherwise choose the eligible boundary nearest the mouse click.
-      const double selend = viewInfo.PositionToTime(event.m_x, rect.x);
+      const double selend = viewInfo.PositionToTime(state.m_x, rect.x);
       wxInt64 pixelDist = 0;
       const double t0 = viewInfo.selectedRegion.t0();
       const double t1 = viewInfo.selectedRegion.t1();
@@ -249,7 +249,7 @@ namespace
          WaveTrackLocation location;
          // We have to be EXACTLY (to the pixel) over the split line for the
          // hand icon to appear.
-         if( IsOverSplitline( viewInfo, wavetrack, rect,event,&location ))
+         if( IsOverSplitline( viewInfo, wavetrack, rect, state ,&location ))
          {
             boundary = ChooseTimeBoundary(selend, selend, viewInfo, selend, 
                onlyWithinSnapDistance, &pixelDist, pPinValue);
@@ -280,13 +280,13 @@ namespace
          const wxInt64 topSel = (f1 >= 0)
             ? FrequencyToPosition(wt, f1, rect.y, rect.height)
             : rect.y;
-         wxInt64 signedBottomDist = (int)(event.m_y - bottomSel);
+         wxInt64 signedBottomDist = (int)(state.m_y - bottomSel);
          wxInt64 verticalDist = std::abs(signedBottomDist);
          if (bottomSel == topSel)
             // Top and bottom are too close to resolve on screen
             chooseBottom = (signedBottomDist >= 0);
          else {
-            const wxInt64 topDist = std::abs((int)(event.m_y - topSel));
+            const wxInt64 topDist = std::abs((int)(state.m_y - topSel));
             if (topDist < verticalDist)
                chooseBottom = false, verticalDist = topDist;
          }
@@ -297,7 +297,7 @@ namespace
             ) {
             const wxInt64 centerSel =
                FrequencyToPosition(wt, fc, rect.y, rect.height);
-            const wxInt64 centerDist = abs((int)(event.m_y - centerSel));
+            const wxInt64 centerDist = abs((int)(state.m_y - centerSel));
             if (centerDist < verticalDist)
                chooseCenter = true, verticalDist = centerDist,
                ratio = f1 / fc;
@@ -423,11 +423,11 @@ namespace
 }
 
 HitTestResult SelectHandle::HitTest
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
+(const TrackPanelMouseState &st, const AudacityProject *pProject,
  const std::shared_ptr<Track> &pTrack)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
 
    wxCursor *pCursor = SelectCursor();
    const bool bMultiToolMode  = pProject->GetToolsToolBar()->IsDown(multiTool);
@@ -470,8 +470,8 @@ HitTestResult SelectHandle::HitTest
       wxASSERT(!(rightSel < leftSel));
    }
 
-   const bool bShiftDown = event.ShiftDown();
-   const bool bCtrlDown = event.ControlDown();
+   const bool bShiftDown = state.ShiftDown();
+   const bool bCtrlDown = state.ControlDown();
    const bool bModifierDown = bShiftDown || bCtrlDown;
 
 #if 0
@@ -493,7 +493,7 @@ HitTestResult SelectHandle::HitTest
    // choose boundaries only in snapping tolerance,
    // and may choose center.
    SelectionBoundary boundary =
-      ChooseBoundary(viewInfo, event, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+      ChooseBoundary(viewInfo, state, pTrack.get(), rect, !bModifierDown, !bModifierDown);
 
    SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
 
@@ -888,7 +888,7 @@ UIHandle::Result SelectHandle::Drag
 }
 
 HitTestPreview SelectHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
    wxString tip;
    wxCursor *pCursor;

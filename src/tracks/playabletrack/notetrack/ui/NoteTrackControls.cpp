@@ -31,36 +31,36 @@ NoteTrackControls::~NoteTrackControls()
 }
 
 HitTestResult NoteTrackControls::HitTest
-(const TrackPanelMouseEvent & evt,
+(const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-   if (event.ButtonDown() || event.ButtonDClick()) {
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+   if (state.ButtonIsDown(wxMOUSE_BTN_ANY)) {
       auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
       if (track && track->GetKind() == Track::Note) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (state, rect, pProject, track)).handle)
             return result;
 
          if (NULL !=
              (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (state, rect, pProject, track)).handle)
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
          if (NULL != (result =
-             VelocitySliderHandle::HitTest(event, rect, pProject, track)).handle)
+            VelocitySliderHandle::HitTest(state, rect, pProject, track)).handle)
             return result;
          if (NULL != (result =
-            NoteTrackButtonHandle::HitTest(event, rect, track)).handle)
+            NoteTrackButtonHandle::HitTest(state, rect, track)).handle)
             return result;
 #endif
       }
    }
 
-   return TrackControls::HitTest(evt, pProject);
+   return TrackControls::HitTest(st, pProject);
 }
 
 class NoteTrackMenuTable : public PopupMenuTable

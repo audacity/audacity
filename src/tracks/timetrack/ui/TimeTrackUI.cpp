@@ -19,11 +19,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/EnvelopeHandle.h"
 
 HitTestResult TimeTrack::DetailedHitTest
-(const TrackPanelMouseEvent &event,
+(const TrackPanelMouseState &st,
  const AudacityProject *pProject, int, bool)
 {
    return EnvelopeHandle::TimeTrackHitTest
-      ( event.event, event.rect, pProject, Pointer<TimeTrack>(this) );
+      ( st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
 }
 
 std::shared_ptr<TrackControls> TimeTrack::GetControls()

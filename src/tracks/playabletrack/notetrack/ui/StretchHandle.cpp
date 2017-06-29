@@ -68,10 +68,10 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
 }
 
 HitTestResult StretchHandle::HitTest
-   ( const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
+   ( const TrackPanelMouseState &st, const AudacityProject *pProject,
      const std::shared_ptr<NoteTrack> &pTrack, StretchState &stretchState)
 {
-   const wxMouseEvent &event = evt.event;
+   const wxMouseState &state = st.state;
 
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
@@ -82,15 +82,15 @@ HitTestResult StretchHandle::HitTest
    if (!pTrack || !pTrack->GetSelected() || pTrack->GetKind() != Track::Note)
       return {};
 
-   const wxRect &rect = evt.rect;
+   const wxRect &rect = st.rect;
    int center = rect.y + rect.height / 2;
-   int distance = abs(event.m_y - center);
+   int distance = abs(state.m_y - center);
    const int yTolerance = 10;
    wxInt64 leftSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t0(), rect.x);
    wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
    // Something is wrong if right edge comes before left edge
    wxASSERT(!(rightSel < leftSel));
-   if (!(leftSel <= event.m_x && event.m_x <= rightSel &&
+   if (!(leftSel <= state.m_x && state.m_x <= rightSel &&
          distance < yTolerance))
       return {};
 
@@ -115,7 +115,7 @@ HitTestResult StretchHandle::HitTest
             < minPeriod )
       return {};
 
-   auto selStart = viewInfo.PositionToTime( event.m_x, rect.x );
+   auto selStart = viewInfo.PositionToTime( state.m_x, rect.x );
    stretchState.mBeatCenter = pTrack->NearestBeatTime( selStart );
    bool startNewSelection = true;
    if ( within( stretchState.mBeat0.second,
@@ -170,7 +170,8 @@ UIHandle::Result StretchHandle::Click
 
    // We must have hit if we got here, but repeat some
    // calculations that set members
-   HitTest( evt, pProject, mpTrack, mStretchState );
+   TrackPanelMouseState tpmState{ evt.event, evt.rect, evt.pCell };
+   HitTest( tpmState, pProject, mpTrack, mStretchState );
 
    viewInfo.selectedRegion.setTimes
       ( mStretchState.mBeat0.first, mStretchState.mBeat1.first );
@@ -205,7 +206,7 @@ UIHandle::Result StretchHandle::Drag
 }
 
 HitTestPreview StretchHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
    const bool unsafe = pProject->IsAudioActive();
    return HitPreview( mStretchState.mMode, unsafe );

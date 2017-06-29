@@ -46,6 +46,7 @@ class AudacityProject;
 class TrackPanelAx;
 class TrackPanelCellIterator;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
 
 class ViewInfo;
 
@@ -310,9 +311,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    void Uncapture( wxMouseEvent *pEvent = nullptr );
    void CancelDragging();
    bool HandleEscapeKey(bool down);
-   void HandleAltKey(bool down);
-   void HandleShiftKey(bool down);
-   void HandleControlKey(bool down);
+   void UpdateMouseState(const wxMouseState &state);
+   void HandleModifierKey();
    void HandlePageUpKey();
    void HandlePageDownKey();
    AudacityProject * GetProject() const;
@@ -329,7 +329,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
 
-   void HandleCursorForLastMouseEvent();
+   void HandleCursorForLastMouseState();
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -372,8 +372,8 @@ protected:
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
-   void HandleCursor( wxMouseEvent *pEvent );
-   void HandleCursor( const TrackPanelMouseEvent &tpmEvent );
+   void HandleCursor( wxMouseState *pState );
+   void HandleCursor( const TrackPanelMouseState &tpmState );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
@@ -484,7 +484,7 @@ protected:
 
    bool mRedrawAfterStop;
 
-   wxMouseEvent mLastMouseEvent;
+   wxMouseState mLastMouseState;
 
    int mMouseMostRecentX;
    int mMouseMostRecentY;

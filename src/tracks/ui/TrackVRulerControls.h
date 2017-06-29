@@ -29,7 +29,7 @@ public:
 
    // Define a default hit test method, just for message and cursor
    HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
    static void DrawZooming

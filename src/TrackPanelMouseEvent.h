@@ -12,10 +12,29 @@ Paul Licameli
 #define __AUDACITY_TRACK_PANEL_MOUSE_EVENT__
 
 class wxMouseEvent;
+class wxMouseState;
 class wxRect;
 class wxSize;
 class TrackPanelCell;
 #include "MemoryX.h"
+
+// Augment a mouse state with information about which track panel cell and
+// sub-rectangle was hit.
+struct TrackPanelMouseState
+{
+   TrackPanelMouseState
+      ( wxMouseState &state_, const wxRect &rect_,
+        const std::shared_ptr<TrackPanelCell> &pCell_ )
+      : state{ state_ }
+      , rect{ rect_ }
+      , pCell{ pCell_ }
+   {
+   }
+
+   wxMouseState &state;
+   const wxRect &rect;
+   std::shared_ptr<TrackPanelCell> pCell; // may be NULL
+};
 
 // Augment a mouse event with information about which track panel cell and
 // sub-rectangle was hit.

@@ -22,10 +22,10 @@ TimeTrackControls::~TimeTrackControls()
 }
 
 HitTestResult TimeTrackControls::HitTest
-(const TrackPanelMouseEvent & event,
+(const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {
-   return TrackControls::HitTest(event, pProject);
+   return TrackControls::HitTest(state, pProject);
 }
 
 enum

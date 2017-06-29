@@ -69,7 +69,7 @@ class AUDACITY_DLL_API NoteTrack final
    virtual ~NoteTrack();
 
    HitTestResult DetailedHitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 

@@ -39,11 +39,11 @@ HitTestPreview LabelTextHandle::HitPreview()
 }
 
 HitTestResult LabelTextHandle::HitTest
-(const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT)
+(const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT)
 {
    // If Control is down, let the select handle be hit instead
-   if (!event.ControlDown() &&
-       pLT->OverATextBox(event.m_x, event.m_y) >= 0)
+   if (!state.ControlDown() &&
+       pLT->OverATextBox(state.m_x, state.m_y) >= 0)
       // There was no cursor change or status message for mousing over a label text box
       return { HitPreview(), &Instance() };
 
@@ -150,7 +150,7 @@ UIHandle::Result LabelTextHandle::Drag
 }
 
 HitTestPreview LabelTextHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return HitPreview();
 }

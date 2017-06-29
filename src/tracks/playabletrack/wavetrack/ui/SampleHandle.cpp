@@ -45,7 +45,7 @@ SampleHandle &SampleHandle::Instance()
 }
 
 HitTestPreview SampleHandle::HitPreview
-(const wxMouseEvent &event, const AudacityProject *pProject, bool unsafe)
+(const wxMouseState &state, const AudacityProject *pProject, bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
@@ -57,18 +57,18 @@ HitTestPreview SampleHandle::HitPreview
       ttb->GetMessageForTool(drawTool),
       (unsafe
        ? &*disabledCursor
-       : (event.AltDown()
+       : (state.AltDown()
           ? &smoothCursor
           : &*pencilCursor))
    };
 }
 
 HitTestResult SampleHandle::HitAnywhere
-(const wxMouseEvent &event, const AudacityProject *pProject)
+(const wxMouseState &state, const AudacityProject *pProject)
 {
    const bool unsafe = pProject->IsAudioActive();
    return {
-      HitPreview(event, pProject, unsafe),
+      HitPreview(state, pProject, unsafe),
       (unsafe
       ? NULL
       : &Instance())
@@ -105,7 +105,7 @@ namespace {
 }
 
 HitTestResult SampleHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+(const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
@@ -122,7 +122,7 @@ HitTestResult SampleHandle::HitTest
       return {};  // Not a wave, so return.
 
    const double tt =
-      adjustTime(wavetrack, viewInfo.PositionToTime(event.m_x, rect.x));
+      adjustTime(wavetrack, viewInfo.PositionToTime(state.m_x, rect.x));
    if (!SampleResolutionTest(viewInfo, wavetrack, tt, rect.width))
       return {};
 
@@ -141,7 +141,7 @@ HitTestResult SampleHandle::HitTest
    wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
 
    double envValue = 1.0;
-   Envelope* env = wavetrack->GetEnvelopeAtX(event.GetX());
+   Envelope* env = wavetrack->GetEnvelopeAtX(state.GetX());
    if (env)
       // Calculate sample as it would be rendered, so quantize time
       envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
@@ -153,14 +153,14 @@ HitTestResult SampleHandle::HitTest
       wavetrack->GetWaveformSettings().dBRange, false) + rect.y;
 
    // Get y position of mouse (in pixels)
-   int yMouse = event.m_y;
+   int yMouse = state.m_y;
 
    // Perhaps yTolerance should be put into preferences?
    const int yTolerance = 10; // More tolerance on samples than on envelope.
    if (abs(yValue - yMouse) >= yTolerance)
       return {};
 
-   return HitAnywhere(event, pProject);
+   return HitAnywhere(state, pProject);
 }
 
 SampleHandle::~SampleHandle()
@@ -417,9 +417,9 @@ UIHandle::Result SampleHandle::Drag
 }
 
 HitTestPreview SampleHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   return HitPreview(evt.event, pProject, false);
+   return HitPreview(st.state, pProject, false);
 }
 
 UIHandle::Result SampleHandle::Release

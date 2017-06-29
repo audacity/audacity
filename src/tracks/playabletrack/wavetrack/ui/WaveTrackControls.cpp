@@ -54,36 +54,36 @@ WaveTrackControls::~WaveTrackControls()
 
 
 HitTestResult WaveTrackControls::HitTest
-(const TrackPanelMouseEvent & evt,
+(const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-   if (event.Button(wxMOUSE_BTN_LEFT)) {
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+   if (state.ButtonIsDown(wxMOUSE_BTN_LEFT)) {
       auto track = FindTrack();
       if (track && track->GetKind() == Track::Wave) {
          HitTestResult result;
          if (NULL !=
              (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (state, rect, pProject, track)).handle)
             return result;
 
          if (NULL !=
              (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+                 (state, rect, pProject, track)).handle)
             return result;
 
          if (NULL != (result =
-            GainSliderHandle::HitTest(event, rect, pProject, track)).handle)
+            GainSliderHandle::HitTest(state, rect, pProject, track)).handle)
             return result;
 
          if (NULL != (result =
-            PanSliderHandle::HitTest(event, rect, pProject, track)).handle)
+            PanSliderHandle::HitTest(state, rect, pProject, track)).handle)
             return result;
       }
    }
 
-   return TrackControls::HitTest(evt, pProject);
+   return TrackControls::HitTest(st, pProject);
 }
 
 enum {

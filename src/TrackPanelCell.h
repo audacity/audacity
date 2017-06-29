@@ -14,6 +14,7 @@ Paul Licameli
 class AudacityProject;
 struct HitTestResult;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
 class ViewInfo;
 class wxKeyEvent;
 class wxPoint;
@@ -28,10 +29,12 @@ public:
    virtual ~TrackPanelCell () = 0;
 
    // Indicate a status bar message, cursor, and click-drag-release handler
-   // appropriate to the mouse position and modifier keys.
+   // appropriate to the mouse position, modifier keys, and button-down state.
+   // The button-down state passed to the function is as it will be at click
+   // time -- not necessarily as it is now.
    // TrackPanel is not responsible for memory management of the handler.
    virtual HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) = 0;
 
    // Return value is a bitwise OR of RefreshCode values

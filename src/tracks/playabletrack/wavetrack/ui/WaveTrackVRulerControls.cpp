@@ -30,10 +30,10 @@ WaveTrackVRulerControls::~WaveTrackVRulerControls()
 }
 
 HitTestResult WaveTrackVRulerControls::HitTest
-(const TrackPanelMouseEvent &evt,
+(const TrackPanelMouseState &st,
  const AudacityProject *)
 {
-   return WaveTrackVZoomHandle::HitTest(evt.event);
+   return WaveTrackVZoomHandle::HitTest(st.state);
 }
 
 unsigned WaveTrackVRulerControls::HandleWheelRotation

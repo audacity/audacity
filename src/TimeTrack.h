@@ -50,7 +50,7 @@ class TimeTrack final : public Track {
    void InsertSilence(double t, double len) override;
 
    HitTestResult DetailedHitTest
-      (const TrackPanelMouseEvent &event,
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
