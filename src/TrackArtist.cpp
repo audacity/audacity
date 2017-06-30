@@ -1503,8 +1503,12 @@ void TrackArtist::DrawWaveform(const WaveTrack *track,
          }
          else {
             delta = rect.height/3;
+#ifdef EXPERIMENTAL_DA
             // JKC Black does not show up enough.
             dc.SetPen(*wxWHITE_PEN);
+#else
+            dc.SetPen(*wxBLACK_PEN);
+#endif
          }
          AColor::Line(dc, (int) (rect.x + xx), rect.y+delta, (int) (rect.x + xx), rect.y - delta + rect.height);
          dc.SetPen(*wxGREY_PEN);
