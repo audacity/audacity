@@ -43,6 +43,9 @@ HitTestResult Track::HitTest
    // If there is no detailed hit for the subclass, there are still some
    // general cases.
 
+   // Label track kludge!
+   auto refresh = result.preview.refreshCode;
+
    // Sliding applies in more than one track type.
    if ( !result.handle && !isMultiTool && currentTool == slideTool )
       result = TimeShiftHandle::HitAnywhere(pProject);
@@ -56,6 +59,7 @@ HitTestResult Track::HitTest
    if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
       result = SelectHandle::HitTest(event, pProject, Pointer(this));
 
+   result.preview.refreshCode |= refresh;
    return result;
 }
 

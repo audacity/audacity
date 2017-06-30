@@ -30,10 +30,13 @@ HitTestResult LabelTrack::DetailedHitTest
 
    // Try label movement handles first
    result = LabelGlyphHandle::HitTest(event, Pointer<LabelTrack>(this));
+   auto refresh = result.preview.refreshCode; // kludge
 
-   if ( !result.handle )
+   if ( !result.handle ) {
       // Missed glyph, try text box
       result = LabelTextHandle::HitTest(event, Pointer<LabelTrack>(this));
+      result.preview.refreshCode |= refresh; // kludge
+   }
 
    return result;
 }
