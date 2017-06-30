@@ -346,13 +346,9 @@ void AColor::CursorColor(wxDC * dc)
 {
    if (!inited)
       Init();
-#if defined(__WXMAC__) || defined(__WXGTK3__)
-   dc->SetLogicalFunction(wxCOPY);
-   dc->SetPen(wxColor(0, 0, 0, 128));
-#else
+
    dc->SetLogicalFunction(wxINVERT);
    dc->SetPen(cursorPen);
-#endif
 }
 
 void AColor::IndicatorColor(wxDC * dc, bool bIsNotRecording)
@@ -506,49 +502,6 @@ void AColor::Init()
    lightPen[1].SetColour(lightSelected);
    mediumPen[1].SetColour(medSelected);
    darkPen[1].SetColour(darkSelected);
-
-// Unthemed colours that used to be used for mac.
-#if 0
-
-#if defined(__WXMAC__)          // && defined(TARGET_CARBON)
-
-   // unselected
-   lightBrush[0].SetColour(246, 246, 255);
-   mediumBrush[0].SetColour(220, 220, 220);
-   darkBrush[0].SetColour(140, 140, 160);
-   lightPen[0].SetColour(246, 246, 255);
-   mediumPen[0].SetColour(220, 220, 220);
-   darkPen[0].SetColour(140, 140, 160);
-
-   // selected
-   lightBrush[1].SetColour(204, 204, 255);
-   mediumBrush[1].SetColour(180, 180, 192);
-   darkBrush[1].SetColour(148, 148, 170);
-   lightPen[1].SetColour(204, 204, 255);
-   mediumPen[1].SetColour(180, 180, 192);
-   darkPen[1].SetColour(148, 148, 170);
-
-#else
-
-   // unselected
-   lightBrush[0].SetColour(255, 255, 255);
-   mediumBrush[0].SetColour(204, 204, 204);
-   darkBrush[0].SetColour(130, 130, 130);
-   lightPen[0].SetColour(255, 255, 255);
-   mediumPen[0].SetColour(204, 204, 204);
-   darkPen[0].SetColour(130, 130, 130);
-
-   // selected
-   lightBrush[1].SetColour(204, 204, 255);
-   mediumBrush[1].SetColour(180, 180, 192);
-   darkBrush[1].SetColour(148, 148, 170);
-   lightPen[1].SetColour(204, 204, 255);
-   mediumPen[1].SetColour(180, 180, 192);
-   darkPen[1].SetColour(0, 0, 0);
-
-#endif
-
-#endif
 
    inited = true;
 }
