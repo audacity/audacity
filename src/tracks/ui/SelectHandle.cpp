@@ -148,19 +148,51 @@ namespace
 #endif
    };
 
+   bool IsOverSplitline
+      (const ViewInfo &viewInfo, const WaveTrack * track,
+       const wxRect &rect, const wxMouseEvent &event,
+       WaveTrackLocation *pCapturedTrackLocation)
+   {
+      for (auto loc: track->GetCachedLocations())
+      {
+         const double x = viewInfo.TimeToPosition(loc.pos);
+         if (x >= 0 && x < rect.width)
+         {
+            // Only interested in split lines...
+            if( loc.typ != WaveTrackLocation::locationCutLine )
+            {
+               wxRect locRect;
+               // Tight tolerance here.  Tolerance was 11 pixels in IsOverCutLine.
+               locRect.x = (int)(rect.x + x) ;
+               locRect.width = 1;
+               locRect.y = rect.y;
+               locRect.height = rect.height;
+               if (locRect.Contains(event.m_x, event.m_y))
+               {
+                  if (pCapturedTrackLocation)
+                     *pCapturedTrackLocation = loc;
+                  return true;
+               }
+            }
+         }
+      }
+
+      return false;
+   }
+
    SelectionBoundary ChooseTimeBoundary
-      (const ViewInfo &viewInfo,
+      (
+      const double t0, const double t1,
+      const ViewInfo &viewInfo,
       double selend, bool onlyWithinSnapDistance,
       wxInt64 *pPixelDist, double *pPinValue)
    {
-      const double t0 = viewInfo.selectedRegion.t0();
-      const double t1 = viewInfo.selectedRegion.t1();
       const wxInt64 posS = viewInfo.TimeToPosition(selend);
       const wxInt64 pos0 = viewInfo.TimeToPosition(t0);
       wxInt64 pixelDist = std::abs(posS - pos0);
       bool chooseLeft = true;
 
-      if (viewInfo.selectedRegion.isPoint())
+      if (t1<=t0)
          // Special case when selection is a point, and thus left
          // and right distances are the same
          chooseLeft = (selend < t0);
@@ -201,13 +233,32 @@ namespace
       // Otherwise choose the eligible boundary nearest the mouse click.
       const double selend = viewInfo.PositionToTime(event.m_x, rect.x);
       wxInt64 pixelDist = 0;
-      SelectionBoundary boundary =
-         ChooseTimeBoundary(viewInfo, selend, onlyWithinSnapDistance,
-         &pixelDist, pPinValue);
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       const double t0 = viewInfo.selectedRegion.t0();
       const double t1 = viewInfo.selectedRegion.t1();
+
+      SelectionBoundary boundary =
+         ChooseTimeBoundary(t0,t1,viewInfo, selend, onlyWithinSnapDistance,
+         &pixelDist, pPinValue);
+
+      // This extra logic handles a split line that is doubling as a 
+      // cursor position, in the case where there isn't already a cursor
+      // on the split line.
+      if( (boundary == SBNone ) && (pTrack->GetKind() == Track::Wave))
+      {
+         const WaveTrack *wavetrack = dynamic_cast<const WaveTrack*>(pTrack);
+         WaveTrackLocation location;
+         // We have to be EXACTLY (to the pixel) over the split line for the
+         // hand icon to appear.
+         if( IsOverSplitline( viewInfo, wavetrack, rect,event,&location ))
+         {
+            boundary = ChooseTimeBoundary(selend, selend, viewInfo, selend, 
+               onlyWithinSnapDistance, &pixelDist, pPinValue);
+         }
+      }
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      //const double t0 = viewInfo.selectedRegion.t0();
+      //const double t1 = viewInfo.selectedRegion.t1();
       const double f0 = viewInfo.selectedRegion.f0();
       const double f1 = viewInfo.selectedRegion.f1();
       const double fc = viewInfo.selectedRegion.fc();
