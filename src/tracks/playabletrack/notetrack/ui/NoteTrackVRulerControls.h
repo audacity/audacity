@@ -27,6 +27,10 @@ public:
    HitTestResult HitTest
       (const TrackPanelMouseEvent &event,
        const AudacityProject *pProject) override;
+
+   unsigned HandleWheelRotation
+      (const TrackPanelMouseEvent &event,
+       AudacityProject *pProject) override;
 };
 
 #endif

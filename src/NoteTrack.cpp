@@ -912,7 +912,7 @@ void NoteTrack::VScroll(int start, int end)
 }
 
 // Zoom the note track, centering the pitch at centerY,
-// amount is 1 for zoom in, and -1 for zoom out
+// positive amounts zoom in; negative amounts zoom out
 void NoteTrack::Zoom(const wxRect &rect, int centerY, int amount)
 {
    // Construct track rectangle to map pitch to screen coordinates
