@@ -294,6 +294,10 @@ void AudacityProject::CreateMenusAndCommands()
    wxArrayString names;
    wxArrayInt indices;
 
+   // The list of defaults to exclude depends on 
+   // preference wxT("/GUI/Shortcuts/FullDefaults"), which may have changed.
+   c->SetMaxList();
+
    {
       auto menubar = c->AddMenuBar(wxT("appmenu"));
       wxASSERT(menubar);

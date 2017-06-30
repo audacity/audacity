@@ -313,6 +313,13 @@ void InitPreferences()
       gPrefs->Write(wxT("/GUI/ToolBars/Meter/Dock"), -1);
    }
 
+   // Upgrading pre 2.2.0 configs we assume extended set of defaults.
+   if ((0<vMajor && vMajor < 2) ||
+       (vMajor == 2 && vMinor < 2))
+   {
+      gPrefs->Write(wxT("/GUI/Shortcuts/FullDefaults"),1);
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);

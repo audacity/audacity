@@ -426,8 +426,6 @@ CommandManager::CommandManager():
 {
    mbSeparatorAllowed = false;
    SetMaxList();
-
-
 }
 
 ///
@@ -452,6 +450,12 @@ void CommandManager::SetMaxList()
    // shortcut is standard or full.
 
    mMaxListOnly.Clear();
+
+   // if the full list, don't exclude any.
+   bool bFull = gPrefs->ReadBool(wxT("/GUI/Shortcuts/FullDefaults"),false);
+   if( bFull )
+      return;
+
    // These short cuts are for the max list only....
    //mMaxListOnly.Add( "Ctrl+I" );
    mMaxListOnly.Add( "Ctrl+Alt+I" );

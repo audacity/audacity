@@ -471,6 +471,9 @@ void KeyConfigPrefs::FilterKeys( wxArrayString & arr )
 
 void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 {
+   gPrefs->DeleteEntry(wxT("/GUI/Shortcuts/FullDefaults"));
+   gPrefs->Flush();
+
    mNewKeys = mDefaultKeys;
    if( event.GetId() == 0 )
       FilterKeys( mNewKeys );
