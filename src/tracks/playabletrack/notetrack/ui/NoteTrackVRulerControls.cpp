@@ -161,13 +161,22 @@ UIHandle::Result NoteTrackVZoomHandle::Release
       pTrack->ZoomTo(evt.rect, mZoomStart, mZoomEnd);
    }
    else if (event.ShiftDown() || event.RightUp()) {
-      pTrack->ZoomOut(evt.rect, mZoomEnd);
+      if (event.ShiftDown() && event.RightUp()) {
+         // Zoom out completely
+         pTrack->SetBottomNote(0);
+         auto octavePadding = 2 * 10; // 10 octaves times 2 single-pixel seperations per pixel
+         auto availableHeight = evt.rect.height - octavePadding;
+         auto numNotes = 128;
+         auto spacePerNote = availableHeight / numNotes;
+         pTrack->SetPitchHeight(std::max(spacePerNote, 1));
+      } else {
+         // Zoom out
+         pTrack->ZoomOut(evt.rect, mZoomEnd);
+      }
    }
    else {
       pTrack->ZoomIn(evt.rect, mZoomEnd);
    }
-
-   // TODO:  shift-right click as in audio track?
 
    mZoomEnd = mZoomStart = 0;
    pProject->ModifyState(true);
