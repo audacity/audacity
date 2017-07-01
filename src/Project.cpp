@@ -4862,7 +4862,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          wxString sMessage;
 
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
-         sMessage.Printf(_("Disk space remains for recording %s"), GetHoursMinsString(iRecordingMins));
+         sMessage.Printf(_("Disk space remaining for recording: %s"), GetHoursMinsString(iRecordingMins));
 
          mStatusBar->SetStatusText(sMessage, mainStatusBarField);
       }
