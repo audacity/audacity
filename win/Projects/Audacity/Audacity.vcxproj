@@ -508,6 +508,7 @@
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCell.h" />
     <ClInclude Include="..\..\..\src\TrackPanelCellIterator.h" />
+    <ClInclude Include="..\..\..\src\TrackPanelDrawingContext.h" />
     <ClInclude Include="..\..\..\src\TrackPanelListener.h" />
     <ClInclude Include="..\..\..\src\TrackPanelMouseEvent.h" />
     <ClInclude Include="..\..\..\src\tracks\playabletrack\notetrack\ui\NoteTrackButtonHandle.h" />
