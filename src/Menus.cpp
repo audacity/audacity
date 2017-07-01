@@ -468,13 +468,11 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->BeginSubMenu(_("R&emove Audio"));
+      c->BeginSubMenu(_("R&emove Special"));
       /* i18n-hint: (verb) Do a special kind of cut*/
       c->AddItem(wxT("SplitCut"), _("Spl&it Cut"), FN(OnSplitCut), wxT("Ctrl+Alt+X"));
       /* i18n-hint: (verb) Do a special kind of DELETE*/
-      c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"),
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-         AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
+      c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"));
 
       c->AddSeparator();
 
@@ -508,9 +506,12 @@ void AudacityProject::CreateMenusAndCommands()
 
       /////////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("La&bels"));
+      c->BeginSubMenu(_("&Labels"));
 
       c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
+
+      c->AddSeparator();
+
       c->AddItem(wxT("AddLabel"), _("Add Label At &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->AddItem(wxT("AddLabelPlaying"), _("Add Label At &Playback Position"),
@@ -525,7 +526,17 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
          AudioIONotBusyFlag, AudioIONotBusyFlag);
+
       c->AddSeparator();
+
+      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
+                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+
+      c->EndSubMenu();
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      c->BeginSubMenu(_("La&bled Audio"));
 
       c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag,
          AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag);
@@ -560,12 +571,6 @@ void AudacityProject::CreateMenusAndCommands()
       /* i18n-hint: (verb)*/
       c->AddItem(wxT("JoinLabels"), _("&Join"), FN(OnJoinLabels), wxT("Alt+J"));
       c->AddItem(wxT("DisjoinLabels"), _("Detac&h at Silences"), FN(OnDisjoinLabels), wxT("Alt+Shift+J"));
-
-      c->AddSeparator();
-
-      // New in Audacity 2.1.3
-      c->AddCheck(wxT("TypeToCreateLabel"), _("&Type to Create a Label (on/off)"),
-                  FN(OnToggleTypeToCreateLabel), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
       c->EndSubMenu();
 
@@ -2231,6 +2236,7 @@ void AudacityProject::UpdateMenus(bool checkActive)
       if (!(flags & TimeSelectedFlag) | !(flags & TracksSelectedFlag))
       {
          mCommandManager.Enable(wxT("SplitCut"), false);
+         mCommandManager.Enable(wxT("SplitDelete"), false);
       }
       if (!(flags & WaveTracksSelectedFlag))
       {
@@ -2240,7 +2246,6 @@ void AudacityProject::UpdateMenus(bool checkActive)
       {
          mCommandManager.Enable(wxT("ExportSel"), false);
          mCommandManager.Enable(wxT("SplitNew"), false);
-         mCommandManager.Enable(wxT("SplitDelete"), false);
       }
       if (!(flags & TimeSelectedFlag) | !(flags & AudioTracksSelectedFlag))
       {
