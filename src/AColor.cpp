@@ -347,7 +347,7 @@ void AColor::CursorColor(wxDC * dc)
    if (!inited)
       Init();
 
-   dc->SetLogicalFunction(wxINVERT);
+   dc->SetLogicalFunction(wxCOPY);
    dc->SetPen(cursorPen);
 }
 
@@ -422,6 +422,11 @@ void AColor::ReInit()
    PreComputeGradient();
 }
 
+wxColour InvertOfColour( const wxColour & c )
+{
+   return wxColour( 255-c.Red(), 255-c.Green(), 255-c.Blue() );
+}
+
 void AColor::Init()
 {
    if (inited)
@@ -464,6 +469,7 @@ void AColor::Init()
    theTheme.SetBrushColour( soloBrush,         clrMuteButtonActive);
 
    theTheme.SetPenColour(   cursorPen,         clrCursorPen);
+   cursorPen.SetColour( InvertOfColour( cursorPen.GetColour()) );
    theTheme.SetPenColour(   indicatorPen[0],   clrRecordingPen);
    theTheme.SetPenColour(   indicatorPen[1],   clrPlaybackPen);
    theTheme.SetBrushColour( indicatorBrush[0], clrRecordingBrush);
