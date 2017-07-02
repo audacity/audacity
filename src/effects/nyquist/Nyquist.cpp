@@ -159,6 +159,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    if (fName == NYQUIST_WORKER_ID) {
       // Effect spawned from Nyquist Prompt
+      mName = XO("Nyquist Worker");
       return;
    }
 
@@ -420,6 +421,7 @@ bool NyquistEffect::Init()
    // reset each time we call the Nyquist Prompt.
    if (mIsPrompt) {
       mType = EffectTypeProcess;
+      mName = XO("Nyquist Prompt");
       mDebugButton = true; // Debug button always enabled for Nyquist Prompt.
    }
 
