@@ -653,6 +653,10 @@ USE_LADSPA_FALSE
 USE_LADSPA_TRUE
 USE_LOCAL_WIDGETEXTRA_FALSE
 USE_LOCAL_WIDGETEXTRA_TRUE
+USE_LOCAL_PORTMIDI_FALSE
+USE_LOCAL_PORTMIDI_TRUE
+USE_PORTMIDI_FALSE
+USE_PORTMIDI_TRUE
 USE_LOCAL_PORTSMF_FALSE
 USE_LOCAL_PORTSMF_TRUE
 USE_PORTSMF_FALSE
@@ -725,6 +729,8 @@ USE_LOCAL_EXPAT_FALSE
 USE_LOCAL_EXPAT_TRUE
 WIDGETEXTRA_LIBS
 WIDGETEXTRA_CFLAGS
+PORTMIDI_LIBS
+PORTMIDI_CFLAGS
 PORTSMF_LIBS
 PORTSMF_CFLAGS
 PORTAUDIO_LIBS
@@ -896,7 +902,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -958,6 +963,7 @@ with_libvorbis
 with_lv2
 with_portaudio
 with_midi
+with_portmidi
 with_widgetextra
 enable_audiounits
 enable_ladspa
@@ -1013,6 +1019,8 @@ PORTAUDIO_CFLAGS
 PORTAUDIO_LIBS
 PORTSMF_CFLAGS
 PORTSMF_LIBS
+PORTMIDI_CFLAGS
+PORTMIDI_LIBS
 WIDGETEXTRA_CFLAGS
 WIDGETEXTRA_LIBS
 GTK_CFLAGS
@@ -1035,6 +1043,7 @@ lib-src/libogg lib-src/libvorbis
 lib-src/lv2
 lib-src/portaudio-v19
 lib-src/portsmf
+lib-src/portmidi
 lib-src/lib-widget-extra
 lib-src/portmixer'
 
@@ -1074,7 +1083,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1327,15 +1335,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1473,7 +1472,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1626,7 +1625,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1731,6 +1729,7 @@ Optional Packages:
   --with-lv2              use for adding LV2 plug-in support
   --with-portaudio        use portaudio19
   --with-midi             use portSMF for Midi support
+  --with-portmidi         use PortMIDI for MIDI playback support
   --with-widgetextra      which libwidgetextra to use (required):
                           [system,local]
   --with-portmixer        compile with PortMixer [default=yes]
@@ -1803,6 +1802,10 @@ Some influential environment variables:
               C compiler flags for PORTSMF, overriding pkg-config
   PORTSMF_LIBS
               linker flags for PORTSMF, overriding pkg-config
+  PORTMIDI_CFLAGS
+              C compiler flags for PORTMIDI, overriding pkg-config
+  PORTMIDI_LIBS
+              linker flags for PORTMIDI, overriding pkg-config
   WIDGETEXTRA_CFLAGS
               C compiler flags for WIDGETEXTRA, overriding pkg-config
   WIDGETEXTRA_LIBS
@@ -2899,7 +2902,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-am__api_version='1.15'
+am__api_version='1.14'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -3071,8 +3074,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# Expand $ac_aux_dir to an absolute path.
-am_aux_dir=`cd "$ac_aux_dir" && pwd`
+# expand $ac_aux_dir to an absolute path
+am_aux_dir=`cd $ac_aux_dir && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -3091,7 +3094,7 @@ else
 $as_echo "$as_me: WARNING: 'missing' script is too old or missing" >&2;}
 fi
 
-if test x"${install_sh+set}" != xset; then
+if test x"${install_sh}" != xset; then
   case $am_aux_dir in
   *\ * | *\	*)
     install_sh="\${SHELL} '$am_aux_dir/install-sh'" ;;
@@ -3419,8 +3422,8 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 # <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
 mkdir_p='$(MKDIR_P)'
 
-# We need awk for the "check" target (and possibly the TAP driver).  The
-# system "awk" is bad on some platforms.
+# We need awk for the "check" target.  The system "awk" is bad on
+# some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used
 # in the wild :-(  We should find a proper way to deprecate it ...
 AMTAR='$${TAR-tar}'
@@ -3593,7 +3596,6 @@ END
     as_fn_error $? "Your 'rm' program is bad, sorry." "$LINENO" 5
   fi
 fi
-
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 $as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
@@ -9173,7 +9175,8 @@ else
     ;;
   *)
     lt_cv_sys_max_cmd_len=`(getconf ARG_MAX) 2> /dev/null`
-    if test -n "$lt_cv_sys_max_cmd_len"; then
+    if test -n "$lt_cv_sys_max_cmd_len" && \
+	test undefined != "$lt_cv_sys_max_cmd_len"; then
       lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
       lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
     else
@@ -9574,10 +9577,6 @@ freebsd* | dragonfly*)
   fi
   ;;
 
-gnu*)
-  lt_cv_deplibs_check_method=pass_all
-  ;;
-
 haiku*)
   lt_cv_deplibs_check_method=pass_all
   ;;
@@ -9616,11 +9615,11 @@ irix5* | irix6* | nonstopux*)
   ;;
 
 # This must be glibc/ELF.
-linux* | k*bsd*-gnu | kopensolaris*-gnu)
+linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-netbsd*)
+netbsd* | netbsdelf*-gnu)
   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
     lt_cv_deplibs_check_method='match_pattern /lib[^/]+(\.so\.[0-9]+\.[0-9]+|_pic\.a)$'
   else
@@ -10714,12 +10713,19 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
 	    LD="${LD-ld} -m elf_i386_fbsd"
 	    ;;
 	  x86_64-*linux*)
-	    LD="${LD-ld} -m elf_i386"
+	    case `/usr/bin/file conftest.o` in
+	      *x86-64*)
+		LD="${LD-ld} -m elf32_x86_64"
+		;;
+	      *)
+		LD="${LD-ld} -m elf_i386"
+		;;
+	    esac
 	    ;;
-	  powerpc64le-*linux*)
+	  powerpc64le-*)
 	    LD="${LD-ld} -m elf32lppclinux"
 	    ;;
-	  powerpc64-*linux*)
+	  powerpc64-*)
 	    LD="${LD-ld} -m elf32ppclinux"
 	    ;;
 	  s390x-*linux*)
@@ -10738,10 +10744,10 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
 	  x86_64-*linux*)
 	    LD="${LD-ld} -m elf_x86_64"
 	    ;;
-	  powerpcle-*linux*)
+	  powerpcle-*)
 	    LD="${LD-ld} -m elf64lppc"
 	    ;;
-	  powerpc-*linux*)
+	  powerpc-*)
 	    LD="${LD-ld} -m elf64ppc"
 	    ;;
 	  s390*-*linux*|s390*-*tpf*)
@@ -12420,7 +12426,7 @@ lt_prog_compiler_static=
       lt_prog_compiler_static='-non_shared'
       ;;
 
-    linux* | k*bsd*-gnu | kopensolaris*-gnu)
+    linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
       case $cc_basename in
       # old Intel for x86_64 which still supported -KPIC.
       ecc*)
@@ -12898,6 +12904,9 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
   openbsd*)
     with_gnu_ld=no
     ;;
+  linux* | k*bsd*-gnu | gnu*)
+    link_all_deplibs=no
+    ;;
   esac
 
   ld_shlibs=yes
@@ -13119,7 +13128,7 @@ _LT_EOF
       fi
       ;;
 
-    netbsd*)
+    netbsd* | netbsdelf*-gnu)
       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
 	archive_cmds='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
 	wlarc=
@@ -13296,6 +13305,7 @@ _LT_EOF
 	if test "$aix_use_runtimelinking" = yes; then
 	  shared_flag="$shared_flag "'${wl}-G'
 	fi
+	link_all_deplibs=no
       else
 	# not using gcc
 	if test "$host_cpu" = ia64; then
@@ -13749,7 +13759,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
       link_all_deplibs=yes
       ;;
 
-    netbsd*)
+    netbsd* | netbsdelf*-gnu)
       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
 	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
       else
@@ -14586,17 +14596,6 @@ freebsd* | dragonfly*)
   esac
   ;;
 
-gnu*)
-  version_type=linux # correct to gnu/linux during the next big refactor
-  need_lib_prefix=no
-  need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
-  shlibpath_var=LD_LIBRARY_PATH
-  shlibpath_overrides_runpath=no
-  hardcode_into_libs=yes
-  ;;
-
 haiku*)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
@@ -14713,7 +14712,7 @@ linux*oldld* | linux*aout* | linux*coff*)
   ;;
 
 # This must be glibc/ELF.
-linux* | k*bsd*-gnu | kopensolaris*-gnu)
+linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
   need_version=no
@@ -14762,14 +14761,10 @@ fi
   # before this can be enabled.
   hardcode_into_libs=yes
 
-  # Add ABI-specific directories to the system library path.
-  sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib"
-
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="$sys_lib_dlsearch_path_spec $lt_ld_extra"
-
+    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -14779,6 +14774,18 @@ fi
   # people can always --disable-shared, the test was removed, and we
   # assume the GNU/Linux dynamic linker is in use.
   dynamic_linker='GNU/Linux ld.so'
+  ;;
+
+netbsdelf*-gnu)
+  version_type=linux
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+  soname_spec='${libname}${release}${shared_ext}$major'
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
+  dynamic_linker='NetBSD ld.elf_so'
   ;;
 
 netbsd*)
@@ -16528,9 +16535,6 @@ fi
         ld_shlibs_CXX=yes
         ;;
 
-      gnu*)
-        ;;
-
       haiku*)
         archive_cmds_CXX='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
         link_all_deplibs_CXX=yes
@@ -16692,7 +16696,7 @@ fi
         inherit_rpath_CXX=yes
         ;;
 
-      linux* | k*bsd*-gnu | kopensolaris*-gnu)
+      linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
         case $cc_basename in
           KCC*)
 	    # Kuck and Associates, Inc. (KAI) C++ Compiler
@@ -17552,7 +17556,7 @@ lt_prog_compiler_static_CXX=
 	    ;;
 	esac
 	;;
-      linux* | k*bsd*-gnu | kopensolaris*-gnu)
+      linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
 	case $cc_basename in
 	  KCC*)
 	    # KAI C++ Compiler
@@ -17616,7 +17620,7 @@ lt_prog_compiler_static_CXX=
 	    ;;
 	esac
 	;;
-      netbsd*)
+      netbsd* | netbsdelf*-gnu)
 	;;
       *qnx* | *nto*)
         # QNX uses GNU C++, but need to define -shared option too, otherwise
@@ -17986,6 +17990,9 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
       exclude_expsyms_CXX='[_]+GLOBAL_OFFSET_TABLE_|[_]+GLOBAL__[FID]_.*|[_]+head_[A-Za-z0-9_]+_dll|[A-Za-z0-9_]+_dll_iname'
       ;;
     esac
+    ;;
+  linux* | k*bsd*-gnu | gnu*)
+    link_all_deplibs_CXX=no
     ;;
   *)
     export_symbols_cmds_CXX='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
@@ -18421,17 +18428,6 @@ freebsd* | dragonfly*)
   esac
   ;;
 
-gnu*)
-  version_type=linux # correct to gnu/linux during the next big refactor
-  need_lib_prefix=no
-  need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
-  shlibpath_var=LD_LIBRARY_PATH
-  shlibpath_overrides_runpath=no
-  hardcode_into_libs=yes
-  ;;
-
 haiku*)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
@@ -18548,7 +18544,7 @@ linux*oldld* | linux*aout* | linux*coff*)
   ;;
 
 # This must be glibc/ELF.
-linux* | k*bsd*-gnu | kopensolaris*-gnu)
+linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
   need_version=no
@@ -18597,14 +18593,10 @@ fi
   # before this can be enabled.
   hardcode_into_libs=yes
 
-  # Add ABI-specific directories to the system library path.
-  sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib"
-
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="$sys_lib_dlsearch_path_spec $lt_ld_extra"
-
+    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -18614,6 +18606,18 @@ fi
   # people can always --disable-shared, the test was removed, and we
   # assume the GNU/Linux dynamic linker is in use.
   dynamic_linker='GNU/Linux ld.so'
+  ;;
+
+netbsdelf*-gnu)
+  version_type=linux
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+  soname_spec='${libname}${release}${shared_ext}$major'
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
+  dynamic_linker='NetBSD ld.elf_so'
   ;;
 
 netbsd*)
@@ -19927,7 +19931,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 
 
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF PORTMIDI WIDGETEXTRA"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -22585,6 +22589,126 @@ $as_echo "$as_me: portSMF library is NOT available in the local tree" >&6;}
 
 
 
+
+# Check whether --with-portmidi was given.
+if test "${with_portmidi+set}" = set; then :
+  withval=$with_portmidi; PORTMIDI_ARGUMENT=$withval
+else
+  PORTMIDI_ARGUMENT="unspecified"
+fi
+
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for PORTMIDI" >&5
+$as_echo_n "checking for PORTMIDI... " >&6; }
+
+if test -n "$PORTMIDI_CFLAGS"; then
+    pkg_cv_PORTMIDI_CFLAGS="$PORTMIDI_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"portmidi\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "portmidi") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_PORTMIDI_CFLAGS=`$PKG_CONFIG --cflags "portmidi" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$PORTMIDI_LIBS"; then
+    pkg_cv_PORTMIDI_LIBS="$PORTMIDI_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"portmidi\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "portmidi") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_PORTMIDI_LIBS=`$PKG_CONFIG --libs "portmidi" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        PORTMIDI_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "portmidi" 2>&1`
+        else
+	        PORTMIDI_PKG_ERRORS=`$PKG_CONFIG --print-errors "portmidi" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$PORTMIDI_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                PORTMIDI_SYSTEM_AVAILABLE="no"
+elif test $pkg_failed = untried; then
+	PORTMIDI_SYSTEM_AVAILABLE="no"
+else
+	PORTMIDI_CFLAGS=$pkg_cv_PORTMIDI_CFLAGS
+	PORTMIDI_LIBS=$pkg_cv_PORTMIDI_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	PORTMIDI_SYSTEM_AVAILABLE="yes"
+fi
+
+   if test "$PORTMIDI_SYSTEM_AVAILABLE" = "yes"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is available as system library" >&5
+$as_echo "$as_me: portmidi library is available as system library" >&6;}
+   else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is NOT available as system library" >&5
+$as_echo "$as_me: portmidi library is NOT available as system library" >&6;}
+   fi
+
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/portmidi/pm_common/portmidi.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/portmidi/pm_common/portmidi.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/portmidi/pm_common/portmidi.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/portmidi/pm_common/portmidi.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  PORTMIDI_LOCAL_AVAILABLE="yes"
+else
+  PORTMIDI_LOCAL_AVAILABLE="no"
+fi
+
+
+   if test "$PORTMIDI_LOCAL_AVAILABLE" = "yes"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is available in the local tree" >&5
+$as_echo "$as_me: portmidi library is available in the local tree" >&6;}
+   else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portmidi library is NOT available in the local tree" >&5
+$as_echo "$as_me: portmidi library is NOT available in the local tree" >&6;}
+   fi
+
+
+
 # Check whether --with-widgetextra was given.
 if test "${with_widgetextra+set}" = set; then :
   withval=$with_widgetextra; WIDGETEXTRA_ARGUMENT=$withval
@@ -23370,6 +23494,40 @@ fi
    if test "$PORTSMF_USE_LOCAL" = yes -o "$PORTSMF_USE_SYSTEM" = yes; then
 
 $as_echo "#define USE_MIDI 1" >>confdefs.h
+
+   fi
+
+
+   if test "$PORTMIDI_USE_LOCAL" = yes; then
+      PORTMIDI_CFLAGS='-I$(top_srcdir)/lib-src/portmidi'
+      PORTMIDI_LIBS='$(top_builddir)/lib-src/portmidi/libportmidi_s.a'
+      subdirs="$subdirs lib-src/portmidi"
+
+   fi
+
+
+
+
+    if test "$PORTMIDI_USE_LOCAL" = yes -o "$PORTMIDI_USE_SYSTEM" = yes; then
+  USE_PORTMIDI_TRUE=
+  USE_PORTMIDI_FALSE='#'
+else
+  USE_PORTMIDI_TRUE='#'
+  USE_PORTMIDI_FALSE=
+fi
+
+    if test "$PORTMIDI_USE_LOCAL" = yes; then
+  USE_LOCAL_PORTMIDI_TRUE=
+  USE_LOCAL_PORTMIDI_FALSE='#'
+else
+  USE_LOCAL_PORTMIDI_TRUE='#'
+  USE_LOCAL_PORTMIDI_FALSE=
+fi
+
+
+   if test "$PORTMIDI_USE_LOCAL" = yes -o "$PORTMIDI_USE_SYSTEM" = yes; then
+
+$as_echo "#define USE_PORTMIDI 1" >>confdefs.h
 
    fi
 
@@ -24345,6 +24503,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LOCAL_PORTSMF_TRUE}" && test -z "${USE_LOCAL_PORTSMF_FALSE}"; then
   as_fn_error $? "conditional \"USE_LOCAL_PORTSMF\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_PORTMIDI_TRUE}" && test -z "${USE_PORTMIDI_FALSE}"; then
+  as_fn_error $? "conditional \"USE_PORTMIDI\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_LOCAL_PORTMIDI_TRUE}" && test -z "${USE_LOCAL_PORTMIDI_FALSE}"; then
+  as_fn_error $? "conditional \"USE_LOCAL_PORTMIDI\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LOCAL_WIDGETEXTRA_TRUE}" && test -z "${USE_LOCAL_WIDGETEXTRA_FALSE}"; then
