@@ -71,7 +71,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Playthrough"));
    {
-      S.TieCheckBox(_("&Other tracks while recording"),
+      S.TieCheckBox(_("&Other tracks while recording (overdub)"),
                     wxT("/AudioIO/Duplex"),
 #ifdef EXPERIMENTAL_DA
                     false);
