@@ -290,21 +290,11 @@ ThemeBase::~ThemeBase(void)
 {
 }
 
-const char * ThemeNames [] =
-{  "Classic",
-   "Dark",
-   "Light",
-   "HiContrast",
-   "Custom"
-};
-
 /// This function is called to load the initial Theme images.
 /// It does not though cause the GUI to refresh.
 void ThemeBase::LoadTheme( teThemeType Theme )
 {
    EnsureInitialised();
-   mThemeName =  ThemeNames[ Theme ];
-
    const bool cbOkIfNotFound = true;
 
    if( !ReadImageCache( Theme, cbOkIfNotFound ) )
@@ -917,7 +907,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "classic" );
    aThemes.Add( "dark" );
    aThemes.Add( "light" );
-   aThemes.Add( "hi-contrast" );
+   aThemes.Add( "high-contrast" );
    aThemes.Add( "custom" );
    int themeIx = aThemes.Index( Name );
    if( themeIx < 0 )
