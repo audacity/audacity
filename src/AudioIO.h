@@ -532,14 +532,11 @@ private:
    volatile long    mNumFrames;
    /// How many frames of zeros were output due to pauses?
    volatile long    mNumPauseFrames;
-   /// pause in ms if no audio playback
-   volatile long    mPauseTime;
    /// total of backward jumps
    volatile double  mMidiLoopOffset;
    volatile long    mAudioFramesPerBuffer;
-   /// Used by Midi process to record that pause has begun.
-   /// Pause time is accumulated in mPauseTime.  This variable is shared
-   /// so that it can be cleared when playback begins.
+   /// Used by Midi process to record that pause has begun,
+   /// so that AllNotesOff() is only delivered once
    volatile bool    mMidiPaused;
 
    Alg_seq_ptr      mSeq;
