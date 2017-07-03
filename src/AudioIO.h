@@ -28,6 +28,7 @@
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "../lib-src/portmidi/pm_common/portmidi.h"
 #include "../lib-src/portmidi/porttime/porttime.h"
+#include <cstring> // Allegro include fails if this header isn't included do to no memcpy
 #include "../lib-src/portsmf/allegro.h"
 
 class NoteTrack;
