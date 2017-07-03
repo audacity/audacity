@@ -473,8 +473,8 @@ void CommandManager::SetMaxList()
    mMaxListOnly.Add( "Shift+Alt+J" );
    mMaxListOnly.Add( "Ctrl+Shift+A" );
    mMaxListOnly.Add( "Q" );
-   mMaxListOnly.Add( "Shift+J" );
-   mMaxListOnly.Add( "Shift+K" );
+   //mMaxListOnly.Add( "Shift+J" );
+   //mMaxListOnly.Add( "Shift+K" );
    //mMaxListOnly.Add( "Shift+Home" );
    //mMaxListOnly.Add( "Shift+End" );
    mMaxListOnly.Add( "Ctrl+[" );

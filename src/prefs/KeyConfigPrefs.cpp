@@ -426,8 +426,8 @@ void KeyConfigPrefs::FilterKeys( wxArrayString & arr )
    MaxListOnly.Add( "Shift+Alt+J" );
    MaxListOnly.Add( "Ctrl+Shift+A" );
    MaxListOnly.Add( "Q" );
-   MaxListOnly.Add( "Shift+J" );
-   MaxListOnly.Add( "Shift+K" );
+   //MaxListOnly.Add( "Shift+J" );
+   //MaxListOnly.Add( "Shift+K" );
    //MaxListOnly.Add( "Shift+Home" );
    //MaxListOnly.Add( "Shift+End" );
    MaxListOnly.Add( "Ctrl+[" );
