@@ -281,6 +281,8 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 
 ScreenFrame::~ScreenFrame()
 {
+   if( mFrame )
+      mFrame.release();
 }
 
 void ScreenFrame::Populate()
