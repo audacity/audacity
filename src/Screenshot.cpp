@@ -109,7 +109,13 @@ void OpenScreenshotTools()
 
 void CloseScreenshotTools()
 {
-   mFrame.reset();
+   // The code below looks like a memory leak,
+   // but actually wxWidgets will take care of deleting the
+   // screenshot window, becuase the parent window is
+   // being deleted.  So we only need to free up our pointer
+   // to it, not actually delete the underlying object.
+   if( mFrame )
+      mFrame.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
