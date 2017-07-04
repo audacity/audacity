@@ -208,6 +208,8 @@ UIHandle::Result TrackSelectHandle::Release
 UIHandle::Result TrackSelectHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
+   // Bug 1677
+   mpTrack.reset();
    return RefreshCode::RefreshAll;
 }
 
