@@ -911,22 +911,26 @@ void NoteTrack::VScroll(int start, int end)
     SetBottomNote(mStartBottomNote + delta);
 }
 
-// Zoom the note track, centering the pitch at centerY,
-// positive amounts zoom in; negative amounts zoom out
-void NoteTrack::Zoom(const wxRect &rect, int centerY, int amount)
+void NoteTrack::Zoom(const wxRect &rect, int y, int amount, bool center)
 {
    // Construct track rectangle to map pitch to screen coordinates
    // Only y and height are needed:
    wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
    PrepareIPitchToY(trackRect);
-   int centerPitch = YToIPitch(centerY);
+   int clickedPitch = YToIPitch(y);
    // zoom out by changing the pitch height -- a small integer
    mPitchHeight += amount;
    if (mPitchHeight <= 0) mPitchHeight = 1;
    PrepareIPitchToY(trackRect); // update because mPitchHeight changed
-   int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
-   // center the pitch that the user clicked on
-   SetBottomNote(mBottomNote + (centerPitch - newCenterPitch));
+   if (center) {
+      int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
+      // center the pitch that the user clicked on
+      SetBottomNote(mBottomNote + (clickedPitch - newCenterPitch));
+   } else {
+      int newClickedPitch = YToIPitch(y);
+      // align to keep the pitch that the user clicked on in the same place
+      SetBottomNote(mBottomNote + (clickedPitch - newClickedPitch));
+   }
 }
 
 
@@ -940,7 +944,7 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
       int temp = topPitch; topPitch = botPitch; botPitch = temp;
    }
    if (topPitch == botPitch) { // can't divide by zero, do something else
-      Zoom(rect, start, 1);
+      Zoom(rect, start, 1, true);
       return;
    }
    int trialPitchHeight = trackRect.height / (topPitch - botPitch);
@@ -949,7 +953,7 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
    } else if (trialPitchHeight == 0) {
       trialPitchHeight = 1;
    }
-   Zoom(rect, (start + end) / 2, trialPitchHeight - mPitchHeight);
+   Zoom(rect, (start + end) / 2, trialPitchHeight - mPitchHeight, true);
 }
 
 int NoteTrack::YToIPitch(int y)

@@ -236,7 +236,7 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
 
    const auto nt = static_cast<NoteTrack*>(pTrack.get());
    if (event.CmdDown() && !event.ShiftDown()) {
-      nt->Zoom(evt.rect, evt.event.m_y, (int) (steps));
+      nt->Zoom(evt.rect, evt.event.m_y, (int) (steps), false);
    } else if (!event.CmdDown() && event.ShiftDown()) {
       // Scroll some fixed number of notes, independent of zoom level or track height:
       static const int movement = 6; // 6 semitones is half an octave

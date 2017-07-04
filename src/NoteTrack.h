@@ -127,9 +127,14 @@ class AUDACITY_DLL_API NoteTrack final
    int GetBottomNote() const { return mBottomNote; }
    int GetPitchHeight() const { return mPitchHeight; }
    void SetPitchHeight(int h) { mPitchHeight = h; }
-   void ZoomOut(const wxRect &rect, int y) { Zoom(rect, y, -1); }
-   void ZoomIn(const wxRect &rect, int y) { Zoom(rect, y, 1); }
-   void Zoom(const wxRect &rect, int centerY, int amount);
+   /// Zooms out by one unit
+   void ZoomOut(const wxRect &rect, int y) { Zoom(rect, y, -1, true); }
+   /// Zooms in by one unit
+   void ZoomIn(const wxRect &rect, int y) { Zoom(rect, y, 1, true); }
+   /// Zoom the note track around y.
+   /// Positive amounts zoom in; negative amounts zoom out.
+   /// If center is true, the result will be centered at y.
+   void Zoom(const wxRect &rect, int y, int amount, bool center);
    void ZoomTo(const wxRect &rect, int start, int end);
    int GetNoteMargin() const { return (mPitchHeight + 1) / 2; }
    int GetOctaveHeight() const { return mPitchHeight * 12 + 2; }
