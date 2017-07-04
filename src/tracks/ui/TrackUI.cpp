@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
 #include "TimeShiftHandle.h"
+#include "../../TrackPanelResizerCell.h"
 
 HitTestResult Track::HitTest
 (const TrackPanelMouseEvent &event,

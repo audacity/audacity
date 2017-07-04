@@ -18,6 +18,7 @@ class ViewInfo;
 class wxKeyEvent;
 class wxPoint;
 class wxRect;
+class wxWindow;
 
 // Abstract base class defining TrackPanel's access to specialist classes that
 // implement drawing and user interactions
