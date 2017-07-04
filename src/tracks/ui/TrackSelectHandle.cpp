@@ -183,6 +183,8 @@ HitTestPreview TrackSelectHandle::Preview
 UIHandle::Result TrackSelectHandle::Release
 (const TrackPanelMouseEvent &, AudacityProject *, wxWindow *)
 {
+   // If we're releasing, surely we are dragging a track?
+   wxASSERT( mpTrack );
    if (mRearrangeCount != 0) {
       AudacityProject *const project = ::GetActiveProject();
       wxString dir;
@@ -194,6 +196,11 @@ UIHandle::Result TrackSelectHandle::Release
          dir.c_str()),
          _("Move Track"));
    }
+   // Bug 1677
+   // Holding on to the reference to the track was causing it to be released far later
+   // than necessary, on shutdown, and so causing a crash as a dialog about cleaning
+   // out files could not show at that time.
+   mpTrack.reset();
    // No need to redraw, that was done when drag moved the track
    return RefreshCode::RefreshNone;
 }
