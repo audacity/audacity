@@ -49,8 +49,14 @@ TrackPanelAx::~TrackPanelAx()
 std::shared_ptr<Track> TrackPanelAx::GetFocus()
 {
    auto focusedTrack = mFocusedTrack.lock();
-   if( !focusedTrack )
-      focusedTrack = SetFocus();
+   if( !focusedTrack ) {
+      TrackListIterator iter( mTrackPanel->GetTracks() );
+      focusedTrack = Track::Pointer( iter.First() );
+      // only call SetFocus if the focus has changed to avoid
+      // unnecessary focus events
+      if (focusedTrack) 
+         focusedTrack = SetFocus();
+   }
 
    if( !TrackNum( focusedTrack ) )
    {
@@ -104,6 +110,14 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
                       num );
       }
    }
+   else
+   {
+      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+         mTrackPanel,
+         wxOBJID_CLIENT,
+         wxACC_SELF);
+   }
+
 #endif
 
    return track;

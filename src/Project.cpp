@@ -5447,14 +5447,16 @@ void AudacityProject::SetTrackPan(WaveTrack * wt, LWSlider * slider)
 /// Removes the specified track.  Called from HandleClosing.
 void AudacityProject::RemoveTrack(Track * toRemove)
 {
-   // If it was focused, reassign focus to the next or, if
-   // unavailable, the previous track.
-   if (mTrackPanel->GetFocusedTrack() == toRemove) {
-      Track *t = mTracks->GetNext(toRemove, true);
-      if (t == NULL) {
-         t = mTracks->GetPrev(toRemove, true);
+   // If it was focused, then new focus is the next or, if
+   // unavailable, the previous track. (The new focus is set
+   // after the track has been removed.)
+   bool toRemoveWasFocused = mTrackPanel->GetFocusedTrack() == toRemove;
+   Track* newFocus{};
+   if (toRemoveWasFocused) {
+      newFocus = mTracks->GetNext(toRemove, true);
+      if (!newFocus) {
+         newFocus = mTracks->GetPrev(toRemove, true);
       }
-      mTrackPanel->SetFocusedTrack(t);  // It's okay if this is NULL
    }
 
    wxString name = toRemove->GetName();
@@ -5473,9 +5475,9 @@ void AudacityProject::RemoveTrack(Track * toRemove)
    if (partner) {
       mTracks->Remove(partner);
    }
-
-   if (mTracks->IsEmpty()) {
-      mTrackPanel->SetFocusedTrack(NULL);
+   
+   if (toRemoveWasFocused) {
+      mTrackPanel->SetFocusedTrack(newFocus);
    }
 
    PushState(
