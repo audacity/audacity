@@ -9061,6 +9061,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				PRODUCT_NAME = expat;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
@@ -9072,6 +9073,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				PRODUCT_NAME = expat;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
