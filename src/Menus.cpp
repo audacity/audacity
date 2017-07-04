@@ -6025,12 +6025,21 @@ void AudacityProject::OnNewStereoTrack()
 
 void AudacityProject::OnNewLabelTrack()
 {
-   LabelTrack *t = new LabelTrack(mDirManager);
+	wxString tn = "Label Track";
+	auto firstSelectedTrack = mTrackPanel->GetFirstSelectedTrack();
+	if (firstSelectedTrack != NULL) {
+		tn = firstSelectedTrack->GetName();
+	}
 
-   SelectNone();
 
-   mTracks->Add(t);
-   t->SetSelected(true);
+	LabelTrack *t = new LabelTrack(mDirManager);
+
+	t->SetName(tn);
+
+	SelectNone();
+
+	t->SetSelected(true);
+	
 
    PushState(_("Created new label track"), _("New Track"));
 
