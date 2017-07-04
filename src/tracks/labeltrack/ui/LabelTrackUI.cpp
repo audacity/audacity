@@ -21,22 +21,21 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Project.h"
 #include "../../../TrackPanelMouseEvent.h"
 
-HitTestResult LabelTrack::DetailedHitTest
+UIHandlePtr LabelTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int, bool)
 {
-   HitTestResult result;
    const wxMouseState &state = st.state;
 
    // Try label movement handles first
+   UIHandlePtr result;
    result = LabelGlyphHandle::HitTest(
       mGlyphHandle, state, Pointer<LabelTrack>(this), st.rect);
 
-   if ( !result.handle ) {
+   if ( !result )
       // Missed glyph, try text box
       result = LabelTextHandle::HitTest(
          mTextHandle, state, Pointer<LabelTrack>(this));
-   }
 
    return result;
 }

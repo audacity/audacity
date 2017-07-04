@@ -16,7 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../MemoryX.h"
 
 class wxMouseState;
-struct HitTestResult;
 class LabelTrack;
 
 /// mEdge:
@@ -49,7 +48,7 @@ public:
 
    LabelGlyphHandle &operator=(LabelGlyphHandle&&) = default;
    
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<LabelGlyphHandle> &holder,
        const wxMouseState &state,
        const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect);

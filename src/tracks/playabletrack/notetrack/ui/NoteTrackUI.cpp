@@ -22,12 +22,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
 
-HitTestResult NoteTrack::DetailedHitTest
+UIHandlePtr NoteTrack::DetailedHitTest
 (const TrackPanelMouseState &state,
  const AudacityProject *pProject, int, bool )
 {
    // Eligible for stretch?
-   HitTestResult result;
+   UIHandlePtr result;
 #ifdef USE_MIDI
    result = StretchHandle::HitTest(
       mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );

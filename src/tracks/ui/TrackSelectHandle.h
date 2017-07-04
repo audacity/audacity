@@ -15,22 +15,20 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../MemoryX.h"
 
 class wxMouseEvent;
-struct HitTestResult;
 class Track;
 
 class TrackSelectHandle final : public UIHandle
 {
    TrackSelectHandle(const TrackSelectHandle&) = delete;
-   static HitTestPreview HitPreview(unsigned trackCount);
 
 public:
    explicit TrackSelectHandle( const std::shared_ptr<Track> &pTrack );
 
    TrackSelectHandle &operator=(const TrackSelectHandle&) = default;
 
-   static HitTestResult HitAnywhere
+   static UIHandlePtr HitAnywhere
       (std::weak_ptr<TrackSelectHandle> &holder,
-       const std::shared_ptr<Track> &pTrack, unsigned trackCount);
+       const std::shared_ptr<Track> &pTrack);
 
    virtual ~TrackSelectHandle();
 

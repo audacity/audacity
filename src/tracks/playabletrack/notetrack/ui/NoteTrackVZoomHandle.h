@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_NOTE_TRACK_VZOOM_HANDLE__
 
 class wxMouseState;
-struct HitTestResult;
 class NoteTrack;
 
 #include "../../../../MemoryX.h"
@@ -30,7 +29,7 @@ public:
 
    NoteTrackVZoomHandle &operator=(const NoteTrackVZoomHandle&) = default;
 
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<NoteTrackVZoomHandle> &holder,
        const wxMouseState &state,
        const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect);

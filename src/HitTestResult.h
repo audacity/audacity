@@ -14,10 +14,7 @@ Paul Licameli
 #include <wx/string.h>
 #include "MemoryX.h"
 
-class UIHandle;
 class wxCursor;
-
-using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 struct HitTestPreview
 {
@@ -30,19 +27,6 @@ struct HitTestPreview
 
    wxString message {};
    wxCursor *cursor {};
-};
-
-struct HitTestResult
-{
-   HitTestResult()
-   {}
-
-   HitTestResult(HitTestPreview preview_, UIHandlePtr handle_)
-      : preview(preview_), handle(handle_)
-   {}
-
-   HitTestPreview preview {};
-   UIHandlePtr handle {};
 };
 
 #endif

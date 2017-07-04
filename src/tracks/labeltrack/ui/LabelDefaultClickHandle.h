@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../MemoryX.h"
 
 class wxMouseEvent;
-struct HitTestResult;
 class LabelTrack;
 
 // Used as a base class.

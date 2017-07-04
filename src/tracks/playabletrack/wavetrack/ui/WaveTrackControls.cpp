@@ -53,7 +53,7 @@ WaveTrackControls::~WaveTrackControls()
 }
 
 
-HitTestResult WaveTrackControls::HitTest
+UIHandlePtr WaveTrackControls::HitTest
 (const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
@@ -62,21 +62,21 @@ HitTestResult WaveTrackControls::HitTest
    if (state.ButtonIsDown(wxMOUSE_BTN_LEFT)) {
       auto track = FindTrack();
       if (track && track->GetKind() == Track::Wave) {
-         HitTestResult result;
+         UIHandlePtr result;
          if (NULL != (result = MuteButtonHandle::HitTest(
-            mMuteHandle, state, rect, pProject, track)).handle)
+            mMuteHandle, state, rect, pProject, track)))
             return result;
 
          if (NULL != (result = SoloButtonHandle::HitTest(
-            mSoloHandle, state, rect, pProject, track)).handle)
+            mSoloHandle, state, rect, pProject, track)))
             return result;
 
          if (NULL != (result = GainSliderHandle::HitTest(
-            mGainHandle, state, rect, pProject, track)).handle)
+            mGainHandle, state, rect, track)))
             return result;
 
          if (NULL != (result = PanSliderHandle::HitTest(
-            mPanHandle, state, rect, pProject, track)).handle)
+            mPanHandle, state, rect, track)))
             return result;
       }
    }

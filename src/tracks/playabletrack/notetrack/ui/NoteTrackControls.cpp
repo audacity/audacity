@@ -30,7 +30,7 @@ NoteTrackControls::~NoteTrackControls()
 {
 }
 
-HitTestResult NoteTrackControls::HitTest
+UIHandlePtr NoteTrackControls::HitTest
 (const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
@@ -39,20 +39,20 @@ HitTestResult NoteTrackControls::HitTest
    if (state.ButtonIsDown(wxMOUSE_BTN_ANY)) {
       auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
       if (track && track->GetKind() == Track::Note) {
-         HitTestResult result;
+         UIHandlePtr result;
          if (NULL != (result = MuteButtonHandle::HitTest(
-            mMuteHandle, state, rect, pProject, track)).handle)
+            mMuteHandle, state, rect, pProject, track)))
             return result;
 
          if (NULL != (result = SoloButtonHandle::HitTest(
-            mSoloHandle, state, rect, pProject, track)).handle)
+            mSoloHandle, state, rect, pProject, track)))
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
          if (NULL != (result = VelocitySliderHandle::HitTest(
-            mVelocityHandle, state, rect, pProject, track)).handle)
+            mVelocityHandle, state, rect, track)))
             return result;
          if (NULL != (result = NoteTrackButtonHandle::HitTest(
-            mClickHandle, state, rect, track)).handle)
+            mClickHandle, state, rect, track)))
             return result;
 #endif
       }

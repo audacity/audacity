@@ -48,13 +48,11 @@ HitTestPreview EnvelopeHandle::HitPreview(const AudacityProject *pProject, bool 
    };
 }
 
-HitTestResult EnvelopeHandle::HitAnywhere
-(std::weak_ptr<EnvelopeHandle> &holder,
- const AudacityProject *pProject, Envelope *envelope)
+UIHandlePtr EnvelopeHandle::HitAnywhere
+(std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope)
 {
-   const bool unsafe = pProject->IsAudioActive();
-   UIHandlePtr result = std::make_shared<EnvelopeHandle>( envelope );
-   return { HitPreview(pProject, unsafe), result };
+   auto result = std::make_shared<EnvelopeHandle>( envelope );
+   return result;
 }
 
 namespace {
@@ -74,7 +72,7 @@ namespace {
    }
 }
 
-HitTestResult EnvelopeHandle::TimeTrackHitTest
+UIHandlePtr EnvelopeHandle::TimeTrackHitTest
 (std::weak_ptr<EnvelopeHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt)
@@ -90,7 +88,7 @@ HitTestResult EnvelopeHandle::TimeTrackHitTest
       (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
-HitTestResult EnvelopeHandle::WaveTrackHitTest
+UIHandlePtr EnvelopeHandle::WaveTrackHitTest
 (std::weak_ptr<EnvelopeHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt)
@@ -120,7 +118,7 @@ HitTestResult EnvelopeHandle::WaveTrackHitTest
        (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
-HitTestResult EnvelopeHandle::HitEnvelope
+UIHandlePtr EnvelopeHandle::HitEnvelope
 (std::weak_ptr<EnvelopeHandle> &holder,
  const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
  Envelope *envelope, float zoomMin, float zoomMax,
@@ -170,7 +168,7 @@ HitTestResult EnvelopeHandle::HitEnvelope
    if (distance >= yTolerance)
       return {};
 
-   return HitAnywhere(holder, pProject, envelope);
+   return HitAnywhere(holder, envelope);
 }
 
 UIHandle::Result EnvelopeHandle::Click

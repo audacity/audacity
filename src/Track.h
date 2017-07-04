@@ -136,14 +136,14 @@ class AUDACITY_DLL_API Track /* not final */
    // Cause certain overriding tool modes (Zoom; future ones?) to behave
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
-   HitTestResult HitTest
+   UIHandlePtr HitTest
       (const TrackPanelMouseState &, const AudacityProject *pProject)
       final;
 
  public:
 
    // Rather override this for subclasses:
-   virtual HitTestResult DetailedHitTest
+   virtual UIHandlePtr DetailedHitTest
       (const TrackPanelMouseState &,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       = 0;

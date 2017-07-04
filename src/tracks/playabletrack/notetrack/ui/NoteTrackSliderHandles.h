@@ -20,8 +20,6 @@
 class NoteTrack;
 class wxMouseState;
 
-struct HitTestResult;
-
 class VelocitySliderHandle final : public SliderHandle
 {
    VelocitySliderHandle(const VelocitySliderHandle&) = delete;
@@ -47,10 +45,10 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
-   (std::weak_ptr<VelocitySliderHandle> &holder,
-    const wxMouseState &state, const wxRect &rect,
-    const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<VelocitySliderHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

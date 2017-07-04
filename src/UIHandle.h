@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_UI_HANDLE__
 
 #include <utility>
+#include "MemoryX.h"
 
 class wxDC;
 class wxRect;

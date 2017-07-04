@@ -14,7 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "MemoryX.h"
 #include "UIHandle.h"
 
-struct HitTestResult;
 class Track;
 class TrackPanelCellIterator;
 

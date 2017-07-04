@@ -48,7 +48,7 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    return RefreshNone;
 }
 
-HitTestResult MinimizeButtonHandle::HitTest
+UIHandlePtr MinimizeButtonHandle::HitTest
 (std::weak_ptr<MinimizeButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
@@ -59,10 +59,7 @@ HitTestResult MinimizeButtonHandle::HitTest
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       auto result = std::make_shared<MinimizeButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
-      return {
-         HitTestPreview{},
-         result
-      };
+      return result;
    }
    else
       return {};
@@ -102,7 +99,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    return result;
 }
 
-HitTestResult CloseButtonHandle::HitTest
+UIHandlePtr CloseButtonHandle::HitTest
 (std::weak_ptr<CloseButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
@@ -113,10 +110,7 @@ HitTestResult CloseButtonHandle::HitTest
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       auto result = std::make_shared<CloseButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
-      return {
-         HitTestPreview{},
-         result
-      };
+      return result;
    }
    else
       return {};
@@ -144,7 +138,7 @@ UIHandle::Result MenuButtonHandle::CommitChanges
    return pCell->DoContextMenu(mRect, pParent, NULL);
 }
 
-HitTestResult MenuButtonHandle::HitTest
+UIHandlePtr MenuButtonHandle::HitTest
 (std::weak_ptr<MenuButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
  const std::shared_ptr<TrackPanelCell> &pCell)
@@ -156,10 +150,7 @@ HitTestResult MenuButtonHandle::HitTest
       auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
       auto result = std::make_shared<MenuButtonHandle>( pCell, pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
-      return {
-         HitTestPreview{},
-         result
-      };
+      return result;
    }
    else
       return {};

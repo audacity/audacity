@@ -52,7 +52,7 @@ HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
    };
 }
 
-HitTestResult NoteTrackVZoomHandle::HitTest
+UIHandlePtr NoteTrackVZoomHandle::HitTest
 (std::weak_ptr<NoteTrackVZoomHandle> &holder,
  const wxMouseState &state,
  const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect)
@@ -61,7 +61,7 @@ HitTestResult NoteTrackVZoomHandle::HitTest
       auto result = std::make_shared<NoteTrackVZoomHandle>(
          pTrack, rect, state.m_y);
       result = AssignUIHandlePtr(holder, result);
-      return HitTestResult(HitPreview(state), result);
+      return result;
    }
    return {};
 }

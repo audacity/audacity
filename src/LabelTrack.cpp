@@ -765,7 +765,7 @@ namespace {
       // Fetch the highlighting state
       auto target = GetActiveProject()->GetTrackPanel()->Target();
       if (target) {
-         auto handle = dynamic_cast<LabelGlyphHandle*>( target->handle.get() );
+         auto handle = dynamic_cast<LabelGlyphHandle*>( target.get() );
          if (handle)
             return &handle->mHit;
       }

@@ -20,7 +20,6 @@ class wxMouseState;
 
 class Envelope;
 class EnvelopeEditor;
-struct HitTestResult;
 class ViewInfo;
 class TimeTrack;
 class WaveTrack;
@@ -31,7 +30,7 @@ class EnvelopeHandle final : public UIHandle
    EnvelopeHandle &operator=(const EnvelopeHandle&) = delete;
    static HitTestPreview HitPreview(const AudacityProject *pProject, bool unsafe);
 
-   static HitTestResult HitEnvelope
+   static UIHandlePtr HitEnvelope
       (std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject,
@@ -43,14 +42,13 @@ public:
 
    virtual ~EnvelopeHandle();
 
-   static HitTestResult HitAnywhere
-      (std::weak_ptr<EnvelopeHandle> &holder,
-       const AudacityProject *pProject, Envelope *envelope);
-   static HitTestResult TimeTrackHitTest
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope);
+   static UIHandlePtr TimeTrackHitTest
       (std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
-   static HitTestResult WaveTrackHitTest
+   static UIHandlePtr WaveTrackHitTest
       (std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);

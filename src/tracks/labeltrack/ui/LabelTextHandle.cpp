@@ -34,7 +34,7 @@ HitTestPreview LabelTextHandle::HitPreview()
    };
 }
 
-HitTestResult LabelTextHandle::HitTest
+UIHandlePtr LabelTextHandle::HitTest
 (std::weak_ptr<LabelTextHandle> &holder,
  const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT)
 {
@@ -44,8 +44,7 @@ HitTestResult LabelTextHandle::HitTest
        (labelNum = pLT->OverATextBox(state.m_x, state.m_y) ) >= 0) {
       auto result = std::make_shared<LabelTextHandle>( pLT, labelNum );
       result = AssignUIHandlePtr(holder, result);
-      // There was no cursor change or status message for mousing over a label text box
-      return { HitPreview(), result };
+      return result;
    }
 
    return {};

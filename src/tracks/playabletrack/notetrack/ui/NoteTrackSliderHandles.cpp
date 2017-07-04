@@ -63,10 +63,10 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
 
 
 
-HitTestResult VelocitySliderHandle::HitTest
+UIHandlePtr VelocitySliderHandle::HitTest
 (std::weak_ptr<VelocitySliderHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
+ const std::shared_ptr<Track> &pTrack)
 {
    if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
@@ -86,7 +86,7 @@ HitTestResult VelocitySliderHandle::HitTest
          sliderFn, sliderRect, pTrack );
       result = AssignUIHandlePtr(holder, result);
 
-      return { HitTestPreview{}, result };
+      return result;
    }
    else
       return {};

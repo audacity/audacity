@@ -21,7 +21,7 @@ TimeTrackControls::~TimeTrackControls()
 {
 }
 
-HitTestResult TimeTrackControls::HitTest
+UIHandlePtr TimeTrackControls::HitTest
 (const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {

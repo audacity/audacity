@@ -32,7 +32,7 @@ std::shared_ptr<Track> TrackVRulerControls::FindTrack()
    return mwTrack.lock();
 }
 
-HitTestResult TrackVRulerControls::HitTest
+UIHandlePtr TrackVRulerControls::HitTest
 (const TrackPanelMouseState &, const AudacityProject *)
 {
    return {};

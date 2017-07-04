@@ -867,10 +867,9 @@ void TrackPanel::HandleMotion( wxMouseState *pState )
 
 void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
 {
-   HitTestResult result;
    auto handle = mUIHandle;
 
-   auto oldHandle = mLastHitTest.handle;
+   auto oldHandle = mLastHitTest;
    auto oldCell = mLastCell.lock();
    auto newCell = tpmState.pCell;
 
@@ -905,12 +904,10 @@ void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
 
       // Now do the
       // UIHANDLE HIT TEST !
-      result = newCell->HitTest(tpmState, GetProject());
-      handle = result.handle;
+      handle = newCell->HitTest(tpmState, GetProject());
 
       mLastCell = newCell;
-      mLastHitTestValid = true;
-      mLastHitTest = result;
+      mLastHitTest = handle;
 
       if (!oldCell && oldHandle != handle)
          // Did not move cell to cell, but did change the target
@@ -1603,11 +1600,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       HandleMotion( tpmState );
    }
 
-   auto target = Target();
-   if (target)
-      mUIHandle = target->handle;
-   else
-      mUIHandle = {};
+   mUIHandle = Target();
 
    if (mUIHandle) {
       // UIHANDLE CLICK

@@ -45,23 +45,20 @@ HitTestPreview TimeShiftHandle::HitPreview
    };
 }
 
-HitTestResult TimeShiftHandle::HitAnywhere
+UIHandlePtr TimeShiftHandle::HitAnywhere
 (std::weak_ptr<TimeShiftHandle> &holder,
- const AudacityProject *pProject,
  const std::shared_ptr<Track> &pTrack, bool gripHit)
 {
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."
-   const bool unsafe = pProject->IsAudioActive();
    auto result = std::make_shared<TimeShiftHandle>( pTrack, gripHit );
    result = AssignUIHandlePtr(holder, result);
-   return { HitPreview(pProject, unsafe), result };
+   return result;
 }
 
-HitTestResult TimeShiftHandle::HitTest
+UIHandlePtr TimeShiftHandle::HitTest
 (std::weak_ptr<TimeShiftHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject,
  const std::shared_ptr<Track> &pTrack)
 {
    /// method that tells us if the mouse event landed on a
@@ -81,7 +78,7 @@ HitTestResult TimeShiftHandle::HitTest
        state.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
       return {};
 
-   return HitAnywhere( holder, pProject, pTrack, true );
+   return HitAnywhere( holder, pTrack, true );
 }
 
 TimeShiftHandle::~TimeShiftHandle()

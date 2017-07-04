@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/EnvelopeHandle.h"
 
-HitTestResult TimeTrack::DetailedHitTest
+UIHandlePtr TimeTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int, bool)
 {

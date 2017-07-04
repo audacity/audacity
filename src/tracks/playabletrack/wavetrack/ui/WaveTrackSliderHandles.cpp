@@ -63,10 +63,10 @@ UIHandle::Result GainSliderHandle::CommitChanges
    return RefreshCode::RefreshCell;
 }
 
-HitTestResult GainSliderHandle::HitTest
+UIHandlePtr GainSliderHandle::HitTest
 (std::weak_ptr<GainSliderHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *, const std::shared_ptr<Track> &pTrack)
+ const std::shared_ptr<Track> &pTrack)
 {
    if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
@@ -88,10 +88,7 @@ HitTestResult GainSliderHandle::HitTest
          std::make_shared<GainSliderHandle>( sliderFn, sliderRect, pTrack );
       result = AssignUIHandlePtr(holder, result);
 
-      return {
-         HitTestPreview{},
-         result
-      };
+      return result;
    }
    else
       return {};
@@ -155,10 +152,10 @@ UIHandle::Result PanSliderHandle::CommitChanges
    return RefreshCode::RefreshCell;
 }
 
-HitTestResult PanSliderHandle::HitTest
+UIHandlePtr PanSliderHandle::HitTest
 (std::weak_ptr<PanSliderHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
+ const std::shared_ptr<Track> &pTrack)
 {
    if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
@@ -178,10 +175,7 @@ HitTestResult PanSliderHandle::HitTest
          sliderFn, sliderRect, pTrack );
       result = AssignUIHandlePtr(holder, result);
 
-      return {
-         HitTestPreview{},
-         result
-      };
+      return result;
    }
    else
       return {};

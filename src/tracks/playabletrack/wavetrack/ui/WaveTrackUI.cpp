@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
 
-HitTestResult WaveTrack::DetailedHitTest
+UIHandlePtr WaveTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int currentTool, bool bMultiTool)
 {
@@ -40,15 +40,15 @@ HitTestResult WaveTrack::DetailedHitTest
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
       return TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, pProject, Pointer(this), false);
+         mTimeShiftHandle, Pointer(this), false);
 
    // Some special targets are not drawn in spectrogram,
    // so don't hit them in such views.
    else if (isWaveform) {
-      HitTestResult result;
+      UIHandlePtr result;
       if (NULL != (result = CutlineHandle::HitTest(
          mCutlineHandle, st.state, st.rect,
-         pProject, Pointer<WaveTrack>(this))).preview.cursor)
+         pProject, Pointer<WaveTrack>(this))))
          // This overriding test applies in all tools
          return result;
       else if (bMultiTool) {
@@ -58,18 +58,16 @@ HitTestResult WaveTrack::DetailedHitTest
          // point, seems arbitrary
          if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
             mEnvelopeHandle, st.state, st.rect,
-            pProject, Pointer<WaveTrack>(this)))
-            .preview.cursor)
+            pProject, Pointer<WaveTrack>(this))))
             ;
          else if (NULL != (result = TimeShiftHandle::HitTest(
-            mTimeShiftHandle, st.state, st.rect,
-            pProject, Pointer(this))).preview.cursor)
+            mTimeShiftHandle, st.state, st.rect, Pointer(this))))
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
             ;
          else if (NULL != (result = SampleHandle::HitTest(
             mSampleHandle, st.state, st.rect,
-            pProject, Pointer<WaveTrack>(this))).preview.cursor)
+            pProject, Pointer<WaveTrack>(this))))
             ;
          return result;
       }
@@ -79,11 +77,11 @@ HitTestResult WaveTrack::DetailedHitTest
          case envelopeTool: {
             auto envelope = GetEnvelopeAtX( st.state.m_x );
             return EnvelopeHandle::HitAnywhere(
-               mEnvelopeHandle, pProject, envelope);
+               mEnvelopeHandle, envelope);
          }
          case drawTool:
             return SampleHandle::HitAnywhere(
-               mSampleHandle, st.state, pProject, Pointer<WaveTrack>(this));
+               mSampleHandle, st.state, Pointer<WaveTrack>(this));
          default:
             break;
       }

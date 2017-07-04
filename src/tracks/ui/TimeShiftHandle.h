@@ -18,10 +18,7 @@ Paul Licameli
 #include "../../Snap.h"
 #include "../../Track.h"
 
-struct HitTestResult;
 class WaveClip;
-
-using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 struct ClipMoveState {
    // non-NULL only if click was in a WaveTrack and without Shift key:
@@ -68,14 +65,12 @@ public:
    static void DoSlideHorizontal
       ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
 
-   static HitTestResult HitAnywhere
+   static UIHandlePtr HitAnywhere
       (std::weak_ptr<TimeShiftHandle> &holder,
-       const AudacityProject *pProject,
        const std::shared_ptr<Track> &pTrack, bool gripHit);
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<TimeShiftHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject,
        const std::shared_ptr<Track> &pTrack);
 
    virtual ~TimeShiftHandle();

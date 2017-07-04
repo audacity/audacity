@@ -37,7 +37,7 @@ UIHandle::Result MuteButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-HitTestResult MuteButtonHandle::HitTest
+UIHandlePtr MuteButtonHandle::HitTest
 (std::weak_ptr<MuteButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
@@ -52,10 +52,7 @@ HitTestResult MuteButtonHandle::HitTest
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
       auto result = std::make_shared<MuteButtonHandle>(pTrack, buttonRect);
       result = AssignUIHandlePtr(holder, result);
-      return {
-         HitTestPreview{},
-         result
-      };
+      return result;
    }
    else
       return {};
@@ -82,7 +79,7 @@ UIHandle::Result SoloButtonHandle::CommitChanges
    return RefreshCode::RefreshNone;
 }
 
-HitTestResult SoloButtonHandle::HitTest
+UIHandlePtr SoloButtonHandle::HitTest
 (std::weak_ptr<SoloButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
@@ -98,11 +95,8 @@ HitTestResult SoloButtonHandle::HitTest
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
       auto result = std::make_shared<SoloButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
-      return HitTestResult(
-         HitTestPreview{},
-         result
-      );
+      return result;
    }
    else
-      return HitTestResult();
+      return {};
 }

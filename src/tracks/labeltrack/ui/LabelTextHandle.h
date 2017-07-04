@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/gdicmn.h>
 
 class wxMouseState;
-struct HitTestResult;
 class LabelTrack;
 class SelectionStateChanger;
 
@@ -28,7 +27,7 @@ class LabelTextHandle final : public LabelDefaultClickHandle
    static HitTestPreview HitPreview();
 
 public:
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<LabelTextHandle> &holder,
        const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
 

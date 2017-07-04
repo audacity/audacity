@@ -30,7 +30,7 @@ NoteTrackButtonHandle::~NoteTrackButtonHandle()
 {
 }
 
-HitTestResult NoteTrackButtonHandle::HitTest
+UIHandlePtr NoteTrackButtonHandle::HitTest
    (std::weak_ptr<NoteTrackButtonHandle> &holder,
     const wxMouseState &state, const wxRect &rect,
     const std::shared_ptr<NoteTrack> &pTrack)
@@ -45,10 +45,7 @@ HitTestResult NoteTrackButtonHandle::HitTest
       auto result = std::make_shared<NoteTrackButtonHandle>(
          pTrack, channel, midiRect );
       result = AssignUIHandlePtr(holder, result);
-      return {
-         HitTestPreview(),
-         result
-      };
+      return result;
    }
    else
       return {};

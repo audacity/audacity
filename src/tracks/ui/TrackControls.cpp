@@ -16,9 +16,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../MixerBoard.h"
 #include "../../Project.h"
-#include "../../TrackPanel.h"
+#include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
-#include "../../WaveTrack.h"
+#include "../../Track.h"
 #include <wx/textdlg.h>
 
 int TrackControls::gCaptureState;
@@ -37,32 +37,32 @@ std::shared_ptr<Track> TrackControls::FindTrack()
    return mwTrack.lock();
 }
 
-HitTestResult TrackControls::HitTest
+UIHandlePtr TrackControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *project)
 {
    const wxMouseState &state = st.state;
    const wxRect &rect = st.rect;
-   HitTestResult result;
+   UIHandlePtr result;
 
    auto pTrack = FindTrack();
    // shared pointer to this:
    auto sThis = pTrack->GetTrackControl();
 
    if (NULL != (result = CloseButtonHandle::HitTest(
-      mCloseHandle, state, rect, this)).handle)
+      mCloseHandle, state, rect, this)))
       return result;
 
    if (NULL != (result = MenuButtonHandle::HitTest(
-      mMenuHandle, state, rect, sThis)).handle)
+      mMenuHandle, state, rect, sThis)))
       return result;
 
    if (NULL != (result = MinimizeButtonHandle::HitTest(
-      mMinimizeHandle, state, rect, this)).handle)
+      mMinimizeHandle, state, rect, this)))
       return result;
 
    return TrackSelectHandle::HitAnywhere(
-      mSelectHandle, pTrack, project->GetTrackPanel()->GetTrackCount());
+      mSelectHandle, pTrack);
 }
 
 enum

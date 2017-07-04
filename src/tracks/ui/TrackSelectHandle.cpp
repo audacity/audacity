@@ -53,25 +53,13 @@ TrackSelectHandle::TrackSelectHandle( const std::shared_ptr<Track> &pTrack )
    : mpTrack( pTrack )
 {}
 
-HitTestPreview TrackSelectHandle::HitPreview(unsigned trackCount)
-{
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return {
-      Message(trackCount),
-       &arrowCursor
-   };
-}
-
-HitTestResult TrackSelectHandle::HitAnywhere
+UIHandlePtr TrackSelectHandle::HitAnywhere
 (std::weak_ptr<TrackSelectHandle> &holder,
- const std::shared_ptr<Track> &pTrack, unsigned trackCount)
+ const std::shared_ptr<Track> &pTrack)
 {
    auto result = std::make_shared<TrackSelectHandle>(pTrack);
    result = AssignUIHandlePtr(holder, result);
-   return {
-      HitPreview(trackCount),
-      result
-   };
+   return result;
 }
 
 TrackSelectHandle::~TrackSelectHandle()

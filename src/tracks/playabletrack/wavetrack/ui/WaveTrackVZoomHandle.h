@@ -17,8 +17,6 @@ class WaveTrack;
 #include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
 
-struct HitTestResult;
-
 class WaveTrackVZoomHandle : public UIHandle
 {
    WaveTrackVZoomHandle(const WaveTrackVZoomHandle&);
@@ -29,8 +27,6 @@ public:
       (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
 
    WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
-
-   static HitTestResult HitTest(const wxMouseState &state, UIHandlePtr result);
 
    static void DoZoom
    (AudacityProject *pProject,

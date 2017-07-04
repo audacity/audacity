@@ -14,8 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ui/ButtonHandle.h"
 #include "../../../TrackPanel.h"
 
-struct HitTestResult;
-
 class wxMouseState;
 
 class MuteButtonHandle final : public ButtonHandle
@@ -38,7 +36,7 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<MuteButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
@@ -66,7 +64,7 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<SoloButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);

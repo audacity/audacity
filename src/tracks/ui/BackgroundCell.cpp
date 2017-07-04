@@ -36,14 +36,6 @@ public:
       return { {}, &arrowCursor };
    }
 
-   static HitTestResult HitAnywhere(UIHandlePtr result)
-   {
-      return {
-         HitPreview(),
-         result
-      };
-   }
-
    virtual ~BackgroundHandle()
    {}
 
@@ -87,14 +79,14 @@ BackgroundCell::~BackgroundCell()
 {
 }
 
-HitTestResult BackgroundCell::HitTest
+UIHandlePtr BackgroundCell::HitTest
 (const TrackPanelMouseState &,
  const AudacityProject *)
 {
    auto result = mHandle.lock();
    if (!result)
       result = std::make_shared<BackgroundHandle>();
-   return BackgroundHandle::HitAnywhere(result);
+   return result;
 }
 
 std::shared_ptr<Track> BackgroundCell::FindTrack()

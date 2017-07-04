@@ -18,10 +18,7 @@ Paul Licameli
 
 class wxMouseEvent;
 class wxMouseState;
-struct HitTestResult;
 class WaveTrack;
-
-using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 class CutlineHandle final : public UIHandle
 {
@@ -35,9 +32,9 @@ public:
 
    CutlineHandle &operator=(const CutlineHandle&) = default;
 
-   static HitTestResult HitAnywhere
+   static UIHandlePtr HitAnywhere
       (const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<CutlineHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject,

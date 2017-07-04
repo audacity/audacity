@@ -26,7 +26,7 @@ public:
       : TrackVRulerControls( pTrack ) {}
    ~WaveTrackVRulerControls();
 
-   HitTestResult HitTest
+   UIHandlePtr HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *) override;
 

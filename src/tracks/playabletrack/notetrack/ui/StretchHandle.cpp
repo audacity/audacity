@@ -63,7 +63,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
    }
 }
 
-HitTestResult StretchHandle::HitTest
+UIHandlePtr StretchHandle::HitTest
 (std::weak_ptr<StretchHandle> &holder,
  const TrackPanelMouseState &st, const AudacityProject *pProject,
  const std::shared_ptr<NoteTrack> &pTrack)
@@ -140,10 +140,7 @@ HitTestResult StretchHandle::HitTest
 
    auto result = std::make_shared<StretchHandle>( pTrack, stretchState );
    result = AssignUIHandlePtr(holder, result);
-   return {
-      HitPreview( stretchState.mMode, unsafe ),
-      result
-   };
+   return result;
 }
 
 StretchHandle::~StretchHandle()

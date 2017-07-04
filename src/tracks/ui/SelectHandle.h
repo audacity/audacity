@@ -20,7 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 
-struct HitTestResult;
 class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;
@@ -38,7 +37,7 @@ public:
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<SelectHandle> &holder,
        const TrackPanelMouseState &state, const AudacityProject *pProject,
        const std::shared_ptr<Track> &pTrack);

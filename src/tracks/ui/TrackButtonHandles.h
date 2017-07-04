@@ -15,7 +15,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 
 class wxMouseState;
-struct HitTestResult;
 
 class MinimizeButtonHandle final : public ButtonHandle
 {
@@ -34,7 +33,7 @@ public:
 
    virtual ~MinimizeButtonHandle();
 
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<MinimizeButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell);
 };
@@ -60,7 +59,7 @@ public:
 
    virtual ~CloseButtonHandle();
 
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<CloseButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell);
 };
@@ -88,7 +87,7 @@ public:
 
    virtual ~MenuButtonHandle();
 
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<MenuButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const std::shared_ptr<TrackPanelCell> &pCell);

@@ -29,9 +29,9 @@ public:
    virtual ~BackgroundCell();
 
 protected:
-   HitTestResult HitTest
+   UIHandlePtr HitTest
       (const TrackPanelMouseState &state,
-      const AudacityProject *pProject) override;
+       const AudacityProject *) override;
 
    std::shared_ptr<Track> FindTrack() override;
 

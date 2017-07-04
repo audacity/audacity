@@ -21,15 +21,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"
 
-#include <wx/event.h>
-
-
 ///////////////////////////////////////////////////////////////////////////////
 WaveTrackVRulerControls::~WaveTrackVRulerControls()
 {
 }
 
-HitTestResult WaveTrackVRulerControls::HitTest
+UIHandlePtr WaveTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *)
 {
@@ -38,7 +35,7 @@ HitTestResult WaveTrackVRulerControls::HitTest
       auto result = std::make_shared<WaveTrackVZoomHandle>(
          pTrack, st.rect, st.state.m_y );
       result = AssignUIHandlePtr(mVZoomHandle, result);
-      return WaveTrackVZoomHandle::HitTest(st.state, result);
+      return result;
    }
    return {};
 }

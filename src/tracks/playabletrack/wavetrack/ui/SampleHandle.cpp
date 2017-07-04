@@ -57,15 +57,13 @@ HitTestPreview SampleHandle::HitPreview
    };
 }
 
-HitTestResult SampleHandle::HitAnywhere
+UIHandlePtr SampleHandle::HitAnywhere
 (std::weak_ptr<SampleHandle> &holder,
- const wxMouseState &state, const AudacityProject *pProject,
- const std::shared_ptr<WaveTrack> &pTrack)
+ const wxMouseState &state, const std::shared_ptr<WaveTrack> &pTrack)
 {
    auto result = std::make_shared<SampleHandle>( pTrack );
    result = AssignUIHandlePtr(holder, result);
-   const bool unsafe = pProject->IsAudioActive();
-   return { HitPreview(state, pProject, unsafe), result };
+   return result;
 }
 
 namespace {
@@ -97,7 +95,7 @@ namespace {
    }
 }
 
-HitTestResult SampleHandle::HitTest
+UIHandlePtr SampleHandle::HitTest
 (std::weak_ptr<SampleHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
@@ -149,7 +147,7 @@ HitTestResult SampleHandle::HitTest
    if (abs(yValue - yMouse) >= yTolerance)
       return {};
 
-   return HitAnywhere(holder, state, pProject, pTrack);
+   return HitAnywhere(holder, state, pTrack);
 }
 
 SampleHandle::~SampleHandle()

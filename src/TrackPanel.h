@@ -531,17 +531,13 @@ protected:
 
  protected:
    std::weak_ptr<TrackPanelCell> mLastCell;
-   HitTestResult mLastHitTest{};
-   bool mLastHitTestValid{};
+   UIHandlePtr mLastHitTest;
    unsigned mMouseOverUpdateFlags{};
 
  public:
-   HitTestResult *Target()
+   UIHandlePtr Target()
    {
-      if ( mLastHitTestValid )
-         return &mLastHitTest;
-      else
-         return nullptr;
+      return mLastHitTest;
    }
 
  protected:
@@ -550,7 +546,6 @@ protected:
       // Forget the rotation of hit test candidates when the mouse moves from
       // cell to cell or outside of the TrackPanel entirely.
       mLastCell.reset();
-      mLastHitTestValid = false;
       mLastHitTest = {};
       mMouseOverUpdateFlags = 0;
    }

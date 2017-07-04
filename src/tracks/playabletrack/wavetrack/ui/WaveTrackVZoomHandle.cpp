@@ -498,12 +498,6 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
    };
 }
 
-HitTestResult WaveTrackVZoomHandle::HitTest
-(const wxMouseState &state, UIHandlePtr result)
-{
-   return { HitPreview(state), result };
-}
-
 WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
 {
 }

@@ -19,7 +19,6 @@ class wxMouseEvent;
 class wxMouseState;
 #include <wx/gdicmn.h>
 
-struct HitTestResult;
 class Track;
 class ViewInfo;
 class WaveTrack;
@@ -35,11 +34,10 @@ public:
 
    SampleHandle &operator=(const SampleHandle&) = default;
 
-   static HitTestResult HitAnywhere
+   static UIHandlePtr HitAnywhere
       (std::weak_ptr<SampleHandle> &holder,
-       const wxMouseState &state, const AudacityProject *pProject,
-       const std::shared_ptr<WaveTrack> &pTrack);
-   static HitTestResult HitTest
+       const wxMouseState &state, const std::shared_ptr<WaveTrack> &pTrack);
+   static UIHandlePtr HitTest
       (std::weak_ptr<SampleHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);

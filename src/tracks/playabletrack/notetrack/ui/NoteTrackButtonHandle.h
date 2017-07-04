@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class NoteTrack;
-struct HitTestResult;
 
 #include <wx/gdicmn.h>
 #include "../../../../MemoryX.h"
@@ -36,7 +35,7 @@ public:
 
    virtual ~NoteTrackButtonHandle();
 
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<NoteTrackButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const std::shared_ptr<NoteTrack> &pTrack);

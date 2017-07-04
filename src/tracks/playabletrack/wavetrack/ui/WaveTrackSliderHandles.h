@@ -16,8 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 class WaveTrack;
 
-struct HitTestResult;
-
 class GainSliderHandle final : public SliderHandle
 {
    GainSliderHandle(const GainSliderHandle&) = delete;
@@ -43,10 +41,10 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<GainSliderHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
+       const std::shared_ptr<Track> &pTrack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,10 +73,10 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
+   static UIHandlePtr HitTest
       (std::weak_ptr<PanSliderHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
+       const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

@@ -27,9 +27,9 @@ NoteTrackVRulerControls::~NoteTrackVRulerControls()
 {
 }
 
-HitTestResult NoteTrackVRulerControls::HitTest
+UIHandlePtr NoteTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *)
+ const AudacityProject *pProject)
 {
    UIHandlePtr result;
    auto track = std::static_pointer_cast<NoteTrack>(FindTrack());

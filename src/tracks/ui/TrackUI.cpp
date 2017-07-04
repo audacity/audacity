@@ -25,7 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelResizerCell.h"
 #include "BackgroundCell.h"
 
-HitTestResult Track::HitTest
+UIHandlePtr Track::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
@@ -37,28 +37,28 @@ HitTestResult Track::HitTest
       // Zoom tool is a non-selecting tool that takes precedence in all tracks
       // over all other tools, no matter what detail you point at.
       return ZoomHandle::HitAnywhere(
-         pProject->GetBackgroundCell()->mZoomHandle, st.state, pProject);
+         pProject->GetBackgroundCell()->mZoomHandle);
 
    // In other tools, let subclasses determine detailed hits.
-   HitTestResult result =
+   auto result =
       DetailedHitTest( st, pProject, currentTool, isMultiTool );
 
    // If there is no detailed hit for the subclass, there are still some
    // general cases.
 
    // Sliding applies in more than one track type.
-   if ( !result.handle && !isMultiTool && currentTool == slideTool )
+   if ( !result && !isMultiTool && currentTool == slideTool )
       result = TimeShiftHandle::HitAnywhere(
-         mTimeShiftHandle, pProject, Pointer(this), false);
+         mTimeShiftHandle, Pointer(this), false);
 
    // Let the multi-tool right-click handler apply only in default of all
    // other detailed hits.
-   if ( !result.handle && isMultiTool )
+   if ( !result && isMultiTool )
       result = ZoomHandle::HitTest(
-         pProject->GetBackgroundCell()->mZoomHandle, st.state, pProject);
+         pProject->GetBackgroundCell()->mZoomHandle, st.state);
 
    // Finally, default of all is adjustment of the selection box.
-   if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
+   if ( !result && ( isMultiTool || currentTool == selectTool) )
       result = SelectHandle::HitTest(
          mSelectHandle, st, pProject, Pointer(this));
 

@@ -54,21 +54,20 @@ HitTestPreview ZoomHandle::HitPreview
    };
 }
 
-HitTestResult ZoomHandle::HitAnywhere
-(std::weak_ptr<ZoomHandle> &holder,
- const wxMouseState &state, const AudacityProject *pProject)
+UIHandlePtr ZoomHandle::HitAnywhere
+(std::weak_ptr<ZoomHandle> &holder)
 {
    auto result = std::make_shared<ZoomHandle>();
    result = AssignUIHandlePtr(holder, result);
-   return { HitPreview(state, pProject), result };
+   return result;
 }
 
-HitTestResult ZoomHandle::HitTest
+UIHandlePtr ZoomHandle::HitTest
 (std::weak_ptr<ZoomHandle> &holder,
- const wxMouseState &state, const AudacityProject *pProject)
+ const wxMouseState &state)
 {
    if (state.ButtonIsDown(wxMOUSE_BTN_RIGHT))
-      return HitAnywhere(holder, state, pProject);
+      return HitAnywhere(holder);
    else
       return {};
 }

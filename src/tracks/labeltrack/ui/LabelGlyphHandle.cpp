@@ -53,7 +53,7 @@ HitTestPreview LabelGlyphHandle::HitPreview(bool hitCenter)
    };
 }
 
-HitTestResult LabelGlyphHandle::HitTest
+UIHandlePtr LabelGlyphHandle::HitTest
 (std::weak_ptr<LabelGlyphHandle> &holder,
  const wxMouseState &state,
  const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect)
@@ -67,10 +67,7 @@ HitTestResult LabelGlyphHandle::HitTest
    {
       auto result = std::make_shared<LabelGlyphHandle>( pLT, rect, hit );
       result = AssignUIHandlePtr(holder, result);
-      return {
-         HitPreview( hit.mEdge & 4 ),
-         result
-      };
+      return result;
    }
 
    return {};

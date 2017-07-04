@@ -42,14 +42,6 @@ HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
        : &arrowCursor)
    };
 }
-
-HitTestResult CutlineHandle::HitAnywhere
-(const AudacityProject *pProject, bool cutline, UIHandlePtr ptr)
-{
-   const bool unsafe = pProject->IsAudioActive();
-   return { HitPreview(cutline, unsafe), ptr };
-}
-
 namespace
 {
    int FindMergeLine(WaveTrack *track, double time)
@@ -98,9 +90,10 @@ namespace
    }
 }
 
-HitTestResult CutlineHandle::HitTest
+UIHandlePtr CutlineHandle::HitTest
 (std::weak_ptr<CutlineHandle> &holder,
- const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
+ const wxMouseState &state, const wxRect &rect,
+ const AudacityProject *pProject,
  const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
@@ -116,7 +109,7 @@ HitTestResult CutlineHandle::HitTest
 
    auto result = std::make_shared<CutlineHandle>( pTrack, location );
    result = AssignUIHandlePtr( holder, result );
-   return HitAnywhere(pProject, location.typ == WaveTrackLocation::locationCutLine, result);
+   return result;
 }
 
 CutlineHandle::~CutlineHandle()

@@ -16,8 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 #include <wx/gdicmn.h>
 
-struct HitTestResult;
-
 // This handle class, unlike most, doesn't associate with any particular cell.
 class ZoomHandle final : public UIHandle
 {
@@ -30,12 +28,10 @@ public:
 
    ZoomHandle &operator=(const ZoomHandle&) = default;
 
-   static HitTestResult HitAnywhere
-      (std::weak_ptr<ZoomHandle> &holder,
-       const wxMouseState &state, const AudacityProject *pProject);
-   static HitTestResult HitTest
-      (std::weak_ptr<ZoomHandle> &holder,
-       const wxMouseState &state, const AudacityProject *pProject);
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<ZoomHandle> &holder);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<ZoomHandle> &holder, const wxMouseState &state);
 
    virtual ~ZoomHandle();
 
