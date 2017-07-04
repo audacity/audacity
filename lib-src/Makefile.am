@@ -163,6 +163,10 @@ if USE_LOCAL_PORTSMF
 SUBDIRS += portsmf
 endif
 
+if USE_LOCAL_PORTMIDI
+SUBDIRS += portmidi
+endif
+
 if USE_LOCAL_SBSMS
 SUBDIRS += sbsms
 endif

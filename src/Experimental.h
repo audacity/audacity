@@ -121,9 +121,7 @@
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
 #ifdef USE_MIDI
-#ifdef __WXMSW__
-   #define EXPERIMENTAL_MIDI_OUT
-#endif
+#define EXPERIMENTAL_MIDI_OUT
 #endif
 
 // USE_MIDI must be defined in order for EXPERIMENTAL_SCOREALIGN to work

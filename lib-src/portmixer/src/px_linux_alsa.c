@@ -41,7 +41,7 @@
 #include <alsa/asoundlib.h>
 
 #include "portaudio.h"
-#include "pa_unix_oss.h"
+#include "pa_linux_alsa.h"
 
 #include "portmixer.h"
 #include "px_mixer.h"
