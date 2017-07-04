@@ -496,6 +496,8 @@ void AButton::OnKeyDown(wxKeyEvent & event)
       break;
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
+      if( !mEnabled )
+         break;
       mWasShiftDown = event.ShiftDown();
       mWasControlDown = event.ControlDown();
       Click();
