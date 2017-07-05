@@ -63,22 +63,20 @@ HitTestResult WaveTrackControls::HitTest
       auto track = FindTrack();
       if (track && track->GetKind() == Track::Wave) {
          HitTestResult result;
-         if (NULL !=
-             (result = MuteButtonHandle::HitTest
-                 (state, rect, pProject, track)).handle)
+         if (NULL != (result = MuteButtonHandle::HitTest(
+            mMuteHandle, state, rect, pProject, track)).handle)
             return result;
 
-         if (NULL !=
-             (result = SoloButtonHandle::HitTest
-                 (state, rect, pProject, track)).handle)
+         if (NULL != (result = SoloButtonHandle::HitTest(
+            mSoloHandle, state, rect, pProject, track)).handle)
             return result;
 
-         if (NULL != (result =
-            GainSliderHandle::HitTest(state, rect, pProject, track)).handle)
+         if (NULL != (result = GainSliderHandle::HitTest(
+            mGainHandle, state, rect, pProject, track)).handle)
             return result;
 
-         if (NULL != (result =
-            PanSliderHandle::HitTest(state, rect, pProject, track)).handle)
+         if (NULL != (result = PanSliderHandle::HitTest(
+            mPanHandle, state, rect, pProject, track)).handle)
             return result;
       }
    }

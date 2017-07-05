@@ -54,6 +54,7 @@ class NoteTrack;
 class WaveTrack;
 class WaveClip;
 class UIHandle;
+using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
@@ -528,8 +529,7 @@ protected:
 
  protected:
    std::weak_ptr<Track> mpClickedTrack;
-   // TrackPanel is not responsible for memory management:
-   UIHandle *mUIHandle {};
+   UIHandlePtr mUIHandle;
 
    std::shared_ptr<TrackPanelCell> mpBackground;
 

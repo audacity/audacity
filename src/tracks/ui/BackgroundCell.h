@@ -12,8 +12,12 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_BACKGROUND_CELL__
 
 #include "CommonTrackPanelCell.h"
+#include "../../MemoryX.h"
 
 class AudacityProject;
+
+class BackgroundHandle;
+class ZoomHandle;
 
 class BackgroundCell final : public CommonTrackPanelCell
 {
@@ -33,6 +37,12 @@ protected:
 
 private:
    AudacityProject *mpProject;
+
+   std::weak_ptr<BackgroundHandle> mHandle;
+
+public:
+   // For want of a better place...
+   std::weak_ptr<ZoomHandle> mZoomHandle;
 };
 
 #endif

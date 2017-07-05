@@ -21,15 +21,19 @@ class LabelTrack;
 
 class LabelGlyphHandle final : public LabelDefaultClickHandle
 {
-   LabelGlyphHandle();
    LabelGlyphHandle(const LabelGlyphHandle&) = delete;
-   LabelGlyphHandle &operator=(const LabelGlyphHandle&) = delete;
-   static LabelGlyphHandle& Instance();
    static HitTestPreview HitPreview(bool hitCenter, unsigned refreshResult);
 
 public:
+   explicit LabelGlyphHandle
+      (const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect);
+
+   LabelGlyphHandle &operator=(LabelGlyphHandle&&) = default;
+   
    static HitTestResult HitTest
-      (const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
+      (std::weak_ptr<LabelGlyphHandle> &holder,
+       const wxMouseState &state,
+       const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect);
 
    virtual ~LabelGlyphHandle();
 

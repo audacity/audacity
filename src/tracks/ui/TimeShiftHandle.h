@@ -21,6 +21,8 @@ Paul Licameli
 struct HitTestResult;
 class WaveClip;
 
+using UIHandlePtr = std::shared_ptr<UIHandle>;
+
 struct ClipMoveState {
    // non-NULL only if click was in a WaveTrack and without Shift key:
    WaveClip *capturedClip {};
@@ -44,14 +46,19 @@ struct ClipMoveState {
 
 class TimeShiftHandle final : public UIHandle
 {
-   TimeShiftHandle();
    TimeShiftHandle(const TimeShiftHandle&) = delete;
-   TimeShiftHandle &operator=(const TimeShiftHandle&) = delete;
-   static TimeShiftHandle& Instance();
    static HitTestPreview HitPreview
       (const AudacityProject *pProject, bool unsafe);
 
 public:
+   explicit TimeShiftHandle
+   ( const std::shared_ptr<Track> &pTrack, bool gripHit );
+
+   TimeShiftHandle &operator=(TimeShiftHandle&&) = default;
+
+   bool IsGripHit() const { return mGripHit; }
+   std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
+
    // A utility function also used by menu commands
    static void CreateListOfCapturedClips
       ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
@@ -61,9 +68,15 @@ public:
    static void DoSlideHorizontal
       ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
 
-   static HitTestResult HitAnywhere(const AudacityProject *pProject);
+   static HitTestResult HitAnywhere
+      (std::weak_ptr<TimeShiftHandle> &holder,
+       const AudacityProject *pProject,
+       const std::shared_ptr<Track> &pTrack, bool gripHit);
    static HitTestResult HitTest
-      (const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject);
+      (std::weak_ptr<TimeShiftHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject,
+       const std::shared_ptr<Track> &pTrack);
 
    virtual ~TimeShiftHandle();
 
@@ -107,6 +120,7 @@ private:
    std::unique_ptr<SnapManager> mSnapManager{};
 
    ClipMoveState mClipMoveState{};
+   bool mGripHit {};
 };
 
 #endif

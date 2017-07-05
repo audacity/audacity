@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ZoomHandle.h"
 #include "TimeShiftHandle.h"
 #include "../../TrackPanelResizerCell.h"
+#include "BackgroundCell.h"
 
 HitTestResult Track::HitTest
 (const TrackPanelMouseState &st,
@@ -35,7 +36,8 @@ HitTestResult Track::HitTest
    if ( !isMultiTool && currentTool == zoomTool )
       // Zoom tool is a non-selecting tool that takes precedence in all tracks
       // over all other tools, no matter what detail you point at.
-      return ZoomHandle::HitAnywhere(st.state, pProject);
+      return ZoomHandle::HitAnywhere(
+         pProject->GetBackgroundCell()->mZoomHandle, st.state, pProject);
 
    // In other tools, let subclasses determine detailed hits.
    HitTestResult result =
@@ -49,16 +51,19 @@ HitTestResult Track::HitTest
 
    // Sliding applies in more than one track type.
    if ( !result.handle && !isMultiTool && currentTool == slideTool )
-      result = TimeShiftHandle::HitAnywhere(pProject);
+      result = TimeShiftHandle::HitAnywhere(
+         mTimeShiftHandle, pProject, Pointer(this), false);
 
    // Let the multi-tool right-click handler apply only in default of all
    // other detailed hits.
    if ( !result.handle && isMultiTool )
-      result = ZoomHandle::HitTest(st.state, pProject);
+      result = ZoomHandle::HitTest(
+         pProject->GetBackgroundCell()->mZoomHandle, st.state, pProject);
 
    // Finally, default of all is adjustment of the selection box.
    if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
-      result = SelectHandle::HitTest(st, pProject, Pointer(this));
+      result = SelectHandle::HitTest(
+         mSelectHandle, st, pProject, Pointer(this));
 
    result.preview.refreshCode |= refresh;
    return result;

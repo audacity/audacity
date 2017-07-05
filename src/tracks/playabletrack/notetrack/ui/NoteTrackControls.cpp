@@ -40,21 +40,19 @@ HitTestResult NoteTrackControls::HitTest
       auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
       if (track && track->GetKind() == Track::Note) {
          HitTestResult result;
-         if (NULL !=
-             (result = MuteButtonHandle::HitTest
-                 (state, rect, pProject, track)).handle)
+         if (NULL != (result = MuteButtonHandle::HitTest(
+            mMuteHandle, state, rect, pProject, track)).handle)
             return result;
 
-         if (NULL !=
-             (result = SoloButtonHandle::HitTest
-                 (state, rect, pProject, track)).handle)
+         if (NULL != (result = SoloButtonHandle::HitTest(
+            mSoloHandle, state, rect, pProject, track)).handle)
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         if (NULL != (result =
-            VelocitySliderHandle::HitTest(state, rect, pProject, track)).handle)
+         if (NULL != (result = VelocitySliderHandle::HitTest(
+            mVelocityHandle, state, rect, pProject, track)).handle)
             return result;
-         if (NULL != (result =
-            NoteTrackButtonHandle::HitTest(state, rect, track)).handle)
+         if (NULL != (result = NoteTrackButtonHandle::HitTest(
+            mClickHandle, state, rect, track)).handle)
             return result;
 #endif
       }

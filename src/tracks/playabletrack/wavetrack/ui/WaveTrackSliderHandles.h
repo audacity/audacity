@@ -21,13 +21,17 @@ struct HitTestResult;
 class GainSliderHandle final : public SliderHandle
 {
    GainSliderHandle(const GainSliderHandle&) = delete;
-   GainSliderHandle &operator=(const GainSliderHandle&) = delete;
-
-   GainSliderHandle();
-   virtual ~GainSliderHandle();
-   static GainSliderHandle& Instance();
 
    std::shared_ptr<WaveTrack> GetWaveTrack();
+
+public:
+   explicit GainSliderHandle
+      ( SliderFn sliderFn, const wxRect &rect,
+        const std::shared_ptr<Track> &pTrack );
+
+   GainSliderHandle &operator=(const GainSliderHandle&) = default;
+
+   virtual ~GainSliderHandle();
 
 protected:
    float GetValue() override;
@@ -40,7 +44,8 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseState &state, const wxRect &rect,
+      (std::weak_ptr<GainSliderHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
@@ -49,13 +54,17 @@ public:
 class PanSliderHandle final : public SliderHandle
 {
    PanSliderHandle(const PanSliderHandle&) = delete;
-   PanSliderHandle &operator=(const PanSliderHandle&) = delete;
-
-   PanSliderHandle();
-   virtual ~PanSliderHandle();
-   static PanSliderHandle& Instance();
 
    std::shared_ptr<WaveTrack> GetWaveTrack();
+
+public:
+   explicit PanSliderHandle
+      ( SliderFn sliderFn, const wxRect &rect,
+        const std::shared_ptr<Track> &pTrack );
+
+   PanSliderHandle &operator=(const PanSliderHandle&) = default;
+
+   virtual ~PanSliderHandle();
 
 protected:
    float GetValue() override;
@@ -67,7 +76,8 @@ protected:
 
 public:
    static HitTestResult HitTest
-      (const wxMouseState &state, const wxRect &rect,
+      (std::weak_ptr<PanSliderHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 

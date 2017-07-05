@@ -23,18 +23,14 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
-LabelGlyphHandle::LabelGlyphHandle()
-{
-}
-
-LabelGlyphHandle &LabelGlyphHandle::Instance()
-{
-   static LabelGlyphHandle instance;
-   return instance;
-}
+LabelGlyphHandle::LabelGlyphHandle
+(const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect)
+   : mpLT{ pLT }
+   , mRect{ rect }
+{}
 
 HitTestPreview LabelGlyphHandle::HitPreview
-   (bool hitCenter, unsigned refreshResult)
+(bool hitCenter, unsigned refreshResult)
 {
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
    return {
@@ -49,7 +45,9 @@ HitTestPreview LabelGlyphHandle::HitPreview
 }
 
 HitTestResult LabelGlyphHandle::HitTest
-(const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT)
+(std::weak_ptr<LabelGlyphHandle> &holder,
+ const wxMouseState &state,
+ const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect)
 {
    using namespace RefreshCode;
    unsigned refreshResult = RefreshNone;
@@ -70,16 +68,18 @@ HitTestResult LabelGlyphHandle::HitTest
    // signal this by setting the tip.
    if (edge != 0)
    {
+      auto result = std::make_shared<LabelGlyphHandle>( pLT, rect );
+      result = AssignUIHandlePtr(holder, result);
       return {
          HitPreview(pLT->mbHitCenter, refreshResult),
-         &Instance()
+         result
       };
    }
    else {
       // An empty result, except maybe, unusually, the refresh
       return {
          { wxString{}, nullptr, refreshResult },
-         nullptr
+         {}
       };
    }
 }
@@ -93,15 +93,10 @@ UIHandle::Result LabelGlyphHandle::Click
 {
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
-   const auto pCell = evt.pCell;
    const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-
-   mpLT = std::static_pointer_cast<LabelTrack>(pCell);
-   mRect = rect;
 
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   mpLT->HandleGlyphClick(event, rect, viewInfo, &viewInfo.selectedRegion);
+   mpLT->HandleGlyphClick(event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    if (! mpLT->IsAdjustingLabel() )
    {

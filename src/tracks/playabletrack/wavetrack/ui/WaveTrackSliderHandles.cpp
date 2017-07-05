@@ -19,19 +19,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../UndoManager.h"
 #include "../../../../WaveTrack.h"
 
-GainSliderHandle::GainSliderHandle()
-   : SliderHandle()
-{
-}
+GainSliderHandle::GainSliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : SliderHandle{ sliderFn, rect, pTrack }
+{}
 
 GainSliderHandle::~GainSliderHandle()
 {
-}
-
-GainSliderHandle &GainSliderHandle::Instance()
-{
-   static GainSliderHandle instance;
-   return instance;
 }
 
 std::shared_ptr<WaveTrack> GainSliderHandle::GetWaveTrack()
@@ -70,7 +64,8 @@ UIHandle::Result GainSliderHandle::CommitChanges
 }
 
 HitTestResult GainSliderHandle::HitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<GainSliderHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *, const std::shared_ptr<Track> &pTrack)
 {
    if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
@@ -83,19 +78,19 @@ HitTestResult GainSliderHandle::HitTest
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       wxRect sliderRect;
       TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
-
-      Instance().mSliderFn =
+      auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::GainSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
              const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
-      Instance().mRect = sliderRect;
-      Instance().mpTrack = pTrack;
+      auto result =
+         std::make_shared<GainSliderHandle>( sliderFn, sliderRect, pTrack );
+      result = AssignUIHandlePtr(holder, result);
 
       return {
          HitPreview(),
-         &Instance()
+         result
       };
    }
    else
@@ -104,19 +99,13 @@ HitTestResult GainSliderHandle::HitTest
 
 ////////////////////////////////////////////////////////////////////////////////
 
-PanSliderHandle::PanSliderHandle()
-   : SliderHandle()
-{
-}
+PanSliderHandle::PanSliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : SliderHandle{ sliderFn, rect, pTrack }
+{}
 
 PanSliderHandle::~PanSliderHandle()
 {
-}
-
-PanSliderHandle &PanSliderHandle::Instance()
-{
-   static PanSliderHandle instance;
-   return instance;
 }
 
 std::shared_ptr<WaveTrack> PanSliderHandle::GetWaveTrack()
@@ -167,7 +156,8 @@ UIHandle::Result PanSliderHandle::CommitChanges
 }
 
 HitTestResult PanSliderHandle::HitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<PanSliderHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
@@ -178,18 +168,19 @@ HitTestResult PanSliderHandle::HitTest
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
-      Instance().mSliderFn =
+      auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::PanSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
              const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
-      Instance().mRect = sliderRect;
-      Instance().mpTrack = pTrack;
+      auto result = std::make_shared<PanSliderHandle>(
+         sliderFn, sliderRect, pTrack );
+      result = AssignUIHandlePtr(holder, result);
 
       return {
          HitPreview(),
-         &Instance()
+         result
       };
    }
    else

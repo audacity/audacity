@@ -27,28 +27,35 @@ class WaveTrack;
 
 class EnvelopeHandle final : public UIHandle
 {
-   EnvelopeHandle();
    EnvelopeHandle(const EnvelopeHandle&) = delete;
    EnvelopeHandle &operator=(const EnvelopeHandle&) = delete;
-   static EnvelopeHandle& Instance();
    static HitTestPreview HitPreview(const AudacityProject *pProject, bool unsafe);
 
    static HitTestResult HitEnvelope
-      (const wxMouseState &state, const wxRect &rect,
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject,
-       const Envelope *envelope, float zoomMin, float zoomMax,
+       Envelope *envelope, float zoomMin, float zoomMax,
        bool dB, float dBRange);
 
 public:
-   static HitTestResult HitAnywhere(const AudacityProject *pProject);
-   static HitTestResult TimeTrackHitTest
-      (const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
-   static HitTestResult WaveTrackHitTest
-      (const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
+   explicit EnvelopeHandle( Envelope *pEnvelope );
 
    virtual ~EnvelopeHandle();
+
+   static HitTestResult HitAnywhere
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const AudacityProject *pProject, Envelope *envelope);
+   static HitTestResult TimeTrackHitTest
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
+   static HitTestResult WaveTrackHitTest
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
+
+   Envelope *GetEnvelope() const { return mEnvelope; }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -77,6 +84,7 @@ private:
    float mLower{}, mUpper{};
    double mdBRange{};
 
+   Envelope *mEnvelope{};
    std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
    std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
 };

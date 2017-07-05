@@ -24,6 +24,8 @@ class TrackPanelCell;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
 
+#include "MemoryX.h"
+
 // A TrackPanelCell reports a handle object of some subclass, in response to a
 // hit test at a mouse position; then this handle processes certain events,
 // and maintains necessary state through click-drag-release event sequences.
@@ -98,5 +100,27 @@ public:
    // use?
    virtual void OnProjectChange(AudacityProject *pProject);
 };
+
+using UIHandlePtr = std::shared_ptr<UIHandle>;
+
+// A frequent convenience
+template<typename Subclass>
+std::shared_ptr<Subclass> AssignUIHandlePtr
+( std::weak_ptr<Subclass> &holder, const std::shared_ptr<Subclass> &pNew )
+{
+   // Either assign to a null weak_ptr, or else rewrite what the weak_ptr
+   // points at.  Thus a handle already pointed at changes its state but not its
+   // identity.  This may matter for the framework that holds the strong
+   // pointers.
+   auto ptr = holder.lock();
+   if (!ptr) {
+      holder = pNew;
+      return pNew;
+   }
+   else {
+      *ptr = std::move(*pNew);
+      return ptr;
+   }
+}
 
 #endif

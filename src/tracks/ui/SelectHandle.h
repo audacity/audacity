@@ -30,17 +30,17 @@ class WaveTrack;
 
 class SelectHandle : public wxEvtHandler, public UIHandle
 {
-   SelectHandle();
    SelectHandle(const SelectHandle&);
    SelectHandle &operator=(const SelectHandle&);
 
 public:
-   static SelectHandle& Instance();
+   explicit SelectHandle( const std::shared_ptr<Track> &pTrack );
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
    static HitTestResult HitTest
-      (const TrackPanelMouseState &state, const AudacityProject *pProject,
+      (std::weak_ptr<SelectHandle> &holder,
+       const TrackPanelMouseState &state, const AudacityProject *pProject,
        const std::shared_ptr<Track> &pTrack);
 
    virtual ~SelectHandle();

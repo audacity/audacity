@@ -18,19 +18,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanel.h"
 #include "../../../TrackPanelMouseEvent.h"
 
-MuteButtonHandle::MuteButtonHandle()
-   : ButtonHandle{ TrackPanel::IsMuting }
-{
-}
+MuteButtonHandle::MuteButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect, TrackPanel::IsMuting }
+{}
 
 MuteButtonHandle::~MuteButtonHandle()
 {
-}
-
-MuteButtonHandle &MuteButtonHandle::Instance()
-{
-   static MuteButtonHandle instance;
-   return instance;
 }
 
 UIHandle::Result MuteButtonHandle::CommitChanges
@@ -44,7 +38,8 @@ UIHandle::Result MuteButtonHandle::CommitChanges
 }
 
 HitTestResult MuteButtonHandle::HitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<MuteButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    wxRect buttonRect;
@@ -55,10 +50,11 @@ HitTestResult MuteButtonHandle::HitTest
       return {};
 
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
-      Instance().mRect = buttonRect;
+      auto result = std::make_shared<MuteButtonHandle>(pTrack, buttonRect);
+      result = AssignUIHandlePtr(holder, result);
       return {
          HitPreview(),
-         &Instance()
+         result
       };
    }
    else
@@ -67,19 +63,13 @@ HitTestResult MuteButtonHandle::HitTest
 
 ////////////////////////////////////////////////////////////////////////////////
 
-SoloButtonHandle::SoloButtonHandle()
-   : ButtonHandle{ TrackPanel::IsSoloing }
-{
-}
+SoloButtonHandle::SoloButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect, TrackPanel::IsSoloing }
+{}
 
 SoloButtonHandle::~SoloButtonHandle()
 {
-}
-
-SoloButtonHandle &SoloButtonHandle::Instance()
-{
-   static SoloButtonHandle instance;
-   return instance;
 }
 
 UIHandle::Result SoloButtonHandle::CommitChanges
@@ -93,7 +83,8 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 }
 
 HitTestResult SoloButtonHandle::HitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<SoloButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
 {
    wxRect buttonRect;
@@ -105,10 +96,11 @@ HitTestResult SoloButtonHandle::HitTest
       return {};
 
    if ( pTrack && buttonRect.Contains(state.m_x, state.m_y) ) {
-      Instance().mRect = buttonRect;
+      auto result = std::make_shared<SoloButtonHandle>( pTrack, buttonRect );
+      result = AssignUIHandlePtr(holder, result);
       return HitTestResult(
          HitPreview(),
-         &Instance()
+         result
       );
    }
    else

@@ -26,21 +26,27 @@ class WaveTrack;
 
 class SampleHandle final : public UIHandle
 {
-   SampleHandle();
    SampleHandle(const SampleHandle&) = delete;
-   SampleHandle &operator=(const SampleHandle&) = delete;
-   static SampleHandle& Instance();
    static HitTestPreview HitPreview
       (const wxMouseState &state, const AudacityProject *pProject, bool unsafe);
 
 public:
+   explicit SampleHandle( const std::shared_ptr<WaveTrack> &pTrack );
+
+   SampleHandle &operator=(const SampleHandle&) = default;
+
    static HitTestResult HitAnywhere
-      (const wxMouseState &state, const AudacityProject *pProject);
+      (std::weak_ptr<SampleHandle> &holder,
+       const wxMouseState &state, const AudacityProject *pProject,
+       const std::shared_ptr<WaveTrack> &pTrack);
    static HitTestResult HitTest
-      (const wxMouseState &state, const wxRect &rect,
+      (std::weak_ptr<SampleHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~SampleHandle();
+
+   std::shared_ptr<WaveTrack> GetTrack() const { return mClickedTrack; }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

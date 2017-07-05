@@ -39,44 +39,51 @@ HitTestResult WaveTrack::DetailedHitTest
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
-      return TimeShiftHandle::HitAnywhere(pProject);
+      return TimeShiftHandle::HitAnywhere(
+         mTimeShiftHandle, pProject, Pointer(this), false);
 
    // Some special targets are not drawn in spectrogram,
    // so don't hit them in such views.
    else if (isWaveform) {
       HitTestResult result;
-      if (NULL !=
-          (result = CutlineHandle::HitTest
-           (st.state, st.rect, pProject, Pointer<WaveTrack>(this)))
-           .preview.cursor)
-          // This overriding test applies in all tools
-          return result;
+      if (NULL != (result = CutlineHandle::HitTest(
+         mCutlineHandle, st.state, st.rect,
+         pProject, Pointer<WaveTrack>(this))).preview.cursor)
+         // This overriding test applies in all tools
+         return result;
       else if (bMultiTool) {
          // Conditional hit tests
          // If Tools toolbar were eliminated, we would keep these
          // The priority of these, in case more than one might apply at one
          // point, seems arbitrary
-         if (NULL != (result = EnvelopeHandle::WaveTrackHitTest
-              (st.state, st.rect, pProject, Pointer<WaveTrack>(this)))
-             .preview.cursor)
+         if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
+            mEnvelopeHandle, st.state, st.rect,
+            pProject, Pointer<WaveTrack>(this)))
+            .preview.cursor)
             ;
-         else if (NULL != (result = TimeShiftHandle::HitTest
-              (st.state, st.rect, pProject)).preview.cursor)
+         else if (NULL != (result = TimeShiftHandle::HitTest(
+            mTimeShiftHandle, st.state, st.rect,
+            pProject, Pointer(this))).preview.cursor)
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
             ;
-         else if (NULL != (result = SampleHandle::HitTest
-              (st.state, st.rect, pProject, Pointer<WaveTrack>(this))).preview.cursor)
+         else if (NULL != (result = SampleHandle::HitTest(
+            mSampleHandle, st.state, st.rect,
+            pProject, Pointer<WaveTrack>(this))).preview.cursor)
             ;
          return result;
       }
       else switch ( currentTool ) {
          // Unconditional hits appropriate to the tool
          // If tools toolbar were eliminated, we would eliminate these
-         case envelopeTool:
-            return EnvelopeHandle::HitAnywhere(pProject);
+         case envelopeTool: {
+            auto envelope = GetEnvelopeAtX( st.state.m_x );
+            return EnvelopeHandle::HitAnywhere(
+               mEnvelopeHandle, pProject, envelope);
+         }
          case drawTool:
-            return SampleHandle::HitAnywhere(st.state, pProject);
+            return SampleHandle::HitAnywhere(
+               mSampleHandle, st.state, pProject, Pointer<WaveTrack>(this));
          default:
             break;
       }

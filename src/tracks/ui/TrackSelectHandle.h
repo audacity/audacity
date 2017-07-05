@@ -20,14 +20,17 @@ class Track;
 
 class TrackSelectHandle final : public UIHandle
 {
-   TrackSelectHandle();
    TrackSelectHandle(const TrackSelectHandle&) = delete;
-   TrackSelectHandle &operator=(const TrackSelectHandle&) = delete;
-   static TrackSelectHandle& Instance();
    static HitTestPreview HitPreview(unsigned trackCount);
 
 public:
-   static HitTestResult HitAnywhere(unsigned trackCount);
+   explicit TrackSelectHandle( const std::shared_ptr<Track> &pTrack );
+
+   TrackSelectHandle &operator=(const TrackSelectHandle&) = default;
+
+   static HitTestResult HitAnywhere
+      (std::weak_ptr<TrackSelectHandle> &holder,
+       const std::shared_ptr<Track> &pTrack, unsigned trackCount);
 
    virtual ~TrackSelectHandle();
 

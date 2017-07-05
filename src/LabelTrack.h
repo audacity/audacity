@@ -105,6 +105,8 @@ const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
+class LabelGlyphHandle;
+class LabelTextHandle;
 
 class AUDACITY_DLL_API LabelTrack final : public Track
 {
@@ -316,6 +318,9 @@ private:
    bool mbIsMoving;
 
    static wxFont msFont;
+
+   std::weak_ptr<LabelGlyphHandle> mGlyphHandle;
+   std::weak_ptr<LabelTextHandle> mTextHandle;
 
 protected:
    std::shared_ptr<TrackControls> GetControls() override;

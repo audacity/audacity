@@ -61,6 +61,8 @@ using NoteTrackBase =
 
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
+class StretchHandle;
+
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
@@ -89,6 +91,7 @@ class AUDACITY_DLL_API NoteTrack final
 
    static void DrawLabelControls
       ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect );
+   int FindChannel(const wxRect &rect, int mx, int my);
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
@@ -241,6 +244,8 @@ class AUDACITY_DLL_API NoteTrack final
    int mPitchHeight;
    int mVisibleChannels; // bit set of visible channels
    int mLastMidiPosition;
+
+   std::weak_ptr<StretchHandle> mStretchHandle;
 
 protected:
    std::shared_ptr<TrackControls> GetControls() override;

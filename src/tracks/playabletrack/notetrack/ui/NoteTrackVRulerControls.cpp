@@ -31,7 +31,10 @@ HitTestResult NoteTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *)
 {
-   return NoteTrackVZoomHandle::HitTest(st.state);
+   UIHandlePtr result;
+   auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
+   return NoteTrackVZoomHandle::HitTest(
+      mVZoomHandle, st.state, track, st.rect);
 }
 
 unsigned NoteTrackVRulerControls::HandleWheelRotation

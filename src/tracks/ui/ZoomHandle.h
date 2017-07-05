@@ -18,20 +18,24 @@ class wxMouseState;
 
 struct HitTestResult;
 
+// This handle class, unlike most, doesn't associate with any particular cell.
 class ZoomHandle final : public UIHandle
 {
-   ZoomHandle();
    ZoomHandle(const ZoomHandle&) = delete;
-   ZoomHandle &operator=(const ZoomHandle&) = delete;
-   static ZoomHandle& Instance();
    static HitTestPreview HitPreview
       (const wxMouseState &state, const AudacityProject *pProject);
 
 public:
+   ZoomHandle();
+
+   ZoomHandle &operator=(const ZoomHandle&) = default;
+
    static HitTestResult HitAnywhere
-      (const wxMouseState &state, const AudacityProject *pProject);
+      (std::weak_ptr<ZoomHandle> &holder,
+       const wxMouseState &state, const AudacityProject *pProject);
    static HitTestResult HitTest
-      (const wxMouseState &state, const AudacityProject *pProject);
+      (std::weak_ptr<ZoomHandle> &holder,
+       const wxMouseState &state, const AudacityProject *pProject);
 
    virtual ~ZoomHandle();
 

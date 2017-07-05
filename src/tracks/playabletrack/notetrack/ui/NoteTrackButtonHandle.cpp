@@ -18,22 +18,21 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanel.h"
 
-NoteTrackButtonHandle::NoteTrackButtonHandle()
-{
-}
+NoteTrackButtonHandle::NoteTrackButtonHandle
+( const std::shared_ptr<NoteTrack> &pTrack,
+  int channel, const wxRect &rect )
+   : mpTrack{ pTrack }
+   , mChannel{ channel }
+   , mRect{ rect }
+{}
 
 NoteTrackButtonHandle::~NoteTrackButtonHandle()
 {
 }
 
-NoteTrackButtonHandle &NoteTrackButtonHandle::Instance()
-{
-   static NoteTrackButtonHandle instance;
-   return instance;
-}
-
 HitTestResult NoteTrackButtonHandle::HitTest
-   (const wxMouseState &state, const wxRect &rect,
+   (std::weak_ptr<NoteTrackButtonHandle> &holder,
+    const wxMouseState &state, const wxRect &rect,
     const std::shared_ptr<NoteTrack> &pTrack)
 {
    wxRect midiRect;
@@ -42,12 +41,14 @@ HitTestResult NoteTrackButtonHandle::HitTest
       return {};
    if (pTrack->GetKind() == Track::Note &&
        midiRect.Contains(state.m_x, state.m_y)) {
-         Instance().mpTrack = pTrack;
-         Instance().mRect = midiRect;
-         return {
-            HitTestPreview(),
-            &Instance()
-         };
+      auto channel = pTrack->FindChannel(midiRect, state.m_x, state.m_y);
+      auto result = std::make_shared<NoteTrackButtonHandle>(
+         pTrack, channel, midiRect );
+      result = AssignUIHandlePtr(holder, result);
+      return {
+         HitTestPreview(),
+         result
+      };
    }
    else
       return {};
@@ -68,6 +69,10 @@ UIHandle::Result NoteTrackButtonHandle::Drag
 HitTestPreview NoteTrackButtonHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *)
 {
+   // auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   auto pTrack = mpTrack.lock();
+   if ( !pTrack )
+      return {};
    // No special message or cursor
    return {};
 }

@@ -16,9 +16,12 @@ Paul Licameli
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 
-SliderHandle::SliderHandle()
-{
-}
+SliderHandle::SliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : mSliderFn{ sliderFn }
+   , mRect{ rect }
+   , mpTrack{ pTrack }
+{}
 
 SliderHandle::~SliderHandle()
 {

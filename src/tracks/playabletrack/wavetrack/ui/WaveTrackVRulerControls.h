@@ -13,6 +13,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TrackVRulerControls.h"
 
+class WaveTrackVZoomHandle;
+
 class WaveTrackVRulerControls final : public TrackVRulerControls
 {
    WaveTrackVRulerControls(const WaveTrackVRulerControls&) = delete;
@@ -31,6 +33,9 @@ public:
    unsigned HandleWheelRotation
       (const TrackPanelMouseEvent &event,
        AudacityProject *pProject) override;
+
+private:
+   std::weak_ptr<WaveTrackVZoomHandle> mVZoomHandle;
 };
 
 #endif

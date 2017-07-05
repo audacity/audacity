@@ -24,15 +24,24 @@ struct HitTestResult;
 class NoteTrackButtonHandle : public UIHandle
 {
    NoteTrackButtonHandle(const NoteTrackButtonHandle&);
-   NoteTrackButtonHandle &operator=(const NoteTrackButtonHandle&);
    NoteTrackButtonHandle();
-   virtual ~NoteTrackButtonHandle();
    static NoteTrackButtonHandle& Instance();
 
 public:
+   explicit NoteTrackButtonHandle
+      ( const std::shared_ptr<NoteTrack> &pTrack,
+        int channel, const wxRect &rect );
+
+   NoteTrackButtonHandle &operator=(const NoteTrackButtonHandle&) = default;
+
+   virtual ~NoteTrackButtonHandle();
+
    static HitTestResult HitTest
-   (const wxMouseState &state, const wxRect &rect,
-    const std::shared_ptr<NoteTrack> &pTrack);
+      (std::weak_ptr<NoteTrackButtonHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<NoteTrack> &pTrack);
+
+   int GetChannel() const { return mChannel; }
 
 protected:
    Result Click
@@ -52,6 +61,7 @@ protected:
    Result Cancel(AudacityProject *pProject) override;
 
    std::weak_ptr<NoteTrack> mpTrack;
+   int mChannel{ -1 };
    wxRect mRect{};
 };
 

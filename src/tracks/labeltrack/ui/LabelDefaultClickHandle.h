@@ -23,12 +23,13 @@ class LabelTrack;
 class LabelDefaultClickHandle /* not final */ : public UIHandle
 {
    LabelDefaultClickHandle(const LabelDefaultClickHandle&) = delete;
-   LabelDefaultClickHandle &operator=(const LabelDefaultClickHandle&) = delete;
 
 public:
    LabelDefaultClickHandle();
    virtual ~LabelDefaultClickHandle();
 
+   LabelDefaultClickHandle &operator=(LabelDefaultClickHandle&&) = default;
+   
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
@@ -45,7 +46,7 @@ public:
 
 private:
    struct LabelState;
-   std::unique_ptr< LabelState > mLabelState;
+   std::shared_ptr< LabelState > mLabelState;
    void SaveState( AudacityProject *pProject );
    void RestoreState( AudacityProject *pProject );
 };

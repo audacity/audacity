@@ -34,15 +34,9 @@ static const int SMOOTHING_BRUSH_RADIUS = 5;
 static const double SMOOTHING_PROPORTION_MAX = 0.7;
 static const double SMOOTHING_PROPORTION_MIN = 0.0;
 
-SampleHandle::SampleHandle()
-{
-}
-
-SampleHandle &SampleHandle::Instance()
-{
-   static SampleHandle instance;
-   return instance;
-}
+SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
+   : mClickedTrack{ pTrack }
+{}
 
 HitTestPreview SampleHandle::HitPreview
 (const wxMouseState &state, const AudacityProject *pProject, bool unsafe)
@@ -64,10 +58,14 @@ HitTestPreview SampleHandle::HitPreview
 }
 
 HitTestResult SampleHandle::HitAnywhere
-(const wxMouseState &state, const AudacityProject *pProject)
+(std::weak_ptr<SampleHandle> &holder,
+ const wxMouseState &state, const AudacityProject *pProject,
+ const std::shared_ptr<WaveTrack> &pTrack)
 {
+   auto result = std::make_shared<SampleHandle>( pTrack );
+   result = AssignUIHandlePtr(holder, result);
    const bool unsafe = pProject->IsAudioActive();
-   return { HitPreview(state, pProject, unsafe), &Instance() };
+   return { HitPreview(state, pProject, unsafe), result };
 }
 
 namespace {
@@ -100,15 +98,11 @@ namespace {
 }
 
 HitTestResult SampleHandle::HitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<SampleHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-
-   /// method that tells us if the mouse event landed on an
-   /// editable sample
-   if (pTrack->GetKind() != Track::Wave)
-      return {};
 
    WaveTrack *wavetrack = pTrack.get();
 
@@ -155,7 +149,7 @@ HitTestResult SampleHandle::HitTest
    if (abs(yValue - yMouse) >= yTolerance)
       return {};
 
-   return HitAnywhere(state, pProject);
+   return HitAnywhere(holder, state, pProject, pTrack);
 }
 
 SampleHandle::~SampleHandle()
@@ -209,15 +203,14 @@ UIHandle::Result SampleHandle::Click
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-   const auto pTrack = std::static_pointer_cast<WaveTrack>(evt.pCell);
+   const auto pTrack = mClickedTrack.get();
 
    /// Someone has just clicked the mouse.  What do we do?
    if (!IsSampleEditingPossible(
-         event, rect, viewInfo, pTrack.get(), rect.width))
+         event, rect, viewInfo, pTrack, rect.width))
       return Cancelled;
 
    /// We're in a track view and zoomed enough to see the samples.
-   mClickedTrack = pTrack;
    mRect = rect;
 
    //If we are still around, we are drawing in earnest.  Set some member data structures up:

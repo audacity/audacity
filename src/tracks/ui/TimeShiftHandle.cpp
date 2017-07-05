@@ -23,15 +23,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
-TimeShiftHandle::TimeShiftHandle()
-{
-}
-
-TimeShiftHandle &TimeShiftHandle::Instance()
-{
-   static TimeShiftHandle instance;
-   return instance;
-}
+TimeShiftHandle::TimeShiftHandle
+( const std::shared_ptr<Track> &pTrack, bool gripHit )
+   : mCapturedTrack{ pTrack }
+   , mGripHit{ gripHit }
+{}
 
 HitTestPreview TimeShiftHandle::HitPreview
 (const AudacityProject *pProject, bool unsafe)
@@ -49,16 +45,24 @@ HitTestPreview TimeShiftHandle::HitPreview
    };
 }
 
-HitTestResult TimeShiftHandle::HitAnywhere(const AudacityProject *pProject)
+HitTestResult TimeShiftHandle::HitAnywhere
+(std::weak_ptr<TimeShiftHandle> &holder,
+ const AudacityProject *pProject,
+ const std::shared_ptr<Track> &pTrack, bool gripHit)
 {
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."
    const bool unsafe = pProject->IsAudioActive();
-   return { HitPreview(pProject, unsafe), &Instance() };
+   auto result = std::make_shared<TimeShiftHandle>( pTrack, gripHit );
+   result = AssignUIHandlePtr(holder, result);
+   return { HitPreview(pProject, unsafe), result };
 }
 
 HitTestResult TimeShiftHandle::HitTest
-   (const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject)
+(std::weak_ptr<TimeShiftHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const AudacityProject *pProject,
+ const std::shared_ptr<Track> &pTrack)
 {
    /// method that tells us if the mouse event landed on a
    /// time-slider that allows us to time shift the sequence.
@@ -77,7 +81,7 @@ HitTestResult TimeShiftHandle::HitTest
        state.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
       return {};
 
-   return HitAnywhere(pProject);
+   return HitAnywhere( holder, pProject, pTrack, true );
 }
 
 TimeShiftHandle::~TimeShiftHandle()
@@ -465,7 +469,6 @@ UIHandle::Result TimeShiftHandle::Click
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
-   mCapturedTrack = pTrack;
    mRect = rect;
    mMouseClickX = event.m_x;
    const double selStart = viewInfo.PositionToTime(event.m_x, mRect.x);
@@ -506,6 +509,7 @@ UIHandle::Result TimeShiftHandle::Drag
           track = mCapturedTrack.get();
    }
 
+   // May need a shared_ptr to reassign mCapturedTrack below
    auto pTrack = Track::Pointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;

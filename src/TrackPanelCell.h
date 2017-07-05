@@ -32,7 +32,6 @@ public:
    // appropriate to the mouse position, modifier keys, and button-down state.
    // The button-down state passed to the function is as it will be at click
    // time -- not necessarily as it is now.
-   // TrackPanel is not responsible for memory management of the handler.
    virtual HitTestResult HitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject) = 0;

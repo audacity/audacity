@@ -24,15 +24,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <algorithm>
 
-StretchHandle::StretchHandle()
-{
-}
-
-StretchHandle &StretchHandle::Instance()
-{
-   static StretchHandle instance;
-   return instance;
-}
+StretchHandle::StretchHandle
+( const std::shared_ptr<NoteTrack> &pTrack, const StretchState &stretchState )
+   : mpTrack{ pTrack }
+   , mStretchState{ stretchState }
+{}
 
 HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
 {
@@ -68,9 +64,11 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
 }
 
 HitTestResult StretchHandle::HitTest
-   ( const TrackPanelMouseState &st, const AudacityProject *pProject,
-     const std::shared_ptr<NoteTrack> &pTrack, StretchState &stretchState)
+(std::weak_ptr<StretchHandle> &holder,
+ const TrackPanelMouseState &st, const AudacityProject *pProject,
+ const std::shared_ptr<NoteTrack> &pTrack)
 {
+   StretchState stretchState;
    const wxMouseState &state = st.state;
 
    // later, we may want a different policy, but for now, stretch is
@@ -140,9 +138,11 @@ HitTestResult StretchHandle::HitTest
          stretchState.mBeatCenter.second - stretchState.mBeat0.second;
    }
 
+   auto result = std::make_shared<StretchHandle>( pTrack, stretchState );
+   result = AssignUIHandlePtr(holder, result);
    return {
       HitPreview( stretchState.mMode, unsafe ),
-      &Instance()
+      result
    };
 }
 
@@ -167,13 +167,7 @@ UIHandle::Result StretchHandle::Click
 
 
    mLeftEdge = evt.rect.GetLeft();
-   mpTrack = std::static_pointer_cast<NoteTrack>(evt.pCell);
    ViewInfo &viewInfo = pProject->GetViewInfo();
-
-   // We must have hit if we got here, but repeat some
-   // calculations that set members
-   TrackPanelMouseState tpmState{ evt.event, evt.rect, evt.pCell };
-   HitTest( tpmState, pProject, mpTrack, mStretchState );
 
    viewInfo.selectedRegion.setTimes
       ( mStretchState.mBeat0.first, mStretchState.mBeat1.first );

@@ -21,14 +21,16 @@ struct HitTestResult;
 
 class WaveTrackVZoomHandle : public UIHandle
 {
-   WaveTrackVZoomHandle();
    WaveTrackVZoomHandle(const WaveTrackVZoomHandle&);
-   WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&);
-   static WaveTrackVZoomHandle& Instance();
    static HitTestPreview HitPreview(const wxMouseState &state);
 
 public:
-   static HitTestResult HitTest(const wxMouseState &state);
+   explicit WaveTrackVZoomHandle
+      (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
+
+   WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
+
+   static HitTestResult HitTest(const wxMouseState &state, UIHandlePtr result);
 
    static void DoZoom
    (AudacityProject *pProject,
@@ -37,6 +39,8 @@ public:
     bool fixedMousePoint);
 
    virtual ~WaveTrackVZoomHandle();
+
+   std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

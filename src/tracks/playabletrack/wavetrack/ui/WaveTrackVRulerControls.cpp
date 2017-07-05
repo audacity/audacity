@@ -33,7 +33,14 @@ HitTestResult WaveTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *)
 {
-   return WaveTrackVZoomHandle::HitTest(st.state);
+   auto pTrack = Track::Pointer<WaveTrack>( FindTrack().get() );
+   if (pTrack) {
+      auto result = std::make_shared<WaveTrackVZoomHandle>(
+         pTrack, st.rect, st.state.m_y );
+      result = AssignUIHandlePtr(mVZoomHandle, result);
+      return WaveTrackVZoomHandle::HitTest(st.state, result);
+   }
+   return {};
 }
 
 unsigned WaveTrackVRulerControls::HandleWheelRotation

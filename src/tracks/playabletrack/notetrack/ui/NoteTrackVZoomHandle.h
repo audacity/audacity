@@ -21,16 +21,23 @@ class NoteTrack;
 
 class NoteTrackVZoomHandle : public UIHandle
 {
-   NoteTrackVZoomHandle();
    NoteTrackVZoomHandle(const NoteTrackVZoomHandle&);
-   NoteTrackVZoomHandle &operator=(const NoteTrackVZoomHandle&);
-   static NoteTrackVZoomHandle& Instance();
    static HitTestPreview HitPreview(const wxMouseState &state);
 
 public:
-   static HitTestResult HitTest(const wxMouseState &state);
+   explicit NoteTrackVZoomHandle
+      (const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect, int y);
+
+   NoteTrackVZoomHandle &operator=(const NoteTrackVZoomHandle&) = default;
+
+   static HitTestResult HitTest
+      (std::weak_ptr<NoteTrackVZoomHandle> &holder,
+       const wxMouseState &state,
+       const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect);
 
    virtual ~NoteTrackVZoomHandle();
+
+   std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

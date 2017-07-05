@@ -13,6 +13,8 @@
 
 #include "tracks/ui/CommonTrackPanelCell.h"
 
+class TrackPanelResizeHandle;
+
 class TrackPanelResizerCell : public CommonTrackPanelCell
 {
    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
@@ -29,7 +31,8 @@ public:
 private:
    friend class TrackPanelCellIterator;
    std::weak_ptr<Track> mpTrack;
-   bool mBetweenTracks {};
+
+   std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
 };
 
 #endif

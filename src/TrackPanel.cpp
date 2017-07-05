@@ -770,7 +770,7 @@ void TrackPanel::CancelDragging()
          ProcessUIHandleResult(
             this, mRuler, pTrack.get(), NULL, refreshResult);
       mpClickedTrack.reset();
-      mUIHandle = NULL;
+      mUIHandle.reset();
       Uncapture();
    }
 }
@@ -1465,7 +1465,7 @@ try
             (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
-            mUIHandle = NULL;
+            mUIHandle.reset();
             mpClickedTrack.reset();
             Uncapture( &event );
          }
@@ -1484,7 +1484,7 @@ try
          // Null this pointer out first before calling Release -- because on Windows, we can
          // come back recursively to this place during handling of the context menu,
          // because of a capture lost event.
-         mUIHandle = nullptr;
+         mUIHandle.reset();
          UIHandle::Result refreshResult =
             uiHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
@@ -1553,7 +1553,7 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       UIHandle::Result refreshResult =
          mUIHandle->Click( tpmEvent, GetProject() );
       if (refreshResult & RefreshCode::Cancelled)
-         mUIHandle = NULL;
+         mUIHandle.reset();
       else
          mpClickedTrack = pTrack;
       ProcessUIHandleResult
@@ -3113,7 +3113,7 @@ TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begi
          mpCell = mpTrack;
       else
          mpCell = trackPanel->GetBackgroundCell();
-      }
+   }
 
    const auto size = mPanel->GetSize();
    mRect = { 0, 0, size.x, size.y };

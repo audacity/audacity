@@ -11,29 +11,42 @@ Paul Licameli
 #ifndef __AUDACITY_CUTLINE_HANDLE__
 #define __AUDACITY_CUTLINE_HANDLE__
 
+#include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
 #include "../../../../MemoryX.h"
+#include "../../../../WaveTrackLocation.h"
 
 class wxMouseEvent;
 class wxMouseState;
 struct HitTestResult;
 class WaveTrack;
 
+using UIHandlePtr = std::shared_ptr<UIHandle>;
+
 class CutlineHandle final : public UIHandle
 {
-   CutlineHandle();
    CutlineHandle(const CutlineHandle&) = delete;
-   CutlineHandle &operator=(const CutlineHandle&) = delete;
-   static CutlineHandle& Instance();
    static HitTestPreview HitPreview(bool cutline, bool unsafe);
 
 public:
-   static HitTestResult HitAnywhere(const AudacityProject *pProject, bool cutline);
+   explicit CutlineHandle
+      ( const std::shared_ptr<WaveTrack> &pTrack,
+        WaveTrackLocation location );
+
+   CutlineHandle &operator=(const CutlineHandle&) = default;
+
+   static HitTestResult HitAnywhere
+      (const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
    static HitTestResult HitTest
-      (const wxMouseState &state, const wxRect &rect,
-      const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
+      (std::weak_ptr<CutlineHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject,
+       const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~CutlineHandle();
+
+   const WaveTrackLocation &GetLocation() { return mLocation; }
+   std::shared_ptr<WaveTrack> GetTrack() { return mpTrack; }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -57,7 +70,8 @@ private:
    enum Operation { Merge, Expand, Remove };
    Operation mOperation{ Merge };
    double mStartTime{}, mEndTime{};
-   bool mbCutline{};
+   WaveTrackLocation mLocation {};
+   std::shared_ptr<WaveTrack> mpTrack{};
 };
 
 #endif

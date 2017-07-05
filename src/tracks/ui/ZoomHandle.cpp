@@ -38,14 +38,7 @@ Paul Licameli split from TrackPanel.cpp
 ///  and forcing a refresh.
 
 ZoomHandle::ZoomHandle()
-{
-}
-
-ZoomHandle &ZoomHandle::Instance()
-{
-   static ZoomHandle instance;
-   return instance;
-}
+{}
 
 HitTestPreview ZoomHandle::HitPreview
    (const wxMouseState &state, const AudacityProject *pProject)
@@ -62,16 +55,20 @@ HitTestPreview ZoomHandle::HitPreview
 }
 
 HitTestResult ZoomHandle::HitAnywhere
-(const wxMouseState &state, const AudacityProject *pProject)
+(std::weak_ptr<ZoomHandle> &holder,
+ const wxMouseState &state, const AudacityProject *pProject)
 {
-   return { HitPreview(state, pProject), &Instance() };
+   auto result = std::make_shared<ZoomHandle>();
+   result = AssignUIHandlePtr(holder, result);
+   return { HitPreview(state, pProject), result };
 }
 
 HitTestResult ZoomHandle::HitTest
-(const wxMouseState &state, const AudacityProject *pProject)
+(std::weak_ptr<ZoomHandle> &holder,
+ const wxMouseState &state, const AudacityProject *pProject)
 {
    if (state.ButtonIsDown(wxMOUSE_BTN_RIGHT))
-      return HitAnywhere(state, pProject);
+      return HitAnywhere(holder, state, pProject);
    else
       return {};
 }

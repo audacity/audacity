@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../Audacity.h"
 #include "SelectHandle.h"
 
 #include "Scrubbing.h"
@@ -52,16 +53,6 @@ enum {
 bool SelectHandle::IsClicked() const
 {
    return mSelectionStateChanger.get();
-}
-
-SelectHandle::SelectHandle()
-{
-}
-
-SelectHandle &SelectHandle::Instance()
-{
-   static SelectHandle instance;
-   return instance;
 }
 
 namespace
@@ -428,9 +419,31 @@ namespace
 }
 
 HitTestResult SelectHandle::HitTest
-(const TrackPanelMouseState &st, const AudacityProject *pProject,
+(std::weak_ptr<SelectHandle> &holder,
+ const TrackPanelMouseState &st, const AudacityProject *pProject,
  const std::shared_ptr<Track> &pTrack)
 {
+   // This handle is a little special, not following the pattern of calling
+   // AssignUIHandlePtr(); there may be some state to preserve during movement
+   // before the click.
+   auto old = holder.lock();
+   std::unique_ptr<SnapManager> oldSnapManager;
+   wxInt64 oldSnapLeft = -1, oldSnapRight = -1;
+   if (old) {
+      // It should not have started listening to timer events
+      wxASSERT( !old->mConnectedProject );
+      oldSnapManager = std::move(old->mSnapManager);
+      oldSnapLeft = old->mSnapLeft;
+      oldSnapRight = old->mSnapRight;
+   }
+
+   auto result = std::make_shared<SelectHandle>( pTrack );
+
+   // Copy the pre-dragging state
+   result->mSnapManager = std::move( oldSnapManager );
+   result->mSnapLeft = oldSnapLeft;
+   result->mSnapRight = oldSnapRight;
+
    const wxMouseState &state = st.state;
    const wxRect &rect = st.rect;
 
@@ -465,7 +478,7 @@ HitTestResult SelectHandle::HitTest
    if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
    {
       MaySetOnDemandTip(pTrack.get(), tip);
-      return { { tip, pCursor }, &Instance() };
+      return { { tip, pCursor }, result };
    }
 
    {
@@ -510,8 +523,12 @@ HitTestResult SelectHandle::HitTest
          tip = ttb->GetMessageForTool(selectTool);
    }
    
-   return HitTestResult{ { tip, pCursor }, &Instance() };
+   return HitTestResult{ { tip, pCursor }, result };
 }
+
+SelectHandle::SelectHandle( const std::shared_ptr<Track> &pTrack )
+   : mpTrack{ pTrack }
+{}
 
 SelectHandle::~SelectHandle()
 {
@@ -545,7 +562,8 @@ UIHandle::Result SelectHandle::Click
    using namespace RefreshCode;
 
    wxMouseEvent &event = evt.event;
-   const auto pTrack = static_cast<Track*>(evt.pCell.get());
+   const auto sTrack = pProject->GetTracks()->Lock(mpTrack);
+   const auto pTrack = sTrack.get();
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
    mMostRecentX = event.m_x;
@@ -598,7 +616,6 @@ UIHandle::Result SelectHandle::Click
    else if (!event.LeftDown())
       return Cancelled;
 
-   mpTrack = Track::Pointer( pTrack );
    mRect = evt.rect;
    mInitialSelection = viewInfo.selectedRegion;
 
@@ -608,11 +625,12 @@ UIHandle::Result SelectHandle::Click
 
    mSelectionBoundary = 0;
 
-   // We create a NEW snap manager in case any snap-points have changed
-   mSnapManager = std::make_unique<SnapManager>(trackList, &viewInfo);
-
-   mSnapLeft = -1;
-   mSnapRight = -1;
+   if (!mSnapManager) {
+      // We create a NEW snap manager in case any snap-points have changed
+      mSnapManager = std::make_unique<SnapManager>(trackList, &viewInfo);
+      mSnapLeft = -1;
+      mSnapRight = -1;
+   }
 
    bool bShiftDown = event.ShiftDown();
    bool bCtrlDown = event.ControlDown();

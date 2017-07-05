@@ -43,6 +43,12 @@ bool IsDragZooming(int zoomStart, int zoomEnd)
 
 }
 
+WaveTrackVZoomHandle::WaveTrackVZoomHandle
+(const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)
+   : mZoomStart(y), mZoomEnd(y), mRect(rect)
+   , mpTrack{ pTrack }
+{}
+
 void WaveTrackVZoomHandle::DoZoom
    (AudacityProject *pProject,
     WaveTrack *pTrack, bool shiftDown, bool rightUp,
@@ -480,16 +486,6 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-WaveTrackVZoomHandle::WaveTrackVZoomHandle()
-{
-}
-
-WaveTrackVZoomHandle &WaveTrackVZoomHandle::Instance()
-{
-   static WaveTrackVZoomHandle instance;
-   return instance;
-}
-
 HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
 {
    static auto zoomInCursor =
@@ -502,9 +498,10 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
    };
 }
 
-HitTestResult WaveTrackVZoomHandle::HitTest(const wxMouseState &state)
+HitTestResult WaveTrackVZoomHandle::HitTest
+(const wxMouseState &state, UIHandlePtr result)
 {
-   return { HitPreview(state), &Instance() };
+   return { HitPreview(state), result };
 }
 
 WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
@@ -512,16 +509,8 @@ WaveTrackVZoomHandle::~WaveTrackVZoomHandle()
 }
 
 UIHandle::Result WaveTrackVZoomHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &, AudacityProject *)
 {
-   mpTrack = std::static_pointer_cast<WaveTrack>(
-      static_cast<WaveTrackVRulerControls*>(evt.pCell.get())->FindTrack() );
-   mRect = evt.rect;
-
-   const wxMouseEvent &event = evt.event;
-   mZoomStart = event.m_y;
-   mZoomEnd = event.m_y;
-
    return RefreshCode::RefreshNone;
 }
 

@@ -806,6 +806,8 @@ public:
 
 public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
+   std::shared_ptr<BackgroundCell> GetBackgroundCell() const
+      { return mBackgroundCell; }
 
    DECLARE_EVENT_TABLE()
 };

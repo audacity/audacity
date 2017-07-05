@@ -34,16 +34,11 @@ namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 
-NoteTrackVZoomHandle::NoteTrackVZoomHandle()
-   : mZoomStart(0), mZoomEnd(0), mRect()
-{
-}
-
-NoteTrackVZoomHandle &NoteTrackVZoomHandle::Instance()
-{
-   static NoteTrackVZoomHandle instance;
-   return instance;
-}
+NoteTrackVZoomHandle::NoteTrackVZoomHandle
+(const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect, int y)
+   : mZoomStart(y), mZoomEnd(y), mRect(rect)
+   , mpTrack{ pTrack }
+{}
 
 HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
 {
@@ -57,9 +52,18 @@ HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
    };
 }
 
-HitTestResult NoteTrackVZoomHandle::HitTest(const wxMouseState &state)
+HitTestResult NoteTrackVZoomHandle::HitTest
+(std::weak_ptr<NoteTrackVZoomHandle> &holder,
+ const wxMouseState &state,
+ const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect)
 {
-   return HitTestResult(HitPreview(state), &Instance());
+   if (pTrack) {
+      auto result = std::make_shared<NoteTrackVZoomHandle>(
+         pTrack, rect, state.m_y);
+      result = AssignUIHandlePtr(holder, result);
+      return HitTestResult(HitPreview(state), result);
+   }
+   return {};
 }
 
 NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
@@ -67,16 +71,8 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 }
 
 UIHandle::Result NoteTrackVZoomHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &, AudacityProject *)
 {
-   mpTrack = std::static_pointer_cast<NoteTrack>(
-      static_cast<NoteTrackVRulerControls*>(evt.pCell.get())->FindTrack() );
-   mRect = evt.rect;
-
-   const wxMouseEvent &event = evt.event;
-   mZoomStart = event.m_y;
-   mZoomEnd = event.m_y;
-
    // change note track to zoom like audio track
    //          mpTrack->StartVScroll();
 

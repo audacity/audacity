@@ -55,16 +55,20 @@ public:
    };
    
 private:
-   StretchHandle();
    StretchHandle(const StretchHandle&);
-   StretchHandle &operator=(const StretchHandle&);
-   static StretchHandle& Instance();
    static HitTestPreview HitPreview(StretchEnum stretchMode, bool unsafe);
 
 public:
+   explicit StretchHandle
+      ( const std::shared_ptr<NoteTrack> &pTrack,
+        const StretchState &stretchState );
+
+   StretchHandle &operator=(const StretchHandle&) = default;
+
    static HitTestResult HitTest
-      ( const TrackPanelMouseState &state, const AudacityProject *pProject,
-        const std::shared_ptr<NoteTrack> &pTrack, StretchState &stretchState );
+      (std::weak_ptr<StretchHandle> &holder,
+       const TrackPanelMouseState &state, const AudacityProject *pProject,
+       const std::shared_ptr<NoteTrack> &pTrack );
 
    virtual ~StretchHandle();
 

@@ -23,7 +23,7 @@ HitTestResult TimeTrack::DetailedHitTest
  const AudacityProject *pProject, int, bool)
 {
    return EnvelopeHandle::TimeTrackHitTest
-      ( st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
+      ( mEnvelopeHandle, st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
 }
 
 std::shared_ptr<TrackControls> TimeTrack::GetControls()

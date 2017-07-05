@@ -45,18 +45,24 @@ HitTestResult TrackControls::HitTest
    const wxRect &rect = st.rect;
    HitTestResult result;
 
-   if (NULL != (result = CloseButtonHandle::HitTest(state, rect)).handle)
+   auto pTrack = FindTrack();
+   // shared pointer to this:
+   auto sThis = pTrack->GetTrackControl();
+
+   if (NULL != (result = CloseButtonHandle::HitTest(
+      mCloseHandle, state, rect, this)).handle)
       return result;
 
-   if (NULL != (result = MenuButtonHandle::HitTest(state, rect,
-         this->FindTrack()->GetTrackControl())).handle)
+   if (NULL != (result = MenuButtonHandle::HitTest(
+      mMenuHandle, state, rect, sThis)).handle)
       return result;
 
-   if (NULL != (result = MinimizeButtonHandle::HitTest(state, rect)).handle)
+   if (NULL != (result = MinimizeButtonHandle::HitTest(
+      mMinimizeHandle, state, rect, this)).handle)
       return result;
 
-   return TrackSelectHandle::HitAnywhere
-      (project->GetTrackPanel()->GetTrackCount());
+   return TrackSelectHandle::HitAnywhere(
+      mSelectHandle, pTrack, project->GetTrackPanel()->GetTrackCount());
 }
 
 enum

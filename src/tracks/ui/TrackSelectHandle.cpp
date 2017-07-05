@@ -26,16 +26,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../images/Cursors.h"
 
-TrackSelectHandle::TrackSelectHandle()
-{
-}
-
-TrackSelectHandle &TrackSelectHandle::Instance()
-{
-   static TrackSelectHandle instance;
-   return instance;
-}
-
 #if defined(__WXMAC__)
 /* i18n-hint: Command names a modifier key on Macintosh keyboards */
 #define CTRL_CLICK _("Command-Click")
@@ -59,6 +49,10 @@ namespace {
    }
 }
 
+TrackSelectHandle::TrackSelectHandle( const std::shared_ptr<Track> &pTrack )
+   : mpTrack( pTrack )
+{}
+
 HitTestPreview TrackSelectHandle::HitPreview(unsigned trackCount)
 {
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
@@ -68,11 +62,15 @@ HitTestPreview TrackSelectHandle::HitPreview(unsigned trackCount)
    };
 }
 
-HitTestResult TrackSelectHandle::HitAnywhere(unsigned trackCount)
+HitTestResult TrackSelectHandle::HitAnywhere
+(std::weak_ptr<TrackSelectHandle> &holder,
+ const std::shared_ptr<Track> &pTrack, unsigned trackCount)
 {
+   auto result = std::make_shared<TrackSelectHandle>(pTrack);
+   result = AssignUIHandlePtr(holder, result);
    return {
       HitPreview(trackCount),
-      &Instance()
+      result
    };
 }
 
@@ -97,8 +95,7 @@ UIHandle::Result TrackSelectHandle::Click
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return Cancelled;
 
-   const auto pControls = static_cast<TrackControls*>(evt.pCell.get());
-   const auto pTrack = pControls->FindTrack();
+   const auto pTrack = mpTrack;
    if (!pTrack)
       return Cancelled;
    TrackPanel *const trackPanel = pProject->GetTrackPanel();
@@ -113,7 +110,6 @@ UIHandle::Result TrackSelectHandle::Click
       result |= Cancelled;
    else {
       mRearrangeCount = 0;
-      mpTrack = pTrack;
       CalculateRearrangingThresholds(event);
    }
 

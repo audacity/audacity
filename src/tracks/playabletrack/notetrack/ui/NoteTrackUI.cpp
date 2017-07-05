@@ -29,8 +29,8 @@ HitTestResult NoteTrack::DetailedHitTest
    // Eligible for stretch?
    HitTestResult result;
 #ifdef USE_MIDI
-   StretchHandle::StretchState stretchState;
-   result = StretchHandle::HitTest( state, pProject, Pointer<NoteTrack>(this), stretchState );
+   result = StretchHandle::HitTest(
+      mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );
 #endif
 
    return result;

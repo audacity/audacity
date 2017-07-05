@@ -12,9 +12,12 @@ Paul Licameli
 #define __AUDACITY_HIT_TEST_RESULT__
 
 #include <wx/string.h>
+#include "MemoryX.h"
 
 class UIHandle;
 class wxCursor;
+
+using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 struct HitTestPreview
 {
@@ -39,12 +42,12 @@ struct HitTestResult
    HitTestResult()
    {}
 
-   HitTestResult(HitTestPreview preview_, UIHandle *handle_)
+   HitTestResult(HitTestPreview preview_, UIHandlePtr handle_)
       : preview(preview_), handle(handle_)
    {}
 
    HitTestPreview preview {};
-   UIHandle *handle {};
+   UIHandlePtr handle {};
 };
 
 #endif

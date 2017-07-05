@@ -20,76 +20,68 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/event.h>
 
-namespace
+// Define this, just so the click to deselect can dispatch here
+// This handle class, unlike most, doesn't associate with any particular cell.
+class BackgroundHandle : public UIHandle
 {
-   // Define this, just so the click to deselect can dispatch here
-   class BackgroundHandle : public UIHandle
+   BackgroundHandle(const BackgroundHandle&) = delete;
+   BackgroundHandle &operator=(const BackgroundHandle&) = delete;
+
+public:
+   BackgroundHandle() {}
+
+   static HitTestPreview HitPreview()
    {
-      BackgroundHandle() {}
-      BackgroundHandle(const BackgroundHandle&) = delete;
-      BackgroundHandle &operator=(const BackgroundHandle&) = delete;
+      static wxCursor arrowCursor{ wxCURSOR_ARROW };
+      return { {}, &arrowCursor };
+   }
 
-   public:
+   static HitTestResult HitAnywhere(UIHandlePtr result)
+   {
+      return {
+         HitPreview(),
+         result
+      };
+   }
 
-      static BackgroundHandle& Instance()
-      {
-         static BackgroundHandle instance;
-         return instance;
+   virtual ~BackgroundHandle()
+   {}
+
+   Result Click
+      (const TrackPanelMouseEvent &evt, AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      const wxMouseEvent &event = evt.event;
+      // Do not start a drag
+      Result result = Cancelled;
+
+      // AS: If the user clicked outside all tracks, make nothing
+      //  selected.
+      if ((event.ButtonDown() || event.ButtonDClick())) {
+         pProject->GetSelectionState().SelectNone
+            ( *pProject->GetTracks(), pProject->GetMixerBoard() );
+         result |= RefreshAll;
       }
 
-      static HitTestPreview HitPreview()
-      {
-         static wxCursor arrowCursor{ wxCURSOR_ARROW };
-         return { {}, &arrowCursor };
-      }
+      return result;
+   }
 
-      static HitTestResult HitAnywhere()
-      {
-         return {
-            HitPreview(),
-            &BackgroundHandle::Instance()
-         };
-      }
+   Result Drag
+      (const TrackPanelMouseEvent &, AudacityProject *) override
+   { return RefreshCode::RefreshNone; }
 
-      virtual ~BackgroundHandle()
-      {}
+   HitTestPreview Preview
+      (const TrackPanelMouseState &, const AudacityProject *) override
+   { return HitPreview(); }
 
-      Result Click
-         (const TrackPanelMouseEvent &evt, AudacityProject *pProject) override
-      {
-         using namespace RefreshCode;
-         const wxMouseEvent &event = evt.event;
-         // Do not start a drag
-         Result result = Cancelled;
+   Result Release
+      (const TrackPanelMouseEvent &, AudacityProject *,
+       wxWindow *) override
+   { return RefreshCode::RefreshNone; }
 
-         // AS: If the user clicked outside all tracks, make nothing
-         //  selected.
-         if ((event.ButtonDown() || event.ButtonDClick())) {
-            pProject->GetSelectionState().SelectNone
-               ( *pProject->GetTracks(), pProject->GetMixerBoard() );
-            result |= RefreshAll;
-         }
-
-         return result;
-      }
-
-      Result Drag
-         (const TrackPanelMouseEvent &, AudacityProject *) override
-      { return RefreshCode::RefreshNone; }
-
-      HitTestPreview Preview
-         (const TrackPanelMouseState &, const AudacityProject *) override
-      { return HitPreview(); }
-
-      Result Release
-         (const TrackPanelMouseEvent &, AudacityProject *,
-          wxWindow *) override
-      { return RefreshCode::RefreshNone; }
-
-      Result Cancel(AudacityProject *) override
-      { return RefreshCode::RefreshNone; }
-   };
-}
+   Result Cancel(AudacityProject *) override
+   { return RefreshCode::RefreshNone; }
+};
 
 BackgroundCell::~BackgroundCell()
 {
@@ -99,7 +91,10 @@ HitTestResult BackgroundCell::HitTest
 (const TrackPanelMouseState &,
  const AudacityProject *)
 {
-   return BackgroundHandle::HitAnywhere();
+   auto result = mHandle.lock();
+   if (!result)
+      result = std::make_shared<BackgroundHandle>();
+   return BackgroundHandle::HitAnywhere(result);
 }
 
 std::shared_ptr<Track> BackgroundCell::FindTrack()

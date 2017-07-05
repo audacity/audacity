@@ -23,18 +23,23 @@ class SelectionStateChanger;
 
 class LabelTextHandle final : public LabelDefaultClickHandle
 {
-   LabelTextHandle();
    LabelTextHandle(const LabelTextHandle&) = delete;
-   LabelTextHandle &operator=(const LabelTextHandle&) = delete;
-   static LabelTextHandle& Instance();
 
    static HitTestPreview HitPreview();
 
 public:
-   static HitTestResult HitTest(
-      const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
+   static HitTestResult HitTest
+      (std::weak_ptr<LabelTextHandle> &holder,
+       const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
 
+   LabelTextHandle &operator=(LabelTextHandle&&) = default;
+
+   explicit LabelTextHandle
+      ( const std::shared_ptr<LabelTrack> &pLT, int labelNum );
    virtual ~LabelTextHandle();
+
+   std::shared_ptr<LabelTrack> GetTrack() const { return mpLT.lock(); }
+   int GetLabelNum() const { return mLabelNum; }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -54,6 +59,7 @@ public:
 
 private:
    std::weak_ptr<LabelTrack> mpLT {};
+   int mLabelNum{ -1 };
    int mLabelTrackStartXPos { -1 };
    int mLabelTrackStartYPos { -1 };
    SelectedRegion mSelectedRegion{};

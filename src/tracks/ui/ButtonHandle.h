@@ -22,10 +22,13 @@ class Track;
 class ButtonHandle /* not final */ : public UIHandle
 {
    ButtonHandle(const ButtonHandle&) = delete;
-   ButtonHandle &operator=(const ButtonHandle&) = delete;
 
 protected:
-   explicit ButtonHandle(int dragCode);
+   explicit ButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect, int dragCode );
+
+   ButtonHandle &operator=(const ButtonHandle&) = default;
+
    virtual ~ButtonHandle();
 
    // This new abstract virtual simplifies the duties of further subclasses.
@@ -54,9 +57,9 @@ protected:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   wxRect mRect {};
    std::weak_ptr<Track> mpTrack;
-   const int mDragCode;
+   wxRect mRect;
+   int mDragCode;
 };
 
 #endif

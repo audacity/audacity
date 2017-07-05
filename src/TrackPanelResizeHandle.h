@@ -20,15 +20,20 @@ class TrackPanelCellIterator;
 
 class TrackPanelResizeHandle final : public UIHandle
 {
-   TrackPanelResizeHandle();
    TrackPanelResizeHandle(const TrackPanelResizeHandle&) = delete;
-   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = delete;
 
 public:
-   static TrackPanelResizeHandle& Instance();
+   explicit TrackPanelResizeHandle
+      ( const std::shared_ptr<Track> &pTrack, int y,
+        const AudacityProject *pProject );
+
+   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = default;
+
    static HitTestPreview HitPreview(bool bLinked);
 
    virtual ~TrackPanelResizeHandle();
+
+   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

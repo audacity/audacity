@@ -17,19 +17,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h"
 #include "../../TrackPanel.h"
 
-MinimizeButtonHandle::MinimizeButtonHandle()
-   : ButtonHandle{ TrackPanel::IsMinimizing }
-{
-}
+MinimizeButtonHandle::MinimizeButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect, TrackPanel::IsMinimizing }
+{}
 
 MinimizeButtonHandle::~MinimizeButtonHandle()
 {
-}
-
-MinimizeButtonHandle &MinimizeButtonHandle::Instance()
-{
-   static MinimizeButtonHandle instance;
-   return instance;
 }
 
 UIHandle::Result MinimizeButtonHandle::CommitChanges
@@ -55,16 +49,19 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
 }
 
 HitTestResult MinimizeButtonHandle::HitTest
-(const wxMouseState &state, const wxRect &rect)
+(std::weak_ptr<MinimizeButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
    wxRect buttonRect;
    TrackInfo::GetMinimizeRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      Instance().mRect = buttonRect;
+      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto result = std::make_shared<MinimizeButtonHandle>( pTrack, buttonRect );
+      result = AssignUIHandlePtr(holder, result);
       return {
          HitPreview(),
-         &Instance()
+         result
       };
    }
    else
@@ -73,19 +70,13 @@ HitTestResult MinimizeButtonHandle::HitTest
 
 ////////////////////////////////////////////////////////////////////////////////
 
-CloseButtonHandle::CloseButtonHandle()
-   : ButtonHandle{ TrackPanel::IsClosing }
-{
-}
+CloseButtonHandle::CloseButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect, TrackPanel::IsClosing }
+{}
 
 CloseButtonHandle::~CloseButtonHandle()
 {
-}
-
-CloseButtonHandle &CloseButtonHandle::Instance()
-{
-   static CloseButtonHandle instance;
-   return instance;
 }
 
 UIHandle::Result CloseButtonHandle::CommitChanges
@@ -112,16 +103,19 @@ UIHandle::Result CloseButtonHandle::CommitChanges
 }
 
 HitTestResult CloseButtonHandle::HitTest
-(const wxMouseState &state, const wxRect &rect)
+(std::weak_ptr<CloseButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
 {
    wxRect buttonRect;
    TrackInfo::GetCloseBoxRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      Instance().mRect = buttonRect;
+      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto result = std::make_shared<CloseButtonHandle>( pTrack, buttonRect );
+      result = AssignUIHandlePtr(holder, result);
       return {
          HitPreview(),
-         &Instance()
+         result
       };
    }
    else
@@ -130,19 +124,15 @@ HitTestResult CloseButtonHandle::HitTest
 
 ////////////////////////////////////////////////////////////////////////////////
 
-MenuButtonHandle::MenuButtonHandle()
-   : ButtonHandle{ TrackPanel::IsPopping }
-{
-}
+MenuButtonHandle::MenuButtonHandle
+( const std::shared_ptr<TrackPanelCell> &pCell,
+  const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : ButtonHandle{ pTrack, rect, TrackPanel::IsPopping }
+   , mpCell{ pCell }
+{}
 
 MenuButtonHandle::~MenuButtonHandle()
 {
-}
-
-MenuButtonHandle &MenuButtonHandle::Instance()
-{
-   static MenuButtonHandle instance;
-   return instance;
 }
 
 UIHandle::Result MenuButtonHandle::CommitChanges
@@ -155,18 +145,20 @@ UIHandle::Result MenuButtonHandle::CommitChanges
 }
 
 HitTestResult MenuButtonHandle::HitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<MenuButtonHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const std::shared_ptr<TrackPanelCell> &pCell)
 {
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      Instance().mpCell = pCell;
-      Instance().mRect = buttonRect;
+      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
+      auto result = std::make_shared<MenuButtonHandle>( pCell, pTrack, buttonRect );
+      result = AssignUIHandlePtr(holder, result);
       return {
          HitPreview(),
-         &Instance()
+         result
       };
    }
    else

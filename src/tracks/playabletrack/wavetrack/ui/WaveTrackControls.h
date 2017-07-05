@@ -13,6 +13,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TrackControls.h"
 
+class MuteButtonHandle;
+class SoloButtonHandle;
+class GainSliderHandle;
+class PanSliderHandle;
+
 class WaveTrackControls final : public TrackControls
 {
    WaveTrackControls(const WaveTrackControls&) = delete;
@@ -29,6 +34,12 @@ public:
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
+
+private:
+   std::weak_ptr<MuteButtonHandle> mMuteHandle;
+   std::weak_ptr<SoloButtonHandle> mSoloHandle;
+   std::weak_ptr<GainSliderHandle> mGainHandle;
+   std::weak_ptr<PanSliderHandle> mPanHandle;
 };
 
 #endif

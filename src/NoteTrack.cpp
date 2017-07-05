@@ -336,11 +336,7 @@ void NoteTrack::DrawLabelControls
    AColor::MIDIChannel(&dc, 0); // always return with gray color selected
 }
 
-// Handles clicking within the midi controls rect (same as DrawLabelControls).
-// This is somewhat oddly written, as these aren't real buttons - they act
-// when the mouse goes down; you can't hold it pressed and move off of it.
-// Left-clicking toggles a single channel; right-clicking turns off all other channels.
-bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
+int NoteTrack::FindChannel(const wxRect &rect, int mx, int my)
 {
    wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
    wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
@@ -351,8 +347,17 @@ bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
    int col = (mx - rect.x) / cellWidth;
    int row = (my - rect.y) / cellHeight;
 
-   int channel = row * 4 + col;
+   return row * 4 + col;
+}
 
+
+// Handles clicking within the midi controls rect (same as DrawLabelControls).
+// This is somewhat oddly written, as these aren't real buttons - they act
+// when the mouse goes down; you can't hold it pressed and move off of it.
+// Left-clicking toggles a single channel; right-clicking turns off all other channels.
+bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
+{
+   auto channel = FindChannel(rect, mx, my);
    if (right)
       SoloVisibleChan(channel);
    else

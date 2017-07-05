@@ -17,6 +17,11 @@ Paul Licameli split from TrackPanel.cpp
 class PopupMenuTable;
 class Track;
 
+class CloseButtonHandle;
+class MenuButtonHandle;
+class MinimizeButtonHandle;
+class TrackSelectHandle;
+
 class TrackControls /* not final */ : public CommonTrackPanelCell
 {
 public:
@@ -54,6 +59,11 @@ protected:
    Track *GetTrack() const;
 
    std::weak_ptr<Track> mwTrack;
+
+   std::weak_ptr<CloseButtonHandle> mCloseHandle;
+   std::weak_ptr<MenuButtonHandle> mMenuHandle;
+   std::weak_ptr<MinimizeButtonHandle> mMinimizeHandle;
+   std::weak_ptr<TrackSelectHandle> mSelectHandle;
 };
 
 #endif

@@ -23,6 +23,8 @@ class Envelope;
 class Ruler;
 class ZoomInfo;
 
+class EnvelopeHandle;
+
 class TimeTrack final : public Track {
 
  public:
@@ -140,6 +142,8 @@ class TimeTrack final : public Track {
    double           mRangeUpper;
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
+
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 
    /** @brief Copy the metadata from another track but not the points
     *

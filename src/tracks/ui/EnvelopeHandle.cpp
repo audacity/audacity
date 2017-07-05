@@ -26,15 +26,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
-EnvelopeHandle::EnvelopeHandle()
-{
-}
+EnvelopeHandle::EnvelopeHandle( Envelope *pEnvelope )
+   : mEnvelope{ pEnvelope }
+{}
 
-EnvelopeHandle &EnvelopeHandle::Instance()
-{
-   static EnvelopeHandle instance;
-   return instance;
-}
+EnvelopeHandle::~EnvelopeHandle()
+{}
 
 HitTestPreview EnvelopeHandle::HitPreview(const AudacityProject *pProject, bool unsafe)
 {
@@ -51,10 +48,13 @@ HitTestPreview EnvelopeHandle::HitPreview(const AudacityProject *pProject, bool 
    };
 }
 
-HitTestResult EnvelopeHandle::HitAnywhere(const AudacityProject *pProject)
+HitTestResult EnvelopeHandle::HitAnywhere
+(std::weak_ptr<EnvelopeHandle> &holder,
+ const AudacityProject *pProject, Envelope *envelope)
 {
    const bool unsafe = pProject->IsAudioActive();
-   return { HitPreview(pProject, unsafe), &Instance() };
+   UIHandlePtr result = std::make_shared<EnvelopeHandle>( envelope );
+   return { HitPreview(pProject, unsafe), result };
 }
 
 namespace {
@@ -75,7 +75,8 @@ namespace {
 }
 
 HitTestResult EnvelopeHandle::TimeTrackHitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<EnvelopeHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt)
 {
    auto envelope = tt->GetEnvelope();
@@ -86,16 +87,17 @@ HitTestResult EnvelopeHandle::TimeTrackHitTest
    float zoomMin, zoomMax;
    GetTimeTrackData( *pProject, *tt, dBRange, dB, zoomMin, zoomMax);
    return EnvelopeHandle::HitEnvelope
-      (state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+      (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
 HitTestResult EnvelopeHandle::WaveTrackHitTest
-(const wxMouseState &state, const wxRect &rect,
+(std::weak_ptr<EnvelopeHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt)
 {
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
-   const Envelope *const envelope = wt->GetEnvelopeAtX(state.GetX());
+   Envelope *const envelope = wt->GetEnvelopeAtX(state.GetX());
 
    if (!envelope)
       return {};
@@ -115,12 +117,13 @@ HitTestResult EnvelopeHandle::WaveTrackHitTest
    const float dBRange = wt->GetWaveformSettings().dBRange;
 
    return EnvelopeHandle::HitEnvelope
-       (state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+       (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
 }
 
 HitTestResult EnvelopeHandle::HitEnvelope
-(const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
- const Envelope *envelope, float zoomMin, float zoomMax,
+(std::weak_ptr<EnvelopeHandle> &holder,
+ const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
+ Envelope *envelope, float zoomMin, float zoomMax,
  bool dB, float dBRange)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
@@ -167,11 +170,7 @@ HitTestResult EnvelopeHandle::HitEnvelope
    if (distance >= yTolerance)
       return {};
 
-   return HitAnywhere(pProject);
-}
-
-EnvelopeHandle::~EnvelopeHandle()
-{
+   return HitAnywhere(holder, pProject, envelope);
 }
 
 UIHandle::Result EnvelopeHandle::Click
@@ -191,23 +190,21 @@ UIHandle::Result EnvelopeHandle::Click
       if (wt->GetDisplay() != WaveTrack::Waveform)
          return Cancelled;
 
-      auto clickedEnvelope =
-         wt->GetEnvelopeAtX(event.GetX());
-      if (!clickedEnvelope)
+      if (!mEnvelope)
          return Cancelled;
 
       mLog = !wt->GetWaveformSettings().isLinear();
       wt->GetDisplayBounds(&mLower, &mUpper);
       mdBRange = wt->GetWaveformSettings().dBRange;
       mEnvelopeEditor =
-         std::make_unique< EnvelopeEditor >( *clickedEnvelope, true );
+         std::make_unique< EnvelopeEditor >( *mEnvelope, true );
       mEnvelopeEditorRight.reset();
 
       // Assume linked track is wave or null
       auto partner = static_cast<WaveTrack*>(wt->GetLink());
       if (partner)
       {
-         clickedEnvelope = partner->GetEnvelopeAtX(event.GetX());
+         auto clickedEnvelope = partner->GetEnvelopeAtX(event.GetX());
          if (clickedEnvelope)
             mEnvelopeEditorRight =
                std::make_unique< EnvelopeEditor >( *clickedEnvelope, true );
@@ -216,12 +213,11 @@ UIHandle::Result EnvelopeHandle::Click
    else if (pTrack->GetKind() == Track::Time)
    {
       TimeTrack *const tt = static_cast<TimeTrack*>(pTrack);
-      auto clickedEnvelope = tt->GetEnvelope();
-      if (!clickedEnvelope)
+      if (!mEnvelope)
          return Cancelled;
       GetTimeTrackData( *pProject, *tt, mdBRange, mLog, mLower, mUpper);
       mEnvelopeEditor =
-         std::make_unique< EnvelopeEditor >( *clickedEnvelope, false );
+         std::make_unique< EnvelopeEditor >( *mEnvelope, false );
       mEnvelopeEditorRight.reset();
    }
    else
