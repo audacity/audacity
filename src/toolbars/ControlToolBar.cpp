@@ -1043,7 +1043,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      playbackTracks.erase(it);
                }
                t1 = wt->GetEndTime();
-               if (t1 < t0) {
+               // less than or equal, not just less than, to ensure a clip boundary.
+               // when append recording.
+               if (t1 <= t0) {
                   if (!tracksCopied) {
                      // Duplicate all tracks before modifying any of them.
                      // The duplicates are used to restore state in case
