@@ -1058,6 +1058,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
                auto wt = Track::Pointer<WaveTrack>(tt);
+               // Don't record into one track of a stereo track...
+               if( ((int)recordingTracks.size() >= recordingChannels -1) && 
+                   wt->GetLinked() )
+               {   tt = it.Next();
+                   continue;
+               }
+
                if (duplex) {
                   auto end = playbackTracks.end();
                   auto it = std::find(playbackTracks.begin(), end, wt);
@@ -1109,7 +1116,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
             t1 = DBL_MAX;        // record for a long, long time
          }
       }
-      else {   // recording to new track.
+
+      if( recordingTracks.empty() )
+      {   // recording to new track.
          bool recordingNameCustom, useTrackNumber, useDateStamp, useTimeStamp;
          wxString defaultTrackName, defaultRecordingTrackName;
 
