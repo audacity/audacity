@@ -52,7 +52,7 @@ static int charXMLCompatiblity[] =
 
 // These are used by XMLEsc to handle surrogate pairs and filter invalid characters outside the ASCII range.
 #define MIN_HIGH_SURROGATE static_cast<wxUChar>(0xD800)
-#define MAX_HIGH_SURROGATE static_cast<wxUChar>(0xDCFF)
+#define MAX_HIGH_SURROGATE static_cast<wxUChar>(0xDBFF)
 #define MIN_LOW_SURROGATE static_cast<wxUChar>(0xDC00)
 #define MAX_LOW_SURROGATE static_cast<wxUChar>(0xDFFF)
 
