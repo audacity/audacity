@@ -866,8 +866,10 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
       c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd));
 
-      c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"));
-      c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"));
+      c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"),
+         TracksSelectedFlag, TracksSelectedFlag);
+      c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"),
+         TracksSelectedFlag, TracksSelectedFlag);
 
       c->AddItem(wxT("CursPrevClipBoundary"), _("Pre&vious Clip Boundary"), FN(OnCursorPrevClipBoundary), wxT(""),
          TrackPanelHasFocus | WaveTracksExistFlag, TrackPanelHasFocus | WaveTracksExistFlag);
