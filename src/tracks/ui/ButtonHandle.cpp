@@ -21,10 +21,9 @@ Paul Licameli
 #include "../ui/TrackControls.h"
 
 ButtonHandle::ButtonHandle
-( const std::shared_ptr<Track> &pTrack, const wxRect &rect, int dragCode )
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
    : mpTrack{ pTrack }
    , mRect{ rect }
-   , mDragCode{ dragCode }
 {}
 
 ButtonHandle::~ButtonHandle()
@@ -45,7 +44,8 @@ UIHandle::Result ButtonHandle::Click
 
    // Come here for left click or double click
    if (mRect.Contains(event.m_x, event.m_y)) {
-      TrackControls::gCaptureState = mDragCode;
+      mWasIn = true;
+      mIsClicked = true;
       // Toggle visible button state
       return RefreshCell;
    }
@@ -62,14 +62,10 @@ UIHandle::Result ButtonHandle::Drag
    if (!pTrack)
       return Cancelled;
 
-   const int newState =
-      mRect.Contains(event.m_x, event.m_y) ? mDragCode : 0;
-   if (TrackControls::gCaptureState == newState)
-      return RefreshNone;
-   else {
-      TrackControls::gCaptureState = newState;
-      return RefreshCell;
-   }
+   auto isIn = mRect.Contains(event.m_x, event.m_y);
+   auto result = (isIn == mWasIn) ? RefreshNone : RefreshCell;
+   mWasIn = isIn;
+   return result;
 }
 
 HitTestPreview ButtonHandle::Preview
@@ -90,22 +86,13 @@ UIHandle::Result ButtonHandle::Release
 
    Result result = RefreshNone;
    const wxMouseEvent &event = evt.event;
-   if (TrackControls::gCaptureState) {
-      TrackControls::gCaptureState = 0;
-      result = RefreshCell;
-   }
    if (pTrack && mRect.Contains(event.m_x, event.m_y))
-      result |= CommitChanges(event, pProject, pParent);
+      result |= RefreshCell | CommitChanges(event, pProject, pParent);
    return result;
 }
 
 UIHandle::Result ButtonHandle::Cancel(AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (TrackControls::gCaptureState) {
-      TrackControls::gCaptureState = 0;
-      return RefreshCell;
-   }
-   else
-      return RefreshNone;
+   return RefreshCell; // perhaps unnecessarily if pointer is out of the box
 }

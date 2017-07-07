@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_TRACK_BUTTON_HANDLES__
 
 #include "../ui/ButtonHandle.h"
-#include "../../TrackPanel.h"
 
 class wxMouseState;
 

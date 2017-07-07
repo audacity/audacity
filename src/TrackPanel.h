@@ -61,6 +61,8 @@ using UIHandlePtr = std::shared_ptr<UIHandle>;
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
 
+struct TrackPanelDrawingContext;
+
 enum class UndoPush : unsigned char;
 
 // JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
@@ -93,26 +95,26 @@ public:
    struct TCPLine;
 
    static void DrawItems
-      ( wxDC *dc, const wxRect &rect, const Track &track, int mouseCapture,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track &track );
 
    static void DrawItems
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack,
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack,
         const std::vector<TCPLine> &topLines,
-        const std::vector<TCPLine> &bottomLines,
-        int mouseCapture, bool captured );
+        const std::vector<TCPLine> &bottomLines );
 
    static void CloseTitleDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void MinimizeSyncLockDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void MidiControlsDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    template<typename TrackClass>
    static void SliderDrawFunction
@@ -122,45 +124,45 @@ public:
         wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured );
 
    static void PanSliderDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void GainSliderDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    static void VelocitySliderDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 #endif
 
    static void MuteOrSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, bool down,
         bool captured, bool solo );
 
    static void WideMuteDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void WideSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void MuteAndSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void StatusDrawFunction
       ( const wxString &string, wxDC *dc, const wxRect &rect );
 
    static void Status1DrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void Status2DrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
 public:
    int GetTrackInfoWidth() const;
@@ -492,20 +494,6 @@ protected:
    int mMouseMostRecentX;
    int mMouseMostRecentY;
 
-public:
-   // Old enumeration of click-and-drag states, which will shrink and disappear
-   // as UIHandle subclasses take over the repsonsibilities.
-   enum   MouseCaptureEnum
-   {
-      IsUncaptured = 0,
-      IsClosing,
-      IsMuting,
-      IsSoloing,
-      IsMinimizing,
-      IsPopping,
-   };
-
-protected:
    friend class TrackPanelAx;
 
 #if wxUSE_ACCESSIBILITY

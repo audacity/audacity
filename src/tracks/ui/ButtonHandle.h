@@ -23,9 +23,13 @@ class ButtonHandle /* not final */ : public UIHandle
 {
    ButtonHandle(const ButtonHandle&) = delete;
 
+public:
+   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
+   bool IsClicked() const { return mIsClicked; }
+
 protected:
    explicit ButtonHandle
-      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect, int dragCode );
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
 
    ButtonHandle &operator=(const ButtonHandle&) = default;
 
@@ -56,7 +60,8 @@ protected:
 
    std::weak_ptr<Track> mpTrack;
    wxRect mRect;
-   int mDragCode;
+   bool mWasIn{ true };
+   bool mIsClicked{};
 };
 
 #endif

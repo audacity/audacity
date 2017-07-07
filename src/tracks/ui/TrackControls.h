@@ -42,9 +42,6 @@ public:
       unsigned result;
    };
 
-   // Make this hack go away!  See TrackPanel::DrawOutside
-   static int gCaptureState;
-
 protected:
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
