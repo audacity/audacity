@@ -1171,7 +1171,7 @@ bool NyquistEffect::ProcessOne()
    // If we're not showing debug window, log errors and warnings:
    if (!mDebugOutput.IsEmpty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogMessage(wxT("\'") + mName + wxT("\' ") + _("returned:") + wxT("\n") + mDebugOutput);
+      wxLogMessage(_("\'%s\' returned:\n%s"), mName, mDebugOutput);
    }
 
    // Audacity has no idea how long Nyquist processing will take, but
