@@ -31,7 +31,7 @@ public:
       (std::weak_ptr<LabelTextHandle> &holder,
        const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
 
-   LabelTextHandle &operator=(LabelTextHandle&&) = default;
+   LabelTextHandle &operator=(const LabelTextHandle&) = default;
 
    explicit LabelTextHandle
       ( const std::shared_ptr<LabelTrack> &pLT, int labelNum );
