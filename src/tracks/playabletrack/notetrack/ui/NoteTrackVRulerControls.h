@@ -13,6 +13,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TrackVRulerControls.h"
 
+class NoteTrackVZoomHandle;
+
 class NoteTrackVRulerControls final : public TrackVRulerControls
 {
    NoteTrackVRulerControls(const NoteTrackVRulerControls&) = delete;
@@ -24,13 +26,16 @@ public:
       : TrackVRulerControls( pTrack ) {}
    ~NoteTrackVRulerControls();
 
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
    unsigned HandleWheelRotation
       (const TrackPanelMouseEvent &event,
        AudacityProject *pProject) override;
+
+private:
+   std::weak_ptr<NoteTrackVZoomHandle> mVZoomHandle;
 };
 
 #endif

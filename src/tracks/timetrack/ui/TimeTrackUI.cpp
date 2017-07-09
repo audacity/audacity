@@ -18,12 +18,16 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/EnvelopeHandle.h"
 
-HitTestResult TimeTrack::DetailedHitTest
-(const TrackPanelMouseEvent &event,
+std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
+(const TrackPanelMouseState &st,
  const AudacityProject *pProject, int, bool)
 {
-   return EnvelopeHandle::TimeTrackHitTest
-      ( event.event, event.rect, pProject, Pointer<TimeTrack>(this) );
+   std::vector<UIHandlePtr> results;
+   auto result = EnvelopeHandle::TimeTrackHitTest
+      ( mEnvelopeHandle, st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
+   if (result)
+      results.push_back(result);
+   return results;
 }
 
 std::shared_ptr<TrackControls> TimeTrack::GetControls()

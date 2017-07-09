@@ -16,9 +16,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../MixerBoard.h"
 #include "../../Project.h"
-#include "../../TrackPanel.h"
+#include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
-#include "../../WaveTrack.h"
+#include "../../Track.h"
 #include <wx/textdlg.h>
 
 int TrackControls::gCaptureState;
@@ -37,26 +37,40 @@ std::shared_ptr<Track> TrackControls::FindTrack()
    return mwTrack.lock();
 }
 
-HitTestResult TrackControls::HitTest
-(const TrackPanelMouseEvent &evt,
+std::vector<UIHandlePtr> TrackControls::HitTest
+(const TrackPanelMouseState &st,
  const AudacityProject *project)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-   HitTestResult result;
+   // Hits are mutually exclusive, results single
 
-   if (NULL != (result = CloseButtonHandle::HitTest(event, rect)).handle)
-      return result;
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
 
-   if (NULL != (result = MenuButtonHandle::HitTest(event, rect,
-         this->FindTrack()->GetTrackControl())).handle)
-      return result;
+   auto pTrack = FindTrack();
+   // shared pointer to this:
+   auto sThis = pTrack->GetTrackControl();
 
-   if (NULL != (result = MinimizeButtonHandle::HitTest(event, rect)).handle)
-      return result;
+   if (NULL != (result = CloseButtonHandle::HitTest(
+      mCloseHandle, state, rect, this)))
+      results.push_back(result);
 
-   return TrackSelectHandle::HitAnywhere
-      (project->GetTrackPanel()->GetTrackCount());
+   if (NULL != (result = MenuButtonHandle::HitTest(
+      mMenuHandle, state, rect, sThis)))
+      results.push_back(result);
+
+   if (NULL != (result = MinimizeButtonHandle::HitTest(
+      mMinimizeHandle, state, rect, this)))
+      results.push_back(result);
+
+   if (results.empty()) {
+      if (NULL != (result = TrackSelectHandle::HitAnywhere(
+         mSelectHandle, pTrack)))
+         results.push_back(result);
+   }
+
+   return results;
 }
 
 enum

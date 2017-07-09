@@ -2,38 +2,41 @@
 
 Audacity: A Digital Audio Editor
 
-ZoomHandle.h
+WaveTrackVZoomHandle.h
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ZOOM_HANDLE__
-#define __AUDACITY_ZOOM_HANDLE__
-
-#include "../../UIHandle.h"
+#ifndef __AUDACITY_WAVE_TRACK_VZOOM_HANDLE__
+#define __AUDACITY_WAVE_TRACK_VZOOM_HANDLE__
 
 class wxMouseState;
+class WaveTrack;
 #include <wx/gdicmn.h>
+#include "../../../../MemoryX.h"
+#include "../../../../UIHandle.h"
 
-// This handle class, unlike most, doesn't associate with any particular cell.
-class ZoomHandle final : public UIHandle
+class WaveTrackVZoomHandle : public UIHandle
 {
-   ZoomHandle(const ZoomHandle&) = delete;
-   static HitTestPreview HitPreview
-      (const wxMouseState &state, const AudacityProject *pProject);
+   WaveTrackVZoomHandle(const WaveTrackVZoomHandle&);
+   static HitTestPreview HitPreview(const wxMouseState &state);
 
 public:
-   ZoomHandle();
+   explicit WaveTrackVZoomHandle
+      (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
 
-   ZoomHandle &operator=(const ZoomHandle&) = default;
+   WaveTrackVZoomHandle &operator=(const WaveTrackVZoomHandle&) = default;
 
-   static UIHandlePtr HitAnywhere
-      (std::weak_ptr<ZoomHandle> &holder);
-   static UIHandlePtr HitTest
-      (std::weak_ptr<ZoomHandle> &holder, const wxMouseState &state);
+   static void DoZoom
+   (AudacityProject *pProject,
+    WaveTrack *pTrack, bool shiftDown, bool rightUp,
+    const wxRect &rect, int zoomStart, int zoomEnd,
+    bool fixedMousePoint);
 
-   virtual ~ZoomHandle();
+   virtual ~WaveTrackVZoomHandle();
+
+   std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -57,7 +60,7 @@ public:
       override;
 
 private:
-   bool IsDragZooming() const;
+   std::weak_ptr<WaveTrack> mpTrack;
 
    int mZoomStart{}, mZoomEnd{};
    wxRect mRect{};

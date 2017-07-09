@@ -22,45 +22,60 @@ Paul Licameli split from TrackPanel.cpp
 #include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
 #include "TimeShiftHandle.h"
+#include "../../TrackPanelResizerCell.h"
+#include "BackgroundCell.h"
 
-HitTestResult Track::HitTest
-(const TrackPanelMouseEvent &event,
+std::vector<UIHandlePtr> Track::HitTest
+(const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
    const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
    const bool isMultiTool = pTtb->IsDown(multiTool);
    const auto currentTool = pTtb->GetCurrentTool();
 
-   if ( !isMultiTool && currentTool == zoomTool )
+   if ( !isMultiTool && currentTool == zoomTool ) {
       // Zoom tool is a non-selecting tool that takes precedence in all tracks
       // over all other tools, no matter what detail you point at.
-      return ZoomHandle::HitAnywhere(event.event, pProject);
+      result = ZoomHandle::HitAnywhere(
+         pProject->GetBackgroundCell()->mZoomHandle);
+      results.push_back(result);
+      return results;
+   }
 
    // In other tools, let subclasses determine detailed hits.
-   HitTestResult result =
-      DetailedHitTest( event, pProject, currentTool, isMultiTool );
+   results =
+      DetailedHitTest( st, pProject, currentTool, isMultiTool );
 
-   // If there is no detailed hit for the subclass, there are still some
-   // general cases.
-
-   // Label track kludge!
-   auto refresh = result.preview.refreshCode;
+   // There are still some general cases.
 
    // Sliding applies in more than one track type.
-   if ( !result.handle && !isMultiTool && currentTool == slideTool )
-      result = TimeShiftHandle::HitAnywhere(pProject);
+   if ( !isMultiTool && currentTool == slideTool ) {
+      result = TimeShiftHandle::HitAnywhere(
+         mTimeShiftHandle, Pointer(this), false);
+      if (result)
+         results.push_back(result);
+   }
 
    // Let the multi-tool right-click handler apply only in default of all
    // other detailed hits.
-   if ( !result.handle && isMultiTool )
-      result = ZoomHandle::HitTest(event.event, pProject);
+   if ( isMultiTool ) {
+      result = ZoomHandle::HitTest(
+         pProject->GetBackgroundCell()->mZoomHandle, st.state);
+      if (result)
+         results.push_back(result);
+   }
 
    // Finally, default of all is adjustment of the selection box.
-   if ( !result.handle && ( isMultiTool || currentTool == selectTool) )
-      result = SelectHandle::HitTest(event, pProject, Pointer(this));
+   if ( isMultiTool || currentTool == selectTool ) {
+      result = SelectHandle::HitTest(
+         mSelectHandle, st, pProject, Pointer(this));
+      if (result)
+         results.push_back(result);
+   }
 
-   result.preview.refreshCode |= refresh;
-   return result;
+   return results;
 }
 
 std::shared_ptr<TrackPanelCell> Track::GetTrackControl()

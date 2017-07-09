@@ -20,26 +20,22 @@ Paul Licameli
 #include "../../TrackPanelMouseEvent.h"
 #include "../ui/TrackControls.h"
 
-ButtonHandle::ButtonHandle(int dragCode)
-   : mDragCode(dragCode)
-{
-}
+ButtonHandle::ButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect, int dragCode )
+   : mpTrack{ pTrack }
+   , mRect{ rect }
+   , mDragCode{ dragCode }
+{}
 
 ButtonHandle::~ButtonHandle()
 {
 }
 
-HitTestPreview ButtonHandle::HitPreview()
-{
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return { {}, &arrowCursor };
-}
-
 UIHandle::Result ButtonHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   auto pTrack = static_cast<TrackControls*>(evt.pCell.get())->FindTrack();
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
    if ( !pTrack )
       return Cancelled;
 
@@ -49,7 +45,6 @@ UIHandle::Result ButtonHandle::Click
 
    // Come here for left click or double click
    if (mRect.Contains(event.m_x, event.m_y)) {
-      mpTrack = pTrack;
       TrackControls::gCaptureState = mDragCode;
       // Toggle visible button state
       return RefreshCell;
@@ -78,7 +73,7 @@ UIHandle::Result ButtonHandle::Drag
 }
 
 HitTestPreview ButtonHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    // No special message or cursor
    return {};

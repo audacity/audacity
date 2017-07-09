@@ -8,6 +8,7 @@ Paul Licameli
 
 **********************************************************************/
 
+#include "Audacity.h"
 #include "UIHandle.h"
 
 UIHandle::~UIHandle()

@@ -16,7 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../MemoryX.h"
 
 class Alg_seq;
-struct HitTestResult;
 class NoteTrack;
 class Track;
 class ViewInfo;
@@ -55,16 +54,20 @@ public:
    };
    
 private:
-   StretchHandle();
    StretchHandle(const StretchHandle&);
-   StretchHandle &operator=(const StretchHandle&);
-   static StretchHandle& Instance();
    static HitTestPreview HitPreview(StretchEnum stretchMode, bool unsafe);
 
 public:
-   static HitTestResult HitTest
-      ( const TrackPanelMouseEvent &event, const AudacityProject *pProject,
-        const std::shared_ptr<NoteTrack> &pTrack, StretchState &state );
+   explicit StretchHandle
+      ( const std::shared_ptr<NoteTrack> &pTrack,
+        const StretchState &stretchState );
+
+   StretchHandle &operator=(const StretchHandle&) = default;
+
+   static UIHandlePtr HitTest
+      (std::weak_ptr<StretchHandle> &holder,
+       const TrackPanelMouseState &state, const AudacityProject *pProject,
+       const std::shared_ptr<NoteTrack> &pTrack );
 
    virtual ~StretchHandle();
 
@@ -75,7 +78,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject);
 
    virtual HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject);
+      (const TrackPanelMouseState &state, const AudacityProject *pProject);
 
    virtual Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,

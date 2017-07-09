@@ -15,39 +15,45 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
 class Envelope;
 class EnvelopeEditor;
-struct HitTestResult;
 class ViewInfo;
 class TimeTrack;
 class WaveTrack;
 
 class EnvelopeHandle final : public UIHandle
 {
-   EnvelopeHandle();
    EnvelopeHandle(const EnvelopeHandle&) = delete;
    EnvelopeHandle &operator=(const EnvelopeHandle&) = delete;
-   static EnvelopeHandle& Instance();
    static HitTestPreview HitPreview(const AudacityProject *pProject, bool unsafe);
 
-   static HitTestResult HitEnvelope
-      (const wxMouseEvent &event, const wxRect &rect,
+   static UIHandlePtr HitEnvelope
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject,
-       const Envelope *envelope, float zoomMin, float zoomMax,
+       Envelope *envelope, float zoomMin, float zoomMax,
        bool dB, float dBRange);
 
 public:
-   static HitTestResult HitAnywhere(const AudacityProject *pProject);
-   static HitTestResult TimeTrackHitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
-   static HitTestResult WaveTrackHitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
+   explicit EnvelopeHandle( Envelope *pEnvelope );
 
    virtual ~EnvelopeHandle();
+
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope);
+   static UIHandlePtr TimeTrackHitTest
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
+   static UIHandlePtr WaveTrackHitTest
+      (std::weak_ptr<EnvelopeHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
+
+   Envelope *GetEnvelope() const { return mEnvelope; }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -56,7 +62,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -76,6 +82,7 @@ private:
    float mLower{}, mUpper{};
    double mdBRange{};
 
+   Envelope *mEnvelope{};
    std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
    std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
 };

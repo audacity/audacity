@@ -53,37 +53,41 @@ WaveTrackControls::~WaveTrackControls()
 }
 
 
-HitTestResult WaveTrackControls::HitTest
-(const TrackPanelMouseEvent & evt,
+std::vector<UIHandlePtr> WaveTrackControls::HitTest
+(const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-   if (event.Button(wxMOUSE_BTN_LEFT)) {
+   // Hits are mutually exclusive, results single
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+   if (state.ButtonIsDown(wxMOUSE_BTN_LEFT)) {
       auto track = FindTrack();
-      if (track && track->GetKind() == Track::Wave) {
-         HitTestResult result;
-         if (NULL !=
-             (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+      std::vector<UIHandlePtr> results;
+      auto result = [&]{
+         UIHandlePtr result;
+         if (NULL != (result = MuteButtonHandle::HitTest(
+            mMuteHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL !=
-             (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+         if (NULL != (result = SoloButtonHandle::HitTest(
+            mSoloHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL != (result =
-            GainSliderHandle::HitTest(event, rect, pProject, track)).handle)
+         if (NULL != (result = GainSliderHandle::HitTest(
+            mGainHandle, state, rect, track)))
             return result;
 
-         if (NULL != (result =
-            PanSliderHandle::HitTest(event, rect, pProject, track)).handle)
+         if (NULL != (result = PanSliderHandle::HitTest(
+            mPanHandle, state, rect, track)))
             return result;
+      }();
+      if (result) {
+         results.push_back(result);
+         return results;
       }
    }
 
-   return TrackControls::HitTest(evt, pProject);
+   return TrackControls::HitTest(st, pProject);
 }
 
 enum {

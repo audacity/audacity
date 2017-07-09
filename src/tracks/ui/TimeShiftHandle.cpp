@@ -23,15 +23,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
-TimeShiftHandle::TimeShiftHandle()
-{
-}
-
-TimeShiftHandle &TimeShiftHandle::Instance()
-{
-   static TimeShiftHandle instance;
-   return instance;
-}
+TimeShiftHandle::TimeShiftHandle
+( const std::shared_ptr<Track> &pTrack, bool gripHit )
+   : mCapturedTrack{ pTrack }
+   , mGripHit{ gripHit }
+{}
 
 HitTestPreview TimeShiftHandle::HitPreview
 (const AudacityProject *pProject, bool unsafe)
@@ -49,21 +45,21 @@ HitTestPreview TimeShiftHandle::HitPreview
    };
 }
 
-HitTestResult TimeShiftHandle::HitAnywhere(const AudacityProject *pProject)
+UIHandlePtr TimeShiftHandle::HitAnywhere
+(std::weak_ptr<TimeShiftHandle> &holder,
+ const std::shared_ptr<Track> &pTrack, bool gripHit)
 {
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."
-   const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(pProject, unsafe),
-      (unsafe
-       ? NULL
-       : &Instance())
-   };
+   auto result = std::make_shared<TimeShiftHandle>( pTrack, gripHit );
+   result = AssignUIHandlePtr(holder, result);
+   return result;
 }
 
-HitTestResult TimeShiftHandle::HitTest
-   (const wxMouseEvent & event, const wxRect &rect, const AudacityProject *pProject)
+UIHandlePtr TimeShiftHandle::HitTest
+(std::weak_ptr<TimeShiftHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const std::shared_ptr<Track> &pTrack)
 {
    /// method that tells us if the mouse event landed on a
    /// time-slider that allows us to time shift the sequence.
@@ -78,11 +74,11 @@ HitTestResult TimeShiftHandle::HitTest
    const int hotspotOffset = 5;
 
    // We are doing an approximate test here - is the mouse in the right or left border?
-   if (!(event.m_x + hotspotOffset < rect.x + adjustedDragHandleWidth ||
-       event.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
+   if (!(state.m_x + hotspotOffset < rect.x + adjustedDragHandleWidth ||
+       state.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
       return {};
 
-   return HitAnywhere(pProject);
+   return HitAnywhere( holder, pTrack, true );
 }
 
 TimeShiftHandle::~TimeShiftHandle()
@@ -413,17 +409,16 @@ void TimeShiftHandle::DoSlideHorizontal
 UIHandle::Result TimeShiftHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
    const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
-
-   using namespace RefreshCode;
-
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
 
    TrackList *const trackList = pProject->GetTracks();
 
@@ -471,7 +466,6 @@ UIHandle::Result TimeShiftHandle::Click
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
-   mCapturedTrack = pTrack;
    mRect = rect;
    mMouseClickX = event.m_x;
    const double selStart = viewInfo.PositionToTime(event.m_x, mRect.x);
@@ -512,6 +506,7 @@ UIHandle::Result TimeShiftHandle::Drag
           track = mCapturedTrack.get();
    }
 
+   // May need a shared_ptr to reassign mCapturedTrack below
    auto pTrack = Track::Pointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;
@@ -769,9 +764,12 @@ UIHandle::Result TimeShiftHandle::Drag
 }
 
 HitTestPreview TimeShiftHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   return HitPreview(pProject, false);
+   // After all that, it still may be unsafe to drag.
+   // Even if so, make an informative cursor change from default to "banned."
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview(pProject, unsafe);
 }
 
 UIHandle::Result TimeShiftHandle::Release

@@ -24,15 +24,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <algorithm>
 
-StretchHandle::StretchHandle()
-{
-}
-
-StretchHandle &StretchHandle::Instance()
-{
-   static StretchHandle instance;
-   return instance;
-}
+StretchHandle::StretchHandle
+( const std::shared_ptr<NoteTrack> &pTrack, const StretchState &stretchState )
+   : mpTrack{ pTrack }
+   , mStretchState{ stretchState }
+{}
 
 HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
 {
@@ -67,11 +63,13 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
    }
 }
 
-HitTestResult StretchHandle::HitTest
-   ( const TrackPanelMouseEvent &evt, const AudacityProject *pProject,
-     const std::shared_ptr<NoteTrack> &pTrack, StretchState &stretchState)
+UIHandlePtr StretchHandle::HitTest
+(std::weak_ptr<StretchHandle> &holder,
+ const TrackPanelMouseState &st, const AudacityProject *pProject,
+ const std::shared_ptr<NoteTrack> &pTrack)
 {
-   const wxMouseEvent &event = evt.event;
+   StretchState stretchState;
+   const wxMouseState &state = st.state;
 
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
@@ -82,15 +80,15 @@ HitTestResult StretchHandle::HitTest
    if (!pTrack || !pTrack->GetSelected() || pTrack->GetKind() != Track::Note)
       return {};
 
-   const wxRect &rect = evt.rect;
+   const wxRect &rect = st.rect;
    int center = rect.y + rect.height / 2;
-   int distance = abs(event.m_y - center);
+   int distance = abs(state.m_y - center);
    const int yTolerance = 10;
    wxInt64 leftSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t0(), rect.x);
    wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
    // Something is wrong if right edge comes before left edge
    wxASSERT(!(rightSel < leftSel));
-   if (!(leftSel <= event.m_x && event.m_x <= rightSel &&
+   if (!(leftSel <= state.m_x && state.m_x <= rightSel &&
          distance < yTolerance))
       return {};
 
@@ -115,7 +113,7 @@ HitTestResult StretchHandle::HitTest
             < minPeriod )
       return {};
 
-   auto selStart = viewInfo.PositionToTime( event.m_x, rect.x );
+   auto selStart = viewInfo.PositionToTime( state.m_x, rect.x );
    stretchState.mBeatCenter = pTrack->NearestBeatTime( selStart );
    bool startNewSelection = true;
    if ( within( stretchState.mBeat0.second,
@@ -140,10 +138,9 @@ HitTestResult StretchHandle::HitTest
          stretchState.mBeatCenter.second - stretchState.mBeat0.second;
    }
 
-   return {
-      HitPreview( stretchState.mMode, unsafe ),
-      &Instance()
-   };
+   auto result = std::make_shared<StretchHandle>( pTrack, stretchState );
+   result = AssignUIHandlePtr(holder, result);
+   return result;
 }
 
 StretchHandle::~StretchHandle()
@@ -155,22 +152,19 @@ UIHandle::Result StretchHandle::Click
 {
    using namespace RefreshCode;
    const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
 
-   if (unsafe ||
-       event.LeftDClick() ||
+   if (event.LeftDClick() ||
        !event.LeftDown() ||
        evt.pCell == NULL)
       return Cancelled;
 
 
    mLeftEdge = evt.rect.GetLeft();
-   mpTrack = std::static_pointer_cast<NoteTrack>(evt.pCell);
    ViewInfo &viewInfo = pProject->GetViewInfo();
-
-   // We must have hit if we got here, but repeat some
-   // calculations that set members
-   HitTest( evt, pProject, mpTrack, mStretchState );
 
    viewInfo.selectedRegion.setTimes
       ( mStretchState.mBeat0.first, mStretchState.mBeat1.first );
@@ -205,7 +199,7 @@ UIHandle::Result StretchHandle::Drag
 }
 
 HitTestPreview StretchHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
    const bool unsafe = pProject->IsAudioActive();
    return HitPreview( mStretchState.mMode, unsafe );

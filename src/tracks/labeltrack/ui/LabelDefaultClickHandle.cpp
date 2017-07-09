@@ -31,7 +31,7 @@ struct LabelDefaultClickHandle::LabelState {
 
 void LabelDefaultClickHandle::SaveState( AudacityProject *pProject )
 {
-   mLabelState = std::make_unique<LabelState>();
+   mLabelState = std::make_shared<LabelState>();
    auto &pairs = mLabelState->mPairs;
    TrackList *const tracks = pProject->GetTracks();
    TrackListIterator iter(tracks);

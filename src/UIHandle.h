@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_UI_HANDLE__
 
 #include <utility>
+#include "MemoryX.h"
 
 class wxDC;
 class wxRect;
@@ -22,6 +23,9 @@ class AudacityProject;
 struct HitTestPreview;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
+
+#include "MemoryX.h"
 
 // A TrackPanelCell reports a handle object of some subclass, in response to a
 // hit test at a mouse position; then this handle processes certain events,
@@ -57,9 +61,11 @@ public:
    virtual Result Drag
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) = 0;
 
-   // Update the cursor and status message.
+   // Can be called when the handle has been hit but not yet clicked,
+   // or called after Drag().
+   // Specifies cursor and status bar message.
    virtual HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject) = 0;
+      (const TrackPanelMouseState &state, const AudacityProject *pProject) = 0;
 
    // Assume previously Clicked and not yet Released or Cancelled.
    // event.pCell may be other than for Click; may be NULL, and rect empty.
@@ -96,6 +102,54 @@ public:
    // to avoid dangling pointers to tracks.  But maybe there will be a future
    // use?
    virtual void OnProjectChange(AudacityProject *pProject);
+
+public:
+   Result GetChangeHighlight() const { return mChangeHighlight; }
+   void SetChangeHighlight(Result val) { mChangeHighlight = val; }
+
+   // If AssignUIHandlePtr is used, then this function is also called before any
+   // overwrite.
+   // Make overloads of this for other subclasses, to cause refresh
+   // of the cell during mouse motion within it.
+   static UIHandle::Result NeedChangeHighlight
+   (const UIHandle &/*oldState*/, const UIHandle &/*newState*/)
+   {
+      return 0;
+   }
+
+protected:
+   // Derived classes can set this nonzero in a constructor, which is enough
+   // to cause repaint of the cell whenever the pointer hits the target,
+   // or leaves it without clicking, or releases or escapes from a drag.
+   Result mChangeHighlight { 0 };
+
 };
+
+using UIHandlePtr = std::shared_ptr<UIHandle>;
+
+// A frequent convenience for defining a hit test.
+// Construct a NEW handle as if hit the first time; then either keep it, or
+// use it to overwrite the state of a previously constructed handle that has not
+// yet been released.
+template<typename Subclass>
+std::shared_ptr<Subclass> AssignUIHandlePtr
+( std::weak_ptr<Subclass> &holder, const std::shared_ptr<Subclass> &pNew )
+{
+   // Either assign to a null weak_ptr, or else rewrite what the weak_ptr
+   // points at.  Thus a handle already pointed at changes its state but not its
+   // identity.  This may matter for the framework that holds the strong
+   // pointers.
+   auto ptr = holder.lock();
+   if (!ptr) {
+      holder = pNew;
+      return pNew;
+   }
+   else {
+      auto code = Subclass::NeedChangeHighlight( *ptr, *pNew );
+      *ptr = std::move(*pNew);
+      ptr->SetChangeHighlight( code );
+      return ptr;
+   }
+}
 
 #endif

@@ -11,13 +11,21 @@ Paul Licameli
 #ifndef __AUDACITY_TRACK_PANEL_CELL__
 #define __AUDACITY_TRACK_PANEL_CELL__
 
+#include "MemoryX.h"
+
 class AudacityProject;
-struct HitTestResult;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
 class ViewInfo;
 class wxKeyEvent;
 class wxPoint;
 class wxRect;
+class wxWindow;
+
+class UIHandle;
+using UIHandlePtr = std::shared_ptr<UIHandle>;
+
+#include <vector>
 
 // Abstract base class defining TrackPanel's access to specialist classes that
 // implement drawing and user interactions
@@ -26,11 +34,13 @@ class AUDACITY_DLL_API TrackPanelCell /* not final */
 public:
    virtual ~TrackPanelCell () = 0;
 
-   // Indicate a status bar message, cursor, and click-drag-release handler
-   // appropriate to the mouse position and modifier keys.
-   // TrackPanel is not responsible for memory management of the handler.
-   virtual HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+   // Return pointers to objects that can be queried for a status
+   // bar message and cursor appropriate to the point, and that dispatch
+   // mouse button events.
+   // The button-down state passed to the function is as it will be at click
+   // time -- not necessarily as it is now.
+   virtual std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) = 0;
 
    // Return value is a bitwise OR of RefreshCode values

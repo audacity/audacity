@@ -44,6 +44,9 @@ class NoteTrack;
 class AudacityProject;
 class ZoomInfo;
 
+class SelectHandle;
+class TimeShiftHandle;
+
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 using WaveTrackArray = std::vector < WaveTrack* > ;
 
@@ -133,15 +136,15 @@ class AUDACITY_DLL_API Track /* not final */
    // Cause certain overriding tool modes (Zoom; future ones?) to behave
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &, const AudacityProject *pProject)
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &, const AudacityProject *pProject)
       final;
 
  public:
 
    // Rather override this for subclasses:
-   virtual HitTestResult DetailedHitTest
-      (const TrackPanelMouseEvent &,
+   virtual std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       = 0;
 
@@ -318,6 +321,9 @@ protected:
    std::shared_ptr<TrackControls> mpControls;
    std::shared_ptr<TrackVRulerControls> mpVRulerContols;
    std::shared_ptr<TrackPanelResizerCell> mpResizer;
+
+   std::weak_ptr<SelectHandle> mSelectHandle;
+   std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
 };
 
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track

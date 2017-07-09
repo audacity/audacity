@@ -16,25 +16,29 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../SelectedRegion.h"
 #include <wx/gdicmn.h>
 
-class wxMouseEvent;
-struct HitTestResult;
+class wxMouseState;
 class LabelTrack;
 class SelectionStateChanger;
 
 class LabelTextHandle final : public LabelDefaultClickHandle
 {
-   LabelTextHandle();
    LabelTextHandle(const LabelTextHandle&) = delete;
-   LabelTextHandle &operator=(const LabelTextHandle&) = delete;
-   static LabelTextHandle& Instance();
 
    static HitTestPreview HitPreview();
 
 public:
-   static HitTestResult HitTest(
-      const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<LabelTextHandle> &holder,
+       const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT);
 
+   LabelTextHandle &operator=(LabelTextHandle&&) = default;
+
+   explicit LabelTextHandle
+      ( const std::shared_ptr<LabelTrack> &pLT, int labelNum );
    virtual ~LabelTextHandle();
+
+   std::shared_ptr<LabelTrack> GetTrack() const { return mpLT.lock(); }
+   int GetLabelNum() const { return mLabelNum; }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -43,7 +47,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -54,6 +58,7 @@ public:
 
 private:
    std::weak_ptr<LabelTrack> mpLT {};
+   int mLabelNum{ -1 };
    int mLabelTrackStartXPos { -1 };
    int mLabelTrackStartYPos { -1 };
    SelectedRegion mSelectedRegion{};

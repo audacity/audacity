@@ -28,16 +28,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrack.h"
 #endif
 
-TrackPanelResizeHandle::TrackPanelResizeHandle()
-{
-}
-
-TrackPanelResizeHandle &TrackPanelResizeHandle::Instance()
-{
-   static TrackPanelResizeHandle instance;
-   return instance;
-}
-
 HitTestPreview TrackPanelResizeHandle::HitPreview(bool bLinked)
 {
    static wxCursor resizeCursor{ wxCURSOR_SIZENS };
@@ -69,30 +59,14 @@ TrackPanelResizeHandle::~TrackPanelResizeHandle()
 UIHandle::Result TrackPanelResizeHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   const wxMouseEvent &event = evt.event;
-   const auto pCell =
-      static_cast<CommonTrackPanelCell*>(evt.pCell.get());
-   auto track = pCell->FindTrack().get();
-   if (track && dynamic_cast< TrackControls * >( pCell )) {
-      // Clicked under a label;
-      // if stereo, replace left channel with the right:
-      if (track && track->GetLinked())
-         track = track->GetLink();
-   }
-   if (!track)
-      return RefreshCode::Cancelled;
+   return RefreshCode::RefreshNone;
+}
 
-   mpTrack = Track::Pointer( track );
-
-   ///  ButtonDown means they just clicked and haven't released yet.
-   ///  We use this opportunity to save which track they clicked on,
-   ///  and the initial height of the track, so as they drag we can
-   ///  update the track size.
-
-   mMouseClickY = event.m_y;
-
-   TrackList *const tracks = pProject->GetTracks();
-
+TrackPanelResizeHandle::TrackPanelResizeHandle
+( const std::shared_ptr<Track> &track, int y, const AudacityProject *pProject )
+   : mpTrack{ track }
+   , mMouseClickY( y )
+{
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    if (MONO_WAVE_PAN(track)){
       //STM:  Determine whether we should rescale one or two tracks
@@ -116,11 +90,12 @@ UIHandle::Result TrackPanelResizeHandle::Click
    else
 #endif
    {
-      Track *prev = tracks->GetPrev(track);
-      Track *next = tracks->GetNext(track);
+      auto tracks = pProject->GetTracks();
+      Track *prev = tracks->GetPrev(track.get());
+      Track *next = tracks->GetNext(track.get());
 
       //STM:  Determine whether we should rescale one or two tracks
-      if (prev && prev->GetLink() == track) {
+      if (prev && prev->GetLink() == track.get()) {
          // mpTrack is the lower track
          mInitialTrackHeight = track->GetHeight();
          mInitialActualHeight = track->GetActualHeight();
@@ -146,8 +121,6 @@ UIHandle::Result TrackPanelResizeHandle::Click
          mMode = IsResizing;
       }
    }
-
-   return RefreshCode::RefreshNone;
 }
 
 UIHandle::Result TrackPanelResizeHandle::Drag
@@ -317,7 +290,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
 }
 
 HitTestPreview TrackPanelResizeHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return HitPreview(mMode == IsResizingBetweenLinkedTracks);
 }
@@ -382,17 +355,4 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    }
 
    return RefreshCode::RefreshAll;
-}
-
-TrackPanelResizerCell::TrackPanelResizerCell( std::shared_ptr<Track> pTrack )
-   : mpTrack{ pTrack }
-{}
-
-HitTestResult TrackPanelResizerCell::HitTest
-(const TrackPanelMouseEvent &event, const AudacityProject *pProject)
-{
-   return {
-      TrackPanelResizeHandle::HitPreview( mBetweenTracks ),
-      &TrackPanelResizeHandle::Instance()
-   };
 }

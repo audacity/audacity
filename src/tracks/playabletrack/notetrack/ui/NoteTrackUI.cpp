@@ -22,18 +22,21 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
 
-HitTestResult NoteTrack::DetailedHitTest
-(const TrackPanelMouseEvent &event,
+std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
+(const TrackPanelMouseState &state,
  const AudacityProject *pProject, int, bool )
 {
    // Eligible for stretch?
-   HitTestResult result;
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
 #ifdef USE_MIDI
-   StretchHandle::StretchState state;
-   result = StretchHandle::HitTest( event, pProject, Pointer<NoteTrack>(this), state );
+   result = StretchHandle::HitTest(
+      mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );
+   if (result)
+      results.push_back(result);
 #endif
 
-   return result;
+   return results;
 }
 
 std::shared_ptr<TrackControls> NoteTrack::GetControls()

@@ -21,19 +21,14 @@
 #include "../../../../UndoManager.h"
 #include "../../../../NoteTrack.h"
 
-VelocitySliderHandle::VelocitySliderHandle()
-: SliderHandle()
-{
-}
+VelocitySliderHandle::VelocitySliderHandle
+( SliderFn sliderFn, const wxRect &rect,
+  const std::shared_ptr<Track> &pTrack )
+   : SliderHandle{ sliderFn, rect, pTrack }
+{}
 
 VelocitySliderHandle::~VelocitySliderHandle()
 {
-}
-
-VelocitySliderHandle &VelocitySliderHandle::Instance()
-{
-   static VelocitySliderHandle instance;
-   return instance;
 }
 
 std::shared_ptr<NoteTrack> VelocitySliderHandle::GetNoteTrack()
@@ -68,28 +63,30 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
 
 
 
-HitTestResult VelocitySliderHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack)
+UIHandlePtr VelocitySliderHandle::HitTest
+(std::weak_ptr<VelocitySliderHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const std::shared_ptr<Track> &pTrack)
 {
-   if (!event.Button(wxMOUSE_BTN_LEFT))
+   if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
 
    wxRect sliderRect;
    TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
-   if (sliderRect.Contains(event.m_x, event.m_y)) {
-      Instance().mSliderFn =
+   if (sliderRect.Contains(state.m_x, state.m_y)) {
+      auto sliderFn =
       []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return TrackInfo::VelocitySlider
             (sliderRect, static_cast<NoteTrack*>( pTrack ), true,
              const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
-      Instance().mRect = sliderRect;
-      Instance().mpTrack = pTrack;
+      auto result = std::make_shared<VelocitySliderHandle>(
+         sliderFn, sliderRect, pTrack );
+      result = AssignUIHandlePtr(holder, result);
 
-      return { HitPreview(), &Instance() };
+      return result;
    }
    else
       return {};

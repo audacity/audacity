@@ -16,18 +16,15 @@ Paul Licameli
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 
-SliderHandle::SliderHandle()
-{
-}
+SliderHandle::SliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : mSliderFn{ sliderFn }
+   , mRect{ rect }
+   , mpTrack{ pTrack }
+{}
 
 SliderHandle::~SliderHandle()
 {
-}
-
-HitTestPreview SliderHandle::HitPreview()
-{
-   // No special message or cursor
-   return {};
 }
 
 UIHandle::Result SliderHandle::Click
@@ -64,7 +61,7 @@ UIHandle::Result SliderHandle::Drag
 }
 
 HitTestPreview SliderHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    // No special message or cursor
    return {};

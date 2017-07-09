@@ -15,19 +15,20 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../MemoryX.h"
 
 class wxMouseEvent;
-struct HitTestResult;
 class Track;
 
 class TrackSelectHandle final : public UIHandle
 {
-   TrackSelectHandle();
    TrackSelectHandle(const TrackSelectHandle&) = delete;
-   TrackSelectHandle &operator=(const TrackSelectHandle&) = delete;
-   static TrackSelectHandle& Instance();
-   static HitTestPreview HitPreview(unsigned trackCount);
 
 public:
-   static HitTestResult HitAnywhere(unsigned trackCount);
+   explicit TrackSelectHandle( const std::shared_ptr<Track> &pTrack );
+
+   TrackSelectHandle &operator=(const TrackSelectHandle&) = default;
+
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<TrackSelectHandle> &holder,
+       const std::shared_ptr<Track> &pTrack);
 
    virtual ~TrackSelectHandle();
 
@@ -38,7 +39,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

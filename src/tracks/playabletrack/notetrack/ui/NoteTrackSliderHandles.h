@@ -18,19 +18,22 @@
 #include "../../../ui/SliderHandle.h"
 
 class NoteTrack;
-
-struct HitTestResult;
+class wxMouseState;
 
 class VelocitySliderHandle final : public SliderHandle
 {
    VelocitySliderHandle(const VelocitySliderHandle&) = delete;
-   VelocitySliderHandle &operator=(const VelocitySliderHandle&) = delete;
-
-   VelocitySliderHandle();
-   virtual ~VelocitySliderHandle();
-   static VelocitySliderHandle& Instance();
 
    std::shared_ptr<NoteTrack> GetNoteTrack();
+
+public:
+   explicit VelocitySliderHandle
+      ( SliderFn sliderFn, const wxRect &rect,
+        const std::shared_ptr<Track> &pTrack );
+
+   VelocitySliderHandle &operator=(const VelocitySliderHandle&) = default;
+
+   virtual ~VelocitySliderHandle();
 
 protected:
    float GetValue() override;
@@ -42,9 +45,10 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
-   (const wxMouseEvent &event, const wxRect &rect,
-    const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<VelocitySliderHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

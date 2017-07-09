@@ -18,6 +18,8 @@
 
 #include "Experimental.h"
 
+#include "HitTestResult.h"
+
 #include "SelectedRegion.h"
 
 #include "widgets/OverlayPanel.h"
@@ -46,6 +48,7 @@ class AudacityProject;
 class TrackPanelAx;
 class TrackPanelCellIterator;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
 
 class ViewInfo;
 
@@ -53,6 +56,7 @@ class NoteTrack;
 class WaveTrack;
 class WaveClip;
 class UIHandle;
+using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
@@ -310,9 +314,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    void Uncapture( wxMouseEvent *pEvent = nullptr );
    void CancelDragging();
    bool HandleEscapeKey(bool down);
-   void HandleAltKey(bool down);
-   void HandleShiftKey(bool down);
-   void HandleControlKey(bool down);
+   void UpdateMouseState(const wxMouseState &state);
+   void HandleModifierKey();
    void HandlePageUpKey();
    void HandlePageDownKey();
    AudacityProject * GetProject() const;
@@ -329,7 +332,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
 
-   void HandleCursorForLastMouseEvent();
+   void HandleCursorForLastMouseState();
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -372,8 +375,8 @@ protected:
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
-   void HandleCursor( wxMouseEvent *pEvent );
-   void HandleCursor( const TrackPanelMouseEvent &tpmEvent );
+   void HandleMotion( wxMouseState *pState );
+   void HandleMotion( const TrackPanelMouseState &tpmState );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
@@ -484,7 +487,7 @@ protected:
 
    bool mRedrawAfterStop;
 
-   wxMouseEvent mLastMouseEvent;
+   wxMouseState mLastMouseState;
 
    int mMouseMostRecentX;
    int mMouseMostRecentY;
@@ -527,9 +530,28 @@ protected:
    wxSize vrulerSize;
 
  protected:
+   std::weak_ptr<TrackPanelCell> mLastCell;
+   UIHandlePtr mLastHitTest;
+   unsigned mMouseOverUpdateFlags{};
+
+ public:
+   UIHandlePtr Target()
+   {
+      return mLastHitTest;
+   }
+
+ protected:
+   void ClearTargets()
+   {
+      // Forget the rotation of hit test candidates when the mouse moves from
+      // cell to cell or outside of the TrackPanel entirely.
+      mLastCell.reset();
+      mLastHitTest = {};
+      mMouseOverUpdateFlags = 0;
+   }
+
    std::weak_ptr<Track> mpClickedTrack;
-   // TrackPanel is not responsible for memory management:
-   UIHandle *mUIHandle {};
+   UIHandlePtr mUIHandle;
 
    std::shared_ptr<TrackPanelCell> mpBackground;
 

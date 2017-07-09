@@ -251,6 +251,8 @@ audacity_SOURCES = \
 	TrackPanelMouseEvent.h \
 	TrackPanelResizeHandle.cpp \
 	TrackPanelResizeHandle.h \
+	TrackPanelResizerCell.cpp \
+	TrackPanelResizerCell.h \
 	TranslatableStringArray.h \
 	UIHandle.h \
 	UIHandle.cpp \
@@ -562,6 +564,8 @@ audacity_SOURCES = \
 	tracks/labeltrack/ui/LabelTrackUI.cpp \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.cpp \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp \
@@ -569,6 +573,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.h \
 	tracks/playabletrack/notetrack/ui/StretchHandle.cpp \
 	tracks/playabletrack/notetrack/ui/StretchHandle.h \
 	tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp \
@@ -583,6 +589,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp \
 	tracks/timetrack/ui/TimeTrackControls.cpp \
 	tracks/timetrack/ui/TimeTrackControls.h \

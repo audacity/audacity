@@ -28,6 +28,10 @@ class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
 
+class CutlineHandle;
+class SampleHandle;
+class EnvelopeHandle;
+
 //
 // Tolerance for merging wave tracks (in seconds)
 //
@@ -103,8 +107,8 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    virtual ~WaveTrack();
 
-   HitTestResult DetailedHitTest
-      (const TrackPanelMouseEvent &event,
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
@@ -635,6 +639,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
+
+   std::weak_ptr<CutlineHandle> mCutlineHandle;
+   std::weak_ptr<SampleHandle> mSampleHandle;
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 
 protected:
    std::shared_ptr<TrackControls> GetControls() override;

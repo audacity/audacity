@@ -22,10 +22,13 @@ class Track;
 class ButtonHandle /* not final */ : public UIHandle
 {
    ButtonHandle(const ButtonHandle&) = delete;
-   ButtonHandle &operator=(const ButtonHandle&) = delete;
 
 protected:
-   explicit ButtonHandle(int dragCode);
+   explicit ButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect, int dragCode );
+
+   ButtonHandle &operator=(const ButtonHandle&) = default;
+
    virtual ~ButtonHandle();
 
    // This new abstract virtual simplifies the duties of further subclasses.
@@ -35,9 +38,6 @@ protected:
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent) = 0;
 
-   // For derived class to define hit tests
-   static HitTestPreview HitPreview();
-
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
@@ -45,7 +45,7 @@ protected:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -54,9 +54,9 @@ protected:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   wxRect mRect {};
    std::weak_ptr<Track> mpTrack;
-   const int mDragCode;
+   wxRect mRect;
+   int mDragCode;
 };
 
 #endif

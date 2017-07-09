@@ -15,21 +15,43 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/gdicmn.h>
 #include "../../../MemoryX.h"
 
-class wxMouseEvent;
-struct HitTestResult;
+class wxMouseState;
 class LabelTrack;
+
+/// mEdge:
+/// 0 if not over a glyph,
+/// else a bitwise or of :
+/// 1 if over the left-hand glyph,
+/// 2 if over the right-hand glyph on a label,
+/// 4 if over center.
+///
+///   mMouseLabelLeft - index of any left label hit
+///   mMouseLabelRight - index of any right label hit
+///
+struct LabelTrackHit {
+   int mEdge{};
+   int mMouseOverLabelLeft{ -1 };    /// Keeps track of which left label the mouse is currently over.
+   int mMouseOverLabelRight{ -1 };   /// Keeps track of which right label the mouse is currently over.
+   bool mbIsMoving {};
+   bool mIsAdjustingLabel {};
+};
 
 class LabelGlyphHandle final : public LabelDefaultClickHandle
 {
-   LabelGlyphHandle();
    LabelGlyphHandle(const LabelGlyphHandle&) = delete;
-   LabelGlyphHandle &operator=(const LabelGlyphHandle&) = delete;
-   static LabelGlyphHandle& Instance();
-   static HitTestPreview HitPreview(bool hitCenter, unsigned refreshResult);
+   static HitTestPreview HitPreview(bool hitCenter);
 
 public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT);
+   explicit LabelGlyphHandle
+      (const std::shared_ptr<LabelTrack> &pLT,
+       const wxRect &rect, const LabelTrackHit &hit);
+
+   LabelGlyphHandle &operator=(LabelGlyphHandle&&) = default;
+   
+   static UIHandlePtr HitTest
+      (std::weak_ptr<LabelGlyphHandle> &holder,
+       const wxMouseState &state,
+       const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect);
 
    virtual ~LabelGlyphHandle();
 
@@ -40,7 +62,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -50,6 +72,11 @@ public:
    Result Cancel(AudacityProject *pProject) override;
 
    bool StopsOnKeystroke() override { return true; }
+
+   LabelTrackHit mHit{};
+
+   static UIHandle::Result NeedChangeHighlight
+      (const LabelGlyphHandle &oldState, const LabelGlyphHandle &newState);
 
 private:
    std::shared_ptr<LabelTrack> mpLT {};

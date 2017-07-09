@@ -32,12 +32,10 @@ std::shared_ptr<Track> TrackVRulerControls::FindTrack()
    return mwTrack.lock();
 }
 
-HitTestResult TrackVRulerControls::HitTest
-   (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+std::vector<UIHandlePtr> TrackVRulerControls::HitTest
+(const TrackPanelMouseState &, const AudacityProject *)
 {
-   // Use a space for the tip, otherwise we get the default message.
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return { { _(" "), &arrowCursor }, nullptr };
+   return std::vector<UIHandlePtr>{};
 }
 
 void TrackVRulerControls::DrawZooming

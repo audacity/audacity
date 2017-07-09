@@ -2,38 +2,41 @@
 
 Audacity: A Digital Audio Editor
 
-ZoomHandle.h
+NoteTrackVZoomHandle.h
 
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ZOOM_HANDLE__
-#define __AUDACITY_ZOOM_HANDLE__
-
-#include "../../UIHandle.h"
+#ifndef __AUDACITY_NOTE_TRACK_VZOOM_HANDLE__
+#define __AUDACITY_NOTE_TRACK_VZOOM_HANDLE__
 
 class wxMouseState;
+class NoteTrack;
+
+#include "../../../../MemoryX.h"
+#include "../../../../UIHandle.h"
 #include <wx/gdicmn.h>
 
-// This handle class, unlike most, doesn't associate with any particular cell.
-class ZoomHandle final : public UIHandle
+class NoteTrackVZoomHandle : public UIHandle
 {
-   ZoomHandle(const ZoomHandle&) = delete;
-   static HitTestPreview HitPreview
-      (const wxMouseState &state, const AudacityProject *pProject);
+   NoteTrackVZoomHandle(const NoteTrackVZoomHandle&);
+   static HitTestPreview HitPreview(const wxMouseState &state);
 
 public:
-   ZoomHandle();
+   explicit NoteTrackVZoomHandle
+      (const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect, int y);
 
-   ZoomHandle &operator=(const ZoomHandle&) = default;
+   NoteTrackVZoomHandle &operator=(const NoteTrackVZoomHandle&) = default;
 
-   static UIHandlePtr HitAnywhere
-      (std::weak_ptr<ZoomHandle> &holder);
    static UIHandlePtr HitTest
-      (std::weak_ptr<ZoomHandle> &holder, const wxMouseState &state);
+      (std::weak_ptr<NoteTrackVZoomHandle> &holder,
+       const wxMouseState &state,
+       const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect);
 
-   virtual ~ZoomHandle();
+   virtual ~NoteTrackVZoomHandle();
+
+   std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -57,10 +60,10 @@ public:
       override;
 
 private:
-   bool IsDragZooming() const;
+   std::weak_ptr<NoteTrack> mpTrack;
 
-   int mZoomStart{}, mZoomEnd{};
-   wxRect mRect{};
+   int mZoomStart, mZoomEnd;
+   wxRect mRect;
 };
 
 #endif

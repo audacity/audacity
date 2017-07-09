@@ -11,25 +11,28 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 #define __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 
-#include "tracks/ui/CommonTrackPanelCell.h"
 #include "MemoryX.h"
 #include "UIHandle.h"
 
-struct HitTestResult;
 class Track;
 class TrackPanelCellIterator;
 
 class TrackPanelResizeHandle final : public UIHandle
 {
-   TrackPanelResizeHandle();
    TrackPanelResizeHandle(const TrackPanelResizeHandle&) = delete;
-   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = delete;
 
 public:
-   static TrackPanelResizeHandle& Instance();
+   explicit TrackPanelResizeHandle
+      ( const std::shared_ptr<Track> &pTrack, int y,
+        const AudacityProject *pProject );
+
+   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = default;
+
    static HitTestPreview HitPreview(bool bLinked);
 
    virtual ~TrackPanelResizeHandle();
+
+   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -38,7 +41,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event,  const AudacityProject *pProject)
+      (const TrackPanelMouseState &state,  const AudacityProject *pProject)
       override;
 
    Result Release
@@ -64,26 +67,6 @@ private:
    int mInitialUpperActualHeight{};
 
    int mMouseClickY{};
-};
-
-class TrackPanelResizerCell : public CommonTrackPanelCell
-{
-   TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
-   TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
-public:
-
-   explicit
-   TrackPanelResizerCell( std::shared_ptr<Track> pTrack );
-
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
-
-   std::shared_ptr<Track> FindTrack() override { return mpTrack.lock(); };
-private:
-   friend class TrackPanelCellIterator;
-   std::weak_ptr<Track> mpTrack;
-   bool mBetweenTracks {};
 };
 
 #endif

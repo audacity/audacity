@@ -34,18 +34,12 @@ static const int SMOOTHING_BRUSH_RADIUS = 5;
 static const double SMOOTHING_PROPORTION_MAX = 0.7;
 static const double SMOOTHING_PROPORTION_MIN = 0.0;
 
-SampleHandle::SampleHandle()
-{
-}
-
-SampleHandle &SampleHandle::Instance()
-{
-   static SampleHandle instance;
-   return instance;
-}
+SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
+   : mClickedTrack{ pTrack }
+{}
 
 HitTestPreview SampleHandle::HitPreview
-(const wxMouseEvent &event, const AudacityProject *pProject, bool unsafe)
+(const wxMouseState &state, const AudacityProject *pProject, bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
@@ -57,22 +51,19 @@ HitTestPreview SampleHandle::HitPreview
       ttb->GetMessageForTool(drawTool),
       (unsafe
        ? &*disabledCursor
-       : (event.AltDown()
+       : (state.AltDown()
           ? &smoothCursor
           : &*pencilCursor))
    };
 }
 
-HitTestResult SampleHandle::HitAnywhere
-(const wxMouseEvent &event, const AudacityProject *pProject)
+UIHandlePtr SampleHandle::HitAnywhere
+(std::weak_ptr<SampleHandle> &holder,
+ const wxMouseState &state, const std::shared_ptr<WaveTrack> &pTrack)
 {
-   const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(event, pProject, unsafe),
-      (unsafe
-      ? NULL
-      : &Instance())
-   };
+   auto result = std::make_shared<SampleHandle>( pTrack );
+   result = AssignUIHandlePtr(holder, result);
+   return result;
 }
 
 namespace {
@@ -104,16 +95,12 @@ namespace {
    }
 }
 
-HitTestResult SampleHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
+UIHandlePtr SampleHandle::HitTest
+(std::weak_ptr<SampleHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
  const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-
-   /// method that tells us if the mouse event landed on an
-   /// editable sample
-   if (pTrack->GetKind() != Track::Wave)
-      return {};
 
    WaveTrack *wavetrack = pTrack.get();
 
@@ -122,7 +109,7 @@ HitTestResult SampleHandle::HitTest
       return {};  // Not a wave, so return.
 
    const double tt =
-      adjustTime(wavetrack, viewInfo.PositionToTime(event.m_x, rect.x));
+      adjustTime(wavetrack, viewInfo.PositionToTime(state.m_x, rect.x));
    if (!SampleResolutionTest(viewInfo, wavetrack, tt, rect.width))
       return {};
 
@@ -141,7 +128,7 @@ HitTestResult SampleHandle::HitTest
    wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
 
    double envValue = 1.0;
-   Envelope* env = wavetrack->GetEnvelopeAtX(event.GetX());
+   Envelope* env = wavetrack->GetEnvelopeAtX(state.GetX());
    if (env)
       // Calculate sample as it would be rendered, so quantize time
       envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
@@ -153,14 +140,14 @@ HitTestResult SampleHandle::HitTest
       wavetrack->GetWaveformSettings().dBRange, false) + rect.y;
 
    // Get y position of mouse (in pixels)
-   int yMouse = event.m_y;
+   int yMouse = state.m_y;
 
    // Perhaps yTolerance should be put into preferences?
    const int yTolerance = 10; // More tolerance on samples than on envelope.
    if (abs(yValue - yMouse) >= yTolerance)
       return {};
 
-   return HitAnywhere(event, pProject);
+   return HitAnywhere(holder, state, pTrack);
 }
 
 SampleHandle::~SampleHandle()
@@ -206,23 +193,22 @@ namespace {
 UIHandle::Result SampleHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-   const auto pTrack = std::static_pointer_cast<WaveTrack>(evt.pCell);
-
-   using namespace RefreshCode;
+   const auto pTrack = mClickedTrack.get();
 
    /// Someone has just clicked the mouse.  What do we do?
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
    if (!IsSampleEditingPossible(
-         event, rect, viewInfo, pTrack.get(), rect.width))
+         event, rect, viewInfo, pTrack, rect.width))
       return Cancelled;
 
    /// We're in a track view and zoomed enough to see the samples.
-   mClickedTrack = pTrack;
    mRect = rect;
 
    //If we are still around, we are drawing in earnest.  Set some member data structures up:
@@ -417,9 +403,10 @@ UIHandle::Result SampleHandle::Drag
 }
 
 HitTestPreview SampleHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   return HitPreview(evt.event, pProject, false);
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview(st.state, pProject, unsafe);
 }
 
 UIHandle::Result SampleHandle::Release

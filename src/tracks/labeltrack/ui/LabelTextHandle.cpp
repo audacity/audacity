@@ -18,15 +18,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ViewInfo.h"
 #include "../../../images/Cursors.h"
 
-LabelTextHandle::LabelTextHandle()
-{
-}
-
-LabelTextHandle &LabelTextHandle::Instance()
-{
-   static LabelTextHandle instance;
-   return instance;
-}
+LabelTextHandle::LabelTextHandle
+( const std::shared_ptr<LabelTrack> &pLT, int labelNum )
+   : mpLT{ pLT }
+   , mLabelNum{ labelNum }
+{}
 
 HitTestPreview LabelTextHandle::HitPreview()
 {
@@ -38,14 +34,18 @@ HitTestPreview LabelTextHandle::HitPreview()
    };
 }
 
-HitTestResult LabelTextHandle::HitTest
-(const wxMouseEvent &event, const std::shared_ptr<LabelTrack> &pLT)
+UIHandlePtr LabelTextHandle::HitTest
+(std::weak_ptr<LabelTextHandle> &holder,
+ const wxMouseState &state, const std::shared_ptr<LabelTrack> &pLT)
 {
    // If Control is down, let the select handle be hit instead
-   if (!event.ControlDown() &&
-       pLT->OverATextBox(event.m_x, event.m_y) >= 0)
-      // There was no cursor change or status message for mousing over a label text box
-      return { HitPreview(), &Instance() };
+   int labelNum;
+   if (!state.ControlDown() &&
+       (labelNum = pLT->OverATextBox(state.m_x, state.m_y) ) >= 0) {
+      auto result = std::make_shared<LabelTextHandle>( pLT, labelNum );
+      result = AssignUIHandlePtr(holder, result);
+      return result;
+   }
 
    return {};
 }
@@ -57,6 +57,10 @@ LabelTextHandle::~LabelTextHandle()
 UIHandle::Result LabelTextHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   auto pLT = mpLT.lock();
+   if (!pLT)
+      return RefreshCode::Cancelled;
+
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
    auto &selectionState = pProject->GetSelectionState();
@@ -64,12 +68,9 @@ UIHandle::Result LabelTextHandle::Click
    mChanger =
       std::make_unique< SelectionStateChanger >( selectionState, *tracks );
 
-   const auto pCell = evt.pCell;
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   auto pLT = std::static_pointer_cast<LabelTrack>(pCell);
-   mpLT = pLT;
    mSelectedRegion = viewInfo.selectedRegion;
    pLT->HandleTextClick( event, evt.rect, viewInfo, &viewInfo.selectedRegion );
    wxASSERT(pLT->IsSelected());
@@ -150,7 +151,7 @@ UIHandle::Result LabelTextHandle::Drag
 }
 
 HitTestPreview LabelTextHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    return HitPreview();
 }

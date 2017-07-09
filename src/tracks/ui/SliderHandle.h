@@ -22,10 +22,17 @@ class Track;
 class SliderHandle /* not final */ : public UIHandle
 {
    SliderHandle(const SliderHandle&) = delete;
-   SliderHandle &operator=(const SliderHandle&) = delete;
+
+public:
+   using SliderFn = LWSlider *(*)( AudacityProject*, const wxRect&, Track* );
+
+   explicit SliderHandle
+      ( SliderFn sliderFn, const wxRect &rect,
+        const std::shared_ptr<Track> &pTrack );
+
+   SliderHandle &operator=(const SliderHandle&) = default;
 
 protected:
-   SliderHandle();
    virtual ~SliderHandle();
 
    // These new abstract virtuals simplify the duties of further subclasses.
@@ -37,9 +44,6 @@ protected:
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject) = 0;
 
-   // For derived classes to define hit tests
-   static HitTestPreview HitPreview();
-
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
@@ -47,7 +51,7 @@ protected:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -59,7 +63,6 @@ protected:
    // Derived class is expected to set these two before Click():
    std::weak_ptr<Track> mpTrack;
    wxRect mRect{};
-   using SliderFn = LWSlider *(*)( AudacityProject*, const wxRect&, Track* );
    SliderFn mSliderFn;
    LWSlider *GetSlider( AudacityProject *pProject );
 
