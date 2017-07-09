@@ -197,9 +197,9 @@ void ControlToolBar::Populate()
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
 
-   bool bPreferAppend;
-   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
-   if( bPreferAppend )
+   bool bPreferNewTrack;
+   gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+   if( !bPreferNewTrack )
       MakeAlternateImages(*mRecord, 1, bmpRecordBelow, bmpRecordBelow,
          bmpRecordBelowDisabled);
    else
@@ -241,9 +241,9 @@ void ControlToolBar::RegenerateTooltips()
             // Without shift
             //commands.push_back(wxT("Record"));
             commands.push_back(wxT("Record1stChoice"));
-            {  bool bPreferAppend;
-               gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
-               if( bPreferAppend ){
+            {  bool bPreferNewTrack;
+               gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+               if( !bPreferNewTrack ){
                   commands.push_back(_("Record New Track"));
                } else {
                   commands.push_back(_("Append Record"));
@@ -922,9 +922,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
    bool shifted = mRecord->WasShiftDown();
 
-   bool bPreferAppend;
-   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
-   if( bPreferAppend )
+   bool bPreferNewTrack;
+   gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+   if( !bPreferNewTrack )
       shifted = !shifted;
 
    TrackList *trackList = p->GetTracks();

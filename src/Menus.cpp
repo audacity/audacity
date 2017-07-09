@@ -839,12 +839,12 @@ void AudacityProject::CreateMenusAndCommands()
       // The OnRecord2ndChoice function is: if normal record records beside,
       // it records below, if normal record records below, it records beside.
       // TODO: Do 'the right thing' with other options like TimerRecord.
-      bool bPreferAppend;
-      gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
+      bool bPreferNewTrack;
+      gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
       c->AddItem(  wxT("Record2ndChoice"), 
          // Our first choice is bound to R (by default) and gets the prime position.
          // We supply the name for the 'other one' here.  It should be bound to Shift+R 
-         bPreferAppend ? _("Record &New Track") : _("&Append Record"), 
+         bPreferNewTrack ? _("&Append Record") : _("Record &New Track"), 
          FN(OnRecord2ndChoice), 
          wxT("Shift+R")
       );

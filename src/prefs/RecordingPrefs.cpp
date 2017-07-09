@@ -160,9 +160,9 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Options"));
    {
-       S.TieCheckBox(_("Record &appends, instead of recording new track"),
-                    wxT("/GUI/PreferAppendRecord"),
-                    true);
+       S.TieCheckBox(_("Always record on a new track"),
+                    wxT("/GUI/PreferNewTrackRecord"),
+                    false);
    }
    S.EndStatic();
 
