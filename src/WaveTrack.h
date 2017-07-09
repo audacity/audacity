@@ -495,10 +495,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    // Remove the clip from the track and return a SMART pointer to it.
    // You assume responsibility for its memory!
-   movable_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
+   std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
    // Append a clip to the track
-   void AddClip(movable_ptr<WaveClip> &&clip); // Call using std::move
+   void AddClip(std::shared_ptr<WaveClip> &&clip); // Call using std::move
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.

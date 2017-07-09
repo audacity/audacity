@@ -119,9 +119,9 @@ public:
 class WaveClip;
 
 // Array of pointers that assume ownership
-using WaveClipHolder = movable_ptr< WaveClip >;
+using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
-using WaveClipConstHolders = std::vector < movable_ptr< const WaveClip > >;
+using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
 // Temporary arrays of mere pointers
 using WaveClipPointers = std::vector < WaveClip* >;

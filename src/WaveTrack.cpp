@@ -1020,7 +1020,7 @@ namespace
    }
 }
 
-movable_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
+std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 {
    // Be clear about who owns the clip!!
    auto it = FindClip(mClips, clip);
@@ -1033,7 +1033,7 @@ movable_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
       return {};
 }
 
-void WaveTrack::AddClip(movable_ptr<WaveClip> &&clip)
+void WaveTrack::AddClip(std::shared_ptr<WaveClip> &&clip)
 {
    // Uncomment the following line after we correct the problem of zero-length clips
    //if (CanInsertClip(clip))
