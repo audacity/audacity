@@ -38,7 +38,6 @@ struct LabelTrackHit {
 
 class LabelGlyphHandle final : public LabelDefaultClickHandle
 {
-   LabelGlyphHandle(const LabelGlyphHandle&) = delete;
    static HitTestPreview HitPreview(bool hitCenter);
 
 public:
@@ -46,7 +45,7 @@ public:
       (const std::shared_ptr<LabelTrack> &pLT,
        const wxRect &rect, const LabelTrackHit &hit);
 
-   LabelGlyphHandle &operator=(LabelGlyphHandle&&) = default;
+   LabelGlyphHandle &operator=(const LabelGlyphHandle&) = default;
    
    static UIHandlePtr HitTest
       (std::weak_ptr<LabelGlyphHandle> &holder,

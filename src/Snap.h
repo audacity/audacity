@@ -35,18 +35,13 @@ class TrackClip
 public:
    TrackClip(Track *t, WaveClip *c);
 
-#ifndef __AUDACITY_OLD_STD__
-   // TrackClip(TrackClip&&) = default; is not supported by vs2013/5 so explicit version needed
-   TrackClip(TrackClip&&);
-#endif
-
    ~TrackClip();
 
    Track *track;
    Track *origTrack;
    WaveTrack *dstTrack;
    WaveClip *clip;
-   movable_ptr<WaveClip> holder;
+   std::shared_ptr<WaveClip> holder;
 };
 
 class TrackClipArray : public std::vector < TrackClip > {};

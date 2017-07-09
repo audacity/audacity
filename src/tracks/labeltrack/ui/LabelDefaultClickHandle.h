@@ -21,13 +21,12 @@ class LabelTrack;
 // Adds some behavior to clicks.
 class LabelDefaultClickHandle /* not final */ : public UIHandle
 {
-   LabelDefaultClickHandle(const LabelDefaultClickHandle&) = delete;
-
 public:
    LabelDefaultClickHandle();
    virtual ~LabelDefaultClickHandle();
 
-   LabelDefaultClickHandle &operator=(LabelDefaultClickHandle&&) = default;
+   LabelDefaultClickHandle &operator=
+      (const LabelDefaultClickHandle&) = default;
    
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
