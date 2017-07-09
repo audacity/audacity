@@ -66,7 +66,7 @@ UIHandle::Result LabelTextHandle::Click
    auto &selectionState = pProject->GetSelectionState();
    TrackList *const tracks = pProject->GetTracks();
    mChanger =
-      std::make_unique< SelectionStateChanger >( selectionState, *tracks );
+      std::make_shared< SelectionStateChanger >( selectionState, *tracks );
 
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
@@ -167,7 +167,7 @@ UIHandle::Result LabelTextHandle::Release
 
    if (mChanger) {
       mChanger->Commit();
-      mChanger.release();
+      mChanger.reset();
    }
 
    const wxMouseEvent &event = evt.event;
@@ -187,7 +187,6 @@ UIHandle::Result LabelTextHandle::Cancel( AudacityProject *pProject )
    // Restore the selection states of tracks
    // Note that we are also relying on LabelDefaultClickHandle::Cancel
    // to restore the selection state of the labels in the tracks.
-   mChanger.release();
    ViewInfo &viewInfo = pProject->GetViewInfo();
    viewInfo.selectedRegion = mSelectedRegion;
    auto result = LabelDefaultClickHandle::Cancel( pProject );

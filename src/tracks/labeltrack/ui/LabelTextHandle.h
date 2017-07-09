@@ -60,7 +60,7 @@ private:
    int mLabelTrackStartXPos { -1 };
    int mLabelTrackStartYPos { -1 };
    SelectedRegion mSelectedRegion{};
-   std::unique_ptr<SelectionStateChanger> mChanger;
+   std::shared_ptr<SelectionStateChanger> mChanger;
 };
 
 #endif
