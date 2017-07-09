@@ -430,6 +430,23 @@ wxColour InvertOfColour( const wxColour & c )
    return wxColour( 255-c.Red(), 255-c.Green(), 255-c.Blue() );
 }
 
+// Fix up the cursor colour, if it is 'unacceptable'.
+// Unacceptable if it is too close to the background colour.
+wxColour CursorColour( )
+{
+   wxColour cCursor = theTheme.Colour( clrCursorPen );
+   wxColour cBack = theTheme.Colour( clrMedium );
+
+   int d = theTheme.ColourDistance( cCursor, cBack );
+
+   // Pen colour is fine, if there is plenty of contrast.
+   if( d  > 200 )
+      return clrCursorPen;
+
+   // otherwise return same colour as a selection.
+   return theTheme.Colour( clrSelected );
+}
+
 void AColor::Init()
 {
    if (inited)
@@ -471,8 +488,7 @@ void AColor::Init()
    theTheme.SetBrushColour( muteBrush[1],      clrMuteButtonVetoed);
    theTheme.SetBrushColour( soloBrush,         clrMuteButtonActive);
 
-   theTheme.SetPenColour(   cursorPen,         clrCursorPen);
-   cursorPen.SetColour( InvertOfColour( cursorPen.GetColour()) );
+   cursorPen.SetColour( CursorColour()  );
    theTheme.SetPenColour(   indicatorPen[0],   clrRecordingPen);
    theTheme.SetPenColour(   indicatorPen[1],   clrPlaybackPen);
    theTheme.SetBrushColour( indicatorBrush[0], clrRecordingBrush);
