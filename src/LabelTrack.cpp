@@ -773,13 +773,17 @@ namespace {
    }
 }
 
+#include "TrackPanelDrawingContext.h"
+
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelTrack::Draw(wxDC & dc, const wxRect & r,
-   const SelectedRegion &selectedRegion,
-   const ZoomInfo &zoomInfo) const
+void LabelTrack::Draw
+(TrackPanelDrawingContext &context, const wxRect & r,
+ const SelectedRegion &selectedRegion,
+ const ZoomInfo &zoomInfo) const
 {
+   auto &dc = context.dc;
    auto pHit = findHit();
 
    if(msFont.Ok())

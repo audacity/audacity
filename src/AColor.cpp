@@ -230,10 +230,13 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
    AColor::Line(dc, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
 }
 
-void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel)
+void AColor::Bevel2
+(wxDC & dc, bool up, const wxRect & r, bool bSel, bool bHighlight)
 {
    int index = 0;
-   if( bSel )
+   if ( bHighlight )
+      index = bmpHiliteButtonExpand;
+   else if( bSel )
       index = up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
    else
       index = up ? bmpUpButtonExpand : bmpDownButtonExpand;

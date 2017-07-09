@@ -21,8 +21,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h"
 #include <wx/textdlg.h>
 
-int TrackControls::gCaptureState;
-
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
    : mwTrack{ pTrack }
 {

@@ -90,7 +90,8 @@ class AUDACITY_DLL_API NoteTrack final
                               const TimeWarper &warper, double semitones);
 
    static void DrawLabelControls
-      ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect );
+      ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect,
+        int highlightedChannel = -1 );
    int FindChannel(const wxRect &rect, int mx, int my);
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 

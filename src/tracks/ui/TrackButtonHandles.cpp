@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 
 MinimizeButtonHandle::MinimizeButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-   : ButtonHandle{ pTrack, rect, TrackPanel::IsMinimizing }
+   : ButtonHandle{ pTrack, rect }
 {}
 
 MinimizeButtonHandle::~MinimizeButtonHandle()
@@ -69,7 +69,7 @@ UIHandlePtr MinimizeButtonHandle::HitTest
 
 CloseButtonHandle::CloseButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-   : ButtonHandle{ pTrack, rect, TrackPanel::IsClosing }
+   : ButtonHandle{ pTrack, rect }
 {}
 
 CloseButtonHandle::~CloseButtonHandle()
@@ -121,7 +121,7 @@ UIHandlePtr CloseButtonHandle::HitTest
 MenuButtonHandle::MenuButtonHandle
 ( const std::shared_ptr<TrackPanelCell> &pCell,
   const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-   : ButtonHandle{ pTrack, rect, TrackPanel::IsPopping }
+   : ButtonHandle{ pTrack, rect }
    , mpCell{ pCell }
 {}
 

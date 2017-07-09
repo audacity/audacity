@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 
 MuteButtonHandle::MuteButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-   : ButtonHandle{ pTrack, rect, TrackPanel::IsMuting }
+   : ButtonHandle{ pTrack, rect }
 {}
 
 MuteButtonHandle::~MuteButtonHandle()
@@ -62,7 +62,7 @@ UIHandlePtr MuteButtonHandle::HitTest
 
 SoloButtonHandle::SoloButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-   : ButtonHandle{ pTrack, rect, TrackPanel::IsSoloing }
+   : ButtonHandle{ pTrack, rect }
 {}
 
 SoloButtonHandle::~SoloButtonHandle()

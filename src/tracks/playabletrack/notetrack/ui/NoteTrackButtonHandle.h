@@ -42,6 +42,10 @@ public:
 
    int GetChannel() const { return mChannel; }
 
+   static UIHandle::Result NeedChangeHighlight
+      (const NoteTrackButtonHandle &oldState,
+       const NoteTrackButtonHandle &newState);
+
 protected:
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

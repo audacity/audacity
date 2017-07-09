@@ -21,7 +21,9 @@ SliderHandle::SliderHandle
    : mSliderFn{ sliderFn }
    , mRect{ rect }
    , mpTrack{ pTrack }
-{}
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
+}
 
 SliderHandle::~SliderHandle()
 {
@@ -44,8 +46,10 @@ UIHandle::Result SliderHandle::Click
       // Just did a modal dialog in OnMouseEvent
       // Do not start a drag
       return RefreshCell | Cancelled;
-   else
+   else {
+      mIsClicked = true;
       return RefreshCell;
+   }
 }
 
 UIHandle::Result SliderHandle::Drag

@@ -251,7 +251,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
 // Draws the midi channel toggle buttons within the given rect.
 // The rect should be evenly divisible by 4 on both axis.
 void NoteTrack::DrawLabelControls
-( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect )
+( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect, int highlightedChannel )
 {
    wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
    wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
@@ -273,7 +273,11 @@ void NoteTrack::DrawLabelControls
 
          bool visible = pTrack ? pTrack->IsVisibleChan(chanName - 1) : true;
          if (visible) {
-            AColor::MIDIChannel(&dc, chanName);
+            // highlightedChannel counts 0 based
+            if ( chanName == highlightedChannel + 1 )
+               AColor::LightMIDIChannel(&dc, chanName);
+            else
+               AColor::MIDIChannel(&dc, chanName);
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in
 // "up" position (original Audacity style) or in "down" position
@@ -299,7 +303,10 @@ void NoteTrack::DrawLabelControls
                          box.x, box.y + box.height - 1,
                          box.x + box.width - 1, box.y + box.height - 1);
          } else {
-            AColor::MIDIChannel(&dc, 0);
+            if ( chanName == highlightedChannel + 1 )
+               AColor::LightMIDIChannel(&dc, chanName);
+            else
+               AColor::MIDIChannel(&dc, 0);
             dc.DrawRectangle(box);
 #if CHANNEL_ON_IS_DOWN
             AColor::LightMIDIChannel(&dc, 0);

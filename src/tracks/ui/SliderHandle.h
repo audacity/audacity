@@ -32,6 +32,9 @@ public:
 
    SliderHandle &operator=(const SliderHandle&) = default;
 
+   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
+   bool IsClicked() const { return mIsClicked; }
+
 protected:
    virtual ~SliderHandle();
 
@@ -67,6 +70,8 @@ protected:
    LWSlider *GetSlider( AudacityProject *pProject );
 
    float mStartingValue {};
+
+   bool mIsClicked{};
 };
 
 #endif

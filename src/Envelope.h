@@ -73,6 +73,7 @@ private:
 };
 
 typedef std::vector<EnvPoint> EnvArray;
+struct TrackPanelDrawingContext;
 
 class Envelope final : public XMLTagHandler {
 public:
@@ -117,7 +118,9 @@ public:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
+   void DrawPoints(
+      TrackPanelDrawingContext &context,
+      const wxRect & r, const ZoomInfo &zoomInfo,
       bool dB, double dBRange,
       float zoomMin, float zoomMax, bool mirrored) const;
 

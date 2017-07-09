@@ -1066,11 +1066,9 @@ void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 
 struct TrackInfo::TCPLine {
    using DrawFunction = void (*)(
-      wxDC *dc,
+      TrackPanelDrawingContext &context,
       const wxRect &rect,
-      const Track *maybeNULL,
-      int pressed, // a value from MouseCaptureEnum; TODO: make it bool
-      bool captured
+      const Track *maybeNULL
    );
 
    unsigned items; // a bitwise OR of values of the enum above
@@ -1696,6 +1694,8 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
    DisplaySelection();
 }
 
+#include "TrackPanelDrawingContext.h"
+
 /// Draw the actual track areas.  We only draw the borders
 /// and the little buttons and menues and whatnot here, the
 /// actual contents of each track are drawn by the TrackArtist.
@@ -1718,26 +1718,28 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
 
+   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
+
    // The track artist actually draws the stuff inside each track
    auto first = GetProject()->GetFirstVisible();
-   mTrackArtist->DrawTracks(GetTracks(), first.get(),
-                            *dc, region, tracksRect, clip,
+   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
+                            region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
 
-   DrawEverythingElse(dc, region, clip);
+   DrawEverythingElse(context, region, clip);
 }
 
 /// Draws 'Everything else'.  In particular it draws:
 ///  - Drop shadow for tracks and vertical rulers.
 ///  - Zooming Indicators.
 ///  - Fills in space below the tracks.
-void TrackPanel::DrawEverythingElse(wxDC * dc,
+void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
                                     const wxRegion &region,
                                     const wxRect & clip)
 {
    // We draw everything else
-
+   auto dc = &context.dc;
    wxRect focusRect(-1, -1, 0, 0);
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
@@ -1787,7 +1789,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          if (mAx->IsFocused(t)) {
             focusRect = borderRect;
          }
-         DrawOutside(borderTrack, dc, borderRect);
+         DrawOutside(context, borderTrack, borderRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -1806,7 +1808,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          rect.y += kTopMargin;
          rect.width = GetVRulerWidth();
          rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(t, dc, rect);
+         mTrackArtist->DrawVRuler(context, t, rect);
       }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1819,7 +1821,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
             rect.y += kTopMargin;
             rect.width = GetVRulerWidth();
             rect.height -= (kTopMargin + kBottomMargin);
-            mTrackArtist->DrawVRuler(t, dc, rect);
+            mTrackArtist->DrawVRuler(context, t, rect);
          }
       }
 #endif
@@ -1856,20 +1858,21 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
 #include "tracks/ui/TrackControls.h"
 
 void TrackInfo::DrawItems
-( wxDC *dc, const wxRect &rect, const Track &track,
-  int mouseCapture, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track &track  )
 {
    const auto topLines = getTCPLines( track );
    const auto bottomLines = commonTrackTCPBottomLines;
    DrawItems
-      ( dc, rect, &track, topLines, bottomLines, mouseCapture, captured );
+      ( context, rect, &track, topLines, bottomLines );
 }
 
 void TrackInfo::DrawItems
-( wxDC *dc, const wxRect &rect, const Track *pTrack,
-  const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines,
-  int mouseCapture, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack,
+  const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines )
 {
+   auto dc = &context.dc;
    TrackInfo::SetTrackInfoFont(dc);
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
@@ -1882,7 +1885,7 @@ void TrackInfo::DrawItems
          };
          if ( !TrackInfo::HideTopItem( rect, itemRect ) &&
               line.drawFunction )
-            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+            line.drawFunction( context, itemRect, pTrack );
          yy += line.height + line.extraSpace;
       }
    }
@@ -1895,21 +1898,27 @@ void TrackInfo::DrawItems
                rect.x, rect.y + yy,
                rect.width, line.height
             };
-            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+            line.drawFunction( context, itemRect, pTrack );
          }
       }
    }
 }
 
+#include "tracks/ui/TrackButtonHandles.h"
 void TrackInfo::CloseTitleDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
    {
-      bool down = captured && (pressed == TrackPanel::IsClosing);
       wxRect bev = rect;
       GetCloseBoxHorizontalBounds( rect, bev );
-      AColor::Bevel2(*dc, !down, bev, selected );
+      auto target = dynamic_cast<CloseButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      AColor::Bevel2(*dc, !down, bev, selected, hit );
 
 #ifdef EXPERIMENTAL_THEMING
       wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -1935,14 +1944,17 @@ void TrackInfo::CloseTitleDrawFunction
    }
 
    {
+      wxRect bev = rect;
+      GetTitleBarHorizontalBounds( rect, bev );
+      auto target = dynamic_cast<MenuButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
       wxString titleStr =
          pTrack ? pTrack->GetName() : _("Name");
 
-      bool down = captured && (pressed == TrackPanel::IsPopping);
-      wxRect bev = rect;
-      GetTitleBarHorizontalBounds( rect, bev );
       //bev.Inflate(-1, -1);
-      AColor::Bevel2(*dc, !down, bev, selected);
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
 
       // Draw title text
       SetTrackInfoFont(dc);
@@ -1993,21 +2005,26 @@ void TrackInfo::CloseTitleDrawFunction
 }
 
 void TrackInfo::MinimizeSyncLockDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool syncLockSelected = pTrack ? pTrack->IsSyncLockSelected() : true;
    bool minimized = pTrack ? pTrack->GetMinimized() : false;
    {
-      bool down = captured && (pressed == TrackPanel::IsMinimizing);
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);
+      auto target = dynamic_cast<MinimizeButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
 
       // Clear background to get rid of previous arrow
       //AColor::MediumTrackInfo(dc, t->GetSelected());
       //dc->DrawRectangle(bev);
 
-      AColor::Bevel2(*dc, !down, bev, selected);
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
 
 #ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour(clrTrackPanelText);
@@ -2039,14 +2056,19 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
+#include "tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h"
 void TrackInfo::MidiControlsDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
+   auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
+   auto channel = target ? target->GetChannel() : -1;
+   auto &dc = context.dc;
    wxRect midiRect = rect;
    GetMidiControlsHorizontalBounds(rect, midiRect);
    NoteTrack::DrawLabelControls
-      ( static_cast<const NoteTrack *>(pTrack), *dc, midiRect );
+      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
 #endif // EXPERIMENTAL_MIDI_OUT
 }
 
@@ -2054,43 +2076,59 @@ template<typename TrackClass>
 void TrackInfo::SliderDrawFunction
 ( LWSlider *(*Selector)
     (const wxRect &sliderRect, const TrackClass *t, bool captured, wxWindow*),
-  wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured )
+  wxDC *dc, const wxRect &rect, const Track *pTrack,
+  bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const TrackClass*>( pTrack );
-   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, false);
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
 }
 
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h"
 void TrackInfo::PanSliderDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
+   auto dc = &context.dc;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured, hit);
 }
 
 void TrackInfo::GainSliderDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
+   auto dc = &context.dc;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
+#include "tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h"
 void TrackInfo::VelocitySliderDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
+   auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
    SliderDrawFunction<NoteTrack>
-      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured, hit);
 }
 #endif
 
 void TrackInfo::MuteOrSoloDrawFunction
-( wxDC *dc, const wxRect &bev, const Track *pTrack, int pressed, bool captured,
-  bool solo )
+( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, bool captured,
+  bool solo, bool hit )
 {
-   bool down = captured &&
-      (pressed == ( solo ? TrackPanel::IsSoloing : TrackPanel::IsMuting ));
    //bev.Inflate(-1, -1);
    bool selected = pTrack ? pTrack->GetSelected() : true;
    auto pt = dynamic_cast<const PlayableTrack *>(pTrack);
@@ -2129,7 +2167,7 @@ void TrackInfo::MuteOrSoloDrawFunction
       *dc,
       value == down,
       bev,
-      selected
+      selected, hit
    );
 
    SetTrackInfoFont(dc);
@@ -2137,25 +2175,40 @@ void TrackInfo::MuteOrSoloDrawFunction
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 }
 
+#include "tracks/playabletrack/ui/PlayableTrackButtonHandles.h"
 void TrackInfo::WideMuteDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    wxRect bev = rect;
    GetWideMuteSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+   auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   bool down = captured && bev.Contains( context.lastState.GetPosition());
+   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
 }
 
 void TrackInfo::WideSoloDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    wxRect bev = rect;
    GetWideMuteSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+   auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   bool down = captured && bev.Contains( context.lastState.GetPosition());
+   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
 }
 
 void TrackInfo::MuteAndSoloDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    bool bHasSoloButton = TrackPanel::HasSoloButton();
 
    wxRect bev = rect;
@@ -2163,13 +2216,25 @@ void TrackInfo::MuteAndSoloDrawFunction
       GetNarrowMuteHorizontalBounds( rect, bev );
    else
       GetWideMuteSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+   {
+      auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
+   }
 
    if( !bHasSoloButton )
       return;
 
    GetNarrowSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+   {
+      auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
+   }
 }
 
 void TrackInfo::StatusDrawFunction
@@ -2180,8 +2245,10 @@ void TrackInfo::StatusDrawFunction
 }
 
 void TrackInfo::Status1DrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    auto wt = static_cast<const WaveTrack*>(pTrack);
 
    /// Returns the string to be displayed in the track label
@@ -2208,23 +2275,28 @@ void TrackInfo::Status1DrawFunction
 }
 
 void TrackInfo::Status2DrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    auto wt = static_cast<const WaveTrack*>(pTrack);
    auto format = wt ? wt->GetSampleFormat() : floatSample;
    auto s = GetSampleFormatStr(format);
    StatusDrawFunction( s, dc, rect );
 }
 
-void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
+void TrackPanel::DrawOutside
+(TrackPanelDrawingContext &context,
+ Track * t, const wxRect & rec)
 {
+   auto dc = &context.dc;
    bool bIsWave = (t->GetKind() == Track::Wave);
 
    // Draw things that extend right of track control panel
    {
       // Start with whole track rect
       wxRect rect = rec;
-      DrawOutsideOfTrack(t, dc, rect);
+      DrawOutsideOfTrack(context, t, rect);
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -2256,16 +2328,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    rect.y += kTopMargin;
    rect.height -= (kBottomMargin + kTopMargin);
 
-   // Need to know which button, if any, to draw as pressed.
-   const MouseCaptureEnum mouseCapture =
-      // This public global variable is a hack for now, which should go away
-      // when TrackPanelCell gets a virtual function into which we move this
-      // drawing code.
-      MouseCaptureEnum(TrackControls::gCaptureState);
-   auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
-   const bool captured = (t == pClickedTrack.get());
-
-   TrackInfo::DrawItems( dc, rect, *t, mouseCapture, captured );
+   TrackInfo::DrawItems( context, rect, *t );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 }
@@ -2274,8 +2337,11 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 // Paint the inset areas left, top, and right in a background color
 // If linked to a following channel, also paint the separator area, which
 // overlaps the next track rectangle's top
-void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawOutsideOfTrack
+(TrackPanelDrawingContext &context, Track * t, const wxRect & rect)
 {
+   auto dc = &context.dc;
+
    // Fill in area outside of the track
    AColor::TrackPanelBackground(dc, false);
    wxRect side;

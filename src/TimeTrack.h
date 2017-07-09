@@ -22,6 +22,7 @@ class wxDC;
 class Envelope;
 class Ruler;
 class ZoomInfo;
+struct TrackPanelDrawingContext;
 
 class EnvelopeHandle;
 
@@ -67,7 +68,9 @@ class TimeTrack final : public Track {
    double GetStartTime() const override { return 0.0; }
    double GetEndTime() const override { return 0.0; }
 
-   void Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) const;
+   void Draw
+      (TrackPanelDrawingContext &context,
+       const wxRect & r, const ZoomInfo &zoomInfo) const;
 
    // XMLTagHandler callback methods for loading and saving
 

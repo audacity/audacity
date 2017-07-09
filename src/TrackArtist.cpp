@@ -183,6 +183,8 @@ audio tracks.
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "Experimental.h"
+#include "TrackPanelDrawingContext.h"
+
 
 #undef PROFILE_WAVEFORM
 #ifdef PROFILE_WAVEFORM
@@ -315,9 +317,9 @@ void TrackArtist::SetMargins(int left, int top, int right, int bottom)
    mMarginBottom = bottom;
 }
 
-void TrackArtist::DrawTracks(TrackList * tracks,
+void TrackArtist::DrawTracks(TrackPanelDrawingContext &context,
+                             TrackList * tracks,
                              Track * start,
-                             wxDC & dc,
                              const wxRegion & reg,
                              const wxRect & rect,
                              const wxRect & clip,
@@ -409,7 +411,7 @@ void TrackArtist::DrawTracks(TrackList * tracks,
          rr.y += mMarginTop;
          rr.width -= (mMarginLeft + mMarginRight);
          rr.height -= (mMarginTop + mMarginBottom);
-         DrawTrack(t, dc, rr,
+         DrawTrack(context, t, rr,
                    selectedRegion, zoomInfo,
                    drawEnvelope, bigPoints, drawSliders, hasSolo);
       }
@@ -438,8 +440,8 @@ void TrackArtist::DrawTracks(TrackList * tracks,
    }
 }
 
-void TrackArtist::DrawTrack(const Track * t,
-                            wxDC & dc,
+void TrackArtist::DrawTrack(TrackPanelDrawingContext &context,
+                            const Track * t,
                             const wxRect & rect,
                             const SelectedRegion &selectedRegion,
                             const ZoomInfo &zoomInfo,
@@ -448,6 +450,7 @@ void TrackArtist::DrawTrack(const Track * t,
                             bool drawSliders,
                             bool hasSolo)
 {
+   auto &dc = context.dc;
    switch (t->GetKind()) {
    case Track::Wave:
    {
@@ -466,7 +469,7 @@ void TrackArtist::DrawTrack(const Track * t,
 
       switch (wt->GetDisplay()) {
       case WaveTrack::Waveform:
-         DrawWaveform(wt, dc, rect, selectedRegion, zoomInfo,
+         DrawWaveform(context, wt, rect, selectedRegion, zoomInfo,
                       drawEnvelope,  bigPoints, drawSliders, muted);
          break;
       case WaveTrack::Spectrum:
@@ -503,16 +506,18 @@ void TrackArtist::DrawTrack(const Track * t,
    }
    #endif // USE_MIDI
    case Track::Label:
-      DrawLabelTrack((LabelTrack *)t, dc, rect, selectedRegion, zoomInfo);
+      DrawLabelTrack(context, (LabelTrack *)t, rect, selectedRegion, zoomInfo);
       break;
    case Track::Time:
-      DrawTimeTrack((TimeTrack *)t, dc, rect, zoomInfo);
+      DrawTimeTrack(context, (TimeTrack *)t, rect, zoomInfo);
       break;
    }
 }
 
-void TrackArtist::DrawVRuler(const Track *t, wxDC * dc, wxRect & rect)
+void TrackArtist::DrawVRuler
+(TrackPanelDrawingContext &context, const Track *t, wxRect & rect)
 {
+   auto dc = &context.dc;
    int kind = t->GetKind();
 
    // Label and Time tracks do not have a vruler
@@ -1468,8 +1473,8 @@ void TrackArtist::DrawEnvLine(wxDC &dc, const wxRect &rect, int x0, int y0, int 
    }
 }
 
-void TrackArtist::DrawWaveform(const WaveTrack *track,
-                               wxDC & dc,
+void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
+                               const WaveTrack *track,
                                const wxRect & rect,
                                const SelectedRegion &selectedRegion,
                                const ZoomInfo &zoomInfo,
@@ -1478,13 +1483,14 @@ void TrackArtist::DrawWaveform(const WaveTrack *track,
                                bool drawSliders,
                                bool muted)
 {
+   auto &dc = context.dc;
    const bool dB = !track->GetWaveformSettings().isLinear();
 
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
          selectedRegion, zoomInfo);
 
    for (const auto &clip: track->GetClips())
-      DrawClipWaveform(track, clip.get(), dc, rect, selectedRegion, zoomInfo,
+      DrawClipWaveform(context, track, clip.get(), rect, selectedRegion, zoomInfo,
                        drawEnvelope, bigPoints,
                        dB, muted);
 
@@ -1737,9 +1743,9 @@ void FindWavePortions
 }
 }
 
-void TrackArtist::DrawClipWaveform(const WaveTrack *track,
+void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
+                                   const WaveTrack *track,
                                    const WaveClip *clip,
-                                   wxDC & dc,
                                    const wxRect & rect,
                                    const SelectedRegion &selectedRegion,
                                    const ZoomInfo &zoomInfo,
@@ -1748,6 +1754,7 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
                                    bool dB,
                                    bool muted)
 {
+   auto &dc = context.dc;
 #ifdef PROFILE_WAVEFORM
    Profiler profiler;
 #endif
@@ -1954,7 +1961,8 @@ void TrackArtist::DrawClipWaveform(const WaveTrack *track,
 
    if (drawEnvelope) {
       DrawEnvelope(dc, mid, env, zoomMin, zoomMax, dB, dBRange);
-      clip->GetEnvelope()->DrawPoints(dc, rect, zoomInfo, dB, dBRange, zoomMin, zoomMax, true);
+      clip->GetEnvelope()->DrawPoints
+         (context, rect, zoomInfo, dB, dBRange, zoomMin, zoomMax, true);
    }
 
    // Draw arrows on the left side if the track extends to the left of the
@@ -3188,8 +3196,8 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
 #endif // USE_MIDI
 
 
-void TrackArtist::DrawLabelTrack(const LabelTrack *track,
-                                 wxDC & dc,
+void TrackArtist::DrawLabelTrack(TrackPanelDrawingContext &context,
+                                 const LabelTrack *track,
                                  const wxRect & rect,
                                  const SelectedRegion &selectedRegion,
                                  const ZoomInfo &zoomInfo)
@@ -3200,15 +3208,15 @@ void TrackArtist::DrawLabelTrack(const LabelTrack *track,
    if (!track->GetSelected() && !track->IsSyncLockSelected())
       sel0 = sel1 = 0.0;
 
-   track->Draw(dc, rect, SelectedRegion(sel0, sel1), zoomInfo);
+   track->Draw(context, rect, SelectedRegion(sel0, sel1), zoomInfo);
 }
 
-void TrackArtist::DrawTimeTrack(const TimeTrack *track,
-                                wxDC & dc,
+void TrackArtist::DrawTimeTrack(TrackPanelDrawingContext &context,
+                                const TimeTrack *track,
                                 const wxRect & rect,
                                 const ZoomInfo &zoomInfo)
 {
-   track->Draw(dc, rect, zoomInfo);
+   track->Draw(context, rect, zoomInfo);
    wxRect envRect = rect;
    envRect.height -= 2;
    double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
@@ -3217,8 +3225,9 @@ void TrackArtist::DrawTimeTrack(const TimeTrack *track,
       lower = LINEAR_TO_DB(std::max(1.0e-7, lower)) / mdBrange + 1.0;
       upper = LINEAR_TO_DB(std::max(1.0e-7, upper)) / mdBrange + 1.0;
    }
-   track->GetEnvelope()->DrawPoints(dc, envRect, zoomInfo,
-               track->GetDisplayLog(), mdBrange, lower, upper, false);
+   track->GetEnvelope()->DrawPoints
+      (context, envRect, zoomInfo,
+       track->GetDisplayLog(), mdBrange, lower, upper, false);
 }
 
 void TrackArtist::UpdatePrefs()

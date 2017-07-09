@@ -12,8 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_PLAYABLE_TRACK_BUTTON_HANDLES__
 
 #include "../../ui/ButtonHandle.h"
-#include "../../../TrackPanel.h"
-
 class wxMouseState;
 
 class MuteButtonHandle final : public ButtonHandle
@@ -50,7 +48,7 @@ class SoloButtonHandle final : public ButtonHandle
 
 public:
    explicit SoloButtonHandle
-   ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
 
    SoloButtonHandle &operator=(const SoloButtonHandle&) = default;
 

@@ -1933,6 +1933,9 @@
     <ClInclude Include="..\..\..\src\RealFFTf48x.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelDrawingContext.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\TrackPanelCell.h">
       <Filter>src</Filter>
     </ClInclude>

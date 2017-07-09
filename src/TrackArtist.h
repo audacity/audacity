@@ -41,6 +41,8 @@ class Ruler;
 class SelectedRegion;
 class ZoomInfo;
 
+struct TrackPanelDrawingContext;
+
 #ifndef uchar
 typedef unsigned char uchar;
 #endif
@@ -52,19 +54,22 @@ class AUDACITY_DLL_API TrackArtist {
    ~TrackArtist();
 
    void SetColours();
-   void DrawTracks(TrackList *tracks, Track *start,
-                   wxDC & dc, const wxRegion & reg,
+   void DrawTracks(TrackPanelDrawingContext &context,
+                   TrackList *tracks, Track *start,
+                   const wxRegion & reg,
                    const wxRect & rect, const wxRect & clip,
                    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                    bool drawEnvelope, bool bigPoints, bool drawSliders);
 
-   void DrawTrack(const Track *t,
-                  wxDC & dc, const wxRect & rect,
+   void DrawTrack(TrackPanelDrawingContext &context,
+                  const Track *t,
+                  const wxRect & rect,
                   const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                   bool drawEnvelope, bool bigPoints, bool drawSliders,
                   bool hasSolo);
 
-   void DrawVRuler(const Track *t, wxDC *dc, wxRect & rect);
+   void DrawVRuler(TrackPanelDrawingContext &context,
+                   const Track *t, wxRect & rect);
 
    void UpdateVRuler(const Track *t, wxRect & rect);
 
@@ -94,8 +99,9 @@ class AUDACITY_DLL_API TrackArtist {
    // Lower-level drawing functions
    //
 
-   void DrawWaveform(const WaveTrack *track,
-                     wxDC & dc, const wxRect & rect,
+   void DrawWaveform(TrackPanelDrawingContext &context,
+                     const WaveTrack *track,
+                     const wxRect & rect,
                      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                      bool drawEnvelope, bool bigPoints, bool drawSliders,
                      bool muted);
@@ -117,18 +123,21 @@ class AUDACITY_DLL_API TrackArtist {
                       bool muted);
 #endif // USE_MIDI
 
-   void DrawLabelTrack(const LabelTrack *track,
-                       wxDC & dc, const wxRect & rect,
+   void DrawLabelTrack(TrackPanelDrawingContext &context,
+                       const LabelTrack *track,
+                       const wxRect & rect,
                        const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
 
-   void DrawTimeTrack(const TimeTrack *track,
-                      wxDC & dc, const wxRect & rect, const ZoomInfo &zoomInfo);
+   void DrawTimeTrack(TrackPanelDrawingContext &context,
+                      const TimeTrack *track,
+                      const wxRect & rect, const ZoomInfo &zoomInfo);
 
    void DrawTimeSlider(wxDC & dc, const wxRect & rect,
                        bool rightwards);
 
-   void DrawClipWaveform(const WaveTrack *track, const WaveClip *clip,
-                         wxDC & dc, const wxRect & rect,
+   void DrawClipWaveform(TrackPanelDrawingContext &context,
+                         const WaveTrack *track, const WaveClip *clip,
+                         const wxRect & rect,
                          const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                          bool drawEnvelope, bool bigPoints,
                          bool dB, bool muted);
