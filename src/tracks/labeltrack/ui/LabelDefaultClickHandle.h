@@ -27,8 +27,7 @@ public:
    LabelDefaultClickHandle();
    virtual ~LabelDefaultClickHandle();
 
-   LabelDefaultClickHandle &operator=
-      (const LabelDefaultClickHandle&) = default;
+   LabelDefaultClickHandle &operator=(LabelDefaultClickHandle&&) = default;
    
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
