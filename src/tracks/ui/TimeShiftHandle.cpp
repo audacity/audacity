@@ -469,7 +469,7 @@ UIHandle::Result TimeShiftHandle::Click
    mRect = rect;
    mMouseClickX = event.m_x;
    const double selStart = viewInfo.PositionToTime(event.m_x, mRect.x);
-   mSnapManager = std::make_unique<SnapManager>(trackList,
+   mSnapManager = std::make_shared<SnapManager>(trackList,
                                   &viewInfo,
                                   &mClipMoveState.capturedClipArray,
                                   &mClipMoveState.trackExclusions,
@@ -783,10 +783,6 @@ UIHandle::Result TimeShiftHandle::Release
 
    Result result = RefreshNone;
 
-   mCapturedTrack.reset();
-   mSnapManager.reset(NULL);
-   mClipMoveState.capturedClipArray.clear();
-
    // Do not draw yellow lines
    if ( mClipMoveState.snapLeft != -1 || mClipMoveState.snapRight != -1) {
       mClipMoveState.snapLeft = mClipMoveState.snapRight = -1;
@@ -842,9 +838,6 @@ UIHandle::Result TimeShiftHandle::Release
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
-   mCapturedTrack.reset();
-   mSnapManager.reset();
-   mClipMoveState.clear();
    return RefreshCode::RefreshAll;
 }
 

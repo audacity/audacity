@@ -51,7 +51,7 @@ public:
    explicit TimeShiftHandle
    ( const std::shared_ptr<Track> &pTrack, bool gripHit );
 
-   TimeShiftHandle &operator=(TimeShiftHandle&&) = default;
+   TimeShiftHandle &operator=(const TimeShiftHandle&) = default;
 
    bool IsGripHit() const { return mGripHit; }
    std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
@@ -112,7 +112,7 @@ private:
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
-   std::unique_ptr<SnapManager> mSnapManager{};
+   std::shared_ptr<SnapManager> mSnapManager{};
 
    ClipMoveState mClipMoveState{};
    bool mGripHit {};
