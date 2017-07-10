@@ -91,7 +91,7 @@ class AUDACITY_DLL_API Track /* not final */
 
  // To be TrackDisplay
  protected:
-   TrackList     *mList;
+   std::weak_ptr<TrackList> mList;
    TrackNodePointer mNode{};
    int            mIndex;
    int            mY;
@@ -113,22 +113,28 @@ class AUDACITY_DLL_API Track /* not final */
  public:
 
    // Given a bare pointer, find a shared_ptr.  But this is not possible for
-   // a track not owned by any list, so the result can be null.
+   // a track not owned by any project, so the result can be null.
    template<typename Subclass = Track>
    inline static std::shared_ptr<Subclass> Pointer( Track *t )
    {
-      if (t && t->mList)
-         return std::static_pointer_cast<Subclass>(*t->mNode);
+      if (t) {
+         auto pList = t->mList.lock();
+         if (pList)
+            return std::static_pointer_cast<Subclass>(*t->mNode);
+      }
       return {};
    }
 
    template<typename Subclass = const Track>
    inline static std::shared_ptr<Subclass> Pointer( const Track *t )
    {
-      if (t && t->mList) {
-         std::shared_ptr<const Track> p{ *t->mNode };
-         // Let you change the type, but not cast away the const
-         return std::static_pointer_cast<Subclass>(p);
+      if (t) {
+         auto pList = t->mList.lock();
+         if (pList) {
+            std::shared_ptr<const Track> p{ *t->mNode };
+            // Let you change the type, but not cast away the const
+            return std::static_pointer_cast<Subclass>(p);
+         }
       }
       return {};
    }
@@ -192,7 +198,8 @@ class AUDACITY_DLL_API Track /* not final */
 
  private:
    TrackNodePointer GetNode() const;
-   void SetOwner(TrackList *list, TrackNodePointer node);
+   void SetOwner
+      (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
 
  // Keep in Track
 
@@ -542,6 +549,9 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // Move is defined in terms of Swap
    void Swap(TrackList &that);
 
+   void SetSelf( const std::shared_ptr<TrackList> &self )
+   { mSelf = self; }
+
 
    // Destructor
    virtual ~TrackList();
@@ -618,7 +628,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    std::shared_ptr<Subclass> Lock(const std::weak_ptr<Subclass> &wTrack)
    {
       auto pTrack = wTrack.lock();
-      if (pTrack && this == pTrack->mList)
+      auto pList = pTrack->mList.lock();
+      if (pTrack && this == pList.get())
          return pTrack;
       return {};
    }
@@ -654,6 +665,8 @@ private:
    void ResizingEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
+
+   std::weak_ptr<TrackList> mSelf;
 };
 
 class AUDACITY_DLL_API TrackFactory

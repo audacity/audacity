@@ -48,7 +48,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 :  vrulerSize(36,0),
    mDirManager(projDirManager)
 {
-   mList      = NULL;
    mSelected  = false;
    mLinked    = false;
 
@@ -72,7 +71,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 Track::Track(const Track &orig)
 : vrulerSize( orig.vrulerSize )
 {
-   mList = NULL;
    mY = 0;
    mIndex = 0;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -119,11 +117,12 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList == NULL || this == mNode->get());
+   wxASSERT(mList.lock() == NULL || this == mNode->get());
    return mNode;
 }
 
-void Track::SetOwner(TrackList *list, TrackNodePointer node)
+void Track::SetOwner
+(const std::weak_ptr<TrackList> &list, TrackNodePointer node)
 {
    mList = list;
    mNode = node;
@@ -207,9 +206,10 @@ int Track::GetHeight() const
 void Track::SetHeight(int h)
 {
    mHeight = h;
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizingEvent(mNode);
+   auto pList = mList.lock();
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
    }
 }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
@@ -221,37 +221,40 @@ bool Track::GetMinimized() const
 
 void Track::SetMinimized(bool isMinimized)
 {
+   auto pList = mList.lock();
    mMinimized = isMinimized;
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizingEvent(mNode);
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
    }
 }
 
 void Track::SetLinked(bool l)
 {
+   auto pList = mList.lock();
    mLinked = l;
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizingEvent(mNode);
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
    }
 }
 
 Track *Track::GetLink() const
 {
-   if (!mList)
+   auto pList = mList.lock();
+   if (!pList)
       return nullptr;
 
-   if (!mList->isNull(mNode)) {
+   if (!pList->isNull(mNode)) {
       if (mLinked) {
          auto next = mNode;
          ++next;
-         if (!mList->isNull(next)) {
+         if (!pList->isNull(next)) {
             return next->get();
          }
       }
 
-      if (mList->hasPrev(mNode)) {
+      if (pList->hasPrev(mNode)) {
          auto prev = mNode;
          --prev;
          auto track = prev->get();
@@ -282,7 +285,8 @@ bool Track::IsSyncLockSelected() const
    if (!p || !p->IsSyncLocked())
       return false;
 
-   SyncLockedTracksIterator git(mList);
+   auto pList = mList.lock();
+   SyncLockedTracksIterator git(pList.get());
    Track *t = git.StartWith(const_cast<Track*>(this));
 
    if (!t) {
@@ -384,7 +388,7 @@ Track *TrackListIterator::StartWith(Track * val)
       return NULL;
    }
 
-   if (val->mList == NULL)
+   if (val->mList.lock() == NULL)
       return nullptr;
 
    cur = val->GetNode();
@@ -790,9 +794,9 @@ void TrackList::Swap(TrackList &that)
 {
    ListOfTracks::swap(that);
    for (auto it = begin(), last = end(); it != last; ++it)
-      (*it)->SetOwner(this, it);
+      (*it)->SetOwner(this->mSelf, it);
    for (auto it = that.begin(), last = that.end(); it != last; ++it)
-      (*it)->SetOwner(&that, it);
+      (*it)->SetOwner(that.mSelf, it);
 }
 
 TrackList::~TrackList()
@@ -886,7 +890,7 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
       value_type track = std::move(*iter);
       erase(iter);
       Track *pTrack = track.get();
-      pTrack->SetOwner(this, insert(end(), std::move(track)));
+      pTrack->SetOwner(mSelf, insert(end(), std::move(track)));
    }
    auto n = begin();
    RecalcPositions(n);
@@ -900,7 +904,7 @@ Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
    push_back(value_type(pTrack = t.release()));
    auto n = end();
    --n;
-   pTrack->SetOwner(this, n);
+   pTrack->SetOwner(mSelf, n);
    RecalcPositions(n);
    ResizingEvent(n);
    return back().get();
@@ -921,7 +925,7 @@ Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
    Track *pTrack;
    push_front(value_type(pTrack = t.release()));
    auto n = begin();
-   pTrack->SetOwner(this, n);
+   pTrack->SetOwner(mSelf, n);
    RecalcPositions(n);
    ResizingEvent(n);
    return front().get();
@@ -936,7 +940,7 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
    push_back(t);
    auto n = end();
    --n;
-   t->SetOwner(this, n);
+   t->SetOwner(mSelf, n);
    RecalcPositions(n);
    ResizingEvent(n);
    return back().get();
@@ -951,13 +955,13 @@ auto TrackList::Replace(Track * t, value_type &&with) -> value_type
    value_type holder;
    if (t && with) {
       auto node = t->GetNode();
-      t->SetOwner(nullptr, {});
+      t->SetOwner({}, {});
 
       holder = std::move(*node);
 
       Track *pTrack = with.get();
       *node = std::move(with);
-      pTrack->SetOwner(this, node);
+      pTrack->SetOwner(mSelf, node);
       RecalcPositions(node);
 
       DeletionEvent();
@@ -971,7 +975,7 @@ TrackNodePointer TrackList::Remove(Track *t)
    TrackNodePointer result(end());
    if (t) {
       auto node = t->GetNode();
-      t->SetOwner(nullptr, {});
+      t->SetOwner({}, {});
 
       if (!isNull(node)) {
          value_type holder = std::move( *node );
@@ -1152,12 +1156,12 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    // Reinsert them
    Track *pTrack;
    if (save22)
-      pTrack = save22.get(), pTrack->SetOwner(this, s1 = insert(s1, std::move(save22)));
-   pTrack = save21.get(), pTrack->SetOwner(this, s1 = insert(s1, std::move(save21)));
+      pTrack = save22.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save22)));
+   pTrack = save21.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save21)));
 
    if (save12)
-      pTrack = save12.get(), pTrack->SetOwner(this, s2 = insert(s2, std::move(save12)));
-   pTrack = save11.get(), pTrack->SetOwner(this, s2 = insert(s2, std::move(save11)));
+      pTrack = save12.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save12)));
+   pTrack = save11.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save11)));
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);

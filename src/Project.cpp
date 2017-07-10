@@ -922,6 +922,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mbLoadedFromAup( false )
 {
 
+   mTracks->SetSelf(mTracks);
+
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
