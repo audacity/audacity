@@ -2871,7 +2871,7 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
    Refresh( false );
 }
 
-#include "TrackPanelDrawingContext.h"
+#include "../TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
    wxPaintDC dc(this);
