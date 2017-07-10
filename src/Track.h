@@ -628,9 +628,11 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    std::shared_ptr<Subclass> Lock(const std::weak_ptr<Subclass> &wTrack)
    {
       auto pTrack = wTrack.lock();
-      auto pList = pTrack->mList.lock();
-      if (pTrack && this == pList.get())
-         return pTrack;
+      if (pTrack) {
+         auto pList = pTrack->mList.lock();
+         if (pTrack && this == pList.get())
+            return pTrack;
+      }
       return {};
    }
 
