@@ -463,8 +463,9 @@ TimeTrack and AudioIOListener and whether the playback is looped.
       #define THREAD_LATENCY 0 /* milliseconds */
    #endif
    #define ROUND(x) (int) ((x)+0.5)
-   //#include <string.h>
-   #include "../lib-src/portmidi/pm_common/portmidi.h"
+
+   #include "portmidi.h"
+   // PaUtil_GetTime is not part of the public API, so we hardcode a path to the header
    #include "../lib-src/portaudio-v19/src/common/pa_util.h"
    #include "NoteTrack.h"
 #endif
