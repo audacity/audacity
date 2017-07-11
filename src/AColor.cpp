@@ -87,6 +87,9 @@ wxBrush AColor::tooltipBrush;
 wxPen AColor::sparePen;
 wxBrush AColor::spareBrush;
 
+wxPen AColor::uglyPen;
+wxBrush AColor::uglyBrush;
+
 //
 // Draw an upward or downward pointing arrow.
 //
@@ -262,7 +265,7 @@ wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
    return c3;
 }
 
-void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
+void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight)
 {
 #ifndef EXPERIMENTAL_THEMING
    Bevel( dc, up, r );
@@ -270,7 +273,7 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
    wxColour col;
    col = Blend( theTheme.Colour( clrTrackInfo ), up ? wxColour( 255,255,255):wxColour(0,0,0));
 
-   wxPen pen( col );
+   wxPen pen( highlight ? uglyPen : col );
    dc.SetPen( pen );
 
    dc.DrawLine(r.x, r.y, r.x + r.width, r.y);
@@ -279,7 +282,7 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r)
    col = Blend( theTheme.Colour( clrTrackInfo ), up ? wxColour(0,0,0): wxColour(255,255,255));
 
    pen.SetColour( col );
-   dc.SetPen( pen );
+   dc.SetPen( highlight ? uglyPen : pen );
 
    dc.DrawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
    dc.DrawLine(r.x, r.y + r.height, r.x + r.width + 1, r.y + r.height);
@@ -299,13 +302,15 @@ void AColor::UseThemeColour( wxDC * dc, int iIndex, int index2 )
    dc->SetPen( sparePen );
 }
 
-void AColor::Light(wxDC * dc, bool selected)
+void AColor::Light(wxDC * dc, bool selected, bool highlight)
 {
    if (!inited)
       Init();
    int index = (int) selected;
-   dc->SetBrush(lightBrush[index]);
-   dc->SetPen(lightPen[index]);
+   auto &brush = highlight ? AColor::uglyBrush : lightBrush[index];
+   dc->SetBrush( brush );
+   auto &pen = highlight ? AColor::uglyPen : lightPen[index];
+   dc->SetPen( pen );
 }
 
 void AColor::Medium(wxDC * dc, bool selected)
@@ -327,13 +332,15 @@ void AColor::MediumTrackInfo(wxDC * dc, bool selected)
 }
 
 
-void AColor::Dark(wxDC * dc, bool selected)
+void AColor::Dark(wxDC * dc, bool selected, bool highlight)
 {
    if (!inited)
       Init();
    int index = (int) selected;
-   dc->SetBrush(darkBrush[index]);
-   dc->SetPen(darkPen[index]);
+   auto &brush = highlight ? AColor::uglyBrush : darkBrush[index];
+   dc->SetBrush( brush );
+   auto &pen = highlight ? AColor::uglyPen : darkPen[index];
+   dc->SetPen( pen );
 }
 
 void AColor::TrackPanelBackground(wxDC * dc, bool selected)
@@ -502,6 +509,9 @@ void AColor::Init()
    //Determine tooltip color
    tooltipPen.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOTEXT) );
    tooltipBrush.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOBK) );
+
+   uglyPen.SetColour( wxColour{ 0, 255, 0 } ); // saturated green
+   uglyBrush.SetColour( wxColour{ 255, 0, 255 } ); // saturated magenta
 
    // A tiny gradient of yellow surrounding the current focused track
    theTheme.SetPenColour(   trackFocusPens[0],  clrTrackFocus0);

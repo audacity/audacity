@@ -36,4 +36,19 @@ struct WaveTrackLocation {
    int clipidx2; // second clip (right one)
 };
 
+inline
+bool operator == (const WaveTrackLocation &a, const WaveTrackLocation &b)
+{
+   return a.pos == b.pos &&
+   a.typ == b.typ &&
+   a.clipidx1 == b.clipidx1 &&
+   a.clipidx2 == b.clipidx2;
+}
+
+inline
+bool operator != (const WaveTrackLocation &a, const WaveTrackLocation &b)
+{
+   return !( a == b );
+}
+
 #endif

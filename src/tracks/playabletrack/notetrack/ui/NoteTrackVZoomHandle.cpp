@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Audacity.h"
 #include "NoteTrackVZoomHandle.h"
+#include "../../../../Experimental.h"
 #include "NoteTrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
@@ -38,7 +39,11 @@ NoteTrackVZoomHandle::NoteTrackVZoomHandle
 (const std::shared_ptr<NoteTrack> &pTrack, const wxRect &rect, int y)
    : mZoomStart(y), mZoomEnd(y), mRect(rect)
    , mpTrack{ pTrack }
-{}
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
 
 HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
 {

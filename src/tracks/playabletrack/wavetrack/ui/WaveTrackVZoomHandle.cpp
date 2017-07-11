@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Audacity.h"
 #include "WaveTrackVZoomHandle.h"
+#include "../../../../Experimental.h"
 #include "WaveTrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
@@ -47,7 +48,9 @@ WaveTrackVZoomHandle::WaveTrackVZoomHandle
 (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y)
    : mZoomStart(y), mZoomEnd(y), mRect(rect)
    , mpTrack{ pTrack }
-{}
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
+}
 
 void WaveTrackVZoomHandle::DoZoom
    (AudacityProject *pProject,

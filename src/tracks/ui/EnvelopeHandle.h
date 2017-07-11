@@ -28,7 +28,8 @@ class EnvelopeHandle final : public UIHandle
 {
    EnvelopeHandle(const EnvelopeHandle&) = delete;
    EnvelopeHandle &operator=(const EnvelopeHandle&) = delete;
-   static HitTestPreview HitPreview(const AudacityProject *pProject, bool unsafe);
+   static HitTestPreview HitPreview
+      (const AudacityProject *pProject, bool unsafe);
 
    static UIHandlePtr HitEnvelope
       (std::weak_ptr<EnvelopeHandle> &holder,

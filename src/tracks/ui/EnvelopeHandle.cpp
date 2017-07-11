@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "EnvelopeHandle.h"
+#include "../../Experimental.h"
 
 #include "../../MemoryX.h"
 
@@ -28,12 +29,17 @@ Paul Licameli split from TrackPanel.cpp
 
 EnvelopeHandle::EnvelopeHandle( Envelope *pEnvelope )
    : mEnvelope{ pEnvelope }
-{}
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
 
 EnvelopeHandle::~EnvelopeHandle()
 {}
 
-HitTestPreview EnvelopeHandle::HitPreview(const AudacityProject *pProject, bool unsafe)
+HitTestPreview EnvelopeHandle::HitPreview
+(const AudacityProject *pProject, bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);

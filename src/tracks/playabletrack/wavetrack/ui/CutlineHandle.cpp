@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../Audacity.h"
 #include "CutlineHandle.h"
+#include "../../../../Experimental.h"
 
 #include "../../../../MemoryX.h"
 
@@ -26,7 +27,11 @@ CutlineHandle::CutlineHandle
 ( const std::shared_ptr<WaveTrack> &pTrack, WaveTrackLocation location )
    : mpTrack{ pTrack }
    , mLocation{ location }
-{}
+{
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
+}
 
 HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
 {

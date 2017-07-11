@@ -68,16 +68,16 @@ class AColor {
    static void Bevel(wxDC & dc, bool up, const wxRect & r);
    static void Bevel2
       (wxDC & dc, bool up, const wxRect & r, bool bSel=false, bool bHighlight = false);
-   static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r);
+   static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight = false);
    static wxColour Blend(const wxColour & c1, const wxColour & c2);
 
    static void UseThemeColour( wxDC * dc, int iIndex, int index2 =-1 );
    static void TrackPanelBackground(wxDC * dc, bool selected);
 
-   static void Light(wxDC * dc, bool selected);
+   static void Light(wxDC * dc, bool selected, bool highlight = false);
    static void Medium(wxDC * dc, bool selected);
    static void MediumTrackInfo(wxDC * dc, bool selected);
-   static void Dark(wxDC * dc, bool selected);
+   static void Dark(wxDC * dc, bool selected, bool highlight = false);
 
    static void CursorColor(wxDC * dc);
    static void IndicatorColor(wxDC * dc, bool bIsNotRecording);
@@ -138,6 +138,10 @@ class AColor {
    static bool gradient_inited;
    static const int gradientSteps = 512;
    static unsigned char gradient_pre[ColorGradientTotal][2][gradientSteps][3];
+
+   // For experiments in mouse-over highlighting only
+   static wxPen uglyPen;
+   static wxBrush uglyBrush;
 
  private:
    static wxPen sparePen;
