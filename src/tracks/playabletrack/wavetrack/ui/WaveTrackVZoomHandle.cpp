@@ -49,7 +49,9 @@ WaveTrackVZoomHandle::WaveTrackVZoomHandle
    : mZoomStart(y), mZoomEnd(y), mRect(rect)
    , mpTrack{ pTrack }
 {
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
+#endif
 }
 
 void WaveTrackVZoomHandle::DoZoom
