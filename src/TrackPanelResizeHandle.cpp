@@ -67,8 +67,6 @@ TrackPanelResizeHandle::TrackPanelResizeHandle
    : mpTrack{ track }
    , mMouseClickY( y )
 {
-   mChangeHighlight = RefreshCode::RefreshCell;
-
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    if (MONO_WAVE_PAN(track)){
       //STM:  Determine whether we should rescale one or two tracks
