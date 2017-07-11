@@ -57,6 +57,7 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
             mClickHandle, state, rect, track)))
             return result;
 #endif
+         return result;
       }();
       if (result) {
          results.push_back(result);

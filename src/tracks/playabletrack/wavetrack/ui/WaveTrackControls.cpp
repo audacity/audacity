@@ -80,6 +80,8 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
          if (NULL != (result = PanSliderHandle::HitTest(
             mPanHandle, state, rect, track)))
             return result;
+
+         return result;
       }();
       if (result) {
          results.push_back(result);
