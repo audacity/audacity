@@ -39,16 +39,20 @@ UIHandle::Result SliderHandle::Click
 
    // Come here for left click or double click
    mStartingValue = GetValue();
-   GetSlider( pProject )->Set(mStartingValue);
-   GetSlider( pProject )->OnMouseEvent(event);
+   auto slider = GetSlider( pProject );
+   slider->OnMouseEvent(event);
+   const float newValue = slider->Get();
+
+   // Make a non-permanent change to the project data:
+   auto result = SetValue(pProject, newValue);
 
    if (event.ButtonDClick())
       // Just did a modal dialog in OnMouseEvent
       // Do not start a drag
-      return RefreshCell | Cancelled;
+      return result | RefreshCell | Cancelled;
    else {
       mIsClicked = true;
-      return RefreshCell;
+      return result | RefreshCell;
    }
 }
 
