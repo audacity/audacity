@@ -1648,14 +1648,12 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
       link = trk->GetLink();
    }
 
-   // So that the highlighting of the resizer refreshes,
-   // include left and right inset areas,
-   // exclude the inset above,
-   // but include the inset below.
-   wxRect rect(0,
+   // subtract insets and shadows from the rectangle, but not border
+   // This matters because some separators do paint over the border
+   wxRect rect(kLeftInset,
             -mViewInfo->vpos + trk->GetY() + kTopInset,
-            GetRect().GetWidth(),
-            trk->GetHeight() );
+            GetRect().GetWidth() - kLeftInset - kRightInset - kShadowThickness,
+            trk->GetHeight() - kTopInset - kShadowThickness);
 
    if (link) {
       rect.height += link->GetHeight();
@@ -1751,8 +1749,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
    trackRect.height = 0;   // for drawing background in no tracks case.
 
    VisibleTrackIterator iter(GetProject());
-   Track *prev{};
-   for (Track *t = iter.First(); t; prev = t, t = iter.Next()) {
+   for (Track *t = iter.First(); t; t = iter.Next()) {
       trackRect.y = t->GetY() - mViewInfo->vpos;
       trackRect.height = t->GetHeight();
 
@@ -1796,7 +1793,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
          if (mAx->IsFocused(t)) {
             focusRect = borderRect;
          }
-         DrawOutside(context, borderTrack, prev, borderRect);
+         DrawOutside(context, borderTrack, borderRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -1838,7 +1835,7 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
       mUIHandle->DrawExtras(UIHandle::Cells, dc, region, clip);
 
    // Paint over the part below the tracks
-   trackRect.y += trackRect.height + kTopInset;
+   trackRect.y += trackRect.height;
    if (trackRect.y < clip.GetBottom()) {
       AColor::TrackPanelBackground(dc, false);
       dc->DrawRectangle(trackRect.x,
@@ -2294,7 +2291,7 @@ void TrackInfo::Status2DrawFunction
 
 void TrackPanel::DrawOutside
 (TrackPanelDrawingContext &context,
- Track * t, Track *prev, const wxRect & rec)
+ Track * t, const wxRect & rec)
 {
    auto dc = &context.dc;
    bool bIsWave = (t->GetKind() == Track::Wave);
@@ -2303,7 +2300,7 @@ void TrackPanel::DrawOutside
    {
       // Start with whole track rect
       wxRect rect = rec;
-      DrawOutsideOfTrack(context, t, prev, rect);
+      DrawOutsideOfTrack(context, t, rect);
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -2345,7 +2342,7 @@ void TrackPanel::DrawOutside
 // If linked to a following channel, also paint the separator area, which
 // overlaps the next track rectangle's top
 void TrackPanel::DrawOutsideOfTrack
-(TrackPanelDrawingContext &context, Track * t, Track *prev, const wxRect & rect)
+(TrackPanelDrawingContext &context, Track * t, const wxRect & rect)
 {
    auto dc = &context.dc;
 
@@ -2358,13 +2355,10 @@ void TrackPanel::DrawOutsideOfTrack
    side.width = kLeftInset;
    dc->DrawRectangle(side);
 
-   if (!prev)
-   {
-      // Area above the first track
-      side = rect;
-      side.height = kTopInset;
-      dc->DrawRectangle(side);
-   }
+   // Area between panel border and top track border
+   side = rect;
+   side.height = kTopInset;
+   dc->DrawRectangle(side);
 
    // Area between panel border and right track border
    side = rect;
@@ -2372,32 +2366,17 @@ void TrackPanel::DrawOutsideOfTrack
    side.width = kTopInset;
    dc->DrawRectangle(side);
 
-   auto target = dynamic_cast<TrackPanelResizeHandle*>(context.target.get());
-   auto highlight = target && target->GetTrack().get() == t;
-
-   side = rect;
-   side.y += t->GetHeight();
-
-   // Area below the track
-   if (highlight ||
-       t->GetLinked()
+   // Area between tracks of stereo group
+   if (t->GetLinked()
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
        || MONO_WAVE_PAN(t)
 #endif
        ) {
       // Paint the channel separator over (what would be) the shadow of the top
       // channel, and the top inset of the bottom channel
-
-      // (Or, highlight the resizer area below the track)
-      side.y -= kShadowThickness;
+      side = rect;
+      side.y += t->GetHeight() - kShadowThickness;
       side.height = kTopInset + kShadowThickness;
-      if (highlight)
-         dc->SetBrush( AColor::uglyBrush );
-      dc->DrawRectangle(side);
-   }
-   else
-   {
-      side.height = kTopInset;
       dc->DrawRectangle(side);
    }
 }
