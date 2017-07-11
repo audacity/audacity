@@ -813,7 +813,12 @@ void TrackPanel::UpdateMouseState(const wxMouseState &state)
 
 void TrackPanel::HandleModifierKey()
 {
-   UpdateMouseState(::wxGetMouseState());
+   // Get the button and key states
+   auto state = ::wxGetMouseState();
+   // Remap the position
+   state.SetPosition(this->ScreenToClient(state.GetPosition()));
+
+   UpdateMouseState(state);
    HandleCursorForLastMouseState();
 }
 void TrackPanel::HandlePageUpKey()
