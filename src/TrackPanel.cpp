@@ -693,9 +693,8 @@ namespace
 
       using namespace RefreshCode;
 
-      panel->UpdateViewIfNoTracks();
-
       if (refreshResult & DestroyedCell) {
+         panel->UpdateViewIfNoTracks();
          // Beware stale pointer!
          if (pLatestTrack == pClickedTrack)
             pLatestTrack = NULL;
