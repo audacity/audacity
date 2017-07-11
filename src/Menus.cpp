@@ -6025,18 +6025,43 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
             return t->GetSelected() && t->GetKind() == Track::Wave; });
 
    // first search the tracks individually
+
+   TrackListIterator iter(GetTracks());
+   Track* track = iter.First();
    std::vector<FoundClip> results;
+
    int nTracksSearched = 0;
-   for (auto& track : *tracks) {
+   int trackNumber = 1;
+   while (track) {
       if (track->GetKind() == Track::Wave && (!anyWaveTracksSelected || track->GetSelected())) {
-         auto waveTrack = static_cast<const WaveTrack*>(track.get());
+         auto waveTrack = static_cast<const WaveTrack*>(track);
+         bool stereoAndDiff = waveTrack->GetLinked() && !ChannelsHaveSameClipBoundaries(waveTrack);
+
          auto result = next ? FindNextClip(waveTrack, t0, t1) :
             FindPrevClip(waveTrack, t0, t1);
-         nTracksSearched++;
-         if (result.found)
+         if (result.found) {
+            result.trackNumber = trackNumber;
+            result.channel = stereoAndDiff;
             results.push_back(result);
+         }
+         if (stereoAndDiff) {
+            auto waveTrack2 = static_cast<const WaveTrack*>(track->GetLink());
+            auto result = next ? FindNextClip(waveTrack2, t0, t1) :
+               FindPrevClip(waveTrack2, t0, t1);
+            if (result.found) {
+               result.trackNumber = trackNumber;
+               result.channel = stereoAndDiff;
+               results.push_back(result);
+            }
+         }
+         
+         nTracksSearched++;
       }
+
+      trackNumber++;
+      track = iter.Next(true);
    }
+
 
    if (results.size() > 0) {
       // if any clips were found,
@@ -6072,7 +6097,30 @@ int AudacityProject::FindClips(double t0, double t1, bool next, std::vector<Foun
       }
    }
 
-   return nTracksSearched;
+   return nTracksSearched;       // can be used for screen reader messages if required
+}
+
+// Whether the two channels of a stereo track have the same clips
+bool AudacityProject::ChannelsHaveSameClipBoundaries(const WaveTrack* wt)
+{
+   bool sameClips = false;
+
+   if (wt->GetLinked() && wt->GetLink()) {
+      auto& left = wt->GetClips();
+      auto& right = static_cast<const WaveTrack*>(wt->GetLink())->GetClips();
+      if (left.size() == right.size()) {
+         sameClips = true;
+         for (unsigned int i = 0; i < left.size(); i++) {
+            if (left[i]->GetStartTime() != right[i]->GetStartTime() ||
+               left[i]->GetEndTime() != right[i]->GetEndTime()) {
+               sameClips = false;
+               break;
+            }
+         }
+      }
+   }
+
+   return sameClips;
 }
 
 void AudacityProject::OnSelectPrevClip()
@@ -6088,7 +6136,7 @@ void AudacityProject::OnSelectNextClip()
 void AudacityProject::OnSelectClip(bool next)
 {
    std::vector<FoundClip> results;
-   int nTracksSearched = FindClips(mViewInfo.selectedRegion.t0(),
+   FindClips(mViewInfo.selectedRegion.t0(),
       mViewInfo.selectedRegion.t1(), next, results);
 
    if (results.size() > 0) {
@@ -6104,22 +6152,21 @@ void AudacityProject::OnSelectClip(bool next)
       // create and send message to screen reader
       wxString message;
       for (auto& result : results) {
-         wxString temp;
-
-         if (nTracksSearched > 1) {
-            if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName()) {
-               auto track = std::find_if(GetTracks()->begin(), GetTracks()->end(),
-                  [&] (const std::shared_ptr<Track>& t) { return t.get() == result.waveTrack; });
-               temp.Printf(wxT("%s %d "), _("Track"), std::distance(GetTracks()->begin(), track) + 1);
-            }
-            else
-               temp.Printf(wxT("%s "), result.waveTrack->GetName());
-
-            message += temp;
-         }
+         wxString temp;         
          temp.Printf(wxT("%d %s %d %s "), result.index + 1, _("of"), result.waveTrack->GetNumClips(),
             result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+         message += temp;         
+
+         if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName())
+            temp.Printf(wxT("%s %d "), _("Track"), result.trackNumber);
+         else
+            temp.Printf(wxT("%s "), result.waveTrack->GetName());
          message += temp;
+
+         if (result.channel) {
+            message += result.waveTrack->GetLinked() ? _("left") : _("right");
+            message += wxT(" ");
+         }
 
          message += wxT(", ");
       }

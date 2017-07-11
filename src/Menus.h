@@ -310,6 +310,8 @@ void OnSelectCursorToNextClipBoundary();
 void OnSelectClipBoundary(bool next);
 typedef struct FoundClip {
    const WaveTrack* waveTrack;
+   int trackNumber;
+   bool channel;
    bool found;
    double startTime;
    double endTime;
@@ -318,6 +320,7 @@ typedef struct FoundClip {
 FoundClip FindNextClip(const WaveTrack* wt, double t0, double t1);
 FoundClip FindPrevClip(const WaveTrack* wt, double t0, double t1);
 int FindClips(double t0, double t1, bool next, std::vector<FoundClip>& results);
+bool ChannelsHaveSameClipBoundaries(const WaveTrack* wt);
 void OnSelectPrevClip();
 void OnSelectNextClip();
 void OnSelectClip(bool next);
