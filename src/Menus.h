@@ -424,6 +424,8 @@ void OnCursorSelStart();
 void OnCursorSelEnd();
 typedef struct FoundClipBoundary {
    const WaveTrack* waveTrack;
+   int trackNumber;
+   bool channel;
    int nFound;    // 0, 1, or 2
    double time;
    int index1;
@@ -439,7 +441,7 @@ int FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& r
 void OnCursorNextClipBoundary();
 void OnCursorPrevClipBoundary();
 void OnCursorClipBoundary(bool next);
-wxString ClipBoundaryMessage(int nTracksSearched, const std::vector<FoundClipBoundary>& results);
+wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
 
 void OnAlignNoSync(int index);
 void OnAlign(int index);
