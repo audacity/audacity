@@ -23500,7 +23500,7 @@ $as_echo "#define USE_MIDI 1" >>confdefs.h
 
 
    if test "$PORTMIDI_USE_LOCAL" = yes; then
-      PORTMIDI_CFLAGS='-I$(top_srcdir)/lib-src/portmidi'
+      PORTMIDI_CFLAGS='-I$(top_srcdir)/lib-src/portmidi/pm_common'
       PORTMIDI_LIBS='$(top_builddir)/lib-src/portmidi/libportmidi_s.a'
       subdirs="$subdirs lib-src/portmidi"
 

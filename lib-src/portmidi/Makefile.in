@@ -19,6 +19,7 @@
 # Written by Richard Ash following Gary Vaughan's Autobook
 
 
+
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
@@ -86,8 +87,9 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/portmidi.pc.in $(srcdir)/portmidi-uninstalled.pc.in \
 	$(top_srcdir)/autotools/depcomp $(dist_doc_DATA) \
-	autotools/compile autotools/depcomp autotools/install-sh \
-	autotools/missing $(top_srcdir)/autotools/compile \
+	$(include_HEADERS) autotools/compile autotools/depcomp \
+	autotools/install-sh autotools/missing \
+	$(top_srcdir)/autotools/compile \
 	$(top_srcdir)/autotools/install-sh \
 	$(top_srcdir)/autotools/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -131,7 +133,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(docdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(docdir)" \
+	"$(DESTDIR)$(includedir)"
 LIBRARIES = $(lib_LIBRARIES)
 AR = ar
 ARFLAGS = cru
@@ -185,6 +188,7 @@ am__can_run_installinfo = \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
 DATA = $(dist_doc_DATA)
+HEADERS = $(include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -338,8 +342,9 @@ libportmidi_s_a_SOURCES = pm_common/portmidi.c \
 # but that would mean re-organising them here (a subdirectory called portSMF to
 # keep headers in, add -I$(srcdir)/portSMF/ to AM_CXXFLAGS, change the paths
 # to the headers here and change the name of the variable to nobase_include_...
-#include_HEADERS = portmidi/portmidi.h \
-#	porttime/porttime.h
+include_HEADERS = pm_common/portmidi.h \
+	porttime/porttime.h
+
 AM_CFLAGS = -I$(top_srcdir)/pm_common -I$(top_srcdir)/porttime
 
 # files that only really viscous cleans remove
@@ -568,6 +573,27 @@ uninstall-dist_docDATA:
 	@list='$(dist_doc_DATA)'; test -n "$(docdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(docdir)'; $(am__uninstall_files_from_dir)
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(includedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(includedir)" || exit $$?; \
+	done
+
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(include_HEADERS)'; test -n "$(includedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -793,9 +819,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(DATA)
+all-am: Makefile $(LIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(docdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -852,7 +878,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_docDATA
+install-data-am: install-dist_docDATA install-includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -899,7 +925,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_docDATA uninstall-libLIBRARIES
+uninstall-am: uninstall-dist_docDATA uninstall-includeHEADERS \
+	uninstall-libLIBRARIES
 
 .MAKE: install-am install-strip
 
@@ -912,13 +939,14 @@ uninstall-am: uninstall-dist_docDATA uninstall-libLIBRARIES
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-dist_docDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLIBRARIES install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-dist_docDATA uninstall-libLIBRARIES
+	uninstall-am uninstall-dist_docDATA uninstall-includeHEADERS \
+	uninstall-libLIBRARIES
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

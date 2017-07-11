@@ -1,5 +1,5 @@
 dnl I frankly don't know what's supposed to go there
-# audacity_checklib_portsmf.m4 serial 1
+# audacity_checklib_portsmf.m4 serial 2
 
 AC_DEFUN([AUDACITY_CHECKLIB_PORTMIDI], [
 
@@ -9,7 +9,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTMIDI], [
                PORTMIDI_ARGUMENT=$withval,
                PORTMIDI_ARGUMENT="unspecified")
 
-   dnl see if libportsmf is installed on the system
+   dnl see if libportmidi is installed on the system
 
    PKG_CHECK_MODULES(PORTMIDI, portmidi,
                      PORTMIDI_SYSTEM_AVAILABLE="yes",
@@ -34,7 +34,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTMIDI], [
 
 AC_DEFUN([AUDACITY_CONFIG_PORTMIDI], [
    if test "$PORTMIDI_USE_LOCAL" = yes; then
-      PORTMIDI_CFLAGS='-I$(top_srcdir)/lib-src/portmidi'
+      PORTMIDI_CFLAGS='-I$(top_srcdir)/lib-src/portmidi/pm_common'
       PORTMIDI_LIBS='$(top_builddir)/lib-src/portmidi/libportmidi_s.a'
       AC_CONFIG_SUBDIRS([lib-src/portmidi])
    fi
@@ -47,6 +47,6 @@ AC_DEFUN([AUDACITY_CONFIG_PORTMIDI], [
 
    if test "$PORTMIDI_USE_LOCAL" = yes -o "$PORTMIDI_USE_SYSTEM" = yes; then
       AC_DEFINE(USE_PORTMIDI, 1,
-                [Define if midi support should be enabled])
+                [Define if MIDI playback support using PortMIDI should be enabled])
    fi
 ])

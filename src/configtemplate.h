@@ -161,7 +161,7 @@
 /* Define if Nyquist support should be enabled */
 #undef USE_NYQUIST
 
-/* Define if midi support should be enabled */
+/* Define if MIDI playback support using PortMIDI should be enabled */
 #undef USE_PORTMIDI
 
 /* Define if PortMixer support should be enabled */

@@ -22,8 +22,8 @@ libportmidi_s_a_SOURCES = pm_common/portmidi.c \
 # but that would mean re-organising them here (a subdirectory called portSMF to
 # keep headers in, add -I$(srcdir)/portSMF/ to AM_CXXFLAGS, change the paths
 # to the headers here and change the name of the variable to nobase_include_...
-#include_HEADERS = portmidi/portmidi.h \
-#	porttime/porttime.h
+include_HEADERS = pm_common/portmidi.h \
+	porttime/porttime.h
 
 
 AM_CFLAGS = -I$(top_srcdir)/pm_common -I$(top_srcdir)/porttime
