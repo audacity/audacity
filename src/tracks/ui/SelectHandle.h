@@ -24,15 +24,19 @@ class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;
 class Track;
+class TrackList;
 class ViewInfo;
 class WaveTrack;
+class wxMouseState;
 
 class SelectHandle : public UIHandle
 {
    SelectHandle(const SelectHandle&);
 
 public:
-   explicit SelectHandle( const std::shared_ptr<Track> &pTrack );
+   explicit SelectHandle
+      (const std::shared_ptr<Track> &pTrack, const TrackList &trackList,
+       const TrackPanelMouseState &st, const ViewInfo &viewInfo);
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
@@ -71,8 +75,7 @@ public:
 private:
    void Connect(AudacityProject *pProject);
 
-   void StartSelection
-      (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge);
+   void StartSelection(AudacityProject *pProject);
    void AdjustSelection
       (AudacityProject *pProject,
        ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,

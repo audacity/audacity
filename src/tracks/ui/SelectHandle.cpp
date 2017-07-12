@@ -428,23 +428,15 @@ UIHandlePtr SelectHandle::HitTest
    // This handle is a little special because there may be some state to
    // preserve during movement before the click.
    auto old = holder.lock();
-   std::shared_ptr<SnapManager> oldSnapManager;
    if (old) {
       // It should not have started listening to timer events
       wxASSERT( !old->mTimerHandler );
-      oldSnapManager = std::move(old->mSnapManager);
    }
 
-   auto result = std::make_shared<SelectHandle>( pTrack );
-   result = AssignUIHandlePtr(holder, result);
-
-   // Copy the pre-dragging state
-   result->mSnapManager = std::move( oldSnapManager );
-
-   const wxMouseState &state = st.state;
-   const wxRect &rect = st.rect;
-
    const ViewInfo &viewInfo = pProject->GetViewInfo();
+   auto result = std::make_shared<SelectHandle>(
+      pTrack, *pProject->GetTracks(), st, viewInfo );
+   result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
    // Adjusting the selection edges can be turned off in
@@ -455,6 +447,7 @@ UIHandlePtr SelectHandle::HitTest
    }
 
    {
+      const wxRect &rect = st.rect;
       wxInt64 leftSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t0(), rect.x);
       wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
       // Something is wrong if right edge comes before left edge
@@ -464,9 +457,22 @@ UIHandlePtr SelectHandle::HitTest
    return result;
 }
 
-SelectHandle::SelectHandle( const std::shared_ptr<Track> &pTrack )
+SelectHandle::SelectHandle
+( const std::shared_ptr<Track> &pTrack, const TrackList &trackList,
+  const TrackPanelMouseState &st, const ViewInfo &viewInfo )
    : mpTrack{ pTrack }
-{}
+   , mSnapManager{ std::make_shared<SnapManager>(&trackList, &viewInfo) }
+{
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+
+   auto time = std::max(0.0, viewInfo.PositionToTime(state.m_x, rect.x));
+   mSnapStart = mSnapManager->Snap(pTrack.get(), time, false);
+   if (mSnapStart.snappedPoint)
+      mSnapStart.outCoord += rect.x;
+   else
+      mSnapStart.outCoord = -1;
+}
 
 SelectHandle::~SelectHandle()
 {
@@ -563,15 +569,12 @@ UIHandle::Result SelectHandle::Click
 
    mSelectionBoundary = 0;
 
-   if (!mSnapManager) {
-      // We create a NEW snap manager in case any snap-points have changed
-      mSnapManager = std::make_shared<SnapManager>(trackList, &viewInfo);
-   }
-
    bool bShiftDown = event.ShiftDown();
    bool bCtrlDown = event.ControlDown();
 
    auto pMixerBoard = pProject->GetMixerBoard();
+
+   mSelStart = mSnapStart.outTime;
 
    // I. Shift-click adjusts an existing selection
    if (bShiftDown || bCtrlDown) {
@@ -604,7 +607,8 @@ UIHandle::Result SelectHandle::Click
             mFreqSelMode = FREQ_SEL_INVALID;
 #endif
             mSelStartValid = true;
-            mSelStart = value;
+            if (!mSnapStart.Snapped())
+               mSelStart = value;
             AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
@@ -699,7 +703,8 @@ UIHandle::Result SelectHandle::Click
                mFreqSelMode = FREQ_SEL_INVALID;
 #endif
                mSelStartValid = true;
-               mSelStart = value;
+               if (!mSnapStart.Snapped())
+                  mSelStart = value;
                break;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
             case SBBottom:
@@ -738,7 +743,7 @@ UIHandle::Result SelectHandle::Click
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height, pTrack);
 #endif
-      StartSelection(pProject, event.m_x, mRect.x);
+      StartSelection(pProject);
       selectionState.SelectTrack
          ( *trackList, *pTrack, true, true, pMixerBoard );
       trackPanel->SetFocusedTrack(pTrack);
@@ -1089,25 +1094,10 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
 }
 
 /// Reset our selection markers.
-void SelectHandle::StartSelection
-   (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge)
+void SelectHandle::StartSelection( AudacityProject *pProject )
 {
    ViewInfo &viewInfo = pProject->GetViewInfo();
    mSelStartValid = true;
-   mSelStart = std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
-
-   if (mSnapManager.get()) {
-      auto pTrack = pProject->GetTracks()->Lock(mpTrack);
-      mSnapStart = mSnapManager->Snap(pTrack.get(), mSelStart, false);
-      if (mSnapStart.Snapped()) {
-         // Reassign mSelStart!
-         mSelStart = mSnapStart.outTime;
-         if (mSnapStart.snappedPoint)
-            mSnapStart.outCoord += trackLeftEdge;
-      }
-      if (!mSnapStart.snappedPoint)
-         mSnapStart.outCoord = -1;
-   }
 
    viewInfo.selectedRegion.setTimes(mSelStart, mSelStart);
 
