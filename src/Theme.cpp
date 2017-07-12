@@ -192,16 +192,16 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 
 // Include the ImageCache...
 
-static unsigned char DarkImageCacheAsData[] = {
+static const unsigned char DarkImageCacheAsData[] = {
 #include "DarkThemeAsCeeCode.h"
 };
-static unsigned char LightImageCacheAsData[] = {
+static const unsigned char LightImageCacheAsData[] = {
 #include "LightThemeAsCeeCode.h"
 };
-static unsigned char ClassicImageCacheAsData[] = {
+static const unsigned char ClassicImageCacheAsData[] = {
 #include "ClassicThemeAsCeeCode.h"
 };
-static unsigned char HiContrastImageCacheAsData[] = {
+static const unsigned char HiContrastImageCacheAsData[] = {
 #include "HiContrastThemeAsCeeCode.h"
 };
 
@@ -963,24 +963,24 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    else
    {
       size_t ImageSize = 0;
-      char * pImage = NULL;
+      const unsigned char * pImage = nullptr;
       switch( type ){
          default: 
          case themeClassic : 
             ImageSize = sizeof(ClassicImageCacheAsData);
-            pImage = (char *)ClassicImageCacheAsData;
+            pImage = ClassicImageCacheAsData;
             break;
          case themeLight : 
             ImageSize = sizeof(LightImageCacheAsData);
-            pImage = (char *)LightImageCacheAsData;
+            pImage = LightImageCacheAsData;
             break;
          case themeDark : 
             ImageSize = sizeof(DarkImageCacheAsData);
-            pImage = (char *)DarkImageCacheAsData;
+            pImage = DarkImageCacheAsData;
             break;
          case themeHiContrast : 
             ImageSize = sizeof(HiContrastImageCacheAsData);
-            pImage = (char *)HiContrastImageCacheAsData;
+            pImage = HiContrastImageCacheAsData;
             break;
       }
 
