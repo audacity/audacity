@@ -915,6 +915,7 @@ void TrackPanel::HandleMotion
       }
 
       auto oldHandle = Target();
+      auto oldPosition = mTarget;
 
       // Now do the
       // UIHANDLE HIT TEST !
@@ -926,8 +927,12 @@ void TrackPanel::HandleMotion
       if (oldHandle) {
          auto begin = mTargets.begin(), end = mTargets.end(),
             iter = std::find(begin, end, oldHandle);
-         if (iter != end)
-            mTarget = iter - begin;
+         if (iter != end) {
+            auto newPosition = iter - begin;
+            if (newPosition <= oldPosition)
+               mTarget = newPosition;
+            // else, some new hit and this position takes priority
+         }
       }
 
       handle = Target();
