@@ -32,6 +32,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../toolbars/ToolsToolBar.h"
 #include "../../../images/Cursors.h"
 
+#include <wx/event.h>
+
 // Only for definition of SonifyBeginModifyState:
 //#include "../../NoteTrack.h"
 
@@ -423,21 +425,21 @@ UIHandlePtr SelectHandle::HitTest
  const TrackPanelMouseState &st, const AudacityProject *pProject,
  const std::shared_ptr<Track> &pTrack)
 {
-   // This handle is a little special, not following the pattern of calling
-   // AssignUIHandlePtr(); there may be some state to preserve during movement
-   // before the click.
+   // This handle is a little special because there may be some state to
+   // preserve during movement before the click.
    auto old = holder.lock();
-   std::unique_ptr<SnapManager> oldSnapManager;
+   std::shared_ptr<SnapManager> oldSnapManager;
    wxInt64 oldSnapLeft = -1, oldSnapRight = -1;
    if (old) {
       // It should not have started listening to timer events
-      wxASSERT( !old->mConnectedProject );
+      wxASSERT( !old->mTimerHandler );
       oldSnapManager = std::move(old->mSnapManager);
       oldSnapLeft = old->mSnapLeft;
       oldSnapRight = old->mSnapRight;
    }
 
    auto result = std::make_shared<SelectHandle>( pTrack );
+   result = AssignUIHandlePtr(holder, result);
 
    // Copy the pre-dragging state
    result->mSnapManager = std::move( oldSnapManager );
@@ -561,14 +563,14 @@ UIHandle::Result SelectHandle::Click
    mInitialSelection = viewInfo.selectedRegion;
 
    TrackList *const trackList = pProject->GetTracks();
-   mSelectionStateChanger = std::make_unique< SelectionStateChanger >
+   mSelectionStateChanger = std::make_shared< SelectionStateChanger >
       ( selectionState, *trackList );
 
    mSelectionBoundary = 0;
 
    if (!mSnapManager) {
       // We create a NEW snap manager in case any snap-points have changed
-      mSnapManager = std::make_unique<SnapManager>(trackList, &viewInfo);
+      mSnapManager = std::make_shared<SnapManager>(trackList, &viewInfo);
       mSnapLeft = -1;
       mSnapRight = -1;
    }
@@ -954,7 +956,6 @@ UIHandle::Result SelectHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   Disconnect();
    pProject->ModifyState(false);
    mFrequencySnapper.reset();
    mSnapManager.reset();
@@ -971,8 +972,6 @@ UIHandle::Result SelectHandle::Release
 
 UIHandle::Result SelectHandle::Cancel(AudacityProject *pProject)
 {
-   Disconnect();
-
    mSelectionStateChanger.reset();
    pProject->GetViewInfo().selectedRegion = mInitialSelection;
 
@@ -995,31 +994,41 @@ void SelectHandle::DrawExtras
 
 void SelectHandle::Connect(AudacityProject *pProject)
 {
-   mConnectedProject = pProject;
-   mConnectedProject->Connect(EVT_TRACK_PANEL_TIMER,
-      wxCommandEventHandler(SelectHandle::OnTimer),
-      NULL,
-      this);
+   mTimerHandler = std::make_shared<TimerHandler>( this, pProject );
 }
 
-void SelectHandle::Disconnect()
+class SelectHandle::TimerHandler : public wxEvtHandler
 {
-   if (mConnectedProject)
-      mConnectedProject->Disconnect(EVT_TRACK_PANEL_TIMER,
-         wxCommandEventHandler(SelectHandle::OnTimer),
-         NULL,
-         this);
-   mConnectedProject = NULL;
+public:
+   TimerHandler( SelectHandle *pParent, AudacityProject *pProject )
+      : mParent{ pParent }
+      , mConnectedProject{ pProject }
+   {
+      if (mConnectedProject)
+         mConnectedProject->Connect(EVT_TRACK_PANEL_TIMER,
+            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
+            NULL,
+            this);
+   }
 
-   mpTrack.reset();
-   mFreqSelTrack.reset();
+   ~TimerHandler()
+   {
+      if (mConnectedProject)
+         mConnectedProject->Disconnect(EVT_TRACK_PANEL_TIMER,
+            wxCommandEventHandler(SelectHandle::TimerHandler::OnTimer),
+            NULL,
+            this);
+   }
 
-   mSnapManager.reset(NULL);
+   // Receives timer event notifications, to implement auto-scroll
+   void OnTimer(wxCommandEvent &event);
 
-   mFreqSelMode = FREQ_SEL_INVALID;
-}
+private:
+   SelectHandle *mParent;
+   AudacityProject *mConnectedProject;
+};
 
-void SelectHandle::OnTimer(wxCommandEvent &event)
+void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
 {
    event.Skip();
 
@@ -1042,12 +1051,12 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
 
    const auto project = mConnectedProject;
    const auto trackPanel = project->GetTrackPanel();
-   if (mMostRecentX >= mRect.x + mRect.width) {
-      mAutoScrolling = true;
+   if (mParent->mMostRecentX >= mParent->mRect.x + mParent->mRect.width) {
+      mParent->mAutoScrolling = true;
       project->TP_ScrollRight();
    }
-   else if (mMostRecentX < mRect.x) {
-      mAutoScrolling = true;
+   else if (mParent->mMostRecentX < mParent->mRect.x) {
+      mParent->mAutoScrolling = true;
       project->TP_ScrollLeft();
    }
    else {
@@ -1055,24 +1064,24 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       // extreme x coordinate of the screen, even if that is still within the
       // track area.
 
-      int xx = mMostRecentX, yy = 0;
+      int xx = mParent->mMostRecentX, yy = 0;
       trackPanel->ClientToScreen(&xx, &yy);
       if (xx == 0) {
-         mAutoScrolling = true;
+         mParent->mAutoScrolling = true;
          project->TP_ScrollLeft();
       }
       else {
          int width, height;
          ::wxDisplaySize(&width, &height);
          if (xx == width - 1) {
-            mAutoScrolling = true;
+            mParent->mAutoScrolling = true;
             project->TP_ScrollRight();
          }
       }
    }
 
-   auto pTrack = mpTrack.lock(); // TrackList::Lock() ?
-   if (mAutoScrolling && pTrack) {
+   auto pTrack = mParent->mpTrack.lock(); // TrackList::Lock() ?
+   if (mParent->mAutoScrolling && pTrack) {
       // AS: To keep the selection working properly as we scroll,
       //  we fake a mouse event (remember, this method is called
       //  from a timer tick).
@@ -1080,8 +1089,8 @@ void SelectHandle::OnTimer(wxCommandEvent &event)
       // AS: For some reason, GCC won't let us pass this directly.
       wxMouseEvent evt(wxEVT_MOTION);
       const auto size = trackPanel->GetSize();
-      Drag(TrackPanelMouseEvent{ evt, mRect, size, pTrack }, project);
-      mAutoScrolling = false;
+      mParent->Drag(TrackPanelMouseEvent{ evt, mParent->mRect, size, pTrack }, project);
+      mParent->mAutoScrolling = false;
       mConnectedProject->GetTrackPanel()->Refresh(false);
    }
 }
@@ -1304,7 +1313,7 @@ void SelectHandle::HandleCenterFrequencyClick
       mFreqSelMode = FREQ_SEL_SNAPPING_CENTER;
       // Disable time selection
       mSelStartValid = false;
-      mFrequencySnapper = std::make_unique<SpectrumAnalyst>();
+      mFrequencySnapper = std::make_shared<SpectrumAnalyst>();
       StartSnappingFreqSelection(*mFrequencySnapper, viewInfo, pTrack);
 #endif
    }

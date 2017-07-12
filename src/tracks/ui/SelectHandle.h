@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../MemoryX.h"
 #include <vector>
 
-#include <wx/event.h>
 #include <wx/gdicmn.h>
 
 class SelectionStateChanger;
@@ -27,10 +26,9 @@ class Track;
 class ViewInfo;
 class WaveTrack;
 
-class SelectHandle : public wxEvtHandler, public UIHandle
+class SelectHandle : public UIHandle
 {
    SelectHandle(const SelectHandle&);
-   SelectHandle &operator=(const SelectHandle&);
 
 public:
    explicit SelectHandle( const std::shared_ptr<Track> &pTrack );
@@ -42,6 +40,8 @@ public:
        const TrackPanelMouseState &state, const AudacityProject *pProject,
        const std::shared_ptr<Track> &pTrack);
 
+   SelectHandle &operator=(const SelectHandle&) = default;
+   
    virtual ~SelectHandle();
 
    bool IsClicked() const;
@@ -67,12 +67,8 @@ public:
       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
       override;
 
-   // Receives timer event notifications, to implement auto-scroll
-   void OnTimer(wxCommandEvent &event);
-
 private:
    void Connect(AudacityProject *pProject);
-   void Disconnect();
 
    void StartSelection
       (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge);
@@ -117,7 +113,7 @@ private:
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
-   std::unique_ptr<SnapManager> mSnapManager;
+   std::shared_ptr<SnapManager> mSnapManager;
    wxInt64 mSnapLeft{ -1 };
    wxInt64 mSnapRight{ -1 };
 
@@ -145,14 +141,16 @@ private:
    // FREQ_SEL_BOTTOM_FREE,
    // and is ignored otherwise.
    double mFreqSelPin{ -1.0 };
-   std::unique_ptr<SpectrumAnalyst> mFrequencySnapper;
+   std::shared_ptr<SpectrumAnalyst> mFrequencySnapper;
 
    int mMostRecentX{ -1 }, mMostRecentY{ -1 };
 
    bool mAutoScrolling{};
 
-   AudacityProject *mConnectedProject{};
+   std::shared_ptr<SelectionStateChanger> mSelectionStateChanger;
 
-   std::unique_ptr<SelectionStateChanger> mSelectionStateChanger;
+   class TimerHandler;
+   friend TimerHandler;
+   std::shared_ptr<TimerHandler> mTimerHandler;
 };
 #endif
