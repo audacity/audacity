@@ -976,12 +976,17 @@ bool TrackPanel::HasRotation() const
    return !mUIHandle && mTargets.size() > 1;
 }
 
-void TrackPanel::RotateTarget()
+void TrackPanel::RotateTarget(bool forward)
 {
    auto size = mTargets.size();
    if (size > 1) {
-      mTarget = (mTarget + 1) % size;
-      Target()->Enter();
+      if (forward)
+         ++mTarget;
+      else
+         mTarget += size - 1;
+      mTarget %= size;
+      if (Target())
+         Target()->Enter();
    }
 }
 
@@ -1391,7 +1396,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 
    case WXK_TAB:
       if ( HasRotation() ) {
-         RotateTarget();
+         RotateTarget( !event.ShiftDown() );
          HandleCursorForPresentMouseState(false);
          return;
       }

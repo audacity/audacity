@@ -551,7 +551,7 @@ protected:
 
    bool HasRotation() const;
 
-   void RotateTarget();
+   void RotateTarget(bool forward);
 
    std::weak_ptr<Track> mpClickedTrack;
    UIHandlePtr mUIHandle;
