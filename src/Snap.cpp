@@ -37,7 +37,7 @@ TrackClip::~TrackClip()
 
 }
 
-SnapManager::SnapManager(TrackList *tracks,
+SnapManager::SnapManager(const TrackList *tracks,
                          const ZoomInfo *zoomInfo,
                          const TrackClipArray *clipExclusions,
                          const TrackArray *trackExclusions,
@@ -102,8 +102,8 @@ void SnapManager::Reinit()
    // Add a SnapPoint at t=0
    mSnapPoints.push_back(SnapPoint{});
 
-   TrackListIterator iter(mTracks);
-   for (Track *track = iter.First();  track; track = iter.Next())
+   TrackListConstIterator iter(mTracks);
+   for (const Track *track = iter.First();  track; track = iter.Next())
    {
       if (mTrackExclusions &&
           mTrackExclusions->end() !=

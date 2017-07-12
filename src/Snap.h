@@ -73,7 +73,7 @@ using SnapPointArray = std::vector < SnapPoint > ;
 class SnapManager
 {
 public:
-   SnapManager(TrackList *tracks,
+   SnapManager(const TrackList *tracks,
                const ZoomInfo *zoomInfo,
                const TrackClipArray *clipExclusions = NULL,
                const TrackArray *trackExclusions = NULL,
@@ -112,7 +112,7 @@ private:
 private:
 
    const AudacityProject *mProject;
-   TrackList *mTracks;
+   const TrackList *mTracks;
    const TrackClipArray *mClipExclusions;
    const TrackArray *mTrackExclusions;
    const ZoomInfo *mZoomInfo;
