@@ -1906,8 +1906,9 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
 #endif
    }
 
-   if (mUIHandle)
-      mUIHandle->DrawExtras(UIHandle::Cells, dc, region, clip);
+   auto target = Target();
+   if (target)
+      target->DrawExtras(UIHandle::Cells, dc, region, clip);
 
    // Paint over the part below the tracks
    trackRect.y += trackRect.height;
@@ -1929,8 +1930,8 @@ void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
       HighlightFocusedTrack(dc, focusRect);
    }
 
-   if (mUIHandle)
-      mUIHandle->DrawExtras(UIHandle::Panel, dc, region, clip);
+   if (target)
+      target->DrawExtras(UIHandle::Panel, dc, region, clip);
 }
 
 // Make this #include go away!

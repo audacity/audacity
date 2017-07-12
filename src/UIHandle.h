@@ -89,6 +89,8 @@ public:
    // If pass is Cells, then any drawing that extends outside the cells
    // is later overlaid with the cell bevels and the empty background color.
    // Otherwise (Panel), it is a later drawing pass that will not be overlaid.
+   // This is invoked on the hit test target even before it is clicked,
+   // and also during drag.
    virtual void DrawExtras
       (DrawingPass pass,
        wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);
