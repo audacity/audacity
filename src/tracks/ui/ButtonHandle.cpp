@@ -25,11 +25,15 @@ ButtonHandle::ButtonHandle
    : mpTrack{ pTrack }
    , mRect{ rect }
 {
-   mChangeHighlight = RefreshCode::RefreshCell;
 }
 
 ButtonHandle::~ButtonHandle()
 {
+}
+
+void ButtonHandle::Enter()
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
 }
 
 UIHandle::Result ButtonHandle::Click

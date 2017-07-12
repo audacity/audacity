@@ -47,6 +47,8 @@ protected:
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject) = 0;
 
+   void Enter() override;
+
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 

@@ -30,6 +30,10 @@ Paul Licameli split from TrackPanel.cpp
 EnvelopeHandle::EnvelopeHandle( Envelope *pEnvelope )
    : mEnvelope{ pEnvelope }
 {
+}
+
+void EnvelopeHandle::Enter()
+{
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif

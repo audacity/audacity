@@ -30,6 +30,10 @@ LabelGlyphHandle::LabelGlyphHandle
    , mRect{ rect }
    , mHit{ hit }
 {
+}
+
+void LabelGlyphHandle::Enter()
+{
    mChangeHighlight = RefreshCode::RefreshCell;
 }
 

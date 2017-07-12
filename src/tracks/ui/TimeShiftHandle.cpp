@@ -29,6 +29,10 @@ TimeShiftHandle::TimeShiftHandle
    : mCapturedTrack{ pTrack }
    , mGripHit{ gripHit }
 {
+}
+
+void TimeShiftHandle::Enter()
+{
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif

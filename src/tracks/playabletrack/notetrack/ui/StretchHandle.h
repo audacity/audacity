@@ -71,20 +71,21 @@ public:
 
    virtual ~StretchHandle();
 
-   virtual Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   virtual Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   virtual HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject);
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      override;
 
-   virtual Result Release
+   Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-      wxWindow *pParent);
+      wxWindow *pParent) override;
 
-   virtual Result Cancel(AudacityProject *pProject);
+   Result Cancel(AudacityProject *pProject) override;
 
    bool StopsOnKeystroke() override { return true; }
 

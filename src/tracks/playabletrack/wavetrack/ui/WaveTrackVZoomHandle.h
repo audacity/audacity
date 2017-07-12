@@ -38,6 +38,8 @@ public:
 
    std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
 
+   void Enter() override;
+
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 

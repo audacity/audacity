@@ -15,6 +15,10 @@ UIHandle::~UIHandle()
 {
 }
 
+void UIHandle::Enter()
+{
+}
+
 void UIHandle::DrawExtras
    (DrawingPass, wxDC *, const wxRegion &, const wxRect &)
 {

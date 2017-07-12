@@ -1386,7 +1386,7 @@ void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
 
 void AudacityProject::RefreshCursor()
 {
-   mTrackPanel->HandleCursorForLastMouseState();
+   mTrackPanel->HandleCursorForPresentMouseState();
 }
 
 void AudacityProject::SetSel0(double newSel0)

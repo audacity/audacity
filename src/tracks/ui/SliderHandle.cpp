@@ -22,6 +22,10 @@ SliderHandle::SliderHandle
    , mRect{ rect }
    , mpTrack{ pTrack }
 {
+}
+
+void SliderHandle::Enter()
+{
    mChangeHighlight = RefreshCode::RefreshCell;
 }
 
