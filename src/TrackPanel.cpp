@@ -757,7 +757,7 @@ void TrackPanel::Uncapture(wxMouseEvent *pEvent)
 {
    if (HasCapture())
       ReleaseMouse();
-   HandleMotion( pEvent );
+   HandleMotion( *pEvent );
 }
 
 void TrackPanel::CancelDragging()
@@ -812,14 +812,9 @@ void TrackPanel::UpdateMouseState(const wxMouseState &state)
 
 void TrackPanel::HandleModifierKey()
 {
-   // Get the button and key states
-   auto state = ::wxGetMouseState();
-   // Remap the position
-   state.SetPosition(this->ScreenToClient(state.GetPosition()));
-
-   UpdateMouseState(state);
-   HandleCursorForLastMouseState();
+   HandleCursorForPresentMouseState();
 }
+
 void TrackPanel::HandlePageUpKey()
 {
    mListener->TP_ScrollWindow(2 * mViewInfo->h - GetScreenEndTime());
@@ -830,12 +825,19 @@ void TrackPanel::HandlePageDownKey()
    mListener->TP_ScrollWindow(GetScreenEndTime());
 }
 
-void TrackPanel::HandleCursorForLastMouseState()
+void TrackPanel::HandleCursorForPresentMouseState()
 {
    // Come here on modifier key or mouse button transitions,
    // or on starting or stopping of play or record,
+   // or change of toolbar button,
    // and change the cursor appropriately.
-   HandleMotion( &mLastMouseState );
+
+   // Get the button and key states
+   auto state = ::wxGetMouseState();
+   // Remap the position
+   state.SetPosition(this->ScreenToClient(state.GetPosition()));
+
+   HandleMotion( state );
 }
 
 bool TrackPanel::IsAudioActive()
@@ -852,20 +854,15 @@ bool TrackPanel::IsAudioActive()
 ///  may cause the appropriate cursor and message to change.
 ///  As this procedure checks which region the mouse is over, it is
 ///  appropriate to establish the message in the status bar.
-void TrackPanel::HandleMotion( wxMouseState *pState )
+void TrackPanel::HandleMotion( wxMouseState &inState )
 {
-   wxMouseState dummy;
-   if (!pState)
-      pState = &dummy;
-   else
-      UpdateMouseState( *pState ), pState = &mLastMouseState;
-   auto &state = *pState;
+   UpdateMouseState( inState );
 
-   const auto foundCell = FindCell( state.m_x, state.m_y );
+   const auto foundCell = FindCell( inState.m_x, inState.m_y );
    auto &track = foundCell.pTrack;
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
-   const TrackPanelMouseState tpmState{ state, rect, pCell };
+   const TrackPanelMouseState tpmState{ mLastMouseState, rect, pCell };
    HandleMotion( tpmState );
 }
 
@@ -1036,7 +1033,7 @@ void TrackPanel::OnPlayback(wxCommandEvent &e)
    // Starting or stopping of play or record affects some cursors.
    // Start or stop is in progress now, not completed; so delay the cursor
    // change until next idle time.
-   CallAfter( [this] { HandleCursorForLastMouseState(); } );
+   CallAfter( [this] { HandleCursorForPresentMouseState(); } );
 }
 
 // The tracks positions within the list have changed, so update the vertical
@@ -1554,7 +1551,7 @@ try
       // consider it not a drag, even if button is down during motion, if
       // mUIHandle is null, as it becomes during interrupted drag
       // (e.g. by hitting space to play while dragging an envelope point)
-      HandleMotion( &event );
+      HandleMotion( event );
    else if ( event.ButtonDown() || event.ButtonDClick() )
       HandleClick( tpmEvent );
 

@@ -334,7 +334,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
 
-   void HandleCursorForLastMouseState();
+   void HandleCursorForPresentMouseState();
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -377,7 +377,7 @@ protected:
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
-   void HandleMotion( wxMouseState *pState );
+   void HandleMotion( wxMouseState &state );
    void HandleMotion( const TrackPanelMouseState &tpmState );
 
    // If label, rectangle includes track control panel only.
