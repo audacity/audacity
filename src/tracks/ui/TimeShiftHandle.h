@@ -75,7 +75,7 @@ public:
 
    virtual ~TimeShiftHandle();
 
-   void Enter() override;
+   void Enter(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

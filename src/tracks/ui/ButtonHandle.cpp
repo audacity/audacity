@@ -31,7 +31,7 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
-void ButtonHandle::Enter()
+void ButtonHandle::Enter(bool)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

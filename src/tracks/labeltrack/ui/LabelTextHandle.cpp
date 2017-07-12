@@ -26,7 +26,7 @@ LabelTextHandle::LabelTextHandle
 {
 }
 
-void LabelTextHandle::Enter()
+void LabelTextHandle::Enter(bool)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

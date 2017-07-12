@@ -950,8 +950,8 @@ void TrackPanel::HandleMotion
          // Did not move cell to cell, but did change the target
          refreshCode = updateFlags;
 
-      if (handle)
-         handle->Enter();
+      if (handle != oldHandle)
+         handle->Enter(true);
    }
 
    // UIHANDLE PREVIEW
@@ -977,15 +977,30 @@ void TrackPanel::HandleMotion
       this, GetRuler(), newTrack.get(), newTrack.get(), refreshCode);
 }
 
-bool TrackPanel::HasRotation() const
+bool TrackPanel::HasRotation()
 {
    // Is there a nontrivial TAB key rotation?
-   return !mUIHandle && mTargets.size() > 1;
+   if ( mTargets.size() > 1 )
+      return true;
+   auto target = Target();
+   return target && target->HasRotation();
 }
 
 void TrackPanel::RotateTarget(bool forward)
 {
    auto size = mTargets.size();
+
+   auto target = Target();
+   if (target && target->HasRotation()) {
+      if(target->Rotate(forward))
+         return;
+      else if (size == 1 || IsMouseCaptured()) {
+         // Rotate through the states of this target only.
+         target->Enter(forward);
+         return;
+      }
+   }
+
    if (size > 1) {
       if (forward)
          ++mTarget;
@@ -993,7 +1008,7 @@ void TrackPanel::RotateTarget(bool forward)
          mTarget += size - 1;
       mTarget %= size;
       if (Target())
-         Target()->Enter();
+         Target()->Enter(forward);
    }
 }
 

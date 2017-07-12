@@ -30,7 +30,7 @@ TimeShiftHandle::TimeShiftHandle
 {
 }
 
-void TimeShiftHandle::Enter()
+void TimeShiftHandle::Enter(bool)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

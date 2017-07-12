@@ -51,7 +51,7 @@ WaveTrackVZoomHandle::WaveTrackVZoomHandle
 {
 }
 
-void WaveTrackVZoomHandle::Enter()
+void WaveTrackVZoomHandle::Enter(bool)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

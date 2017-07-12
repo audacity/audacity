@@ -549,7 +549,7 @@ protected:
       mMouseOverUpdateFlags = 0;
    }
 
-   bool HasRotation() const;
+   bool HasRotation();
 
    void RotateTarget(bool forward);
 

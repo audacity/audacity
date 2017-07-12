@@ -38,7 +38,7 @@ public:
 
    std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
 
-   void Enter() override;
+   void Enter(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
