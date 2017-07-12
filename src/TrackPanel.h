@@ -334,7 +334,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
 
-   void HandleCursorForPresentMouseState();
+   void HandleCursorForPresentMouseState(bool doHit = true);
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -377,8 +377,9 @@ protected:
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
-   void HandleMotion( wxMouseState &state );
-   void HandleMotion( const TrackPanelMouseState &tpmState );
+   void HandleMotion( wxMouseState &state, bool doHit = true );
+   void HandleMotion
+      ( const TrackPanelMouseState &tpmState, bool doHit = true );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
@@ -524,13 +525,17 @@ protected:
 
  protected:
    std::weak_ptr<TrackPanelCell> mLastCell;
-   UIHandlePtr mLastHitTest;
+   std::vector<UIHandlePtr> mTargets;
+   size_t mTarget {};
    unsigned mMouseOverUpdateFlags{};
 
  public:
    UIHandlePtr Target()
    {
-      return mLastHitTest;
+      if (mTargets.size())
+         return mTargets[mTarget];
+      else
+         return {};
    }
 
  protected:
@@ -539,9 +544,14 @@ protected:
       // Forget the rotation of hit test candidates when the mouse moves from
       // cell to cell or outside of the TrackPanel entirely.
       mLastCell.reset();
-      mLastHitTest = {};
+      mTargets.clear();
+      mTarget = 0;
       mMouseOverUpdateFlags = 0;
    }
+
+   bool HasRotation() const;
+
+   void RotateTarget();
 
    std::weak_ptr<Track> mpClickedTrack;
    UIHandlePtr mUIHandle;

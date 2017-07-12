@@ -825,7 +825,7 @@ void TrackPanel::HandlePageDownKey()
    mListener->TP_ScrollWindow(GetScreenEndTime());
 }
 
-void TrackPanel::HandleCursorForPresentMouseState()
+void TrackPanel::HandleCursorForPresentMouseState(bool doHit)
 {
    // Come here on modifier key or mouse button transitions,
    // or on starting or stopping of play or record,
@@ -837,7 +837,7 @@ void TrackPanel::HandleCursorForPresentMouseState()
    // Remap the position
    state.SetPosition(this->ScreenToClient(state.GetPosition()));
 
-   HandleMotion( state );
+   HandleMotion( state, doHit );
 }
 
 bool TrackPanel::IsAudioActive()
@@ -854,7 +854,7 @@ bool TrackPanel::IsAudioActive()
 ///  may cause the appropriate cursor and message to change.
 ///  As this procedure checks which region the mouse is over, it is
 ///  appropriate to establish the message in the status bar.
-void TrackPanel::HandleMotion( wxMouseState &inState )
+void TrackPanel::HandleMotion( wxMouseState &inState, bool doHit )
 {
    UpdateMouseState( inState );
 
@@ -863,31 +863,42 @@ void TrackPanel::HandleMotion( wxMouseState &inState )
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
    const TrackPanelMouseState tpmState{ mLastMouseState, rect, pCell };
-   HandleMotion( tpmState );
+   HandleMotion( tpmState, doHit );
 }
 
-void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
+void TrackPanel::HandleMotion
+( const TrackPanelMouseState &tpmState, bool doHit )
 {
    auto handle = mUIHandle;
 
-   auto oldHandle = mLastHitTest;
-   auto oldCell = mLastCell.lock();
    auto newCell = tpmState.pCell;
 
    std::shared_ptr<Track> newTrack;
    if ( newCell )
-      newTrack = static_cast<CommonTrackPanelCell*>( newCell.get() )->FindTrack();
-
-   std::shared_ptr<Track> oldTrack;
-   if ( oldCell )
-      oldTrack = static_cast<CommonTrackPanelCell*>( oldCell.get() )->FindTrack();
+      newTrack = static_cast<CommonTrackPanelCell*>( newCell.get() )->
+         FindTrack();
 
    wxString tip{};
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
 
-   if ( !mUIHandle ) {
+   if ( ! doHit ) {
+      // Dragging or not
+      handle = Target();
+
+      // Assume cell does not change but target does
+      refreshCode = mMouseOverUpdateFlags;
+      mMouseOverUpdateFlags = 0;
+   }
+   else if ( !mUIHandle ) {
       // Not yet dragging.
+
+      auto oldCell = mLastCell.lock();
+      std::shared_ptr<Track> oldTrack;
+      if ( oldCell )
+         oldTrack = static_cast<CommonTrackPanelCell*>( oldCell.get() )->
+            FindTrack();
+
       unsigned updateFlags = mMouseOverUpdateFlags;
 
       // First check whether crossing cell to cell
@@ -903,15 +914,25 @@ void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
          }
       }
 
+      auto oldHandle = Target();
+
       // Now do the
       // UIHANDLE HIT TEST !
-      auto targets = newCell->HitTest(tpmState, GetProject());
+      mTargets = newCell->HitTest(tpmState, GetProject());
 
-      // No use, yet, of any but the first target
-      handle = targets.empty() ? UIHandlePtr{} : targets[0];
+      mTarget = 0;
+
+      // Find the old target's new place if we can
+      if (oldHandle) {
+         auto begin = mTargets.begin(), end = mTargets.end(),
+            iter = std::find(begin, end, oldHandle);
+         if (iter != end)
+            mTarget = iter - begin;
+      }
+
+      handle = Target();
 
       mLastCell = newCell;
-      mLastHitTest = handle;
 
       if (!oldCell && oldHandle != handle)
          // Did not move cell to cell, but did change the target
@@ -942,6 +963,21 @@ void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
 
    ProcessUIHandleResult(
       this, GetRuler(), newTrack.get(), newTrack.get(), refreshCode);
+}
+
+bool TrackPanel::HasRotation() const
+{
+   // Is there a nontrivial TAB key rotation?
+   return !mUIHandle && mTargets.size() > 1;
+}
+
+void TrackPanel::RotateTarget()
+{
+   auto size = mTargets.size();
+   if (size > 1) {
+      mTarget = (mTarget + 1) % size;
+      Target()->Enter();
+   }
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -1292,12 +1328,19 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
       this, mRuler, pTrack.get(), pTrack.get(), result);
 }
 
-/// Filter captured keys typed into LabelTracks.
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 {
    wxKeyEvent *kevent = static_cast<wxKeyEvent *>(event.GetEventObject());
-   if ( WXK_ESCAPE != kevent->GetKeyCode() )
+   const auto code = kevent->GetKeyCode();
+   if ( WXK_ESCAPE != code )
       HandleInterruptedDrag();
+
+   if ( WXK_TAB == code && HasRotation() ) {
+      // Override what the cell might do, don't call its CaptureKey;
+      // Also override TAB navigation in wxWidgets, by not skipping
+      event.Skip(false);
+      return;
+   }
 
    Track * const t = GetFocusedTrack();
    if (t) {
@@ -1340,6 +1383,15 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    case WXK_PAGEDOWN:
       HandlePageDownKey();
       return;
+
+   case WXK_TAB:
+      if ( HasRotation() ) {
+         RotateTarget();
+         HandleCursorForPresentMouseState(false);
+         return;
+      }
+      else
+         break;
    }
 
    Track *const t = GetFocusedTrack();
