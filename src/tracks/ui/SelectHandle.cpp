@@ -428,14 +428,17 @@ UIHandlePtr SelectHandle::HitTest
    // This handle is a little special because there may be some state to
    // preserve during movement before the click.
    auto old = holder.lock();
+   bool oldUseSnap = true;
    if (old) {
       // It should not have started listening to timer events
       wxASSERT( !old->mTimerHandler );
+      oldUseSnap = old->mUseSnap;
    }
 
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    auto result = std::make_shared<SelectHandle>(
-      pTrack, *pProject->GetTracks(), st, viewInfo );
+      pTrack, oldUseSnap, *pProject->GetTracks(), st, viewInfo );
+
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
@@ -457,8 +460,28 @@ UIHandlePtr SelectHandle::HitTest
    return result;
 }
 
+UIHandle::Result SelectHandle::NeedChangeHighlight
+(const SelectHandle &oldState, const SelectHandle &newState)
+{
+   auto useSnap = oldState.mUseSnap;
+   // This is guaranteed when constructing the new handle:
+   wxASSERT( useSnap == newState.mUseSnap );
+   if (!useSnap)
+      return 0;
+
+   auto &oldSnapState = oldState.mSnapStart;
+   auto &newSnapState = newState.mSnapStart;
+   if ( oldSnapState.Snapped() == newSnapState.Snapped() &&
+        (!oldSnapState.Snapped() ||
+         oldSnapState.outCoord == newSnapState.outCoord) )
+      return 0;
+
+   return RefreshCode::RefreshAll;
+}
+
 SelectHandle::SelectHandle
-( const std::shared_ptr<Track> &pTrack, const TrackList &trackList,
+( const std::shared_ptr<Track> &pTrack, bool useSnap,
+  const TrackList &trackList,
   const TrackPanelMouseState &st, const ViewInfo &viewInfo )
    : mpTrack{ pTrack }
    , mSnapManager{ std::make_shared<SnapManager>(&trackList, &viewInfo) }
@@ -472,6 +495,8 @@ SelectHandle::SelectHandle
       mSnapStart.outCoord += rect.x;
    else
       mSnapStart.outCoord = -1;
+
+   mUseSnap = useSnap;
 }
 
 SelectHandle::~SelectHandle()
@@ -495,6 +520,40 @@ namespace {
       return
          std::min(frequency / minFrequency, maxFrequency / frequency);
    }
+}
+
+void SelectHandle::Enter(bool forward)
+{
+   mUseSnap = forward;
+
+   bool hasSnap = HasRotation();
+   if (hasSnap)
+      // Repaint to turn the snap lines on or off
+      mChangeHighlight = RefreshCode::RefreshAll;
+
+   if (hasSnap && IsClicked())
+      // Readjust the moving selection end
+      AssignSelection(
+         ::GetActiveProject()->GetViewInfo(),
+         mUseSnap ? mSnapEnd.outTime : mSnapEnd.timeSnappedTime,
+         nullptr);
+}
+
+bool SelectHandle::HasRotation() const
+{
+   return
+      mSnapStart.snappedPoint || (IsClicked() && mSnapEnd.snappedPoint);
+}
+
+bool SelectHandle::Rotate(bool forward)
+{
+   if (SelectHandle::HasRotation()) {
+      if (mUseSnap == forward) {
+         Enter(!forward);
+         return true;
+      }
+   }
+   return false;
 }
 
 UIHandle::Result SelectHandle::Click
@@ -574,7 +633,8 @@ UIHandle::Result SelectHandle::Click
 
    auto pMixerBoard = pProject->GetMixerBoard();
 
-   mSelStart = mSnapStart.outTime;
+   mSelStart = mUseSnap ? mSnapStart.outTime : mSnapStart.timeSnappedTime;
+   auto xx = viewInfo.TimeToPosition(mSelStart, mRect.x);
 
    // I. Shift-click adjusts an existing selection
    if (bShiftDown || bCtrlDown) {
@@ -595,7 +655,7 @@ UIHandle::Result SelectHandle::Click
       double value;
       // Shift-click, choose closest boundary
       SelectionBoundary boundary =
-         ChooseBoundary(viewInfo, event.m_x, event.m_y, pTrack, mRect, false, false, &value);
+         ChooseBoundary(viewInfo, xx, event.m_y, pTrack, mRect, false, false, &value);
       mSelectionBoundary = boundary;
       switch (boundary) {
          case SBLeft:
@@ -607,7 +667,7 @@ UIHandle::Result SelectHandle::Click
             mFreqSelMode = FREQ_SEL_INVALID;
 #endif
             mSelStartValid = true;
-            if (!mSnapStart.Snapped())
+            if (!(mUseSnap && mSnapStart.Snapped()))
                mSelStart = value;
             AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
@@ -689,7 +749,7 @@ UIHandle::Result SelectHandle::Click
             // Not shift-down, choose boundary only within snapping
             double value;
             SelectionBoundary boundary =
-               ChooseBoundary(viewInfo, event.m_x, event.m_y, pTrack, mRect, true, true, &value);
+               ChooseBoundary(viewInfo, xx, event.m_y, pTrack, mRect, true, true, &value);
             mSelectionBoundary = boundary;
             switch (boundary) {
             case SBNone:
@@ -703,7 +763,7 @@ UIHandle::Result SelectHandle::Click
                mFreqSelMode = FREQ_SEL_INVALID;
 #endif
                mSelStartValid = true;
-               if (!mSnapStart.Snapped())
+               if (!(mUseSnap && mSnapStart.Snapped()))
                   mSelStart = value;
                break;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -854,6 +914,9 @@ UIHandle::Result SelectHandle::Drag
 HitTestPreview SelectHandle::Preview
 (const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
+   if (!HasRotation())
+      mUseSnap = true;
+
    auto pTrack = mpTrack.lock();
    if (!pTrack)
       return {};
@@ -870,6 +933,10 @@ HitTestPreview SelectHandle::Preview
       // Choose one of many cursors for mouse-over
 
       const ViewInfo &viewInfo = pProject->GetViewInfo();
+
+      auto &state = st.state;
+      auto time = mUseSnap ? mSnapStart.outTime : mSnapStart.timeSnappedTime;
+      auto xx = viewInfo.TimeToPosition(time, mRect.x);
 
       const bool bMultiToolMode =
          pProject->GetToolsToolBar()->IsDown(multiTool);
@@ -895,7 +962,6 @@ HitTestPreview SelectHandle::Preview
              !viewInfo.bAdjustSelectionEdges)
             ;
          else {
-            const auto &state = st.state;
             const wxRect &rect = st.rect;
             const bool bShiftDown = state.ShiftDown();
             const bool bCtrlDown = state.ControlDown();
@@ -905,7 +971,7 @@ HitTestPreview SelectHandle::Preview
             // choose boundaries only in snapping tolerance,
             // and may choose center.
             SelectionBoundary boundary =
-            ChooseBoundary(viewInfo, state.m_x, state.m_y, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+            ChooseBoundary(viewInfo, xx, state.m_y, pTrack.get(), rect, !bModifierDown, !bModifierDown);
 
             SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
          }
@@ -929,13 +995,12 @@ HitTestPreview SelectHandle::Preview
       if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
          ;
       else {
-         const auto &state = st.state;
          const wxRect &rect = st.rect;
          const bool bShiftDown = state.ShiftDown();
          const bool bCtrlDown = state.ControlDown();
          const bool bModifierDown = bShiftDown || bCtrlDown;
          SelectionBoundary boundary = ChooseBoundary(
-            viewInfo, state.m_x, state.m_y, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+            viewInfo, xx, state.m_y, pTrack.get(), rect, !bModifierDown, !bModifierDown);
          SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
       }
 
@@ -962,7 +1027,7 @@ UIHandle::Result SelectHandle::Release
       mSelectionStateChanger.reset();
    }
    
-   if (mSnapStart.outCoord != -1 || mSnapEnd.outCoord != -1)
+   if (mUseSnap && (mSnapStart.outCoord != -1 || mSnapEnd.outCoord != -1))
       return RefreshAll;
    else
       return RefreshNone;
@@ -985,7 +1050,7 @@ void SelectHandle::DrawExtras
 {
    if (pass == Panel) {
       // Draw snap guidelines if we have any
-      if ( mSnapManager )
+      if ( mUseSnap && mSnapManager )
          mSnapManager->Draw( dc, mSnapStart.outCoord, mSnapEnd.outCoord );
    }
 }
@@ -1130,7 +1195,8 @@ void SelectHandle::AdjustSelection
       bool rightEdge = (selend > mSelStart);
       mSnapEnd = mSnapManager->Snap(pTrack.get(), selend, rightEdge);
       if (mSnapEnd.Snapped()) {
-         selend = mSnapEnd.outTime;
+         if (mUseSnap)
+            selend = mSnapEnd.outTime;
          if (mSnapEnd.snappedPoint)
             mSnapEnd.outCoord += trackLeftEdge;
       }
@@ -1147,7 +1213,12 @@ void SelectHandle::AdjustSelection
          mSnapEnd.outCoord = -1;
       }
    }
+   AssignSelection(viewInfo, selend, pTrack.get());
+}
 
+void SelectHandle::AssignSelection
+(ViewInfo &viewInfo, double selend, Track *pTrack)
+{
    double sel0, sel1;
    if (mSelStart < selend) {
       sel0 = mSelStart;
@@ -1163,7 +1234,7 @@ void SelectHandle::AdjustSelection
    //On-Demand: check to see if there is an OD thing associated with this track.  If so we want to update the focal point for the task.
    if (pTrack && (pTrack->GetKind() == Track::Wave) && ODManager::IsInstanceCreated())
       ODManager::Instance()->DemandTrackUpdate
-         (static_cast<WaveTrack*>(pTrack.get()),sel0); //sel0 is sometimes less than mSelStart
+         (static_cast<WaveTrack*>(pTrack),sel0); //sel0 is sometimes less than mSelStart
 }
 
 void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,

@@ -35,7 +35,8 @@ class SelectHandle : public UIHandle
 
 public:
    explicit SelectHandle
-      (const std::shared_ptr<Track> &pTrack, const TrackList &trackList,
+      (const std::shared_ptr<Track> &pTrack, bool useSnap,
+       const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo);
 
    // This always hits, but details of the hit vary with mouse position and
@@ -50,6 +51,12 @@ public:
    virtual ~SelectHandle();
 
    bool IsClicked() const;
+
+   void Enter(bool forward) override;
+
+   bool HasRotation() const override;
+
+   bool Rotate(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -72,6 +79,10 @@ public:
       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
       override;
 
+   static UIHandle::Result NeedChangeHighlight
+      (const SelectHandle &oldState,
+       const SelectHandle &newState);
+
 private:
    void Connect(AudacityProject *pProject);
 
@@ -80,6 +91,7 @@ private:
       (AudacityProject *pProject,
        ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
        Track *pTrack);
+   void AssignSelection(ViewInfo &viewInfo, double selend, Track *pTrack);
 
    void StartFreqSelection
       (ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
@@ -115,6 +127,7 @@ private:
 
    std::shared_ptr<SnapManager> mSnapManager;
    SnapResults mSnapStart, mSnapEnd;
+   bool mUseSnap{ true };
 
    bool mSelStartValid{};
    double mSelStart{ 0.0 };
