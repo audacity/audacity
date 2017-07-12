@@ -63,7 +63,6 @@ for drawing different aspects of the label and its text box.
 #include "AColor.h"
 #include "Project.h"
 #include "TrackArtist.h"
-#include "Snap.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"

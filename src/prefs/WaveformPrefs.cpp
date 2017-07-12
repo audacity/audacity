@@ -21,7 +21,6 @@ Paul Licameli
 #include <wx/checkbox.h>
 
 #include "../Project.h"
-#include "../Snap.h"
 
 #include "../TrackPanel.h"
 #include "../ShuttleGui.h"

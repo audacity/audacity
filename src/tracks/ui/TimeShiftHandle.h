@@ -15,7 +15,6 @@ Paul Licameli
 
 #include "../../MemoryX.h"
 
-#include "../../Snap.h"
 #include "../../Track.h"
 
 class WaveClip;

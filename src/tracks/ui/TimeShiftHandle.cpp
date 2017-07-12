@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
-#include "../../Snap.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../toolbars/ToolsToolBar.h"
 #include "../../UndoManager.h"

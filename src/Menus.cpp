@@ -122,8 +122,6 @@ simplifies construction of menu items.
 #include "widgets/HelpSystem.h"
 #include "DeviceManager.h"
 
-#include "Snap.h"
-
 #include "UndoManager.h"
 #include "WaveTrack.h"
 
