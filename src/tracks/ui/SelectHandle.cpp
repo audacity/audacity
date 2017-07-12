@@ -429,13 +429,10 @@ UIHandlePtr SelectHandle::HitTest
    // preserve during movement before the click.
    auto old = holder.lock();
    std::shared_ptr<SnapManager> oldSnapManager;
-   wxInt64 oldSnapLeft = -1, oldSnapRight = -1;
    if (old) {
       // It should not have started listening to timer events
       wxASSERT( !old->mTimerHandler );
       oldSnapManager = std::move(old->mSnapManager);
-      oldSnapLeft = old->mSnapLeft;
-      oldSnapRight = old->mSnapRight;
    }
 
    auto result = std::make_shared<SelectHandle>( pTrack );
@@ -443,8 +440,6 @@ UIHandlePtr SelectHandle::HitTest
 
    // Copy the pre-dragging state
    result->mSnapManager = std::move( oldSnapManager );
-   result->mSnapLeft = oldSnapLeft;
-   result->mSnapRight = oldSnapRight;
 
    const wxMouseState &state = st.state;
    const wxRect &rect = st.rect;
@@ -571,8 +566,6 @@ UIHandle::Result SelectHandle::Click
    if (!mSnapManager) {
       // We create a NEW snap manager in case any snap-points have changed
       mSnapManager = std::make_shared<SnapManager>(trackList, &viewInfo);
-      mSnapLeft = -1;
-      mSnapRight = -1;
    }
 
    bool bShiftDown = event.ShiftDown();
@@ -964,7 +957,7 @@ UIHandle::Result SelectHandle::Release
       mSelectionStateChanger.reset();
    }
    
-   if (mSnapLeft != -1 || mSnapRight != -1)
+   if (mSnapStart.outCoord != -1 || mSnapEnd.outCoord != -1)
       return RefreshAll;
    else
       return RefreshNone;
@@ -988,7 +981,7 @@ void SelectHandle::DrawExtras
    if (pass == Panel) {
       // Draw snap guidelines if we have any
       if ( mSnapManager )
-         mSnapManager->Draw( dc, mSnapLeft, mSnapRight );
+         mSnapManager->Draw( dc, mSnapStart.outCoord, mSnapEnd.outCoord );
    }
 }
 
@@ -1103,21 +1096,20 @@ void SelectHandle::StartSelection
    mSelStartValid = true;
    mSelStart = std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
 
-   double s = mSelStart;
-
    if (mSnapManager.get()) {
-      mSnapLeft = -1;
-      mSnapRight = -1;
       auto pTrack = pProject->GetTracks()->Lock(mpTrack);
-      auto results = mSnapManager->Snap(pTrack.get(), mSelStart, false);
-      if (results.Snapped()) {
-         s = results.outTime;
-         if (results.snappedPoint)
-            mSnapLeft = trackLeftEdge + results.outCoord;
+      mSnapStart = mSnapManager->Snap(pTrack.get(), mSelStart, false);
+      if (mSnapStart.Snapped()) {
+         // Reassign mSelStart!
+         mSelStart = mSnapStart.outTime;
+         if (mSnapStart.snappedPoint)
+            mSnapStart.outCoord += trackLeftEdge;
       }
+      if (!mSnapStart.snappedPoint)
+         mSnapStart.outCoord = -1;
    }
 
-   viewInfo.selectedRegion.setTimes(s, s);
+   viewInfo.selectedRegion.setTimes(mSelStart, mSelStart);
 
    // PRL:  commented out the Sonify stuff with the TrackPanel refactor.
    // It was no-op anyway.
@@ -1136,15 +1128,37 @@ void SelectHandle::AdjustSelection
       // Must be dragging frequency bounds only.
       return;
 
-   const double selend =
+   double selend =
       std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
-   double origSel0, origSel1;
-   double sel0, sel1;
+   double origSelend = selend;
 
    auto pTrack = Track::Pointer( track );
    if (!pTrack)
       pTrack = pProject->GetTracks()->Lock(mpTrack);
 
+   if (pTrack && mSnapManager.get()) {
+      bool rightEdge = (selend > mSelStart);
+      mSnapEnd = mSnapManager->Snap(pTrack.get(), selend, rightEdge);
+      if (mSnapEnd.Snapped()) {
+         selend = mSnapEnd.outTime;
+         if (mSnapEnd.snappedPoint)
+            mSnapEnd.outCoord += trackLeftEdge;
+      }
+      if (!mSnapEnd.snappedPoint)
+         mSnapEnd.outCoord = -1;
+
+      // Check if selection endpoints are too close together to snap (unless
+      // using snap-to-time -- then we always accept the snap results)
+      if (mSnapStart.outCoord >= 0 &&
+          mSnapEnd.outCoord >= 0 &&
+          std::abs(mSnapStart.outCoord - mSnapEnd.outCoord) < 3 &&
+          !mSnapEnd.snappedTime) {
+         selend = origSelend;
+         mSnapEnd.outCoord = -1;
+      }
+   }
+
+   double sel0, sel1;
    if (mSelStart < selend) {
       sel0 = mSelStart;
       sel1 = selend;
@@ -1152,36 +1166,6 @@ void SelectHandle::AdjustSelection
    else {
       sel1 = mSelStart;
       sel0 = selend;
-   }
-
-   origSel0 = sel0;
-   origSel1 = sel1;
-
-   if (pTrack && mSnapManager.get()) {
-      mSnapLeft = -1;
-      mSnapRight = -1;
-      auto results = mSnapManager->Snap(pTrack.get(), sel0, false);
-      if (results.Snapped()) {
-         sel0 = results.outTime;
-         if (results.snappedPoint)
-            mSnapLeft = trackLeftEdge + results.outCoord;
-      }
-      results = mSnapManager->Snap(pTrack.get(), sel1, true);
-      if (results.Snapped()) {
-         sel1 = results.outTime;
-         if (results.snappedPoint)
-            mSnapRight = trackLeftEdge + results.outCoord;
-      }
-
-      // Check if selection endpoints are too close together to snap (unless
-      // using snap-to-time -- then we always accept the snap results)
-      if (mSnapLeft >= 0 && mSnapRight >= 0 && mSnapRight - mSnapLeft < 3 &&
-            !results.snappedTime) {
-         sel0 = origSel0;
-         sel1 = origSel1;
-         mSnapLeft = -1;
-         mSnapRight = -1;
-      }
    }
 
    viewInfo.selectedRegion.setTimes(sel0, sel1);

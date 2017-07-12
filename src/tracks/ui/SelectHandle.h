@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../UIHandle.h"
 #include "../../SelectedRegion.h"
+#include "../../Snap.h"
 
 #include "../../MemoryX.h"
 #include <vector>
@@ -109,13 +110,8 @@ private:
    wxRect mRect{};
    SelectedRegion mInitialSelection{};
 
-   // Handles snapping the selection boundaries or track boundaries to
-   // line up with existing tracks or labels.  mSnapLeft and mSnapRight
-   // are the horizontal index of pixels to display user feedback
-   // guidelines so the user knows when such snapping is taking place.
    std::shared_ptr<SnapManager> mSnapManager;
-   wxInt64 mSnapLeft{ -1 };
-   wxInt64 mSnapRight{ -1 };
+   SnapResults mSnapStart, mSnapEnd;
 
    bool mSelStartValid{};
    double mSelStart{ 0.0 };
