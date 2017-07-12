@@ -47,6 +47,10 @@ public:
 
    virtual ~UIHandle() = 0;
 
+   // Before clicking, the handle is notified that it has been "hit"
+   // Default does nothing.
+   virtual void Enter();
+
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.
    // Otherwise the framework will later call Release or Cancel after

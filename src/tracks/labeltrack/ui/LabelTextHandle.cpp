@@ -24,6 +24,10 @@ LabelTextHandle::LabelTextHandle
    : mpLT{ pLT }
    , mLabelNum{ labelNum }
 {
+}
+
+void LabelTextHandle::Enter()
+{
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif

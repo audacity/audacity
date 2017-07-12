@@ -40,6 +40,10 @@ NoteTrackVZoomHandle::NoteTrackVZoomHandle
    : mZoomStart(y), mZoomEnd(y), mRect(rect)
    , mpTrack{ pTrack }
 {
+}
+
+void NoteTrackVZoomHandle::Enter()
+{
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif

@@ -916,6 +916,9 @@ void TrackPanel::HandleMotion( const TrackPanelMouseState &tpmState )
       if (!oldCell && oldHandle != handle)
          // Did not move cell to cell, but did change the target
          refreshCode = updateFlags;
+
+      if (handle)
+         handle->Enter();
    }
 
    // UIHANDLE PREVIEW

@@ -54,6 +54,8 @@ public:
 
    virtual ~LabelGlyphHandle();
 
+   void Enter() override;
+
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 

@@ -25,6 +25,10 @@ NoteTrackButtonHandle::NoteTrackButtonHandle
    , mChannel{ channel }
    , mRect{ rect }
 {
+}
+
+void NoteTrackButtonHandle::Enter()
+{
    mChangeHighlight = RefreshCode::RefreshCell;
 }
 

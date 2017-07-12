@@ -28,6 +28,10 @@ CutlineHandle::CutlineHandle
    : mpTrack{ pTrack }
    , mLocation{ location }
 {
+}
+
+void CutlineHandle::Enter()
+{
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif

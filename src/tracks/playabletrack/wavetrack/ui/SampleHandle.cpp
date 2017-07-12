@@ -38,6 +38,10 @@ static const double SMOOTHING_PROPORTION_MIN = 0.0;
 SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
    : mClickedTrack{ pTrack }
 {
+}
+
+void SampleHandle::Enter()
+{
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif

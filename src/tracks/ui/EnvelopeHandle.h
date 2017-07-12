@@ -56,6 +56,8 @@ public:
 
    Envelope *GetEnvelope() const { return mEnvelope; }
 
+   void Enter() override;
+
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
