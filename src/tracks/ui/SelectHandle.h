@@ -46,24 +46,26 @@ public:
 
    bool IsClicked() const;
 
-   virtual Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   virtual Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   virtual HitTestPreview Preview
-      (const TrackPanelMouseState &state, const AudacityProject *pProject);
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      override;
 
-   virtual Result Release
+   Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent);
+       wxWindow *pParent) override;
 
-   virtual Result Cancel(AudacityProject*);
+   Result Cancel(AudacityProject*) override;
 
-   virtual void DrawExtras
+   void DrawExtras
       (DrawingPass pass,
-      wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);
+      wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
+      override;
 
    // Receives timer event notifications, to implement auto-scroll
    void OnTimer(wxCommandEvent &event);
