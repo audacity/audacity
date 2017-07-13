@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../UIHandle.h"
 #include "../../SelectedRegion.h"
+#include "../../Snap.h"
 
 #include "../../MemoryX.h"
 #include <vector>
@@ -23,15 +24,20 @@ class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;
 class Track;
+class TrackList;
 class ViewInfo;
 class WaveTrack;
+class wxMouseState;
 
 class SelectHandle : public UIHandle
 {
    SelectHandle(const SelectHandle&);
 
 public:
-   explicit SelectHandle( const std::shared_ptr<Track> &pTrack );
+   explicit SelectHandle
+      (const std::shared_ptr<Track> &pTrack, bool useSnap,
+       const TrackList &trackList,
+       const TrackPanelMouseState &st, const ViewInfo &viewInfo);
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
@@ -45,6 +51,12 @@ public:
    virtual ~SelectHandle();
 
    bool IsClicked() const;
+
+   void Enter(bool forward) override;
+
+   bool HasRotation() const override;
+
+   bool Rotate(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -67,15 +79,19 @@ public:
       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
       override;
 
+   static UIHandle::Result NeedChangeHighlight
+      (const SelectHandle &oldState,
+       const SelectHandle &newState);
+
 private:
    void Connect(AudacityProject *pProject);
 
-   void StartSelection
-      (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge);
+   void StartSelection(AudacityProject *pProject);
    void AdjustSelection
       (AudacityProject *pProject,
        ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
        Track *pTrack);
+   void AssignSelection(ViewInfo &viewInfo, double selend, Track *pTrack);
 
    void StartFreqSelection
       (ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,
@@ -109,13 +125,9 @@ private:
    wxRect mRect{};
    SelectedRegion mInitialSelection{};
 
-   // Handles snapping the selection boundaries or track boundaries to
-   // line up with existing tracks or labels.  mSnapLeft and mSnapRight
-   // are the horizontal index of pixels to display user feedback
-   // guidelines so the user knows when such snapping is taking place.
    std::shared_ptr<SnapManager> mSnapManager;
-   wxInt64 mSnapLeft{ -1 };
-   wxInt64 mSnapRight{ -1 };
+   SnapResults mSnapStart, mSnapEnd;
+   bool mUseSnap{ true };
 
    bool mSelStartValid{};
    double mSelStart{ 0.0 };

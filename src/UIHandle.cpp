@@ -15,8 +15,18 @@ UIHandle::~UIHandle()
 {
 }
 
-void UIHandle::Enter()
+void UIHandle::Enter(bool)
 {
+}
+
+bool UIHandle::HasRotation() const
+{
+   return false;
+}
+
+bool UIHandle::Rotate(bool)
+{
+   return false;
 }
 
 void UIHandle::DrawExtras

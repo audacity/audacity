@@ -37,7 +37,7 @@ TrackClip::~TrackClip()
 
 }
 
-SnapManager::SnapManager(TrackList *tracks,
+SnapManager::SnapManager(const TrackList *tracks,
                          const ZoomInfo *zoomInfo,
                          const TrackClipArray *clipExclusions,
                          const TrackArray *trackExclusions,
@@ -102,8 +102,8 @@ void SnapManager::Reinit()
    // Add a SnapPoint at t=0
    mSnapPoints.push_back(SnapPoint{});
 
-   TrackListIterator iter(mTracks);
-   for (Track *track = iter.First();  track; track = iter.Next())
+   TrackListConstIterator iter(mTracks);
+   for (const Track *track = iter.First();  track; track = iter.Next())
    {
       if (mTrackExclusions &&
           mTrackExclusions->end() !=
@@ -320,40 +320,47 @@ bool SnapManager::SnapToPoints(Track *currentTrack,
    return false;
 }
 
-bool SnapManager::Snap(Track *currentTrack,
-                       double t,
-                       bool rightEdge,
-                       double *outT,
-                       bool *snappedPoint,
-                       bool *snappedTime)
+SnapResults SnapManager::Snap
+(Track *currentTrack, double t, bool rightEdge)
 {
+
+   SnapResults results;
    // Check to see if we need to reinitialize
    Reinit();
 
-   // First snap to points in mSnapPoints
-   *outT = t;
-   *snappedPoint = SnapToPoints(currentTrack, t, rightEdge, outT);
+   results.timeSnappedTime = results.outTime = t;
+   results.outCoord = mZoomInfo->TimeToPosition(t);
 
-   // Now snap to the time grid
-   *snappedTime = false;
+   // First snap to points in mSnapPoints
+   results.snappedPoint =
+      SnapToPoints(currentTrack, t, rightEdge, &results.outTime);
+
+   if (mSnapToTime) {
+      // Find where it would snap time to the grid
+      mConverter.ValueToControls(t, GetActiveProject()->GetSnapTo() == SNAP_NEAREST);
+      mConverter.ControlsToValue();
+      results.timeSnappedTime = mConverter.GetValue();
+   }
+
+   results.snappedTime = false;
    if (mSnapToTime)
    {
-      if (*snappedPoint)
+      if (results.snappedPoint)
       {
          // Since mSnapPoints only contains points on the grid, we're done
-         *snappedTime = true;
+         results.snappedTime = true;
       }
       else
       {
-         // Snap time to the grid
-         mConverter.ValueToControls(t, GetActiveProject()->GetSnapTo() == SNAP_NEAREST);
-         mConverter.ControlsToValue();
-         *outT = mConverter.GetValue();
-         *snappedTime = true;
+         results.outTime = results.timeSnappedTime;
+         results.snappedTime = true;
       }
    }
 
-   return *snappedPoint || *snappedTime;
+   if (results.Snapped())
+      results.outCoord = mZoomInfo->TimeToPosition(results.outTime);
+
+   return results;
 }
 
 /* static */ wxArrayString SnapManager::GetSnapLabels()
@@ -405,13 +412,13 @@ bool SnapManager::Snap(Track *currentTrack,
 
 #include "AColor.h"
 
-void SnapManager::Draw( wxDC *dc, wxInt64 left, wxInt64 right )
+void SnapManager::Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 )
 {
    AColor::SnapGuidePen(dc);
-   if ( left >= 0 ) {
-      AColor::Line(*dc, (int)left, 0, (int)left, 30000);
+   if ( snap0 >= 0 ) {
+      AColor::Line(*dc, (int)snap0, 0, (int)snap0, 30000);
    }
-   if ( right >= 0 ) {
-      AColor::Line(*dc, (int)right, 0, (int)right, 30000);
+   if ( snap1 >= 0 ) {
+      AColor::Line(*dc, (int)snap1, 0, (int)snap1, 30000);
    }
 }

@@ -27,7 +27,7 @@ NoteTrackButtonHandle::NoteTrackButtonHandle
 {
 }
 
-void NoteTrackButtonHandle::Enter()
+void NoteTrackButtonHandle::Enter(bool)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

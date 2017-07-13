@@ -24,7 +24,7 @@ SliderHandle::SliderHandle
 {
 }
 
-void SliderHandle::Enter()
+void SliderHandle::Enter(bool)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }

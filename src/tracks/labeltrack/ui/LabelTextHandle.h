@@ -38,7 +38,7 @@ public:
    std::shared_ptr<LabelTrack> GetTrack() const { return mpLT.lock(); }
    int GetLabelNum() const { return mLabelNum; }
 
-   void Enter() override;
+   void Enter(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

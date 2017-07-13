@@ -48,8 +48,19 @@ public:
    virtual ~UIHandle() = 0;
 
    // Before clicking, the handle is notified that it has been "hit"
+   // This might put the handle into its first rotated state
+   // (or last, if forward is false) or mark itself as needing a highlight.
    // Default does nothing.
-   virtual void Enter();
+   virtual void Enter(bool forward);
+
+   // Tell whether the handle has more than one TAB key rotation state.
+   // Default is always false.
+   virtual bool HasRotation() const;
+
+   // If not previously in the last rotation state (or first if !forward),
+   // change rotation state and return true; else return false
+   // Default does nothing and returns false
+   virtual bool Rotate(bool forward);
 
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.
@@ -89,6 +100,8 @@ public:
    // If pass is Cells, then any drawing that extends outside the cells
    // is later overlaid with the cell bevels and the empty background color.
    // Otherwise (Panel), it is a later drawing pass that will not be overlaid.
+   // This is invoked on the hit test target even before it is clicked,
+   // and also during drag.
    virtual void DrawExtras
       (DrawingPass pass,
        wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect);

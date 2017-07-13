@@ -144,7 +144,7 @@ class AUDACITY_DLL_API Track /* not final */
    // Do not further override this...
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *pProject)
-      final;
+      final override;
 
  public:
 

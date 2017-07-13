@@ -30,7 +30,7 @@ CutlineHandle::CutlineHandle
 {
 }
 
-void CutlineHandle::Enter()
+void CutlineHandle::Enter(bool)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;

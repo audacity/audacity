@@ -32,7 +32,7 @@ LabelGlyphHandle::LabelGlyphHandle
 {
 }
 
-void LabelGlyphHandle::Enter()
+void LabelGlyphHandle::Enter(bool)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }
