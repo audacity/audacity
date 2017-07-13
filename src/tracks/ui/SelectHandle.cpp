@@ -146,38 +146,6 @@ namespace
 #endif
    };
 
-   bool IsOverSplitline
-      (const ViewInfo &viewInfo, const WaveTrack * track,
-       const wxRect &rect, wxCoord xx, wxCoord yy,
-       WaveTrackLocation *pCapturedTrackLocation)
-   {
-      for (auto loc: track->GetCachedLocations())
-      {
-         const double x = viewInfo.TimeToPosition(loc.pos);
-         if (x >= 0 && x < rect.width)
-         {
-            // Only interested in split lines...
-            if( loc.typ != WaveTrackLocation::locationCutLine )
-            {
-               wxRect locRect;
-               // Tight tolerance here.  Tolerance was 11 pixels in IsOverCutLine.
-               locRect.x = (int)(rect.x + x) ;
-               locRect.width = 1;
-               locRect.y = rect.y;
-               locRect.height = rect.height;
-               if (locRect.Contains(xx, yy))
-               {
-                  if (pCapturedTrackLocation)
-                     *pCapturedTrackLocation = loc;
-                  return true;
-               }
-            }
-         }
-      }
-
-      return false;
-   }
-
    SelectionBoundary ChooseTimeBoundary
       (
       const double t0, const double t1,
@@ -237,22 +205,6 @@ namespace
       SelectionBoundary boundary =
          ChooseTimeBoundary(t0,t1,viewInfo, selend, onlyWithinSnapDistance,
          &pixelDist, pPinValue);
-
-      // This extra logic handles a split line that is doubling as a 
-      // cursor position, in the case where there isn't already a cursor
-      // on the split line.
-      if( (boundary == SBNone ) && (pTrack->GetKind() == Track::Wave))
-      {
-         const WaveTrack *wavetrack = dynamic_cast<const WaveTrack*>(pTrack);
-         WaveTrackLocation location;
-         // We have to be EXACTLY (to the pixel) over the split line for the
-         // hand icon to appear.
-         if( IsOverSplitline( viewInfo, wavetrack, rect, xx, yy, &location ))
-         {
-            boundary = ChooseTimeBoundary(selend, selend, viewInfo, selend, 
-               onlyWithinSnapDistance, &pixelDist, pPinValue);
-         }
-      }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       //const double t0 = viewInfo.selectedRegion.t0();
