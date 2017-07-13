@@ -1108,12 +1108,12 @@ void SelectHandle::StartSelection
    if (mSnapManager.get()) {
       mSnapLeft = -1;
       mSnapRight = -1;
-      bool snappedPoint, snappedTime;
       auto pTrack = pProject->GetTracks()->Lock(mpTrack);
-      if (mSnapManager->Snap(pTrack.get(), mSelStart, false,
-         &s, &snappedPoint, &snappedTime)) {
-         if (snappedPoint)
-            mSnapLeft = viewInfo.TimeToPosition(s, trackLeftEdge);
+      auto results = mSnapManager->Snap(pTrack.get(), mSelStart, false);
+      if (results.Snapped()) {
+         s = results.outTime;
+         if (results.snappedPoint)
+            mSnapLeft = trackLeftEdge + results.outCoord;
       }
    }
 
@@ -1157,27 +1157,26 @@ void SelectHandle::AdjustSelection
    origSel0 = sel0;
    origSel1 = sel1;
 
-   if (mSnapManager.get()) {
+   if (pTrack && mSnapManager.get()) {
       mSnapLeft = -1;
       mSnapRight = -1;
-      bool snappedPoint, snappedTime;
-      if (pTrack &&
-          mSnapManager->Snap(pTrack.get(), sel0, false,
-                             &sel0, &snappedPoint, &snappedTime)) {
-         if (snappedPoint)
-            mSnapLeft = viewInfo.TimeToPosition(sel0, trackLeftEdge);
+      auto results = mSnapManager->Snap(pTrack.get(), sel0, false);
+      if (results.Snapped()) {
+         sel0 = results.outTime;
+         if (results.snappedPoint)
+            mSnapLeft = trackLeftEdge + results.outCoord;
       }
-      if (pTrack &&
-          mSnapManager->Snap(pTrack.get(), sel1, true,
-                             &sel1, &snappedPoint, &snappedTime)) {
-         if (snappedPoint)
-            mSnapRight = viewInfo.TimeToPosition(sel1, trackLeftEdge);
+      results = mSnapManager->Snap(pTrack.get(), sel1, true);
+      if (results.Snapped()) {
+         sel1 = results.outTime;
+         if (results.snappedPoint)
+            mSnapRight = trackLeftEdge + results.outCoord;
       }
 
       // Check if selection endpoints are too close together to snap (unless
       // using snap-to-time -- then we always accept the snap results)
       if (mSnapLeft >= 0 && mSnapRight >= 0 && mSnapRight - mSnapLeft < 3 &&
-            !snappedTime) {
+            !results.snappedTime) {
          sel0 = origSel0;
          sel1 = origSel1;
          mSnapLeft = -1;

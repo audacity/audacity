@@ -2968,9 +2968,9 @@ void AdornedRulerPanel::HandleSnapping()
       mSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
    }
 
-   bool snappedPoint, snappedTime;
-   mIsSnapped = mSnapManager->Snap(NULL, mQuickPlayPos, false,
-                                   &mQuickPlayPos, &snappedPoint, &snappedTime);
+   auto results = mSnapManager->Snap(NULL, mQuickPlayPos, false);
+   mQuickPlayPos = results.outTime;
+   mIsSnapped = results.Snapped();
 }
 
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)

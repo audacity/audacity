@@ -615,14 +615,12 @@ UIHandle::Result TimeShiftHandle::Drag
 #endif
       if (trySnap)
       {
-         double newClipLeft = clipLeft;
-         double newClipRight = clipRight;
-
-         bool dummy1, dummy2;
-         mSnapManager->Snap(mCapturedTrack.get(), clipLeft, false, &newClipLeft,
-            &dummy1, &dummy2);
-         mSnapManager->Snap(mCapturedTrack.get(), clipRight, false, &newClipRight,
-            &dummy1, &dummy2);
+         auto results =
+            mSnapManager->Snap(mCapturedTrack.get(), clipLeft, false);
+         auto newClipLeft = results.outTime;
+         results =
+            mSnapManager->Snap(mCapturedTrack.get(), clipRight, false);
+         auto newClipRight = results.outTime;
 
          // Only one of them is allowed to snap
          if (newClipLeft != clipLeft && newClipRight != clipRight) {

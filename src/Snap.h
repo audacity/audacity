@@ -70,6 +70,16 @@ public:
 
 using SnapPointArray = std::vector < SnapPoint > ;
 
+struct SnapResults {
+   double timeSnappedTime{ 0.0 };
+   double outTime{ 0.0 };
+   wxInt64 outCoord{ -1 };
+   bool snappedPoint{ false };
+   bool snappedTime{ false };
+
+   bool Snapped() const { return snappedPoint || snappedTime; }
+};
+
 class SnapManager
 {
 public:
@@ -85,19 +95,17 @@ public:
    // Returns true if the output time is not the same as the input.
    // Pass rightEdge=true if this is the right edge of a selection,
    // and false if it's the left edge.
-   bool Snap(Track *currentTrack,
+   SnapResults Snap(Track *currentTrack,
              double t,
-             bool rightEdge,
-             double *outT,
-             bool *snappedPoint,
-             bool *snappedTime);
+             bool rightEdge);
 
    static wxArrayString GetSnapLabels();
    static wxArrayString GetSnapValues();
    static const wxString & GetSnapValue(int index);
    static int GetSnapIndex(const wxString & value);
 
-   static void Draw( wxDC *dc, wxInt64 left, wxInt64 right );
+   // The two coordinates need not be ordered:
+   static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );
 
 private:
 
