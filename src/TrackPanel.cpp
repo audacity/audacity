@@ -1347,18 +1347,15 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
 
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 {
+   mEnableTab = false;
    wxKeyEvent *kevent = static_cast<wxKeyEvent *>(event.GetEventObject());
    const auto code = kevent->GetKeyCode();
    if ( WXK_ESCAPE != code )
       HandleInterruptedDrag();
 
-   if ( WXK_TAB == code && HasRotation() ) {
-      // Override what the cell might do, don't call its CaptureKey;
-      // Also override TAB navigation in wxWidgets, by not skipping
-      event.Skip(false);
-      return;
-   }
+   // TODO?  Some notion of focused cell, more generally than focused tracks
 
+   // Give focused track precedence
    Track * const t = GetFocusedTrack();
    if (t) {
       const unsigned refreshResult =
@@ -1366,7 +1363,16 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
       ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
       event.Skip(kevent->GetSkipped());
    }
-   else
+
+   // Special TAB key handling, but only if the track didn't capture it
+   if ( !(t && !kevent->GetSkipped()) &&
+        WXK_TAB == code && HasRotation() ) {
+      // Override TAB navigation in wxWidgets, by not skipping
+      event.Skip(false);
+      mEnableTab = true;
+      return;
+   }
+   else if (!t)
       event.Skip();
 }
 
@@ -1402,7 +1408,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
       return;
 
    case WXK_TAB:
-      if ( HasRotation() ) {
+      if ( mEnableTab && HasRotation() ) {
          RotateTarget( !event.ShiftDown() );
          HandleCursorForPresentMouseState(false);
          return;

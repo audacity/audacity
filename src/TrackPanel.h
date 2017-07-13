@@ -558,6 +558,8 @@ protected:
 
    std::shared_ptr<TrackPanelCell> mpBackground;
 
+   bool mEnableTab{};
+
    DECLARE_EVENT_TABLE()
 };
 
