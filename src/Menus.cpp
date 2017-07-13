@@ -3390,6 +3390,12 @@ double AudacityProject::OnClipMove
       auto t0 = viewInfo.selectedRegion.t0();
 
       state.capturedClip = wt->GetClipAtTime( t0 );
+      if (state.capturedClip == nullptr && track->GetLinked() && track->GetLink()) {
+         // the clips in the right channel may be different from the left
+         track = track->GetLink();
+         wt = static_cast<WaveTrack*>(track);
+         state.capturedClip = wt->GetClipAtTime(t0);
+      }
       if (state.capturedClip == nullptr)
          return 0.0;
 
