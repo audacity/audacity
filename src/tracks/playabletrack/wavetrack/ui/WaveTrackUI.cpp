@@ -89,6 +89,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
                result = SampleHandle::HitAnywhere(
                   mSampleHandle, st.state, Pointer<WaveTrack>(this));
             default:
+               result = {};
                break;
          }
          if (result)
