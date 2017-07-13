@@ -148,7 +148,7 @@ namespace
 
    bool IsOverSplitline
       (const ViewInfo &viewInfo, const WaveTrack * track,
-       const wxRect &rect, const wxMouseState &state,
+       const wxRect &rect, wxCoord xx, wxCoord yy,
        WaveTrackLocation *pCapturedTrackLocation)
    {
       for (auto loc: track->GetCachedLocations())
@@ -165,7 +165,7 @@ namespace
                locRect.width = 1;
                locRect.y = rect.y;
                locRect.height = rect.height;
-               if (locRect.Contains(state.m_x, state.m_y))
+               if (locRect.Contains(xx, yy))
                {
                   if (pCapturedTrackLocation)
                      *pCapturedTrackLocation = loc;
@@ -220,7 +220,7 @@ namespace
 
    SelectionBoundary ChooseBoundary
       (const ViewInfo &viewInfo,
-       const wxMouseState & state, const Track *pTrack, const wxRect &rect,
+       wxCoord xx, wxCoord yy, const Track *pTrack, const wxRect &rect,
        bool mayDragWidth, bool onlyWithinSnapDistance,
        double *pPinValue = NULL)
    {
@@ -229,7 +229,7 @@ namespace
       // within the time boundaries.
       // May choose no boundary if onlyWithinSnapDistance is true.
       // Otherwise choose the eligible boundary nearest the mouse click.
-      const double selend = viewInfo.PositionToTime(state.m_x, rect.x);
+      const double selend = viewInfo.PositionToTime(xx, rect.x);
       wxInt64 pixelDist = 0;
       const double t0 = viewInfo.selectedRegion.t0();
       const double t1 = viewInfo.selectedRegion.t1();
@@ -247,7 +247,7 @@ namespace
          WaveTrackLocation location;
          // We have to be EXACTLY (to the pixel) over the split line for the
          // hand icon to appear.
-         if( IsOverSplitline( viewInfo, wavetrack, rect, state ,&location ))
+         if( IsOverSplitline( viewInfo, wavetrack, rect, xx, yy, &location ))
          {
             boundary = ChooseTimeBoundary(selend, selend, viewInfo, selend, 
                onlyWithinSnapDistance, &pixelDist, pPinValue);
@@ -278,13 +278,13 @@ namespace
          const wxInt64 topSel = (f1 >= 0)
             ? FrequencyToPosition(wt, f1, rect.y, rect.height)
             : rect.y;
-         wxInt64 signedBottomDist = (int)(state.m_y - bottomSel);
+         wxInt64 signedBottomDist = (int)(yy - bottomSel);
          wxInt64 verticalDist = std::abs(signedBottomDist);
          if (bottomSel == topSel)
             // Top and bottom are too close to resolve on screen
             chooseBottom = (signedBottomDist >= 0);
          else {
-            const wxInt64 topDist = std::abs((int)(state.m_y - topSel));
+            const wxInt64 topDist = std::abs((int)(yy - topSel));
             if (topDist < verticalDist)
                chooseBottom = false, verticalDist = topDist;
          }
@@ -295,7 +295,7 @@ namespace
             ) {
             const wxInt64 centerSel =
                FrequencyToPosition(wt, fc, rect.y, rect.height);
-            const wxInt64 centerDist = abs((int)(state.m_y - centerSel));
+            const wxInt64 centerDist = abs((int)(yy - centerSel));
             if (centerDist < verticalDist)
                chooseCenter = true, verticalDist = centerDist,
                ratio = f1 / fc;
@@ -592,7 +592,7 @@ UIHandle::Result SelectHandle::Click
       double value;
       // Shift-click, choose closest boundary
       SelectionBoundary boundary =
-         ChooseBoundary(viewInfo, event, pTrack, mRect, false, false, &value);
+         ChooseBoundary(viewInfo, event.m_x, event.m_y, pTrack, mRect, false, false, &value);
       mSelectionBoundary = boundary;
       switch (boundary) {
          case SBLeft:
@@ -685,7 +685,7 @@ UIHandle::Result SelectHandle::Click
             // Not shift-down, choose boundary only within snapping
             double value;
             SelectionBoundary boundary =
-               ChooseBoundary(viewInfo, event, pTrack, mRect, true, true, &value);
+               ChooseBoundary(viewInfo, event.m_x, event.m_y, pTrack, mRect, true, true, &value);
             mSelectionBoundary = boundary;
             switch (boundary) {
             case SBNone:
@@ -900,7 +900,7 @@ HitTestPreview SelectHandle::Preview
             // choose boundaries only in snapping tolerance,
             // and may choose center.
             SelectionBoundary boundary =
-            ChooseBoundary(viewInfo, state, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+            ChooseBoundary(viewInfo, state.m_x, state.m_y, pTrack.get(), rect, !bModifierDown, !bModifierDown);
 
             SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
          }
@@ -930,7 +930,7 @@ HitTestPreview SelectHandle::Preview
          const bool bCtrlDown = state.ControlDown();
          const bool bModifierDown = bShiftDown || bCtrlDown;
          SelectionBoundary boundary = ChooseBoundary(
-            viewInfo, state, pTrack.get(), rect, !bModifierDown, !bModifierDown);
+            viewInfo, state.m_x, state.m_y, pTrack.get(), rect, !bModifierDown, !bModifierDown);
          SetTipAndCursorForBoundary(boundary, !bShiftDown, tip, pCursor);
       }
 
