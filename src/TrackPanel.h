@@ -313,7 +313,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // void SetSnapTo(int snapto)
 
    void HandleInterruptedDrag();
-   void Uncapture( wxMouseEvent *pEvent = nullptr );
+   void Uncapture( wxMouseState *pState = nullptr );
    void CancelDragging();
    bool HandleEscapeKey(bool down);
    void UpdateMouseState(const wxMouseState &state);

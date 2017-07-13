@@ -753,11 +753,18 @@ namespace
    }
 }
 
-void TrackPanel::Uncapture(wxMouseEvent *pEvent)
+void TrackPanel::Uncapture(wxMouseState *pState)
 {
+   auto state = ::wxGetMouseState();
+   if (!pState) {
+      // Remap the position
+      state.SetPosition(this->ScreenToClient(state.GetPosition()));
+      pState = &state;
+   }
+
    if (HasCapture())
       ReleaseMouse();
-   HandleMotion( *pEvent );
+   HandleMotion( *pState );
 }
 
 void TrackPanel::CancelDragging()
