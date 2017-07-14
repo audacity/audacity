@@ -770,14 +770,16 @@ void TrackPanel::Uncapture(wxMouseState *pState)
 void TrackPanel::CancelDragging()
 {
    if (mUIHandle) {
-      UIHandle::Result refreshResult = mUIHandle->Cancel(GetProject());
+      // copy shared_ptr for safety, as in HandleClick
+      auto handle = mUIHandle;
+      UIHandle::Result refreshResult = handle->Cancel(GetProject());
       auto pTrack = GetTracks()->Lock(mpClickedTrack);
       if (pTrack)
          ProcessUIHandleResult(
             this, mRuler, pTrack.get(), NULL,
             refreshResult | mMouseOverUpdateFlags );
       mpClickedTrack.reset();
-      mUIHandle.reset(), ClearTargets();
+      mUIHandle.reset(), handle.reset(), ClearTargets();
       Uncapture();
    }
 }
@@ -1124,8 +1126,11 @@ void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
 // Tracks have been removed from the list.
 void TrackPanel::OnTrackListDeletion(wxCommandEvent & e)
 {
-   if (mUIHandle)
-      mUIHandle->OnProjectChange(GetProject());
+   if (mUIHandle) {
+      // copy shared_ptr for safety, as in HandleClick
+      auto handle = mUIHandle;
+      handle->OnProjectChange(GetProject());
+   }
 
    // If the focused track disappeared but there are still other tracks,
    // this reassigns focus.
@@ -1610,14 +1615,16 @@ try
       auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
       if (event.Dragging()) {
          // UIHANDLE DRAG
+         // copy shared_ptr for safety, as in HandleClick
+         auto handle = mUIHandle;
          const UIHandle::Result refreshResult =
-            mUIHandle->Drag( tpmEvent, GetProject() );
+            handle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
             (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
          mMouseOverUpdateFlags |= refreshResult;
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
-            mUIHandle.reset(), ClearTargets();
+            mUIHandle.reset(), handle.reset(), ClearTargets();
             mpClickedTrack.reset();
             Uncapture( &event );
          }
@@ -1704,10 +1711,13 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
 
    if (mUIHandle) {
       // UIHANDLE CLICK
+      // Make another shared pointer to the handle, in case recursive
+      // event dispatching otherwise tries to delete the handle.
+      auto handle = mUIHandle;
       UIHandle::Result refreshResult =
-         mUIHandle->Click( tpmEvent, GetProject() );
+         handle->Click( tpmEvent, GetProject() );
       if (refreshResult & RefreshCode::Cancelled)
-         mUIHandle.reset(), ClearTargets();
+         mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
          mpClickedTrack = pTrack;
 
