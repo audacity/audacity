@@ -963,6 +963,14 @@ HitTestPreview SelectHandle::Preview
       if (ttb)
          tip = ttb->GetMessageForTool(selectTool);
    }
+   if (HasRotation()) {
+      tip += wxT(" ") + (mUseSnap
+/* i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries */
+        ? _("(snapping)")
+/* i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries */
+        : _("(not snapping)")
+      );
+   }
    return { tip, pCursor };
 }
 

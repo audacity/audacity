@@ -969,6 +969,11 @@ void TrackPanel::HandleMotion
       static wxCursor defaultCursor{ wxCURSOR_ARROW };
       pCursor = &defaultCursor;
    }
+
+   if (HasRotation())
+      /* i18n-hint TAB is a key on the keyboard */
+      tip += wxT(" "), tip += _("(TAB for more choices)");
+   this->SetToolTip(tip);
    mListener->TP_DisplayStatusMessage(tip);
    if (pCursor)
       SetCursor( *pCursor );
