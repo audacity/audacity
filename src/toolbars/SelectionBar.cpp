@@ -336,6 +336,7 @@ void SelectionBar::Populate()
    mChoice = safenew wxChoice
       (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
        0, wxDefaultValidator, "");
+   mChoice->SetName(wxT("\a"));     // stop Jaws screen reader using nearby text for name when name is empty
    mChoice->SetSelection(0);
    mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
 #endif
