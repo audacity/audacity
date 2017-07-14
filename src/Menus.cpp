@@ -7235,11 +7235,8 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
    wxString message;
    for (auto& result : results) {
       wxString temp;
-      
-      message += (result.clipStart1 ? _("start") : _("end")) + wxT(" ");
 
-      temp.Printf(wxT("%d %s %d %s "), result.index1 + 1, _("of"), result.waveTrack->GetNumClips(),
-         result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+      temp.Printf(wxT("%s %d "), result.clipStart1 ? _("start") : _("end"), result.index1 + 1);
       message += temp;
 
       if (result.nFound == 2) {
@@ -7247,6 +7244,10 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
             result.index2 + 1);
          message += temp;
       }
+
+      temp.Printf(wxT("%s %d %s "), _("of"), result.waveTrack->GetNumClips(),
+         result.waveTrack->GetNumClips() == 1 ? _("clip") : _("clips"));
+      message += temp;
 
       if (result.waveTrack->GetName() == result.waveTrack->GetDefaultName())
          temp.Printf(wxT("%s %d "), _("Track"), result.trackNumber);
