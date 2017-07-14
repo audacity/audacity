@@ -2020,7 +2020,8 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = std::make_unique<TrackList>();
+   mOutputTracks = std::make_shared<TrackList>();
+   mOutputTracks->SetSelf(mOutputTracks);
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
