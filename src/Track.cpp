@@ -993,6 +993,11 @@ TrackNodePointer TrackList::Remove(Track *t)
 
 void TrackList::Clear(bool sendEvent)
 {
+   // Null out the back-pointers in tracks, in case there are outstanding
+   // shared_ptrs to those tracks.
+   for ( auto pTrack: *this )
+      pTrack->SetOwner( {}, {} );
+
    ListOfTracks tempList;
    tempList.swap( *this );
    if (sendEvent)
