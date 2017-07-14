@@ -92,6 +92,8 @@ public:
    ~TrackInfo();
    void ReCreateSliders();
 
+   static unsigned MinimumTrackHeight();
+
    struct TCPLine;
 
    static void DrawItems

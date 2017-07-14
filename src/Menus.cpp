@@ -6391,9 +6391,7 @@ void AudacityProject::DoZoomFitV()
       return;
 
    height = height / count;
-
-   if (height < 40)
-      height = 40;
+   height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    TrackListIterator iter2(GetTracks());
    t = iter2.First();

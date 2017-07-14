@@ -33,6 +33,8 @@ and TimeTrack.
 
 #include "Experimental.h"
 
+#include "TrackPanel.h" // for TrackInfo
+
 #ifdef _MSC_VER
 //Disable truncation warnings
 #pragma warning( disable : 4786 )
@@ -130,11 +132,17 @@ void Track::SetOwner
 
 int Track::GetMinimizedHeight() const
 {
+   auto height = TrackInfo::MinimumTrackHeight();
+
    if (GetLink()) {
-      return 22;
+      auto halfHeight = height / 2;
+      if (GetLinked())
+         return halfHeight;
+      else
+         return height - halfHeight;
    }
 
-   return 44;
+   return height;
 }
 
 int Track::GetIndex() const

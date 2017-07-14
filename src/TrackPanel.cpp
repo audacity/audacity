@@ -1313,6 +1313,18 @@ std::pair< int, int > CalcBottomItemY
 
 }
 
+unsigned TrackInfo::MinimumTrackHeight()
+{
+   unsigned height = 0;
+   if (!commonTrackTCPLines.empty())
+      height += commonTrackTCPLines.front().height;
+   if (!commonTrackTCPBottomLines.empty())
+      height += commonTrackTCPBottomLines.front().height;
+   // + 1 prevents the top item from disappearing for want of enough space,
+   // according to the rules in HideTopItem.
+   return height + kTopMargin + kBottomMargin + 1;
+}
+
 bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
                  int allowance ) {
    auto limit = CalcBottomItemY
