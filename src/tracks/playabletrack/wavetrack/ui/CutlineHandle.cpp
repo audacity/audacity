@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../Snap.h" // for kPixelTolerance
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UndoManager.h"
 #include "../../../../WaveTrack.h"
@@ -77,8 +78,8 @@ namespace
          if (x >= 0 && x < rect.width)
          {
             wxRect locRect;
-            locRect.x = (int)(rect.x + x) - 5;
-            locRect.width = 11;
+            locRect.width = 2 * kPixelTolerance - 1;
+            locRect.x = (int)(rect.x + x) - locRect.width / 2;
             locRect.y = rect.y;
             locRect.height = rect.height;
             if (locRect.Contains(state.m_x, state.m_y))
