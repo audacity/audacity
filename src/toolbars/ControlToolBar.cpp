@@ -108,7 +108,6 @@ ControlToolBar::ControlToolBar()
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
    mSizer = NULL;
-   mCutPreviewTracks = NULL;
 
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
    is playing or recording or stopped, and whether it is paused. */
@@ -928,7 +927,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       shifted = !shifted;
 
    TrackList *trackList = p->GetTracks();
-   TrackList tracksCopy{};
+   auto pTracksCopy = TrackList::Create();
+   auto &tracksCopy = *pTracksCopy;
    bool tracksCopied = false;
 
    WaveTrackArray recordingTracks;
@@ -1280,7 +1280,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
 
          // use NOTHROW-GUARANTEE:
 
-         mCutPreviewTracks = std::make_unique<TrackList>();
+         mCutPreviewTracks = TrackList::Create();
          mCutPreviewTracks->Add(std::move(new1));
          if (track2)
             mCutPreviewTracks->Add(std::move(new2));

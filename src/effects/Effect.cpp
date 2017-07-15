@@ -2020,8 +2020,7 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = std::make_shared<TrackList>();
-   mOutputTracks->SetSelf(mOutputTracks);
+   mOutputTracks = TrackList::Create();
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
@@ -2518,7 +2517,7 @@ void Effect::Preview(bool dryOnly)
    } );
 
    // Build NEW tracklist from rendering tracks
-   auto uTracks = std::make_unique<TrackList>();
+   auto uTracks = TrackList::Create();
    mTracks = uTracks.get();
 
    // Linear Effect preview optimised by pre-mixing to one track.

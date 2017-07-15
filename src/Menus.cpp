@@ -4730,7 +4730,8 @@ void AudacityProject::OnCut()
 
    ClearClipboard();
 
-   TrackList newClipboard;
+   auto pNewClipboard = TrackList::Create();
+   auto &newClipboard = *pNewClipboard;
 
    n = iter.First();
    while (n) {
@@ -4813,7 +4814,8 @@ void AudacityProject::OnSplitCut()
 
    ClearClipboard();
 
-   TrackList newClipboard;
+   auto pNewClipboard = TrackList::Create();
+   auto &newClipboard = *pNewClipboard;
 
    while (n) {
       if (n->GetSelected()) {
@@ -4874,7 +4876,8 @@ void AudacityProject::OnCopy()
 
    ClearClipboard();
 
-   TrackList newClipboard;
+   auto pNewClipboard = TrackList::Create();
+   auto &newClipboard = *pNewClipboard;
 
    n = iter.First();
    while (n) {

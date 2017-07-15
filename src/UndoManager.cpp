@@ -41,7 +41,7 @@ WX_DECLARE_HASH_SET(ConstBlockFilePtr, wxPointerHash, wxPointerEqual, Set );
 
 struct UndoStackElem {
 
-   UndoStackElem(std::unique_ptr<TrackList> &&tracks_,
+   UndoStackElem(std::shared_ptr<TrackList> &&tracks_,
       const wxString &description_,
       const wxString &shortDescription_,
       const SelectedRegion &selectedRegion_,
@@ -231,7 +231,7 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.tracks.reset();
 
    // Duplicate
-   auto tracksCopy = std::make_unique<TrackList>();
+   auto tracksCopy = TrackList::Create();
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {
@@ -275,7 +275,7 @@ void UndoManager::PushState(const TrackList * l,
       RemoveStateAt(i);
    }
 
-   auto tracksCopy = std::make_unique<TrackList>();
+   auto tracksCopy = TrackList::Create();
    TrackListConstIterator iter(l);
    const Track *t = iter.First();
    while (t) {

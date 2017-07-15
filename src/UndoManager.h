@@ -61,13 +61,13 @@ class TrackList;
 
 struct UndoStackElem;
 struct UndoState {
-   UndoState(std::unique_ptr<TrackList> &&tracks_,
+   UndoState(std::shared_ptr<TrackList> &&tracks_,
       const std::shared_ptr<Tags> &tags_,
       const SelectedRegion &selectedRegion_)
       : tracks(std::move(tracks_)), tags(tags_), selectedRegion(selectedRegion_)
    {}
 
-   std::unique_ptr<TrackList> tracks;
+   std::shared_ptr<TrackList> tracks;
    std::shared_ptr<Tags> tags;
    SelectedRegion selectedRegion; // by value
 };

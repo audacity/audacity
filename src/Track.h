@@ -534,24 +534,24 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    // privatize this, make you use Swap instead:
    using ListOfTracks::swap;
 
- public:
    // Create an empty TrackList
    TrackList();
 
+   TrackList(const TrackList &that) = delete;
+   TrackList(TrackList &&that) = delete;
+
+ public:
+   // Create an empty TrackList
+   static std::shared_ptr<TrackList> Create();
+
    // Allow copy -- a deep copy that duplicates all tracks
-   TrackList(const TrackList &that);
    TrackList &operator= (const TrackList &that);
 
    // Allow move
-   TrackList(TrackList &&that);
    TrackList& operator= (TrackList&&);
 
    // Move is defined in terms of Swap
    void Swap(TrackList &that);
-
-   void SetSelf( const std::shared_ptr<TrackList> &self )
-   { mSelf = self; }
-
 
    // Destructor
    virtual ~TrackList();

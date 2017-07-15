@@ -762,10 +762,12 @@ TrackList::TrackList()
 {
 }
 
-TrackList::TrackList(const TrackList &that)
-   : ListOfTracks{}
+// Factory function
+std::shared_ptr<TrackList> TrackList::Create()
 {
-   DoAssign(that);
+   std::shared_ptr<TrackList> result{ safenew TrackList{} };
+   result->mSelf = result;
+   return result;
 }
 
 TrackList& TrackList::operator= (const TrackList &that)
@@ -775,11 +777,6 @@ TrackList& TrackList::operator= (const TrackList &that)
       DoAssign(that);
    }
    return *this;
-}
-
-TrackList::TrackList(TrackList &&that)
-{
-   Swap(that);
 }
 
 TrackList &TrackList::operator= (TrackList &&that)

@@ -602,17 +602,17 @@ public:
    std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
-   std::shared_ptr<TrackList> mTracks{ std::make_shared<TrackList>() };
+   std::shared_ptr<TrackList> mTracks;
 
    int mSnapTo;
    wxString mSelectionFormat;
    wxString mFrequencySelectionFormatName;
    wxString mBandwidthSelectionFormatName;
 
-   std::unique_ptr<TrackList> mLastSavedTracks;
+   std::shared_ptr<TrackList> mLastSavedTracks;
 
    // Clipboard (static because it is shared by all projects)
-   static std::unique_ptr<TrackList> msClipboard;
+   static std::shared_ptr<TrackList> msClipboard;
    static AudacityProject *msClipProject;
    static double msClipT0;
    static double msClipT1;

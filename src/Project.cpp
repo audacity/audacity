@@ -171,8 +171,7 @@ scroll information.  It also has some status flags.
 
 #include "../images/AudacityLogoAlpha.xpm"
 
-std::unique_ptr<TrackList> AudacityProject::msClipboard
-   { std::make_unique<TrackList>() };
+std::shared_ptr<TrackList> AudacityProject::msClipboard{ TrackList::Create() };
 double AudacityProject::msClipT0 = 0.0;
 double AudacityProject::msClipT1 = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
@@ -921,8 +920,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mViewInfo(0.0, 1.0, ZoomInfo::GetDefaultZoom()),
      mbLoadedFromAup( false )
 {
-
-   mTracks->SetSelf(mTracks);
+   mTracks = TrackList::Create();
 
 #ifdef EXPERIMENTAL_DA2
    SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -943,7 +941,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // MM: We don't need to Ref() here because it start with refcount=1
    mDirManager = std::make_shared<DirManager>();
 
-   mLastSavedTracks = NULL;
+   mLastSavedTracks.reset();
 
    // Register for tracklist updates
    mTracks->Connect(EVT_TRACKLIST_PERMUTED,
@@ -3132,7 +3130,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 
       Track *t;
       TrackListIterator iter(GetTracks());
-      mLastSavedTracks = std::make_unique<TrackList>();
+      mLastSavedTracks = TrackList::Create();
 
       t = iter.First();
       while (t) {
@@ -3976,7 +3974,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       if (mLastSavedTracks)
          mLastSavedTracks->Clear();
-      mLastSavedTracks = std::make_unique<TrackList>();
+      mLastSavedTracks = TrackList::Create();
 
       TrackListIterator iter(GetTracks());
       Track *t = iter.First();
@@ -4020,7 +4018,9 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       TrackListOfKindIterator iter(Track::Wave, GetTracks());
       unsigned int numWaveTracks = 0;
 
-      TrackList pSavedTrackList;
+      auto ppSavedTrackList = TrackList::Create();
+      auto &pSavedTrackList = *ppSavedTrackList;
+
       for (pTrack = iter.First(); pTrack != NULL; pTrack = iter.Next())
       {
          numWaveTracks++;
@@ -5023,7 +5023,8 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 
    ClearClipboard();
 
-   TrackList newClipboard;
+   auto pNewClipboard = TrackList::Create();
+   auto &newClipboard = *pNewClipboard;
 
    //Apply action on wavetracks starting from
    //labeled regions in the end. This is to correctly perform
