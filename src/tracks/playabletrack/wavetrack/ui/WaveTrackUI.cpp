@@ -88,6 +88,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
             case drawTool:
                result = SampleHandle::HitAnywhere(
                   mSampleHandle, st.state, Pointer<WaveTrack>(this));
+               break;
             default:
                result = {};
                break;
