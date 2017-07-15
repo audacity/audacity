@@ -246,6 +246,7 @@ private:
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
    // relative time
    void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
+   void BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const;
    double GetInterpolationStartValueAtPoint( int iPoint ) const;
 
    // The list of envelope control points.

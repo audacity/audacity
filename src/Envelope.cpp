@@ -1174,6 +1174,28 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
    mSearchGuess = Lo;
 }
 
+// relative time
+/// @param Lo returns last index before this time, maybe -1
+/// @param Hi returns first index at or after this time, maybe past the end
+void Envelope::BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const
+{
+   Lo = -1;
+   Hi = mEnv.size();
+
+   // Invariants:  Lo is not less than -1, Hi not more than size
+   while (Hi > (Lo + 1)) {
+      int mid = (Lo + Hi) / 2;
+      // mid must be strictly between Lo and Hi, therefore a valid index
+      if (t <= mEnv[mid].GetT())
+         Hi = mid;
+      else
+         Lo = mid;
+   }
+   wxASSERT( Hi == ( Lo+1 ));
+
+   mSearchGuess = Lo;
+}
+
 /// GetInterpolationStartValueAtPoint() is used to select either the
 /// envelope value or its log depending on whether we are doing linear
 /// or log interpolation.
@@ -1226,7 +1248,7 @@ void Envelope::GetValuesRelative
       auto tplus = t + increment;
 
       // IF before envelope THEN first value
-      if ( tplus <= mEnv[0].GetT() ) {
+      if ( leftLimit ? tplus <= mEnv[0].GetT() : tplus < mEnv[0].GetT() ) {
          buffer[b] = mEnv[0].GetVal();
          t += tstep;
          continue;
@@ -1249,9 +1271,14 @@ void Envelope::GetValuesRelative
          // points to move over.  That's why we binary search.
 
          int lo,hi;
-         BinarySearchForTime( lo, hi, tplus );
+         if ( leftLimit )
+            BinarySearchForTime_LeftLimit( lo, hi, tplus );
+         else
+            BinarySearchForTime( lo, hi, tplus );
+
          // mEnv[0] is before tplus because of eliminations above, therefore lo >= 0
          // mEnv[len - 1] is after tplus, therefore hi <= len - 1
+         wxASSERT( lo >= 0 && hi <= len - 1 );
 
          tprev = mEnv[lo].GetT();
          tnext = mEnv[hi].GetT();
