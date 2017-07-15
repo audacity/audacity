@@ -974,7 +974,7 @@ void TrackPanel::HandleMotion
 
    if (HasRotation())
       /* i18n-hint TAB is a key on the keyboard */
-      tip += wxT(" "), tip += _("(TAB for more choices)");
+      tip += wxT(" "), tip += _("(Tab for more choices)");
    this->SetToolTip(tip);
    mListener->TP_DisplayStatusMessage(tip);
    if (pCursor)
