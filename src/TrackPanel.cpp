@@ -952,7 +952,7 @@ void TrackPanel::HandleMotion
          // Did not move cell to cell, but did change the target
          refreshCode = updateFlags;
 
-      if (handle != oldHandle)
+      if (handle && handle != oldHandle)
          handle->Enter(true);
    }
 
