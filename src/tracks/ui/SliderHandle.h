@@ -50,20 +50,22 @@ protected:
    void Enter(bool forward) override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      final override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      final override;
 
    HitTestPreview Preview
       (const TrackPanelMouseState &state, const AudacityProject *pProject)
-      override;
+      final override;
 
    Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent) override;
+       wxWindow *pParent) final override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(AudacityProject *pProject) final override;
 
    // Derived class is expected to set these two before Click():
    std::weak_ptr<Track> mpTrack;

@@ -42,23 +42,25 @@ protected:
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent) = 0;
 
-   void Enter(bool forward) override;
+   void Enter(bool forward) final override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      final override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      final override;
 
    HitTestPreview Preview
       (const TrackPanelMouseState &state, const AudacityProject *pProject)
-      override;
+      final override;
 
    Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent) override;
+       wxWindow *pParent) final override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(AudacityProject *pProject) final override;
 
    std::weak_ptr<Track> mpTrack;
    wxRect mRect;
