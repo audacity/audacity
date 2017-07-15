@@ -540,6 +540,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    TrackList(const TrackList &that) = delete;
    TrackList(TrackList &&that) = delete;
 
+   void clear() = delete;
+
  public:
    // Create an empty TrackList
    static std::shared_ptr<TrackList> Create();
