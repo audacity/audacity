@@ -1541,15 +1541,12 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
       if (xx >= 0 && xx < rect.width) {
-         // delta is used to adjust the top and bottom edge of a split line.
-         int delta =0;
          dc.SetPen( highlight ? AColor::uglyPen : *wxGREY_PEN );
          AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
          if (loc.typ == WaveTrackLocation::locationCutLine) {
             dc.SetPen( highlight ? AColor::uglyPen : *wxRED_PEN );
          }
          else {
-            delta = rect.height/3;
 #ifdef EXPERIMENTAL_DA
             // JKC Black does not show up enough.
             dc.SetPen(highlight ? AColor::uglyPen : *wxWHITE_PEN);
@@ -1557,9 +1554,9 @@ void TrackArtist::DrawWaveform(TrackPanelDrawingContext &context,
             dc.SetPen(highlight ? AColor::uglyPen : *wxBLACK_PEN);
 #endif
          }
-         AColor::Line(dc, (int) (rect.x + xx), rect.y+delta, (int) (rect.x + xx), rect.y - delta + rect.height);
+         AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
          dc.SetPen( highlight ? AColor::uglyPen : *wxGREY_PEN );
-         AColor::Line(dc, (int) (rect.x + xx + 1), rect.y+delta, (int) (rect.x + xx + 1), rect.y - delta + rect.height);
+         AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
       }
    }
 
