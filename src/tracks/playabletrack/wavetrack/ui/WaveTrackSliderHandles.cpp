@@ -35,23 +35,29 @@ std::shared_ptr<WaveTrack> GainSliderHandle::GetWaveTrack()
 
 float GainSliderHandle::GetValue()
 {
-   return GetWaveTrack()->GetGain();
+   if (GetWaveTrack())
+      return GetWaveTrack()->GetGain();
+   else
+      return 0;
 }
 
 UIHandle::Result GainSliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
    auto pTrack = GetWaveTrack();
-   pTrack->SetGain(newValue);
 
-   // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mpTrack.lock()->GetLink());
-   if (link)
-      link->SetGain(newValue);
+   if (pTrack) {
+      pTrack->SetGain(newValue);
 
-   MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdateGain(pTrack.get());
+      // Assume linked track is wave or null
+      const auto link = static_cast<WaveTrack*>(mpTrack.lock()->GetLink());
+      if (link)
+         link->SetGain(newValue);
+
+      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->UpdateGain(pTrack.get());
+   }
 
    return RefreshCode::RefreshNone;
 }
@@ -112,35 +118,40 @@ std::shared_ptr<WaveTrack> PanSliderHandle::GetWaveTrack()
 
 float PanSliderHandle::GetValue()
 {
-   return GetWaveTrack()->GetPan();
+   if (GetWaveTrack())
+      return GetWaveTrack()->GetPan();
+   else
+      return 0;
 }
 
 UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newValue)
 {
-   auto pTrack = GetWaveTrack();
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   bool panZero = false;
-   panZero = static_cast<WaveTrack*>(mpTrack)->SetPan(newValue);
-#else
-   pTrack->SetPan(newValue);
-#endif
-
-   // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
-   if (link)
-      link->SetPan(newValue);
-
-   MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdatePan(pTrack.get());
-
    using namespace RefreshCode;
    Result result = RefreshNone;
+   auto pTrack = GetWaveTrack();
+
+   if (pTrack) {
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      bool panZero = false;
+      panZero = static_cast<WaveTrack*>(mpTrack)->SetPan(newValue);
+#else
+      pTrack->SetPan(newValue);
+#endif
+
+      // Assume linked track is wave or null
+      const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
+      if (link)
+         link->SetPan(newValue);
+
+      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->UpdatePan(pTrack.get());
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if(panZero)
-      result |= FixScrollbars;
+      if(panZero)
+         result |= FixScrollbars;
 #endif
+   }
 
    return result;
 }

@@ -38,18 +38,24 @@ std::shared_ptr<NoteTrack> VelocitySliderHandle::GetNoteTrack()
 
 float VelocitySliderHandle::GetValue()
 {
-   return GetNoteTrack()->GetVelocity();
+   if (GetNoteTrack())
+      return GetNoteTrack()->GetVelocity();
+   else
+      return 0;
 }
 
 UIHandle::Result VelocitySliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
    auto pTrack = GetNoteTrack();
-   pTrack->SetVelocity(newValue);
 
-   MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdateVelocity(pTrack.get());
+   if (pTrack) {
+      pTrack->SetVelocity(newValue);
+
+      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->UpdateVelocity(pTrack.get());
+   }
 
    return RefreshCode::RefreshCell;
 }
