@@ -62,7 +62,7 @@ class ToolsToolBar final : public ToolBar {
    bool IsDown(int tool) const;
    int GetDownTool();
 
-   const wxChar * GetMessageForTool( int ToolNumber ) const;
+   wxString GetMessageForTool( int ToolNumber ) const;
 
    void Populate();
    void Repaint(wxDC * WXUNUSED(dc)) override {};

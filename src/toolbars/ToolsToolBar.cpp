@@ -270,7 +270,7 @@ int ToolsToolBar::GetDownTool()
    return firstTool;  // Should never happen
 }
 
-const wxChar * ToolsToolBar::GetMessageForTool( int ToolNumber ) const
+wxString ToolsToolBar::GetMessageForTool( int ToolNumber ) const
 {
    wxASSERT( ToolNumber >= 0 );
    wxASSERT( ToolNumber < numTools );

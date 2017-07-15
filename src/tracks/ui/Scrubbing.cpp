@@ -959,9 +959,9 @@ const wxString &Scrubber::GetUntranslatedStateString() const
       return empty;
 }
 
-const wxString & Scrubber::StatusMessageForWave() const
+wxString Scrubber::StatusMessageForWave() const
 {
-   static wxString result;
+   wxString result;
    result = "";
 
    if(  Seeks() )
