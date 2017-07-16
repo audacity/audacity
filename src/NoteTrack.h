@@ -102,13 +102,6 @@ class AUDACITY_DLL_API NoteTrack final
    bool ExportMIDI(const wxString &f) const;
    bool ExportAllegro(const wxString &f) const;
 
-/* REQUIRES PORTMIDI */
-//   int GetLastMidiPosition() const { return mLastMidiPosition; }
-//   void SetLastMidiPosition( int position )
-//   {
-//      mLastMidiPosition = position;
-//   }
-
    // High-level editing
    Track::Holder Cut  (double t0, double t1) override;
    Track::Holder Copy (double t0, double t1, bool forClipboard = true) const override;
@@ -206,8 +199,10 @@ class AUDACITY_DLL_API NoteTrack final
    // map all channel numbers mod 16. This will have no effect
    // on MIDI files, but it will allow users to at least select
    // all channels on non-MIDI event sequence data.
-#define ALL_CHANNELS 0xFFFF
-#define CHANNEL_BIT(c) (1 << (c & ALL_CHANNELS))
+#define NUM_CHANNELS 16
+   // Bitmask with all NUM_CHANNELS bits set
+#define ALL_CHANNELS (1 << NUM_CHANNELS) - 1
+#define CHANNEL_BIT(c) (1 << (c % NUM_CHANNELS))
    bool IsVisibleChan(int c) const {
       return (mVisibleChannels & CHANNEL_BIT(c)) != 0;
    }
@@ -244,7 +239,6 @@ class AUDACITY_DLL_API NoteTrack final
    int mStartBottomNote;
    int mPitchHeight;
    int mVisibleChannels; // bit set of visible channels
-   int mLastMidiPosition;
 
    std::weak_ptr<StretchHandle> mStretchHandle;
 

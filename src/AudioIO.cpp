@@ -851,10 +851,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           const PaStreamCallbackTimeInfo *timeInfo,
                           PaStreamCallbackFlags statusFlags, void *userData );
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-int compareTime( const void* a, const void* b );
-#endif
-
 //////////////////////////////////////////////////////////////////////
 //
 //     class AudioThread - declaration and glue code
@@ -3914,7 +3910,7 @@ void AudioIO::OutputEvent()
             int offset = mNextEventTrack->GetVelocity();
             data2 += offset; // offset comes from per-track slider
             // clip velocity to insure a legal note-on value
-            data2 = (data2 < 0 ? 1 : (data2 > 127 ? 127 : data2));
+            data2 = (data2 < 1 ? 1 : (data2 > 127 ? 127 : data2));
             // since we are going to play this note, we need to get a note_off
             mIterator->request_note_off();
          } else data2 = 0; // 0 velocity means "note off"
@@ -4891,11 +4887,4 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
    return callbackReturn;
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-int compareTime( const void* a, const void* b )
-{
-   return( (int)((*(PmEvent*)a).timestamp - (*(PmEvent*)b).timestamp ) );
-}
-#endif
 

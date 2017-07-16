@@ -558,8 +558,8 @@ const int AColor_midicolors[16][3] = {
    {153, 255, 255},             // 13=lt turquoise
    {153, 153, 255},             // 14=lt blue
    {204, 102, 255},             // 15=lt blue-violet
-   {255, 51, 204}
-};                              // 16=lt red-violet
+   {255, 51, 204}               // 16=lt red-violet
+};
 
 void AColor::MIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 {
@@ -571,7 +571,7 @@ void AColor::MIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
       dc->SetBrush(wxBrush(wxColour(colors[0],
                                     colors[1], colors[2]), wxSOLID));
    } else {
-      dc->SetPen(wxPen(wxColour(153, 153, 153), 1, wxSOLID));// DONT-THEME Midi, unused.
+      dc->SetPen(wxPen(wxColour(153, 153, 153), 1, wxSOLID));
       dc->SetBrush(wxBrush(wxColour(153, 153, 153), wxSOLID));
    }
 
