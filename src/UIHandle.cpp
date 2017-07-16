@@ -10,6 +10,7 @@ Paul Licameli
 
 #include "Audacity.h"
 #include "UIHandle.h"
+#include "RefreshCode.h"
 
 UIHandle::~UIHandle()
 {
@@ -25,6 +26,16 @@ bool UIHandle::HasRotation() const
 }
 
 bool UIHandle::Rotate(bool)
+{
+   return false;
+}
+
+bool UIHandle::HasEscape() const
+{
+   return false;
+}
+
+bool UIHandle::Escape()
 {
    return false;
 }

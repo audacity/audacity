@@ -52,11 +52,13 @@ public:
 
    bool IsClicked() const;
 
+   void SetUseSnap(bool use);
    void Enter(bool forward) override;
 
-   bool HasRotation() const override;
+   bool HasSnap() const;
+   bool HasEscape() const override;
 
-   bool Rotate(bool forward) override;
+   bool Escape() override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

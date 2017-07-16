@@ -474,11 +474,16 @@ namespace {
    }
 }
 
-void SelectHandle::Enter(bool forward)
+void SelectHandle::Enter(bool)
 {
-   mUseSnap = forward;
+   SetUseSnap(true);
+}
 
-   bool hasSnap = HasRotation();
+void SelectHandle::SetUseSnap(bool use)
+{
+   mUseSnap = use;
+
+   bool hasSnap = HasSnap();
    if (hasSnap)
       // Repaint to turn the snap lines on or off
       mChangeHighlight = RefreshCode::RefreshAll;
@@ -491,19 +496,22 @@ void SelectHandle::Enter(bool forward)
          nullptr);
 }
 
-bool SelectHandle::HasRotation() const
+bool SelectHandle::HasSnap() const
 {
    return
-      mSnapStart.snappedPoint || (IsClicked() && mSnapEnd.snappedPoint);
+      (IsClicked() ? mSnapEnd : mSnapStart).snappedPoint;
 }
 
-bool SelectHandle::Rotate(bool forward)
+bool SelectHandle::HasEscape() const
 {
-   if (SelectHandle::HasRotation()) {
-      if (mUseSnap == forward) {
-         Enter(!forward);
-         return true;
-      }
+   return HasSnap() && mUseSnap;
+}
+
+bool SelectHandle::Escape()
+{
+   if (SelectHandle::HasEscape()) {
+      SetUseSnap(false);
+      return true;
    }
    return false;
 }
@@ -866,7 +874,8 @@ UIHandle::Result SelectHandle::Drag
 HitTestPreview SelectHandle::Preview
 (const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   if (!HasRotation())
+   if (!HasSnap() && !mUseSnap)
+      // Moved out of snapping; revert to un-escaped state
       mUseSnap = true;
 
    auto pTrack = mpTrack.lock();
@@ -963,13 +972,10 @@ HitTestPreview SelectHandle::Preview
       if (ttb)
          tip = ttb->GetMessageForTool(selectTool);
    }
-   if (HasRotation()) {
-      tip += wxT(" ") + (mUseSnap
+   if (HasEscape() && mUseSnap) {
+      tip += wxT(" ") +
 /* i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries */
-        ? _("(snapping)")
-/* i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries */
-        : _("(not snapping)")
-      );
+        _("(snapping)");
    }
    return { tip, pCursor };
 }
@@ -1010,8 +1016,11 @@ void SelectHandle::DrawExtras
 {
    if (pass == Panel) {
       // Draw snap guidelines if we have any
-      if ( mUseSnap && mSnapManager )
-         mSnapManager->Draw( dc, mSnapStart.outCoord, mSnapEnd.outCoord );
+      if ( mSnapManager ) {
+         auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
+         auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
+         mSnapManager->Draw( dc, coord1, coord2 );
+      }
    }
 }
 

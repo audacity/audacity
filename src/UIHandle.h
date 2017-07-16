@@ -62,6 +62,15 @@ public:
    // Default does nothing and returns false
    virtual bool Rotate(bool forward);
 
+   // Tell whether the handle has its own escape action.  In case it is already
+   // clicked, it will not cancel on Escape key if true.
+   // Default is always false.
+   virtual bool HasEscape() const;
+
+   // The handle may change state and mark itself for highlight change.
+   // Default does nothing and returns false
+   virtual bool Escape();
+
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.
    // Otherwise the framework will later call Release or Cancel after

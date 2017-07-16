@@ -316,7 +316,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
 
    void HandleInterruptedDrag();
    void Uncapture( wxMouseState *pState = nullptr );
-   void CancelDragging();
+   bool CancelDragging();
    bool HandleEscapeKey(bool down);
    void UpdateMouseState(const wxMouseState &state);
    void HandleModifierKey();
@@ -552,8 +552,9 @@ protected:
    }
 
    bool HasRotation();
+   bool HasEscape();
 
-   void RotateTarget(bool forward);
+   bool ChangeTarget(bool forward, bool cycle);
 
    std::weak_ptr<Track> mpClickedTrack;
    UIHandlePtr mUIHandle;

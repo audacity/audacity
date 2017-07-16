@@ -767,11 +767,12 @@ void TrackPanel::Uncapture(wxMouseState *pState)
    HandleMotion( *pState );
 }
 
-void TrackPanel::CancelDragging()
+bool TrackPanel::CancelDragging()
 {
    if (mUIHandle) {
       // copy shared_ptr for safety, as in HandleClick
       auto handle = mUIHandle;
+      // UIHANDLE CANCEL
       UIHandle::Result refreshResult = handle->Cancel(GetProject());
       auto pTrack = GetTracks()->Lock(mpClickedTrack);
       if (pTrack)
@@ -781,7 +782,9 @@ void TrackPanel::CancelDragging()
       mpClickedTrack.reset();
       mUIHandle.reset(), handle.reset(), ClearTargets();
       Uncapture();
+      return true;
    }
+   return false;
 }
 
 bool TrackPanel::HandleEscapeKey(bool down)
@@ -789,13 +792,22 @@ bool TrackPanel::HandleEscapeKey(bool down)
    if (!down)
       return false;
 
+   auto target = Target();
+   if (target && target->HasEscape() && target->Escape()) {
+      HandleCursorForPresentMouseState(false);
+      return true;
+   }
+
    if (mUIHandle) {
-      // UIHANDLE CANCEL
       CancelDragging();
       return true;
    }
 
-   // Not escaping from a mouse drag
+   if (ChangeTarget(true, false)) {
+      HandleCursorForPresentMouseState(false);
+      return true;
+   }
+
    return false;
 }
 
@@ -972,9 +984,9 @@ void TrackPanel::HandleMotion
       pCursor = &defaultCursor;
    }
 
-   if (HasRotation())
+   if (HasEscape())
       /* i18n-hint TAB is a key on the keyboard */
-      tip += wxT(" "), tip += _("(Tab for more choices)");
+      tip += wxT(" "), tip += _("(Esc to cancel)");
    this->SetToolTip(tip);
    mListener->TP_DisplayStatusMessage(tip);
    if (pCursor)
@@ -993,20 +1005,38 @@ bool TrackPanel::HasRotation()
    return target && target->HasRotation();
 }
 
-void TrackPanel::RotateTarget(bool forward)
+bool TrackPanel::HasEscape()
+{
+   if (HasCapture())
+      return true;
+
+   if (mTarget + 1 == mTargets.size() &&
+       Target() &&
+       !Target()->HasEscape())
+       return false;
+
+   return true;
+}
+
+bool TrackPanel::ChangeTarget(bool forward, bool cycle)
 {
    auto size = mTargets.size();
 
    auto target = Target();
    if (target && target->HasRotation()) {
       if(target->Rotate(forward))
-         return;
-      else if (size == 1 || IsMouseCaptured()) {
+         return true;
+      else if (cycle && (size == 1 || IsMouseCaptured())) {
          // Rotate through the states of this target only.
          target->Enter(forward);
-         return;
+         return true;
       }
    }
+
+   if (!cycle &&
+       ((forward && mTarget + 1 == size) ||
+        (!forward && mTarget == 0)))
+      return false;
 
    if (size > 1) {
       if (forward)
@@ -1016,7 +1046,10 @@ void TrackPanel::RotateTarget(bool forward)
       mTarget %= size;
       if (Target())
          Target()->Enter(forward);
+      return true;
    }
+
+   return false;
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -1401,6 +1434,7 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
       event.Skip(kevent->GetSkipped());
    }
 
+#if 0
    // Special TAB key handling, but only if the track didn't capture it
    if ( !(t && !kevent->GetSkipped()) &&
         WXK_TAB == code && HasRotation() ) {
@@ -1409,7 +1443,9 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
       mEnableTab = true;
       return;
    }
-   else if (!t)
+   else
+#endif
+   if (!t)
       event.Skip();
 }
 
@@ -1444,14 +1480,16 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
       HandlePageDownKey();
       return;
 
+#if 0
    case WXK_TAB:
       if ( mEnableTab && HasRotation() ) {
-         RotateTarget( !event.ShiftDown() );
+         ChangeTarget( !event.ShiftDown(), true );
          HandleCursorForPresentMouseState(false);
          return;
       }
       else
          break;
+#endif
    }
 
    Track *const t = GetFocusedTrack();
@@ -1611,7 +1649,7 @@ try
          ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
 
       if(!buttons) {
-         HandleEscapeKey( true );
+         CancelDragging();
 
 #if defined(__WXMAC__)
 
@@ -1692,7 +1730,7 @@ try
 catch( ... )
 {
    // Abort any dragging, as if by hitting Esc
-   if ( HandleEscapeKey( true ) )
+   if ( CancelDragging() )
       ;
    else {
       Uncapture();
