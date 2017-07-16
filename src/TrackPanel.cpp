@@ -901,7 +901,7 @@ void TrackPanel::HandleMotion
       newTrack = static_cast<CommonTrackPanelCell*>( newCell.get() )->
          FindTrack();
 
-   wxString tip{};
+   wxString status{}, tooltip{};
    wxCursor *pCursor{};
    unsigned refreshCode = 0;
 
@@ -974,7 +974,8 @@ void TrackPanel::HandleMotion
    // Update status message and cursor, whether dragging or not
    if (handle) {
       auto preview = handle->Preview( tpmState, GetProject() );
-      tip = preview.message;
+      status = preview.message;
+      tooltip = preview.tooltip;
       pCursor = preview.cursor;
       auto code = handle->GetChangeHighlight();
       handle->SetChangeHighlight(RefreshCode::RefreshNone);
@@ -988,9 +989,10 @@ void TrackPanel::HandleMotion
 
    if (HasEscape())
       /* i18n-hint TAB is a key on the keyboard */
-      tip += wxT(" "), tip += _("(Esc to cancel)");
-   this->SetToolTip(tip);
-   mListener->TP_DisplayStatusMessage(tip);
+      status += wxT(" "), status += _("(Esc to cancel)");
+   mListener->TP_DisplayStatusMessage(status);
+   if (!tooltip.empty())
+      this->SetToolTip(tooltip);
    if (pCursor)
       SetCursor( *pCursor );
 
