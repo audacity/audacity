@@ -1721,7 +1721,7 @@ try
 
    //EnsureVisible should be called after the up-click.
    if (event.ButtonUp()) {
-      Uncapture( &event );
+      Uncapture();
 
       wxRect rect;
 
