@@ -792,10 +792,12 @@ bool TrackPanel::HandleEscapeKey(bool down)
    if (!down)
       return false;
 
-   auto target = Target();
-   if (target && target->HasEscape() && target->Escape()) {
-      HandleCursorForPresentMouseState(false);
-      return true;
+   {
+      auto target = Target();
+      if (target && target->HasEscape() && target->Escape()) {
+         HandleCursorForPresentMouseState(false);
+         return true;
+      }
    }
 
    if (mUIHandle) {
