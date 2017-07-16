@@ -22,7 +22,7 @@ struct HitTestPreview
    {}
 
    HitTestPreview(const wxString &message_, wxCursor *cursor_,
-                  const wxString &tooltip_ = {})
+      const wxString &tooltip_ = wxString{})
       : message(message_), cursor(cursor_), tooltip(tooltip_)
    {}
 
