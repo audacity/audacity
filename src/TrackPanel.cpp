@@ -1689,17 +1689,13 @@ try
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
-         auto uiHandle = mUIHandle;
-         // Null mUIHandle out first before calling Release -- because on Windows, we can
-         // come back recursively to this place during handling of the context menu,
-         // because of a capture lost event.
          unsigned moreFlags = mMouseOverUpdateFlags;
-         mUIHandle.reset(), ClearTargets();
          UIHandle::Result refreshResult =
-            uiHandle->Release( tpmEvent, GetProject(), this );
+            mUIHandle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
             (this, mRuler, pClickedTrack.get(), pTrack.get(),
              refreshResult | moreFlags);
+         mUIHandle.reset(), ClearTargets();
          mpClickedTrack.reset();
          // will also Uncapture() below
       }

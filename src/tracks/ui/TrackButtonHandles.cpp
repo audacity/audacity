@@ -152,12 +152,18 @@ MenuButtonHandle::~MenuButtonHandle()
 }
 
 UIHandle::Result MenuButtonHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *, wxWindow *pParent)
+(const wxMouseEvent &, AudacityProject *pProject, wxWindow *pParent)
 {
+   auto pPanel = pProject->GetTrackPanel();
    auto pCell = mpCell.lock();
    if (!pCell)
       return RefreshCode::Cancelled;
-   return pCell->DoContextMenu(mRect, pParent, NULL);
+   auto pTrack =
+      static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
+   if (!pTrack)
+      return RefreshCode::Cancelled;
+   pPanel->CallAfter( [=]{ pPanel->OnTrackMenu( pTrack.get() ); } );
+   return RefreshCode::RefreshNone;
 }
 
 wxString MenuButtonHandle::Tip(const wxMouseState &) const
