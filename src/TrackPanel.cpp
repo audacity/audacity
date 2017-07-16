@@ -988,7 +988,7 @@ void TrackPanel::HandleMotion
    }
 
    if (HasEscape())
-      /* i18n-hint TAB is a key on the keyboard */
+      /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
    mListener->TP_DisplayStatusMessage(status);
    if (!tooltip.empty())
