@@ -11,6 +11,9 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_BUTTON_HANDLE__
 #define __AUDACITY_NOTE_TRACK_BUTTON_HANDLE__
 
+#include "../../../../Audacity.h"
+#ifdef USE_MIDI
+
 class wxMouseState;
 class NoteTrack;
 
@@ -71,4 +74,5 @@ protected:
    wxRect mRect{};
 };
 
+#endif
 #endif

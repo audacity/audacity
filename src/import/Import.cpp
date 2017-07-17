@@ -327,6 +327,7 @@ movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    return new_item;
 }
 
+#ifdef USE_MIDI
 bool Importer::IsMidi(const wxString &fName)
 {
    const auto extension = fName.AfterLast(wxT('.'));
@@ -335,6 +336,7 @@ bool Importer::IsMidi(const wxString &fName)
       extension.IsSameAs(wxT("midi"), false) ||
       extension.IsSameAs(wxT("mid"), false);
 }
+#endif
 
 // returns number of tracks imported
 bool Importer::Import(const wxString &fName,

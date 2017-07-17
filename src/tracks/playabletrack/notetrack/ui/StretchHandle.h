@@ -11,6 +11,9 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_STRETCH_HANDLE__
 #define __AUDACITY_STRETCH_HANDLE__
 
+#include "../../../../Audacity.h"
+#ifdef USE_MIDI
+
 #include "../../../../UIHandle.h"
 
 #include "../../../../MemoryX.h"
@@ -102,4 +105,5 @@ private:
    StretchState mStretchState{};
 };
 
+#endif
 #endif

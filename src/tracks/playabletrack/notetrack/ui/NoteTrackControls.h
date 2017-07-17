@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_CONTROLS__
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
+#include "../../../../Audacity.h"
+#ifdef USE_MIDI
 #include "../../../ui/TrackControls.h"
 #include "../../../../MemoryX.h"
 class MuteButtonHandle;
@@ -42,4 +44,5 @@ public:
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
 };
 
+#endif
 #endif

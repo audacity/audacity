@@ -136,7 +136,9 @@ public:
     */
     movable_ptr<ExtImportItem> CreateDefaultImportItem();
 
+#ifdef USE_MIDI
    static bool IsMidi(const wxString &fName);
+#endif
 
    // if false, the import failed and errorMessage will be set.
    bool Import(const wxString &fName,

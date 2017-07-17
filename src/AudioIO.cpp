@@ -2036,8 +2036,10 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
 
-   if (playbackTracks.size() > 0 
+   if (playbackTracks.size() > 0
 #ifdef EXPERIMENTAL_MIDI_OUT
+// We want to always start a portaudio stream if there is a note track
+// so that we can sync with it, even if we aren't playing anything to the stream
       || midiPlaybackTracks.size() > 0
 #endif
       )
@@ -2838,7 +2840,7 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
-#ifdef HAVE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    mMidiPlaybackTracks.clear();
 #endif
 

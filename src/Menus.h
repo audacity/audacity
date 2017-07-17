@@ -400,12 +400,14 @@ void OnRescanDevices(const CommandContext &context );
 // Import Submenu
 void OnImport(const CommandContext &context );
 void OnImportLabels(const CommandContext &context );
+#ifdef USE_MIDI
 void OnImportMIDI(const CommandContext &context );
 
 // return null on failure; if success, return the given project, or a NEW
 // one, if the given was null; create no NEW project if failure
 static AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName);
+#endif
 
 void OnImportRaw(const CommandContext &context );
 

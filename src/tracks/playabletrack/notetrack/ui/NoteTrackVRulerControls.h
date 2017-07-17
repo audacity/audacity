@@ -11,6 +11,9 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_VRULER_CONTROLS__
 #define __AUDACITY_NOTE_TRACK_VRULER_CONTROLS__
 
+#include "../../../../Audacity.h"
+#ifdef USE_MIDI
+
 #include "../../../ui/TrackVRulerControls.h"
 
 class NoteTrackVZoomHandle;
@@ -38,4 +41,5 @@ private:
    std::weak_ptr<NoteTrackVZoomHandle> mVZoomHandle;
 };
 
+#endif
 #endif
