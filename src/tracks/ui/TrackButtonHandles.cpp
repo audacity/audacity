@@ -168,7 +168,18 @@ UIHandle::Result MenuButtonHandle::CommitChanges
 
 wxString MenuButtonHandle::Tip(const wxMouseState &) const
 {
-   return _("More Commands...");
+   auto name = _("Open menu...");
+   auto project = ::GetActiveProject();
+   auto focused =
+      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+   if (!focused)
+      return name;
+
+   auto commandManager = project->GetCommandManager();
+   std::vector<wxString> commands;
+   commands.push_back(name);
+   commands.push_back(wxT("TrackMenu"));
+   return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 
 UIHandlePtr MenuButtonHandle::HitTest
