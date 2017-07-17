@@ -41,28 +41,11 @@ void EnvelopeHandle::Enter(bool)
 EnvelopeHandle::~EnvelopeHandle()
 {}
 
-HitTestPreview EnvelopeHandle::HitPreview
-(const AudacityProject *pProject, bool unsafe)
-{
-   static auto disabledCursor =
-      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
-   static auto envelopeCursor =
-      ::MakeCursor(wxCURSOR_ARROW, EnvCursorXpm, 16, 16);
-   // TODO: this message isn't appropriate for time track
-   auto message = _("Click and drag to edit the amplitude envelope");
-
-   return {
-      message,
-      (unsafe
-       ? &*disabledCursor
-       : &*envelopeCursor)
-   };
-}
-
 UIHandlePtr EnvelopeHandle::HitAnywhere
-(std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope)
+(std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope, bool timeTrack)
 {
    auto result = std::make_shared<EnvelopeHandle>( envelope );
+   result->mTimeTrack = timeTrack;
    return result;
 }
 
@@ -96,7 +79,8 @@ UIHandlePtr EnvelopeHandle::TimeTrackHitTest
    float zoomMin, zoomMax;
    GetTimeTrackData( *pProject, *tt, dBRange, dB, zoomMin, zoomMax);
    return EnvelopeHandle::HitEnvelope
-      (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+      (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange,
+       true);
 }
 
 UIHandlePtr EnvelopeHandle::WaveTrackHitTest
@@ -126,14 +110,14 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
    const float dBRange = wt->GetWaveformSettings().dBRange;
 
    return EnvelopeHandle::HitEnvelope
-       (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange);
+       (holder, state, rect, pProject, envelope, zoomMin, zoomMax, dB, dBRange, false);
 }
 
 UIHandlePtr EnvelopeHandle::HitEnvelope
 (std::weak_ptr<EnvelopeHandle> &holder,
  const wxMouseState &state, const wxRect &rect, const AudacityProject *pProject,
  Envelope *envelope, float zoomMin, float zoomMax,
- bool dB, float dBRange)
+ bool dB, float dBRange, bool timeTrack)
 {
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
@@ -179,7 +163,7 @@ UIHandlePtr EnvelopeHandle::HitEnvelope
    if (distance >= yTolerance)
       return {};
 
-   return HitAnywhere(holder, envelope);
+   return HitAnywhere(holder, envelope, timeTrack);
 }
 
 UIHandle::Result EnvelopeHandle::Click
@@ -258,7 +242,23 @@ HitTestPreview EnvelopeHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *pProject)
 {
    const bool unsafe = pProject->IsAudioActive();
-   return HitPreview(pProject, unsafe);
+   static auto disabledCursor =
+      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+   static auto envelopeCursor =
+      ::MakeCursor(wxCURSOR_ARROW, EnvCursorXpm, 16, 16);
+
+   wxString message;
+   if (mTimeTrack)
+      message = _("Click and drag to warp playback time");
+   else
+      message = _("Click and drag to edit the amplitude envelope");
+
+   return {
+      message,
+      (unsafe
+       ? &*disabledCursor
+       : &*envelopeCursor)
+   };
 }
 
 UIHandle::Result EnvelopeHandle::Release

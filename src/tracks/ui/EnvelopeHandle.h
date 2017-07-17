@@ -28,15 +28,13 @@ class EnvelopeHandle final : public UIHandle
 {
    EnvelopeHandle(const EnvelopeHandle&) = delete;
    EnvelopeHandle &operator=(const EnvelopeHandle&) = delete;
-   static HitTestPreview HitPreview
-      (const AudacityProject *pProject, bool unsafe);
 
    static UIHandlePtr HitEnvelope
       (std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject,
        Envelope *envelope, float zoomMin, float zoomMax,
-       bool dB, float dBRange);
+       bool dB, float dBRange, bool timeTrack);
 
 public:
    explicit EnvelopeHandle( Envelope *pEnvelope );
@@ -44,7 +42,8 @@ public:
    virtual ~EnvelopeHandle();
 
    static UIHandlePtr HitAnywhere
-      (std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope);
+      (std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope,
+       bool timeTrack);
    static UIHandlePtr TimeTrackHitTest
       (std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
@@ -88,6 +87,8 @@ private:
    Envelope *mEnvelope{};
    std::unique_ptr<EnvelopeEditor> mEnvelopeEditor;
    std::unique_ptr<EnvelopeEditor> mEnvelopeEditorRight;
+
+   bool mTimeTrack{};
 };
 
 #endif

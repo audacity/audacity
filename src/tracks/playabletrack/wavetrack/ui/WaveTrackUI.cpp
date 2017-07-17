@@ -82,7 +82,7 @@ std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
             case envelopeTool: {
                auto envelope = GetEnvelopeAtX( st.state.m_x );
                result = EnvelopeHandle::HitAnywhere(
-                  mEnvelopeHandle, envelope);
+                  mEnvelopeHandle, envelope, false);
                break;
             }
             case drawTool:
