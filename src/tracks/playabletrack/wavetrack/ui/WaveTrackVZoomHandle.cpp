@@ -501,9 +501,12 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
    static auto zoomOutCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
+   const auto message =
+_("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
    return {
-      _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."),
-      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
+      message,
+      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor),
+      message
    };
 }
 
