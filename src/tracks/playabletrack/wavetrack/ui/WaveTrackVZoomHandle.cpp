@@ -505,8 +505,8 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
 _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
    return {
       message,
-      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor),
-      message
+      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
+      // , message
    };
 }
 

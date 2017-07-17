@@ -59,8 +59,8 @@ HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
 _("Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
    return {
       message,
-      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor),
-      message
+      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
+      // , message
    };
 }
 
