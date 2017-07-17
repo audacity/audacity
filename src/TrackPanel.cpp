@@ -991,7 +991,8 @@ void TrackPanel::HandleMotion
       /* i18n-hint Esc is a key on the keyboard */
       status += wxT(" "), status += _("(Esc to cancel)");
    mListener->TP_DisplayStatusMessage(status);
-   this->SetToolTip(tooltip);
+   if (tooltip != GetToolTipText())
+      this->SetToolTip(tooltip);
    if (pCursor)
       SetCursor( *pCursor );
 
