@@ -3824,7 +3824,7 @@ void AudacityProject::OnTrackMute()
    Track *t = NULL;
    if (!t) {
       t = mTrackPanel->GetFocusedTrack();
-      if (!t || (t->GetKind() != Track::Wave))
+      if (!dynamic_cast<PlayableTrack*>(t))
          return;
    }
    DoTrackMute(t, false);
@@ -3836,7 +3836,7 @@ void AudacityProject::OnTrackSolo()
    if (!t)
    {
       t = mTrackPanel->GetFocusedTrack();
-      if (!t || (t->GetKind() != Track::Wave))
+      if (!dynamic_cast<PlayableTrack*>(t))
          return;
    }
    DoTrackSolo(t, false);
