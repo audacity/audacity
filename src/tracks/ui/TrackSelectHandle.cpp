@@ -154,8 +154,8 @@ HitTestPreview TrackSelectHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *project)
 {
    const auto trackCount = project->GetTrackPanel()->GetTrackCount();
-   if (mClicked) {
    auto message = Message(trackCount);
+   if (mClicked) {
       static auto disabledCursor =
          ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
       static wxCursor rearrangeCursor{ wxCURSOR_HAND };
