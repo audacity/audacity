@@ -4573,6 +4573,19 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
             chanCnt = 0;
          }
+         // Poke: If there are no playback tracks, then the earlier check
+         // about the time indicator being passed the end won't happen;
+         // do it here instead (but not if looping or scrubbing)
+         if (numPlaybackTracks == 0
+            && gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
+         {
+            if ((gAudioIO->ReversedTime()
+               ? gAudioIO->mTime <= gAudioIO->mT1
+               : gAudioIO->mTime >= gAudioIO->mT1)) {
+
+               callbackReturn = paComplete;
+            }
+         }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
          // Update the current time position, for scrubbing
