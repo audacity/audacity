@@ -24,6 +24,8 @@ protected:
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
 public:
    explicit MinimizeButtonHandle
       ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
@@ -47,6 +49,8 @@ protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
+
+   wxString Tip(const wxMouseState &state) const override;
 
    bool StopsOnKeystroke () override { return true; }
    
@@ -76,6 +80,8 @@ protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
+
+   wxString Tip(const wxMouseState &state) const override;
 
 public:
    explicit MenuButtonHandle

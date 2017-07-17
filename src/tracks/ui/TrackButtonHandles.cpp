@@ -48,6 +48,12 @@ UIHandle::Result MinimizeButtonHandle::CommitChanges
    return RefreshNone;
 }
 
+wxString MinimizeButtonHandle::Tip(const wxMouseState &) const
+{
+   auto pTrack = GetTrack();
+   return pTrack->GetMinimized() ? _("Expand") : _("Collapse");
+}
+
 UIHandlePtr MinimizeButtonHandle::HitTest
 (std::weak_ptr<MinimizeButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
@@ -99,6 +105,22 @@ UIHandle::Result CloseButtonHandle::CommitChanges
    return result;
 }
 
+wxString CloseButtonHandle::Tip(const wxMouseState &) const
+{
+   auto name = _("Close");
+   auto project = ::GetActiveProject();
+   auto focused =
+      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+   if (!focused)
+      return name;
+
+   auto commandManager = project->GetCommandManager();
+   std::vector<wxString> commands;
+   commands.push_back(name);
+   commands.push_back(wxT("TrackClose"));
+   return commandManager->DescribeCommandsAndShortcuts(commands);
+}
+
 UIHandlePtr CloseButtonHandle::HitTest
 (std::weak_ptr<CloseButtonHandle> &holder,
  const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell)
@@ -136,6 +158,11 @@ UIHandle::Result MenuButtonHandle::CommitChanges
    if (!pCell)
       return RefreshCode::Cancelled;
    return pCell->DoContextMenu(mRect, pParent, NULL);
+}
+
+wxString MenuButtonHandle::Tip(const wxMouseState &) const
+{
+   return _("More Commands...");
 }
 
 UIHandlePtr MenuButtonHandle::HitTest

@@ -834,31 +834,13 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 void ToolBar::SetButtonToolTip
 (AButton &button, const std::vector<wxString> &commands, const wxString &separator)
 {
-   const auto project = GetActiveProject();
-   const auto commandManager = project ? project->GetCommandManager() : nullptr;
    wxString result;
-   auto iter = commands.begin(), end = commands.end();
-   while (iter != end) {
-      result += *iter++;
-      if (iter != end) {
-         if (!iter->empty()) {
-            if (commandManager) {
-               auto keyStr = commandManager->GetKeyFromName(*iter);
-               // For DarkAudacity, only add '(shortcut-info)' if there is 
-               // some, rather than as in that case in Audacity saying 
-               // '(no key)'.  More users will be confused by the Audacity 
-               // way than helped by it.
-               if (!keyStr.empty()){
-                  result += wxT(" ");
-                  result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
-               }
-            }
-         }
-         ++iter;
-      }
-      if (iter != end)
-         result += separator;
-   }
+   const auto project = GetActiveProject();
+   const auto commandManager =
+      project ? project->GetCommandManager() : nullptr;
+   if (commandManager)
+      result =
+         commandManager->DescribeCommandsAndShortcuts(commands, separator);
    button.SetToolTip(result);
 }
 

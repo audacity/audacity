@@ -1301,6 +1301,29 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    }
 }
 
+wxString CommandManager::DescribeCommandsAndShortcuts
+(const std::vector<wxString> &commands, const wxString &separator) const
+{
+   wxString result;
+   auto iter = commands.begin(), end = commands.end();
+   while (iter != end) {
+      result += *iter++;
+      if (iter != end) {
+         if (!iter->empty()) {
+            auto keyStr = GetKeyFromName(*iter);
+            if (!keyStr.empty()){
+               result += wxT(" ");
+               result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+            }
+         }
+         ++iter;
+      }
+      if (iter != end)
+         result += separator;
+   }
+   return result;
+}
+
 ///
 ///
 ///

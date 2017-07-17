@@ -15,6 +15,7 @@ Paul Licameli
 #include "../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
 class Track;
@@ -41,6 +42,9 @@ protected:
    // Subclass can decide to refresh other things and the results will be ORed.
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent) = 0;
+
+   // Define a message for the status bar and tooltip.
+   virtual wxString Tip(const wxMouseState &state) const = 0;
 
    void Enter(bool forward) final override;
 

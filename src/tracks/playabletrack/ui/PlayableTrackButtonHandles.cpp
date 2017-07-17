@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../Audacity.h"
 #include "PlayableTrackButtonHandles.h"
 
+#include "../../../commands/CommandManager.h"
 #include "../../../HitTestResult.h"
 #include "../../../Project.h"
 #include "../../../RefreshCode.h"
@@ -35,6 +36,22 @@ UIHandle::Result MuteButtonHandle::CommitChanges
       pProject->DoTrackMute(pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
+}
+
+wxString MuteButtonHandle::Tip(const wxMouseState &) const
+{
+   auto name = _("Mute");
+   auto project = ::GetActiveProject();
+   auto focused =
+      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+   if (!focused)
+      return name;
+
+   auto commandManager = project->GetCommandManager();
+   std::vector<wxString> commands;
+   commands.push_back(name);
+   commands.push_back(wxT("TrackMute"));
+   return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 
 UIHandlePtr MuteButtonHandle::HitTest
@@ -77,6 +94,22 @@ UIHandle::Result SoloButtonHandle::CommitChanges
       pProject->DoTrackSolo(pTrack.get(), event.ShiftDown());
 
    return RefreshCode::RefreshNone;
+}
+
+wxString SoloButtonHandle::Tip(const wxMouseState &) const
+{
+   auto name = _("Solo");
+   auto project = ::GetActiveProject();
+   auto focused =
+      project->GetTrackPanel()->GetFocusedTrack() == GetTrack().get();
+   if (!focused)
+      return name;
+
+   auto commandManager = project->GetCommandManager();
+   std::vector<wxString> commands;
+   commands.push_back(name);
+   commands.push_back(wxT("TrackSolo"));
+   return commandManager->DescribeCommandsAndShortcuts(commands);
 }
 
 UIHandlePtr SoloButtonHandle::HitTest

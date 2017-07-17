@@ -75,10 +75,11 @@ UIHandle::Result ButtonHandle::Drag
 }
 
 HitTestPreview ButtonHandle::Preview
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &st, const AudacityProject *)
 {
-   // No special message or cursor
-   return {};
+   // No special cursor
+   auto message = Tip(st.state);
+   return { message, {}, message };
 }
 
 UIHandle::Result ButtonHandle::Release

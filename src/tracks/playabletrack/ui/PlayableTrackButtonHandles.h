@@ -31,6 +31,8 @@ protected:
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
    bool StopsOnKeystroke () override { return true; }
 
 public:
@@ -58,6 +60,8 @@ protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
+
+   wxString Tip(const wxMouseState &state) const override;
 
    bool StopsOnKeystroke () override { return true; }
 
