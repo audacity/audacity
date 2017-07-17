@@ -165,8 +165,8 @@ HitTestPreview TrackSelectHandle::Preview
          message,
          (unsafe
           ? &*disabledCursor
-          : &rearrangeCursor),
-         message
+          : &rearrangeCursor)
+         // , message // Stop showing the tooltip after the click
       };
    }
    else {
