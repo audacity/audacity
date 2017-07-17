@@ -90,6 +90,9 @@ public:
    bool StopsOnKeystroke() override { return true; }
 
 private:
+   static double GetT0(const Track &track, const ViewInfo &viewInfo);
+   static double GetT1(const Track &track, const ViewInfo &viewInfo);
+
    void Stretch
       (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 
