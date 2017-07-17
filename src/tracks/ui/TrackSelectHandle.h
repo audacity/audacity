@@ -52,6 +52,7 @@ public:
 
 private:
    std::shared_ptr<Track> mpTrack;
+   bool mClicked{};
 
    // JH: if the user is dragging a track, at what y
    //   coordinate should the dragging track move up or down?

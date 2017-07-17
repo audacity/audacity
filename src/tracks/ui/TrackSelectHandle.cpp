@@ -104,6 +104,7 @@ UIHandle::Result TrackSelectHandle::Click
    pProject->HandleListSelection
       (pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 
+   mClicked = true;
    return result;
 }
 
@@ -153,8 +154,7 @@ HitTestPreview TrackSelectHandle::Preview
 (const TrackPanelMouseState &, const AudacityProject *project)
 {
    const auto trackCount = project->GetTrackPanel()->GetTrackCount();
-   if (mpTrack) {
-      // Has been clicked
+   if (mClicked) {
       static auto disabledCursor =
          ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
       static wxCursor rearrangeCursor{ wxCURSOR_HAND };
