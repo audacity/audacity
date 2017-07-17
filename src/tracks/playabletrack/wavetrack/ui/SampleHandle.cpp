@@ -21,7 +21,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../toolbars/ToolsToolBar.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UndoManager.h"
@@ -56,8 +55,13 @@ HitTestPreview SampleHandle::HitPreview
    static auto pencilCursor =
       ::MakeCursor(wxCURSOR_PENCIL, DrawCursorXpm, 12, 22);
    const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+
+   // TODO:  message should also mention the brush.  Describing the modifier key
+   // (alt, or other) varies with operating system.
+   auto message = _("Click and drag to edit the samples");
+
    return {
-      ttb->GetMessageForTool(drawTool),
+      message,
       (unsafe
        ? &*disabledCursor
        : (state.AltDown()

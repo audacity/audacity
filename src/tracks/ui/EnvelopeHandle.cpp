@@ -19,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../prefs/WaveformSettings.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../TimeTrack.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -49,9 +48,11 @@ HitTestPreview EnvelopeHandle::HitPreview
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto envelopeCursor =
       ::MakeCursor(wxCURSOR_ARROW, EnvCursorXpm, 16, 16);
-   const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+   // TODO: this message isn't appropriate for time track
+   auto message = _("Click and drag to edit the amplitude envelope");
+
    return {
-      ttb->GetMessageForTool(envelopeTool),
+      message,
       (unsafe
        ? &*disabledCursor
        : &*envelopeCursor)

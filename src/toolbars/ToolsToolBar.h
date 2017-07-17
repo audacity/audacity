@@ -62,8 +62,6 @@ class ToolsToolBar final : public ToolBar {
    bool IsDown(int tool) const;
    int GetDownTool();
 
-   wxString GetMessageForTool( int ToolNumber ) const;
-
    void Populate();
    void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override {};
@@ -77,8 +75,6 @@ class ToolsToolBar final : public ToolBar {
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;
-
-   const wxChar *mMessageOfTool[numTools];
 
  public:
 

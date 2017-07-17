@@ -44,9 +44,13 @@ HitTestPreview TimeShiftHandle::HitPreview
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto slideCursor =
       MakeCursor(wxCURSOR_SIZEWE, TimeCursorXpm, 16, 16);
-   const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+   // TODO: Should it say "track or clip" ?  Non-wave tracks can move, or clips in a wave track.
+   // TODO: mention effects of shift (move all clips of selected wave track) and ctrl (move vertically only) ?
+   //  -- but not all of that is available in multi tool.
+   auto message = _("Click and drag to move a track in time");
+
    return {
-      ttb->GetMessageForTool(slideTool),
+      message,
       (unsafe
        ? &*disabledCursor
        : &*slideCursor)

@@ -22,7 +22,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../ViewInfo.h"
 #include "../../../images/Cursors.h"
 
@@ -47,9 +46,17 @@ HitTestPreview ZoomHandle::HitPreview
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
    static auto zoomOutCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
-   const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+   wxString message;
+   // TODO:  Why not mention middle click to zoom normal on Windows too?
+#if defined( __WXMAC__ )
+   message = _("Click to Zoom In, Shift-Click to Zoom Out");
+#elif defined( __WXMSW__ )
+   message = _("Drag to Zoom Into Region, Right-Click to Zoom Out");
+#elif defined( __WXGTK__ )
+   message = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
+#endif
    return {
-      ttb->GetMessageForTool(zoomTool),
+      message,
       (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
    };
 }

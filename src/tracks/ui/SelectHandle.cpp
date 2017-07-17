@@ -968,9 +968,7 @@ HitTestPreview SelectHandle::Preview
       MaySetOnDemandTip(pTrack.get(), tip);
    }
    if (tip == "") {
-      const auto ttb = pProject->GetToolsToolBar();
-      if (ttb)
-         tip = ttb->GetMessageForTool(selectTool);
+      tip = _("Click and drag to select audio");
    }
    if (HasEscape() && mUseSnap) {
       tip += wxT(" ") +
