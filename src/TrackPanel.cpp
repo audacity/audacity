@@ -1014,7 +1014,7 @@ bool TrackPanel::HasRotation()
 
 bool TrackPanel::HasEscape()
 {
-   if (HasCapture())
+   if (IsMouseCaptured())
       return true;
 
    if (mTarget + 1 == mTargets.size() &&
@@ -1022,7 +1022,7 @@ bool TrackPanel::HasEscape()
        !Target()->HasEscape())
        return false;
 
-   return true;
+   return mTargets.size() > 0;
 }
 
 bool TrackPanel::ChangeTarget(bool forward, bool cycle)
