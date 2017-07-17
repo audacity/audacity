@@ -155,16 +155,18 @@ HitTestPreview TrackSelectHandle::Preview
 {
    const auto trackCount = project->GetTrackPanel()->GetTrackCount();
    if (mClicked) {
+   auto message = Message(trackCount);
       static auto disabledCursor =
          ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
       static wxCursor rearrangeCursor{ wxCURSOR_HAND };
 
       const bool unsafe = GetActiveProject()->IsAudioActive();
       return {
-         Message(trackCount),
+         message,
          (unsafe
           ? &*disabledCursor
-          : &rearrangeCursor)
+          : &rearrangeCursor),
+         message
       };
    }
    else {
@@ -172,8 +174,9 @@ HitTestPreview TrackSelectHandle::Preview
       // Don't test safety, because the click to change selection is allowed
       static wxCursor arrowCursor{ wxCURSOR_ARROW };
       return {
-         Message(trackCount),
-         &arrowCursor
+         message,
+         &arrowCursor,
+         message
       };
    }
 }
