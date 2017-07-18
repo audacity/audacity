@@ -493,12 +493,14 @@ void SelectHandle::SetUseSnap(bool use)
       // Repaint to turn the snap lines on or off
       mChangeHighlight = RefreshCode::RefreshAll;
 
-   if (hasSnap && IsClicked())
+   if (IsClicked()) {
       // Readjust the moving selection end
       AssignSelection(
          ::GetActiveProject()->GetViewInfo(),
          mUseSnap ? mSnapEnd.outTime : mSnapEnd.timeSnappedTime,
          nullptr);
+      mChangeHighlight |= RefreshCode::UpdateSelection;
+   }
 }
 
 bool SelectHandle::HasSnap() const
@@ -598,7 +600,6 @@ UIHandle::Result SelectHandle::Click
    auto pMixerBoard = pProject->GetMixerBoard();
 
    mSelStart = mUseSnap ? mSnapStart.outTime : mSnapStart.timeSnappedTime;
-   auto xx = viewInfo.TimeToPosition(mSelStart, mRect.x);
 
    // I. Shift-click adjusts an existing selection
    if (bShiftDown || bCtrlDown) {
@@ -619,7 +620,7 @@ UIHandle::Result SelectHandle::Click
       double value;
       // Shift-click, choose closest boundary
       SelectionBoundary boundary =
-         ChooseBoundary(viewInfo, xx, event.m_y, pTrack, mRect, false, false, &value);
+         ChooseBoundary(viewInfo, event.m_x, event.m_y, pTrack, mRect, false, false, &value);
       mSelectionBoundary = boundary;
       switch (boundary) {
          case SBLeft:
@@ -631,8 +632,7 @@ UIHandle::Result SelectHandle::Click
             mFreqSelMode = FREQ_SEL_INVALID;
 #endif
             mSelStartValid = true;
-            if (!(mUseSnap && mSnapStart.Snapped()))
-               mSelStart = value;
+            mSelStart = value;
             AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
@@ -713,7 +713,7 @@ UIHandle::Result SelectHandle::Click
             // Not shift-down, choose boundary only within snapping
             double value;
             SelectionBoundary boundary =
-               ChooseBoundary(viewInfo, xx, event.m_y, pTrack, mRect, true, true, &value);
+               ChooseBoundary(viewInfo, event.m_x, event.m_y, pTrack, mRect, true, true, &value);
             mSelectionBoundary = boundary;
             switch (boundary) {
             case SBNone:
@@ -727,8 +727,7 @@ UIHandle::Result SelectHandle::Click
                mFreqSelMode = FREQ_SEL_INVALID;
 #endif
                mSelStartValid = true;
-               if (!(mUseSnap && mSnapStart.Snapped()))
-                  mSelStart = value;
+               mSelStart = value;
                break;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
             case SBBottom:
@@ -1178,9 +1177,9 @@ void SelectHandle::AdjustSelection
       // using snap-to-time -- then we always accept the snap results)
       if (mSnapStart.outCoord >= 0 &&
           mSnapEnd.outCoord >= 0 &&
-          std::abs(mSnapStart.outCoord - mSnapEnd.outCoord) < 3 &&
-          !mSnapEnd.snappedTime) {
-         selend = origSelend;
+          std::abs(mSnapStart.outCoord - mSnapEnd.outCoord) < 3) {
+         if(!mSnapEnd.snappedTime)
+            selend = origSelend;
          mSnapEnd.outCoord = -1;
       }
    }
