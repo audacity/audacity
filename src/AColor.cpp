@@ -238,7 +238,7 @@ void AColor::Bevel2
 {
    int index = 0;
    if ( bHighlight )
-      index = bmpHiliteButtonExpand;
+      index = up ? bmpHiliteButtonExpand : bmpHiliteButtonExpandSel;
    else if( bSel )
       index = up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
    else
