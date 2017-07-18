@@ -383,7 +383,12 @@ UIHandlePtr SelectHandle::HitTest
    bool oldUseSnap = true;
    if (old) {
       // It should not have started listening to timer events
-      wxASSERT( !old->mTimerHandler );
+      if( old->mTimerHandler ) {
+         wxASSERT(false);
+         // Handle this eventuality anyway, don't leave a dangling back-pointer
+         // in the attached event handler.
+         old->mTimerHandler.reset();
+      }
       oldUseSnap = old->mUseSnap;
    }
 
