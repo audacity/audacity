@@ -120,7 +120,6 @@ UIHandlePtr StretchHandle::HitTest
    auto selStart = viewInfo.PositionToTime( state.m_x, rect.x );
    selStart = std::max(t0, std::min(t1, selStart));
    stretchState.mBeatCenter = pTrack->NearestBeatTime( selStart );
-   bool startNewSelection = true;
    if ( within( stretchState.mBeat0.second,
                 stretchState.mBeatCenter.second, 0.1 ) ) {
       stretchState.mMode = stretchLeft;
