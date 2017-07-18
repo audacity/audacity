@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-03-18 18:41+0000\n"
-"PO-Revision-Date: 2017-04-01 21:00+0300\n"
+"PO-Revision-Date: 2017-07-18 13:17+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -2812,7 +2812,7 @@ msgstr "Με&τακίνηση δρομέα"
 
 #: src/Menus.cpp:588
 msgid "to Selection Star&t"
-msgstr "στην αρχή της επιλογής"
+msgstr "στην α&ρχή της επιλογής"
 
 #: src/Menus.cpp:589
 msgid "to Selection En&d"
@@ -2884,11 +2884,11 @@ msgstr "&Κάθετη προσαρμογή"
 
 #: src/Menus.cpp:666
 msgid "Go to Selection Sta&rt"
-msgstr "Πήγαινε στην αρχή της επιλογής"
+msgstr "Μετάβαση στην α&ρχή της επιλογής"
 
 #: src/Menus.cpp:667
 msgid "Go to Selection En&d"
-msgstr "Πήγαινε στο τέλος της επιλογής"
+msgstr "Πήγαινε στο &τέλος της επιλογής"
 
 #: src/Menus.cpp:670
 msgid "&Collapse All Tracks"
@@ -3009,7 +3009,7 @@ msgstr "&Παύση"
 
 #: src/Menus.cpp:771
 msgid "S&kip to Start"
-msgstr "Μετ&άβαση στην αρχή"
+msgstr "Με&τάβαση στην αρχή"
 
 #: src/Menus.cpp:773
 msgid "Skip to E&nd"
@@ -3366,7 +3366,7 @@ msgstr "Αναπαραγωγή πριν και μετά το τέλος της �
 
 #: src/Menus.cpp:1151
 msgid "Play Cut Preview"
-msgstr "Αναπαραγωγή Αποκοπή Προεπισκόπηση"
+msgstr "Προεπισκόπηση αποκοπής αναπαραγωγής"
 
 #: src/Menus.cpp:1158
 msgid "Selection to Start"
@@ -3598,7 +3598,7 @@ msgstr "Αναπαραγωγή με επανάληψη σε ταχύτητα"
 
 #: src/Menus.cpp:1260
 msgid "Play Cut Preview at speed"
-msgstr "Αναπαραγωγή προεπισκόπησης αποκοπής σε ταχύτητα"
+msgstr "Προεπισκόπησης αποκοπής αναπαραγωγής σε ταχύτητα"
 
 #: src/Menus.cpp:1261
 msgid "Adjust playback speed"
@@ -11208,8 +11208,7 @@ msgstr "Επιτυχής εξαγωγή του/των ακόλουθου/ων %l
 #: src/export/ExportMultiple.cpp:588
 #, c-format
 msgid "Something went wrong after exporting the following %lld file(s)."
-msgstr ""
-"Κάτι πήγε στραβά μετά την εξαγωγή του/των ακόλουθου/ων %lld αρχείου/ων."
+msgstr "Κάτι πήγε στραβά μετά την εξαγωγή του/των ακόλουθου/ων %lld αρχείου/ων."
 
 #: src/export/ExportMultiple.cpp:589
 #, c-format
@@ -11661,8 +11660,8 @@ msgid ""
 "How do you want to import the current file(s)?"
 msgstr ""
 "Κατά την εισαγωγή ασυμπίεστων αρχείων ήχου μπορείτε ή να τα αντιγράψετε στο "
-"έργο, ή να τα διαβάσετε αμέσως από την τρέχουσα θέση τους (χωρίς "
-"αντιγραφή).\n"
+"έργο, ή να τα διαβάσετε αμέσως από την τρέχουσα θέση τους (χωρίς αντιγραφή)."
+"\n"
 "\n"
 "Η τρέχουσα προτίμηση ορίζεται σε %s.\n"
 "\n"
@@ -13823,7 +13822,7 @@ msgstr "Ταχύτητα αναπαραγωγής"
 
 #: src/toolbars/TranscriptionToolBar.cpp:305
 msgid "Play-at-speed"
-msgstr "Αναπαραγωγή-στην-ταχύτητα"
+msgstr "Αναπαραγωγή-με-ταχύτητα"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
