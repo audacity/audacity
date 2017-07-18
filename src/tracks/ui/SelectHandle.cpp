@@ -439,12 +439,12 @@ SelectHandle::SelectHandle
    , mSnapManager{ std::make_shared<SnapManager>(&trackList, &viewInfo) }
 {
    const wxMouseState &state = st.state;
-   const wxRect &rect = st.rect;
+   mRect = st.rect;
 
-   auto time = std::max(0.0, viewInfo.PositionToTime(state.m_x, rect.x));
+   auto time = std::max(0.0, viewInfo.PositionToTime(state.m_x, mRect.x));
    mSnapStart = mSnapManager->Snap(pTrack.get(), time, false);
    if (mSnapStart.snappedPoint)
-      mSnapStart.outCoord += rect.x;
+      mSnapStart.outCoord += mRect.x;
    else
       mSnapStart.outCoord = -1;
 
@@ -579,7 +579,6 @@ UIHandle::Result SelectHandle::Click
    else if (!event.LeftDown())
       return Cancelled;
 
-   mRect = evt.rect;
    mInitialSelection = viewInfo.selectedRegion;
 
    TrackList *const trackList = pProject->GetTracks();
