@@ -4218,10 +4218,6 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
          UpdateMenus(false);
       }
 
-      if (focus != NULL) {
-         focus->SetFocus();
-      }
-
    } );
 
    //double prevEndTime = mTracks->GetEndTime();
@@ -4290,6 +4286,9 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
          //  mTrackPanel->Refresh(false);
    }
    RedrawProject();
+   if (focus != nullptr) {
+      focus->SetFocus();
+   }
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
 
    mTrackPanel->Refresh(false);
