@@ -1,11 +1,12 @@
 # translation of audacity.po to Afrikaans
 # Copyright (C) 2006 Free Software Foundation, Inc.
 # F Wolff <friedel@translate.org.za>, 2006.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity-af\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2007-10-27 23:04+0200\n"
 "Last-Translator: F Wolff <friedel@translate.org.za>\n"
 "Language-Team: Afrikaans <translate-discuss-af@lists.sourceforge.net>\n"
@@ -41,6 +42,7 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "Fout"
 
@@ -1837,49 +1839,29 @@ msgstr ""
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr ""
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr ""
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr ""
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Slegs lame_enc.dll|lame_enc.dll|Biblioteke wat dinamies bind (*.dll)|*.dll|"
-"Alle lêers (*.*)|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr ""
-
-#: src/FFmpeg.h:339
-#, fuzzy
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Slegs lame_enc.dll|lame_enc.dll|Biblioteke wat dinamies bind (*.dll)|*.dll|"
-"Alle lêers (*.*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "Reghoekig"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr "Kon nie lêer \"%s\" open nie."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr "Audacity is gebaseer op kode van die volgende projekte:"
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr "Audacity benodig die lêer %s op MP3's te skep."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2280,6 +2262,20 @@ msgstr "&Verwerp"
 msgid "&OK"
 msgstr "&Regso"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "Onbepaalbaar"
@@ -2414,18 +2410,19 @@ msgstr "Gee baannaam"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr ""
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "Etiket gewysig"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "Etiket gewysig"
 
@@ -3906,6 +3903,7 @@ msgstr "Baan '%s' %s met %.02f sekondes verskuif"
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Tydverskuiwing"
 
@@ -3950,7 +3948,7 @@ msgid "Moved"
 msgstr "Skuif &op"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "Skuif baan"
 
@@ -4177,6 +4175,7 @@ msgid "Detach Labeled Audio"
 msgstr ""
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "Verdeel"
 
@@ -4200,11 +4199,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "links"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "regs"
 
@@ -4501,10 +4502,12 @@ msgid "Resample"
 msgstr ""
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr ""
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr ""
 
@@ -4536,6 +4539,7 @@ msgstr ""
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "Versterking"
 
@@ -4543,6 +4547,7 @@ msgstr "Versterking"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr ""
 
@@ -4553,18 +4558,21 @@ msgstr ""
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "Balans"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "Stil"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "Solo"
 
@@ -4573,14 +4581,17 @@ msgid "Signal Level Meter"
 msgstr ""
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "Versterkbalk geksuif"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr ""
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "Balansbalk geskuif"
 
@@ -5592,14 +5603,6 @@ msgid ""
 "  %s"
 msgstr ""
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "Duur"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr ""
@@ -5717,6 +5720,14 @@ msgstr "Eindtyd en -datum"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr ""
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "Duur"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -5902,6 +5913,14 @@ msgstr ""
 msgid " Sync Lock Selected"
 msgstr ""
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "Klik en sleep om die relatiewe grootte van stereo bane te verstel."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "Klik en sleep om die grootte van die baan te wysig."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -5949,6 +5968,51 @@ msgstr ""
 
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
+msgstr ""
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr ""
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr ""
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Slegs lame_enc.dll|lame_enc.dll|Biblioteke wat dinamies bind (*.dll)|*.dll|"
+"Alle lêers (*.*)|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr ""
+
+#: src/FFmpeg.h:339
+#, fuzzy
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Slegs lame_enc.dll|lame_enc.dll|Biblioteke wat dinamies bind (*.dll)|*.dll|"
+"Alle lêers (*.*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
@@ -6058,10 +6122,6 @@ msgstr "Nuwe piekamplitude (dB):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "Laat aftopping toe"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "Versterk"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
@@ -6212,10 +6272,6 @@ msgstr "Vlak:"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr ""
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6310,10 +6366,6 @@ msgstr ""
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "Wysig toonhoogte"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6374,10 +6426,6 @@ msgstr "Knip seleksie uit"
 msgid "New Length:"
 msgstr "Lengte"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "Wysig spoed"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6411,10 +6459,6 @@ msgstr "Lengte (sekondes)"
 #, fuzzy
 msgid "Length in seconds from"
 msgstr "Lengte (sekondes)"
-
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "Wysig tempo"
 
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
@@ -6451,11 +6495,6 @@ msgstr "Maks piekwydte (hoër is meer sensitief):"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr ""
-
-#: src/effects/ClickRemoval.h:29
-#, fuzzy
-msgid "Click Removal"
-msgstr "Klikverwydering"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6585,10 +6624,6 @@ msgstr "Saamdruktyd: %.1f sek"
 #: src/effects/Compressor.cpp:634
 #, c-format
 msgid "%.1f secs"
-msgstr ""
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
 msgstr ""
 
 #: src/effects/Contrast.cpp:56
@@ -7124,11 +7159,6 @@ msgstr ""
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-#, fuzzy
-msgid "Distortion"
-msgstr "Duur"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7189,10 +7219,6 @@ msgstr ""
 msgid "Silence duration:"
 msgstr ""
 
-#: src/effects/DtmfGen.h:28
-msgid "DTMF Tones"
-msgstr ""
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr ""
@@ -7218,10 +7244,6 @@ msgstr "Vertraging (sekondes):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "Dempingsfaktor:"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "Eggo"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7542,6 +7564,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr ""
 
@@ -7919,10 +7942,6 @@ msgstr ""
 msgid "No curves exported"
 msgstr ""
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "Gelykstelling"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -7943,14 +7962,6 @@ msgstr "Klik en sleep om oudio te selekteer"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "Indoof"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "Uitdoof"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -7967,10 +7978,6 @@ msgstr ""
 msgid "Stop threshold (samples):"
 msgstr ""
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr ""
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr ""
@@ -7978,10 +7985,6 @@ msgstr ""
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "Spieëlgolf"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8060,10 +8063,6 @@ msgstr ""
 
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
-msgstr ""
-
-#: src/effects/Noise.h:24
-msgid "Noise"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp:100
@@ -8515,10 +8514,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr ""
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr ""
@@ -8610,10 +8605,6 @@ msgstr "Afvoerkanale: %2d"
 msgid "Output gain (dB)"
 msgstr "Afvoerkanale: %2d"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Phaser"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8634,10 +8625,6 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "Herstel"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8674,10 +8661,6 @@ msgstr "Nuwe seleksielengte: "
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "Herhaal"
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -8812,14 +8795,6 @@ msgstr ""
 msgid "Reverses the selected audio"
 msgstr "Die seleksie word as Ogg Vorbis uitgevoer"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "Agteruit"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -8912,10 +8887,6 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr ""
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:61
@@ -9021,11 +8992,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr ""
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "&Stereo na mono"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9084,10 +9050,6 @@ msgstr ""
 
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
-msgstr ""
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
 msgstr ""
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
@@ -9180,15 +9142,6 @@ msgstr ""
 msgid "Interpolation:"
 msgstr ""
 
-#: src/effects/ToneGen.h:25
-msgid "Chirp"
-msgstr ""
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "Toon..."
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr ""
@@ -9252,10 +9205,6 @@ msgstr "Kompressor..."
 msgid "Truncate tracks independently"
 msgstr ""
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr ""
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr ""
@@ -9287,6 +9236,122 @@ msgstr "Wahwah-frekwensieverplasing (%):"
 
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
+msgstr ""
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "Versterk"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr ""
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "Wysig toonhoogte"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "Wysig spoed"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "Wysig tempo"
+
+#: src/effects/ClickRemoval.h:29
+#, fuzzy
+msgid "Click Removal"
+msgstr "Klikverwydering"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr ""
+
+#: src/effects/Distortion.h:26
+#, fuzzy
+msgid "Distortion"
+msgstr "Duur"
+
+#: src/effects/DtmfGen.h:28
+msgid "DTMF Tones"
+msgstr ""
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "Eggo"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "Gelykstelling"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "Indoof"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "Uitdoof"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr ""
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "Spieëlgolf"
+
+#: src/effects/Noise.h:24
+msgid "Noise"
+msgstr ""
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr ""
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Phaser"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "Herstel"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "Herhaal"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "Agteruit"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr ""
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "&Stereo na mono"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr ""
+
+#: src/effects/ToneGen.h:25
+msgid "Chirp"
+msgstr ""
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "Toon..."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
 msgstr ""
 
 #: src/effects/Wahwah.h:28
@@ -11359,11 +11424,6 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr ""
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime-lêers"
@@ -11390,6 +11450,11 @@ msgstr ""
 
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
+msgstr ""
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
 msgstr ""
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
@@ -11460,17 +11525,17 @@ msgstr "Hoeveelheid om in te voer:"
 msgid "Sample rate:"
 msgstr "Monsterfrekwensie:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr ""
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr ""
 
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
-msgstr ""
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp:37
@@ -12355,7 +12420,7 @@ msgid "Move clip up/down between tracks"
 msgstr ""
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "Omhulling"
 
@@ -13610,6 +13675,8 @@ msgid "Zoom Tool"
 msgstr "Vergrootglas"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "Tekenpen"
 
@@ -13637,6 +13704,438 @@ msgstr ""
 #: src/toolbars/TranscriptionToolBar.cpp:309
 msgid "Looped-Play-at-Speed"
 msgstr ""
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+msgid "Drag one or more label boundaries."
+msgstr ""
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+msgid "Drag label boundary."
+msgstr ""
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "Spring na begin"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+#, fuzzy
+msgid "&Font..."
+msgstr "Skriftipe..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "Etiketbaan-skriftipe"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+#, fuzzy
+msgid "Face name"
+msgstr "Her&noem"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr ""
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+#, fuzzy
+msgid "Up &Octave"
+msgstr "Oktaaf hoër"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+#, fuzzy
+msgid "Down Octa&ve"
+msgstr "Oktaaf laer"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+#, fuzzy
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"Klik om vertikaal in te zoem,  Shift-klik om uit te zoem,  Sleep om 'n "
+"spesifieke  zoemstreek te maak."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+#, fuzzy
+msgid "Click and drag to stretch selected region."
+msgstr "Klik en sleep om oudio te selekteer"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+#, fuzzy
+msgid "Stretch Note Track"
+msgstr "Notebaan"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+#, fuzzy
+msgid "Stretch"
+msgstr "Dempingsfaktor:"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "Klik en sleep om die monsters te wysig."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "Monster geskuif"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "Monsterwysiging"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "'%s' gewysig na %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "Formaatverandering"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+msgid "16000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+#, fuzzy
+msgid "&Other..."
+msgstr "Ander..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' gewysig na %s Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "Tempoverandering"
+
+# frekwensie? bistempo?
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "Stel tempo"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+#, fuzzy
+msgid "Wa&veform"
+msgstr "Golfvorm"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+#, fuzzy
+msgid "&Waveform (dB)"
+msgstr "Golfvorm (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+#, fuzzy
+msgid "&Spectrogram"
+msgstr "Spektrogramme"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "Spektrogramme"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+#, fuzzy
+msgid "Ma&ke Stereo Track"
+msgstr "Maak stereo baan"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+#, fuzzy
+msgid "Swap Stereo &Channels"
+msgstr "%d kanale"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+#, fuzzy
+msgid "Spl&it Stereo Track"
+msgstr "Verdeel stereo baan"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "&Stereo na mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "Formaat:"
+
+# frekwensie? bistempo?
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "Stel tempo"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "Mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "Linkerkanaal"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "Regterkanaal"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "Kanaal"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "'%s' 'n stereo baan gemaak"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "Maak stereo"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, fuzzy, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "%d kanale"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+#, fuzzy
+msgid "Swap Channels"
+msgstr "%d kanale"
+
+# Onder aanname dat split verlede tyd is en hierdie dus nie 'n opdrag is nie.
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "Stereo baan '%s' verdeel"
+
+# Onder aanname dat split verlede tyd is en hierdie dus nie 'n opdrag is nie.
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, fuzzy, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "Stereo baan '%s' verdeel"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+#, fuzzy
+msgid "Split to Mono"
+msgstr "&Stereo na mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift-links-klik"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift-links-klik"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift-links-klik"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+#, fuzzy
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"Klik om vertikaal in te zoem,  Shift-klik om uit te zoem,  Sleep om 'n "
+"spesifieke  zoemstreek te maak."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "Stel spoed se ondergrens (%) na:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "Spoed se ondergrens"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "Stel spoed se bogrens (%) na:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "Spoed se bogrens"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Stel spoedomvang na '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "Stel omvang"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+#, fuzzy
+msgid "Set Interpolation"
+msgstr "Vinnige \"sinc\"-interpolasie"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "Lineêr"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+msgid "L&ogarithmic scale"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "Stel omvang..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+#, fuzzy
+msgid "Logarithmic &Interpolation"
+msgstr "Vinnige \"sinc\"-interpolasie"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "Klik en sleep om 'n baan in tyd te skuif."
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "Klik en sleep om die amplitudeomhulling te wysig."
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "Omhulling aangepas."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -13672,6 +14171,185 @@ msgstr "Skuif baan af"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "Klik en sleep om die regterseleksiegrens te skuif."
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "Klik en sleep om oudio te selekteer"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "Voorkeure..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, fuzzy, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "Kombinasiemodus: Cmd- vir muis- en sleutelbordvoorkeure"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "Klik en sleep om oudio te selekteer"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "Klik en sleep om oudio te selekteer"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "Klik en sleep om 'n baan in tyd te skuif."
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "Skuif baan op"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "Gekose bane stilgemaak vir %.2f sekonde vanaf %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "Sluit"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "&Open..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "Naam..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "Skuif baan op"
+
+#: src/tracks/ui/TrackControls.cpp:137
+#, fuzzy
+msgid "Move Track &Down"
+msgstr "Skuif baan af"
+
+#: src/tracks/ui/TrackControls.cpp:143
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "Skuif baan op"
+
+#: src/tracks/ui/TrackControls.cpp:149
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "Skuif baan af"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "Verander baan se naam na:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+#, fuzzy
+msgid "Track Name"
+msgstr "Baannommer"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "'%s' hernoem na '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "Naamverandering"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "&Opdrag"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Links klik"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "Nuwe oudiobaan gemaak"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "op"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "af"
+
+# Die tweede parameter is 'op' of 'af' en moet dus teenaan 'geskuif' kom
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "'%s' %sgeskuif"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "Klik vir inzoem, Shift-klik vir uitzoem."
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "Sleep om op area in te zoem, Regs-klik om uit te zoem"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "Links=Inzoem, Regs=Uitzoem, Middel=Normaal"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -13740,10 +14418,6 @@ msgstr ""
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr ""
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "Sluit"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -13871,10 +14545,6 @@ msgstr ""
 
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
-msgstr ""
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
 msgstr ""
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
@@ -14373,6 +15043,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "Moenie dié waarskuwing weer wys nie"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr ""
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14418,26 +15092,6 @@ msgstr "Kon nie lêer \"%s\" open nie."
 #~ msgstr "Neem op"
 
 #, fuzzy
-#~ msgid "&Other..."
-#~ msgstr "Ander..."
-
-#, fuzzy
-#~ msgid "Wa&veform"
-#~ msgstr "Golfvorm"
-
-#, fuzzy
-#~ msgid "&Waveform (dB)"
-#~ msgstr "Golfvorm (dB)"
-
-#, fuzzy
-#~ msgid "&Spectrogram"
-#~ msgstr "Spektrogramme"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "Spektrogramme"
-
-#, fuzzy
 #~ msgid "&Mono"
 #~ msgstr "Mono"
 
@@ -14450,226 +15104,8 @@ msgstr "Kon nie lêer \"%s\" open nie."
 #~ msgstr "Regterkanaal"
 
 #, fuzzy
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "Maak stereo baan"
-
-#, fuzzy
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "Verdeel stereo baan"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "Formaat:"
-
-# frekwensie? bistempo?
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "Stel tempo"
-
-#, fuzzy
-#~ msgid "Up &Octave"
-#~ msgstr "Oktaaf hoër"
-
-#, fuzzy
-#~ msgid "Down Octa&ve"
-#~ msgstr "Oktaaf laer"
-
-#, fuzzy
-#~ msgid "&Font..."
-#~ msgstr "Skriftipe..."
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "Stel omvang..."
-
-#, fuzzy
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "Vinnige \"sinc\"-interpolasie"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "Naam..."
-
-#, fuzzy
-#~ msgid "Move Track &Up"
-#~ msgstr "Skuif baan op"
-
-#, fuzzy
-#~ msgid "Move Track &Down"
-#~ msgstr "Skuif baan af"
-
-#, fuzzy
-#~ msgid "Move Track to &Top"
-#~ msgstr "Skuif baan op"
-
-#, fuzzy
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "Skuif baan af"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "&Opdrag"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Links klik"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Klik om vertikaal in te zoem,  Shift-klik om uit te zoem,  Sleep om 'n "
-#~ "spesifieke  zoemstreek te maak."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "Klik en sleep om die relatiewe grootte van stereo bane te verstel."
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "Klik en sleep om die grootte van die baan te wysig."
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "Voorkeure..."
-
-#, fuzzy
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "Kombinasiemodus: Cmd- vir muis- en sleutelbordvoorkeure"
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "Klik en sleep om oudio te selekteer"
-
-#, fuzzy
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "Klik en sleep om die regterseleksiegrens te skuif."
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "Klik en sleep om die linkerseleksiegrens te skuif."
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "Klik en sleep om oudio te selekteer"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "Omhulling aangepas."
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "Monster geskuif"
-
-#~ msgid "Sample Edit"
-#~ msgstr "Monsterwysiging"
-
-#~ msgid "up"
-#~ msgstr "op"
-
-#~ msgid "down"
-#~ msgstr "af"
-
-# Die tweede parameter is 'op' of 'af' en moet dus teenaan 'geskuif' kom
-#~ msgid "Moved '%s' %s"
-#~ msgstr "'%s' %sgeskuif"
-
-#~ msgid "Left Channel"
-#~ msgstr "Linkerkanaal"
-
-#~ msgid "Right Channel"
-#~ msgstr "Regterkanaal"
-
-#~ msgid "Mono"
-#~ msgstr "Mono"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "'%s' gewysig na %s"
-
-#~ msgid "Channel"
-#~ msgstr "Kanaal"
-
-#, fuzzy
-#~ msgid "Swap Channels"
-#~ msgstr "%d kanale"
-
-# Onder aanname dat split verlede tyd is en hierdie dus nie 'n opdrag is nie.
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "Stereo baan '%s' verdeel"
-
-#, fuzzy
-#~ msgid "Split to Mono"
-#~ msgstr "&Stereo na mono"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "'%s' 'n stereo baan gemaak"
-
-#~ msgid "Make Stereo"
-#~ msgstr "Maak stereo"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "'%s' gewysig na %s Hz"
-
-#~ msgid "Rate Change"
-#~ msgstr "Tempoverandering"
-
-#~ msgid "Format Change"
-#~ msgstr "Formaatverandering"
-
-# frekwensie? bistempo?
-#~ msgid "Set Rate"
-#~ msgstr "Stel tempo"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "Stel spoed se ondergrens (%) na:"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "Spoed se ondergrens"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Stel spoed se bogrens (%) na:"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "Spoed se bogrens"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "Stel spoedomvang na '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "Stel omvang"
-
-#, fuzzy
-#~ msgid "Set Interpolation"
-#~ msgstr "Vinnige \"sinc\"-interpolasie"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Verander baan se naam na:"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "'%s' hernoem na '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "Naamverandering"
-
-#~ msgid "Label Track Font"
-#~ msgstr "Etiketbaan-skriftipe"
 
 #, fuzzy
 #~ msgid "You must select audio in the project window."
@@ -14696,27 +15132,6 @@ msgstr "Kon nie lêer \"%s\" open nie."
 
 #~ msgid "Fit Project"
 #~ msgstr "Pas projek"
-
-#~ msgid "Click and drag to select audio"
-#~ msgstr "Klik en sleep om oudio te selekteer"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "Klik en sleep om die amplitudeomhulling te wysig."
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "Klik en sleep om die monsters te wysig."
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "Klik vir inzoem, Shift-klik vir uitzoem."
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "Sleep om op area in te zoem, Regs-klik om uit te zoem"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "Links=Inzoem, Regs=Uitzoem, Middel=Normaal"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "Klik en sleep om 'n baan in tyd te skuif."
 
 #, fuzzy
 #~ msgid "Audacity Support Team"
@@ -14758,14 +15173,6 @@ msgstr "Kon nie lêer \"%s\" open nie."
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "Stel tempo"
-
-#, fuzzy
-#~ msgid "&Linear"
-#~ msgstr "Lineêr"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Shift-links-klik"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"
@@ -15316,12 +15723,6 @@ msgstr "Kon nie lêer \"%s\" open nie."
 
 #~ msgid "by Lynn Allan"
 #~ msgstr "deur Lynn Allan"
-
-#, fuzzy
-#~ msgid ""
-#~ "Could not open file:\n"
-#~ "  %s"
-#~ msgstr "Kon nie lêer \"%s\" open nie."
 
 #~ msgid "Noise Removal by Dominic Mazzoni"
 #~ msgstr "Ruisverwydering, deur Dominic Mazzoni"

@@ -1,11 +1,12 @@
 # Slovenian translation of Audacity audio software.
 # Copyright (C) 2009 Martin Srebotnjak
 #
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.1.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2017-02-19 20:22+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
@@ -44,6 +45,7 @@ msgstr "Prosimo, izberite obstoječo datoteko."
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "Napaka"
 
@@ -1901,52 +1903,35 @@ msgstr "Kje je '%s'?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Združljivih knjižnic FFmpeg ni mogoče najti"
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg ni mogoče najti"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity skuša uporabiti knjižnice FFmpeg za uvoz zvočne datoteke,\n"
-"vendar knjižnic ni mogoče najti.\n"
-"\n"
-"Če želite uporabljati uvoz FFmpeg, odprite Nastavitve->Knjižnice,\n"
-"da prenesete ali poiščete knjižnice FFmpeg."
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "Tega opozorila ne prikaži več"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Samo avformat.dll|*avformat*.dll|Dinamično povezane knjižnice (*.dll)|*.dll|"
-"Vse datoteke|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Dinamične knjižnice (*.dylib)|*.dylib|Vse datoteke (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Samo libavformat.so|libavformat*.so*|Dinamično povezane knjižnice (*.so*)|*."
-"so*|Vse datoteke (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "Pravokotno"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Z Audacity ni mogoče pisati v datoteko:\n"
+"  %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Z Audacity ni mogoče pisati v datoteko:\n"
+"  %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Z Audacity ni mogoče pisati v datoteko:\n"
+"  %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2360,6 +2345,20 @@ msgstr "Zavrzi"
 msgid "&OK"
 msgstr "V &redu"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "Nemogoče določiti"
@@ -2493,18 +2492,19 @@ msgstr "Vnesite ime sledi"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "Sled z oznakami"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "Spremenjena oznaka"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "Uredi oznako"
 
@@ -3970,6 +3970,7 @@ msgstr "Časovno %s zamaknjene sledi/posnetki %.02f sekund"
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Časovni zamik"
 
@@ -4014,7 +4015,7 @@ msgid "Moved"
 msgstr "Premaknjeno"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "Premakni sled"
 
@@ -4235,6 +4236,7 @@ msgid "Detach Labeled Audio"
 msgstr "Loči označen zvok"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "Razdvoji"
 
@@ -4258,11 +4260,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "levo"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "desno"
 
@@ -4561,10 +4565,12 @@ msgid "Resample"
 msgstr "Prevzorči"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "Nova frekvenco vzorčenja (Hz):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "Vnesena vrednost ni veljavna"
 
@@ -4595,6 +4601,7 @@ msgstr "Mešanje in izdelava sledi"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "Okrepitev"
 
@@ -4602,6 +4609,7 @@ msgstr "Okrepitev"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "Hitrost"
 
@@ -4612,18 +4620,21 @@ msgstr "Glasbilo"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "Zasuk"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "Utišaj"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "Solo"
 
@@ -4632,14 +4643,17 @@ msgid "Signal Level Meter"
 msgstr "Merilnik ravni signala"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "Premaknjeni drsnik ojačitve"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "Premaknjeni drsnik hitrosti"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "Premaknjeni drsnik zasuka"
 
@@ -5733,14 +5747,6 @@ msgstr ""
 "Ni mogoče shraniti datoteke:\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "Trajanje"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Časovno snemanje Audacity"
@@ -5857,6 +5863,14 @@ msgstr "Datum in čas zaključka"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "Končni datum"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "Trajanje"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6033,6 +6047,15 @@ msgstr " Izbrano"
 msgid " Sync Lock Selected"
 msgstr " Zaklep sinhronosti izbran"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr ""
+"Kliknite in povlecite, da izboljšate relativno velikost stereo posnetkov."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "Kliknite in povlecite, da bi spremenili velikost posnetka."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6081,6 +6104,54 @@ msgstr "Ni dovolj prostora, da bi prilepili izbor"
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "Ni dovolj prostora, da bi razpostrli črto reza"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg ni mogoče najti"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity skuša uporabiti knjižnice FFmpeg za uvoz zvočne datoteke,\n"
+"vendar knjižnic ni mogoče najti.\n"
+"\n"
+"Če želite uporabljati uvoz FFmpeg, odprite Nastavitve->Knjižnice,\n"
+"da prenesete ali poiščete knjižnice FFmpeg."
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "Tega opozorila ne prikaži več"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Samo avformat.dll|*avformat*.dll|Dinamično povezane knjižnice (*.dll)|*.dll|"
+"Vse datoteke|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Dinamične knjižnice (*.dylib)|*.dylib|Vse datoteke (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Samo libavformat.so|libavformat*.so*|Dinamično povezane knjižnice (*.so*)|*."
+"so*|Vse datoteke (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6195,10 +6266,6 @@ msgstr "Nova vrhnja amplituda (dB):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "Dovoli rezanje"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "Ojačaj"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
@@ -6348,10 +6415,6 @@ msgstr "Jakost"
 msgid "&Link Volume control to Tone controls"
 msgstr "&Poveži nadzor jakosti z nadzorom tona"
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "Nizki in visoki toni"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 msgid "Percentage"
@@ -6439,10 +6502,6 @@ msgstr "Sprememba v odstotkih"
 msgid "Use high quality stretching (slow)"
 msgstr "Uporabi visokokakovostno raztegovanje (počasno)"
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "Spremeni višino tona"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6500,10 +6559,6 @@ msgstr "Trenutna dolžina izbora."
 msgid "New Length:"
 msgstr "Nova dolžina:"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "Spremeni hitrost"
-
 #: src/effects/ChangeTempo.cpp:102
 msgid "Change the tempo of a selection without changing its pitch"
 msgstr "Spremeni tempo izbora brez spremembe višine tona"
@@ -6535,10 +6590,6 @@ msgstr "Dolžina (v sekundah)"
 #: src/effects/ChangeTempo.cpp:316
 msgid "Length in seconds from"
 msgstr "Dolžina v sekundah od"
-
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "Spremeni tempo"
 
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
@@ -6573,10 +6624,6 @@ msgstr "Največja širina konice (večja pomeni večjo občutljivost):"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "Največja širina konice"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "Odstranitev presketa"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6704,10 +6751,6 @@ msgstr "Čas upada %.1f s"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f s"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "Stiskalnik"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7229,10 +7272,6 @@ msgstr " (0 do 100):"
 msgid " (0 to 5):"
 msgstr " (0 do 5):"
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "Popačenje"
-
 #: src/effects/DtmfGen.cpp:47
 msgid "Sequence"
 msgstr "Sekvenca"
@@ -7292,10 +7331,6 @@ msgstr "ms"
 msgid "Silence duration:"
 msgstr "Trajanje tišine:"
 
-#: src/effects/DtmfGen.h:28
-msgid "DTMF Tones"
-msgstr "Toni DTMF"
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "Zamik"
@@ -7320,10 +7355,6 @@ msgstr "Zakasnitev (sekund):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "Faktor krnitve: "
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "Odmev"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7634,6 +7665,7 @@ msgid "Mark effect as a favorite"
 msgstr "Označi učinek za priljubljenega"
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "Odstrani"
 
@@ -8013,10 +8045,6 @@ msgstr "Krivulje izvožene"
 msgid "No curves exported"
 msgstr "Nobena krivulja ni bila izvožena"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "Izenačevanje"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8042,14 +8070,6 @@ msgstr "Na izbranem zvoku uveljavi linearno pojemanje"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "Na izbranem zvoku uveljavi linearno pojemanje"
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "Zvišuj glasnost"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "Znižuj glasnost"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr "Ustvari oznake, kjer zazna porezavo"
@@ -8066,10 +8086,6 @@ msgstr "Začetni prag (vzorci):"
 msgid "Stop threshold (samples):"
 msgstr "Zaključni prag (vzorci):"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "Najdi porezano"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Ni dovolj prostora, da bi ustvarili zvok"
@@ -8077,10 +8093,6 @@ msgstr "Ni dovolj prostora, da bi ustvarili zvok"
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Obrne zvočne vzorce, preobrne njihovo polarnost"
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "Obrni"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8159,10 +8171,6 @@ msgstr "Tvori enega od treh različnih vrst šuma"
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "Vrsta šuma:"
-
-#: src/effects/Noise.h:24
-msgid "Noise"
-msgstr "Šum"
 
 #: src/effects/NoiseReduction.cpp:100
 msgid "Median"
@@ -8602,10 +8610,6 @@ msgstr ""
 "Poskusite povečati zvokovni izbor na vsaj %.1f sekund,\n"
 "ali zmanjšati »Časovno ločljivost« na manj kot %.1f sekund."
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr "Paulovrazteg"
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "Stopnje"
@@ -8686,10 +8690,6 @@ msgstr "&Izhodna ojačitev (dB):"
 msgid "Output gain (dB)"
 msgstr "Izhodna ojačitev (dB)"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Faznik"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "Določi največjo amplitudo ene ali več sledi"
@@ -8719,10 +8719,6 @@ msgstr ""
 "Prosimo, izberite območje, katerega se vsaj na enem robu dotika zvok.\n"
 "\n"
 "Več ko je okrožajočih zvokov, boljši bo rezultat."
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "Popravi"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8755,10 +8751,6 @@ msgstr "Nova dolžina izbora:"
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr "Opozorilo: brez ponovitev."
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "Ponovi"
 
 #: src/effects/Reverb.cpp:47
 msgid "RoomSize"
@@ -8884,14 +8876,6 @@ msgstr "Odmev"
 msgid "Reverses the selected audio"
 msgstr "Obrne izbrani zvok"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "Vzvratno"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "Časovno raztegovanje/sprememba višine tona SBSMS"
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -8986,10 +8970,6 @@ msgstr "Najmanjše dušenje zvoka pasovno&zapornega filtra:"
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "Najmanjše dušenje zvoka pasovno&zapornega filtra (dB)"
 
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr "Klasični filtri"
-
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
 msgstr "Poravnaj MIDI na zvok"
@@ -9083,10 +9063,6 @@ msgstr "Ustvari zvok z ničelno amplitudo"
 msgid "Converts stereo tracks to mono"
 msgstr "Pretvori stereo sledi v mono"
 
-#: src/effects/StereoToMono.h:18
-msgid "Stereo To Mono"
-msgstr "Stereo v mono"
-
 #: src/effects/TimeScale.cpp:44
 msgid "RatePercentChangeStart"
 msgstr "Začetna sprememba hitrosti v odstotkih"
@@ -9142,10 +9118,6 @@ msgstr "(%) [-50 do 100]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "Končni zamik višine tona"
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "Časovno merilo"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9234,14 +9206,6 @@ msgstr "Konec amplitude"
 msgid "Interpolation:"
 msgstr "Interpolacija:"
 
-#: src/effects/ToneGen.h:25
-msgid "Chirp"
-msgstr "Pisk"
-
-#: src/effects/ToneGen.h:26
-msgid "Tone"
-msgstr "Ton"
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr "Poreži zaznano tišino"
@@ -9305,10 +9269,6 @@ msgstr "Stisni na:"
 msgid "Truncate tracks independently"
 msgstr "Poreži sledi neodvisno"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "Poreži tišino"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "Resonanca"
@@ -9340,6 +9300,118 @@ msgstr "Razli&ka v frekvenci wah (%):"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "Razlika v frekvenci wah v odstotkih"
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "Ojačaj"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "Nizki in visoki toni"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "Spremeni višino tona"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "Spremeni hitrost"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "Spremeni tempo"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "Odstranitev presketa"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "Stiskalnik"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "Popačenje"
+
+#: src/effects/DtmfGen.h:28
+msgid "DTMF Tones"
+msgstr "Toni DTMF"
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "Odmev"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "Izenačevanje"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "Zvišuj glasnost"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "Znižuj glasnost"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "Najdi porezano"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "Obrni"
+
+#: src/effects/Noise.h:24
+msgid "Noise"
+msgstr "Šum"
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr "Paulovrazteg"
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Faznik"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "Popravi"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "Ponovi"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "Vzvratno"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "Časovno raztegovanje/sprememba višine tona SBSMS"
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr "Klasični filtri"
+
+#: src/effects/StereoToMono.h:18
+msgid "Stereo To Mono"
+msgstr "Stereo v mono"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "Časovno merilo"
+
+#: src/effects/ToneGen.h:25
+msgid "Chirp"
+msgstr "Pisk"
+
+#: src/effects/ToneGen.h:26
+msgid "Tone"
+msgstr "Ton"
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "Poreži tišino"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11584,11 +11656,6 @@ msgstr "Beri datoteke &neposredno iz izvirnika (hitreje)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "Ne &opozarjaj več in vedno uporabi to možnost"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "Uvažanje datoteke %s"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "Datoteke QuickTime"
@@ -11616,6 +11683,11 @@ msgstr "Opisa toka ni mogoče pridobiti"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "Predpomnilnika polnjenja ni mogoče pridobiti."
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "Uvažanje datoteke %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11685,6 +11757,13 @@ msgstr "Količina za uvoz:"
 msgid "Sample rate:"
 msgstr "Mera vzorčenja:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr ""
+"%s dokončano %2.0f%%.  Kliknite, če želite spremeniti žariščno točko "
+"opravila."
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "Uvoz dokončan. Izračun signalne oblike"
@@ -11692,13 +11771,6 @@ msgstr "Uvoz dokončan. Izračun signalne oblike"
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "Dekodiranje signalne oblike"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr ""
-"%s dokončano %2.0f%%.  Kliknite, če želite spremeniti žariščno točko "
-"opravila."
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12600,7 +12672,7 @@ msgid "Move clip up/down between tracks"
 msgstr "Premakni posnetek gor/dol med sledmi"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "Ovojnica"
 
@@ -13826,6 +13898,8 @@ msgid "Zoom Tool"
 msgstr "Orodje za povečavo"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "Risanje"
 
@@ -13855,6 +13929,415 @@ msgstr "Predvajaj-pri-hitrosti"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "Predvajaj zankano pri hitrosti"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+msgid "Drag one or more label boundaries."
+msgstr "Povlecite eno ali več mej oznak."
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+msgid "Drag label boundary."
+msgstr "Povlecite ročice robu naslova."
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "Kliknite za začetek"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "&Pisava ..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "Pisava oznake sledi"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "Ime pisave"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "Velikost pisave"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "Zvišaj za &oktavo"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "Znižaj za o&ktavo"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"Kliknite za navpično povečavo, kliknite z dvigalko za pomanjšanje, povlecite "
+"za ustvarjanje določenega področja za povečavo."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "Kliknite in povlecite, da raztegnete izbrano območje."
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "Raztegni sled not (MIDI)"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "Raztegni"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "Spojeni posnetki"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "Spoji"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "Črta reza razširjena"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "Razpostri"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "Črta reza odstranjena"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "Kliknite in povlecite, da bi spremenili primerke"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr ""
+"Če želite uporabiti risanje, izberite »Signalna oblika« v spustnem meniju "
+"sledi."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+"Za uporabo risanja povečajte pogled, dokler ne vidite posameznih vzorcev."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+msgid "Moved Samples"
+msgstr "Premaknjeni vzorci"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "Urejanje vzorcev"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "Spremenjeno: »%s« v %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "Sprememba formata:"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100000,0100 Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "&Drugo ..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "Spremenjeno: '%s' v %s Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "Sprememba mere"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "Nastavi frekvenco"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "Si&gnalna oblika"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+msgid "&Waveform (dB)"
+msgstr "&Signalna oblika (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "&Spektrogram"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+msgid "S&pectrogram Settings..."
+msgstr "Nastavitve s&pektrograma …"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "Naredi stereo zvo&čno sled"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+msgid "Swap Stereo &Channels"
+msgstr "Zamenjaj stereo &kanala"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+msgid "Spl&it Stereo Track"
+msgstr "Razdvo&ji stereo sled"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "Razdvoji stereo sled v mono »%s«"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+msgid "&Format"
+msgstr "&Oblika"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+msgid "Rat&e"
+msgstr "&Hitrost"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+#, fuzzy
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+"Če želite spremeniti nastavitve spektrograma,\n"
+"najprej ustavite predvajanje oz. snemanje."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr "Najprej ustavi zvok"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "Mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "Levi kanal"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "Desni kanal"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "Kanal"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "Stereo posnetek '%s' narejen."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "Naredi stereo"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "Zamenjana kanala v »%s«"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+msgid "Swap Channels"
+msgstr "Zamenjaj kanala"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "Razdvoji stereo sled »%s«"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "Razdvoji stereo sled v mono »%s«"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+msgid "Split to Mono"
+msgstr "Razdvoji v mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Dvigalka-levi-klik"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"Kliknite za navpično približanje, kliknite z dvigalko za odmik, povlecite za "
+"ustvarjanje določenega področja za povečavo."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "Spremeni spodnjo mejo hitrosti (%) na:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "Spodnja meja hitrosti"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "Spremeni zgornjo mejo hitrosti (%) na:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "Zgornja meja hitrosti"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Nastavi območje na '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "Nastavi področje"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr "Določite prikaz časovne sledi na linearnega"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "Določite prikaz"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr "Določite prikaz časovne sledi na logaritemskega"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr "Določite interpolacijo časovne sledi na linearno"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "Določite interpolacijo"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr "Določite interpolacijo časovne sledi na logaritemsko"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "Linearno"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+msgid "L&ogarithmic scale"
+msgstr "L&ogaritemsko merilo"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+msgid "&Range..."
+msgstr "&Obseg ..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "Logaritemska &interpolacija"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "Kliknite in povlecite, da bi premaknili posnetek vzdolž časovne linije"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "Kliknite in povlecite, da bi spremenili okvir amplitude"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "Optimirana kuverta."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -13888,6 +14371,172 @@ msgstr "Premakni kazalec miške za drsenje"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr "&Drsenje"
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "Kliknite in povlecite, da bi premaknili levi okvir izbora."
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "Kliknite in povlecite, da bi premaknili desni okvir izbora."
+
+#: src/tracks/ui/SelectHandle.cpp:337
+msgid "Click and drag to move bottom selection frequency."
+msgstr "Kliknite in povlecite, da bi premaknili spodnjo frekvenco izbora."
+
+#: src/tracks/ui/SelectHandle.cpp:341
+msgid "Click and drag to move top selection frequency."
+msgstr "Kliknite in povlecite, da bi premaknili vrhnjo frekvenco izbora."
+
+#: src/tracks/ui/SelectHandle.cpp:349
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr ""
+"Kliknite in povlecite, da premaknete sredinsko frekvenco izbora v spektralni "
+"vrh."
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+msgid "Click and drag to move center selection frequency."
+msgstr "Kliknite in povlecite, da premaknete sredinsko frekvenco izbora."
+
+#: src/tracks/ui/SelectHandle.cpp:364
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "Kliknite in povlecite, da prilagodite pasovno širino frekvence."
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+msgid "Edit, Preferences..."
+msgstr "Uredi nastavitve …"
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "Večorodni način: %s za nastavitve miške in tipkovnice."
+
+#: src/tracks/ui/SelectHandle.cpp:953
+msgid "Click and drag to set frequency bandwidth."
+msgstr "Kliknite in povlecite, da določite pasovno širino frekvence."
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "Kliknite in povlecite, da izberete posnetek"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "Kliknite in povlecite, da bi premaknili posnetek vzdolž časovne linije"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+msgid "Moved clips to another track"
+msgstr "Posnetki premaknjeni na drugo sled"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "Stišani izbrani posnetki za %.2f sekund pri %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "Zapri"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "Odpri ne&davne ..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+msgid "&Name..."
+msgstr "I&me …"
+
+#: src/tracks/ui/TrackControls.cpp:131
+msgid "Move Track &Up"
+msgstr "Pomakni sled navz&gor"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "Premakni sled navz&dol"
+
+#: src/tracks/ui/TrackControls.cpp:143
+msgid "Move Track to &Top"
+msgstr "Pomakni sled na vr&h"
+
+#: src/tracks/ui/TrackControls.cpp:149
+msgid "Move Track to &Bottom"
+msgstr "Pomakni sled na &dno"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "Spremeni naslov sledi v:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "Ime sledi"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "Preimenovano '%s' v '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "Sprememba imena"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+msgid "Command-Click"
+msgstr "Cmd-klik"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+msgid "Ctrl-Click"
+msgstr "Krmilka-klik"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+"%s za izbor/preklic izbora sledi. Povlecite navzgor ali navzdol za spremembo "
+"zaporedja sledi."
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, c-format
+msgid "%s to select or deselect track."
+msgstr "%s za izbor/preklic izbora sledi."
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "navzgor"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "navzdol"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "Premaknjeno '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "Kliknite za povečavo, dvigalka-klik za pomanjšanje"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "Povlecite za povečanje področja, desno-kliknite za pomanjšanje"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "Levo=Povečava, Desno=Pomanjšanje, Sredina=Normalno"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -13956,10 +14605,6 @@ msgstr "Naprej"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "Nazaj"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "Zapri"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14080,10 +14725,6 @@ msgstr " Porezano "
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "Pokaži dnevnik za podrobnosti"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "Prosimo, izberite dejanje"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14568,6 +15209,10 @@ msgstr "e"
 msgid "Don't show this warning again"
 msgstr "Tega opozorila ne prikaži več"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "Prosimo, izberite dejanje"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14630,21 +15275,6 @@ msgstr "Napaka pri odpiranju datoteke: »%s«"
 #~ msgid "Play at speed"
 #~ msgstr "Predvajaj pri hitrosti"
 
-#~ msgid "&Other..."
-#~ msgstr "&Drugo ..."
-
-#~ msgid "Wa&veform"
-#~ msgstr "Si&gnalna oblika"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "&Signalna oblika (dB)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "&Spektrogram"
-
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "Nastavitve s&pektrograma …"
-
 #~ msgid "&Mono"
 #~ msgstr "&Mono"
 
@@ -14654,304 +15284,11 @@ msgstr "Napaka pri odpiranju datoteke: »%s«"
 #~ msgid "&Right Channel"
 #~ msgstr "&Desni kanal"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "Naredi stereo zvo&čno sled"
-
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "Zamenjaj stereo &kanala"
-
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "Razdvo&ji stereo sled"
-
-#~ msgid "&Format"
-#~ msgstr "&Oblika"
-
-#~ msgid "Rat&e"
-#~ msgstr "&Hitrost"
-
-#~ msgid "Up &Octave"
-#~ msgstr "Zvišaj za &oktavo"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "Znižaj za o&ktavo"
-
-#~ msgid "&Font..."
-#~ msgstr "&Pisava ..."
-
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "L&ogaritemsko merilo"
-
-#~ msgid "&Range..."
-#~ msgstr "&Obseg ..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "Logaritemska &interpolacija"
-
-#~ msgid "&Name..."
-#~ msgstr "I&me …"
-
-#~ msgid "Move Track &Up"
-#~ msgstr "Pomakni sled navz&gor"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "Premakni sled navz&dol"
-
-#~ msgid "Move Track to &Top"
-#~ msgstr "Pomakni sled na vr&h"
-
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "Pomakni sled na &dno"
-
-#~ msgid "Command-Click"
-#~ msgstr "Cmd-klik"
-
-#~ msgid "Ctrl-Click"
-#~ msgstr "Krmilka-klik"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr ""
-#~ "Kliknite za navpično približanje, kliknite z dvigalko za odmik, povlecite "
-#~ "za ustvarjanje določenega področja za povečavo."
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Kliknite za navpično povečavo, kliknite z dvigalko za pomanjšanje, "
-#~ "povlecite za ustvarjanje določenega področja za povečavo."
-
-#~ msgid ""
-#~ "%s to select or deselect track. Drag up or down to change track order."
-#~ msgstr ""
-#~ "%s za izbor/preklic izbora sledi. Povlecite navzgor ali navzdol za "
-#~ "spremembo zaporedja sledi."
-
-#~ msgid "%s to select or deselect track."
-#~ msgstr "%s za izbor/preklic izbora sledi."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr ""
-#~ "Kliknite in povlecite, da izboljšate relativno velikost stereo posnetkov."
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "Kliknite in povlecite, da bi spremenili velikost posnetka."
-
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "Povlecite eno ali več mej oznak."
-
-#~ msgid "Drag label boundary."
-#~ msgstr "Povlecite ročice robu naslova."
-
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "Kliknite in povlecite, da premaknete sredinsko frekvenco izbora."
-
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr ""
-#~ "Kliknite in povlecite, da premaknete sredinsko frekvenco izbora v "
-#~ "spektralni vrh."
-
-#~ msgid "Edit, Preferences..."
-#~ msgstr "Uredi nastavitve …"
-
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "Večorodni način: %s za nastavitve miške in tipkovnice."
-
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "Kliknite in povlecite, da določite pasovno širino frekvence."
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "Kliknite in povlecite, da raztegnete v izbranem območju."
 
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "Kliknite, da bi premaknili mejo izbora h kazalcu."
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "Kliknite in povlecite, da bi premaknili levi okvir izbora."
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "Kliknite in povlecite, da bi premaknili desni okvir izbora."
-
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "Kliknite in povlecite, da bi premaknili spodnjo frekvenco izbora."
-
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "Kliknite in povlecite, da bi premaknili vrhnjo frekvenco izbora."
-
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "Kliknite in povlecite, da prilagodite pasovno širino frekvence."
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "Kliknite in povlecite, da raztegnete izbrano območje."
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "Raztegni sled not (MIDI)"
-
-#~ msgid "Stretch"
-#~ msgstr "Raztegni"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "Optimirana kuverta."
-
-#~ msgid "Moved clips to another track"
-#~ msgstr "Posnetki premaknjeni na drugo sled"
-
-#~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
-#~ msgstr ""
-#~ "Če želite uporabiti risanje, izberite »Signalna oblika« v spustnem meniju "
-#~ "sledi."
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr ""
-#~ "Za uporabo risanja povečajte pogled, dokler ne vidite posameznih vzorcev."
-
-#~ msgid "Moved Samples"
-#~ msgstr "Premaknjeni vzorci"
-
-#~ msgid "Sample Edit"
-#~ msgstr "Urejanje vzorcev"
-
-#~ msgid "up"
-#~ msgstr "navzgor"
-
-#~ msgid "down"
-#~ msgstr "navzdol"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "Premaknjeno '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "Črta reza razširjena"
-
-#~ msgid "Expand"
-#~ msgstr "Razpostri"
-
-#~ msgid "Merged Clips"
-#~ msgstr "Spojeni posnetki"
-
-#~ msgid "Merge"
-#~ msgstr "Spoji"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "Črta reza odstranjena"
-
-#~ msgid "Left Channel"
-#~ msgstr "Levi kanal"
-
-#~ msgid "Right Channel"
-#~ msgstr "Desni kanal"
-
-#~ msgid "Mono"
-#~ msgstr "Mono"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "Spremenjeno: »%s« v %s"
-
-#~ msgid "Channel"
-#~ msgstr "Kanal"
-
-#~ msgid "Swapped Channels in '%s'"
-#~ msgstr "Zamenjana kanala v »%s«"
-
-#~ msgid "Swap Channels"
-#~ msgstr "Zamenjaj kanala"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "Razdvoji stereo sled »%s«"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "Razdvoji stereo sled v mono »%s«"
-
-#~ msgid "Split to Mono"
-#~ msgstr "Razdvoji v mono"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "Stereo posnetek '%s' narejen."
-
-#~ msgid "Make Stereo"
-#~ msgstr "Naredi stereo"
-
-#~ msgid ""
-#~ "To change Spectrogram Settings, stop any\n"
-#~ ".playing or recording first."
-#~ msgstr ""
-#~ "Če želite spremeniti nastavitve spektrograma,\n"
-#~ "najprej ustavite predvajanje oz. snemanje."
-
-#~ msgid "Stop the Audio First"
-#~ msgstr "Najprej ustavi zvok"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "Spremenjeno: '%s' v %s Hz"
-
-#~ msgid "Rate Change"
-#~ msgstr "Sprememba mere"
-
-#~ msgid "Format Change"
-#~ msgstr "Sprememba formata:"
-
-#~ msgid "Set Rate"
-#~ msgstr "Nastavi frekvenco"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "Spremeni spodnjo mejo hitrosti (%) na:"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "Spodnja meja hitrosti"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Spremeni zgornjo mejo hitrosti (%) na:"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "Zgornja meja hitrosti"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "Nastavi območje na '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "Nastavi področje"
-
-#~ msgid "Set time track display to linear"
-#~ msgstr "Določite prikaz časovne sledi na linearnega"
-
-#~ msgid "Set Display"
-#~ msgstr "Določite prikaz"
-
-#~ msgid "Set time track display to logarithmic"
-#~ msgstr "Določite prikaz časovne sledi na logaritemskega"
-
-#~ msgid "Set time track interpolation to linear"
-#~ msgstr "Določite interpolacijo časovne sledi na linearno"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "Določite interpolacijo"
-
-#~ msgid "Set time track interpolation to logarithmic"
-#~ msgstr "Določite interpolacijo časovne sledi na logaritemsko"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Spremeni naslov sledi v:"
-
-#~ msgid "Track Name"
-#~ msgstr "Ime sledi"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "Preimenovano '%s' v '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "Sprememba imena"
-
-#~ msgid "Label Track Font"
-#~ msgstr "Pisava oznake sledi"
-
-#~ msgid "Face name"
-#~ msgstr "Ime pisave"
-
-#~ msgid "Face size"
-#~ msgstr "Velikost pisave"
 
 #~ msgid "%.2f dB Average RMS"
 #~ msgstr "%.2f dB povprečnega RMS"
@@ -15088,28 +15425,6 @@ msgstr "Napaka pri odpiranju datoteke: »%s«"
 
 #~ msgid "Selection "
 #~ msgstr "Izbor"
-
-#~ msgid "Click and drag to select audio"
-#~ msgstr "Kliknite in povlecite, da izberete posnetek"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "Kliknite in povlecite, da bi spremenili okvir amplitude"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "Kliknite in povlecite, da bi spremenili primerke"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "Kliknite za povečavo, dvigalka-klik za pomanjšanje"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "Povlecite za povečanje področja, desno-kliknite za pomanjšanje"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "Levo=Povečava, Desno=Pomanjšanje, Sredina=Normalno"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr ""
-#~ "Kliknite in povlecite, da bi premaknili posnetek vzdolž časovne linije"
 
 #~ msgid "Unpinned Record/Play head"
 #~ msgstr "Odpeta glava snemanja/predvajanja"

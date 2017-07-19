@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the audacity package.
 # Audacity Team <EMAIL@ADDRESS>, YEAR.
 # அருண் குமார் - Arun Kumar <thangam.arunx@gmail.com>, 2014.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -44,6 +45,7 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "வழு."
 
@@ -1952,53 +1954,35 @@ msgstr "'%s' எங்கே ?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "ஏற்புடைய FFmpeg நூலகத்தை கண்டுபிடிப்பதில் தோல்வி"
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg இல்லை"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity FFmpeg ஊடாக ஒலிக்கோப்பை இறக்குமதி செய்ய முனைந்தது, \n"
-"ஆனால் நூலகத்தை காணவில்லை. \n"
-"\n"
-"FFmpeg இறக்குமதியை பயன்படுத்த, FFmpeg நூலகத்தை தரவிறக்கம் செய்ய அல்லது சுட்டிக்காட்ட \n"
-"Preferences > Libraries க்கு செல்லவும்."
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "இந்த எச்சரிக்கையை மிண்டும் காண்பிக்க வேண்டாம்"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"avformat.dll|*avformat*.dll மட்டும்|இயங்கு நிலை நூலகங்கள் (*.dll)|*.dll|அனைத்தும் "
-"(*.*)|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "இயங்கு நிலை நூலகங்கள் (*.dylib)|*.dylib|அனைத்தும் (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"libavformat.so|libavformat*.so* மட்டும் |இயங்கு நிலை நூலகங்கள் (*.so*)|*.so*|"
-"அனைத்தும் (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "செவ்வகம் "
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity யால் கோப்பை எழுத முடியவில்லை:\n"
+" %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity யால் கோப்பை எழுத முடியவில்லை:\n"
+" %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity யால் கோப்பை எழுத முடியவில்லை:\n"
+" %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2401,6 +2385,20 @@ msgstr "&கைவிடு"
 msgid "&OK"
 msgstr "&சரி"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "தீர்மானிக்க முடியாதுள்ளது"
@@ -2535,18 +2533,19 @@ msgstr "ஒலித்துண்டின் பெயரை உள்ளி�
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "சிட்டை ஒலித்துண்டு"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "திருத்தப்பட்ட சிட்டை"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "சிட்டை  தொகு"
 
@@ -4020,6 +4019,7 @@ msgstr ""
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr ""
 
@@ -4065,7 +4065,7 @@ msgid "Moved"
 msgstr "&மேலே நகர்த்த"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "ஒலித்துண்டை அசை"
 
@@ -4287,6 +4287,7 @@ msgid "Detach Labeled Audio"
 msgstr "பெயரிடப்பட்ட ஒலி அமைவை பிரி"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "பிள"
 
@@ -4310,11 +4311,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "இடது"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "வலது"
 
@@ -4613,10 +4616,12 @@ msgid "Resample"
 msgstr "மீள்மாதிரி"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "புதிய மாதிரி வீதம்"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "உள்ளிடப்பட்ட பெறுமதி செல்லுபடி அற்றதாகும்"
 
@@ -4647,6 +4652,7 @@ msgstr "கலந்து வழங்கப்பட்ட தடங்கள�
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "பெறு"
 
@@ -4654,6 +4660,7 @@ msgstr "பெறு"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "வேகம்"
 
@@ -4664,18 +4671,21 @@ msgstr "சங்கீத கருவி"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "நகர்த்தி"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "ஓசையற்ற"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "தனி"
 
@@ -4684,14 +4694,17 @@ msgid "Signal Level Meter"
 msgstr "சமிக்ஞை மட்ட கருவி"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "பெறும் நகர்த்தி நகர்த்தப்பட்டுள்ளது"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr ""
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "நகர்த்தும் நகர்த்தி நகர்த்தப்பட்டுள்ளது"
 
@@ -5763,14 +5776,6 @@ msgstr ""
 "Audacity யால் கோப்பை சேமிக்க முடியவில்லை:\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "கால அளவு"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Audacity நேர பதியி"
@@ -5892,6 +5897,14 @@ msgstr "முடிவு திகதி மற்றும் நேரம்
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "முடிவு திகதி"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "கால அளவு"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6081,6 +6094,15 @@ msgstr ""
 msgid " Sync Lock Selected"
 msgstr ""
 
+#: src/TrackPanelResizeHandle.cpp:43
+#, fuzzy
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6128,6 +6150,55 @@ msgstr "தெரிவினை ஒட்ட போதுமான இடம்
 
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
+msgstr ""
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg இல்லை"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity FFmpeg ஊடாக ஒலிக்கோப்பை இறக்குமதி செய்ய முனைந்தது, \n"
+"ஆனால் நூலகத்தை காணவில்லை. \n"
+"\n"
+"FFmpeg இறக்குமதியை பயன்படுத்த, FFmpeg நூலகத்தை தரவிறக்கம் செய்ய அல்லது சுட்டிக்காட்ட \n"
+"Preferences > Libraries க்கு செல்லவும்."
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "இந்த எச்சரிக்கையை மிண்டும் காண்பிக்க வேண்டாம்"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"avformat.dll|*avformat*.dll மட்டும்|இயங்கு நிலை நூலகங்கள் (*.dll)|*.dll|அனைத்தும் "
+"(*.*)|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "இயங்கு நிலை நூலகங்கள் (*.dylib)|*.dylib|அனைத்தும் (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"libavformat.so|libavformat*.so* மட்டும் |இயங்கு நிலை நூலகங்கள் (*.so*)|*.so*|"
+"அனைத்தும் (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
@@ -6242,10 +6313,6 @@ msgstr "புதிய உயர் விஸ்தரிப்பு (dB)"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr ""
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "விஸ்தரி"
 
 #: src/effects/AutoDuck.cpp:41
 #, fuzzy
@@ -6394,10 +6461,6 @@ msgstr "மட்டம்"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr ""
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6489,10 +6552,6 @@ msgstr "சதவீத மாற்றம்"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "சுருதியை மாற்று"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6554,10 +6613,6 @@ msgstr "தேர்வை வெட்டவும்"
 msgid "New Length:"
 msgstr "நீளம்"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "வேக மாற்றம்"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6596,10 +6651,6 @@ msgstr "நீளம் (நொடிகள்)"
 msgid "Length in seconds from"
 msgstr "நீளம் (நொடிகள்)"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "டெம்போ மாற்றம்"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6633,10 +6684,6 @@ msgstr ""
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr ""
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "அகற்றுதலை சொடுக்கு"
 
 #: src/effects/Compressor.cpp:61
 #, fuzzy
@@ -6769,10 +6816,6 @@ msgstr "சிதைவு நேரம் %.1f நொடிகள்"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f நொடிகள்"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "அழுத்தி"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7325,10 +7368,6 @@ msgstr "(%) [-50 to 100]:"
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "Distortion"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7389,11 +7428,6 @@ msgstr ""
 msgid "Silence duration:"
 msgstr "சத்தமற்ற காலஅளவு"
 
-#: src/effects/DtmfGen.h:28
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "DTMF இசைகள்..."
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "தாமதம்"
@@ -7420,10 +7454,6 @@ msgstr ""
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "சிதைவு காரணி:"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "எதிரொலி"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7752,6 +7782,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "நீக்கு"
 
@@ -8145,10 +8176,6 @@ msgstr "வளைவுகள் ஏற்றுமதி செய்யப்�
 msgid "No curves exported"
 msgstr "வளைவுகள் ஏற்றுமதி செய்யப்படவில்லை"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "சரிநிகராக்கம்"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8169,14 +8196,6 @@ msgstr "ஒலியை தேர்ந்தெடுத்து இழுக�
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr ""
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr ""
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8193,10 +8212,6 @@ msgstr ""
 msgid "Stop threshold (samples):"
 msgstr ""
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr ""
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "ஒலியை உற்பத்தி செய்ய போதுமான இடம் இல்லை"
@@ -8204,10 +8219,6 @@ msgstr "ஒலியை உற்பத்தி செய்ய போதும
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "நேர்மாறாக்கி"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8286,11 +8297,6 @@ msgstr ""
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "இரைச்சல் வகை"
-
-#: src/effects/Noise.h:24
-#, fuzzy
-msgid "Noise"
-msgstr "இரைச்சல்:"
 
 #: src/effects/NoiseReduction.cpp:100
 #, fuzzy
@@ -8749,11 +8755,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-#, fuzzy
-msgid "Paulstretch"
-msgstr "Paulstretch..."
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "நிலைகள்"
@@ -8846,10 +8847,6 @@ msgstr "ஈர பெறு (db) :"
 msgid "Output gain (dB)"
 msgstr "ஈர பெறு (db) :"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Phaser"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8879,10 +8876,6 @@ msgstr ""
 "ஒரு பக்கமேனும் ஒலி அமைவை உடைய பகுதியை தெரியவும்.\n"
 "\n"
 "அதிக சுற்றியுள்ள ஒலி இருப்பின், இது சிறப்பாக செயற்படும்"
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "திருத்த"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8919,10 +8912,6 @@ msgstr "புதிய தெரிவு நீளம் :"
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "திரும்ப செய்"
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -9068,14 +9057,6 @@ msgstr "எதிரொலி"
 msgid "Reverses the selected audio"
 msgstr "தெரிவு செய்யப்பட்ட ஒலி FLAC ஆக ஏற்றுமதிசெய்கிறது"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "பின்னோக்கு"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9184,10 +9165,6 @@ msgstr ""
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr ""
 
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr ""
-
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
 msgstr "MIDI இருந்து ஒலி அமைவாக வரிசைபடுத்து"
@@ -9288,11 +9265,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr "ஸ்டீரியோ தட்டுகளை மொனோவாக்கு"
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "பலதிசை இருந்து ஒரு திசை ஆக"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9352,11 +9324,6 @@ msgstr "(%) [-50 to 100]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "இறுதி சுருதி நகரத்தி"
-
-#: src/effects/TimeScale.h:27
-#, fuzzy
-msgid "Time Scale"
-msgstr "அளவு"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9449,16 +9416,6 @@ msgstr "வளமை முடிவு"
 msgid "Interpolation:"
 msgstr "இடை கணிப்பு :"
 
-#: src/effects/ToneGen.h:25
-#, fuzzy
-msgid "Chirp"
-msgstr "கீச்சிடு....."
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "சத்தம்...."
-
 #: src/effects/TruncSilence.cpp:48
 #, fuzzy
 msgid "Truncate Detected Silence"
@@ -9526,10 +9483,6 @@ msgstr "அழுத்தி"
 msgid "Truncate tracks independently"
 msgstr "பலதிசை ஒலி தடங்களை சுயாதீனமாக சாதாரணமாக்கு"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "அமைதியை வெட்டு"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "அதிர்வலை"
@@ -9562,6 +9515,125 @@ msgstr "அதிர்வெண் (hz)"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr ""
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "விஸ்தரி"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr ""
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "சுருதியை மாற்று"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "வேக மாற்றம்"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "டெம்போ மாற்றம்"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "அகற்றுதலை சொடுக்கு"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "அழுத்தி"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "Distortion"
+
+#: src/effects/DtmfGen.h:28
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "DTMF இசைகள்..."
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "எதிரொலி"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "சரிநிகராக்கம்"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr ""
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr ""
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr ""
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "நேர்மாறாக்கி"
+
+#: src/effects/Noise.h:24
+#, fuzzy
+msgid "Noise"
+msgstr "இரைச்சல்:"
+
+#: src/effects/Paulstretch.h:19
+#, fuzzy
+msgid "Paulstretch"
+msgstr "Paulstretch..."
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Phaser"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "திருத்த"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "திரும்ப செய்"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "பின்னோக்கு"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr ""
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "பலதிசை இருந்து ஒரு திசை ஆக"
+
+#: src/effects/TimeScale.h:27
+#, fuzzy
+msgid "Time Scale"
+msgstr "அளவு"
+
+#: src/effects/ToneGen.h:25
+#, fuzzy
+msgid "Chirp"
+msgstr "கீச்சிடு....."
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "சத்தம்...."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "அமைதியை வெட்டு"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11621,11 +11693,6 @@ msgstr "சுருக்கப்படாத ஒலி அ&amp;மைவு�
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "இறக்குமதி %s"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr ""
@@ -11653,6 +11720,11 @@ msgstr ""
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr ""
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "இறக்குமதி %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11722,17 +11794,17 @@ msgstr ""
 msgid "Sample rate:"
 msgstr "சாம்பிள் வீதம்:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr ""
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr ""
 
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
-msgstr ""
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp:37
@@ -12665,7 +12737,7 @@ msgid "Move clip up/down between tracks"
 msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr ""
 
@@ -13950,6 +14022,8 @@ msgid "Zoom Tool"
 msgstr "ஜூம் கருவி"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "வரையும் கருவி"
 
@@ -13979,6 +14053,421 @@ msgstr "வேகமாக செயல்படு"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "வேகத்துடன்  இயக்கவும் "
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+#, fuzzy
+msgid "Drag one or more label boundaries."
+msgstr "ஒன்று அல்லது மேற்பட்ட சிட்டை எல்லையை இழுக்கவும்"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+#, fuzzy
+msgid "Drag label boundary."
+msgstr "சிட்டை எல்லையை இழு"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "ஆரம்பத்திற்கு தவிர்த்து செல்"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "எழுத்துரு"
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "ஒலித்துண்டு சிட்டை எழுத்துரு"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "முகப் பெயர்"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "முக அளவு"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "மேல் அட்டமசுரம்"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "கிழ் அட்டமசுரம்"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "தெரிவு செய்த பகுதியை நீட்ட சொடுக்கி இழுக்கவும்."
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+#, fuzzy
+msgid "Stretch Note Track"
+msgstr "குறிப்பு தடம்"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "இழு"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "இணைக்கப்பட்ட ஒலிகள்"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "இணை"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "வெட்டும் வரி விரிவாக்கப்பட்டது"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "விரிவாக்கு"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "வெட்டும் வரி நீக்கப்பட்டது"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "மாதிரிகளை மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "அசைக்கப்பட்ட மாதிரி"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "மாதிரி தொகு"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "'%s' இல் இருந்து %s க்கு மாற்றப்பட்டது"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "அமைப்பு மாற்றம்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100 h 060 m 060.0100 s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "பிற..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' %s Hz க்கு மாற்றப்பட்டது"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "அளவு மாற்றம்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "அளவை நிர்ணயி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "அலைவடிவம்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+#, fuzzy
+msgid "&Waveform (dB)"
+msgstr "அலை வடிவம் (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+#, fuzzy
+msgid "&Spectrogram"
+msgstr "வர்ணப்பட்டை"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "தேர்வு"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "பிரியோசை ஒலித்துண்டை உருவாக்கு"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+#, fuzzy
+msgid "Swap Stereo &Channels"
+msgstr "2 (பிரியோசை) உள்ளீட்டு சானல்கள்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+#, fuzzy
+msgid "Spl&it Stereo Track"
+msgstr "பிரியோசை ஒலித்துண்டை பிரி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "பிரியோசையை மொனோ '%s' ஆக பிரி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "அமைப்பு மாற்றம்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "அளவை  நிர்ணயி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "மொனோ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "இடது சானெல்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "வலது சானெல்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "சானெல்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "'%s' ஐ பிரியோசை ஒலித்துண்டாக்கு"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "பிரியோசையை உருவாக்கு"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, fuzzy, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "உள்ளீட்டு சானல்கள்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+#, fuzzy
+msgid "Swap Channels"
+msgstr "உள்ளீட்டு சானல்கள்"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "'%s' பிரியோசை ஒலித்துண்டை பிரி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "பிரியோசையை மொனோ '%s' ஆக பிரி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+#, fuzzy
+msgid "Split to Mono"
+msgstr "பிரியோசையை மோனோவாக பிரி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift-இடது-சுட்டி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift-இடது-சுட்டி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift-இடது-சுட்டி"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "குறைந்த வேக எல்லையை (%) மாற்று:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "குறைந்த வேக எல்லை "
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "உயர்ந்த வேக எல்லையை (%) இற்கு மாற்று:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "உயர்ந்த வேக எல்லை"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "எல்லையை '%ld' - '%ld' இற்க்கிடையில் நிர்ணயி "
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "எல்லையை நிர்ணயி"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "காட்சியை அமை"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "இடை கணிப்பை நிர்ணயி"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "நேரியல்"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "மடக்கை"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "பெயர்மாற்றம்..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "மடக்கை இடை கணிப்பு"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "ஒலித்தட்டை கால நேரத்திற்குள் மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "வளமையை மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr ""
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -14014,6 +14503,182 @@ msgstr "ஒலித்துண்டை கீழே நகர்த்து"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "தெரிவு செய்த வலது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "ஒலியை தேர்ந்தெடுத்து இழுக்கவும்"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "விருப்பங்கள்..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "ஒலியை தேர்ந்தெடுத்து இழுக்கவும்"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "ஒலியை தேர்ந்தெடுத்து இழுக்கவும்"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "ஒலித்தட்டை கால நேரத்திற்குள் மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "தேர்ந்தெடுத்த பாடல்களை  %.2f யிலிருந்து %.2f வினாடிகளுக்கு அமைதிப்படுத்து"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "மூடு"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "&அண்மையில் திறந்த..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "பெயர்..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#: src/tracks/ui/TrackControls.cpp:143
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "ஒலித்துண்டை மேலே நகர்த்து"
+
+#: src/tracks/ui/TrackControls.cpp:149
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "ஒலித்துண்டை கீழே நகர்த்து"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "ஒலித்துண்டு பெயரை மாற்று:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "ஒலித்துண்டு பெயர்"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "'%s' இல் இருந்து '%s' இற்கு பெயர் மாற்றப்பட்டது"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "பெயர் மாற்றப்பட்டது"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "கட்டளை"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Ctrl-இடது-சுட்டி"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "மேலே"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "கீழே"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "அசைக்கப்பட்டது '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "உள்ளே ஜூம் செய்ய கிளிக் செய்யவும், வெளியே ஜூம் செய்ய ஷிபிட்-கிளிக்"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "பகுதிக்குள் ஜூம் செய்ய இழுக்கவும், வெளியே ஜூம் செய்ய வலப்பக்கம் கிளிக் செய்யவும்"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "இடது=உள்ளே ஜூம்,வலம்=வெளியே ஜூம்,நடு=சாதாரணம்"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -14083,10 +14748,6 @@ msgstr "முன்னோக்கி"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "பின்னோக்கி"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "மூடு"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14220,10 +14881,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "தகவல்களுக்கு குறிப்பு புத்தகத்தை காட்டவும்"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14728,6 +15385,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "இந்த எச்சரிக்கையை மீண்டும் காட்டாதீர்"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "தயவுசெய்து ஒரு செய்கையை தேர்ந்தெடுங்கள்"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14782,20 +15443,6 @@ msgstr "கோப்பை சுமையேற்ற முடியவில�
 #~ msgid "Play at speed"
 #~ msgstr "வேகத்துடன்  இயக்கவும் "
 
-#~ msgid "&Other..."
-#~ msgstr "பிற..."
-
-#~ msgid "Wa&veform"
-#~ msgstr "அலைவடிவம்"
-
-#, fuzzy
-#~ msgid "&Waveform (dB)"
-#~ msgstr "அலை வடிவம் (dB)"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "தேர்வு"
-
 #~ msgid "&Mono"
 #~ msgstr "மோனோ"
 
@@ -14805,257 +15452,12 @@ msgstr "கோப்பை சுமையேற்ற முடியவில�
 #~ msgid "&Right Channel"
 #~ msgstr "வலது சானெல்"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "பிரியோசை ஒலித்துண்டை உருவாக்கு"
-
-#, fuzzy
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "2 (பிரியோசை) உள்ளீட்டு சானல்கள்"
-
-#, fuzzy
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "பிரியோசை ஒலித்துண்டை பிரி"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "அமைப்பு மாற்றம்"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "அளவை  நிர்ணயி"
-
-#~ msgid "Up &Octave"
-#~ msgstr "மேல் அட்டமசுரம்"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "கிழ் அட்டமசுரம்"
-
-#~ msgid "&Font..."
-#~ msgstr "எழுத்துரு"
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "மடக்கை"
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "பெயர்மாற்றம்..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "மடக்கை இடை கணிப்பு"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "பெயர்..."
-
-#, fuzzy
-#~ msgid "Move Track &Up"
-#~ msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#, fuzzy
-#~ msgid "Move Track to &Top"
-#~ msgstr "ஒலித்துண்டை மேலே நகர்த்து"
-
-#, fuzzy
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "ஒலித்துண்டை கீழே நகர்த்து"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "கட்டளை"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl-இடது-சுட்டி"
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "ஒலித்துண்டின் அளவை மாற்ற சொடுக்கி இழுக்கவும்."
-
-#, fuzzy
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "ஒன்று அல்லது மேற்பட்ட சிட்டை எல்லையை இழுக்கவும்"
-
-#, fuzzy
-#~ msgid "Drag label boundary."
-#~ msgstr "சிட்டை எல்லையை இழு"
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "விருப்பங்கள்..."
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "ஒலியை தேர்ந்தெடுத்து இழுக்கவும்"
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "தெரிவு செய்த பகுதிக்குள் நீட்ட சொடுக்கி இழுக்கவும்."
 
 #, fuzzy
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "தெரிவு செய்த வலது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "தெரிவு செய்த இடது எல்லையை அசைக்க சொடுக்கி இழுக்கவும்"
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "ஒலியை தேர்ந்தெடுத்து இழுக்கவும்"
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "தெரிவு செய்த பகுதியை நீட்ட சொடுக்கி இழுக்கவும்."
-
-#~ msgid "Stretch"
-#~ msgstr "இழு"
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "அசைக்கப்பட்ட மாதிரி"
-
-#~ msgid "Sample Edit"
-#~ msgstr "மாதிரி தொகு"
-
-#~ msgid "up"
-#~ msgstr "மேலே"
-
-#~ msgid "down"
-#~ msgstr "கீழே"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "அசைக்கப்பட்டது '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "வெட்டும் வரி விரிவாக்கப்பட்டது"
-
-#~ msgid "Expand"
-#~ msgstr "விரிவாக்கு"
-
-#~ msgid "Merged Clips"
-#~ msgstr "இணைக்கப்பட்ட ஒலிகள்"
-
-#~ msgid "Merge"
-#~ msgstr "இணை"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "வெட்டும் வரி நீக்கப்பட்டது"
-
-#~ msgid "Left Channel"
-#~ msgstr "இடது சானெல்"
-
-#~ msgid "Right Channel"
-#~ msgstr "வலது சானெல்"
-
-#~ msgid "Mono"
-#~ msgstr "மொனோ"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "'%s' இல் இருந்து %s க்கு மாற்றப்பட்டது"
-
-#~ msgid "Channel"
-#~ msgstr "சானெல்"
-
-#, fuzzy
-#~ msgid "Swap Channels"
-#~ msgstr "உள்ளீட்டு சானல்கள்"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "'%s' பிரியோசை ஒலித்துண்டை பிரி"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "பிரியோசையை மொனோ '%s' ஆக பிரி"
-
-#, fuzzy
-#~ msgid "Split to Mono"
-#~ msgstr "பிரியோசையை மோனோவாக பிரி"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "'%s' ஐ பிரியோசை ஒலித்துண்டாக்கு"
-
-#~ msgid "Make Stereo"
-#~ msgstr "பிரியோசையை உருவாக்கு"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "'%s' %s Hz க்கு மாற்றப்பட்டது"
-
-#~ msgid "Rate Change"
-#~ msgstr "அளவு மாற்றம்"
-
-#~ msgid "Format Change"
-#~ msgstr "அமைப்பு மாற்றம்"
-
-#~ msgid "Set Rate"
-#~ msgstr "அளவை நிர்ணயி"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "குறைந்த வேக எல்லையை (%) மாற்று:"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "குறைந்த வேக எல்லை "
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "உயர்ந்த வேக எல்லையை (%) இற்கு மாற்று:"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "உயர்ந்த வேக எல்லை"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "எல்லையை '%ld' - '%ld' இற்க்கிடையில் நிர்ணயி "
-
-#~ msgid "Set Range"
-#~ msgstr "எல்லையை நிர்ணயி"
-
-#~ msgid "Set Display"
-#~ msgstr "காட்சியை அமை"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "இடை கணிப்பை நிர்ணயி"
-
-#~ msgid "Change track name to:"
-#~ msgstr "ஒலித்துண்டு பெயரை மாற்று:"
-
-#~ msgid "Track Name"
-#~ msgstr "ஒலித்துண்டு பெயர்"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "'%s' இல் இருந்து '%s' இற்கு பெயர் மாற்றப்பட்டது"
-
-#~ msgid "Name Change"
-#~ msgstr "பெயர் மாற்றப்பட்டது"
-
-#~ msgid "Label Track Font"
-#~ msgstr "ஒலித்துண்டு சிட்டை எழுத்துரு"
-
-#~ msgid "Face name"
-#~ msgstr "முகப் பெயர்"
-
-#~ msgid "Face size"
-#~ msgstr "முக அளவு"
 
 #, fuzzy
 #~ msgid "%.2f dB Average RMS"
@@ -15171,27 +15573,6 @@ msgstr "கோப்பை சுமையேற்ற முடியவில�
 #~ msgid "Selection "
 #~ msgstr "தேர்வு"
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "ஒலியை தேர்ந்தெடுத்து இழுக்கவும்"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "வளமையை மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "மாதிரிகளை மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "உள்ளே ஜூம் செய்ய கிளிக் செய்யவும், வெளியே ஜூம் செய்ய ஷிபிட்-கிளிக்"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "பகுதிக்குள் ஜூம் செய்ய இழுக்கவும், வெளியே ஜூம் செய்ய வலப்பக்கம் கிளிக் செய்யவும்"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "இடது=உள்ளே ஜூம்,வலம்=வெளியே ஜூம்,நடு=சாதாரணம்"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "ஒலித்தட்டை கால நேரத்திற்குள் மாற்றுவதற்கு தேர்ந்தெடுத்து இழுக்கவும்"
-
 #~ msgid "Re&gion Save"
 #~ msgstr "பகு&தியை சேமி "
 
@@ -15273,13 +15654,6 @@ msgstr "கோப்பை சுமையேற்ற முடியவில�
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "அளவை நிர்ணயி"
-
-#~ msgid "&Linear"
-#~ msgstr "நேரியல்"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Shift-இடது-சுட்டி"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "ஒலித்துண்டின் வரிசையை மாற்ற, நிலைக்குத்தாக சொடுக்கி இழுக்கவும்"

@@ -3,11 +3,12 @@
 # This file is distributed under the same license as Audacity.
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 # bashishtha <bashishtha.singh@gmail.com>, 2010.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2016-12-04 23:29+0530\n"
 "Last-Translator: Bashishtha Singh <bashishtha.singh@gmail.com>\n"
 "Language-Team: bashishtha narayan singh, tushar raj <bashishtha.singh@gmail."
@@ -48,6 +49,7 @@ msgstr "मौजूदा फ़ाइलों में से एक चु�
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "त्रुटि"
 
@@ -1906,52 +1908,35 @@ msgstr "'%s' कहाँ है?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "संगत FFmpeg लाइब्रेरी को नहीं ढूंढ पाया."
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg नहीं मिला"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity ने FFmpeg के द्वारा ऑडियो फ़ाइल आयात करने की\n"
-"कोशिश की, लेकिन उसे जरूरी लाइब्रेरी नहीं मिली.\n"
-"\n"
-"FFmpeg आयात के उपयोग के लिए चुनें, वरीयताएँ > लाइब्रेरी\n"
-"ढूँढने या डाउनलोड करने के लिए."
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "यह चेतावनी फिर न दिखाएँ"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"केवल avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"सभी फ़ाइलें|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "डाइनामिक लाईब्रेरी (*.dylib)|*.dylib|सभी फ़ाइलें (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"सिर्फ libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|सभी फ़ाइलें (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "आयताकार"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"%s :\n"
+" फ़ाइल में लिखा नहीं जा सका।"
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"%s :\n"
+" फ़ाइल में लिखा नहीं जा सका।"
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"%s :\n"
+" फ़ाइल में लिखा नहीं जा सका।"
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2376,6 +2361,20 @@ msgstr "छोड़ दें"
 msgid "&OK"
 msgstr "ठीक(&O)"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "पता लगाने में असमर्थ"
@@ -2513,18 +2512,19 @@ msgstr "ट्रैक का नाम बताएं"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "नाम ट्रैक"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "परिवर्तित नाम"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "नाम संपादन"
 
@@ -4028,6 +4028,7 @@ msgstr "ट्रैक/कतरन को %s ओर %.02f सेकंड क�
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "समय आगे-पीछे करें"
 
@@ -4072,7 +4073,7 @@ msgid "Moved"
 msgstr "हट गया"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "ट्रैक खिसकाएं"
 
@@ -4295,6 +4296,7 @@ msgid "Detach Labeled Audio"
 msgstr "नामित ऑडियो अलग करें"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "तोड़ें"
 
@@ -4319,11 +4321,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "बायाँ"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "दायाँ"
 
@@ -4617,10 +4621,12 @@ msgid "Resample"
 msgstr "पुन: नमूना लें"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "नया नमूना आवृति दर(Hz):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "प्रविष्टि अमान्य है"
 
@@ -4651,6 +4657,7 @@ msgstr "मिश्रण द्वारा ट्रैक निर्मा
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "गेन"
 
@@ -4658,6 +4665,7 @@ msgstr "गेन"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "गति"
 
@@ -4668,18 +4676,21 @@ msgstr "वाद्य यंत्र"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "दाँए-बाँए"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "मौन"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "एकल"
 
@@ -4688,14 +4699,17 @@ msgid "Signal Level Meter"
 msgstr "सिगनल स्तर मीटर"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "गेन स्लाइडर स्थानांतरित"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "गति स्लाइडर स्थानांतरित"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "पैन स्लाइडर स्थानांतरित"
 
@@ -5783,14 +5797,6 @@ msgstr ""
 "Audacity फ़ाइल को संचित नहीं कर सका:\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "अवधि"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Audacity घड़ी से अंकन"
@@ -5916,6 +5922,14 @@ msgstr "समाप्ति तारीख और समय"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "समापन तिथि"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "अवधि"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6113,6 +6127,14 @@ msgstr " चयन चालू"
 msgid " Sync Lock Selected"
 msgstr "ट्रैकों को गठबंधन में रखा है"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "स्टीरियो ट्रैक के सापेक्षिक आकार समायोजन के लिए क्लिक करके खींचें."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "ट्रैक को नए आकार के लिए क्लिक कर खींचें."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6161,6 +6183,54 @@ msgstr "चयनित भाग चिपकाने के लिए पर�
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "काट-रेखा के विस्तार के लिए पर्याप्त जगह नहीं है"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg नहीं मिला"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity ने FFmpeg के द्वारा ऑडियो फ़ाइल आयात करने की\n"
+"कोशिश की, लेकिन उसे जरूरी लाइब्रेरी नहीं मिली.\n"
+"\n"
+"FFmpeg आयात के उपयोग के लिए चुनें, वरीयताएँ > लाइब्रेरी\n"
+"ढूँढने या डाउनलोड करने के लिए."
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "यह चेतावनी फिर न दिखाएँ"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"केवल avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"सभी फ़ाइलें|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "डाइनामिक लाईब्रेरी (*.dylib)|*.dylib|सभी फ़ाइलें (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"सिर्फ libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|सभी फ़ाइलें (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6276,10 +6346,6 @@ msgstr "नयी ध्वनि तीव्रता(dB):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "कतरन दिखाएँ"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "प्रवर्धन करें"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
@@ -6430,10 +6496,6 @@ msgstr "स्तर"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "बेस और ट्रेबल"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 msgid "Percentage"
@@ -6522,10 +6584,6 @@ msgstr "प्रतिशत परिवर्तन"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "पिच बदलें"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6583,10 +6641,6 @@ msgstr "चयन की वर्तमान लंबाई."
 msgid "New Length:"
 msgstr "नई लंबाई :"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "गति बदलें"
-
 #: src/effects/ChangeTempo.cpp:102
 msgid "Change the tempo of a selection without changing its pitch"
 msgstr "बिना पिच परिवर्तन के चयन का टेम्पो बदलें"
@@ -6625,10 +6679,6 @@ msgstr "लंबाई(सेकेंड):"
 msgid "Length in seconds from"
 msgstr "सेकेंड लंबाई से"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "गति बदलें (सुर नहीं) "
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6662,10 +6712,6 @@ msgstr "अधिकतम स्पाइक चौड़ाई(बड़ा �
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "अधिकतम स्पाइक चौड़ाई"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "क्लिक हटाना"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6793,10 +6839,6 @@ msgstr "क्षय समय %.1f सेकेंड"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f सेकेंड"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "संपीड़क"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7355,11 +7397,6 @@ msgstr " (0 से 100):"
 msgid " (0 to 5):"
 msgstr " (0 से 5):"
 
-#: src/effects/Distortion.h:26
-#, fuzzy
-msgid "Distortion"
-msgstr "अवधि"
-
 #: src/effects/DtmfGen.cpp:47
 msgid "Sequence"
 msgstr "क्रम"
@@ -7417,10 +7454,6 @@ msgstr "ms"
 msgid "Silence duration:"
 msgstr "मौन अंतराल :"
 
-#: src/effects/DtmfGen.h:28
-msgid "DTMF Tones"
-msgstr "DTMF स्वर"
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "विलंबता"
@@ -7445,10 +7478,6 @@ msgstr "देरी(सेकेंड):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "क्षय गुणक :"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "गूँज"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7762,6 +7791,7 @@ msgid "Mark effect as a favorite"
 msgstr "इस प्रभाव को पसंदीदा बनाएं"
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "हटाएं"
 
@@ -8140,10 +8170,6 @@ msgstr "वक्र निर्यातित"
 msgid "No curves exported"
 msgstr "किसी वक्र का निर्यात नहीं हुआ"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "इक्वलाइज़ेशन"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8169,14 +8195,6 @@ msgstr "चयनित ऑडियो पर रेखीय धुंध घ�
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "चयनित ऑडियो पर रेखीय रूप से घटते-हुए लागू करता है"
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "बढ़ते हुए"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "घटते हुए"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr "जहां क्लिपिंग का पता चला है वहाँ नामपट्टी लगाता है"
@@ -8193,10 +8211,6 @@ msgstr "आरंभिक परिसीमा (नमूने):"
 msgid "Stop threshold (samples):"
 msgstr "अंतिम परिसीमा (नमूने):"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "कतरन ढूंढें"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "ऑडियो सृजन के लिए पर्याप्त जगह नहीं है"
@@ -8204,10 +8218,6 @@ msgstr "ऑडियो सृजन के लिए पर्याप्त �
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "ऑडियो नमूनो को ऊपर-से-नीचे पलटकर उनकी पोलैरिटी उलटता है"
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "उलटें"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8287,10 +8297,6 @@ msgstr "शोर के तीन अलग प्रकार में से
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "शोर प्रकार :"
-
-#: src/effects/Noise.h:24
-msgid "Noise"
-msgstr "शोर"
 
 #: src/effects/NoiseReduction.cpp:100
 msgid "Median"
@@ -8731,10 +8737,6 @@ msgstr ""
 "ऑडियो चयन न्यूनतम %.1f सेकेंड तक बढ़ाने का प्रयास करें, या समय रिजोल्यूशन को %.1f सेकेंड से "
 "भी कम करें."
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr "पॉलस्ट्रेच..."
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "चरण"
@@ -8823,10 +8825,6 @@ msgstr "आउटपुट गेन (dB):"
 msgid "Output gain (dB)"
 msgstr "आउटपुट गेन (dB)"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "फ़ेज़र"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "एक या अधिक ट्रैकों के शिखर आयाम सेट करता है"
@@ -8856,10 +8854,6 @@ msgstr ""
 "कृपया एक क्षेत्र का चयन करें जो कि ऑडियो को किसी एक तरफ छूता हो.\n"
 "\n"
 "आसपास के ज्यादा ऑडियो होने से यह बेहतर प्रदर्शन करता है."
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "मरम्मत"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8892,10 +8886,6 @@ msgstr "नवीन चयन लंबाई: "
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr "चेतावनी : दोहराया नहीं जाएगा."
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "दुहराएं"
 
 #: src/effects/Reverb.cpp:47
 msgid "RoomSize"
@@ -9025,15 +9015,6 @@ msgstr "गूँज"
 msgid "Reverses the selected audio"
 msgstr "चुनी हुई ध्वनी को उल्टा करता है"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "पलटना"
-
-#: src/effects/SBSMSEffect.h:38
-#, fuzzy
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "स्लाइडिंग टाइम स्केल/पिच शिफ्ट"
-
 # बटरवर्थ छन्नी
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
@@ -9126,10 +9107,6 @@ msgstr "न्यूनतम स्टॉपबैंड क्षीणन :"
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "न्यूनतम स्टॉपबैंड क्षीणन (dB)"
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr "क्लासिक फ़िल्टर"
 
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
@@ -9225,10 +9202,6 @@ msgstr "शून्य आयाम का ऑडियो बनाता ह�
 msgid "Converts stereo tracks to mono"
 msgstr "स्टिरियो ट्रैक को मोनो में बदलता है"
 
-#: src/effects/StereoToMono.h:18
-msgid "Stereo To Mono"
-msgstr "स्टिरियो से मोनो"
-
 #: src/effects/TimeScale.cpp:44
 msgid "RatePercentChangeStart"
 msgstr "RatePercentChangeStart"
@@ -9285,10 +9258,6 @@ msgstr "(%) [-50 से 100]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "अंतिम पिच शिफ्ट"
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "समय पैमाना"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9377,14 +9346,6 @@ msgstr "अंतिम आयाम"
 msgid "Interpolation:"
 msgstr "अंतर्गणना :"
 
-#: src/effects/ToneGen.h:25
-msgid "Chirp"
-msgstr "सीटी"
-
-#: src/effects/ToneGen.h:26
-msgid "Tone"
-msgstr "स्वर"
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr "पता चलने वाली चुप्पी हटाएं"
@@ -9446,10 +9407,6 @@ msgstr "इसमें संपीड़ित करें :"
 msgid "Truncate tracks independently"
 msgstr "ट्रैक स्वतंत्र रुप से छाटें"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "चुप्पी हटाएं"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "संनाद"
@@ -9481,6 +9438,120 @@ msgstr "वा: आवृति Offset (%):"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "Wah आवृत्ति ऑफसेट प्रतिशत में "
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "प्रवर्धन करें"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "बेस और ट्रेबल"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "पिच बदलें"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "गति बदलें"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "गति बदलें (सुर नहीं) "
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "क्लिक हटाना"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "संपीड़क"
+
+#: src/effects/Distortion.h:26
+#, fuzzy
+msgid "Distortion"
+msgstr "अवधि"
+
+#: src/effects/DtmfGen.h:28
+msgid "DTMF Tones"
+msgstr "DTMF स्वर"
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "गूँज"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "इक्वलाइज़ेशन"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "बढ़ते हुए"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "घटते हुए"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "कतरन ढूंढें"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "उलटें"
+
+#: src/effects/Noise.h:24
+msgid "Noise"
+msgstr "शोर"
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr "पॉलस्ट्रेच..."
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "फ़ेज़र"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "मरम्मत"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "दुहराएं"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "पलटना"
+
+#: src/effects/SBSMSEffect.h:38
+#, fuzzy
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "स्लाइडिंग टाइम स्केल/पिच शिफ्ट"
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr "क्लासिक फ़िल्टर"
+
+#: src/effects/StereoToMono.h:18
+msgid "Stereo To Mono"
+msgstr "स्टिरियो से मोनो"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "समय पैमाना"
+
+#: src/effects/ToneGen.h:25
+msgid "Chirp"
+msgstr "सीटी"
+
+#: src/effects/ToneGen.h:26
+msgid "Tone"
+msgstr "स्वर"
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "चुप्पी हटाएं"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11701,11 +11772,6 @@ msgstr "सीधे (&d) मूल फ़ाइल से पढ़ें(त�
 msgid "Don't &warn again and always use my choice above"
 msgstr "हमेशा मेरी पूर्व पसंद का उपयोग करें और फिर से चेतावनी न दें"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr " %s आयात कर रहे हैं"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime फ़ाईलें"
@@ -11733,6 +11799,11 @@ msgstr "प्रवाह(stream) वर्णन नहीं मिला"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "fill buffer नहीं मिल सका"
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr " %s आयात कर रहे हैं"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11802,6 +11873,11 @@ msgstr "आयात की मात्रा:"
 msgid "Sample rate:"
 msgstr "सैंपल रेट:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%% संपन्न. कार्य केन्द्र बिन्दु बदलने के लिए क्लिक करें."
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "आयात पूरा हुआ. तरंगरूप गणना जारी"
@@ -11809,11 +11885,6 @@ msgstr "आयात पूरा हुआ. तरंगरूप गणना 
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "तरंगरुप डिकोडिंग"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%% संपन्न. कार्य केन्द्र बिन्दु बदलने के लिए क्लिक करें."
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12715,7 +12786,7 @@ msgid "Move clip up/down between tracks"
 msgstr "क्लिप को ट्रैकों के बीच ऊपर/नीचे स्थानांतरित करें"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "लिफ़ाफ़ा"
 
@@ -13966,6 +14037,8 @@ msgstr "बड़ा-छोटा करें"
 
 # ध्वनि-चित्र खींचें
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "पेंसिल औजार"
 
@@ -13995,6 +14068,413 @@ msgstr "इस-गति-पर-बजाएं"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "बारंबार इस गति पर बजाएं"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+msgid "Drag one or more label boundaries."
+msgstr "नाम-पट्टी (या पट्टियों) को किनारे से खींचें."
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+msgid "Drag label boundary."
+msgstr "नाम-पट्टी सीमा को खीचें."
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "आरंभ करने के लिए क्लिक करें"
+
+# मुद्रलिपि
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "फ़ान्ट...(&F)"
+
+# नाम ट्रैक मुद्रलिपि
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "नाम ट्रैक फ़ान्ट"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "मुखनाम"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "मुखाकार"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "ऊपरी सप्तक(&O)"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "निम्न सप्तक(&v)"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"क्लिक करें ऊर्ध्व में बड़ा दिखाने के लिए, उच्च-क्लिक छोटा दिखाने के लिए, और खींचें एक क्षेत्र "
+"विशेष को छोटा-बड़ा दिखाने के लिए."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "चयनित क्षेत्र को विस्तृत करने के लिए क्लिक कर खींचें."
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "स्वर ट्रैक को फैलाएं"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "विस्तार"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "जुड़ी कतरन"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "विलय"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "विस्तृत काट-रेखा"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "विस्तार"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "काट-रेखा हटाई गई"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "नमूना संपादन के लिए क्लिक कर खींचें"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr "चित्र खींचने के लिए, ट्रैक ड्रॉप-डाउन मेनू से 'तरंगरूप' चुनें."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr "रेखाचित्र खींचने के लिए, छवि को प्रत्येक नमूना स्पष्ट दिखने तक बड़ा करें."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+msgid "Moved Samples"
+msgstr "खिसकाए गये नमूने"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "संपादन नमूना"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "परिवर्तित '%s' से %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "स्वरुप परिवर्तन"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100000.0100 Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "अन्य...(&O)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "परिवर्तित '%s' से %s Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "आवृति दर परिवर्तन"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "आवृति दर निर्धारित करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "तरंगरूप (&v)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+msgid "&Waveform (dB)"
+msgstr "तरंगरुप (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "स्पेक्ट्रोग्राम(&S)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+msgid "S&pectrogram Settings..."
+msgstr "स्पेक्ट्रोग्राम सेटिंग्स..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "स्टिरियो ट्रैक बनाएं(&k)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+msgid "Swap Stereo &Channels"
+msgstr "स्टिरियो चैनल अदला-बदली"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+msgid "Spl&it Stereo Track"
+msgstr "स्टिरियो ट्रैक विभाजित करें(&i)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "स्टिरियो को मोनो '%s' में विभाजित करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+msgid "&Format"
+msgstr "प्रारुप"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+msgid "Rat&e"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+#, fuzzy
+msgid "Stop the Audio First"
+msgstr "प्रथम लेबल से पहले के ऑडियो को शामिल करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "मोनो"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "बायाँ चैनल"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "दायां चैनल"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "चैनल"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "'%s' को स्टिरियो ट्रैक बनाया"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "स्टिरियो बनाएं"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "'%s' में चैनल अदला-बदली"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+msgid "Swap Channels"
+msgstr "चैनल अदला-बदली"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "स्टिरियो ट्रैक '%s' अलग करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "स्टिरियो को मोनो '%s' में विभाजित करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+msgid "Split to Mono"
+msgstr "मोनो में तोड़ें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "बड़ा करें\tबायाँ-क्लिक या बायाँ-क्लिक खीचें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "छोटा करें\tऊच्च-बायाँ-क्लिक"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "बड़ा कर फिट करें\tऊच्च-दायाँ-क्लिक"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"क्लिक करें ऊर्ध्व में ज़ूम के लिए, उच्च-क्लिक ज़ूम-आउट के लिए. ज़ूम-क्षेत्र बताने के लिए क्लिक करते "
+"हुए खींचें."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "न्यूनतम गति सीमा (%) बदलें :"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "न्यूनतम गति-सीमा"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "बदलें अधिकतम गति सीमा (%) :"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "अधिकतम गति-सीमा"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "सीमा निर्धारित करें '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "सीमा निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr "समय ट्रैक का प्रदर्शन रेखीय निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "प्रदर्शन निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr "समय ट्रैक का प्रदर्शन लघुगणकीय निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr "समय ट्रैक का अंतर्वेशन रेखीय निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "अंतर्वेशन निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr "समय ट्रैक का अंतर्वेशन लघुगणकीय निर्धारित करें"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "रेखीय (&L)"
+
+# लॉगरिद्मिक
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "लघुगणकीय"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+msgid "&Range..."
+msgstr "सीमाक्षेत्र..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "लघुगणकीय अंतर्वेषण"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "ट्रैक को समय में खिसकाने के लिए क्लिक कर खींचें"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "आयाम लिफाफा के संपादन हेतु क्लिक करके खींचें"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "ऐडजस्टेड लिफ़ाफ़ा."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -14033,6 +14513,175 @@ msgstr "माउस बिंदु पर बड़ा या छोटा क
 #, fuzzy
 msgid "Scru&bbing"
 msgstr "Scrub"
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "बाँई ओर की चयन सीमा को खिसकाने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "दाँई ओर की चयन सीमा को खिसकाने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:337
+msgid "Click and drag to move bottom selection frequency."
+msgstr "निम्नतम चयन आवृत्ति को खिसकाने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:341
+msgid "Click and drag to move top selection frequency."
+msgstr "अधिकतम चयन आवृत्ति को खिसकाने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:349
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "आवृत्ति चयन मध्य को वर्णक्रम शिखर पर ले जाने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+msgid "Click and drag to move center selection frequency."
+msgstr "आवृत्ति चयन मध्य को खिसकाने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:364
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "आवृत्ति बैंडविड्थ को ठीक करने के लिए क्लिक करके खींचें."
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+msgid "Edit, Preferences..."
+msgstr "संपादन, पसंद..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "विभिन्न-औजार मोड : %s मूषक और कुंजीपटल  वरीयताएओं के लिए."
+
+#: src/tracks/ui/SelectHandle.cpp:953
+msgid "Click and drag to set frequency bandwidth."
+msgstr "आवृत्ति बैंडविड्थ निर्धारित करने के लिए क्लिक करके खींचें."
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "ऑडियो चुनने के लिए क्लिक कर खींचें"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "ट्रैक को समय में खिसकाने के लिए क्लिक कर खींचें"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "कतरन को दूसरे ट्रैक पर भेजा गया"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "चयनित ट्रैकों को मौन किया %.2f सेकेंड के लिए %.2f पर"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "बंद करें"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "खोलें हाल की फ़ाइलें (&R)..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+msgid "&Name..."
+msgstr "नाम..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+msgid "Move Track &Up"
+msgstr "ट्रैक ऊपर खिसकाएं (&U)"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "ट्रैक नीचे खिसकाएँ"
+
+#: src/tracks/ui/TrackControls.cpp:143
+msgid "Move Track to &Top"
+msgstr "ट्रैक चोटी पर खिसकाएं ( &T)"
+
+#: src/tracks/ui/TrackControls.cpp:149
+msgid "Move Track to &Bottom"
+msgstr "ट्रैक नीचे खिसकाएं (&B)"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "ट्रैक नाम बदलकर यह करें :"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "ट्रैक का नाम"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "नामकरण '%s' to '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "नाम परिवर्तन"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr ""
+"ऑडियो चयन करने के लिए क्लिक कर खींचें, कमांड-क्लिक स्क्रब करने के लिए, कमांड-दोहरा क्लिक "
+"स्क्रॉल-स्क्रब करने के लिए, कमांड-खींचें ढूंढने के लिए"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr ""
+"ऑडियो चयन करने के लिए क्लिक कर खींचें, कंट्रोल-क्लिक स्क्रब करने के लिए, कंट्रोल-दोहरा क्लिक "
+"स्क्रॉल-स्क्रब करने के लिए, कंट्रोल-खींचें ढूंढने के लिए"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr "%s से ट्रैक का चयन करें या रद्द करें. ट्रैक का क्रम बदलने के लिए.ऊपर या नीचे खींचें."
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, c-format
+msgid "%s to select or deselect track."
+msgstr "%s से ट्रैक चयन करें या छोड़ें."
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "ऊपर"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "नीचे"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "'%s' %s खिसकाया"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "बड़े आकार में देखने के लिए क्लिक करें, और छोटे के लिए उच्च-क्लिक करें"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "क्षेत्र में आकार बढ़ाने के लिए खींचें, दाएँ-क्लिक से आकार घटाएं "
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "बायाँ=आकार बढ़ाना, दायाँ=आकार घटाना, मध्य=सामान्य"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -14101,10 +14750,6 @@ msgstr "आगे"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "पीछे"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "बंद करें"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14227,10 +14872,6 @@ msgstr " कटा हुआ "
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "विस्तृत जानकारी के लिए लॉग दिखाएँ"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "कृपया एक कार्य का चयन करें"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14731,6 +15372,10 @@ msgstr "e"
 msgid "Don't show this warning again"
 msgstr "यह चेतावनी दुबारा न दिखाएँ"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "कृपया एक कार्य का चयन करें"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14799,21 +15444,6 @@ msgstr "\"%s\" : फ़ाइल को लोड नहीं किया जा 
 #~ msgid "Play at speed"
 #~ msgstr "इस गति पर बजाएं"
 
-#~ msgid "&Other..."
-#~ msgstr "अन्य...(&O)"
-
-#~ msgid "Wa&veform"
-#~ msgstr "तरंगरूप (&v)"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "तरंगरुप (dB)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "स्पेक्ट्रोग्राम(&S)"
-
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "स्पेक्ट्रोग्राम सेटिंग्स..."
-
 #~ msgid "&Mono"
 #~ msgstr "एकल(&M)"
 
@@ -14823,298 +15453,11 @@ msgstr "\"%s\" : फ़ाइल को लोड नहीं किया जा 
 #~ msgid "&Right Channel"
 #~ msgstr "दायां चैनल"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "स्टिरियो ट्रैक बनाएं(&k)"
-
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "स्टिरियो चैनल अदला-बदली"
-
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "स्टिरियो ट्रैक विभाजित करें(&i)"
-
-#~ msgid "&Format"
-#~ msgstr "प्रारुप"
-
-#~ msgid "Up &Octave"
-#~ msgstr "ऊपरी सप्तक(&O)"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "निम्न सप्तक(&v)"
-
-# मुद्रलिपि
-#~ msgid "&Font..."
-#~ msgstr "फ़ान्ट...(&F)"
-
-# लॉगरिद्मिक
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "लघुगणकीय"
-
-#~ msgid "&Range..."
-#~ msgstr "सीमाक्षेत्र..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "लघुगणकीय अंतर्वेषण"
-
-#~ msgid "&Name..."
-#~ msgstr "नाम..."
-
-#~ msgid "Move Track &Up"
-#~ msgstr "ट्रैक ऊपर खिसकाएं (&U)"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "ट्रैक नीचे खिसकाएँ"
-
-#~ msgid "Move Track to &Top"
-#~ msgstr "ट्रैक चोटी पर खिसकाएं ( &T)"
-
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "ट्रैक नीचे खिसकाएं (&B)"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr ""
-#~ "ऑडियो चयन करने के लिए क्लिक कर खींचें, कमांड-क्लिक स्क्रब करने के लिए, कमांड-दोहरा "
-#~ "क्लिक स्क्रॉल-स्क्रब करने के लिए, कमांड-खींचें ढूंढने के लिए"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr ""
-#~ "ऑडियो चयन करने के लिए क्लिक कर खींचें, कंट्रोल-क्लिक स्क्रब करने के लिए, कंट्रोल-दोहरा "
-#~ "क्लिक स्क्रॉल-स्क्रब करने के लिए, कंट्रोल-खींचें ढूंढने के लिए"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr ""
-#~ "क्लिक करें ऊर्ध्व में ज़ूम के लिए, उच्च-क्लिक ज़ूम-आउट के लिए. ज़ूम-क्षेत्र बताने के लिए क्लिक "
-#~ "करते हुए खींचें."
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "क्लिक करें ऊर्ध्व में बड़ा दिखाने के लिए, उच्च-क्लिक छोटा दिखाने के लिए, और खींचें एक क्षेत्र "
-#~ "विशेष को छोटा-बड़ा दिखाने के लिए."
-
-#~ msgid ""
-#~ "%s to select or deselect track. Drag up or down to change track order."
-#~ msgstr "%s से ट्रैक का चयन करें या रद्द करें. ट्रैक का क्रम बदलने के लिए.ऊपर या नीचे खींचें."
-
-#~ msgid "%s to select or deselect track."
-#~ msgstr "%s से ट्रैक चयन करें या छोड़ें."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "स्टीरियो ट्रैक के सापेक्षिक आकार समायोजन के लिए क्लिक करके खींचें."
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "ट्रैक को नए आकार के लिए क्लिक कर खींचें."
-
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "नाम-पट्टी (या पट्टियों) को किनारे से खींचें."
-
-#~ msgid "Drag label boundary."
-#~ msgstr "नाम-पट्टी सीमा को खीचें."
-
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "आवृत्ति चयन मध्य को खिसकाने के लिए क्लिक करके खींचें."
-
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "आवृत्ति चयन मध्य को वर्णक्रम शिखर पर ले जाने के लिए क्लिक करके खींचें."
-
-#~ msgid "Edit, Preferences..."
-#~ msgstr "संपादन, पसंद..."
-
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "विभिन्न-औजार मोड : %s मूषक और कुंजीपटल  वरीयताएओं के लिए."
-
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "आवृत्ति बैंडविड्थ निर्धारित करने के लिए क्लिक करके खींचें."
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "चयनित क्षेत्र के अंदर विस्तार के लिए क्लिक कर खींचें."
 
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "चयन सीमा को कर्सर तक लाने के लिए क्लिक करें."
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "बाँई ओर की चयन सीमा को खिसकाने के लिए क्लिक करके खींचें."
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "दाँई ओर की चयन सीमा को खिसकाने के लिए क्लिक करके खींचें."
-
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "निम्नतम चयन आवृत्ति को खिसकाने के लिए क्लिक करके खींचें."
-
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "अधिकतम चयन आवृत्ति को खिसकाने के लिए क्लिक करके खींचें."
-
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "आवृत्ति बैंडविड्थ को ठीक करने के लिए क्लिक करके खींचें."
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "चयनित क्षेत्र को विस्तृत करने के लिए क्लिक कर खींचें."
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "स्वर ट्रैक को फैलाएं"
-
-#~ msgid "Stretch"
-#~ msgstr "विस्तार"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "ऐडजस्टेड लिफ़ाफ़ा."
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "कतरन को दूसरे ट्रैक पर भेजा गया"
-
-#~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
-#~ msgstr "चित्र खींचने के लिए, ट्रैक ड्रॉप-डाउन मेनू से 'तरंगरूप' चुनें."
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr "रेखाचित्र खींचने के लिए, छवि को प्रत्येक नमूना स्पष्ट दिखने तक बड़ा करें."
-
-#~ msgid "Moved Samples"
-#~ msgstr "खिसकाए गये नमूने"
-
-#~ msgid "Sample Edit"
-#~ msgstr "संपादन नमूना"
-
-#~ msgid "up"
-#~ msgstr "ऊपर"
-
-#~ msgid "down"
-#~ msgstr "नीचे"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "'%s' %s खिसकाया"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "विस्तृत काट-रेखा"
-
-#~ msgid "Expand"
-#~ msgstr "विस्तार"
-
-#~ msgid "Merged Clips"
-#~ msgstr "जुड़ी कतरन"
-
-#~ msgid "Merge"
-#~ msgstr "विलय"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "काट-रेखा हटाई गई"
-
-#~ msgid "Left Channel"
-#~ msgstr "बायाँ चैनल"
-
-#~ msgid "Right Channel"
-#~ msgstr "दायां चैनल"
-
-#~ msgid "Mono"
-#~ msgstr "मोनो"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "परिवर्तित '%s' से %s"
-
-#~ msgid "Channel"
-#~ msgstr "चैनल"
-
-#~ msgid "Swapped Channels in '%s'"
-#~ msgstr "'%s' में चैनल अदला-बदली"
-
-#~ msgid "Swap Channels"
-#~ msgstr "चैनल अदला-बदली"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "स्टिरियो ट्रैक '%s' अलग करें"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "स्टिरियो को मोनो '%s' में विभाजित करें"
-
-#~ msgid "Split to Mono"
-#~ msgstr "मोनो में तोड़ें"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "'%s' को स्टिरियो ट्रैक बनाया"
-
-#~ msgid "Make Stereo"
-#~ msgstr "स्टिरियो बनाएं"
-
-#, fuzzy
-#~ msgid "Stop the Audio First"
-#~ msgstr "प्रथम लेबल से पहले के ऑडियो को शामिल करें"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "परिवर्तित '%s' से %s Hz"
-
-#~ msgid "Rate Change"
-#~ msgstr "आवृति दर परिवर्तन"
-
-#~ msgid "Format Change"
-#~ msgstr "स्वरुप परिवर्तन"
-
-#~ msgid "Set Rate"
-#~ msgstr "आवृति दर निर्धारित करें"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "न्यूनतम गति सीमा (%) बदलें :"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "न्यूनतम गति-सीमा"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "बदलें अधिकतम गति सीमा (%) :"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "अधिकतम गति-सीमा"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "सीमा निर्धारित करें '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "सीमा निर्धारित करें"
-
-#~ msgid "Set time track display to linear"
-#~ msgstr "समय ट्रैक का प्रदर्शन रेखीय निर्धारित करें"
-
-#~ msgid "Set Display"
-#~ msgstr "प्रदर्शन निर्धारित करें"
-
-#~ msgid "Set time track display to logarithmic"
-#~ msgstr "समय ट्रैक का प्रदर्शन लघुगणकीय निर्धारित करें"
-
-#~ msgid "Set time track interpolation to linear"
-#~ msgstr "समय ट्रैक का अंतर्वेशन रेखीय निर्धारित करें"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "अंतर्वेशन निर्धारित करें"
-
-#~ msgid "Set time track interpolation to logarithmic"
-#~ msgstr "समय ट्रैक का अंतर्वेशन लघुगणकीय निर्धारित करें"
-
-#~ msgid "Change track name to:"
-#~ msgstr "ट्रैक नाम बदलकर यह करें :"
-
-#~ msgid "Track Name"
-#~ msgstr "ट्रैक का नाम"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "नामकरण '%s' to '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "नाम परिवर्तन"
-
-# नाम ट्रैक मुद्रलिपि
-#~ msgid "Label Track Font"
-#~ msgstr "नाम ट्रैक फ़ान्ट"
-
-#~ msgid "Face name"
-#~ msgstr "मुखनाम"
-
-#~ msgid "Face size"
-#~ msgstr "मुखाकार"
 
 #~ msgid "%.2f dB Average RMS"
 #~ msgstr "%.2f dB औसत RMS"
@@ -15255,27 +15598,6 @@ msgstr "\"%s\" : फ़ाइल को लोड नहीं किया जा 
 #~ msgid "Selection "
 #~ msgstr "चयन "
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "ऑडियो चुनने के लिए क्लिक कर खींचें"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "आयाम लिफाफा के संपादन हेतु क्लिक करके खींचें"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "नमूना संपादन के लिए क्लिक कर खींचें"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "बड़े आकार में देखने के लिए क्लिक करें, और छोटे के लिए उच्च-क्लिक करें"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "क्षेत्र में आकार बढ़ाने के लिए खींचें, दाएँ-क्लिक से आकार घटाएं "
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "बायाँ=आकार बढ़ाना, दायाँ=आकार घटाना, मध्य=सामान्य"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "ट्रैक को समय में खिसकाने के लिए क्लिक कर खींचें"
-
 #, fuzzy
 #~ msgid "Unpinned Record/Play head"
 #~ msgstr ""
@@ -15369,18 +15691,6 @@ msgstr "\"%s\" : फ़ाइल को लोड नहीं किया जा 
 
 #~ msgid "&Rate"
 #~ msgstr "दर"
-
-#~ msgid "&Linear"
-#~ msgstr "रेखीय (&L)"
-
-#~ msgid "Zoom In\tLeft-Click/Left-Drag"
-#~ msgstr "बड़ा करें\tबायाँ-क्लिक या बायाँ-क्लिक खीचें"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "छोटा करें\tऊच्च-बायाँ-क्लिक"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "बड़ा कर फिट करें\tऊच्च-दायाँ-क्लिक"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "ट्रैकों को उपर-नीचे करने के लिए उन्हें खड़ी दिशा में खींचें."

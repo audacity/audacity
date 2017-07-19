@@ -1,10 +1,11 @@
 # Belorussian translation of Audacity
 # Copyright (C) 2002,2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: be\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2010-04-19 16:57+0300\n"
 "Last-Translator: FatCow <zhr@tut.by>\n"
 "Language-Team: Patricia Clausnitzer <by.marcis@gmail.com>\n"
@@ -46,6 +47,7 @@ msgstr " Абярыце дзеянне "
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "Памылка"
 
@@ -1871,49 +1873,35 @@ msgstr ""
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Не атрымалася знайсці сумяшчальныя бібліятэкі FFmpeg"
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "Бібліятэка FFmpeg не знойдзена"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "Больш не паказваць гэта папярэджанне"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Толькі avformat.dll|*avformat*.dll|Дынамічна слінкованные бібліятэкі (*.dll)|"
-"*.dll|Усе файлы (*.*)|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Дынамічныя бібліятэкі (*.dylib)|*.dylib|Усе файлы (*)|*"
-
-#: src/FFmpeg.h:339
-#, fuzzy
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Толькі libavformat.so|libavformat.so*|Дынамічна слінкованные бібліятэкі (*."
-"so)|*.so*|Усе файлы (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "Rectangular"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity не атрымалася запісаць файл:\n"
+"  %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity не атрымалася запісаць файл:\n"
+"  %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity не атрымалася запісаць файл:\n"
+"  %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2332,6 +2320,20 @@ msgstr "Ад&здавацца"
 msgid "&OK"
 msgstr "&OK"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "Немагчыма вызначыць"
@@ -2466,18 +2468,19 @@ msgstr "Увядзіце назву дарожкі"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "Дарожка пазнак"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "Пазнака зменена"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "Праўка пазнакі"
 
@@ -3984,6 +3987,7 @@ msgstr "Дарожка/вобласць зрушана на %s %.02f секун�
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Перасоўванне"
 
@@ -4028,7 +4032,7 @@ msgid "Moved"
 msgstr "Перамясціць &угару"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "Перамясціць дарожку"
 
@@ -4267,6 +4271,7 @@ msgid "Detach Labeled Audio"
 msgstr "Адчапіць пазнакі"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "Падзяліць"
 
@@ -4290,11 +4295,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "левы"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "правы"
 
@@ -4595,10 +4602,12 @@ msgid "Resample"
 msgstr "Змена чашчыні сэмпліравання"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "Новая чашчыня сэмпліравання (Гц):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "Уведзенае значэнне некарэктна"
 
@@ -4629,6 +4638,7 @@ msgstr "Зводзяцца дарожкі"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "Гучнасць"
 
@@ -4636,6 +4646,7 @@ msgstr "Гучнасць"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr ""
 
@@ -4646,18 +4657,21 @@ msgstr "Музычная прылада"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "Панарама"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "Ціха"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "Сола"
 
@@ -4666,14 +4680,17 @@ msgid "Signal Level Meter"
 msgstr "Індыкатар узроўня сігналу"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "Рэгулятар гучнасці зрушаны"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr ""
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "Рэгулятар панарамы зрушаны"
 
@@ -5728,14 +5745,6 @@ msgstr ""
 "Audacity не атрымалася захаваць файл:\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "Працягласць"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Таймер запісу Audacity"
@@ -5858,6 +5867,14 @@ msgstr "Дата і час завяршэння"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "Дата канца"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "Працягласць"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6048,6 +6065,14 @@ msgstr ""
 msgid " Sync Lock Selected"
 msgstr ""
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "Пстрыкніце і перацягніце для рэгуляцыі адноснага памеру стереодорожек"
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "Пстрыкніце і перацягніце для змены вышыні дарожкі"
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6097,6 +6122,51 @@ msgstr "Недастаткова месцы для ўстаўкі вылучан
 
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
+msgstr ""
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "Бібліятэка FFmpeg не знойдзена"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "Больш не паказваць гэта папярэджанне"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Толькі avformat.dll|*avformat*.dll|Дынамічна слінкованные бібліятэкі (*.dll)|"
+"*.dll|Усе файлы (*.*)|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Дынамічныя бібліятэкі (*.dylib)|*.dylib|Усе файлы (*)|*"
+
+#: src/FFmpeg.h:339
+#, fuzzy
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Толькі libavformat.so|libavformat.so*|Дынамічна слінкованные бібліятэкі (*."
+"so)|*.so*|Усе файлы (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
@@ -6212,10 +6282,6 @@ msgstr "Новая віновая амплітуда (Дб):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "Дазволіць перагрузку сігналу"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "Узмацненне сігналу"
 
 #: src/effects/AutoDuck.cpp:41
 #, fuzzy
@@ -6373,10 +6439,6 @@ msgstr "Узровень сціску:"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr ""
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6472,10 +6534,6 @@ msgstr "Адсоткавая змена"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "Змена вышыні тону"
-
 #  i18n-hint: n/a is an English
 #  abbreviation meaning "not
 #  applicable" (in other words,
@@ -6543,10 +6601,6 @@ msgstr "Пакінуць у файле толькі вылучанае"
 msgid "New Length:"
 msgstr "Працягласць"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "Змена хуткасці"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6585,10 +6639,6 @@ msgstr "Працягласць (з)"
 msgid "Length in seconds from"
 msgstr "У іншую працягласць у секундах"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "Змена тэмпу"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6624,10 +6674,6 @@ msgstr "Макс. шырыня піка (вышэй ? адчувальней):"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr ""
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "Выдаленне пстрычак"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6760,10 +6806,6 @@ msgstr "Працягласць згасання: %.1f c"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f з"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "Кампрэсары"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7315,10 +7357,6 @@ msgstr ""
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "Скажэнне"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7380,11 +7418,6 @@ msgstr "мс"
 msgid "Silence duration:"
 msgstr "Працягласць цішыні:"
 
-#: src/effects/DtmfGen.h:28
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "Тонавыя сігналы тэлефона..."
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "Затрымка"
@@ -7411,10 +7444,6 @@ msgstr "Час затрымкі (з):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "Каэфіцыент згасання: "
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "Рэха"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7747,6 +7776,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "Выдаліць"
 
@@ -8135,10 +8165,6 @@ msgstr ""
 msgid "No curves exported"
 msgstr ""
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "Эквалайзер"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8159,14 +8185,6 @@ msgstr "Пстрыкніце і перацягніце для вылучэння
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "Плыўнае нарастанне"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "Плыўнае згасанне"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8183,10 +8201,6 @@ msgstr "Зыходны парог (у сэмплах):"
 msgid "Stop threshold (samples):"
 msgstr "Канчатковы парог (у сэмплах):"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "Пошук перагрузкі"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Недастаткова месцы для стварэння гукавых дадзеных"
@@ -8194,10 +8208,6 @@ msgstr "Недастаткова месцы для стварэння гукав
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "Інвертаванне"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8279,11 +8289,6 @@ msgstr ""
 #, fuzzy
 msgid "Noise type:"
 msgstr "Тып шуму"
-
-#: src/effects/Noise.h:24
-#, fuzzy
-msgid "Noise"
-msgstr "Шум..."
 
 #: src/effects/NoiseReduction.cpp:100
 #, fuzzy
@@ -8743,10 +8748,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr ""
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr ""
@@ -8839,10 +8840,6 @@ msgstr "&Узмацненне (Дб):"
 msgid "Output gain (dB)"
 msgstr "&Узмацненне (Дб):"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Фейзеры"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8868,10 +8865,6 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "Аднавіць"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8908,10 +8901,6 @@ msgstr "Новая працягласць вылучэння: "
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "Паўтор..."
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -9051,14 +9040,6 @@ msgstr "Рэверберацыя"
 msgid "Reverses the selected audio"
 msgstr "Абраныя гукавыя дадзеныя экспартаваны ў %s"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "Рэверс"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9157,10 +9138,6 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr ""
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:61
@@ -9269,11 +9246,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr "Стэрэа ў &мана"
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "Стэрэа ў мана"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9333,10 +9305,6 @@ msgstr ""
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr ""
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "Плыўная змена тэмпу і вышыні тону"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9428,16 +9396,6 @@ msgstr "Канец амплітуды"
 msgid "Interpolation:"
 msgstr "Інтэрпаляцыя:"
 
-#: src/effects/ToneGen.h:25
-#, fuzzy
-msgid "Chirp"
-msgstr "&Імпульс..."
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "Хваля..."
-
 #: src/effects/TruncSilence.cpp:48
 #, fuzzy
 msgid "Truncate Detected Silence"
@@ -9504,10 +9462,6 @@ msgstr "Кампрэсары"
 msgid "Truncate tracks independently"
 msgstr ""
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "Выразанне цішыні"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "Рэзананс"
@@ -9540,6 +9494,123 @@ msgstr "Зрушэнне чашчыні Wah (%):"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr ""
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "Узмацненне сігналу"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr ""
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "Змена вышыні тону"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "Змена хуткасці"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "Змена тэмпу"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "Выдаленне пстрычак"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "Кампрэсары"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "Скажэнне"
+
+#: src/effects/DtmfGen.h:28
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "Тонавыя сігналы тэлефона..."
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "Рэха"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "Эквалайзер"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "Плыўнае нарастанне"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "Плыўнае згасанне"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "Пошук перагрузкі"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "Інвертаванне"
+
+#: src/effects/Noise.h:24
+#, fuzzy
+msgid "Noise"
+msgstr "Шум..."
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr ""
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Фейзеры"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "Аднавіць"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "Паўтор..."
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "Рэверс"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr ""
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "Стэрэа ў мана"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "Плыўная змена тэмпу і вышыні тону"
+
+#: src/effects/ToneGen.h:25
+#, fuzzy
+msgid "Chirp"
+msgstr "&Імпульс..."
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "Хваля..."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "Выразанне цішыні"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11659,11 +11730,6 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "Імпартуецца %s"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "Файлы QuickTime"
@@ -11691,6 +11757,11 @@ msgstr ""
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr ""
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "Імпартуецца %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11760,6 +11831,13 @@ msgstr "Колькі імпартаваць:"
 msgid "Sample rate:"
 msgstr "Чашчыня сэмпліравання:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr ""
+"%s %2.0f%% завершана. Пстрыкніце мышкай, каб паказаць іншую вобласць "
+"апрацоўкі."
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "Імпарт завершаны. Вылічаецца хвалевая форма сігналу"
@@ -11767,13 +11845,6 @@ msgstr "Імпарт завершаны. Вылічаецца хвалевая �
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "Выконваецца дэкадаванне хвалевай формы"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr ""
-"%s %2.0f%% завершана. Пстрыкніце мышкай, каб паказаць іншую вобласць "
-"апрацоўкі."
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12674,7 +12745,7 @@ msgid "Move clip up/down between tracks"
 msgstr "Перамясціць вобласць з адной дарожкі ў іншую"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "Агінальная"
 
@@ -13960,6 +14031,8 @@ msgid "Zoom Tool"
 msgstr "Маштабаванне"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "Змена агінальнай"
 
@@ -13989,6 +14062,440 @@ msgstr "Прайграванне на хуткасці"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "Прайграванне на хуткасці"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+#, fuzzy
+msgid "Drag one or more label boundaries."
+msgstr "Перацягнуць межы адной і больш пазнак"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+#, fuzzy
+msgid "Drag label boundary."
+msgstr "Перацягнуць межы пазнакі"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "Перайсці да пачатку дарожкі"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+#, fuzzy
+msgid "&Font..."
+msgstr "Шрыфт..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "Шрыфт дарожкі для пазнак"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "Шрыфт"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "Кегель"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+#, fuzzy
+msgid "Up &Octave"
+msgstr "Актавай вышэй"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+#, fuzzy
+msgid "Down Octa&ve"
+msgstr "Актавай ніжэй"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+#, fuzzy
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"Выкарыстоўвайце пстрычку для набліжэння па вертыкалі, Shift і пстрычка - для "
+"аддалення, перацягванне з націснутай кнопкай для вылучэння вобласці "
+"маштабавання."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+#, fuzzy
+msgid "Click and drag to stretch selected region."
+msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+#, fuzzy
+msgid "Stretch Note Track"
+msgstr "Дарожка для пазнак"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+#, fuzzy
+msgid "Stretch"
+msgstr "Каэфіцыент згасання: "
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "Аб'яднаны кліпы"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "Аб'яднаць"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "Пашыраная лінія выразанняў"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "Пашырыць"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "Выдалена лінія выразання"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "Пстрыкніце і перацягніце для рэдагавання сэмплаў"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "Сэмпл зрушаны"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "Праўка сэмпла"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "'%s' зменена на %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "Змена фармату"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100 ч 060 м 060.0100 з"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+#, fuzzy
+msgid "&Other..."
+msgstr "Іншая..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' зменена на %s Гц"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "Змяніць чашчыню"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "Чашчыня сэмпліравання"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+#, fuzzy
+msgid "Wa&veform"
+msgstr "Хваля"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+#, fuzzy
+msgid "&Waveform (dB)"
+msgstr "Хваля (Дб)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+#, fuzzy
+msgid "&Spectrogram"
+msgstr "Спектраграмы"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "Спектраграмы"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+#, fuzzy
+msgid "Ma&ke Stereo Track"
+msgstr "Зрабіць стэрэафанічнай"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+#, fuzzy
+msgid "Swap Stereo &Channels"
+msgstr "%d каналаў"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+#, fuzzy
+msgid "Spl&it Stereo Track"
+msgstr "Падзяліць стереодорожку"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "Падзяліць стэрэа на мана"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "Фармат:"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "Чашчыня сэмпліравання"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "Мана"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "Левы канал"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "Правы канал"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "Канал"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "Зрабіць '%s' стереодорожку"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "Зрабіць стэрэафанічнай"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, fuzzy, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "%d каналаў"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+#, fuzzy
+msgid "Swap Channels"
+msgstr "%d каналаў"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "Падзяліць стереодорожку '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, fuzzy, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "Падзяліць стереодорожку '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+#, fuzzy
+msgid "Split to Mono"
+msgstr "Падзяліць стэрэа на мана"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift-Пстрычка левай клавішай"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift-Пстрычка левай клавішай"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift-Пстрычка левай клавішай"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+#, fuzzy
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"Выкарыстоўвайце пстрычку для набліжэння па вертыкалі, Shift і пстрычка - для "
+"аддалення, перацягванне з націснутай кнопкай для вылучэння вобласці "
+"маштабавання."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "Змяніць ніжнюю мяжу хуткасці (%) на:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "Мяжа паніжэння хуткасці"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "Змяніць верхнюю мяжу хуткасці (%) на:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "Мяжа падвышэння хуткасці"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Усталяваць мяжу як %ld'' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "Усталяваць дыяпазон"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+#, fuzzy
+msgid "Set Display"
+msgstr "Адлюстраванне"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+#, fuzzy
+msgid "Set Interpolation"
+msgstr "Інтэрпаляцыя:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "Лінейны"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "Лагарыфмічная"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "Усталяваць дыяпазон..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+#, fuzzy
+msgid "Logarithmic &Interpolation"
+msgstr "Хуткая сінхронная інтэрпаляцыя"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "Пстрыкніце і перацягніце для перасоўвання дарожкі ў часе"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "Пстрыкніце і перацягніце для рэдагавання агінальнай амплітуды"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "Агінальная скарэктавана."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -14024,6 +14531,185 @@ msgstr "Перамясціць дарожку ўніз"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі правай мяжы вылучэння"
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "Параметры..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, fuzzy, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "Універсальная прылада: націсніце Ctrl-P для налады мышы і клавіятуры"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "Пстрыкніце і перацягніце для перасоўвання дарожкі ў часе"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "Вобласць перамешчана з адной дарожкі ў іншую"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "У вылучаныя дарожкі запісана %.2f з з адзнакі %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "Зачыніць"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "&Нядаўнія файлы..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "Назва..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "Перамясціць дарожку ўгару"
+
+#: src/tracks/ui/TrackControls.cpp:137
+#, fuzzy
+msgid "Move Track &Down"
+msgstr "Перамясціць дарожку ўніз"
+
+#: src/tracks/ui/TrackControls.cpp:143
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "Перамясціць дарожку ўгару"
+
+#: src/tracks/ui/TrackControls.cpp:149
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "Перамясціць дарожку ўніз"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "Змяніць назву дарожкі на:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "Назва дарожкі"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "Назва '%s' зменена на '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "Пераназванне"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "Каманда"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Ctrl-Пстрычка левай клавішай"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "Абярыце дзеянне"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "угару"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "уніз"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "Зрушана '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "Пстрычка для набліжэння, Shift+пстрычка для аддалення"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr ""
+"Перацягнуць для набліжэння вобласці, пстрыкнуць правай кнопкай мышы дял "
+"аддаленні"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "Левая=Наблізіць, Правая=Аддаліць, Сярэдняя=Звычайны выгляд"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -14092,10 +14778,6 @@ msgstr "Наперад"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "Назад"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "Зачыніць"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14227,10 +14909,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr ""
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "Абярыце дзеянне"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14738,6 +15416,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "Больш не паказваць гэта паведамленне"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "Абярыце дзеянне"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14795,26 +15477,6 @@ msgstr "Не атрымалася загрузіць файл: \"%s\""
 #~ msgstr "Стэрэа ў &мана"
 
 #, fuzzy
-#~ msgid "&Other..."
-#~ msgstr "Іншая..."
-
-#, fuzzy
-#~ msgid "Wa&veform"
-#~ msgstr "Хваля"
-
-#, fuzzy
-#~ msgid "&Waveform (dB)"
-#~ msgstr "Хваля (Дб)"
-
-#, fuzzy
-#~ msgid "&Spectrogram"
-#~ msgstr "Спектраграмы"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "Спектраграмы"
-
-#, fuzzy
 #~ msgid "&Mono"
 #~ msgstr "Мана"
 
@@ -14827,270 +15489,8 @@ msgstr "Не атрымалася загрузіць файл: \"%s\""
 #~ msgstr "Правы канал"
 
 #, fuzzy
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "Зрабіць стэрэафанічнай"
-
-#, fuzzy
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "Падзяліць стереодорожку"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "Фармат:"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "Чашчыня сэмпліравання"
-
-#, fuzzy
-#~ msgid "Up &Octave"
-#~ msgstr "Актавай вышэй"
-
-#, fuzzy
-#~ msgid "Down Octa&ve"
-#~ msgstr "Актавай ніжэй"
-
-#, fuzzy
-#~ msgid "&Font..."
-#~ msgstr "Шрыфт..."
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "Лагарыфмічная"
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "Усталяваць дыяпазон..."
-
-#, fuzzy
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "Хуткая сінхронная інтэрпаляцыя"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "Назва..."
-
-#, fuzzy
-#~ msgid "Move Track &Up"
-#~ msgstr "Перамясціць дарожку ўгару"
-
-#, fuzzy
-#~ msgid "Move Track &Down"
-#~ msgstr "Перамясціць дарожку ўніз"
-
-#, fuzzy
-#~ msgid "Move Track to &Top"
-#~ msgstr "Перамясціць дарожку ўгару"
-
-#, fuzzy
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "Перамясціць дарожку ўніз"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "Каманда"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl-Пстрычка левай клавішай"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Выкарыстоўвайце пстрычку для набліжэння па вертыкалі, Shift і пстрычка - "
-#~ "для аддалення, перацягванне з націснутай кнопкай для вылучэння вобласці "
-#~ "маштабавання."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr ""
-#~ "Пстрыкніце і перацягніце для рэгуляцыі адноснага памеру стереодорожек"
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "Пстрыкніце і перацягніце для змены вышыні дарожкі"
-
-#, fuzzy
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "Перацягнуць межы адной і больш пазнак"
-
-#, fuzzy
-#~ msgid "Drag label boundary."
-#~ msgstr "Перацягнуць межы пазнакі"
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "Параметры..."
-
-#, fuzzy
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr ""
-#~ "Універсальная прылада: націсніце Ctrl-P для налады мышы і клавіятуры"
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
-
-#, fuzzy
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr ""
-#~ "Пстрыкніце і перацягніце адзнаку для ўсталёўкі правай мяжы вылучэння"
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "Пстрыкніце і перацягніце адзнаку для ўсталёўкі левай мяжы вылучэння"
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "Агінальная скарэктавана."
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "Вобласць перамешчана з адной дарожкі ў іншую"
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "Сэмпл зрушаны"
-
-#~ msgid "Sample Edit"
-#~ msgstr "Праўка сэмпла"
-
-#~ msgid "up"
-#~ msgstr "угару"
-
-#~ msgid "down"
-#~ msgstr "уніз"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "Зрушана '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "Пашыраная лінія выразанняў"
-
-#~ msgid "Expand"
-#~ msgstr "Пашырыць"
-
-#~ msgid "Merged Clips"
-#~ msgstr "Аб'яднаны кліпы"
-
-#~ msgid "Merge"
-#~ msgstr "Аб'яднаць"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "Выдалена лінія выразання"
-
-#~ msgid "Left Channel"
-#~ msgstr "Левы канал"
-
-#~ msgid "Right Channel"
-#~ msgstr "Правы канал"
-
-#~ msgid "Mono"
-#~ msgstr "Мана"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "'%s' зменена на %s"
-
-#~ msgid "Channel"
-#~ msgstr "Канал"
-
-#, fuzzy
-#~ msgid "Swap Channels"
-#~ msgstr "%d каналаў"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "Падзяліць стереодорожку '%s'"
-
-#, fuzzy
-#~ msgid "Split to Mono"
-#~ msgstr "Падзяліць стэрэа на мана"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "Зрабіць '%s' стереодорожку"
-
-#~ msgid "Make Stereo"
-#~ msgstr "Зрабіць стэрэафанічнай"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "'%s' зменена на %s Гц"
-
-#~ msgid "Rate Change"
-#~ msgstr "Змяніць чашчыню"
-
-#~ msgid "Format Change"
-#~ msgstr "Змена фармату"
-
-#~ msgid "Set Rate"
-#~ msgstr "Чашчыня сэмпліравання"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "Змяніць ніжнюю мяжу хуткасці (%) на:"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "Мяжа паніжэння хуткасці"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Змяніць верхнюю мяжу хуткасці (%) на:"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "Мяжа падвышэння хуткасці"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "Усталяваць мяжу як %ld'' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "Усталяваць дыяпазон"
-
-#, fuzzy
-#~ msgid "Set Display"
-#~ msgstr "Адлюстраванне"
-
-#, fuzzy
-#~ msgid "Set Interpolation"
-#~ msgstr "Інтэрпаляцыя:"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Змяніць назву дарожкі на:"
-
-#~ msgid "Track Name"
-#~ msgstr "Назва дарожкі"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "Назва '%s' зменена на '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "Пераназванне"
-
-#~ msgid "Label Track Font"
-#~ msgstr "Шрыфт дарожкі для пазнак"
-
-#~ msgid "Face name"
-#~ msgstr "Шрыфт"
-
-#~ msgid "Face size"
-#~ msgstr "Кегель"
 
 #, fuzzy
 #~ msgid "%.2f dB Average RMS"
@@ -15212,29 +15612,6 @@ msgstr "Не атрымалася загрузіць файл: \"%s\""
 #~ msgid "Selection "
 #~ msgstr "Вылучэнне "
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "Пстрыкніце і перацягніце для вылучэння гукавога фрагмента"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "Пстрыкніце і перацягніце для рэдагавання агінальнай амплітуды"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "Пстрыкніце і перацягніце для рэдагавання сэмплаў"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "Пстрычка для набліжэння, Shift+пстрычка для аддалення"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr ""
-#~ "Перацягнуць для набліжэння вобласці, пстрыкнуць правай кнопкай мышы дял "
-#~ "аддаленні"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "Левая=Наблізіць, Правая=Аддаліць, Сярэдняя=Звычайны выгляд"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "Пстрыкніце і перацягніце для перасоўвання дарожкі ў часе"
-
 #~ msgid "Re&gion Save"
 #~ msgstr "&Запомніць вобласць"
 
@@ -15304,14 +15681,6 @@ msgstr "Не атрымалася загрузіць файл: \"%s\""
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "Чашчыня сэмпліравання"
-
-#, fuzzy
-#~ msgid "&Linear"
-#~ msgstr "Лінейны"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Shift-Пстрычка левай клавішай"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"

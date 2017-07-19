@@ -6,11 +6,12 @@
 # Translators:
 # Choi Youn-Soo <korea3d@gmail.com>, 2012.
 # Seong-ho Cho <darkcircle.0426@gmail.com>, 2012-2014
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2014-03-29 03:23-0000\n"
 "Last-Translator: Seong-ho Cho\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/audacity/language/"
@@ -48,6 +49,7 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "오류"
 
@@ -1968,54 +1970,35 @@ msgstr "'%s'은(는) 어디에 있습니까?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "호환 FFmpeg 라이브러리를 찾는데 실패했습니다."
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg을 찾을 수 없습니다."
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity가 오디오 파일을 가져오는데 FFmpeg를 사용하려 했지만\n"
-"라이브러리를 찾을 수 없었습니다.\n"
-"\n"
-"FFmpeg 가져오기를 사용하려면, FFmpeg 라이브러리를 다운로드\n"
-"하거나 위치 지정을 하려면 기본 설정 > 라이브러리 이동하십시오."
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "이 경고를 다시 표시하지 않음"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"전용 avformat.dll|*avformat*.dll|동적 링크 라이브러리 (*.dll)|*.dll|모든 파"
-"일 (*.*)|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "동적 라이브러리 (*.dylib)|*.dylib|모든 파일 (*)|*"
-
-#: src/FFmpeg.h:339
-#, fuzzy
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"전용 libavformat.so|libavformat.so*|동적 링크 라이브러리 (*.so*)|*.so*|모든 "
-"파일 (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "사각"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity가 파일을 쓸 수 없습니다:\n"
+"  %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity가 파일을 쓸 수 없습니다:\n"
+"  %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity가 파일을 쓸 수 없습니다:\n"
+"  %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2448,6 +2431,20 @@ msgstr "버리기(&D)"
 msgid "&OK"
 msgstr "확인(&O)"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "확인할 수 없습니다."
@@ -2582,18 +2579,19 @@ msgstr "트랙명 입력"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "레이블 트랙"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "수정한 레이블"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "레이블 편집"
 
@@ -4086,6 +4084,7 @@ msgstr "%s 트랙/클립을 %.02f초 이동했습니다"
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "시간 이동"
 
@@ -4131,7 +4130,7 @@ msgid "Moved"
 msgstr "위로 이동(&U)"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "트랙 이동"
 
@@ -4353,6 +4352,7 @@ msgid "Detach Labeled Audio"
 msgstr "레이블 붙은 오디오 떼어내기"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "분할"
 
@@ -4376,11 +4376,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "왼쪽"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "오른쪽"
 
@@ -4678,10 +4680,12 @@ msgid "Resample"
 msgstr "리샘플"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "새 샘플 속도(Hz):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "입력한 값이 유효하지 않습니다"
 
@@ -4712,6 +4716,7 @@ msgstr "트랙 믹싱 및 렌더링"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "게인"
 
@@ -4719,6 +4724,7 @@ msgstr "게인"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "속도"
 
@@ -4729,18 +4735,21 @@ msgstr "악기"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "팬"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "음소거"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "독주"
 
@@ -4749,14 +4758,17 @@ msgid "Signal Level Meter"
 msgstr "시그널 레벨 미터"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "게인 슬라이더를 이동했습니다"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "빠르기 슬라이더를 움직였습니다"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "팬 슬라이더를 이동했습니다"
 
@@ -5844,14 +5856,6 @@ msgstr ""
 "Audacity가 파일을 저장할 수 없습니다.\n"
 " %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "지속 시간"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Audacity 타이머 녹음"
@@ -5977,6 +5981,14 @@ msgstr "끝 날짜 및 시간"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "끝 날짜"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "지속 시간"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6166,6 +6178,14 @@ msgstr " 선택 On"
 msgid " Sync Lock Selected"
 msgstr " 싱크 잠금을 선택했습니다"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "마우스 단추를 누르고 끌어서 스테레오 트랙의 상대 크기를 조정합니다."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "트랙 크기를 조절하려면 누르고 끌어 움직이십시오."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6214,6 +6234,56 @@ msgstr "선택 내용을 붙여넣는데 필요한 공간이 부족합니다"
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "자르기 선을 확장하는데 필요한 공간이 부족합니다"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg을 찾을 수 없습니다."
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity가 오디오 파일을 가져오는데 FFmpeg를 사용하려 했지만\n"
+"라이브러리를 찾을 수 없었습니다.\n"
+"\n"
+"FFmpeg 가져오기를 사용하려면, FFmpeg 라이브러리를 다운로드\n"
+"하거나 위치 지정을 하려면 기본 설정 > 라이브러리 이동하십시오."
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "이 경고를 다시 표시하지 않음"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"전용 avformat.dll|*avformat*.dll|동적 링크 라이브러리 (*.dll)|*.dll|모든 파"
+"일 (*.*)|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "동적 라이브러리 (*.dylib)|*.dylib|모든 파일 (*)|*"
+
+#: src/FFmpeg.h:339
+#, fuzzy
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"전용 libavformat.so|libavformat.so*|동적 링크 라이브러리 (*.so*)|*.so*|모든 "
+"파일 (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6331,10 +6401,6 @@ msgstr "새 피크 증폭(dB):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "클리핑 허용"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "증폭"
 
 #: src/effects/AutoDuck.cpp:41
 #, fuzzy
@@ -6490,10 +6556,6 @@ msgstr "레벨"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "저음과 고음"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6585,10 +6647,6 @@ msgstr "퍼센트 바꾸기"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "음 높이 바꾸기"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6652,10 +6710,6 @@ msgstr "선택 잘라내기"
 msgid "New Length:"
 msgstr "길이"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "속도 바꾸기"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6694,10 +6748,6 @@ msgstr "길이(초)"
 msgid "Length in seconds from"
 msgstr "초단위 길이까지"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "빠르기 바꾸기"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6731,10 +6781,6 @@ msgstr "최대 스파이크 폭(큰 값일수록 더욱 예민함):"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "최대 스파이크 폭"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "딸깍음 제거"
 
 #: src/effects/Compressor.cpp:61
 #, fuzzy
@@ -6868,10 +6914,6 @@ msgstr "감쇠 시간 %.1f 초"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f 초"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "압축기"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7430,10 +7472,6 @@ msgstr "(%) [-50에서 100까지]:"
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "왜곡"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7495,11 +7533,6 @@ msgstr "ms"
 msgid "Silence duration:"
 msgstr "묵음 지속 시간:"
 
-#: src/effects/DtmfGen.h:28
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "DTMF 톤..."
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "지연"
@@ -7526,10 +7559,6 @@ msgstr "지연 시간(초):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "감쇠 요소:"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "에코"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7863,6 +7892,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "제거"
 
@@ -8255,10 +8285,6 @@ msgstr "곡선을 가져옴"
 msgid "No curves exported"
 msgstr "가져온 곡선이 없음"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "균등화"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8279,14 +8305,6 @@ msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "페이드 인"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "페이드 아웃"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8303,10 +8321,6 @@ msgstr "시작 한계(샘플):"
 msgid "Stop threshold (samples):"
 msgstr "정지 한계(샘플):"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "클리핑 찾기"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "오디오를 만들기 위한 충분한 공간이 없습니다."
@@ -8314,10 +8328,6 @@ msgstr "오디오를 만들기 위한 충분한 공간이 없습니다."
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "반전"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8396,11 +8406,6 @@ msgstr ""
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "잡음 형식:"
-
-#: src/effects/Noise.h:24
-#, fuzzy
-msgid "Noise"
-msgstr "잡음:"
 
 #: src/effects/NoiseReduction.cpp:100
 #, fuzzy
@@ -8850,11 +8855,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-#, fuzzy
-msgid "Paulstretch"
-msgstr "폴 스트렛치..."
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "스테이지"
@@ -8947,10 +8947,6 @@ msgstr "웨트 게인(dB):"
 msgid "Output gain (dB)"
 msgstr "웨트 게인(dB):"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "페이저"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8980,10 +8976,6 @@ msgstr ""
 "적어도 오디오의 한 면을 지닌 영역을 선택하십시오.\n"
 "\n"
 "오디오 더 많이 선택할 수록, 수행 결과가 좋아집니다."
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "복구"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -9020,10 +9012,6 @@ msgstr "새 선택 길이: "
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "반복"
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -9169,14 +9157,6 @@ msgstr "리버브"
 msgid "Reverses the selected audio"
 msgstr "선택한 오디오를 %s(으)로 내보내는 중"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "역방향"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9284,10 +9264,6 @@ msgstr ""
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr ""
 
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr ""
-
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
 msgstr "MIDI를 오디오에 정렬"
@@ -9387,11 +9363,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr "스테레오 트랙을 모노로(&K)"
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "스테레오를 모노로"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9451,11 +9422,6 @@ msgstr "(%) [-50에서 100까지]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "최종 음 높이 이동"
-
-#: src/effects/TimeScale.h:27
-#, fuzzy
-msgid "Time Scale"
-msgstr "스케일"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9548,16 +9514,6 @@ msgstr "증폭 끝"
 msgid "Interpolation:"
 msgstr "보간:"
 
-#: src/effects/ToneGen.h:25
-#, fuzzy
-msgid "Chirp"
-msgstr "처프..."
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "톤..."
-
 #: src/effects/TruncSilence.cpp:48
 #, fuzzy
 msgid "Truncate Detected Silence"
@@ -9625,10 +9581,6 @@ msgstr "압축:"
 msgid "Truncate tracks independently"
 msgstr "스테레오 채널을 독립적으로 정규화"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "묵음 잘라내기"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "공명음"
@@ -9661,6 +9613,125 @@ msgstr "와 주파수 오프셋(%):"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "퍼센트 단위의 와 주파수 오프셋"
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "증폭"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "저음과 고음"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "음 높이 바꾸기"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "속도 바꾸기"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "빠르기 바꾸기"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "딸깍음 제거"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "압축기"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "왜곡"
+
+#: src/effects/DtmfGen.h:28
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "DTMF 톤..."
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "에코"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "균등화"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "페이드 인"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "페이드 아웃"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "클리핑 찾기"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "반전"
+
+#: src/effects/Noise.h:24
+#, fuzzy
+msgid "Noise"
+msgstr "잡음:"
+
+#: src/effects/Paulstretch.h:19
+#, fuzzy
+msgid "Paulstretch"
+msgstr "폴 스트렛치..."
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "페이저"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "복구"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "반복"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "역방향"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr ""
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "스테레오를 모노로"
+
+#: src/effects/TimeScale.h:27
+#, fuzzy
+msgid "Time Scale"
+msgstr "스케일"
+
+#: src/effects/ToneGen.h:25
+#, fuzzy
+msgid "Chirp"
+msgstr "처프..."
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "톤..."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "묵음 잘라내기"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11914,11 +11985,6 @@ msgstr "원본에서 파일 직접 읽기(좀 더 빠름)(&D)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "다시 경고하지 않고 항상 위의 내 선택을 사용(&W)"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "%s 가져오기"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime 파일"
@@ -11946,6 +12012,11 @@ msgstr "스트림 설명을 가져올 수 없습니다"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "완충 버퍼(fill buffer)를 가져올 수 없습니다."
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "%s 가져오기"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -12015,6 +12086,11 @@ msgstr "가져올 분량:"
 msgid "Sample rate:"
 msgstr "샘플 주파수:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s을(를) %2.0f%% 완료했습니다. 초점을 바꾸시려면 마우스로 누르십시오."
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "가져오기를 완료했습니다. 파형 계산중"
@@ -12022,11 +12098,6 @@ msgstr "가져오기를 완료했습니다. 파형 계산중"
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "파형 디코딩"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s을(를) %2.0f%% 완료했습니다. 초점을 바꾸시려면 마우스로 누르십시오."
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12937,7 +13008,7 @@ msgid "Move clip up/down between tracks"
 msgstr "트랙 사이에서 위/아래로 클립 이동"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "형태"
 
@@ -14227,6 +14298,8 @@ msgid "Zoom Tool"
 msgstr "줌 도구"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "그리기 도구"
 
@@ -14256,6 +14329,426 @@ msgstr "재생 속도"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "빠르게 재생"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+#, fuzzy
+msgid "Drag one or more label boundaries."
+msgstr "하나 이상의 레이블 경계 끌기"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+#, fuzzy
+msgid "Drag label boundary."
+msgstr "레이블 경계 끌기"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "시작 부분으로 건너뛰기"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "글꼴(&F)..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "레이블 트랙 글꼴"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "글꼴 이름"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "글꼴 크기"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "옥타브 올리기(&O)"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "옥타브 내리기(&V)"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"마우스 단추를 누르면 수직 확대, Shift를 누른 상태에서 마우스 단추를 누르면 축"
+"소입니다. 일부 확대 영역을 만드려면 끌어 움직이십시오."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "선택한 범위를 늘이려면 누르고 끌어 움직이십시오."
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "음 트랙 길이 연장"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "길이 연장"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "클립을 병합했습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "병합"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "컷 라인을 확장했습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "확장"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "컷 라인을 제거했습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "샘플을 편집하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr "그리기를 사용하려면, 트랙 드롭다운 메뉴에서 '파형'을 선택하십시오."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+"그리기를 사용하려면, 각각의 샘플을 볼 수 있을 때까지 계속 확대하십시오."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "샘플을 이동했습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "편집 샘플"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "'%s'을(를) %s(으)로 바꾸었습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "형식 바꾸기"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100 시간 060 분 060.0100 초"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "기타(&O)..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s'을(를) %s Hz로 바꾸었습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "주파수 바꾸기"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "주파수 설정"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "파형(&V)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+#, fuzzy
+msgid "&Waveform (dB)"
+msgstr "파형(dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "스펙트로그램(&S)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "스펙토그램"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "스테레오 트랙 만들기(&K)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+#, fuzzy
+msgid "Swap Stereo &Channels"
+msgstr "2 (스테레오) 입력 채널"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+#, fuzzy
+msgid "Spl&it Stereo Track"
+msgstr "스테레오 트랙 나누기(&T)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "'%s' 스테레오 트랙을 모노로 나누기"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "형식:"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "주파수 설정(&E)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "모노"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "왼쪽 채널"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "오른쪽 채널"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "채널"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "'%s'을(를) 스테레오 트랙으로 만들었습니다"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "스테레오 만들기"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, fuzzy, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "%d 채널"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+#, fuzzy
+msgid "Swap Channels"
+msgstr "%d 채널"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "'%s' 스테레오 트랙 분할"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "'%s' 스테레오 트랙을 모노로 나누기"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+#, fuzzy
+msgid "Split to Mono"
+msgstr "스테레오를 모노로 나누기(&N)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift-왼쪽 누름"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift-왼쪽 누름"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift-왼쪽 누름"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"마우스 단추를 누르면 수직 확대, Shift 누른 상태에서 마우스 단추를 누르면 축소"
+"입니다. 확대영역을 지정하려면 끌어 움직이십시오."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "최저 속도 한계(%) 바꾸기:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "최저 속도 한계"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "최대 속도 한계(%) 바꾸기:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "상위 속도 제한"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "'%ld' - '%ld' 범위로 설정"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "범위 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr "시간 트랙을 선형으로 표시하도록 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "표시 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr "시간 트랙을 로그형으로 표시하도록 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr "시간 트랙 보간을 선형으로 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "보간 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr "시간 트랙 보간을 로그형으로 설정"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "선형(&L)"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "로그곡선(&O)"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "이름 바꾸기..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "로그 보간(&I)"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr ""
+"트랙을 제 시점으로 이동하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "증폭 형태를 편집하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "형태를 조정했습니다."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -14291,6 +14784,187 @@ msgstr "트랙을 아래로 이동(&D)"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "오른쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "기본 설정..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, fuzzy, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr ""
+"다중 도구 모드: 마우스 키보드 기본 설정을 실행하려면 Cmd-,를 누르십시오"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr ""
+"트랙을 제 시점으로 이동하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "다른 트랙으로 클립을 옮겼습니다"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "%.2f초 분량의 선택한 트랙을 %.2f 초 위치에서 묵음처리함"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "닫기"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "최근 열기(&R)..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "이름(&A)..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "트랙을 위로 이동(&P)"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "트랙을 아래로 이동(&D)"
+
+#: src/tracks/ui/TrackControls.cpp:143
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "트랙을 위로 이동(&P)"
+
+#: src/tracks/ui/TrackControls.cpp:149
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "트랙을 아래로 이동(&D)"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "트랙명 바꾸기:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "트랙명"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "'%s'을(를) '%s'(으)로 이름 바꾸기"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "이름 바꾸기"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "명령"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Ctrl-왼쪽 마우스 단추 누름"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "동작을 선택하십시오"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "위로"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "아래로"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "'%s'을(를) %s 이동했습니다"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr ""
+"확대하려면 마우스 단추를 누르고, 축소하려면 Shift키를 누른 상태에서 마우스 단"
+"추를 누르십시오"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr ""
+"영역 확대하려면 끌어 움직이고, 축소하려면 오른쪽 마우스 단추를 누르십시오"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "좌=확대, 우=축소, 중=표준"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -14359,10 +15033,6 @@ msgstr "앞으로"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "뒤로"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "닫기"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14497,10 +15167,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "자세한 로그 표시"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "동작을 선택하십시오"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -15008,6 +15674,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "이 경고를 다시 표시하지 않음"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "동작을 선택하십시오"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -15065,23 +15735,6 @@ msgstr "파일을 로드할 수 없습니다: \"%s\""
 #~ msgid "Play at speed"
 #~ msgstr "빠르게 재생"
 
-#~ msgid "&Other..."
-#~ msgstr "기타(&O)..."
-
-#~ msgid "Wa&veform"
-#~ msgstr "파형(&V)"
-
-#, fuzzy
-#~ msgid "&Waveform (dB)"
-#~ msgstr "파형(dB)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "스펙트로그램(&S)"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "스펙토그램"
-
 #~ msgid "&Mono"
 #~ msgstr "모노(&M)"
 
@@ -15091,122 +15744,6 @@ msgstr "파일을 로드할 수 없습니다: \"%s\""
 #~ msgid "&Right Channel"
 #~ msgstr "오른쪽 채널(&R)"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "스테레오 트랙 만들기(&K)"
-
-#, fuzzy
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "2 (스테레오) 입력 채널"
-
-#, fuzzy
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "스테레오 트랙 나누기(&T)"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "형식:"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "주파수 설정(&E)"
-
-#~ msgid "Up &Octave"
-#~ msgstr "옥타브 올리기(&O)"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "옥타브 내리기(&V)"
-
-#~ msgid "&Font..."
-#~ msgstr "글꼴(&F)..."
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "로그곡선(&O)"
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "이름 바꾸기..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "로그 보간(&I)"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "이름(&A)..."
-
-#, fuzzy
-#~ msgid "Move Track &Up"
-#~ msgstr "트랙을 위로 이동(&P)"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "트랙을 아래로 이동(&D)"
-
-#, fuzzy
-#~ msgid "Move Track to &Top"
-#~ msgstr "트랙을 위로 이동(&P)"
-
-#, fuzzy
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "트랙을 아래로 이동(&D)"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "명령"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl-왼쪽 마우스 단추 누름"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr ""
-#~ "마우스 단추를 누르면 수직 확대, Shift 누른 상태에서 마우스 단추를 누르면 "
-#~ "축소입니다. 확대영역을 지정하려면 끌어 움직이십시오."
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "마우스 단추를 누르면 수직 확대, Shift를 누른 상태에서 마우스 단추를 누르"
-#~ "면 축소입니다. 일부 확대 영역을 만드려면 끌어 움직이십시오."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "마우스 단추를 누르고 끌어서 스테레오 트랙의 상대 크기를 조정합니다."
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "트랙 크기를 조절하려면 누르고 끌어 움직이십시오."
-
-#, fuzzy
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "하나 이상의 레이블 경계 끌기"
-
-#, fuzzy
-#~ msgid "Drag label boundary."
-#~ msgstr "레이블 경계 끌기"
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "기본 설정..."
-
-#, fuzzy
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr ""
-#~ "다중 도구 모드: 마우스 키보드 기본 설정을 실행하려면 Cmd-,를 누르십시오"
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "선택한 범위 안에서 내용을 늘이려면 누르고 끌어 움직이십시오."
 
@@ -15214,182 +15751,8 @@ msgstr "파일을 로드할 수 없습니다: \"%s\""
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
 
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "오른쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "왼쪽 선택 범위를 이동하려면 누르고 끌어 움직이십시오."
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "선택한 범위를 늘이려면 누르고 끌어 움직이십시오."
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "음 트랙 길이 연장"
-
-#~ msgid "Stretch"
-#~ msgstr "길이 연장"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "형태를 조정했습니다."
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "다른 트랙으로 클립을 옮겼습니다"
-
 #~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 #~ msgstr "그리기를 사용하려면, 트랙 드롭다운 메뉴에서 '파형'을 선택하십시오."
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr ""
-#~ "그리기를 사용하려면, 각각의 샘플을 볼 수 있을 때까지 계속 확대하십시오."
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "샘플을 이동했습니다"
-
-#~ msgid "Sample Edit"
-#~ msgstr "편집 샘플"
-
-#~ msgid "up"
-#~ msgstr "위로"
-
-#~ msgid "down"
-#~ msgstr "아래로"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "'%s'을(를) %s 이동했습니다"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "컷 라인을 확장했습니다"
-
-#~ msgid "Expand"
-#~ msgstr "확장"
-
-#~ msgid "Merged Clips"
-#~ msgstr "클립을 병합했습니다"
-
-#~ msgid "Merge"
-#~ msgstr "병합"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "컷 라인을 제거했습니다"
-
-#~ msgid "Left Channel"
-#~ msgstr "왼쪽 채널"
-
-#~ msgid "Right Channel"
-#~ msgstr "오른쪽 채널"
-
-#~ msgid "Mono"
-#~ msgstr "모노"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "'%s'을(를) %s(으)로 바꾸었습니다"
-
-#~ msgid "Channel"
-#~ msgstr "채널"
-
-#, fuzzy
-#~ msgid "Swap Channels"
-#~ msgstr "%d 채널"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "'%s' 스테레오 트랙 분할"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "'%s' 스테레오 트랙을 모노로 나누기"
-
-#, fuzzy
-#~ msgid "Split to Mono"
-#~ msgstr "스테레오를 모노로 나누기(&N)"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "'%s'을(를) 스테레오 트랙으로 만들었습니다"
-
-#~ msgid "Make Stereo"
-#~ msgstr "스테레오 만들기"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "'%s'을(를) %s Hz로 바꾸었습니다"
-
-#~ msgid "Rate Change"
-#~ msgstr "주파수 바꾸기"
-
-#~ msgid "Format Change"
-#~ msgstr "형식 바꾸기"
-
-#~ msgid "Set Rate"
-#~ msgstr "주파수 설정"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "최저 속도 한계(%) 바꾸기:"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "최저 속도 한계"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "최대 속도 한계(%) 바꾸기:"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "상위 속도 제한"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "'%ld' - '%ld' 범위로 설정"
-
-#~ msgid "Set Range"
-#~ msgstr "범위 설정"
-
-#~ msgid "Set time track display to linear"
-#~ msgstr "시간 트랙을 선형으로 표시하도록 설정"
-
-#~ msgid "Set Display"
-#~ msgstr "표시 설정"
-
-#~ msgid "Set time track display to logarithmic"
-#~ msgstr "시간 트랙을 로그형으로 표시하도록 설정"
-
-#~ msgid "Set time track interpolation to linear"
-#~ msgstr "시간 트랙 보간을 선형으로 설정"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "보간 설정"
-
-#~ msgid "Set time track interpolation to logarithmic"
-#~ msgstr "시간 트랙 보간을 로그형으로 설정"
-
-#~ msgid "Change track name to:"
-#~ msgstr "트랙명 바꾸기:"
-
-#~ msgid "Track Name"
-#~ msgstr "트랙명"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "'%s'을(를) '%s'(으)로 이름 바꾸기"
-
-#~ msgid "Name Change"
-#~ msgstr "이름 바꾸기"
-
-#~ msgid "Label Track Font"
-#~ msgstr "레이블 트랙 글꼴"
-
-#~ msgid "Face name"
-#~ msgstr "글꼴 이름"
-
-#~ msgid "Face size"
-#~ msgstr "글꼴 크기"
 
 #, fuzzy
 #~ msgid "%.2f dB Average RMS"
@@ -15532,33 +15895,6 @@ msgstr "파일을 로드할 수 없습니다: \"%s\""
 #~ msgid "Selection "
 #~ msgstr "선택 "
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "오디오를 선택하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr ""
-#~ "증폭 형태를 편집하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "샘플을 편집하려면 마우스 단추를 누른 상태에서 끌어 움직이십시오"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr ""
-#~ "확대하려면 마우스 단추를 누르고, 축소하려면 Shift키를 누른 상태에서 마우"
-#~ "스 단추를 누르십시오"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr ""
-#~ "영역 확대하려면 끌어 움직이고, 축소하려면 오른쪽 마우스 단추를 누르십시오"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "좌=확대, 우=축소, 중=표준"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr ""
-#~ "트랙을 제 시점으로 이동하려면 마우스 단추를 누른 상태에서 끌어 움직이십시"
-#~ "오"
-
 #~ msgid "Re&gion Save"
 #~ msgstr "영역 저장(&G)"
 
@@ -15645,13 +15981,6 @@ msgstr "파일을 로드할 수 없습니다: \"%s\""
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "주파수 설정"
-
-#~ msgid "&Linear"
-#~ msgstr "선형(&L)"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Shift-왼쪽 누름"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "트랙의 순서를 바꾸려면 트랙을 수직으로 끌어 올리고 내립니다."
@@ -15820,12 +16149,6 @@ msgstr "파일을 로드할 수 없습니다: \"%s\""
 
 #~ msgid "Set Ra&nge..."
 #~ msgstr "범위 설정(&N)..."
-
-#, fuzzy
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down "
-#~ "Menu."
-#~ msgstr "그리기를 사용하려면, 트랙 드롭다운 메뉴에서 '파형'을 선택하십시오."
 
 #~ msgid "Plug-ins %i to %i"
 #~ msgstr "%i~%i 플러그인"

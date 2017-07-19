@@ -1,8 +1,9 @@
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -40,6 +41,7 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "Եղավ սխալ"
 
@@ -1956,53 +1958,35 @@ msgstr "Որտեղ է '%s'?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Ձախողվեց գտնել աջակցող FFmpeg գրադարանը:"
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg-ն գոյություն չունի"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Աուդասիթին փորձարկեց FFmpeg-ի օգտագործումը աուդիո ֆայլի ներմուծման համար,\n"
-"բայց գրադարանը գոյություն չունի.\n"
-"\n"
-"FFmpeg ներմուծումն օգտագործելու համար, մտեք Կարգավորումներ > Գրադարան\n"
-"բեռնելու կամ FFmpeg-ի տեղը նշելու համար:"
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "Չցուցադրել այս զգուշացումը կրկին"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Միայն avformat.dll|*avformat*.dll|Դինամիկ միացված գրադարաններ (*.dll)|*.dll|"
-"Բոլոր ֆայլերը (*.*)|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Դինամիկ գրադարաններ (*.dylib)|*.dylib|Բոլոր ֆայլերը (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Միայն libavformat.so|libavformat*.so*|Դինամիկ միացված գրադարաններ (*.so*)|*."
-"so*|Բոլոր ֆայլերը (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "Ողղանկյուն"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Աուդասիթին չի կարողանում գրել ֆայլը՝\n"
+"  %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Աուդասիթին չի կարողանում գրել ֆայլը՝\n"
+"  %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Աուդասիթին չի կարողանում գրել ֆայլը՝\n"
+"  %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2433,6 +2417,20 @@ msgstr "Հրաժարվել"
 msgid "&OK"
 msgstr "Լավ"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "Անհնար է որոշել"
@@ -2567,18 +2565,19 @@ msgstr "Մուտքագրեք ձայնային ֆայլի անունը"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "Նշիչ ձայնային ֆայլ"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "Փոփոխված նշում"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "Փոխել նշում"
 
@@ -4065,6 +4064,7 @@ msgstr "Ժամափոխված ձայնագրություններ/ամրացում
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Ժամափոխում"
 
@@ -4108,7 +4108,7 @@ msgid "Moved"
 msgstr "Տեղափոխված"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "Տեղափոխել ձայնագրություն"
 
@@ -4329,6 +4329,7 @@ msgid "Detach Labeled Audio"
 msgstr "Բաժանել նշված աուդիոն"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "Անջատել"
 
@@ -4352,11 +4353,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "Ձախ"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "Աջ"
 
@@ -4656,10 +4659,12 @@ msgid "Resample"
 msgstr "Վերահաճախավորել"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "Նոր հաճախություն (Հց)՝"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "Նշված արժեքը թերի է"
 
@@ -4690,6 +4695,7 @@ msgstr "Միախառնված և ստեղծված ձայնագրությունն�
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "Որակի ամրապնդում"
 
@@ -4697,6 +4703,7 @@ msgstr "Որակի ամրապնդում"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "Արագություն"
 
@@ -4707,18 +4714,21 @@ msgstr "Երաժշտական գործիք"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "Պան"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "Լուռ"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "Սոլո"
 
@@ -4727,14 +4737,17 @@ msgid "Signal Level Meter"
 msgstr "Ազդանշանային մետրի փուլ"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "Տեղափոխվել է ամրապնդման սլայդ"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "Տեղափոխված արագագործ սլայդ"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "Տեղափոխվել է պան սլայդ"
 
@@ -5836,14 +5849,6 @@ msgstr ""
 "Աուդասիթին չի կարող պահպանել ֆայլը՝\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "Ժամաչափը"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Աուդասիթի ժամային ձայնագրում"
@@ -5968,6 +5973,14 @@ msgstr "Վերջի ամսաթիվ և ժամ"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "Վերջի ամսաթիվ"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "Ժամաչափը"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6157,6 +6170,15 @@ msgstr "Նշում միացնել"
 msgid " Sync Lock Selected"
 msgstr "Սինք-փակ նշված"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr ""
+"Սեղմեք և քաշեք, հարմարեցնելով ստերեո ձայնագրությունների հարաբերական չափերը:"
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6205,6 +6227,55 @@ msgstr "Բավարար տարածք չկա նշվածի տեղադրման հա�
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "Բավարար տարածք չկա կտրված ֆայլի տարածման համար"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg-ն գոյություն չունի"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Աուդասիթին փորձարկեց FFmpeg-ի օգտագործումը աուդիո ֆայլի ներմուծման համար,\n"
+"բայց գրադարանը գոյություն չունի.\n"
+"\n"
+"FFmpeg ներմուծումն օգտագործելու համար, մտեք Կարգավորումներ > Գրադարան\n"
+"բեռնելու կամ FFmpeg-ի տեղը նշելու համար:"
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "Չցուցադրել այս զգուշացումը կրկին"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Միայն avformat.dll|*avformat*.dll|Դինամիկ միացված գրադարաններ (*.dll)|*.dll|"
+"Բոլոր ֆայլերը (*.*)|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Դինամիկ գրադարաններ (*.dylib)|*.dylib|Բոլոր ֆայլերը (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Միայն libavformat.so|libavformat*.so*|Դինամիկ միացված գրադարաններ (*.so*)|*."
+"so*|Բոլոր ֆայլերը (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6322,10 +6393,6 @@ msgstr "Նոր առավել ուժեղացում (դԲ)՝"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "Թույլատրում հատման"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "Ընդլայնել"
 
 #: src/effects/AutoDuck.cpp:41
 #, fuzzy
@@ -6483,10 +6550,6 @@ msgstr "Փուլ"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "Բաս և եռատակ"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6576,10 +6639,6 @@ msgstr "Տոկոս փոխում"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "Փոխել տոնի բարձրությունը"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6643,10 +6702,6 @@ msgstr "Կտրել նշվածը"
 msgid "New Length:"
 msgstr "Երկարություն"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "Փոխված արագություն"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6685,10 +6740,6 @@ msgstr "Երկարություն (վարկյան)"
 msgid "Length in seconds from"
 msgstr "մինչ երկարություն վարկյանում"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "Փոխել տեմպը"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6722,10 +6773,6 @@ msgstr "Առավելագ. ծայրի լայնությունը (Ցածրում ա
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "Առավելագ. ծայրի լայնությունը"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "Սեղմել հեռացման"
 
 #: src/effects/Compressor.cpp:61
 #, fuzzy
@@ -6856,10 +6903,6 @@ msgstr "Մնաց ժամանակ %.1f վարկյ."
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f վարկյ."
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "Խտացնող"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7411,10 +7454,6 @@ msgstr "(%) [-50 ից 100]:"
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "Այլակերպում"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7476,11 +7515,6 @@ msgstr "մվ"
 msgid "Silence duration:"
 msgstr "Լռության ժամաչափ՝"
 
-#: src/effects/DtmfGen.h:28
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "Հեռ. տոնի ազդանշաններ..."
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "Ուշացնող"
@@ -7506,10 +7540,6 @@ msgstr "Դանդաղեցման ժամ (վարկյան)՝"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "Քայքայման գործոն՝"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "Կրկնում"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7840,6 +7870,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "Հեռացնել"
 
@@ -8230,10 +8261,6 @@ msgstr "Կորերը վերցվեց"
 msgid "No curves exported"
 msgstr "Չկա կոր վերցման համար"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "Տատանումների կառուցում"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8253,14 +8280,6 @@ msgstr ""
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "Ավելացնել"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "Քչացնել"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8277,10 +8296,6 @@ msgstr "Սկսման շեմ (մասեր)՝"
 msgid "Stop threshold (samples):"
 msgstr "Դադարի շեմ (մասեր)՝"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "Գտնել անջատում"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Բավարար տարածք չկա ստեղծելու համար աուդիոն"
@@ -8288,10 +8303,6 @@ msgstr "Բավարար տարածք չկա ստեղծելու համար աու�
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "Շրջել"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8370,11 +8381,6 @@ msgstr ""
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "Աղմուկի տեսակ՝"
-
-#: src/effects/Noise.h:24
-#, fuzzy
-msgid "Noise"
-msgstr "Աղմուկ՝"
 
 #: src/effects/NoiseReduction.cpp:100
 #, fuzzy
@@ -8825,11 +8831,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-#, fuzzy
-msgid "Paulstretch"
-msgstr "Paulstretch..."
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "Մասեր"
@@ -8922,10 +8923,6 @@ msgstr "Խոնա&վացում (դԲ)՝"
 msgid "Output gain (dB)"
 msgstr "Խոնա&վացում (դԲ)՝"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Փուլապտտիչ"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8956,10 +8953,6 @@ msgstr ""
 "Խնդրում ենք ընտրել տարածք որն ունի աուդիո շփում առնվազն մեկ կողմը:\n"
 "\n"
 "Որքան շրջապատող աուդիո, այնքան լավ:"
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "Նորոգել"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8996,10 +8989,6 @@ msgstr "Նոր ընտրվածի երկարություն՝"
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "Կրկնել"
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -9135,14 +9124,6 @@ msgstr "Արտացոլում"
 msgid "Reverses the selected audio"
 msgstr "Վերցնում նշված աուդիոն որպես %s"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "Հակառակ"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9245,10 +9226,6 @@ msgstr "Մինիմալ դ&ադարբենդային մարում՝"
 #, fuzzy
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "Մինիմալ դադարբենդային մարում (դԲ)՝"
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr "Դասական զտումներ"
 
 #: src/effects/ScoreAlignDialog.cpp:61
 #, fuzzy
@@ -9356,11 +9333,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr "Ստերեո ձայնագրությունը դարձնել մոնո"
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "Ստերեոից մոնո"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9420,11 +9392,6 @@ msgstr "(%) [-50 ից 100]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "Վերջնական ձայնի բարձրություն"
-
-#: src/effects/TimeScale.h:27
-#, fuzzy
-msgid "Time Scale"
-msgstr "Մասշտաբ"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9517,16 +9484,6 @@ msgstr "Ամպլիտուդա ավարտ"
 msgid "Interpolation:"
 msgstr "Ինտերպոլացիա՝"
 
-#: src/effects/ToneGen.h:25
-#, fuzzy
-msgid "Chirp"
-msgstr "Ձայն..."
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "Տոն..."
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr "Ընդհատել գտնված լռությունը"
@@ -9590,10 +9547,6 @@ msgstr "Խտացնել ից՝"
 msgid "Truncate tracks independently"
 msgstr "Կարգավորում ստերեո ալիքները առանձին"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "Ընդհատել լռություն"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "Ռեզոնանս"
@@ -9626,6 +9579,125 @@ msgstr "Վահ հաճախականության ճյուղ (%)`"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "Վահ հաճախականության ճյուղ տոկոսում"
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "Ընդլայնել"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "Բաս և եռատակ"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "Փոխել տոնի բարձրությունը"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "Փոխված արագություն"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "Փոխել տեմպը"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "Սեղմել հեռացման"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "Խտացնող"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "Այլակերպում"
+
+#: src/effects/DtmfGen.h:28
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "Հեռ. տոնի ազդանշաններ..."
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "Կրկնում"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "Տատանումների կառուցում"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "Ավելացնել"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "Քչացնել"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "Գտնել անջատում"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "Շրջել"
+
+#: src/effects/Noise.h:24
+#, fuzzy
+msgid "Noise"
+msgstr "Աղմուկ՝"
+
+#: src/effects/Paulstretch.h:19
+#, fuzzy
+msgid "Paulstretch"
+msgstr "Paulstretch..."
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Փուլապտտիչ"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "Նորոգել"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "Կրկնել"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "Հակառակ"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr "Դասական զտումներ"
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "Ստերեոից մոնո"
+
+#: src/effects/TimeScale.h:27
+#, fuzzy
+msgid "Time Scale"
+msgstr "Մասշտաբ"
+
+#: src/effects/ToneGen.h:25
+#, fuzzy
+msgid "Chirp"
+msgstr "Ձայն..."
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "Տոն..."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "Ընդհատել լռություն"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11906,11 +11978,6 @@ msgstr "Կարդալ ֆայլերը անմիջապես օրիգինալից (ա�
 msgid "Don't &warn again and always use my choice above"
 msgstr "Չզգուշացնել կրկին և միշտ օգտագործել իմ ընտրությունը վերևում"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "Ներմուծվում են՝ %s"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime ֆայլեր"
@@ -11938,6 +12005,11 @@ msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "Անհնար է ստանալ բուֆերի լրացումը"
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "Ներմուծվում են՝ %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -12007,6 +12079,11 @@ msgstr "Ներմուծման քանակ՝"
 msgid "Sample rate:"
 msgstr "Ձայնաչափի բաժին՝"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%% ավարտվեց:  Սեղմեք փոխելու համար համակարգողի հրահանգը:"
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "Ներմուծումն ավարտվեց: Waveform հաշվարկ"
@@ -12014,11 +12091,6 @@ msgstr "Ներմուծումն ավարտվեց: Waveform հաշվարկ"
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "Ալիքաձև կոդավորում"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%% ավարտվեց:  Սեղմեք փոխելու համար համակարգողի հրահանգը:"
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12933,7 +13005,7 @@ msgid "Move clip up/down between tracks"
 msgstr "Մասի տեղափոխում վերև/ցած ձայնագրությունների միջև"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "Պատիչ"
 
@@ -14210,6 +14282,8 @@ msgid "Zoom Tool"
 msgstr "Խոշորացնող գործիք"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "Գծող գործիք"
 
@@ -14239,6 +14313,422 @@ msgstr "Նվագարկել արագությամբ"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "Նվագարկել արագությամբ"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+#, fuzzy
+msgid "Drag one or more label boundaries."
+msgstr "Քաշել մեկ և ավելի նշման տարածություններ"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+#, fuzzy
+msgid "Drag label boundary."
+msgstr "Քաշել նշման տարածություններ"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "Անցնել սկիզբ"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "&Տառատեսակ..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "Ձայնագրության նիշ տառատեսակ"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "Տեսքի անունը"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "Տեսքի չափը"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "Բարձր է &օկտավայից"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "Ցածր օկտավ&ա"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"Սեղմեք հորիզոնական մեծացման համար: Shift-սեղմում փոքրացման համար: Քաշել "
+"ստեղծելու համար առանձին մեծացված մաս:"
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "Ձգվող հավելում ձայնագրություն"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "Ձգել"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "Միացված ֆայլեր"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "Միացնել"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "Տարածված կտրման գիծ"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "Տարածել"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "Հեռացված կտրման գիծ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+#, fuzzy
+msgid "Click and drag to edit the samples"
+msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr "Գծում անելու համար, ընտրեք 'Waveform' ուղղայահաց ցանկից:"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+"Գծում անելու համար, խոշորացրեք ընթացքում, մինչ  տեսնելը անհատական նմուշը:"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "Տեղափոխված նմուշ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "Փոխել նմուշ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "Փոխված '%s' ից %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "Ֆորմատի փոխում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100 ժ 060 ր 060.0100 վ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "Այլ..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, fuzzy, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "Փոխված '%s' ից %d Հց"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "Ձայնաչափի բաժնի փոխում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "Նշել ձայնաչափի բաժին"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "Ալիքաձև"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+msgid "&Waveform (dB)"
+msgstr "Ալիքաձև (դԲ)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "Սպեկտրոգրամ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "Սպեկտրոգրամներ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "Պատրաստել ստերեո ֆայլ (երկու դինամիկով)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+msgid "Swap Stereo &Channels"
+msgstr "Ստերեո ալիքների փոխանակում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+msgid "Spl&it Stereo Track"
+msgstr "Անջատել ստերեո ձայնագ. ֆայլը"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "Անջատել իրարից ստերեոն մոնոի '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "Ֆորմատ՝"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "Նշել ձայնի &բաժին"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "Մոնո"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "Ձախ ալիք"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "Աջ ալիք"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "Ալիք"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "Պատրաստել '%s' ստերեո ձայնագրություն"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "Դարձնել ստերեո"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "Փոխանակված ալիքներ '%s' -ում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+msgid "Swap Channels"
+msgstr "Փոխանակել ալիքները"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "Անջատել իրարից ստերեո ձայնագրությունը '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "Անջատել իրարից ստերեոն մոնոի '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+msgid "Split to Mono"
+msgstr "Անջատել իրարից մոնոի"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift և ձախ սեղմում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift և ձախ սեղմում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift և ձախ սեղմում"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"Սեղմեք հորիզոնական մեծացման համար: Shift-սեղմում փոքրացման համար: Քաշելով "
+"գցել հատուկ մեծացված մաս:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "Փոխել դանդաղ արագացման սանդղակը (%) -ի՝"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "Դանդաղ արագացման սանդղակ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "Փոխել արագ նվագարկման սանդղակը (%) -ի"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "Արագ նվագարկման սանդղակ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, fuzzy, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Նշել հաճախությունը '%d' - '%d'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "Նշել հաճախություն"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr "Նշել ժամ ձայնագրության էկրանը գծային"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "Նշել էկրանը"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr "Նշել ժամ ձայնագրության էկրանը լոգարիթմային"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr "Նշել ժամ ձայնագրության միջարկումը գծային"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "Նշել միջարկում"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr "Նշել ժամ ձայնագրության միջարկումը լոգարիթմային"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "&Գծային"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "Լ&օգարիթմային"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "Անվանափոխել..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "Լոգարիթմային &միջարկում"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+#, fuzzy
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "Հարմարեցված պատիչ"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -14273,6 +14763,182 @@ msgstr "Տեղափոխել ֆայլը &ցած"
 
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
+msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "Սեղմեք և քաշեք, տեղափոխելու համար աջ նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr ""
+"Սեղմեք և քաշեք, հարմարեցնելով ստերեո ձայնագրությունների հարաբերական չափերը:"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "Կարգավորումներ..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, fuzzy, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "Բազմագործիք տեսք՝ Cmd-, մկնիկի և ստեղնաշարի կարգավորումների համար"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+#, fuzzy
+msgid "Click and drag to select audio"
+msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+#, fuzzy
+msgid "Click and drag to move a track in time"
+msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "Տեղափոխվածը միացնել այլ ձայնագրության"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "Լռելյայն նշված ձայնագրությունները %.2f վարկյանի մինչ %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "Փակել"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "Բացել &նախկիններից..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "Ա&նունը..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+msgid "Move Track &Up"
+msgstr "Տեղափոխել ֆայլը &վերև"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "Տեղափոխել ֆայլը &ներգև"
+
+#: src/tracks/ui/TrackControls.cpp:143
+msgid "Move Track to &Top"
+msgstr "Տեղափոխել ֆայլը &մեջտեղ"
+
+#: src/tracks/ui/TrackControls.cpp:149
+msgid "Move Track to &Bottom"
+msgstr "Տեղափոխել ֆայլը &ցած"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "Փոխել ձայնագրության անունը -ի՝"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "Ձայնագրության անունը"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "Անվանափոխված '%s' ից '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "Անվանափոխում"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "Կատարող"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Ctrl և ձախ սեղմում"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "Խնդրում ենք ընտրել որևէ գործողություն"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "Վերև"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "Ներգև"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "Տեղափոխված '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr ""
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr ""
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr ""
 
 #: src/widgets/AButton.cpp:465
@@ -14343,10 +15009,6 @@ msgstr ""
 #, fuzzy
 msgid "Backwards"
 msgstr "Հետևի պլանի ֆոն"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "Փակել"
 
 #: src/widgets/HelpSystem.cpp:252
 #, fuzzy
@@ -14482,10 +15144,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "Ցուցադրել պատմության ֆայլերի մանրամասներ"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "Խնդրում ենք ընտրել որևէ գործողություն"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14992,6 +15650,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "Չցուցադրել այս զգուշացումը կրկին"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "Խնդրում ենք ընտրել որևէ գործողություն"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -15049,22 +15711,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Play at speed"
 #~ msgstr "Նվագարկել արագությամբ"
 
-#~ msgid "&Other..."
-#~ msgstr "Այլ..."
-
-#~ msgid "Wa&veform"
-#~ msgstr "Ալիքաձև"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "Ալիքաձև (դԲ)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "Սպեկտրոգրամ"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "Սպեկտրոգրամներ"
-
 #~ msgid "&Mono"
 #~ msgstr "Մոնո (մեկ դինամիկ)"
 
@@ -15074,118 +15720,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "&Right Channel"
 #~ msgstr "Աջ ալիք (աջ դինամիկ)"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "Պատրաստել ստերեո ֆայլ (երկու դինամիկով)"
-
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "Ստերեո ալիքների փոխանակում"
-
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "Անջատել ստերեո ձայնագ. ֆայլը"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "Ֆորմատ՝"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "Նշել ձայնի &բաժին"
-
-#~ msgid "Up &Octave"
-#~ msgstr "Բարձր է &օկտավայից"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "Ցածր օկտավ&ա"
-
-#~ msgid "&Font..."
-#~ msgstr "&Տառատեսակ..."
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "Լ&օգարիթմային"
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "Անվանափոխել..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "Լոգարիթմային &միջարկում"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "Ա&նունը..."
-
-#~ msgid "Move Track &Up"
-#~ msgstr "Տեղափոխել ֆայլը &վերև"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "Տեղափոխել ֆայլը &ներգև"
-
-#~ msgid "Move Track to &Top"
-#~ msgstr "Տեղափոխել ֆայլը &մեջտեղ"
-
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "Տեղափոխել ֆայլը &ցած"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "Կատարող"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl և ձախ սեղմում"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr ""
-#~ "Սեղմեք հորիզոնական մեծացման համար: Shift-սեղմում փոքրացման համար: Քաշելով "
-#~ "գցել հատուկ մեծացված մաս:"
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Սեղմեք հորիզոնական մեծացման համար: Shift-սեղմում փոքրացման համար: Քաշել "
-#~ "ստեղծելու համար առանձին մեծացված մաս:"
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr ""
-#~ "Սեղմեք և քաշեք, հարմարեցնելով ստերեո ձայնագրությունների հարաբերական "
-#~ "չափերը:"
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
-
-#, fuzzy
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "Քաշել մեկ և ավելի նշման տարածություններ"
-
-#, fuzzy
-#~ msgid "Drag label boundary."
-#~ msgstr "Քաշել նշման տարածություններ"
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "Կարգավորումներ..."
-
-#, fuzzy
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "Բազմագործիք տեսք՝ Cmd-, մկնիկի և ստեղնաշարի կարգավորումների համար"
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար արանքի նշված տարածքը:"
 
@@ -15193,187 +15727,8 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
 
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար աջ նշված տարածքը:"
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "Սեղմեք և քաշեք, տեղափոխելու համար ձախ նշված տարածքը:"
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr ""
-#~ "Սեղմեք և քաշեք, հարմարեցնելով ստերեո ձայնագրությունների հարաբերական "
-#~ "չափերը:"
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "Ձգվող հավելում ձայնագրություն"
-
-#~ msgid "Stretch"
-#~ msgstr "Ձգել"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "Հարմարեցված պատիչ"
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "Տեղափոխվածը միացնել այլ ձայնագրության"
-
 #~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 #~ msgstr "Գծում անելու համար, ընտրեք 'Waveform' ուղղայահաց ցանկից:"
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr ""
-#~ "Գծում անելու համար, խոշորացրեք ընթացքում, մինչ  տեսնելը անհատական նմուշը:"
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "Տեղափոխված նմուշ"
-
-#~ msgid "Sample Edit"
-#~ msgstr "Փոխել նմուշ"
-
-#~ msgid "up"
-#~ msgstr "Վերև"
-
-#~ msgid "down"
-#~ msgstr "Ներգև"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "Տեղափոխված '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "Տարածված կտրման գիծ"
-
-#~ msgid "Expand"
-#~ msgstr "Տարածել"
-
-#~ msgid "Merged Clips"
-#~ msgstr "Միացված ֆայլեր"
-
-#~ msgid "Merge"
-#~ msgstr "Միացնել"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "Հեռացված կտրման գիծ"
-
-#~ msgid "Left Channel"
-#~ msgstr "Ձախ ալիք"
-
-#~ msgid "Right Channel"
-#~ msgstr "Աջ ալիք"
-
-#~ msgid "Mono"
-#~ msgstr "Մոնո"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "Փոխված '%s' ից %s"
-
-#~ msgid "Channel"
-#~ msgstr "Ալիք"
-
-#~ msgid "Swapped Channels in '%s'"
-#~ msgstr "Փոխանակված ալիքներ '%s' -ում"
-
-#~ msgid "Swap Channels"
-#~ msgstr "Փոխանակել ալիքները"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "Անջատել իրարից ստերեո ձայնագրությունը '%s'"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "Անջատել իրարից ստերեոն մոնոի '%s'"
-
-#~ msgid "Split to Mono"
-#~ msgstr "Անջատել իրարից մոնոի"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "Պատրաստել '%s' ստերեո ձայնագրություն"
-
-#~ msgid "Make Stereo"
-#~ msgstr "Դարձնել ստերեո"
-
-#, fuzzy
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "Փոխված '%s' ից %d Հց"
-
-#~ msgid "Rate Change"
-#~ msgstr "Ձայնաչափի բաժնի փոխում"
-
-#~ msgid "Format Change"
-#~ msgstr "Ֆորմատի փոխում"
-
-#~ msgid "Set Rate"
-#~ msgstr "Նշել ձայնաչափի բաժին"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "Փոխել դանդաղ արագացման սանդղակը (%) -ի՝"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "Դանդաղ արագացման սանդղակ"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Փոխել արագ նվագարկման սանդղակը (%) -ի"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "Արագ նվագարկման սանդղակ"
-
-#, fuzzy
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "Նշել հաճախությունը '%d' - '%d'"
-
-#~ msgid "Set Range"
-#~ msgstr "Նշել հաճախություն"
-
-#~ msgid "Set time track display to linear"
-#~ msgstr "Նշել ժամ ձայնագրության էկրանը գծային"
-
-#~ msgid "Set Display"
-#~ msgstr "Նշել էկրանը"
-
-#~ msgid "Set time track display to logarithmic"
-#~ msgstr "Նշել ժամ ձայնագրության էկրանը լոգարիթմային"
-
-#~ msgid "Set time track interpolation to linear"
-#~ msgstr "Նշել ժամ ձայնագրության միջարկումը գծային"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "Նշել միջարկում"
-
-#~ msgid "Set time track interpolation to logarithmic"
-#~ msgstr "Նշել ժամ ձայնագրության միջարկումը լոգարիթմային"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Փոխել ձայնագրության անունը -ի՝"
-
-#~ msgid "Track Name"
-#~ msgstr "Ձայնագրության անունը"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "Անվանափոխված '%s' ից '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "Անվանափոխում"
-
-#~ msgid "Label Track Font"
-#~ msgstr "Ձայնագրության նիշ տառատեսակ"
-
-#~ msgid "Face name"
-#~ msgstr "Տեսքի անունը"
-
-#~ msgid "Face size"
-#~ msgstr "Տեսքի չափը"
 
 #, fuzzy
 #~ msgid "%.2f dB Average RMS"
@@ -15519,22 +15874,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #~ msgid "Selection "
 #~ msgstr "Ընտրված"
 
-#, fuzzy
-#~ msgid "Click and drag to select audio"
-#~ msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
-
-#, fuzzy
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
-
-#, fuzzy
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
-
-#, fuzzy
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփոխելու համար:"
-
 #~ msgid "Re&gion Save"
 #~ msgstr "Մասի պահպանում"
 
@@ -15620,13 +15959,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "Նշել ձայնաչափի բաժին"
-
-#~ msgid "&Linear"
-#~ msgstr "&Գծային"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Shift և ձախ սեղմում"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr ""
@@ -15798,12 +16130,6 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
 #~ msgid "Set Ra&nge..."
 #~ msgstr "Նշել հա&ճախությունը..."
-
-#, fuzzy
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down "
-#~ "Menu."
-#~ msgstr "Գծում անելու համար, ընտրեք 'Waveform' ուղղայահաց ցանկից:"
 
 #~ msgid "Plug-ins %i to %i"
 #~ msgstr "Պլագիններ %i ից %i"

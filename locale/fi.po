@@ -1,8 +1,9 @@
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2015-09-18 20:53+0300\n"
 "Last-Translator: Heino Keränen\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -39,6 +40,7 @@ msgstr "Valitse olemassa oleva tiedosto."
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "Virhe"
 
@@ -1908,52 +1910,35 @@ msgstr "Missä on '%s'?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Yhteensopivien FFmpeg-kirjastojen etsiminen epäonnistui."
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg ei löytynyt"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity yritti käyttää FFmpeg:tä audiotiedoston tuontiin,\n"
-"mutta kirjastoja ei löytynyt.\n"
-"\n"
-"Käytä FFmpeg-tuontia, mene Asetukset... > Kirjastot\n"
-"lataa tai paikanna FFmpeg-kirjastot."
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "Älä näytä tätä varoitusta uudelleen"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Vain avformat.dll|*avformat*.dll|Dynaamisesti likitetyt kirjastot (*.dll)|*."
-"dll|Kaikki tiedostot|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Dynaamiset kirjastot (*.dylib)|*.dylib|Kaikki tiedostot (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Vain libavformat.so|libavformat*.so*|Dynaamisesti likitetyt kirjastot (*."
-"so*)|*.so*|All Files (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "Suorakulma"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity ei voinut kirjoittaa tiedostoa:\n"
+"  %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity ei voinut kirjoittaa tiedostoa:\n"
+"  %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity ei voinut kirjoittaa tiedostoa:\n"
+"  %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2386,6 +2371,20 @@ msgstr "&Hylkää"
 msgid "&OK"
 msgstr "&OK"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "Ei voitu päätellä"
@@ -2519,18 +2518,19 @@ msgstr "Kirjoita raidan nimi"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "Merkkiraita"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "Muokattu merkkiä"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "Merkin muokkaus"
 
@@ -4009,6 +4009,7 @@ msgstr "Aikasiirretyt raidat/clipit %s %.02f sekuntia"
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Aikakorjaus"
 
@@ -4053,7 +4054,7 @@ msgid "Moved"
 msgstr "Siirretty"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "Siirrä raita"
 
@@ -4274,6 +4275,7 @@ msgid "Detach Labeled Audio"
 msgstr "Irroita merkitty audio"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "Jaettu"
 
@@ -4297,11 +4299,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "vasemmalle"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "oikealle"
 
@@ -4598,10 +4602,12 @@ msgid "Resample"
 msgstr "Muuta näytetaajuutta..."
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "Uusi näytetaajuus (Hz):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "Annettu arvo on virheellinen"
 
@@ -4632,6 +4638,7 @@ msgstr "Miksaa ja renderöi raitoja"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "Vahvistus"
 
@@ -4639,6 +4646,7 @@ msgstr "Vahvistus"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "Nopeus"
 
@@ -4649,18 +4657,21 @@ msgstr "Musiikkisoitin"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "Pan"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "Mykkä"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "Soolo"
 
@@ -4669,14 +4680,17 @@ msgid "Signal Level Meter"
 msgstr "Signaalin tasomittari"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "Siirretty vahvistussäädintä"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "Siirretty nopeussäädintä"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "Muutettu panorointia"
 
@@ -5773,14 +5787,6 @@ msgstr ""
 "Audacity ei voinut tallentaa tiedostoa:\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "Kesto"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Audacityn ajastettu äänitys"
@@ -5906,6 +5912,14 @@ msgstr "Lopetuspäivä ja aika"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "Lopetuspäivä"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "Kesto"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6095,6 +6109,14 @@ msgstr "Valittu päällä"
 msgid " Sync Lock Selected"
 msgstr "Sync Lock valittu"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "Napsautus ja veto säätää stereoraitojen suhteellista kokoa."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "Napsautus ja veto muokkaa raidan kokoa."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6142,6 +6164,54 @@ msgstr "Ei ole tarpeeksi tilaa valinnan liittämiseen"
 
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
+msgstr ""
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg ei löytynyt"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity yritti käyttää FFmpeg:tä audiotiedoston tuontiin,\n"
+"mutta kirjastoja ei löytynyt.\n"
+"\n"
+"Käytä FFmpeg-tuontia, mene Asetukset... > Kirjastot\n"
+"lataa tai paikanna FFmpeg-kirjastot."
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "Älä näytä tätä varoitusta uudelleen"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Vain avformat.dll|*avformat*.dll|Dynaamisesti likitetyt kirjastot (*.dll)|*."
+"dll|Kaikki tiedostot|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Dynaamiset kirjastot (*.dylib)|*.dylib|Kaikki tiedostot (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Vain libavformat.so|libavformat*.so*|Dynaamisesti likitetyt kirjastot (*."
+"so*)|*.so*|All Files (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
@@ -6255,10 +6325,6 @@ msgstr "Uusi huippukohdan voimakkuus (dB):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "Salli leikkautuminen"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "Vahvista"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
@@ -6408,10 +6474,6 @@ msgstr "Taso"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "Basso ja diskantti"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 msgid "Percentage"
@@ -6499,10 +6561,6 @@ msgstr "Muutosprosentti"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "Muuta sävelkorkeutta"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6560,10 +6618,6 @@ msgstr "Valinnan nykyinen pituus."
 msgid "New Length:"
 msgstr "Uusi pituus:"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "Muuta nopeutta"
-
 #: src/effects/ChangeTempo.cpp:102
 msgid "Change the tempo of a selection without changing its pitch"
 msgstr "Muuta tempoa muuttamatta sävelkorkeutta"
@@ -6602,10 +6656,6 @@ msgstr "Pituus (sek.):"
 msgid "Length in seconds from"
 msgstr "Pituuteen sekunteina"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "Muuta tempoa"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6639,10 +6689,6 @@ msgstr "Maksimi napsauksen leveys (korkeampi on herkempi):"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "Maksimi napsauksen leveys"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "Napsahdusten poisto"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6770,10 +6816,6 @@ msgstr "Palautusaika %.1f sek."
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f sek."
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "Kompressori"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7319,11 +7361,6 @@ msgstr "(%) [-50 -> 100]:"
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-#, fuzzy
-msgid "Distortion"
-msgstr "Kesto"
-
 #: src/effects/DtmfGen.cpp:47
 msgid "Sequence"
 msgstr "Sekvenssi"
@@ -7381,10 +7418,6 @@ msgstr "ms"
 msgid "Silence duration:"
 msgstr "Hiljaisuuden pituus:"
 
-#: src/effects/DtmfGen.h:28
-msgid "DTMF Tones"
-msgstr "Puhelinvalinta (DTMF)"
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "Viive"
@@ -7409,10 +7442,6 @@ msgstr "Viiveen kesto (sek.):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "Vaimenemiskerroin:"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "Kaiku"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7711,6 +7740,7 @@ msgid "Mark effect as a favorite"
 msgstr "Merkitse efekti suosikiksi"
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "Poista"
 
@@ -8087,10 +8117,6 @@ msgstr "Käyrät viety"
 msgid "No curves exported"
 msgstr "Käyriä ei viety"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "Taajuuskorjaus"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8110,14 +8136,6 @@ msgstr "Klikkaa ja vedä valitaksesi audiota."
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "Koskee valitun audion lineaarista uloshäivytystä"
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "Häivytys sisään"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "Häivytys ulos"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8134,10 +8152,6 @@ msgstr "Pienin arvo (näytteinä):"
 msgid "Stop threshold (samples):"
 msgstr "Suurin arvo (näytteinä):"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "Etsi leikkaus"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Tilaa ei ole tarpeeksi käytettävissä audion tuottamiseen"
@@ -8145,10 +8159,6 @@ msgstr "Tilaa ei ole tarpeeksi käytettävissä audion tuottamiseen"
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "Muunna vastavaiheiseksi"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8228,10 +8238,6 @@ msgstr "Generoi yhtä kolmesta erityyppisestä kohinasta"
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "Kohinatyyppi:"
-
-#: src/effects/Noise.h:24
-msgid "Noise"
-msgstr "Kohina"
 
 #: src/effects/NoiseReduction.cpp:100
 msgid "Median"
@@ -8657,10 +8663,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr "Supervenytys (Paulstretch)..."
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "Vaiheet"
@@ -8748,10 +8750,6 @@ msgstr "Kaiun vahvistus (dB):"
 msgid "Output gain (dB)"
 msgstr "Kaiun vahvistus (dB)"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Vaiheistus"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8776,10 +8774,6 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "Korjaus"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8812,10 +8806,6 @@ msgstr "Uusi valinnan pituus: "
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr "Varoitus: Ei toistoa."
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "Toistin"
 
 #: src/effects/Reverb.cpp:47
 msgid "RoomSize"
@@ -8941,14 +8931,6 @@ msgstr "Jälkikaiku"
 msgid "Reverses the selected audio"
 msgstr "Kääntää valitun audion"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "Takaperin"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9042,10 +9024,6 @@ msgstr ""
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr ""
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr "Klassiset suodattimet"
 
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
@@ -9141,10 +9119,6 @@ msgstr "Luo ääntä nolla amplitudilla"
 msgid "Converts stereo tracks to mono"
 msgstr "Muuntaa stereoraidan monoksi"
 
-#: src/effects/StereoToMono.h:18
-msgid "Stereo To Mono"
-msgstr "Stereoraita monoksi"
-
 #: src/effects/TimeScale.cpp:44
 msgid "RatePercentChangeStart"
 msgstr "RatePercentChangeStart"
@@ -9200,10 +9174,6 @@ msgstr "(%) [-50 -> 100]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "Loppupään sävelkorkeuden muutos"
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "Aikaskaala"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9292,14 +9262,6 @@ msgstr "Lopetus amplitudi"
 msgid "Interpolation:"
 msgstr "Interpolointi:"
 
-#: src/effects/ToneGen.h:25
-msgid "Chirp"
-msgstr "Viserrys"
-
-#: src/effects/ToneGen.h:26
-msgid "Tone"
-msgstr "Ääni"
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr "Lyhennä havaittu hiljaisuus"
@@ -9363,10 +9325,6 @@ msgstr "Pakkaa arvoon:"
 msgid "Truncate tracks independently"
 msgstr "Normalisoi stereokanavia itsenäisesti"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "Lyhennä hiljaisuutta"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "Resonanssi"
@@ -9399,6 +9357,119 @@ msgstr "Wah-taajuussiirtymä (%):"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "Wahwah-taajuussiirtymä prosentteina"
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "Vahvista"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "Basso ja diskantti"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "Muuta sävelkorkeutta"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "Muuta nopeutta"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "Muuta tempoa"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "Napsahdusten poisto"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "Kompressori"
+
+#: src/effects/Distortion.h:26
+#, fuzzy
+msgid "Distortion"
+msgstr "Kesto"
+
+#: src/effects/DtmfGen.h:28
+msgid "DTMF Tones"
+msgstr "Puhelinvalinta (DTMF)"
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "Kaiku"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "Taajuuskorjaus"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "Häivytys sisään"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "Häivytys ulos"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "Etsi leikkaus"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "Muunna vastavaiheiseksi"
+
+#: src/effects/Noise.h:24
+msgid "Noise"
+msgstr "Kohina"
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr "Supervenytys (Paulstretch)..."
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Vaiheistus"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "Korjaus"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "Toistin"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "Takaperin"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr "Klassiset suodattimet"
+
+#: src/effects/StereoToMono.h:18
+msgid "Stereo To Mono"
+msgstr "Stereoraita monoksi"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "Aikaskaala"
+
+#: src/effects/ToneGen.h:25
+msgid "Chirp"
+msgstr "Viserrys"
+
+#: src/effects/ToneGen.h:26
+msgid "Tone"
+msgstr "Ääni"
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "Lyhennä hiljaisuutta"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11514,11 +11585,6 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr "Älä &varoita uudelleen ja käyttä aina edellä olevia valintoja"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "Tuodaan %s"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime -tiedostot"
@@ -11546,6 +11612,11 @@ msgstr "Kohdetiedostoa ei kyetty avaamaan kirjoitusta varten"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "Täyttöpuskuria ei voida saada."
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "Tuodaan %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11615,6 +11686,11 @@ msgstr "Tuonnin määrä:"
 msgid "Sample rate:"
 msgstr "Näytteenottotaajuus:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr ""
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr ""
@@ -11622,11 +11698,6 @@ msgstr ""
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "Aaltomuoto dekoodaus"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr ""
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12504,7 +12575,7 @@ msgid "Move clip up/down between tracks"
 msgstr "Siirtää leikkeen ylös/alas raitojen välillä"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "Voimakkuusraita"
 
@@ -13726,6 +13797,8 @@ msgid "Zoom Tool"
 msgstr "Zoomaustyökalu"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "Piirtotyökalu"
 
@@ -13755,6 +13828,409 @@ msgstr "Soita eri nopeudella"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "Silmukkatoisto nopeudella"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+msgid "Drag one or more label boundaries."
+msgstr "Vedä yhtä tai useampaa merkin rajaa."
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+msgid "Drag label boundary."
+msgstr "Vedä merkin rajaa."
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "Käynnistä napsauttamalla"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "&Fontti..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "Merkkiraidan fontti"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "Face-nimi"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "Face-koko"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "Oktaavi &ylös"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "Oktaavi &alas"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"Napsautus lähentää pystysuunnassa. Vaihto + napsautus loitontaa. Vetäminen "
+"määrittää suurennusalueen."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "Napsautus ja veto venyttää valittua aluetta."
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "Venytä nuottiraita"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "Venytys"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "Yhdistetyt klipit"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "Yhdistä"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "Laajennettu leikkauslinja"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "Laajenna"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "Poista leikkauslinja"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "Napsautus ja veto muokkaa näytteitä"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+msgid "Moved Samples"
+msgstr "Siirretty näytteitä"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "Näytteen muokkaus"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "Muutettu \"%s\" -> %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "Formaatin muutos"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100000.0100 Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "&Muu..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "Muutettu \"%s\" -> %s Hz:iin"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "Näytetaajuuden vaihto"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "Aseta näytetaajuus"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "Aa&ltomuoto"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+msgid "&Waveform (dB)"
+msgstr "&Aaltomuoto (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "&Spektrogrammi"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+msgid "S&pectrogram Settings..."
+msgstr "S&pektrogrammiasetukset..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "Luo &stereoraita"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+msgid "Swap Stereo &Channels"
+msgstr "Vaihda stereo&kanavia"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+msgid "Spl&it Stereo Track"
+msgstr "Jaa &stereoraita"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "Jaa stereo monoksi '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+msgid "&Format"
+msgstr "&Muoto"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "Aseta näytetaajuus"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "Mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "Vasen kanava"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "Oikea kanava"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "Kanava"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "%s:sta tehty stereoraita"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "Tee stereoksi"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "Vaihdetut kanavat '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+msgid "Swap Channels"
+msgstr "Vaihda kanavia"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "Jaettu stereoraita '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "Jaa stereo monoksi '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+msgid "Split to Mono"
+msgstr "Jaa &monoksi"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Lähennä\tVasen-napsautus/Vasen-veto"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Loitonna\tVaihto + vasen-napsautus"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Zoomaa sopivaksi\tVaihto + oikea napsautus"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"Napsautus suurentaa pystysuunnassa. Vaihto + napsautus pienentää. Vetäminen "
+"määrittää suurennusalueen."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "Vaihda alemmaksi arvoksi (%):"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "Alempi nopeusrajoitus"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "Vaihda ylemmäksi arvoksi (%):"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "Ylempi nopeusrajoitus"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Aseta alue välille '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "Aseta alue"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "Aseta näyttö"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "Aseta interpolointi"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "&Lineaarinen"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "L&ogaritminen"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+msgid "&Range..."
+msgstr "&Alue..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "Logaritminen &interpolointi"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "Napsautus ja veto siirtää raitaa aikajanalla"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "Napsautus ja veto muokkaa voimakkuusraitaa"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "Muokattu äänenvoimakkuusraita."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -13790,6 +14266,172 @@ msgstr "Siirrä kohdennettu raita alimmaksi"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "Napsautus ja veto siirtää valinnan vasenta reunaa."
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "Napsautus ja veto siirtää valinnan oikeaa reunaa."
+
+#: src/tracks/ui/SelectHandle.cpp:337
+msgid "Click and drag to move bottom selection frequency."
+msgstr "Napsautus ja veto siirtää alas valinnan taajuutta."
+
+#: src/tracks/ui/SelectHandle.cpp:341
+msgid "Click and drag to move top selection frequency."
+msgstr "Napsautus ja veto siirtää ylös valinnan taajuutta."
+
+#: src/tracks/ui/SelectHandle.cpp:349
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr ""
+"Napsautus ja veto siirtää keskelle valitun taajuuden spektrin huipulle."
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+msgid "Click and drag to move center selection frequency."
+msgstr "Napsautus ja veto siirtää keskelle valitun taajuuden."
+
+#: src/tracks/ui/SelectHandle.cpp:364
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "Napsautus ja veto säätää taajuuskaistaa."
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+msgid "Edit, Preferences..."
+msgstr "Muokkaa, Asetukset..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "Monitoimitila: %s hiiren ja näppäimistön asetukset."
+
+#: src/tracks/ui/SelectHandle.cpp:953
+msgid "Click and drag to set frequency bandwidth."
+msgstr "Napsautus ja veto asettaa taajuuskaistaa."
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "Napsautus ja veto valitsee audiota"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "Napsautus ja veto siirtää raitaa aikajanalla"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "Siirretty leike toiseen raitaan"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "Vaimennettu valitut raidat %.2f sekunniksi kohdassa %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "Sulje"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "Avaa &viimeisin..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+msgid "&Name..."
+msgstr "&Nimi..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+msgid "Move Track &Up"
+msgstr "Siirrä raita &ylös"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "Siirrä raita &alas"
+
+#: src/tracks/ui/TrackControls.cpp:143
+msgid "Move Track to &Top"
+msgstr "Siirrä raita &ylimmäksi"
+
+#: src/tracks/ui/TrackControls.cpp:149
+msgid "Move Track to &Bottom"
+msgstr "Siirrä raita ali&mmaksi"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "Vaihda raidan nimeksi:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "Raidan nimi"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "'%s' vaihdettu nimelle '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "Nimen muutos"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "Komento"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Ctrl + vasen napsautus"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "Valitse toimenpide"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "ylös"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "alas"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "Siirretty \"%s\" %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "Napsautus lähentää. Vaihto + napsautus loitontaa."
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "Vetäminen lähentää alueeseen, oikea-napsautus loitontaa."
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "Vasen=lähennä, oikea=loitonna, keskipainike=normaalisoi"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -13858,10 +14500,6 @@ msgstr "Eteenpäin"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "Taaksepäin"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "Sulje"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -13981,10 +14619,6 @@ msgstr "-Leikattu "
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr ""
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "Valitse toimenpide"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14477,6 +15111,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "Älä näytä tätä varoitusta uudelleen"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "Valitse toimenpide"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14534,21 +15172,6 @@ msgstr "Ei voitu ladata tiedostoa: \"%s\""
 #~ msgid "Play at speed"
 #~ msgstr "Soita eri nopeudella"
 
-#~ msgid "&Other..."
-#~ msgstr "&Muu..."
-
-#~ msgid "Wa&veform"
-#~ msgstr "Aa&ltomuoto"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "&Aaltomuoto (dB)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "&Spektrogrammi"
-
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "S&pektrogrammiasetukset..."
-
 #~ msgid "&Mono"
 #~ msgstr "&Mono"
 
@@ -14558,266 +15181,11 @@ msgstr "Ei voitu ladata tiedostoa: \"%s\""
 #~ msgid "&Right Channel"
 #~ msgstr "&Oikea kanava"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "Luo &stereoraita"
-
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "Vaihda stereo&kanavia"
-
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "Jaa &stereoraita"
-
-#~ msgid "&Format"
-#~ msgstr "&Muoto"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "Aseta näytetaajuus"
-
-#~ msgid "Up &Octave"
-#~ msgstr "Oktaavi &ylös"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "Oktaavi &alas"
-
-#~ msgid "&Font..."
-#~ msgstr "&Fontti..."
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "L&ogaritminen"
-
-#~ msgid "&Range..."
-#~ msgstr "&Alue..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "Logaritminen &interpolointi"
-
-#~ msgid "&Name..."
-#~ msgstr "&Nimi..."
-
-#~ msgid "Move Track &Up"
-#~ msgstr "Siirrä raita &ylös"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "Siirrä raita &alas"
-
-#~ msgid "Move Track to &Top"
-#~ msgstr "Siirrä raita &ylimmäksi"
-
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "Siirrä raita ali&mmaksi"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "Komento"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl + vasen napsautus"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr ""
-#~ "Napsautus suurentaa pystysuunnassa. Vaihto + napsautus pienentää. "
-#~ "Vetäminen määrittää suurennusalueen."
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Napsautus lähentää pystysuunnassa. Vaihto + napsautus loitontaa. "
-#~ "Vetäminen määrittää suurennusalueen."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "Napsautus ja veto säätää stereoraitojen suhteellista kokoa."
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "Napsautus ja veto muokkaa raidan kokoa."
-
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "Vedä yhtä tai useampaa merkin rajaa."
-
-#~ msgid "Drag label boundary."
-#~ msgstr "Vedä merkin rajaa."
-
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "Napsautus ja veto siirtää keskelle valitun taajuuden."
-
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr ""
-#~ "Napsautus ja veto siirtää keskelle valitun taajuuden spektrin huipulle."
-
-#~ msgid "Edit, Preferences..."
-#~ msgstr "Muokkaa, Asetukset..."
-
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "Monitoimitila: %s hiiren ja näppäimistön asetukset."
-
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "Napsautus ja veto asettaa taajuuskaistaa."
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "Napsautus ja veto venyttää valitun alueen sisällä."
 
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "Napsauta siirtääksesi valinnan rajan kohdistimeen."
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "Napsautus ja veto siirtää valinnan vasenta reunaa."
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "Napsautus ja veto siirtää valinnan oikeaa reunaa."
-
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "Napsautus ja veto siirtää alas valinnan taajuutta."
-
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "Napsautus ja veto siirtää ylös valinnan taajuutta."
-
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "Napsautus ja veto säätää taajuuskaistaa."
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "Napsautus ja veto venyttää valittua aluetta."
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "Venytä nuottiraita"
-
-#~ msgid "Stretch"
-#~ msgstr "Venytys"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "Muokattu äänenvoimakkuusraita."
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "Siirretty leike toiseen raitaan"
-
-#~ msgid "Moved Samples"
-#~ msgstr "Siirretty näytteitä"
-
-#~ msgid "Sample Edit"
-#~ msgstr "Näytteen muokkaus"
-
-#~ msgid "up"
-#~ msgstr "ylös"
-
-#~ msgid "down"
-#~ msgstr "alas"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "Siirretty \"%s\" %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "Laajennettu leikkauslinja"
-
-#~ msgid "Expand"
-#~ msgstr "Laajenna"
-
-#~ msgid "Merged Clips"
-#~ msgstr "Yhdistetyt klipit"
-
-#~ msgid "Merge"
-#~ msgstr "Yhdistä"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "Poista leikkauslinja"
-
-#~ msgid "Left Channel"
-#~ msgstr "Vasen kanava"
-
-#~ msgid "Right Channel"
-#~ msgstr "Oikea kanava"
-
-#~ msgid "Mono"
-#~ msgstr "Mono"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "Muutettu \"%s\" -> %s"
-
-#~ msgid "Channel"
-#~ msgstr "Kanava"
-
-#~ msgid "Swapped Channels in '%s'"
-#~ msgstr "Vaihdetut kanavat '%s'"
-
-#~ msgid "Swap Channels"
-#~ msgstr "Vaihda kanavia"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "Jaettu stereoraita '%s'"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "Jaa stereo monoksi '%s'"
-
-#~ msgid "Split to Mono"
-#~ msgstr "Jaa &monoksi"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "%s:sta tehty stereoraita"
-
-#~ msgid "Make Stereo"
-#~ msgstr "Tee stereoksi"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "Muutettu \"%s\" -> %s Hz:iin"
-
-#~ msgid "Rate Change"
-#~ msgstr "Näytetaajuuden vaihto"
-
-#~ msgid "Format Change"
-#~ msgstr "Formaatin muutos"
-
-#~ msgid "Set Rate"
-#~ msgstr "Aseta näytetaajuus"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "Vaihda alemmaksi arvoksi (%):"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "Alempi nopeusrajoitus"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Vaihda ylemmäksi arvoksi (%):"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "Ylempi nopeusrajoitus"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "Aseta alue välille '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "Aseta alue"
-
-#~ msgid "Set Display"
-#~ msgstr "Aseta näyttö"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "Aseta interpolointi"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Vaihda raidan nimeksi:"
-
-#~ msgid "Track Name"
-#~ msgstr "Raidan nimi"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "'%s' vaihdettu nimelle '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "Nimen muutos"
-
-#~ msgid "Label Track Font"
-#~ msgstr "Merkkiraidan fontti"
-
-#~ msgid "Face name"
-#~ msgstr "Face-nimi"
-
-#~ msgid "Face size"
-#~ msgstr "Face-koko"
 
 #, fuzzy
 #~ msgid "Average RMS = %.2f dB."
@@ -14923,27 +15291,6 @@ msgstr "Ei voitu ladata tiedostoa: \"%s\""
 #~ msgid "Selection "
 #~ msgstr "Valinta "
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "Napsautus ja veto valitsee audiota"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "Napsautus ja veto muokkaa voimakkuusraitaa"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "Napsautus ja veto muokkaa näytteitä"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "Napsautus lähentää. Vaihto + napsautus loitontaa."
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "Vetäminen lähentää alueeseen, oikea-napsautus loitontaa."
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "Vasen=lähennä, oikea=loitonna, keskipainike=normaalisoi"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "Napsautus ja veto siirtää raitaa aikajanalla"
-
 #~ msgid "Re&gion Save"
 #~ msgstr "Tallenna alue"
 
@@ -15025,18 +15372,6 @@ msgstr "Ei voitu ladata tiedostoa: \"%s\""
 
 #~ msgid "&Rate"
 #~ msgstr "&Määrä"
-
-#~ msgid "&Linear"
-#~ msgstr "&Lineaarinen"
-
-#~ msgid "Zoom In\tLeft-Click/Left-Drag"
-#~ msgstr "Lähennä\tVasen-napsautus/Vasen-veto"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Loitonna\tVaihto + vasen-napsautus"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "Zoomaa sopivaksi\tVaihto + oikea napsautus"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "Vetämällä raitaa pystysuunnassa voit muuttaa raitojen järjestystä."

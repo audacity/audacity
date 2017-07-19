@@ -1,11 +1,12 @@
 # Header entry was created by Lokalize.
 #
 # Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016, 2017.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2017-03-11 19:53+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -42,6 +43,7 @@ msgstr "Vyberte, prosím, stávající soubor."
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "Chyba"
 
@@ -1902,52 +1904,35 @@ msgstr "Kde je '% s'?"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Nepodařilo se najít hodící se FFmpeg knihovny."
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg nebyl nalezen"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity se pokusil použít FFmpeg k nahrání zvukového souboru,\n"
-"ale knihovny nebyly nalezeny.\n"
-"\n"
-"Pro užití FFmpeg pro nahrání přejděte do Nastavení → Knihovny\n"
-"pro stažení nebo vyhledání knihoven FFmpeg."
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "Nezobrazovat toto varování znovu"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"Pouze avformat.dll|*avformat*dll|. Dynamicky linkované knihovny (* dll.)|*."
-"dll|Všechny soubory|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Dynamické knihovny (*.dylib)|*.dylib|All Files (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"Pouze libavformat.so|libavformat*.so*|Dynamicky linkované knihovny (*.so*)|*."
-"so*|Všechny soubory (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "Obdélníkový"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity se nepodařilo zapsat soubor:\n"
+"  %s."
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity se nepodařilo zapsat soubor:\n"
+"  %s."
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity se nepodařilo zapsat soubor:\n"
+"  %s."
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2365,6 +2350,20 @@ msgstr "Zahodit"
 msgid "&OK"
 msgstr "&OK"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "Nepodařilo se zjistit"
@@ -2496,18 +2495,19 @@ msgstr "Vložte název stopy"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "Popisová stopa"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "Změněný štítek"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "Upravit štítek"
 
@@ -3971,6 +3971,7 @@ msgstr "Časově posunuté stopy/klipy %s %.02f sekund"
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Časový posun"
 
@@ -4015,7 +4016,7 @@ msgid "Moved"
 msgstr "Přesunuto"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "Přesunout stopu"
 
@@ -4237,6 +4238,7 @@ msgid "Detach Labeled Audio"
 msgstr "Oddělit štítky označený zvuk"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "Rozdělit"
 
@@ -4260,11 +4262,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "vlevo"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "vpravo"
 
@@ -4564,10 +4568,12 @@ msgid "Resample"
 msgstr "Převzorkovat"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "Nový vzorkovací kmitočet (Hz):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "Vložená hodnota je neplatná"
 
@@ -4598,6 +4604,7 @@ msgstr "Spojit (smíchat) stopy"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "Zesílení"
 
@@ -4605,6 +4612,7 @@ msgstr "Zesílení"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "Síla tónu"
 
@@ -4615,18 +4623,21 @@ msgstr "Hudební nástroj"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "Vyvážení"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "Ztlumit"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "Sólo"
 
@@ -4635,14 +4646,17 @@ msgid "Signal Level Meter"
 msgstr "Měřič úrovně signálu"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "Ovládání hlasitosti posunuto"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "Posuvník rychlosti přesunut"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "Ovládání vyvážení (panorama) posunuto"
 
@@ -5733,14 +5747,6 @@ msgstr ""
 "Audacity se nepodařilo uložit soubor:\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "Doba trvání"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Časované nahrávání Audacity"
@@ -5855,6 +5861,14 @@ msgstr "Datum a čas konce"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "Datum konce"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "Doba trvání"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6031,6 +6045,14 @@ msgstr " Výběr zapnut"
 msgid " Sync Lock Selected"
 msgstr " Vybráno synchronizované zamknutí"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "Klepněte a táhněte pro přizpůsobení stereo stop."
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "Klepněte a táhněte pro změnu velikosti stopy."
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6079,6 +6101,54 @@ msgstr "K vložení výběru není dost místa"
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "Za klipem není dost místa pro otevření střihu"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg nebyl nalezen"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity se pokusil použít FFmpeg k nahrání zvukového souboru,\n"
+"ale knihovny nebyly nalezeny.\n"
+"\n"
+"Pro užití FFmpeg pro nahrání přejděte do Nastavení → Knihovny\n"
+"pro stažení nebo vyhledání knihoven FFmpeg."
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "Nezobrazovat toto varování znovu"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"Pouze avformat.dll|*avformat*dll|. Dynamicky linkované knihovny (* dll.)|*."
+"dll|Všechny soubory|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "Dynamické knihovny (*.dylib)|*.dylib|All Files (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"Pouze libavformat.so|libavformat*.so*|Dynamicky linkované knihovny (*.so*)|*."
+"so*|Všechny soubory (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6193,10 +6263,6 @@ msgstr "Nový špičkový rozkmit (dB):"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "Povolit přebuzení (clipping)"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "Zesílit"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
@@ -6346,10 +6412,6 @@ msgstr "Úroveň"
 msgid "&Link Volume control to Tone controls"
 msgstr "&Spojit ovládání hlasitosti s ovládáním tónu"
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "Hloubky a výšky"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 msgid "Percentage"
@@ -6437,10 +6499,6 @@ msgstr "Změna vyjádřená v procentech"
 msgid "Use high quality stretching (slow)"
 msgstr "Použít vysoce jakostní protažení (pomalé)"
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "Změnit výšku tónu"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6498,10 +6556,6 @@ msgstr "Nynější délka výběru."
 msgid "New Length:"
 msgstr "Nová délka:"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "Změna tempa/výšky tónu"
-
 #: src/effects/ChangeTempo.cpp:102
 msgid "Change the tempo of a selection without changing its pitch"
 msgstr "Změnit tempo výběru bez změny ladění (výšky tónu)"
@@ -6533,10 +6587,6 @@ msgstr "Délka (sekundy)"
 #: src/effects/ChangeTempo.cpp:316
 msgid "Length in seconds from"
 msgstr "Délka v sekundách od"
-
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "Změnit tempo"
 
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
@@ -6572,10 +6622,6 @@ msgstr "Největší šířka špičky (vyšší je citlivější):"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "Největší šířka špičky"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "Odstranění praskání"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6703,10 +6749,6 @@ msgstr "Čas uvolnění: %.1f sek."
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f sek."
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "Kompresor"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7229,10 +7271,6 @@ msgstr " (0 až 100):"
 msgid " (0 to 5):"
 msgstr " (0 až 5):"
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "Zkreslení"
-
 #: src/effects/DtmfGen.cpp:47
 msgid "Sequence"
 msgstr "Sekvence"
@@ -7292,10 +7330,6 @@ msgstr "ms"
 msgid "Silence duration:"
 msgstr "Doba trvání ticha:"
 
-#: src/effects/DtmfGen.h:28
-msgid "DTMF Tones"
-msgstr "Tóny DTMF"
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "Zpoždění"
@@ -7320,10 +7354,6 @@ msgstr "Čas zpoždění (vteřiny):"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "Faktor doběhu (dozvuku):"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "Echo"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7633,6 +7663,7 @@ msgid "Mark effect as a favorite"
 msgstr "Označit efekt jako oblíbený"
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "Odstranit"
 
@@ -8012,10 +8043,6 @@ msgstr "Křivky uloženy"
 msgid "No curves exported"
 msgstr "Žádné křivky nebyly uloženy"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "Ekvalizace"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8041,14 +8068,6 @@ msgstr "Použije lineární zesílení vybraného zvuku"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "Použije lineární zeslabení vybraného zvuku"
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "Fade In (postupný náběh)"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "Fade Out (do ztracena)"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr "Vytvoří štítky tam, kde je zjištěno přebuzení (clipping)"
@@ -8065,10 +8084,6 @@ msgstr "Počáteční práh (vzorky):"
 msgid "Stop threshold (samples):"
 msgstr "Koncový práh (vzorky):"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "Najít přebuzení (clipping)"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Není dostupné dost ukládacího místa pro vytvoření zvuku"
@@ -8076,10 +8091,6 @@ msgstr "Není dostupné dost ukládacího místa pro vytvoření zvuku"
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Převrátí zvukové vzorky vzhůru nohama. Obrátí jejich polaritu"
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "Obrátit fáze"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8159,10 +8170,6 @@ msgstr "Vytváří jeden ze tří různých druhů šumu"
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "Druh šumu:"
-
-#: src/effects/Noise.h:24
-msgid "Noise"
-msgstr "Šum"
 
 #: src/effects/NoiseReduction.cpp:100
 msgid "Median"
@@ -8599,10 +8606,6 @@ msgstr ""
 "Pokuste se o zvětšení výběru zvuku na alespoň %.1f s,\n"
 "nebo o zmenšení časového rozlišení na méně než %.1f s."
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr "PaulStretch"
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "Stupně"
@@ -8683,10 +8686,6 @@ msgstr "&Výstupní úroveň zesílení (dB):"
 msgid "Output gain (dB)"
 msgstr "Výstupní úroveň zesílení (dB)"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "Fázovač"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "Nastaví vrchol rozkmitu jedné nebo více stop"
@@ -8716,10 +8715,6 @@ msgstr ""
 "Použijte, prosím, oblast výběru, jejíž zvuk se dotýká alespoň jedné strany.\n"
 "\n"
 "Čím více okolního zvuku, tím lepší účinek."
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "Opravit"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8752,10 +8747,6 @@ msgstr "Nová délka výběru:"
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr "Varování: Žádná opakování."
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "Opakovat"
 
 #: src/effects/Reverb.cpp:47
 msgid "RoomSize"
@@ -8881,14 +8872,6 @@ msgstr "Dozvuk"
 msgid "Reverses the selected audio"
 msgstr "Obrátí vybraný zvuk"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "Puštění pozpátku"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "Protáhnutí času zvuku/výšky tónu SBSMS"
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -8985,10 +8968,6 @@ msgstr "Nejmenší zeslabování pásma za&stavení:"
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "Nejmenší zeslabování pásma &zastavení (dB):"
 
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr "Klasické filtry"
-
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
 msgstr "Zarovnat MIDI se zvukem"
@@ -9082,10 +9061,6 @@ msgstr "Vytvoří zvuk s nulovým rozkmitem"
 msgid "Converts stereo tracks to mono"
 msgstr "Převede stereofonní stopu na monofonní"
 
-#: src/effects/StereoToMono.h:18
-msgid "Stereo To Mono"
-msgstr "Přeměnit stereo na mono"
-
 #: src/effects/TimeScale.cpp:44
 msgid "RatePercentChangeStart"
 msgstr "Začátek změny procenta rychlosti"
@@ -9141,10 +9116,6 @@ msgstr "(%) [-50 až 100]:"
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "Výška tónu na konci"
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "Změnit klouzavě tempo/výšku tónu"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9233,14 +9204,6 @@ msgstr "Konečný rozkmit"
 msgid "Interpolation:"
 msgstr "Interpolace:"
 
-#: src/effects/ToneGen.h:25
-msgid "Chirp"
-msgstr "Tónový generátor (cvrlikání)"
-
-#: src/effects/ToneGen.h:26
-msgid "Tone"
-msgstr "Tón"
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr "Ořezat zjištěné ticho"
@@ -9303,10 +9266,6 @@ msgstr "Zkrátit na:"
 msgid "Truncate tracks independently"
 msgstr "Zkrátit stopy nezávisle"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "Ořezat ticho"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "Rezonance"
@@ -9338,6 +9297,118 @@ msgstr "&Posun kvákacího kmitočtu (%):"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "Posun kvákacího kmitočtu v procentech"
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "Zesílit"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "Hloubky a výšky"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "Změnit výšku tónu"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "Změna tempa/výšky tónu"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "Změnit tempo"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "Odstranění praskání"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "Kompresor"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "Zkreslení"
+
+#: src/effects/DtmfGen.h:28
+msgid "DTMF Tones"
+msgstr "Tóny DTMF"
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "Echo"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "Ekvalizace"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "Fade In (postupný náběh)"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "Fade Out (do ztracena)"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "Najít přebuzení (clipping)"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "Obrátit fáze"
+
+#: src/effects/Noise.h:24
+msgid "Noise"
+msgstr "Šum"
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr "PaulStretch"
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "Fázovač"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "Opravit"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "Opakovat"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "Puštění pozpátku"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "Protáhnutí času zvuku/výšky tónu SBSMS"
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr "Klasické filtry"
+
+#: src/effects/StereoToMono.h:18
+msgid "Stereo To Mono"
+msgstr "Přeměnit stereo na mono"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "Změnit klouzavě tempo/výšku tónu"
+
+#: src/effects/ToneGen.h:25
+msgid "Chirp"
+msgstr "Tónový generátor (cvrlikání)"
+
+#: src/effects/ToneGen.h:26
+msgid "Tone"
+msgstr "Tón"
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "Ořezat ticho"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11584,11 +11655,6 @@ msgstr "Číst soubory &přímo z původního souboru (rychlejší)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "Nevarovat znovu a vždy použít moji volbu výše"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "Nahrává se %s"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "Soubory QuickTime"
@@ -11616,6 +11682,11 @@ msgstr "Nelze získat popis proudu"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "Nelze dostat vyrovnávací paměť plnění"
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "Nahrává se %s"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11685,6 +11756,11 @@ msgstr "Množství dat k nahrání:"
 msgid "Sample rate:"
 msgstr "Vzorkovací kmitočet:"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%% hotovo. Klepněte pro změnu zaměření."
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "Nahrávání dokončeno. Vytváří se znázornění křivky"
@@ -11692,11 +11768,6 @@ msgstr "Nahrávání dokončeno. Vytváří se znázornění křivky"
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "Dekóduje se křivka"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%% hotovo. Klepněte pro změnu zaměření."
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12600,7 +12671,7 @@ msgid "Move clip up/down between tracks"
 msgstr "Přesunout klip nahoru nebo dolů mezi stopami"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "Obálka"
 
@@ -13827,6 +13898,8 @@ msgid "Zoom Tool"
 msgstr "Nástroj lupa"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "Nástroj pro kreslení"
 
@@ -13856,6 +13929,413 @@ msgstr "Přehrát nastavenou rychlostí"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "Přehrát ve smyčce nastavenou rychlostí"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+msgid "Drag one or more label boundaries."
+msgstr "Přesunout jednu nebo více hranic oblastí."
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+msgid "Drag label boundary."
+msgstr "Přesunout hranice oblastí."
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "Klepněte pro spuštění"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "&Písmo..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "Písmo pro popisové stopy"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "Název písma"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "Velikost písma"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "O &oktávu výš"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "O ok&távu níž"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr ""
+"Klepněte pro svislé přiblížení Shift+klepnutí pro oddálení Táhněte pro "
+"vytvoření zvláštní oblasti přiblížení."
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "Klepněte a táhněte"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "Zvětšit notovou stopu"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "Zvětšit"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "Spojené klipy"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "Spojit"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "Otevřený střih"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "Otevřít střih"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "Odstraněná čára střihu"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "Klepněte na tlačítko a upravte vzorky"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr "Pokud chcete kreslit, zvolte Křivka z rozbalovací nabídky stopy."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+"Kreslení je možné použít, když budete zvětšovat pohled, dokud neuvidíte "
+"jednotlivé vzorky."
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+msgid "Moved Samples"
+msgstr "Přesunuté vzorky"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "Upravit vzorek"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "Změněno '%s' na %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "Změnit formát"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100000.0100 Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "&Další..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "Změněno '%s' na %s Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "Změna vzorkovacího kmitočtu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "Nastavit vzorkovací kmitočet"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "Kř&ivka"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+msgid "&Waveform (dB)"
+msgstr "&Křivka (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "&Spektrogram"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+msgid "S&pectrogram Settings..."
+msgstr "Nastavení &spektrogramu..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "&Vytvořit stereo stopu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+msgid "Swap Stereo &Channels"
+msgstr "Prohodit stereo &kanály"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+msgid "Spl&it Stereo Track"
+msgstr "&Rozdělit stereo stopu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "Rozdělit stereo na mono '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+msgid "&Format"
+msgstr "&Formát"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+msgid "Rat&e"
+msgstr "&Kmitočet"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+#, fuzzy
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+"Pro změnu nastavení spektrogramu, zastavte nejprve\n"
+"všechna přehrávání nebo nahrávání."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr "Zastavit nejprve zvuk"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "Mono"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "Levý kanál"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "Pravý kanál"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "Kanál"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "Vytvořit '%s' stereo stopu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "Vytvořit stereo"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "Prohozené kanály v '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+msgid "Swap Channels"
+msgstr "Prohodit kanály"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "Rozdělit stereo stopu '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "Rozdělit stereo na mono '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+msgid "Split to Mono"
+msgstr "Rozdělit na monofonní stopy"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Přiblížit\tKlepnutí levým tlačítkem myši/tažení"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Oddálit\tShift-klepnutí levým tlačítkem myši"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Přizpůsobit oknu\tShift-klepnutí pravým tlačítkem myši"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr ""
+"Klepněte pro svislé přiblížení. Shift+klepnutí pro oddálení. Táhněte pro "
+"přiblížení oblasti."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "Změnit dolní hranici rychlosti na (%) původní rychlosti:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "Nastavit dolní hranici rychlosti"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "Změnit horní hranici rychlosti na (%) původní rychlosti:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "Nastavit horní hranici rychlosti"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Nastavte rozsah na '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "Nastavit rozsah"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr "Nastavit zobrazení časové stopy na lineární"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "Nastavit zobrazení"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr "Nastavit zobrazení časové stopy na logaritmické"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr "Nastavit interpolaci časové stopy na lineární"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "Nastavit interpolaci"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr "Nastavit interpolaci časové stopy na logaritmickou"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "&Lineární"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+msgid "L&ogarithmic scale"
+msgstr "Lo&garitmická stupnice"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+msgid "&Range..."
+msgstr "&Rozsah..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "Logaritmická &interpolace"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "Klepněte a táhněte pro přesunutí zvukové stopy na časové ose"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "Klepněte na tlačítko a upravte rozkmit obalové křivky"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "Upravená obalová křivka."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -13889,6 +14369,174 @@ msgstr "Pohybovat ukazovátkem myši pro převíjení"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr "&Převíjení"
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "Klepněte a táhněte pro nastavení levé hranice výběru."
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "Klepněte a táhněte pro nastavení pravé hranice výběru."
+
+#: src/tracks/ui/SelectHandle.cpp:337
+msgid "Click and drag to move bottom selection frequency."
+msgstr "Klepněte a táhněte pro posunutí dolního kmitočtu výběru."
+
+#: src/tracks/ui/SelectHandle.cpp:341
+msgid "Click and drag to move top selection frequency."
+msgstr "Klepněte a táhněte pro posunutí horního kmitočtu výběru."
+
+#: src/tracks/ui/SelectHandle.cpp:349
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr ""
+"Klepněte a táhněte pro posunutí středového kmitočtu výběru na vrchol spektra."
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+msgid "Click and drag to move center selection frequency."
+msgstr "Klepněte a táhněte pro posunutí středového kmitočtu výběru."
+
+#: src/tracks/ui/SelectHandle.cpp:364
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "Klepněte a táhněte pro upravení šířky kmitočtového pásma."
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+msgid "Edit, Preferences..."
+msgstr "Úpravy, Nastavení..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr ""
+"Vícenástrojový režim: Stiskněte klávesu %s pro nastavení myši a klávesnice."
+
+#: src/tracks/ui/SelectHandle.cpp:953
+msgid "Click and drag to set frequency bandwidth."
+msgstr "Klepněte a táhněte pro nastavení šířky kmitočtového pásma."
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "Klepněte na tlačítko a tažením vyberte zvuk"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "Klepněte a táhněte pro přesunutí zvukové stopy na časové ose"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+msgid "Moved clips to another track"
+msgstr "Klipy byly přesunuty do jiné stopy"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "Ztlumeny zvolené stopy na %.2f sekund od %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "Zavřít"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "Otevřít &Nedávné..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+msgid "&Name..."
+msgstr "&Název..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+msgid "Move Track &Up"
+msgstr "Přesunout stopu nahor&u"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "Přesunout stopu &dolů"
+
+#: src/tracks/ui/TrackControls.cpp:143
+msgid "Move Track to &Top"
+msgstr "Přesunout stopu úplně na&horu"
+
+#: src/tracks/ui/TrackControls.cpp:149
+msgid "Move Track to &Bottom"
+msgstr "Přesunout stopu úplně d&olů"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "Přejmenovat stopu na:"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "Název stopy"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "Přejmenováno '%s' na '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "Změnit název"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+msgid "Command-Click"
+msgstr "Příkaz-klepnutí"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+msgid "Ctrl-Click"
+msgstr "Ctrl-klepnutí"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+"%s pro vybrání nebo zrušení výběru stopy. Táhněte nahoru nebo dolů pro změnu "
+"pořadí stop."
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, c-format
+msgid "%s to select or deselect track."
+msgstr "%s pro vybrání nebo zrušení výběru stopy."
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "nahoru"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "dolů"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "Přesunuto '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "Klepněte pro přiblížení, Shift+klepnutí pro oddálení"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr ""
+"Táhnout levým tlačítkem myši pro přiblížení oblasti, stisknutím pravého "
+"tlačítka myši dojde k oddálení"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "Levé=přiblížit, Pravé=oddálit,Střední=normální velikost"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -13957,10 +14605,6 @@ msgstr "Vpřed"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "Vzad"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "Zavřít"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14081,10 +14725,6 @@ msgstr " Zastřiženo "
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "Ukázat zápis s podrobnostmi"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "Vyberte, prosím, činnost"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14569,6 +15209,10 @@ msgstr "e"
 msgid "Don't show this warning again"
 msgstr "Nezobrazovat toto varování znovu"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "Vyberte, prosím, činnost"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14634,21 +15278,6 @@ msgstr "Nelze načíst soubor: \"%s\""
 #~ msgid "Play at speed"
 #~ msgstr "Rychlost přehrávání"
 
-#~ msgid "&Other..."
-#~ msgstr "&Další..."
-
-#~ msgid "Wa&veform"
-#~ msgstr "Kř&ivka"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "&Křivka (dB)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "&Spektrogram"
-
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "Nastavení &spektrogramu..."
-
 #~ msgid "&Mono"
 #~ msgstr "&Mono"
 
@@ -14658,304 +15287,14 @@ msgstr "Nelze načíst soubor: \"%s\""
 #~ msgid "&Right Channel"
 #~ msgstr "&Pravý kanál"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "&Vytvořit stereo stopu"
-
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "Prohodit stereo &kanály"
-
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "&Rozdělit stereo stopu"
-
-#~ msgid "&Format"
-#~ msgstr "&Formát"
-
-#~ msgid "Rat&e"
-#~ msgstr "&Kmitočet"
-
-#~ msgid "Up &Octave"
-#~ msgstr "O &oktávu výš"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "O ok&távu níž"
-
-#~ msgid "&Font..."
-#~ msgstr "&Písmo..."
-
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "Lo&garitmická stupnice"
-
-#~ msgid "&Range..."
-#~ msgstr "&Rozsah..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "Logaritmická &interpolace"
-
-#~ msgid "&Name..."
-#~ msgstr "&Název..."
-
-#~ msgid "Move Track &Up"
-#~ msgstr "Přesunout stopu nahor&u"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "Přesunout stopu &dolů"
-
-#~ msgid "Move Track to &Top"
-#~ msgstr "Přesunout stopu úplně na&horu"
-
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "Přesunout stopu úplně d&olů"
-
-#~ msgid "Command-Click"
-#~ msgstr "Příkaz-klepnutí"
-
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl-klepnutí"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr ""
-#~ "Klepněte pro svislé přiblížení. Shift+klepnutí pro oddálení. Táhněte pro "
-#~ "přiblížení oblasti."
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Klepněte pro svislé přiblížení Shift+klepnutí pro oddálení Táhněte pro "
-#~ "vytvoření zvláštní oblasti přiblížení."
-
-#~ msgid ""
-#~ "%s to select or deselect track. Drag up or down to change track order."
-#~ msgstr ""
-#~ "%s pro vybrání nebo zrušení výběru stopy. Táhněte nahoru nebo dolů pro "
-#~ "změnu pořadí stop."
-
-#~ msgid "%s to select or deselect track."
-#~ msgstr "%s pro vybrání nebo zrušení výběru stopy."
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "Klepněte a táhněte pro přizpůsobení stereo stop."
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "Klepněte a táhněte pro změnu velikosti stopy."
-
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "Přesunout jednu nebo více hranic oblastí."
-
-#~ msgid "Drag label boundary."
-#~ msgstr "Přesunout hranice oblastí."
-
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "Klepněte a táhněte pro posunutí středového kmitočtu výběru."
-
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr ""
-#~ "Klepněte a táhněte pro posunutí středového kmitočtu výběru na vrchol "
-#~ "spektra."
-
-#~ msgid "Edit, Preferences..."
-#~ msgstr "Úpravy, Nastavení..."
-
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr ""
-#~ "Vícenástrojový režim: Stiskněte klávesu %s pro nastavení myši a "
-#~ "klávesnice."
-
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "Klepněte a táhněte pro nastavení šířky kmitočtového pásma."
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "Klepněte a táhněte pro zvětšení uvnitř vybrané oblasti"
 
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "Klepněte pro posunutí hranice výběru k ukazateli."
 
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "Klepněte a táhněte pro nastavení levé hranice výběru."
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "Klepněte a táhněte pro nastavení pravé hranice výběru."
-
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "Klepněte a táhněte pro posunutí dolního kmitočtu výběru."
-
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "Klepněte a táhněte pro posunutí horního kmitočtu výběru."
-
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "Klepněte a táhněte pro upravení šířky kmitočtového pásma."
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "Klepněte a táhněte"
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "Zvětšit notovou stopu"
-
-#~ msgid "Stretch"
-#~ msgstr "Zvětšit"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "Upravená obalová křivka."
-
-#~ msgid "Moved clips to another track"
-#~ msgstr "Klipy byly přesunuty do jiné stopy"
-
 #~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 #~ msgstr "Pokud chcete kreslit, zvolte Křivka z rozbalovací nabídky stopy."
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr ""
-#~ "Kreslení je možné použít, když budete zvětšovat pohled, dokud neuvidíte "
-#~ "jednotlivé vzorky."
-
-#~ msgid "Moved Samples"
-#~ msgstr "Přesunuté vzorky"
-
-#~ msgid "Sample Edit"
-#~ msgstr "Upravit vzorek"
-
-#~ msgid "up"
-#~ msgstr "nahoru"
-
-#~ msgid "down"
-#~ msgstr "dolů"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "Přesunuto '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "Otevřený střih"
-
-#~ msgid "Expand"
-#~ msgstr "Otevřít střih"
-
-#~ msgid "Merged Clips"
-#~ msgstr "Spojené klipy"
-
-#~ msgid "Merge"
-#~ msgstr "Spojit"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "Odstraněná čára střihu"
-
-#~ msgid "Left Channel"
-#~ msgstr "Levý kanál"
-
-#~ msgid "Right Channel"
-#~ msgstr "Pravý kanál"
-
-#~ msgid "Mono"
-#~ msgstr "Mono"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "Změněno '%s' na %s"
-
-#~ msgid "Channel"
-#~ msgstr "Kanál"
-
-#~ msgid "Swapped Channels in '%s'"
-#~ msgstr "Prohozené kanály v '%s'"
-
-#~ msgid "Swap Channels"
-#~ msgstr "Prohodit kanály"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "Rozdělit stereo stopu '%s'"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "Rozdělit stereo na mono '%s'"
-
-#~ msgid "Split to Mono"
-#~ msgstr "Rozdělit na monofonní stopy"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "Vytvořit '%s' stereo stopu"
-
-#~ msgid "Make Stereo"
-#~ msgstr "Vytvořit stereo"
-
-#~ msgid ""
-#~ "To change Spectrogram Settings, stop any\n"
-#~ ".playing or recording first."
-#~ msgstr ""
-#~ "Pro změnu nastavení spektrogramu, zastavte nejprve\n"
-#~ "všechna přehrávání nebo nahrávání."
-
-#~ msgid "Stop the Audio First"
-#~ msgstr "Zastavit nejprve zvuk"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "Změněno '%s' na %s Hz"
-
-#~ msgid "Rate Change"
-#~ msgstr "Změna vzorkovacího kmitočtu"
-
-#~ msgid "Format Change"
-#~ msgstr "Změnit formát"
-
-#~ msgid "Set Rate"
-#~ msgstr "Nastavit vzorkovací kmitočet"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "Změnit dolní hranici rychlosti na (%) původní rychlosti:"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "Nastavit dolní hranici rychlosti"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Změnit horní hranici rychlosti na (%) původní rychlosti:"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "Nastavit horní hranici rychlosti"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "Nastavte rozsah na '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "Nastavit rozsah"
-
-#~ msgid "Set time track display to linear"
-#~ msgstr "Nastavit zobrazení časové stopy na lineární"
-
-#~ msgid "Set Display"
-#~ msgstr "Nastavit zobrazení"
-
-#~ msgid "Set time track display to logarithmic"
-#~ msgstr "Nastavit zobrazení časové stopy na logaritmické"
-
-#~ msgid "Set time track interpolation to linear"
-#~ msgstr "Nastavit interpolaci časové stopy na lineární"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "Nastavit interpolaci"
-
-#~ msgid "Set time track interpolation to logarithmic"
-#~ msgstr "Nastavit interpolaci časové stopy na logaritmickou"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Přejmenovat stopu na:"
-
-#~ msgid "Track Name"
-#~ msgstr "Název stopy"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "Přejmenováno '%s' na '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "Změnit název"
-
-#~ msgid "Label Track Font"
-#~ msgstr "Písmo pro popisové stopy"
-
-#~ msgid "Face name"
-#~ msgstr "Název písma"
-
-#~ msgid "Face size"
-#~ msgstr "Velikost písma"
 
 #~ msgid "%.2f dB Average RMS"
 #~ msgstr "Průměrná efektivní hodnota %.2f dB"
@@ -15091,29 +15430,6 @@ msgstr "Nelze načíst soubor: \"%s\""
 #~ msgid "Selection "
 #~ msgstr "Výběr"
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "Klepněte na tlačítko a tažením vyberte zvuk"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "Klepněte na tlačítko a upravte rozkmit obalové křivky"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "Klepněte na tlačítko a upravte vzorky"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "Klepněte pro přiblížení, Shift+klepnutí pro oddálení"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr ""
-#~ "Táhnout levým tlačítkem myši pro přiblížení oblasti, stisknutím pravého "
-#~ "tlačítka myši dojde k oddálení"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "Levé=přiblížit, Pravé=oddálit,Střední=normální velikost"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "Klepněte a táhněte pro přesunutí zvukové stopy na časové ose"
-
 #~ msgid "Unpinned Record/Play head"
 #~ msgstr "Odšpendlená hlava nahrávání/přehrávání"
 
@@ -15204,18 +15520,6 @@ msgstr "Nelze načíst soubor: \"%s\""
 
 #~ msgid "&Rate"
 #~ msgstr "&Výše"
-
-#~ msgid "&Linear"
-#~ msgstr "&Lineární"
-
-#~ msgid "Zoom In\tLeft-Click/Left-Drag"
-#~ msgstr "Přiblížit\tKlepnutí levým tlačítkem myši/tažení"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Oddálit\tShift-klepnutí levým tlačítkem myši"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "Přizpůsobit oknu\tShift-klepnutí pravým tlačítkem myši"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "Táhněte stopu svisle pro změnu pořadí stop."
@@ -15449,11 +15753,6 @@ msgstr "Nelze načíst soubor: \"%s\""
 
 #~ msgid "Set Ra&nge..."
 #~ msgstr "Nastavit roz&sah..."
-
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down "
-#~ "Menu."
-#~ msgstr "Pokud chcete kreslit, zvolte Křivka z rozbalovací nabídky stopy."
 
 #~ msgid "Plug-ins %i to %i"
 #~ msgstr "Přídavné moduly %i až %i"

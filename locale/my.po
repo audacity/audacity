@@ -5,11 +5,12 @@
 # Russell Kyaw <rkyaw@yahoo.com>, 2009, 2010.
 # BurmaIT team <info@burmait.net>, 2009, 2010.
 #
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 1.3.7\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2010-01-27 06:35-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team: Burmese <my@li.org>\n"
@@ -45,6 +46,7 @@ msgstr "လှုပ်ရှားမှုတခုကို ရွေးခ�
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "အမှားအယွင်း"
 
@@ -1863,54 +1865,35 @@ msgstr ""
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "လိုက်ဖက်တဲ့ FFmpeg စုစည်းချက်များကို မတွေ့နိုင်ဘူး"
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg ကို မတွေ့ရှိဘူး"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"အိုဒေးစီးတီးက အသံဖိုင်တခုကို တင်သွင်းဖို့ FFmpeg ကို သုံးဖို့ ကြိုးစားနေတယ်၊\n"
-"ဒါပေမဲ့ စုစည်းချက်များကို မတွေ့ရှိဘူး။\n"
-"\n"
-"FFmpeg တင်သွင်းမှုကို သုံးဖို့၊ ဦးစားပေးချက်များ > စုစည်းချက်များဆီ သွားပြီး\n"
-"FFmpeg စုစည်းချက်များကို ဆွဲချ (သို့) ​ရှာတွေ့နိုင်တယ်။"
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "ဒီသတိပေးချက်ကို နောက်တကြိမ် မပြပါနဲ့"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"avformat.dll|*avformat*.dll|တက်တက်ကြွကြွ ချိတ်ဆက်ထားတဲ့ စုစည်းချက်များ (*.dll)|*.dll|"
-"ဖိုင်များ အားလုံး (*.*)|* ကိုသာ"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "တက်ကြွ စုစည်းချက်များ (*.dylib)|*.dylib|ဖိုင်များ အားလုံး (*)|*"
-
-#: src/FFmpeg.h:339
-#, fuzzy
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"libavformat.so|libavformat.so*|တက်တက်ကြွကြွ ချိတ်ဆက်ထားတဲ့ စုစည်းချက်များ  (*.so*)|*.so*|"
-"ဖိုင်များ အားလုံး (*)|* ကိုသာ"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "စတုဂံပုံ"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"အိုဒေးစီးတီးက မရေးသားနိုင်တဲ့ ဖိုင် -\n"
+"  %s။"
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"အိုဒေးစီးတီးက မရေးသားနိုင်တဲ့ ဖိုင် -\n"
+"  %s။"
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"အိုဒေးစီးတီးက မရေးသားနိုင်တဲ့ ဖိုင် -\n"
+"  %s။"
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2311,6 +2294,20 @@ msgstr "စွန့်ပစ်ပါ"
 msgid "&OK"
 msgstr "ကောင်းပြီ"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "မဆုံးဖြတ်နိုင်ဘူး"
@@ -2445,18 +2442,19 @@ msgstr "အသံလမ်းကြော အမည် ရေးသွင်း�
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr ""
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "မွမ်းမံထားတဲ့ အမှတ်အသား"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "အမှတ်အသား တည်းဖြတ်မှု"
 
@@ -3960,6 +3958,7 @@ msgstr "အသံလမ်းကြောများ/တွဲညှပ်မ�
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "အချိန်-ရွှေ့ပြောင်းမှု"
 
@@ -4004,7 +4003,7 @@ msgid "Moved"
 msgstr "အထက်ကို ရွှေ့ပါ"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "အသံလမ်းကြောကို ရွှေ့ပါ"
 
@@ -4245,6 +4244,7 @@ msgid "Detach Labeled Audio"
 msgstr "ပယ်ဖျက်ထားတဲ့ စာတန်းတပ် နယ်ပယ်များ"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "ခွဲခြမ်းပါ"
 
@@ -4268,11 +4268,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "ဘယ်ဖက်"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "ညာဖက်"
 
@@ -4572,10 +4574,12 @@ msgid "Resample"
 msgstr "နမူနာပြန်တင်ပါ"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "နမူနာ နှုန်းအသစ် (Hz):"
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "ရေးသွင်းထားတဲ့ တန်ဖိုးဟာ မမှန်ဘူး"
 
@@ -4606,6 +4610,7 @@ msgstr "အသံလမ်းကြောများကို ပေါင်�
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "တိုးတက်မှု"
 
@@ -4613,6 +4618,7 @@ msgstr "တိုးတက်မှု"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr ""
 
@@ -4623,18 +4629,21 @@ msgstr ""
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "တပြင်လုံး"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "အသံပိတ်ပါ"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "တပင်တိုင်"
 
@@ -4643,14 +4652,17 @@ msgid "Signal Level Meter"
 msgstr ""
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "ရွှေ့ထားတဲ့ တိုးတက်မှု စလိုင်ဒါ"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr ""
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "ရွှေ့ထားတဲ့ တပြင်လုံး စလိုင်ဒါ"
 
@@ -5711,14 +5723,6 @@ msgstr ""
 "အိုဒေးစီးတီးက မသိမ်းဆည်းနိုင်တဲ့ ဖိုင် -\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "ကြာမြင့်ချိန်"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "အိုဒေးစီးတီး အချိန်တိုင်းကိရိယာ မှတ်တမ်း"
@@ -5841,6 +5845,14 @@ msgstr "ရက်စွဲနဲ့ အချိန်ကို အသုံး�
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "ရက်စွဲကို အဆုံးသတ်ပါ"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "ကြာမြင့်ချိန်"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6031,6 +6043,14 @@ msgstr "ရွေးချယ်မှု ဖွင့်ထားပါ"
 msgid " Sync Lock Selected"
 msgstr ""
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "စတီရီယို အသံလမ်းကြောများရဲ့ သက်ဆိုင်ရာ အရွယ်ကို ချိန်ညှိဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "အသံလမ်းကြောကို အရွယ်ညှိဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6079,6 +6099,56 @@ msgstr "ရွေးချယ်ချက်ကို ပွားယူဖိ�
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "ဖြတ်ယူတဲ့ လိုင်းကို ချဲ့ကားဖို့ ရနိုင်တဲ့ နေရာ မလုံလောက်ဘူး"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg ကို မတွေ့ရှိဘူး"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"အိုဒေးစီးတီးက အသံဖိုင်တခုကို တင်သွင်းဖို့ FFmpeg ကို သုံးဖို့ ကြိုးစားနေတယ်၊\n"
+"ဒါပေမဲ့ စုစည်းချက်များကို မတွေ့ရှိဘူး။\n"
+"\n"
+"FFmpeg တင်သွင်းမှုကို သုံးဖို့၊ ဦးစားပေးချက်များ > စုစည်းချက်များဆီ သွားပြီး\n"
+"FFmpeg စုစည်းချက်များကို ဆွဲချ (သို့) ​ရှာတွေ့နိုင်တယ်။"
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "ဒီသတိပေးချက်ကို နောက်တကြိမ် မပြပါနဲ့"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"avformat.dll|*avformat*.dll|တက်တက်ကြွကြွ ချိတ်ဆက်ထားတဲ့ စုစည်းချက်များ (*.dll)|*.dll|"
+"ဖိုင်များ အားလုံး (*.*)|* ကိုသာ"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "တက်ကြွ စုစည်းချက်များ (*.dylib)|*.dylib|ဖိုင်များ အားလုံး (*)|*"
+
+#: src/FFmpeg.h:339
+#, fuzzy
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"libavformat.so|libavformat.so*|တက်တက်ကြွကြွ ချိတ်ဆက်ထားတဲ့ စုစည်းချက်များ  (*.so*)|*.so*|"
+"ဖိုင်များ အားလုံး (*)|* ကိုသာ"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6195,10 +6265,6 @@ msgstr "အထွတ်အထိပ် ကျယ်ပြန့်မှု အ�
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "တွဲညှပ်မှုကို ခွင့်ပြုပါ"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "ချဲ့ထွင်ပါ"
 
 #: src/effects/AutoDuck.cpp:41
 #, fuzzy
@@ -6355,10 +6421,6 @@ msgstr "အဆင့် -"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr ""
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6454,10 +6516,6 @@ msgstr "ရာနှုန်း ပြောင်းလဲမှု"
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "အသံပေါက် ပြောင်းလဲပါ"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6521,10 +6579,6 @@ msgstr "ရွေးချယ်​​ချက် အတွက် ဖိုင�
 msgid "New Length:"
 msgstr "အရှည်"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "အမြန်နှုန်းကို ပြောင်းလဲပါ"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6563,10 +6617,6 @@ msgstr "အရှည် (စက္ကန့်များ)"
 msgid "Length in seconds from"
 msgstr "စက္ကန့်များပါတဲ့ အရှည်သို့"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "နရီအနှေးအမြန်ကို ပြောင်းလဲပါ"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6603,10 +6653,6 @@ msgstr "စပိုက်ရဲ့ အများဆုံး အကျယ် 
 #, fuzzy
 msgid "Max Spike Width"
 msgstr "စပိုက်ရဲ့ အများဆုံး အကျယ်"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "ဖယ်ရှားမှုကို နှိုပ်ပါ"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6739,10 +6785,6 @@ msgstr "ယိုယွင်း ချိန် %.1f စက္ကန့်"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f စက္ကန့်"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "ဖိသိပ်ကိရိယာ"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7295,10 +7337,6 @@ msgstr ""
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-msgid "Distortion"
-msgstr "တွန့်လိမ်ခြင်း"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7360,11 +7398,6 @@ msgstr "ms"
 msgid "Silence duration:"
 msgstr "တိတ်ဆိတ်မှု ကြာမြင့်ချိန် -"
 
-#: src/effects/DtmfGen.h:28
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "DTMF အသံများ..."
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "နှောင့်နှေးစေပါ"
@@ -7391,10 +7424,6 @@ msgstr "နှောင့်နှေးချိန် (စက္ကန့်�
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "ယိုယွင်းမှု အကြောင်းရင်း -"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "ပဲ့တင်သံ"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7726,6 +7755,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr ""
 
@@ -8111,10 +8141,6 @@ msgstr ""
 msgid "No curves exported"
 msgstr ""
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "ညီမျှစေခြင်း"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8135,14 +8161,6 @@ msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ�
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "ကြည်လင်ထင်ရှားစေပါ"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "မှေးမှိန်ပျောက်ကွယ်စေပါ"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8159,10 +8177,6 @@ msgstr "အတိုင်းအတာကို စတင်ပါ (နမူန
 msgid "Stop threshold (samples):"
 msgstr "အတိုင်းအတာကို ရပ်တန့်ပါ (နမူနာများ) -"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "တွဲညှပ်မှုကို ​ရှာ​ပါ"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr ""
@@ -8170,10 +8184,6 @@ msgstr ""
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "ပြောင်းပြန်လှန်ပါ"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8255,11 +8265,6 @@ msgstr ""
 #, fuzzy
 msgid "Noise type:"
 msgstr "ဆူညံမှု အမျိုးအစား"
-
-#: src/effects/Noise.h:24
-#, fuzzy
-msgid "Noise"
-msgstr "ဆူညံသံ..."
 
 #: src/effects/NoiseReduction.cpp:100
 #, fuzzy
@@ -8718,10 +8723,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr ""
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "အဆင့်များ"
@@ -8814,10 +8815,6 @@ msgstr "ရလဒ် ချာနယ်များ - %2d"
 msgid "Output gain (dB)"
 msgstr "ရလဒ် ချာနယ်များ - %2d"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "ဖေးဇာ"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8847,10 +8844,6 @@ msgstr ""
 "၄င်းရဲ့ အနည်းဆုံး အနားတခုကို ထိနေတဲ့ အသံပါတဲ့ နယ်ပယ်တခုကို ရွေးပါ။\n"
 "\n"
 "အသံ ဝိုင်းရံမှု များလေ၊ ၄င်းရဲ့ လုပ်ဆောင်မှု ပိုကောင်းလေဖြစ်တယ်။"
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "ပြုပြင်ပါ"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8887,10 +8880,6 @@ msgstr "ရွေးချယ်မှု အရှည် အသစ် -"
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "ထပ်လုပ်ပါ"
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -9026,14 +9015,6 @@ msgstr "ပဲ့တင်ထပ်စေပါ"
 msgid "Reverses the selected audio"
 msgstr "ရွေးထားတဲ့ အသံကို %s အဖြစ် တင်ပို့နေတယ်"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "ပြောင်းပြန်လှန်ပါ"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9130,10 +9111,6 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr ""
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:61
@@ -9242,11 +9219,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr "စတီရီယိုမှ မိုနို လမ်ကြောင်းသို့"
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "စတီရီယိုမှ မိုနိုသို့"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9306,10 +9278,6 @@ msgstr ""
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr ""
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "အချိန် စကေး"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9401,16 +9369,6 @@ msgstr "ကျယ်ပြန့်ခြင်း ပြီးဆုံးမ�
 msgid "Interpolation:"
 msgstr "ပေါင်းစပ်ဖြည့်စွတ်ခြင်း -"
 
-#: src/effects/ToneGen.h:25
-#, fuzzy
-msgid "Chirp"
-msgstr "မြည်သံ..."
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "အသံ..."
-
 #: src/effects/TruncSilence.cpp:48
 #, fuzzy
 msgid "Truncate Detected Silence"
@@ -9477,10 +9435,6 @@ msgstr "ဖိသိပ်ကိရိယာ"
 msgid "Truncate tracks independently"
 msgstr ""
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "တိတ်ဆိတ်မှုကို တိဖြတ်ပါ"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "အသံသြဇာ"
@@ -9513,6 +9467,123 @@ msgstr "ဝါ ကြိမ်နှုန်း အော့ဖ်ဆက် (%)
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "ရာခိုင်နှုန်းအလိုက် ဝါ ကြိမ်နှုန်း အော့ဖ်ဆက်"
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "ချဲ့ထွင်ပါ"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr ""
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "အသံပေါက် ပြောင်းလဲပါ"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "အမြန်နှုန်းကို ပြောင်းလဲပါ"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "နရီအနှေးအမြန်ကို ပြောင်းလဲပါ"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "ဖယ်ရှားမှုကို နှိုပ်ပါ"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "ဖိသိပ်ကိရိယာ"
+
+#: src/effects/Distortion.h:26
+msgid "Distortion"
+msgstr "တွန့်လိမ်ခြင်း"
+
+#: src/effects/DtmfGen.h:28
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "DTMF အသံများ..."
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "ပဲ့တင်သံ"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "ညီမျှစေခြင်း"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "ကြည်လင်ထင်ရှားစေပါ"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "မှေးမှိန်ပျောက်ကွယ်စေပါ"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "တွဲညှပ်မှုကို ​ရှာ​ပါ"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "ပြောင်းပြန်လှန်ပါ"
+
+#: src/effects/Noise.h:24
+#, fuzzy
+msgid "Noise"
+msgstr "ဆူညံသံ..."
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr ""
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "ဖေးဇာ"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "ပြုပြင်ပါ"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "ထပ်လုပ်ပါ"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "ပြောင်းပြန်လှန်ပါ"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr ""
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "စတီရီယိုမှ မိုနိုသို့"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "အချိန် စကေး"
+
+#: src/effects/ToneGen.h:25
+#, fuzzy
+msgid "Chirp"
+msgstr "မြည်သံ..."
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "အသံ..."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "တိတ်ဆိတ်မှုကို တိဖြတ်ပါ"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11725,11 +11796,6 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "%s ကို တင်သွင်းနေခြင်း"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime ဖိုင်များ"
@@ -11757,6 +11823,11 @@ msgstr ""
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr ""
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "%s ကို တင်သွင်းနေခြင်း"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11826,6 +11897,11 @@ msgstr "တင်သွင်းမဲ့ ပမာဏ -"
 msgid "Sample rate:"
 msgstr "နမူနာ နှုန်းထား -"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%% ပြီးစီးတယ်။ ဆုံချက်လုပ်ငန်း အမှတ်ကို ပြောင်းဖို့ နှိုပ်ပါ။"
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "တင်သွင်းမှု ပြီးစီးပြီ။ လှိုင်းသဏ္ဍာန်ကို တွက်ချက်ခြင်း"
@@ -11833,11 +11909,6 @@ msgstr "တင်သွင်းမှု ပြီးစီးပြီ။ လ�
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "လှိုင်းသဏ္ဍာန်ကို စာဝှက်ရေးသားခြင်း"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%% ပြီးစီးတယ်။ ဆုံချက်လုပ်ငန်း အမှတ်ကို ပြောင်းဖို့ နှိုပ်ပါ။"
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12732,7 +12803,7 @@ msgid "Move clip up/down between tracks"
 msgstr "အသံကြောများ အကြား အပိုင်းကို အထက်/အောက် ရွေ့လျားပါ"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "စာအိတ်"
 
@@ -14021,6 +14092,8 @@ msgid "Zoom Tool"
 msgstr "ချဲ့ထွင် ကိရိယာ"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "ရေးဆွဲ ကိရိယာ"
 
@@ -14050,6 +14123,435 @@ msgstr "အရှိန်-နဲ့-ဖွင့်ပြပါ"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "အရှိန်-နဲ့-ဖွင့်ပြပါ"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+#, fuzzy
+msgid "Drag one or more label boundaries."
+msgstr "တခု (သို့) အမှတ်အသား နယ်သတ်မျဉ်းများကို ဒရွတ်ဆွဲပါ"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+#, fuzzy
+msgid "Drag label boundary."
+msgstr "အမှတ်အသား နယ်သတ်မျဉ်းကို ဒရွတ်ဆွဲပါ"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "အစကို ကျော်သွားပါ"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+#, fuzzy
+msgid "&Font..."
+msgstr "ဖောင့်..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "အမှတ်အသား အသံလမ်းကြော ဖောင့်"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "ဖောင့် အမည်"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "ဖောင့် အရွယ်"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+#, fuzzy
+msgid "Up &Octave"
+msgstr "ရှစ်သံတွဲ အထက်"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+#, fuzzy
+msgid "Down Octa&ve"
+msgstr "ရှစ်သံတွဲ အောက်"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+#, fuzzy
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr "ဒေါင်လိုက် ချဲ့ကားဖို့ နှိုပ်ပါ၊ ကျုံ့ဖို့ Shift-နှိုပ်ပါ၊ သီးခြား ချဲ့ထွင် နယ်ပယ်တခုကို ဖန်တီးဖို့ ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+#, fuzzy
+msgid "Click and drag to stretch selected region."
+msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+#, fuzzy
+msgid "Stretch Note Track"
+msgstr "အသံလမ်းကြောကို မှတ်သားပါ"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+#, fuzzy
+msgid "Stretch"
+msgstr "ယိုယွင်းမှု အကြောင်းရင်း -"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "ပေါင်းစပ်ထားတဲ့ ညှပ်စများ"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "ပေါင်းစပ်ပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "ချဲ့ကားထားတဲ့ ဖြတ်ယူမှု လိုင်း"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "ချဲ့ကားပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "ဖယ်ရှားထားတဲ့ ဖြတ်ယူမှု လိုင်း"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "နမူနာများကို တည်းဖြတ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr "ရေးဆွဲမှုကို သုံးစွဲဖို့၊ အသံလမ်းကြော ရွေးနိုင်တဲ့ စာရင်းတွဲ စာရင်းမှတ်ထဲမှ 'လှိုင်းသဏ္ဍာန်' ကို ရွေးပါ။"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr "ရေးဆွဲမှုကို သုံးစွဲဖို့၊ နမူနာများ တခုချင်း သင် မတွေ့မချင်း နောက်က် ချဲ့ထွင်ပါ။"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "ရွှေ့ထားတဲ့ နမူနာ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "နမူနာ တည်းဖြတ်မှု"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "'%s' မှ %s သို့ ပြောင်းလဲမှု"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "အမျိုးအစား ပြောင်းလဲမှု"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100 နာရီ 060 မိနစ် 060.0100 စက္ကန့်"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+#, fuzzy
+msgid "&Other..."
+msgstr "အခြား..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' မှ %s Hz သို့ ပြောင်းလဲမှု"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "နှုန်းထား​ ပြောင်းလဲမှု"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "နှုန်းထားကို ချမှတ်ပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+#, fuzzy
+msgid "Wa&veform"
+msgstr "လှိုင်းသဏ္ဍာန်"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+#, fuzzy
+msgid "&Waveform (dB)"
+msgstr "လှိုင်းသဏ္ဍာန် (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+#, fuzzy
+msgid "&Spectrogram"
+msgstr "စပက်ထရိုဂရမ်များ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "စပက်ထရိုဂရမ်များ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+#, fuzzy
+msgid "Ma&ke Stereo Track"
+msgstr "စတီရီယို အသံလမ်းကြောကို ဖန်တီးပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+#, fuzzy
+msgid "Swap Stereo &Channels"
+msgstr "%d ချာနယ်များ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+#, fuzzy
+msgid "Spl&it Stereo Track"
+msgstr "စတီရီယို အသံလမ်းကြောကို ခွဲခြမ်းပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "စတီရီယိုကို မိုနို '%s' အဖြစ် ခွဲခြမ်းပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "အမျိုးအစား -"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "နှုန်းထားကို ချမှတ်ပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "မိုနို"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "ဘယ်ဖက် ချာနယ်"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "ညာဖက် ချာနယ်"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "ချာနယ်"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "'%s' ကို စတီရီယို အသံလမ်းကြော တခု ဖန်တီးပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "စတီရီယို ဖန်တီးပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, fuzzy, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "%d ချာနယ်များ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+#, fuzzy
+msgid "Swap Channels"
+msgstr "%d ချာနယ်များ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "စတီရီယို အသံလမ်းကြော '%s' ကို ခွဲခြမ်းပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "စတီရီယိုကို မိုနို '%s' အဖြစ် ခွဲခြမ်းပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+#, fuzzy
+msgid "Split to Mono"
+msgstr "စတီရီယိုကို မိုနိုအဖြစ် ခွဲခြမ်းပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "Shift-ဘယ်-နှိုပ်ပါ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+#, fuzzy
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr "ဒေါင်လိုက် ချဲ့ကားဖို့ နှိုပ်ပါ၊ ကျုံ့ဖို့ Shift-နှိုပ်ပါ၊ သီးခြား ချဲ့ထွင် နယ်ပယ်တခုကို ဖန်တီးဖို့ ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "ပြောင်းလဲရမဲ့ အောက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "အောက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "ပြောင်းလဲရမဲ့ အထက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "အထက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "သတ်မှတ်မဲ့ အတိုင်းအတာ '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "အတိုင်းအတာကို ချမှတ်ပါ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+#, fuzzy
+msgid "Set Display"
+msgstr "ပြသပါ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+#, fuzzy
+msgid "Set Interpolation"
+msgstr "ပေါင်းစပ်ဖြည့်စွတ်ခြင်း -"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "အစဉ်လိုက်"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "လော်ဂရစ်သမစ်"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "အတိုင်းအတာကို ချမှတ်ပါ..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+#, fuzzy
+msgid "Logarithmic &Interpolation"
+msgstr "လျင်မြန်တဲ့ ဆင့် ဆက်စပ်ဖန်တီးခြင်း"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "တချိန်ထဲမှာ အသံကြော တခုကို ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "ကျယ်ပြန့်တဲ့ စာအိတ်ကို တည်းဖြတ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "ချိန်ညှိထားတဲ့ စာအိတ်။"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -14085,6 +14587,183 @@ msgstr "အသံလမ်းကြောကို အောက် ရွှေ�
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "ညာဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "ဦးစားပေးချက်များ..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, fuzzy, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "ကိရိယာ-မျိုးစုံ စနစ် - ကြွတ်ခလုတ်နဲ့ ကီးဘုတ် ဦးစားပေးချက်များ အတွက် Cmd-"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "တချိန်ထဲမှာ အသံကြော တခုကို ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "အခြား အသံလမ်းကြောကို ရွှေ့တဲ့ တွဲညှပ်"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "%.2f စက္ကန့်နေရာ %.2f အတွက် ငြိမ်သက်တဲ့ ရွေးချယ်မှု အသံလမ်းကြောများ"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "ပိတ်ပါ"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "လတ်တလောကို ဖွင့်ပါ..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "အမည်..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "အသံလမ်းကြောကို အထက် ရွှေ့ပါ"
+
+#: src/tracks/ui/TrackControls.cpp:137
+#, fuzzy
+msgid "Move Track &Down"
+msgstr "အသံလမ်းကြောကို အောက် ရွှေ့ပါ"
+
+#: src/tracks/ui/TrackControls.cpp:143
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "အသံလမ်းကြောကို အထက် ရွှေ့ပါ"
+
+#: src/tracks/ui/TrackControls.cpp:149
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "အသံလမ်းကြောကို အောက် ရွှေ့ပါ"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "ပြောင်းလဲမဲ့ အသံလမ်းကြော အမည် -"
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "အသံလမ်းကြော အမည်"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "'%s' မှ '%s' သို့ အမည်ပြောင်းထားချက်"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "အမည် ပြောင်းလဲမှု"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "ညွှန်ကြားချက်"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "Ctrl-ဘယ်-နှိုပ်"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "အထက်"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "အောက်"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "ရွှေ့ထားတဲ့ '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "ချဲ့ကားဖို့ နှိုပ်ပါ၊ ကျုံ့ဖို့ Shift-နှိုပ်ပါ"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "နယ်ပယ်ထဲကို ချဲ့ထွင်ဖို့ ဒရွတ်ဆွဲပါ၊ ကျုံ့ဖို့ ညာ-နှိုပ်ပါ"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "ဘယ်ဖက်=ချဲ့ကားပါ၊ ညာဖက်=ကျုံ့ပါ၊ အလယ်=ပုံမှန်"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -14153,10 +14832,6 @@ msgstr "ရှေ့ဆက်မှုများ"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "နောက်ပြန်ချက်များ"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "ပိတ်ပါ"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14288,10 +14963,6 @@ msgstr ""
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr ""
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14801,6 +15472,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "ဒီသတိပေးချက်ကို နောက်တခါ မပြနဲ့"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14858,26 +15533,6 @@ msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 #~ msgstr "စတီရီယိုမှ မိုနို လမ်ကြောင်းသို့"
 
 #, fuzzy
-#~ msgid "&Other..."
-#~ msgstr "အခြား..."
-
-#, fuzzy
-#~ msgid "Wa&veform"
-#~ msgstr "လှိုင်းသဏ္ဍာန်"
-
-#, fuzzy
-#~ msgid "&Waveform (dB)"
-#~ msgstr "လှိုင်းသဏ္ဍာန် (dB)"
-
-#, fuzzy
-#~ msgid "&Spectrogram"
-#~ msgstr "စပက်ထရိုဂရမ်များ"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "စပက်ထရိုဂရမ်များ"
-
-#, fuzzy
 #~ msgid "&Mono"
 #~ msgstr "မိုနို"
 
@@ -14890,275 +15545,11 @@ msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 #~ msgstr "ညာဖက် ချာနယ်"
 
 #, fuzzy
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "စတီရီယို အသံလမ်းကြောကို ဖန်တီးပါ"
-
-#, fuzzy
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "စတီရီယို အသံလမ်းကြောကို ခွဲခြမ်းပါ"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "အမျိုးအစား -"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "နှုန်းထားကို ချမှတ်ပါ"
-
-#, fuzzy
-#~ msgid "Up &Octave"
-#~ msgstr "ရှစ်သံတွဲ အထက်"
-
-#, fuzzy
-#~ msgid "Down Octa&ve"
-#~ msgstr "ရှစ်သံတွဲ အောက်"
-
-#, fuzzy
-#~ msgid "&Font..."
-#~ msgstr "ဖောင့်..."
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "လော်ဂရစ်သမစ်"
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "အတိုင်းအတာကို ချမှတ်ပါ..."
-
-#, fuzzy
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "လျင်မြန်တဲ့ ဆင့် ဆက်စပ်ဖန်တီးခြင်း"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "အမည်..."
-
-#, fuzzy
-#~ msgid "Move Track &Up"
-#~ msgstr "အသံလမ်းကြောကို အထက် ရွှေ့ပါ"
-
-#, fuzzy
-#~ msgid "Move Track &Down"
-#~ msgstr "အသံလမ်းကြောကို အောက် ရွှေ့ပါ"
-
-#, fuzzy
-#~ msgid "Move Track to &Top"
-#~ msgstr "အသံလမ်းကြောကို အထက် ရွှေ့ပါ"
-
-#, fuzzy
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "အသံလမ်းကြောကို အောက် ရွှေ့ပါ"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "ညွှန်ကြားချက်"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "Ctrl-ဘယ်-နှိုပ်"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "ဒေါင်လိုက် ချဲ့ကားဖို့ နှိုပ်ပါ၊ ကျုံ့ဖို့ Shift-နှိုပ်ပါ၊ သီးခြား ချဲ့ထွင် နယ်ပယ်တခုကို ဖန်တီးဖို့ ဒရွတ်ဆွဲပါ။"
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "စတီရီယို အသံလမ်းကြောများရဲ့ သက်ဆိုင်ရာ အရွယ်ကို ချိန်ညှိဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "အသံလမ်းကြောကို အရွယ်ညှိဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#, fuzzy
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "တခု (သို့) အမှတ်အသား နယ်သတ်မျဉ်းများကို ဒရွတ်ဆွဲပါ"
-
-#, fuzzy
-#~ msgid "Drag label boundary."
-#~ msgstr "အမှတ်အသား နယ်သတ်မျဉ်းကို ဒရွတ်ဆွဲပါ"
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "ဦးစားပေးချက်များ..."
-
-#, fuzzy
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "ကိရိယာ-မျိုးစုံ စနစ် - ကြွတ်ခလုတ်နဲ့ ကီးဘုတ် ဦးစားပေးချက်များ အတွက် Cmd-"
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
-
-#, fuzzy
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
 
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "ညာဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "ချိန်ညှိထားတဲ့ စာအိတ်။"
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "အခြား အသံလမ်းကြောကို ရွှေ့တဲ့ တွဲညှပ်"
-
 #~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 #~ msgstr "ရေးဆွဲမှုကို သုံးစွဲဖို့၊ အသံလမ်းကြော ရွေးနိုင်တဲ့ စာရင်းတွဲ စာရင်းမှတ်ထဲမှ 'လှိုင်းသဏ္ဍာန်' ကို ရွေးပါ။"
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr "ရေးဆွဲမှုကို သုံးစွဲဖို့၊ နမူနာများ တခုချင်း သင် မတွေ့မချင်း နောက်က် ချဲ့ထွင်ပါ။"
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "ရွှေ့ထားတဲ့ နမူနာ"
-
-#~ msgid "Sample Edit"
-#~ msgstr "နမူနာ တည်းဖြတ်မှု"
-
-#~ msgid "up"
-#~ msgstr "အထက်"
-
-#~ msgid "down"
-#~ msgstr "အောက်"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "ရွှေ့ထားတဲ့ '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "ချဲ့ကားထားတဲ့ ဖြတ်ယူမှု လိုင်း"
-
-#~ msgid "Expand"
-#~ msgstr "ချဲ့ကားပါ"
-
-#~ msgid "Merged Clips"
-#~ msgstr "ပေါင်းစပ်ထားတဲ့ ညှပ်စများ"
-
-#~ msgid "Merge"
-#~ msgstr "ပေါင်းစပ်ပါ"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "ဖယ်ရှားထားတဲ့ ဖြတ်ယူမှု လိုင်း"
-
-#~ msgid "Left Channel"
-#~ msgstr "ဘယ်ဖက် ချာနယ်"
-
-#~ msgid "Right Channel"
-#~ msgstr "ညာဖက် ချာနယ်"
-
-#~ msgid "Mono"
-#~ msgstr "မိုနို"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "'%s' မှ %s သို့ ပြောင်းလဲမှု"
-
-#~ msgid "Channel"
-#~ msgstr "ချာနယ်"
-
-#, fuzzy
-#~ msgid "Swap Channels"
-#~ msgstr "%d ချာနယ်များ"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "စတီရီယို အသံလမ်းကြော '%s' ကို ခွဲခြမ်းပါ"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "စတီရီယိုကို မိုနို '%s' အဖြစ် ခွဲခြမ်းပါ"
-
-#, fuzzy
-#~ msgid "Split to Mono"
-#~ msgstr "စတီရီယိုကို မိုနိုအဖြစ် ခွဲခြမ်းပါ"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "'%s' ကို စတီရီယို အသံလမ်းကြော တခု ဖန်တီးပါ"
-
-#~ msgid "Make Stereo"
-#~ msgstr "စတီရီယို ဖန်တီးပါ"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "'%s' မှ %s Hz သို့ ပြောင်းလဲမှု"
-
-#~ msgid "Rate Change"
-#~ msgstr "နှုန်းထား​ ပြောင်းလဲမှု"
-
-#~ msgid "Format Change"
-#~ msgstr "အမျိုးအစား ပြောင်းလဲမှု"
-
-#~ msgid "Set Rate"
-#~ msgstr "နှုန်းထားကို ချမှတ်ပါ"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "ပြောင်းလဲရမဲ့ အောက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "အောက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "ပြောင်းလဲရမဲ့ အထက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "အထက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "သတ်မှတ်မဲ့ အတိုင်းအတာ '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "အတိုင်းအတာကို ချမှတ်ပါ"
-
-#, fuzzy
-#~ msgid "Set Display"
-#~ msgstr "ပြသပါ"
-
-#, fuzzy
-#~ msgid "Set Interpolation"
-#~ msgstr "ပေါင်းစပ်ဖြည့်စွတ်ခြင်း -"
-
-#~ msgid "Change track name to:"
-#~ msgstr "ပြောင်းလဲမဲ့ အသံလမ်းကြော အမည် -"
-
-#~ msgid "Track Name"
-#~ msgstr "အသံလမ်းကြော အမည်"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "'%s' မှ '%s' သို့ အမည်ပြောင်းထားချက်"
-
-#~ msgid "Name Change"
-#~ msgstr "အမည် ပြောင်းလဲမှု"
-
-#~ msgid "Label Track Font"
-#~ msgstr "အမှတ်အသား အသံလမ်းကြော ဖောင့်"
-
-#~ msgid "Face name"
-#~ msgstr "ဖောင့် အမည်"
-
-#~ msgid "Face size"
-#~ msgstr "ဖောင့် အရွယ်"
 
 #, fuzzy
 #~ msgid "%.2f dB Average RMS"
@@ -15265,27 +15656,6 @@ msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 #~ msgid "Selection "
 #~ msgstr "ရွေးချယ်မှု"
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "အသံကို ရွေးချယ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "ကျယ်ပြန့်တဲ့ စာအိတ်ကို တည်းဖြတ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "နမူနာများကို တည်းဖြတ်ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "ချဲ့ကားဖို့ နှိုပ်ပါ၊ ကျုံ့ဖို့ Shift-နှိုပ်ပါ"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "နယ်ပယ်ထဲကို ချဲ့ထွင်ဖို့ ဒရွတ်ဆွဲပါ၊ ကျုံ့ဖို့ ညာ-နှိုပ်ပါ"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "ဘယ်ဖက်=ချဲ့ကားပါ၊ ညာဖက်=ကျုံ့ပါ၊ အလယ်=ပုံမှန်"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "တချိန်ထဲမှာ အသံကြော တခုကို ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ"
-
 #~ msgid "Re&gion Save"
 #~ msgstr "နယ်ပယ်ကို သိမ်းဆည်းမှု"
 
@@ -15344,14 +15714,6 @@ msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "နှုန်းထားကို ချမှတ်ပါ"
-
-#, fuzzy
-#~ msgid "&Linear"
-#~ msgstr "အစဉ်လိုက်"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Shift-ဘယ်-နှိုပ်ပါ"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"
@@ -15499,12 +15861,6 @@ msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 #, fuzzy
 #~ msgid "Set Ra&nge..."
 #~ msgstr "အတိုင်းအတာကို ချမှတ်ပါ..."
-
-#, fuzzy
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down "
-#~ "Menu."
-#~ msgstr "ရေးဆွဲမှုကို သုံးစွဲဖို့၊ အသံလမ်းကြော ရွေးနိုင်တဲ့ စာရင်းတွဲ စာရင်းမှတ်ထဲမှ 'လှိုင်းသဏ္ဍာန်' ကို ရွေးပါ။"
 
 #, fuzzy
 #~ msgid "Plug-ins %i to %i"

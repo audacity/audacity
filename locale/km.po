@@ -2,11 +2,12 @@
 # Khoem Sokhem <khoemsokhem@khmeros.info>, 2007, 2008.
 # Eng Vannak <evannak@khmeros.info>, 2008.
 # translation of audacity.po to
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2008-07-09 13:48+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <en@li.org>\n"
@@ -44,6 +45,7 @@ msgstr "សូមជ្រើស​អំពើ"
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "កំហុស"
 
@@ -1845,49 +1847,35 @@ msgstr ""
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr ""
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr ""
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr ""
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-#, fuzzy
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr ""
-"មានតែ lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"ឯកសារទាំងអស់ (*.*)|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr ""
-
-#: src/FFmpeg.h:339
-#, fuzzy
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"មានតែ lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"ឯកសារទាំងអស់ (*.*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "ចតុកោណកែង"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity មិន​អាច​សរសេរ​ឯកសារ ៖\n"
+"  %s ។"
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity មិន​អាច​សរសេរ​ឯកសារ ៖\n"
+"  %s ។"
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity មិន​អាច​សរសេរ​ឯកសារ ៖\n"
+"  %s ។"
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2286,6 +2274,20 @@ msgstr "បោះបង់"
 msgid "&OK"
 msgstr "យល់ព្រម"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "មិន​អាច​​កំណត់"
@@ -2420,18 +2422,19 @@ msgstr "បញ្ចូល​ឈ្មោះ​​បទ"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr ""
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "ស្លាក​ដែល​បានកែប្រែ"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "កែសម្រួល​ស្លាក"
 
@@ -3924,6 +3927,7 @@ msgstr "ពេលវេលា​ប្តូរ​បទ/ឈុត %s %.02f វ�
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "អង្កិល​ពេល​វេលា"
 
@@ -3968,7 +3972,7 @@ msgid "Moved"
 msgstr "ផ្លាស់ទី​ឡើងលើ"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "ផ្លាស់ទី​បទ"
 
@@ -4207,6 +4211,7 @@ msgid "Detach Labeled Audio"
 msgstr "លុប​តំបន់​​ដែល​មាន​ស្លាក"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "ពុះ"
 
@@ -4230,11 +4235,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "ឆ្វេង"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "ស្ដាំ"
 
@@ -4530,10 +4537,12 @@ msgid "Resample"
 msgstr "ធ្វើ​គំរូ​ឡើង​វិញ"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr ""
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "តម្លៃ​ដែល​បញ្ចូល​មិន​ត្រឹមត្រូវ"
 
@@ -4564,6 +4573,7 @@ msgstr "លាយ និង​បង្ហាញ​បទ"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "កំណើន"
 
@@ -4571,6 +4581,7 @@ msgstr "កំណើន"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr ""
 
@@ -4581,18 +4592,21 @@ msgstr ""
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "បន្ទះ"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "ស្ងាត់"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "សូឡូ"
 
@@ -4601,14 +4615,17 @@ msgid "Signal Level Meter"
 msgstr ""
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "​គ្រាប់​រំកិល​កំណើន​ដែល​បាន​ផ្លាស់ទី"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr ""
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "​គ្រាប់រុញ​រំកិល​ដែល​បាន​ផ្លាស់ទី​"
 
@@ -5643,14 +5660,6 @@ msgstr ""
 "Audacity មិន​អាច​រក្សាទុក​ឯកសារ ៖\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "ថិរវេលា"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "ឧបករណ៍​កំណត់​ពេល​ថត​របស់ Audacity"
@@ -5771,6 +5780,14 @@ msgstr "កាល​បរិច្ឆេទ និង​ពេល​វេល�
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr ""
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "ថិរវេលា"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -5959,6 +5976,14 @@ msgstr "ជ្រើស​បើក"
 msgid " Sync Lock Selected"
 msgstr ""
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "ចុច និង​អូស​ដើម្បី​លៃ​តម្រូវ​ទំហំ​បទ​ស្តេរ៉េអូ​នីមួយៗ ។"
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "ចុច និង​អូស​ដើម្បី​ប្ដូរ​ទំហំ​បទ ។"
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6007,6 +6032,51 @@ msgstr "មិន​មាន​បន្ទប់​គ្រប់គ្រា
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "មិន​មាន​បន្ទប់​គ្រប់គ្រាន់​ដើម្បី​ពង្រីក​បន្ទាត់​កាត់"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr ""
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr ""
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+#, fuzzy
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr ""
+"មានតែ lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"ឯកសារទាំងអស់ (*.*)|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr ""
+
+#: src/FFmpeg.h:339
+#, fuzzy
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"មានតែ lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"ឯកសារទាំងអស់ (*.*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6121,10 +6191,6 @@ msgstr "អាំភ្លី​កំពូល​ថ្មី (dB) ៖"
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "អនុញ្ញាត​ឲ្យ​ច្រឹប"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "ពង្រីក"
 
 #: src/effects/AutoDuck.cpp:41
 #, fuzzy
@@ -6280,10 +6346,6 @@ msgstr "កម្រិត ៖"
 msgid "&Link Volume control to Tone controls"
 msgstr ""
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr ""
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 #, fuzzy
@@ -6378,10 +6440,6 @@ msgstr ""
 msgid "Use high quality stretching (slow)"
 msgstr ""
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "ផ្លាស់ប្តូរ​កម្ពស់​សំឡេង"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6445,10 +6503,6 @@ msgstr "កាត់​​តម្រឹម​​ឯកសារ​​ទៅ​
 msgid "New Length:"
 msgstr "ប្រវែង"
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "ផ្លាស់ប្តូរ​ល្បឿន"
-
 #: src/effects/ChangeTempo.cpp:102
 #, fuzzy
 msgid "Change the tempo of a selection without changing its pitch"
@@ -6482,10 +6536,6 @@ msgstr "ប្រវែង (វិនាទី)"
 #, fuzzy
 msgid "Length in seconds from"
 msgstr "ប្រវែង (វិនាទី)"
-
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "ផ្លាស់ប្តូរ​ចង្វាក់​ភ្លេង"
 
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
@@ -6522,11 +6572,6 @@ msgstr "ទទឹង​ spike អតិបរមា (កាន់​តែ​ខ
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr ""
-
-#: src/effects/ClickRemoval.h:29
-#, fuzzy
-msgid "Click Removal"
-msgstr "យក​ក្លីកចេញ"
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6656,10 +6701,6 @@ msgstr "ពេល​វេលា​វាយ ៖ %.1f វិនាទី"
 #: src/effects/Compressor.cpp:634
 #, c-format
 msgid "%.1f secs"
-msgstr ""
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
 msgstr ""
 
 #: src/effects/Contrast.cpp:56
@@ -7197,11 +7238,6 @@ msgstr ""
 msgid " (0 to 5):"
 msgstr ""
 
-#: src/effects/Distortion.h:26
-#, fuzzy
-msgid "Distortion"
-msgstr "ថិរវេលា"
-
 #: src/effects/DtmfGen.cpp:47
 #, fuzzy
 msgid "Sequence"
@@ -7263,11 +7299,6 @@ msgstr "មីល្លីវិនាទី"
 msgid "Silence duration:"
 msgstr "ថិរវេលាស្ងាត់ ៖"
 
-#: src/effects/DtmfGen.h:28
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "សំឡេង DTMF..."
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr ""
@@ -7293,10 +7324,6 @@ msgstr "ពេលវេលា​ពន្យារ (វិនាទី) ៖"
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "កត្តា​បន្ថយ ៖"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "អេកូ"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7620,6 +7647,7 @@ msgid "Mark effect as a favorite"
 msgstr ""
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr ""
 
@@ -8001,10 +8029,6 @@ msgstr ""
 msgid "No curves exported"
 msgstr ""
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "អេហ្គុយ"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8025,14 +8049,6 @@ msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស�
 msgid "Applies a linear fade-out to the selected audio"
 msgstr ""
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "ផុសចេញ"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "ផតចុះ"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr ""
@@ -8049,10 +8065,6 @@ msgstr "កម្រិត​ពន្លឺ​ចាប់ផ្ដើម (គ�
 msgid "Stop threshold (samples):"
 msgstr "កម្រិត​ពន្លឺ​បញ្ចប់ (គំរូ) ៖"
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "រក​កា​ខ្ទាស់"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr ""
@@ -8060,10 +8072,6 @@ msgstr ""
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "ដាក់​បញ្ច្រាស"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8144,11 +8152,6 @@ msgstr ""
 #, fuzzy
 msgid "Noise type:"
 msgstr "ប្រភេទ​ការរំខាន"
-
-#: src/effects/Noise.h:24
-#, fuzzy
-msgid "Noise"
-msgstr "ការ​រំខាន..."
 
 #: src/effects/NoiseReduction.cpp:100
 #, fuzzy
@@ -8606,10 +8609,6 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr ""
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr ""
@@ -8701,10 +8700,6 @@ msgstr "ឆានែល​លទ្ធផល ៖ %2d"
 msgid "Output gain (dB)"
 msgstr "ឆានែល​លទ្ធផល ៖ %2d"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "ឧបករណ៍​កំណត់​ដំណាក់កាល"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr ""
@@ -8728,10 +8723,6 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "ជួសជុល"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8768,10 +8759,6 @@ msgstr "ប្រវែងជម្រើស​ថ្មី ៖"
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr ""
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "ធ្វើ​​ម្ដង​​ទៀត"
 
 #: src/effects/Reverb.cpp:47
 #, fuzzy
@@ -8906,14 +8893,6 @@ msgstr ""
 msgid "Reverses the selected audio"
 msgstr "​នាំចេញ​អូឌីយ៉ូ​ទៅជា %s"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "ដាក់​បញ្ច្រាស"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -9006,10 +8985,6 @@ msgstr ""
 
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
-msgstr ""
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp:61
@@ -9117,11 +9092,6 @@ msgstr ""
 msgid "Converts stereo tracks to mono"
 msgstr ""
 
-#: src/effects/StereoToMono.h:18
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "ស្តេរីអូ​ទៅ​ជា​ម៉ូណូ"
-
 #: src/effects/TimeScale.cpp:44
 #, fuzzy
 msgid "RatePercentChangeStart"
@@ -9180,10 +9150,6 @@ msgstr ""
 
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
-msgstr ""
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
 msgstr ""
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
@@ -9276,16 +9242,6 @@ msgstr ""
 msgid "Interpolation:"
 msgstr ""
 
-#: src/effects/ToneGen.h:25
-#, fuzzy
-msgid "Chirp"
-msgstr "Chirp..."
-
-#: src/effects/ToneGen.h:26
-#, fuzzy
-msgid "Tone"
-msgstr "សំឡេង..."
-
 #: src/effects/TruncSilence.cpp:48
 #, fuzzy
 msgid "Truncate Detected Silence"
@@ -9352,10 +9308,6 @@ msgstr "ឧបករណ៍​បង្ហាប់..."
 msgid "Truncate tracks independently"
 msgstr ""
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "កាត់​ស្ងាត់​ឲ្យ​ខ្លី"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr ""
@@ -9388,6 +9340,125 @@ msgstr "អុហ្វសិតប្រេកង់ Wah (%) ៖"
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr ""
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "ពង្រីក"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr ""
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "ផ្លាស់ប្តូរ​កម្ពស់​សំឡេង"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "ផ្លាស់ប្តូរ​ល្បឿន"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "ផ្លាស់ប្តូរ​ចង្វាក់​ភ្លេង"
+
+#: src/effects/ClickRemoval.h:29
+#, fuzzy
+msgid "Click Removal"
+msgstr "យក​ក្លីកចេញ"
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr ""
+
+#: src/effects/Distortion.h:26
+#, fuzzy
+msgid "Distortion"
+msgstr "ថិរវេលា"
+
+#: src/effects/DtmfGen.h:28
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "សំឡេង DTMF..."
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "អេកូ"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "អេហ្គុយ"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "ផុសចេញ"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "ផតចុះ"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "រក​កា​ខ្ទាស់"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "ដាក់​បញ្ច្រាស"
+
+#: src/effects/Noise.h:24
+#, fuzzy
+msgid "Noise"
+msgstr "ការ​រំខាន..."
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr ""
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "ឧបករណ៍​កំណត់​ដំណាក់កាល"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "ជួសជុល"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "ធ្វើ​​ម្ដង​​ទៀត"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "ដាក់​បញ្ច្រាស"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr ""
+
+#: src/effects/StereoToMono.h:18
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "ស្តេរីអូ​ទៅ​ជា​ម៉ូណូ"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr ""
+
+#: src/effects/ToneGen.h:25
+#, fuzzy
+msgid "Chirp"
+msgstr "Chirp..."
+
+#: src/effects/ToneGen.h:26
+#, fuzzy
+msgid "Tone"
+msgstr "សំឡេង..."
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "កាត់​ស្ងាត់​ឲ្យ​ខ្លី"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11451,11 +11522,6 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr ""
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "ឯកសារ QuickTime"
@@ -11482,6 +11548,11 @@ msgstr ""
 
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
+msgstr ""
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
 msgstr ""
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
@@ -11552,17 +11623,17 @@ msgstr "ចំនួន​ត្រូវ​នាំចូល ៖"
 msgid "Sample rate:"
 msgstr "អត្រាគំរូ ៖"
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr ""
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr ""
 
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
-msgstr ""
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp:37
@@ -12447,7 +12518,7 @@ msgid "Move clip up/down between tracks"
 msgstr "ផ្លាស់ទី​ឈុត​ឡើងលើ/ចុះក្រោម​រវាង​បទ"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "ស្រោម​សំបុត្រ"
 
@@ -13719,6 +13790,8 @@ msgid "Zoom Tool"
 msgstr "ឧបករណ៍​ពង្រីក F4"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "ឧបករណ៍​គូរ F3"
 
@@ -13748,6 +13821,433 @@ msgstr "ចាក់​នៅ​ល្បឿន"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "ចាក់​នៅ​ល្បឿន"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+#, fuzzy
+msgid "Drag one or more label boundaries."
+msgstr "អូស​ស៊ុម​ស្លាក​មួយ ឬ​ច្រើន"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+#, fuzzy
+msgid "Drag label boundary."
+msgstr "អូស​ស៊ុម​ស្លាក"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "រំលង​ដើម្បី​ចាប់ផ្ដើម ដើម"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+#, fuzzy
+msgid "&Font..."
+msgstr "ពុម្ពអក្សរ..."
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "ដាក់ស្លាក​ពុម្ពអក្សរ​បទ"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "ឈ្មោះ​មុខ"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "ទំហំ​មុខ"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+#, fuzzy
+msgid "Up &Octave"
+msgstr "Octave ឡើង"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+#, fuzzy
+msgid "Down Octa&ve"
+msgstr "Octave ចុះ"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+#, fuzzy
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr "ចុច​ដើម្បី​​ពង្រីក​បញ្ឈរ ប្ដូរ​(Shift) - ចុច ដើម្បី​បង្រួម អូស​ដើម្បី​បង្កើត​តំបន់​ពង្រីក​ជាក់លាក់ ។"
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+#, fuzzy
+msgid "Click and drag to stretch selected region."
+msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+#, fuzzy
+msgid "Stretch Note Track"
+msgstr "កំណត់​ចំណាំ​បទ"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+#, fuzzy
+msgid "Stretch"
+msgstr "កត្តា​បន្ថយ ៖"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "បញ្ចូល​ឈុត​ចូល​គ្នា"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "បញ្ចូល​ចូល​គ្នា"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "ពង្រីក​បន្ទាត់​កាត់"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "ពង្រីក"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "​បន្ទាត់​កាត់​ដែល​បាន​យកចេញ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "ចុច និង​អូស​ដើម្បី​កែសម្រួល​គំរូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+#, fuzzy
+msgid "Moved Samples"
+msgstr "គំរូ​ដែលបានផ្លាស់ទី"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "កែសម្រួល​គំរូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "ផ្លាស់ប្ដូរ '%s' ទៅ %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "ផ្លាស់ប្ដូរ​ទ្រង់ទ្រាយ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100 ម៉ោង 060 នាទី 060.01000 វិនាទី"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+#, fuzzy
+msgid "&Other..."
+msgstr "ផ្សេងៗទៀត..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "ផ្លាស់ប្ដូរ '%s' ទៅ %s Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "ផ្លាស់ប្ដូរ​អត្រា"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "កំណត់​អត្រា"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+#, fuzzy
+msgid "Wa&veform"
+msgstr "ទ្រង់ទ្រាយ​រលក"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+#, fuzzy
+msgid "&Waveform (dB)"
+msgstr "ទ្រង់ទ្រាយ​រលក (dB)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+#, fuzzy
+msgid "&Spectrogram"
+msgstr "ក្រាហ្វិក​វិសាលគម"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+#, fuzzy
+msgid "S&pectrogram Settings..."
+msgstr "ក្រាហ្វិក​វិសាលគម"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+#, fuzzy
+msgid "Ma&ke Stereo Track"
+msgstr "បង្កើត​បទ​ស្តេរ៉េអូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+#, fuzzy
+msgid "Swap Stereo &Channels"
+msgstr "ឆានែល %d"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+#, fuzzy
+msgid "Spl&it Stereo Track"
+msgstr "ពុះ​បទ​ស្តេរ៉េអូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "អនុវត្ត​ស្តេរ៉េអូ​ទៅជា​​ម៉ូណូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+#, fuzzy
+msgid "&Format"
+msgstr "ទ្រង់ទ្រាយ ៖"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+#, fuzzy
+msgid "Rat&e"
+msgstr "កំណត់​អត្រា"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "ម៉ូណូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "ឆានែល​ឆ្វេង"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "ឆានែល​ស្ដាំ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "ឆានែល"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "បង្កើត​បទ​ស្តេរ៉េអូ '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "បង្កើត​ស្តេរ៉េអូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, fuzzy, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "ឆានែល %d"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+#, fuzzy
+msgid "Swap Channels"
+msgstr "ឆានែល %d"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "ពុះ​បទ​ស្តេរ៉េអូ '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, fuzzy, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "អនុវត្ត​ស្តេរ៉េអូ​ទៅជា​​ម៉ូណូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+#, fuzzy
+msgid "Split to Mono"
+msgstr "ស្តេរីអូ​ទៅ​ជា​ម៉ូណូ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+#, fuzzy
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "ប្តូរ(Shift)​ខាង​ឆ្វេង-ចុចស្តាំ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+#, fuzzy
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "ប្តូរ(Shift)​ខាង​ឆ្វេង-ចុចស្តាំ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+#, fuzzy
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "ប្តូរ(Shift)​ខាង​ឆ្វេង-ចុចស្តាំ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+#, fuzzy
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr "ចុច​ដើម្បី​​ពង្រីក​បញ្ឈរ ប្ដូរ​(Shift) - ចុច ដើម្បី​បង្រួម អូស​ដើម្បី​បង្កើត​តំបន់​ពង្រីក​ជាក់លាក់ ។"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "ផ្លាស់ប្ដូរ​ដែន​កំណត់​ល្បឿន​ទាប​ជាង (%) ទៅ ៖"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "ដែន​កំណត់​ល្បឿន​ទាប​ជាង"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "ផ្លាស់ប្ដូរ​ដែន​កំណត់​ល្បឿន​ខ្ពស់​ជាង (%) ទៅ ៖"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "ដែន​កំណត់​ល្បឿន​ខ្ពស់​ជាង"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "កំណត់​ជួរ​ទៅ '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "កំណត់​ជួរ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+#, fuzzy
+msgid "Set Display"
+msgstr "បង្ហាញ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+#, fuzzy
+msgid "Set Interpolation"
+msgstr "ការ​កែខៃ​ធ្វើ​សមកាលកម្ម​រហ័ស"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "លីនេអ៊ែរ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+msgid "L&ogarithmic scale"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+#, fuzzy
+msgid "&Range..."
+msgstr "កំណត់​ជួរ..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+#, fuzzy
+msgid "Logarithmic &Interpolation"
+msgstr "ការ​កែខៃ​ធ្វើ​សមកាលកម្ម​រហ័ស"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​បទ​នៅ​ក្នុង​ពេលវេលា"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "ចុច​ និង​អូស​ដើម្បី​កែសម្រួល​ស្រោមសំបុត្រ​អាំភ្លី"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "​ស្រោម​សំបុត្រ​ដែល​បាន​លៃតម្រូវ ។"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -13783,6 +14283,184 @@ msgstr "ផ្លាស់ទី​បទ​ចុះ​ក្រោម"
 #: src/tracks/ui/Scrubbing.cpp:999
 msgid "Scru&bbing"
 msgstr ""
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស​ខាង​ស្ដាំ ។"
+
+#: src/tracks/ui/SelectHandle.cpp:337
+#, fuzzy
+msgid "Click and drag to move bottom selection frequency."
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
+
+#: src/tracks/ui/SelectHandle.cpp:341
+#, fuzzy
+msgid "Click and drag to move top selection frequency."
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
+
+#: src/tracks/ui/SelectHandle.cpp:349
+#, fuzzy
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+#, fuzzy
+msgid "Click and drag to move center selection frequency."
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
+
+#: src/tracks/ui/SelectHandle.cpp:364
+#, fuzzy
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+#, fuzzy
+msgid "Edit, Preferences..."
+msgstr "​ចំណូលចិត្ត..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, fuzzy, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "របៀប​ឧបករណ៍​ច្រើន ៖ Cmd- សម្រាប់​ចំណូល​ចិត្ត​ក្ដារ​ចុច និង​កណ្ដុរ"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+#, fuzzy
+msgid "Click and drag to set frequency bandwidth."
+msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​បទ​នៅ​ក្នុង​ពេលវេលា"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "ផ្លាស់ទី​ឈុត​ទៅ​បទ​មួយផ្សេង​ទៀត"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "ធ្វើ​​ឲ្យ​​ស្ងាត់​​បទ​​ដែល​​ជ្រើស %.2f វិនាទី នៅ %.2f"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "បិទ"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "បើក..."
+
+#: src/tracks/ui/TrackControls.cpp:125
+#, fuzzy
+msgid "&Name..."
+msgstr "ឈ្មោះ..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+#, fuzzy
+msgid "Move Track &Up"
+msgstr "ផ្លាស់ទី​បទ​ឡើង​លើ"
+
+#: src/tracks/ui/TrackControls.cpp:137
+#, fuzzy
+msgid "Move Track &Down"
+msgstr "ផ្លាស់ទី​បទ​ចុះ​ក្រោម"
+
+#: src/tracks/ui/TrackControls.cpp:143
+#, fuzzy
+msgid "Move Track to &Top"
+msgstr "ផ្លាស់ទី​បទ​ឡើង​លើ"
+
+#: src/tracks/ui/TrackControls.cpp:149
+#, fuzzy
+msgid "Move Track to &Bottom"
+msgstr "ផ្លាស់ទី​បទ​ចុះ​ក្រោម"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "ផ្លាស់ប្ដូរ​ឈ្មោះ​បទ​ទៅ ៖"
+
+#: src/tracks/ui/TrackControls.cpp:164
+#, fuzzy
+msgid "Track Name"
+msgstr "លេខ​បទ"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "បាន​ប្ដូរ​ឈ្មោះ '%s' ទៅ '%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "ផ្លាស់ប្ដូរ​ឈ្មោះ"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+#, fuzzy
+msgid "Command-Click"
+msgstr "ពាក្យ​បញ្ជា"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "បញ្ជា(Ctrl) ចុចឆ្វេង"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr ""
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, fuzzy, c-format
+msgid "%s to select or deselect track."
+msgstr "បង្កើត​​បទ​​អូឌីយ៉ូ​​ថ្មី"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "ឡើង​លើ"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "ចុះ​ក្រោម"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "ផ្លាស់ទី '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "ចុច​ដើម្បី​ពង្រីក ប្តូរ(Shift)-ចុច ដើម្បី​បង្រួម"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "អូស​ដើម្បី​ពង្រីក​ទៅ​ក្នុង​តំបន់ ចុច​ខាងស្តាំ​ដើម្បី​បង្រួម"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "ឆ្វេង=ពង្រីក ស្តាំ=បង្រួម កណ្តាល=ធម្មតា"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -13851,10 +14529,6 @@ msgstr ""
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr ""
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "បិទ"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -13985,10 +14659,6 @@ msgstr ""
 
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
-msgstr ""
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
 msgstr ""
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
@@ -14494,6 +15164,10 @@ msgstr ""
 msgid "Don't show this warning again"
 msgstr "កុំ​បង្ហាញ​ការ​ព្រមាន​នេះ​ម្តងទៀត"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr ""
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14547,26 +15221,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgstr "ថត R"
 
 #, fuzzy
-#~ msgid "&Other..."
-#~ msgstr "ផ្សេងៗទៀត..."
-
-#, fuzzy
-#~ msgid "Wa&veform"
-#~ msgstr "ទ្រង់ទ្រាយ​រលក"
-
-#, fuzzy
-#~ msgid "&Waveform (dB)"
-#~ msgstr "ទ្រង់ទ្រាយ​រលក (dB)"
-
-#, fuzzy
-#~ msgid "&Spectrogram"
-#~ msgstr "ក្រាហ្វិក​វិសាលគម"
-
-#, fuzzy
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "ក្រាហ្វិក​វិសាលគម"
-
-#, fuzzy
 #~ msgid "&Mono"
 #~ msgstr "ម៉ូណូ"
 
@@ -14579,257 +15233,8 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgstr "ឆានែល​ស្ដាំ"
 
 #, fuzzy
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "បង្កើត​បទ​ស្តេរ៉េអូ"
-
-#, fuzzy
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "ពុះ​បទ​ស្តេរ៉េអូ"
-
-#, fuzzy
-#~ msgid "&Format"
-#~ msgstr "ទ្រង់ទ្រាយ ៖"
-
-#, fuzzy
-#~ msgid "Rat&e"
-#~ msgstr "កំណត់​អត្រា"
-
-#, fuzzy
-#~ msgid "Up &Octave"
-#~ msgstr "Octave ឡើង"
-
-#, fuzzy
-#~ msgid "Down Octa&ve"
-#~ msgstr "Octave ចុះ"
-
-#, fuzzy
-#~ msgid "&Font..."
-#~ msgstr "ពុម្ពអក្សរ..."
-
-#, fuzzy
-#~ msgid "&Range..."
-#~ msgstr "កំណត់​ជួរ..."
-
-#, fuzzy
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "ការ​កែខៃ​ធ្វើ​សមកាលកម្ម​រហ័ស"
-
-#, fuzzy
-#~ msgid "&Name..."
-#~ msgstr "ឈ្មោះ..."
-
-#, fuzzy
-#~ msgid "Move Track &Up"
-#~ msgstr "ផ្លាស់ទី​បទ​ឡើង​លើ"
-
-#, fuzzy
-#~ msgid "Move Track &Down"
-#~ msgstr "ផ្លាស់ទី​បទ​ចុះ​ក្រោម"
-
-#, fuzzy
-#~ msgid "Move Track to &Top"
-#~ msgstr "ផ្លាស់ទី​បទ​ឡើង​លើ"
-
-#, fuzzy
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "ផ្លាស់ទី​បទ​ចុះ​ក្រោម"
-
-#, fuzzy
-#~ msgid "Command-Click"
-#~ msgstr "ពាក្យ​បញ្ជា"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "បញ្ជា(Ctrl) ចុចឆ្វេង"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr "ចុច​ដើម្បី​​ពង្រីក​បញ្ឈរ ប្ដូរ​(Shift) - ចុច ដើម្បី​បង្រួម អូស​ដើម្បី​បង្កើត​តំបន់​ពង្រីក​ជាក់លាក់ ។"
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​លៃ​តម្រូវ​ទំហំ​បទ​ស្តេរ៉េអូ​នីមួយៗ ។"
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ប្ដូរ​ទំហំ​បទ ។"
-
-#, fuzzy
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "អូស​ស៊ុម​ស្លាក​មួយ ឬ​ច្រើន"
-
-#, fuzzy
-#~ msgid "Drag label boundary."
-#~ msgstr "អូស​ស៊ុម​ស្លាក"
-
-#, fuzzy
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
-
-#, fuzzy
-#~ msgid "Edit, Preferences..."
-#~ msgstr "​ចំណូលចិត្ត..."
-
-#, fuzzy
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "របៀប​ឧបករណ៍​ច្រើន ៖ Cmd- សម្រាប់​ចំណូល​ចិត្ត​ក្ដារ​ចុច និង​កណ្ដុរ"
-
-#, fuzzy
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
-
-#, fuzzy
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស​ខាង​ស្ដាំ ។"
-
-#, fuzzy
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
-
-#, fuzzy
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​ស៊ុម​ការ​ជ្រើស ។"
-
-#, fuzzy
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "​ស្រោម​សំបុត្រ​ដែល​បាន​លៃតម្រូវ ។"
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "ផ្លាស់ទី​ឈុត​ទៅ​បទ​មួយផ្សេង​ទៀត"
-
-#, fuzzy
-#~ msgid "Moved Samples"
-#~ msgstr "គំរូ​ដែលបានផ្លាស់ទី"
-
-#~ msgid "Sample Edit"
-#~ msgstr "កែសម្រួល​គំរូ"
-
-#~ msgid "up"
-#~ msgstr "ឡើង​លើ"
-
-#~ msgid "down"
-#~ msgstr "ចុះ​ក្រោម"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "ផ្លាស់ទី '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "ពង្រីក​បន្ទាត់​កាត់"
-
-#~ msgid "Expand"
-#~ msgstr "ពង្រីក"
-
-#~ msgid "Merged Clips"
-#~ msgstr "បញ្ចូល​ឈុត​ចូល​គ្នា"
-
-#~ msgid "Merge"
-#~ msgstr "បញ្ចូល​ចូល​គ្នា"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "​បន្ទាត់​កាត់​ដែល​បាន​យកចេញ"
-
-#~ msgid "Left Channel"
-#~ msgstr "ឆានែល​ឆ្វេង"
-
-#~ msgid "Right Channel"
-#~ msgstr "ឆានែល​ស្ដាំ"
-
-#~ msgid "Mono"
-#~ msgstr "ម៉ូណូ"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "ផ្លាស់ប្ដូរ '%s' ទៅ %s"
-
-#~ msgid "Channel"
-#~ msgstr "ឆានែល"
-
-#, fuzzy
-#~ msgid "Swap Channels"
-#~ msgstr "ឆានែល %d"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "ពុះ​បទ​ស្តេរ៉េអូ '%s'"
-
-#, fuzzy
-#~ msgid "Split to Mono"
-#~ msgstr "ស្តេរីអូ​ទៅ​ជា​ម៉ូណូ"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "បង្កើត​បទ​ស្តេរ៉េអូ '%s'"
-
-#~ msgid "Make Stereo"
-#~ msgstr "បង្កើត​ស្តេរ៉េអូ"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "ផ្លាស់ប្ដូរ '%s' ទៅ %s Hz"
-
-#~ msgid "Rate Change"
-#~ msgstr "ផ្លាស់ប្ដូរ​អត្រា"
-
-#~ msgid "Format Change"
-#~ msgstr "ផ្លាស់ប្ដូរ​ទ្រង់ទ្រាយ"
-
-#~ msgid "Set Rate"
-#~ msgstr "កំណត់​អត្រា"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "ផ្លាស់ប្ដូរ​ដែន​កំណត់​ល្បឿន​ទាប​ជាង (%) ទៅ ៖"
-
-#~ msgid "Lower speed limit"
-#~ msgstr "ដែន​កំណត់​ល្បឿន​ទាប​ជាង"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "ផ្លាស់ប្ដូរ​ដែន​កំណត់​ល្បឿន​ខ្ពស់​ជាង (%) ទៅ ៖"
-
-#~ msgid "Upper speed limit"
-#~ msgstr "ដែន​កំណត់​ល្បឿន​ខ្ពស់​ជាង"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "កំណត់​ជួរ​ទៅ '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "កំណត់​ជួរ"
-
-#, fuzzy
-#~ msgid "Set Display"
-#~ msgstr "បង្ហាញ"
-
-#, fuzzy
-#~ msgid "Set Interpolation"
-#~ msgstr "ការ​កែខៃ​ធ្វើ​សមកាលកម្ម​រហ័ស"
-
-#~ msgid "Change track name to:"
-#~ msgstr "ផ្លាស់ប្ដូរ​ឈ្មោះ​បទ​ទៅ ៖"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "បាន​ប្ដូរ​ឈ្មោះ '%s' ទៅ '%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "ផ្លាស់ប្ដូរ​ឈ្មោះ"
-
-#~ msgid "Label Track Font"
-#~ msgstr "ដាក់ស្លាក​ពុម្ពអក្សរ​បទ"
-
-#~ msgid "Face name"
-#~ msgstr "ឈ្មោះ​មុខ"
-
-#~ msgid "Face size"
-#~ msgstr "ទំហំ​មុខ"
 
 #, fuzzy
 #~ msgid "You must select audio in the project window."
@@ -14884,27 +15289,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #~ msgid "Selection "
 #~ msgstr "ជម្រើស"
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ជ្រើស​អូឌីយ៉ូ"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "ចុច​ និង​អូស​ដើម្បី​កែសម្រួល​ស្រោមសំបុត្រ​អាំភ្លី"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "ចុច និង​អូស​ដើម្បី​កែសម្រួល​គំរូ"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "ចុច​ដើម្បី​ពង្រីក ប្តូរ(Shift)-ចុច ដើម្បី​បង្រួម"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "អូស​ដើម្បី​ពង្រីក​ទៅ​ក្នុង​តំបន់ ចុច​ខាងស្តាំ​ដើម្បី​បង្រួម"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "ឆ្វេង=ពង្រីក ស្តាំ=បង្រួម កណ្តាល=ធម្មតា"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "ចុច និង​អូស​ដើម្បី​ផ្លាស់ទី​បទ​នៅ​ក្នុង​ពេលវេលា"
-
 #, fuzzy
 #~ msgid "Audacity Support Team"
 #~ msgstr "ក្រុម​​​គាំទ្រ​​របស់ Audacity %s"
@@ -14948,14 +15332,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 #, fuzzy
 #~ msgid "&Rate"
 #~ msgstr "កំណត់​អត្រា"
-
-#, fuzzy
-#~ msgid "&Linear"
-#~ msgstr "លីនេអ៊ែរ"
-
-#, fuzzy
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "ប្តូរ(Shift)​ខាង​ឆ្វេង-ចុចស្តាំ"
 
 #, fuzzy
 #~ msgid "&Bass (dB):"
@@ -15384,10 +15760,6 @@ msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 
 #~ msgid "Applied effect: Generate Silence, %.6lf seconds"
 #~ msgstr "បែបផែន​ដែល​បាន​​អនុវត្ត ៖ បង្កើត​ស្ងាត់ៗ %.6lf វិនាទី"
-
-#, fuzzy
-#~ msgid "Applying Stereo to Mono"
-#~ msgstr "អនុវត្ត​ស្តេរ៉េអូ​ទៅជា​​ម៉ូណូ"
 
 #~ msgid ""
 #~ "Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = "

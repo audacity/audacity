@@ -7,11 +7,12 @@
 # Chao YU <isaac.yc@gmail.com>, 2011
 # wwj402 <wwj402@gmail.com>, 2013,2015
 # zhangmin <zm1990s@gmail.com>, 2014-2016
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-19 18:18+0100\n"
+"POT-Creation-Date: 2017-07-19 19:06+0100\n"
 "PO-Revision-Date: 2017-04-03 17:14+0800\n"
 "Last-Translator: zh_CN.po <dingpengyu06@gmail.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
@@ -49,6 +50,7 @@ msgstr "请选择一个已存在的文件。"
 #: src/prefs/KeyConfigPrefs.cpp:600 src/prefs/KeyConfigPrefs.cpp:614
 #: src/prefs/KeyConfigPrefs.cpp:639 src/prefs/KeyConfigPrefs.cpp:1134
 #: src/toolbars/ControlToolBar.cpp:713 src/toolbars/ControlToolBar.cpp:1194
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "Error"
 msgstr "错误"
 
@@ -1880,48 +1882,35 @@ msgstr "'%s' 在哪里？"
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "找不到兼容的FFmpeg库。"
 
-#: src/FFmpeg.h:180
-msgid "FFmpeg not found"
-msgstr "FFmpeg没有找到"
-
-#: src/FFmpeg.h:195
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
-"but the libraries were not found.\n"
-"\n"
-"To use FFmpeg import, go to Preferences > Libraries\n"
-"to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity尝试着用FFmpeg库来导入音频文件，\n"
-"但库没有找到。 \n"
-"\n"
-"果你要使用FFmpeg导入，请到'首选项'->'库'， 去下载或定位FFmpeg库。"
-
-#: src/FFmpeg.h:203
-msgid "Do not show this warning again"
-msgstr "不要再显示这个警告了"
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h:279
-msgid ""
-"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files|*"
-msgstr "仅 avformat.dll|*avformat*.dll|动态链接库 (*.dll)|*.dll|所有文件|*"
-
-#: src/FFmpeg.h:312
-msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "动态库 (*.dylib)|*.dylib|所有文件 (*)|*"
-
-#: src/FFmpeg.h:339
-msgid ""
-"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|All Files (*)|*"
-msgstr ""
-"仅 libavformat.so|libavformat*.so*|动态链接库 (*.so*)|*.so*|所有文件 (*)|*"
-
 #: src/FFT.cpp:338
 msgid "Rectangular"
 msgstr "方形"
+
+#: src/FileException.cpp:27
+#, fuzzy, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr ""
+"Audacity不能写文件：\n"
+"  %s"
+
+#: src/FileException.cpp:30
+#, fuzzy, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr ""
+"Audacity不能写文件：\n"
+"  %s"
+
+#: src/FileException.cpp:33
+#, fuzzy, c-format
+msgid "Audacity failed to write to a file in %s."
+msgstr ""
+"Audacity不能写文件：\n"
+"  %s"
+
+#: src/FileException.cpp:37
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2343,6 +2332,20 @@ msgstr "丢弃(&D)"
 msgid "&OK"
 msgstr "确定(&O)"
 
+#: src/InconsistencyException.cpp:33
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
+#: src/InconsistencyException.cpp:38
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at feedback@audacityteam.org."
+msgstr ""
+
 #: src/Internat.cpp:204
 msgid "Unable to determine"
 msgstr "不能决定"
@@ -2476,18 +2479,19 @@ msgstr "输入标记轨名"
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
-#: src/LabelDialog.cpp:785 src/LabelDialog.h:63 src/LabelTrack.cpp:110
-#: src/TrackPanelAx.cpp:369
+#: src/LabelDialog.cpp:785 src/LabelTrack.cpp:110 src/TrackPanelAx.cpp:369
+#: src/LabelDialog.h:63
 msgid "Label Track"
 msgstr "标记轨"
 
 #: src/LabelTrack.cpp:1787 src/LabelTrack.cpp:1819 src/LabelTrack.cpp:2182
-#: src/LabelTrack.cpp:2197
+#: src/LabelTrack.cpp:2197 src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:145
 msgid "Modified Label"
 msgstr "已修改的标记"
 
 #: src/LabelTrack.cpp:1788 src/LabelTrack.cpp:1820 src/LabelTrack.cpp:2183
 #: src/LabelTrack.cpp:2198 src/LabelTrack.cpp:2210
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:146
 msgid "Label Edit"
 msgstr "标记编辑"
 
@@ -3966,6 +3970,7 @@ msgstr "时间移动轨道/剪辑 %s %.02f 秒"
 
 #: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
 #: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
+#: src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "时间-移动(Time-Shift)"
 
@@ -4010,7 +4015,7 @@ msgid "Moved"
 msgstr "已移动"
 
 #. i18n-hint: The direction of movement will be up, down, to top or to bottom..
-#: src/Menus.cpp:3948
+#: src/Menus.cpp:3948 src/tracks/ui/TrackSelectHandle.cpp:198
 msgid "Move Track"
 msgstr "移动轨道"
 
@@ -4231,6 +4236,7 @@ msgid "Detach Labeled Audio"
 msgstr "分离标记的音频"
 
 #: src/Menus.cpp:5695
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:893
 msgid "Split"
 msgstr "分离"
 
@@ -4254,11 +4260,13 @@ msgstr ""
 msgid "clips"
 msgstr ""
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
 msgid "left"
 msgstr "左"
 
-#: src/Menus.cpp:6227 src/Menus.cpp:7313
+#. i18n-hint: a direction as in left or right.
+#: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:834
 msgid "right"
 msgstr "右"
 
@@ -4550,10 +4558,12 @@ msgid "Resample"
 msgstr "重采样"
 
 #: src/Menus.cpp:8463
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:405
 msgid "New sample rate (Hz):"
 msgstr "新采样率(Hz)："
 
 #: src/Menus.cpp:8491
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:434
 msgid "The entered value is invalid"
 msgstr "输入的值无效"
 
@@ -4584,6 +4594,7 @@ msgstr "混音并渲染轨道"
 #: src/Project.cpp:5429 src/TrackPanel.cpp:2962 src/TrackPanel.cpp:2968
 #: src/effects/BassTreble.cpp:46 src/effects/Phaser.cpp:54
 #: src/effects/Wahwah.cpp:51
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Gain"
 msgstr "音量增强"
 
@@ -4591,6 +4602,7 @@ msgstr "音量增强"
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp:218 src/MixerBoard.cpp:221 src/MixerBoard.cpp:417
 #: src/TrackPanel.cpp:2994 src/TrackPanel.cpp:2999
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Velocity"
 msgstr "速度"
 
@@ -4601,18 +4613,21 @@ msgstr "乐器"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: src/MixerBoard.cpp:253 src/MixerBoard.cpp:255 src/MixerBoard.cpp:433
 #: src/Project.cpp:5445 src/TrackPanel.cpp:2978 src/TrackPanel.cpp:2984
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Pan"
 msgstr "左右声道平衡"
 
 #. i18n-hint: This is on a button that will silence this track.
 #: src/MixerBoard.cpp:268 src/MixerBoard.cpp:310 src/MixerBoard.cpp:1358
 #: src/TrackPanel.cpp:2327
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:43
 msgid "Mute"
 msgstr "静音"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp:282 src/MixerBoard.cpp:311 src/MixerBoard.cpp:1384
 #: src/TrackPanel.cpp:2325
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp:101
 msgid "Solo"
 msgstr "独奏"
 
@@ -4621,14 +4636,17 @@ msgid "Signal Level Meter"
 msgstr "信号电平指示"
 
 #: src/MixerBoard.cpp:404
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:68
 msgid "Moved gain slider"
 msgstr "已移动音量增强滑杆"
 
 #: src/MixerBoard.cpp:417
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp:66
 msgid "Moved velocity slider"
 msgstr "已移动速度滑杆"
 
 #: src/MixerBoard.cpp:433
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp:162
 msgid "Moved pan slider"
 msgstr "已移动左右声道平衡滑杆"
 
@@ -5703,14 +5721,6 @@ msgstr ""
 "Audacity不能保存文件：\n"
 "  %s"
 
-#: src/TimeDialog.h:32 src/TimerRecordDialog.cpp:840
-#: src/TimerRecordDialog.cpp:852 src/effects/DtmfGen.cpp:338
-#: src/effects/Noise.cpp:243 src/effects/Silence.cpp:77
-#: src/effects/ToneGen.cpp:418 src/effects/ladspa/LadspaEffect.cpp:1178
-#: src/effects/lv2/LV2Effect.cpp:1577 src/effects/VST/VSTEffect.cpp:2807
-msgid "Duration"
-msgstr "持续时间"
-
 #: src/TimerRecordDialog.cpp:143
 msgid "Audacity Timer Record"
 msgstr "Audacity 定时录制"
@@ -5835,6 +5845,14 @@ msgstr "结束日期和时间"
 #: src/TimerRecordDialog.cpp:824
 msgid "End Date"
 msgstr "结束日期"
+
+#: src/TimerRecordDialog.cpp:840 src/TimerRecordDialog.cpp:852
+#: src/TimeDialog.h:32 src/effects/DtmfGen.cpp:338 src/effects/Noise.cpp:243
+#: src/effects/Silence.cpp:77 src/effects/ToneGen.cpp:418
+#: src/effects/ladspa/LadspaEffect.cpp:1178 src/effects/lv2/LV2Effect.cpp:1577
+#: src/effects/VST/VSTEffect.cpp:2807
+msgid "Duration"
+msgstr "持续时间"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -6024,6 +6042,14 @@ msgstr " 选择打开"
 msgid " Sync Lock Selected"
 msgstr "同步锁定的选择"
 
+#: src/TrackPanelResizeHandle.cpp:43
+msgid "Click and drag to adjust relative size of stereo tracks."
+msgstr "单击并拖动调整立体声音轨的相対大小"
+
+#: src/TrackPanelResizeHandle.cpp:49
+msgid "Click and drag to resize the track."
+msgstr "单击并拖动调整轨道的大小"
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -6072,6 +6098,50 @@ msgstr "没有足够的空间来粘贴选区"
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
 msgstr "没有足够的空间来扩展剪切线"
+
+#: src/FFmpeg.h:180
+msgid "FFmpeg not found"
+msgstr "FFmpeg没有找到"
+
+#: src/FFmpeg.h:195
+msgid ""
+"Audacity attempted to use FFmpeg to import an audio file,\n"
+"but the libraries were not found.\n"
+"\n"
+"To use FFmpeg import, go to Preferences > Libraries\n"
+"to download or locate the FFmpeg libraries."
+msgstr ""
+"Audacity尝试着用FFmpeg库来导入音频文件，\n"
+"但库没有找到。 \n"
+"\n"
+"果你要使用FFmpeg导入，请到'首选项'->'库'， 去下载或定位FFmpeg库。"
+
+#: src/FFmpeg.h:203
+msgid "Do not show this warning again"
+msgstr "不要再显示这个警告了"
+
+#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
+#: src/FFmpeg.h:279
+msgid ""
+"Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
+"All Files|*"
+msgstr "仅 avformat.dll|*avformat*.dll|动态链接库 (*.dll)|*.dll|所有文件|*"
+
+#: src/FFmpeg.h:312
+msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+msgstr "动态库 (*.dylib)|*.dylib|所有文件 (*)|*"
+
+#: src/FFmpeg.h:339
+msgid ""
+"Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
+"so*|All Files (*)|*"
+msgstr ""
+"仅 libavformat.so|libavformat*.so*|动态链接库 (*.so*)|*.so*|所有文件 (*)|*"
+
+#: src/blockfile/NotYetAvailableException.cpp:25
+#, c-format
+msgid "This operation cannot be done until importation of %s completes."
+msgstr ""
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6189,10 +6259,6 @@ msgstr "新建峰值振幅 (分贝)："
 #: src/effects/Amplify.cpp:257
 msgid "Allow clipping"
 msgstr "允许破音"
-
-#: src/effects/Amplify.h:26
-msgid "Amplify"
-msgstr "增幅(放大)"
 
 #: src/effects/AutoDuck.cpp:41
 msgid "DuckAmountDb"
@@ -6340,10 +6406,6 @@ msgstr "电平"
 msgid "&Link Volume control to Tone controls"
 msgstr "&并将音量控制连接到音调控制"
 
-#: src/effects/BassTreble.h:26
-msgid "Bass and Treble"
-msgstr "低音和高音"
-
 #: src/effects/ChangePitch.cpp:57 src/effects/ChangeSpeed.cpp:67
 #: src/effects/ChangeTempo.cpp:51
 msgid "Percentage"
@@ -6431,10 +6493,6 @@ msgstr "改变百分比"
 msgid "Use high quality stretching (slow)"
 msgstr "使用高品质的拉伸 (慢)"
 
-#: src/effects/ChangePitch.h:39
-msgid "Change Pitch"
-msgstr "改变音高"
-
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: src/effects/ChangeSpeed.cpp:59 src/effects/ladspa/LadspaEffect.cpp:595
 #: src/effects/lv2/LV2Effect.cpp:354 src/effects/lv2/LV2Effect.cpp:367
@@ -6492,10 +6550,6 @@ msgstr "当前选区长度"
 msgid "New Length:"
 msgstr "新长度："
 
-#: src/effects/ChangeSpeed.h:28
-msgid "Change Speed"
-msgstr "改变速率"
-
 #: src/effects/ChangeTempo.cpp:102
 msgid "Change the tempo of a selection without changing its pitch"
 msgstr "改变选区的节奏，不改变其音高"
@@ -6534,10 +6588,6 @@ msgstr "长度 (秒)："
 msgid "Length in seconds from"
 msgstr "到长度 (秒)"
 
-#: src/effects/ChangeTempo.h:33
-msgid "Change Tempo"
-msgstr "改变节奏"
-
 #: src/effects/ClickRemoval.cpp:51 src/effects/ClickRemoval.cpp:348
 #: src/effects/Compressor.cpp:60 src/effects/Compressor.cpp:222
 msgid "Threshold"
@@ -6571,10 +6621,6 @@ msgstr "最大尖脉冲宽度 (越高越敏感)"
 #: src/effects/ClickRemoval.cpp:362
 msgid "Max Spike Width"
 msgstr "最大尖脉冲宽度"
-
-#: src/effects/ClickRemoval.h:29
-msgid "Click Removal"
-msgstr "消除咔嚓声..."
 
 #: src/effects/Compressor.cpp:61
 msgid "NoiseFloor"
@@ -6702,10 +6748,6 @@ msgstr "释放时间 %.1f 秒"
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f 秒"
-
-#: src/effects/Compressor.h:30
-msgid "Compressor"
-msgstr "压缩器"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -7248,11 +7290,6 @@ msgstr "(%) [-50到100]："
 msgid " (0 to 5):"
 msgstr "（0至5）："
 
-#: src/effects/Distortion.h:26
-#, fuzzy
-msgid "Distortion"
-msgstr "持续时间"
-
 #: src/effects/DtmfGen.cpp:47
 msgid "Sequence"
 msgstr "次序"
@@ -7310,10 +7347,6 @@ msgstr "毫秒"
 msgid "Silence duration:"
 msgstr "空白持续时间："
 
-#: src/effects/DtmfGen.h:28
-msgid "DTMF Tones"
-msgstr "DTMF 音"
-
 #: src/effects/Echo.cpp:36 src/effects/Reverb.cpp:48
 msgid "Delay"
 msgstr "延迟"
@@ -7338,10 +7371,6 @@ msgstr "延迟时间 (秒)："
 #: src/effects/Echo.cpp:168
 msgid "Decay factor:"
 msgstr "衰減系数"
-
-#: src/effects/Echo.h:24
-msgid "Echo"
-msgstr "回声"
 
 #: src/effects/Effect.cpp:1055
 #, c-format
@@ -7648,6 +7677,7 @@ msgid "Mark effect as a favorite"
 msgstr "将效果标记为喜欢"
 
 #: src/effects/EffectRack.cpp:247
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
 msgid "Remove"
 msgstr "移除"
 
@@ -8024,10 +8054,6 @@ msgstr "已导出的曲线"
 msgid "No curves exported"
 msgstr "没有导出任何曲线"
 
-#: src/effects/Equalization.h:46
-msgid "Equalization"
-msgstr "均衡器"
-
 #: src/effects/Equalization48x.cpp:509
 #, c-format
 msgid ""
@@ -8053,14 +8079,6 @@ msgstr "为选区应用线性淡入"
 msgid "Applies a linear fade-out to the selected audio"
 msgstr "为选区应用线性淡出"
 
-#: src/effects/Fade.h:18
-msgid "Fade In"
-msgstr "淡入"
-
-#: src/effects/Fade.h:19
-msgid "Fade Out"
-msgstr "淡出"
-
 #: src/effects/FindClipping.cpp:61
 msgid "Creates labels where clipping is detected"
 msgstr "创建剪切检测到的标签"
@@ -8077,10 +8095,6 @@ msgstr "开始阈值(样本数)："
 msgid "Stop threshold (samples):"
 msgstr "停止阈值(样本数)："
 
-#: src/effects/FindClipping.h:23
-msgid "Find Clipping"
-msgstr "寻找破音"
-
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "空间不足，不能生成音频"
@@ -8088,10 +8102,6 @@ msgstr "空间不足，不能生成音频"
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "上下翻转音频，反相"
-
-#: src/effects/Invert.h:20
-msgid "Invert"
-msgstr "反相"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
@@ -8169,10 +8179,6 @@ msgstr "产生三种(任选其一)不同类型的噪音"
 #: src/effects/Noise.cpp:226
 msgid "Noise type:"
 msgstr "噪声类型："
-
-#: src/effects/Noise.h:24
-msgid "Noise"
-msgstr "噪音"
 
 #: src/effects/NoiseReduction.cpp:100
 msgid "Median"
@@ -8603,10 +8609,6 @@ msgstr ""
 "尝试增加音频选择至少 %.1f seconds,\n"
 "或减少“时间分辨率”小于 %.1f seconds."
 
-#: src/effects/Paulstretch.h:19
-msgid "Paulstretch"
-msgstr "Paulstretch"
-
 #: src/effects/Phaser.cpp:48 src/effects/Phaser.cpp:257
 msgid "Stages"
 msgstr "阶段"
@@ -8692,10 +8694,6 @@ msgstr "输出增益 (分贝):"
 msgid "Output gain (dB)"
 msgstr "输出增益 (分贝)"
 
-#: src/effects/Phaser.h:30
-msgid "Phaser"
-msgstr "不均匀相移器"
-
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
 msgstr "设置一个或多个音轨的峰值振幅"
@@ -8724,10 +8722,6 @@ msgstr ""
 "请选择一个至少一侧邻接音频的选区。\n"
 "\n"
 "周围的音频越多，修复效果越好。"
-
-#: src/effects/Repair.h:18
-msgid "Repair"
-msgstr "修复"
 
 #: src/effects/Repeat.cpp:41
 msgid "Count"
@@ -8760,10 +8754,6 @@ msgstr "新选区的长度："
 #: src/effects/Repeat.cpp:243
 msgid "Warning: No repeats."
 msgstr "警告: 没有重复。"
-
-#: src/effects/Repeat.h:23
-msgid "Repeat"
-msgstr "重复"
 
 #: src/effects/Reverb.cpp:47
 msgid "RoomSize"
@@ -8889,14 +8879,6 @@ msgstr "混响"
 msgid "Reverses the selected audio"
 msgstr "反向选择的音频"
 
-#: src/effects/Reverse.h:20
-msgid "Reverse"
-msgstr "反向"
-
-#: src/effects/SBSMSEffect.h:38
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "吕雪莉时间/沥青拉伸"
-
 #. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp:92
 msgid "Butterworth"
@@ -8988,10 +8970,6 @@ msgstr "最小阻带衰减(stopband attenuation)(&t)："
 #: src/effects/ScienFilter.cpp:516
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "最小阻带衰减(stopband attenuation dB)(&t)"
-
-#: src/effects/ScienFilter.h:34
-msgid "Classic Filters"
-msgstr "经典滤波器"
 
 #: src/effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
@@ -9087,10 +9065,6 @@ msgstr "创建没有任何振幅的音频"
 msgid "Converts stereo tracks to mono"
 msgstr "将立体声轨道转换为单声道"
 
-#: src/effects/StereoToMono.h:18
-msgid "Stereo To Mono"
-msgstr "立体声转单声道"
-
 #: src/effects/TimeScale.cpp:44
 msgid "RatePercentChangeStart"
 msgstr "起始速度变化率"
@@ -9146,10 +9120,6 @@ msgstr "(%) [-50到100]："
 #: src/effects/TimeScale.cpp:274
 msgid "Final Pitch Shift"
 msgstr "结尾音调变化"
-
-#: src/effects/TimeScale.h:27
-msgid "Time Scale"
-msgstr "时间伸缩"
 
 #: src/effects/ToneGen.cpp:44 src/prefs/SpectrogramSettings.cpp:148
 #: src/prefs/WaveformSettings.cpp:155 src/widgets/Meter.cpp:1999
@@ -9238,14 +9208,6 @@ msgstr "结束振幅"
 msgid "Interpolation:"
 msgstr "内插算法："
 
-#: src/effects/ToneGen.h:25
-msgid "Chirp"
-msgstr "线性调频"
-
-#: src/effects/ToneGen.h:26
-msgid "Tone"
-msgstr "单音"
-
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
 msgstr "截去检测到的静音"
@@ -9308,10 +9270,6 @@ msgstr "压缩到："
 msgid "Truncate tracks independently"
 msgstr "分别标准化立体声的两个声道"
 
-#: src/effects/TruncSilence.h:32
-msgid "Truncate Silence"
-msgstr "截去静音"
-
 #: src/effects/Wahwah.cpp:49 src/effects/Wahwah.cpp:272
 msgid "Resonance"
 msgstr "共鸣"
@@ -9344,6 +9302,119 @@ msgstr "哇哇频率偏移 (%)："
 #: src/effects/Wahwah.cpp:282
 msgid "Wah frequency offset in percent"
 msgstr "哇哇频率偏移 (%)："
+
+#: src/effects/Amplify.h:26
+msgid "Amplify"
+msgstr "增幅(放大)"
+
+#: src/effects/BassTreble.h:26
+msgid "Bass and Treble"
+msgstr "低音和高音"
+
+#: src/effects/ChangePitch.h:39
+msgid "Change Pitch"
+msgstr "改变音高"
+
+#: src/effects/ChangeSpeed.h:28
+msgid "Change Speed"
+msgstr "改变速率"
+
+#: src/effects/ChangeTempo.h:33
+msgid "Change Tempo"
+msgstr "改变节奏"
+
+#: src/effects/ClickRemoval.h:29
+msgid "Click Removal"
+msgstr "消除咔嚓声..."
+
+#: src/effects/Compressor.h:30
+msgid "Compressor"
+msgstr "压缩器"
+
+#: src/effects/Distortion.h:26
+#, fuzzy
+msgid "Distortion"
+msgstr "持续时间"
+
+#: src/effects/DtmfGen.h:28
+msgid "DTMF Tones"
+msgstr "DTMF 音"
+
+#: src/effects/Echo.h:24
+msgid "Echo"
+msgstr "回声"
+
+#: src/effects/Equalization.h:46
+msgid "Equalization"
+msgstr "均衡器"
+
+#: src/effects/Fade.h:18
+msgid "Fade In"
+msgstr "淡入"
+
+#: src/effects/Fade.h:19
+msgid "Fade Out"
+msgstr "淡出"
+
+#: src/effects/FindClipping.h:23
+msgid "Find Clipping"
+msgstr "寻找破音"
+
+#: src/effects/Invert.h:20
+msgid "Invert"
+msgstr "反相"
+
+#: src/effects/Noise.h:24
+msgid "Noise"
+msgstr "噪音"
+
+#: src/effects/Paulstretch.h:19
+msgid "Paulstretch"
+msgstr "Paulstretch"
+
+#: src/effects/Phaser.h:30
+msgid "Phaser"
+msgstr "不均匀相移器"
+
+#: src/effects/Repair.h:18
+msgid "Repair"
+msgstr "修复"
+
+#: src/effects/Repeat.h:23
+msgid "Repeat"
+msgstr "重复"
+
+#: src/effects/Reverse.h:20
+msgid "Reverse"
+msgstr "反向"
+
+#: src/effects/SBSMSEffect.h:38
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "吕雪莉时间/沥青拉伸"
+
+#: src/effects/ScienFilter.h:34
+msgid "Classic Filters"
+msgstr "经典滤波器"
+
+#: src/effects/StereoToMono.h:18
+msgid "Stereo To Mono"
+msgstr "立体声转单声道"
+
+#: src/effects/TimeScale.h:27
+msgid "Time Scale"
+msgstr "时间伸缩"
+
+#: src/effects/ToneGen.h:25
+msgid "Chirp"
+msgstr "线性调频"
+
+#: src/effects/ToneGen.h:26
+msgid "Tone"
+msgstr "单音"
+
+#: src/effects/TruncSilence.h:32
+msgid "Truncate Silence"
+msgstr "截去静音"
 
 #: src/effects/Wahwah.h:28
 msgid "Wahwah"
@@ -11542,11 +11613,6 @@ msgstr "从原始文件中直接读取[更快] (&D)"
 msgid "Don't &warn again and always use my choice above"
 msgstr "请不要再次警告，总是使用我上面的选定(&w)"
 
-#: src/import/ImportPlugin.h:140 src/import/ImportRaw.cpp:241
-#, c-format
-msgid "Importing %s"
-msgstr "导入'%s'中"
-
 #: src/import/ImportQT.cpp:20
 msgid "QuickTime files"
 msgstr "QuickTime文件"
@@ -11574,6 +11640,11 @@ msgstr "不能取得流描述"
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
 msgstr "不能得到填充缓冲"
+
+#: src/import/ImportRaw.cpp:241 src/import/ImportPlugin.h:140
+#, c-format
+msgid "Importing %s"
+msgstr "导入'%s'中"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
 #: src/import/ImportRaw.cpp:244
@@ -11643,6 +11714,11 @@ msgstr "总计要导入："
 msgid "Sample rate:"
 msgstr "采样率："
 
+#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
+#, c-format
+msgid "%s %2.0f%% complete.  Click to change task focal point."
+msgstr "%s %2.0f%%完成。点击改变任务焦点。"
+
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
 msgstr "导入完成，计算波形中"
@@ -11650,11 +11726,6 @@ msgstr "导入完成，计算波形中"
 #: src/ondemand/ODDecodeTask.h:57
 msgid "Decoding Waveform"
 msgstr "解码波形中"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp:335
-#, c-format
-msgid "%s %2.0f%% complete.  Click to change task focal point."
-msgstr "%s %2.0f%%完成。点击改变任务焦点。"
 
 #: src/prefs/BatchPrefs.cpp:37
 msgid "Batch"
@@ -12546,7 +12617,7 @@ msgid "Move clip up/down between tracks"
 msgstr "在轨道间上下移动剪辑"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp:137
+#: src/prefs/MousePrefs.cpp:137 src/tracks/ui/EnvelopeHandle.cpp:280
 msgid "Envelope"
 msgstr "包络线"
 
@@ -13784,6 +13855,8 @@ msgid "Zoom Tool"
 msgstr "缩放工具"
 
 #: src/toolbars/ToolsToolBar.cpp:136 src/toolbars/ToolsToolBar.cpp:183
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:189
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:199
 msgid "Draw Tool"
 msgstr "绘制工具"
 
@@ -13813,6 +13886,408 @@ msgstr "以指定速度播放"
 #, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "以指定速度循环播放"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:54
+msgid "Drag one or more label boundaries."
+msgstr "拖动一个或多个标记边界"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp:55
+msgid "Drag label boundary."
+msgstr "拖动标记边界"
+
+#: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
+#, fuzzy
+msgid "Click to edit label text"
+msgstr "点击开始"
+
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
+msgid "&Font..."
+msgstr "字体...(&F)"
+
+#. i18n-hint: (noun) This is the font for the label track.
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:111
+msgid "Label Track Font"
+msgstr "标记轨的字体"
+
+#. i18n-hint: (noun) The name of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:125
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:132
+msgid "Face name"
+msgstr "字体名"
+
+#. i18n-hint: (noun) The size of the typeface
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:137
+#: src/tracks/labeltrack/ui/LabelTrackControls.cpp:144
+msgid "Face size"
+msgstr "字体大小"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:127
+msgid "Up &Octave"
+msgstr "提高八倍音阶(&O)"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp:128
+msgid "Down Octa&ve"
+msgstr "降低八倍音阶(&v)"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp:59
+msgid ""
+"Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
+"particular zoom region."
+msgstr "单击在垂直方向放大，按住Shift键单击缩小，拖拽创建一个特定的缩放区域。"
+
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:60
+msgid "Click and drag to stretch selected region."
+msgstr "单击并拖动以伸展选中的音频。"
+
+#. i18n-hint: (noun) The track that is used for MIDI notes which can be
+#. dragged to change their duration.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:253
+msgid "Stretch Note Track"
+msgstr "伸展注解轨道"
+
+#. i18n-hint: In the history list, indicates a MIDI note has
+#. been dragged to change its duration (stretch it). Using either past
+#. or present tense is fine here.  If unsure, go for whichever is
+#. shorter.
+#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:258
+msgid "Stretch"
+msgstr "伸展"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
+msgid "Left-Click to expand, Right-Click to remove"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
+msgid "Left-Click to merge clips"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merged Clips"
+msgstr "已合并的剪辑"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
+msgid "Merge"
+msgstr "合并"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+msgid "Expanded Cut Line"
+msgstr "已展开的剪切线"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:232
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Expand"
+msgstr "扩展"
+
+#: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:236
+msgid "Removed Cut Line"
+msgstr "移除剪切线"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:61
+msgid "Click and drag to edit the samples"
+msgstr "单击并拖动编辑采样"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
+#, fuzzy
+msgid ""
+"To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+msgstr "如果需要使用“绘制”工具，请在轨道下拉菜单中选择'波形'。"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
+msgid "To use Draw, zoom in further until you can see the individual samples."
+msgstr "如果需要使用“绘制”工具，请“放大”波形至能看清楚单个采样点。"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:438
+msgid "Moved Samples"
+msgstr "已移动采样点"
+
+#: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:439
+msgid "Sample Edit"
+msgstr "采样编辑"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:243
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:730
+#, c-format
+msgid "Changed '%s' to %s"
+msgstr "已变更的'%s' 至 %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:247
+msgid "Format Change"
+msgstr "格式变更"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
+msgid "8000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
+msgid "11025 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
+#, fuzzy
+msgid "16000 Hz"
+msgstr "0100000.0100 Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
+msgid "22050 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
+msgid "44100 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
+msgid "48000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
+msgid "88200 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
+msgid "96000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
+msgid "176400 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
+msgid "192000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
+msgid "352800 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
+msgid "384000 Hz"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
+msgid "&Other..."
+msgstr "其他...(&O)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:347
+#, c-format
+msgid "Changed '%s' to %s Hz"
+msgstr "已将 '%s' 改变为 %s Hz"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:349
+msgid "Rate Change"
+msgstr "改变采样率"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:378
+msgid "Set Rate"
+msgstr "设定采样率"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:565
+msgid "Wa&veform"
+msgstr "波形(&v)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:566
+msgid "&Waveform (dB)"
+msgstr "波形 (dB) (&W)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:567
+msgid "&Spectrogram"
+msgstr "频谱图(&S)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:568
+msgid "S&pectrogram Settings..."
+msgstr "频谱图设置(&P)..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:574
+msgid "Ma&ke Stereo Track"
+msgstr "制作立体声音轨(&k)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:576
+msgid "Swap Stereo &Channels"
+msgstr "翻转立体声两个轨道(&C)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:577
+msgid "Spl&it Stereo Track"
+msgstr "分离立体声音轨(&i)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
+#, fuzzy
+msgid "Split Stereo to Mo&no"
+msgstr "分离立体声到单声道 '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
+msgid "&Format"
+msgstr "格式(&F)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:586
+msgid "Rat&e"
+msgstr "鼠&e"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
+#, fuzzy
+msgid ""
+"To change Spectrogram Settings, stop any\n"
+"playing or recording first."
+msgstr ""
+"要更改谱图设置，请停止任何\n"
+"播放或录音."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
+msgid "Stop the Audio First"
+msgstr "先停止音频"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:717
+msgid "Mono"
+msgstr "单声道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:721
+msgid "Left Channel"
+msgstr "左声道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:725
+msgid "Right Channel"
+msgstr "右声道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:733
+msgid "Channel"
+msgstr "声道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:784
+#, c-format
+msgid "Made '%s' a stereo track"
+msgstr "将'%s'制作为立体声音轨"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:787
+msgid "Make Stereo"
+msgstr "制作立体声"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:878
+#, c-format
+msgid "Swapped Channels in '%s'"
+msgstr "在 '%s' 翻转轨道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:880
+msgid "Swap Channels"
+msgstr "翻转轨道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:891
+#, c-format
+msgid "Split stereo track '%s'"
+msgstr "分离立体声轨道'%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:904
+#, c-format
+msgid "Split Stereo to Mono '%s'"
+msgstr "分离立体声到单声道 '%s'"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:906
+msgid "Split to Mono"
+msgstr "分离为单声道"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:395
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:468
+msgid "Zoom In\tLeft-Click/Left-Drag"
+msgstr "放大\tLeft-Click/Left-Drag"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:396
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:469
+msgid "Zoom Out\tShift-Left-Click"
+msgstr "缩小\tShift-Left-Click"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:397
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:470
+msgid "Zoom to Fit\tShift-Right-Click"
+msgstr "缩放到合适大小\tShift-Right-Click"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp:505
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
+msgstr "单击在垂直方向放大。按住Shift键单击缩小。拖拽指定一个缩放区域。"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:84
+msgid "Change lower speed limit (%) to:"
+msgstr "最低速率限制(%)改为："
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:85
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:86
+msgid "Lower speed limit"
+msgstr "最低速率限制"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:91
+msgid "Change upper speed limit (%) to:"
+msgstr "最高速率限制(%)改为："
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:92
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:93
+msgid "Upper speed limit"
+msgstr "最高速率限制"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:102
+#, c-format
+msgid "Set range to '%ld' - '%ld'"
+msgstr "将范围设置为 '%ld' - '%ld'"
+
+#. i18n-hint: (verb)
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:106
+msgid "Set Range"
+msgstr "设定范围"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+msgid "Set time track display to linear"
+msgstr "设置时间轨显示为线性"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:117
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set Display"
+msgstr "设置显示"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:128
+msgid "Set time track display to logarithmic"
+msgstr "设置时间轨显示为对数"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+msgid "Set time track interpolation to linear"
+msgstr "设置时间轨插值为线性"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:140
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set Interpolation"
+msgstr "设置插值"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:144
+msgid "Set time track interpolation to logarithmic"
+msgstr "设置音轨时间插值为对数"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
+#, fuzzy
+msgid "&Linear scale"
+msgstr "线性化(&L)"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
+#, fuzzy
+msgid "L&ogarithmic scale"
+msgstr "对数的(&o)"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:154
+msgid "&Range..."
+msgstr "范围(&R)..."
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp:155
+msgid "Logarithmic &Interpolation"
+msgstr "对数插值(&I)"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:252
+#, fuzzy
+msgid "Click and drag to warp playback time"
+msgstr "单击并拖动在时间范围内的轨道"
+
+#: src/tracks/ui/EnvelopeHandle.cpp:254
+msgid "Click and drag to edit the amplitude envelope"
+msgstr "单击并拖动编辑振幅包络线"
+
+#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#: src/tracks/ui/EnvelopeHandle.cpp:278
+msgid "Adjusted envelope."
+msgstr "调整过的包络."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -13851,6 +14326,170 @@ msgstr "将焦点移到轨道底部"
 #, fuzzy
 msgid "Scru&bbing"
 msgstr "跟随播放"
+
+#: src/tracks/ui/SelectHandle.cpp:328
+msgid "Click and drag to move left selection boundary."
+msgstr "单击并拖动选区的左边界。"
+
+#: src/tracks/ui/SelectHandle.cpp:332
+msgid "Click and drag to move right selection boundary."
+msgstr "单击并拖动选区的右边界。"
+
+#: src/tracks/ui/SelectHandle.cpp:337
+msgid "Click and drag to move bottom selection frequency."
+msgstr "点击并拖动以调整选区底部频率"
+
+#: src/tracks/ui/SelectHandle.cpp:341
+msgid "Click and drag to move top selection frequency."
+msgstr "点击并拖动以调整选区顶部频率"
+
+#: src/tracks/ui/SelectHandle.cpp:349
+msgid "Click and drag to move center selection frequency to a spectral peak."
+msgstr "点击并移动以移动中心频率到某个频谱峰值处"
+
+#: src/tracks/ui/SelectHandle.cpp:350 src/tracks/ui/SelectHandle.cpp:356
+msgid "Click and drag to move center selection frequency."
+msgstr "点击并拖动以移动中心频率"
+
+#: src/tracks/ui/SelectHandle.cpp:364
+msgid "Click and drag to adjust frequency bandwidth."
+msgstr "点击并拖动以调整频宽"
+
+#. i18n-hint: These are the names of a menu and a command in that menu
+#: src/tracks/ui/SelectHandle.cpp:918
+msgid "Edit, Preferences..."
+msgstr "编辑，首选项..."
+
+#: src/tracks/ui/SelectHandle.cpp:923
+#, c-format
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "多功能工具：按 %s 打开鼠标及键盘首选项"
+
+#: src/tracks/ui/SelectHandle.cpp:953
+msgid "Click and drag to set frequency bandwidth."
+msgstr "点击并拖动以设置频宽"
+
+#: src/tracks/ui/SelectHandle.cpp:975
+msgid "Click and drag to select audio"
+msgstr "单击并拖动选择音频"
+
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#: src/tracks/ui/SelectHandle.cpp:980
+msgid "(snapping)"
+msgstr ""
+
+#: src/tracks/ui/TimeShiftHandle.cpp:50
+msgid "Click and drag to move a track in time"
+msgstr "单击并拖动在时间范围内的轨道"
+
+#: src/tracks/ui/TimeShiftHandle.cpp:828
+#, fuzzy
+msgid "Moved clips to another track"
+msgstr "将剪辑移至另一轨道"
+
+#. i18n-hint: %s is a direction like left or right
+#: src/tracks/ui/TimeShiftHandle.cpp:838
+#, fuzzy, c-format
+msgid "Time shifted tracks/clips %s %.02f seconds"
+msgstr "使选定轨道静音%.2f 秒，(在 %.2f )"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:54
+msgid "Collapse"
+msgstr ""
+
+#: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
+msgid "Close"
+msgstr "关闭"
+
+#: src/tracks/ui/TrackButtonHandles.cpp:171
+#, fuzzy
+msgid "Open menu..."
+msgstr "打开最近使用的...(&R)"
+
+#: src/tracks/ui/TrackControls.cpp:125
+msgid "&Name..."
+msgstr "名称(&N)..."
+
+#: src/tracks/ui/TrackControls.cpp:131
+msgid "Move Track &Up"
+msgstr "音轨上移(&U)"
+
+#: src/tracks/ui/TrackControls.cpp:137
+msgid "Move Track &Down"
+msgstr "音轨下移(&D)"
+
+#: src/tracks/ui/TrackControls.cpp:143
+msgid "Move Track to &Top"
+msgstr "移动轨道到顶部(&T)"
+
+#: src/tracks/ui/TrackControls.cpp:149
+msgid "Move Track to &Bottom"
+msgstr "移动轨道到底部(&B)"
+
+#: src/tracks/ui/TrackControls.cpp:163
+msgid "Change track name to:"
+msgstr "轨道名称变为："
+
+#: src/tracks/ui/TrackControls.cpp:164
+msgid "Track Name"
+msgstr "轨道名"
+
+#: src/tracks/ui/TrackControls.cpp:178
+#, c-format
+msgid "Renamed '%s' to '%s'"
+msgstr "将'%s'改名为'%s'"
+
+#: src/tracks/ui/TrackControls.cpp:181
+msgid "Name Change"
+msgstr "改变名称"
+
+#. i18n-hint: Command names a modifier key on Macintosh keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:31
+msgid "Command-Click"
+msgstr "命令点击"
+
+#. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
+#: src/tracks/ui/TrackSelectHandle.cpp:34
+#, fuzzy
+msgid "Ctrl-Click"
+msgstr "左击"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:42
+#, c-format
+msgid "%s to select or deselect track. Drag up or down to change track order."
+msgstr "%s选择或取消选择轨道。向上或向下拖动以更改轨道顺序。"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:47
+#, c-format
+msgid "%s to select or deselect track."
+msgstr "%s选择或取消选择轨道。"
+
+#. i18n-hint: a direction as in up or down.
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "up"
+msgstr "向上"
+
+#: src/tracks/ui/TrackSelectHandle.cpp:193
+msgid "down"
+msgstr "向下"
+
+#. i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.
+#: src/tracks/ui/TrackSelectHandle.cpp:195
+#, c-format
+msgid "Moved '%s' %s"
+msgstr "已移动 '%s' %s"
+
+#: src/tracks/ui/ZoomHandle.cpp:52
+msgid "Click to Zoom In, Shift-Click to Zoom Out"
+msgstr "单击放大，按住Shift键单击缩小"
+
+#: src/tracks/ui/ZoomHandle.cpp:54
+msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
+msgstr "拖入放大区域，右击缩小"
+
+#: src/tracks/ui/ZoomHandle.cpp:56
+msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
+msgstr "鼠标左键=放大， 右键=缩小， 中键=正常"
 
 #: src/widgets/AButton.cpp:465
 msgid " (disabled)"
@@ -13919,10 +14558,6 @@ msgstr "前进"
 #: src/widgets/HelpSystem.cpp:142
 msgid "Backwards"
 msgstr "后退"
-
-#: src/widgets/HelpSystem.cpp:160
-msgid "Close"
-msgstr "关闭"
 
 #: src/widgets/HelpSystem.cpp:252
 msgid "Help on the Internet"
@@ -14045,10 +14680,6 @@ msgstr " 已修剪的 "
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
 msgstr "打开日志显示详情"
-
-#: src/widgets/MultiDialog.h:24
-msgid "Please select an action"
-msgstr "请选择一个动作"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -14542,6 +15173,10 @@ msgstr "e"
 msgid "Don't show this warning again"
 msgstr "下次不再显示此警告"
 
+#: src/widgets/MultiDialog.h:24
+msgid "Please select an action"
+msgstr "请选择一个动作"
+
 #: src/xml/XMLFileReader.cpp:59
 #, c-format
 msgid "Error: %hs at line %lu"
@@ -14611,21 +15246,6 @@ msgstr "不能载入文件： \"%s\""
 #~ msgid "Play at speed"
 #~ msgstr "以指定速度播放"
 
-#~ msgid "&Other..."
-#~ msgstr "其他...(&O)"
-
-#~ msgid "Wa&veform"
-#~ msgstr "波形(&v)"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "波形 (dB) (&W)"
-
-#~ msgid "&Spectrogram"
-#~ msgstr "频谱图(&S)"
-
-#~ msgid "S&pectrogram Settings..."
-#~ msgstr "频谱图设置(&P)..."
-
 #~ msgid "&Mono"
 #~ msgstr "单声道(&M)"
 
@@ -14636,296 +15256,11 @@ msgstr "不能载入文件： \"%s\""
 #~ msgid "&Right Channel"
 #~ msgstr "右声道"
 
-#~ msgid "Ma&ke Stereo Track"
-#~ msgstr "制作立体声音轨(&k)"
-
-#~ msgid "Swap Stereo &Channels"
-#~ msgstr "翻转立体声两个轨道(&C)"
-
-#~ msgid "Spl&it Stereo Track"
-#~ msgstr "分离立体声音轨(&i)"
-
-#~ msgid "&Format"
-#~ msgstr "格式(&F)"
-
-#~ msgid "Rat&e"
-#~ msgstr "鼠&e"
-
-#~ msgid "Up &Octave"
-#~ msgstr "提高八倍音阶(&O)"
-
-#~ msgid "Down Octa&ve"
-#~ msgstr "降低八倍音阶(&v)"
-
-#~ msgid "&Font..."
-#~ msgstr "字体...(&F)"
-
-#, fuzzy
-#~ msgid "L&ogarithmic scale"
-#~ msgstr "对数的(&o)"
-
-#~ msgid "&Range..."
-#~ msgstr "范围(&R)..."
-
-#~ msgid "Logarithmic &Interpolation"
-#~ msgstr "对数插值(&I)"
-
-#~ msgid "&Name..."
-#~ msgstr "名称(&N)..."
-
-#~ msgid "Move Track &Up"
-#~ msgstr "音轨上移(&U)"
-
-#~ msgid "Move Track &Down"
-#~ msgstr "音轨下移(&D)"
-
-#~ msgid "Move Track to &Top"
-#~ msgstr "移动轨道到顶部(&T)"
-
-#~ msgid "Move Track to &Bottom"
-#~ msgstr "移动轨道到底部(&B)"
-
-#~ msgid "Command-Click"
-#~ msgstr "命令点击"
-
-#, fuzzy
-#~ msgid "Ctrl-Click"
-#~ msgstr "左击"
-
-#~ msgid ""
-#~ "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a "
-#~ "zoom region."
-#~ msgstr "单击在垂直方向放大。按住Shift键单击缩小。拖拽指定一个缩放区域。"
-
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "单击在垂直方向放大，按住Shift键单击缩小，拖拽创建一个特定的缩放区域。"
-
-#~ msgid ""
-#~ "%s to select or deselect track. Drag up or down to change track order."
-#~ msgstr "%s选择或取消选择轨道。向上或向下拖动以更改轨道顺序。"
-
-#~ msgid "%s to select or deselect track."
-#~ msgstr "%s选择或取消选择轨道。"
-
-#~ msgid "Click and drag to adjust relative size of stereo tracks."
-#~ msgstr "单击并拖动调整立体声音轨的相対大小"
-
-#~ msgid "Click and drag to resize the track."
-#~ msgstr "单击并拖动调整轨道的大小"
-
-#~ msgid "Drag one or more label boundaries."
-#~ msgstr "拖动一个或多个标记边界"
-
-#~ msgid "Drag label boundary."
-#~ msgstr "拖动标记边界"
-
-#~ msgid "Click and drag to move center selection frequency."
-#~ msgstr "点击并拖动以移动中心频率"
-
-#~ msgid ""
-#~ "Click and drag to move center selection frequency to a spectral peak."
-#~ msgstr "点击并移动以移动中心频率到某个频谱峰值处"
-
-#~ msgid "Edit, Preferences..."
-#~ msgstr "编辑，首选项..."
-
-#~ msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-#~ msgstr "多功能工具：按 %s 打开鼠标及键盘首选项"
-
-#~ msgid "Click and drag to set frequency bandwidth."
-#~ msgstr "点击并拖动以设置频宽"
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "在选中区域内单击并拖动以进行伸展。"
 
 #~ msgid "Click to move selection boundary to cursor."
 #~ msgstr "点击以移动选区边界"
-
-#~ msgid "Click and drag to move left selection boundary."
-#~ msgstr "单击并拖动选区的左边界。"
-
-#~ msgid "Click and drag to move right selection boundary."
-#~ msgstr "单击并拖动选区的右边界。"
-
-#~ msgid "Click and drag to move bottom selection frequency."
-#~ msgstr "点击并拖动以调整选区底部频率"
-
-#~ msgid "Click and drag to move top selection frequency."
-#~ msgstr "点击并拖动以调整选区顶部频率"
-
-#~ msgid "Click and drag to adjust frequency bandwidth."
-#~ msgstr "点击并拖动以调整频宽"
-
-#~ msgid "Click and drag to stretch selected region."
-#~ msgstr "单击并拖动以伸展选中的音频。"
-
-#~ msgid "Stretch Note Track"
-#~ msgstr "伸展注解轨道"
-
-#~ msgid "Stretch"
-#~ msgstr "伸展"
-
-#~ msgid "Adjusted envelope."
-#~ msgstr "调整过的包络."
-
-#, fuzzy
-#~ msgid "Moved clips to another track"
-#~ msgstr "将剪辑移至另一轨道"
-
-#~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
-#~ msgstr "如果需要使用“绘制”工具，请在轨道下拉菜单中选择'波形'。"
-
-#~ msgid ""
-#~ "To use Draw, zoom in further until you can see the individual samples."
-#~ msgstr "如果需要使用“绘制”工具，请“放大”波形至能看清楚单个采样点。"
-
-#~ msgid "Moved Samples"
-#~ msgstr "已移动采样点"
-
-#~ msgid "Sample Edit"
-#~ msgstr "采样编辑"
-
-#~ msgid "up"
-#~ msgstr "向上"
-
-#~ msgid "down"
-#~ msgstr "向下"
-
-#~ msgid "Moved '%s' %s"
-#~ msgstr "已移动 '%s' %s"
-
-#~ msgid "Expanded Cut Line"
-#~ msgstr "已展开的剪切线"
-
-#~ msgid "Expand"
-#~ msgstr "扩展"
-
-#~ msgid "Merged Clips"
-#~ msgstr "已合并的剪辑"
-
-#~ msgid "Merge"
-#~ msgstr "合并"
-
-#~ msgid "Removed Cut Line"
-#~ msgstr "移除剪切线"
-
-#~ msgid "Left Channel"
-#~ msgstr "左声道"
-
-#~ msgid "Right Channel"
-#~ msgstr "右声道"
-
-#~ msgid "Mono"
-#~ msgstr "单声道"
-
-#~ msgid "Changed '%s' to %s"
-#~ msgstr "已变更的'%s' 至 %s"
-
-#~ msgid "Channel"
-#~ msgstr "声道"
-
-#~ msgid "Swapped Channels in '%s'"
-#~ msgstr "在 '%s' 翻转轨道"
-
-#~ msgid "Swap Channels"
-#~ msgstr "翻转轨道"
-
-#~ msgid "Split stereo track '%s'"
-#~ msgstr "分离立体声轨道'%s'"
-
-#~ msgid "Split Stereo to Mono '%s'"
-#~ msgstr "分离立体声到单声道 '%s'"
-
-#~ msgid "Split to Mono"
-#~ msgstr "分离为单声道"
-
-#~ msgid "Made '%s' a stereo track"
-#~ msgstr "将'%s'制作为立体声音轨"
-
-#~ msgid "Make Stereo"
-#~ msgstr "制作立体声"
-
-#~ msgid ""
-#~ "To change Spectrogram Settings, stop any\n"
-#~ ".playing or recording first."
-#~ msgstr ""
-#~ "要更改谱图设置，请停止任何\n"
-#~ "播放或录音."
-
-#~ msgid "Stop the Audio First"
-#~ msgstr "先停止音频"
-
-#~ msgid "Changed '%s' to %s Hz"
-#~ msgstr "已将 '%s' 改变为 %s Hz"
-
-#~ msgid "Rate Change"
-#~ msgstr "改变采样率"
-
-#~ msgid "Format Change"
-#~ msgstr "格式变更"
-
-#~ msgid "Set Rate"
-#~ msgstr "设定采样率"
-
-#~ msgid "Change lower speed limit (%) to:"
-#~ msgstr "最低速率限制(%)改为："
-
-#~ msgid "Lower speed limit"
-#~ msgstr "最低速率限制"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "最高速率限制(%)改为："
-
-#~ msgid "Upper speed limit"
-#~ msgstr "最高速率限制"
-
-#~ msgid "Set range to '%ld' - '%ld'"
-#~ msgstr "将范围设置为 '%ld' - '%ld'"
-
-#~ msgid "Set Range"
-#~ msgstr "设定范围"
-
-#~ msgid "Set time track display to linear"
-#~ msgstr "设置时间轨显示为线性"
-
-#~ msgid "Set Display"
-#~ msgstr "设置显示"
-
-#~ msgid "Set time track display to logarithmic"
-#~ msgstr "设置时间轨显示为对数"
-
-#~ msgid "Set time track interpolation to linear"
-#~ msgstr "设置时间轨插值为线性"
-
-#~ msgid "Set Interpolation"
-#~ msgstr "设置插值"
-
-#~ msgid "Set time track interpolation to logarithmic"
-#~ msgstr "设置音轨时间插值为对数"
-
-#~ msgid "Change track name to:"
-#~ msgstr "轨道名称变为："
-
-#~ msgid "Track Name"
-#~ msgstr "轨道名"
-
-#~ msgid "Renamed '%s' to '%s'"
-#~ msgstr "将'%s'改名为'%s'"
-
-#~ msgid "Name Change"
-#~ msgstr "改变名称"
-
-#~ msgid "Label Track Font"
-#~ msgstr "标记轨的字体"
-
-#~ msgid "Face name"
-#~ msgstr "字体名"
-
-#~ msgid "Face size"
-#~ msgstr "字体大小"
 
 #~ msgid "%.2f dB Average RMS"
 #~ msgstr "平均 RMS 振幅 %.1f 分贝 "
@@ -15067,27 +15402,6 @@ msgstr "不能载入文件： \"%s\""
 #~ msgid "Selection "
 #~ msgstr "选区"
 
-#~ msgid "Click and drag to select audio"
-#~ msgstr "单击并拖动选择音频"
-
-#~ msgid "Click and drag to edit the amplitude envelope"
-#~ msgstr "单击并拖动编辑振幅包络线"
-
-#~ msgid "Click and drag to edit the samples"
-#~ msgstr "单击并拖动编辑采样"
-
-#~ msgid "Click to Zoom In, Shift-Click to Zoom Out"
-#~ msgstr "单击放大，按住Shift键单击缩小"
-
-#~ msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-#~ msgstr "拖入放大区域，右击缩小"
-
-#~ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
-#~ msgstr "鼠标左键=放大， 右键=缩小， 中键=正常"
-
-#~ msgid "Click and drag to move a track in time"
-#~ msgstr "单击并拖动在时间范围内的轨道"
-
 #~ msgid "Unpinned Record/Play head"
 #~ msgstr "解除记录/播放头"
 
@@ -15178,18 +15492,6 @@ msgstr "不能载入文件： \"%s\""
 
 #~ msgid "&Rate"
 #~ msgstr "采样率(&R)"
-
-#~ msgid "&Linear"
-#~ msgstr "线性化(&L)"
-
-#~ msgid "Zoom In\tLeft-Click/Left-Drag"
-#~ msgstr "放大\tLeft-Click/Left-Drag"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "缩小\tShift-Left-Click"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "缩放到合适大小\tShift-Right-Click"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "垂直拖动轨道以改变它们的顺序"
