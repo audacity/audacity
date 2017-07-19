@@ -237,8 +237,17 @@ void AColor::Bevel2
 (wxDC & dc, bool up, const wxRect & r, bool bSel, bool bHighlight)
 {
    int index = 0;
-   if ( bHighlight )
-      index = up ? bmpHiliteButtonExpand : bmpHiliteButtonExpandSel;
+   // There are eight button states in the TCP.
+   // A theme might not differentiate between them all.  That's up to 
+   // the theme designer.
+   //   Button highlighted (i.e. hovered over) or not.
+   //   Track selected or not
+   //   Button up or down.
+   // Highlight in most themes is lighter than not highlighted.
+   if ( bHighlight && bSel)
+      index = up ? bmpHiliteUpButtonExpandSel : bmpHiliteButtonExpandSel;
+   else if ( bHighlight )
+      index = up ? bmpHiliteUpButtonExpand : bmpHiliteButtonExpand;
    else if( bSel )
       index = up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
    else
@@ -541,6 +550,7 @@ void AColor::Init()
    inited = true;
 }
 
+// These colours are chosen so that black text shows up OK on them.
 const int AColor_midicolors[16][3] = {
    {255, 102, 102},             // 1=salmon
    {204, 0, 0},                 // 2=red
@@ -548,7 +558,7 @@ const int AColor_midicolors[16][3] = {
    {255, 255, 0},               // 4=yellow
    {0, 204, 0},                 // 5=green
    {0, 204, 204},               // 6=turquoise
-   {0, 0, 204},                 // 7=blue
+   {125, 125, 255},             // 7=blue
    {153, 0, 255},               // 8=blue-violet
 
    {140, 97, 54},               // 9=brown
@@ -556,7 +566,7 @@ const int AColor_midicolors[16][3] = {
    {255, 175, 40},              // 11=lt orange
    {102, 255, 102},             // 12=lt green
    {153, 255, 255},             // 13=lt turquoise
-   {153, 153, 255},             // 14=lt blue
+   {190, 190, 255},             // 14=lt blue
    {204, 102, 255},             // 15=lt blue-violet
    {255, 51, 204}               // 16=lt red-violet
 };

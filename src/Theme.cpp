@@ -536,6 +536,8 @@ void FlowPacker::GetNextPosition( int xSize, int ySize )
    {
       SetNewGroup( ((mFlags & resFlagPaired)!=0) ? 2 : 1 );
       myHeight = ySize;
+//      mFlags &= ~resFlagNewLine;
+//      mOldFlags = mFlags;
    }
 
    iImageGroupIndex++;

@@ -37,6 +37,7 @@
 #include "InconsistencyException.h"
 
 #include "TrackPanel.h" // For TrackInfo
+#include "AllThemeResources.h"
 
 #ifdef SONIFY
 #include "../lib-src/portmidi/pm_common/portmidi.h"
@@ -251,6 +252,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
 void NoteTrack::DrawLabelControls
 ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect, int highlightedChannel )
 {
+   dc.SetTextForeground(theTheme.Colour(clrLabelTrackText));
    wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
    wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
 
@@ -338,6 +340,7 @@ void NoteTrack::DrawLabelControls
          dc.DrawText(text, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
       }
    }
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    AColor::MIDIChannel(&dc, 0); // always return with gray color selected
 }
 

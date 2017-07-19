@@ -556,10 +556,14 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    //thumbPos should be in pixels
    int thumbPos = ValueToPosition(mCurrentValue);
    int thumbOrtho; // position in axis orthogonal to mOrientation
-   if (mOrientation == wxHORIZONTAL)
+   if (mOrientation == wxHORIZONTAL){
       thumbOrtho = mCenterY - (mThumbHeight/2);
-   else
+      thumbPos += 3-mThumbWidth/2;
+   }
+   else{
       thumbOrtho = mCenterX - (mThumbWidth/2);
+      thumbPos += 8-mThumbHeight/2;
+   }
 
 #if !defined(__WXMAC__)
    if( mHW )
