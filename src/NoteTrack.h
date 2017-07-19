@@ -84,6 +84,8 @@ class AUDACITY_DLL_API NoteTrack final
    double GetStartTime() const override;
    double GetEndTime() const override;
 
+   void SetHeight(int h) override;
+
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,

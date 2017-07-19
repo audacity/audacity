@@ -184,7 +184,7 @@ class AUDACITY_DLL_API Track /* not final */
    int GetY() const;
    void SetY(int y);
    int GetHeight() const;
-   void SetHeight(int h);
+   virtual void SetHeight(int h);
 #endif
    bool GetMinimized() const;
    void SetMinimized(bool isMinimized);

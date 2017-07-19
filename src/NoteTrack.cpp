@@ -210,6 +210,18 @@ double NoteTrack::GetEndTime() const
    return GetStartTime() + GetSeq().get_real_dur();
 }
 
+void NoteTrack::SetHeight(int h)
+{
+   auto oldHeight = GetHeight();
+   Track::SetHeight(h);
+   Zoom(
+      wxRect{ 0, 0, 1, h }, // only height matters
+      h - 1, // preserve bottom note
+      (float)h / std::max(1, oldHeight),
+      false
+   );
+}
+
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
                                       const TimeWarper &warper,
