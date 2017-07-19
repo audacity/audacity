@@ -132,11 +132,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
       if (event.ShiftDown() && event.RightUp()) {
          // Zoom out completely
          pTrack->SetBottomNote(0);
-         auto octavePadding = 2 * 10; // 10 octaves times 2 single-pixel seperations per pixel
-         auto availableHeight = evt.rect.height - octavePadding;
-         auto numNotes = 128;
-         auto spacePerNote = availableHeight / numNotes;
-         pTrack->SetPitchHeight(std::max(spacePerNote, 1));
+         pTrack->SetPitchHeight(evt.rect.height, 1);
       } else {
          // Zoom out
          pTrack->ZoomOut(evt.rect, mZoomEnd);

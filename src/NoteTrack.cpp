@@ -122,7 +122,7 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
    mVelocity = 0;
 #endif
    mBottomNote = 24;
-   mPitchHeight = 5;
+   mPitchHeight = 5.0f;
 
    mVisibleChannels = ALL_CHANNELS;
 }
@@ -184,7 +184,7 @@ Track::Holder NoteTrack::Duplicate() const
    }
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
-   duplicate->SetPitchHeight(mPitchHeight);
+   duplicate->mPitchHeight = mPitchHeight;
    duplicate->mVisibleChannels = mVisibleChannels;
    duplicate->SetOffset(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -912,6 +912,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("notetrack"));
 }
 
+#if 0
 void NoteTrack::StartVScroll()
 {
     mStartBottomNote = mBottomNote;
@@ -923,17 +924,17 @@ void NoteTrack::VScroll(int start, int end)
     int delta = ((end - start) + ph / 2) / ph;
     SetBottomNote(mStartBottomNote + delta);
 }
+#endif
 
-void NoteTrack::Zoom(const wxRect &rect, int y, int amount, bool center)
+void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
 {
    // Construct track rectangle to map pitch to screen coordinates
    // Only y and height are needed:
    wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
    PrepareIPitchToY(trackRect);
    int clickedPitch = YToIPitch(y);
-   // zoom out by changing the pitch height -- a small integer
-   mPitchHeight += amount;
-   if (mPitchHeight <= 0) mPitchHeight = 1;
+   // zoom by changing the pitch height
+   SetPitchHeight(rect.height, mPitchHeight * multiplier);
    PrepareIPitchToY(trackRect); // update because mPitchHeight changed
    if (center) {
       int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
@@ -960,13 +961,8 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
       Zoom(rect, start, 1, true);
       return;
    }
-   int trialPitchHeight = trackRect.height / (topPitch - botPitch);
-   if (trialPitchHeight > 25) { // keep mPitchHeight in bounds [1...25]
-      trialPitchHeight = 25;
-   } else if (trialPitchHeight == 0) {
-      trialPitchHeight = 1;
-   }
-   Zoom(rect, (start + end) / 2, trialPitchHeight - mPitchHeight, true);
+   auto trialPitchHeight = (float)trackRect.height / (topPitch - botPitch);
+   Zoom(rect, (start + end) / 2, trialPitchHeight / mPitchHeight, true);
 }
 
 int NoteTrack::YToIPitch(int y)
@@ -976,7 +972,9 @@ int NoteTrack::YToIPitch(int y)
    y -= octave * GetOctaveHeight();
    // result is approximate because C and G are one pixel taller than
    // mPitchHeight.
-   return (y / mPitchHeight) + octave * 12;
+   return (y / GetPitchHeight()) + octave * 12;
 }
+
+const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
 
 #endif // USE_MIDI
