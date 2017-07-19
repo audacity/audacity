@@ -134,7 +134,7 @@ class AUDACITY_DLL_API NoteTrack final
    void Zoom(const wxRect &rect, int y, int amount, bool center);
    void ZoomTo(const wxRect &rect, int start, int end);
    int GetNoteMargin(int height) const
-   { return std::min(height / 3, (mPitchHeight + 1) / 2); }
+   { return std::min(height / 4, (mPitchHeight + 1) / 2); }
    int GetOctaveHeight() const { return mPitchHeight * 12 + 2; }
    // call this once before a series of calls to IPitchToY(). It
    // sets mBottom to offset of octave 0 so that mBottomNote
