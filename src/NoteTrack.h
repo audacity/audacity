@@ -133,13 +133,14 @@ class AUDACITY_DLL_API NoteTrack final
    /// If center is true, the result will be centered at y.
    void Zoom(const wxRect &rect, int y, int amount, bool center);
    void ZoomTo(const wxRect &rect, int start, int end);
-   int GetNoteMargin() const { return (mPitchHeight + 1) / 2; }
+   int GetNoteMargin(int height) const
+   { return std::min(height / 3, (mPitchHeight + 1) / 2); }
    int GetOctaveHeight() const { return mPitchHeight * 12 + 2; }
    // call this once before a series of calls to IPitchToY(). It
    // sets mBottom to offset of octave 0 so that mBottomNote
    // is located at r.y + r.height - (GetNoteMargin() + 1 + mPitchHeight)
    void PrepareIPitchToY(const wxRect &r) const {
-       mBottom = r.y + r.height - GetNoteMargin() - 1 - mPitchHeight +
+       mBottom = r.y + r.height - GetNoteMargin(r.height) - 1 - mPitchHeight +
           (mBottomNote / 12) * GetOctaveHeight() +
           GetNotePos(mBottomNote % 12);
    }

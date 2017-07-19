@@ -619,7 +619,7 @@ void TrackArtist::DrawVRuler
 
       int octave = 0;
       int obottom = track->GetOctaveBottom(octave);
-      int marg = track->GetNoteMargin();
+      int marg = track->GetNoteMargin(rect.height);
       //IPITCH_TO_Y(octave * 12) + PITCH_HEIGHT + 1;
       while (obottom >= rect.y) {
          dc->SetPen(*wxBLACK_PEN);
@@ -2826,9 +2826,9 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    // eOffset is for the line between E and F; there's another line
    // between B and C, hence the offset of 2 for two line thicknesses
    int eOffset = track->GetPitchHeight() * 5 + 2;
-   while (obottom > rect.y + track->GetNoteMargin() + 3) {
+   while (obottom > rect.y + track->GetNoteMargin(rect.height) + 3) {
       // draw a black line separating octaves if this octave botton is visible
-      if (obottom < rect.y + rect.height - track->GetNoteMargin()) {
+      if (obottom < rect.y + rect.height - track->GetNoteMargin(rect.height)) {
          dc.SetPen(*wxBLACK_PEN);
          // obottom - 1 because obottom is at the bottom of the line
          AColor::Line(dc, left, obottom - 1, right, obottom - 1);
@@ -2970,7 +2970,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                       selectedBarLinePen);
    SonifyEndNoteBackground();
    SonifyBeginNoteForeground();
-   int marg = track->GetNoteMargin();
+   int marg = track->GetNoteMargin(rect.height);
 
    // NOTE: it would be better to put this in some global initialization
    // function rather than do lookups every time.
