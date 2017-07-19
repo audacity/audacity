@@ -1746,7 +1746,11 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
 
-   if (playbackTracks.size() > 0 || midiPlaybackTracks.size() > 0)
+   if (playbackTracks.size() > 0 
+#ifdef EXPERIMENTAL_MIDI_OUT
+      || midiPlaybackTracks.size() > 0
+#endif
+      )
       playbackChannels = 2;
 
    if (mSoftwarePlaythrough)
