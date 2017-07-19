@@ -121,6 +121,9 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
+dnl PMALSA indicates that portmidi should be built with alsa support (needed)
+AC_DEFINE(PMALSA, 1)
+
 AC_CONFIG_FILES([Makefile portmidi.pc portmidi-uninstalled.pc])
 
 AC_OUTPUT

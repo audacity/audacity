@@ -5613,6 +5613,9 @@ _ACEOF
 fi
 
 
+$as_echo "#define PMALSA 1" >>confdefs.h
+
+
 ac_config_files="$ac_config_files Makefile portmidi.pc portmidi-uninstalled.pc"
 
 
