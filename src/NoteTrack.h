@@ -124,7 +124,8 @@ class AUDACITY_DLL_API NoteTrack final
       ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur );
 
    int GetBottomNote() const { return mBottomNote; }
-   int GetPitchHeight() const { return std::max(1, (int)mPitchHeight); }
+   int GetPitchHeight(int factor) const
+   { return std::max(1, (int)(factor * mPitchHeight)); }
    void SetPitchHeight(int rectHeight, float h)
    {
       // Impose certain zoom limits
@@ -146,14 +147,14 @@ class AUDACITY_DLL_API NoteTrack final
    void Zoom(const wxRect &rect, int y, float multiplier, bool center);
    void ZoomTo(const wxRect &rect, int start, int end);
    int GetNoteMargin(int height) const
-   { return std::min(height / 4, (GetPitchHeight() + 1) / 2); }
-   int GetOctaveHeight() const { return GetPitchHeight() * 12 + 2; }
+   { return std::min(height / 4, (GetPitchHeight(1) + 1) / 2); }
+   int GetOctaveHeight() const { return GetPitchHeight(12) + 2; }
    // call this once before a series of calls to IPitchToY(). It
    // sets mBottom to offset of octave 0 so that mBottomNote
    // is located at r.y + r.height - (GetNoteMargin() + 1 + GetPitchHeight())
    void PrepareIPitchToY(const wxRect &r) const {
        mBottom =
-         r.y + r.height - GetNoteMargin(r.height) - 1 - GetPitchHeight() +
+         r.y + r.height - GetNoteMargin(r.height) - 1 - GetPitchHeight(1) +
              (mBottomNote / 12) * GetOctaveHeight() +
                 GetNotePos(mBottomNote % 12);
    }
@@ -164,7 +165,7 @@ class AUDACITY_DLL_API NoteTrack final
    // compute the window coordinate of the bottom of an octave: This is
    // the bottom of the line separating B and C.
    int GetOctaveBottom(int oct) const {
-      return IPitchToY(oct * 12) + GetPitchHeight() + 1;
+      return IPitchToY(oct * 12) + GetPitchHeight(1) + 1;
    }
    // Y coordinate for given floating point pitch (rounded to int)
    int PitchToY(double p) const {
@@ -176,7 +177,7 @@ class AUDACITY_DLL_API NoteTrack final
    // (the bottom of the black line between B and C) to the top of the
    // note. Note extra pixel separates B(11)/C(0) and E(4)/F(5).
    int GetNotePos(int p) const
-   { return 1 + GetPitchHeight() * (p + 1) + (p > 4); }
+   { return 1 + GetPitchHeight(p + 1) + (p > 4); }
    // get pixel offset to top of ith black key note
    int GetBlackPos(int i) const { return GetNotePos(i * 2 + 1 + (i > 1)); }
    // GetWhitePos tells where to draw lines between keys as an offset from

@@ -632,7 +632,7 @@ void TrackArtist::DrawVRuler
                             rect.x + rect.width, obottom - pos);
          }
          wxRect br = rect;
-         br.height = track->GetPitchHeight();
+         br.height = track->GetPitchHeight(1);
          br.x++;
          br.width = 17;
          for (int black = 0; black < 5; black++) {
@@ -2825,7 +2825,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
    int obottom = track->GetOctaveBottom(octave);
    // eOffset is for the line between E and F; there's another line
    // between B and C, hence the offset of 2 for two line thicknesses
-   int eOffset = track->GetPitchHeight() * 5 + 2;
+   int eOffset = track->GetPitchHeight(5) + 2;
    while (obottom > rect.y + track->GetNoteMargin(rect.height) + 3) {
       // draw a black line separating octaves if this octave botton is visible
       if (obottom < rect.y + rect.height - track->GetNoteMargin(rect.height)) {
@@ -2844,7 +2844,7 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
       wxRect br;
       br.x = left;
       br.width = right - left;
-      br.height = track->GetPitchHeight();
+      br.height = track->GetPitchHeight(1);
       for (int black = 0; black < 5; black++) {
          br.y = obottom - track->GetBlackPos(black);
          if (br.y > rect.y && br.y + br.height < rect.y + rect.height) {
@@ -2914,7 +2914,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
 
    // reserve 1/2 note height at top and bottom of track for
    // out-of-bounds notes
-   int numPitches = (rect.height) / track->GetPitchHeight();
+   int numPitches = (rect.height) / track->GetPitchHeight(1);
    if (numPitches < 0) numPitches = 0; // cannot be negative
 
    // bottom is the hypothetical location of the bottom of pitch 0 relative to
@@ -3017,7 +3017,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                if (note->loud > 0.0 || 0 == (shape = IsShape(note))) {
                   wxRect nr; // "note rectangle"
                   nr.y = track->PitchToY(note->pitch);
-                  nr.height = track->GetPitchHeight();
+                  nr.height = track->GetPitchHeight(1);
 
                   nr.x = TIME_TO_X(xx);
                   nr.width = TIME_TO_X(x1) - nr.x;
@@ -3058,7 +3058,7 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                         else
                            AColor::MIDIChannel(&dc, note->chan + 1);
                         dc.DrawRectangle(nr);
-                        if (track->GetPitchHeight() > 2) {
+                        if (track->GetPitchHeight(1) > 2) {
                            AColor::LightMIDIChannel(&dc, note->chan + 1);
                            AColor::Line(dc, nr.x, nr.y, nr.x + nr.width-2, nr.y);
                            AColor::Line(dc, nr.x, nr.y, nr.x, nr.y + nr.height-2);

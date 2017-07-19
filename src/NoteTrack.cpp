@@ -213,11 +213,14 @@ double NoteTrack::GetEndTime() const
 void NoteTrack::SetHeight(int h)
 {
    auto oldHeight = GetHeight();
+   auto oldMargin = GetNoteMargin(oldHeight);
    Track::SetHeight(h);
+   auto margin = GetNoteMargin(h);
    Zoom(
       wxRect{ 0, 0, 1, h }, // only height matters
-      h - 1, // preserve bottom note
-      (float)h / std::max(1, oldHeight),
+      h - margin - 1, // preserve bottom note
+      (float)(h - 2 * margin) /
+           std::max(1, oldHeight - 2 * oldMargin),
       false
    );
 }
@@ -984,7 +987,7 @@ int NoteTrack::YToIPitch(int y)
    y -= octave * GetOctaveHeight();
    // result is approximate because C and G are one pixel taller than
    // mPitchHeight.
-   return (y / GetPitchHeight()) + octave * 12;
+   return (y / GetPitchHeight(1)) + octave * 12;
 }
 
 const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
