@@ -36,6 +36,7 @@ for drawing different aspects of the label and its text box.
 #include <stdio.h>
 #include <algorithm>
 #include <limits.h>
+#include <float.h>
 
 #include <wx/bitmap.h>
 #include <wx/brush.h>
@@ -1329,9 +1330,9 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
 
 void LabelStruct::Export(wxTextFile &file) const
 {
-   file.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
-      getT0(),
-      getT1(), 
+   file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
+      Internat::ToString(getT0(), FLT_DIG).c_str(),
+      Internat::ToString(getT1(), FLT_DIG).c_str(),
       title.c_str()
    ));
 
@@ -1344,9 +1345,9 @@ void LabelStruct::Export(wxTextFile &file) const
 
    // Write a \ character at the start of a second line,
    // so that earlier versions of Audacity ignore it.
-   file.AddLine(wxString::Format(wxT("\\\t%f\t%f"),
-      f0,
-      f1
+   file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
+      Internat::ToString(f0, FLT_DIG).c_str(),
+      Internat::ToString(f1, FLT_DIG).c_str()
    ));
 
    // Additional lines in future formats should also start with '\'.
