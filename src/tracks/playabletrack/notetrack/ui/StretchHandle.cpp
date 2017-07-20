@@ -301,10 +301,10 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
 
    // make sure target duration is not too short
    // Take quick exit if so, without changing the selection.
+   auto t0 = mStretchState.mBeat0.first;
+   auto t1 = mStretchState.mBeat1.first;
    switch ( mStretchState.mMode ) {
    case stretchLeft: {
-      auto t0 = viewInfo.selectedRegion.t0();
-      auto t1 = viewInfo.selectedRegion.t1();
       dur = t1 - moveto;
       if (dur < mStretchState.mRightBeats * minPeriod)
          return;
@@ -316,8 +316,6 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
       break;
    }
    case stretchRight: {
-      auto t0 = viewInfo.selectedRegion.t0();
-      auto t1 = viewInfo.selectedRegion.t1();
       dur = moveto - t0;
       if (dur < mStretchState.mLeftBeats * minPeriod)
          return;
@@ -328,8 +326,6 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
       break;
    }
    case stretchCenter: {
-      auto t0 = GetT0(*mpTrack, viewInfo);
-      auto t1 = GetT1(*mpTrack, viewInfo);
       moveto = std::max(t0, std::min(t1, moveto));
       left_dur = moveto - t0;
       right_dur = t1 - moveto;
