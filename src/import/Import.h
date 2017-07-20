@@ -137,6 +137,8 @@ public:
     */
     movable_ptr<ExtImportItem> CreateDefaultImportItem();
 
+   static bool IsMidi(const wxString &fName);
+
    // if false, the import failed and errorMessage will be set.
    bool Import(const wxString &fName,
               TrackFactory *trackFactory,

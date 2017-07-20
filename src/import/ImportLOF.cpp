@@ -388,8 +388,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
 #ifdef USE_MIDI
       // If file is a midi
-      if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
-          ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
+      if (Importer::IsMidi(targetfile))
       {
          mProject = AudacityProject::DoImportMIDI(mProject, targetfile);
       }

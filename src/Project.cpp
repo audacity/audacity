@@ -460,8 +460,12 @@ public:
             mProject->HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
-         for (const auto &name : sortednames)
-            mProject->Import(name);
+         for (const auto &name : sortednames) {
+            if (Importer::IsMidi(name))
+               AudacityProject::DoImportMIDI(mProject, name);
+            else
+               mProject->Import(name);
+         }
 
          mProject->ZoomAfterImport(nullptr);
 

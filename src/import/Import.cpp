@@ -328,6 +328,14 @@ movable_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
    return new_item;
 }
 
+bool Importer::IsMidi(const wxString &fName)
+{
+   const auto extension = fName.AfterLast(wxT('.'));
+   return
+      extension.IsSameAs(wxT("midi"), false) ||
+      extension.IsSameAs(wxT("mid"), false);
+}
+
 // returns number of tracks imported
 bool Importer::Import(const wxString &fName,
                      TrackFactory *trackFactory,
@@ -343,7 +351,7 @@ bool Importer::Import(const wxString &fName,
    // Always refuse to import MIDI, even though the FFmpeg plugin pretends to know how (but makes very bad renderings)
 #ifdef USE_MIDI
    // MIDI files must be imported, not opened
-   if ((extension.IsSameAs(wxT("midi"), false)) || (extension.IsSameAs(wxT("mid"), false))) {
+   if (IsMidi(fName)) {
       errorMessage.Printf(_("\"%s\" \nis a MIDI file, not an audio file. \nAudacity cannot open this type of file for playing, but you can\nedit it by clicking File > Import > MIDI."), fName.c_str());
       return false;
    }
