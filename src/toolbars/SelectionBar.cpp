@@ -811,14 +811,20 @@ void SelectionBar::SetSelectionMode(int mode)
 
 #ifdef SEL_RADIO_TITLES
    if( mStartEndProxy == NULL ){
+      // The line breaks are a little funny in order that the i18n hints occur i the right place in 
+      // the .pot file
+      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : 
       // i18n-hint: S-E is an abbreviation of Start-End
-      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : _("S-E") );
+         _("S-E") );
+      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : 
       // i18n-hint: S-L is an abbreviation of Start-Length
-      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : _("S-L") );
+         _("S-L") );
+      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : 
       // i18n-hint: L-E is an abbreviation of Length-End
-      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : _("L-E") );
+         _("L-E") );
+      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : 
       // i18n-hint: L-C is an abbreviation of Length-Center
-      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : _("L-C") );
+         _("L-C") );
    }
    else
    {
@@ -840,6 +846,7 @@ void SelectionBar::SetSelectionMode(int mode)
 #endif
 
 #ifdef SEL_BUTTON_TITLES
+   // Not translated.  This is old experiemental code that is probably on the way out.
    wxString CenterNames[] = { "       Start  -  End        ", "       Start  -  Length   ", "   Length  -  End        ", "   Length  -  Center   " };
    mButtonTitles[1]->SetLabel( CenterNames[mode] );
 #endif

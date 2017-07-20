@@ -690,14 +690,14 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
 #ifdef __GNUC_PATCHLEVEL__
 #ifdef __MINGW32__
-   AddBuildinfoRow(&informationStr, _("Compiler:"), _("MinGW ") + wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("MinGW ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
 #else
-   AddBuildinfoRow(&informationStr, _("Compiler:"), _("GCC ") + wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("GCC ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
 #endif
 #endif
 
 #ifdef __clang_version__
-   AddBuildinfoRow(&informationStr, _("Compiler:"), _("clang " __clang_version__));
+   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("clang ") __clang_version__);
 #endif
 
    // Install prefix

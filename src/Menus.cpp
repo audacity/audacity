@@ -7290,7 +7290,8 @@ wxString AudacityProject::ClipBoundaryMessage(const std::vector<FoundClipBoundar
    wxString message;
    for (auto& result : results) {
       wxString temp;
-
+      // TODO This section is extremely difficult for translators.
+      // Can it be made easier and can hints be given?
       temp.Printf(wxT("%s %d "), result.clipStart1 ? _("start") : _("end"), result.index1 + 1);
       message += temp;
 
