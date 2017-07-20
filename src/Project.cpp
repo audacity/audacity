@@ -463,6 +463,8 @@ public:
          for (const auto &name : sortednames)
             mProject->Import(name);
 
+         mProject->ZoomAfterImport(nullptr);
+
          return true;
       } );
    }
@@ -4171,12 +4173,6 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 #endif
 
-   OnZoomFit();
-
-   mTrackPanel->SetFocus();
-   mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
-   mTrackPanel->Refresh(false);
-
    if (initiallyEmpty && mDirManager->GetProjectName() == wxT("")) {
       wxString name = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast(wxT('.'));
       mFileName =::wxPathOnly(fileName) + wxFILE_SEP_PATH + name + wxT(".aup");
@@ -4188,6 +4184,17 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    //   HandleResize();
 
    newTracks.clear();
+}
+
+void AudacityProject::ZoomAfterImport(Track *pTrack)
+{
+   OnZoomFit();
+
+   mTrackPanel->SetFocus();
+   RedrawProject();
+   if (!pTrack)
+      pTrack = mTrackPanel->GetFirstSelectedTrack();
+   mTrackPanel->EnsureVisible(pTrack);
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.

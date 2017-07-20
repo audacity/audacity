@@ -6733,6 +6733,8 @@ void AudacityProject::OnImport()
 
       Import(fileName);
    }
+
+   ZoomAfterImport(nullptr);
 }
 
 void AudacityProject::OnImportLabels()
@@ -6776,7 +6778,7 @@ void AudacityProject::OnImportLabels()
                 Format(_("Imported labels from '%s'"), fileName.c_str()),
                 _("Import Labels"));
 
-      RedrawProject();
+      ZoomAfterImport(nullptr);
    }
 }
 
@@ -6821,8 +6823,7 @@ AudacityProject *AudacityProject::DoImportMIDI(
       pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
          fileName.c_str()), _("Import MIDI"));
 
-      pProject->RedrawProject();
-      pProject->mTrackPanel->EnsureVisible(pTrack);
+      pProject->ZoomAfterImport(pTrack);
       pNewProject = nullptr;
       return pProject;
    }

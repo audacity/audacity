@@ -265,6 +265,8 @@ public:
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
    bool Import(const wxString &fileName, WaveTrackArray *pTrackArray = NULL);
 
+   void ZoomAfterImport(Track *pTrack);
+
    void AddImportedTracks(const wxString &fileName,
                           TrackHolders &&newTracks);
 
