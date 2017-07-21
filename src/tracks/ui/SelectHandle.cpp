@@ -634,6 +634,7 @@ UIHandle::Result SelectHandle::Click
 #endif
             mSelStartValid = true;
             mSelStart = value;
+            mSnapStart = SnapResults{};
             AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
@@ -729,6 +730,7 @@ UIHandle::Result SelectHandle::Click
 #endif
                mSelStartValid = true;
                mSelStart = value;
+               mSnapStart = SnapResults{};
                break;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
             case SBBottom:
