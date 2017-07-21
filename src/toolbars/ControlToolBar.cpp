@@ -709,10 +709,17 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #endif
       }
       else {
+         // Bug1627 (part of it):
+         // infinite error spew when trying to start scrub:
+         // Problem was that the error dialog yields to events,
+         // causing recursion to this function in the scrub timer
+         // handler!  Easy fix, just delay the user alert instead.
+         CallAfter( [=]{
          // Show error message if stream could not be opened
          ShowErrorDialog(this, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
+         });
       }
    }
 
