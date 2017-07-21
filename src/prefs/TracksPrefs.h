@@ -33,6 +33,8 @@ class TracksPrefs final : public PrefsPanel
    static bool GetPinnedHeadPreference();
    static void SetPinnedHeadPreference(bool value, bool flush = false);
 
+   static wxString GetDefaultAudioTrackNamePreference();
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);

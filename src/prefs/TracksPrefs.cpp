@@ -158,12 +158,30 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
       gPrefs->Flush();
 }
 
+wxString TracksPrefs::GetDefaultAudioTrackNamePreference()
+{
+   const auto name =
+      gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), _(""));
+   if (name.empty())
+      // When nothing was specified,
+      // the default-default is whatever translation of...
+      return _("Audio Track");
+   else
+      return name;
+}
+
 bool TracksPrefs::Commit()
 {
    // Bug 1583: Clear the caching of the preference pinned state.
    iPreferencePinned = -1;
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   if (gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"),
+                    _("Audio Track")) == _("Audio Track")) {
+      gPrefs->DeleteEntry(wxT("/GUI/TrackNames/DefaultTrackName"));
+      gPrefs->Flush();
+   }
 
    return true;
 }

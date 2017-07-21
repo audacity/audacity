@@ -53,6 +53,7 @@ Track classes.
 
 #include "effects/TimeWarper.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/TracksPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
 #include "InconsistencyException.h"
@@ -107,7 +108,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mRate = (int) rate;
    mGain = 1.0;
    mPan = 0.0;
-   SetDefaultName(gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), _("Audio Track")));
+   SetDefaultName(TracksPrefs::GetDefaultAudioTrackNamePreference());
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;

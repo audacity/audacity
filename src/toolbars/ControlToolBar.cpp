@@ -1109,7 +1109,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
          /* i18n-hint: The default name for an audio track. */
-         gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"),&defaultTrackName, _("Audio Track"));
+         defaultTrackName = TracksPrefs::GetDefaultAudioTrackNamePreference();
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
