@@ -554,10 +554,10 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
    switch(i){
    case StartTimeID + 4 * EndTimeID:
       if( mEnd < mStart )
-         mEnd = mStart;
+         mStart = mEnd;
    case StartTimeID * 4 + EndTimeID:
       if( mStart > mEnd )
-         mStart = mEnd;
+         mEnd = mStart;
       mLength = mEnd - mStart;
       mCenter = (mStart+mEnd)/2.0;
       break;
