@@ -402,6 +402,14 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
                                    PlayMode::normalPlay, appearance, backwards);
+            if (mScrubToken <= 0) {
+               // Bug1627 (part of it):
+               // infinite error spew when trying to start scrub:
+               // If failed for reasons of audio device problems, do not try
+               // again with repeated timer ticks.
+               mScrubStartPosition = -1;
+               return false;
+            }
          }
       }
       else
@@ -420,14 +428,6 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
 
          mPoller->Start(ScrubPollInterval_ms);
-      }
-      else if (mScrubToken <= 0) {
-         // Bug1627 (part of it):
-         // infinite error spew when trying to start scrub:
-         // If failed for reasons of audio device problems, do not try
-         // again with repeated timer ticks.
-         mScrubStartPosition = -1;
-         return false;
       }
 
       // Return true whether we started scrub, or are still waiting to decide.
