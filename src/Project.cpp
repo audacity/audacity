@@ -2031,6 +2031,9 @@ void AudacityProject::FixScrollbars()
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
    }
+
+   CallAfter(
+      [this]{ GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
 std::shared_ptr<Track> AudacityProject::GetFirstVisible()
@@ -2278,6 +2281,9 @@ void AudacityProject::DoScroll()
    if (!mAutoScrolling) {
       mTrackPanel->Refresh(false);
    }
+
+   CallAfter(
+      [this]{ GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
 bool AudacityProject::ReportIfActionNotAllowed
@@ -4490,6 +4496,8 @@ void AudacityProject::PushState(const wxString &desc,
       this->DoZoomFitV();
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
+
+   GetTrackPanel()->HandleCursorForPresentMouseState();
 }
 
 void AudacityProject::RollbackState()
@@ -4502,6 +4510,7 @@ void AudacityProject::ModifyState(bool bWantsAutoSave)
    GetUndoManager()->ModifyState(GetTracks(), mViewInfo.selectedRegion, mTags);
    if (bWantsAutoSave)
       AutoSave();
+   GetTrackPanel()->HandleCursorForPresentMouseState();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
