@@ -537,7 +537,8 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
                     wxLC_EDIT_LABELS);
          mChains = S.Id(ChainsListID).AddListControlReportMode();
-         mChains->InsertColumn(0, wxT("Chain"), wxLIST_FORMAT_LEFT);
+         // i18n-hint: This is the heading for a column in the edit chains dialog
+         mChains->InsertColumn(0, _("Chain"), wxLIST_FORMAT_LEFT);
          S.StartHorizontalLay(wxCENTER, false);
          {
             S.Id(AddButtonID).AddButton(_("&Add"));
