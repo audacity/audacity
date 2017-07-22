@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-22 11:50+0100\n"
-"PO-Revision-Date: 2017-07-22 10:53+0200\n"
+"PO-Revision-Date: 2017-07-22 22:46+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/"
 "de/)\n"
@@ -184,14 +184,12 @@ msgstr "Skript"
 msgid "Output"
 msgstr "Ausgabe"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1051
-#: src/effects/nyquist/Nyquist.cpp:2304
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1051 src/effects/nyquist/Nyquist.cpp:2304
 msgid "Load Nyquist script"
 msgstr "Nyquist-Skript laden"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1054
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1100
-#: src/effects/nyquist/Nyquist.cpp:2329
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1100 src/effects/nyquist/Nyquist.cpp:2329
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr "Nyquist-Skripte (*.ny)|*.ny|Lisp-Skripte (*.lsp)|*.lsp|Alle Dateien|*"
 
@@ -209,8 +207,7 @@ msgstr "Skript wurde nicht gespeichert."
 msgid "Warning"
 msgstr "Warnung"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1097
-#: src/effects/nyquist/Nyquist.cpp:2326
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1097 src/effects/nyquist/Nyquist.cpp:2326
 msgid "Save Nyquist script"
 msgstr "Nyquist-Skript speichern"
 
@@ -697,7 +694,7 @@ msgstr "Erweiterungsunterstützung"
 
 #: src/AboutDialog.cpp:647 src/AboutDialog.cpp:650
 msgid "Sound card mixer support"
-msgstr "Unterstützung für Soundkarten-Mischer"
+msgstr "Unterstützung für Soundkarten-Mixer"
 
 #: src/AboutDialog.cpp:655 src/AboutDialog.cpp:658
 msgid "Pitch and Tempo Change support"
@@ -970,8 +967,8 @@ msgstr "Audacity Protokoll"
 msgid "&Save..."
 msgstr "&Speichern …"
 
-#: src/AudacityLogger.cpp:199 src/Tags.cpp:883
-#: src/prefs/KeyConfigPrefs.cpp:275 src/prefs/KeyConfigPrefs.cpp:877
+#: src/AudacityLogger.cpp:199 src/Tags.cpp:883 src/prefs/KeyConfigPrefs.cpp:275
+#: src/prefs/KeyConfigPrefs.cpp:877
 msgid "Cl&ear"
 msgstr "&Löschen"
 
@@ -2051,7 +2048,7 @@ msgid ""
 "Too much audio was selected.  Only the first %.1f seconds of audio will be "
 "analyzed."
 msgstr ""
-"Es wurde zu viel Audio ausgewählt.  Nur die ersten %.1f Sekunden werden "
+"Es wurde zu viel Ton ausgewählt.  Nur die ersten %.1f Sekunden werden "
 "analysiert."
 
 #: src/FreqWindow.cpp:654
@@ -2191,7 +2188,7 @@ msgid ""
 "We strongly recommend that you use our latest stable released version, which "
 "has full documentation and support.<br><br>"
 msgstr ""
-"Wir empfehlen dringend unsere letzte stabile veröffentlichte Version zu "
+"Wir empfehlen dringend, unsere letzte stabile veröffentlichte Version zu "
 "verwenden. Diese bietet vollständige Dokumentation und Unterstützung.<br><br>"
 
 #: src/HelpText.cpp:212
@@ -2199,7 +2196,7 @@ msgid ""
 "You can help us get Audacity ready for release by joining our [[http://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Sie können uns helfen, Audacity fertig zur Veröffentlichung zu bekommen, in "
+"Sie können uns helfen, Audacity zur Veröffentlichung fertig zu stellen, in "
 "dem Sie unserer [[http://www.audacityteam.org/community/|Community]] "
 "beitreten.<hr><br><br>"
 
@@ -2882,19 +2879,19 @@ msgstr "&Rechts von der Wiedergabeposition"
 
 #: src/Menus.cpp:636
 msgid "Track &Start to Cursor"
-msgstr "&Spuranfang zu Cursor"
+msgstr "&Spuranfang bis Cursor"
 
 #: src/Menus.cpp:637
 msgid "Cursor to Track &End"
-msgstr "Cursor zu Spur&ende"
+msgstr "Cursor bis Spur&ende"
 
 #: src/Menus.cpp:643
 msgid "S&tore Selection"
-msgstr "A&uswahl speichern"
+msgstr "A&uswahl merken"
 
 #: src/Menus.cpp:647
 msgid "Retrieve Selectio&n"
-msgstr "Auswahl erhalte&n"
+msgstr "Auswahl abrufe&n"
 
 #: src/Menus.cpp:658
 msgid "S&pectral"
@@ -2914,11 +2911,11 @@ msgstr "Nächste &niedrigere Spitzenfrequenz"
 
 #: src/Menus.cpp:670
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "&Vorherige Ausschnittgrenze an Cursor"
+msgstr "&Vorherige Ausschnittgrenze bis Cursor"
 
 #: src/Menus.cpp:673
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Cursor an n&ächste Ausschnittgrenze"
+msgstr "Cursor bis n&ächste Ausschnittgrenze"
 
 #: src/Menus.cpp:676
 msgid "Previo&us Clip"
@@ -2930,11 +2927,11 @@ msgstr "Nächst&er Ausschnitt"
 
 #: src/Menus.cpp:686
 msgid "Cursor to Stored &Cursor Position"
-msgstr "Cursor zur gespeicherten &Cursorposition"
+msgstr "Cursor bis gespeicherte &Cursorposition"
 
 #: src/Menus.cpp:689
 msgid "Store Cursor Pos&ition"
-msgstr "Cursorpos&ition speichern"
+msgstr "Cursorpos&ition merken"
 
 #: src/Menus.cpp:697
 msgid "At &Zero Crossings"
@@ -3009,7 +3006,7 @@ msgstr "&Karaoke …"
 
 #: src/Menus.cpp:763
 msgid "&Mixer Board..."
-msgstr "&Mischer ..."
+msgstr "&Mixer ..."
 
 #: src/Menus.cpp:769
 msgid "&Toolbars"
@@ -3206,7 +3203,7 @@ msgstr "A&utomatische Aufnahmeeinpegelung (ein/aus)"
 
 #: src/Menus.cpp:932
 msgid "Add &New"
-msgstr "&Neue hinzufügen"
+msgstr "&Neu hinzufügen"
 
 #: src/Menus.cpp:934
 msgid "&Mono Track"
@@ -3249,9 +3246,8 @@ msgid "Remo&ve Tracks"
 msgstr "Spuren ent&fernen"
 
 #: src/Menus.cpp:976
-#, fuzzy
 msgid "M&ute/Unmute"
-msgstr "Fokussierte Spur st&umm/laut"
+msgstr "St&umm/Laut"
 
 #: src/Menus.cpp:977
 msgid "&Mute All Tracks"
@@ -3263,7 +3259,7 @@ msgstr "Alle Spuren wieder &laut stellen"
 
 #: src/Menus.cpp:981
 msgid "&Pan"
-msgstr ""
+msgstr "&Panorama"
 
 #: src/Menus.cpp:982
 msgid "&Left"
@@ -3343,7 +3339,7 @@ msgstr "Er&zeugen"
 
 #: src/Menus.cpp:1083 src/Menus.cpp:1110 src/Menus.cpp:1134
 msgid "Add / Remove Plug-ins..."
-msgstr "Plugins hinzufügen / entfernen …"
+msgstr "Erweiterungen hinzufügen / entfernen …"
 
 #: src/Menus.cpp:1099
 msgid "Effe&ct"
@@ -3445,7 +3441,7 @@ msgstr "Auf Aktualisierungen &prüfen …"
 #. i18n-hint: Ext-Bar is a menu with extra commands from tool bars
 #: src/Menus.cpp:1265
 msgid "Ext-&Bar"
-msgstr ""
+msgstr "Zus-&Leiste"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp:1278
@@ -3489,9 +3485,8 @@ msgid "Play C&ut Preview"
 msgstr "Schnitt-Vorscha&u wiedergeben"
 
 #: src/Menus.cpp:1304
-#, fuzzy
 msgid "T&ools"
-msgstr "Werkzeuge"
+msgstr "&Werkzeuge"
 
 #: src/Menus.cpp:1306
 msgid "&Selection Tool"
@@ -3526,9 +3521,8 @@ msgid "&Previous Tool"
 msgstr "&Vorheriges Werkzeug"
 
 #: src/Menus.cpp:1320
-#, fuzzy
 msgid "Mi&xer"
-msgstr "Mi&x"
+msgstr "Mi&xer"
 
 #: src/Menus.cpp:1322
 msgid "Ad&just playback volume"
@@ -3563,9 +3557,8 @@ msgid "DeleteKey&2"
 msgstr "Löschtaste&2"
 
 #: src/Menus.cpp:1347
-#, fuzzy
 msgid "Trans&cription"
-msgstr "Transkription"
+msgstr "Trans&kription"
 
 #: src/Menus.cpp:1349
 msgid "Pl&ay-at-Speed"
@@ -3600,9 +3593,8 @@ msgid "Move to &Previous Label"
 msgstr "Zu &vorheriger Textmarke bewegen"
 
 #: src/Menus.cpp:1367
-#, fuzzy
 msgid "Scru&b"
-msgstr "Schrubben"
+msgstr "Schru&bben"
 
 #: src/Menus.cpp:1369
 msgid "Short seek &left during playback"
@@ -3621,9 +3613,8 @@ msgid "Long Seek rig&ht during playback"
 msgstr "Großer Sprung nach re&chts während Wiedergabe"
 
 #: src/Menus.cpp:1378
-#, fuzzy
 msgid "De&vice"
-msgstr "Ge&rät:"
+msgstr "Ge&rät"
 
 #: src/Menus.cpp:1380
 msgid "Change &recording device"
@@ -3642,9 +3633,8 @@ msgid "Change recording cha&nnels"
 msgstr "Aufnahmeka&näle ändern"
 
 #: src/Menus.cpp:1397
-#, fuzzy
 msgid "&Selection"
-msgstr "Auwahl"
+msgstr "Au&swahl"
 
 #: src/Menus.cpp:1399
 msgid "Snap To &Off"
@@ -3692,9 +3682,8 @@ msgstr "Auswahl rechts verr&ingern"
 
 #. i18n-hint: Ext-Command is a menu with extra commands
 #: src/Menus.cpp:1425
-#, fuzzy
 msgid "Ext-Co&mmand"
-msgstr "Befehl"
+msgstr "Zus-&Befehle"
 
 #: src/Menus.cpp:1427
 msgid "Move backward thru active windows"
@@ -3706,7 +3695,7 @@ msgstr "Vorwärts durch aktive Fenster bewegen"
 
 #: src/Menus.cpp:1433
 msgid "F&ocus"
-msgstr ""
+msgstr "F&okus"
 
 #: src/Menus.cpp:1435
 msgid "Move &backward from toolbars to tracks"
@@ -3749,9 +3738,8 @@ msgid "Toggle Focuse&d Track"
 msgstr "Fokussierte Spur umschalten"
 
 #: src/Menus.cpp:1455
-#, fuzzy
 msgid "&Cursor"
-msgstr "&Cursor nach"
+msgstr "&Cursor"
 
 #: src/Menus.cpp:1457
 msgid "Cursor &Left"
@@ -3786,9 +3774,8 @@ msgid "Clip Rig&ht"
 msgstr "Rec&hts abschneiden"
 
 #: src/Menus.cpp:1471
-#, fuzzy
 msgid "&Track"
-msgstr "&Spuren"
+msgstr "&Spur"
 
 #: src/Menus.cpp:1473
 msgid "Change p&an on focused track"
@@ -3924,9 +3911,8 @@ msgstr "Ausschnitte nach rechts zeitverschoben"
 msgid "Time shifted clips to the left"
 msgstr "Ausschnitte nach links zeitverschoben"
 
-#: src/Menus.cpp:3471 src/prefs/MousePrefs.cpp:131
-#: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
-#: src/tracks/ui/TimeShiftHandle.cpp:842
+#: src/Menus.cpp:3471 src/prefs/MousePrefs.cpp:131 src/prefs/MousePrefs.cpp:132
+#: src/prefs/MousePrefs.cpp:133 src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Zeitverschiebung"
 
@@ -5339,7 +5325,7 @@ msgstr "Transport"
 #: src/Screenshot.cpp:388 src/toolbars/MixerToolBar.cpp:58
 #: src/toolbars/MixerToolBar.cpp:187
 msgid "Mixer"
-msgstr "Mischer"
+msgstr "Mixer"
 
 #: src/Screenshot.cpp:389 src/toolbars/MeterToolBar.cpp:172
 #: src/widgets/Meter.cpp:2230
@@ -7249,7 +7235,7 @@ msgstr ""
 
 #: src/effects/DtmfGen.cpp:320
 msgid "DTMF sequence:"
-msgstr "DTMF Abfolge:"
+msgstr "DTMF-Abfolge:"
 
 #: src/effects/DtmfGen.cpp:325 src/effects/Noise.cpp:230
 #: src/effects/ToneGen.cpp:366 src/effects/ToneGen.cpp:403
@@ -10063,7 +10049,7 @@ msgstr " - R"
 
 #: src/export/Export.cpp:1297
 msgid "Mixer Panel"
-msgstr "Misch-Panel"
+msgstr "Mixer-Panel"
 
 #: src/export/Export.cpp:1304 src/export/Export.cpp:1350
 #, c-format
@@ -13573,7 +13559,7 @@ msgstr "Aufnahmelautstärke: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp:285
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Aufnahmelautstärke (Nicht verfügbar; Systemmischer verwenden.)"
+msgstr "Aufnahmelautstärke (Nicht verfügbar; Systemmixer verwenden.)"
 
 #: src/toolbars/MixerToolBar.cpp:290
 #, c-format
@@ -13586,7 +13572,7 @@ msgstr " (emuliert)"
 
 #: src/toolbars/MixerToolBar.cpp:293
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Wiedergabelautstärke (Nicht verfügbar; Systemmischer verwenden.)"
+msgstr "Wiedergabelautstärke (Nicht verfügbar; Systemmixer verwenden.)"
 
 #: src/toolbars/ScrubbingToolBar.cpp:113
 msgid "Seek"
@@ -13634,7 +13620,7 @@ msgstr "Schrub-Regler anzeigen"
 
 #: src/toolbars/SelectionBar.cpp:127 src/toolbars/SelectionBar.cpp:501
 msgid "Selection"
-msgstr "Auwahl"
+msgstr "Auswahl"
 
 #: src/toolbars/SelectionBar.cpp:276 src/toolbars/SelectionBar.cpp:365
 msgid "Project Rate (Hz):"
