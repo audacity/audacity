@@ -18,7 +18,13 @@ wxString KeyStringNormalize(const wxString & key)
 #if defined(__WXMAC__)
    wxString newkey;
    wxString temp = key;
+
+   // PRL:  This is needed to parse older preference files.
    temp.Replace(wxT("XCtrl+"), wxT("Control+"));
+
+   // PRL:  RawCtrl is the proper replacement for Control, when formatting
+   // wxMenuItem, so that wxWidgets shows ^ in the menu.  It is written into
+   // new preference files (2.2.0 and later).
    temp.Replace(wxT("RawCtrl+"), wxT("Control+"));
    temp.Replace(wxT("Ctrl+"), wxT("Command+"));
 
