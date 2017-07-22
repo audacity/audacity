@@ -291,7 +291,7 @@ void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen )
    if (!inited)
       Init();
    // do nothing if no colours set.
-   if( (iBrush != -1) && ( iPen !=-1))
+   if( (iBrush == -1) && ( iPen ==-1))
       return;
    wxColour col = wxColour(0,0,0);
    if( iBrush !=-1 ){
