@@ -51,6 +51,10 @@ private:
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
       pMenu->Check(OnTimeTrackLogIntID, pTrack->GetInterpolateLog());
+
+      auto isLog = pTrack->GetDisplayLog();
+      pMenu->Check(OnTimeTrackLinID, !isLog);
+      pMenu->Check(OnTimeTrackLogID, isLog);
    }
 
    void DestroyMenu() override
@@ -148,8 +152,8 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnTimeTrackLinID, _("&Linear scale"), OnTimeTrackLin)
-   POPUP_MENU_ITEM(OnTimeTrackLogID, _("L&ogarithmic scale"), OnTimeTrackLog)
+   POPUP_MENU_RADIO_ITEM(OnTimeTrackLinID, _("&Linear scale"), OnTimeTrackLin)
+   POPUP_MENU_RADIO_ITEM(OnTimeTrackLogID, _("L&ogarithmic scale"), OnTimeTrackLog)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(OnSetTimeTrackRangeID, _("&Range..."), OnSetTimeTrackRange)
    POPUP_MENU_CHECK_ITEM(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"), OnTimeTrackLogInt)
