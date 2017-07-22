@@ -138,6 +138,7 @@ void AboutDialog::CreateCreditsList()
 
    // Contributors
    AddCredit(wxString(wxT("Lynn Allan, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Brian Armstrong, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("David Avery, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("David Bailes, ")) + _("accessibility advisor"), roleContributor);
    AddCredit(wxString(wxT("William Bland, ")) + _("developer"), roleContributor);
@@ -156,6 +157,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("David Hostetler, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Steve Jolly, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Steven Jones, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Henric Jungheim, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Max Kellermann, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Arun Kishore, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Paul Livesey, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Harvey Lubin, ")) + _("graphic artist"), roleContributor);
