@@ -521,6 +521,7 @@ bool Exporter::GetFilename()
       mFilterIndex = 0;
    }
    maskString.RemoveLast();
+   wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
 //Bug 1304: Set a default path if none was given.  For Export.
 #ifdef __WIN32__
@@ -536,37 +537,44 @@ bool Exporter::GetFilename()
    mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), wxT("~/Documents")));
 #endif
    mFilename.SetName(mProject->GetName());
+   if (mFilename.GetName().empty())
+      mFilename.SetName(_("untitled"));
    while (true) {
       // Must reset each iteration
       mBook = NULL;
 
-      FileDialog fd(mProject,
-                    mFileDialogTitle,
-                    mFilename.GetPath(),
-                    mFilename.GetFullName(),
-                    maskString,
-                    wxFD_SAVE | wxRESIZE_BORDER);
-      mDialog = &fd;
-      mDialog->PushEventHandler(this);
+      {
+         auto useFileName = mFilename;
+         if (!useFileName.HasExt())
+            useFileName.SetExt(defext);
+         FileDialog fd(mProject,
+                       mFileDialogTitle,
+                       mFilename.GetPath(),
+                       useFileName.GetFullName(),
+                       maskString,
+                       wxFD_SAVE | wxRESIZE_BORDER);
+         mDialog = &fd;
+         mDialog->PushEventHandler(this);
 
-      fd.SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
-      fd.SetFilterIndex(mFilterIndex);
+         fd.SetUserPaneCreator(CreateUserPaneCallback, (wxUIntPtr) this);
+         fd.SetFilterIndex(mFilterIndex);
 
-      int result = fd.ShowModal();
+         int result = fd.ShowModal();
 
-      mDialog->PopEventHandler();
+         mDialog->PopEventHandler();
 
-      if (result == wxID_CANCEL) {
-         return false;
+         if (result == wxID_CANCEL) {
+            return false;
+         }
+
+         mFilename = fd.GetPath();
+         if (mFilename == wxT("")) {
+            return false;
+         }
+
+         mFormat = fd.GetFilterIndex();
+         mFilterIndex = fd.GetFilterIndex();
       }
-
-      mFilename = fd.GetPath();
-      if (mFilename == wxT("")) {
-         return false;
-      }
-
-      mFormat = fd.GetFilterIndex();
-      mFilterIndex = fd.GetFilterIndex();
 
       int c = 0;
       int i = -1;
@@ -585,7 +593,7 @@ bool Exporter::GetFilename()
       }
 
       wxString ext = mFilename.GetExt();
-      wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
+      defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
       //
       // Check the extension - add the default if it's not there,
