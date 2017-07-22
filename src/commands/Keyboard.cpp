@@ -18,6 +18,7 @@ wxString KeyStringNormalize(const wxString & key)
 #if defined(__WXMAC__)
    wxString newkey;
    wxString temp = key;
+   temp.Replace(wxT("XCtrl+"), wxT("Control+"));
    temp.Replace(wxT("RawCtrl+"), wxT("Control+"));
    temp.Replace(wxT("Ctrl+"), wxT("Command+"));
 
