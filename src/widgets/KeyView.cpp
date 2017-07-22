@@ -1080,15 +1080,22 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
       if (FindFocus() == this)
       {
          // Focused lines get highlighted background
+         dc.SetPen(*wxTRANSPARENT_PEN);
          dc.SetBrush(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)));
-         AColor::DrawFocus(dc, r);
          dc.DrawRectangle(r);
+
+         // and they also get a dotted focus rect.  This could just be left out.
+         // The focus rect does very little for us, as it is the same size as the 
+         // rectangle itself.  Consequently for themes that have black text it
+         // disappears.  But on HiContrast you do get a dotted green border which
+         // may have some utility.
+         AColor::DrawFocus(dc, r);
       }
       else
       {
          // Non focused lines get a light background
-         dc.SetBrush(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)));
          dc.SetPen(*wxTRANSPARENT_PEN);
+         dc.SetBrush(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)));
          dc.DrawRectangle(r);
       }
    }

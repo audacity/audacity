@@ -178,22 +178,8 @@ void AColor::DrawFocus(wxDC & dc, wxRect & rect)
          x2 = rect.GetRight(),
          y2 = rect.GetBottom();
 
-#ifdef __WXMAC__
-   // Why must this be different?
-   // Otherwise nothing is visible if you do as for the
-   // other platforms.
-   UseThemeColour( &dc, clrTrackPanelText );
-
-   //dc.SetPen(wxPen(wxT("MEDIUM GREY"), 1, wxSOLID));
-   //dc.SetLogicalFunction(wxCOPY);
-#else
-   UseThemeColour( &dc, clrTrackPanelText );
-
-   //dc.SetPen(wxPen(wxT("MEDIUM GREY"), 0, wxSOLID));
-   // this seems to be closer than what Windows does than wxINVERT although
-   // I'm still not sure if it's correct
-   //dc.SetLogicalFunction(wxAND_REVERSE);
-#endif
+   // -1 for brush, so it just sets the pen colour, and does not change the brush.
+   UseThemeColour( &dc, -1, clrTrackPanelText );
 
    wxCoord z;
    for ( z = x1 + 1; z < x2; z += 2 )
@@ -211,7 +197,6 @@ void AColor::DrawFocus(wxDC & dc, wxRect & rect)
    for ( z = y2 - shift; z > y1; z -= 2 )
       dc.DrawPoint(x1, z);
 
-   dc.SetLogicalFunction(wxCOPY);
 }
 
 void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
@@ -298,15 +283,24 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
 #endif
 }
 
-void AColor::UseThemeColour( wxDC * dc, int iIndex, int index2 )
+// Set colour of and select brush and pen.
+// Use -1 to omit brush or pen.
+// If pen omitted, then the same colour as the brush will be used.
+void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen )
 {
    if (!inited)
       Init();
-   wxColour col = theTheme.Colour( iIndex );
-   spareBrush.SetColour( col );
-   dc->SetBrush( spareBrush );
-   if( index2 != -1)
-      col = theTheme.Colour( index2 );
+   // do nothing if no colours set.
+   if( (iBrush != -1) && ( iPen !=-1))
+      return;
+   wxColour col = wxColour(0,0,0);
+   if( iBrush !=-1 ){
+      col = theTheme.Colour( iBrush );
+      spareBrush.SetColour( col );
+      dc->SetBrush( spareBrush );
+   }
+   if( iPen != -1)
+      col = theTheme.Colour( iPen );
    sparePen.SetColour( col );
    dc->SetPen( sparePen );
 }

@@ -71,7 +71,7 @@ class AColor {
    static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight = false);
    static wxColour Blend(const wxColour & c1, const wxColour & c2);
 
-   static void UseThemeColour( wxDC * dc, int iIndex, int index2 =-1 );
+   static void UseThemeColour( wxDC * dc, int iBrush, int iPen=-1 );
    static void TrackPanelBackground(wxDC * dc, bool selected);
 
    static void Light(wxDC * dc, bool selected, bool highlight = false);
