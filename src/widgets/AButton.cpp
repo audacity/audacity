@@ -30,6 +30,7 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>
+#include <wx/eventfilter.h>
 #include <wx/image.h>
 #include <wx/timer.h>
 
@@ -51,72 +52,33 @@ END_EVENT_TABLE()
 // LL:  An alternative to this might be to just use the wxEVT_KILL_FOCUS
 //      or wxEVT_ACTIVATE events.
 class AButton::Listener final
-   : public wxEvtHandler
+   : public wxEventFilter
 {
 public:
    Listener (AButton *button);
    ~Listener();
 
-   void OnKeyDown(wxKeyEvent & event);
-   void OnKeyUp(wxKeyEvent & event);
-   void OnTimer(wxTimerEvent & event);
+   int FilterEvent(wxEvent &event) override;
 
-   DECLARE_CLASS(AButton::Listener)
-   DECLARE_EVENT_TABLE()
+   void OnEvent();
 
 private:
    AButton *mButton;
-   wxTimer mShiftKeyTimer;
 };
-
-IMPLEMENT_CLASS(AButton::Listener, wxEvtHandler);
-
-BEGIN_EVENT_TABLE(AButton::Listener, wxEvtHandler)
-   EVT_TIMER(wxID_ANY, AButton::Listener::OnTimer)
-END_EVENT_TABLE()
 
 AButton::Listener::Listener (AButton *button)
 : mButton(button)
 {
-   mShiftKeyTimer.SetOwner(this);
-
-   wxTheApp->Connect( wxEVT_KEY_DOWN,
-                      wxKeyEventHandler( AButton::Listener::OnKeyDown ),
-                      NULL,
-                      this );
-
-   wxTheApp->Connect( wxEVT_KEY_UP,
-                      wxKeyEventHandler( AButton::Listener::OnKeyUp ),
-                      NULL,
-                      this );
+   wxEvtHandler::AddFilter(this);
 }
 
 AButton::Listener::~Listener ()
 {
-   wxTheApp->Disconnect( wxEVT_KEY_DOWN,
-                         wxKeyEventHandler( AButton::Listener::OnKeyDown ),
-                         NULL,
-                         this );
-
-   wxTheApp->Disconnect( wxEVT_KEY_UP,
-                         wxKeyEventHandler( AButton::Listener::OnKeyUp ),
-                         NULL,
-                         this );
+   wxEvtHandler::RemoveFilter(this);
 }
 
-void AButton::Listener::OnKeyDown(wxKeyEvent & event)
+void AButton::Listener::OnEvent()
 {
-   // Really, it's all the same check for changes of key states.
-   OnKeyUp(event);
-
-   // See comments in OnTimer()
-   mShiftKeyTimer.Start(100);
-}
-
-void AButton::Listener::OnKeyUp(wxKeyEvent & event)
-{
-   event.Skip();
-
    if (!mButton->IsDown())
    {
       int idx = 0;
@@ -136,22 +98,17 @@ void AButton::Listener::OnKeyUp(wxKeyEvent & event)
    }
 }
 
-void AButton::Listener::OnTimer(wxTimerEvent & event)
+int AButton::Listener::FilterEvent(wxEvent &event)
 {
-   event.Skip();
-
-   // bug 307 fix:
-   // Shift key-up events get swallowed if a command with a Shift in its keyboard
-   // shortcut opens a dialog, and OnKeyUp() doesn't get called.
-   // With CTRL now causing the button to change appearance, presumably similar
-   // can happen with that key.
-   if (!wxGetKeyState(WXK_SHIFT) ||
-      !wxGetKeyState(WXK_CONTROL))
-   {
-      wxKeyEvent dummy;
-      this->OnKeyUp(dummy);
-      mShiftKeyTimer.Stop();
-   }
+   if (event.GetEventType() == wxEVT_KEY_DOWN ||
+       event.GetEventType() == wxEVT_KEY_UP)
+      OnEvent();
+   else if (event.GetEventType() == wxEVT_SET_FOCUS)
+      // A modal dialog might have eaten the modifier key-up with its own
+      // filter before we saw it; this is adequate to fix the button image
+      // when the dialog disappears.
+      OnEvent();
+   return Event_Skip;
 }
 
 AButton::AButton(wxWindow * parent,
