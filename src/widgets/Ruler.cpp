@@ -2516,6 +2516,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
       mProject->OnUnlockPlayRegion();
    }
 
+   mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
    mLeftDownClick = mQuickPlayPos;
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
@@ -2550,7 +2551,9 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
 
 void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
 {
-   bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
+   bool isWithinClick =
+      (mLeftDownClickUnsnapped >= 0) &&
+      IsWithinMarker(mousePosX, mLeftDownClickUnsnapped);
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
    bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
@@ -2881,7 +2884,7 @@ void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
    mousePosX = std::min(mousePosX, tp->GetLeftOffset() + width - 1);
 
    mLastMouseX = mousePosX;
-   mQuickPlayPos = Pos2Time(mousePosX);
+   mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
 }
 
 // Pop-up menus
