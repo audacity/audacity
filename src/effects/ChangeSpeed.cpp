@@ -698,14 +698,14 @@ void EffectChangeSpeed::Update_Text_Multiplier()
 void EffectChangeSpeed::Update_Slider_PercentChange()
 // Update Slider Percent control from percent change.
 {
-   double unwarped = m_PercentChange;
+   auto unwarped = std::min<double>(m_PercentChange, MAX_Percentage);
    if (unwarped > 0.0)
       // Un-warp values above zero to actually go up to kSliderMax.
       unwarped = pow(m_PercentChange, (1.0 / kSliderWarp));
 
    // Caution: m_PercentChange could be infinite.
    int unwarpedi = (int)(unwarped + 0.5);
-   unwarpedi = std::min<int>(std::max<int>(unwarpedi, (int)kSliderMax), (int)MAX_Percentage);
+   unwarpedi = std::min<int>(unwarpedi, (int)kSliderMax);
 
    mpSlider_PercentChange->SetValue(unwarpedi);
 }
