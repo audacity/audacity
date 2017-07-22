@@ -11,13 +11,12 @@
 # stefanniedermann <stefan.niedermann@googlemail.com>, 2013-2014
 # Tobias Bannert <tobannert@gmail.com>, 2014-2015
 # Tobias Frei <tobias@freiwuppertal.de>, 2012
-#: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp:45
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-19 19:06+0100\n"
-"PO-Revision-Date: 2017-01-15 12:17+0100\n"
+"PO-Revision-Date: 2017-07-22 10:53+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/"
 "de/)\n"
@@ -26,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.2\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
@@ -185,14 +184,12 @@ msgstr "Skript"
 msgid "Output"
 msgstr "Ausgabe"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1051
-#: src/effects/nyquist/Nyquist.cpp:2304
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1051 src/effects/nyquist/Nyquist.cpp:2304
 msgid "Load Nyquist script"
 msgstr "Nyquist-Skript laden"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1054
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1100
-#: src/effects/nyquist/Nyquist.cpp:2329
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1100 src/effects/nyquist/Nyquist.cpp:2329
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr "Nyquist-Skripte (*.ny)|*.ny|Lisp-Skripte (*.lsp)|*.lsp|Alle Dateien|*"
 
@@ -210,8 +207,7 @@ msgstr "Skript wurde nicht gespeichert."
 msgid "Warning"
 msgstr "Warnung"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1097
-#: src/effects/nyquist/Nyquist.cpp:2326
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1097 src/effects/nyquist/Nyquist.cpp:2326
 msgid "Save Nyquist script"
 msgstr "Nyquist-Skript speichern"
 
@@ -430,7 +426,7 @@ msgstr "Skript stoppen"
 
 #: src/AboutDialog.cpp:99
 msgid "Check Online"
-msgstr ""
+msgstr "Online prüfen"
 
 #: src/AboutDialog.cpp:108
 msgid "quality assurance"
@@ -472,7 +468,7 @@ msgstr "Dokumentation und Unterstützung"
 
 #: src/AboutDialog.cpp:124
 msgid "documentation and support, French"
-msgstr "Dokumentation und Unterstützeng, Französisch"
+msgstr "Dokumentation und Unterstützung, Französisch"
 
 #: src/AboutDialog.cpp:142
 msgid "accessibility advisor"
@@ -540,18 +536,16 @@ msgstr ""
 "Franke, Daniel Winzen, Ralf Gebauer, Joachim Huffer"
 
 #: src/AboutDialog.cpp:382
-#, fuzzy
 msgid "<h3>Audacity "
-msgstr "Audacity"
+msgstr "<h3>Audacity "
 
 #: src/AboutDialog.cpp:383
-#, fuzzy
 msgid ""
 "Audacity the free, open source, cross-platform software for recording and "
 "editing sounds."
 msgstr ""
-"Kostenlose, quelloffene, plattformübergreifende Software für die Aufnahme "
-"und Bearbeitung von Klängen"
+"Audacity, die kostenlose, quelloffene, plattformübergreifende Software zur "
+"Aufnahme und Bearbeitung von Klängen."
 
 #: src/AboutDialog.cpp:388
 msgid "Credits"
@@ -559,7 +553,7 @@ msgstr "Mitwirkende"
 
 #: src/AboutDialog.cpp:392
 msgid "DarkAudacity Customisation"
-msgstr ""
+msgstr "DarkAudacity-Anpassungen"
 
 #: src/AboutDialog.cpp:396
 msgid "Audacity Team Members"
@@ -586,30 +580,28 @@ msgid "Libraries"
 msgstr "Bibliotheken"
 
 #: src/AboutDialog.cpp:411
-#, fuzzy
 msgid "Audacity includes code from the following projects:"
-msgstr "Audacity basiert auf Programmcode von folgenden Projekten:"
+msgstr "Audacity beinhaltet Code von den folgenden Projekten:"
 
 #: src/AboutDialog.cpp:414
 msgid "Special thanks:"
 msgstr "Besonderer Dank geht an:"
 
 #: src/AboutDialog.cpp:423
-#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
 "&copy; 1999-2017 Audacity Team.<br>"
 msgstr ""
-"Die <b>Audacity<sup>&reg;</sup></b> Software unterliegt dem Urheberrecht von"
+"<p><br>&nbsp; &nbsp; Die <b>Audacity<sup>&reg;</sup></b> Software unterliegt "
+"dem Urheberrecht &copy; 1999-2017 Audacity-Team.<br>"
 
 #: src/AboutDialog.cpp:424
-#, fuzzy
 msgid ""
 "&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
 "Mazzoni.<br><br>"
 msgstr ""
-"Der Name <b>Audacity<sup>&reg;</sup></b> ist ein registriertes Warenzeichen "
-"von Dominic Mazzoni."
+"&nbsp; &nbsp; Der Name <b>Audacity</b> ist ein registriertes Warenzeichen "
+"von Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp:430 src/effects/Effect.cpp:190
 #: src/effects/Effect.cpp:220 src/effects/nyquist/Nyquist.cpp:207
@@ -691,7 +683,7 @@ msgstr "Funktionen"
 
 #: src/AboutDialog.cpp:593 src/AboutDialog.cpp:595
 msgid "Dark Theme Extras"
-msgstr ""
+msgstr "Dunkle Themen Extras"
 
 #: src/AboutDialog.cpp:599 src/AboutDialog.cpp:602 src/AboutDialog.cpp:607
 #: src/AboutDialog.cpp:610 src/AboutDialog.cpp:615 src/AboutDialog.cpp:618
@@ -734,25 +726,24 @@ msgstr "Release-Version"
 
 #: src/AboutDialog.cpp:687 src/AboutDialog.cpp:693 src/AboutDialog.cpp:695
 #: src/AboutDialog.cpp:700
-#, fuzzy
 msgid "Compiler:"
-msgstr "Kompressor"
+msgstr "Compiler:"
 
 #: src/AboutDialog.cpp:693
 msgid "MinGW "
-msgstr ""
+msgstr "MinGW "
 
 #: src/AboutDialog.cpp:695
 msgid "GCC "
-msgstr ""
+msgstr "GCC "
 
 #: src/AboutDialog.cpp:700
 msgid "clang "
-msgstr ""
+msgstr "clang "
 
 #: src/AboutDialog.cpp:706
 msgid "Installation Prefix: "
-msgstr "Installation Präfix:"
+msgstr "Installation Präfix: "
 
 #: src/AboutDialog.cpp:711
 msgid "Settings folder: "
@@ -815,7 +806,7 @@ msgstr "Audacity-Unterstützungsdaten"
 
 #: src/AudacityApp.cpp:1302
 msgid "Master Gain Control"
-msgstr "Lautstärkeregler (Master)"
+msgstr "Haupt-Lautstärkeregler"
 
 #: src/AudacityApp.cpp:1485
 msgid "Block size must be within 256 to 100000000\n"
@@ -988,8 +979,8 @@ msgstr "Audacity Protokoll"
 msgid "&Save..."
 msgstr "&Speichern …"
 
-#: src/AudacityLogger.cpp:199 src/Tags.cpp:883
-#: src/prefs/KeyConfigPrefs.cpp:275 src/prefs/KeyConfigPrefs.cpp:877
+#: src/AudacityLogger.cpp:199 src/Tags.cpp:883 src/prefs/KeyConfigPrefs.cpp:275
+#: src/prefs/KeyConfigPrefs.cpp:877
 msgid "Cl&ear"
 msgstr "&Löschen"
 
@@ -1162,13 +1153,13 @@ msgid "Recover Projects"
 msgstr "Projekte wiederherstellen"
 
 #: src/AutoRecovery.cpp:138
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all recoverable projects?\n"
 "\n"
 "Choosing \"Yes\" discards all recoverable projects immediately."
 msgstr ""
-"Sind Sie sicher, dass Sie alle Projekte verwerfen möchten?\n"
+"Sind Sie sicher, dass Sie alle wiederherstellbaren Projekte verwerfen "
+"möchten?\n"
 "\n"
 "Wenn Sie „Ja“ wählen, werden alle Projekte sofort verworfen."
 
@@ -1183,7 +1174,6 @@ msgstr ""
 "Die Dateien im Sicherheitskopie-Ordner konnten nicht aufgelistet werden."
 
 #: src/AutoRecovery.cpp:757
-#, fuzzy
 msgid "Error Decoding File"
 msgstr "Fehler beim Dekodieren der Datei"
 
@@ -1215,11 +1205,11 @@ msgstr "Befe&hl wählen"
 #: src/BatchCommands.cpp:571
 msgid "Ogg Vorbis support is not included in this build of Audacity"
 msgstr ""
-"Diese Version von Audacity beinhaltet keine Unterstützung für Ogg-Vorbis."
+"Diese Version von Audacity beinhaltet keine Unterstützung für Ogg-Vorbis"
 
 #: src/BatchCommands.cpp:583
 msgid "FLAC support is not included in this build of Audacity"
-msgstr "Diese Version von Audacity beinhaltet keine Unterstützung für FLAC."
+msgstr "Diese Version von Audacity beinhaltet keine Unterstützung für FLAC"
 
 #: src/BatchCommands.cpp:587
 #, c-format
@@ -1340,7 +1330,7 @@ msgstr "Num"
 
 #: src/BatchProcessDialog.cpp:562
 msgid "Command  "
-msgstr "Befehl"
+msgstr "Befehl  "
 
 #: src/BatchProcessDialog.cpp:563 src/effects/Contrast.cpp:184
 msgid "Parameters"
@@ -1459,7 +1449,6 @@ msgid "Cancel Save"
 msgstr "Speichern abbrechen"
 
 #: src/Dependencies.cpp:352
-#, fuzzy
 msgid "Save Without Copying"
 msgstr "Speichern ohne zu kopieren"
 
@@ -1535,9 +1524,8 @@ msgstr ""
 "Bitte wählen Sie in den Einstellungen ein anderes temporäres Verzeichnis."
 
 #: src/DirManager.cpp:426
-#, fuzzy
 msgid "Cleaning project temporary files"
-msgstr "Temporäre Dateien werden aufgeräumt"
+msgstr "Temporäre Projektdateien werden gesäubert"
 
 #: src/DirManager.cpp:439
 msgid "Cleaning up temporary files"
@@ -1613,7 +1601,7 @@ msgstr ""
 
 #: src/DirManager.cpp:1530 src/DirManager.cpp:1584
 msgid "Close project immediately with no changes"
-msgstr "Projekt sofort schließen (ohne Änderungen)"
+msgstr "Projekt sofort ohne Änderungen schließen"
 
 #: src/DirManager.cpp:1531
 msgid ""
@@ -1706,7 +1694,7 @@ msgstr "Verknüpfte Dateien wiederherstellen (sicher und empfohlen)"
 
 #: src/DirManager.cpp:1662
 msgid "Fill in silence for missing display data (this session only)"
-msgstr "Stille bei fehlenden Anzeigedaten einfügen (nur diese Sitzung)."
+msgstr "Stille bei fehlenden Anzeigedaten einfügen (nur diese Sitzung)"
 
 #: src/DirManager.cpp:1663 src/DirManager.cpp:1734 src/DirManager.cpp:1808
 msgid "Close project immediately with no further changes"
@@ -1939,30 +1927,26 @@ msgid "Rectangular"
 msgstr "Rechteck"
 
 #: src/FileException.cpp:27
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity failed to open a file in %s."
-msgstr ""
-"Audacity konnte die Datei nicht schreiben:\n"
-"  %s."
+msgstr "Audacity konnte eine Datei in %s nicht öffnen."
 
 #: src/FileException.cpp:30
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity failed to read from a file in %s."
-msgstr ""
-"Audacity konnte die Datei nicht schreiben:\n"
-"  %s."
+msgstr "Audacity konnte eine Datei in %s nicht lesen."
 
 #: src/FileException.cpp:33
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity failed to write to a file in %s."
-msgstr ""
-"Audacity konnte die Datei nicht schreiben:\n"
-"  %s."
+msgstr "Audacity konnte eine Datei in %s nicht schreiben."
 
 #: src/FileException.cpp:37
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
+"Audacity hat erfolgreich eine Datei in %s geschrieben, konnte sie aber nicht "
+"nach %s umbenennen."
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: src/FileFormats.cpp:299
@@ -2200,47 +2184,60 @@ msgstr "Keine lokale Hilfe"
 
 #: src/HelpText.cpp:208
 msgid "Get the Official Released Version of Audacity"
-msgstr ""
+msgstr "Offiziell veröffentlichte Version von Audacity erhalten"
 
 #: src/HelpText.cpp:210
 msgid ""
 "<br><br>The version of Audacity you are using is an <b>Alpha test version</"
 "b>."
 msgstr ""
+"<br><br>Die verwendete Version von Audacity ist eine <b>Alpha-Test-Version</"
+"b>."
 
 #: src/HelpText.cpp:211
 msgid ""
 "We strongly recommend that you use our latest stable released version, which "
 "has full documentation and support.<br><br>"
 msgstr ""
+"Wir empfehlen dringend unsere letzte stabile veröffentlichte Version zu "
+"verwenden. Diese bietet vollständige Dokumentation und Unterstützung.<br><br>"
 
 #: src/HelpText.cpp:212
 msgid ""
 "You can help us get Audacity ready for release by joining our [[http://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
+"Sie können uns helfen, Audacity fertig zur Veröffentlichung zu bekommen, in "
+"dem Sie unserer [[http://www.audacityteam.org/community/|Community]] "
+"beitreten.<hr><br><br>"
 
 #: src/HelpText.cpp:218
 msgid "<br><br>DarkAudacity is based on Audacity:"
-msgstr ""
+msgstr "<br><br>DarkAudacity basiert auf Audacity:"
 
 #: src/HelpText.cpp:219
 msgid ""
 " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
 "between them."
 msgstr ""
+" [[http://www.darkaudacity.com|www.darkaudacity.com]] - für Unterschiede "
+"dazwischen."
 
 #: src/HelpText.cpp:220
 msgid ""
 " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
 "help using DarkAudacity."
 msgstr ""
+" Email an [[mailto:james@audacityteam.org|james@audacityteam.org]] - für "
+"Hilfe bei der Verwendung von DarkAudacity."
 
 #: src/HelpText.cpp:221
 msgid ""
 " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started "
 "with DarkAudacity."
 msgstr ""
+" [[http://www.darkaudacity.com/video.html|Tutorials]] - um mit DarkAudacity "
+"los zu legen."
 
 #: src/HelpText.cpp:228
 msgid "How to get help"
@@ -2271,8 +2268,8 @@ msgid ""
 " [[http://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
-" [[http://forum.audacityteam.org/|Forum]] - stellen Sie Ihre Fragen online "
-"direkt."
+" [[http://forum.audacityteam.org/|Forum]] - stellen Sie Ihre Fragen direkt "
+"online."
 
 #: src/HelpText.cpp:233
 msgid ""
@@ -2309,16 +2306,14 @@ msgstr ""
 "html#fromcd|Audio-CDs]]."
 
 #: src/HelpText.cpp:266
-#, fuzzy
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]].<br><br>To always view the Manual online, change \"Location of "
 "Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
 "Das Handbuch scheint nicht installiert zu sein. Bitte [[*URL*|schauen Sie "
-"sich das Handbuch online an]] oder [[http://manual.audacityteam.org/man/"
-"unzipping_the_manual.html| laden Sie das Handbuch herunter]].<br><br>Um das "
-"Handbuch immer online anzuschauen, ändern Sie „Ort der Anleitung“ in<br> den "
+"sich das Handbuch online an]].<br><br>Um das Handbuch immer online "
+"anzuschauen, ändern Sie „Ort der Anleitung“ in den "
 "Programmoberflächeneinstellungen zu „Aus dem Internet“."
 
 #: src/HelpText.cpp:271
@@ -2348,9 +2343,8 @@ msgid "Action"
 msgstr "Aktion"
 
 #: src/HistoryWindow.cpp:88
-#, fuzzy
 msgid "Reclaimable Space"
-msgstr "Variable Geschwindigkeit:"
+msgstr "Zurückforderbarer Platz"
 
 #: src/HistoryWindow.cpp:97
 msgid "&Total space used"
@@ -2387,6 +2381,8 @@ msgid ""
 "Internal error in %s at %s line %d.\n"
 "Please inform the Audacity team at feedback@audacityteam.org."
 msgstr ""
+"Interner Fehler %s in Zeile %s: %d.\n"
+"Bitte informieren Sie das Audacity-Team unter feedback@audacityteam.org."
 
 #: src/InconsistencyException.cpp:38
 #, c-format
@@ -2394,6 +2390,8 @@ msgid ""
 "Internal error at %s line %d.\n"
 "Please inform the Audacity team at feedback@audacityteam.org."
 msgstr ""
+"Interner Fehler in Zeile %s: %d.\n"
+"Bitte informieren Sie das Audacity-Team unter feedback@audacityteam.org."
 
 #: src/Internat.cpp:204
 msgid "Unable to determine"
@@ -2496,9 +2494,8 @@ msgid "New..."
 msgstr "Neu …"
 
 #: src/LabelDialog.cpp:592 src/Menus.cpp:6743
-#, fuzzy
 msgid "Select a text file containing labels"
-msgstr "Textdatei mit Textmarken auswählen …"
+msgstr "Textdatei mit Textmarken auswählen"
 
 #: src/LabelDialog.cpp:596 src/Menus.cpp:6747
 msgid "Text files (*.txt)|*.txt|All files|*"
@@ -2578,6 +2575,7 @@ msgstr "Gelöschte Textmarke"
 #: src/LabelTrack.cpp:2286
 msgid "One or more saved labels could not be read."
 msgstr ""
+"Eine oder mehrere gespeicherte Textmarken konnten nicht gelesen werden."
 
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
@@ -2601,9 +2599,8 @@ msgstr ""
 "ab: %s (%s)."
 
 #: src/Legacy.cpp:263
-#, fuzzy
 msgid "Error Converting Legacy Project File"
-msgstr "Fehler beim Speichern des Projekts"
+msgstr "Fehler beim konvertieren einer alten Projektdatei"
 
 #: src/Legacy.cpp:304
 #, c-format
@@ -2638,22 +2635,19 @@ msgstr "Projekt speichern &unter …"
 
 #: src/Menus.cpp:335
 msgid "Save Othe&r"
-msgstr ""
+msgstr "Ande&rs speichern"
 
 #: src/Menus.cpp:338
-#, fuzzy
 msgid "Export as MP&3"
-msgstr "Exportierte Tags"
+msgstr "Als MP&3 exportieren"
 
 #: src/Menus.cpp:342
-#, fuzzy
 msgid "Export as &WAV"
-msgstr "Textmarken exportieren als:"
+msgstr "Als &WAV exportieren"
 
 #: src/Menus.cpp:346
-#, fuzzy
 msgid "Export as &OGG"
-msgstr "Exportierte Tags"
+msgstr "Als &OGG exportieren"
 
 #: src/Menus.cpp:350
 msgid "&Export Audio..."
@@ -2676,9 +2670,8 @@ msgid "Export MI&DI..."
 msgstr "MI&DI exportieren …"
 
 #: src/Menus.cpp:373
-#, fuzzy
 msgid "&Save Compressed Copy of Project..."
-msgstr "Komprimierte &Kopie des Projektes speichern …"
+msgstr "Komprimierte Kopie des Projektes &speichern …"
 
 #: src/Menus.cpp:377 src/import/ImportRaw.cpp:457
 msgid "&Import"
@@ -2701,7 +2694,6 @@ msgid "&Raw Data..."
 msgstr "&Rohdaten …"
 
 #: src/Menus.cpp:391
-#, fuzzy
 msgid "C&hains"
 msgstr "&Ketten"
 
@@ -2795,21 +2787,18 @@ msgid "Detac&h at Silences"
 msgstr "&Bei Stille abtrennen"
 
 #: src/Menus.cpp:507
-#, fuzzy
 msgid "&Labels"
-msgstr "Textmarken"
+msgstr "&Textmarken"
 
 #: src/Menus.cpp:509
 msgid "&Edit Labels..."
 msgstr "Te&xtmarken bearbeiten …"
 
 #: src/Menus.cpp:513
-#, fuzzy
 msgid "Add Label At &Selection"
-msgstr "&Textmarke bei Auswahl hinzufügen"
+msgstr "Textmarke bei &Auswahl hinzufügen"
 
 #: src/Menus.cpp:515
-#, fuzzy
 msgid "Add Label At &Playback Position"
 msgstr "Textmarke bei &Wiedergabeposition hinzufügen"
 
@@ -2854,9 +2843,8 @@ msgid "Spli&t"
 msgstr "&Trennen"
 
 #: src/Menus.cpp:575
-#, fuzzy
 msgid "Me&tadata..."
-msgstr "Me&tadaten bearbeiten …"
+msgstr "Me&tadaten …"
 
 #: src/Menus.cpp:592
 msgid "Pre&ferences..."
@@ -2885,14 +2873,12 @@ msgid "In All &Tracks"
 msgstr "&In allen Spuren"
 
 #: src/Menus.cpp:619
-#, fuzzy
 msgid "In All &Sync-Locked Tracks"
-msgstr "&In allen Synchronspuren"
+msgstr "In allen &sync-gesperrten Spuren"
 
 #: src/Menus.cpp:631
-#, fuzzy
 msgid "R&egion"
-msgstr "Wiedergabe-&Bereich"
+msgstr "&Bereich"
 
 #: src/Menus.cpp:633
 msgid "&Left at Playback Position"
@@ -2911,14 +2897,12 @@ msgid "Cursor to Track &End"
 msgstr "Cursor zu Spur&ende"
 
 #: src/Menus.cpp:643
-#, fuzzy
 msgid "S&tore Selection"
-msgstr "A&uswahl anzeigen"
+msgstr "A&uswahl speichern"
 
 #: src/Menus.cpp:647
-#, fuzzy
 msgid "Retrieve Selectio&n"
-msgstr "Spektralauswahl"
+msgstr "Auswahl erhalte&n"
 
 #: src/Menus.cpp:658
 msgid "S&pectral"
@@ -2929,32 +2913,28 @@ msgid "To&ggle spectral selection"
 msgstr "&Spektralauswahl umschalten"
 
 #: src/Menus.cpp:660
-#, fuzzy
 msgid "Next &Higher Peak Frequency"
-msgstr "Nächste höhere Spitzenfrequenz"
+msgstr "Nächste &höhere Spitzenfrequenz"
 
 #: src/Menus.cpp:661
-#, fuzzy
 msgid "Next &Lower Peak Frequency"
-msgstr "Nächste niedrigere Spitzenfrequenz"
+msgstr "Nächste &niedrigere Spitzenfrequenz"
 
 #: src/Menus.cpp:670
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr ""
+msgstr "&Vorherige Ausschnittgrenze an Cursor"
 
 #: src/Menus.cpp:673
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr ""
+msgstr "Cursor an n&ächste Ausschnittgrenze"
 
 #: src/Menus.cpp:676
-#, fuzzy
 msgid "Previo&us Clip"
-msgstr "Vorheriges Werkzeug"
+msgstr "Vorheri&ger Ausschnitt"
 
 #: src/Menus.cpp:678
-#, fuzzy
 msgid "N&ext Clip"
-msgstr "Nächstes Werkzeug"
+msgstr "Nächst&er Ausschnitt"
 
 #: src/Menus.cpp:686
 msgid "Cursor to Stored &Cursor Position"
@@ -2965,9 +2945,8 @@ msgid "Store Cursor Pos&ition"
 msgstr "Cursorpos&ition speichern"
 
 #: src/Menus.cpp:697
-#, fuzzy
 msgid "At &Zero Crossings"
-msgstr "Null&durchgänge finden"
+msgstr "Bei Null&durchgängen"
 
 #: src/Menus.cpp:705
 msgid "&View"
@@ -2996,18 +2975,16 @@ msgid "&Zoom to Selection"
 msgstr "A&uswahl anzeigen"
 
 #: src/Menus.cpp:719
-#, fuzzy
 msgid "T&rack Size"
-msgstr "Spurtitel"
+msgstr "Spu&rgröße"
 
 #: src/Menus.cpp:720
-#, fuzzy
 msgid "&Fit to Width"
-msgstr "&In Fenster einpassen"
+msgstr "&An Breite anpassen"
 
 #: src/Menus.cpp:721
 msgid "Fit to &Height"
-msgstr ""
+msgstr "An &Höhe anpassen"
 
 #: src/Menus.cpp:722
 msgid "&Collapse All Tracks"
@@ -3018,19 +2995,16 @@ msgid "E&xpand Collapsed Tracks"
 msgstr "Zugeklappte Spuren au&fklappen"
 
 #: src/Menus.cpp:726
-#, fuzzy
 msgid "Sk&ip to"
-msgstr "Ans Ende springen"
+msgstr "Spr&ingen zu"
 
 #: src/Menus.cpp:727
-#, fuzzy
 msgid "Selection Sta&rt"
-msgstr "Anfang der Auswahl:"
+msgstr "Auswahlan&fang"
 
 #: src/Menus.cpp:729 src/Menus.cpp:865
-#, fuzzy
 msgid "Selection En&d"
-msgstr "Auswahlende"
+msgstr "Auswahlen&de"
 
 #. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
 #: src/Menus.cpp:758
@@ -3043,7 +3017,7 @@ msgstr "&Karaoke …"
 
 #: src/Menus.cpp:763
 msgid "&Mixer Board..."
-msgstr "&Mischer"
+msgstr "&Mischer ..."
 
 #: src/Menus.cpp:769
 msgid "&Toolbars"
@@ -3051,7 +3025,6 @@ msgstr "&Werkzeugleisten"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp:772
-#, fuzzy
 msgid "&Reset Toolb&ars"
 msgstr "&Werkzeugleisten zurücksetzen"
 
@@ -3111,14 +3084,12 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "&Spektralauswahl-Werkzeugleiste"
 
 #: src/Menus.cpp:806
-#, fuzzy
 msgid "&Extra Menus (on/off)"
-msgstr "&Overdub (an/aus)"
+msgstr "&Zusätzliche Menus (an/aus)"
 
 #: src/Menus.cpp:808
-#, fuzzy
 msgid "&Show Clipping (on/off)"
-msgstr "&Übersteuerungen anzeigen"
+msgstr "&Übersteuerungen anzeigen (an/aus)"
 
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
@@ -3128,9 +3099,8 @@ msgstr "&Transport"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/Menus.cpp:822 src/Menus.cpp:1273
-#, fuzzy
 msgid "Pl&ay"
-msgstr "Wiederg&abe/Stopp"
+msgstr "Wiederg&abe"
 
 #. i18n-hint: (verb) Start or Stop audio playback
 #: src/Menus.cpp:824
@@ -3155,58 +3125,48 @@ msgid "&Record"
 msgstr "&Aufnahme"
 
 #: src/Menus.cpp:845
-#, fuzzy
 msgid "&Append Record"
-msgstr "Aufnahme anhängen"
+msgstr "Aufnahme anh&ängen"
 
 #: src/Menus.cpp:845
-#, fuzzy
 msgid "Record &New Track"
-msgstr "Spuren ent&fernen"
+msgstr "&Neue Spur aufzeichnen"
 
 #: src/Menus.cpp:850
 msgid "&Timer Record..."
 msgstr "&Zeitgesteuerte Aufnahme …"
 
 #: src/Menus.cpp:862
-#, fuzzy
 msgid "&Cursor to"
-msgstr "Cursor nach links versetzen"
+msgstr "&Cursor nach"
 
 #: src/Menus.cpp:864
-#, fuzzy
 msgid "Selection Star&t"
-msgstr "Anfang der Auswahl:"
+msgstr "Auswahlan&fang"
 
 #: src/Menus.cpp:867
-#, fuzzy
 msgid "Track &Start"
-msgstr "zum Spur&anfang"
+msgstr "Spur&anfang"
 
 #: src/Menus.cpp:869
-#, fuzzy
 msgid "Track &End"
-msgstr "zum Spur&ende"
+msgstr "Spur&ende"
 
 #: src/Menus.cpp:872
-#, fuzzy
 msgid "Pre&vious Clip Boundary"
-msgstr "Be&grenzungen zuschneiden"
+msgstr "&Vorherige Ausschnittbegrenzung"
 
 #: src/Menus.cpp:874
-#, fuzzy
 msgid "Ne&xt Clip Boundary"
-msgstr "Be&grenzungen zuschneiden"
+msgstr "N&ächste Ausschnittbegrenzung"
 
 #: src/Menus.cpp:877
-#, fuzzy
 msgid "&Project Start"
-msgstr "Projekte"
+msgstr "&Projektanfang"
 
 #: src/Menus.cpp:878
-#, fuzzy
 msgid "Project E&nd"
-msgstr "Projekte"
+msgstr "Projekte&nde"
 
 #: src/Menus.cpp:886
 msgid "Pla&y Region"
@@ -3225,9 +3185,8 @@ msgid "R&escan Audio Devices"
 msgstr "Audiogeräte &erneut suchen"
 
 #: src/Menus.cpp:901
-#, fuzzy
 msgid "Transport &Options"
-msgstr "Transkription"
+msgstr "Transport-&Optionen"
 
 #: src/Menus.cpp:903
 msgid "Sound Activation Le&vel..."
@@ -3238,9 +3197,8 @@ msgid "Sound A&ctivated Recording (on/off)"
 msgstr "Geräusch&aktivierte Aufnahme (ein/aus)"
 
 #: src/Menus.cpp:907
-#, fuzzy
 msgid "Pinned Play/Record &Head (on/off)"
-msgstr "Aufnahme-/Wiedergabekopf angeheftet"
+msgstr "Aufnahme-/Wiedergabekopf angepinnt (an/aus)"
 
 #: src/Menus.cpp:912
 msgid "&Overdub (on/off)"
@@ -3276,12 +3234,11 @@ msgstr "&Zeitspur"
 
 #: src/Menus.cpp:945
 msgid "Mi&x"
-msgstr ""
+msgstr "Mi&x"
 
 #: src/Menus.cpp:952
-#, fuzzy
 msgid "Mix Stereo down to &Mono"
-msgstr "Stereo in &Mono aufteilen"
+msgstr "Stereo zu &Mono heruntermischen"
 
 #: src/Menus.cpp:956
 msgid "Mi&x and Render"
@@ -3308,19 +3265,16 @@ msgid "&Unmute All Tracks"
 msgstr "Alle Spuren wieder &laut stellen"
 
 #: src/Menus.cpp:982
-#, fuzzy
 msgid "&Left"
-msgstr "Links"
+msgstr "&Links"
 
 #: src/Menus.cpp:983
-#, fuzzy
 msgid "&Right"
-msgstr "Rechts"
+msgstr "&Rechts"
 
 #: src/Menus.cpp:984
-#, fuzzy
 msgid "&Center"
-msgstr "Mitte"
+msgstr "&Mitte"
 
 #: src/Menus.cpp:993
 msgid "&Align End to End"
@@ -3355,14 +3309,12 @@ msgid "&Align Tracks"
 msgstr "Spuren aus&richten"
 
 #: src/Menus.cpp:1016
-#, fuzzy
 msgid "&Move Selection with Tracks (on/off)"
-msgstr "Effekt in Ablage nach unten schieben"
+msgstr "Auswahl &mit Spuren verschieben (an/aus)"
 
 #: src/Menus.cpp:1024
-#, fuzzy
 msgid "Move Sele&ction and Tracks"
-msgstr "Effekt in Ablage nach unten schieben"
+msgstr "Auswahl und Sp&uren verschieben"
 
 #: src/Menus.cpp:1040 src/Menus.cpp:7599
 msgid "Synchronize MIDI with Audio"
@@ -3438,9 +3390,8 @@ msgid "&Help"
 msgstr "&Hilfe"
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "&Getting Started"
-msgstr "Anfang der Auswahl:"
+msgstr "&Loslegen"
 
 #: src/Menus.cpp:1197
 msgid "&Quick Help"
@@ -3451,9 +3402,8 @@ msgid "&Manual"
 msgstr "&Handbuch"
 
 #: src/Menus.cpp:1204
-#, fuzzy
 msgid "&Tools"
-msgstr "Werkzeuge"
+msgstr "&Werkzeuge"
 
 #: src/Menus.cpp:1205
 msgid "&Screenshot Tools..."
@@ -3464,18 +3414,16 @@ msgid "&Run Benchmark..."
 msgstr "&Benchmark starten …"
 
 #: src/Menus.cpp:1216
-#, fuzzy
 msgid "&Diagnostics"
-msgstr "Diagnose"
+msgstr "&Diagnose"
 
 #: src/Menus.cpp:1217
 msgid "Au&dio Device Info..."
 msgstr "&Audio-Geräteinfo …"
 
 #: src/Menus.cpp:1221
-#, fuzzy
 msgid "&MIDI Device Info..."
-msgstr "&Audio-Geräteinfo …"
+msgstr "&MIDI-Geräteinfo …"
 
 #: src/Menus.cpp:1226
 msgid "Show &Log..."
@@ -3483,7 +3431,7 @@ msgstr "&Protokoll anzeigen …"
 
 #: src/Menus.cpp:1229
 msgid "&Generate Support Data..."
-msgstr "&Unterstützungsdaten erzeugen"
+msgstr "&Unterstützungsdaten erzeugen ..."
 
 #: src/Menus.cpp:1231
 msgid "Chec&k Dependencies..."
@@ -3496,267 +3444,215 @@ msgstr "Auf Aktualisierungen &prüfen …"
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp:1277
 msgid "Sto&p"
-msgstr ""
+msgstr "Sto&ppen"
 
 #: src/Menus.cpp:1283
-#, fuzzy
 msgid "Play &One Second"
-msgstr "1 Sekunde wiedergeben"
+msgstr "Eine Sekunde wiedergeben"
 
 #: src/Menus.cpp:1286
-#, fuzzy
 msgid "Play To &Selection"
-msgstr "Bis zur Markierung wiedergeben"
+msgstr "Bis zur Au&swahl wiedergeben"
 
 #: src/Menus.cpp:1289
-#, fuzzy
 msgid "Play &Before Selection Start"
-msgstr "Vor dem Auswahlanfang wiedergeben"
+msgstr "&Vor Auswahlanfang wiedergeben"
 
 #: src/Menus.cpp:1290
-#, fuzzy
 msgid "Play Af&ter Selection Start"
-msgstr "Nach dem Auswahlanfang wiedergeben"
+msgstr "Nach dem Auswahl&anfang wiedergeben"
 
 #: src/Menus.cpp:1291
-#, fuzzy
 msgid "Play Be&fore Selection End"
-msgstr "Vor dem Auswahlende wiedergeben"
+msgstr "Vor Auswahl&ende wiedergeben"
 
 #: src/Menus.cpp:1292
-#, fuzzy
 msgid "Play Aft&er Selection End"
-msgstr "Nach dem Auswahlende wiedergeben"
+msgstr "Nach dem Auswahl&ende wiedergeben"
 
 #: src/Menus.cpp:1293
-#, fuzzy
 msgid "Play Before a&nd After Selection Start"
-msgstr "Vor und nach Auswahlanfang wiedergeben"
+msgstr "Vor u&nd nach Auswahlanfang wiedergeben"
 
 #: src/Menus.cpp:1294
-#, fuzzy
 msgid "Play Before an&d After Selection End"
-msgstr "Vor und nach Auswahlende wiedergeben"
+msgstr "Vor un&d nach Auswahlende wiedergeben"
 
 #: src/Menus.cpp:1295
-#, fuzzy
 msgid "Play C&ut Preview"
-msgstr "Schnitt-Vorschau wiedergeben"
+msgstr "Schnitt-Vorscha&u wiedergeben"
 
 #: src/Menus.cpp:1305
-#, fuzzy
 msgid "&Selection Tool"
-msgstr "Auswahlwerkzeug"
+msgstr "Au&swahlwerkzeug"
 
 #: src/Menus.cpp:1306
-#, fuzzy
 msgid "&Envelope Tool"
-msgstr "Hüllkurvenwerkzeug"
+msgstr "H&üllkurvenwerkzeug"
 
 #: src/Menus.cpp:1307
-#, fuzzy
 msgid "&Draw Tool"
-msgstr "Zeichenwerkzeug"
+msgstr "&Zeichenwerkzeug"
 
 #: src/Menus.cpp:1308
-#, fuzzy
 msgid "&Zoom Tool"
-msgstr "Vergrößerungswerkzeug"
+msgstr "&Vergrößerungswerkzeug"
 
 #: src/Menus.cpp:1309
-#, fuzzy
 msgid "&Time Shift Tool"
-msgstr "Verschiebewerkzeug"
+msgstr "&Zeitverschiebewerkzeug"
 
 #: src/Menus.cpp:1310
-#, fuzzy
 msgid "&Multi Tool"
-msgstr "Multifunktionswerkzeug"
+msgstr "&Multifunktionswerkzeug"
 
 #: src/Menus.cpp:1312
-#, fuzzy
 msgid "&Next Tool"
-msgstr "Nächstes Werkzeug"
+msgstr "&Nächstes Werkzeug"
 
 #: src/Menus.cpp:1313
-#, fuzzy
 msgid "&Previous Tool"
-msgstr "Vorheriges Werkzeug"
+msgstr "&Vorheriges Werkzeug"
 
 #: src/Menus.cpp:1321
-#, fuzzy
 msgid "Ad&just playback volume"
-msgstr "Wiedergabelautstärke einstellen"
+msgstr "Wiedergabe&lautstärke einstellen"
 
 #: src/Menus.cpp:1322
-#, fuzzy
 msgid "&Increase playback volume"
-msgstr "Wiedergabelautstärke erhöhen"
+msgstr "W&iedergabelautstärke erhöhen"
 
 #: src/Menus.cpp:1323
-#, fuzzy
 msgid "&Decrease playback volume"
-msgstr "Wiedergabelautstärke verringern"
+msgstr "Wiedergabelautstär&ke reduzieren"
 
 #: src/Menus.cpp:1324
-#, fuzzy
 msgid "Adj&ust recording volume"
-msgstr "Aufnahmelautstärke einstellen"
+msgstr "Aufnahmela&utstärke einstellen"
 
 #: src/Menus.cpp:1325
-#, fuzzy
 msgid "I&ncrease recording volume"
-msgstr "Aufnahmelautstärke erhöhen"
+msgstr "Auf&nahmelautstärke erhöhen"
 
 #: src/Menus.cpp:1326
-#, fuzzy
 msgid "D&ecrease recording volume"
-msgstr "Aufnahmelautstärke verringern"
+msgstr "Aufnahmelautstärke v&erringern"
 
 #: src/Menus.cpp:1334
-#, fuzzy
 msgid "&DeleteKey"
-msgstr "Löschtaste"
+msgstr "&Löschtaste"
 
 #: src/Menus.cpp:1338
-#, fuzzy
 msgid "DeleteKey&2"
-msgstr "Löschtaste2"
+msgstr "Löschtaste&2"
 
 #: src/Menus.cpp:1348
-#, fuzzy
 msgid "Pl&ay-at-Speed"
-msgstr "Schnellere/langsamere Wiedergabe"
+msgstr "Mit &Geschwindigkeit wiedergeben"
 
 #: src/Menus.cpp:1349
-#, fuzzy
 msgid "&Loop Play-at-Speed"
-msgstr "Endloswiedergabe mit Geschwindigkeit"
+msgstr "End&loswiedergabe mit Geschwindigkeit"
 
 #: src/Menus.cpp:1350
-#, fuzzy
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Schnitt-Vorschau mit Geschwindigkeit wiedergeben"
+msgstr "Schnitt-Vorschau mit Geschwindig&keit wiedergeben"
 
 #: src/Menus.cpp:1351
-#, fuzzy
 msgid "Ad&just playback speed"
-msgstr "Wiedergabegeschwindigkeit einstellen"
+msgstr "Wiedergabe&geschwindigkeit einstellen"
 
 #: src/Menus.cpp:1352
-#, fuzzy
 msgid "&Increase playback speed"
-msgstr "Wiedergabegeschwindigkeit erhöhen"
+msgstr "W&iedergabegeschwindigkeit erhöhen"
 
 #: src/Menus.cpp:1353
-#, fuzzy
 msgid "&Decrease playback speed"
-msgstr "Wiedergabegeschwindigkeit reduzieren"
+msgstr "Wiedergabegeschwindigkeit &reduzieren"
 
 #: src/Menus.cpp:1357
-#, fuzzy
 msgid "Move to &Next Label"
-msgstr "Zu nächster Textmarke springen"
+msgstr "Zu &nächster Textmarke bewegen"
 
 #: src/Menus.cpp:1359
-#, fuzzy
 msgid "Move to &Previous Label"
-msgstr "Zu vorheriger Textmarke springen"
+msgstr "Zu &vorheriger Textmarke bewegen"
 
 #: src/Menus.cpp:1368
-#, fuzzy
 msgid "Short seek &left during playback"
-msgstr "Kleine Sprünge nach links während Wiedergabe"
+msgstr "Kleiner Sprung nach &links während Wiedergabe"
 
 #: src/Menus.cpp:1369
-#, fuzzy
 msgid "Short seek &right during playback"
-msgstr "Kleine Sprünge nach rechts während Wiedergabe"
+msgstr "Kleiner Sprung nach &rechts während Wiedergabe"
 
 #: src/Menus.cpp:1370
-#, fuzzy
 msgid "Long seek le&ft during playback"
-msgstr "Große Sprünge nach links während Wiedergabe"
+msgstr "Großer Sprung nach lin&ks während Wiedergabe"
 
 #: src/Menus.cpp:1371
-#, fuzzy
 msgid "Long Seek rig&ht during playback"
-msgstr "Große Sprünge nach rechts während Wiedergabe"
+msgstr "Großer Sprung nach re&chts während Wiedergabe"
 
 #: src/Menus.cpp:1379
-#, fuzzy
 msgid "Change &recording device"
-msgstr "Aufnahmegerät ändern"
+msgstr "Aufnahmege&rät ändern"
 
 #: src/Menus.cpp:1382
-#, fuzzy
 msgid "Change &playback device"
-msgstr "Wiedergabegerät ändern"
+msgstr "Wiedergabegerät &ändern"
 
 #: src/Menus.cpp:1385
-#, fuzzy
 msgid "Change audio &host"
-msgstr "Audiohost ändern"
+msgstr "Audiohost &ändern"
 
 #: src/Menus.cpp:1388
-#, fuzzy
 msgid "Change recording cha&nnels"
-msgstr "Aufnahmekanäle ändern"
+msgstr "Aufnahmeka&näle ändern"
 
 #: src/Menus.cpp:1398
-#, fuzzy
 msgid "Snap To &Off"
-msgstr "Einrasten aus"
+msgstr "Einrasten &aus"
 
 #: src/Menus.cpp:1399
-#, fuzzy
 msgid "Snap To &Nearest"
-msgstr "Einrasten an Nächsten"
+msgstr "Einrasten an &Nächsten"
 
 #: src/Menus.cpp:1400
-#, fuzzy
 msgid "Snap To &Prior"
-msgstr "Einrasten an Vorherigen"
+msgstr "Einrasten an &Vorherigen"
 
 #: src/Menus.cpp:1402
-#, fuzzy
 msgid "Selection to &Start"
-msgstr "Auswahl auf Anfang"
+msgstr "Auswahl auf &Anfang"
 
 #: src/Menus.cpp:1403
-#, fuzzy
 msgid "Selection to En&d"
-msgstr "Auswahl auf Ende"
+msgstr "Auswahl auf En&de"
 
 #: src/Menus.cpp:1404
-#, fuzzy
 msgid "Selection Extend &Left"
-msgstr "Auswahl nach links erweitern"
+msgstr "Auswahl &links erweitern"
 
 #: src/Menus.cpp:1405
-#, fuzzy
 msgid "Selection Extend &Right"
-msgstr "Auswahl nach rechts erweitern"
+msgstr "Auswahl &rechts erweitern"
 
 #: src/Menus.cpp:1407
-#, fuzzy
 msgid "Set (or Extend) Le&ft Selection"
-msgstr "Linke Grenze der Auswahl setzen (oder erweitern)"
+msgstr "L&inke Auswahl setzen (oder erweitern)"
 
 #: src/Menus.cpp:1408
-#, fuzzy
 msgid "Set (or Extend) Rig&ht Selection"
-msgstr "Rechte Grenze der Auswahl setzen (oder erweitern)"
+msgstr "Re&chte Auswahl setzen (oder erweitern)"
 
 #: src/Menus.cpp:1410
-#, fuzzy
 msgid "Selection Contract L&eft"
-msgstr "Auswahl links verringern"
+msgstr "Auswahl links v&erringern"
 
 #: src/Menus.cpp:1411
-#, fuzzy
 msgid "Selection Contract R&ight"
-msgstr "Auswahl rechts verringern"
+msgstr "Auswahl rechts verr&ingern"
 
 #: src/Menus.cpp:1425
 msgid "Move backward thru active windows"
@@ -3767,168 +3663,136 @@ msgid "Move forward thru active windows"
 msgstr "Vorwärts durch aktive Fenster bewegen"
 
 #: src/Menus.cpp:1433
-#, fuzzy
 msgid "Move &backward from toolbars to tracks"
-msgstr "Rückwärts bewegen von den Werkzeugen zu den Spuren"
+msgstr "Rückwärts &bewegen von Werkzeugleisten zu Spuren"
 
 #: src/Menus.cpp:1434
-#, fuzzy
 msgid "Move f&orward from toolbars to tracks"
-msgstr "Vorwärts bewegen von den Werkzeugen zu den Spuren"
+msgstr "V&orwärts bewegen von Werkzeugleisten zu Spuren"
 
 #: src/Menus.cpp:1438
-#, fuzzy
 msgid "Move Focus to &Previous Track"
-msgstr "Fokus zur vorherigen Spur bewegen"
+msgstr "Fokus zur v&orherigen Spur bewegen"
 
 #: src/Menus.cpp:1439
-#, fuzzy
 msgid "Move Focus to &Next Track"
-msgstr "Fokus zur nächsten Spur bewegen"
+msgstr "Fokus zur &nächsten Spur bewegen"
 
 #: src/Menus.cpp:1440
-#, fuzzy
 msgid "Move Focus to &First Track"
-msgstr "Fokus auf die erste Spur bewegen"
+msgstr "&Fokus auf die erste Spur bewegen"
 
 #: src/Menus.cpp:1441
-#, fuzzy
 msgid "Move Focus to &Last Track"
-msgstr "Fokus auf die letzte Spur bewegen"
+msgstr "Fokus auf die &letzte Spur bewegen"
 
 #: src/Menus.cpp:1443
-#, fuzzy
 msgid "Move Focus to P&revious and Select"
-msgstr "Fokus zur vorherigen Spur bewegen und auswählen"
+msgstr "Fokus zur vo&rherigen Spur bewegen und auswählen"
 
 #: src/Menus.cpp:1444
-#, fuzzy
 msgid "Move Focus to N&ext and Select"
-msgstr "Fokus zur nächsten Spur bewegen und auswählen"
+msgstr "Fokus zur n&ächsten Spur bewegen und auswählen"
 
 #: src/Menus.cpp:1446
-#, fuzzy
 msgid "&Toggle Focused Track"
-msgstr "Zwischen fokussierten Spuren umschalten"
+msgstr "&Fokussierte Spur umschalten"
 
 #: src/Menus.cpp:1447
-#, fuzzy
 msgid "Toggle Focuse&d Track"
-msgstr "Zwischen fokussierten Spuren umschalten"
+msgstr "Fokussierte Spur umschalten"
 
 #: src/Menus.cpp:1455
-#, fuzzy
 msgid "Cursor &Left"
-msgstr "Cursor nach links versetzen"
+msgstr "Cursor nach &links"
 
 #: src/Menus.cpp:1456
-#, fuzzy
 msgid "Cursor &Right"
-msgstr "Cursor nach rechts versetzen"
+msgstr "Cursor nach &rechts"
 
 #: src/Menus.cpp:1457
-#, fuzzy
 msgid "Cursor Sh&ort Jump Left"
-msgstr "Cursor etwas nach links"
+msgstr "Curs&or kurz nach links springen"
 
 #: src/Menus.cpp:1458
-#, fuzzy
 msgid "Cursor Shor&t Jump Right"
-msgstr "Cursor etwas nach rechts"
+msgstr "Cursor kurz nach rech&ts springen"
 
 #: src/Menus.cpp:1459
-#, fuzzy
 msgid "Cursor Long J&ump Left"
-msgstr "Cursor viel nach links"
+msgstr "Cursor weit nach l&inks springen"
 
 #: src/Menus.cpp:1460
-#, fuzzy
 msgid "Cursor Long Ju&mp Right"
-msgstr "Cursor viel nach rechts"
+msgstr "Cursor weit nach re&chts springen"
 
 #: src/Menus.cpp:1462
 msgid "Clip L&eft"
-msgstr ""
+msgstr "L&inks abschneiden"
 
 #: src/Menus.cpp:1463
-#, fuzzy
 msgid "Clip Rig&ht"
-msgstr "Übersteuerungen"
+msgstr "Rec&hts abschneiden"
 
 #: src/Menus.cpp:1471
-#, fuzzy
 msgid "Change p&an on focused track"
-msgstr "Panorama der fokussierten Spur ändern"
+msgstr "P&anorama der fokussierten Spur ändern"
 
 #: src/Menus.cpp:1472
-#, fuzzy
 msgid "Pan &left on focused track"
-msgstr "Panorama der fokussierten Spur nach links verschieben"
+msgstr "Panorama der fokussierten Spur nach &links schieben"
 
 #: src/Menus.cpp:1473
-#, fuzzy
 msgid "Pan &right on focused track"
-msgstr "Panorama der fokussierten Spur nach rechts verschieben"
+msgstr "Panorama der fokussierten Spur nach &rechts schieben"
 
 #: src/Menus.cpp:1474
-#, fuzzy
 msgid "Change gai&n on focused track"
-msgstr "Verstärkung der fokussierten Spur ändern"
+msgstr "Verstärku&ng der fokussierten Spur ändern"
 
 #: src/Menus.cpp:1475
-#, fuzzy
 msgid "&Increase gain on focused track"
-msgstr "Verstärkung der fokussierten Spur erhöhen"
+msgstr "Verstärkung der fokussierten Spur erh&öhen"
 
 #: src/Menus.cpp:1476
-#, fuzzy
 msgid "&Decrease gain on focused track"
-msgstr "Verstärkung der fokussierten Spur verringern"
+msgstr "Verstärkung der fokussierten Spur verr&ingern"
 
 #: src/Menus.cpp:1477
-#, fuzzy
 msgid "Op&en menu on focused track"
-msgstr "Menü für fokussierte Spur öffnen"
+msgstr "M&enü für fokussierte Spur öffnen"
 
 #: src/Menus.cpp:1478
-#, fuzzy
 msgid "M&ute/Unmute focused track"
-msgstr "Fokussierte Spur stumm/laut"
+msgstr "Fokussierte Spur st&umm/laut"
 
 #: src/Menus.cpp:1479
-#, fuzzy
 msgid "&Solo/Unsolo focused track"
-msgstr "Fokussierte Spur alleine/nicht alleine"
+msgstr "Fokussierte Spur &alleine/nicht alleine"
 
 #: src/Menus.cpp:1480
-#, fuzzy
 msgid "&Close focused track"
-msgstr "Fokussierte Spur schließen"
+msgstr "Fokussierte Spur s&chließen"
 
 #: src/Menus.cpp:1481
-#, fuzzy
 msgid "Move focused track u&p"
-msgstr "Fokussierte Spur nach oben verschieben "
+msgstr "Fokussierte Spur nach o&ben schieben"
 
 #: src/Menus.cpp:1482
-#, fuzzy
 msgid "Move focused track do&wn"
-msgstr "Fokussierte Spur nach unten verschieben "
+msgstr "Fokussierte Spur nach un&ten schieben"
 
 #: src/Menus.cpp:1483
-#, fuzzy
 msgid "Move focused track to t&op"
-msgstr "Fokussierte Spur nach ganz oben verschieben "
+msgstr "Fokussierte Spur nach ganz &oben schieben"
 
 #: src/Menus.cpp:1484
-#, fuzzy
 msgid "Move focused track to &bottom"
-msgstr "Fokussierte Spur nach ganz unten verschieben "
+msgstr "Fokussierte Spur nach ganz &unten schieben"
 
 #: src/Menus.cpp:1488
-#, fuzzy
 msgid "&Full screen (on/off)"
-msgstr "Vollbild an/aus"
+msgstr "&Vollbild (an/aus)"
 
 #: src/Menus.cpp:1499
 msgid "Minimize all projects"
@@ -3998,23 +3862,20 @@ msgstr "keine Textmarken in Textspur"
 
 #: src/Menus.cpp:3462
 msgid "Time shifted clips to the right"
-msgstr ""
+msgstr "Ausschnitte nach rechts zeitverschoben"
 
 #: src/Menus.cpp:3463
-#, fuzzy
 msgid "Time shifted clips to the left"
-msgstr "Spuren/Ausschnitte wurden um %s %.02f Sekunden verschoben"
+msgstr "Ausschnitte nach links zeitverschoben"
 
-#: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131
-#: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
-#: src/tracks/ui/TimeShiftHandle.cpp:842
+#: src/Menus.cpp:3469 src/prefs/MousePrefs.cpp:131 src/prefs/MousePrefs.cpp:132
+#: src/prefs/MousePrefs.cpp:133 src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Zeitverschiebung"
 
 #: src/Menus.cpp:3473
-#, fuzzy
 msgid "clip not moved"
-msgstr "Skript wurde nicht gespeichert."
+msgstr "Auschnitt nicht verschoben"
 
 #: src/Menus.cpp:3511
 msgid "Set Left Selection Boundary"
@@ -4185,7 +4046,7 @@ msgstr "Duplizieren"
 #. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
 #: src/Menus.cpp:5540
 msgid "Cut labeled audio regions to clipboard"
-msgstr "Markierte Audiobereiche wurden in Zwischenablage ausgeschnitten "
+msgstr "Markierte Audiobereiche wurden in Zwischenablage ausgeschnitten"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp:5542
@@ -4290,15 +4151,15 @@ msgstr "Trennen Neu"
 
 #: src/Menus.cpp:6216 src/Menus.cpp:7302
 msgid "of"
-msgstr ""
+msgstr "von"
 
 #: src/Menus.cpp:6217 src/Menus.cpp:7303
 msgid "clip"
-msgstr ""
+msgstr "Ausschnitt"
 
 #: src/Menus.cpp:6217 src/Menus.cpp:7303
 msgid "clips"
-msgstr ""
+msgstr "Ausschnitte"
 
 #. i18n-hint: a direction as in left or right.
 #: src/Menus.cpp:6227 src/Menus.cpp:7313 src/tracks/ui/TimeShiftHandle.cpp:836
@@ -4328,9 +4189,8 @@ msgid "Import Labels"
 msgstr "Textmarken importieren"
 
 #: src/Menus.cpp:6788
-#, fuzzy
 msgid "Select a MIDI file"
-msgstr "Eine MIDI-Datei auswählen …"
+msgstr "Eine MIDI-Datei wählen"
 
 #: src/Menus.cpp:6792
 msgid ""
@@ -4351,9 +4211,8 @@ msgid "Import MIDI"
 msgstr "MIDI importieren"
 
 #: src/Menus.cpp:6839
-#, fuzzy
 msgid "Select any uncompressed audio file"
-msgstr "Eine unkomprimierte Audiodatei auswählen …"
+msgstr "Beliebige unkomprimierte Audiodatei wählen"
 
 #: src/Menus.cpp:6843
 msgid "All files|*"
@@ -4394,19 +4253,16 @@ msgid "Mix and Render"
 msgstr "Mischen und rendern"
 
 #: src/Menus.cpp:7293 src/Menus.cpp:7297
-#, fuzzy
 msgid "start"
 msgstr "Start"
 
 #: src/Menus.cpp:7293 src/Menus.cpp:7297
-#, fuzzy
 msgid "end"
 msgstr "Ende"
 
 #: src/Menus.cpp:7297
-#, fuzzy
 msgid "and"
-msgstr "Ende"
+msgstr "and"
 
 #: src/Menus.cpp:7379
 msgid "start to zero"
@@ -4582,19 +4438,16 @@ msgid "Unable to save device info"
 msgstr "Geräteinformation kann nicht gespeichert werden"
 
 #: src/Menus.cpp:8249
-#, fuzzy
 msgid "MIDI Device Info"
-msgstr "MIDI-Geräte"
+msgstr "MIDI-Geräteinfo"
 
 #: src/Menus.cpp:8267 src/Menus.cpp:8278
-#, fuzzy
 msgid "Save MIDI Device Info"
-msgstr "Geräteinfo speichern"
+msgstr "MIDI-Geräteinfo speichern"
 
 #: src/Menus.cpp:8278
-#, fuzzy
 msgid "Unable to save MIDI device info"
-msgstr "Geräteinformation kann nicht gespeichert werden"
+msgstr "MIDI-Geräteinformation kann nicht gespeichert werden"
 
 #: src/Menus.cpp:8411
 msgid ""
@@ -4906,7 +4759,7 @@ msgstr "Audacity-Einstellungen zurücksetzen"
 
 #: src/Printing.cpp:166
 msgid "There was a problem printing."
-msgstr "Es gab ein Problem beim Drucken"
+msgstr "Es gab ein Problem beim Drucken."
 
 #: src/Printing.cpp:167
 msgid "Print"
@@ -4960,9 +4813,8 @@ msgstr ""
 "zu sehen sind, dann „Datei“ > „Projekt speichern“."
 
 #: src/Project.cpp:2859
-#, fuzzy
 msgid "Select one or more files"
-msgstr "Eine oder mehere Audiodateien auswählen ..."
+msgstr "Eine oder mehrere Dateien wählen"
 
 #: src/Project.cpp:2895
 #, c-format
@@ -5101,7 +4953,7 @@ msgstr ""
 
 #: src/Project.cpp:3553
 msgid "Can't open project file"
-msgstr "Kann Projektdatei nicht öffnen."
+msgstr "Kann Projektdatei nicht öffnen"
 
 #: src/Project.cpp:3813
 msgid ""
@@ -5128,9 +4980,8 @@ msgid "Warning - Empty Project"
 msgstr "Warnung - Leeres Projekt"
 
 #: src/Project.cpp:3854
-#, fuzzy
 msgid "Could not create safety file: "
-msgstr "Sicherheitsdatei konnte nicht erstellt werden: "
+msgstr "Sicherungsdatei konnte nicht erstellt werden: "
 
 #: src/Project.cpp:3881
 #, c-format
@@ -5195,17 +5046,17 @@ msgid ""
 "To open a compressed project takes longer than usual, as it imports \n"
 "each compressed track.\n"
 msgstr ""
-"„Komprimiertes Projekt speichern“ ist für Audacity-Projekte, nicht für "
-"Audiodateien.\n"
+"„Komprimiertes Projekt speichern“ ist für Audacity-Projekte gedacht, nicht "
+"für Audiodateien.\n"
 "Um eine Audiodatei zu erhalten, die in anderen Programmen geöffnet werden "
 "kann, \n"
 "verwenden Sie „Exportieren“.\n"
 "\n"
 "Komprimierte Projektdateien sind eine gute Möglichkeit, Ihr Projekt online "
 "zu übertragen,\n"
-"aber sie weisen einige Verluste in der Wiedergabetreue auf.\n"
+"aber sie weisen Verluste in der Wiedergabetreue auf.\n"
 "\n"
-"Ein komprimiertes Projekt zu öffnen, dauert länger als normal, weil es "
+"Ein komprimiertes Projekt zu öffnen, dauert länger als gewöhnlich, weil es "
 "jede \n"
 "komprimierte Spur importiert.\n"
 
@@ -5243,9 +5094,9 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: src/Project.cpp:4867
-#, fuzzy, c-format
+#, c-format
 msgid "Disk space remaining for recording: %s"
-msgstr "Verbleibender Speicherplatz für Aufnahme %s"
+msgstr "Speicherplatz verbleibend für Aufnahme %s"
 
 #: src/Project.cpp:4889
 msgid "On-demand import and waveform calculation complete."
@@ -5298,7 +5149,7 @@ msgstr "Eingestelltes Panorama"
 #: src/Project.cpp:5487
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "Spur „%s“ entfernt."
+msgstr "Spur „%s“ entfernt"
 
 #: src/Project.cpp:5489
 msgid "Track Remove"
@@ -5335,7 +5186,7 @@ msgstr "Bildschirmfoto erstellen"
 
 #: src/Screenshot.cpp:300
 msgid "Choose location to save files"
-msgstr "Ort zum Speichern von Dateien wählen "
+msgstr "Ort zum Speichern von Dateien wählen"
 
 #: src/Screenshot.cpp:310
 msgid "Save images to:"
@@ -5398,19 +5249,16 @@ msgid "All Toolbars"
 msgstr "Alle Werkzeugleisten"
 
 #: src/Screenshot.cpp:370
-#, fuzzy
 msgid "All Menus"
-msgstr "Menü"
+msgstr "Alle Menüs"
 
 #: src/Screenshot.cpp:371
-#, fuzzy
 msgid "All Effects"
-msgstr "Effekte"
+msgstr "Alle Effekte"
 
 #: src/Screenshot.cpp:372
-#, fuzzy
 msgid "All Preferences"
-msgstr "Einstellungen: "
+msgstr "Alle Einstellungen"
 
 #: src/Screenshot.cpp:379
 msgid "SelectionBar"
@@ -6035,7 +5883,7 @@ msgstr "Zeitspur"
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp:992
 msgid "(Esc to cancel)"
-msgstr ""
+msgstr "(Esc zum abbrechen)"
 
 #: src/TrackPanel.cpp:2427
 msgid "Stereo, "
@@ -6132,9 +5980,8 @@ msgid "Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"
 msgstr "Richtungswechsel  -- gewichtet: %1.4f  sd: (%1.4f)\n"
 
 #: src/WaveClip.cpp:1952
-#, fuzzy
 msgid "Resampling failed."
-msgstr "Ändere Abtastrate für Spur %d"
+msgstr "Änderung der Abtastrate fehlgeschlagen."
 
 #. i18n-hint: The default name for an audio track.
 #: src/WaveTrack.cpp:110 src/prefs/TracksPrefs.cpp:130
@@ -6144,11 +5991,11 @@ msgstr "Tonspur"
 
 #: src/WaveTrack.cpp:1342 src/WaveTrack.cpp:1361
 msgid "There is not enough room available to paste the selection"
-msgstr "Nicht ausreichend Platz vorhanden, um die Auswahl einzufügen."
+msgstr "Nicht ausreichend Platz vorhanden, um die Auswahl einzufügen"
 
 #: src/WaveTrack.cpp:2510
 msgid "There is not enough room available to expand the cut line"
-msgstr "Nicht ausreichend Platz vorhanden, um die Schnittlinie zu erweitern."
+msgstr "Nicht ausreichend Platz vorhanden, um die Schnittlinie zu erweitern"
 
 #: src/FFmpeg.h:180
 msgid "FFmpeg not found"
@@ -6197,6 +6044,8 @@ msgstr ""
 #, c-format
 msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
+"Diese Operation kann erst ausgeführt werden, wenn der Import von %s "
+"abgeschlossen ist."
 
 #: src/commands/CommandManager.cpp:111 src/effects/nyquist/Nyquist.cpp:95
 #: src/prefs/KeyConfigPrefs.cpp:900 src/prefs/MousePrefs.cpp:57
@@ -6234,18 +6083,20 @@ msgstr ""
 "auswählen. (Mono ist nicht möglich.)"
 
 #: src/commands/CommandManager.cpp:1244
-#, fuzzy
 msgid "No Audio Selected"
-msgstr "Keine Kette ausgewählt"
+msgstr "Keine Ton ausgewählt"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp:1247
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "You must first select some audio for '%s' to act on.\n"
 "\n"
 "Ctrl + A selects all audio."
-msgstr "Für diese Aktion bitte zuerst Ton auswählen."
+msgstr ""
+"Für die Aktion '%s' bitte zuerst Ton auswählen.\n"
+"\n"
+"Strg+A wählt alles aus."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp:1251
@@ -6254,6 +6105,8 @@ msgid ""
 "Select the audio for %s to use (for example, Cmd + A to Select All) then try "
 "again."
 msgstr ""
+"Wählen Sie den Ton der zum %s verwendet werden soll (zum Beispiel: Cmd + A "
+"um alles auszuwählen) und versuchen Sie es erneut."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp:1258
@@ -6262,6 +6115,8 @@ msgid ""
 "Select the audio for %s to use (for example, Ctrl + A to Select All) then "
 "try again."
 msgstr ""
+"Wählen Sie den Ton der zum %s verwendet werden soll (zum Beispiel: Strg + A "
+"um alles auszuwählen) und versuchen Sie es erneut."
 
 #: src/commands/CommandManager.cpp:1267
 msgid ""
@@ -6327,7 +6182,7 @@ msgstr "InnerersAufblendenLen"
 
 #: src/effects/AutoDuck.cpp:44
 msgid "OuterFadeDownLen"
-msgstr "ÄußeresAbblendenLen "
+msgstr "ÄußeresAbblendenLen"
 
 #: src/effects/AutoDuck.cpp:45
 msgid "OuterFadeUpLen"
@@ -6615,7 +6470,7 @@ msgstr "Tempowechsel mit hoher Qualität"
 
 #: src/effects/ChangeTempo.cpp:207
 msgid "Change Tempo without Changing Pitch"
-msgstr "Tempo ändern (ohne Auswirkung auf die Tonhöhe)"
+msgstr "Tempo ohne Auswirkung auf die Tonhöhe ändern"
 
 #: src/effects/ChangeTempo.cpp:231
 msgid "Beats per minute"
@@ -6781,24 +6636,24 @@ msgstr "%.1f:1"
 #: src/effects/Compressor.cpp:629
 #, c-format
 msgid "Attack Time %.2f secs"
-msgstr "Ansprechzeit: %.2f Sek."
+msgstr "Ansprechzeit: %.2f Sekunden"
 
 #: src/effects/Compressor.cpp:630 src/effects/ScoreAlignDialog.cpp:262
 #: src/effects/ScoreAlignDialog.cpp:264 src/effects/ScoreAlignDialog.cpp:268
 #: src/effects/ScoreAlignDialog.cpp:271 src/effects/ScoreAlignDialog.cpp:273
 #, c-format
 msgid "%.2f secs"
-msgstr "%.2f Sek."
+msgstr "%.2f Sekunden"
 
 #: src/effects/Compressor.cpp:633
 #, c-format
 msgid "Release Time %.1f secs"
-msgstr "Abklingzeit %.1f Sek."
+msgstr "Abklingzeit %.1f Sekunden"
 
 #: src/effects/Compressor.cpp:634
 #, c-format
 msgid "%.1f secs"
-msgstr "%.1f Sek."
+msgstr "%.1f Sekunden"
 
 #: src/effects/Contrast.cpp:56
 msgid "You can only measure one track at a time."
@@ -6822,7 +6677,7 @@ msgstr ""
 
 #: src/effects/Contrast.cpp:97
 msgid "Please select an audio track."
-msgstr "Bitte eine Tonspur auswählen"
+msgstr "Bitte eine Tonspur auswählen."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp:181
@@ -6901,18 +6756,18 @@ msgstr "&Exportieren …"
 #: src/effects/Contrast.cpp:376
 #, c-format
 msgid "RMS = %s."
-msgstr ""
+msgstr "RMS = %s."
 
 #. i18n-hint: dB abbreviates decibels
 #: src/effects/Contrast.cpp:379
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: src/effects/Contrast.cpp:385
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f"
-msgstr "%.2f dB"
+msgstr "%.2f"
 
 #: src/effects/Contrast.cpp:389 src/effects/Contrast.cpp:462
 #: src/effects/Contrast.cpp:475
@@ -6926,9 +6781,9 @@ msgstr "unbestimmt"
 #. i18n-hint: dB abbreviates decibels
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp:404
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f dB RMS"
-msgstr "%.2f dB"
+msgstr "%.2f dB RMS"
 
 #. i18n-hint: dB abbreviates decibels
 #: src/effects/Contrast.cpp:407
@@ -6942,16 +6797,15 @@ msgstr "Unterschied ist unbestimmt."
 #. i18n-hint: dB abbreviates decibels
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp:419
-#, fuzzy, c-format
+#, c-format
 msgid "Difference = %.2f RMS dB."
-msgstr "Unterschied = %.2f durchschnittlicher Effektivwert in dB."
+msgstr "Unterschied = %.2f RMS dB."
 
 #. i18n-hint: dB abbreviates decibels
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp:423
-#, fuzzy
 msgid "Difference = infinite RMS dB."
-msgstr "Unterschied = unendlich durchschnittlicher Effektivwert in dB."
+msgstr "Unterschied = unendlich RMS dB."
 
 #: src/effects/Contrast.cpp:437
 msgid "Foreground level too high"
@@ -7436,13 +7290,13 @@ msgid "Previewing"
 msgstr "Vorhören"
 
 #: src/effects/Effect.cpp:2627 src/toolbars/ControlToolBar.cpp:714
-#, fuzzy
 msgid ""
 "Error opening sound device.\n"
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
-"Fehler beim Öffnen des Audiogerätes. Versuchen Sie den Audiohost, das "
-"Wiedergabegerät oder die Abtastrate des Projektes zu ändern."
+"Fehler beim Öffnen des Audiogerätes.\n"
+"Versuchen Sie den Audiohost, das Wiedergabegerät und die Abtastrate des "
+"Projektes zu ändern."
 
 #: src/effects/Effect.cpp:2947 src/effects/Effect.cpp:2955
 #: src/effects/Effect.cpp:2957
@@ -8051,7 +7905,7 @@ msgstr "Löschen bestätigen"
 
 #: src/effects/Equalization.cpp:3445
 msgid "Delete "
-msgstr " "
+msgstr "Löschen "
 
 #: src/effects/Equalization.cpp:3445
 msgid "items?"
@@ -8140,7 +7994,7 @@ msgstr "Maximal-Wert (Samples):"
 
 #: src/effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
-msgstr "Es ist nicht genug Platz verfügbar, um den Ton zu erzeugen."
+msgstr "Es ist nicht genug Platz verfügbar, um den Ton zu erzeugen"
 
 #: src/effects/Invert.cpp:40
 msgid "Flips the audio samples upside-down, reversing their polarity"
@@ -8150,7 +8004,7 @@ msgstr ""
 #. i18n-hint: Of strength of an effect.  Not strongly.
 #: src/effects/Leveller.cpp:41 src/prefs/GUIPrefs.cpp:95
 msgid "Light"
-msgstr "Schwach"
+msgstr "Leicht"
 
 #: src/effects/Leveller.cpp:42
 msgid "Moderate"
@@ -8291,7 +8145,7 @@ msgstr "Sie müssen für Schritte 1 und 2 die gleiche Fenstergröße angeben."
 #: src/effects/NoiseReduction.cpp:622
 msgid "Warning: window types are not the same as for profiling."
 msgstr ""
-"Warnung: Fenstertypen sind nicht die gleichen wie für die Profilbildung"
+"Warnung: Fenstertypen sind nicht die gleichen wie für die Profilbildung."
 
 #: src/effects/NoiseReduction.cpp:654
 msgid "All noise profile data must have the same sample rate."
@@ -8372,7 +8226,7 @@ msgid ""
 msgstr ""
 "Wählen Sie ein paar Sekunden Rauschen aus, damit Audacity weiß, was zu "
 "heraus zu filtern ist.\n"
-"Danach „Rauschprofil ermitteln“ wählen."
+"Danach „Rauschprofil ermitteln“ wählen:"
 
 #: src/effects/NoiseReduction.cpp:1684 src/effects/NoiseRemoval.cpp:714
 msgid "&Get Noise Profile"
@@ -9081,7 +8935,7 @@ msgstr "Vorglättungsdauer:"
 
 #: src/effects/ScoreAlignDialog.cpp:148
 msgid "Presmooth Time"
-msgstr "Vorglättungsdauer:"
+msgstr "Vorglättungsdauer"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -9105,7 +8959,7 @@ msgstr "Glättungsdauer:"
 
 #: src/effects/ScoreAlignDialog.cpp:174
 msgid "Smooth Time"
-msgstr "Glättungsdauer:"
+msgstr "Glättungsdauer"
 
 #: src/effects/ScoreAlignDialog.cpp:181
 msgid "Use Defaults"
@@ -9537,7 +9391,7 @@ msgstr ""
 #: src/effects/VST/VSTEffect.cpp:777
 msgid "notice that small silences have been inserted into the audio. "
 msgstr ""
-"werden Sie feststellen, dass kleine Pausen in den Ton eingefügt wurden."
+"werden Sie feststellen, dass kleine Pausen in den Ton eingefügt wurden. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:375
 #: src/effects/ladspa/LadspaEffect.cpp:382 src/effects/VST/VSTEffect.cpp:778
@@ -9570,17 +9424,17 @@ msgstr ""
 #: src/effects/audiounits/AudioUnitEffect.cpp:391
 msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr ""
-"Wählen Sie „Generisch“, um die vom System bereitgestellte allgemeine "
+" Wählen Sie „Generisch“, um die vom System bereitgestellte allgemeine "
 "Schnittstelle zu benutzen."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:392
 msgid " Select \"Basic\" for A basic text-only interface. "
-msgstr "Wählen Sie „Einfach“ für eine einfache Text-Schnittstelle. "
+msgstr " Wählen Sie „Einfach“ für eine einfache Text-Schnittstelle. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:393
 #: src/effects/lv2/LV2Effect.cpp:238 src/effects/VST/VSTEffect.cpp:795
 msgid " Reopen the effect for this to take effect."
-msgstr "Öffnen Sie den Effekt erneut, damit die Einstellung aktiv wird."
+msgstr " Öffnen Sie den Effekt erneut, damit die Einstellung aktiv wird."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:397
 msgid "Select &interface"
@@ -9622,7 +9476,7 @@ msgstr "LADSPA-Effekt Optionen"
 
 #: src/effects/ladspa/LadspaEffect.cpp:379
 msgid "As part of their processing, some LADSPA effects must delay returning "
-msgstr "Als Teil ihrer Verarbeitung müssen manche LADSPA-Effekte die Rückgabe"
+msgstr "Als Teil ihrer Verarbeitung müssen manche LADSPA-Effekte die Rückgabe "
 
 #: src/effects/ladspa/LadspaEffect.cpp:383
 msgid "not work for all LADSPA effects."
@@ -9651,7 +9505,7 @@ msgstr "LV2-Effekt-Einstellungen"
 
 #: src/effects/lv2/LV2Effect.cpp:218
 msgid "As part of their processing, some LV2 effects must delay returning "
-msgstr "Als Teil ihrer Verarbeitung müssen manche LV2-Effekte die Rückgabe"
+msgstr "Als Teil ihrer Verarbeitung müssen manche LV2-Effekte die Rückgabe "
 
 #: src/effects/lv2/LV2Effect.cpp:221
 msgid "Enabling this setting will provide that compensation, but it may "
@@ -9676,7 +9530,7 @@ msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp:237 src/effects/VST/VSTEffect.cpp:794
 msgid " A basic text-only method is also available. "
-msgstr "Eine grundlegende Nur-Text-Methode ist auch vorhanden."
+msgstr "Eine grundlegende Nur-Text-Methode ist auch vorhanden. "
 
 #: src/effects/lv2/LV2Effect.cpp:239 src/effects/VST/VSTEffect.cpp:796
 msgid "Enable &graphical interface"
@@ -9707,9 +9561,8 @@ msgid "Applying Nyquist Effect..."
 msgstr "Nyquist-Effekt anwenden …"
 
 #: src/effects/nyquist/Nyquist.cpp:162
-#, fuzzy
 msgid "Nyquist Worker"
-msgstr "&Nyquist Werkbank …"
+msgstr "Nyquist Arbeiter"
 
 #: src/effects/nyquist/Nyquist.cpp:447
 msgid ""
@@ -9744,9 +9597,8 @@ msgid "Nyquist Error"
 msgstr "Nyquist-Fehler"
 
 #: src/effects/nyquist/Nyquist.cpp:784
-#, fuzzy
 msgid "Debug Output: "
-msgstr "Nyquist-Ausgabe: "
+msgstr "Debug-Ausgabe: "
 
 #. i18n-hint: An effect "returned" a message.
 #: src/effects/nyquist/Nyquist.cpp:1174
@@ -9755,6 +9607,8 @@ msgid ""
 "'%s' returned:\n"
 "%s"
 msgstr ""
+"'%s' gab zurück:\n"
+"%s"
 
 #: src/effects/nyquist/Nyquist.cpp:1183 src/effects/nyquist/Nyquist.cpp:1186
 msgid "Processing complete."
@@ -9762,14 +9616,13 @@ msgstr "Verarbeitung beendet."
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp:1195
-#, fuzzy, c-format
+#, c-format
 msgid "nyx_error returned from %s.\n"
-msgstr "MP3-Encoder meldet Fehler %ld"
+msgstr "nxy_Fehler zurückgegeben von %s.\n"
 
 #: src/effects/nyquist/Nyquist.cpp:1196
-#, fuzzy
 msgid "plug-in"
-msgstr "Nyquist Erweiterungen"
+msgstr "Erweiterung"
 
 #: src/effects/nyquist/Nyquist.cpp:1220 src/effects/nyquist/Nyquist.cpp:1229
 msgid "Nyquist returned the value:"
@@ -9788,7 +9641,6 @@ msgid "Nyquist returned an empty array.\n"
 msgstr "Nyquist gab leeres Array zurück.\n"
 
 #: src/effects/nyquist/Nyquist.cpp:1335
-#, fuzzy
 msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist gab keine Audiodaten zurück.\n"
 
@@ -9800,7 +9652,7 @@ msgstr ""
 "konvertiert zu Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp:1725
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 "Control not created."
@@ -9809,7 +9661,6 @@ msgstr ""
 "Steuerungselement nicht erstellt."
 
 #: src/effects/nyquist/Nyquist.cpp:1838
-#, fuzzy
 msgid ""
 "Your code looks like SAL syntax, but there is no 'return' statement.\n"
 "For SAL, use a return statement such as:\n"
@@ -9818,12 +9669,12 @@ msgid ""
 "\t(mult *track* 0.1)\n"
 " ."
 msgstr ""
-"Ihr Code sieht nach SAL-Syntax aus, aber es gibt keine „return“-Anweisung. "
-"Entweder nutzen Sie eine 'return' Anweisung, wie\n"
-"\treturn s * 0.1\n"
-"für SAL oder beginnen mit einem offenen Einschub, wie\n"
-"\t(mult s 0.1)\n"
-" für LISP."
+"Ihr Code sieht nach SAL-Syntax aus, aber es gibt keine „return“-Anweisung.\n"
+"Für SAL verwenden Sie eine 'return' Anweisung:\n"
+"\treturn *track* * 0.1\n"
+"oder beginnen Sie für LISP mit einem offenen Einschub:\n"
+"\t(mult *track* 0.1)\n"
+" ."
 
 #: src/effects/nyquist/Nyquist.cpp:1841
 msgid "Error in Nyquist code"
@@ -9930,25 +9781,25 @@ msgstr "Puffergröße"
 #: src/effects/VST/VSTEffect.cpp:753
 msgid "The buffer size controls the number of samples sent to the effect "
 msgstr ""
-"Die Puffergröße bestimmt die Anzahl der an den Effekt gesendeten Samples,"
+"Die Puffergröße bestimmt die Anzahl der an den Effekt gesendeten Samples, "
 
 #: src/effects/VST/VSTEffect.cpp:754
 msgid "on each iteration. Smaller values will cause slower processing and "
 msgstr ""
 "bei jeder Iteration. Kleinere Werte verursachen eine langsamere Verarbeitung "
-"und"
+"und "
 
 #: src/effects/VST/VSTEffect.cpp:755
 msgid "some effects require 8192 samples or less to work properly. However "
 msgstr ""
 "einige Effekte erfordern 8192 Samples oder weniger, um richtig zu "
-"funktionieren. Jedoch"
+"funktionieren. Jedoch "
 
 #: src/effects/VST/VSTEffect.cpp:756
 msgid "most effects can accept large buffers and using them will greatly "
 msgstr ""
 "können die meisten Effekte große Puffer akzeptieren und die Verwendung wird "
-"dazu"
+"dazu "
 
 #: src/effects/VST/VSTEffect.cpp:757
 msgid "reduce processing time."
@@ -10036,9 +9887,8 @@ msgid "Error writing to file: \"%s\""
 msgstr "Fehler beim Schreiben in Datei: „%s“"
 
 #: src/effects/VST/VSTEffect.cpp:3569
-#, fuzzy
 msgid "Error Saving Effect Presets"
-msgstr "Fehler beim Speichern der VST-Voreinstellungen"
+msgstr "Fehler beim Speichern der Effekt-Voreinstellungen"
 
 #: src/effects/VST/VSTEffect.cpp:3690
 #, c-format
@@ -10197,7 +10047,7 @@ msgstr "(externes Programm)"
 #: src/export/ExportCL.cpp:371 src/export/ExportPCM.cpp:457
 #, c-format
 msgid "Cannot export audio to %s"
-msgstr "Kann Audiodaten nicht nach %s exportieren."
+msgstr "Kann Audiodaten nicht nach %s exportieren"
 
 #: src/export/ExportCL.cpp:449 src/export/ExportMultiple.cpp:399
 msgid "Export"
@@ -10396,9 +10246,8 @@ msgstr "Benutzerdefinierte FFmpeg-Formatoptionen öffnen"
 
 #: src/export/ExportFFmpegDialogs.cpp:498
 #: src/export/ExportFFmpegDialogs.cpp:522
-#, fuzzy
 msgid "Error Saving FFmpeg Presets"
-msgstr "Fehler beim Speichern der VST-Voreinstellungen"
+msgstr "Fehler beim Speichern der FFmpeg-Voreinstellungen"
 
 #: src/export/ExportFFmpegDialogs.cpp:568
 #, c-format
@@ -10931,7 +10780,7 @@ msgstr "MP2-Dateien"
 
 #: src/export/ExportMP2.cpp:229
 msgid "Cannot export MP2 with this sample rate and bit rate"
-msgstr "MP2 kann mit dieser Abtastrate bzw. Bitrate nicht exportiert werden."
+msgstr "MP2 kann mit dieser Abtastrate bzw. Bitrate nicht exportiert werden"
 
 #: src/export/ExportMP2.cpp:240 src/export/ExportMP3.cpp:1795
 #: src/export/ExportOGG.cpp:182
@@ -10941,7 +10790,7 @@ msgstr "Kann Zieldatei nicht zum Schreiben öffnen"
 #: src/export/ExportMP2.cpp:272
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
-msgstr " Exportiere ausgewähltes Audio mit %ld kbit/s"
+msgstr "Exportiere ausgewähltes Audio mit %ld kbit/s"
 
 #: src/export/ExportMP2.cpp:273
 #, c-format
@@ -11687,7 +11536,7 @@ msgstr "Vorbis Versionskonflikt"
 
 #: src/import/ImportOGG.cpp:206
 msgid "Invalid Vorbis bitstream header"
-msgstr "Ungltiger Vorbis Bitstream Header."
+msgstr "Ungltiger Vorbis Bitstream Header"
 
 #: src/import/ImportOGG.cpp:209
 msgid "Internal logic fault"
@@ -11775,7 +11624,7 @@ msgstr "QuickTime-Samplegröße konnte nicht ermittelt werden"
 
 #: src/import/ImportQT.cpp:304
 msgid "Unable to retrieve stream description"
-msgstr "Stream-Beschreibung konnte nicht empfangen werden."
+msgstr "Stream-Beschreibung konnte nicht empfangen werden"
 
 #: src/import/ImportQT.cpp:373
 msgid "Unable to get fill buffer"
@@ -11925,9 +11774,8 @@ msgid "Latency"
 msgstr "Latenz"
 
 #: src/prefs/DevicePrefs.cpp:175
-#, fuzzy
 msgid "&Buffer length:"
-msgstr "Puffergröße"
+msgstr "Puffergr&öße:"
 
 #: src/prefs/DevicePrefs.cpp:179 src/prefs/DevicePrefs.cpp:180
 #: src/prefs/DevicePrefs.cpp:186 src/prefs/DevicePrefs.cpp:187
@@ -11937,7 +11785,7 @@ msgstr "Millisekunden"
 
 #: src/prefs/DevicePrefs.cpp:182
 msgid "Track &shift after record:"
-msgstr ""
+msgstr "Spur nach Aufnahme &schieben:"
 
 #: src/prefs/DevicePrefs.cpp:223
 msgid "No audio interfaces"
@@ -12031,7 +11879,7 @@ msgid ""
 "restarted"
 msgstr ""
 "Änderungen am temporären Verzeichnis werden erst nach dem Neustart von "
-"Audacity wirksam."
+"Audacity wirksam"
 
 #: src/prefs/DirectoriesPrefs.cpp:252
 msgid "Temp Directory Update"
@@ -12075,12 +11923,11 @@ msgstr "Gruppiert nach Typ"
 
 #: src/prefs/EffectsPrefs.cpp:119
 msgid "S&ort or Group:"
-msgstr ""
+msgstr "S&ortieren oder gruppieren:"
 
 #: src/prefs/EffectsPrefs.cpp:126
-#, fuzzy
 msgid "&Maximum effects per group (0 to disable):"
-msgstr "Maximale Effekte pro Gruppe (0 zum Deaktivieren):"
+msgstr "&Maximale Effekte pro Gruppe (0 zum deaktivieren):"
 
 #: src/prefs/EffectsPrefs.cpp:140
 msgid "Plugin Options"
@@ -12088,7 +11935,7 @@ msgstr "Erweiterung-Optionen"
 
 #: src/prefs/EffectsPrefs.cpp:142
 msgid "Check for updated plugins when Audacity starts"
-msgstr "Auf aktualisierte Erweiterungen prüfen, sobald Audacity startet."
+msgstr "Auf aktualisierte Erweiterungen prüfen, sobald Audacity startet"
 
 #: src/prefs/EffectsPrefs.cpp:145
 msgid "Rescan plugins next time Audacity is started"
@@ -12220,22 +12067,20 @@ msgid "From Internet"
 msgstr "Aus dem Internet"
 
 #: src/prefs/GUIPrefs.cpp:94
-#, fuzzy
 msgid "Classic"
-msgstr "Klassische Filter"
+msgstr "Klassisch"
 
 #: src/prefs/GUIPrefs.cpp:96
 msgid "Dark"
-msgstr ""
+msgstr "Dunkel"
 
 #: src/prefs/GUIPrefs.cpp:97
-#, fuzzy
 msgid "High Contrast"
-msgstr "Kontrast …"
+msgstr "Hoher Kontrast"
 
 #: src/prefs/GUIPrefs.cpp:98
 msgid "Custom"
-msgstr ""
+msgstr "Eigenes"
 
 #: src/prefs/GUIPrefs.cpp:121 src/prefs/TracksPrefs.cpp:98
 #: src/prefs/WaveformPrefs.cpp:87
@@ -12252,43 +12097,39 @@ msgstr "Ort der &Anleitung:"
 
 #: src/prefs/GUIPrefs.cpp:147
 msgid "Th&eme:"
-msgstr ""
+msgstr "Th&eme:"
 
 #: src/prefs/GUIPrefs.cpp:154
 msgid "Meter dB &range:"
 msgstr "Aussteuerungsanzeige dB-&Bereich:"
 
 #: src/prefs/GUIPrefs.cpp:172
-#, fuzzy
 msgid "Show"
-msgstr "Anzeigen:"
+msgstr "Anzeigen"
 
 #: src/prefs/GUIPrefs.cpp:174
-#, fuzzy
 msgid "'How to Get &Help' at launch"
-msgstr "Wie man Hilfe erhält"
+msgstr "'Wie man &Hilfe erhält' beim Start"
 
 #: src/prefs/GUIPrefs.cpp:177
 msgid "E&xtra menus"
-msgstr ""
+msgstr "Zus&ätzliche Menus"
 
 #: src/prefs/GUIPrefs.cpp:183
 msgid "Show alternative &styling (Mac vs PC)"
-msgstr ""
+msgstr "Alternativen &Stil zeigen (Mac vs PC)"
 
 #: src/prefs/GUIPrefs.cpp:192
 msgid "&Beep on completion of longer activities"
 msgstr "&Piepen bei Beendigung längerer Aktivitäten"
 
 #: src/prefs/GUIPrefs.cpp:195
-#, fuzzy
 msgid "Re&tain labels if selection snaps to a label"
-msgstr ""
-"Textmarken behal&ten, wenn die Auswahl in einer Textmarken Ecke einrastet"
+msgstr "Textmarken erhal&ten, wenn die Auswahl an einer Textmarken einrastet"
 
 #: src/prefs/GUIPrefs.cpp:198
 msgid "B&lend system and Audacity theme"
-msgstr ""
+msgstr "System- und Audacity-Theme mischen"
 
 #: src/prefs/GUIPrefs.cpp:202
 msgid "&Display a mono channel as virtual stereo"
@@ -12303,16 +12144,12 @@ msgid "When importing audio files"
 msgstr "Beim Importieren von Audiodateien"
 
 #: src/prefs/ImportExportPrefs.cpp:57
-#, fuzzy
 msgid "&Copy uncompressed files into the project (safer)"
-msgstr ""
-"&Bei unkomprimierten Audiodateien vor Bearbeitung eine Kopie erstellen "
-"(sicherer)"
+msgstr "&Unkomprimierte Dateien in das Projekt kopieren (sicherer)"
 
 #: src/prefs/ImportExportPrefs.cpp:59
-#, fuzzy
 msgid "&Read uncompressed files from original location (faster)"
-msgstr "&Unkomprimierte Audiodaten direkt aus dem Original lesen (schneller)"
+msgstr "&Unkomprimierte Dateien vom Ursprungsort lesen (schneller)"
 
 #: src/prefs/ImportExportPrefs.cpp:64
 msgid "&Normalize all tracks in project"
@@ -12323,32 +12160,28 @@ msgid "When exporting tracks to an audio file"
 msgstr "Beim Exportieren in eine Audiodatei"
 
 #: src/prefs/ImportExportPrefs.cpp:74
-#, fuzzy
 msgid "&Mix down to Stereo or Mono"
-msgstr "In Stereo zusammenmischen beim Exportieren"
+msgstr "Zu Stereo oder Mono herunter&mischen"
 
 #: src/prefs/ImportExportPrefs.cpp:76
 msgid "&Use custom mix"
-msgstr ""
+msgstr "&Eigenen Mix verwenden"
 
 #: src/prefs/ImportExportPrefs.cpp:81
-#, fuzzy
 msgid "S&how Metadata Tags editor before export"
-msgstr "Tag-Metadaten-Editor vor dem Exportieren &zeigen"
+msgstr "Metadaten-Tag-Editor vor dem Export &zeigen"
 
 #: src/prefs/ImportExportPrefs.cpp:90
 msgid "Exported Allegro (.gro) files save time as:"
-msgstr ""
+msgstr "Exportierte Allegro (.gro) Dateien speichern die Zeit als:"
 
 #: src/prefs/ImportExportPrefs.cpp:94
-#, fuzzy
 msgid "&Seconds"
-msgstr "Sekunden"
+msgstr "&Sekunden"
 
 #: src/prefs/ImportExportPrefs.cpp:96
-#, fuzzy
 msgid "&Beats"
-msgstr "Wiederholt"
+msgstr "&Beats"
 
 #: src/prefs/KeyConfigPrefs.cpp:78 src/prefs/KeyConfigPrefs.cpp:787
 msgid "Keyboard"
@@ -12450,7 +12283,7 @@ msgstr "Sie können diesem Eintrag keinen Schlüssel zuweisen"
 
 #: src/prefs/KeyConfigPrefs.cpp:613
 msgid "You must select a binding before assigning a shortcut"
-msgstr "Sie müssen vor der Zuweisung einer Verknüpfung eine Bindung auswählen."
+msgstr "Sie müssen vor der Zuweisung einer Verknüpfung eine Bindung auswählen"
 
 #: src/prefs/KeyConfigPrefs.cpp:635
 #, c-format
@@ -12572,9 +12405,8 @@ msgid "Using: PortMidi"
 msgstr "Benutze: PortMidi"
 
 #: src/prefs/MidiIOPrefs.cpp:146
-#, fuzzy
 msgid "MIDI Synth L&atency (ms):"
-msgstr "MIDI Synthesizer Latenz (ms):"
+msgstr "MIDI-Synthesizerlatenz (ms):"
 
 #: src/prefs/MidiIOPrefs.cpp:186
 msgid "No MIDI interfaces"
@@ -12857,9 +12689,8 @@ msgid "Effects Preview"
 msgstr "Effekte vorhören"
 
 #: src/prefs/PlaybackPrefs.cpp:61
-#, fuzzy
 msgid "&Length:"
-msgstr "Länge"
+msgstr "&Länge:"
 
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp:73
@@ -12867,14 +12698,12 @@ msgid "Cut Preview"
 msgstr "Schnitt vorhören"
 
 #: src/prefs/PlaybackPrefs.cpp:77
-#, fuzzy
 msgid "&Before cut region:"
-msgstr "Vorhören &vor Schnittauswahl:"
+msgstr "&Vor Schnittauswahl:"
 
 #: src/prefs/PlaybackPrefs.cpp:84
-#, fuzzy
 msgid "&After cut region:"
-msgstr "Vorhören &nach Schnittauswahl:"
+msgstr "&Nach Schnittauswahl:"
 
 #: src/prefs/PlaybackPrefs.cpp:95
 msgid "Seek Time when playing"
@@ -12893,9 +12722,8 @@ msgid "Audacity Preferences"
 msgstr "Audacity-Einstellungen"
 
 #: src/prefs/PrefsDialog.cpp:250
-#, fuzzy
 msgid "Category"
-msgstr "&Kategorie:"
+msgstr "Kategorie"
 
 #: src/prefs/PrefsDialog.cpp:547 src/prefs/PrefsDialog.h:52
 msgid "Preferences: "
@@ -12911,18 +12739,16 @@ msgid "When saving a project that depends on other audio files"
 msgstr "Beim Speichern eines Projekts, das von anderen Audiodateien abhängt"
 
 #: src/prefs/ProjectsPrefs.cpp:63
-#, fuzzy
 msgid "&Copy all audio into project (safest)"
-msgstr "&Immer sämtliches Audio in das Projekt kopieren (am sichersten)"
+msgstr "&Sämtliches Audio in das Projekt kopieren (am sichersten)"
 
 #: src/prefs/ProjectsPrefs.cpp:65
 msgid "Do &not copy any audio"
 msgstr "&Audio nicht kopieren"
 
 #: src/prefs/ProjectsPrefs.cpp:67
-#, fuzzy
 msgid "As&k"
-msgstr "&Benutzer fragen"
+msgstr "&Fragen"
 
 #: src/prefs/QualityPrefs.cpp:74
 msgid "Rectangle"
@@ -12981,43 +12807,36 @@ msgid "Playthrough"
 msgstr "Durchschleifen"
 
 #: src/prefs/RecordingPrefs.cpp:74
-#, fuzzy
 msgid "&Other tracks while recording (overdub)"
-msgstr "&Overdub: Andere Spuren während Aufnahme wiedergeben "
+msgstr "&Andere Spuren während Aufnahme (Overdub)"
 
 #: src/prefs/RecordingPrefs.cpp:83
-#, fuzzy
 msgid "&Hardware Playthrough of input"
-msgstr "So&ftware durchschleifen (an/aus)"
+msgstr "Eingang per &Hardware durchschleifen"
 
 #: src/prefs/RecordingPrefs.cpp:87
-#, fuzzy
 msgid "&Software Playthrough of input"
-msgstr "So&ftware durchschleifen (an/aus)"
+msgstr "Eingabe per &Software durchschleifen"
 
 #: src/prefs/RecordingPrefs.cpp:96
 msgid "Sound Activated Recording"
 msgstr "Pegelgesteuerte Aufnahme"
 
 #: src/prefs/RecordingPrefs.cpp:107
-#, fuzzy
 msgid "Le&vel (dB):"
 msgstr "&Pegel (dB):"
 
 #: src/prefs/RecordingPrefs.cpp:117
-#, fuzzy
 msgid "Name newly recorded tracks"
 msgstr "Neu aufgezeichnete Spuren benennen"
 
 #: src/prefs/RecordingPrefs.cpp:124
-#, fuzzy
 msgid "With:"
-msgstr "Innerhalb:"
+msgstr "Mit:"
 
 #: src/prefs/RecordingPrefs.cpp:127
-#, fuzzy
 msgid "Custom Track &Name"
-msgstr "Eigene Spur&namen verwenen"
+msgstr "Eigener Spur&name"
 
 #: src/prefs/RecordingPrefs.cpp:133
 msgid "Recorded_Audio"
@@ -13028,23 +12847,20 @@ msgid "Custom name text"
 msgstr "Eigener Namenstext"
 
 #: src/prefs/RecordingPrefs.cpp:143
-#, fuzzy
 msgid "&Track Number"
-msgstr "Spurnummer"
+msgstr "&Spurnummer"
 
 #: src/prefs/RecordingPrefs.cpp:147
-#, fuzzy
 msgid "System &Date"
-msgstr "System&datum hinzufügen"
+msgstr "System&datum"
 
 #: src/prefs/RecordingPrefs.cpp:151
-#, fuzzy
 msgid "System T&ime"
-msgstr "Systemze&it hinzufügen"
+msgstr "Systemze&it"
 
 #: src/prefs/RecordingPrefs.cpp:163
 msgid "Always record on a new track"
-msgstr ""
+msgstr "Immer auf neuer Spur aufzeichnen"
 
 #: src/prefs/RecordingPrefs.cpp:170
 msgid "Automated Recording Level Adjustment"
@@ -13150,9 +12966,8 @@ msgid "8 - most wideband"
 msgstr "8 - meist Breitband"
 
 #: src/prefs/SpectrumPrefs.cpp:93
-#, fuzzy
 msgid "1024 - default"
-msgstr "256 - Standard"
+msgstr "1024 - Standard"
 
 #: src/prefs/SpectrumPrefs.cpp:98
 msgid "32768 - most narrowband"
@@ -13192,9 +13007,8 @@ msgid "Frequency g&ain (dB/dec):"
 msgstr "F&requenzanhebung (dB/dec):"
 
 #: src/prefs/SpectrumPrefs.cpp:215
-#, fuzzy
 msgid "Gra&yscale"
-msgstr "S&kalieren"
+msgstr "Gra&ustufen"
 
 #: src/prefs/SpectrumPrefs.cpp:222
 msgid "Algorithm"
@@ -13287,7 +13101,7 @@ msgstr "Die maximale Notenzahl muss zwischen 1 und 128 liegen"
 
 #: src/prefs/ThemePrefs.cpp:60
 msgid "Theme"
-msgstr "Thema"
+msgstr "Theme"
 
 #: src/prefs/ThemePrefs.cpp:88
 msgid "Info"
@@ -13322,16 +13136,14 @@ msgstr ""
 "die Bilddatei auch andere Symbole anzeigt.)"
 
 #: src/prefs/ThemePrefs.cpp:96
-#, fuzzy
 msgid ""
 "This is a debug version of Audacity, with an extra button, 'Output "
 "Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
-"Sie haben Audacity mit dem zusätzlichen Knopf „Output Sourcery“ kompiliert. "
-"Dieser speichert\n"
-"eine C-Version der Grafik-Dateien, die standardmäßig einkompiliert werden "
-"können."
+"Diese Entwicklungs-Version von Audacity enthält den zusätzlichen Knopf "
+"„Output Sourcery“.  Dieser speichert\n"
+"eine C-Version des Grafikcache, die standardmäßig einkompiliert werden kann."
 
 #: src/prefs/ThemePrefs.cpp:101
 msgid ""
@@ -13370,9 +13182,8 @@ msgid "Load Files"
 msgstr "Dateien laden"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp:25
-#, fuzzy
 msgid "Tracks Behaviors"
-msgstr "Verhalten"
+msgstr "Spurverhalten"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp:46
 msgid "Simple"
@@ -13384,7 +13195,7 @@ msgstr "Mehrspur"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp:63
 msgid "A&uto-select, if selection required"
-msgstr ""
+msgstr "Wenn Auswahl erforderlich, a&utomatisch auswählen"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp:67
@@ -13392,9 +13203,8 @@ msgid "Enable cut &lines"
 msgstr "Schnitt&linien anzeigen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp:70
-#, fuzzy
 msgid "Enable &dragging selection edges"
-msgstr "Auswahl verschieben aktivieren"
+msgstr "Auswahlenden &verschieben aktivieren"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp:73
 msgid "Editing a clip can &move other clips"
@@ -13426,11 +13236,11 @@ msgstr "Spektrogramm"
 
 #: src/prefs/TracksPrefs.cpp:79
 msgid "Connect dots"
-msgstr ""
+msgstr "Punkte verbinden"
 
 #: src/prefs/TracksPrefs.cpp:82
 msgid "Stem plot"
-msgstr ""
+msgstr "Stammzeichnung"
 
 #: src/prefs/TracksPrefs.cpp:100
 msgid "&Pinned Recording/Playback head"
@@ -13438,11 +13248,11 @@ msgstr "Aufnahme/Wiedergabekopf &angeheftet"
 
 #: src/prefs/TracksPrefs.cpp:103
 msgid "A&uto-scroll if head unpinned"
-msgstr ""
+msgstr "A&utomatisch scrollen wenn Kopf abgepinnt"
 
 #: src/prefs/TracksPrefs.cpp:106
 msgid "Auto-&fit track height"
-msgstr ""
+msgstr "Spurhöhe automatisch ein&passen"
 
 #: src/prefs/TracksPrefs.cpp:114
 msgid "Default &view mode:"
@@ -13450,7 +13260,7 @@ msgstr "Standard-&Anzeigemodus:"
 
 #: src/prefs/TracksPrefs.cpp:121
 msgid "Display &samples:"
-msgstr ""
+msgstr "&Samples anzeigen:"
 
 #: src/prefs/TracksPrefs.cpp:128
 msgid "Default audio track &name:"
@@ -13477,9 +13287,8 @@ msgid "Saving &empty project"
 msgstr "Speichern von &leeren Projekt"
 
 #: src/prefs/WarningsPrefs.cpp:63
-#, fuzzy
 msgid "&Low disk space at launch or new project"
-msgstr "&Wenig Speicherplatz beim Programmstart"
+msgstr "&Wenig Speicherplatz bei Programmstart oder neuem Projekt"
 
 #: src/prefs/WarningsPrefs.cpp:66
 msgid "Mixing down to &mono during export"
@@ -13537,32 +13346,29 @@ msgid "Loop Play"
 msgstr "Endloswiedergabe"
 
 #: src/toolbars/ControlToolBar.cpp:246
-#, fuzzy
 msgid "Record New Track"
-msgstr "Neue Spur"
+msgstr "Neue Spur aufzeichnen"
 
 #: src/toolbars/ControlToolBar.cpp:248
 msgid "Append Record"
 msgstr "Aufnahme anhängen"
 
 #: src/toolbars/ControlToolBar.cpp:263
-#, fuzzy
 msgid "Select to End"
 msgstr "Auswahl auf Ende"
 
 #: src/toolbars/ControlToolBar.cpp:270
-#, fuzzy
 msgid "Select to Start"
 msgstr "Auswahl auf Anfang"
 
 #: src/toolbars/ControlToolBar.cpp:1195
-#, fuzzy
 msgid ""
 "Error opening sound device.\n"
 "Try changing the audio host, recording device and the project sample rate."
 msgstr ""
-"Fehler beim Öffnen des Tongerätes. Versuchen Sie Audiohost, Aufnahmegerät "
-"und die Projektabtastrate zu ändern."
+"Fehler beim Öffnen des Audiogerätes.\n"
+"Versuchen Sie den Audiohost, das Aufnahmegerät und die Abtastrate des "
+"Projektes zu ändern."
 
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp:337
@@ -13779,54 +13585,44 @@ msgid "Project Rate (Hz):"
 msgstr "Projektfrequenz (Hz):"
 
 #: src/toolbars/SelectionBar.cpp:288
-#, fuzzy
 msgid "Snap-To"
 msgstr "Einrasten"
 
 #: src/toolbars/SelectionBar.cpp:295 src/toolbars/SelectionBar.cpp:441
-#, fuzzy
 msgid "Audio Position"
-msgstr "Audioposition:"
+msgstr "Audioposition"
 
 #: src/toolbars/SelectionBar.cpp:301
-#, fuzzy
 msgid "Start-End"
-msgstr "Start"
+msgstr "Start-Ende"
 
 #: src/toolbars/SelectionBar.cpp:304
-#, fuzzy
 msgid "Start-Length"
-msgstr "Filterlänge"
+msgstr "Start-Länge"
 
 #: src/toolbars/SelectionBar.cpp:307
-#, fuzzy
 msgid "Length-End"
-msgstr "Länge"
+msgstr "Länge-Ende"
 
 #: src/toolbars/SelectionBar.cpp:310
-#, fuzzy
 msgid "Length-Center"
-msgstr "Länge"
+msgstr "Länge-Mitte"
 
 #: src/toolbars/SelectionBar.cpp:331
-#, fuzzy
 msgid "Start and End of Selection"
-msgstr "Start auf Auswahl&ende"
+msgstr "Start und Ende der Auswahl"
 
 #: src/toolbars/SelectionBar.cpp:332
-#, fuzzy
 msgid "Start and Length of Selection"
-msgstr "Aktuelle Auswahllänge."
+msgstr "Start und Länge der Auswahl"
 
 #: src/toolbars/SelectionBar.cpp:333
-#, fuzzy
 msgid "Length and End of Selection"
-msgstr "Linke Grenze der Auswahl setzen (oder erweitern)"
+msgstr "Länge und Ende der Auswahl"
 
 #: src/toolbars/SelectionBar.cpp:334
-#, fuzzy
 msgid "Length and Center of Selection"
-msgstr "Aktuelle Auswahllänge."
+msgstr "Länge und Mitte der Auswahl"
 
 #: src/toolbars/SelectionBar.cpp:348 src/toolbars/SelectionBar.cpp:459
 #: src/toolbars/SelectionBar.cpp:701
@@ -13843,9 +13639,8 @@ msgid "Snap To"
 msgstr "Einrasten"
 
 #: src/toolbars/SelectionBar.cpp:434 src/toolbars/SelectionBar.cpp:435
-#, fuzzy
 msgid "Selection options"
-msgstr "Auswahl auf Ende"
+msgstr "Auswahl-Optionen"
 
 #: src/toolbars/SelectionBar.cpp:521
 #, c-format
@@ -13856,95 +13651,85 @@ msgstr "Auswahl/Klicks einrasten in %s"
 #: src/toolbars/SelectionBar.cpp:709
 #, c-format
 msgid "%s - driven"
-msgstr ""
+msgstr "%s - gesteuert"
 
 #. i18n-hint: %s1 is replaced e.g by 'Length', %s2 e.g by 'Center'.
 #: src/toolbars/SelectionBar.cpp:712
 #, c-format
 msgid "Selection %s.  %s won't change."
-msgstr ""
+msgstr "Auswahl %s.  %s wird sich nicht ändern."
 
 #. i18n-hint: S-E is an abbreviation of Start-End
 #: src/toolbars/SelectionBar.cpp:742 src/toolbars/SelectionBar.cpp:815
 #: src/toolbars/SelectionBar.cpp:825
-#, fuzzy
 msgid "Start - End"
-msgstr "Start"
+msgstr "Start - Ende"
 
 #. i18n-hint: S-L is an abbreviation of Start-Length
 #: src/toolbars/SelectionBar.cpp:743 src/toolbars/SelectionBar.cpp:817
 #: src/toolbars/SelectionBar.cpp:826
-#, fuzzy
 msgid "Start - Length"
-msgstr "Suchen starten"
+msgstr "Start - Länge"
 
 #. i18n-hint: L-E is an abbreviation of Length-End
 #: src/toolbars/SelectionBar.cpp:744 src/toolbars/SelectionBar.cpp:819
 #: src/toolbars/SelectionBar.cpp:827
-#, fuzzy
 msgid "Length - End"
-msgstr "Länge"
+msgstr "Länge - Ende"
 
 #. i18n-hint: L-C is an abbreviation of Length-Center
 #: src/toolbars/SelectionBar.cpp:745 src/toolbars/SelectionBar.cpp:821
 #: src/toolbars/SelectionBar.cpp:828
-#, fuzzy
 msgid "Length - Center"
-msgstr "Filterlänge"
+msgstr "Länge - Mitte"
 
 #: src/toolbars/SelectionBar.cpp:748
-#, fuzzy
 msgid "Start - Length - End"
-msgstr "Start auf Auswahl&ende"
+msgstr "Start - Länge - Ende"
 
 #: src/toolbars/SelectionBar.cpp:749
 msgid "Start - Center - Length"
-msgstr ""
+msgstr "Start - Mitte - Länge"
 
 #: src/toolbars/SelectionBar.cpp:750
-#, fuzzy
 msgid "Start - Center - End"
-msgstr "Start auf Auswahl&ende"
+msgstr "Start - Mitte - Ende"
 
 #: src/toolbars/SelectionBar.cpp:751
 msgid "Start - Length - Center - End"
-msgstr ""
+msgstr "Start - Länge - Mitte - Ende"
 
 #: src/toolbars/SelectionBar.cpp:815 src/toolbars/SelectionBar.cpp:825
 msgid "S-E"
-msgstr ""
+msgstr "S-E"
 
 #: src/toolbars/SelectionBar.cpp:817 src/toolbars/SelectionBar.cpp:826
 msgid "S-L"
-msgstr ""
+msgstr "S-L"
 
 #: src/toolbars/SelectionBar.cpp:819 src/toolbars/SelectionBar.cpp:827
 msgid "L-E"
-msgstr ""
+msgstr "L-E"
 
 #: src/toolbars/SelectionBar.cpp:821 src/toolbars/SelectionBar.cpp:828
-#, fuzzy
 msgid "L-C"
-msgstr "LC"
+msgstr "L-C"
 
 #: src/toolbars/SelectionBar.cpp:831
-#, fuzzy
 msgid "Show start time and end time"
-msgstr "Startdatum und -zeit"
+msgstr "Startzeit und Endzeit zeigen"
 
 #: src/toolbars/SelectionBar.cpp:832
-#, fuzzy
 msgid "Show start time and length"
-msgstr "Startdatum und -zeit"
+msgstr "Startzeit und Länge zeigen"
 
 #: src/toolbars/SelectionBar.cpp:833
-#, fuzzy
 msgid "Show length and end time"
-msgstr "Vordergrund-Endzeit"
+msgstr "Länge und Endzeit zeigen"
 
 #: src/toolbars/SelectionBar.cpp:834
 msgid "Show length and center"
-msgstr ""
+msgstr "Länge und Mitte zeigen"
 
 #: src/toolbars/SpectralSelectionBar.cpp:143
 msgid "Center frequency and Width"
@@ -13978,7 +13763,7 @@ msgstr "Audacity %s Werkzeugleiste"
 
 #: src/toolbars/ToolBar.cpp:499 src/toolbars/ToolBar.cpp:553
 msgid "Click and drag to resize toolbar"
-msgstr "Klicken und ziehen um die Größe der Werkzeugleiste zu verändern."
+msgstr "Klicken und ziehen um die Größe der Werkzeugleiste zu verändern"
 
 #: src/toolbars/ToolDock.cpp:353 src/toolbars/ToolDock.cpp:354
 msgid "ToolDock"
@@ -14024,12 +13809,10 @@ msgid "Playback Speed"
 msgstr "Wiedergabe-Geschwindigkeit"
 
 #: src/toolbars/TranscriptionToolBar.cpp:308
-#, fuzzy
 msgid "Play-at-Speed"
 msgstr "Schnellere/langsamere Wiedergabe"
 
 #: src/toolbars/TranscriptionToolBar.cpp:309
-#, fuzzy
 msgid "Looped-Play-at-Speed"
 msgstr "Endloswiedergabe mit Geschwindigkeit"
 
@@ -14042,9 +13825,8 @@ msgid "Drag label boundary."
 msgstr "Markierungsgrenze verschieben."
 
 #: src/tracks/labeltrack/ui/LabelTextHandle.cpp:41
-#, fuzzy
 msgid "Click to edit label text"
-msgstr "Klicken um zu starten"
+msgstr "Klicken um Textmarke zu bearbeiten"
 
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp:72
 msgid "&Font..."
@@ -14103,11 +13885,11 @@ msgstr "Dehnen"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:48
 msgid "Left-Click to expand, Right-Click to remove"
-msgstr ""
+msgstr "Zum aufklappen links klicken, zum entfernen rechts klicken"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:49
 msgid "Left-Click to merge clips"
-msgstr ""
+msgstr "Zum zusammenfügen von Ausschnitten links klicken"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp:229
 msgid "Merged Clips"
@@ -14135,10 +13917,11 @@ msgid "Click and drag to edit the samples"
 msgstr "Klicken und ziehen um Samples zu verändern"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:188
-#, fuzzy
 msgid ""
 "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
-msgstr "Zum Zeichnen wählen Sie „Wellenform“ im Drop-Down Menü der Spur."
+msgstr ""
+"Zum Zeichnen wählen Sie „Wellenform“ oder „Wellenform (dB)“ im Drop-Down "
+"Menü der Spur."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp:198
 msgid "To use Draw, zoom in further until you can see the individual samples."
@@ -14166,52 +13949,51 @@ msgstr "Format ändern"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:302
 msgid "8000 Hz"
-msgstr ""
+msgstr "8000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:303
 msgid "11025 Hz"
-msgstr ""
+msgstr "11025 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:304
-#, fuzzy
 msgid "16000 Hz"
-msgstr "0100000.0100 Hz"
+msgstr "16000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:305
 msgid "22050 Hz"
-msgstr ""
+msgstr "22050 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:306
 msgid "44100 Hz"
-msgstr ""
+msgstr "44100 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:307
 msgid "48000 Hz"
-msgstr ""
+msgstr "48000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:308
 msgid "88200 Hz"
-msgstr ""
+msgstr "88200 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:309
 msgid "96000 Hz"
-msgstr ""
+msgstr "96000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:310
 msgid "176400 Hz"
-msgstr ""
+msgstr "176400 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:311
 msgid "192000 Hz"
-msgstr ""
+msgstr "192000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:312
 msgid "352800 Hz"
-msgstr ""
+msgstr "352800 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:313
 msgid "384000 Hz"
-msgstr ""
+msgstr "352800 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:314
 msgid "&Other..."
@@ -14259,9 +14041,8 @@ msgid "Spl&it Stereo Track"
 msgstr "Stereospur aufte&ilen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:580
-#, fuzzy
 msgid "Split Stereo to Mo&no"
-msgstr "Stereo in Mono trennen „%s“"
+msgstr "Stereo zu Mo&no aufteilen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:584
 msgid "&Format"
@@ -14272,12 +14053,11 @@ msgid "Rat&e"
 msgstr "Rat&e"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:676
-#, fuzzy
 msgid ""
 "To change Spectrogram Settings, stop any\n"
 "playing or recording first."
 msgstr ""
-"Um Spektrogramm-Einstellungen zu verändern, stoppen Sie\n"
+"Um Spektrogramm-Einstellungen zu ändern, stoppen Sie\n"
 "zuerst sämtliche Wiedergaben oder Aufnahmen."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp:678
@@ -14410,9 +14190,8 @@ msgid "Set time track interpolation to logarithmic"
 msgstr "Zeitspur-Interpolation auf Logarithmisch stellen"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp:151
-#, fuzzy
 msgid "&Linear scale"
-msgstr "&Linear"
+msgstr "&Linearer Maßstab"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp:152
 msgid "L&ogarithmic scale"
@@ -14427,9 +14206,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "Logarithmische &Interpolation"
 
 #: src/tracks/ui/EnvelopeHandle.cpp:252
-#, fuzzy
 msgid "Click and drag to warp playback time"
-msgstr "Klicken und ziehen, um eine Spur auf der Zeitachse zu verschieben"
+msgstr "Klicken und ziehen um Wiedergabezeit zu krümmen"
 
 #: src/tracks/ui/EnvelopeHandle.cpp:254
 msgid "Click and drag to edit the amplitude envelope"
@@ -14457,9 +14235,8 @@ msgid "Seeking"
 msgstr "Suchen"
 
 #: src/tracks/ui/Scrubbing.cpp:247
-#, fuzzy
 msgid "Scrub &Ruler"
-msgstr "Schrub-Regler"
+msgstr "Schrub-&Regler"
 
 #: src/tracks/ui/Scrubbing.cpp:968
 msgid "Move mouse pointer to Seek"
@@ -14525,7 +14302,7 @@ msgstr "Klicken und ziehen um Audiodaten auszuwählen"
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp:980
 msgid "(snapping)"
-msgstr ""
+msgstr "(Schnappen)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp:50
 msgid "Click and drag to move a track in time"
@@ -14537,22 +14314,21 @@ msgstr "Ausschnitt wurde in andere Spur verschoben"
 
 #. i18n-hint: %s is a direction like left or right
 #: src/tracks/ui/TimeShiftHandle.cpp:838
-#, fuzzy, c-format
+#, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
-msgstr "Ausgewählte Spuren in Stille verwandelt für %.2f Sekunden bei %.2f"
+msgstr "Spuren/Ausschnitte %s %.02f Sekunden zeitverschoben"
 
 #: src/tracks/ui/TrackButtonHandles.cpp:54
 msgid "Collapse"
-msgstr ""
+msgstr "Zusammenklappen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp:110 src/widgets/HelpSystem.cpp:160
 msgid "Close"
 msgstr "Schließen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp:171
-#, fuzzy
 msgid "Open menu..."
-msgstr "Zuletzt ge&öffnete Dateien …"
+msgstr "Menu öffnen ..."
 
 #: src/tracks/ui/TrackControls.cpp:125
 msgid "&Name..."
@@ -14809,7 +14585,7 @@ msgstr " Überwachung "
 
 #: src/widgets/Meter.cpp:2243
 msgid " Active "
-msgstr "Aktiv"
+msgstr " Aktiv "
 
 #: src/widgets/Meter.cpp:2257
 #, c-format
@@ -14943,7 +14719,7 @@ msgstr "01000,01000 Frames |24"
 #. * Japanese TV, and very odd)
 #: src/widgets/NumericTextCtrl.cpp:387
 msgid "hh:mm:ss + NTSC drop frames"
-msgstr "hh:mm:ss + NTSC-Drop-Einzelbilder (29.97 fps)"
+msgstr "hh:mm:ss + NTSC-Drop-Einzelbilder"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -15049,9 +14825,8 @@ msgstr "0100000.0100 Hz"
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp:482
-#, fuzzy
 msgid "01000.01000 kHz|0.001"
-msgstr "0100.01000 kHz|0.001"
+msgstr "01000.01000 kHz|0.001"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -15114,9 +14889,8 @@ msgid "NaN"
 msgstr "NaN"
 
 #: src/widgets/numformatter.cpp:146
-#, fuzzy
 msgid "Infinity"
-msgstr "-unendlich"
+msgstr "Unendlich"
 
 #: src/widgets/numformatter.cpp:150
 msgid "-Infinity"
@@ -15207,14 +14981,12 @@ msgid "Quick-Play enabled"
 msgstr "Schnelle Wiedergabe aktiviert"
 
 #: src/widgets/Ruler.cpp:2853
-#, fuzzy
 msgid "Click to unpin"
-msgstr "Klicken um zu überwachen"
+msgstr "Klicken um zum abpinnen"
 
 #: src/widgets/Ruler.cpp:2854
-#, fuzzy
 msgid "Click to pin"
-msgstr "Klicken um zu starten"
+msgstr "Klicken um zum anpinnen"
 
 #: src/widgets/Ruler.cpp:2894
 msgid "Disable Quick-Play"
