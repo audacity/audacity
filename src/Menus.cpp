@@ -769,7 +769,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu(_("&Toolbars"));
 
       /* i18n-hint: (verb)*/
-      c->AddItem(wxT("ResetToolbars"), _("&Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddItem(wxT("ResetToolbars"), _("Reset Toolb&ars"), FN(OnResetToolBars), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->AddSeparator();
 
       /* i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)*/

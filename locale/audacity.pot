@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-22 11:50+0100\n"
+"POT-Creation-Date: 2017-07-22 16:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2781,7 +2781,7 @@ msgstr ""
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp:772
-msgid "&Reset Toolb&ars"
+msgid "Reset Toolb&ars"
 msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
