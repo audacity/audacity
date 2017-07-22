@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-07-22 11:50+0100\n"
+"POT-Creation-Date: 2017-07-22 16:00+0100\n"
 "PO-Revision-Date: 2017-07-22 22:46+0200\n"
 "Last-Translator: Joachim Huffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/"
@@ -3014,7 +3014,7 @@ msgstr "&Werkzeugleisten"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp:772
-msgid "&Reset Toolb&ars"
+msgid "Reset Toolb&ars"
 msgstr "&Werkzeugleisten zurücksetzen"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
