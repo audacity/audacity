@@ -239,7 +239,6 @@ void AboutDialog::CreateCreditsList()
 
    AddCredit(wxT("[[http://libexpat.github.io/|expat]]"), roleLibrary);
    AddCredit(wxT("[[http://xiph.org/flac/|FLAC]]"), roleLibrary);
-   AddCredit(wxT("iAVC"), roleLibrary);
    AddCredit(wxT("[[http://lame.sourceforge.net/|LAME]]"), roleLibrary);
    AddCredit(wxT("[[http://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
    AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
