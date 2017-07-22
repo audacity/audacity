@@ -161,7 +161,7 @@ void TracksPrefs::SetPinnedHeadPreference(bool value, bool flush)
 wxString TracksPrefs::GetDefaultAudioTrackNamePreference()
 {
    const auto name =
-      gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), _(""));
+      gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), wxT(""));
    if (name.empty())
       // When nothing was specified,
       // the default-default is whatever translation of...

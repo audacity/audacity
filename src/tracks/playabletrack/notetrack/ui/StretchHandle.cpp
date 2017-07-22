@@ -42,7 +42,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
       ::MakeCursor(wxCURSOR_BULLSEYE, StretchCursorXpm, 16, 16);
 
    if (unsafe) {
-      return { _(""), &*disabledCursor };
+      return { wxT(""), &*disabledCursor };
    }
    else {
       wxCursor *pCursor = NULL;
