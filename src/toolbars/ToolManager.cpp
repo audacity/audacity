@@ -67,6 +67,8 @@
 #include "../Project.h"
 #include "../Theme.h"
 #include "../widgets/AButton.h"
+#include "../widgets/ASlider.h"
+#include "../widgets/Meter.h"
 #include "../widgets/Grabber.h"
 
 #include "../Experimental.h"
@@ -637,6 +639,25 @@ void ToolManager::RegenerateTooltips()
       if (bar)
          bar->RegenerateTooltips();
    }
+}
+
+int ToolManager::FilterEvent(wxEvent &event)
+{
+   // Snoop the global event stream for changes of focused window.  Remember
+   // the last one of our own that is not a grabber.
+
+   if (event.GetEventType() == wxEVT_SET_FOCUS) {
+      auto &focusEvent = static_cast<wxFocusEvent&>(event);
+      auto window = focusEvent.GetWindow();
+      if ( !dynamic_cast<Grabber*>( window ) &&
+           wxGetTopLevelParent(window) == mParent )
+         mLastFocus = window;
+   }
+   else if (event.GetEventType() == wxEVT_KILL_FOCUS)
+      // Avoid a dangling pointer!
+      mLastFocus = nullptr;
+
+   return Event_Skip;
 }
 
 //
@@ -1420,6 +1441,8 @@ void ToolManager::HandleEscapeKey()
          mDragWindow->Destroy();
          mDragWindow = nullptr;
          mDragBar->Refresh(false);
+
+         mPrevDock->SetFocus();
       }
       else {
          // Floater remains, and returns to where it begain
@@ -1455,4 +1478,20 @@ void ToolManager::DoneDragging()
    mTimer.Stop();
    mDidDrag = false;
    mClicked = false;
+
+   if (mPrevFocus) {
+      auto parent = mPrevFocus->GetParent();
+      if (parent) {
+         // Two lines we seem to need on Mac with wx3, for reasons unknown
+         //parent->SetFocus();
+         //parent->NavigateIn();
+
+         // What we really want just to reestablish old focus
+         auto temp1 = AButton::TemporarilyAllowFocus();
+         auto temp2 = ASlider::TemporarilyAllowFocus();
+         auto temp3 = Meter::TemporarilyAllowFocus();
+         mPrevFocus->SetFocus();
+      }
+   }
+   mPrevFocus = nullptr;
 }

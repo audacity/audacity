@@ -15,6 +15,7 @@
 
 #include "../MemoryX.h"
 #include <wx/defs.h>
+#include <wx/eventfilter.h>
 #include <wx/frame.h>
 #include <wx/timer.h>
 
@@ -41,7 +42,7 @@ class ToolFrame;
 /// class ToolManager
 ////////////////////////////////////////////////////////////
 
-class ToolManager final : public wxEvtHandler
+class ToolManager final : public wxEvtHandler, public wxEventFilter
 {
 
  public:
@@ -68,6 +69,8 @@ class ToolManager final : public wxEvtHandler
    void Reset();
    void RegenerateTooltips();
 
+   int FilterEvent(wxEvent &event) override;
+
  private:
 
    ToolBar *Float( ToolBar *t, wxPoint & pos );
@@ -88,6 +91,7 @@ class ToolManager final : public wxEvtHandler
    void Updated();
 
    AudacityProject *mParent;
+   wxWindow *mLastFocus{};
 
    ToolFrame *mDragWindow;
    ToolDock *mDragDock;
