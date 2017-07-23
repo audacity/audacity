@@ -663,8 +663,8 @@ int ToolManager::FilterEvent(wxEvent &event)
            top == mParent )
          mLastFocus = window;
    }
-   else if (event.GetEventType() == wxEVT_CLOSE_WINDOW) {
-      auto &closeEvent = static_cast<wxCloseEvent&>(event);
+   else if (event.GetEventType() == wxEVT_DESTROY) {
+      auto &closeEvent = static_cast<wxWindowDestroyEvent&>(event);
       auto window = closeEvent.GetEventObject();
       if (window == mLastFocus)
          // Avoid a dangling pointer!
