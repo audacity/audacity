@@ -334,7 +334,7 @@ IMPLEMENT_CLASS( ToolDock, wxPanelWrapper );
 //
 // Custom event
 //
-//DEFINE_EVENT_TYPE( EVT_TOOLBAR_FLOAT );
+DEFINE_EVENT_TYPE( EVT_TOOLBAR_FLOAT );
 
 BEGIN_EVENT_TABLE( ToolDock, wxPanelWrapper )
    EVT_GRABBER( wxID_ANY, ToolDock::OnGrabber )
