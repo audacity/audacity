@@ -75,6 +75,7 @@ class ToolManager final : public wxEvtHandler
    void OnTimer( wxTimerEvent & event );
    void OnMouse( wxMouseEvent & event );
    void OnCaptureLost( wxMouseCaptureLostEvent & event );
+   void UndockBar( wxPoint mp );
    void OnGrabber( GrabberEvent & event );
    void HandleEscapeKey();
    void DoneDragging();
@@ -119,6 +120,8 @@ class ToolManager final : public wxEvtHandler
    ToolBarConfiguration::Position mPrevSlot
       { ToolBarConfiguration::UnspecifiedPosition };
    ToolBarConfiguration mPrevConfiguration;
+   bool mDidDrag{};
+   bool mClicked{};
 
  public:
 

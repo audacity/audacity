@@ -1076,7 +1076,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    // Can't do anything if we're not dragging.  This also prevents
    // us from intercepting events that don't belong to us from the
    // parent since we're Connect()ed to a couple.
-   if( !mDragWindow )
+   if( !mClicked )
    {
       return;
    }
@@ -1090,11 +1090,16 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    wxPoint pos =
       ( (wxWindow *)event.GetEventObject() )->ClientToScreen( event.GetPosition() ) - mDragOffset;
 
-   // Button was released...finish the drag
+
    if( !event.LeftIsDown() )
    {
+      // Button was released...finish the drag
       // Transition the bar to a dock
-      if( mDragDock && !event.ShiftDown() )
+      if (!mDidDrag) {
+         DoneDragging();
+         return;
+      }
+      else if( mDragDock && !event.ShiftDown() )
       {
          // Trip over...everyone ashore that's going ashore...
          mDragDock->Dock( mDragBar, true, mDragBefore );
@@ -1115,6 +1120,15 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    }
    else if( event.Dragging() && pos != mLastPos )
    {
+      if (!mDidDrag) {
+         // Must set the bar afloat if it's currently docked
+         mDidDrag = true;
+         wxPoint mp = event.GetPosition();
+         mp = mParent->ClientToScreen(mp);
+         if (!mDragWindow)
+            UndockBar(mp);
+      }
+
       // Make toolbar follow the mouse
       mDragWindow->Move( pos  );
 
@@ -1310,6 +1324,36 @@ void ToolManager::OnIndicatorCreate( wxWindowCreateEvent & event )
    event.Skip();
 }
 
+void ToolManager::UndockBar( wxPoint mp )
+{
+#if defined(__WXMAC__)
+   // Disable window animation
+   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
+#endif
+
+   // Adjust the starting position
+   mp -= mDragOffset;
+
+   // Inform toolbar of change
+   mDragBar->SetDocked( NULL, true );
+   mDragBar->SetPositioned();
+
+   // Construct a NEW floater
+   wxASSERT(mParent);
+   mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
+
+   // Make sure the ferry is visible
+   mDragWindow->Show();
+
+   // Notify parent of change
+   Updated();
+
+#if defined(__WXMAC__)
+   // Reinstate original transition
+   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
+#endif
+}
+
 //
 // Transition a toolbar from float to dragging
 //
@@ -1340,35 +1384,10 @@ void ToolManager::OnGrabber( GrabberEvent & event )
                  mDragBar->GetParent()->ClientToScreen( mDragBar->GetPosition() ) +
       wxPoint( 1, 1 );
 
-   // Must set the bar afloat if it's currently docked
+   mClicked = true;
    if( mPrevDock )
    {
-#if defined(__WXMAC__)
-      // Disable window animation
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
-#endif
-
-      // Adjust the starting position
-      mp -= mDragOffset;
-
-      // Inform toolbar of change
-      mDragBar->SetDocked( NULL, true );
-      mDragBar->SetPositioned();
-
-      // Construct a NEW floater
-      wxASSERT(mParent);
-      mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
-
-      // Make sure the ferry is visible
-      mDragWindow->Show();
-
-      // Notify parent of change
-      Updated();
-
-#if defined(__WXMAC__)
-      // Reinstate original transition
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
-#endif
+      mDragWindow = nullptr;
    }
    else
    {
@@ -1434,4 +1453,6 @@ void ToolManager::DoneDragging()
    mLastPos.x = mBarPos.x = -1;
    mLastPos.y = mBarPos.y = -1;
    mTimer.Stop();
+   mDidDrag = false;
+   mClicked = false;
 }
