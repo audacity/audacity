@@ -2303,8 +2303,6 @@ wxAccStatus MeterAx::GetState(int WXUNUSED(childId), long* state)
 
    *state = wxACC_STATE_SYSTEM_FOCUSABLE;
 
-   // Do not use mButtonIsFocused is not set until after this method
-   // is called.
    *state |= ( m == wxWindow::FindFocus() ? wxACC_STATE_SYSTEM_FOCUSED : 0 );
 
    return wxACC_OK;

@@ -183,7 +183,6 @@ void AButton::Init(wxWindow * parent,
 
    mAlternateIdx = 0;
 
-   mButtonIsFocused = false;
    mFocusRect = GetClientRect().Deflate( 3, 3 );
    mForceFocusRect = false;
 
@@ -311,7 +310,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    mImages[mAlternateIdx].mArr[buttonState].Draw(dc, GetClientRect());
 
-   if( mButtonIsFocused )
+   if( this == wxWindow::FindFocus() )
    {
       AColor::DrawFocus( dc, mFocusRect );
    }
@@ -466,13 +465,11 @@ void AButton::OnKeyDown(wxKeyEvent & event)
 
 void AButton::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
-   mButtonIsFocused = true;
    Refresh( false );
 }
 
 void AButton::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
-   mButtonIsFocused = false;
    Refresh( false );
 }
 
@@ -739,8 +736,6 @@ wxAccStatus AButtonAx::GetState(int WXUNUSED(childId), long* state)
       break;
    }
 
-   // Do not use mButtonIsFocused is not set until after this method
-   // is called.
    *state |= ( ab == wxWindow::FindFocus() ? wxACC_STATE_SYSTEM_FOCUSED : 0 );
 
    return wxACC_OK;
