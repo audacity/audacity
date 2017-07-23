@@ -1,4 +1,4 @@
-/**********************************************************************
+   /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -436,6 +436,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 
    // Process the toolbar config settings
    ReadConfig();
+
+   wxEvtHandler::AddFilter(this);
 }
 
 //
@@ -443,6 +445,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 //
 ToolManager::~ToolManager()
 {
+   wxEvtHandler::RemoveFilter(this);
+
    // Save the toolbar states
    WriteConfig();
 
@@ -646,16 +650,23 @@ int ToolManager::FilterEvent(wxEvent &event)
    // Snoop the global event stream for changes of focused window.  Remember
    // the last one of our own that is not a grabber.
 
-   if (event.GetEventType() == wxEVT_SET_FOCUS) {
+   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
       auto &focusEvent = static_cast<wxFocusEvent&>(event);
       auto window = focusEvent.GetWindow();
-      if ( !dynamic_cast<Grabber*>( window ) &&
+      // window is that which will GET the focus
+      if ( window &&
+           !dynamic_cast<Grabber*>( window ) &&
+           !dynamic_cast<ToolFrame*>( window ) &&
            wxGetTopLevelParent(window) == mParent )
          mLastFocus = window;
    }
-   else if (event.GetEventType() == wxEVT_KILL_FOCUS)
-      // Avoid a dangling pointer!
-      mLastFocus = nullptr;
+   else if (event.GetEventType() == wxEVT_CLOSE_WINDOW) {
+      auto &closeEvent = static_cast<wxCloseEvent&>(event);
+      auto window = closeEvent.GetEventObject();
+      if (window == mLastFocus)
+         // Avoid a dangling pointer!
+         mLastFocus = nullptr;
+   }
 
    return Event_Skip;
 }
@@ -1479,19 +1490,17 @@ void ToolManager::DoneDragging()
    mDidDrag = false;
    mClicked = false;
 
-   if (mPrevFocus) {
-      auto parent = mPrevFocus->GetParent();
-      if (parent) {
-         // Two lines we seem to need on Mac with wx3, for reasons unknown
-         //parent->SetFocus();
-         //parent->NavigateIn();
-
-         // What we really want just to reestablish old focus
+   if (mLastFocus) {
+      CallAfter( [&] {
          auto temp1 = AButton::TemporarilyAllowFocus();
          auto temp2 = ASlider::TemporarilyAllowFocus();
          auto temp3 = Meter::TemporarilyAllowFocus();
-         mPrevFocus->SetFocus();
-      }
+         auto parent = mLastFocus->GetParent();
+ //        if (parent) {
+   //         parent->SetFocus();
+     //       parent->NavigateIn();
+       //  }
+         mLastFocus->SetFocus();
+      } );
    }
-   mPrevFocus = nullptr;
 }

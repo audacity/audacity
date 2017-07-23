@@ -1223,9 +1223,9 @@ int AudacityApp::FilterEvent(wxEvent & event)
           object->IsKindOf(CLASSINFO(wxWindow)))
       {
          const auto window = ((wxWindow *)e.GetEventObject());
-         window->SetFocus();
+//         window->SetFocus();
 #if defined(__WXMAC__)
-         window->NavigateIn();
+  //       window->NavigateIn();
 #endif
       }
    }
