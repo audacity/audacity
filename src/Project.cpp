@@ -2410,10 +2410,6 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
       return;
    }
 
-   // Let the base class do what it wants...
-   wxFrame::OnActivate(event);
-   // ... but then we override its decisions about focus.
-
    mActive = event.GetActive();
 
    // Under Windows, focus can be "lost" when returning to
@@ -2445,6 +2441,7 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
       MacShowUndockedToolbars(true);
 #endif
    }
+   event.Skip();
 }
 
 bool AudacityProject::IsActive()
