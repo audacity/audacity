@@ -40,7 +40,7 @@ The root command is often sudo on GNU/Linux, for example 'sudo make install'.
 
 Then to compile and install Audacity: 
 
-   ./configure CXXFLAGS="-std=gnu++11"
+   ./configure CXXFLAGS="-std=gnu++11" -with-lib-preferences="local system"
    make
    make install  # as root
 
