@@ -282,7 +282,7 @@ public:
 
 private:
    static void ConsistencyCheck
-      (const BlockArray &block, size_t from,
+      (const BlockArray &block, size_t maxSamples, size_t from,
        sampleCount numSamples, const wxChar *whereStr,
        bool mayThrow = true);
 
