@@ -71,6 +71,8 @@ class ToolManager final : public wxEvtHandler, public wxEventFilter
 
    int FilterEvent(wxEvent &event) override;
 
+   bool RestoreFocus();
+
  private:
 
    ToolBar *Float( ToolBar *t, wxPoint & pos );

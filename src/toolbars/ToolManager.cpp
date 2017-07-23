@@ -1491,11 +1491,19 @@ void ToolManager::DoneDragging()
    mDidDrag = false;
    mClicked = false;
 
+   RestoreFocus();
+}
+
+bool ToolManager::RestoreFocus()
+{
    if (mLastFocus) {
       auto temp1 = AButton::TemporarilyAllowFocus();
       auto temp2 = ASlider::TemporarilyAllowFocus();
       auto temp3 = Meter::TemporarilyAllowFocus();
       auto parent = mLastFocus->GetParent();
       mLastFocus->SetFocus();
+      return true;
    }
+
+   return false;
 }

@@ -1351,10 +1351,6 @@ void AudacityProject::UpdatePrefs()
    if (mRuler) {
       mRuler->UpdatePrefs();
    }
-
-   // The toolbars will be recreated, so make sure we don't leave
-   // a stale pointer hanging around.
-   mLastFocusedWindow = NULL;
 }
 
 void AudacityProject::SetMissingAliasFileDialog(wxDialog *dialog)
@@ -2416,11 +2412,6 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
 
    mActive = event.GetActive();
 
-#if defined(__WXGTK__)
-   // See bug #294 for explanation
-   mTrackPanel->SetFocus();
-#endif
-
    // Under Windows, focus can be "lost" when returning to
    // Audacity from a different application.
    //
@@ -2428,17 +2419,11 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    // then ALT+TAB to return to Audacity.  Focus will be given to the
    // project window frame which is not at all useful.
    //
-   // So, when the project window receives a deactivate event, we
-   // remember which child had the focus.  Then, when we receive the
+   // So, we use ToolManager's observation of focus changes in a wxEventFilter.
+   // Then, when we receive the
    // activate event, we restore that focus to the child or the track
    // panel if no child had the focus (which probably should never happen).
    if (!mActive) {
-      // We only want to remember the last focused window if FindFocus() returns
-      // a window within the current project frame.
-      wxWindow *w = FindFocus();
-      if (wxGetTopLevelParent(w) ==this) {
-         mLastFocusedWindow = w;
-      }
 #ifdef __WXMAC__
       if (IsIconized())
          MacShowUndockedToolbars(false);
@@ -2446,16 +2431,11 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    }
    else {
       SetActiveProject(this);
-      if (mLastFocusedWindow) {
-         mLastFocusedWindow->SetFocus();
-      }
-      else {
+      if ( ! GetToolManager()->RestoreFocus() ) {
          if (mTrackPanel) {
             mTrackPanel->SetFocus();
          }
       }
-      // No longer need to remember the last focused window
-      mLastFocusedWindow = NULL;
 
 #ifdef __WXMAC__
       MacShowUndockedToolbars(true);
@@ -2616,7 +2596,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    //     its size change.
       SaveWindowSize();
 
-   mLastFocusedWindow = NULL;
    mIsDeleting = true;
 
    // Mac: we never quit as the result of a close.

@@ -710,9 +710,6 @@ private:
 
    bool mLockPlayRegion;
 
-   // See AudacityProject::OnActivate() for an explanation of this.
-   wxWindow *mLastFocusedWindow{};
-
    std::unique_ptr<ImportXMLTagHandler> mImportXMLTagHandler;
 
    // Last auto-save file name and path (empty if none)
