@@ -15,6 +15,7 @@
 
 #include "../MemoryX.h"
 #include <wx/defs.h>
+#include <wx/eventfilter.h>
 #include <wx/frame.h>
 #include <wx/timer.h>
 
@@ -41,7 +42,7 @@ class ToolFrame;
 /// class ToolManager
 ////////////////////////////////////////////////////////////
 
-class ToolManager final : public wxEvtHandler
+class ToolManager final : public wxEvtHandler, public wxEventFilter
 {
 
  public:
@@ -68,6 +69,8 @@ class ToolManager final : public wxEvtHandler
    void Reset();
    void RegenerateTooltips();
 
+   int FilterEvent(wxEvent &event) override;
+
  private:
 
    ToolBar *Float( ToolBar *t, wxPoint & pos );
@@ -75,6 +78,7 @@ class ToolManager final : public wxEvtHandler
    void OnTimer( wxTimerEvent & event );
    void OnMouse( wxMouseEvent & event );
    void OnCaptureLost( wxMouseCaptureLostEvent & event );
+   void UndockBar( wxPoint mp );
    void OnGrabber( GrabberEvent & event );
    void HandleEscapeKey();
    void DoneDragging();
@@ -87,6 +91,7 @@ class ToolManager final : public wxEvtHandler
    void Updated();
 
    AudacityProject *mParent;
+   wxWindow *mLastFocus{};
 
    ToolFrame *mDragWindow;
    ToolDock *mDragDock;
@@ -119,6 +124,8 @@ class ToolManager final : public wxEvtHandler
    ToolBarConfiguration::Position mPrevSlot
       { ToolBarConfiguration::UnspecifiedPosition };
    ToolBarConfiguration mPrevConfiguration;
+   bool mDidDrag{};
+   bool mClicked{};
 
  public:
 
@@ -135,7 +142,7 @@ class ToolFrame final : public wxFrame
 {
 public:
 
-   ToolFrame( wxWindow *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
+   ToolFrame( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
 
    ~ToolFrame();
 
@@ -171,9 +178,11 @@ public:
 
    void Resize( const wxSize &size );
 
+   AudacityProject *GetParent() const { return mParent; }
+
 private:
 
-   wxWindow *mParent;
+   AudacityProject *const mParent;
    ToolManager *mManager;
    ToolBar *mBar;
    wxSize mMinSize;

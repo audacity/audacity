@@ -67,6 +67,8 @@
 #include "../Project.h"
 #include "../Theme.h"
 #include "../widgets/AButton.h"
+#include "../widgets/ASlider.h"
+#include "../widgets/Meter.h"
 #include "../widgets/Grabber.h"
 
 #include "../Experimental.h"
@@ -80,7 +82,7 @@
 // Constructor
 //
 ToolFrame::ToolFrame
-   ( wxWindow *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
+   ( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
    : wxFrame( parent,
           bar->GetId(),
           wxEmptyString,
@@ -92,6 +94,7 @@ ToolFrame::ToolFrame
           wxFRAME_TOOL_WINDOW |
 #endif
           wxFRAME_FLOAT_ON_PARENT )
+   , mParent{ parent }
 {
    int width = bar->GetSize().x;
    int border;
@@ -113,7 +116,6 @@ ToolFrame::ToolFrame
 #endif
 
    // Save parameters
-   mParent = parent;
    mManager = manager;
    mBar = bar;
 
@@ -434,6 +436,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 
    // Process the toolbar config settings
    ReadConfig();
+
+   wxEvtHandler::AddFilter(this);
 }
 
 //
@@ -441,6 +445,8 @@ ToolManager::ToolManager( AudacityProject *parent, wxWindow *topDockParent )
 //
 ToolManager::~ToolManager()
 {
+   wxEvtHandler::RemoveFilter(this);
+
    // Save the toolbar states
    WriteConfig();
 
@@ -637,6 +643,35 @@ void ToolManager::RegenerateTooltips()
       if (bar)
          bar->RegenerateTooltips();
    }
+}
+
+int ToolManager::FilterEvent(wxEvent &event)
+{
+   // Snoop the global event stream for changes of focused window.  Remember
+   // the last one of our own that is not a grabber.
+
+   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
+      auto &focusEvent = static_cast<wxFocusEvent&>(event);
+      auto window = focusEvent.GetWindow();
+      auto top = wxGetTopLevelParent(window);
+      if(auto toolFrame = dynamic_cast<ToolFrame*>(top))
+         top = toolFrame->GetParent();
+      // window is that which will GET the focus
+      if ( window &&
+           !dynamic_cast<Grabber*>( window ) &&
+           !dynamic_cast<ToolFrame*>( window ) &&
+           top == mParent )
+         mLastFocus = window;
+   }
+   else if (event.GetEventType() == wxEVT_CLOSE_WINDOW) {
+      auto &closeEvent = static_cast<wxCloseEvent&>(event);
+      auto window = closeEvent.GetEventObject();
+      if (window == mLastFocus)
+         // Avoid a dangling pointer!
+         mLastFocus = nullptr;
+   }
+
+   return Event_Skip;
 }
 
 //
@@ -1076,7 +1111,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    // Can't do anything if we're not dragging.  This also prevents
    // us from intercepting events that don't belong to us from the
    // parent since we're Connect()ed to a couple.
-   if( !mDragWindow )
+   if( !mClicked )
    {
       return;
    }
@@ -1090,11 +1125,16 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    wxPoint pos =
       ( (wxWindow *)event.GetEventObject() )->ClientToScreen( event.GetPosition() ) - mDragOffset;
 
-   // Button was released...finish the drag
+
    if( !event.LeftIsDown() )
    {
+      // Button was released...finish the drag
       // Transition the bar to a dock
-      if( mDragDock && !event.ShiftDown() )
+      if (!mDidDrag) {
+         DoneDragging();
+         return;
+      }
+      else if( mDragDock && !event.ShiftDown() )
       {
          // Trip over...everyone ashore that's going ashore...
          mDragDock->Dock( mDragBar, true, mDragBefore );
@@ -1115,6 +1155,15 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    }
    else if( event.Dragging() && pos != mLastPos )
    {
+      if (!mDidDrag) {
+         // Must set the bar afloat if it's currently docked
+         mDidDrag = true;
+         wxPoint mp = event.GetPosition();
+         mp = mParent->ClientToScreen(mp);
+         if (!mDragWindow)
+            UndockBar(mp);
+      }
+
       // Make toolbar follow the mouse
       mDragWindow->Move( pos  );
 
@@ -1310,6 +1359,36 @@ void ToolManager::OnIndicatorCreate( wxWindowCreateEvent & event )
    event.Skip();
 }
 
+void ToolManager::UndockBar( wxPoint mp )
+{
+#if defined(__WXMAC__)
+   // Disable window animation
+   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
+#endif
+
+   // Adjust the starting position
+   mp -= mDragOffset;
+
+   // Inform toolbar of change
+   mDragBar->SetDocked( NULL, true );
+   mDragBar->SetPositioned();
+
+   // Construct a NEW floater
+   wxASSERT(mParent);
+   mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
+
+   // Make sure the ferry is visible
+   mDragWindow->Show();
+
+   // Notify parent of change
+   Updated();
+
+#if defined(__WXMAC__)
+   // Reinstate original transition
+   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
+#endif
+}
+
 //
 // Transition a toolbar from float to dragging
 //
@@ -1340,35 +1419,10 @@ void ToolManager::OnGrabber( GrabberEvent & event )
                  mDragBar->GetParent()->ClientToScreen( mDragBar->GetPosition() ) +
       wxPoint( 1, 1 );
 
-   // Must set the bar afloat if it's currently docked
+   mClicked = true;
    if( mPrevDock )
    {
-#if defined(__WXMAC__)
-      // Disable window animation
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
-#endif
-
-      // Adjust the starting position
-      mp -= mDragOffset;
-
-      // Inform toolbar of change
-      mDragBar->SetDocked( NULL, true );
-      mDragBar->SetPositioned();
-
-      // Construct a NEW floater
-      wxASSERT(mParent);
-      mDragWindow = safenew ToolFrame( mParent, this, mDragBar, mp );
-
-      // Make sure the ferry is visible
-      mDragWindow->Show();
-
-      // Notify parent of change
-      Updated();
-
-#if defined(__WXMAC__)
-      // Reinstate original transition
-      wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, mTransition );
-#endif
+      mDragWindow = nullptr;
    }
    else
    {
@@ -1434,4 +1488,14 @@ void ToolManager::DoneDragging()
    mLastPos.x = mBarPos.x = -1;
    mLastPos.y = mBarPos.y = -1;
    mTimer.Stop();
+   mDidDrag = false;
+   mClicked = false;
+
+   if (mLastFocus) {
+      auto temp1 = AButton::TemporarilyAllowFocus();
+      auto temp2 = ASlider::TemporarilyAllowFocus();
+      auto temp3 = Meter::TemporarilyAllowFocus();
+      auto parent = mLastFocus->GetParent();
+      mLastFocus->SetFocus();
+   }
 }
