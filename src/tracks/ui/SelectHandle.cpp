@@ -421,7 +421,7 @@ UIHandle::Result SelectHandle::NeedChangeHighlight
 (const SelectHandle &oldState, const SelectHandle &newState)
 {
    auto useSnap = oldState.mUseSnap;
-   // This is guaranteed when constructing the new handle:
+   // This is guaranteed when constructing the NEW handle:
    wxASSERT( useSnap == newState.mUseSnap );
    if (!useSnap)
       return 0;
@@ -677,7 +677,7 @@ UIHandle::Result SelectHandle::Click
       return RefreshAll | UpdateSelection;
    }
 
-   // II. Unmodified click starts a new selection
+   // II. Unmodified click starts a NEW selection
 
    //Make sure you are within the selected track
    bool startNewSelection = true;
@@ -761,7 +761,7 @@ UIHandle::Result SelectHandle::Click
       } // bAdjustSelectionEdges
    }
 
-   // III. Common case for starting a new selection
+   // III. Common case for starting a NEW selection
 
    if (startNewSelection) {
       // If we didn't move a selection boundary, start a NEW selection

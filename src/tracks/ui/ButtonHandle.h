@@ -36,7 +36,7 @@ protected:
 
    virtual ~ButtonHandle();
 
-   // This new abstract virtual simplifies the duties of further subclasses.
+   // This NEW abstract virtual simplifies the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for button state
    // change.
    // Subclass can decide to refresh other things and the results will be ORed.

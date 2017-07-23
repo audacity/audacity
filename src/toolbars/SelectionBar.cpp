@@ -197,7 +197,7 @@ wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name,
 
    pSizer->Add(pBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
    // Hacky code to return a second optional value via the variable mProxy.
-   // If not NULL, we made a new proxy label
+   // If not NULL, we made a NEW proxy label
    mProxy = NULL;
    if( !bUseNativeRadioButton )
    {

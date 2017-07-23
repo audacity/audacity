@@ -175,7 +175,7 @@ Track::Holder NoteTrack::Duplicate() const
       wxASSERT(!mSeq);
       duplicate->mSerializationLength = this->mSerializationLength;
       duplicate->mSerializationBuffer.reset
-         ( new char[ this->mSerializationLength ] );
+         ( safenew char[ this->mSerializationLength ] );
       memcpy( duplicate->mSerializationBuffer.get(),
               this->mSerializationBuffer.get(), this->mSerializationLength );
    }

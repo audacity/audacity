@@ -425,7 +425,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 
 //   unsigned char *src = Img1.GetData();
    unsigned char *mk = Img2.GetData();
-   //wxImage::setAlpha requires memory allocated with malloc, not new
+   //wxImage::setAlpha requires memory allocated with malloc, not NEW
    MallocString<unsigned char> alpha{
       static_cast<unsigned char*>(malloc( nBytes )) };
 

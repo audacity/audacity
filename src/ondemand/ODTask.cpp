@@ -71,7 +71,7 @@ void ODTask::DoSome(float amountWork)
    SetIsRunning(true);
    mBlockUntilTerminateMutex.Lock();
 
-//   printf("%s %i subtask starting on new thread with priority\n", GetTaskName(),GetTaskNumber());
+//   printf("%s %i subtask starting on NEW thread with priority\n", GetTaskName(),GetTaskNumber());
 
    mDoingTask=mTaskStarted=true;
 

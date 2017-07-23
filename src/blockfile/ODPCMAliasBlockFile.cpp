@@ -381,7 +381,7 @@ void ODPCMAliasBlockFile::WriteSummary()
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
    // Call this first, so that in case of exceptions from ReadData, there is
-   // no new output file
+   // no NEW output file
    SampleBuffer sampleData(mLen, floatSample);
    this->ReadData(sampleData.ptr(), floatSample, 0, mLen, true);
 

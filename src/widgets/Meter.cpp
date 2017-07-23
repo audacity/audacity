@@ -314,12 +314,12 @@ Meter::Meter(AudacityProject *project,
    {
       if(mIsInput)
       {
-         //mIcon = new wxBitmap(MicMenuNarrow_xpm);
+         //mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
          mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpMic)));
       }
       else
       {
-         //mIcon = new wxBitmap(SpeakerMenuNarrow_xpm);
+         //mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
          mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpSpeaker)));
       }
    }

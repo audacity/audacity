@@ -2430,7 +2430,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
-      item = new wxTextCtrl(this, -1, message,
+      item = safenew wxTextCtrl(this, -1, message,
                             wxDefaultPosition, wxSize(480, 250),
                             wxTE_MULTILINE | wxTE_READONLY);
       mainSizer->Add(item, 1, wxEXPAND | wxALL, 10);

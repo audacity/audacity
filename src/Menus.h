@@ -395,8 +395,8 @@ void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
 
-// return null on failure; if success, return the given project, or a new
-// one, if the given was null; create no new project if failure
+// return null on failure; if success, return the given project, or a NEW
+// one, if the given was null; create no NEW project if failure
 static AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName);
 

@@ -3245,7 +3245,7 @@ void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
       HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
    }
    else {
-      // otherwise use the new ShowHelpDialog
+      // otherwise use the NEW ShowHelpDialog
       HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
    }
 }

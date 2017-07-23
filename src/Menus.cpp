@@ -2623,7 +2623,7 @@ void AudacityProject::OnRecord()
    GetControlToolBar()->OnRecord(evt);
 }
 
-// If first choice is record same track 2nd choice is record new track
+// If first choice is record same track 2nd choice is record NEW track
 // and vice versa.
 void AudacityProject::OnRecord2ndChoice()
 {

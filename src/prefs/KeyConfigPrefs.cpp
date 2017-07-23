@@ -324,7 +324,7 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
                           Labels,
                           mKeys,
                           bSort);
-   //Not needed as new nodes are already shown expanded.
+   //Not needed as NEW nodes are already shown expanded.
    //mView->ExpandAll();
 
    mNewKeys = mKeys;

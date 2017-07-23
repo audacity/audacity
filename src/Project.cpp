@@ -2067,7 +2067,7 @@ void AudacityProject::UpdateLayout()
    if (!mTrackPanel)
       return;
 
-   // Layout first to get our new width,
+   // Layout first to get our NEW width,
    // Then and only then we can arrange the toolbars.
    Layout();
    mToolManager->LayoutToolBars();
@@ -4636,7 +4636,7 @@ void AudacityProject::RecreateMixerBoard( )
    mMixerBoard = NULL;
    mMixerBoard = safenew MixerBoard(this, mMixerBoardFrame, pos, siz);
    mMixerBoardFrame->mMixerBoard = mMixerBoard;
-   //wxLogDebug("Created new board %p", mMixerBoard );
+   //wxLogDebug("Created NEW board %p", mMixerBoard );
    mMixerBoard->UpdateTrackClusters();
    mMixerBoard->SetSize( siz );
    mMixerBoardFrame->SetSize( siz2 );
@@ -5470,8 +5470,8 @@ void AudacityProject::SetTrackPan(WaveTrack * wt, LWSlider * slider)
 /// Removes the specified track.  Called from HandleClosing.
 void AudacityProject::RemoveTrack(Track * toRemove)
 {
-   // If it was focused, then new focus is the next or, if
-   // unavailable, the previous track. (The new focus is set
+   // If it was focused, then NEW focus is the next or, if
+   // unavailable, the previous track. (The NEW focus is set
    // after the track has been removed.)
    bool toRemoveWasFocused = mTrackPanel->GetFocusedTrack() == toRemove;
    Track* newFocus{};

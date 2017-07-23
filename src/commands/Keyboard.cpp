@@ -24,7 +24,7 @@ wxString KeyStringNormalize(const wxString & key)
 
    // PRL:  RawCtrl is the proper replacement for Control, when formatting
    // wxMenuItem, so that wxWidgets shows ^ in the menu.  It is written into
-   // new preference files (2.2.0 and later).
+   // NEW preference files (2.2.0 and later).
    temp.Replace(wxT("RawCtrl+"), wxT("Control+"));
    temp.Replace(wxT("Ctrl+"), wxT("Command+"));
 

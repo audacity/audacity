@@ -30,7 +30,7 @@
 
   UndoManager can also automatically consolidate actions into
   a single state change.  If the "consolidate" argument to
-  PushState is true, then new changes may accumulate into the most
+  PushState is true, then NEW changes may accumulate into the most
   recent Undo state, if descriptions match and if no Undo or Redo or rollback
   operation intervened since that state was pushed.
 

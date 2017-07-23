@@ -38,7 +38,7 @@ public:
 protected:
    virtual ~SliderHandle();
 
-   // These new abstract virtuals simplify the duties of further subclasses.
+   // These NEW abstract virtuals simplify the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for slider state
    // change.
    // Subclass can decide to refresh other things and the results will be ORed.

@@ -946,7 +946,7 @@ void TrackPanel::HandleMotion
 
       mTarget = 0;
 
-      // Find the old target's new place if we can
+      // Find the old target's NEW place if we can
       if (oldHandle) {
          auto begin = mTargets.begin(), end = mTargets.end(),
             iter = std::find(begin, end, oldHandle);
@@ -954,7 +954,7 @@ void TrackPanel::HandleMotion
             auto newPosition = iter - begin;
             if (newPosition <= oldPosition)
                mTarget = newPosition;
-            // else, some new hit and this position takes priority
+            // else, some NEW hit and this position takes priority
          }
       }
 
