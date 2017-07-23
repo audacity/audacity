@@ -175,7 +175,6 @@ class AButton final : public wxWindow {
    bool mWasControlDown;
 
    bool mCursorIsInWindow;
-   bool mButtonIsFocused;
    bool mButtonIsDown;
    bool mIsClicking;
    bool mEnabled;
