@@ -118,7 +118,7 @@ public:
    void RealtimeAddEffect(Effect *effect);
    void RealtimeRemoveEffect(Effect *effect);
    void RealtimeSetEffects(const EffectArray & mActive);
-   void RealtimeInitialize();
+   void RealtimeInitialize(double rate);
    void RealtimeAddProcessor(int group, unsigned chans, float rate);
    void RealtimeFinalize();
    void RealtimeSuspend();
