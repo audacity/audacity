@@ -625,6 +625,7 @@ private:
 
    void InitializeRealtime();
    void CleanupRealtime();
+   void Resume();
 
 private:
    AudacityProject *mProject;
@@ -664,6 +665,7 @@ private:
    double mPlayPos;
 
    bool mDismissed{};
+   bool mNeedsResume{};
 
    DECLARE_EVENT_TABLE()
 };

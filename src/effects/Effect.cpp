@@ -2842,6 +2842,9 @@ EffectUIHost::~EffectUIHost()
 
    if (mClient)
    {
+      if (mNeedsResume)
+         Resume();
+      
       mClient->CloseUI();
       mClient = NULL;
    }
@@ -3149,6 +3152,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
    Hide();
 
+   if (mNeedsResume)
+      Resume();
    mClient->CloseUI();
    mClient = NULL;
 
@@ -3343,27 +3348,33 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
 }
 
+void EffectUIHost::Resume()
+{
+   if (!mClient->ValidateUI()) {
+      // If we're previewing we should still be able to stop playback
+      // so don't disable transport buttons.
+      //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
+      // The preferred behaviour is currently undecided, so for now
+      // just disallow enabling until settings are valid.
+      mEnabled = false;
+      mEnableCb->SetValue(mEnabled);
+      return;
+   }
+   mEffect->RealtimeResume();
+}
+
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
    mEnabled = mEnableCb->GetValue();
 
-   if (mEnabled)
-   {
-      if (!mClient->ValidateUI()) {
-         // If we're previewing we should still be able to stop playback
-         // so don't disable transport buttons.
-         //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
-         // The preferred behaviour is currently undecided, so for now
-         // just disallow enabling until settings are valid.
-         mEnabled = false;
-         mEnableCb->SetValue(mEnabled);
-         return;
-      }
-      mEffect->RealtimeResume();
+   if (mEnabled) {
+      Resume();
+      mNeedsResume = false;
    }
    else
    {
       mEffect->RealtimeSuspend();
+      mNeedsResume = true;
    }
 
    UpdateControls();
