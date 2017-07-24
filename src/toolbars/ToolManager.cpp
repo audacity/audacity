@@ -1361,6 +1361,10 @@ void ToolManager::OnIndicatorCreate( wxWindowCreateEvent & event )
 
 void ToolManager::UndockBar( wxPoint mp )
 {
+   mPrevDock->Undock(mDragBar);
+   mPrevSlot = mPrevDock->GetConfiguration().Find(mDragBar);
+   mPrevDock->GetConfiguration().Remove(mDragBar);
+
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
@@ -1407,8 +1411,6 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    if (mDragBar->IsDocked()) {
       mPrevDock = dynamic_cast<ToolDock*>(mDragBar->GetParent());
       wxASSERT(mPrevDock);
-      mPrevSlot = mPrevDock->GetConfiguration().Find(mDragBar);
-      mPrevDock->WrapConfiguration(mPrevConfiguration);
    }
    else
       mPrevPosition = mDragBar->GetParent()->GetPosition();
