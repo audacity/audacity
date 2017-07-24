@@ -108,11 +108,17 @@ AUControl::AUControl()
 
 AUControl::~AUControl()
 {
+   Close();
+}
+
+void AUControl::Close()
+{
 #if !defined(_LP64)
 
    if (mInstance)
    {
       AudioComponentInstanceDispose(mInstance);
+      mInstance = nullptr;
    }
 
 #endif
@@ -125,11 +131,13 @@ AUControl::~AUControl()
                       object:mView];
 
       [mView release];
+      mView = nullptr;
    }
 
    if (mAUView)
    {
       [mAUView release];
+      mAUView = nullptr;
    }
 }
 

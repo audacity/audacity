@@ -1747,7 +1747,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         innerSizer->Add(pControl.release(), 1, wxEXPAND);
+         innerSizer->Add((mpControl = pControl.release()), 1, wxEXPAND);
          container->SetSizer(innerSizer.release());
       }
 
@@ -1808,6 +1808,8 @@ bool AudioUnitEffect::CloseUI()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
+   if (mpControl)
+      mpControl->Close(), mpControl = nullptr;
 #endif
 
    mParent->RemoveEventHandler(this);
