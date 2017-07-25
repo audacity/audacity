@@ -164,6 +164,8 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    // S.StartStatic(_("Track Settings"));
    // {
 
+   S.StartScroller(); {
+
    mDefaultsCheckbox = 0;
    if (mWt) {
       /* i18n-hint: use is a verb */
@@ -297,6 +299,8 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 #endif
 
+   } S.EndScroller();
+   
    EnableDisableSTFTOnlyControls();
 
    mPopulating = false;

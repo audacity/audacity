@@ -352,7 +352,13 @@ PrefsDialog::PrefsDialog
    // Frankly, this is a hack to work around a bug in wxTreebook, and
    // will have to be revisited if we add another category to mCategories.
    // JKC later added a category and 20 onto the 7.
+
    sz.y += 7 + 20;
+
+   // PRL:  Bug 161 is an obsolete concern with wx3; bug 1183 is a problem
+   // of minimum size being too great at low resolution.
+   sz.DecTo( ::wxGetDisplaySize() );
+
    SetSize(sz);
    SetMinSize(sz);
 
