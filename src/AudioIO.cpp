@@ -3869,7 +3869,21 @@ void AudioIO::OutputEvent()
             data2 = (data2 < 1 ? 1 : (data2 > 127 ? 127 : data2));
             // since we are going to play this note, we need to get a note_off
             mIterator->request_note_off();
-         } else data2 = 0; // 0 velocity means "note off"
+
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+            mPendingNotesOff.push_back(std::make_pair(channel, data1));
+#endif
+         }
+         else {
+            data2 = 0; // 0 velocity means "note off"
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+            auto end = mPendingNotesOff.end();
+            auto iter = std::find(
+               mPendingNotesOff.begin(), end, std::make_pair(channel, data1) );
+            if (iter != end)
+               mPendingNotesOff.erase(iter);
+#endif
+         }
          command = 0x90; // MIDI NOTE ON (or OFF when velocity == 0)
       // Update event
       } else if (mNextEvent->is_update()) {
@@ -4007,6 +4021,17 @@ PmTimestamp AudioIO::MidiTime()
 
 void AudioIO::AllNotesOff()
 {
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+   // Send individual note-off messages for each note-on not yet paired.
+   for (const auto &pair : mPendingNotesOff) {
+      Pm_WriteShort(mMidiStream, 0, Pm_Message(
+         0x90 + pair.first, pair.second, 0));
+   }
+   mPendingNotesOff.clear();
+
+   // Proceed to do the usual messages too.
+#endif
+
    for (int chan = 0; chan < 16; chan++) {
       Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
    }

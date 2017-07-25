@@ -125,6 +125,10 @@ struct AudioIOStartStreamOptions
 #endif
 };
 
+// This workaround makes pause and stop work when output is to GarageBand,
+// which seems not to implement the notes-off message correctly.
+#define AUDIO_IO_GB_MIDI_WORKAROUND
+
 class AUDACITY_DLL_API AudioIO final {
 
  public:
@@ -543,6 +547,11 @@ private:
    std::unique_ptr<Alg_iterator> mIterator;
    /// The next event to play (or null)
    Alg_event_ptr    mNextEvent;
+
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+   std::vector< std::pair< int, int > > mPendingNotesOff;
+#endif
+
    /// Time at which the next event should be output, measured in seconds.
    /// Note that this could be a note's time+duration for note offs.
    double           mNextEventTime;
