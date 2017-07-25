@@ -1005,6 +1005,7 @@ bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
             return false;
          }
 
+         ctrl.mVal = d;
          ctrl.mTmp = ctrl.mVal * (ctrl.mSampleRate ? mSampleRate : 1.0);
       }
    }
@@ -1679,10 +1680,9 @@ bool LV2Effect::BuildPlain()
 
                   float rate = ctrl.mSampleRate ? mSampleRate : 1.0;
 
-                  ctrl.mVal = ctrl.mDef;
                   ctrl.mLo = ctrl.mMin * rate;
                   ctrl.mHi = ctrl.mMax * rate;
-                  ctrl.mTmp = ctrl.mDef * rate;
+                  ctrl.mTmp = ctrl.mVal * rate;
 
                   if (ctrl.mInteger)
                   {
@@ -1891,7 +1891,7 @@ bool LV2Effect::TransferDataToWindow()
          }
          else if (ctrl.mInput)
          {
-            ctrl.mTmp = ctrl.mDef * (ctrl.mSampleRate ? mSampleRate : 1.0);
+            ctrl.mTmp = ctrl.mVal * (ctrl.mSampleRate ? mSampleRate : 1.0);
             SetSlider(mSliders[p], ctrl);
          }
       }
