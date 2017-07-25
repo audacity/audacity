@@ -985,7 +985,9 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
             pImage = HiContrastImageCacheAsData;
             break;
       }
-
+      // The image size includes a rogue '0' on the end, because the array ends in a ','.
+      ImageSize--;
+      //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
@@ -997,6 +999,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          wxMessageBox(_("Audacity could not read its default theme.\nPlease report the problem."));
          return false;
       }
+      //wxLogDebug("Read %i by %i", ImageCache.GetWidth(), ImageCache.GetHeight() );
    }
 
    // Resize a large image down.
