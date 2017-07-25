@@ -2029,7 +2029,8 @@ void AudacityProject::FixScrollbars()
    }
 
    CallAfter(
-      [this]{ GetTrackPanel()->HandleCursorForPresentMouseState(); } );
+      [this]{ if (GetTrackPanel())
+         GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
 std::shared_ptr<Track> AudacityProject::GetFirstVisible()
@@ -2279,7 +2280,8 @@ void AudacityProject::DoScroll()
    }
 
    CallAfter(
-      [this]{ GetTrackPanel()->HandleCursorForPresentMouseState(); } );
+      [this]{ if (GetTrackPanel())
+         GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
 bool AudacityProject::ReportIfActionNotAllowed
