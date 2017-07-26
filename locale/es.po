@@ -9706,6 +9706,7 @@ msgstr ""
 "\treturn *track* * 0.1\n"
 "de SAL, o para LISP comience con un apertura de paréntesis como:\n"
 "\t(mult *track* 0.1)\n"
+" ."
 
 #: src/effects/nyquist/Nyquist.cpp:1841
 msgid "Error in Nyquist code"
