@@ -64,14 +64,44 @@ static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
    return (results.GetCount() > 0);
 }
 
+#ifdef __WXMAC__
+#include <CoreFoundation/CFLocale.h>
+#include "wx/osx/core/cfstring.h"
+#endif
+
 wxString GetSystemLanguageCode()
 {
    wxArrayString langCodes;
    wxArrayString langNames;
 
    GetLanguages(langCodes, langNames);
+
    int sysLang = wxLocale::GetSystemLanguage();
-   const wxLanguageInfo *info = wxLocale::GetLanguageInfo(sysLang);
+
+   const wxLanguageInfo *info;
+
+#ifdef __WXMAC__
+   // PRL: Bug 1227, system language on Mac may not be right because wxW3 is
+   // dependent on country code too in wxLocale::GetSystemLanguage().
+
+   if (sysLang == wxLANGUAGE_UNKNOWN)
+   {
+      // wxW3 did a too-specific lookup of language and country, when
+      // there is nothing for that combination; try it by language alone.
+
+      // The following lines are cribbed from that function.
+      wxCFRef<CFLocaleRef> userLocaleRef(CFLocaleCopyCurrent());
+      wxCFStringRef str(wxCFRetain((CFStringRef)CFLocaleGetValue(userLocaleRef, kCFLocaleLanguageCode)));
+      auto lang = str.AsString();
+
+      // Now avoid wxLocale::GetLanguageInfo(), instead calling:
+      info = wxLocale::FindLanguageInfo(lang);
+   }
+   else
+#endif
+   {
+      info = wxLocale::GetLanguageInfo(sysLang);
+   }
 
    if (info) {
       wxString fullCode = info->CanonicalName;
