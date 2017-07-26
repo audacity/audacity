@@ -192,16 +192,16 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 
 // Include the ImageCache...
 
-static const unsigned char DarkImageCacheAsData[] = {
+static unsigned char DarkImageCacheAsData[] = {
 #include "DarkThemeAsCeeCode.h"
 };
-static const unsigned char LightImageCacheAsData[] = {
+static unsigned char LightImageCacheAsData[] = {
 #include "LightThemeAsCeeCode.h"
 };
-static const unsigned char ClassicImageCacheAsData[] = {
+static unsigned char ClassicImageCacheAsData[] = {
 #include "ClassicThemeAsCeeCode.h"
 };
-static const unsigned char HiContrastImageCacheAsData[] = {
+static unsigned char HiContrastImageCacheAsData[] = {
 #include "HiContrastThemeAsCeeCode.h"
 };
 
