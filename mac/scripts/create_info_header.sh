@@ -21,8 +21,14 @@ done
 cd ${TOPLEVEL}
 mkdir -p mac/build
 eval $(g++ -E -dM src/Audacity.h | awk '/#define *AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL) /{print $2 "=" $3}')
+if [ $CONFIGURATION == 'Debug' ]
+then
+    AUDACITY_EXECUTABLE=Audacity
+else
+    AUDACITY_EXECUTABLE=Audacity.sh
+fi
 cat >mac/build/Info.plist.h <<EOF
-#define AUDACITY_EXECUTABLE Audacity
+#define AUDACITY_EXECUTABLE ${AUDACITY_EXECUTABLE}
 #define AUDACITY_VERSION ${AUDACITY_VERSION}
 #define AUDACITY_RELEASE ${AUDACITY_RELEASE}
 #define AUDACITY_REVISION ${AUDACITY_REVISION}

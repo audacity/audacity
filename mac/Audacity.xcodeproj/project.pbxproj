@@ -890,6 +890,7 @@
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
+		28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C8211C1B5C661E00B53328 /* ViewInfo.cpp */; };
 		28CA9E6B1AE60C53005C0BFE /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
 		28CA9E6C1AE60C53005C0BFE /* dBTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 82FF184E13CF01A600C1B664 /* dBTable.h */; };
@@ -1489,6 +1490,17 @@
 				2892CE25131AFAEF00E1E17D /* README.txt in Install miscellany */,
 			);
 			name = "Install miscellany";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		28C816B7131255550035BB10 /* Install wrapper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */,
+			);
+			name = "Install wrapper";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		ED95519E195D956F0027176E /* Install background image */ = {
@@ -2697,6 +2709,7 @@
 		28CC03A61AD386CF00826380 /* sndsliders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sndsliders.c; sourceTree = "<group>"; };
 		28CC03A71AD386CF00826380 /* sndsliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sndsliders.h; sourceTree = "<group>"; };
 		28CC03B01AD3874500826380 /* security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = security.c; sourceTree = "<group>"; };
+		28C816B81312555B0035BB10 /* Audacity.sh */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text.script.sh; name = Audacity.sh; path = mac/Audacity.sh; sourceTree = "<group>"; };
 		28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileHistory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28CCDD040F93A0B20081F2FC /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D000A31A32920C00367B21 /* DeviceChange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceChange.cpp; sourceTree = "<group>"; };
@@ -3913,6 +3926,7 @@
 			isa = PBXGroup;
 			children = (
 				174F73C8098D516D009CD6E0 /* Resources */,
+				28C816B81312555B0035BB10 /* Audacity.sh */,
 				28006FFA132C167600BD34D7 /* Install.txt */,
 				178CF4FF0989541C0056CE58 /* configmac.h */,
 				174F73D7098D51AA009CD6E0 /* Info.plist */,
@@ -6800,6 +6814,7 @@
 				28708D631B17C3C400496FEB /* Copy wxWidgets libs */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
+				28C816B7131255550035BB10 /* Install wrapper */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
 				ED95519E195D956F0027176E /* Install background image */,
 				282413D8131D51FC009FD931 /* Create dist */,
