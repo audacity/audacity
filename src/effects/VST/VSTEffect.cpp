@@ -1762,6 +1762,7 @@ bool VSTEffect::CloseUI()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
+   mControl->Close();
 #endif
 
    mParent->RemoveEventHandler(this);

@@ -13,6 +13,7 @@ class Track;
 class TrackList;
 class MixerBoard;
 class ViewInfo;
+#include "MemoryX.h"
 #include <vector>
 
 // State relating to the set of selected tracks
@@ -36,12 +37,10 @@ public:
       ( TrackList &tracks, ViewInfo &viewInfo, Track &track,
         bool shift, bool ctrl, bool syncLocked, MixerBoard *pMixerBoard );
 
-   void TrackListUpdated( const TrackList &tracks );
-
 private:
    friend class SelectionStateChanger;
 
-   Track *mLastPickedTrack {};
+   std::weak_ptr<Track> mLastPickedTrack;
 };
 
 // For committing or rolling-back of changes in selectedness of tracks.
@@ -59,7 +58,7 @@ public:
 private:
    SelectionState *mpState;
    TrackList &mTracks;
-   Track *mInitialLastPickedTrack;
+   std::weak_ptr<Track> mInitialLastPickedTrack;
    std::vector<bool> mInitialTrackSelection;
 };
 

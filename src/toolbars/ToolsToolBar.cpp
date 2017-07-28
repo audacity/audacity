@@ -85,31 +85,6 @@ ToolsToolBar::ToolsToolBar()
    wxASSERT( drawTool     == drawTool     - firstTool );
    wxASSERT( multiTool    == multiTool    - firstTool );
 
-   mMessageOfTool[selectTool] = _("Click and drag to select audio");
-
-   // TODO: this message isn't appropriate for time track
-   mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
-
-   // TODO:  message should also mention the brush.  Describing the modifier key
-   // (alt, or other) varies with operating system.
-   mMessageOfTool[drawTool] = _("Click and drag to edit the samples");
-
-   // TODO:  Why not mention middle click to zoom normal on Windows too?
-#if defined( __WXMAC__ )
-   mMessageOfTool[zoomTool] = _("Click to Zoom In, Shift-Click to Zoom Out");
-#elif defined( __WXMSW__ )
-   mMessageOfTool[zoomTool] = _("Drag to Zoom Into Region, Right-Click to Zoom Out");
-#elif defined( __WXGTK__ )
-   mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
-#endif
-
-   // TODO: Should it say "track or clip" ?  Non-wave tracks can move, or clips in a wave track.
-   // TODO: mention effects of shift (move all clips of selected wave track) and ctrl (move vertically only) ?
-   //  -- but not all of that is available in multi tool.
-   mMessageOfTool[slideTool] = _("Click and drag to move a track in time");
-
-   mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
-
    bool multiToolActive = false;
    gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
 
@@ -269,19 +244,6 @@ int ToolsToolBar::GetDownTool()
 
    return firstTool;  // Should never happen
 }
-
-const wxChar * ToolsToolBar::GetMessageForTool( int ToolNumber ) const
-{
-   wxASSERT( ToolNumber >= 0 );
-   wxASSERT( ToolNumber < numTools );
-
-   auto tip = ::GetActiveProject()->GetScrubber().StatusMessageForWave();
-   if( tip.IsEmpty() )
-      return mMessageOfTool[ToolNumber];
-   else
-      return tip;
-}
-
 
 void ToolsToolBar::OnTool(wxCommandEvent & evt)
 {

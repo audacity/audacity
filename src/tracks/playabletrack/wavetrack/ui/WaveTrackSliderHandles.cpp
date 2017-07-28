@@ -1,5 +1,3 @@
-#include "WaveTrackSliderHandles.h"
-
 /**********************************************************************
 
 Audacity: A Digital Audio Editor
@@ -21,44 +19,45 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../UndoManager.h"
 #include "../../../../WaveTrack.h"
 
-GainSliderHandle::GainSliderHandle()
-   : SliderHandle()
-{
-}
+GainSliderHandle::GainSliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : SliderHandle{ sliderFn, rect, pTrack }
+{}
 
 GainSliderHandle::~GainSliderHandle()
 {
 }
 
-GainSliderHandle &GainSliderHandle::Instance()
+std::shared_ptr<WaveTrack> GainSliderHandle::GetWaveTrack()
 {
-   static GainSliderHandle instance;
-   return instance;
-}
-
-WaveTrack *GainSliderHandle::GetTrack()
-{
-   return static_cast<WaveTrack*>(mpTrack);
+   return std::static_pointer_cast<WaveTrack>(mpTrack.lock());
 }
 
 float GainSliderHandle::GetValue()
 {
-   return static_cast<WaveTrack*>(mpTrack)->GetGain();
+   if (GetWaveTrack())
+      return GetWaveTrack()->GetGain();
+   else
+      return 0;
 }
 
 UIHandle::Result GainSliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
-   GetTrack()->SetGain(newValue);
+   auto pTrack = GetWaveTrack();
 
-   // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mpTrack->GetLink());
-   if (link)
-      link->SetGain(newValue);
+   if (pTrack) {
+      pTrack->SetGain(newValue);
 
-   MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdateGain(GetTrack());
+      // Assume linked track is wave or null
+      const auto link = static_cast<WaveTrack*>(mpTrack.lock()->GetLink());
+      if (link)
+         link->SetGain(newValue);
+
+      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->UpdateGain(pTrack.get());
+   }
 
    return RefreshCode::RefreshNone;
 }
@@ -70,30 +69,32 @@ UIHandle::Result GainSliderHandle::CommitChanges
    return RefreshCode::RefreshCell;
 }
 
-HitTestResult GainSliderHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+UIHandlePtr GainSliderHandle::HitTest
+(std::weak_ptr<GainSliderHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const std::shared_ptr<Track> &pTrack)
 {
-   if (!event.Button(wxMOUSE_BTN_LEFT))
+   if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
 
    wxRect sliderRect;
    TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
-   if (sliderRect.Contains(event.m_x, event.m_y)) {
-      WaveTrack *const wavetrack = static_cast<WaveTrack*>(pTrack);
+   if (sliderRect.Contains(state.m_x, state.m_y)) {
       wxRect sliderRect;
       TrackInfo::GetGainRect(rect.GetTopLeft(), sliderRect);
-      auto slider = TrackInfo::GainSlider
-         (sliderRect, wavetrack, true,
-          const_cast<TrackPanel*>(pProject->GetTrackPanel()));
-      Instance().mpSlider = slider;
-      Instance().mpTrack = wavetrack;
-      return {
-         HitPreview(),
-         &Instance()
+      auto sliderFn =
+      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+         return TrackInfo::GainSlider
+            (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
+             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
+      auto result =
+         std::make_shared<GainSliderHandle>( sliderFn, sliderRect, pTrack );
+      result = AssignUIHandlePtr(holder, result);
+
+      return result;
    }
    else
       return {};
@@ -101,56 +102,56 @@ HitTestResult GainSliderHandle::HitTest
 
 ////////////////////////////////////////////////////////////////////////////////
 
-PanSliderHandle::PanSliderHandle()
-   : SliderHandle()
-{
-}
+PanSliderHandle::PanSliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : SliderHandle{ sliderFn, rect, pTrack }
+{}
 
 PanSliderHandle::~PanSliderHandle()
 {
 }
 
-PanSliderHandle &PanSliderHandle::Instance()
+std::shared_ptr<WaveTrack> PanSliderHandle::GetWaveTrack()
 {
-   static PanSliderHandle instance;
-   return instance;
-}
-
-WaveTrack *PanSliderHandle::GetTrack()
-{
-   return static_cast<WaveTrack*>(mpTrack);
+   return std::static_pointer_cast<WaveTrack>(mpTrack.lock());
 }
 
 float PanSliderHandle::GetValue()
 {
-   return GetTrack()->GetPan();
+   if (GetWaveTrack())
+      return GetWaveTrack()->GetPan();
+   else
+      return 0;
 }
 
 UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newValue)
 {
-#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   bool panZero = false;
-   panZero = static_cast<WaveTrack*>(mpTrack)->SetPan(newValue);
-#else
-   mpTrack->SetPan(newValue);
-#endif
-
-   // Assume linked track is wave or null
-   const auto link = static_cast<WaveTrack*>(mpTrack->GetLink());
-   if (link)
-      link->SetPan(newValue);
-
-   MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdatePan(GetTrack());
-
    using namespace RefreshCode;
    Result result = RefreshNone;
+   auto pTrack = GetWaveTrack();
+
+   if (pTrack) {
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      bool panZero = false;
+      panZero = static_cast<WaveTrack*>(mpTrack)->SetPan(newValue);
+#else
+      pTrack->SetPan(newValue);
+#endif
+
+      // Assume linked track is wave or null
+      const auto link = static_cast<WaveTrack*>(pTrack->GetLink());
+      if (link)
+         link->SetPan(newValue);
+
+      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->UpdatePan(pTrack.get());
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   if(panZero)
-      result |= FixScrollbars;
+      if(panZero)
+         result |= FixScrollbars;
 #endif
+   }
 
    return result;
 }
@@ -162,28 +163,30 @@ UIHandle::Result PanSliderHandle::CommitChanges
    return RefreshCode::RefreshCell;
 }
 
-HitTestResult PanSliderHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+UIHandlePtr PanSliderHandle::HitTest
+(std::weak_ptr<PanSliderHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const std::shared_ptr<Track> &pTrack)
 {
-   if (!event.Button(wxMOUSE_BTN_LEFT))
+   if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
 
    wxRect sliderRect;
    TrackInfo::GetPanRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
-   if (sliderRect.Contains(event.m_x, event.m_y)) {
-      WaveTrack *const wavetrack = static_cast<WaveTrack*>(pTrack);
-      auto slider = TrackInfo::PanSlider
-         (sliderRect, wavetrack, true,
-          const_cast<TrackPanel*>(pProject->GetTrackPanel()));
-      Instance().mpSlider = slider;
-      Instance().mpTrack = wavetrack;
-      return {
-         HitPreview(),
-         &Instance()
+   if (sliderRect.Contains(state.m_x, state.m_y)) {
+      auto sliderFn =
+      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+         return TrackInfo::PanSlider
+            (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
+             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
       };
+      auto result = std::make_shared<PanSliderHandle>(
+         sliderFn, sliderRect, pTrack );
+      result = AssignUIHandlePtr(holder, result);
+
+      return result;
    }
    else
       return {};

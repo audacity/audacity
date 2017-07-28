@@ -53,6 +53,7 @@ Track classes.
 
 #include "effects/TimeWarper.h"
 #include "prefs/SpectrumPrefs.h"
+#include "prefs/TracksPrefs.h"
 #include "prefs/WaveformPrefs.h"
 
 #include "InconsistencyException.h"
@@ -107,7 +108,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mRate = (int) rate;
    mGain = 1.0;
    mPan = 0.0;
-   SetDefaultName(gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), _("Audio Track")));
+   SetDefaultName(TracksPrefs::GetDefaultAudioTrackNamePreference());
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
@@ -1020,7 +1021,7 @@ namespace
    }
 }
 
-movable_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
+std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 {
    // Be clear about who owns the clip!!
    auto it = FindClip(mClips, clip);
@@ -1033,7 +1034,7 @@ movable_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
       return {};
 }
 
-void WaveTrack::AddClip(movable_ptr<WaveClip> &&clip)
+void WaveTrack::AddClip(std::shared_ptr<WaveClip> &&clip)
 {
    // Uncomment the following line after we correct the problem of zero-length clips
    //if (CanInsertClip(clip))

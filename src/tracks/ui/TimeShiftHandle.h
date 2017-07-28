@@ -18,7 +18,6 @@ Paul Licameli
 #include "../../Snap.h"
 #include "../../Track.h"
 
-struct HitTestResult;
 class WaveClip;
 
 struct ClipMoveState {
@@ -44,14 +43,19 @@ struct ClipMoveState {
 
 class TimeShiftHandle final : public UIHandle
 {
-   TimeShiftHandle();
    TimeShiftHandle(const TimeShiftHandle&) = delete;
-   TimeShiftHandle &operator=(const TimeShiftHandle&) = delete;
-   static TimeShiftHandle& Instance();
    static HitTestPreview HitPreview
       (const AudacityProject *pProject, bool unsafe);
 
 public:
+   explicit TimeShiftHandle
+   ( const std::shared_ptr<Track> &pTrack, bool gripHit );
+
+   TimeShiftHandle &operator=(const TimeShiftHandle&) = default;
+
+   bool IsGripHit() const { return mGripHit; }
+   std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
+
    // A utility function also used by menu commands
    static void CreateListOfCapturedClips
       ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
@@ -61,11 +65,17 @@ public:
    static void DoSlideHorizontal
       ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
 
-   static HitTestResult HitAnywhere(const AudacityProject *pProject);
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect, const AudacityProject *pProject);
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<TimeShiftHandle> &holder,
+       const std::shared_ptr<Track> &pTrack, bool gripHit);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<TimeShiftHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<Track> &pTrack);
 
    virtual ~TimeShiftHandle();
+
+   void Enter(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -74,7 +84,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -90,7 +100,7 @@ public:
    bool StopsOnKeystroke() override { return true; }
 
 private:
-   Track *mCapturedTrack{};
+   std::shared_ptr<Track> mCapturedTrack;
    wxRect mRect{};
 
    bool mDidSlideVertically{};
@@ -104,9 +114,10 @@ private:
    // line up with existing tracks or labels.  mSnapLeft and mSnapRight
    // are the horizontal index of pixels to display user feedback
    // guidelines so the user knows when such snapping is taking place.
-   std::unique_ptr<SnapManager> mSnapManager{};
+   std::shared_ptr<SnapManager> mSnapManager{};
 
    ClipMoveState mClipMoveState{};
+   bool mGripHit {};
 };
 
 #endif

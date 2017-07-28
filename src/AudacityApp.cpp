@@ -198,7 +198,7 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "libvamp")
 #  endif
 
-#  if defined(__WXDEBUG__)
+#  if defined(_DEBUG)
 #     define D "d"
 #  else
 #     define D ""
@@ -651,54 +651,12 @@ public:
 };
 
 #if defined(__WXMAC__)
-// This should be removed when Lame and FFmpeg support is converted
-// from loadable libraries to commands.
-//
-// The purpose of this is to give the user more control over where libraries
-// such as Lame and FFmpeg get loaded from.
-//
-// Since absolute pathnames are used when loading these libraries, the normal search
-// path would be DYLD_LIBRARY_PATH, absolute path, DYLD_FALLBACK_LIBRARY_PATH.  This
-// means that DYLD_LIBRARY_PATH can override what the user actually wants.
-//
-// So, we simply clear DYLD_LIBRARY_PATH to allow the users choice to be the first
-// one tried.
+
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
 int main(int argc, char *argv[])
 {
-   bool doCrash = false;
-
-#ifdef FIX_BUG1567
-   doCrash = AudacityApp::IsSierraOrLater();
-#endif
-
-   bool doExec = !doCrash && getenv("DYLD_LIBRARY_PATH");
-   unsetenv("DYLD_LIBRARY_PATH");
-
-   extern char **environ;
-   
-#ifdef FIX_BUG1567
-   const char *var_name = "_NO_CRASH";
-   if ( doCrash && !( getenv( var_name ) ) ) {
-      setenv(var_name, "1", TRUE);
-      // Bizarre fix for Bug1567
-      // Crashing one Audacity and immediately starting another avoids intermittent
-      // failures to load libraries on Sierra
-      if ( fork() )
-         // The original process crashes at once
-         raise(SIGTERM);
-
-      // Child process can't proceed until doing this:
-      execve(argv[0], argv, environ);
-   }
-   else
-#else
-      if (doExec)
-         execve(argv[0], argv, environ);
-#endif
-
    wxDISABLE_DEBUG_SUPPORT();
 
    return wxEntry(argc, argv);
@@ -1155,6 +1113,9 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    if (ctx == wxDebugReport::Context_Current)
    {
       rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
+#ifdef EXPERIMENTAL_MIDI_OUT
+      rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));
+#endif
    }
 
    AudacityLogger *logger = GetLogger();
@@ -1538,12 +1499,6 @@ bool AudacityApp::OnInit()
       temporarywindow.Center();
       temporarywindow.SetTitle(_("Audacity is starting up..."));
       SetTopWindow(&temporarywindow);
-
-#ifdef FIX_BUG1567
-      // Without this, splash screen may be hidden under other programs.
-      if (IsSierraOrLater())
-         MacActivateApp();
-#endif
 
       // ANSWER-ME: Why is YieldFor needed at all?
       //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);

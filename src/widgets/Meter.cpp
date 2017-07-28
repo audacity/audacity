@@ -314,12 +314,12 @@ Meter::Meter(AudacityProject *project,
    {
       if(mIsInput)
       {
-         //mIcon = new wxBitmap(MicMenuNarrow_xpm);
+         //mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
          mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpMic)));
       }
       else
       {
-         //mIcon = new wxBitmap(SpeakerMenuNarrow_xpm);
+         //mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
          mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpSpeaker)));
       }
    }
@@ -445,7 +445,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    
       // Start with a clean background
       // LLL:  Should research USE_AQUA_THEME usefulness...
-#ifndef USE_AQUA_THEME
+//#ifndef USE_AQUA_THEME
 #ifdef EXPERIMENTAL_THEMING
       //if( !mMeterDisabled )
       //{
@@ -456,7 +456,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.SetBrush(mBkgndBrush);
       dc.DrawRectangle(0, 0, mWidth, mHeight);
-#endif
+//#endif
 
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
@@ -468,6 +468,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
          dc.SetFont(GetFont());
          dc.SetTextForeground( clrText );
+         dc.SetTextBackground( clrBoxFill );
          dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
          dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
       }
@@ -2302,8 +2303,6 @@ wxAccStatus MeterAx::GetState(int WXUNUSED(childId), long* state)
 
    *state = wxACC_STATE_SYSTEM_FOCUSABLE;
 
-   // Do not use mButtonIsFocused is not set until after this method
-   // is called.
    *state |= ( m == wxWindow::FindFocus() ? wxACC_STATE_SYSTEM_FOCUSED : 0 );
 
    return wxACC_OK;

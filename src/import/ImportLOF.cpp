@@ -231,10 +231,10 @@ ProgressResult LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory)
    // back to the caller.
    // Instead, it recursively calls AudacityProject::Import for each file listed
    // in the .lof file.
-   // Each importation creates a new undo state.
+   // Each importation creates a NEW undo state.
    // If there is an error or exception during one of them, only that one's
    // side effects are rolled back, and the rest of the import list is skipped.
-   // The file may have "window" directives that cause new AudacityProjects
+   // The file may have "window" directives that cause NEW AudacityProjects
    // to be created, and the undo states are pushed onto the latest project.
    // If a project is created but the first file import into it fails, destroy
    // the project.
@@ -311,7 +311,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
          mProject = nullptr;
       else
          // Apply any offset and duration directives of the first "window" line
-         // to the previously open project, not a new one.
+         // to the previously open project, not a NEW one.
          ;
 
       windowCalledOnce = true;
@@ -388,8 +388,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
 #ifdef USE_MIDI
       // If file is a midi
-      if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
-          ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
+      if (Importer::IsMidi(targetfile))
       {
          mProject = AudacityProject::DoImportMIDI(mProject, targetfile);
       }

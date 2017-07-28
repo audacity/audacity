@@ -92,7 +92,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
 
 }
 
-bool WarningsPrefs::Apply()
+bool WarningsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

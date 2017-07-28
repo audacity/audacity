@@ -194,8 +194,8 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
    const ViewInfo &GetViewInfo() const { return mViewInfo; }
    ViewInfo &GetViewInfo() { return mViewInfo; }
 
-   Track *GetFirstVisible();
-   void UpdateFirstVisible();
+   std::shared_ptr<Track> GetFirstVisible();
+   void InvalidateFirstVisible();
 
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
@@ -252,7 +252,7 @@ class AUDACITY_DLL_API AudacityProject final : public wxFrame,
 
    // Return the given project if that is not NULL, else create a project.
    // Then open the given project path.
-   // But if an exception escapes this function, create no new project.
+   // But if an exception escapes this function, create no NEW project.
    static AudacityProject *OpenProject(
       AudacityProject *pProject,
       const wxString &fileNameArg, bool addtohistory = true);
@@ -267,6 +267,8 @@ public:
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
    bool Import(const wxString &fileName, WaveTrackArray *pTrackArray = NULL);
+
+   void ZoomAfterImport(Track *pTrack);
 
    void AddImportedTracks(const wxString &fileName,
                           TrackHolders &&newTracks);
@@ -358,7 +360,7 @@ public:
    void OnOpenAudioFile(wxCommandEvent & event);
    void OnODTaskUpdate(wxCommandEvent & event);
    void OnODTaskComplete(wxCommandEvent & event);
-   void OnTrackListUpdated(wxCommandEvent & event);
+   void OnTrackListUpdate(wxCommandEvent & event);
 
    void HandleResize();
    void UpdateLayout();
@@ -571,7 +573,9 @@ public:
  public:
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-private:
+   void RecreateMixerBoard();
+
+ private:
    void PopState(const UndoState &state);
 
    void UpdateLyrics();
@@ -609,17 +613,17 @@ private:
    std::shared_ptr<Tags> mTags;
 
    // List of tracks and display info
-   std::shared_ptr<TrackList> mTracks{ std::make_shared<TrackList>() };
+   std::shared_ptr<TrackList> mTracks;
 
    int mSnapTo;
    wxString mSelectionFormat;
    wxString mFrequencySelectionFormatName;
    wxString mBandwidthSelectionFormatName;
 
-   std::unique_ptr<TrackList> mLastSavedTracks;
+   std::shared_ptr<TrackList> mLastSavedTracks;
 
    // Clipboard (static because it is shared by all projects)
-   static std::unique_ptr<TrackList> msClipboard;
+   static std::shared_ptr<TrackList> msClipboard;
    static AudacityProject *msClipProject;
    static double msClipT0;
    static double msClipT1;
@@ -662,8 +666,8 @@ private:
 
    HistoryWindow *mHistoryWindow{};
    LyricsWindow* mLyricsWindow{};
-   MixerBoard* mMixerBoard{};
    MixerBoardFrame* mMixerBoardFrame{};
+   MixerBoard* mMixerBoard{};
 
    Destroy_ptr<FreqWindow> mFreqWindow;
    Destroy_ptr<ContrastDialog> mContrastDialog;
@@ -714,9 +718,6 @@ private:
    bool mIsSyncLocked;
 
    bool mLockPlayRegion;
-
-   // See AudacityProject::OnActivate() for an explanation of this.
-   wxWindow *mLastFocusedWindow{};
 
    std::unique_ptr<ImportXMLTagHandler> mImportXMLTagHandler;
 
@@ -813,6 +814,8 @@ public:
 
 public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
+   std::shared_ptr<BackgroundCell> GetBackgroundCell() const
+      { return mBackgroundCell; }
 
    DECLARE_EVENT_TABLE()
 };

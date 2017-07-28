@@ -13,33 +13,29 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackVRulerControls.h"
 
 #include "../../../HitTestResult.h"
+#include "../../../TrackPanelMouseEvent.h"
 #include "../../../Project.h"
-#include "../../../toolbars/ToolsToolBar.h"
 
 #include "../../ui/EnvelopeHandle.h"
 
-HitTestResult TimeTrack::HitTest
-(const TrackPanelMouseEvent &event,
- const AudacityProject *pProject)
+std::vector<UIHandlePtr> TimeTrack::DetailedHitTest
+(const TrackPanelMouseState &st,
+ const AudacityProject *pProject, int, bool)
 {
-   HitTestResult result = Track::HitTest(event, pProject);
-   if (result.preview.cursor)
-      return result;
-
-   const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-   if (pTtb->IsDown(multiTool))
-      // No hit test --unconditional availability.
-      result = EnvelopeHandle::HitAnywhere(pProject);
-
-   return result;
+   std::vector<UIHandlePtr> results;
+   auto result = EnvelopeHandle::TimeTrackHitTest
+      ( mEnvelopeHandle, st.state, st.rect, pProject, Pointer<TimeTrack>(this) );
+   if (result)
+      results.push_back(result);
+   return results;
 }
 
-TrackControls *TimeTrack::GetControls()
+std::shared_ptr<TrackControls> TimeTrack::GetControls()
 {
-   return &TimeTrackControls::Instance();
+   return std::make_shared<TimeTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *TimeTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> TimeTrack::GetVRulerControls()
 {
-   return &TimeTrackVRulerControls::Instance();
+   return std::make_shared<TimeTrackVRulerControls>( Pointer( this ) );
 }

@@ -21,54 +21,31 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
-#include "../../../../toolbars/ToolsToolBar.h"
 
-HitTestResult NoteTrack::HitTest
-(const TrackPanelMouseEvent &event,
- const AudacityProject *pProject)
+std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
+(const TrackPanelMouseState &state,
+ const AudacityProject *pProject, int, bool )
 {
-   const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-
-   // If the cursor is in the hot zone for stretching, that takes precedence
-   // over selection, but it didn't take precedence over other hits.
-   // That was the old logic, and maybe I tried too hard to preserve it just so.
-   // PRL.
-
    // Eligible for stretch?
-   HitTestResult result1;
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
 #ifdef USE_MIDI
-   StretchHandle::StretchState state;
-   result1 = StretchHandle::HitTest( event, pProject, this, state );
+   result = StretchHandle::HitTest(
+      mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );
+   if (result)
+      results.push_back(result);
 #endif
 
-   // But some other non-select tool like zoom may take priority.
-   HitTestResult result = Track::HitTest(event, pProject);
-   if (result.preview.cursor &&
-       !(result1.preview.cursor && pTtb->GetCurrentTool() == selectTool))
-      return result;
-
-   if (pTtb->IsDown(multiTool)) {
-      // Default to selection
-      if (!result1.preview.cursor &&
-          NULL != (result =
-         SelectHandle::HitTest(event, pProject, this)).preview.cursor)
-         return result;
-   }
-
-   // Do stretch!
-   if (result1.preview.cursor)
-      return result1;
-
-   return result;
+   return results;
 }
 
-TrackControls *NoteTrack::GetControls()
+std::shared_ptr<TrackControls> NoteTrack::GetControls()
 {
-   return &NoteTrackControls::Instance();
+   return std::make_shared<NoteTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *NoteTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> NoteTrack::GetVRulerControls()
 {
-   return &NoteTrackVRulerControls::Instance();
+   return std::make_shared<NoteTrackVRulerControls>( Pointer( this ) );
 }
 #endif

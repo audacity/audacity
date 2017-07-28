@@ -12,29 +12,34 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_PLAYABLE_TRACK_BUTTON_HANDLES__
 
 #include "../../ui/ButtonHandle.h"
-
-struct HitTestResult;
+class wxMouseState;
 
 class MuteButtonHandle final : public ButtonHandle
 {
    MuteButtonHandle(const MuteButtonHandle&) = delete;
-   MuteButtonHandle &operator=(const MuteButtonHandle&) = delete;
 
-   MuteButtonHandle();
+public:
+   explicit MuteButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+
+   MuteButtonHandle &operator=(const MuteButtonHandle&) = default;
+
    virtual ~MuteButtonHandle();
-   static MuteButtonHandle& Instance();
 
 protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, const Track *pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<MuteButtonHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,23 +47,29 @@ public:
 class SoloButtonHandle final : public ButtonHandle
 {
    SoloButtonHandle(const SoloButtonHandle&) = delete;
-   SoloButtonHandle &operator=(const SoloButtonHandle&) = delete;
 
-   SoloButtonHandle();
+public:
+   explicit SoloButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+
+   SoloButtonHandle &operator=(const SoloButtonHandle&) = default;
+
    virtual ~SoloButtonHandle();
-   static SoloButtonHandle& Instance();
 
 protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, const Track *pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<SoloButtonHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

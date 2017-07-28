@@ -28,10 +28,7 @@ are never altered once it is constructed.  This is important to
 some of the derived classes that are actually aliases to audio
 data stored in existing files.
 
-BlockFiles are reference-counted, and deleted when their reference
-count hits zero.  DirManager is the class responsible for
-constructing and managing BlockFiles and managing their reference
-counts.
+BlockFiles are managed by std::shared_ptr, so they are reference-counted.
 
 *//****************************************************************//**
 
@@ -682,7 +679,7 @@ void AliasBlockFile::WriteSummary()
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
    // Call this first, so that in case of exceptions from ReadData, there is
-   // no new output file
+   // no NEW output file
    SampleBuffer sampleData(mLen, floatSample);
    this->ReadData(sampleData.ptr(), floatSample, 0, mLen);
 

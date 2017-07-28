@@ -1806,6 +1806,11 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
    if ( it != end ) {
       auto cutline = it->get();
       // assume STRONG-GUARANTEE from Paste
+
+      // Envelope::Paste takes offset into account, WaveClip::Paste doesn't!
+      // Do this to get the right result:
+      cutline->mEnvelope->SetOffset(0);
+
       Paste(mOffset+cutline->GetOffset(), cutline);
       // Now erase the cutline,
       // but be careful to find it again, because Paste above may

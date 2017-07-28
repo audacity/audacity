@@ -35,6 +35,7 @@ public:
    ~VSTControl();
 
    bool Create(wxWindow *parent, VSTEffectLink *link);
+   void Close();
 
 private:
    void CreateCocoa();

@@ -247,10 +247,13 @@ audacity_SOURCES = \
 	TrackPanelAx.h \
 	TrackPanelCell.h \
 	TrackPanelCellIterator.h \
+	TrackPanelDrawingContext.h \
 	TrackPanelListener.h \
 	TrackPanelMouseEvent.h \
 	TrackPanelResizeHandle.cpp \
 	TrackPanelResizeHandle.h \
+	TrackPanelResizerCell.cpp \
+	TrackPanelResizerCell.h \
 	TranslatableStringArray.h \
 	UIHandle.h \
 	UIHandle.cpp \
@@ -541,6 +544,9 @@ audacity_SOURCES = \
 	toolbars/SpectralSelectionBar.cpp \
 	toolbars/SpectralSelectionBar.h \
 	toolbars/SpectralSelectionBarListener.h \
+	toolbars/TimeToolbar.cpp \
+	toolbars/TimeToolbar.h \
+	toolbars/TimeToolbarListener.h \
 	toolbars/ToolBar.cpp \
 	toolbars/ToolBar.h \
 	toolbars/ToolDock.cpp \
@@ -562,6 +568,8 @@ audacity_SOURCES = \
 	tracks/labeltrack/ui/LabelTrackUI.cpp \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.cpp \
 	tracks/labeltrack/ui/LabelTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackControls.h \
 	tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp \
@@ -569,6 +577,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/notetrack/ui/NoteTrackUI.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.cpp \
 	tracks/playabletrack/notetrack/ui/NoteTrackVRulerControls.h \
+	tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp \
+	tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.h \
 	tracks/playabletrack/notetrack/ui/StretchHandle.cpp \
 	tracks/playabletrack/notetrack/ui/StretchHandle.h \
 	tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp \
@@ -583,6 +593,8 @@ audacity_SOURCES = \
 	tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.cpp \
 	tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp \
+	tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.h \
 	tracks/playabletrack/wavetrack/ui/WaveTrackUI.cpp \
 	tracks/timetrack/ui/TimeTrackControls.cpp \
 	tracks/timetrack/ui/TimeTrackControls.h \
@@ -789,6 +801,11 @@ audacity_SOURCES += \
 	import/ImportMIDI.cpp \
 	import/ImportMIDI.h \
 	$(NULL)
+endif
+
+if USE_PORTMIDI
+audacity_CPPFLAGS += $(PORTMIDI_CFLAGS)
+audacity_LDADD += $(PORTMIDI_LIBS)
 endif
 
 if USE_QUICKTIME

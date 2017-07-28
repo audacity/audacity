@@ -247,6 +247,8 @@ public:
    void UpdateWidth();
 
 private:
+   void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap, 
+      wxRect & bev, const wxString & str, bool up );
    void CreateMuteSoloImages();
    int FindMixerTrackCluster(const PlayableTrack* pTrack,
                               MixerTrackCluster** hMixerTrackCluster) const;

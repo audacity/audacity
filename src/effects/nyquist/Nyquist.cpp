@@ -159,6 +159,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    if (fName == NYQUIST_WORKER_ID) {
       // Effect spawned from Nyquist Prompt
+      mName = XO("Nyquist Worker");
       return;
    }
 
@@ -420,6 +421,7 @@ bool NyquistEffect::Init()
    // reset each time we call the Nyquist Prompt.
    if (mIsPrompt) {
       mType = EffectTypeProcess;
+      mName = XO("Nyquist Prompt");
       mDebugButton = true; // Debug button always enabled for Nyquist Prompt.
    }
 
@@ -883,6 +885,11 @@ bool NyquistEffect::ProcessOne()
 
    wxString cmd;
 
+   // TODO: Document.
+   // Nyquist default latency is 300 ms, which is rather conservative and
+   // too long when playback set to ALSA (bug 570), so we'll use 100 ms like Audacity.
+   cmd += wxT("(snd-set-latency  0.1)");
+
    if (mVersion >= 4) {
       nyx_set_audio_name("*TRACK*");
       cmd += wxT("(setf S 0.25)\n");
@@ -1164,7 +1171,7 @@ bool NyquistEffect::ProcessOne()
    // If we're not showing debug window, log errors and warnings:
    if (!mDebugOutput.IsEmpty() && !mDebug && !mTrace) {
       /* i18n-hint: An effect "returned" a message.*/
-      wxLogMessage(wxT("\'") + mName + wxT("\' ") + _("returned:") + wxT("\n") + mDebugOutput);
+      wxLogMessage(_("\'%s\' returned:\n%s"), mName, mDebugOutput);
    }
 
    // Audacity has no idea how long Nyquist processing will take, but
@@ -2423,7 +2430,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
-      item = new wxTextCtrl(this, -1, message,
+      item = safenew wxTextCtrl(this, -1, message,
                             wxDefaultPosition, wxSize(480, 250),
                             wxTE_MULTILINE | wxTE_READONLY);
       mainSizer->Add(item, 1, wxEXPAND | wxALL, 10);

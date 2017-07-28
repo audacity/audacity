@@ -23,55 +23,90 @@ Paul Licameli split from TrackPanel.cpp
 #include "SampleHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
 
-HitTestResult WaveTrack::HitTest
-(const TrackPanelMouseEvent &event,
- const AudacityProject *pProject)
+std::vector<UIHandlePtr> WaveTrack::DetailedHitTest
+(const TrackPanelMouseState &st,
+ const AudacityProject *pProject, int currentTool, bool bMultiTool)
 {
-   // FIXME: Should similar logic apply to NoteTrack (#if defined(USE_MIDI)) ?
-   // From here on the order in which we hit test determines
-   // which tool takes priority in the rare cases where it
-   // could be more than one.
+   // This is the only override of Track::DetailedHitTest that still
+   // depends on the state of the Tools toolbar.
+   // If that toolbar were eliminated, this could simplify to a sequence of
+   // hit test routines describable by a table.
 
-   // This hit was always tested first no matter which tool:
-   HitTestResult result = CutlineHandle::HitTest(event.event, event.rect, pProject, this);
-   if (result.preview.cursor)
-      return result;
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
+   bool isWaveform = (GetDisplay() == WaveTrack::Waveform);
 
-   result = Track::HitTest(event, pProject);
-   if (result.preview.cursor)
-      return result;
-
-   const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-   if (pTtb->IsDown(multiTool)) {
-      // Replicate some of the logic of TrackPanel::DetermineToolToUse
-      int currentTool = -1;
-      if (event.event.CmdDown())
-         result = TimeShiftHandle::HitAnywhere(pProject);
-      else if (NULL !=
-         (result = EnvelopeHandle::WaveTrackHitTest(event.event, event.rect, pProject, this))
-         .preview.cursor)
-         ;
-      else if (NULL != (result =
-         TimeShiftHandle::HitTest(event.event, event.rect, pProject)).preview.cursor)
-         ;
-      else if (NULL != (result =
-         SampleHandle::HitTest(event.event, event.rect, pProject, this)).preview.cursor)
-         ;
-      else if (NULL != (result =
-         SelectHandle::HitTest(event, pProject, this)).preview.cursor)
-         // default of all other hit tests
-         ;
+   if (bMultiTool && st.state.CmdDown()) {
+      // Ctrl modifier key in multi-tool overrides everything else
+      // (But this does not do the time shift constrained to the vertical only,
+      //  which is what happens when you hold Ctrl in the Time Shift tool mode)
+      result = TimeShiftHandle::HitAnywhere(
+         mTimeShiftHandle, Pointer(this), false);
+      if (result)
+         results.push_back(result);
+      return results;
    }
 
-   return result;
+   // Some special targets are not drawn in spectrogram,
+   // so don't hit them in such views.
+   else if (isWaveform) {
+      UIHandlePtr result;
+      if (NULL != (result = CutlineHandle::HitTest(
+         mCutlineHandle, st.state, st.rect,
+         pProject, Pointer<WaveTrack>(this))))
+         // This overriding test applies in all tools
+         results.push_back(result);
+      if (bMultiTool) {
+         // Conditional hit tests
+         // If Tools toolbar were eliminated, we would keep these
+         // The priority of these, in case more than one might apply at one
+         // point, seems arbitrary
+         if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
+            mEnvelopeHandle, st.state, st.rect,
+            pProject, Pointer<WaveTrack>(this))))
+            results.push_back(result);
+         if (NULL != (result = TimeShiftHandle::HitTest(
+            mTimeShiftHandle, st.state, st.rect, Pointer(this))))
+            // This is the hit test on the "grips" drawn left and
+            // right in Multi only
+            results.push_back(result);
+         if (NULL != (result = SampleHandle::HitTest(
+            mSampleHandle, st.state, st.rect,
+            pProject, Pointer<WaveTrack>(this))))
+            results.push_back(result);
+      }
+      else {
+         switch ( currentTool ) {
+               // Unconditional hits appropriate to the tool
+               // If tools toolbar were eliminated, we would eliminate these
+            case envelopeTool: {
+               auto envelope = GetEnvelopeAtX( st.state.m_x );
+               result = EnvelopeHandle::HitAnywhere(
+                  mEnvelopeHandle, envelope, false);
+               break;
+            }
+            case drawTool:
+               result = SampleHandle::HitAnywhere(
+                  mSampleHandle, st.state, Pointer<WaveTrack>(this));
+               break;
+            default:
+               result = {};
+               break;
+         }
+         if (result)
+            results.push_back(result);
+      }
+   }
+
+   return results;
 }
 
-TrackControls *WaveTrack::GetControls()
+std::shared_ptr<TrackControls> WaveTrack::GetControls()
 {
-   return &WaveTrackControls::Instance();
+   return std::make_shared<WaveTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *WaveTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> WaveTrack::GetVRulerControls()
 {
-   return &WaveTrackVRulerControls::Instance();
+   return std::make_shared<WaveTrackVRulerControls>( Pointer( this ) );
 }

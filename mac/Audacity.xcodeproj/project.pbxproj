@@ -890,6 +890,7 @@
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
+		28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		28C8211D1B5C661E00B53328 /* ViewInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C8211C1B5C661E00B53328 /* ViewInfo.cpp */; };
 		28CA9E6B1AE60C53005C0BFE /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
 		28CA9E6C1AE60C53005C0BFE /* dBTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 82FF184E13CF01A600C1B664 /* dBTable.h */; };
@@ -1209,7 +1210,6 @@
 		5E07842E1DEE6B8600CA76EA /* FileException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842C1DEE6B8600CA76EA /* FileException.cpp */; };
 		5E0784311DF1E4F400CA76EA /* UserException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E07842F1DF1E4F400CA76EA /* UserException.cpp */; };
 		5E0A0E311D23019A00CD2567 /* MenusMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E0A0E301D23019A00CD2567 /* MenusMac.cpp */; };
-		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E10D9061EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */; };
 		5E15123D1DB000C000702E29 /* UIHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15123B1DB000C000702E29 /* UIHandle.cpp */; };
 		5E15125A1DB000DC00702E29 /* LabelTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512401DB000DC00702E29 /* LabelTrackControls.cpp */; };
@@ -1222,7 +1222,12 @@
 		5E15126E1DB0010C00702E29 /* TrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E1512681DB0010C00702E29 /* TrackControls.cpp */; };
 		5E15126F1DB0010C00702E29 /* TrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126A1DB0010C00702E29 /* TrackUI.cpp */; };
 		5E1512701DB0010C00702E29 /* TrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */; };
+		5E2A19941EED688500217B58 /* SelectionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E2A19921EED688500217B58 /* SelectionState.cpp */; };
 		5E3FFE721EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */; };
+		5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */; };
+		5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */; };
+		5E667A661F0BEE8C00C942A5 /* NoteTrackVZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A631F0BEE8C00C942A5 /* NoteTrackVZoomHandle.cpp */; };
+		5E667A691F0D723A00C942A5 /* TrackPanelResizerCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E667A671F0D723A00C942A5 /* TrackPanelResizerCell.cpp */; };
 		5E73963B1DAFD82D00BA0A4D /* PopupMenuTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */; };
 		5E73963E1DAFD86000BA0A4D /* ZoomHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */; };
 		5E7396441DAFD8C600BA0A4D /* TimeShiftHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E7396421DAFD8C600BA0A4D /* TimeShiftHandle.cpp */; };
@@ -1486,6 +1491,17 @@
 			);
 			name = "Install miscellany";
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		28C816B7131255550035BB10 /* Install wrapper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */,
+			);
+			name = "Install wrapper";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		ED95519E195D956F0027176E /* Install background image */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -2681,6 +2697,7 @@
 		28BD8AB0101DF4C600686679 /* Validators.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Validators.h; sourceTree = "<group>"; tabWidth = 3; };
 		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
+		28C816B81312555B0035BB10 /* Audacity.sh */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text.script.sh; name = Audacity.sh; path = mac/Audacity.sh; sourceTree = "<group>"; };
 		28C8211C1B5C661E00B53328 /* ViewInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewInfo.cpp; sourceTree = "<group>"; };
 		28CBD65D1B9F7DF7003AC5EE /* pt_PT.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pt_PT.po; path = ../locale/pt_PT.po; sourceTree = "<group>"; };
 		28CBD65E1B9F7DF7003AC5EE /* zh_CN.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = zh_CN.po; path = ../locale/zh_CN.po; sourceTree = "<group>"; };
@@ -3028,8 +3045,6 @@
 		5E07842F1DF1E4F400CA76EA /* UserException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserException.cpp; sourceTree = "<group>"; };
 		5E0784301DF1E4F400CA76EA /* UserException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserException.h; sourceTree = "<group>"; };
 		5E0A0E301D23019A00CD2567 /* MenusMac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MenusMac.cpp; sourceTree = "<group>"; };
-		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
-		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E10D9041EC8F81300B3AC57 /* PlayableTrackButtonHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayableTrackButtonHandles.cpp; sourceTree = "<group>"; };
 		5E10D9051EC8F81300B3AC57 /* PlayableTrackButtonHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayableTrackButtonHandles.h; sourceTree = "<group>"; };
 		5E1512381DB000C000702E29 /* HitTestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitTestResult.h; sourceTree = "<group>"; };
@@ -3054,11 +3069,23 @@
 		5E15126A1DB0010C00702E29 /* TrackUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackUI.cpp; sourceTree = "<group>"; };
 		5E15126B1DB0010C00702E29 /* TrackVRulerControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackVRulerControls.cpp; sourceTree = "<group>"; };
 		5E15126C1DB0010C00702E29 /* TrackVRulerControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackVRulerControls.h; sourceTree = "<group>"; };
+		5E2A19921EED688500217B58 /* SelectionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionState.cpp; sourceTree = "<group>"; };
+		5E2A19931EED688500217B58 /* SelectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionState.h; sourceTree = "<group>"; };
 		5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackSliderHandles.cpp; sourceTree = "<group>"; };
 		5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackSliderHandles.h; sourceTree = "<group>"; };
 		5E4685F81CCA9D84008741F2 /* CommandFunctors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommandFunctors.h; sourceTree = "<group>"; };
+		5E52335F1EFDD57D001E4BB8 /* TrackPanelDrawingContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelDrawingContext.h; sourceTree = "<group>"; };
 		5E61EE0C1CBAA6BB0009FCF1 /* MemoryX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryX.h; sourceTree = "<group>"; };
+		5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WaveTrackVZoomHandle.cpp; sourceTree = "<group>"; };
+		5E667A5F1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveTrackVZoomHandle.h; sourceTree = "<group>"; };
+		5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackButtonHandle.cpp; sourceTree = "<group>"; };
+		5E667A621F0BEE8C00C942A5 /* NoteTrackButtonHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackButtonHandle.h; sourceTree = "<group>"; };
+		5E667A631F0BEE8C00C942A5 /* NoteTrackVZoomHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoteTrackVZoomHandle.cpp; sourceTree = "<group>"; };
+		5E667A641F0BEE8C00C942A5 /* NoteTrackVZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoteTrackVZoomHandle.h; sourceTree = "<group>"; };
+		5E667A671F0D723A00C942A5 /* TrackPanelResizerCell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrackPanelResizerCell.cpp; sourceTree = "<group>"; };
+		5E667A681F0D723A00C942A5 /* TrackPanelResizerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelResizerCell.h; sourceTree = "<group>"; };
 		5E7396391DAFD82D00BA0A4D /* PopupMenuTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupMenuTable.cpp; sourceTree = "<group>"; };
+		5E73963A1DAFD82D00BA0A4D /* PopupMenuTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupMenuTable.h; sourceTree = "<group>"; };
 		5E73963C1DAFD86000BA0A4D /* ZoomHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZoomHandle.cpp; sourceTree = "<group>"; };
 		5E73963D1DAFD86000BA0A4D /* ZoomHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomHandle.h; sourceTree = "<group>"; };
 		5E7396421DAFD8C600BA0A4D /* TimeShiftHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeShiftHandle.cpp; sourceTree = "<group>"; };
@@ -3131,7 +3158,6 @@
 		5EF17C221D1F0A690090A642 /* ScrubbingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrubbingToolBar.h; sourceTree = "<group>"; };
 		5EF958831DEB121800191280 /* InconsistencyException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InconsistencyException.cpp; sourceTree = "<group>"; };
 		5EF958841DEB121800191280 /* InconsistencyException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InconsistencyException.h; sourceTree = "<group>"; };
-		5E73963A1DAFD82D00BA0A4D /* PopupMenuTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupMenuTable.h; sourceTree = "<group>"; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
 		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
@@ -3900,6 +3926,7 @@
 			isa = PBXGroup;
 			children = (
 				174F73C8098D516D009CD6E0 /* Resources */,
+				28C816B81312555B0035BB10 /* Audacity.sh */,
 				28006FFA132C167600BD34D7 /* Install.txt */,
 				178CF4FF0989541C0056CE58 /* configmac.h */,
 				174F73D7098D51AA009CD6E0 /* Info.plist */,
@@ -4041,6 +4068,7 @@
 				1790B0EC09883BFD008A330A /* TrackPanel.cpp */,
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
 				5E7396601DAFDB1E00BA0A4D /* TrackPanelResizeHandle.cpp */,
+				5E667A671F0D723A00C942A5 /* TrackPanelResizerCell.cpp */,
 				5E15123B1DB000C000702E29 /* UIHandle.cpp */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				5E07842F1DF1E4F400CA76EA /* UserException.cpp */,
@@ -4144,9 +4172,11 @@
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				5E74D2D91CC4427B00D88B0B /* TrackPanelCell.h */,
 				5E74D2DA1CC4427B00D88B0B /* TrackPanelCellIterator.h */,
+				5E52335F1EFDD57D001E4BB8 /* TrackPanelDrawingContext.h */,
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				5E15123A1DB000C000702E29 /* TrackPanelMouseEvent.h */,
 				5E7396611DAFDB1E00BA0A4D /* TrackPanelResizeHandle.h */,
+				5E667A681F0D723A00C942A5 /* TrackPanelResizerCell.h */,
 				284416391B82D6BC0000574D /* TranslatableStringArray.h */,
 				5E15123C1DB000C000702E29 /* UIHandle.h */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
@@ -5852,14 +5882,18 @@
 		5EA0181B1EC7B226001F2996 /* ui */ = {
 			isa = PBXGroup;
 			children = (
-				5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */,
-				5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */,
+				5E667A611F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp */,
 				5EA0181C1EC7B226001F2996 /* NoteTrackControls.cpp */,
-				5EA0181D1EC7B226001F2996 /* NoteTrackControls.h */,
+				5E3FFE701EC9032B0020F7C9 /* NoteTrackSliderHandles.cpp */,
 				5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */,
 				5EA0181F1EC7B226001F2996 /* NoteTrackVRulerControls.cpp */,
-				5EA018201EC7B226001F2996 /* NoteTrackVRulerControls.h */,
+				5E667A631F0BEE8C00C942A5 /* NoteTrackVZoomHandle.cpp */,
 				5E73966C1DAFDB8500BA0A4D /* StretchHandle.cpp */,
+				5E667A621F0BEE8C00C942A5 /* NoteTrackButtonHandle.h */,
+				5EA0181D1EC7B226001F2996 /* NoteTrackControls.h */,
+				5E3FFE711EC9032B0020F7C9 /* NoteTrackSliderHandles.h */,
+				5EA018201EC7B226001F2996 /* NoteTrackVRulerControls.h */,
+				5E667A641F0BEE8C00C942A5 /* NoteTrackVZoomHandle.h */,
 				5E73966D1DAFDB8500BA0A4D /* StretchHandle.h */,
 			);
 			path = ui;
@@ -5882,11 +5916,13 @@
 				5E7396541DAFDA0000BA0A4D /* WaveTrackSliderHandles.cpp */,
 				5EA018251EC7B226001F2996 /* WaveTrackUI.cpp */,
 				5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */,
+				5E667A5E1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp */,
 				5E7396491DAFD91D00BA0A4D /* CutlineHandle.h */,
 				5E000A201EC7B5D500E8FD93 /* SampleHandle.h */,
 				5EA018241EC7B226001F2996 /* WaveTrackControls.h */,
 				5E7396551DAFDA0000BA0A4D /* WaveTrackSliderHandles.h */,
 				5EA018271EC7B226001F2996 /* WaveTrackVRulerControls.h */,
+				5E667A5F1F0BEE5F00C942A5 /* WaveTrackVZoomHandle.h */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -6778,6 +6814,7 @@
 				28708D631B17C3C400496FEB /* Copy wxWidgets libs */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
+				28C816B7131255550035BB10 /* Install wrapper */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
 				ED95519E195D956F0027176E /* Install background image */,
 				282413D8131D51FC009FD931 /* Create dist */,
@@ -7732,6 +7769,7 @@
 				1790B19709883BFD008A330A /* Track.cpp in Sources */,
 				1790B19809883BFD008A330A /* TrackArtist.cpp in Sources */,
 				1790B19909883BFD008A330A /* TrackPanel.cpp in Sources */,
+				5E667A601F0BEE5F00C942A5 /* WaveTrackVZoomHandle.cpp in Sources */,
 				1790B19A09883BFD008A330A /* TrackPanelAx.cpp in Sources */,
 				1790B19C09883BFD008A330A /* UndoManager.cpp in Sources */,
 				1790B19E09883BFD008A330A /* VoiceKey.cpp in Sources */,
@@ -7850,12 +7888,14 @@
 				5EA0182A1EC7B226001F2996 /* NoteTrackVRulerControls.cpp in Sources */,
 				284B279D0FC66864005EAC96 /* PlaybackPrefs.cpp in Sources */,
 				284B279E0FC66864005EAC96 /* ProjectsPrefs.cpp in Sources */,
+				5E667A661F0BEE8C00C942A5 /* NoteTrackVZoomHandle.cpp in Sources */,
 				5E78388E1DE4995F003270C0 /* AudacityException.cpp in Sources */,
 				284B279F0FC66864005EAC96 /* RecordingPrefs.cpp in Sources */,
 				5E73966B1DAFDB5600BA0A4D /* LabelTextHandle.cpp in Sources */,
 				284B27E40FC66CCD005EAC96 /* TracksPrefs.cpp in Sources */,
 				284B27E50FC66CCD005EAC96 /* WarningsPrefs.cpp in Sources */,
 				5E15125B1DB000DC00702E29 /* LabelTrackUI.cpp in Sources */,
+				5E667A691F0D723A00C942A5 /* TrackPanelResizerCell.cpp in Sources */,
 				28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */,
 				28FBCA6A1B42E01100BB3405 /* AUControl.mm in Sources */,
 				28D540060FD1912A00FA7C75 /* CommandBuilder.cpp in Sources */,
@@ -7901,6 +7941,7 @@
 				8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */,
 				28884943131B6CF600B59735 /* af.po in Sources */,
 				28884944131B6CF600B59735 /* ar.po in Sources */,
+				5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */,
 				28884945131B6CF600B59735 /* be.po in Sources */,
 				28884946131B6CF600B59735 /* bg.po in Sources */,
 				28884947131B6CF600B59735 /* bn.po in Sources */,
@@ -8395,10 +8436,7 @@
 				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
-				WARNING_CFLAGS = (
-					"-Wno-inconsistent-missing-override",
-					"-Wno-potentially-evaluated-expression",
-				);
+				WARNING_CFLAGS = "";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=1 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -8423,6 +8461,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
@@ -8723,10 +8762,7 @@
 				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
-				WARNING_CFLAGS = (
-					"-Wno-inconsistent-missing-override",
-					"-Wno-potentially-evaluated-expression",
-				);
+				WARNING_CFLAGS = "";
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/osx_cocoa-unicode-$(WX_VER)-$(WX_FLAVOR) -I$(WX_PREFIX)/include/wx-$(WX_VER)-$(WX_FLAVOR) -D_FILE_OFFSET_BITS=64 -DwxDEBUG_LEVEL=0 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
@@ -8753,6 +8789,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
@@ -9061,6 +9098,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				PRODUCT_NAME = expat;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
@@ -9072,6 +9110,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				PRODUCT_NAME = expat;
 				SKIP_INSTALL = YES;
 				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";

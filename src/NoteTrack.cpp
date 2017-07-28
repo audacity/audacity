@@ -37,6 +37,7 @@
 #include "InconsistencyException.h"
 
 #include "TrackPanel.h" // For TrackInfo
+#include "AllThemeResources.h"
 
 #ifdef SONIFY
 #include "../lib-src/portmidi/pm_common/portmidi.h"
@@ -121,10 +122,9 @@ NoteTrack::NoteTrack(const std::shared_ptr<DirManager> &projDirManager)
    mVelocity = 0;
 #endif
    mBottomNote = 24;
-   mPitchHeight = 5;
+   mPitchHeight = 5.0f;
 
    mVisibleChannels = ALL_CHANNELS;
-   mLastMidiPosition = 0;
 }
 
 NoteTrack::~NoteTrack()
@@ -175,7 +175,7 @@ Track::Holder NoteTrack::Duplicate() const
       wxASSERT(!mSeq);
       duplicate->mSerializationLength = this->mSerializationLength;
       duplicate->mSerializationBuffer.reset
-         ( new char[ this->mSerializationLength ] );
+         ( safenew char[ this->mSerializationLength ] );
       memcpy( duplicate->mSerializationBuffer.get(),
               this->mSerializationBuffer.get(), this->mSerializationLength );
    }
@@ -184,8 +184,7 @@ Track::Holder NoteTrack::Duplicate() const
    }
    // copy some other fields here
    duplicate->SetBottomNote(mBottomNote);
-   duplicate->SetPitchHeight(mPitchHeight);
-   duplicate->mLastMidiPosition = mLastMidiPosition;
+   duplicate->mPitchHeight = mPitchHeight;
    duplicate->mVisibleChannels = mVisibleChannels;
    duplicate->SetOffset(GetOffset());
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -209,6 +208,21 @@ double NoteTrack::GetStartTime() const
 double NoteTrack::GetEndTime() const
 {
    return GetStartTime() + GetSeq().get_real_dur();
+}
+
+void NoteTrack::SetHeight(int h)
+{
+   auto oldHeight = GetHeight();
+   auto oldMargin = GetNoteMargin(oldHeight);
+   Track::SetHeight(h);
+   auto margin = GetNoteMargin(h);
+   Zoom(
+      wxRect{ 0, 0, 1, h }, // only height matters
+      h - margin - 1, // preserve bottom note
+      (float)(h - 2 * margin) /
+           std::max(1, oldHeight - 2 * oldMargin),
+      false
+   );
 }
 
 
@@ -251,8 +265,9 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
 // Draws the midi channel toggle buttons within the given rect.
 // The rect should be evenly divisible by 4 on both axis.
 void NoteTrack::DrawLabelControls
-( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect )
+( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect, int highlightedChannel )
 {
+   dc.SetTextForeground(theTheme.Colour(clrLabelTrackText));
    wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
    wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
 
@@ -273,7 +288,11 @@ void NoteTrack::DrawLabelControls
 
          bool visible = pTrack ? pTrack->IsVisibleChan(chanName - 1) : true;
          if (visible) {
-            AColor::MIDIChannel(&dc, chanName);
+            // highlightedChannel counts 0 based
+            if ( chanName == highlightedChannel + 1 )
+               AColor::LightMIDIChannel(&dc, chanName);
+            else
+               AColor::MIDIChannel(&dc, chanName);
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in
 // "up" position (original Audacity style) or in "down" position
@@ -299,7 +318,10 @@ void NoteTrack::DrawLabelControls
                          box.x, box.y + box.height - 1,
                          box.x + box.width - 1, box.y + box.height - 1);
          } else {
-            AColor::MIDIChannel(&dc, 0);
+            if ( chanName == highlightedChannel + 1 )
+               AColor::LightMIDIChannel(&dc, chanName);
+            else
+               AColor::MIDIChannel(&dc, 0);
             dc.DrawRectangle(box);
 #if CHANNEL_ON_IS_DOWN
             AColor::LightMIDIChannel(&dc, 0);
@@ -333,14 +355,11 @@ void NoteTrack::DrawLabelControls
          dc.DrawText(text, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
       }
    }
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    AColor::MIDIChannel(&dc, 0); // always return with gray color selected
 }
 
-// Handles clicking within the midi controls rect (same as DrawLabelControls).
-// This is somewhat oddly written, as these aren't real buttons - they act
-// when the mouse goes down; you can't hold it pressed and move off of it.
-// Left-clicking toggles a single channel; right-clicking turns off all other channels.
-bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
+int NoteTrack::FindChannel(const wxRect &rect, int mx, int my)
 {
    wxASSERT_MSG(rect.width % 4 == 0, "Midi channel control rect width must be divisible by 4");
    wxASSERT_MSG(rect.height % 4 == 0, "Midi channel control rect height must be divisible by 4");
@@ -351,8 +370,17 @@ bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
    int col = (mx - rect.x) / cellWidth;
    int row = (my - rect.y) / cellHeight;
 
-   int channel = row * 4 + col;
+   return row * 4 + col;
+}
 
+
+// Handles clicking within the midi controls rect (same as DrawLabelControls).
+// This is somewhat oddly written, as these aren't real buttons - they act
+// when the mouse goes down; you can't hold it pressed and move off of it.
+// Left-clicking toggles a single channel; right-clicking turns off all other channels.
+bool NoteTrack::LabelClick(const wxRect &rect, int mx, int my, bool right)
+{
+   auto channel = FindChannel(rect, mx, my);
    if (right)
       SoloVisibleChan(channel);
    else
@@ -449,7 +477,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    //AddToDuration( delta );
 
    // What should be done with the rest of newTrack's members?
-   //(mBottomNote, mDirManager, mLastMidiPosition,
+   //(mBottomNote, mDirManager,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
    // This std::move is needed to "upcast" the pointer type
@@ -473,8 +501,8 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    newTrack->SetOffset(GetOffset());
 
    // What should be done with the rest of newTrack's members?
-   //(mBottomNote, mDirManager, mLastMidiPosition,
-   // mSerializationBuffer, mSerializationLength, mVisibleChannels)
+   // (mBottomNote, mDirManager, mSerializationBuffer,
+   // mSerializationLength, mVisibleChannels)
 
    // This std::move is needed to "upcast" the pointer type
    return std::move(newTrack);
@@ -899,6 +927,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("notetrack"));
 }
 
+#if 0
 void NoteTrack::StartVScroll()
 {
     mStartBottomNote = mBottomNote;
@@ -910,23 +939,27 @@ void NoteTrack::VScroll(int start, int end)
     int delta = ((end - start) + ph / 2) / ph;
     SetBottomNote(mStartBottomNote + delta);
 }
+#endif
 
-// Zoom the note track, centering the pitch at centerY,
-// amount is 1 for zoom in, and -1 for zoom out
-void NoteTrack::Zoom(const wxRect &rect, int centerY, int amount)
+void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
 {
    // Construct track rectangle to map pitch to screen coordinates
    // Only y and height are needed:
    wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
    PrepareIPitchToY(trackRect);
-   int centerPitch = YToIPitch(centerY);
-   // zoom out by changing the pitch height -- a small integer
-   mPitchHeight += amount;
-   if (mPitchHeight <= 0) mPitchHeight = 1;
+   int clickedPitch = YToIPitch(y);
+   // zoom by changing the pitch height
+   SetPitchHeight(rect.height, mPitchHeight * multiplier);
    PrepareIPitchToY(trackRect); // update because mPitchHeight changed
-   int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
-   // center the pitch that the user clicked on
-   SetBottomNote(mBottomNote + (centerPitch - newCenterPitch));
+   if (center) {
+      int newCenterPitch = YToIPitch(rect.GetY() + rect.GetHeight() / 2);
+      // center the pitch that the user clicked on
+      SetBottomNote(mBottomNote + (clickedPitch - newCenterPitch));
+   } else {
+      int newClickedPitch = YToIPitch(y);
+      // align to keep the pitch that the user clicked on in the same place
+      SetBottomNote(mBottomNote + (clickedPitch - newClickedPitch));
+   }
 }
 
 
@@ -940,16 +973,11 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
       int temp = topPitch; topPitch = botPitch; botPitch = temp;
    }
    if (topPitch == botPitch) { // can't divide by zero, do something else
-      Zoom(rect, start, 1);
+      Zoom(rect, start, 1, true);
       return;
    }
-   int trialPitchHeight = trackRect.height / (topPitch - botPitch);
-   if (trialPitchHeight > 25) { // keep mPitchHeight in bounds [1...25]
-      trialPitchHeight = 25;
-   } else if (trialPitchHeight == 0) {
-      trialPitchHeight = 1;
-   }
-   Zoom(rect, (start + end) / 2, trialPitchHeight - mPitchHeight);
+   auto trialPitchHeight = (float)trackRect.height / (topPitch - botPitch);
+   Zoom(rect, (start + end) / 2, trialPitchHeight / mPitchHeight, true);
 }
 
 int NoteTrack::YToIPitch(int y)
@@ -959,7 +987,9 @@ int NoteTrack::YToIPitch(int y)
    y -= octave * GetOctaveHeight();
    // result is approximate because C and G are one pixel taller than
    // mPitchHeight.
-   return (y / mPitchHeight) + octave * 12;
+   return (y / GetPitchHeight(1)) + octave * 12;
 }
+
+const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
 
 #endif // USE_MIDI

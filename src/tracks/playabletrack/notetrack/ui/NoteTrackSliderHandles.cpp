@@ -21,39 +21,41 @@
 #include "../../../../UndoManager.h"
 #include "../../../../NoteTrack.h"
 
-VelocitySliderHandle::VelocitySliderHandle()
-: SliderHandle()
-{
-}
+VelocitySliderHandle::VelocitySliderHandle
+( SliderFn sliderFn, const wxRect &rect,
+  const std::shared_ptr<Track> &pTrack )
+   : SliderHandle{ sliderFn, rect, pTrack }
+{}
 
 VelocitySliderHandle::~VelocitySliderHandle()
 {
 }
 
-VelocitySliderHandle &VelocitySliderHandle::Instance()
+std::shared_ptr<NoteTrack> VelocitySliderHandle::GetNoteTrack()
 {
-   static VelocitySliderHandle instance;
-   return instance;
-}
-
-NoteTrack *VelocitySliderHandle::GetTrack()
-{
-   return static_cast<NoteTrack*>(mpTrack);
+   return std::static_pointer_cast<NoteTrack>(mpTrack.lock());
 }
 
 float VelocitySliderHandle::GetValue()
 {
-   return GetTrack()->GetVelocity();
+   if (GetNoteTrack())
+      return GetNoteTrack()->GetVelocity();
+   else
+      return 0;
 }
 
 UIHandle::Result VelocitySliderHandle::SetValue
 (AudacityProject *pProject, float newValue)
 {
-   GetTrack()->SetVelocity(newValue);
+   auto pTrack = GetNoteTrack();
 
-   MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
-   if (pMixerBoard)
-      pMixerBoard->UpdateVelocity(GetTrack());
+   if (pTrack) {
+      pTrack->SetVelocity(newValue);
+
+      MixerBoard *const pMixerBoard = pProject->GetMixerBoard();
+      if (pMixerBoard)
+         pMixerBoard->UpdateVelocity(pTrack.get());
+   }
 
    return RefreshCode::RefreshCell;
 }
@@ -67,25 +69,30 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
 
 
 
-HitTestResult VelocitySliderHandle::HitTest
-(const wxMouseEvent &event, const wxRect &rect,
- const AudacityProject *pProject, Track *pTrack)
+UIHandlePtr VelocitySliderHandle::HitTest
+(std::weak_ptr<VelocitySliderHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const std::shared_ptr<Track> &pTrack)
 {
-   if (!event.Button(wxMOUSE_BTN_LEFT))
+   if (!state.ButtonIsDown(wxMOUSE_BTN_LEFT))
       return {};
 
    wxRect sliderRect;
    TrackInfo::GetVelocityRect(rect.GetTopLeft(), sliderRect);
    if ( TrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance ) )
       return {};
-   if (sliderRect.Contains(event.m_x, event.m_y)) {
-      NoteTrack *const notetrack = static_cast<NoteTrack*>(pTrack);
-      auto slider = TrackInfo::VelocitySlider
-         (sliderRect, notetrack, true,
-          const_cast<TrackPanel*>(pProject->GetTrackPanel()));
-      Instance().mpSlider = slider;
-      Instance().mpTrack = notetrack;
-      return { HitPreview(), &Instance() };
+   if (sliderRect.Contains(state.m_x, state.m_y)) {
+      auto sliderFn =
+      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+         return TrackInfo::VelocitySlider
+            (sliderRect, static_cast<NoteTrack*>( pTrack ), true,
+             const_cast<TrackPanel*>(pProject->GetTrackPanel()));
+      };
+      auto result = std::make_shared<VelocitySliderHandle>(
+         sliderFn, sliderRect, pTrack );
+      result = AssignUIHandlePtr(holder, result);
+
+      return result;
    }
    else
       return {};

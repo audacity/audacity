@@ -59,7 +59,7 @@ class PrefsDialog /* not final */ : public wxDialogWrapper
    void OnCategoryChange(wxCommandEvent & e);
    void OnOK(wxCommandEvent & e);
    void OnCancel(wxCommandEvent & e);
-   void OnApply(wxCommandEvent & e);
+   void OnPreview(wxCommandEvent & e);
    void OnHelp(wxCommandEvent & e);
    void OnTreeKeyDown(wxTreeEvent & e); // Used to dismiss the dialog when enter is pressed with focus on tree
 

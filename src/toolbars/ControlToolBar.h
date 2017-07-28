@@ -161,7 +161,7 @@ class ControlToolBar final : public ToolBar {
 
    wxBoxSizer *mSizer;
 
-   std::unique_ptr<TrackList> mCutPreviewTracks;
+   std::shared_ptr<TrackList> mCutPreviewTracks;
 
    // strings for status bar
    wxString mStatePlay;

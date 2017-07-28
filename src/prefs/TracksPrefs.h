@@ -27,13 +27,15 @@ class TracksPrefs final : public PrefsPanel
  public:
    TracksPrefs(wxWindow * parent);
    ~TracksPrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
    static bool GetPinnedHeadPreference();
    static void SetPinnedHeadPreference(bool value, bool flush = false);
    static const wxChar *ScrollingPreferenceKey();
    static inline bool ScrollingPreferenceDefault() { return false; }
+
+   static wxString GetDefaultAudioTrackNamePreference();
 
  private:
    void Populate();

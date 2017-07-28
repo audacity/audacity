@@ -12,25 +12,29 @@ Paul Licameli
 #include "SliderHandle.h"
 #include "../../widgets/ASlider.h"
 #include "../../HitTestResult.h"
+#include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 
-SliderHandle::SliderHandle()
+SliderHandle::SliderHandle
+( SliderFn sliderFn, const wxRect &rect, const std::shared_ptr<Track> &pTrack )
+   : mSliderFn{ sliderFn }
+   , mRect{ rect }
+   , mpTrack{ pTrack }
 {
+}
+
+void SliderHandle::Enter(bool)
+{
+   mChangeHighlight = RefreshCode::RefreshCell;
 }
 
 SliderHandle::~SliderHandle()
 {
 }
 
-HitTestPreview SliderHandle::HitPreview()
-{
-   // No special message or cursor
-   return {};
-}
-
 UIHandle::Result SliderHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
@@ -39,15 +43,21 @@ UIHandle::Result SliderHandle::Click
 
    // Come here for left click or double click
    mStartingValue = GetValue();
-   mpSlider->Set(mStartingValue);
-   mpSlider->OnMouseEvent(event);
+   auto slider = GetSlider( pProject );
+   slider->OnMouseEvent(event);
+   const float newValue = slider->Get();
+
+   // Make a non-permanent change to the project data:
+   auto result = SetValue(pProject, newValue);
 
    if (event.ButtonDClick())
       // Just did a modal dialog in OnMouseEvent
       // Do not start a drag
-      return RefreshCell | Cancelled;
-   else
-      return RefreshCell;
+      return result | RefreshCell | Cancelled;
+   else {
+      mIsClicked = true;
+      return result | RefreshCell;
+   }
 }
 
 UIHandle::Result SliderHandle::Drag
@@ -55,15 +65,15 @@ UIHandle::Result SliderHandle::Drag
 {
    wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
-   mpSlider->OnMouseEvent(event);
-   const float newValue = mpSlider->Get();
+   GetSlider( pProject )->OnMouseEvent(event);
+   const float newValue = GetSlider( pProject )->Get();
 
    // Make a non-permanent change to the project data:
    return RefreshCell | SetValue(pProject, newValue);
 }
 
 HitTestPreview SliderHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
    // No special message or cursor
    return {};
@@ -75,22 +85,32 @@ UIHandle::Result SliderHandle::Release
 {
    using namespace RefreshCode;
    wxMouseEvent &event = evt.event;
-   mpSlider->OnMouseEvent(event);
-   const float newValue = mpSlider->Get();
+   GetSlider( pProject )->OnMouseEvent(event);
+   const float newValue = GetSlider( pProject )->Get();
 
    Result result = RefreshCell;
 
    // Commit changes to the project data:
    result |= SetValue(pProject, newValue);
    result |= CommitChanges(event, pProject);
+
+   mpTrack.reset();
    return result;
 }
 
 UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
 {
    wxMouseEvent event(wxEVT_LEFT_UP);
-   mpSlider->OnMouseEvent(event);
+   GetSlider( pProject )->OnMouseEvent(event);
 
    // Undo un-committed changes to project data:
-   return RefreshCode::RefreshCell | SetValue(pProject, mStartingValue);
+   auto result = SetValue(pProject, mStartingValue);
+   mpTrack.reset();
+   return RefreshCode::RefreshCell | result;
+}
+
+LWSlider *SliderHandle::GetSlider( AudacityProject *pProject )
+{
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   return mSliderFn( pProject, mRect, pTrack.get() );
 }

@@ -88,13 +88,13 @@ void GUIPrefs::Populate()
    mThemeCodes.Add( wxT("classic") );
    mThemeCodes.Add( wxT("light") );
    mThemeCodes.Add( wxT("dark") );
-   mThemeCodes.Add( wxT("hi-contrast") );
+   mThemeCodes.Add( wxT("high-contrast") );
    mThemeCodes.Add( wxT("custom") );
 
    mThemeChoices.Add( _("Classic") );
    mThemeChoices.Add( _("Light") );
    mThemeChoices.Add( _("Dark") );
-   mThemeChoices.Add( _("Hi Contrast") );
+   mThemeChoices.Add( _("High Contrast") );
    mThemeChoices.Add( _("Custom") );
 
    GetRangeChoices(&mRangeChoices, &mRangeCodes);
@@ -204,7 +204,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool GUIPrefs::Apply()
+bool GUIPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

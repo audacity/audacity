@@ -2020,7 +2020,7 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.clear();
    mOMap.clear();
 
-   mOutputTracks = std::make_unique<TrackList>();
+   mOutputTracks = TrackList::Create();
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
@@ -2517,7 +2517,7 @@ void Effect::Preview(bool dryOnly)
    } );
 
    // Build NEW tracklist from rendering tracks
-   auto uTracks = std::make_unique<TrackList>();
+   auto uTracks = TrackList::Create();
    mTracks = uTracks.get();
 
    // Linear Effect preview optimised by pre-mixing to one track.
@@ -2842,6 +2842,9 @@ EffectUIHost::~EffectUIHost()
 
    if (mClient)
    {
+      if (mNeedsResume)
+         Resume();
+      
       mClient->CloseUI();
       mClient = NULL;
    }
@@ -3149,6 +3152,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
    Hide();
 
+   if (mNeedsResume)
+      Resume();
    mClient->CloseUI();
    mClient = NULL;
 
@@ -3245,7 +3250,7 @@ void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
       HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
    }
    else {
-      // otherwise use the new ShowHelpDialog
+      // otherwise use the NEW ShowHelpDialog
       HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
    }
 }
@@ -3343,27 +3348,33 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
 }
 
+void EffectUIHost::Resume()
+{
+   if (!mClient->ValidateUI()) {
+      // If we're previewing we should still be able to stop playback
+      // so don't disable transport buttons.
+      //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
+      // The preferred behaviour is currently undecided, so for now
+      // just disallow enabling until settings are valid.
+      mEnabled = false;
+      mEnableCb->SetValue(mEnabled);
+      return;
+   }
+   mEffect->RealtimeResume();
+}
+
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
    mEnabled = mEnableCb->GetValue();
 
-   if (mEnabled)
-   {
-      if (!mClient->ValidateUI()) {
-         // If we're previewing we should still be able to stop playback
-         // so don't disable transport buttons.
-         //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
-         // The preferred behaviour is currently undecided, so for now
-         // just disallow enabling until settings are valid.
-         mEnabled = false;
-         mEnableCb->SetValue(mEnabled);
-         return;
-      }
-      mEffect->RealtimeResume();
+   if (mEnabled) {
+      Resume();
+      mNeedsResume = false;
    }
    else
    {
       mEffect->RealtimeSuspend();
+      mNeedsResume = true;
    }
 
    UpdateControls();

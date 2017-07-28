@@ -341,12 +341,12 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    GetProject()->Bind(wxEVT_IDLE, &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_RESIZED,
-                    wxCommandEventHandler(TrackPanel::OnTrackListResized),
+   mTracks->Connect(EVT_TRACKLIST_RESIZING,
+                    wxCommandEventHandler(TrackPanel::OnTrackListResizing),
                     NULL,
                     this);
-   mTracks->Connect(EVT_TRACKLIST_UPDATED,
-                    wxCommandEventHandler(TrackPanel::OnTrackListUpdated),
+   mTracks->Connect(EVT_TRACKLIST_DELETION,
+                    wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
                     NULL,
                     this);
    wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
@@ -361,12 +361,12 @@ TrackPanel::~TrackPanel()
    mTimer.Stop();
 
    // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_UPDATED,
-                       wxCommandEventHandler(TrackPanel::OnTrackListUpdated),
+   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
+                       wxCommandEventHandler(TrackPanel::OnTrackListDeletion),
                        NULL,
                        this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZED,
-                       wxCommandEventHandler(TrackPanel::OnTrackListResized),
+   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
+                       wxCommandEventHandler(TrackPanel::OnTrackListResizing),
                        NULL,
                        this);
    wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
@@ -693,9 +693,8 @@ namespace
 
       using namespace RefreshCode;
 
-      panel->UpdateViewIfNoTracks();
-
       if (refreshResult & DestroyedCell) {
+         panel->UpdateViewIfNoTracks();
          // Beware stale pointer!
          if (pLatestTrack == pClickedTrack)
             pLatestTrack = NULL;
@@ -754,30 +753,38 @@ namespace
    }
 }
 
-void TrackPanel::Uncapture(wxMouseEvent *pEvent)
+void TrackPanel::Uncapture(wxMouseState *pState)
 {
+   auto state = ::wxGetMouseState();
+   if (!pState) {
+      // Remap the position
+      state.SetPosition(this->ScreenToClient(state.GetPosition()));
+      pState = &state;
+   }
+
    if (HasCapture())
       ReleaseMouse();
-   HandleCursor( pEvent );
+   HandleMotion( *pState );
 }
 
-void TrackPanel::CancelDragging()
+bool TrackPanel::CancelDragging()
 {
    if (mUIHandle) {
-      UIHandle::Result refreshResult = mUIHandle->Cancel(GetProject());
-      {
-         // TODO: avoid dangling pointers to mpClickedTrack
-         // when the undo stack management of the typical Cancel override
-         // causes it to relocate.  That is implement some means to
-         // re-fetch the track according to its position in the list.
-         // (Or should all Tracks be managed always by std::shared_ptr?)
-         mpClickedTrack = NULL;
-      }
-      ProcessUIHandleResult(this, mRuler, mpClickedTrack, NULL, refreshResult);
-      mpClickedTrack = NULL;
-      mUIHandle = NULL;
+      // copy shared_ptr for safety, as in HandleClick
+      auto handle = mUIHandle;
+      // UIHANDLE CANCEL
+      UIHandle::Result refreshResult = handle->Cancel(GetProject());
+      auto pTrack = GetTracks()->Lock(mpClickedTrack);
+      if (pTrack)
+         ProcessUIHandleResult(
+            this, mRuler, pTrack.get(), NULL,
+            refreshResult | mMouseOverUpdateFlags );
+      mpClickedTrack.reset();
+      mUIHandle.reset(), handle.reset(), ClearTargets();
       Uncapture();
+      return true;
    }
+   return false;
 }
 
 bool TrackPanel::HandleEscapeKey(bool down)
@@ -785,32 +792,50 @@ bool TrackPanel::HandleEscapeKey(bool down)
    if (!down)
       return false;
 
+   {
+      auto target = Target();
+      if (target && target->HasEscape() && target->Escape()) {
+         HandleCursorForPresentMouseState(false);
+         return true;
+      }
+   }
+
    if (mUIHandle) {
-      // UIHANDLE CANCEL
       CancelDragging();
       return true;
    }
 
-   // Not escaping from a mouse drag
+   if (ChangeTarget(true, false)) {
+      HandleCursorForPresentMouseState(false);
+      return true;
+   }
+
    return false;
 }
 
-void TrackPanel::HandleAltKey(bool down)
+void TrackPanel::UpdateMouseState(const wxMouseState &state)
 {
-   mLastMouseEvent.m_altDown = down;
-   HandleCursorForLastMouseEvent();
+   mLastMouseState = state;
+
+   // Simulate a down button if none, so hit test routines can anticipate
+   // which button will be clicked
+   if (!state.ButtonIsDown(wxMOUSE_BTN_ANY)) {
+#ifdef __WXOSX__
+      if (state.RawControlDown())
+         // On Mac we can distinctly anticipate "right" click (as Control+click)
+         mLastMouseState.SetRightDown( true ),
+         mLastMouseState.SetLeftDown( false );
+      else
+#endif
+         // Anticipate a left click by default
+         mLastMouseState.SetRightDown( false ),
+         mLastMouseState.SetLeftDown( true );
+   }
 }
 
-void TrackPanel::HandleShiftKey(bool down)
+void TrackPanel::HandleModifierKey()
 {
-   mLastMouseEvent.m_shiftDown = down;
-   HandleCursorForLastMouseEvent();
-}
-
-void TrackPanel::HandleControlKey(bool down)
-{
-   mLastMouseEvent.m_controlDown = down;
-   HandleCursorForLastMouseEvent();
+   HandleCursorForPresentMouseState();
 }
 
 void TrackPanel::HandlePageUpKey()
@@ -823,12 +848,19 @@ void TrackPanel::HandlePageDownKey()
    mListener->TP_ScrollWindow(GetScreenEndTime());
 }
 
-void TrackPanel::HandleCursorForLastMouseEvent()
+void TrackPanel::HandleCursorForPresentMouseState(bool doHit)
 {
-   // Come here on modifier key transitions,
+   // Come here on modifier key or mouse button transitions,
    // or on starting or stopping of play or record,
+   // or change of toolbar button,
    // and change the cursor appropriately.
-   HandleCursor( &mLastMouseEvent );
+
+   // Get the button and key states
+   auto state = ::wxGetMouseState();
+   // Remap the position
+   state.SetPosition(this->ScreenToClient(state.GetPosition()));
+
+   HandleMotion( state, doHit );
 }
 
 bool TrackPanel::IsAudioActive()
@@ -838,59 +870,193 @@ bool TrackPanel::IsAudioActive()
 }
 
 
-///  TrackPanel::HandleCursor( ) sets the cursor drawn at the mouse location.
+///  TrackPanel::HandleMotion( ) sets the cursor drawn at the mouse location,
+///  and updates the status bar message.
+///  We treat certain other changes of mouse button and key state as "motions"
+///  too, and also starting and stopping of playback or recording, all of which
+///  may cause the appropriate cursor and message to change.
 ///  As this procedure checks which region the mouse is over, it is
 ///  appropriate to establish the message in the status bar.
-void TrackPanel::HandleCursor( wxMouseEvent *pEvent )
+void TrackPanel::HandleMotion( wxMouseState &inState, bool doHit )
 {
-   wxMouseEvent dummy;
-   if (!pEvent)
-      pEvent = &dummy;
-   else
-      mLastMouseEvent = *pEvent;
-   auto &event = *pEvent;
+   UpdateMouseState( inState );
 
-   const auto foundCell = FindCell( event.m_x, event.m_y );
+   const auto foundCell = FindCell( inState.m_x, inState.m_y );
    auto &track = foundCell.pTrack;
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
-   const auto size = GetSize();
-   const TrackPanelMouseEvent tpmEvent{ event, rect, size, pCell };
-   HandleCursor( tpmEvent );
+   const TrackPanelMouseState tpmState{ mLastMouseState, rect, pCell };
+   HandleMotion( tpmState, doHit );
 }
 
-void TrackPanel::HandleCursor( const TrackPanelMouseEvent &tpmEvent )
+void TrackPanel::HandleMotion
+( const TrackPanelMouseState &tpmState, bool doHit )
 {
-   if ( mUIHandle ) {
-      // UIHANDLE PREVIEW
-      // Update status message and cursor during drag
-      HitTestPreview preview = mUIHandle->Preview( tpmEvent, GetProject() );
-      mListener->TP_DisplayStatusMessage( preview.message );
-      if ( preview.cursor )
-         SetCursor( *preview.cursor );
+   auto handle = mUIHandle;
+
+   auto newCell = tpmState.pCell;
+
+   std::shared_ptr<Track> newTrack;
+   if ( newCell )
+      newTrack = static_cast<CommonTrackPanelCell*>( newCell.get() )->
+         FindTrack();
+
+   wxString status{}, tooltip{};
+   wxCursor *pCursor{};
+   unsigned refreshCode = 0;
+
+   if ( ! doHit ) {
+      // Dragging or not
+      handle = Target();
+
+      // Assume cell does not change but target does
+      refreshCode = mMouseOverUpdateFlags;
+      mMouseOverUpdateFlags = 0;
    }
-   else {
-      wxCursor *pCursor = NULL;
+   else if ( !mUIHandle ) {
+      // Not yet dragging.
 
-      wxString tip;
+      auto oldCell = mLastCell.lock();
+      std::shared_ptr<Track> oldTrack;
+      if ( oldCell )
+         oldTrack = static_cast<CommonTrackPanelCell*>( oldCell.get() )->
+            FindTrack();
 
-      // Are we within the vertical resize area?
-      // (Add margin back to bottom of the rectangle)
-      auto pCell = tpmEvent.pCell;
-      auto track = static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
-      if (pCell && pCursor == NULL && tip == wxString()) {
-         const auto size = GetSize();
-         HitTestResult hitTest( pCell->HitTest(tpmEvent, GetProject()) );
-         tip = hitTest.preview.message;
-         ProcessUIHandleResult(this, mRuler, track, track, hitTest.preview.refreshCode);
-         pCursor = hitTest.preview.cursor;
-         if (pCursor)
-            SetCursor(*pCursor);
+      unsigned updateFlags = mMouseOverUpdateFlags;
+
+      // First check whether crossing cell to cell
+      if ( newCell == oldCell )
+         oldCell.reset();
+      else {
+         // Forget old targets
+         ClearTargets();
+         // Re-draw any highlighting
+         if (oldCell) {
+            ProcessUIHandleResult(
+               this, GetRuler(), oldTrack.get(), oldTrack.get(), updateFlags);
+         }
       }
-      
-      if (pCursor != NULL || tip != wxString())
-         mListener->TP_DisplayStatusMessage(tip);
+
+      auto oldHandle = Target();
+      auto oldPosition = mTarget;
+
+      // Now do the
+      // UIHANDLE HIT TEST !
+      mTargets = newCell->HitTest(tpmState, GetProject());
+
+      mTarget = 0;
+
+      // Find the old target's NEW place if we can
+      if (oldHandle) {
+         auto begin = mTargets.begin(), end = mTargets.end(),
+            iter = std::find(begin, end, oldHandle);
+         if (iter != end) {
+            auto newPosition = iter - begin;
+            if (newPosition <= oldPosition)
+               mTarget = newPosition;
+            // else, some NEW hit and this position takes priority
+         }
+      }
+
+      handle = Target();
+
+      mLastCell = newCell;
+
+      if (!oldCell && oldHandle != handle)
+         // Did not move cell to cell, but did change the target
+         refreshCode = updateFlags;
+
+      if (handle && handle != oldHandle)
+         handle->Enter(true);
    }
+
+   // UIHANDLE PREVIEW
+   // Update status message and cursor, whether dragging or not
+   if (handle) {
+      auto preview = handle->Preview( tpmState, GetProject() );
+      status = preview.message;
+      tooltip = preview.tooltip;
+      pCursor = preview.cursor;
+      auto code = handle->GetChangeHighlight();
+      handle->SetChangeHighlight(RefreshCode::RefreshNone);
+      refreshCode |= code;
+      mMouseOverUpdateFlags |= code;
+   }
+   if (!pCursor) {
+      static wxCursor defaultCursor{ wxCURSOR_ARROW };
+      pCursor = &defaultCursor;
+   }
+
+   if (HasEscape())
+      /* i18n-hint Esc is a key on the keyboard */
+      status += wxT(" "), status += _("(Esc to cancel)");
+   mListener->TP_DisplayStatusMessage(status);
+   if (tooltip != GetToolTipText()) {
+      // Unset first, by analogy with AButton
+      UnsetToolTip();
+      SetToolTip(tooltip);
+   }
+   if (pCursor)
+      SetCursor( *pCursor );
+
+   ProcessUIHandleResult(
+      this, GetRuler(), newTrack.get(), newTrack.get(), refreshCode);
+}
+
+bool TrackPanel::HasRotation()
+{
+   // Is there a nontrivial TAB key rotation?
+   if ( mTargets.size() > 1 )
+      return true;
+   auto target = Target();
+   return target && target->HasRotation();
+}
+
+bool TrackPanel::HasEscape()
+{
+   if (IsMouseCaptured())
+      return true;
+
+   if (mTarget + 1 == mTargets.size() &&
+       Target() &&
+       !Target()->HasEscape())
+       return false;
+
+   return mTargets.size() > 0;
+}
+
+bool TrackPanel::ChangeTarget(bool forward, bool cycle)
+{
+   auto size = mTargets.size();
+
+   auto target = Target();
+   if (target && target->HasRotation()) {
+      if(target->Rotate(forward))
+         return true;
+      else if (cycle && (size == 1 || IsMouseCaptured())) {
+         // Rotate through the states of this target only.
+         target->Enter(forward);
+         return true;
+      }
+   }
+
+   if (!cycle &&
+       ((forward && mTarget + 1 == size) ||
+        (!forward && mTarget == 0)))
+      return false;
+
+   if (size > 1) {
+      if (forward)
+         ++mTarget;
+      else
+         mTarget += size - 1;
+      mTarget %= size;
+      if (Target())
+         Target()->Enter(forward);
+      return true;
+   }
+
+   return false;
 }
 
 void TrackPanel::UpdateSelectionDisplay()
@@ -982,34 +1148,35 @@ void TrackPanel::UpdateViewIfNoTracks()
 void TrackPanel::OnPlayback(wxCommandEvent &e)
 {
    e.Skip();
-   CallAfter( [this] { HandleCursorForLastMouseEvent(); } );
+   // Starting or stopping of play or record affects some cursors.
+   // Start or stop is in progress now, not completed; so delay the cursor
+   // change until next idle time.
+   CallAfter( [this] { HandleCursorForPresentMouseState(); } );
 }
 
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
-void TrackPanel::OnTrackListResized(wxCommandEvent & e)
+void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
 {
    Track *t = (Track *) e.GetClientData();
    UpdateVRuler(t);
    e.Skip();
 }
 
-// Tracks have been added or removed from the list.  Handle adds as if
-// a resize has taken place.
-void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
+// Tracks have been removed from the list.
+void TrackPanel::OnTrackListDeletion(wxCommandEvent & e)
 {
-   if (mUIHandle)
-      mUIHandle->OnProjectChange(GetProject());
-
-   // Tracks may have been deleted, so check to see if the focused track was on of them.
-   if (!mTracks->Contains(GetFocusedTrack())) {
-      SetFocusedTrack(NULL);
+   if (mUIHandle) {
+      // copy shared_ptr for safety, as in HandleClick
+      auto handle = mUIHandle;
+      handle->OnProjectChange(GetProject());
    }
 
-   if (e.GetClientData()) {
-      OnTrackListResized(e);
-      return;
-   }
+   // If the focused track disappeared but there are still other tracks,
+   // this reassigns focus.
+   GetFocusedTrack();
+
+   UpdateVRulerSize();
 
    e.Skip();
 }
@@ -1021,11 +1188,9 @@ void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 
 struct TrackInfo::TCPLine {
    using DrawFunction = void (*)(
-      wxDC *dc,
+      TrackPanelDrawingContext &context,
       const wxRect &rect,
-      const Track *maybeNULL,
-      int pressed, // a value from MouseCaptureEnum; TODO: make it bool
-      bool captured
+      const Track *maybeNULL
    );
 
    unsigned items; // a bitwise OR of values of the enum above
@@ -1188,6 +1353,18 @@ std::pair< int, int > CalcBottomItemY
 
 }
 
+unsigned TrackInfo::MinimumTrackHeight()
+{
+   unsigned height = 0;
+   if (!commonTrackTCPLines.empty())
+      height += commonTrackTCPLines.front().height;
+   if (!commonTrackTCPBottomLines.empty())
+      height += commonTrackTCPBottomLines.front().height;
+   // + 1 prevents the top item from disappearing for want of enough space,
+   // according to the rules in HideTopItem.
+   return height + kTopMargin + kBottomMargin + 1;
+}
+
 bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
                  int allowance ) {
    auto limit = CalcBottomItemY
@@ -1240,17 +1417,22 @@ void TrackPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
 
    unsigned result =
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
-   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
-   ProcessUIHandleResult(this, mRuler, pTrack, pTrack, result);
+   auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
+   ProcessUIHandleResult(
+      this, mRuler, pTrack.get(), pTrack.get(), result);
 }
 
-/// Filter captured keys typed into LabelTracks.
 void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 {
+   mEnableTab = false;
    wxKeyEvent *kevent = static_cast<wxKeyEvent *>(event.GetEventObject());
-   if ( WXK_ESCAPE != kevent->GetKeyCode() )
+   const auto code = kevent->GetKeyCode();
+   if ( WXK_ESCAPE != code )
       HandleInterruptedDrag();
 
+   // TODO?  Some notion of focused cell, more generally than focused tracks
+
+   // Give focused track precedence
    Track * const t = GetFocusedTrack();
    if (t) {
       const unsigned refreshResult =
@@ -1258,7 +1440,19 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
       ProcessUIHandleResult(this, mRuler, t, t, refreshResult);
       event.Skip(kevent->GetSkipped());
    }
+
+#if 0
+   // Special TAB key handling, but only if the track didn't capture it
+   if ( !(t && !kevent->GetSkipped()) &&
+        WXK_TAB == code && HasRotation() ) {
+      // Override TAB navigation in wxWidgets, by not skipping
+      event.Skip(false);
+      mEnableTab = true;
+      return;
+   }
    else
+#endif
+   if (!t)
       event.Skip();
 }
 
@@ -1275,15 +1469,12 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
          break;
 
    case WXK_ALT:
-      HandleAltKey(true);
-      break;
-
    case WXK_SHIFT:
-      HandleShiftKey(true);
-      break;
-
    case WXK_CONTROL:
-      HandleControlKey(true);
+#ifdef __WXOSX__
+   case WXK_RAW_CONTROL:
+#endif
+      HandleModifierKey();
       break;
 
       // Allow PageUp and PageDown keys to
@@ -1295,6 +1486,17 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    case WXK_PAGEDOWN:
       HandlePageDownKey();
       return;
+
+#if 0
+   case WXK_TAB:
+      if ( mEnableTab && HasRotation() ) {
+         ChangeTarget( !event.ShiftDown(), true );
+         HandleCursorForPresentMouseState(false);
+         return;
+      }
+      else
+         break;
+#endif
    }
 
    Track *const t = GetFocusedTrack();
@@ -1339,16 +1541,14 @@ void TrackPanel::OnKeyUp(wxKeyEvent & event)
    case WXK_ESCAPE:
       didSomething = HandleEscapeKey(false);
       break;
+
    case WXK_ALT:
-      HandleAltKey(false);
-      break;
-
    case WXK_SHIFT:
-      HandleShiftKey(false);
-      break;
-
    case WXK_CONTROL:
-      HandleControlKey(false);
+#ifdef __WXOSX__
+   case WXK_RAW_CONTROL:
+#endif
+      HandleModifierKey();
       break;
    }
 
@@ -1369,6 +1569,8 @@ void TrackPanel::OnKeyUp(wxKeyEvent & event)
 /// Should handle the case when the mouse capture is lost.
 void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
+   ClearTargets();
+   
    wxMouseEvent e(wxEVT_LEFT_UP);
 
    e.m_x = mMouseMostRecentX;
@@ -1444,6 +1646,9 @@ try
 
    if (event.Leaving())
    {
+      if ( !mUIHandle )
+         ClearTargets();
+
       auto buttons =
          // Bug 1325: button state in Leaving events is unreliable on Mac.
          // Poll the global state instead.
@@ -1451,7 +1656,7 @@ try
          ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
 
       if(!buttons) {
-         HandleEscapeKey( true );
+         CancelDragging();
 
 #if defined(__WXMAC__)
 
@@ -1464,31 +1669,38 @@ try
    }
 
    if (mUIHandle) {
+      auto pClickedTrack = GetTracks()->Lock(mpClickedTrack);
       if (event.Dragging()) {
          // UIHANDLE DRAG
+         // copy shared_ptr for safety, as in HandleClick
+         auto handle = mUIHandle;
          const UIHandle::Result refreshResult =
-            mUIHandle->Drag( tpmEvent, GetProject() );
-         ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
+            handle->Drag( tpmEvent, GetProject() );
+         ProcessUIHandleResult
+            (this, mRuler, pClickedTrack.get(), pTrack.get(), refreshResult);
+         mMouseOverUpdateFlags |= refreshResult;
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
-            mUIHandle = NULL;
-            mpClickedTrack = NULL;
+            mUIHandle.reset(), handle.reset(), ClearTargets();
+            mpClickedTrack.reset();
             Uncapture( &event );
          }
-         else
-            HandleCursor( tpmEvent );
+         else {
+            UpdateMouseState(event);
+            TrackPanelMouseState tpmState{ mLastMouseState, rect, pCell };
+            HandleMotion( tpmState );
+         }
       }
       else if (event.ButtonUp()) {
          // UIHANDLE RELEASE
-         auto uiHandle = mUIHandle;
-         // Null this pointer out first before calling Release -- because on Windows, we can
-         // come back recursively to this place during handling of the context menu,
-         // because of a capture lost event.
-         mUIHandle = nullptr;
+         unsigned moreFlags = mMouseOverUpdateFlags;
          UIHandle::Result refreshResult =
-            uiHandle->Release( tpmEvent, GetProject(), this );
-         ProcessUIHandleResult(this, mRuler, mpClickedTrack, pTrack, refreshResult);
-         mpClickedTrack = NULL; 
+            mUIHandle->Release( tpmEvent, GetProject(), this );
+         ProcessUIHandleResult
+            (this, mRuler, pClickedTrack.get(), pTrack.get(),
+             refreshResult | moreFlags);
+         mUIHandle.reset(), ClearTargets();
+         mpClickedTrack.reset();
          // will also Uncapture() below
       }
    }
@@ -1497,7 +1709,7 @@ try
       // consider it not a drag, even if button is down during motion, if
       // mUIHandle is null, as it becomes during interrupted drag
       // (e.g. by hitting space to play while dragging an envelope point)
-      HandleCursor( &event );
+      HandleMotion( event );
    else if ( event.ButtonDown() || event.ButtonDClick() )
       HandleClick( tpmEvent );
 
@@ -1508,20 +1720,20 @@ try
 
    //EnsureVisible should be called after the up-click.
    if (event.ButtonUp()) {
-      Uncapture( &event );
+      Uncapture();
 
       wxRect rect;
 
       const auto foundCell = FindCell(event.m_x, event.m_y);
       auto t = foundCell.pTrack;
       if ( t )
-         EnsureVisible(t);
+         EnsureVisible(t.get());
    }
 }
 catch( ... )
 {
    // Abort any dragging, as if by hitting Esc
-   if ( HandleEscapeKey( true ) )
+   if ( CancelDragging() )
       ;
    else {
       Uncapture();
@@ -1535,22 +1747,45 @@ void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    const auto &event = tpmEvent.event;
    auto pCell = tpmEvent.pCell;
    const auto &rect = tpmEvent.rect;
-   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell )->FindTrack();
+   auto pTrack = static_cast<CommonTrackPanelCell *>( pCell.get() )->FindTrack();
 
-   if ( !mUIHandle && pCell )
-      mUIHandle =
-         pCell->HitTest( tpmEvent, GetProject() ).handle;
+   // Do hit test once more, in case the button really pressed was not the
+   // one "anticipated."
+   {
+      TrackPanelMouseState tpmState{
+         tpmEvent.event,
+         tpmEvent.rect,
+         tpmEvent.pCell
+      };
+      HandleMotion( tpmState );
+   }
+
+   mUIHandle = Target();
 
    if (mUIHandle) {
       // UIHANDLE CLICK
+      // Make another shared pointer to the handle, in case recursive
+      // event dispatching otherwise tries to delete the handle.
+      auto handle = mUIHandle;
       UIHandle::Result refreshResult =
-         mUIHandle->Click( tpmEvent, GetProject() );
+         handle->Click( tpmEvent, GetProject() );
       if (refreshResult & RefreshCode::Cancelled)
-         mUIHandle = NULL;
-      else
+         mUIHandle.reset(), handle.reset(), ClearTargets();
+      else {
          mpClickedTrack = pTrack;
-      ProcessUIHandleResult(this, mRuler, pTrack, pTrack, refreshResult);
-      HandleCursor( tpmEvent );
+
+         // Perhaps the clicked handle wants to update cursor and state message
+         // after a click.
+         TrackPanelMouseState tpmState{
+            tpmEvent.event,
+            tpmEvent.rect,
+            tpmEvent.pCell
+         };
+         HandleMotion( tpmState );
+      }
+      ProcessUIHandleResult(
+         this, mRuler, pTrack.get(), pTrack.get(), refreshResult);
+      mMouseOverUpdateFlags |= refreshResult;
    }
 }
 
@@ -1561,6 +1796,9 @@ double TrackPanel::GetMostRecentXPos()
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 {
+   if (!trk)
+      return;
+
    Track *link = trk->GetLink();
 
    if (link && !trk->GetLinked()) {
@@ -1618,6 +1856,8 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
    DisplaySelection();
 }
 
+#include "TrackPanelDrawingContext.h"
+
 /// Draw the actual track areas.  We only draw the borders
 /// and the little buttons and menues and whatnot here, the
 /// actual contents of each track are drawn by the TrackArtist.
@@ -1640,25 +1880,28 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
 
+   TrackPanelDrawingContext context{ *dc, Target(), mLastMouseState };
+
    // The track artist actually draws the stuff inside each track
-   mTrackArtist->DrawTracks(GetTracks(), GetProject()->GetFirstVisible(),
-                            *dc, region, tracksRect, clip,
+   auto first = GetProject()->GetFirstVisible();
+   mTrackArtist->DrawTracks(context, GetTracks(), first.get(),
+                            region, tracksRect, clip,
                             mViewInfo->selectedRegion, *mViewInfo,
                             envelopeFlag, bigPointsFlag, sliderFlag);
 
-   DrawEverythingElse(dc, region, clip);
+   DrawEverythingElse(context, region, clip);
 }
 
 /// Draws 'Everything else'.  In particular it draws:
 ///  - Drop shadow for tracks and vertical rulers.
 ///  - Zooming Indicators.
 ///  - Fills in space below the tracks.
-void TrackPanel::DrawEverythingElse(wxDC * dc,
+void TrackPanel::DrawEverythingElse(TrackPanelDrawingContext &context,
                                     const wxRegion &region,
                                     const wxRect & clip)
 {
    // We draw everything else
-
+   auto dc = &context.dc;
    wxRect focusRect(-1, -1, 0, 0);
    wxRect trackRect = clip;
    trackRect.height = 0;   // for drawing background in no tracks case.
@@ -1708,7 +1951,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          if (mAx->IsFocused(t)) {
             focusRect = borderRect;
          }
-         DrawOutside(borderTrack, dc, borderRect);
+         DrawOutside(context, borderTrack, borderRect);
       }
 
       // Believe it or not, we can speed up redrawing if we don't
@@ -1727,7 +1970,7 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
          rect.y += kTopMargin;
          rect.width = GetVRulerWidth();
          rect.height -= (kTopMargin + kBottomMargin);
-         mTrackArtist->DrawVRuler(t, dc, rect);
+         mTrackArtist->DrawVRuler(context, t, rect);
       }
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1740,14 +1983,15 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
             rect.y += kTopMargin;
             rect.width = GetVRulerWidth();
             rect.height -= (kTopMargin + kBottomMargin);
-            mTrackArtist->DrawVRuler(t, dc, rect);
+            mTrackArtist->DrawVRuler(context, t, rect);
          }
       }
 #endif
    }
 
-   if (mUIHandle)
-      mUIHandle->DrawExtras(UIHandle::Cells, dc, region, clip);
+   auto target = Target();
+   if (target)
+      target->DrawExtras(UIHandle::Cells, dc, region, clip);
 
    // Paint over the part below the tracks
    trackRect.y += trackRect.height;
@@ -1769,28 +2013,29 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
       HighlightFocusedTrack(dc, focusRect);
    }
 
-   if (mUIHandle)
-      mUIHandle->DrawExtras(UIHandle::Panel, dc, region, clip);
+   if (target)
+      target->DrawExtras(UIHandle::Panel, dc, region, clip);
 }
 
 // Make this #include go away!
 #include "tracks/ui/TrackControls.h"
 
 void TrackInfo::DrawItems
-( wxDC *dc, const wxRect &rect, const Track &track,
-  int mouseCapture, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track &track  )
 {
    const auto topLines = getTCPLines( track );
    const auto bottomLines = commonTrackTCPBottomLines;
    DrawItems
-      ( dc, rect, &track, topLines, bottomLines, mouseCapture, captured );
+      ( context, rect, &track, topLines, bottomLines );
 }
 
 void TrackInfo::DrawItems
-( wxDC *dc, const wxRect &rect, const Track *pTrack,
-  const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines,
-  int mouseCapture, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack,
+  const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines )
 {
+   auto dc = &context.dc;
    TrackInfo::SetTrackInfoFont(dc);
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
@@ -1803,7 +2048,7 @@ void TrackInfo::DrawItems
          };
          if ( !TrackInfo::HideTopItem( rect, itemRect ) &&
               line.drawFunction )
-            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+            line.drawFunction( context, itemRect, pTrack );
          yy += line.height + line.extraSpace;
       }
    }
@@ -1816,21 +2061,27 @@ void TrackInfo::DrawItems
                rect.x, rect.y + yy,
                rect.width, line.height
             };
-            line.drawFunction( dc, itemRect, pTrack, mouseCapture, captured );
+            line.drawFunction( context, itemRect, pTrack );
          }
       }
    }
 }
 
+#include "tracks/ui/TrackButtonHandles.h"
 void TrackInfo::CloseTitleDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
    {
-      bool down = captured && (pressed == TrackPanel::IsClosing);
       wxRect bev = rect;
       GetCloseBoxHorizontalBounds( rect, bev );
-      AColor::Bevel2(*dc, !down, bev, selected );
+      auto target = dynamic_cast<CloseButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      AColor::Bevel2(*dc, !down, bev, selected, hit );
 
 #ifdef EXPERIMENTAL_THEMING
       wxPen pen( theTheme.Colour( clrTrackPanelText ));
@@ -1856,14 +2107,17 @@ void TrackInfo::CloseTitleDrawFunction
    }
 
    {
+      wxRect bev = rect;
+      GetTitleBarHorizontalBounds( rect, bev );
+      auto target = dynamic_cast<MenuButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
       wxString titleStr =
          pTrack ? pTrack->GetName() : _("Name");
 
-      bool down = captured && (pressed == TrackPanel::IsPopping);
-      wxRect bev = rect;
-      GetTitleBarHorizontalBounds( rect, bev );
       //bev.Inflate(-1, -1);
-      AColor::Bevel2(*dc, !down, bev, selected);
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
 
       // Draw title text
       SetTrackInfoFont(dc);
@@ -1914,21 +2168,26 @@ void TrackInfo::CloseTitleDrawFunction
 }
 
 void TrackInfo::MinimizeSyncLockDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool syncLockSelected = pTrack ? pTrack->IsSyncLockSelected() : true;
    bool minimized = pTrack ? pTrack->GetMinimized() : false;
    {
-      bool down = captured && (pressed == TrackPanel::IsMinimizing);
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);
+      auto target = dynamic_cast<MinimizeButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
 
       // Clear background to get rid of previous arrow
       //AColor::MediumTrackInfo(dc, t->GetSelected());
       //dc->DrawRectangle(bev);
 
-      AColor::Bevel2(*dc, !down, bev, selected);
+      AColor::Bevel2(*dc, !down, bev, selected, hit);
 
 #ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour(clrTrackPanelText);
@@ -1960,14 +2219,19 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    }
 }
 
+#include "tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h"
 void TrackInfo::MidiControlsDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
+   auto target = dynamic_cast<NoteTrackButtonHandle*>( context.target.get() );
+   auto channel = target ? target->GetChannel() : -1;
+   auto &dc = context.dc;
    wxRect midiRect = rect;
    GetMidiControlsHorizontalBounds(rect, midiRect);
    NoteTrack::DrawLabelControls
-      ( static_cast<const NoteTrack *>(pTrack), *dc, midiRect );
+      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
 #endif // EXPERIMENTAL_MIDI_OUT
 }
 
@@ -1975,43 +2239,59 @@ template<typename TrackClass>
 void TrackInfo::SliderDrawFunction
 ( LWSlider *(*Selector)
     (const wxRect &sliderRect, const TrackClass *t, bool captured, wxWindow*),
-  wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured )
+  wxDC *dc, const wxRect &rect, const Track *pTrack,
+  bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
    auto wt = static_cast<const TrackClass*>( pTrack );
-   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc);
+   Selector( sliderRect, wt, captured, nullptr )->OnPaint(*dc, highlight);
 }
 
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h"
 void TrackInfo::PanSliderDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto target = dynamic_cast<PanSliderHandle*>( context.target.get() );
+   auto dc = &context.dc;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::PanSlider, dc, rect, pTrack, captured, hit);
 }
 
 void TrackInfo::GainSliderDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
+   auto dc = &context.dc;
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
    SliderDrawFunction<WaveTrack>
-      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::GainSlider, dc, rect, pTrack, captured, hit);
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
+#include "tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h"
 void TrackInfo::VelocitySliderDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
+   auto target = dynamic_cast<VelocitySliderHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
    SliderDrawFunction<NoteTrack>
-      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured);
+      ( &TrackInfo::VelocitySlider, dc, rect, pTrack, captured, hit);
 }
 #endif
 
 void TrackInfo::MuteOrSoloDrawFunction
-( wxDC *dc, const wxRect &bev, const Track *pTrack, int pressed, bool captured,
-  bool solo )
+( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, bool captured,
+  bool solo, bool hit )
 {
-   bool down = captured &&
-      (pressed == ( solo ? TrackPanel::IsSoloing : TrackPanel::IsMuting ));
    //bev.Inflate(-1, -1);
    bool selected = pTrack ? pTrack->GetSelected() : true;
    auto pt = dynamic_cast<const PlayableTrack *>(pTrack);
@@ -2050,7 +2330,7 @@ void TrackInfo::MuteOrSoloDrawFunction
       *dc,
       value == down,
       bev,
-      selected
+      selected, hit
    );
 
    SetTrackInfoFont(dc);
@@ -2058,25 +2338,40 @@ void TrackInfo::MuteOrSoloDrawFunction
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
 }
 
+#include "tracks/playabletrack/ui/PlayableTrackButtonHandles.h"
 void TrackInfo::WideMuteDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    wxRect bev = rect;
    GetWideMuteSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+   auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   bool down = captured && bev.Contains( context.lastState.GetPosition());
+   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
 }
 
 void TrackInfo::WideSoloDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    wxRect bev = rect;
    GetWideMuteSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+   auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
+   bool hit = target && target->GetTrack().get() == pTrack;
+   bool captured = hit && target->IsClicked();
+   bool down = captured && bev.Contains( context.lastState.GetPosition());
+   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
 }
 
 void TrackInfo::MuteAndSoloDrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed, bool captured )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    bool bHasSoloButton = TrackPanel::HasSoloButton();
 
    wxRect bev = rect;
@@ -2084,13 +2379,25 @@ void TrackInfo::MuteAndSoloDrawFunction
       GetNarrowMuteHorizontalBounds( rect, bev );
    else
       GetWideMuteSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, false );
+   {
+      auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
+   }
 
    if( !bHasSoloButton )
       return;
 
    GetNarrowSoloHorizontalBounds( rect, bev );
-   MuteOrSoloDrawFunction( dc, bev, pTrack, pressed, captured, true );
+   {
+      auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
+   }
 }
 
 void TrackInfo::StatusDrawFunction
@@ -2101,8 +2408,10 @@ void TrackInfo::StatusDrawFunction
 }
 
 void TrackInfo::Status1DrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    auto wt = static_cast<const WaveTrack*>(pTrack);
 
    /// Returns the string to be displayed in the track label
@@ -2129,23 +2438,28 @@ void TrackInfo::Status1DrawFunction
 }
 
 void TrackInfo::Status2DrawFunction
-( wxDC *dc, const wxRect &rect, const Track *pTrack, int, bool )
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
 {
+   auto dc = &context.dc;
    auto wt = static_cast<const WaveTrack*>(pTrack);
    auto format = wt ? wt->GetSampleFormat() : floatSample;
    auto s = GetSampleFormatStr(format);
    StatusDrawFunction( s, dc, rect );
 }
 
-void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
+void TrackPanel::DrawOutside
+(TrackPanelDrawingContext &context,
+ Track * t, const wxRect & rec)
 {
+   auto dc = &context.dc;
    bool bIsWave = (t->GetKind() == Track::Wave);
 
    // Draw things that extend right of track control panel
    {
       // Start with whole track rect
       wxRect rect = rec;
-      DrawOutsideOfTrack(t, dc, rect);
+      DrawOutsideOfTrack(context, t, rect);
 
       // Now exclude left, right, and top insets
       rect.x += kLeftInset;
@@ -2177,15 +2491,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
    rect.y += kTopMargin;
    rect.height -= (kBottomMargin + kTopMargin);
 
-   // Need to know which button, if any, to draw as pressed.
-   const MouseCaptureEnum mouseCapture =
-      // This public global variable is a hack for now, which should go away
-      // when TrackPanelCell gets a virtual function into which we move this
-      // drawing code.
-      MouseCaptureEnum(TrackControls::gCaptureState);
-   const bool captured = (t == mpClickedTrack);
-
-   TrackInfo::DrawItems( dc, rect, *t, mouseCapture, captured );
+   TrackInfo::DrawItems( context, rect, *t );
 
    //mTrackInfo.DrawBordersWithin( dc, rect, *t );
 }
@@ -2194,8 +2500,11 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec)
 // Paint the inset areas left, top, and right in a background color
 // If linked to a following channel, also paint the separator area, which
 // overlaps the next track rectangle's top
-void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & rect)
+void TrackPanel::DrawOutsideOfTrack
+(TrackPanelDrawingContext &context, Track * t, const wxRect & rect)
 {
+   auto dc = &context.dc;
+
    // Fill in area outside of the track
    AColor::TrackPanelBackground(dc, false);
    wxRect side;
@@ -2275,7 +2584,8 @@ void TrackPanel::UpdateVRulers()
 
 void TrackPanel::UpdateVRuler(Track *t)
 {
-   UpdateTrackVRuler(t);
+   if (t)
+      UpdateTrackVRuler(t);
 
    UpdateVRulerSize();
 }
@@ -2353,7 +2663,7 @@ void TrackPanel::OnTrackMenu(Track *t)
          return;
    }
 
-   TrackPanelCell *const pCell = t->GetTrackControl();
+   const auto pCell = t->GetTrackControl();
    const wxRect rect(FindTrackRect(t, true));
    const UIHandle::Result refreshResult =
       pCell->DoContextMenu(rect, this, NULL);
@@ -2516,7 +2826,7 @@ TrackPanel::FoundCell TrackPanel::FindCell(int mouseX, int mouseY)
       iter = prev;
    auto found = *iter;
    return {
-      static_cast<CommonTrackPanelCell*>( found.first )->FindTrack(),
+      static_cast<CommonTrackPanelCell*>( found.first.get() )->FindTrack(),
       found.first,
       found.second
    };
@@ -2538,6 +2848,16 @@ wxRect TrackPanel::FindTrackRect( const Track * target, bool label )
       target->GetHeight()
    };
 
+   // PRL:  I think the following very old comment misused the term "race
+   // condition" for a bug that happened with only a single thread.  I think the
+   // real problem referred to, was that this function could be reached, via
+   // TrackPanelAx callbacks, during low-level operations while the TrackList
+   // was not in a consistent state.  Therefore GetLinked() did not imply
+   // that GetLink() was not null.
+   // Now the problem is fixed by delaying the handling of events generated
+   // by TrackList.
+
+   // Old comment:
    // The check for a null linked track is necessary because there's
    // a possible race condition between the time the 2 linked tracks
    // are added and when wxAccessible methods are called.  This is
@@ -2576,7 +2896,7 @@ void TrackPanel::DisplaySelection()
 
 Track *TrackPanel::GetFocusedTrack()
 {
-   return mAx->GetFocus();
+   return mAx->GetFocus().get();
 }
 
 void TrackPanel::SetFocusedTrack( Track *t )
@@ -2593,7 +2913,7 @@ void TrackPanel::SetFocusedTrack( Track *t )
       AudacityProject::CaptureKeyboard(this);
    }
 
-   mAx->SetFocus( t );
+   mAx->SetFocus( Track::Pointer( t ) );
    Refresh( false );
 }
 
@@ -3080,12 +3400,15 @@ IteratorRange< TrackPanelCellIterator > TrackPanel::Cells()
 TrackPanelCellIterator::TrackPanelCellIterator(TrackPanel *trackPanel, bool begin)
    : mPanel{ trackPanel }
    , mIter{ trackPanel->GetProject() }
-   , mpTrack{ begin ? mIter.First() : nullptr }
-   , mpCell{ begin
-      ? ( mpTrack ? mpTrack : trackPanel->GetBackgroundCell().get() )
-      : nullptr
-   }
 {
+   if (begin) {
+      mpTrack = Track::Pointer( mIter.First() );
+      if (mpTrack)
+         mpCell = mpTrack;
+      else
+         mpCell = trackPanel->GetBackgroundCell();
+   }
+
    const auto size = mPanel->GetSize();
    mRect = { 0, 0, size.x, size.y };
    UpdateRect();
@@ -3095,7 +3418,7 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
 {
    if ( mpTrack ) {
       if ( ++ mType == CellType::Background )
-         mType = CellType::Track, mpTrack = mIter.Next();
+         mType = CellType::Track, mpTrack = Track::Pointer( mIter.Next() );
    }
    if ( mpTrack ) {
       if ( mType == CellType::Label &&
@@ -3113,21 +3436,19 @@ TrackPanelCellIterator &TrackPanelCellIterator::operator++ ()
             mpCell = mpTrack->GetVRulerControl();
             break;
          case CellType::Resizer: {
-            auto instance = &TrackPanelResizerCell::Instance();
-            instance->mpTrack = mpTrack;
-            mpCell = instance;
+            mpCell = mpTrack->GetResizer();
             break;
          }
          default:
             // should not happen
-            mpCell = nullptr;
+            mpCell.reset();
             break;
       }
    }
    else if ( !mDidBackground )
-      mpCell = mPanel->GetBackgroundCell().get(), mDidBackground = true;
+      mpCell = mPanel->GetBackgroundCell(), mDidBackground = true;
    else
-      mpCell = nullptr;
+      mpCell.reset();
 
    UpdateRect();
 

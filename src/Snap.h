@@ -35,18 +35,13 @@ class TrackClip
 public:
    TrackClip(Track *t, WaveClip *c);
 
-#ifndef __AUDACITY_OLD_STD__
-   // TrackClip(TrackClip&&) = default; is not supported by vs2013/5 so explicit version needed
-   TrackClip(TrackClip&&);
-#endif
-
    ~TrackClip();
 
    Track *track;
    Track *origTrack;
    WaveTrack *dstTrack;
    WaveClip *clip;
-   movable_ptr<WaveClip> holder;
+   std::shared_ptr<WaveClip> holder;
 };
 
 class TrackClipArray : public std::vector < TrackClip > {};
@@ -75,10 +70,20 @@ public:
 
 using SnapPointArray = std::vector < SnapPoint > ;
 
+struct SnapResults {
+   double timeSnappedTime{ 0.0 };
+   double outTime{ 0.0 };
+   wxInt64 outCoord{ -1 };
+   bool snappedPoint{ false };
+   bool snappedTime{ false };
+
+   bool Snapped() const { return snappedPoint || snappedTime; }
+};
+
 class SnapManager
 {
 public:
-   SnapManager(TrackList *tracks,
+   SnapManager(const TrackList *tracks,
                const ZoomInfo *zoomInfo,
                const TrackClipArray *clipExclusions = NULL,
                const TrackArray *trackExclusions = NULL,
@@ -90,19 +95,17 @@ public:
    // Returns true if the output time is not the same as the input.
    // Pass rightEdge=true if this is the right edge of a selection,
    // and false if it's the left edge.
-   bool Snap(Track *currentTrack,
+   SnapResults Snap(Track *currentTrack,
              double t,
-             bool rightEdge,
-             double *outT,
-             bool *snappedPoint,
-             bool *snappedTime);
+             bool rightEdge);
 
    static wxArrayString GetSnapLabels();
    static wxArrayString GetSnapValues();
    static const wxString & GetSnapValue(int index);
    static int GetSnapIndex(const wxString & value);
 
-   static void Draw( wxDC *dc, wxInt64 left, wxInt64 right );
+   // The two coordinates need not be ordered:
+   static void Draw( wxDC *dc, wxInt64 snap0, wxInt64 snap1 );
 
 private:
 
@@ -117,7 +120,7 @@ private:
 private:
 
    const AudacityProject *mProject;
-   TrackList *mTracks;
+   const TrackList *mTracks;
    const TrackClipArray *mClipExclusions;
    const TrackArray *mTrackExclusions;
    const ZoomInfo *mZoomInfo;

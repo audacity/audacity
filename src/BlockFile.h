@@ -194,6 +194,7 @@ class PROFILE_DLL_API BlockFile /* not final, abstract */ {
       ReadLock &operator= (const ReadLock &that)
       {
          *((ReadLockBase*)this) = that;
+         return *this;
       }
 #endif
       ReadLock(ReadLock&&that) : ReadLockBase{ std::move(that) } {}

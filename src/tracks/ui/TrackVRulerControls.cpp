@@ -13,25 +13,29 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackVRulerControls.h"
 
 #include "../../TrackPanel.h"
+#include "../../Track.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>
+
+TrackVRulerControls::TrackVRulerControls( std::shared_ptr<Track> pTrack )
+  : mwTrack{ pTrack }
+{
+}
 
 TrackVRulerControls::~TrackVRulerControls()
 {
 }
 
-Track *TrackVRulerControls::FindTrack()
+std::shared_ptr<Track> TrackVRulerControls::FindTrack()
 {
-   return GetTrack();
+   return mwTrack.lock();
 }
 
-HitTestResult TrackVRulerControls::HitTest
-   (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+std::vector<UIHandlePtr> TrackVRulerControls::HitTest
+(const TrackPanelMouseState &, const AudacityProject *)
 {
-   // Use a space for the tip, otherwise we get the default message.
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return { { _(" "), &arrowCursor }, nullptr };
+   return std::vector<UIHandlePtr>{};
 }
 
 void TrackVRulerControls::DrawZooming

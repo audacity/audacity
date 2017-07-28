@@ -22,25 +22,15 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/listbox.h>
 #include <wx/spinctrl.h>
 
-LabelTrackControls::LabelTrackControls()
-{
-}
-
-LabelTrackControls &LabelTrackControls::Instance()
-{
-   static LabelTrackControls instance;
-   return instance;
-}
-
 LabelTrackControls::~LabelTrackControls()
 {
 }
 
-HitTestResult LabelTrackControls::HitTest
-(const TrackPanelMouseEvent & event,
+std::vector<UIHandlePtr> LabelTrackControls::HitTest
+(const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {
-   return TrackControls::HitTest(event, pProject);
+   return TrackControls::HitTest(state, pProject);
 }
 
 class LabelTrackMenuTable : public PopupMenuTable

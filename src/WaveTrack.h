@@ -28,6 +28,10 @@ class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
 
+class CutlineHandle;
+class SampleHandle;
+class EnvelopeHandle;
+
 //
 // Tolerance for merging wave tracks (in seconds)
 //
@@ -103,9 +107,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    virtual ~WaveTrack();
 
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    double GetOffset() const override;
    void SetOffset(double o) override;
@@ -490,10 +495,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    // Remove the clip from the track and return a SMART pointer to it.
    // You assume responsibility for its memory!
-   movable_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
+   std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
    // Append a clip to the track
-   void AddClip(movable_ptr<WaveClip> &&clip); // Call using std::move
+   void AddClip(std::shared_ptr<WaveClip> &&clip); // Call using std::move
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
@@ -635,9 +640,13 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 
+   std::weak_ptr<CutlineHandle> mCutlineHandle;
+   std::weak_ptr<SampleHandle> mSampleHandle;
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+
 protected:
-   TrackControls *GetControls() override;
-   TrackVRulerControls *GetVRulerControls() override;
+   std::shared_ptr<TrackControls> GetControls() override;
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
 };
 
 // This is meant to be a short-lived object, during whose lifetime,

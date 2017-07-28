@@ -121,9 +121,7 @@
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
 #ifdef USE_MIDI
-#ifdef __WXMSW__
-   #define EXPERIMENTAL_MIDI_OUT
-#endif
+#define EXPERIMENTAL_MIDI_OUT
 #endif
 
 // USE_MIDI must be defined in order for EXPERIMENTAL_SCOREALIGN to work
@@ -209,5 +207,11 @@
 // Zero-padding factor for spectrograms can smooth the display of spectrograms by
 // interpolating in frequency domain.
 #define EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+
+// PRL 11 Jul 2017
+// Highlight more things in TrackPanel when the mouse moves over them,
+// using delibrately ugly pens and brushes until there is better cooperation
+// with themes
+//#define EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
 
 #endif

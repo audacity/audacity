@@ -20,8 +20,10 @@ Paul Licameli
 #include "../../TrackPanelMouseEvent.h"
 #include "../ui/TrackControls.h"
 
-ButtonHandle::ButtonHandle(int dragCode)
-   : mDragCode(dragCode)
+ButtonHandle::ButtonHandle
+( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
+   : mpTrack{ pTrack }
+   , mRect{ rect }
 {
 }
 
@@ -29,24 +31,27 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
-HitTestPreview ButtonHandle::HitPreview()
+void ButtonHandle::Enter(bool)
 {
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return { {}, &arrowCursor };
+   mChangeHighlight = RefreshCode::RefreshCell;
 }
 
 UIHandle::Result ButtonHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   const wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if ( !pTrack )
+      return Cancelled;
+
+   const wxMouseEvent &event = evt.event;
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return Cancelled;
 
    // Come here for left click or double click
    if (mRect.Contains(event.m_x, event.m_y)) {
-      mpTrack = static_cast<TrackControls*>(evt.pCell)->GetTrack();
-      TrackControls::gCaptureState = mDragCode;
+      mWasIn = true;
+      mIsClicked = true;
       // Toggle visible button state
       return RefreshCell;
    }
@@ -55,25 +60,26 @@ UIHandle::Result ButtonHandle::Click
 }
 
 UIHandle::Result ButtonHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    const wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
-   const int newState =
-      mRect.Contains(event.m_x, event.m_y) ? mDragCode : 0;
-   if (TrackControls::gCaptureState == newState)
-      return RefreshNone;
-   else {
-      TrackControls::gCaptureState = newState;
-      return RefreshCell;
-   }
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if (!pTrack)
+      return Cancelled;
+
+   auto isIn = mRect.Contains(event.m_x, event.m_y);
+   auto result = (isIn == mWasIn) ? RefreshNone : RefreshCell;
+   mWasIn = isIn;
+   return result;
 }
 
 HitTestPreview ButtonHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
+(const TrackPanelMouseState &st, const AudacityProject *)
 {
-   // No special message or cursor
-   return {};
+   // No special cursor
+   auto message = Tip(st.state);
+   return { message, {}, message };
 }
 
 UIHandle::Result ButtonHandle::Release
@@ -81,35 +87,19 @@ UIHandle::Result ButtonHandle::Release
  wxWindow *pParent)
 {
    using namespace RefreshCode;
+   auto pTrack = pProject->GetTracks()->Lock(mpTrack);
+   if (!pTrack)
+      return Cancelled;
+
    Result result = RefreshNone;
    const wxMouseEvent &event = evt.event;
-   if (TrackControls::gCaptureState) {
-      TrackControls::gCaptureState = 0;
-      result = RefreshCell;
-   }
-   if (mpTrack && mRect.Contains(event.m_x, event.m_y))
-      result |= CommitChanges(event, pProject, pParent);
+   if (pTrack && mRect.Contains(event.m_x, event.m_y))
+      result |= RefreshCell | CommitChanges(event, pProject, pParent);
    return result;
 }
 
 UIHandle::Result ButtonHandle::Cancel(AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (TrackControls::gCaptureState) {
-      TrackControls::gCaptureState = 0;
-      return RefreshCell;
-   }
-   else
-      return RefreshNone;
+   return RefreshCell; // perhaps unnecessarily if pointer is out of the box
 }
-
-void ButtonHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-      mRect = {};
-   }
-
-   UIHandle::OnProjectChange(pProject);
-}
-

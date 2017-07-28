@@ -13,25 +13,25 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../UIHandle.h"
 
-class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
-struct HitTestResult;
-
+// This handle class, unlike most, doesn't associate with any particular cell.
 class ZoomHandle final : public UIHandle
 {
-   ZoomHandle();
    ZoomHandle(const ZoomHandle&) = delete;
-   ZoomHandle &operator=(const ZoomHandle&) = delete;
-   static ZoomHandle& Instance();
    static HitTestPreview HitPreview
-      (const wxMouseEvent &event, const AudacityProject *pProject);
+      (const wxMouseState &state, const AudacityProject *pProject);
 
 public:
-   static HitTestResult HitAnywhere
-      (const wxMouseEvent &event, const AudacityProject *pProject);
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const AudacityProject *pProject);
+   ZoomHandle();
+
+   ZoomHandle &operator=(const ZoomHandle&) = default;
+
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<ZoomHandle> &holder);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<ZoomHandle> &holder, const wxMouseState &state);
 
    virtual ~ZoomHandle();
 
@@ -42,7 +42,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release

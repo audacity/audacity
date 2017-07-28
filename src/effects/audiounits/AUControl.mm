@@ -108,11 +108,17 @@ AUControl::AUControl()
 
 AUControl::~AUControl()
 {
+   Close();
+}
+
+void AUControl::Close()
+{
 #if !defined(_LP64)
 
    if (mInstance)
    {
       AudioComponentInstanceDispose(mInstance);
+      mInstance = nullptr;
    }
 
 #endif
@@ -125,11 +131,13 @@ AUControl::~AUControl()
                       object:mView];
 
       [mView release];
+      mView = nullptr;
    }
 
    if (mAUView)
    {
       [mAUView release];
+      mAUView = nullptr;
    }
 }
 
@@ -199,7 +207,7 @@ void AUControl::OnSize(wxSizeEvent & evt)
    {
       return;
    }
-   mSettingSize = true;
+   auto vr = valueRestorer( mSettingSize, true );
 
    wxSize sz = GetSize();
 
@@ -249,8 +257,6 @@ void AUControl::OnSize(wxSizeEvent & evt)
       mLastMin = wxSize(rect.size.width, rect.size.height);
    }
 #endif
-
-   mSettingSize = false;
 
    return;
 }
@@ -418,6 +424,7 @@ void AUControl::CocoaViewResized()
    {
       return;
    }
+   auto vr = valueRestorer( mSettingSize, true );
 
    NSSize viewSize = [mView frame].size;
    NSSize frameSize = [mAUView frame].size;
@@ -624,7 +631,8 @@ void AUControl::CarbonViewResized()
    {
       return;
    }
-   
+   auto vr = valueRestorer( mSettingSize, true );
+
    // resize and move window
    HIRect rect;
    HIViewGetFrame(mHIView, &rect);

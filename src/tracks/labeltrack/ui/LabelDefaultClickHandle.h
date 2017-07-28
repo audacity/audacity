@@ -15,32 +15,26 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../MemoryX.h"
 
 class wxMouseEvent;
-struct HitTestResult;
 class LabelTrack;
 
-// Adds some behavior to click, then calls through to other mouse handling.
-class LabelDefaultClickHandle final : public UIHandle
+// Used as a base class.
+// Adds some behavior to clicks.
+class LabelDefaultClickHandle /* not final */ : public UIHandle
 {
-   LabelDefaultClickHandle();
-   LabelDefaultClickHandle(const LabelDefaultClickHandle&) = delete;
-   LabelDefaultClickHandle &operator=(const LabelDefaultClickHandle&) = delete;
-
 public:
-   static LabelDefaultClickHandle& Instance();
+   LabelDefaultClickHandle();
    virtual ~LabelDefaultClickHandle();
 
-   void DoClick
-      (const wxMouseEvent &event, AudacityProject *pProject, TrackPanelCell *pCell);
-
+   LabelDefaultClickHandle &operator=
+      (const LabelDefaultClickHandle&) = default;
+   
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    Result Drag
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
-      override;
+   // does not override Preview()
 
    Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
@@ -48,22 +42,10 @@ public:
 
    Result Cancel(AudacityProject *pProject) override;
 
-   void DrawExtras
-      (DrawingPass pass,
-       wxDC * dc, const wxRegion &updateRegion, const wxRect &panelRect)
-       override;
-
-   bool StopsOnKeystroke() override;
-
-   void OnProjectChange(AudacityProject *pProject) override;
-
-   UIHandle *mpForward {};
-
 private:
    struct LabelState;
-   std::unique_ptr< LabelState > mLabelState;
+   std::shared_ptr< LabelState > mLabelState;
    void SaveState( AudacityProject *pProject );
-   void UpdateState( AudacityProject *pProject );
    void RestoreState( AudacityProject *pProject );
 };
 

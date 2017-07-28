@@ -13,21 +13,33 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/TrackControls.h"
 
+class MuteButtonHandle;
+class SoloButtonHandle;
+class GainSliderHandle;
+class PanSliderHandle;
+
 class WaveTrackControls final : public TrackControls
 {
-   WaveTrackControls();
    WaveTrackControls(const WaveTrackControls&) = delete;
    WaveTrackControls &operator=(const WaveTrackControls&) = delete;
 
 public:
-   static WaveTrackControls &Instance();
+   explicit
+   WaveTrackControls( std::shared_ptr<Track> pTrack )
+      : TrackControls( pTrack ) {}
    ~WaveTrackControls();
 
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
+
+private:
+   std::weak_ptr<MuteButtonHandle> mMuteHandle;
+   std::weak_ptr<SoloButtonHandle> mSoloHandle;
+   std::weak_ptr<GainSliderHandle> mGainHandle;
+   std::weak_ptr<PanSliderHandle> mPanHandle;
 };
 
 #endif

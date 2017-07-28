@@ -13,20 +13,23 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/SliderHandle.h"
 
+class wxMouseState;
 class WaveTrack;
-
-struct HitTestResult;
 
 class GainSliderHandle final : public SliderHandle
 {
    GainSliderHandle(const GainSliderHandle&) = delete;
-   GainSliderHandle &operator=(const GainSliderHandle&) = delete;
 
-   GainSliderHandle();
+   std::shared_ptr<WaveTrack> GetWaveTrack();
+
+public:
+   explicit GainSliderHandle
+      ( SliderFn sliderFn, const wxRect &rect,
+        const std::shared_ptr<Track> &pTrack );
+
+   GainSliderHandle &operator=(const GainSliderHandle&) = default;
+
    virtual ~GainSliderHandle();
-   static GainSliderHandle& Instance();
-
-   WaveTrack *GetTrack();
 
 protected:
    float GetValue() override;
@@ -38,9 +41,10 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Track *pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<GainSliderHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<Track> &pTrack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,13 +52,17 @@ public:
 class PanSliderHandle final : public SliderHandle
 {
    PanSliderHandle(const PanSliderHandle&) = delete;
-   PanSliderHandle &operator=(const PanSliderHandle&) = delete;
 
-   PanSliderHandle();
+   std::shared_ptr<WaveTrack> GetWaveTrack();
+
+public:
+   explicit PanSliderHandle
+      ( SliderFn sliderFn, const wxRect &rect,
+        const std::shared_ptr<Track> &pTrack );
+
+   PanSliderHandle &operator=(const PanSliderHandle&) = default;
+
    virtual ~PanSliderHandle();
-   static PanSliderHandle& Instance();
-
-   WaveTrack *GetTrack();
 
 protected:
    float GetValue() override;
@@ -65,9 +73,10 @@ protected:
    bool StopsOnKeystroke () override { return true; }
 
 public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Track *pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<PanSliderHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<Track> &pTrack);
 };
 
 #endif

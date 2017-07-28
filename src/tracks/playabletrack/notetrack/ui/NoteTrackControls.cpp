@@ -13,188 +13,59 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 
 #include "NoteTrackControls.h"
+#include "NoteTrackButtonHandle.h"
+
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "NoteTrackSliderHandles.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../Track.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../Project.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../UIHandle.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-// TODO: do appearance changes as in ButtonHandle, or even, inherit from that
-class NoteTrackClickHandle : public UIHandle
-{
-   NoteTrackClickHandle(const NoteTrackClickHandle&);
-   NoteTrackClickHandle &operator=(const NoteTrackClickHandle&);
-   NoteTrackClickHandle();
-   virtual ~NoteTrackClickHandle();
-   static NoteTrackClickHandle& Instance();
-
-public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect, Track *pTrack);
-
-protected:
-   virtual Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
-
-   virtual Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
-
-   virtual HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject);
-
-   virtual Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent);
-
-   virtual Result Cancel(AudacityProject *pProject);
-
-   void OnProjectChange(AudacityProject *pProject) override;
-
-   NoteTrack *mpTrack{};
-   wxRect mRect{};
-};
-
-NoteTrackClickHandle::NoteTrackClickHandle()
-{
-}
-
-NoteTrackClickHandle::~NoteTrackClickHandle()
-{
-}
-
-NoteTrackClickHandle &NoteTrackClickHandle::Instance()
-{
-   static NoteTrackClickHandle instance;
-   return instance;
-}
-
-HitTestResult NoteTrackClickHandle::HitTest
-   (const wxMouseEvent &event, const wxRect &rect, Track *pTrack)
-{
-   wxRect midiRect;
-   TrackInfo::GetMidiControlsRect(rect, midiRect);
-   if ( TrackInfo::HideTopItem( rect, midiRect ) )
-      return {};
-   if (pTrack->GetKind() == Track::Note &&
-       midiRect.Contains(event.m_x, event.m_y)) {
-         Instance().mpTrack = static_cast<NoteTrack*>(pTrack);
-         Instance().mRect = midiRect;
-         return {
-            HitTestPreview(),
-            &Instance()
-         };
-   }
-   else
-      return {};
-}
-
-UIHandle::Result NoteTrackClickHandle::Click
-(const TrackPanelMouseEvent &, AudacityProject *)
-{
-   return RefreshCode::RefreshNone;
-}
-
-UIHandle::Result NoteTrackClickHandle::Drag
-(const TrackPanelMouseEvent &, AudacityProject *)
-{
-   return RefreshCode::RefreshNone;
-}
-
-HitTestPreview NoteTrackClickHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *)
-{
-   // No special message or cursor
-   return {};
-}
-
-UIHandle::Result NoteTrackClickHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject, wxWindow *)
-{
-   using namespace RefreshCode;
-
-   if (!mpTrack)
-      return RefreshNone;
-
-   const wxMouseEvent &event = evt.event;
-   if (mpTrack->LabelClick(mRect, event.m_x, event.m_y,
-      event.Button(wxMOUSE_BTN_RIGHT))) {
-      // No undo items needed??
-      pProject->ModifyState(false);
-      return RefreshAll;
-   }
-   return RefreshNone;
-}
-
-UIHandle::Result NoteTrackClickHandle::Cancel(AudacityProject *)
-{
-   return RefreshCode::RefreshNone;
-}
-
-void NoteTrackClickHandle::OnProjectChange(AudacityProject *pProject)
-{
-   if (! pProject->GetTracks()->Contains(mpTrack)) {
-      mpTrack = nullptr;
-      mRect = {};
-   }
-
-   UIHandle::OnProjectChange(pProject);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-NoteTrackControls::NoteTrackControls()
-{
-}
-
-NoteTrackControls &NoteTrackControls::Instance()
-{
-   static NoteTrackControls instance;
-   return instance;
-}
-
 NoteTrackControls::~NoteTrackControls()
 {
 }
 
-HitTestResult NoteTrackControls::HitTest
-(const TrackPanelMouseEvent & evt,
+std::vector<UIHandlePtr> NoteTrackControls::HitTest
+(const TrackPanelMouseState & st,
  const AudacityProject *pProject)
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-   if (event.ButtonDown() || event.ButtonDClick()) {
-      if (mpTrack->GetKind() == Track::Note) {
-         auto track = GetTrack();
-         HitTestResult result;
-         if (NULL !=
-             (result = MuteButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+   // Hits are mutually exclusive, results single
+   std::vector<UIHandlePtr> results;
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+   if (state.ButtonIsDown(wxMOUSE_BTN_ANY)) {
+      auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
+      auto result = [&]{
+         UIHandlePtr result;
+         if (NULL != (result = MuteButtonHandle::HitTest(
+            mMuteHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL !=
-             (result = SoloButtonHandle::HitTest
-                 (event, rect, pProject, track)).handle)
+         if (NULL != (result = SoloButtonHandle::HitTest(
+            mSoloHandle, state, rect, pProject, track)))
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
-         if (NULL != (result =
-             VelocitySliderHandle::HitTest(event, rect, pProject, mpTrack)).handle)
+         if (NULL != (result = VelocitySliderHandle::HitTest(
+            mVelocityHandle, state, rect, track)))
             return result;
-         if (NULL != (result =
-            NoteTrackClickHandle::HitTest(event, rect, GetTrack())).handle)
+         if (NULL != (result = NoteTrackButtonHandle::HitTest(
+            mClickHandle, state, rect, track)))
             return result;
 #endif
+         return result;
+      }();
+      if (result) {
+         results.push_back(result);
+         return results;
       }
    }
 
-   return TrackControls::HitTest(evt, pProject);
+   return TrackControls::HitTest(st, pProject);
 }
 
 class NoteTrackMenuTable : public PopupMenuTable

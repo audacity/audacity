@@ -192,16 +192,16 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 
 // Include the ImageCache...
 
-static unsigned char DarkImageCacheAsData[] = {
+static const unsigned char DarkImageCacheAsData[] = {
 #include "DarkThemeAsCeeCode.h"
 };
-static unsigned char LightImageCacheAsData[] = {
+static const unsigned char LightImageCacheAsData[] = {
 #include "LightThemeAsCeeCode.h"
 };
-static unsigned char ClassicImageCacheAsData[] = {
+static const unsigned char ClassicImageCacheAsData[] = {
 #include "ClassicThemeAsCeeCode.h"
 };
-static unsigned char HiContrastImageCacheAsData[] = {
+static const unsigned char HiContrastImageCacheAsData[] = {
 #include "HiContrastThemeAsCeeCode.h"
 };
 
@@ -290,21 +290,11 @@ ThemeBase::~ThemeBase(void)
 {
 }
 
-const char * ThemeNames [] =
-{  "Classic",
-   "Dark",
-   "Light",
-   "HiContrast",
-   "Custom"
-};
-
 /// This function is called to load the initial Theme images.
 /// It does not though cause the GUI to refresh.
 void ThemeBase::LoadTheme( teThemeType Theme )
 {
    EnsureInitialised();
-   mThemeName =  ThemeNames[ Theme ];
-
    const bool cbOkIfNotFound = true;
 
    if( !ReadImageCache( Theme, cbOkIfNotFound ) )
@@ -435,7 +425,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 
 //   unsigned char *src = Img1.GetData();
    unsigned char *mk = Img2.GetData();
-   //wxImage::setAlpha requires memory allocated with malloc, not new
+   //wxImage::setAlpha requires memory allocated with malloc, not NEW
    MallocString<unsigned char> alpha{
       static_cast<unsigned char*>(malloc( nBytes )) };
 
@@ -546,6 +536,8 @@ void FlowPacker::GetNextPosition( int xSize, int ySize )
    {
       SetNewGroup( ((mFlags & resFlagPaired)!=0) ? 2 : 1 );
       myHeight = ySize;
+//      mFlags &= ~resFlagNewLine;
+//      mOldFlags = mFlags;
    }
 
    iImageGroupIndex++;
@@ -917,7 +909,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "classic" );
    aThemes.Add( "dark" );
    aThemes.Add( "light" );
-   aThemes.Add( "hi-contrast" );
+   aThemes.Add( "high-contrast" );
    aThemes.Add( "custom" );
    int themeIx = aThemes.Index( Name );
    if( themeIx < 0 )
@@ -973,27 +965,27 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    else
    {
       size_t ImageSize = 0;
-      char * pImage = NULL;
+      const unsigned char * pImage = nullptr;
       switch( type ){
          default: 
          case themeClassic : 
             ImageSize = sizeof(ClassicImageCacheAsData);
-            pImage = (char *)ClassicImageCacheAsData;
+            pImage = ClassicImageCacheAsData;
             break;
          case themeLight : 
             ImageSize = sizeof(LightImageCacheAsData);
-            pImage = (char *)LightImageCacheAsData;
+            pImage = LightImageCacheAsData;
             break;
          case themeDark : 
             ImageSize = sizeof(DarkImageCacheAsData);
-            pImage = (char *)DarkImageCacheAsData;
+            pImage = DarkImageCacheAsData;
             break;
          case themeHiContrast : 
             ImageSize = sizeof(HiContrastImageCacheAsData);
-            pImage = (char *)HiContrastImageCacheAsData;
+            pImage = HiContrastImageCacheAsData;
             break;
       }
-
+      //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
@@ -1005,6 +997,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          wxMessageBox(_("Audacity could not read its default theme.\nPlease report the problem."));
          return false;
       }
+      //wxLogDebug("Read %i by %i", ImageCache.GetWidth(), ImageCache.GetHeight() );
    }
 
    // Resize a large image down.

@@ -185,7 +185,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
    SetMinSize(GetSize());
 }
 
-bool ExtImportPrefs::Apply()
+bool ExtImportPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

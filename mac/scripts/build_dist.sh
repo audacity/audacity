@@ -15,7 +15,7 @@ echo "Audacity has been installed to: ${DSTROOT}"
 cd ..
 
 VOL="Audacity $VERSION"
-DMG="audacity-macosx-$VERSION"
+DMG="audacity-macos-$VERSION"
 
 # Preclean
 rm -rf "$DMG" "$DMG.dmg" TMP.dmg

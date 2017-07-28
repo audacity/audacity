@@ -18,6 +18,8 @@
 
 #include "Experimental.h"
 
+#include "HitTestResult.h"
+
 #include "SelectedRegion.h"
 
 #include "widgets/OverlayPanel.h"
@@ -46,6 +48,7 @@ class AudacityProject;
 class TrackPanelAx;
 class TrackPanelCellIterator;
 struct TrackPanelMouseEvent;
+struct TrackPanelMouseState;
 
 class ViewInfo;
 
@@ -53,9 +56,12 @@ class NoteTrack;
 class WaveTrack;
 class WaveClip;
 class UIHandle;
+using UIHandlePtr = std::shared_ptr<UIHandle>;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
+
+struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
 
@@ -86,77 +92,80 @@ public:
    ~TrackInfo();
    void ReCreateSliders();
 
+   static unsigned MinimumTrackHeight();
+
    struct TCPLine;
 
    static void DrawItems
-      ( wxDC *dc, const wxRect &rect, const Track &track, int mouseCapture,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track &track );
 
    static void DrawItems
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack,
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack,
         const std::vector<TCPLine> &topLines,
-        const std::vector<TCPLine> &bottomLines,
-        int mouseCapture, bool captured );
+        const std::vector<TCPLine> &bottomLines );
 
    static void CloseTitleDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void MinimizeSyncLockDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void MidiControlsDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    template<typename TrackClass>
    static void SliderDrawFunction
       ( LWSlider *(*Selector)
            (const wxRect &sliderRect, const TrackClass *t, bool captured,
             wxWindow*),
-        wxDC *dc, const wxRect &rect, const Track *pTrack, bool captured );
+        wxDC *dc, const wxRect &rect, const Track *pTrack,
+        bool captured, bool highlight );
 
    static void PanSliderDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void GainSliderDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    static void VelocitySliderDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 #endif
 
    static void MuteOrSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured, bool solo );
+      ( wxDC *dc, const wxRect &rect, const Track *pTrack, bool down,
+        bool captured, bool solo, bool hit );
 
    static void WideMuteDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void WideSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void MuteAndSoloDrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void StatusDrawFunction
       ( const wxString &string, wxDC *dc, const wxRect &rect );
 
    static void Status1DrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
    static void Status2DrawFunction
-      ( wxDC *dc, const wxRect &rect, const Track *pTrack, int pressed,
-        bool captured );
+      ( TrackPanelDrawingContext &context,
+        const wxRect &rect, const Track *pTrack );
 
 public:
    int GetTrackInfoWidth() const;
@@ -165,7 +174,6 @@ public:
 
    void DrawBackground(wxDC * dc, const wxRect & rect, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
    void DrawBordersWithin(wxDC * dc, const wxRect & rect, const Track &track ) const;
-   void DrawVRuler(wxDC * dc, const wxRect & rect, Track * t) const;
 
    static void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );
    static void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
@@ -279,8 +287,8 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    void OnContextMenu(wxContextMenuEvent & event);
 
    void OnPlayback(wxCommandEvent &);
-   void OnTrackListResized(wxCommandEvent & event);
-   void OnTrackListUpdated(wxCommandEvent & event);
+   void OnTrackListResizing(wxCommandEvent & event);
+   void OnTrackListDeletion(wxCommandEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
    double GetMostRecentXPos();
@@ -307,12 +315,11 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    // void SetSnapTo(int snapto)
 
    void HandleInterruptedDrag();
-   void Uncapture( wxMouseEvent *pEvent = nullptr );
-   void CancelDragging();
+   void Uncapture( wxMouseState *pState = nullptr );
+   bool CancelDragging();
    bool HandleEscapeKey(bool down);
-   void HandleAltKey(bool down);
-   void HandleShiftKey(bool down);
-   void HandleControlKey(bool down);
+   void UpdateMouseState(const wxMouseState &state);
+   void HandleModifierKey();
    void HandlePageUpKey();
    void HandlePageDownKey();
    AudacityProject * GetProject() const;
@@ -329,7 +336,7 @@ class AUDACITY_DLL_API TrackPanel final : public OverlayPanel {
    Track *GetFocusedTrack();
    void SetFocusedTrack(Track *t);
 
-   void HandleCursorForLastMouseEvent();
+   void HandleCursorForPresentMouseState(bool doHit = true);
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
@@ -366,14 +373,15 @@ protected:
 
    // Find track info by coordinate
    struct FoundCell {
-      Track *pTrack;
-      TrackPanelCell *pCell;
+      std::shared_ptr<Track> pTrack;
+      std::shared_ptr<TrackPanelCell> pCell;
       wxRect rect;
    };
    FoundCell FindCell(int mouseX, int mouseY);
 
-   void HandleCursor( wxMouseEvent *pEvent );
-   void HandleCursor( const TrackPanelMouseEvent &tpmEvent );
+   void HandleMotion( wxMouseState &state, bool doHit = true );
+   void HandleMotion
+      ( const TrackPanelMouseState &tpmState, bool doHit = true );
 
    // If label, rectangle includes track control panel only.
    // If !label, rectangle includes all of that, and the vertical ruler, and
@@ -407,14 +415,19 @@ public:
 protected:
    void DrawTracks(wxDC * dc);
 
-   void DrawEverythingElse(wxDC *dc, const wxRegion & region,
+   void DrawEverythingElse(TrackPanelDrawingContext &context,
+                           const wxRegion & region,
                            const wxRect & clip);
-   void DrawOutside(Track *t, wxDC *dc, const wxRect & rec);
+   void DrawOutside
+      (TrackPanelDrawingContext &context,
+       Track *t, const wxRect & rec);
 
    void HighlightFocusedTrack (wxDC* dc, const wxRect &rect);
    void DrawShadow            (Track *t, wxDC* dc, const wxRect & rect);
    void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & rect, const int labelw, const int vrul);
-   void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & rect);
+   void DrawOutsideOfTrack
+      (TrackPanelDrawingContext &context,
+       Track *t, const wxRect & rect);
 
 public:
    // Set the object that performs catch-all event handling when the pointer
@@ -484,25 +497,11 @@ protected:
 
    bool mRedrawAfterStop;
 
-   wxMouseEvent mLastMouseEvent;
+   wxMouseState mLastMouseState;
 
    int mMouseMostRecentX;
    int mMouseMostRecentY;
 
-public:
-   // Old enumeration of click-and-drag states, which will shrink and disappear
-   // as UIHandle subclasses take over the repsonsibilities.
-   enum   MouseCaptureEnum
-   {
-      IsUncaptured = 0,
-      IsClosing,
-      IsMuting,
-      IsSoloing,
-      IsMinimizing,
-      IsPopping,
-   };
-
-protected:
    friend class TrackPanelAx;
 
 #if wxUSE_ACCESSIBILITY
@@ -527,11 +526,42 @@ protected:
    wxSize vrulerSize;
 
  protected:
-   Track *mpClickedTrack {};
-   // TrackPanel is not responsible for memory management:
-   UIHandle *mUIHandle {};
+   std::weak_ptr<TrackPanelCell> mLastCell;
+   std::vector<UIHandlePtr> mTargets;
+   size_t mTarget {};
+   unsigned mMouseOverUpdateFlags{};
+
+ public:
+   UIHandlePtr Target()
+   {
+      if (mTargets.size())
+         return mTargets[mTarget];
+      else
+         return {};
+   }
+
+ protected:
+   void ClearTargets()
+   {
+      // Forget the rotation of hit test candidates when the mouse moves from
+      // cell to cell or outside of the TrackPanel entirely.
+      mLastCell.reset();
+      mTargets.clear();
+      mTarget = 0;
+      mMouseOverUpdateFlags = 0;
+   }
+
+   bool HasRotation();
+   bool HasEscape();
+
+   bool ChangeTarget(bool forward, bool cycle);
+
+   std::weak_ptr<Track> mpClickedTrack;
+   UIHandlePtr mUIHandle;
 
    std::shared_ptr<TrackPanelCell> mpBackground;
+
+   bool mEnableTab{};
 
    DECLARE_EVENT_TABLE()
 };

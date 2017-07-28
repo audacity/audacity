@@ -314,7 +314,7 @@ EffectType EffectEqualization::GetType()
 
 bool EffectEqualization::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   parms.Write(KEY_FilterLength, mM);
+   parms.Write(KEY_FilterLength, (unsigned long)mM);
    parms.Write(KEY_CurveName, mCurveName);
    parms.Write(KEY_InterpLin, mLin);
    parms.WriteEnum(KEY_InterpMeth, mInterp, wxArrayString(kNumInterpolations, kInterpStrings));
@@ -1680,12 +1680,20 @@ void EffectEqualization::setCurve(int currentCurve)
                break;
          }
          else {
+            // There are more points at higher freqs,
+            // so interpolate next one then stop.
             when = 1.0;
-            double lastF = mCurves[currentCurve].points[pointCount-1].Freq;
-            double nextF = mCurves[currentCurve].points[pointCount].Freq;
-            double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
             double nextDB = mCurves[currentCurve].points[pointCount].dB;
-            value = lastDB + ((nextDB - lastDB) * ((mHiFreq - lastF) / (nextF - lastF)));
+            if (pointCount > 0) {
+               double nextF = mCurves[currentCurve].points[pointCount].Freq;
+               double lastF = mCurves[currentCurve].points[pointCount-1].Freq;
+               double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
+               value = lastDB +
+                  ((nextDB - lastDB) *
+                     ((mHiFreq - lastF) / (nextF - lastF)));
+            }
+            else
+               value = nextDB;
             env->InsertOrReplace(when, value);
             break;
          }
@@ -1751,9 +1759,14 @@ void EffectEqualization::setCurve(int currentCurve)
 
             // interpolate the final point instead
             when = 1.0;
-            double logLastF = log10(mCurves[currentCurve].points[pointCount-1].Freq);
-            double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
-            value = lastDB + ((value - lastDB) * ((log10(mHiFreq) - logLastF) / (flog - logLastF)));
+            if (pointCount > 0) {
+               double lastDB = mCurves[currentCurve].points[pointCount-1].dB;
+               double logLastF =
+                  log10(mCurves[currentCurve].points[pointCount-1].Freq);
+               value = lastDB +
+                  ((value - lastDB) *
+                     ((log10(mHiFreq) - logLastF) / (flog - logLastF)));
+            }
             env->InsertOrReplace(when, value);
             break;
          }
@@ -2871,6 +2884,7 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
    Refresh( false );
 }
 
+#include "../TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
    wxPaintDC dc(this);
@@ -3038,8 +3052,10 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    memDC.SetPen(*wxBLACK_PEN);
    if( mEffect->mDraw->GetValue() )
    {
-      mEffect->mEnvelope->DrawPoints(memDC, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
-                                     mEffect->mdBMin, mEffect->mdBMax, false);
+      TrackPanelDrawingContext context{ memDC, {}, {} };
+      mEffect->mEnvelope->DrawPoints(
+         context, mEnvRect, ZoomInfo(0.0, mEnvRect.width-1), false, 0.0,
+      mEffect->mdBMin, mEffect->mdBMax, false);
    }
 
    dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);

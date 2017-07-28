@@ -25,7 +25,7 @@ class PlaybackPrefs final : public PrefsPanel
  public:
    PlaybackPrefs(wxWindow * parent);
    virtual ~PlaybackPrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
  private:

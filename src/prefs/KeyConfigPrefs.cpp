@@ -305,6 +305,7 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
    mNames.Clear();
    mKeys.Clear();
    mDefaultKeys.Clear();
+   mStandardDefaultKeys.Clear();
    mManager->GetAllCommandData(
       mNames,
       mKeys,
@@ -314,13 +315,16 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
       Prefixes,
       true); // True to include effects (list items), false otherwise.
 
+   mStandardDefaultKeys = mDefaultKeys;
+   FilterKeys( mStandardDefaultKeys );
+
    mView->RefreshBindings(mNames,
                           Categories,
                           Prefixes,
                           Labels,
                           mKeys,
                           bSort);
-   //Not needed as new nodes are already shown expanded.
+   //Not needed as NEW nodes are already shown expanded.
    //mView->ExpandAll();
 
    mNewKeys = mKeys;
@@ -401,10 +405,8 @@ void KeyConfigPrefs::OnDefaults(wxCommandEvent & event)
    PopupMenu(&Menu);//, wxPoint(0, 0));
 }
 
-void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
+void KeyConfigPrefs::FilterKeys( wxArrayString & arr )
 {
-   int id = event.GetId();
-   mNewKeys = mDefaultKeys;
    wxSortedArrayString MaxListOnly;
 
    // These short cuts are for the max list only....
@@ -424,8 +426,8 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    MaxListOnly.Add( "Shift+Alt+J" );
    MaxListOnly.Add( "Ctrl+Shift+A" );
    MaxListOnly.Add( "Q" );
-   MaxListOnly.Add( "Shift+J" );
-   MaxListOnly.Add( "Shift+K" );
+   //MaxListOnly.Add( "Shift+J" );
+   //MaxListOnly.Add( "Shift+K" );
    //MaxListOnly.Add( "Shift+Home" );
    //MaxListOnly.Add( "Shift+End" );
    MaxListOnly.Add( "Ctrl+[" );
@@ -460,14 +462,24 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    MaxListOnly.Add( "Alt+F6" );
 
    MaxListOnly.Sort();
+   // Remove items that are in MaxList.
+   for (size_t i = 0; i < arr.GetCount(); i++) {
+      if( MaxListOnly.Index( arr[i] ) != wxNOT_FOUND )
+         arr[i]= wxT("");
+   }
+}
+
+void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
+{
+   gPrefs->DeleteEntry(wxT("/GUI/Shortcuts/FullDefaults"));
+   gPrefs->Flush();
+
+   mNewKeys = mDefaultKeys;
+   if( event.GetId() == 0 )
+      FilterKeys( mNewKeys );
 
    for (size_t i = 0; i < mNewKeys.GetCount(); i++) {
-      // Proof of concept for idea for freeing up some unwanted bindings.
-      // There will be neater code idioms we can use.
-      bool bDeleteBinding = false;
-      if( id == 0 )
-         bDeleteBinding |= ( MaxListOnly.Index( mNewKeys[i] ) != wxNOT_FOUND );
-      mManager->SetKeyFromIndex(i, bDeleteBinding ? "" : mNewKeys[i]);
+      mManager->SetKeyFromIndex(i, mNewKeys[i]);
    }
 
    RefreshBindings(true);
@@ -688,7 +700,7 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
    mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
 }
 
-bool KeyConfigPrefs::Apply()
+bool KeyConfigPrefs::Commit()
 {
    // On the Mac, preferences may be changed without any active
    // projects.  This means that the CommandManager isn't availabe
@@ -703,7 +715,7 @@ bool KeyConfigPrefs::Apply()
    PopulateOrExchange(S);
 
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      wxString dkey = KeyStringNormalize(mDefaultKeys[i]);
+      wxString dkey = KeyStringNormalize(mStandardDefaultKeys[i]);
       wxString name = wxT("/NewKeys/") + mNames[i];
       wxString key = KeyStringNormalize(mNewKeys[i]);
 
@@ -1233,7 +1245,7 @@ void KeyConfigPrefs::OnItemSelected(wxListEvent & e)
    mKey->AppendText(item.GetText());
 }
 
-bool KeyConfigPrefs::Apply()
+bool KeyConfigPrefs::Commit()
 {
    for (size_t i = 0; i < mNames.GetCount(); i++) {
 //    wxString dkey = KeyStringNormalize(mManager->GetDefaultKeyFromName(mNames[i]));

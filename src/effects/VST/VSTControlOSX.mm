@@ -66,6 +66,11 @@ VSTControl::VSTControl()
 
 VSTControl::~VSTControl()
 {
+   Close();
+}
+
+void VSTControl::Close()
+{
 #if !defined(_LP64)
    if (mWindowRef)
    {

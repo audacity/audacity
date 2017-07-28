@@ -16,41 +16,59 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../MixerBoard.h"
 #include "../../Project.h"
-#include "../../TrackPanel.h"
+#include "../../TrackPanel.h" // for TrackInfo
 #include "../../TrackPanelMouseEvent.h"
-#include "../../WaveTrack.h"
+#include "../../Track.h"
 #include <wx/textdlg.h>
 
-int TrackControls::gCaptureState;
+TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
+   : mwTrack{ pTrack }
+{
+}
 
 TrackControls::~TrackControls()
 {
 }
 
-HitTestResult TrackControls::HitTest
-(const TrackPanelMouseEvent &evt,
- const AudacityProject *project)
+std::shared_ptr<Track> TrackControls::FindTrack()
 {
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
-   HitTestResult result;
-
-   if (NULL != (result = CloseButtonHandle::HitTest(event, rect)).handle)
-      return result;
-
-   if (NULL != (result = MenuButtonHandle::HitTest(event, rect, this)).handle)
-      return result;
-
-   if (NULL != (result = MinimizeButtonHandle::HitTest(event, rect)).handle)
-      return result;
-
-   return TrackSelectHandle::HitAnywhere
-      (project->GetTrackPanel()->GetTrackCount());
+   return mwTrack.lock();
 }
 
-Track *TrackControls::FindTrack()
+std::vector<UIHandlePtr> TrackControls::HitTest
+(const TrackPanelMouseState &st,
+ const AudacityProject *project)
 {
-   return GetTrack();
+   // Hits are mutually exclusive, results single
+
+   const wxMouseState &state = st.state;
+   const wxRect &rect = st.rect;
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
+
+   auto pTrack = FindTrack();
+   // shared pointer to this:
+   auto sThis = pTrack->GetTrackControl();
+
+   if (NULL != (result = CloseButtonHandle::HitTest(
+      mCloseHandle, state, rect, this)))
+      results.push_back(result);
+
+   if (NULL != (result = MenuButtonHandle::HitTest(
+      mMenuHandle, state, rect, sThis)))
+      results.push_back(result);
+
+   if (NULL != (result = MinimizeButtonHandle::HitTest(
+      mMinimizeHandle, state, rect, this)))
+      results.push_back(result);
+
+   if (results.empty()) {
+      if (NULL != (result = TrackSelectHandle::HitAnywhere(
+         mSelectHandle, pTrack)))
+         results.push_back(result);
+   }
+
+   return results;
 }
 
 enum
@@ -197,12 +215,16 @@ unsigned TrackControls::DoContextMenu
    wxRect buttonRect;
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
-   InitMenuData data{ mpTrack, pParent, RefreshCode::RefreshNone };
+   auto track = FindTrack();
+   if (!track)
+      return RefreshCode::RefreshNone;
+
+   InitMenuData data{ track.get(), pParent, RefreshCode::RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
    auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
-   PopupMenuTable *const pExtension = GetMenuExtension(mpTrack);
+   PopupMenuTable *const pExtension = GetMenuExtension(track.get());
    if (pExtension)
       pMenu->Extend(pExtension);
 

@@ -57,7 +57,7 @@ class AButton final : public wxWindow {
    virtual ~ AButton();
 
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
+   bool AcceptsFocusFromKeyboard() const override { return mEnabled; }
 
    void SetFocusFromKbd() override;
 
@@ -175,7 +175,6 @@ class AButton final : public wxWindow {
    bool mWasControlDown;
 
    bool mCursorIsInWindow;
-   bool mButtonIsFocused;
    bool mButtonIsDown;
    bool mIsClicking;
    bool mEnabled;

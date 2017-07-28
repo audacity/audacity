@@ -26,7 +26,7 @@ class ThemePrefs final : public PrefsPanel
  public:
    ThemePrefs(wxWindow * parent);
    ~ThemePrefs(void);
-   bool Apply() override;
+   bool Commit() override;
 
  private:
    void Populate();

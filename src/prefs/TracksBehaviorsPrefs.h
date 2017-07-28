@@ -23,7 +23,7 @@ class TracksBehaviorsPrefs final : public PrefsPanel
  public:
    TracksBehaviorsPrefs(wxWindow * parent);
    ~TracksBehaviorsPrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
  private:

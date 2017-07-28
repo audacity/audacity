@@ -73,7 +73,7 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 }
 
-bool ProjectsPrefs::Apply()
+bool ProjectsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

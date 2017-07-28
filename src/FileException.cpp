@@ -24,22 +24,30 @@ wxString FileException::ErrorMessage() const
    wxString format;
    switch (cause) {
       case Cause::Open:
-         format = _("Audacity failed to open a file at %s.\n");
+         format = _("Audacity failed to open a file in %s.");
          break;
       case Cause::Read:
-         format = _("Audacity failed to read from a file at %s.\n");
+         format = _("Audacity failed to read from a file in %s.");
          break;
       case Cause::Write:
-         format = _(
-"Audacity failed to write to a file at %s.\nAttempt this operation again after removing unnecessary files.\nOne way to do that is with the Discard buttons in the History dialog.\nSee the View menu.");
+         format = _("Audacity failed to write to a file in %s.");
          break;
       case Cause::Rename:
-         format = _(
-"Audacity successfully wrote the file %s but failed to rename it as %s.");
+         format =
+_("Audacity successfully wrote a file in %s but failed to rename it as %s.");
       default:
          break;
    }
+   wxString target = fileName.GetVolume();
+   if (target.empty()) {
+      // Shorten the path, arbitrarily to 3 components
+      auto path = fileName;
+      path.SetFullName(wxString{});
+      while(path.GetDirCount() > 3)
+         path.RemoveLastDir();
+      target = path.GetFullPath();
+   }
    return wxString::Format(
-      format, fileName.GetFullPath(), renameTarget.GetFullPath() );
+      format, target, renameTarget.GetFullName() );
 }
 

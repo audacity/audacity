@@ -130,7 +130,7 @@ public:
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.
    const wxString &GetUntranslatedStateString() const;
-   const wxString &StatusMessageForWave() const;
+   wxString StatusMessageForWave() const;
 
    // All possible status strings.
    static std::vector<wxString> GetAllUntranslatedStatusStrings();

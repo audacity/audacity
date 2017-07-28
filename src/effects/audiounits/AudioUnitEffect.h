@@ -211,6 +211,8 @@ private:
 
    AUEventListenerRef mEventListenerRef;
 
+   AUControl *mpControl{};
+
    friend class AudioUnitEffectExportDialog;
    friend class AudioUnitEffectImportDialog;
 };

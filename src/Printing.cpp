@@ -32,6 +32,8 @@
 
 #include "Experimental.h"
 
+#include "TrackPanelDrawingContext.h"
+
 // Globals, so that we remember settings from session to session
 wxPrintData &gPrintData()
 {
@@ -97,7 +99,9 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       r.width = width;
       r.height = (int)(n->GetHeight() * scale);
 
-      artist.DrawTrack(n, *dc, r, SelectedRegion(), zoomInfo, false, false, false, false);
+      TrackPanelDrawingContext context{ *dc, {}, {} };
+      artist.DrawTrack(
+         context, n, r, SelectedRegion(), zoomInfo, false, false, false, false);
 
       dc->SetPen(*wxBLACK_PEN);
       AColor::Line(*dc, 0, r.y, width, r.y);

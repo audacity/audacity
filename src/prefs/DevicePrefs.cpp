@@ -370,7 +370,7 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
    Layout();
 }
 
-bool DevicePrefs::Apply()
+bool DevicePrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

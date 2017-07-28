@@ -13,32 +13,40 @@ Paul Licameli
 
 #include "../../../../UIHandle.h"
 #include "audacity/Types.h"
+#include "../../../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
-struct HitTestResult;
 class Track;
 class ViewInfo;
 class WaveTrack;
 
 class SampleHandle final : public UIHandle
 {
-   SampleHandle();
    SampleHandle(const SampleHandle&) = delete;
-   SampleHandle &operator=(const SampleHandle&) = delete;
-   static SampleHandle& Instance();
    static HitTestPreview HitPreview
-      (const wxMouseEvent &event, const AudacityProject *pProject, bool unsafe);
+      (const wxMouseState &state, const AudacityProject *pProject, bool unsafe);
 
 public:
-   static HitTestResult HitAnywhere
-      (const wxMouseEvent &event, const AudacityProject *pProject);
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-       const AudacityProject *pProject, Track *pTrack);
+   explicit SampleHandle( const std::shared_ptr<WaveTrack> &pTrack );
+
+   SampleHandle &operator=(const SampleHandle&) = default;
+
+   static UIHandlePtr HitAnywhere
+      (std::weak_ptr<SampleHandle> &holder,
+       const wxMouseState &state, const std::shared_ptr<WaveTrack> &pTrack);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<SampleHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~SampleHandle();
+
+   std::shared_ptr<WaveTrack> GetTrack() const { return mClickedTrack; }
+
+   void Enter(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -47,7 +55,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -62,7 +70,7 @@ private:
    float FindSampleEditingLevel
       (const wxMouseEvent &event, const ViewInfo &viewInfo, double t0);
 
-   WaveTrack *mClickedTrack{};
+   std::shared_ptr<WaveTrack> mClickedTrack;
    wxRect mRect{};
 
    sampleCount mClickedStartSample{};

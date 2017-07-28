@@ -1,9 +1,6 @@
-// Mac only supports 16x16 pixel cursors.
-#ifdef __WXMAC__
-#define CURSORS_SIZE16
-#else
+// Mac, Win and Linux all support 32 x 32 cursors now.
+
 #define CURSORS_SIZE32
-#endif
 
 
 #ifdef CURSORS_SIZE32

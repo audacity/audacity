@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
+#include "../../../Audacity.h"
 #include "LabelGlyphHandle.h"
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
@@ -22,65 +23,58 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
-LabelGlyphHandle::LabelGlyphHandle()
+LabelGlyphHandle::LabelGlyphHandle
+(const std::shared_ptr<LabelTrack> &pLT,
+ const wxRect &rect, const LabelTrackHit &hit)
+   : mpLT{ pLT }
+   , mRect{ rect }
+   , mHit{ hit }
 {
 }
 
-LabelGlyphHandle &LabelGlyphHandle::Instance()
+void LabelGlyphHandle::Enter(bool)
 {
-   static LabelGlyphHandle instance;
-   return instance;
+   mChangeHighlight = RefreshCode::RefreshCell;
 }
 
-HitTestPreview LabelGlyphHandle::HitPreview
-   (bool hitCenter, unsigned refreshResult)
+UIHandle::Result LabelGlyphHandle::NeedChangeHighlight
+(const LabelGlyphHandle &oldState, const LabelGlyphHandle &newState)
+{
+   if (oldState.mHit.mEdge != newState.mHit.mEdge)
+      // pointer moves between the circle and the chevron
+      return RefreshCode::RefreshCell;
+   return 0;
+}
+
+HitTestPreview LabelGlyphHandle::HitPreview(bool hitCenter)
 {
    static wxCursor arrowCursor{ wxCURSOR_ARROW };
    return {
       (hitCenter
          ? _("Drag one or more label boundaries.")
          : _("Drag label boundary.")),
-      &arrowCursor,
-      // Unusually, can have a non-zero third member of HitTestPreview, so that
-      // mouse-over highlights it.
-      refreshResult
+      &arrowCursor
    };
 }
 
-HitTestResult LabelGlyphHandle::HitTest
-(const wxMouseEvent &event, LabelTrack *pLT)
+UIHandlePtr LabelGlyphHandle::HitTest
+(std::weak_ptr<LabelGlyphHandle> &holder,
+ const wxMouseState &state,
+ const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect)
 {
-   using namespace RefreshCode;
-   unsigned refreshResult = RefreshNone;
-
-   // Note: this has side effects on pLT!
-   int edge = pLT->OverGlyph(event.m_x, event.m_y);
-
-   //KLUDGE: We refresh the whole Label track when the icon hovered over
-   //changes colouration.  Inefficient.
-   edge += pLT->mbHitCenter ? 4 : 0;
-   if (edge != pLT->mOldEdge)
-   {
-      pLT->mOldEdge = edge;
-      refreshResult |= RefreshCell;
-   }
+   LabelTrackHit hit{};
+   pLT->OverGlyph(hit, state.m_x, state.m_y);
 
    // IF edge!=0 THEN we've set the cursor and we're done.
    // signal this by setting the tip.
-   if (edge != 0)
+   if ( hit.mEdge & 3 )
    {
-      return {
-         HitPreview(pLT->mbHitCenter, refreshResult),
-         &Instance()
-      };
+      auto result = std::make_shared<LabelGlyphHandle>( pLT, rect, hit );
+      result = AssignUIHandlePtr(holder, result);
+      return result;
    }
-   else {
-      // An empty result, except maybe, unusually, the refresh
-      return {
-         { wxString{}, nullptr, refreshResult },
-         nullptr
-      };
-   }
+
+   return {};
 }
 
 LabelGlyphHandle::~LabelGlyphHandle()
@@ -90,25 +84,23 @@ LabelGlyphHandle::~LabelGlyphHandle()
 UIHandle::Result LabelGlyphHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   TrackPanelCell *const pCell = evt.pCell;
-   const wxMouseEvent &event = evt.event;
-   const wxRect &rect = evt.rect;
+   auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
-   mpLT = static_cast<LabelTrack*>(pCell);
-   mRect = rect;
+   const wxMouseEvent &event = evt.event;
 
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   mpLT->HandleGlyphClick(event, rect, viewInfo, &viewInfo.selectedRegion);
+   mpLT->HandleGlyphClick
+      (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
-   if (! mpLT->IsAdjustingLabel() )
+   if (! mHit.mIsAdjustingLabel )
    {
       // The positive hit test should have ensured otherwise
       //wxASSERT(false);
-      return RefreshCode::Cancelled;
+      result |= RefreshCode::Cancelled;
    }
-
-   // redraw the track.
-   return RefreshCode::RefreshCell;
+   else
+      // redraw the track.
+      result |= RefreshCode::RefreshCell;
 
    // handle shift+ctrl down
    /*if (event.ShiftDown()) { // && event.ControlDown()) {
@@ -117,48 +109,51 @@ UIHandle::Result LabelGlyphHandle::Click
       return;
    }*/
 
-
-   return RefreshCode::RefreshNone;
+   return result;
 }
 
 UIHandle::Result LabelGlyphHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   auto result = LabelDefaultClickHandle::Drag( evt, pProject );
+
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   mpLT->HandleGlyphDragRelease(event, mRect, viewInfo, &viewInfo.selectedRegion);
+   mpLT->HandleGlyphDragRelease
+      (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion);
 
    // Refresh all so that the change of selection is redrawn in all tracks
-   return RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
+   return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
 }
 
 HitTestPreview LabelGlyphHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *)
 {
-   return HitPreview(mpLT->mbHitCenter, 0);
+   return HitPreview( mHit.mEdge & 4 );
 }
 
 UIHandle::Result LabelGlyphHandle::Release
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject,
  wxWindow *pParent)
 {
-   mpLT->mOldEdge = 0;
+   auto result = LabelDefaultClickHandle::Release( evt, pProject, pParent );
 
    const wxMouseEvent &event = evt.event;
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   if (mpLT->HandleGlyphDragRelease(event, mRect, viewInfo, &viewInfo.selectedRegion)) {
+   if (mpLT->HandleGlyphDragRelease
+          (mHit, event, mRect, viewInfo, &viewInfo.selectedRegion)) {
       pProject->PushState(_("Modified Label"),
          _("Label Edit"),
          UndoPush::CONSOLIDATE);
    }
 
    // Refresh all so that the change of selection is redrawn in all tracks
-   return RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
+   return result | RefreshCode::RefreshAll | RefreshCode::DrawOverlays;
 }
 
 UIHandle::Result LabelGlyphHandle::Cancel(AudacityProject *pProject)
 {
-   mpLT->mOldEdge = 0;
    pProject->RollbackState();
-   return RefreshCode::RefreshAll;
+   auto result = LabelDefaultClickHandle::Cancel( pProject );
+   return result | RefreshCode::RefreshAll;
 }

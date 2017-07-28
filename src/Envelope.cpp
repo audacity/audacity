@@ -27,6 +27,7 @@ a draggable point type.
 *//*******************************************************************/
 
 #include "Envelope.h"
+#include "Experimental.h"
 #include "ViewInfo.h"
 
 #include <math.h>
@@ -311,12 +312,23 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
    }
 }
 
+#include "TrackPanelDrawingContext.h"
+#include "tracks/ui/EnvelopeHandle.h"
+
 /// TODO: This should probably move to track artist.
-void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
-                    bool dB, double dBRange,
-                    float zoomMin, float zoomMax, bool mirrored) const
+void Envelope::DrawPoints
+(TrackPanelDrawingContext &context, const wxRect & r, const ZoomInfo &zoomInfo,
+ bool dB, double dBRange,
+ float zoomMin, float zoomMax, bool mirrored) const
 {
-   dc.SetPen(AColor::envelopePen);
+   auto &dc = context.dc;
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
+   highlight = target && target->GetEnvelope() == this;
+#endif
+   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
+   dc.SetPen( pen );
    dc.SetBrush(*wxWHITE_BRUSH);
 
    for (int i = 0; i < (int)mEnv.size(); i++) {
@@ -325,7 +337,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
       if (position >= 0 && position < r.width) {
          // Change colour if this is the draggable point...
          if (i == mDragPoint) {
-            dc.SetPen(AColor::envelopePen);
+            dc.SetPen( pen );
             dc.SetBrush(AColor::envelopeBrush);
          }
 
@@ -367,7 +379,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo,
 
          // Change colour back again if was the draggable point.
          if (i == mDragPoint) {
-            dc.SetPen(AColor::envelopePen);
+            dc.SetPen( pen );
             dc.SetBrush(*wxWHITE_BRUSH);
          }
       }
@@ -717,7 +729,13 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    auto len = mEnv.size();
    for ( size_t i = begin; i < len; ++i ) {
       auto &point = mEnv[i];
-      point.SetT( point.GetT() - (t1 - t0) );
+      if (rightPoint && i == begin)
+         // Avoid roundoff error.
+         // Make exactly equal times of neighboring points so that we have
+         // a real discontinuity.
+         point.SetT( t0 );
+      else
+         point.SetT( point.GetT() - (t1 - t0) );
    }
 
    // See if the discontinuity is removable.
@@ -1156,6 +1174,28 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
    mSearchGuess = Lo;
 }
 
+// relative time
+/// @param Lo returns last index before this time, maybe -1
+/// @param Hi returns first index at or after this time, maybe past the end
+void Envelope::BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const
+{
+   Lo = -1;
+   Hi = mEnv.size();
+
+   // Invariants:  Lo is not less than -1, Hi not more than size
+   while (Hi > (Lo + 1)) {
+      int mid = (Lo + Hi) / 2;
+      // mid must be strictly between Lo and Hi, therefore a valid index
+      if (t <= mEnv[mid].GetT())
+         Hi = mid;
+      else
+         Lo = mid;
+   }
+   wxASSERT( Hi == ( Lo+1 ));
+
+   mSearchGuess = Lo;
+}
+
 /// GetInterpolationStartValueAtPoint() is used to select either the
 /// envelope value or its log depending on whether we are doing linear
 /// or log interpolation.
@@ -1208,7 +1248,7 @@ void Envelope::GetValuesRelative
       auto tplus = t + increment;
 
       // IF before envelope THEN first value
-      if ( tplus <= mEnv[0].GetT() ) {
+      if ( leftLimit ? tplus <= mEnv[0].GetT() : tplus < mEnv[0].GetT() ) {
          buffer[b] = mEnv[0].GetVal();
          t += tstep;
          continue;
@@ -1231,9 +1271,14 @@ void Envelope::GetValuesRelative
          // points to move over.  That's why we binary search.
 
          int lo,hi;
-         BinarySearchForTime( lo, hi, tplus );
+         if ( leftLimit )
+            BinarySearchForTime_LeftLimit( lo, hi, tplus );
+         else
+            BinarySearchForTime( lo, hi, tplus );
+
          // mEnv[0] is before tplus because of eliminations above, therefore lo >= 0
          // mEnv[len - 1] is after tplus, therefore hi <= len - 1
+         wxASSERT( lo >= 0 && hi <= len - 1 );
 
          tprev = mEnv[lo].GetT();
          tnext = mEnv[hi].GetT();

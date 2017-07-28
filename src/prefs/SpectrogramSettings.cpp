@@ -258,7 +258,7 @@ void SpectrogramSettings::LoadPrefs()
    gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
    frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
 
-   windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 1024);
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);

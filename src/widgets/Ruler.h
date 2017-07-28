@@ -401,6 +401,7 @@ private:
 
 
    double mIndTime;
+   double mQuickPlayPosUnsnapped;
    double mQuickPlayPos;
 
    std::unique_ptr<SnapManager> mSnapManager;
@@ -444,6 +445,7 @@ private:
    };
 
    MouseEventState mMouseEventState;
+   double mLeftDownClickUnsnapped;  // click position in seconds, before snap
    double mLeftDownClick;  // click position in seconds
    int mLastMouseX;  // Pixel position
    bool mIsDragging;

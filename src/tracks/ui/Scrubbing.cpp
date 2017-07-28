@@ -402,6 +402,14 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mScrubToken =
                ctb->PlayPlayRegion(SelectedRegion(time0, time1), options,
                                    PlayMode::normalPlay, appearance, backwards);
+            if (mScrubToken <= 0) {
+               // Bug1627 (part of it):
+               // infinite error spew when trying to start scrub:
+               // If failed for reasons of audio device problems, do not try
+               // again with repeated timer ticks.
+               mScrubStartPosition = -1;
+               return false;
+            }
          }
       }
       else
@@ -959,9 +967,9 @@ const wxString &Scrubber::GetUntranslatedStateString() const
       return empty;
 }
 
-const wxString & Scrubber::StatusMessageForWave() const
+wxString Scrubber::StatusMessageForWave() const
 {
-   static wxString result;
+   wxString result;
    result = "";
 
    if(  Seeks() )

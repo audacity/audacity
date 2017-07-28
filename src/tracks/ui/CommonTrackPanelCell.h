@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_COMMON_TRACK_PANEL_CELL__
 
 #include "../../TrackPanelCell.h"
+#include "../../MemoryX.h"
 #include <stdlib.h>
 
 class Track;
@@ -26,7 +27,7 @@ public:
 
    virtual ~CommonTrackPanelCell() = 0;
 
-   virtual Track *FindTrack() = 0;
+   virtual std::shared_ptr<Track> FindTrack() = 0;
 
 protected:
    unsigned HandleWheelRotation

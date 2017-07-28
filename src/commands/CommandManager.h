@@ -105,6 +105,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    CommandManager(const CommandManager&) PROHIBITED;
    CommandManager &operator= (const CommandManager&) PROHIBITED;
 
+   void SetMaxList();
    void PurgeData();
 
    //
@@ -261,6 +262,18 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
    void TellUserWhyDisallowed(const wxString & Name, CommandFlag flagsGot, CommandFlag flagsRequired);
 
+   ///
+   /// Formatting summaries that include shortcut keys
+   ///
+   wxString DescribeCommandsAndShortcuts
+      (// An array, alternating user-visible strings, and
+       // non-user-visible command names.  If a shortcut key is defined
+       // for the command, then it is appended, parenthesized, after the
+       // user-visible string.
+       const std::vector<wxString> &commands,
+       // If more than one pair of strings is given, then use this separator.
+       const wxString &separator = wxT(" / ")) const;
+
 protected:
 
    //
@@ -316,6 +329,9 @@ protected:
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
 
 private:
+   // mMaxList only holds shortcuts that should not be added (by default).
+   wxSortedArrayString mMaxListOnly;
+
    MenuBarList  mMenuBarList;
    SubMenuList  mSubMenuList;
    CommandList  mCommandList;

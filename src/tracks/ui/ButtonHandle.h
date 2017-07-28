@@ -12,8 +12,10 @@ Paul Licameli
 #define __AUDACITY_BUTTON_HANDLE__
 
 #include "../../UIHandle.h"
+#include "../../MemoryX.h"
 
 class wxMouseEvent;
+class wxMouseState;
 #include <wx/gdicmn.h>
 
 class Track;
@@ -21,43 +23,53 @@ class Track;
 class ButtonHandle /* not final */ : public UIHandle
 {
    ButtonHandle(const ButtonHandle&) = delete;
-   ButtonHandle &operator=(const ButtonHandle&) = delete;
+
+public:
+   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
+   bool IsClicked() const { return mIsClicked; }
 
 protected:
-   explicit ButtonHandle(int dragCode);
+   explicit ButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+
+   ButtonHandle &operator=(const ButtonHandle&) = default;
+
    virtual ~ButtonHandle();
 
-   // This new abstract virtual simplifies the duties of further subclasses.
+   // This NEW abstract virtual simplifies the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for button state
    // change.
    // Subclass can decide to refresh other things and the results will be ORed.
    virtual Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent) = 0;
 
-   // For derived class to define hit tests
-   static HitTestPreview HitPreview();
+   // Define a message for the status bar and tooltip.
+   virtual wxString Tip(const wxMouseState &state) const = 0;
+
+   void Enter(bool forward) final override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      final override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      final override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
-      override;
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      final override;
 
    Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent) override;
+       wxWindow *pParent) final override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(AudacityProject *pProject) final override;
 
-   void OnProjectChange(AudacityProject *pProject) override;
-
-   wxRect mRect {};
-   Track *mpTrack {};
-   const int mDragCode;
+   std::weak_ptr<Track> mpTrack;
+   wxRect mRect;
+   bool mWasIn{ true };
+   bool mIsClicked{};
 };
 
 #endif

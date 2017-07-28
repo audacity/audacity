@@ -22,7 +22,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Project.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../toolbars/ToolsToolBar.h"
 #include "../../ViewInfo.h"
 #include "../../../images/Cursors.h"
 
@@ -38,40 +37,44 @@ Paul Licameli split from TrackPanel.cpp
 ///  and forcing a refresh.
 
 ZoomHandle::ZoomHandle()
-{
-}
-
-ZoomHandle &ZoomHandle::Instance()
-{
-   static ZoomHandle instance;
-   return instance;
-}
+{}
 
 HitTestPreview ZoomHandle::HitPreview
-   (const wxMouseEvent &event, const AudacityProject *pProject)
+   (const wxMouseState &state, const AudacityProject *pProject)
 {
    static auto zoomInCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
    static auto zoomOutCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
-   const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+   wxString message;
+   // TODO:  Why not mention middle click to zoom normal on Windows too?
+#if defined( __WXMAC__ )
+   message = _("Click to Zoom In, Shift-Click to Zoom Out");
+#elif defined( __WXMSW__ )
+   message = _("Drag to Zoom Into Region, Right-Click to Zoom Out");
+#elif defined( __WXGTK__ )
+   message = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
+#endif
    return {
-      ttb->GetMessageForTool(zoomTool),
-      (event.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
+      message,
+      (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
    };
 }
 
-HitTestResult ZoomHandle::HitAnywhere
-(const wxMouseEvent &event, const AudacityProject *pProject)
+UIHandlePtr ZoomHandle::HitAnywhere
+(std::weak_ptr<ZoomHandle> &holder)
 {
-   return { HitPreview(event, pProject), &Instance() };
+   auto result = std::make_shared<ZoomHandle>();
+   result = AssignUIHandlePtr(holder, result);
+   return result;
 }
 
-HitTestResult ZoomHandle::HitTest
-(const wxMouseEvent &event, const AudacityProject *pProject)
+UIHandlePtr ZoomHandle::HitTest
+(std::weak_ptr<ZoomHandle> &holder,
+ const wxMouseState &state)
 {
-   if (event.ButtonIsDown(wxMOUSE_BTN_RIGHT) || event.RightUp())
-      return HitAnywhere(event, pProject);
+   if (state.ButtonIsDown(wxMOUSE_BTN_RIGHT))
+      return HitAnywhere(holder);
    else
       return {};
 }
@@ -115,9 +118,9 @@ UIHandle::Result ZoomHandle::Drag
 }
 
 HitTestPreview ZoomHandle::Preview
-(const TrackPanelMouseEvent &evt, const AudacityProject *pProject)
+(const TrackPanelMouseState &st, const AudacityProject *pProject)
 {
-   return HitPreview(evt.event, pProject);
+   return HitPreview(st.state, pProject);
 }
 
 UIHandle::Result ZoomHandle::Release

@@ -11,24 +11,28 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 #define __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
 
-#include "tracks/ui/CommonTrackPanelCell.h"
+#include "MemoryX.h"
 #include "UIHandle.h"
 
-struct HitTestResult;
 class Track;
 class TrackPanelCellIterator;
 
 class TrackPanelResizeHandle final : public UIHandle
 {
-   TrackPanelResizeHandle();
    TrackPanelResizeHandle(const TrackPanelResizeHandle&) = delete;
-   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = delete;
 
 public:
-   static TrackPanelResizeHandle& Instance();
+   explicit TrackPanelResizeHandle
+      ( const std::shared_ptr<Track> &pTrack, int y,
+        const AudacityProject *pProject );
+
+   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = default;
+
    static HitTestPreview HitPreview(bool bLinked);
 
    virtual ~TrackPanelResizeHandle();
+
+   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -37,7 +41,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event,  const AudacityProject *pProject)
+      (const TrackPanelMouseState &state,  const AudacityProject *pProject)
       override;
 
    Result Release
@@ -45,8 +49,6 @@ public:
        wxWindow *pParent) override;
 
    Result Cancel(AudacityProject *pProject) override;
-
-   void OnProjectChange(AudacityProject *pProject) override;
 
 private:
    enum Mode {
@@ -56,7 +58,7 @@ private:
    };
    Mode mMode{ IsResizing };
 
-   Track *mpTrack{};
+   std::weak_ptr<Track> mpTrack;
 
    bool mInitialMinimized{};
    int mInitialTrackHeight{};
@@ -65,25 +67,6 @@ private:
    int mInitialUpperActualHeight{};
 
    int mMouseClickY{};
-};
-
-class TrackPanelResizerCell : public CommonTrackPanelCell
-{
-   TrackPanelResizerCell() {}
-   TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
-   TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
-public:
-   static TrackPanelResizerCell &Instance();
-
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
-
-   Track *FindTrack() override { return mpTrack; };
-private:
-   friend class TrackPanelCellIterator;
-   Track *mpTrack {};
-   bool mBetweenTracks {};
 };
 
 #endif

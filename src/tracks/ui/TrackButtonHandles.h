@@ -13,24 +13,30 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../ui/ButtonHandle.h"
 
-struct HitTestResult;
+class wxMouseState;
 
 class MinimizeButtonHandle final : public ButtonHandle
 {
    MinimizeButtonHandle(const MinimizeButtonHandle&) = delete;
-   MinimizeButtonHandle &operator=(const MinimizeButtonHandle&) = delete;
-
-   MinimizeButtonHandle();
-   virtual ~MinimizeButtonHandle();
-   static MinimizeButtonHandle& Instance();
 
 protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
 public:
-   static HitTestResult HitTest(const wxMouseEvent &event, const wxRect &rect);
+   explicit MinimizeButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+
+   MinimizeButtonHandle &operator=(const MinimizeButtonHandle&) = default;
+
+   virtual ~MinimizeButtonHandle();
+
+   static UIHandlePtr HitTest
+      (std::weak_ptr<MinimizeButtonHandle> &holder,
+       const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,21 +44,27 @@ public:
 class CloseButtonHandle final : public ButtonHandle
 {
    CloseButtonHandle(const CloseButtonHandle&) = delete;
-   CloseButtonHandle &operator=(const CloseButtonHandle&) = delete;
-
-   CloseButtonHandle();
-   virtual ~CloseButtonHandle();
-   static CloseButtonHandle& Instance();
 
 protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
    bool StopsOnKeystroke () override { return true; }
    
 public:
-   static HitTestResult HitTest(const wxMouseEvent &event, const wxRect &rect);
+   explicit CloseButtonHandle
+      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+
+   CloseButtonHandle &operator=(const CloseButtonHandle&) = default;
+
+   virtual ~CloseButtonHandle();
+
+   static UIHandlePtr HitTest
+      (std::weak_ptr<CloseButtonHandle> &holder,
+       const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,23 +75,30 @@ public:
 class MenuButtonHandle final : public ButtonHandle
 {
    MenuButtonHandle(const MenuButtonHandle&) = delete;
-   MenuButtonHandle &operator=(const MenuButtonHandle&) = delete;
-
-   MenuButtonHandle();
-   virtual ~MenuButtonHandle();
-   static MenuButtonHandle& Instance();
 
 protected:
    Result CommitChanges
       (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
       override;
 
+   wxString Tip(const wxMouseState &state) const override;
+
 public:
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect, TrackPanelCell *pCell);
+   explicit MenuButtonHandle
+      ( const std::shared_ptr<TrackPanelCell> &pCell,
+        const std::shared_ptr<Track> &pTrack, const wxRect &rect );
+
+   MenuButtonHandle &operator=(const MenuButtonHandle&) = default;
+
+   virtual ~MenuButtonHandle();
+
+   static UIHandlePtr HitTest
+      (std::weak_ptr<MenuButtonHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const std::shared_ptr<TrackPanelCell> &pCell);
 
 private:
-   TrackPanelCell *mpCell{};
+   std::weak_ptr<TrackPanelCell> mpCell;
 };
 
 #endif

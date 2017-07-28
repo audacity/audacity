@@ -33,6 +33,8 @@ public:
    AUControl();
    ~AUControl();
 
+   void Close();
+
    bool Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bool custom);
    void CreateCocoa();
    void CreateGeneric();

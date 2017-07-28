@@ -138,6 +138,7 @@ void AboutDialog::CreateCreditsList()
 
    // Contributors
    AddCredit(wxString(wxT("Lynn Allan, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Brian Armstrong, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("David Avery, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("David Bailes, ")) + _("accessibility advisor"), roleContributor);
    AddCredit(wxString(wxT("William Bland, ")) + _("developer"), roleContributor);
@@ -156,6 +157,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("David Hostetler, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Steve Jolly, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Steven Jones, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Henric Jungheim, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Arun Kishore, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Paul Livesey, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Harvey Lubin, ")) + _("graphic artist"), roleContributor);
@@ -235,18 +237,18 @@ void AboutDialog::CreateCreditsList()
 #endif
    // Libraries
 
-   AddCredit(wxT("[[http://www.jclark.com/xml/expat.html|expat]]"), roleLibrary);
+   AddCredit(wxT("[[http://libexpat.github.io/|expat]]"), roleLibrary);
    AddCredit(wxT("[[http://xiph.org/flac/|FLAC]]"), roleLibrary);
-   AddCredit(wxT("iAVC"), roleLibrary);
    AddCredit(wxT("[[http://lame.sourceforge.net/|LAME]]"), roleLibrary);
    AddCredit(wxT("[[http://www.underbit.com/products/mad/|libmad]]"), roleLibrary);
    AddCredit(wxT("[[http://www.mega-nerd.com/libsndfile/|libsndfile]]"), roleLibrary);
    AddCredit(wxT("[[http://sourceforge.net/p/soxr/wiki/Home/|libsoxr]]"), roleLibrary);
    AddCredit(wxT("[[http://lv2plug.in/|lv2]] (") + _("incorporating") + wxT(" lilv, msinttypes, serd, sord and sratom)"), roleLibrary);
-   AddCredit(wxT("[[https://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.cs.cmu.edu/~music/nyquist/|Nyquist]]"), roleLibrary);
    AddCredit(wxT("[[http://vorbis.com/|Ogg Vorbis]]"), roleLibrary);
    AddCredit(wxT("[[http://www.portaudio.com/|PortAudio]]"), roleLibrary);
-   AddCredit(wxT("[[http://sourceforge.net/apps/trac/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
+   AddCredit(wxT("[[http://www.portmedia.sourceforge.net/portmidi/|PortMidi]]"), roleLibrary);
+   AddCredit(wxT("[[http://sourceforge.net/p/portmedia/wiki/portsmf/|portsmf]]"), roleLibrary);
    AddCredit(wxT("[[http://sbsms.sourceforge.net/|sbsms]]"), roleLibrary);
    AddCredit(wxT("[[http://www.surina.net/soundtouch/|SoundTouch]]"), roleLibrary);
    AddCredit(wxT("[[http://www.twolame.org/|TwoLAME]]"), roleLibrary);
@@ -681,6 +683,23 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, _("Build type:"), _("Debug build"));
 #else
    AddBuildinfoRow(&informationStr, _("Build type:"), _("Release build"));
+#endif
+
+#ifdef _MSC_FULL_VER
+   AddBuildinfoRow(&informationStr, _("Compiler:"),
+	   wxString::Format(wxT("MSVC %02d.%02d.%05d.%02d"), _MSC_VER / 100, _MSC_VER % 100, _MSC_FULL_VER % 100000, _MSC_BUILD));
+#endif
+
+#ifdef __GNUC_PATCHLEVEL__
+#ifdef __MINGW32__
+   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("MinGW ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+#else
+   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("GCC ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+#endif
+#endif
+
+#ifdef __clang_version__
+   AddBuildinfoRow(&informationStr, _("Compiler:"), wxT("clang ") __clang_version__);
 #endif
 
    // Install prefix

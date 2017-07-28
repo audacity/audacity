@@ -11,27 +11,41 @@ Paul Licameli
 #ifndef __AUDACITY_CUTLINE_HANDLE__
 #define __AUDACITY_CUTLINE_HANDLE__
 
+#include "../../../../MemoryX.h"
 #include "../../../../UIHandle.h"
+#include "../../../../MemoryX.h"
+#include "../../../../WaveTrackLocation.h"
 
 class wxMouseEvent;
-struct HitTestResult;
-class Track;
+class wxMouseState;
+class WaveTrack;
 
 class CutlineHandle final : public UIHandle
 {
-   CutlineHandle();
    CutlineHandle(const CutlineHandle&) = delete;
-   CutlineHandle &operator=(const CutlineHandle&) = delete;
-   static CutlineHandle& Instance();
    static HitTestPreview HitPreview(bool cutline, bool unsafe);
 
 public:
-   static HitTestResult HitAnywhere(const AudacityProject *pProject, bool cutline);
-   static HitTestResult HitTest
-      (const wxMouseEvent &event, const wxRect &rect,
-      const AudacityProject *pProject, Track *pTrack);
+   explicit CutlineHandle
+      ( const std::shared_ptr<WaveTrack> &pTrack,
+        WaveTrackLocation location );
+
+   CutlineHandle &operator=(const CutlineHandle&) = default;
+
+   static UIHandlePtr HitAnywhere
+      (const AudacityProject *pProject, bool cutline, UIHandlePtr ptr);
+   static UIHandlePtr HitTest
+      (std::weak_ptr<CutlineHandle> &holder,
+       const wxMouseState &state, const wxRect &rect,
+       const AudacityProject *pProject,
+       const std::shared_ptr<WaveTrack> &pTrack);
 
    virtual ~CutlineHandle();
+
+   const WaveTrackLocation &GetLocation() { return mLocation; }
+   std::shared_ptr<WaveTrack> GetTrack() { return mpTrack; }
+
+   void Enter(bool forward) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -40,7 +54,7 @@ public:
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject)
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
       override;
 
    Result Release
@@ -55,7 +69,8 @@ private:
    enum Operation { Merge, Expand, Remove };
    Operation mOperation{ Merge };
    double mStartTime{}, mEndTime{};
-   bool mbCutline{};
+   WaveTrackLocation mLocation {};
+   std::shared_ptr<WaveTrack> mpTrack{};
 };
 
 #endif

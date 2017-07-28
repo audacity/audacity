@@ -33,6 +33,8 @@ and TimeTrack.
 
 #include "Experimental.h"
 
+#include "TrackPanel.h" // for TrackInfo
+
 #ifdef _MSC_VER
 //Disable truncation warnings
 #pragma warning( disable : 4786 )
@@ -48,7 +50,6 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 :  vrulerSize(36,0),
    mDirManager(projDirManager)
 {
-   mList      = NULL;
    mSelected  = false;
    mLinked    = false;
 
@@ -70,8 +71,8 @@ Track::Track(const std::shared_ptr<DirManager> &projDirManager)
 }
 
 Track::Track(const Track &orig)
+: vrulerSize( orig.vrulerSize )
 {
-   mList = NULL;
    mY = 0;
    mIndex = 0;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -118,14 +119,12 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList == NULL || this == mNode->get());
+   wxASSERT(mList.lock() == NULL || this == mNode->get());
    return mNode;
 }
 
-// A track can only live on one list at a time, so if you're moving a
-// track from one list to another, you must call SetOwner() with NULL
-// pointers first and then with the real pointers.
-void Track::SetOwner(TrackList *list, TrackNodePointer node)
+void Track::SetOwner
+(const std::weak_ptr<TrackList> &list, TrackNodePointer node)
 {
    mList = list;
    mNode = node;
@@ -133,11 +132,17 @@ void Track::SetOwner(TrackList *list, TrackNodePointer node)
 
 int Track::GetMinimizedHeight() const
 {
+   auto height = TrackInfo::MinimumTrackHeight();
+
    if (GetLink()) {
-      return 22;
+      auto halfHeight = height / 2;
+      if (GetLinked())
+         return halfHeight;
+      else
+         return height - halfHeight;
    }
 
-   return 44;
+   return height;
 }
 
 int Track::GetIndex() const
@@ -209,9 +214,10 @@ int Track::GetHeight() const
 void Track::SetHeight(int h)
 {
    mHeight = h;
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
+   auto pList = mList.lock();
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
    }
 }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
@@ -223,37 +229,40 @@ bool Track::GetMinimized() const
 
 void Track::SetMinimized(bool isMinimized)
 {
+   auto pList = mList.lock();
    mMinimized = isMinimized;
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
    }
 }
 
 void Track::SetLinked(bool l)
 {
+   auto pList = mList.lock();
    mLinked = l;
-   if (mList) {
-      mList->RecalcPositions(mNode);
-      mList->ResizedEvent(mNode);
+   if (pList) {
+      pList->RecalcPositions(mNode);
+      pList->ResizingEvent(mNode);
    }
 }
 
 Track *Track::GetLink() const
 {
-   if (!mList)
+   auto pList = mList.lock();
+   if (!pList)
       return nullptr;
 
-   if (!mList->isNull(mNode)) {
+   if (!pList->isNull(mNode)) {
       if (mLinked) {
          auto next = mNode;
          ++next;
-         if (!mList->isNull(next)) {
+         if (!pList->isNull(next)) {
             return next->get();
          }
       }
 
-      if (mList->hasPrev(mNode)) {
+      if (pList->hasPrev(mNode)) {
          auto prev = mNode;
          --prev;
          auto track = prev->get();
@@ -284,7 +293,8 @@ bool Track::IsSyncLockSelected() const
    if (!p || !p->IsSyncLocked())
       return false;
 
-   SyncLockedTracksIterator git(mList);
+   auto pList = mList.lock();
+   SyncLockedTracksIterator git(pList.get());
    Track *t = git.StartWith(const_cast<Track*>(this));
 
    if (!t) {
@@ -319,9 +329,9 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
    }
 }
 
-Track *Track::FindTrack()
+std::shared_ptr<Track> Track::FindTrack()
 {
-   return this;
+   return Pointer( this );
 }
 
 void PlayableTrack::Init( const PlayableTrack &orig )
@@ -386,7 +396,7 @@ Track *TrackListIterator::StartWith(Track * val)
       return NULL;
    }
 
-   if (val->mList == NULL)
+   if (val->mList.lock() == NULL)
       return nullptr;
 
    cur = val->GetNode();
@@ -605,6 +615,7 @@ bool VisibleTrackIterator::Condition(Track *t)
    auto partner = t->GetLink();
    if ( partner && t->GetLinked() )
       return Condition( partner );
+   return false;
 }
 
 // SyncLockedTracksIterator
@@ -738,22 +749,25 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 
 // TrackList
 //
-// The TrackList sends itself events whenever an update occurs to the list it
+// The TrackList sends events whenever certain updates occur to the list it
 // is managing.  Any other classes that may be interested in get these updates
 // should use TrackList::Connect() and TrackList::Disconnect().
 //
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZED);
-DEFINE_EVENT_TYPE(EVT_TRACKLIST_UPDATED);
+DEFINE_EVENT_TYPE(EVT_TRACKLIST_PERMUTED);
+DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZING);
+DEFINE_EVENT_TYPE(EVT_TRACKLIST_DELETION);
 
 TrackList::TrackList()
 :  wxEvtHandler()
 {
 }
 
-TrackList::TrackList(const TrackList &that)
-   : ListOfTracks{}
+// Factory function
+std::shared_ptr<TrackList> TrackList::Create()
 {
-   DoAssign(that);
+   std::shared_ptr<TrackList> result{ safenew TrackList{} };
+   result->mSelf = result;
+   return result;
 }
 
 TrackList& TrackList::operator= (const TrackList &that)
@@ -763,11 +777,6 @@ TrackList& TrackList::operator= (const TrackList &that)
       DoAssign(that);
    }
    return *this;
-}
-
-TrackList::TrackList(TrackList &&that)
-{
-   Swap(that);
 }
 
 TrackList &TrackList::operator= (TrackList &&that)
@@ -790,9 +799,9 @@ void TrackList::Swap(TrackList &that)
 {
    ListOfTracks::swap(that);
    for (auto it = begin(), last = end(); it != last; ++it)
-      (*it)->SetOwner(this, it);
+      (*it)->SetOwner(this->mSelf, it);
    for (auto it = that.begin(), last = that.end(); it != last; ++it)
-      (*it)->SetOwner(&that, it);
+      (*it)->SetOwner(that.mSelf, it);
 }
 
 TrackList::~TrackList()
@@ -857,28 +866,27 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
 
-void TrackList::UpdatedEvent(TrackNodePointer node)
+void TrackList::PermutationEvent()
 {
-   wxCommandEvent e(EVT_TRACKLIST_UPDATED);
-   if (!isNull(node)) {
-      e.SetClientData(node->get());
-   }
-   else {
-      e.SetClientData(NULL);
-   }
-
-   // PRL:  ProcessEvent, not QueueEvent!  Listeners may need their last
-   // chance to examine some removed tracks that are about to be destroyed.
-   ProcessEvent(e);
+   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_PERMUTED);
+   // wxWidgets will own the event object
+   QueueEvent(e.release());
 }
 
-void TrackList::ResizedEvent(TrackNodePointer node)
+void TrackList::DeletionEvent()
 {
-   if (!isNull(node)) {
-      wxCommandEvent e(EVT_TRACKLIST_RESIZED);
-      e.SetClientData(node->get());
-      ProcessEvent(e);
-   }
+   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_DELETION);
+   // wxWidgets will own the event object
+   QueueEvent(e.release());
+}
+
+void TrackList::ResizingEvent(TrackNodePointer node)
+{
+   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_RESIZING);
+   if (!isNull(node))
+      e->SetClientData(node->get());
+   // wxWidgets will own the event object
+   QueueEvent(e.release());
 }
 
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
@@ -887,12 +895,11 @@ void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
       value_type track = std::move(*iter);
       erase(iter);
       Track *pTrack = track.get();
-      pTrack->SetOwner(this, insert(end(), std::move(track)));
+      pTrack->SetOwner(mSelf, insert(end(), std::move(track)));
    }
    auto n = begin();
    RecalcPositions(n);
-   UpdatedEvent(n);
-   ResizedEvent(n);
+   PermutationEvent();
 }
 
 template<typename TrackKind>
@@ -902,9 +909,9 @@ Track *TrackList::Add(std::unique_ptr<TrackKind> &&t)
    push_back(value_type(pTrack = t.release()));
    auto n = end();
    --n;
-   pTrack->SetOwner(this, n);
+   pTrack->SetOwner(mSelf, n);
    RecalcPositions(n);
-   UpdatedEvent(n);
+   ResizingEvent(n);
    return back().get();
 }
 
@@ -923,17 +930,14 @@ Track *TrackList::AddToHead(std::unique_ptr<TrackKind> &&t)
    Track *pTrack;
    push_front(value_type(pTrack = t.release()));
    auto n = begin();
-   pTrack->SetOwner(this, n);
+   pTrack->SetOwner(mSelf, n);
    RecalcPositions(n);
-   UpdatedEvent(n);
-   ResizedEvent(n);
+   ResizingEvent(n);
    return front().get();
 }
 
 // Make instantiations for the linker to find
 template Track *TrackList::AddToHead<TimeTrack>(std::unique_ptr<TimeTrack> &&);
-
-#ifdef __AUDACITY_OLD_STD__
 
 template<typename TrackKind>
 Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
@@ -941,9 +945,9 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
    push_back(t);
    auto n = end();
    --n;
-   t->SetOwner(this, n);
+   t->SetOwner(mSelf, n);
    RecalcPositions(n);
-   UpdatedEvent(n);
+   ResizingEvent(n);
    return back().get();
 }
 
@@ -951,24 +955,22 @@ Track *TrackList::Add(std::shared_ptr<TrackKind> &&t)
 template Track *TrackList::Add<Track>(std::shared_ptr<Track> &&);
 template Track *TrackList::Add<WaveTrack>(std::shared_ptr<WaveTrack> &&);
 
-#endif
-
 auto TrackList::Replace(Track * t, value_type &&with) -> value_type
 {
    value_type holder;
    if (t && with) {
       auto node = t->GetNode();
+      t->SetOwner({}, {});
+
       holder = std::move(*node);
 
       Track *pTrack = with.get();
       *node = std::move(with);
-      pTrack->SetOwner(this, node);
+      pTrack->SetOwner(mSelf, node);
       RecalcPositions(node);
 
-      // PRL:  Note:  Send the event while t (now in holder) is not yet
-      // destroyed, so pointers to t that listeners may have are not dangling.
-      UpdatedEvent(node);
-      ResizedEvent(node);
+      DeletionEvent();
+      ResizingEvent(node);
    }
    return holder;
 }
@@ -978,6 +980,7 @@ TrackNodePointer TrackList::Remove(Track *t)
    TrackNodePointer result(end());
    if (t) {
       auto node = t->GetNode();
+      t->SetOwner({}, {});
 
       if (!isNull(node)) {
          value_type holder = std::move( *node );
@@ -987,10 +990,7 @@ TrackNodePointer TrackList::Remove(Track *t)
             RecalcPositions(result);
          }
 
-         // PRL:  Note:  Send the event while t (now in holder) is not yet
-         // destroyed, so pointers to t that listeners may have are not dangling.
-         UpdatedEvent(end());
-         ResizedEvent(result);
+         DeletionEvent();
       }
    }
    return result;
@@ -998,13 +998,15 @@ TrackNodePointer TrackList::Remove(Track *t)
 
 void TrackList::Clear(bool sendEvent)
 {
+   // Null out the back-pointers in tracks, in case there are outstanding
+   // shared_ptrs to those tracks.
+   for ( auto pTrack: *this )
+      pTrack->SetOwner( {}, {} );
+
    ListOfTracks tempList;
    tempList.swap( *this );
    if (sendEvent)
-      // PRL:  Note:  Send the event while tempList is not yet
-      // destroyed, so pointers to tracks that listeners may have are not
-      // dangling.
-      UpdatedEvent(end());
+      DeletionEvent();
 }
 
 void TrackList::Select(Track * t, bool selected /* = true */ )
@@ -1164,17 +1166,16 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    // Reinsert them
    Track *pTrack;
    if (save22)
-      pTrack = save22.get(), pTrack->SetOwner(this, s1 = insert(s1, std::move(save22)));
-   pTrack = save21.get(), pTrack->SetOwner(this, s1 = insert(s1, std::move(save21)));
+      pTrack = save22.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save22)));
+   pTrack = save21.get(), pTrack->SetOwner(mSelf, s1 = insert(s1, std::move(save21)));
 
    if (save12)
-      pTrack = save12.get(), pTrack->SetOwner(this, s2 = insert(s2, std::move(save12)));
-   pTrack = save11.get(), pTrack->SetOwner(this, s2 = insert(s2, std::move(save11)));
+      pTrack = save12.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save12)));
+   pTrack = save11.get(), pTrack->SetOwner(mSelf, s2 = insert(s2, std::move(save11)));
 
    // Now correct the Index in the tracks, and other things
    RecalcPositions(s1);
-   UpdatedEvent(s1);
-   ResizedEvent(s1);
+   PermutationEvent();
 }
 
 bool TrackList::MoveUp(Track * t)

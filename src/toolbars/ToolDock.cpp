@@ -334,7 +334,7 @@ IMPLEMENT_CLASS( ToolDock, wxPanelWrapper );
 //
 // Custom event
 //
-DEFINE_EVENT_TYPE( EVT_TOOLBAR_FLOAT );
+//DEFINE_EVENT_TYPE( EVT_TOOLBAR_FLOAT );
 
 BEGIN_EVENT_TABLE( ToolDock, wxPanelWrapper )
    EVT_GRABBER( wxID_ANY, ToolDock::OnGrabber )
@@ -835,13 +835,8 @@ void ToolDock::OnGrabber( GrabberEvent & event )
 {
    // auto pos = event.GetPosition();
    if (!event.IsEscaping()) {
-      ToolBar *t = mBars[ event.GetId() ];
-
       // Pass it on to the manager since it isn't in the handling hierarchy
       mManager->ProcessEvent( event );
-
-      // We no longer have control
-      mConfiguration.Remove( t );
    }
 }
 

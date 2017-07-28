@@ -455,8 +455,9 @@ void LWSlider::Init(wxWindow * parent,
    mCurrentValue = 0.0f;
    mDefaultValue = 0.0f;
    mDefaultShortcut = false;
-   mBitmap = NULL;
-   mThumbBitmap = NULL;
+   mBitmap = nullptr;
+   mThumbBitmap = nullptr;
+   mThumbBitmapHilited = nullptr;
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
    mTipPanel = NULL;
@@ -545,9 +546,9 @@ void LWSlider::AdjustSize(const wxSize & sz)
    Refresh();
 }
 
-void LWSlider::OnPaint(wxDC &dc)
+void LWSlider::OnPaint(wxDC &dc, bool highlight)
 {
-   if (!mBitmap || !mThumbBitmap)
+   if (!mBitmap || !mThumbBitmap || !mThumbBitmapHilited)
    {
       Draw(dc);
    }
@@ -555,10 +556,14 @@ void LWSlider::OnPaint(wxDC &dc)
    //thumbPos should be in pixels
    int thumbPos = ValueToPosition(mCurrentValue);
    int thumbOrtho; // position in axis orthogonal to mOrientation
-   if (mOrientation == wxHORIZONTAL)
+   if (mOrientation == wxHORIZONTAL){
       thumbOrtho = mCenterY - (mThumbHeight/2);
-   else
+      thumbPos += 3-mThumbWidth/2;
+   }
+   else{
       thumbOrtho = mCenterX - (mThumbWidth/2);
+      thumbPos += 8-mThumbHeight/2;
+   }
 
 #if !defined(__WXMAC__)
    if( mHW )
@@ -568,14 +573,16 @@ void LWSlider::OnPaint(wxDC &dc)
 #endif
 
    dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
+   const auto &thumbBitmap =
+      highlight ? *mThumbBitmapHilited : *mThumbBitmap;
    if (mOrientation == wxHORIZONTAL)
    {
-      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbPos, mTop+thumbOrtho, true);
+      dc.DrawBitmap(thumbBitmap, mLeft+thumbPos, mTop+thumbOrtho, true);
    }
    else
    {
       // TODO: Don't use pixel-count hack in positioning.  
-      dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
+      dc.DrawBitmap(thumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
    }
 
    if (mTipPanel)
@@ -605,9 +612,12 @@ void LWSlider::Draw(wxDC & paintDC)
 //      wxImage img2 = img.Rotate90(false);
 //      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( img2));
       mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotated )));
+      mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotatedHilited )));
    }
-   else
+   else {
       mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
+      mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbHilited )));
+   }
 
 
 // This code draws the (old) slider thumb.
@@ -731,13 +741,13 @@ void LWSlider::Draw(wxDC & paintDC)
       dc.SetTextForeground( theTheme.Colour( clrTrackPanelText ));
 
       // TransparentColour should be same as clrTrackInfo.
+      // This may have been necessary at one time to avoid 
+      // antialiasing the font against white, even on dark background.
       dc.SetTextBackground( theTheme.Colour( clrTrackInfo ) );
       dc.SetBackground( theTheme.Colour( clrTrackInfo ) );
-      // HAVE to use solid and not transparent here,
-      // otherwise windows will do its clever font optimisation trick,
-      // but against a default colour of white, which is not OK on a dark
-      // background.
-      dc.SetBackgroundMode( wxSOLID );
+      // Used to use wxSOLID here, but wxTRANSPARENT is better for mac, and 
+      // works fine on windows.
+      dc.SetBackgroundMode( wxTRANSPARENT );
 #else
       dc.SetTextForeground(mEnabled ? wxColour(0, 0, 0) : wxColour(128, 128, 128));
       dc.SetTextBackground(wxColour(255,255,255));
@@ -1500,6 +1510,7 @@ void LWSlider::SetEnabled(bool enabled)
    mEnabled = enabled;
 
    mThumbBitmap.reset();
+   mThumbBitmapHilited.reset();
 
    Refresh();
 }
@@ -1596,7 +1607,11 @@ void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
-   mLWSlider->OnPaint(dc);
+   bool highlighted =
+      GetClientRect().Contains(
+         ScreenToClient(
+            ::wxGetMousePosition() ) );
+   mLWSlider->OnPaint(dc, highlighted);
 
    if ( mSliderIsFocused )
    {

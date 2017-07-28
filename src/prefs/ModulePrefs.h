@@ -36,7 +36,7 @@ class ModulePrefs final : public PrefsPanel
  public:
    ModulePrefs(wxWindow * parent);
    ~ModulePrefs();
-   bool Apply() override;
+   bool Commit() override;
    wxString HelpPageName() override;
 
    static int GetModuleStatus( const wxString &fname );

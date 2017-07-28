@@ -21,7 +21,6 @@ Paul Licameli
 #include <wx/checkbox.h>
 
 #include "../Project.h"
-#include "../Snap.h"
 
 #include "../TrackPanel.h"
 #include "../ShuttleGui.h"
@@ -134,7 +133,7 @@ bool WaveformPrefs::Validate()
    return result;
 }
 
-bool WaveformPrefs::Apply()
+bool WaveformPrefs::Commit()
 {
    const bool isOpenPage = this->IsShown();
 
@@ -191,7 +190,7 @@ bool WaveformPrefs::Apply()
    return true;
 }
 
-bool WaveformPrefs::ShowsApplyButton()
+bool WaveformPrefs::ShowsPreviewButton()
 {
    return true;
 }

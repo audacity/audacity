@@ -1020,6 +1020,11 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
       // has not changed (because sample format conversion was not actually done in the aliased file).
       if (!bb.f->IsAlias() && (bb.f->GetLength() > mMaxSamples))
       {
+         // PRL:  Bill observed this error.  Not sure how it was caused.
+         // I have added code in ConsistencyCheck that should abort the
+         // editing operation that caused this, not fixing
+         // the problem but moving the point of detection earlier if we
+         // find a reproducible case.
          wxString sMsg =
             wxString::Format(
                _("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length."),
@@ -1575,7 +1580,7 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
          // shouldn't throw, because XMLWriter is not XMLFileWriter
          static_cast< SimpleBlockFile * >( &*pFile )->SaveXML( *blockFileLog );
 
-      newBlock.push_back(SeqBlock(pFile, mNumSamples));
+      newBlock.push_back(SeqBlock(pFile, newNumSamples));
 
       buffer += addedLen * SAMPLE_SIZE(format);
       newNumSamples += addedLen;
@@ -1792,11 +1797,11 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
 void Sequence::ConsistencyCheck(const wxChar *whereStr, bool mayThrow) const
 {
-   ConsistencyCheck(mBlock, 0, mNumSamples, whereStr, mayThrow);
+   ConsistencyCheck(mBlock, mMaxSamples, 0, mNumSamples, whereStr, mayThrow);
 }
 
 void Sequence::ConsistencyCheck
-   (const BlockArray &mBlock, size_t from,
+   (const BlockArray &mBlock, size_t maxSamples, size_t from,
     sampleCount mNumSamples, const wxChar *whereStr,
     bool mayThrow)
 {
@@ -1817,8 +1822,12 @@ void Sequence::ConsistencyCheck
       if (pos != seqBlock.start)
          ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
 
-      if ( seqBlock.f )
-         pos += seqBlock.f->GetLength();
+      if ( seqBlock.f ) {
+         const auto length = seqBlock.f->GetLength();
+         if (length > maxSamples)
+            ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
+         pos += length;
+      }
       else
          ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
    }
@@ -1845,7 +1854,7 @@ void Sequence::ConsistencyCheck
 void Sequence::CommitChangesIfConsistent
    (BlockArray &newBlock, sampleCount numSamples, const wxChar *whereStr)
 {
-   ConsistencyCheck( newBlock, 0, numSamples, whereStr ); // may throw
+   ConsistencyCheck( newBlock, mMaxSamples, 0, numSamples, whereStr ); // may throw
 
    // now commit
    // use NOFAIL-GUARANTEE
@@ -1888,7 +1897,7 @@ void Sequence::AppendBlocksIfConsistent
 
    // Check consistency only of the blocks that were added,
    // avoiding quadratic time for repeated checking of repeating appends
-   ConsistencyCheck( mBlock, prevSize, numSamples, whereStr ); // may throw
+   ConsistencyCheck( mBlock, mMaxSamples, prevSize, numSamples, whereStr ); // may throw
 
    // now commit
    // use NOFAIL-GUARANTEE

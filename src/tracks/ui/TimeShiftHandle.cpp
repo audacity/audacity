@@ -10,27 +10,31 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Audacity.h"
 #include "TimeShiftHandle.h"
+#include "../../Experimental.h"
 
 #include "TrackControls.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
 #include "../../Project.h"
 #include "../../RefreshCode.h"
-#include "../../Snap.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../toolbars/ToolsToolBar.h"
 #include "../../UndoManager.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
-TimeShiftHandle::TimeShiftHandle()
+TimeShiftHandle::TimeShiftHandle
+( const std::shared_ptr<Track> &pTrack, bool gripHit )
+   : mCapturedTrack{ pTrack }
+   , mGripHit{ gripHit }
 {
 }
 
-TimeShiftHandle &TimeShiftHandle::Instance()
+void TimeShiftHandle::Enter(bool)
 {
-   static TimeShiftHandle instance;
-   return instance;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+   mChangeHighlight = RefreshCode::RefreshCell;
+#endif
 }
 
 HitTestPreview TimeShiftHandle::HitPreview
@@ -40,30 +44,34 @@ HitTestPreview TimeShiftHandle::HitPreview
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto slideCursor =
       MakeCursor(wxCURSOR_SIZEWE, TimeCursorXpm, 16, 16);
-   const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
+   // TODO: Should it say "track or clip" ?  Non-wave tracks can move, or clips in a wave track.
+   // TODO: mention effects of shift (move all clips of selected wave track) and ctrl (move vertically only) ?
+   //  -- but not all of that is available in multi tool.
+   auto message = _("Click and drag to move a track in time");
+
    return {
-      ttb->GetMessageForTool(slideTool),
+      message,
       (unsafe
        ? &*disabledCursor
        : &*slideCursor)
    };
 }
 
-HitTestResult TimeShiftHandle::HitAnywhere(const AudacityProject *pProject)
+UIHandlePtr TimeShiftHandle::HitAnywhere
+(std::weak_ptr<TimeShiftHandle> &holder,
+ const std::shared_ptr<Track> &pTrack, bool gripHit)
 {
    // After all that, it still may be unsafe to drag.
    // Even if so, make an informative cursor change from default to "banned."
-   const bool unsafe = pProject->IsAudioActive();
-   return {
-      HitPreview(pProject, unsafe),
-      (unsafe
-       ? NULL
-       : &Instance())
-   };
+   auto result = std::make_shared<TimeShiftHandle>( pTrack, gripHit );
+   result = AssignUIHandlePtr(holder, result);
+   return result;
 }
 
-HitTestResult TimeShiftHandle::HitTest
-   (const wxMouseEvent & event, const wxRect &rect, const AudacityProject *pProject)
+UIHandlePtr TimeShiftHandle::HitTest
+(std::weak_ptr<TimeShiftHandle> &holder,
+ const wxMouseState &state, const wxRect &rect,
+ const std::shared_ptr<Track> &pTrack)
 {
    /// method that tells us if the mouse event landed on a
    /// time-slider that allows us to time shift the sequence.
@@ -78,11 +86,11 @@ HitTestResult TimeShiftHandle::HitTest
    const int hotspotOffset = 5;
 
    // We are doing an approximate test here - is the mouse in the right or left border?
-   if (!(event.m_x + hotspotOffset < rect.x + adjustedDragHandleWidth ||
-       event.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
+   if (!(state.m_x + hotspotOffset < rect.x + adjustedDragHandleWidth ||
+       state.m_x + hotspotOffset >= rect.x + rect.width - adjustedDragHandleWidth))
       return {};
 
-   return HitAnywhere(pProject);
+   return HitAnywhere( holder, pTrack, true );
 }
 
 TimeShiftHandle::~TimeShiftHandle()
@@ -413,17 +421,16 @@ void TimeShiftHandle::DoSlideHorizontal
 UIHandle::Result TimeShiftHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   using namespace RefreshCode;
+   const bool unsafe = pProject->IsAudioActive();
+   if ( unsafe )
+      return Cancelled;
+
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
    const ViewInfo &viewInfo = pProject->GetViewInfo();
 
-   Track *const pTrack = static_cast<Track*>(evt.pCell);
-
-   using namespace RefreshCode;
-
-   const bool unsafe = pProject->IsAudioActive();
-   if (unsafe)
-      return Cancelled;
+   const auto pTrack = std::static_pointer_cast<Track>(evt.pCell);
 
    TrackList *const trackList = pProject->GetTracks();
 
@@ -441,7 +448,7 @@ UIHandle::Result TimeShiftHandle::Click
        clickTime < viewInfo.selectedRegion.t1());
 
    WaveTrack *wt = pTrack->GetKind() == Track::Wave
-      ? static_cast<WaveTrack*>(pTrack) : nullptr;
+      ? static_cast<WaveTrack*>(pTrack.get()) : nullptr;
 
    if ((wt
 #ifdef USE_MIDI
@@ -471,11 +478,10 @@ UIHandle::Result TimeShiftHandle::Click
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
-   mCapturedTrack = pTrack;
    mRect = rect;
    mMouseClickX = event.m_x;
    const double selStart = viewInfo.PositionToTime(event.m_x, mRect.x);
-   mSnapManager = std::make_unique<SnapManager>(trackList,
+   mSnapManager = std::make_shared<SnapManager>(trackList,
                                   &viewInfo,
                                   &mClipMoveState.capturedClipArray,
                                   &mClipMoveState.trackExclusions,
@@ -497,23 +503,26 @@ UIHandle::Result TimeShiftHandle::Drag
    ViewInfo &viewInfo = pProject->GetViewInfo();
 
    // We may switch pTrack to its stereo partner below
-   Track *pTrack = dynamic_cast<Track*>(evt.pCell);
+   Track *track = dynamic_cast<Track*>(evt.pCell.get());
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
-   pTrack = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack();
+   pTrack = static_cast<CommonTrackPanelCell*>(evt.pCell)->FindTrack().get();
    */
 
-   if (!pTrack) {
+   if (!track) {
       // Allow sliding if the pointer is not over any track, but only if x is
       // within the bounds of the tracks area.
       if (event.m_x >= mRect.GetX() &&
          event.m_x < mRect.GetX() + mRect.GetWidth())
-          pTrack = mCapturedTrack;
+          track = mCapturedTrack.get();
    }
 
+   // May need a shared_ptr to reassign mCapturedTrack below
+   auto pTrack = Track::Pointer( track );
    if (!pTrack)
       return RefreshCode::RefreshNone;
+
 
    using namespace RefreshCode;
    const bool unsafe = pProject->IsAudioActive();
@@ -571,7 +580,7 @@ UIHandle::Result TimeShiftHandle::Drag
       double clipLeft = 0, clipRight = 0;
 #ifdef USE_MIDI
       if (pTrack->GetKind() == Track::Wave) {
-         WaveTrack *const mtw = static_cast<WaveTrack*>(pTrack);
+         WaveTrack *const mtw = static_cast<WaveTrack*>(pTrack.get());
          const double rate = mtw->GetRate();
          // set it to a sample point
          desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
@@ -610,14 +619,12 @@ UIHandle::Result TimeShiftHandle::Drag
 #endif
       if (trySnap)
       {
-         double newClipLeft = clipLeft;
-         double newClipRight = clipRight;
-
-         bool dummy1, dummy2;
-         mSnapManager->Snap(mCapturedTrack, clipLeft, false, &newClipLeft,
-            &dummy1, &dummy2);
-         mSnapManager->Snap(mCapturedTrack, clipRight, false, &newClipRight,
-            &dummy1, &dummy2);
+         auto results =
+            mSnapManager->Snap(mCapturedTrack.get(), clipLeft, false);
+         auto newClipLeft = results.outTime;
+         results =
+            mSnapManager->Snap(mCapturedTrack.get(), clipRight, false);
+         auto newClipRight = results.outTime;
 
          // Only one of them is allowed to snap
          if (newClipLeft != clipLeft && newClipRight != clipRight) {
@@ -658,8 +665,8 @@ UIHandle::Result TimeShiftHandle::Drag
        /* && !mCapturedClipIsSelection*/)
    {
       const int diff =
-         TrackPosition(*trackList, pTrack) -
-         TrackPosition(*trackList, mCapturedTrack);
+         TrackPosition(*trackList, pTrack.get()) -
+         TrackPosition(*trackList, mCapturedTrack.get());
       for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
             ii < nn; ++ii ) {
          TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
@@ -767,9 +774,12 @@ UIHandle::Result TimeShiftHandle::Drag
 }
 
 HitTestPreview TimeShiftHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *pProject)
+(const TrackPanelMouseState &, const AudacityProject *pProject)
 {
-   return HitPreview(pProject, false);
+   // After all that, it still may be unsafe to drag.
+   // Even if so, make an informative cursor change from default to "banned."
+   const bool unsafe = pProject->IsAudioActive();
+   return HitPreview(pProject, unsafe);
 }
 
 UIHandle::Result TimeShiftHandle::Release
@@ -782,10 +792,6 @@ UIHandle::Result TimeShiftHandle::Release
       return this->Cancel(pProject);
 
    Result result = RefreshNone;
-
-   mCapturedTrack = NULL;
-   mSnapManager.reset(NULL);
-   mClipMoveState.capturedClipArray.clear();
 
    // Do not draw yellow lines
    if ( mClipMoveState.snapLeft != -1 || mClipMoveState.snapRight != -1) {
@@ -842,9 +848,6 @@ UIHandle::Result TimeShiftHandle::Release
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
-   mCapturedTrack = nullptr;
-   mSnapManager.reset();
-   mClipMoveState.clear();
    return RefreshCode::RefreshAll;
 }
 

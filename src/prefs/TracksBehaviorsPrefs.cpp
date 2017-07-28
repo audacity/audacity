@@ -71,9 +71,11 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 /* Stopping at either end is best (DA decision) 
    Works for VI users and regular users alike.
 */
+#ifndef EXPERIMENTAL_DA
       S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
                     wxT("/GUI/CircularTrackNavigation"),
                     false);
+#endif
       S.TieCheckBox(_("&Type to create a label"),
                     wxT("/GUI/TypeToCreateLabel"),
                     true);
@@ -94,7 +96,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 }
 
-bool TracksBehaviorsPrefs::Apply()
+bool TracksBehaviorsPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

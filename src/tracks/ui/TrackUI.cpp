@@ -22,53 +22,83 @@ Paul Licameli split from TrackPanel.cpp
 #include "../playabletrack/wavetrack/ui/SampleHandle.h"
 #include "ZoomHandle.h"
 #include "TimeShiftHandle.h"
+#include "../../TrackPanelResizerCell.h"
+#include "BackgroundCell.h"
 
-HitTestResult Track::HitTest
-(const TrackPanelMouseEvent &event,
+std::vector<UIHandlePtr> Track::HitTest
+(const TrackPanelMouseState &st,
  const AudacityProject *pProject)
 {
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
    const ToolsToolBar * pTtb = pProject->GetToolsToolBar();
-   // Unless in Multimode keep using the current tool.
    const bool isMultiTool = pTtb->IsDown(multiTool);
-   if (!isMultiTool) {
-      switch (pTtb->GetCurrentTool()) {
-      case envelopeTool:
-         // Pass "false" for unsafe -- let the tool decide to cancel itself
-         return EnvelopeHandle::HitAnywhere(pProject);
-      case drawTool:
-         return SampleHandle::HitAnywhere(event.event, pProject);
-      case zoomTool:
-         return ZoomHandle::HitAnywhere(event.event, pProject);
-      case slideTool:
-         return TimeShiftHandle::HitAnywhere(pProject);
-      case selectTool:
-         return SelectHandle::HitTest(event, pProject, this);
+   const auto currentTool = pTtb->GetCurrentTool();
 
-      default:
-         // fallthru
-         ;
-      }
+   if ( !isMultiTool && currentTool == zoomTool ) {
+      // Zoom tool is a non-selecting tool that takes precedence in all tracks
+      // over all other tools, no matter what detail you point at.
+      result = ZoomHandle::HitAnywhere(
+         pProject->GetBackgroundCell()->mZoomHandle);
+      results.push_back(result);
+      return results;
    }
 
-   // Replicate some of the logic of TrackPanel::DetermineToolToUse
-   HitTestResult result;
+   // In other tools, let subclasses determine detailed hits.
+   results =
+      DetailedHitTest( st, pProject, currentTool, isMultiTool );
 
-   if (isMultiTool)
-      result = ZoomHandle::HitTest(event.event, pProject);
+   // There are still some general cases.
 
-   return result;
+   // Sliding applies in more than one track type.
+   if ( !isMultiTool && currentTool == slideTool ) {
+      result = TimeShiftHandle::HitAnywhere(
+         mTimeShiftHandle, Pointer(this), false);
+      if (result)
+         results.push_back(result);
+   }
+
+   // Let the multi-tool right-click handler apply only in default of all
+   // other detailed hits.
+   if ( isMultiTool ) {
+      result = ZoomHandle::HitTest(
+         pProject->GetBackgroundCell()->mZoomHandle, st.state);
+      if (result)
+         results.push_back(result);
+   }
+
+   // Finally, default of all is adjustment of the selection box.
+   if ( isMultiTool || currentTool == selectTool ) {
+      result = SelectHandle::HitTest(
+         mSelectHandle, st, pProject, Pointer(this));
+      if (result)
+         results.push_back(result);
+   }
+
+   return results;
 }
 
-TrackPanelCell *Track::GetTrackControl()
+std::shared_ptr<TrackPanelCell> Track::GetTrackControl()
 {
-   TrackControls *const result = GetControls();
-   result->mpTrack = this;
-   return result;
+   if (!mpControls)
+      // create on demand
+      mpControls = GetControls();
+   return mpControls;
 }
 
-TrackPanelCell *Track::GetVRulerControl()
+std::shared_ptr<TrackPanelCell> Track::GetVRulerControl()
 {
-   TrackVRulerControls *const result = GetVRulerControls();
-   result->mpTrack = this;
-   return result;
+   if (!mpVRulerContols)
+      // create on demand
+      mpVRulerContols = GetVRulerControls();
+   return mpVRulerContols;
+}
+
+#include "../../TrackPanelResizeHandle.h"
+std::shared_ptr<TrackPanelCell> Track::GetResizer()
+{
+   if (!mpResizer)
+      // create on demand
+      mpResizer = std::make_shared<TrackPanelResizerCell>( Pointer( this ) );
+   return mpResizer;
 }

@@ -73,7 +73,12 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieCheckBox(_("Overdub"),
                     wxT("/AudioIO/Duplex"),
+#ifdef EXPERIMENTAL_DA
+                    false);
+#else
                     true);
+#endif
+
 #if defined(__WXMAC__)
       S.TieCheckBox(_("&Hardware Playthrough"),
                     wxT("/AudioIO/Playthrough"),
@@ -155,9 +160,9 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Options"));
    {
-       S.TieCheckBox(_("Record &appends"),
-                    wxT("/GUI/PreferAppendRecord"),
-                    true);
+       S.TieCheckBox(_("Record on a new track"),
+                    wxT("/GUI/PreferNewTrackRecord"),
+                    false);
    }
    S.EndStatic();
 
@@ -207,7 +212,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    #endif
 }
 
-bool RecordingPrefs::Apply()
+bool RecordingPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

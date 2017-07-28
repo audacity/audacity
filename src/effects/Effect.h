@@ -18,6 +18,7 @@
 
 #include "../MemoryX.h"
 #include <wx/bmpbuttn.h>
+#include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/string.h>
@@ -415,7 +416,7 @@ protected:
    private:
       Effect *mpEffect{};
       LabelTrack *mpTrack{};
-      movable_ptr<Track> mpOrigTrack{};
+      std::shared_ptr<Track> mpOrigTrack{};
    };
 
    // Set name to given value if that is not empty, else use default name
@@ -444,7 +445,7 @@ protected:
    double         mSampleRate;
    TrackFactory   *mFactory;
    TrackList *inputTracks() const { return mTracks; }
-   std::unique_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
+   std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -571,6 +572,7 @@ private:
    int mAdditionalButtons;
 
    DECLARE_EVENT_TABLE()
+   wxDECLARE_NO_COPY_CLASS(EffectDialog);
 };
 
 //
@@ -623,6 +625,7 @@ private:
 
    void InitializeRealtime();
    void CleanupRealtime();
+   void Resume();
 
 private:
    AudacityProject *mProject;
@@ -662,6 +665,7 @@ private:
    double mPlayPos;
 
    bool mDismissed{};
+   bool mNeedsResume{};
 
    DECLARE_EVENT_TABLE()
 };

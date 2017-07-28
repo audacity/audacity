@@ -15,16 +15,17 @@ Paul Licameli split from TrackPanel.cpp
 
 class LabelTrackControls final : public TrackControls
 {
-   LabelTrackControls();
    LabelTrackControls(const LabelTrackControls&) = delete;
    LabelTrackControls &operator=(const LabelTrackControls&) = delete;
 
 public:
-   static LabelTrackControls &Instance();
+   explicit
+   LabelTrackControls( std::shared_ptr<Track> pTrack )
+      : TrackControls( pTrack ) {}
    ~LabelTrackControls();
 
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;

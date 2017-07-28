@@ -12,18 +12,25 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_TRACK_CONTROLS__
 
 #include "CommonTrackPanelCell.h"
+#include "../../MemoryX.h"
 
 class PopupMenuTable;
 class Track;
 
+class CloseButtonHandle;
+class MenuButtonHandle;
+class MinimizeButtonHandle;
+class TrackSelectHandle;
+
 class TrackControls /* not final */ : public CommonTrackPanelCell
 {
 public:
-   TrackControls() : mpTrack(NULL) {}
+   explicit
+   TrackControls( std::shared_ptr<Track> pTrack );
 
    virtual ~TrackControls() = 0;
 
-   Track *GetTrack() const { return mpTrack; }
+   std::shared_ptr<Track> FindTrack() override;
 
    // This is passed to the InitMenu() methods of the PopupMenuTable
    // objects returned by GetMenuExtension:
@@ -35,24 +42,25 @@ public:
       unsigned result;
    };
 
-   // Make this hack go away!  See TrackPanel::DrawOutside
-   static int gCaptureState;
-
 protected:
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
-   virtual HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
+   virtual std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
        const AudacityProject *) override = 0;
-
-   Track *FindTrack() override;
 
    unsigned DoContextMenu
       (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition) override;
    virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
 
-   friend class Track;
-   Track *mpTrack;
+   Track *GetTrack() const;
+
+   std::weak_ptr<Track> mwTrack;
+
+   std::weak_ptr<CloseButtonHandle> mCloseHandle;
+   std::weak_ptr<MenuButtonHandle> mMenuHandle;
+   std::weak_ptr<MinimizeButtonHandle> mMinimizeHandle;
+   std::weak_ptr<TrackSelectHandle> mSelectHandle;
 };
 
 #endif

@@ -31,7 +31,7 @@ class MidiIOPrefs final : public PrefsPanel
  public:
    MidiIOPrefs(wxWindow * parent);
    virtual ~MidiIOPrefs();
-   bool Apply() override;
+   bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;
 

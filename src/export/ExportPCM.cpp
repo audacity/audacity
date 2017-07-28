@@ -228,6 +228,10 @@ bool ExportPCMOptions::TransferDataFromWindow()
 void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
 {
    int format = sf_header_index_to_type(mHeaderChoice->GetSelection());
+   // Fix for Bug 1218 - AIFF with no option should default to 16 bit.
+   if( format == SF_FORMAT_AIFF )
+      format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
+
    mEncodingNames.Clear();
    mEncodingChoice->Clear();
    mEncodingFormats.Clear();

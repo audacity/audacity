@@ -72,7 +72,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       // Draw indicator in all visible tracks
       for ( const auto &data : tp->Cells() )
       {
-         Track *const pTrack = dynamic_cast<Track*>(data.first);
+         Track *const pTrack = dynamic_cast<Track*>(data.first.get());
          if (!pTrack)
             continue;
 

@@ -75,7 +75,7 @@
 BEGIN_EVENT_TABLE(PrefsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PrefsDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PrefsDialog::OnCancel)
-   EVT_BUTTON(wxID_APPLY, PrefsDialog::OnApply)
+   EVT_BUTTON(wxID_PREVIEW, PrefsDialog::OnPreview)
    EVT_BUTTON(wxID_HELP, PrefsDialog::OnHelp)
    EVT_TREE_KEY_DOWN(wxID_ANY, PrefsDialog::OnTreeKeyDown) // Handles key events when tree has focus
 END_EVENT_TABLE()
@@ -113,9 +113,9 @@ int wxTreebookExt::SetSelection(size_t n)
 
    PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
    const bool showHelp = (panel->HelpPageName() != wxEmptyString);
-   const bool showApply = panel->ShowsApplyButton();
+   const bool showPreview = panel->ShowsPreviewButton();
    wxWindow *const helpButton = wxWindow::FindWindowById(wxID_HELP, GetParent());
-   wxWindow *const applyButton = wxWindow::FindWindowById(wxID_APPLY, GetParent());
+   wxWindow *const previewButton = wxWindow::FindWindowById(wxID_PREVIEW, GetParent());
 
    if (helpButton) {
       if (showHelp) {
@@ -137,8 +137,8 @@ int wxTreebookExt::SetSelection(size_t n)
          GetParent()->Layout();
    }
 
-   if (applyButton) { // might still be NULL during population
-      const bool changed = applyButton->Show(showApply);
+   if (previewButton) { // might still be NULL during population
+      const bool changed = previewButton->Show(showPreview);
       if (changed)
          GetParent()->Layout();
    }
@@ -308,13 +308,13 @@ PrefsDialog::PrefsDialog
    }
    S.EndVerticalLay();
 
-   S.AddStandardButtons(eOkButton | eCancelButton | eApplyButton | eHelpButton);
+   S.AddStandardButtons(eOkButton | eCancelButton | ePreviewButton | eHelpButton);
    static_cast<wxButton*>(wxWindow::FindWindowById(wxID_OK, this))->SetDefault();
 
-   if (mUniquePage && !mUniquePage->ShowsApplyButton()) {
-      wxWindow *const applyButton =
-         wxWindow::FindWindowById(wxID_APPLY, GetParent());
-      applyButton->Show(false);
+   if (mUniquePage && !mUniquePage->ShowsPreviewButton()) {
+      wxWindow *const previewButton =
+         wxWindow::FindWindowById(wxID_PREVIEW, GetParent());
+      previewButton->Show(false);
    }
 
 #if defined(__WXGTK__)
@@ -355,7 +355,13 @@ PrefsDialog::PrefsDialog
    // Frankly, this is a hack to work around a bug in wxTreebook, and
    // will have to be revisited if we add another category to mCategories.
    // JKC later added a category and 20 onto the 7.
+
    sz.y += 7 + 20;
+
+   // PRL:  Bug 161 is an obsolete concern with wx3; bug 1183 is a problem
+   // of minimum size being too great at low resolution.
+   sz.DecTo( ::wxGetDisplaySize() );
+
    SetSize(sz);
    SetMinSize(sz);
 
@@ -416,9 +422,9 @@ PrefsPanel * PrefsDialog::GetCurrentPanel()
    }
 }
 
-void PrefsDialog::OnApply(wxCommandEvent & WXUNUSED(event))
+void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
-   GetCurrentPanel()->Apply();
+   GetCurrentPanel()->Preview();
 }
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
@@ -470,11 +476,14 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
          PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
 
-         panel->Apply();
+         panel->Preview();
+         panel->Commit();
       }
    }
-   else
-      mUniquePage->Apply();
+   else {
+      mUniquePage->Preview();
+      mUniquePage->Commit();
+   }
 
    gPrefs->Flush();
 
@@ -586,7 +595,7 @@ void PrefsPanel::Cancel()
 {
 }
 
-bool PrefsPanel::ShowsApplyButton()
+bool PrefsPanel::ShowsPreviewButton()
 {
    return false;
 }

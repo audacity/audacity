@@ -108,7 +108,6 @@ ControlToolBar::ControlToolBar()
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
    mSizer = NULL;
-   mCutPreviewTracks = NULL;
 
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
    is playing or recording or stopped, and whether it is paused. */
@@ -197,9 +196,9 @@ void ControlToolBar::Populate()
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
 
-   bool bPreferAppend;
-   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
-   if( bPreferAppend )
+   bool bPreferNewTrack;
+   gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+   if( !bPreferNewTrack )
       MakeAlternateImages(*mRecord, 1, bmpRecordBelow, bmpRecordBelow,
          bmpRecordBelowDisabled);
    else
@@ -241,9 +240,9 @@ void ControlToolBar::RegenerateTooltips()
             // Without shift
             //commands.push_back(wxT("Record"));
             commands.push_back(wxT("Record1stChoice"));
-            {  bool bPreferAppend;
-               gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
-               if( bPreferAppend ){
+            {  bool bPreferNewTrack;
+               gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+               if( !bPreferNewTrack ){
                   commands.push_back(_("Record New Track"));
                } else {
                   commands.push_back(_("Append Record"));
@@ -538,6 +537,12 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (!CanStopAudioStream())
       return -1;
 
+   bool useMidi = true;
+
+   // Remove these lines to experiment with scrubbing/seeking of note tracks
+   if (options.pScrubbingOptions)
+      useMidi = false;
+
    // Uncomment this for laughs!
    // backwards = true;
 
@@ -583,7 +588,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    for (Track *trk = iter.First(); trk; trk = iter.Next()) {
       if (trk->GetKind() == Track::Wave
 #ifdef EXPERIMENTAL_MIDI_OUT
-         || trk->GetKind() == Track::Note
+         || (trk->GetKind() == Track::Note && useMidi)
 #endif
          ) {
          hasaudio = true;
@@ -668,7 +673,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                mCutPreviewTracks->GetWaveTrackConstArray(false),
                WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
-               NoteTrackArray(),
+               useMidi
+                  ? mCutPreviewTracks->GetNoteTrackArray(false)
+                  : NoteTrackArray(),
 #endif
                tcp0, tcp1, myOptions);
          }
@@ -686,7 +693,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          token = gAudioIO->StartStream(t->GetWaveTrackConstArray(false),
                                        WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
-                                       t->GetNoteTrackArray(false),
+                                       useMidi
+                                          ? t->GetNoteTrackArray(false)
+                                          : NoteTrackArray(),
 #endif
                                        t0, t1, options);
       }
@@ -700,10 +709,17 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 #endif
       }
       else {
+         // Bug1627 (part of it):
+         // infinite error spew when trying to start scrub:
+         // Problem was that the error dialog yields to events,
+         // causing recursion to this function in the scrub timer
+         // handler!  Easy fix, just delay the user alert instead.
+         CallAfter( [=]{
          // Show error message if stream could not be opened
          ShowErrorDialog(this, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
+         });
       }
    }
 
@@ -922,13 +938,14 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
    bool shifted = mRecord->WasShiftDown();
 
-   bool bPreferAppend;
-   gPrefs->Read("/GUI/PreferAppendRecord",&bPreferAppend, true);
-   if( bPreferAppend )
+   bool bPreferNewTrack;
+   gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+   if( !bPreferNewTrack )
       shifted = !shifted;
 
    TrackList *trackList = p->GetTracks();
-   TrackList tracksCopy{};
+   auto pTracksCopy = TrackList::Create();
+   auto &tracksCopy = *pTracksCopy;
    bool tracksCopied = false;
 
    WaveTrackArray recordingTracks;
@@ -981,8 +998,11 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       NoteTrackArray midiTracks;
 #endif
       bool duplex;
+#ifdef EXPERIMENTAL_DA
+      gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, false);
+#else
       gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
-
+#endif
       if(duplex){
          playbackTracks = trackList->GetWaveTrackConstArray(false);
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1040,7 +1060,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                      playbackTracks.erase(it);
                }
                t1 = wt->GetEndTime();
-               if (t1 < t0) {
+               // less than or equal, not just less than, to ensure a clip boundary.
+               // when append recording.
+               if (t1 <= t0) {
                   if (!tracksCopied) {
                      // Duplicate all tracks before modifying any of them.
                      // The duplicates are used to restore state in case
@@ -1087,7 +1109,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
          /* i18n-hint: The default name for an audio track. */
-         gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"),&defaultTrackName, _("Audio Track"));
+         defaultTrackName = TracksPrefs::GetDefaultAudioTrackNamePreference();
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
@@ -1252,7 +1274,12 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
       TrackListIterator it(p->GetTracks());
       for (Track *t = it.First(); t; t = it.Next())
       {
-         if (t->GetKind() == Track::Wave && t->GetSelected())
+         if (t->GetSelected() &&
+            (t->GetKind() == Track::Wave
+#ifdef EXPERIMENTAL_MIDI_OUT
+         || t->GetKind() == Track::Note
+#endif
+            ))
          {
             track1 = t;
             track2 = t->GetLink();
@@ -1275,7 +1302,7 @@ void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cu
 
          // use NOTHROW-GUARANTEE:
 
-         mCutPreviewTracks = std::make_unique<TrackList>();
+         mCutPreviewTracks = TrackList::Create();
          mCutPreviewTracks->Add(std::move(new1));
          if (track2)
             mCutPreviewTracks->Add(std::move(new2));
@@ -1383,8 +1410,11 @@ void ControlToolBar::StartScrolling()
          // If you overdub, you may want to anticipate some context in existing tracks,
          // so center the head.  If not, put it rightmost to display as much wave as we can.
          bool duplex;
+#ifdef EXPERIMENTAL_DA
+         gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, false);
+#else
          gPrefs->Read(wxT("/AudioIO/Duplex"), &duplex, true);
-
+#endif
          if (duplex) {
             // See if there is really anything being overdubbed
             if (gAudioIO->GetNumPlaybackChannels() == 0)

@@ -18,7 +18,6 @@
 #include <wx/access.h>
 #endif
 
-#include "Snap.h"
 #include "Track.h"
 #include "TrackPanel.h"
 
@@ -32,10 +31,12 @@ public:
    virtual ~ TrackPanelAx();
 
    // Returns currently focused track or first one if none focused
-   Track *GetFocus();
+   std::shared_ptr<Track> GetFocus();
 
    // Changes focus to a specified track
-   void SetFocus( Track *track );
+   // Return is the actual focused track, which may be different from
+   // the argument when that is null
+   std::shared_ptr<Track> SetFocus( std::shared_ptr<Track> track = {} );
 
    // Returns TRUE if passed track has the focus
    bool IsFocused( Track *track );
@@ -107,11 +108,12 @@ public:
 
 private:
 
-   int TrackNum( Track *track );
-   Track *FindTrack( int num );
+   int TrackNum( const std::shared_ptr<Track> &track );
+   std::shared_ptr<Track> FindTrack( int num );
 
    TrackPanel *mTrackPanel;
-   Track *mFocusedTrack;
+
+   std::weak_ptr<Track> mFocusedTrack;
 
    wxString mMessage;
    bool mTrackName;

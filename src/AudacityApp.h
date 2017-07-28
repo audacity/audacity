@@ -164,12 +164,7 @@ class AudacityApp final : public wxApp {
 
 #ifdef __WXMAC__
 
-   #if ! defined(__WXDEBUG__)
-   #define FIX_BUG1567
-   #endif
-
    void MacActivateApp();
-   static bool IsSierraOrLater();
 
 #endif
 

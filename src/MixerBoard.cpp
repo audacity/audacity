@@ -129,7 +129,7 @@ void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)
 
 #define TRACK_NAME_HEIGHT                    18
 #define MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH  48
-#define MUTE_SOLO_HEIGHT                     16
+#define MUTE_SOLO_HEIGHT                     19
 #define PAN_HEIGHT                           24
 
 #define kLeftSideStackWidth         MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset //vvv Change when numbers shown on slider scale.
@@ -344,6 +344,8 @@ NoteTrack *MixerTrackCluster::GetNote() const
 
 void MixerTrackCluster::UpdatePrefs()
 {
+   this->SetBackgroundColour( theTheme.Colour( clrMedium ) );
+   mStaticText_TrackName->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
    if (mMeter)
       mMeter->UpdatePrefs(); // in case meter range has changed
    HandleResize(); // in case prefs "/GUI/Solo" changed
@@ -936,10 +938,33 @@ MixerBoard::~MixerBoard()
       this);
 }
 
+
+
+
 void MixerBoard::UpdatePrefs()
 {
+   mProject->RecreateMixerBoard();
+
+// Old approach modified things in situ.
+// However with a theme change there is so much to modify, it is easier
+// to recreate.
+#if 0
+   mScrolledWindow->SetBackgroundColour( theTheme.Colour( clrMedium ) );
+   if( mImageMuteUp ){
+      mImageMuteUp.reset();
+      mImageMuteOver.reset();
+      mImageMuteDown.reset();
+      mImageMuteDownWhileSolo.reset();
+      mImageMuteDisabled.reset();
+      mImageSoloUp.reset();
+      mImageSoloOver.reset();
+      mImageSoloDown.reset();
+      mImageSoloDisabled.reset();
+   }
    for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.GetCount(); nClusterIndex++)
       mMixerTrackClusters[nClusterIndex]->UpdatePrefs();
+   Refresh();
+#endif
 }
 
 // Reassign mixer input strips (MixerTrackClusters) to Track Clusters
@@ -994,7 +1019,7 @@ void MixerBoard::UpdateTrackClusters()
          }
          nClusterIndex++;
       }
-      pTrack = iterTracks.Next();
+      pTrack = iterTracks.Next(true);
    }
 
    if (pMixerTrackCluster)
@@ -1299,12 +1324,10 @@ void MixerBoard::UpdateWidth()
 // private methods
 //
 
-void MixerBoard::CreateMuteSoloImages()
+
+void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap, wxRect & bev, const wxString & str, bool up )
 {
-   // Much of this is similar to TrackInfo::MuteOrSoloDrawFunction.
-   wxMemoryDC dc;
-   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
-   wxString str = _("Mute");
+
    int textWidth, textHeight;
 
    int fontSize = 10;
@@ -1312,63 +1335,58 @@ void MixerBoard::CreateMuteSoloImages()
       fontSize = 8;
    #endif
    wxFont font(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
-   this->GetTextExtent(str, &textWidth, &textHeight, NULL, NULL, &font);
-   mMuteSoloWidth = textWidth + kQuadrupleInset;
-   if (mMuteSoloWidth < kRightSideStackWidth - kInset)
-      mMuteSoloWidth = kRightSideStackWidth - kInset;
+   GetTextExtent(str, &textWidth, &textHeight, NULL, NULL, &font);
 
-   wxBitmap bitmap(mMuteSoloWidth, MUTE_SOLO_HEIGHT);
-   dc.SelectObject(bitmap);
-   wxRect bev(0, 0, mMuteSoloWidth - 1, MUTE_SOLO_HEIGHT - 1);
-
-   // mute button images
-   AColor::Mute(&dc, false, false, false);
+   AColor::UseThemeColour( &dc, clrMedium );
    dc.DrawRectangle(bev);
+
+   AColor::Bevel2( dc, up, bev, false );
 
    wxCoord x = bev.x + (bev.width - textWidth) / 2;
    wxCoord y = bev.y + (bev.height - textHeight) / 2;
    dc.SetFont(font);
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
+   dc.SetBackgroundMode(wxTRANSPARENT);
    dc.DrawText(str, x, y);
+//   dc.DrawText(str, 0, 0);
+}
 
-   AColor::Bevel(dc, true, bev);
+void MixerBoard::CreateMuteSoloImages()
+{
+   // Much of this is similar to TrackInfo::MuteOrSoloDrawFunction.
+   wxMemoryDC dc;
+   wxString str = _("Mute");
 
+   //mMuteSoloWidth = textWidth + kQuadrupleInset;
+   //if (mMuteSoloWidth < kRightSideStackWidth - kInset)
+   mMuteSoloWidth = kRightSideStackWidth - kInset;
+
+   wxBitmap bitmap(mMuteSoloWidth, MUTE_SOLO_HEIGHT,24);
+   dc.SelectObject(bitmap);
+   wxRect bev(0, 0, mMuteSoloWidth, MUTE_SOLO_HEIGHT);
+   
+   const bool up=true;
+   const bool down=false;
+
+   MakeButtonBitmap( dc, bitmap, bev, str, up );
    mImageMuteUp = std::make_unique<wxImage>(bitmap.ConvertToImage());
    mImageMuteOver = std::make_unique<wxImage>(bitmap.ConvertToImage()); // Same as up, for now.
 
-   AColor::Mute(&dc, true, true, false);
-   dc.DrawRectangle(bev);
-   dc.DrawText(str, x, y);
-   AColor::Bevel(dc, false, bev);
+   MakeButtonBitmap( dc, bitmap, bev, str, down );
+   //AColor::Bevel(dc, false, bev);
    mImageMuteDown = std::make_unique<wxImage>(bitmap.ConvertToImage());
 
-   AColor::Mute(&dc, true, true, true);
-   dc.DrawRectangle(bev);
-   dc.DrawText(str, x, y);
-   AColor::Bevel(dc, false, bev);
+   MakeButtonBitmap( dc, bitmap, bev, str, down );
    mImageMuteDownWhileSolo = std::make_unique<wxImage>(bitmap.ConvertToImage());
 
    mImageMuteDisabled = std::make_unique<wxImage>(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
 
-
-   // solo button images
-   AColor::Solo(&dc, false, false);
-   dc.DrawRectangle(bev);
-
    str = _("Solo");
-   dc.GetTextExtent(str, &textWidth, &textHeight);
-   x = bev.x + (bev.width - textWidth) / 2;
-   y = bev.y + (bev.height - textHeight) / 2;
-   dc.DrawText(str, x, y);
-
-   AColor::Bevel(dc, true, bev);
-
+   MakeButtonBitmap( dc, bitmap, bev, str, up );
    mImageSoloUp = std::make_unique<wxImage>(bitmap.ConvertToImage());
    mImageSoloOver = std::make_unique<wxImage>(bitmap.ConvertToImage()); // Same as up, for now.
 
-   AColor::Solo(&dc, true, true);
-   dc.DrawRectangle(bev);
-   dc.DrawText(str, x, y);
-   AColor::Bevel(dc, false, bev);
+   MakeButtonBitmap( dc, bitmap, bev, str, down );
    mImageSoloDown = std::make_unique<wxImage>(bitmap.ConvertToImage());
 
    mImageSoloDisabled = std::make_unique<wxImage>(mMuteSoloWidth, MUTE_SOLO_HEIGHT); // Leave empty because unused.
@@ -1518,6 +1536,7 @@ MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
 MixerBoardFrame::~MixerBoardFrame()
 {
 }
+
 
 // event handlers
 void MixerBoardFrame::OnCloseWindow(wxCloseEvent &WXUNUSED(event))

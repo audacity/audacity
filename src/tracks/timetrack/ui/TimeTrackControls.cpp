@@ -17,25 +17,15 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../widgets/PopupMenuTable.h"
 #include <wx/numdlg.h>
 
-TimeTrackControls::TimeTrackControls()
-{
-}
-
-TimeTrackControls &TimeTrackControls::Instance()
-{
-   static TimeTrackControls instance;
-   return instance;
-}
-
 TimeTrackControls::~TimeTrackControls()
 {
 }
 
-HitTestResult TimeTrackControls::HitTest
-(const TrackPanelMouseEvent & event,
+std::vector<UIHandlePtr> TimeTrackControls::HitTest
+(const TrackPanelMouseState & state,
  const AudacityProject *pProject)
 {
-   return TrackControls::HitTest(event, pProject);
+   return TrackControls::HitTest(state, pProject);
 }
 
 enum
@@ -61,6 +51,10 @@ private:
       TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
 
       pMenu->Check(OnTimeTrackLogIntID, pTrack->GetInterpolateLog());
+
+      auto isLog = pTrack->GetDisplayLog();
+      pMenu->Check(OnTimeTrackLinID, !isLog);
+      pMenu->Check(OnTimeTrackLogID, isLog);
    }
 
    void DestroyMenu() override
@@ -158,8 +152,8 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
    POPUP_MENU_SEPARATOR()
-   POPUP_MENU_ITEM(OnTimeTrackLinID, _("&Linear scale"), OnTimeTrackLin)
-   POPUP_MENU_ITEM(OnTimeTrackLogID, _("L&ogarithmic scale"), OnTimeTrackLog)
+   POPUP_MENU_RADIO_ITEM(OnTimeTrackLinID, _("&Linear scale"), OnTimeTrackLin)
+   POPUP_MENU_RADIO_ITEM(OnTimeTrackLogID, _("L&ogarithmic scale"), OnTimeTrackLog)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_ITEM(OnSetTimeTrackRangeID, _("&Range..."), OnSetTimeTrackRange)
    POPUP_MENU_CHECK_ITEM(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"), OnTimeTrackLogInt)

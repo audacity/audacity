@@ -16,7 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../MemoryX.h"
 
 class Alg_seq;
-struct HitTestResult;
 class NoteTrack;
 class Track;
 class ViewInfo;
@@ -55,41 +54,49 @@ public:
    };
    
 private:
-   StretchHandle();
    StretchHandle(const StretchHandle&);
-   StretchHandle &operator=(const StretchHandle&);
-   static StretchHandle& Instance();
    static HitTestPreview HitPreview(StretchEnum stretchMode, bool unsafe);
 
 public:
-   static HitTestResult HitTest
-      ( const TrackPanelMouseEvent &event, const AudacityProject *pProject,
-        NoteTrack *pTrack, StretchState &state );
+   explicit StretchHandle
+      ( const std::shared_ptr<NoteTrack> &pTrack,
+        const StretchState &stretchState );
+
+   StretchHandle &operator=(const StretchHandle&) = default;
+
+   static UIHandlePtr HitTest
+      (std::weak_ptr<StretchHandle> &holder,
+       const TrackPanelMouseState &state, const AudacityProject *pProject,
+       const std::shared_ptr<NoteTrack> &pTrack );
 
    virtual ~StretchHandle();
 
-   virtual Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   virtual Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject);
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
 
-   virtual HitTestPreview Preview
-      (const TrackPanelMouseEvent &event, const AudacityProject *pProject);
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, const AudacityProject *pProject)
+      override;
 
-   virtual Result Release
+   Result Release
       (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-      wxWindow *pParent);
+      wxWindow *pParent) override;
 
-   virtual Result Cancel(AudacityProject *pProject);
+   Result Cancel(AudacityProject *pProject) override;
 
    bool StopsOnKeystroke() override { return true; }
 
 private:
+   static double GetT0(const Track &track, const ViewInfo &viewInfo);
+   static double GetT1(const Track &track, const ViewInfo &viewInfo);
+
    void Stretch
       (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
 
-   NoteTrack *mpTrack{};
+   std::shared_ptr<NoteTrack> mpTrack{};
    int mLeftEdge{ -1 };
 
    StretchState mStretchState{};

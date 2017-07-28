@@ -38,10 +38,14 @@ class LabelTrack;
 class TimeTrack;
 class TrackControls;
 class TrackVRulerControls;
+class TrackPanelResizerCell;
 class WaveTrack;
 class NoteTrack;
 class AudacityProject;
 class ZoomInfo;
+
+class SelectHandle;
+class TimeShiftHandle;
 
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
 using WaveTrackArray = std::vector < WaveTrack* > ;
@@ -72,7 +76,7 @@ class NoteTrack;
 
 class TrackList;
 
-using ListOfTracks = std::list<movable_ptr<Track>>;
+using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
 using TrackNodePointer = ListOfTracks::iterator;
 
@@ -87,7 +91,7 @@ class AUDACITY_DLL_API Track /* not final */
 
  // To be TrackDisplay
  protected:
-   TrackList     *mList;
+   std::weak_ptr<TrackList> mList;
    TrackNodePointer mNode{};
    int            mIndex;
    int            mY;
@@ -107,21 +111,62 @@ class AUDACITY_DLL_API Track /* not final */
    bool           mMinimized;
 
  public:
-   mutable wxSize vrulerSize;
 
-   // An implementation is defined for call-through from subclasses, but
-   // the inherited method is still marked pure virtual
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &, const AudacityProject *pProject)
-      override = 0;
+   // Given a bare pointer, find a shared_ptr.  But this is not possible for
+   // a track not owned by any project, so the result can be null.
+   template<typename Subclass = Track>
+   inline static std::shared_ptr<Subclass> Pointer( Track *t )
+   {
+      if (t) {
+         auto pList = t->mList.lock();
+         if (pList)
+            return std::static_pointer_cast<Subclass>(*t->mNode);
+      }
+      return {};
+   }
+
+   template<typename Subclass = const Track>
+   inline static std::shared_ptr<Subclass> Pointer( const Track *t )
+   {
+      if (t) {
+         auto pList = t->mList.lock();
+         if (pList) {
+            std::shared_ptr<const Track> p{ *t->mNode };
+            // Let you change the type, but not cast away the const
+            return std::static_pointer_cast<Subclass>(p);
+         }
+      }
+      return {};
+   }
+
+   // Cause certain overriding tool modes (Zoom; future ones?) to behave
+   // uniformly in all tracks, disregarding track contents.
+   // Do not further override this...
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &, const AudacityProject *pProject)
+      final override;
+
+ public:
+
+   // Rather override this for subclasses:
+   virtual std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      = 0;
+
+   mutable wxSize vrulerSize;
 
    // Return another, associated TrackPanelCell object that implements the
    // drop-down, close and minimize buttons, etc.
-   TrackPanelCell *GetTrackControl();
+   std::shared_ptr<TrackPanelCell> GetTrackControl();
 
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
-   TrackPanelCell *GetVRulerControl();
+   std::shared_ptr<TrackPanelCell> GetVRulerControl();
+
+   // Return another, associated TrackPanelCell object that implements the
+   // click and drag to resize
+   std::shared_ptr<TrackPanelCell> GetResizer();
 
    // This just returns a constant and can be overriden by subclasses
    // to specify a different height for the case that the track is minimized.
@@ -139,7 +184,7 @@ class AUDACITY_DLL_API Track /* not final */
    int GetY() const;
    void SetY(int y);
    int GetHeight() const;
-   void SetHeight(int h);
+   virtual void SetHeight(int h);
 #endif
    bool GetMinimized() const;
    void SetMinimized(bool isMinimized);
@@ -153,7 +198,8 @@ class AUDACITY_DLL_API Track /* not final */
 
  private:
    TrackNodePointer GetNode() const;
-   void SetOwner(TrackList *list, TrackNodePointer node);
+   void SetOwner
+      (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
 
  // Keep in Track
 
@@ -272,9 +318,19 @@ class AUDACITY_DLL_API Track /* not final */
    bool IsSyncLockSelected() const;
 
 protected:
-   Track *FindTrack() override;
-   virtual TrackControls *GetControls() = 0;
-   virtual TrackVRulerControls *GetVRulerControls() = 0;
+   std::shared_ptr<Track> FindTrack() override;
+
+   // These are called to create controls on demand:
+   virtual std::shared_ptr<TrackControls> GetControls() = 0;
+   virtual std::shared_ptr<TrackVRulerControls> GetVRulerControls() = 0;
+
+   // These hold the controls:
+   std::shared_ptr<TrackControls> mpControls;
+   std::shared_ptr<TrackVRulerControls> mpVRulerContols;
+   std::shared_ptr<TrackPanelResizerCell> mpResizer;
+
+   std::weak_ptr<SelectHandle> mSelectHandle;
+   std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
 };
 
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track
@@ -462,42 +518,42 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
  * Clear, and Contains, plus serialization of the list of tracks.
  */
 
-// Posted when the horizontal positions within tracks have beed updated.  The
-// wxCommandEvent::GetClientData() method can be used to retrieve the first
-// track that was updated.  All positions following that track will have been
-// updated as well.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZED, -1);
+// Posted when tracks are reordered but otherwise unchanged.
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_PERMUTED, -1);
 
-// Posted when tracks have been added or deleted from a tracklist.  The pointer
-// wxCommandEvent::GetClientData() returns will be NULL for deletions or the
-// track that was added.
+// Posted when some track was added or changed its height.
+// The wxCommandEvent::GetClientData() method can be used to retrieve it.
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZING, -1);
+
+// Posted when a track has been deleted from a tracklist.
 // Also posted when one track replaces another
-// Also posted when the list of tracks is permuted, but no addition or deletion
-// When a track has been removed, the event is processed before the track
-// is destroyed, so that listeners that stored a pointer to the track can still
-// use it and correctly check whether the list still contains it.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_DELETION, -1);
 
 class TrackList final : public wxEvtHandler, public ListOfTracks
 {
    // privatize this, make you use Swap instead:
    using ListOfTracks::swap;
 
- public:
    // Create an empty TrackList
    TrackList();
 
+   TrackList(const TrackList &that) = delete;
+   TrackList(TrackList &&that) = delete;
+
+   void clear() = delete;
+
+ public:
+   // Create an empty TrackList
+   static std::shared_ptr<TrackList> Create();
+
    // Allow copy -- a deep copy that duplicates all tracks
-   TrackList(const TrackList &that);
    TrackList &operator= (const TrackList &that);
 
    // Allow move
-   TrackList(TrackList &&that);
    TrackList& operator= (TrackList&&);
 
    // Move is defined in terms of Swap
    void Swap(TrackList &that);
-
 
    // Destructor
    virtual ~TrackList();
@@ -515,10 +571,8 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    template<typename TrackKind>
    Track *AddToHead(std::unique_ptr<TrackKind> &&t);
 
-#ifdef __AUDACITY_OLD_STD__
    template<typename TrackKind>
    Track *Add(std::shared_ptr<TrackKind> &&t);
-#endif
 
    /// Replace first track with second track, give back a holder
    value_type Replace(Track * t, value_type &&with);
@@ -570,6 +624,20 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
    /// Mainly a test function. Uses a linear search, so could be slow.
    bool Contains(const Track * t) const;
 
+   // Return non-null only if the weak pointer is not, and the track is
+   // owned by this list; constant time.
+   template <typename Subclass>
+   std::shared_ptr<Subclass> Lock(const std::weak_ptr<Subclass> &wTrack)
+   {
+      auto pTrack = wTrack.lock();
+      if (pTrack) {
+         auto pList = pTrack->mList.lock();
+         if (pTrack && this == pList.get())
+            return pTrack;
+      }
+      return {};
+   }
+
    bool IsEmpty() const;
    int GetCount() const;
 
@@ -596,10 +664,13 @@ private:
    void DoAssign(const TrackList &that);
        
    void RecalcPositions(TrackNodePointer node);
-   void UpdatedEvent(TrackNodePointer node);
-   void ResizedEvent(TrackNodePointer node);
+   void PermutationEvent();
+   void DeletionEvent();
+   void ResizingEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
+
+   std::weak_ptr<TrackList> mSelf;
 };
 
 class AUDACITY_DLL_API TrackFactory

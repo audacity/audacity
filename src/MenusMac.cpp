@@ -92,9 +92,3 @@ void AudacityApp::MacActivateApp()
    if ( [app respondsToSelector:@selector(activateIgnoringOtherApps:)] )
       [app activateIgnoringOtherApps:YES];
 }
-
-bool AudacityApp::IsSierraOrLater()
-{
-   auto number = kCFCoreFoundationVersionNumber;
-   return number >= 1348.1;
-}

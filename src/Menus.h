@@ -310,6 +310,8 @@ void OnSelectCursorToNextClipBoundary();
 void OnSelectClipBoundary(bool next);
 typedef struct FoundClip {
    const WaveTrack* waveTrack;
+   int trackNumber;
+   bool channel;
    bool found;
    double startTime;
    double endTime;
@@ -318,6 +320,7 @@ typedef struct FoundClip {
 FoundClip FindNextClip(const WaveTrack* wt, double t0, double t1);
 FoundClip FindPrevClip(const WaveTrack* wt, double t0, double t1);
 int FindClips(double t0, double t1, bool next, std::vector<FoundClip>& results);
+bool ChannelsHaveSameClipBoundaries(const WaveTrack* wt);
 void OnSelectPrevClip();
 void OnSelectNextClip();
 void OnSelectClip(bool next);
@@ -393,8 +396,8 @@ void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
 
-// return null on failure; if success, return the given project, or a new
-// one, if the given was null; create no new project if failure
+// return null on failure; if success, return the given project, or a NEW
+// one, if the given was null; create no NEW project if failure
 static AudacityProject *DoImportMIDI(
    AudacityProject *pProject, const wxString &fileName);
 
@@ -422,6 +425,8 @@ void OnCursorSelStart();
 void OnCursorSelEnd();
 typedef struct FoundClipBoundary {
    const WaveTrack* waveTrack;
+   int trackNumber;
+   bool channel;
    int nFound;    // 0, 1, or 2
    double time;
    int index1;
@@ -437,7 +442,7 @@ int FindClipBoundaries(double time, bool next, std::vector<FoundClipBoundary>& r
 void OnCursorNextClipBoundary();
 void OnCursorPrevClipBoundary();
 void OnCursorClipBoundary(bool next);
-wxString ClipBoundaryMessage(int nTracksSearched, const std::vector<FoundClipBoundary>& results);
+wxString ClipBoundaryMessage(const std::vector<FoundClipBoundary>& results);
 
 void OnAlignNoSync(int index);
 void OnAlign(int index);
@@ -507,6 +512,9 @@ void OnCrashReport();
 #endif
 void OnScreenshot();
 void OnAudioDeviceInfo();
+#ifdef EXPERIMENTAL_MIDI_OUT
+void OnMidiDeviceInfo();
+#endif
 
        //
 

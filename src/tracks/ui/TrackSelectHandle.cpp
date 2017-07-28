@@ -26,16 +26,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../images/Cursors.h"
 
-TrackSelectHandle::TrackSelectHandle()
-{
-}
-
-TrackSelectHandle &TrackSelectHandle::Instance()
-{
-   static TrackSelectHandle instance;
-   return instance;
-}
-
 #if defined(__WXMAC__)
 /* i18n-hint: Command names a modifier key on Macintosh keyboards */
 #define CTRL_CLICK _("Command-Click")
@@ -59,21 +49,17 @@ namespace {
    }
 }
 
-HitTestPreview TrackSelectHandle::HitPreview(unsigned trackCount)
-{
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return {
-      Message(trackCount),
-       &arrowCursor
-   };
-}
+TrackSelectHandle::TrackSelectHandle( const std::shared_ptr<Track> &pTrack )
+   : mpTrack( pTrack )
+{}
 
-HitTestResult TrackSelectHandle::HitAnywhere(unsigned trackCount)
+UIHandlePtr TrackSelectHandle::HitAnywhere
+(std::weak_ptr<TrackSelectHandle> &holder,
+ const std::shared_ptr<Track> &pTrack)
 {
-   return {
-      HitPreview(trackCount),
-      &Instance()
-   };
+   auto result = std::make_shared<TrackSelectHandle>(pTrack);
+   result = AssignUIHandlePtr(holder, result);
+   return result;
 }
 
 TrackSelectHandle::~TrackSelectHandle()
@@ -83,6 +69,9 @@ TrackSelectHandle::~TrackSelectHandle()
 UIHandle::Result TrackSelectHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   // If unsafe to drag, still, it does harmlessly change the selected track
+   // set on button down.
+
    using namespace RefreshCode;
    Result result = RefreshNone;
 
@@ -94,8 +83,9 @@ UIHandle::Result TrackSelectHandle::Click
    if (!event.Button(wxMOUSE_BTN_LEFT))
       return Cancelled;
 
-   TrackControls *const pControls = static_cast<TrackControls*>(evt.pCell);
-   Track *const pTrack = pControls->GetTrack();
+   const auto pTrack = mpTrack;
+   if (!pTrack)
+      return Cancelled;
    TrackPanel *const trackPanel = pProject->GetTrackPanel();
    const bool unsafe = pProject->IsAudioActive();
 
@@ -108,13 +98,13 @@ UIHandle::Result TrackSelectHandle::Click
       result |= Cancelled;
    else {
       mRearrangeCount = 0;
-      mpTrack = pTrack;
       CalculateRearrangingThresholds(event);
    }
 
    pProject->HandleListSelection
-      (pTrack, event.ShiftDown(), event.ControlDown(), !unsafe);
+      (pTrack.get(), event.ShiftDown(), event.ControlDown(), !unsafe);
 
+   mClicked = true;
    return result;
 }
 
@@ -135,18 +125,18 @@ UIHandle::Result TrackSelectHandle::Drag
 
    MixerBoard* pMixerBoard = pProject->GetMixerBoard(); // Update mixer board, too.
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
-      tracks->MoveUp(mpTrack);
+      tracks->MoveUp(mpTrack.get());
       --mRearrangeCount;
       if (pMixerBoard)
-         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack ))
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack.get() ))
             pMixerBoard->MoveTrackCluster(pPlayable, true /* up */);
    }
    else if ( event.m_y > mMoveDownThreshold
       || event.m_y > evt.whole.GetHeight() ) {
-      tracks->MoveDown(mpTrack);
+      tracks->MoveDown(mpTrack.get());
       ++mRearrangeCount;
       if (pMixerBoard)
-         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack ))
+         if(auto pPlayable = dynamic_cast< const PlayableTrack* >( mpTrack.get() ))
             pMixerBoard->MoveTrackCluster(pPlayable, false /* down */);
    }
    else
@@ -161,26 +151,41 @@ UIHandle::Result TrackSelectHandle::Drag
 }
 
 HitTestPreview TrackSelectHandle::Preview
-(const TrackPanelMouseEvent &, const AudacityProject *project)
+(const TrackPanelMouseState &, const AudacityProject *project)
 {
-   // Note that this differs from HitPreview.
+   const auto trackCount = project->GetTrackPanel()->GetTrackCount();
+   auto message = Message(trackCount);
+   if (mClicked) {
+      static auto disabledCursor =
+         ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+      static wxCursor rearrangeCursor{ wxCURSOR_HAND };
 
-   static auto disabledCursor =
-      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
-   static wxCursor rearrangeCursor{ wxCURSOR_HAND };
-
-   const bool unsafe = GetActiveProject()->IsAudioActive();
-   return {
-      Message(project->GetTrackPanel()->GetTrackCount()),
-      (unsafe
-         ? &*disabledCursor
-         : &rearrangeCursor)
-   };
+      const bool unsafe = GetActiveProject()->IsAudioActive();
+      return {
+         message,
+         (unsafe
+          ? &*disabledCursor
+          : &rearrangeCursor)
+         // , message // Stop showing the tooltip after the click
+      };
+   }
+   else {
+      // Only mouse-over
+      // Don't test safety, because the click to change selection is allowed
+      static wxCursor arrowCursor{ wxCURSOR_ARROW };
+      return {
+         message,
+         &arrowCursor,
+         message
+      };
+   }
 }
 
 UIHandle::Result TrackSelectHandle::Release
 (const TrackPanelMouseEvent &, AudacityProject *, wxWindow *)
 {
+   // If we're releasing, surely we are dragging a track?
+   wxASSERT( mpTrack );
    if (mRearrangeCount != 0) {
       AudacityProject *const project = ::GetActiveProject();
       wxString dir;
@@ -192,6 +197,11 @@ UIHandle::Result TrackSelectHandle::Release
          dir.c_str()),
          _("Move Track"));
    }
+   // Bug 1677
+   // Holding on to the reference to the track was causing it to be released far later
+   // than necessary, on shutdown, and so causing a crash as a dialog about cleaning
+   // out files could not show at that time.
+   mpTrack.reset();
    // No need to redraw, that was done when drag moved the track
    return RefreshCode::RefreshNone;
 }
@@ -199,6 +209,8 @@ UIHandle::Result TrackSelectHandle::Release
 UIHandle::Result TrackSelectHandle::Cancel(AudacityProject *pProject)
 {
    pProject->RollbackState();
+   // Bug 1677
+   mpTrack.reset();
    return RefreshCode::RefreshAll;
 }
 
@@ -213,15 +225,15 @@ void TrackSelectHandle::CalculateRearrangingThresholds(const wxMouseEvent & even
    AudacityProject *const project = ::GetActiveProject();
    TrackList *const tracks = project->GetTracks();
 
-   if (tracks->CanMoveUp(mpTrack))
+   if (tracks->CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
-      event.m_y - tracks->GetGroupHeight(tracks->GetPrev(mpTrack, true));
+      event.m_y - tracks->GetGroupHeight(tracks->GetPrev(mpTrack.get(), true));
    else
       mMoveUpThreshold = INT_MIN;
 
-   if (tracks->CanMoveDown(mpTrack))
+   if (tracks->CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
-      event.m_y + tracks->GetGroupHeight(tracks->GetNext(mpTrack, true));
+      event.m_y + tracks->GetGroupHeight(tracks->GetNext(mpTrack.get(), true));
    else
       mMoveDownThreshold = INT_MAX;
 }

@@ -16,7 +16,7 @@ index ed731f7..0743ae9 100644
  
      virtual bool ShowFullScreen(bool show, long style);
  
-+    bool NotifyFullScreen( bool fullScreen ) { m_isFullScreen = fullScreen; }
++    void NotifyFullScreen( bool fullScreen ) { m_isFullScreen = fullScreen; }
 +
      virtual void ShowWithoutActivating();
  

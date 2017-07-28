@@ -184,48 +184,17 @@
   seem too complicated to describe everything in complete detail in one
   place.
 
-  \par Midi While Recording Only
-  All of the midi-to-audio synchronization is of course meaningless when
-  audio is not playing. If only recording, there is the problem that
-  synchronization is based on output time, but without audio output,
-  there is no output time. This does not seem like a critical feature,
-  so MIDI is not synchronized to audio without audio playback. The
-  user can always play a track of silence while recording to synchronize.
+  \par Midi with a time track
+  When a variable-speed time track is present, MIDI events are output
+  with the times used by the time track (rather than the raw times).
+  This ensures MIDI is synchronized with audio.
 
-  \par Midi Without Audio Playback
-  When there is no audio playback, MIDI runs according to its own clock.
-  The midi timestamp clock starts at approximately the same time as
-  audio recording (if any). A timestamp of 0 corresponds to mT0, the
-  starting time in the Midi track(s). Thus the timestamp for an event
-  at time tmidi should be: \n
-  timestamp = tmidi - mT0 + PauseTime() - latency - 0.001\n
-  Where latency is the synthesizer latency, and the extra 0.001 is the
-  latency (1ms) that PortMidi adds to timestamps automatically.
-
-  \par Midi Output Without Audio Playback
-  Midi events should be written before their timestamp expires. Since
-  the loop that checks for events to write pauses for MIDI_SLEEP, the
-  events should be written at least MIDI_SLEEP early, and due to
-  other delays and computation, we want some extra time, so let's
-  allow 2*MIDI_SLEEP. Therefore, the write time should be when:\n
-  tmidi - mT0 + PauseTime() - latency - 0.001 - 2 * MIDI_SLEEP < Pt_Time()\n,
-  which can be rearranged to:\n
-  tmidi < mT0 + Pt_Time() + MIDI_SLEEP + (MIDI_SLEEP + latency) - PauseTime\n
-  which matches the code in AudioIO::FillMidiBuffers() after converting ms to
-  s appropriately. (Note also that the 0.001 is dropped here -- it's not
-  really important).
-
-  \par The code for Midi Without Audio was developed by simply trying
-  to play Midi alone and fixing everything that did not work. The
-  "normal" AudioIO execution was full of assumptions about audio, so
-  there is no systematic design for running without audio, merely a
-  number of "patches" to make it work. The expression
-  "mNumPlaybackChannels > 0" is used to detect whether audio playback
-  is active, and "mNumFrames > 0" is used to indicate that playback
-  of either Midi or Audio has actually started. (mNumFrames is
-  normally incremented by the audio callback, but if there is no
-  audio playback or recording, it is set to 1 at the end of
-  initialization.
+  \par Midi While Recording Only or Without Audio Playback
+  To reduce duplicate code and to ensure recording is synchronised with
+  MIDI, a portaudio stream will always be used, even when there is no
+  actual audio output.  For recording, this ensures that the recorded
+  audio will by synchronized with the MIDI (otherwise, it gets out-of-
+  sync if played back with correct timing).
 
   \par NoteTrack PlayLooped
   When mPlayLooped is true, output is supposed to loop from mT0 to mT1.
@@ -851,10 +820,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           const PaStreamCallbackTimeInfo *timeInfo,
                           PaStreamCallbackFlags statusFlags, void *userData );
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-int compareTime( const void* a, const void* b );
-#endif
-
 //////////////////////////////////////////////////////////////////////
 //
 //     class AudioThread - declaration and glue code
@@ -1001,7 +966,6 @@ AudioIO::AudioIO()
    mMidiStreamActive = false;
    mSendMidiState = false;
    mIterator = NULL;
-   mMidiPlaySpeed = 1.0;
 
    mNumFrames = 0;
    mNumPauseFrames = 0;
@@ -1450,7 +1414,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
 #ifdef EXPERIMENTAL_MIDI_OUT
    mNumFrames = 0;
    mNumPauseFrames = 0;
-   mPauseTime = 0;
 #endif
    mOwningProject = GetActiveProject();
    mInputMeter = NULL;
@@ -1546,11 +1509,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    }
 
    SetMeters();
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   if (numPlaybackChannels == 0 && numCaptureChannels == 0)
-      return true;
-#endif
 
 #ifdef USE_PORTMIXER
 #ifdef __WXMSW__
@@ -1788,7 +1746,11 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    unsigned int captureChannels = 0;
    sampleFormat captureFormat = floatSample;
 
-   if( playbackTracks.size() > 0 )
+   if (playbackTracks.size() > 0 
+#ifdef EXPERIMENTAL_MIDI_OUT
+      || midiPlaybackTracks.size() > 0
+#endif
+      )
       playbackChannels = 2;
 
    if (mSoftwarePlaythrough)
@@ -1946,7 +1908,9 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    if (mNumPlaybackChannels > 0)
    {
       EffectManager & em = EffectManager::Get();
-      em.RealtimeInitialize();
+      // Setup for realtime playback at the rate of the realtime
+      // stream, not the rate of the track.
+      em.RealtimeInitialize(mRate);
 
       // The following adds a NEW effect processor for each logical track and the
       // group determination should mimic what is done in audacityAudioCallback()
@@ -1963,7 +1927,9 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
             chanCnt++;
          }
 
-         em.RealtimeAddProcessor(group++, chanCnt, vt->GetRate());
+         // Setup for realtime playback at the rate of the realtime
+         // stream, not the rate of the track.
+         em.RealtimeAddProcessor(group++, chanCnt, mRate);
       }
    }
 
@@ -2012,14 +1978,6 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
       wxMilliSleep( 50 );
    }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   // if no playback, reset the midi time to zero to roughly sync
-   // with recording (or if recording is not going to happen, just
-   // reset time now so that time stamps increase from zero
-   Pt_Stop();
-   Pt_Start(1, NULL, NULL);
-#endif
-
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
 
       // Now start the PortAudio stream!
@@ -2059,13 +2017,6 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    }
 
    mAudioThreadFillBuffersLoopRunning = true;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   // If audio is not running, mNumFrames will not be incremented and
-   // MIDI will hang waiting for it unless we do it here.
-   if (mNumPlaybackChannels + mNumCaptureChannels == 0) {
-      mNumFrames = 1;
-   }
-#endif
 
    // Enable warning popups for unfound aliased blockfiles.
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
@@ -2191,7 +2142,6 @@ bool AudioIO::StartPortMidiStream()
                                 mMidiLatency);
    if (mLastPmError == pmNoError) {
       mMidiStreamActive = true;
-      mPauseTime = 0;
       mMidiPaused = false;
       mMidiLoopOffset = 0;
       mMidiOutputComplete = false;
@@ -2392,7 +2342,6 @@ void AudioIO::StopStream()
       }
 
       mIterator.reset(); // just in case someone tries to reference it
-      mMidiPlaySpeed = 1.0;
    }
 #endif
 
@@ -2994,7 +2943,6 @@ AudioThread::ExitCode AudioThread::Entry()
 #ifdef EXPERIMENTAL_MIDI_OUT
 MidiThread::ExitCode MidiThread::Entry()
 {
-   long pauseStart = 0;
    while( !TestDestroy() )
    {
       // Set LoopActive outside the tests to avoid race condition
@@ -3008,13 +2956,10 @@ MidiThread::ExitCode MidiThread::Entry()
             if (!gAudioIO->mMidiPaused) {
                gAudioIO->mMidiPaused = true;
                gAudioIO->AllNotesOff(); // to avoid hanging notes during pause
-               pauseStart = MidiTime(NULL);
             }
          } else {
             if (gAudioIO->mMidiPaused) {
                gAudioIO->mMidiPaused = false;
-               // note: mPauseTime ignored if audio is playing
-               gAudioIO->mPauseTime += (MidiTime(NULL) - pauseStart);
             }
 
             gAudioIO->FillMidiBuffers();
@@ -3022,9 +2967,10 @@ MidiThread::ExitCode MidiThread::Entry()
             // test for end
             double realTime = gAudioIO->mT0 + gAudioIO->MidiTime() * 0.001 -
                                gAudioIO->PauseTime();
-            if (gAudioIO->mNumPlaybackChannels != 0) {
-               realTime -= 1; // with audio, MidiTime() runs ahead 1s
-            }
+            realTime -= 1; // MidiTime() runs ahead 1s
+
+            // XXX Is this still true now?  It seems to break looping --Poke
+            //
             // The TrackPanel::OnTimer() method updates the time position
             // indicator every 200ms, so it tends to not advance the
             // indicator to the end of the selection (mT1) but instead stop
@@ -3032,15 +2978,20 @@ MidiThread::ExitCode MidiThread::Entry()
             // down and the indicator is removed, but for a brief time, the
             // indicator is clearly stopped before reaching mT1. To avoid
             // this, we do not set mMidiOutputComplete until we are actually
-            // 0.22s beyond mT1 (even though we stop playing at mT1. This
+            // 0.22s beyond mT1 (even though we stop playing at mT1). This
             // gives OnTimer() time to wake up and draw the final time
             // position at mT1 before shutting down the stream.
-            double timeAtSpeed = (realTime - gAudioIO->mT0) *
-                                 gAudioIO->mMidiPlaySpeed + gAudioIO->mT0;
+            const double loopDelay = 0.220;
+
+            double timeAtSpeed;
+            if (gAudioIO->mTimeTrack)
+               timeAtSpeed = gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mT0, realTime);
+            else
+               timeAtSpeed = realTime;
 
             gAudioIO->mMidiOutputComplete =
                (gAudioIO->mPlayMode == gAudioIO->PLAY_STRAIGHT && // PRL:  what if scrubbing?
-                timeAtSpeed >= gAudioIO->mT1 + 0.220);
+                timeAtSpeed >= gAudioIO->mT1 + loopDelay);
             // !gAudioIO->mNextEvent);
          }
       }
@@ -3283,12 +3234,12 @@ wxString AudioIO::GetDeviceInfo()
    if(haveRecDevice){
       s << wxT("Selected recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
    }else{
-      s << wxT("No recording device found.") << e;
+      s << wxT("No recording device found for '") << recDevice << wxT("'.") << e;
    }
    if(havePlayDevice){
       s << wxT("Selected playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
    }else{
-      s << wxT("No playback device found.") << e;
+      s << wxT("No playback device found for '") << playDevice << wxT("'.") << e;
    }
 
    wxArrayLong supportedSampleRates;
@@ -3436,6 +3387,109 @@ wxString AudioIO::GetDeviceInfo()
 #endif
    return o.GetString();
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+// FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke
+wxString AudioIO::GetMidiDeviceInfo()
+{
+   wxStringOutputStream o;
+   wxTextOutputStream s(o, wxEOL_UNIX);
+   wxString e(wxT("\n"));
+
+   if (IsStreamActive()) {
+      return wxT("Stream is active ... unable to gather information.");
+   }
+
+
+   // XXX: May need to trap errors as with the normal device info
+   int recDeviceNum = Pm_GetDefaultInputDeviceID();
+   int playDeviceNum = Pm_GetDefaultOutputDeviceID();
+   int cnt = Pm_CountDevices();
+
+   wxLogDebug(wxT("PortMidi reports %d MIDI devices"), cnt);
+
+   s << wxT("==============================") << e;
+   s << wxT("Default recording device number: ") << recDeviceNum << e;
+   s << wxT("Default playback device number: ") << playDeviceNum << e;
+
+   wxString recDevice = gPrefs->Read(wxT("/MidiIO/RecordingDevice"), wxT(""));
+   wxString playDevice = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"), wxT(""));
+
+   // This gets info on all available audio devices (input and output)
+   if (cnt <= 0) {
+      s << wxT("No devices found\n");
+      return o.GetString();
+   }
+
+   for (int i = 0; i < cnt; i++) {
+      s << wxT("==============================") << e;
+
+      const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+      if (!info) {
+         s << wxT("Device info unavailable for: ") << i << e;
+         continue;
+      }
+
+      wxString name = wxSafeConvertMB2WX(info->name);
+      wxString hostName = wxSafeConvertMB2WX(info->interf);
+
+      s << wxT("Device ID: ") << i << e;
+      s << wxT("Device name: ") << name << e;
+      s << wxT("Host name: ") << hostName << e;
+      s << wxT("Supports output: ") << info->output << e;
+      s << wxT("Supports input: ") << info->input << e;
+      s << wxT("Opened: ") << info->opened << e;
+
+      if (name == playDevice && info->output)
+         playDeviceNum = i;
+
+      if (name == recDevice && info->input)
+         recDeviceNum = i;
+
+      // XXX: This is only done because the same was applied with PortAudio
+      // If PortMidi returns -1 for the default device, use the first one
+      if (recDeviceNum < 0 && info->input){
+         recDeviceNum = i;
+      }
+      if (playDeviceNum < 0 && info->output){
+         playDeviceNum = i;
+      }
+   }
+
+   bool haveRecDevice = (recDeviceNum >= 0);
+   bool havePlayDevice = (playDeviceNum >= 0);
+
+   s << wxT("==============================") << e;
+   if (haveRecDevice) {
+      s << wxT("Selected MIDI recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
+   } else {
+      s << wxT("No MIDI recording device found for '") << recDevice << wxT("'.") << e;
+   }
+   if (havePlayDevice) {
+      s << wxT("Selected MIDI playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
+   } else {
+      s << wxT("No MIDI playback device found for '") << playDevice << wxT("'.") << e;
+   }
+
+#ifdef IS_ALPHA
+
+   s << wxT("==============================") << e;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled") << e;
+#else
+   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled") << e;
+#endif
+#ifdef EXPERIMENTAL_MIDI_IN
+   s << wxT("EXPERIMENTAL_MIDI_IN is enabled") << e;
+#else
+   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled") << e;
+#endif
+
+#endif
+
+   return o.GetString();
+}
+#endif
 
 // This method is the data gateway between the audio thread (which
 // communicates with the disk) and the PortAudio callback thread
@@ -3750,16 +3804,17 @@ void AudioIO::OutputEvent()
    int command = -1;
    int data1 = -1;
    int data2 = -1;
+
+   double eventTime;
+   if (mTimeTrack)
+      eventTime = mTimeTrack->ComputeWarpedLength(mT0, mNextEventTime) + mT0;
+   else
+      eventTime = mNextEventTime;
    // 0.0005 is for rounding
-   double eventTime = (mNextEventTime - mT0) / mMidiPlaySpeed + mT0;
    double time = eventTime + PauseTime() + 0.0005 -
                  ((mMidiLatency + mSynthLatency) * 0.001);
 
-   if (mNumPlaybackChannels > 0) { // is there audio playback?
-      time += 1; // MidiTime() has a 1s offset
-   } else {
-      time -= mT0; // Midi is not synced to audio
-   }
+   time += 1; // MidiTime() has a 1s offset
    // state changes have to go out without delay because the
    // midi stream time gets reset when playback starts, and
    // we don't want to leave any control changes scheduled for later
@@ -3811,10 +3866,24 @@ void AudioIO::OutputEvent()
             int offset = mNextEventTrack->GetVelocity();
             data2 += offset; // offset comes from per-track slider
             // clip velocity to insure a legal note-on value
-            data2 = (data2 < 0 ? 1 : (data2 > 127 ? 127 : data2));
+            data2 = (data2 < 1 ? 1 : (data2 > 127 ? 127 : data2));
             // since we are going to play this note, we need to get a note_off
             mIterator->request_note_off();
-         } else data2 = 0; // 0 velocity means "note off"
+
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+            mPendingNotesOff.push_back(std::make_pair(channel, data1));
+#endif
+         }
+         else {
+            data2 = 0; // 0 velocity means "note off"
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+            auto end = mPendingNotesOff.end();
+            auto iter = std::find(
+               mPendingNotesOff.begin(), end, std::make_pair(channel, data1) );
+            if (iter != end)
+               mPendingNotesOff.erase(iter);
+#endif
+         }
          command = 0x90; // MIDI NOTE ON (or OFF when velocity == 0)
       // Update event
       } else if (mNextEvent->is_update()) {
@@ -3924,39 +3993,10 @@ void AudioIO::FillMidiBuffers()
    SetHasSolo(hasSolo);
    // Compute the current track time differently depending upon
    // whether audio playback is in effect:
-   double time;
-   if (mNumPlaybackChannels > 0) {
-      time = AudioTime() - PauseTime();
-   } else {
-      time = mT0 + Pt_Time() * 0.001 - PauseTime();
-      double timeAtSpeed = (time - mT0) * mMidiPlaySpeed + mT0;
-      if (mNumCaptureChannels <= 0) {
-         // no audio callback, so move the time cursor here:
-         double trackTime = timeAtSpeed - mMidiLoopOffset;
-         //printf("mTime set. mT0 %g Pt_Time() %gs PauseTime %g\n",
-         //       mT0, Pt_Time() * 0.001, PauseTime());
-         // Since loop offset is incremented when we fill the
-         // buffer, the cursor tends to jump back to mT0 early.
-         // Therefore, if we are in loop mode, and if mTime < mT0,
-         // we must not be at the end of the loop yet.
-         if (mPlayMode == gAudioIO->PLAY_LOOPED && trackTime < mT0) {
-            trackTime += (mT1 - mT0);
-         }
-         // mTime is shared with another thread so we stored
-         // intermediate values in trackTime. Do the update
-         // atomically now that we have the final value:
-         mTime = trackTime;
-      }
-      // advance time so that midi messages are written a little early,
-      // timestamps will insure accurate output timing. This is an "extra"
-      // MIDI_SLEEP interval; another is added below to compensate for the
-      // fact that we need to output messages that will become due while
-      // we are sleeping.
-      time += MIDI_SLEEP * 0.001;
-   }
+   double time = AudioTime() - PauseTime();
    while (mNextEvent &&
-          (mNextEventTime - mT0) / mMidiPlaySpeed + mT0 < time +
-                           ((MIDI_SLEEP + mSynthLatency) * 0.001)) {
+          (mTimeTrack ? (mTimeTrack->ComputeWarpedLength(mT0, mNextEventTime) + mT0) : mNextEventTime)
+             < time + ((MIDI_SLEEP + mSynthLatency) * 0.001)) {
       OutputEvent();
       GetNextEvent();
    }
@@ -3964,31 +4004,34 @@ void AudioIO::FillMidiBuffers()
 
 double AudioIO::PauseTime()
 {
-   if (mNumPlaybackChannels > 0) {
-      return mNumPauseFrames / mRate;
-   } else {
-      return mPauseTime * 0.001;
-   }
+   return mNumPauseFrames / mRate;
 }
 
 
 PmTimestamp AudioIO::MidiTime()
 {
-   if (mNumPlaybackChannels > 0) {
-      //printf("AudioIO:MidiTime: PaUtil_GetTime() %g mAudioCallbackOutputTime %g time - outputTime %g\n",
-      //        PaUtil_GetTime(), mAudioCallbackOutputTime, PaUtil_GetTime() - mAudioCallbackOutputTime);
-      // note: the extra 0.0005 is for rounding. Round down by casting to
-      // unsigned long, then convert to PmTimeStamp (currently signed)
-      return (PmTimestamp) ((unsigned long) (1000 * (AudioTime() + 1.0005 -
-                              mAudioFramesPerBuffer / mRate +
-                              PaUtil_GetTime() - mAudioCallbackOutputTime)));
-   } else {
-      return Pt_Time();
-   }
+   //printf("AudioIO:MidiTime: PaUtil_GetTime() %g mAudioCallbackOutputTime %g time - outputTime %g\n",
+   //        PaUtil_GetTime(), mAudioCallbackOutputTime, PaUtil_GetTime() - mAudioCallbackOutputTime);
+   // note: the extra 0.0005 is for rounding. Round down by casting to
+   // unsigned long, then convert to PmTimeStamp (currently signed)
+   return (PmTimestamp) ((unsigned long) (1000 * (AudioTime() + 1.0005 -
+                           mAudioFramesPerBuffer / mRate +
+                           PaUtil_GetTime() - mAudioCallbackOutputTime)));
 }
 
 void AudioIO::AllNotesOff()
 {
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+   // Send individual note-off messages for each note-on not yet paired.
+   for (const auto &pair : mPendingNotesOff) {
+      Pm_WriteShort(mMidiStream, 0, Pm_Message(
+         0x90 + pair.first, pair.second, 0));
+   }
+   mPendingNotesOff.clear();
+
+   // Proceed to do the usual messages too.
+#endif
+
    for (int chan = 0; chan < 16; chan++) {
       Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
    }
@@ -4563,6 +4606,19 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
             chanCnt = 0;
          }
+         // Poke: If there are no playback tracks, then the earlier check
+         // about the time indicator being passed the end won't happen;
+         // do it here instead (but not if looping or scrubbing)
+         if (numPlaybackTracks == 0
+            && gAudioIO->mPlayMode == AudioIO::PLAY_STRAIGHT)
+         {
+            if ((gAudioIO->ReversedTime()
+               ? gAudioIO->mTime <= gAudioIO->mT1
+               : gAudioIO->mTime >= gAudioIO->mT1)) {
+
+               callbackReturn = paComplete;
+            }
+         }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
          // Update the current time position, for scrubbing
@@ -4788,11 +4844,4 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
    return callbackReturn;
 }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-int compareTime( const void* a, const void* b )
-{
-   return( (int)((*(PmEvent*)a).timestamp - (*(PmEvent*)b).timestamp ) );
-}
-#endif
 

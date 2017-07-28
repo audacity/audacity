@@ -148,8 +148,6 @@ public:
    // Utility functiuon that takes a 32 bit bitmap and makes it into an image.
    wxImage MakeImageWithAlpha( wxBitmap & Bmp );
 
-   wxString mThemeName;
-
 protected:
    ArrayOfImages mImages;
    ArrayOfBitmaps mBitmaps;

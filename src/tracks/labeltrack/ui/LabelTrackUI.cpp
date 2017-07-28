@@ -20,59 +20,34 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "../../../Project.h"
 #include "../../../TrackPanelMouseEvent.h"
-#include "../../../toolbars/ToolsToolBar.h"
 
-HitTestResult LabelTrack::HitTest
-(const TrackPanelMouseEvent &evt,
- const AudacityProject *pProject)
+std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
+(const TrackPanelMouseState &st,
+ const AudacityProject *pProject, int, bool)
 {
-   // PRL: Maybe I did too much work to preserve old behavior, but anyway,
-   // this unusually combines parts of two or more hit test results.
+   UIHandlePtr result;
+   std::vector<UIHandlePtr> results;
+   const wxMouseState &state = st.state;
 
-   HitTestResult result;
-   const wxMouseEvent &event = evt.event;
+   result = LabelGlyphHandle::HitTest(
+      mGlyphHandle, state, Pointer<LabelTrack>(this), st.rect);
+   if (result)
+      results.push_back(result);
 
-   // Try label movement handles first
-   result = LabelGlyphHandle::HitTest(event, this);
-   // Hit test may request refresh even if a miss
-   auto refreshResult = result.preview.refreshCode;
+   result = LabelTextHandle::HitTest(
+      mTextHandle, state, Pointer<LabelTrack>(this));
+   if (result)
+      results.push_back(result);
 
-   if ( !result.handle ) {
-      // Missed glyph, try text box
-      // This hit test does not define its own messages or cursor
-      HitTestResult defaultResult = Track::HitTest(evt, pProject);
-      if (!defaultResult.handle) {
-         // In case of multi tool, default to selection.
-         const ToolsToolBar *const pTtb = pProject->GetToolsToolBar();
-         if (pTtb->IsDown(multiTool))
-            defaultResult = SelectHandle::HitTest(evt, pProject, this);
-      }
-      result = LabelTextHandle::HitTest(event, this);
-      if (result.handle)
-         // Use any cursor or status message change from catchall,
-         // But let the text ui handle pass
-         result.preview = defaultResult.preview;
-      else
-         result = defaultResult;
-   }
-
-   // Now attach some common extra work to the click action
-   LabelDefaultClickHandle::Instance().mpForward = result.handle;
-   result.handle = &LabelDefaultClickHandle::Instance();
-
-   // Don't lose the refresh result side effect of the glyph
-   // hit test
-   result.preview.refreshCode |= refreshResult;
-
-   return result;
+   return results;
 }
 
-TrackControls *LabelTrack::GetControls()
+std::shared_ptr<TrackControls> LabelTrack::GetControls()
 {
-   return &LabelTrackControls::Instance();
+   return std::make_shared<LabelTrackControls>( Pointer( this ) );
 }
 
-TrackVRulerControls *LabelTrack::GetVRulerControls()
+std::shared_ptr<TrackVRulerControls> LabelTrack::GetVRulerControls()
 {
-   return &LabelTrackVRulerControls::Instance();
+   return std::make_shared<LabelTrackVRulerControls>( Pointer( this ) );
 }

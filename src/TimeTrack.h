@@ -22,6 +22,9 @@ class wxDC;
 class Envelope;
 class Ruler;
 class ZoomInfo;
+struct TrackPanelDrawingContext;
+
+class EnvelopeHandle;
 
 class TimeTrack final : public Track {
 
@@ -49,9 +52,10 @@ class TimeTrack final : public Track {
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    // Identifying the type of track
    int GetKind() const override { return Time; }
@@ -64,7 +68,9 @@ class TimeTrack final : public Track {
    double GetStartTime() const override { return 0.0; }
    double GetEndTime() const override { return 0.0; }
 
-   void Draw(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo) const;
+   void Draw
+      (TrackPanelDrawingContext &context,
+       const wxRect & r, const ZoomInfo &zoomInfo) const;
 
    // XMLTagHandler callback methods for loading and saving
 
@@ -140,6 +146,8 @@ class TimeTrack final : public Track {
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
 
+   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+
    /** @brief Copy the metadata from another track but not the points
     *
     * Copies the Name, DefaultName, Range and Display data from the source track
@@ -153,8 +161,8 @@ class TimeTrack final : public Track {
    friend class TrackFactory;
 
 protected:
-   TrackControls *GetControls() override;
-   TrackVRulerControls *GetVRulerControls() override;
+   std::shared_ptr<TrackControls> GetControls() override;
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
 };
 
 

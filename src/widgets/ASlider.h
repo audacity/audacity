@@ -142,7 +142,7 @@ class LWSlider
 
    void AdjustSize(const wxSize & sz);
 
-   void OnPaint(wxDC &dc);
+   void OnPaint(wxDC &dc, bool highlighted);
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyEvent(wxKeyEvent & event);
@@ -232,12 +232,7 @@ class LWSlider
 
    bool mIsDragging;
 
-   std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap;
-
-   // AD: True if this object owns *mThumbBitmap (sometimes mThumbBitmap points
-   // to an object we shouldn't DELETE) -- once we get theming totally right
-   // this should go away
-   bool mThumbBitmapAllocated;
+   std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap, mThumbBitmapHilited;
 
    wxString mName;
 

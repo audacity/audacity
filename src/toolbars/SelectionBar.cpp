@@ -196,7 +196,7 @@ wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name,
 
    pSizer->Add(pBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
    // Hacky code to return a second optional value via the variable mProxy.
-   // If not NULL, we made a new proxy label
+   // If not NULL, we made a NEW proxy label
    mProxy = NULL;
    if( !bUseNativeRadioButton )
    {
@@ -332,6 +332,7 @@ void SelectionBar::Populate()
    mChoice = safenew wxChoice
       (this, ChoiceID, wxDefaultPosition, wxDefaultSize, 4, choices,
        0, wxDefaultValidator, "");
+   mChoice->SetName(wxT("\a"));     // stop Jaws screen reader using nearby text for name when name is empty
    mChoice->SetSelection(0);
    mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
 #endif
@@ -547,10 +548,10 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
    switch(i){
    case StartTimeID + 4 * EndTimeID:
       if( mEnd < mStart )
-         mEnd = mStart;
+         mStart = mEnd;
    case StartTimeID * 4 + EndTimeID:
       if( mStart > mEnd )
-         mStart = mEnd;
+         mEnd = mStart;
       mLength = mEnd - mStart;
       mCenter = (mStart+mEnd)/2.0;
       break;
@@ -804,14 +805,20 @@ void SelectionBar::SetSelectionMode(int mode)
 
 #ifdef SEL_RADIO_TITLES
    if( mStartEndProxy == NULL ){
+      // The line breaks are a little funny in order that the i18n hints occur i the right place in 
+      // the .pot file
+      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : 
       // i18n-hint: S-E is an abbreviation of Start-End
-      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : _("S-E") );
+         _("S-E") );
+      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : 
       // i18n-hint: S-L is an abbreviation of Start-Length
-      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : _("S-L") );
+         _("S-L") );
+      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : 
       // i18n-hint: L-E is an abbreviation of Length-End
-      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : _("L-E") );
+         _("L-E") );
+      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : 
       // i18n-hint: L-C is an abbreviation of Length-Center
-      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : _("L-C") );
+         _("L-C") );
    }
    else
    {
@@ -833,6 +840,7 @@ void SelectionBar::SetSelectionMode(int mode)
 #endif
 
 #ifdef SEL_BUTTON_TITLES
+   // Not translated.  This is old experiemental code that is probably on the way out.
    wxString CenterNames[] = { "       Start  -  End        ", "       Start  -  Length   ", "   Length  -  End        ", "   Length  -  Center   " };
    mButtonTitles[1]->SetLabel( CenterNames[mode] );
 #endif

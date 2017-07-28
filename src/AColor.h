@@ -66,17 +66,18 @@ class AColor {
    static void Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
    static void DrawFocus(wxDC & dc, wxRect & r);
    static void Bevel(wxDC & dc, bool up, const wxRect & r);
-   static void Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel=false);
-   static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r);
+   static void Bevel2
+      (wxDC & dc, bool up, const wxRect & r, bool bSel=false, bool bHighlight = false);
+   static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight = false);
    static wxColour Blend(const wxColour & c1, const wxColour & c2);
 
-   static void UseThemeColour( wxDC * dc, int iIndex, int index2 =-1 );
+   static void UseThemeColour( wxDC * dc, int iBrush, int iPen=-1 );
    static void TrackPanelBackground(wxDC * dc, bool selected);
 
-   static void Light(wxDC * dc, bool selected);
+   static void Light(wxDC * dc, bool selected, bool highlight = false);
    static void Medium(wxDC * dc, bool selected);
    static void MediumTrackInfo(wxDC * dc, bool selected);
-   static void Dark(wxDC * dc, bool selected);
+   static void Dark(wxDC * dc, bool selected, bool highlight = false);
 
    static void CursorColor(wxDC * dc);
    static void IndicatorColor(wxDC * dc, bool bIsNotRecording);
@@ -84,6 +85,10 @@ class AColor {
 
    static void Mute(wxDC * dc, bool on, bool selected, bool soloing);
    static void Solo(wxDC * dc, bool on, bool selected);
+
+   // In all of these, channel is 1-indexed (1 through 16); if out of bounds
+   // (either due to being explicitly set to 0 or due to an allegro file with
+   // more than 16 channels) a gray color is returned.
 
    static void MIDIChannel(wxDC * dc, int channel /* 1 - 16 */ );
    static void LightMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ );
@@ -137,6 +142,10 @@ class AColor {
    static bool gradient_inited;
    static const int gradientSteps = 512;
    static unsigned char gradient_pre[ColorGradientTotal][2][gradientSteps][3];
+
+   // For experiments in mouse-over highlighting only
+   static wxPen uglyPen;
+   static wxBrush uglyBrush;
 
  private:
    static wxPen sparePen;

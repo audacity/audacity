@@ -463,7 +463,7 @@ void EffectManager::RealtimeRemoveEffect(Effect *effect)
    RealtimeResume();
 }
 
-void EffectManager::RealtimeInitialize()
+void EffectManager::RealtimeInitialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
    RealtimeSuspend();
@@ -477,8 +477,10 @@ void EffectManager::RealtimeInitialize()
    mRealtimeActive = true;
 
    // Tell each effect to get ready for action
-   for (auto e : mRealtimeEffects)
+   for (auto e : mRealtimeEffects) {
+      e->SetSampleRate(rate);
       e->RealtimeInitialize();
+   }
 
    // Get things moving
    RealtimeResume();

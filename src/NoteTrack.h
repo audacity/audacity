@@ -61,6 +61,8 @@ using NoteTrackBase =
 
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
+class StretchHandle;
+
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
@@ -68,9 +70,10 @@ class AUDACITY_DLL_API NoteTrack final
    NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
    virtual ~NoteTrack();
 
-   HitTestResult HitTest
-      (const TrackPanelMouseEvent &event,
-       const AudacityProject *pProject) override;
+   std::vector<UIHandlePtr> DetailedHitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+      override;
 
    using Holder = std::unique_ptr<NoteTrack>;
    Track::Holder Duplicate() const override;
@@ -81,13 +84,17 @@ class AUDACITY_DLL_API NoteTrack final
    double GetStartTime() const override;
    double GetEndTime() const override;
 
+   void SetHeight(int h) override;
+
    Alg_seq &GetSeq() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
    static void DrawLabelControls
-      ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect );
+      ( const NoteTrack *pTrack, wxDC & dc, const wxRect &rect,
+        int highlightedChannel = -1 );
+   int FindChannel(const wxRect &rect, int mx, int my);
    bool LabelClick(const wxRect &rect, int x, int y, bool right);
 
    void SetSequence(std::unique_ptr<Alg_seq> &&seq);
@@ -96,13 +103,6 @@ class AUDACITY_DLL_API NoteTrack final
    Alg_seq *MakeExportableSeq(std::unique_ptr<Alg_seq> &cleanup) const;
    bool ExportMIDI(const wxString &f) const;
    bool ExportAllegro(const wxString &f) const;
-
-/* REQUIRES PORTMIDI */
-//   int GetLastMidiPosition() const { return mLastMidiPosition; }
-//   void SetLastMidiPosition( int position )
-//   {
-//      mLastMidiPosition = position;
-//   }
 
    // High-level editing
    Track::Holder Cut  (double t0, double t1) override;
@@ -124,21 +124,39 @@ class AUDACITY_DLL_API NoteTrack final
       ( QuantizedTimeAndBeat t0, QuantizedTimeAndBeat t1, double newDur );
 
    int GetBottomNote() const { return mBottomNote; }
-   int GetPitchHeight() const { return mPitchHeight; }
-   void SetPitchHeight(int h) { mPitchHeight = h; }
-   void ZoomOut(const wxRect &rect, int y) { Zoom(rect, y, -1); }
-   void ZoomIn(const wxRect &rect, int y) { Zoom(rect, y, 1); }
-   void Zoom(const wxRect &rect, int centerY, int amount);
+   int GetPitchHeight(int factor) const
+   { return std::max(1, (int)(factor * mPitchHeight)); }
+   void SetPitchHeight(int rectHeight, float h)
+   {
+      // Impose certain zoom limits
+      auto octavePadding = 2 * 10; // 10 octaves times 2 single-pixel seperations per pixel
+      auto availableHeight = rectHeight - octavePadding;
+      auto numNotes = 128.f;
+      auto minSpacePerNote =
+         std::max((float)MinPitchHeight, availableHeight / numNotes);
+      mPitchHeight =
+         std::max(minSpacePerNote,
+                  std::min((float)MaxPitchHeight, h));
+   }
+   /// Zooms out a constant factor (subject to zoom limits)
+   void ZoomOut(const wxRect &rect, int y) { Zoom(rect, y, 1.0f / ZoomStep, true); }
+   /// Zooms in a contant factor (subject to zoom limits)
+   void ZoomIn(const wxRect &rect, int y) { Zoom(rect, y, ZoomStep, true); }
+   /// Zoom the note track around y.
+   /// If center is true, the result will be centered at y.
+   void Zoom(const wxRect &rect, int y, float multiplier, bool center);
    void ZoomTo(const wxRect &rect, int start, int end);
-   int GetNoteMargin() const { return (mPitchHeight + 1) / 2; }
-   int GetOctaveHeight() const { return mPitchHeight * 12 + 2; }
+   int GetNoteMargin(int height) const
+   { return std::min(height / 4, (GetPitchHeight(1) + 1) / 2); }
+   int GetOctaveHeight() const { return GetPitchHeight(12) + 2; }
    // call this once before a series of calls to IPitchToY(). It
    // sets mBottom to offset of octave 0 so that mBottomNote
-   // is located at r.y + r.height - (GetNoteMargin() + 1 + mPitchHeight)
+   // is located at r.y + r.height - (GetNoteMargin() + 1 + GetPitchHeight())
    void PrepareIPitchToY(const wxRect &r) const {
-       mBottom = r.y + r.height - GetNoteMargin() - 1 - mPitchHeight +
-          (mBottomNote / 12) * GetOctaveHeight() +
-          GetNotePos(mBottomNote % 12);
+       mBottom =
+         r.y + r.height - GetNoteMargin(r.height) - 1 - GetPitchHeight(1) +
+             (mBottomNote / 12) * GetOctaveHeight() +
+                GetNotePos(mBottomNote % 12);
    }
    // IPitchToY returns Y coordinate of top of pitch p
    int IPitchToY(int p) const {
@@ -147,7 +165,7 @@ class AUDACITY_DLL_API NoteTrack final
    // compute the window coordinate of the bottom of an octave: This is
    // the bottom of the line separating B and C.
    int GetOctaveBottom(int oct) const {
-      return IPitchToY(oct * 12) + mPitchHeight + 1;
+      return IPitchToY(oct * 12) + GetPitchHeight(1) + 1;
    }
    // Y coordinate for given floating point pitch (rounded to int)
    int PitchToY(double p) const {
@@ -158,7 +176,8 @@ class AUDACITY_DLL_API NoteTrack final
    // map pitch class number (0-11) to pixel offset from bottom of octave
    // (the bottom of the black line between B and C) to the top of the
    // note. Note extra pixel separates B(11)/C(0) and E(4)/F(5).
-   int GetNotePos(int p) const { return 1 + mPitchHeight * (p + 1) + (p > 4); }
+   int GetNotePos(int p) const
+   { return 1 + GetPitchHeight(p + 1) + (p > 4); }
    // get pixel offset to top of ith black key note
    int GetBlackPos(int i) const { return GetNotePos(i * 2 + 1 + (i > 1)); }
    // GetWhitePos tells where to draw lines between keys as an offset from
@@ -174,6 +193,8 @@ class AUDACITY_DLL_API NoteTrack final
 
       mBottomNote = note;
    }
+
+#if 0
    // Vertical scrolling is performed by dragging the keyboard at
    // left of track. Protocol is call StartVScroll, then update by
    // calling VScroll with original and final mouse position.
@@ -182,6 +203,7 @@ class AUDACITY_DLL_API NoteTrack final
    // so I left these functions here for possible use in the future.
    void StartVScroll();
    void VScroll(int start, int end);
+#endif
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
@@ -196,8 +218,10 @@ class AUDACITY_DLL_API NoteTrack final
    // map all channel numbers mod 16. This will have no effect
    // on MIDI files, but it will allow users to at least select
    // all channels on non-MIDI event sequence data.
-#define ALL_CHANNELS 0xFFFF
-#define CHANNEL_BIT(c) (1 << (c & ALL_CHANNELS))
+#define NUM_CHANNELS 16
+   // Bitmask with all NUM_CHANNELS bits set
+#define ALL_CHANNELS (1 << NUM_CHANNELS) - 1
+#define CHANNEL_BIT(c) (1 << (c % NUM_CHANNELS))
    bool IsVisibleChan(int c) const {
       return (mVisibleChannels & CHANNEL_BIT(c)) != 0;
    }
@@ -232,13 +256,21 @@ class AUDACITY_DLL_API NoteTrack final
    mutable int mBottom;
    int mBottomNote;
    int mStartBottomNote;
-   int mPitchHeight;
+
+   // Remember continuous variation for zooming,
+   // but it is rounded off whenever drawing:
+   float mPitchHeight;
+
+   enum { MinPitchHeight = 1, MaxPitchHeight = 25 };
+   static const float ZoomStep;
+
    int mVisibleChannels; // bit set of visible channels
-   int mLastMidiPosition;
+
+   std::weak_ptr<StretchHandle> mStretchHandle;
 
 protected:
-   TrackControls *GetControls() override;
-   TrackVRulerControls *GetVRulerControls() override;
+   std::shared_ptr<TrackControls> GetControls() override;
+   std::shared_ptr<TrackVRulerControls> GetVRulerControls() override;
 };
 
 #endif // USE_MIDI
