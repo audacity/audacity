@@ -139,6 +139,14 @@ dnl Gather wx arguments
 
 WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
 WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
+
+dnl Enable C++ 11 support. Use gnu++11 on GCC since wxWidgets uses extensions
+if "${CXX}" -v 2>&1 | grep -q '^gcc version'; then
+    WX_CXXFLAGS="${WX_CXXFLAGS} --std=gnu++11"
+else
+    WX_CXXFLAGS="${WX_CXXFLAGS} --std=c++11"
+fi
+
 AC_SUBST([WX_CXXFLAGS])
 AC_SUBST([WX_LIBS])
 
