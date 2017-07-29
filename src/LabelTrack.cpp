@@ -853,7 +853,6 @@ void LabelTrack::Draw
          highlight = highlightTrack && target->GetLabelNum() == i;
 #endif
          bool selected = mSelIndex == i;
-         const wxBrush &brush = dc.GetBrush();
 
          if( selected )
             dc.SetBrush( AColor::labelTextEditBrush );
@@ -862,7 +861,7 @@ void LabelTrack::Draw
          labelStruct.DrawTextBox( dc, r );
 
          if (highlight || selected)
-            dc.SetBrush( brush );
+            dc.SetBrush(AColor::labelTextNormalBrush);
       }
    }
 
