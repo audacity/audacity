@@ -338,6 +338,13 @@ void SelectionBar::Populate()
        0, wxDefaultValidator, "");
    mChoice->SetName(wxT("\a"));     // stop Jaws screen reader using nearby text for name when name is empty
    mChoice->SetSelection(0);
+#ifdef __WXGTK__
+   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
+   // be three units high.
+   wxSize sz = mChoice->GetBestSize();
+   sz.SetHeight( sz.y-4);
+   mChoice->SetMinSize( sz );
+#endif
    mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
 #endif
 
@@ -398,12 +405,29 @@ void SelectionBar::Populate()
                       NULL,
                       this);
 
+#ifdef __WXGTK__
+   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
+   // be three units high.
+   wxSize sz = mRateBox->GetBestSize();
+   sz.SetHeight( sz.y-4);
+   mRateBox->SetMinSize( sz );
+#endif
+
    mainSizer->Add(mRateBox, 0, wxALIGN_TOP | wxRIGHT, 5);
    AddVLine( mainSizer );
 
    mSnapTo = safenew wxChoice(this, SnapToID,
                           wxDefaultPosition, wxDefaultSize,
                           SnapManager::GetSnapLabels());
+
+#ifdef __WXGTK__
+   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
+   // be three units high.
+   sz = mSnapTo->GetBestSize();
+   sz.SetHeight( sz.y-4);
+   mSnapTo->SetMinSize( sz );
+#endif
+
    mainSizer->Add(mSnapTo,
                   0, wxALIGN_TOP | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
