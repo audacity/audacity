@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-22 16:00+0100\n"
-"PO-Revision-Date: 2017-07-28 12:51+0000\n"
+"PO-Revision-Date: 2017-07-29 08:30+0000\n"
 "Last-Translator: Thomas De Rocker\n"
 "Language-Team: Dutch (http://www.transifex.com/klyok/audacity/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "Bestand '%s' bestaat reeds. Weet u zeker dat u het wilt overschrijven?lockk"
+msgstr "Bestand '%s' bestaat reeds. Weet u zeker dat u het wilt overschrijven?"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:78 src/LangChoice.cpp:135
 msgid "Confirm"
