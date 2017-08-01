@@ -398,8 +398,8 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & event)
 {
    wxMenu Menu;
-   Menu.Append( 0, _("Standard") );
-   Menu.Append( 1, _("Full") );
+   Menu.Append( 1, _("Standard") );
+   Menu.Append( 2, _("Full") );
    Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
    // Pop it up where the mouse is.
    PopupMenu(&Menu);//, wxPoint(0, 0));
@@ -475,7 +475,7 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
    gPrefs->Flush();
 
    mNewKeys = mDefaultKeys;
-   if( event.GetId() == 0 )
+   if( event.GetId() == 1 )
       FilterKeys( mNewKeys );
 
    for (size_t i = 0; i < mNewKeys.GetCount(); i++) {
