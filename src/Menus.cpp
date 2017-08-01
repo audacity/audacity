@@ -365,8 +365,8 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | WaveTracksExistFlag);
 #if defined(USE_MIDI)
       c->AddItem(wxT("ExportMIDI"), _("Export MI&DI..."), FN(OnExportMIDI),
-         AudioIONotBusyFlag | NoteTracksSelectedFlag,
-         AudioIONotBusyFlag | NoteTracksSelectedFlag);
+         AudioIONotBusyFlag | NoteTracksExistFlag,
+         AudioIONotBusyFlag | NoteTracksExistFlag);
 #endif
 #ifdef USE_LIBVORBIS
       c->AddSeparator();
@@ -4491,7 +4491,7 @@ void AudacityProject::OnExportMIDI(){
       t = iter.Next();
    }
 
-   if(numNoteTracksSelected > 1){
+   if(numNoteTracksSelected != 1){
       wxMessageBox(wxString::Format(wxT(
          "Please select only one MIDI track at a time.")));
       return;
