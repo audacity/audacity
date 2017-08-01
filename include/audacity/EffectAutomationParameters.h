@@ -286,6 +286,7 @@ public:
       cleaned.Replace(wxT("/"), wxT("_"));
       cleaned.Replace(wxT("\\"), wxT("_"));
       cleaned.Replace(wxT(":"), wxT("_"));
+      cleaned.Replace(wxT("="), wxT("_"));
 
       return cleaned;
    }
