@@ -69,6 +69,7 @@
 #include "../widgets/Warning.h"
 #include "../AColor.h"
 #include "../Dependencies.h"
+#include "../FileNames.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -524,18 +525,7 @@ bool Exporter::GetFilename()
    wxString defext = mPlugins[mFormat]->GetExtension(mSubFormat).Lower();
 
 //Bug 1304: Set a default path if none was given.  For Export.
-#ifdef __WIN32__
-   wxFileName tmpFile;
-   tmpFile.AssignHomeDir();
-   wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
-   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), tmpDirLoc + "\\Documents\\Audacity"));
-   // The path might not exist.
-   // There is no error if the path could not be created.  That's OK.
-   // The dialog that Audacity offers will allow the user to select a valid directory.
-   mFilename.Mkdir(0755, wxPATH_MKDIR_FULL);
-#else
-   mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), wxT("~/Documents")));
-#endif
+   mFilename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
    mFilename.SetName(mProject->GetName());
    if (mFilename.GetName().empty())
       mFilename.SetName(_("untitled"));

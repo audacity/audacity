@@ -15,6 +15,7 @@
 #include "Audacity.h"
 
 class wxFileName;
+class wxFileNameWrapper;
 class wxArrayString;
 
 // Uh, this is really a namespace rather than a class,
@@ -64,6 +65,9 @@ public:
 
    // Obtain name of loaded module that contains address
    static wxString PathFromAddr(void *addr);
+
+   static wxFileNameWrapper DefaultToDocumentsFolder
+      (const wxString &preference);
 
 private:
    // Private constructors: No one is ever going to instantiate it.
