@@ -6827,6 +6827,9 @@ AudacityProject *AudacityProject::DoImportMIDI(
 
       pProject->ZoomAfterImport(pTrack);
       pNewProject = nullptr;
+
+      wxGetApp().AddFileToHistory(fileName);
+
       return pProject;
    }
    else
