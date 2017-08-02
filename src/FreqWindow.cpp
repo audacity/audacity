@@ -76,7 +76,7 @@ and in the spectrogram spectral selection.
 #include "Theme.h"
 #include "AllThemeResources.h"
 
-#include "FileDialog.h"
+#include "FileNames.h"
 
 #include "WaveTrack.h"
 
@@ -1027,7 +1027,8 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString fName = _("spectrum.txt");
 
-   fName = FileSelector(_("Export Spectral Data As:"),
+   fName = FileNames::SelectFile(FileNames::Operation::Export,
+      _("Export Spectral Data As:"),
       wxEmptyString, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
 
    if (fName == wxT(""))

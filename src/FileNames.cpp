@@ -31,6 +31,7 @@ used throughout Audacity into this one place.
 #include "Internat.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
+#include "../lib-src/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
 #include <dlfcn.h>
@@ -335,4 +336,58 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder
 #endif
 
    return result;
+}
+
+namespace {
+   wxString PreferenceKey(FileNames::Operation op)
+   {
+      wxString key;
+      switch (op) {
+         case FileNames::Operation::Open:
+            key = wxT("/DefaultOpenPath"); break;
+         case FileNames::Operation::Export:
+            key = wxT("/DefaultExportPath"); break;
+         case FileNames::Operation::None:
+         default:
+            break;
+      }
+      return key;
+   }
+}
+
+wxString FileNames::FindDefaultPath(Operation op)
+{
+   auto key = PreferenceKey(op);
+   if (key.empty())
+      return wxString{};
+   else
+      return DefaultToDocumentsFolder(key).GetPath();
+}
+
+void FileNames::UpdateDefaultPath(Operation op, const wxString &path)
+{
+   if (path.empty())
+      return;
+   auto key = PreferenceKey(op);
+   if (!key.empty())  {
+      gPrefs->Write(key, ::wxPathOnly(path));
+      gPrefs->Flush();
+   }
+}
+
+wxString
+FileNames::SelectFile(Operation op,
+           const wxString& message,
+           const wxString& default_path,
+           const wxString& default_filename,
+           const wxString& default_extension,
+           const wxString& wildcard,
+           int flags,
+           wxWindow *parent)
+{
+   return WithDefaultPath(op, default_path, [&](const wxString &path) {
+      return FileSelector(
+            message, path, default_filename, default_extension,
+            wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
+   });
 }

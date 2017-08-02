@@ -53,6 +53,7 @@
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
 #include <wx/listimpl.cpp>
+#include <FileDialog.h>
 
 #include "../FileFormats.h"
 #include "../Internat.h"

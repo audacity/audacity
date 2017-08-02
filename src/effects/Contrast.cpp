@@ -20,7 +20,6 @@
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
-#include "../lib-src/FileDialog/FileDialog.h"
 
 #include <cmath>
 #include <limits>
@@ -30,6 +29,7 @@
 #define finite(x) _finite(x)
 #endif
 
+#include <wx/filedlg.h>
 #include <wx/valtext.h>
 #include <wx/log.h>
 
@@ -489,7 +489,8 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    AudacityProject * project = GetActiveProject();
    wxString fName = wxT("contrast.txt");
 
-   fName = FileSelector(_("Export Contrast Result As:"),
+   fName = FileNames::SelectFile(FileNames::Operation::Export,
+                        _("Export Contrast Result As:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),

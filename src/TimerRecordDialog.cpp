@@ -25,6 +25,7 @@
 #include <wx/defs.h>
 #include <wx/dir.h>
 #include <wx/datetime.h>
+#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/progdlg.h>
 #include <wx/sizer.h>
@@ -291,7 +292,8 @@ void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
 // New events for timer recording automation
 void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
-   wxString fName = FileSelector(_("Save Timer Recording As"),
+   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+      _("Save Timer Recording As"),
       m_fnAutoSaveFile.GetPath(),
       m_fnAutoSaveFile.GetFullName(),
       wxT("aup"),

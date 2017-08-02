@@ -18,12 +18,13 @@
 #include <wx/app.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
+#include <wx/filedlg.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/process.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
-#include <FileDialog.h>
+#include "FileNames.h"
 #include "Export.h"
 
 #include "../Mix.h"
@@ -169,7 +170,8 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
    ext = wxT(".exe");
 #endif
 
-   path = FileSelector(_("Find path to command"),
+   path = FileNames::SelectFile(FileNames::Operation::Open,
+                       _("Find path to command"),
                        wxEmptyString,
                        wxEmptyString,
                        ext,
