@@ -6731,8 +6731,7 @@ void AudacityProject::OnImport()
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       wxString fileName = selectedFiles[ff];
 
-      wxString path = ::wxPathOnly(fileName);
-      gPrefs->Write(wxT("/DefaultOpenPath"), path);
+      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       Import(fileName);
    }

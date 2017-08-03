@@ -2927,8 +2927,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       if (AudacityProject::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fileName));
-      gPrefs->Flush();
+      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       // DMM: If the project is dirty, that means it's been touched at
       // all, and it's not safe to open a NEW project directly in its

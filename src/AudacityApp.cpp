@@ -774,9 +774,7 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
       // verify that the file exists
       if (wxFile::Exists(fullPathStr))
       {
-         if (!gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr)) ||
-               !gPrefs->Flush())
-            return false;
+         FileNames::UpdateDefaultPath(FileNames::Operation::Open, fullPathStr);
 
          // Make sure it isn't already open.
          // Test here even though AudacityProject::OpenFile() also now checks, because
