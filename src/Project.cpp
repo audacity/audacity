@@ -2830,7 +2830,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    // we built up earlier into the mask
 
    // Retrieve saved path and type
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
+   auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
    wxString type = gPrefs->Read(wxT("/DefaultOpenType"),mask.BeforeFirst(wxT('|')));
 
    // Convert the type to the filter index
