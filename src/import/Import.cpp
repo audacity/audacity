@@ -332,6 +332,7 @@ bool Importer::IsMidi(const wxString &fName)
 {
    const auto extension = fName.AfterLast(wxT('.'));
    return
+      extension.IsSameAs(wxT("gro"), false) ||
       extension.IsSameAs(wxT("midi"), false) ||
       extension.IsSameAs(wxT("mid"), false);
 }
