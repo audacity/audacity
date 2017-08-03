@@ -519,7 +519,7 @@ public:
       "Where would I find the file '%s'?" instead if you want. */
       question.Printf(_("Where is '%s'?"), mName.c_str());
 
-      wxString path = FileNames::SelectFile(FileNames::Operation::None,
+      wxString path = FileNames::SelectFile(FileNames::Operation::_None,
          question,
          mLibPath.GetPath(),
          mLibPath.GetName(),

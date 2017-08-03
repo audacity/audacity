@@ -72,7 +72,8 @@ public:
    // If not None, determines a preference key (for the default path string) to
    // be read and updated
    enum class Operation {
-      None,
+      // _ on None to defeat some macro that is expanding this.
+      _None,
       Open,
       Export
    };

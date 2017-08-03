@@ -39,7 +39,7 @@ KeyConfigPrefs and MousePrefs use.
 #include "../Internat.h"
 #include "../ShuttleGui.h"
 
-#include "FileNames.h"
+#include "../FileNames.h"
 
 #if defined(EXPERIMENTAL_KEY_VIEW)
 

@@ -24,7 +24,7 @@
 #include <wx/process.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
-#include "FileNames.h"
+#include "../FileNames.h"
 #include "Export.h"
 
 #include "../Mix.h"

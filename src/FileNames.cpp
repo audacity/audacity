@@ -347,7 +347,7 @@ namespace {
             key = wxT("/DefaultOpenPath"); break;
          case FileNames::Operation::Export:
             key = wxT("/DefaultExportPath"); break;
-         case FileNames::Operation::None:
+         case FileNames::Operation::_None:
          default:
             break;
       }

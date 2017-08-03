@@ -30,6 +30,7 @@ and on Mac OS X for the filesystem.
 
 #include "Internat.h"
 #include "Experimental.h"
+#include "FileNames.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -245,7 +246,7 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
          wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
          ext = ff.GetExt();
-         name = FileNames::SelectFile(FileNames::Operation::None,
+         name = FileNames::SelectFile(FileNames::Operation::_None,
                              _("Specify New Filename:"),
                              wxEmptyString,
                              name,
