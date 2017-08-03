@@ -3955,10 +3955,13 @@ void AudioIO::GetNextEvent()
    mNextEvent = mIterator->next(&mNextIsNoteOn,
                                 (void **) &mNextEventTrack,
                                 &nextOffset, mT1 + mMidiLoopOffset);
+
+   mNextEventTime  = mT1 + mMidiLoopOffset + 1;
    if (mNextEvent) {
       mNextEventTime = (mNextIsNoteOn ? mNextEvent->time :
                               mNextEvent->get_end_time()) + nextOffset;;
-   } else { // terminate playback at mT1
+   } 
+   if (mNextEventTime > (mT1 + mMidiLoopOffset)){ // terminate playback at mT1
       mNextEvent = &gAllNotesOff;
       mNextEventTime = mT1 + mMidiLoopOffset - ALG_EPS;
       mNextIsNoteOn = true; // do not look at duration
