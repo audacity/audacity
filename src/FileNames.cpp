@@ -30,6 +30,8 @@ used throughout Audacity into this one place.
 #include "FileNames.h"
 #include "Internat.h"
 #include "PlatformCompatibility.h"
+#include "wxFileNameWrapper.h"
+#include "../lib-src/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
 #include <dlfcn.h>
@@ -314,4 +316,78 @@ wxString FileNames::PathFromAddr(void *addr)
 #endif
 
     return name.GetFullPath();
+}
+
+wxFileNameWrapper FileNames::DefaultToDocumentsFolder
+(const wxString &preference)
+{
+   wxFileNameWrapper result;
+   result.AssignHomeDir();
+
+#ifdef __WIN32__
+   result.SetPath(gPrefs->Read(
+      preference, result.GetPath(wxPATH_GET_VOLUME) + "\\Documents\\Audacity"));
+   // The path might not exist.
+   // There is no error if the path could not be created.  That's OK.
+   // The dialog that Audacity offers will allow the user to select a valid directory.
+   result.Mkdir(0755, wxPATH_MKDIR_FULL);
+#else
+   result.SetPath(gPrefs->Read( preference, result.GetPath() + "/Documents"));
+#endif
+
+   return result;
+}
+
+namespace {
+   wxString PreferenceKey(FileNames::Operation op)
+   {
+      wxString key;
+      switch (op) {
+         case FileNames::Operation::Open:
+            key = wxT("/DefaultOpenPath"); break;
+         case FileNames::Operation::Export:
+            key = wxT("/DefaultExportPath"); break;
+         case FileNames::Operation::None:
+         default:
+            break;
+      }
+      return key;
+   }
+}
+
+wxString FileNames::FindDefaultPath(Operation op)
+{
+   auto key = PreferenceKey(op);
+   if (key.empty())
+      return wxString{};
+   else
+      return DefaultToDocumentsFolder(key).GetPath();
+}
+
+void FileNames::UpdateDefaultPath(Operation op, const wxString &path)
+{
+   if (path.empty())
+      return;
+   auto key = PreferenceKey(op);
+   if (!key.empty())  {
+      gPrefs->Write(key, ::wxPathOnly(path));
+      gPrefs->Flush();
+   }
+}
+
+wxString
+FileNames::SelectFile(Operation op,
+           const wxString& message,
+           const wxString& default_path,
+           const wxString& default_filename,
+           const wxString& default_extension,
+           const wxString& wildcard,
+           int flags,
+           wxWindow *parent)
+{
+   return WithDefaultPath(op, default_path, [&](const wxString &path) {
+      return FileSelector(
+            message, path, default_filename, default_extension,
+            wildcard, flags, parent, wxDefaultCoord, wxDefaultCoord);
+   });
 }

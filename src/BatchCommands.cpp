@@ -434,7 +434,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
 //      double endTime = project->mTracks->GetEndTime();
 //      double startTime = 0.0;
       //OnSelectAll();
-      pathName = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
+      pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
       ::wxMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
             pathName.c_str(), cleanedString.c_str(), justName.c_str(), extension.c_str()),
          _("Export recording"),

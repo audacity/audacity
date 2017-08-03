@@ -41,7 +41,7 @@ of the BlockFile system.
 #include "Sequence.h"
 #include "Prefs.h"
 
-#include "FileDialog.h"
+#include "FileNames.h"
 
 class BenchmarkDialog final : public wxDialogWrapper
 {
@@ -248,7 +248,8 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
 {
    wxString fName = wxT("benchmark.txt");
 
-   fName = FileSelector(wxT("Export Benchmark Data As:"),
+   fName = FileNames::SelectFile(FileNames::Operation::Export,
+                        wxT("Export Benchmark Data As:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),

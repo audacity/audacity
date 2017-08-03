@@ -21,8 +21,8 @@
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h"
 
-#include "FileDialog.h"
-
+class FileDialog;
+class wxFileCtrlEvent;
 class wxMemoryDC;
 class wxStaticText;
 class AudacityProject;

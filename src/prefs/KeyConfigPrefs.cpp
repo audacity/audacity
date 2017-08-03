@@ -39,7 +39,7 @@ KeyConfigPrefs and MousePrefs use.
 #include "../Internat.h"
 #include "../ShuttleGui.h"
 
-#include "FileDialog.h"
+#include "FileNames.h"
 
 #if defined(EXPERIMENTAL_KEY_VIEW)
 
@@ -333,11 +333,10 @@ void KeyConfigPrefs::RefreshBindings(bool bSort)
 void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),
-                                ::wxGetCwd());
 
-   file = FileSelector(_("Select an XML file containing Audacity keyboard shortcuts..."),
-                       path,
+   file = FileNames::SelectFile(FileNames::Operation::Open,
+                        _("Select an XML file containing Audacity keyboard shortcuts..."),
+                       wxEmptyString,
                        file,
                        wxT(""),
                        _("XML files (*.xml)|*.xml|All files|*"),
@@ -347,10 +346,6 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    if (!file) {
       return;
    }
-
-   path = wxPathOnly(file);
-   gPrefs->Write(wxT("/DefaultOpenPath"), path);
-   gPrefs->Flush();
 
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
@@ -365,11 +360,10 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
-   wxString path = gPrefs->Read(wxT("/DefaultExportPath"),
-                                ::wxGetCwd());
 
-   file = FileSelector(_("Export Keyboard Shortcuts As:"),
-                       path,
+   file = FileNames::SelectFile(FileNames::Operation::Export,
+                       _("Export Keyboard Shortcuts As:"),
+                       wxEmptyString,
                        file,
                        wxT("xml"),
                        _("XML files (*.xml)|*.xml|All files|*"),
@@ -379,10 +373,6 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    if (!file) {
       return;
    }
-
-   path = wxPathOnly(file);
-   gPrefs->Write(wxT("/DefaultExportPath"), path);
-   gPrefs->Flush();
 
    GuardedCall< void >( [&] {
       XMLFileWriter prefFile{ file, _("Error Exporting Keyboard Shortcuts") };
@@ -993,11 +983,10 @@ void KeyConfigPrefs::RepopulateBindingsList()
 void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),
-                                ::wxGetCwd());
 
-   file = FileSelector(_("Select an XML file containing Audacity keyboard shortcuts..."),
-                       path,
+   file = FileNames::SelectFile(FileNames::Operation::Open,
+                       _("Select an XML file containing Audacity keyboard shortcuts..."),
+                       wxEmptyString,
                        file,
                        wxT(""),
                        _("XML files (*.xml)|*.xml|All files|*"),
@@ -1007,10 +996,6 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    if (!file) {
       return;
    }
-
-   path = wxPathOnly(file);
-   gPrefs->Write(wxT("/DefaultOpenPath"), path);
-   gPrefs->Flush();
 
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
@@ -1025,10 +1010,9 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
-   wxString path = gPrefs->Read(wxT("/DefaultExportPath"),
-                                ::wxGetCwd());
 
-   file = FileSelector(_("Export Keyboard Shortcuts As:"),
+   file = FileNames::SelectFile(FileNames::Operation::Export,
+                       _("Export Keyboard Shortcuts As:"),
                        path,
                        file,
                        wxT("xml"),
@@ -1039,10 +1023,6 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    if (!file) {
       return;
    }
-
-   path = wxPathOnly(file);
-   gPrefs->Write(wxT("/DefaultExportPath"), path);
-   gPrefs->Flush();
 
    GuardedCall< void >( [&] {
       XMLFileWriter prefFile{ file, _("Error Exporting Keyboard Shortcuts") };

@@ -117,7 +117,6 @@ simplifies construction of menu items.
 #include "SoundActivatedRecord.h"
 #include "LabelDialog.h"
 
-#include "FileDialog.h"
 #include "SplashDialog.h"
 #include "widgets/HelpSystem.h"
 #include "DeviceManager.h"
@@ -4424,7 +4423,8 @@ void AudacityProject::OnExportLabels()
       return;
    }
 
-   fName = FileSelector(_("Export Labels As:"),
+   fName = FileNames::SelectFile(FileNames::Operation::Export,
+                        _("Export Labels As:"),
                         wxEmptyString,
                         fName,
                         wxT("txt"),
@@ -4505,7 +4505,8 @@ void AudacityProject::OnExportMIDI(){
 
       wxString fName = wxT("");
 
-      fName = FileSelector(_("Export MIDI As:"),
+      fName = FileNames::SelectFile(FileNames::Operation::Export,
+         _("Export MIDI As:"),
          wxEmptyString,
          fName,
          wxT(".mid|.gro"),
@@ -6730,8 +6731,7 @@ void AudacityProject::OnImport()
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       wxString fileName = selectedFiles[ff];
 
-      wxString path = ::wxPathOnly(fileName);
-      gPrefs->Write(wxT("/DefaultOpenPath"), path);
+      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       Import(fileName);
    }
@@ -6741,11 +6741,10 @@ void AudacityProject::OnImport()
 
 void AudacityProject::OnImportLabels()
 {
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
-
    wxString fileName =
-       FileSelector(_("Select a text file containing labels"),
-                    path,     // Path
+       FileNames::SelectFile(FileNames::Operation::Open,
+                    _("Select a text file containing labels"),
+                    wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
                     _("Text files (*.txt)|*.txt|All files|*"),
@@ -6753,10 +6752,6 @@ void AudacityProject::OnImportLabels()
                     this);    // Parent
 
    if (fileName != wxT("")) {
-      path =::wxPathOnly(fileName);
-      gPrefs->Write(wxT("/DefaultOpenPath"), path);
-      gPrefs->Flush();
-
       wxTextFile f;
 
       f.Open(fileName);
@@ -6787,23 +6782,17 @@ void AudacityProject::OnImportLabels()
 #ifdef USE_MIDI
 void AudacityProject::OnImportMIDI()
 {
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
-
-   wxString fileName = FileSelector(_("Select a MIDI file"),
-                                    path,     // Path
+   wxString fileName = FileNames::SelectFile(FileNames::Operation::Open,
+                                    _("Select a MIDI file"),
+                                    wxEmptyString,     // Path
                                     wxT(""),       // Name
                                     wxT(""),       // Extension
                                     _("MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"),
                                     wxRESIZE_BORDER,        // Flags
                                     this);    // Parent
 
-   if (fileName != wxT("")) {
-      path =::wxPathOnly(fileName);
-      gPrefs->Write(wxT("/DefaultOpenPath"), path);
-      gPrefs->Flush();
-
+   if (fileName != wxT(""))
       AudacityProject::DoImportMIDI(this, fileName);
-   }
 }
 
 AudacityProject *AudacityProject::DoImportMIDI(
@@ -6839,11 +6828,10 @@ AudacityProject *AudacityProject::DoImportMIDI(
 
 void AudacityProject::OnImportRaw()
 {
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
-
    wxString fileName =
-       FileSelector(_("Select any uncompressed audio file"),
-                    path,     // Path
+       FileNames::SelectFile(FileNames::Operation::Open,
+                    _("Select any uncompressed audio file"),
+                    wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(""),       // Extension
                     _("All files|*"),
@@ -6852,10 +6840,6 @@ void AudacityProject::OnImportRaw()
 
    if (fileName == wxT(""))
       return;
-
-   path =::wxPathOnly(fileName);
-   gPrefs->Write(wxT("/DefaultOpenPath"), path);
-   gPrefs->Flush();
 
    TrackHolders newTracks;
 
@@ -8231,7 +8215,8 @@ void AudacityProject::OnAudioDeviceInfo()
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      wxString fName = FileSelector(_("Save Device Info"),
+      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+                                    _("Save Device Info"),
                                     wxEmptyString,
                                     wxT("deviceinfo.txt"),
                                     wxT("txt"),
@@ -8271,7 +8256,8 @@ void AudacityProject::OnMidiDeviceInfo()
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      wxString fName = FileSelector(_("Save MIDI Device Info"),
+      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+         _("Save MIDI Device Info"),
          wxEmptyString,
          wxT("midideviceinfo.txt"),
          wxT("txt"),

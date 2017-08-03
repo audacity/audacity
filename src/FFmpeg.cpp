@@ -24,6 +24,7 @@ License: GPL v2.  See License.txt.
 #include "widgets/HelpSystem.h"
 
 #include <wx/file.h>
+#include <wx/filedlg.h>
 
 #include "Experimental.h"
 
@@ -518,7 +519,8 @@ public:
       "Where would I find the file '%s'?" instead if you want. */
       question.Printf(_("Where is '%s'?"), mName.c_str());
 
-      wxString path = FileSelector(question,
+      wxString path = FileNames::SelectFile(FileNames::Operation::None,
+         question,
          mLibPath.GetPath(),
          mLibPath.GetName(),
          wxT(""),

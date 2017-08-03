@@ -41,7 +41,6 @@
 #include <wx/window.h>
 #endif
 
-#include "FileDialog.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "Prefs.h"
@@ -51,6 +50,7 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/filedlg.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/listctrl.h>
@@ -1152,7 +1152,8 @@ void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
    wxString fn;
 
    // Ask the user for the real name
-   fn = FileSelector(_("Load Metadata As:"),
+   fn = FileNames::SelectFile(FileNames::Operation::None,
+                     _("Load Metadata As:"),
                      FileNames::DataDir(),
                      wxT("Tags.xml"),
                      wxT("xml"),
@@ -1206,7 +1207,8 @@ void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
    TransferDataFromWindow();
 
    // Ask the user for the real name
-   fn = FileSelector(_("Save Metadata As:"),
+   fn = FileNames::SelectFile(FileNames::Operation::None,
+                     _("Save Metadata As:"),
                      FileNames::DataDir(),
                      wxT("Tags.xml"),
                      wxT("xml"),

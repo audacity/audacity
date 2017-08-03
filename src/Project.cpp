@@ -2830,7 +2830,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    // we built up earlier into the mask
 
    // Retrieve saved path and type
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
+   auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
    wxString type = gPrefs->Read(wxT("/DefaultOpenType"),mask.BeforeFirst(wxT('|')));
 
    // Convert the type to the filter index
@@ -2927,8 +2927,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       if (AudacityProject::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fileName));
-      gPrefs->Flush();
+      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       // DMM: If the project is dirty, that means it's been touched at
       // all, and it's not safe to open a NEW project directly in its
@@ -4317,16 +4316,7 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
    if( filename.GetFullPath().IsEmpty() ){
       bHasPath = false;
-      filename.AssignHomeDir();
-#ifdef __WIN32__
-      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "\\Documents\\Audacity"));
-      // The path might not exist.
-      // There is no error if the path could not be created.  That's OK.
-      // The dialog that Audacity offers will allow the user to select a valid directory.
-      filename.Mkdir(0755, wxPATH_MKDIR_FULL);
-#else
-      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "/Documents"));
-#endif
+      filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
 
    wxString sDialogTitle;
@@ -4361,7 +4351,8 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    // for overwrite ourselves later, and we disallow it.
    // We disallow overwrite because we would have to DELETE the many
    // smaller files too, or prompt to move them.
-   wxString fName = FileSelector(sDialogTitle,
+   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+                                 sDialogTitle,
                                  filename.GetPath(),
                                  filename.GetFullName(),
                                  wxT("aup"),

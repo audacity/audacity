@@ -140,7 +140,6 @@ extern "C" {
 #include <wx/msgdlg.h>   // for wxMessageBox
 #include <wx/utils.h>
 #include "widgets/LinkingHtmlWindow.h"
-#include "FileDialog.h"
 #include "ShuttleGui.h"
 #include "Prefs.h"
 #include <wx/checkbox.h>
