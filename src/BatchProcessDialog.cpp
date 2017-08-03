@@ -50,6 +50,7 @@
 #include "AllThemeResources.h"
 
 #include "FileDialog.h"
+#include "FileNames.h"
 #include "import/Import.h"
 
 #define ChainsListID       7001
@@ -237,7 +238,6 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
    wxString prompt =  _("Select file(s) for batch processing...");
 
    FormatList l;
@@ -279,6 +279,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       }
    }
 
+   auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
    FileDialog dlog(this,
                    prompt,
                    path,
@@ -290,7 +291,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    if (dlog.ShowModal() != wxID_OK) {
       return;
    }
-
+   
    wxArrayString files;
    dlog.GetPaths(files);
 
