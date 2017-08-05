@@ -1540,11 +1540,12 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       #ifdef __WXMAC__
       if (mPortMixer) {
          if (Px_SupportsPlaythrough(mPortMixer)) {
-            bool playthrough;
+            bool playthrough = false;
 
             mPreviousHWPlaythrough = Px_GetPlaythrough(mPortMixer);
 
-            gPrefs->Read(wxT("/AudioIO/Playthrough"), &playthrough, false);
+            // Bug 388.  Feature not supported.
+            //gPrefs->Read(wxT("/AudioIO/Playthrough"), &playthrough, false);
             if (playthrough)
                Px_SetPlaythrough(mPortMixer, 1.0);
             else
