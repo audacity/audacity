@@ -4673,6 +4673,16 @@ void AudacityProject::Zoom(double level)
 {
    mViewInfo.SetZoom(level);
    FixScrollbars();
+   // See if we can center the selection on screen, and have it actually fit.
+   // tOnLeft is the amount of time we would need before the selection left edge to center it.
+   float t0 = mViewInfo.selectedRegion.t0();
+   float t1 = mViewInfo.selectedRegion.t1();
+   float tAvailable = GetScreenEndTime() - mViewInfo.h;
+   float tOnLeft = (tAvailable - t0 + t1)/2.0;
+   // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
+   // If tOnLeft is positive, then we have room for the selection, so scroll to it.
+   if( tOnLeft >=0 )
+      TP_ScrollWindow( t0-tOnLeft);
 }
 
 // Utility function called by other zoom methods
