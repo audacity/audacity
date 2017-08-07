@@ -93,7 +93,11 @@ class ScreenFrame final : public wxFrame
    DECLARE_EVENT_TABLE()
 };
 
-using ScreenFramePtr = Destroy_ptr<ScreenFrame>;
+// Static pointer to the unique ScreenFrame window.
+// Formerly it was parentless, therefore this was a Destroy_ptr<ScreenFrame>
+// But now the window is owned, so just use a bare pointer, and null it when
+// the unique window is destroyed.
+using ScreenFramePtr = ScreenFrame*;
 ScreenFramePtr mFrame;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +105,12 @@ ScreenFramePtr mFrame;
 void OpenScreenshotTools()
 {
    if (!mFrame) {
-      mFrame = ScreenFramePtr{ safenew ScreenFrame(wxGetApp().GetTopWindow(), -1) };
+      auto parent = wxGetApp().GetTopWindow();
+      if (!parent) {
+         wxASSERT(false);
+         return;
+      }
+      mFrame = ScreenFramePtr{ safenew ScreenFrame(parent, -1) };
    }
    mFrame->Show();
    mFrame->Raise();
@@ -109,13 +118,7 @@ void OpenScreenshotTools()
 
 void CloseScreenshotTools()
 {
-   // The code below looks like a memory leak,
-   // but actually wxWidgets will take care of deleting the
-   // screenshot window, becuase the parent window is
-   // being deleted.  So we only need to free up our pointer
-   // to it, not actually delete the underlying object.
-   if( mFrame )
-      mFrame.release();
+   mFrame = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -281,8 +284,11 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 
 ScreenFrame::~ScreenFrame()
 {
-   if( mFrame )
-      mFrame.release();
+   if (this == mFrame)
+      mFrame = nullptr;
+   else
+      // There should only be one!
+      wxASSERT(false);
 }
 
 void ScreenFrame::Populate()
@@ -486,8 +492,6 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
 
 void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
-   if (this == mFrame.get())
-      mFrame.release();
    Destroy();
 }
 
