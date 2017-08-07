@@ -146,7 +146,7 @@ UIHandle::Result TrackSelectHandle::Drag
    // track is fully on-screen.
    CalculateRearrangingThresholds(event);
 
-   result |= EnsureVisible;
+   result |= EnsureVisible | RefreshAll;
    return result;
 }
 
