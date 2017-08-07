@@ -949,20 +949,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mLastSavedTracks.reset();
 
-   // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_PERMUTED,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                    NULL,
-                    this);
-   mTracks->Connect(EVT_TRACKLIST_DELETION,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                    NULL,
-                    this);
-   mTracks->Connect(EVT_TRACKLIST_RESIZING,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                    NULL,
-                    this);
-
    //
    // Initialize view info (shared with TrackPanel)
    //
@@ -1984,9 +1970,6 @@ void AudacityProject::FixScrollbars()
       rescroll = false;
    }
 
-   if (lastv != mViewInfo.vpos)
-      InvalidateFirstVisible();
-
    // wxScrollbar only supports int values but we need a greater range, so
    // we scale the scrollbar coordinates on demand. We only do this if we
    // would exceed the int range, so we can always use the maximum resolution
@@ -2035,8 +2018,8 @@ void AudacityProject::FixScrollbars()
 
 std::shared_ptr<Track> AudacityProject::GetFirstVisible()
 {
-   auto pTrack = mViewInfo.track.lock();
-   if (!pTrack && GetTracks()) {
+   std::shared_ptr<Track> pTrack;
+   if (GetTracks()) {
       // Recompute on demand and memo-ize
       TrackListIterator iter(GetTracks());
       for (Track *t = iter.First(); t; t = iter.Next()) {
@@ -2048,15 +2031,9 @@ std::shared_ptr<Track> AudacityProject::GetFirstVisible()
             break;
          }
       }
-      mViewInfo.track = pTrack;
    }
 
    return pTrack;
-}
-
-void AudacityProject::InvalidateFirstVisible()
-{
-   mViewInfo.track.reset();
 }
 
 void AudacityProject::UpdateLayout()
@@ -2213,14 +2190,6 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
-// The projects tracklist has been updated
-void AudacityProject::OnTrackListUpdate(wxCommandEvent & event)
-{
-   InvalidateFirstVisible();
-
-   event.Skip();
-}
-
 ///Handles the redrawing necessary for tasks as they partially update in the background.
 void AudacityProject::OnODTaskUpdate(wxCommandEvent & WXUNUSED(event))
 {
@@ -2266,9 +2235,6 @@ void AudacityProject::DoScroll()
 
    int lastv = mViewInfo.vpos;
    mViewInfo.vpos = mVsbar->GetThumbPosition() * mViewInfo.scrollStep;
-
-   if (lastv != mViewInfo.vpos)
-      InvalidateFirstVisible();
 
    //mchinen: do not always set this project to be the active one.
    //a project may autoscroll while playing in the background
@@ -2674,20 +2640,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    mTags.reset();
 
    mImportXMLTagHandler.reset();
-
-   // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_PERMUTED,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                       NULL,
-                       this);
 
    // Delete all the tracks to free up memory and DirManager references.
    mTracks->Clear();
@@ -3523,7 +3475,6 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
-       mViewInfo.track.reset();
        mViewInfo.vpos = longVpos;
        mbInitializingScrollbar = true;
    }
