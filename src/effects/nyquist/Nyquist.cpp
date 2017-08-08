@@ -1021,7 +1021,7 @@ bool NyquistEffect::ProcessOne()
          if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
             peakString += wxString::Format(wxT("(float %s) "), Internat::ToString(maxPeak).c_str());
          } else {
-            peakString += wxT("nil");
+            peakString += wxT("nil ");
          }
 
          float rms = mCurTrack[i]->GetRMS(mT0, mT1); // may throw
