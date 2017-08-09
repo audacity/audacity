@@ -1309,8 +1309,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("TimeShiftTool"), _("&Time Shift Tool"), FN(OnTimeShiftTool), wxT("F5"));
       c->AddItem(wxT("MultiTool"), _("&Multi Tool"), FN(OnMultiTool), wxT("F6"));
 
-      c->AddItem(wxT("NextTool"), _("&Next Tool"), FN(OnNextTool), wxT("D"));
       c->AddItem(wxT("PrevTool"), _("&Previous Tool"), FN(OnPrevTool), wxT("A"));
+      c->AddItem(wxT("NextTool"), _("&Next Tool"), FN(OnNextTool), wxT("D"));
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -1354,9 +1354,9 @@ void AudacityProject::CreateMenusAndCommands()
 
       // These were on the original transcription toolbar.  But they are not on the
       // shortened one.
-      c->AddItem(wxT("MoveToNextLabel"), _("Move to &Next Label"), FN(OnMoveToNextLabel), wxT("Alt+Right"),
-         CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
       c->AddItem(wxT("MoveToPrevLabel"), _("Move to &Previous Label"), FN(OnMoveToPrevLabel), wxT("Alt+Left"),
+         CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("MoveToNextLabel"), _("Move to &Next Label"), FN(OnMoveToNextLabel), wxT("Alt+Right"),
          CaptureNotBusyFlag | TrackPanelHasFocus, CaptureNotBusyFlag | TrackPanelHasFocus);
       c->EndSubMenu();
 
