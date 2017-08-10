@@ -530,8 +530,10 @@ private:
 
    // These fields are used to synchronize MIDI with audio:
 
+   /// PortAudio's currentTime
+   volatile double  mAudioCallbackOutputCurrentTime;
    /// PortAudio's outTime
-   volatile double  mAudioCallbackOutputTime;
+   volatile double  mAudioCallbackOutputDacTime;
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
    /// How many frames of zeros were output due to pauses?

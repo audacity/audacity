@@ -4014,13 +4014,14 @@ double AudioIO::PauseTime()
 
 PmTimestamp AudioIO::MidiTime()
 {
-   //printf("AudioIO:MidiTime: PaUtil_GetTime() %g mAudioCallbackOutputTime %g time - outputTime %g\n",
-   //        PaUtil_GetTime(), mAudioCallbackOutputTime, PaUtil_GetTime() - mAudioCallbackOutputTime);
+   //printf("AudioIO:MidiTime: PaUtil_GetTime() %g mAudioCallbackOutputDacTime %g time - outputTime %g\n",
+   //        PaUtil_GetTime(), mAudioCallbackOutputDacTime, PaUtil_GetTime() - mAudioCallbackOutputDacTime);
    // note: the extra 0.0005 is for rounding. Round down by casting to
    // unsigned long, then convert to PmTimeStamp (currently signed)
+   auto offset = mAudioCallbackOutputDacTime - mAudioCallbackOutputCurrentTime;
    return (PmTimestamp) ((unsigned long) (1000 * (AudioTime() + 1.0005 -
                            mAudioFramesPerBuffer / mRate +
-                           PaUtil_GetTime() - mAudioCallbackOutputTime)));
+                           -offset)));
 }
 
 void AudioIO::AllNotesOff()
@@ -4253,8 +4254,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* GSW: Save timeInfo in case MidiPlayback needs it */
-   gAudioIO->mAudioCallbackOutputTime = timeInfo->outputBufferDacTime;
-   // printf("in callback, mAudioCallbackOutputTime %g\n", gAudioIO->mAudioCallbackOutputTime); //DBG
+   gAudioIO->mAudioCallbackOutputDacTime = timeInfo->outputBufferDacTime;
+   gAudioIO->mAudioCallbackOutputCurrentTime = timeInfo->currentTime;
+   // printf("in callback, mAudioCallbackOutputDacTime %g\n", gAudioIO->mAudioCallbackOutputDacTime); //DBG
    gAudioIO->mAudioFramesPerBuffer = framesPerBuffer;
    if(gAudioIO->IsPaused())
       gAudioIO->mNumPauseFrames += framesPerBuffer;
