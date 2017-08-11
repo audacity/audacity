@@ -57,6 +57,9 @@
 // DA: Enables dark audacity theme and customisations.
 //#define EXPERIMENTAL_DA
 
+// Define this so that sync-lock tiles shine through spectrogram.
+#define EXPERIMENTAL_SPECTROGRAM_OVERLAY
+
 // EXPERIMENTAL_THEMING is mostly mainstream now.
 // the define is still present to mark out old code before theming, that we might
 // conceivably need.
