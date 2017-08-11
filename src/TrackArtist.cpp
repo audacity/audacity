@@ -2259,7 +2259,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    wxImage image((int)mid.width, (int)mid.height);
    if (!image.IsOk())
       return;
+   image.SetAlpha();
+
    unsigned char *data = image.GetData();
+   unsigned char *alpha = image.GetAlpha();
 
    const auto half = settings.GetFFTLength() / 2;
    const double binUnit = rate / (2 * half);
@@ -2599,7 +2602,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-         int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
+         int px = ((mid.height - 1 - yy) * mid.width + xx);
+         // More transparent the closer to zero intensity.
+         alpha[px]= wxMin( 200, (value+0.3) * 500) ;
+         px *=3;
          data[px++] = rv;
          data[px++] = gv;
          data[px] = bv;
