@@ -6293,8 +6293,9 @@ double AudacityProject::GetScreenEndTime() const
 
 void AudacityProject::ZoomInByFactor( double ZoomFactor )
 {
-   // LLL: Handling positioning differently when audio is active
-   if (gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) {
+   // LLL: Handling positioning differently when audio is 
+   // actively playing.  Don't do this if paused.
+   if ((gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) && !gAudioIO->IsPaused()){
       ZoomBy(ZoomFactor);
       mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
       mTrackPanel->Refresh(false);
