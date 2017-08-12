@@ -208,8 +208,9 @@ wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name,
    return pBtn;
 }
 
-wxStaticText * SelectionBar::AddTitle( const wxString & Title, int id, wxSizer * pSizer ){
-   wxStaticText * pTitle = safenew wxStaticText(this, id,Title );
+auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer ){
+   auStaticText * pTitle = safenew auStaticText(this, Title );
+   pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.Length() == 1 ) ? 0:5);
    return pTitle;
@@ -222,7 +223,6 @@ NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * 
    NumericTextCtrl * pCtrl = safenew NumericTextCtrl(
       NumericConverter::TIME, this, id, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
-   pCtrl->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pCtrl->EnableMenu();
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
    return pCtrl;
@@ -238,6 +238,7 @@ void SelectionBar::AddVLine(  wxSizer * pSizer ){
 void SelectionBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
+
    mStartTime = mEndTime = mLengthTime = mCenterTime = mAudioTime = nullptr;
 #ifdef SEL_RADIO_TITLE
    mStartEndProxy = mStartLengthProxy = mLengthEndProxy = mLengthCenterProxy = nullptr;
@@ -273,26 +274,15 @@ void SelectionBar::Populate()
 
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   wxStaticText * pProjRate = safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
-   // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines
-   //       and I could not figure out why.  Thus...hackage.
-#if defined(__WXGTK__)
-                  wxDefaultPosition, wxSize(110, -1));
-#else
-                  wxDefaultPosition, wxDefaultSize);
-#endif
-   pProjRate->SetForegroundColour( clrText );
-   mainSizer->Add(pProjRate,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   AddTitle( _("Project Rate (Hz):"), mainSizer );
    AddVLine( mainSizer );
-
-   AddTitle( _("Snap-To"), -1, mainSizer );
+   AddTitle( _("Snap-To"), mainSizer );
 #ifdef OPTIONS_BUTTON
    // Not enough room to say 'Selection Options".  There is a tooltip instead.
-   AddTitle( wxT(""), -1, mainSizer );
+   AddTitle( wxT(""), mainSizer );
 #endif
    AddVLine( mainSizer );
-
-   AddTitle( _("Audio Position"), -1, mainSizer );
+   AddTitle( _("Audio Position"), mainSizer );
    AddVLine( mainSizer );
 
    {

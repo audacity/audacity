@@ -10,8 +10,6 @@
 **********************************************************************/
 
 #include "Audacity.h"
-#include "Experimental.h"
-#include "MixerBoard.h"
 
 #include <cfloat>
 #include <math.h>
@@ -21,6 +19,9 @@
 #include <wx/icon.h>
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 
+#include "Theme.h"
+#include "Experimental.h"
+#include "MixerBoard.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
@@ -187,11 +188,13 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    wxPoint ctrlPos(kDoubleInset, kDoubleInset);
    wxSize ctrlSize(size.GetWidth() - kQuadrupleInset, TRACK_NAME_HEIGHT);
    mStaticText_TrackName =
-      safenew wxStaticText(this, -1, mTrack->GetName(), ctrlPos, ctrlSize,
-                           wxALIGN_CENTRE | wxST_NO_AUTORESIZE | wxSUNKEN_BORDER);
+      safenew auStaticText(this, mTrack->GetName());
    //v Useful when different tracks are different colors, but not now.
    //    mStaticText_TrackName->SetBackgroundColour(this->GetTrackColor());
+   mStaticText_TrackName->SetForegroundColour(theTheme.Colour(clrMedium));
    mStaticText_TrackName->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   mStaticText_TrackName->SetSize( ctrlSize );
+   mStaticText_TrackName->SetPosition( ctrlPos );
 
 
    // gain and velocity sliders at left (both in same place)

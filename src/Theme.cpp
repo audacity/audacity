@@ -1265,3 +1265,36 @@ void ThemeBase::RotateImageInto( int iTo, int iFrom, bool bClockwise )
    wxImage img2 = img.Rotate90( bClockwise );
    ReplaceImage( iTo, &img2 );
 }
+
+BEGIN_EVENT_TABLE(auStaticText, wxWindow)
+    EVT_PAINT(auStaticText::OnPaint)
+END_EVENT_TABLE()
+
+ 
+auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
+ wxWindow(parent, wxID_ANY)
+{
+   int textWidth, textHeight;
+
+   int fontSize = 11;
+   #ifdef __WXMSW__
+      fontSize = 9;
+   #endif
+   wxFont font(fontSize, wxDEFAULT, wxNORMAL, wxNORMAL);
+   GetTextExtent(textIn, &textWidth, &textHeight, NULL, NULL, &font);
+
+   SetFont( font );
+   SetMinSize( wxSize(textWidth, textHeight) );
+   SetBackgroundColour( theTheme.Colour( clrMedium));
+   SetForegroundColour( theTheme.Colour( clrTrackPanelText));
+   SetName(textIn);
+}
+ 
+void auStaticText::OnPaint(wxPaintEvent & evt)
+{
+   wxPaintDC dc(this);
+   //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
+   dc.DrawText( GetName(), 0,0);
+}
+
+

@@ -1159,7 +1159,9 @@ void TrackPanel::OnPlayback(wxCommandEvent &e)
 void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
 {
    Track *t = (Track *) e.GetClientData();
-   UpdateVRuler(t);
+   // A deleted track can trigger the event.  In which case do nothing here.
+   if( t )
+      UpdateVRuler(t);
    e.Skip();
 }
 
