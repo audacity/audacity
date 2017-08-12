@@ -64,10 +64,10 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
    const auto pTrack = FindTrack();
    if (!pTrack)
       return RefreshNone;
-   wxASSERT(pTrack->GetKind() == Track::Note);
-   auto steps = evt.steps;
 
+   auto steps = evt.steps;
    const auto nt = static_cast<NoteTrack*>(pTrack.get());
+
    if (event.CmdDown() && !event.ShiftDown()) {
       if (steps > 0)
          nt->ZoomIn(evt.rect, evt.event.m_y);

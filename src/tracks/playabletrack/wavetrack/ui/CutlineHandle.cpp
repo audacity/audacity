@@ -104,12 +104,9 @@ UIHandlePtr CutlineHandle::HitTest
    const ViewInfo &viewInfo = pProject->GetViewInfo();
    /// method that tells us if the mouse event landed on an
    /// editable Cutline
-   if (pTrack->GetKind() != Track::Wave)
-      return {};
 
-   WaveTrack *wavetrack = pTrack.get();
    WaveTrackLocation location;
-   if (!IsOverCutline(viewInfo, wavetrack, rect, state, &location))
+   if (!IsOverCutline(viewInfo, pTrack.get(), rect, state, &location))
       return {};
 
    auto result = std::make_shared<CutlineHandle>( pTrack, location );

@@ -207,8 +207,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack && pTrack->GetKind() == Track::Wave);
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    int newWaveColor = id - OnInstrument1ID;
 
@@ -307,8 +306,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= On16BitID && id <= OnFloatID);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack && pTrack->GetKind() == Track::Wave);
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    sampleFormat newFormat = int16Sample;
 
@@ -448,8 +446,7 @@ void RateMenuTable::OnRateChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= OnRate8ID && id <= OnRate384ID);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack->GetKind() == Track::Wave);
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    SetRate(pTrack, gRates[id - OnRate8ID]);
 
@@ -459,8 +456,7 @@ void RateMenuTable::OnRateChange(wxCommandEvent & event)
 
 void RateMenuTable::OnRateOther(wxCommandEvent &)
 {
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack && pTrack->GetKind() == Track::Wave);
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    int newRate;
 
@@ -710,8 +706,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
 {
    int idInt = event.GetId();
    wxASSERT(idInt >= OnWaveformID && idInt <= OnSpectrumID);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   wxASSERT(pTrack && pTrack->GetKind() == Track::Wave);
+   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    bool linear = false;
    WaveTrack::WaveTrackDisplay id;

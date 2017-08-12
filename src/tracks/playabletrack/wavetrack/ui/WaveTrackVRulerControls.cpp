@@ -54,7 +54,6 @@ void WaveTrackVRulerControls::DoZoomPreset( int i)
    const auto pTrack = FindTrack();
    if (!pTrack)
       return;
-   wxASSERT(pTrack->GetKind() == Track::Wave);
 
    const auto wt = static_cast<WaveTrack*>(pTrack.get());
 
@@ -84,10 +83,9 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    const auto pTrack = FindTrack();
    if (!pTrack)
       return RefreshNone;
-   wxASSERT(pTrack->GetKind() == Track::Wave);
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
    auto steps = evt.steps;
 
-   WaveTrack *const wt = static_cast<WaveTrack*>(pTrack.get());
    const bool isDB =
       wt->GetDisplay() == WaveTrack::Waveform &&
       wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
