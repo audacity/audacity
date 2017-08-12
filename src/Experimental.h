@@ -58,7 +58,14 @@
 //#define EXPERIMENTAL_DA
 
 // Define this so that sync-lock tiles shine through spectrogram.
+// The spectrogram pastes a bitmap over the tiles.
+// This makes it use alpha blending, most transparent where least intense.
 #define EXPERIMENTAL_SPECTROGRAM_OVERLAY
+
+// Define this so that sync-lock tiles shine through note/MIDI track.
+// The note track then relies on the same code for drawing background as
+// Wavetrack, and draws its notes and lines over the top.
+#define EXPERIMENTAL_NOTETRACK_OVERLAY
 
 // EXPERIMENTAL_THEMING is mostly mainstream now.
 // the define is still present to mark out old code before theming, that we might

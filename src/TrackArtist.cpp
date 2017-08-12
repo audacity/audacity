@@ -2817,7 +2817,9 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
 {
    dc.SetBrush(wb);
    dc.SetPen(wp);
+#ifndef EXPERIMENTAL_NOTETRACK_OVERLAY
    dc.DrawRectangle(sel); // fill rectangle with white keys background
+#endif
 
    int left = TIME_TO_X(track->GetOffset());
    if (left < sel.x) left = sel.x; // clip on left
@@ -2931,6 +2933,12 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    // bottomNote is displayed, and to that
    // we add the height of bottomNote from the position of pitch 0
    track->PrepareIPitchToY(rect);
+
+#ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
+   DrawBackgroundWithSelection(&dc, rect, track,
+         AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
+         selectedRegion, zoomInfo);
+#endif
 
    // Background comes in 4 colors, that are now themed.
    //   214, 214,214 -- unselected white keys
