@@ -122,10 +122,10 @@ void ContrastDialog::SetStartAndEndTime()
 enum {
    ID_BUTTON_USECURRENTF = 10001,
    ID_BUTTON_USECURRENTB,
-   ID_BUTTON_GETURL,
+   //ID_BUTTON_GETURL,
    ID_BUTTON_EXPORT,
    ID_BUTTON_RESET,
-   ID_BUTTON_CLOSE,
+   //ID_BUTTON_CLOSE,
    ID_FOREGROUNDSTART_T,
    ID_FOREGROUNDEND_T,
    ID_BACKGROUNDSTART_T,
@@ -139,10 +139,10 @@ enum {
 BEGIN_EVENT_TABLE(ContrastDialog,wxDialogWrapper)
    EVT_BUTTON(ID_BUTTON_USECURRENTF, ContrastDialog::OnGetForeground)
    EVT_BUTTON(ID_BUTTON_USECURRENTB, ContrastDialog::OnGetBackground)
-   EVT_BUTTON(ID_BUTTON_GETURL, ContrastDialog::OnGetURL)
+   EVT_BUTTON(wxID_HELP, ContrastDialog::OnGetURL)
    EVT_BUTTON(ID_BUTTON_EXPORT, ContrastDialog::OnExport)
    EVT_BUTTON(ID_BUTTON_RESET, ContrastDialog::OnReset)
-   EVT_BUTTON(ID_BUTTON_CLOSE, ContrastDialog::OnClose)
+   EVT_BUTTON(wxID_CANCEL, ContrastDialog::OnClose)
 END_EVENT_TABLE()
 
 /* i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/ */
@@ -294,6 +294,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       S.EndMultiColumn();
    }
    S.EndStatic();
+   S.AddStandardButtons(eCloseButton |eHelpButton);
+#if 0
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol(1);
@@ -302,6 +304,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(_("&Close"));
    }
    S.EndMultiColumn();
+#endif
    Layout();
    Fit();
    SetMinSize(GetSize());
