@@ -4022,10 +4022,23 @@ PmTimestamp AudioIO::MidiTime()
    //        PaUtil_GetTime(), mAudioCallbackOutputDacTime, PaUtil_GetTime() - mAudioCallbackOutputDacTime);
    // note: the extra 0.0005 is for rounding. Round down by casting to
    // unsigned long, then convert to PmTimeStamp (currently signed)
+
+   // PRL:  Bug1714 happened because PaUtil_GetTime() and
+   // mAudioCallbackOutputDacTime could be very widely different, causing
+   // integer overlows.
+   // Portaudio documentation says the origin for
+   // the times passed to audacityAudioCallback is unspecified.
+   // See long comments at the top of the file for the explanation of this
+   // calculation; we must use PaUtil_GetTime() here and also in the audio
+   // callback, to change the origin of times from portaudio, so the diffence of
+   // now and then is small, as the long comment assumes.
+   auto clockChange = PaUtil_GetTime() - mAudioCallbackClockTime;
    auto offset = mAudioCallbackOutputDacTime - mAudioCallbackOutputCurrentTime;
-   return (PmTimestamp) ((unsigned long) (1000 * (AudioTime() + 1.0005 -
-                           mAudioFramesPerBuffer / mRate +
-                           -offset)));
+   return (PmTimestamp) ((unsigned long) (1000 * (
+      AudioTime() + 1.0005 -
+      mAudioFramesPerBuffer / mRate +
+      clockChange - offset
+   )));
 }
 
 void AudioIO::AllNotesOff()
@@ -4258,6 +4271,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* GSW: Save timeInfo in case MidiPlayback needs it */
+   gAudioIO->mAudioCallbackClockTime = PaUtil_GetTime();
    gAudioIO->mAudioCallbackOutputDacTime = timeInfo->outputBufferDacTime;
    gAudioIO->mAudioCallbackOutputCurrentTime = timeInfo->currentTime;
    // printf("in callback, mAudioCallbackOutputDacTime %g\n", gAudioIO->mAudioCallbackOutputDacTime); //DBG

@@ -530,7 +530,10 @@ private:
 
    // These fields are used to synchronize MIDI with audio:
 
-   /// PortAudio's currentTime
+   /// PortAudio's clock time
+   volatile double  mAudioCallbackClockTime;
+   /// PortAudio's currentTime -- its origin is unspecified!  So that's why
+   /// we also record the above
    volatile double  mAudioCallbackOutputCurrentTime;
    /// PortAudio's outTime
    volatile double  mAudioCallbackOutputDacTime;
