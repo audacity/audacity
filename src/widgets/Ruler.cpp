@@ -692,6 +692,10 @@ wxString Ruler::LabelString(double d, bool major)
             s += t;
          }
          else {
+// Commented out old and incorrect code for avoiding the 40mins and 60 seconds problem
+// It was causing Bug 463 - Incorrect Timeline numbering (where at high zoom and long tracks,
+// numbers did not change.
+#if 0
             // The casting to float is working around an issue where 59 seconds
             // would show up as 60 when using g++ (Ubuntu 4.3.3-5ubuntu4) 4.3.3.
             int secs = (int)(float)(d);
@@ -709,7 +713,32 @@ wxString Ruler::LabelString(double d, bool major)
             // The casting to float is working around an issue where 59 seconds
             // would show up as 60 when using g++ (Ubuntu 4.3.3-5ubuntu4) 4.3.3.
             t2.Printf(format.c_str(), fmod((float)d, (float)60.0));
+#else
+            // For d in the range of hours, d is just very slightly below the value it should 
+            // have, because of using a double, which in turn yields values like 59:59:999999 
+            // mins:secs:nanosecs when we want 1:00:00:000000
+            // so adjust by less than a nano second per hour to get nicer number formatting.
+            double dd = d * 1.000000000000001;
+            int secs = (int)(dd);
+            wxString t1, t2, format;
 
+            if (secs >= 3600)
+               t1.Printf(wxT("%d:%02d:"), secs/3600, (secs/60)%60);
+            else if (secs >= 60)
+               t1.Printf(wxT("%d:"), secs/60);
+
+            if (secs >= 60)
+               format.Printf(wxT("%%0%d.%dlf"), mDigits+3, mDigits);
+            else
+               format.Printf(wxT("%%%d.%dlf"), mDigits+3, mDigits);
+            // dd will be reduced to just the seconds and fractional part.
+            dd = dd - secs + (secs%60);
+            // truncate to appropriate number of digits, so that the print formatting 
+            // doesn't round up 59.9999999 to 60.
+            double multiplier = pow( 10, mDigits);
+            dd = ((int)(dd * multiplier))/multiplier;
+            t2.Printf(format.c_str(), dd);
+#endif
             s += t1 + t2;
          }
       }
