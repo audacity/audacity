@@ -386,9 +386,9 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       S.StartHorizontalLay(wxEXPAND);
       {
          S.SetSizerProportion(1);
-         S.StartMultiColumn(4);
+         S.StartMultiColumn(6);
          S.SetStretchyCol(1);
-         S.SetStretchyCol(5);
+         S.SetStretchyCol(3);
          {
             S.AddPrompt(wxT("Cursor:"));
 
@@ -493,8 +493,9 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    }
    mLogAxis = mAxis != 0;
 
-   //mCloseButton->SetDefault();
-   //mCloseButton->SetFocus();
+   mCloseButton = reinterpret_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
+   mCloseButton->SetDefault();
+   mCloseButton->SetFocus();
 
    Layout();
    Fit();
