@@ -169,15 +169,19 @@ enum
    IdDelayCheckBox,
 
    IdCaptureFirst,
-   IdCaptureWindowContents = IdCaptureFirst,
+   // No point delaying the capture of sets of things.
+   IdCaptureMenus= IdCaptureFirst,
+   IdCaptureEffects,
+   IdCapturePreferences,
+
+   // Put all events that need delay between AllDelayed and LastDelayed.
+   IdAllDelayedEvents,
+   IdCaptureToolbars  =IdAllDelayedEvents,
+   IdCaptureWindowContents,
    IdCaptureFullWindow,
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
   
-   IdCaptureToolbars,
-   IdCaptureMenus,
-   IdCaptureEffects,
-   IdCapturePreferences,
    IdCaptureSelectionBar,
    IdCaptureSpectralSelection,
    IdCaptureTools,
@@ -198,14 +202,11 @@ enum
    IdCaptureSecondTrack,
    IdCaptureLast = IdCaptureSecondTrack,
 
+   IdLastDelayedEvent,
+
    IdToggleBackgroundBlue,
    IdToggleBackgroundWhite,
 
-   // Put all events that might need delay below:
-   IdAllDelayedEvents,
-
-
-   IdLastDelayedEvent,
 };
 
 BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
@@ -472,16 +473,20 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
 {
    int id = e.GetId();
 
+   // If split into two parts to make for easier breakpoint
+   // when testing timer.
    if (mDelayCheckBox &&
        mDelayCheckBox->GetValue() &&
        e.IsCommandEvent() &&
-       e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED &&
-       id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
+       e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED)
+   {
+      if( id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
        e.GetEventObject() != NULL) {
-      // safenew because it's a one-shot that deletes itself
-      ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
-      timer->Start(5000, true);
-      return true;
+         // safenew because it's a one-shot that deletes itself
+         ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
+         timer->Start(5000, true);
+         return true;
+      }
    }
 
    if (e.IsCommandEvent() && e.GetEventObject() == NULL) {
@@ -592,14 +597,15 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 
    wxArrayString Names;
 
+   Names.Add(wxT("menus"));
+   Names.Add(wxT("effects"));
+   Names.Add(wxT("preferences"));
+
+   Names.Add(wxT("toolbars"));
    Names.Add(wxT("window"));
    Names.Add(wxT("fullwindow"));
    Names.Add(wxT("windowplus"));
    Names.Add(wxT("fullscreen"));
-   Names.Add(wxT("toolbars"));
-   Names.Add(wxT("menus"));
-   Names.Add(wxT("effects"));
-   Names.Add(wxT("preferences"));
    Names.Add(wxT("selectionbar"));
    Names.Add(wxT("spectralselection"));
    Names.Add(wxT("tools"));
