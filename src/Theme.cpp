@@ -250,15 +250,18 @@ bool ThemeBase::LoadPreferredTheme()
 void Theme::ApplyUpdatedImages()
 {
    AColor::ReInit();
-   AudacityProject *p = GetActiveProject();
-   p->ApplyUpdatedTheme();
-   for( int ii = 0; ii < ToolBarCount; ++ii )
-   {
-      ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
-      if( pToolBar )
-         pToolBar->ReCreateButtons();
+
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+      AudacityProject *p = gAudacityProjects[i].get();
+      p->ApplyUpdatedTheme();
+      for( int ii = 0; ii < ToolBarCount; ++ii )
+      {
+         ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
+         if( pToolBar )
+            pToolBar->ReCreateButtons();
+      }
+      p->GetRulerPanel()->ReCreateButtons();
    }
-   p->GetRulerPanel()->ReCreateButtons();
 }
 
 void Theme::RegisterImages()
