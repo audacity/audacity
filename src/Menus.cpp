@@ -2815,9 +2815,14 @@ void AudacityProject::SortTracks(int flags)
          ndx++;
       }
       else {
+         bool bArrayTrackLinked = false;
          for (ndx = 0; ndx < arr.size(); ++ndx) {
             Track &arrTrack = **arr[ndx];
-            if(flags & kAudacitySortByName) {
+            // Don't insert between channels of a stereo track!
+            if( bArrayTrackLinked ){
+               bArrayTrackLinked = false;
+            }
+            else if(flags & kAudacitySortByName) {
                //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
                //also if we have case insensitive equality, then we need to sort by case as well
                //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
@@ -2864,6 +2869,7 @@ void AudacityProject::SortTracks(int flags)
 
                ndx+=candidatesLookedAt;
             }
+            bArrayTrackLinked = arrTrack.GetLinked();
          }
       }
       arr.insert(arr.begin() + ndx, iter);
