@@ -1921,7 +1921,11 @@ CommandFlag AudacityProject::GetFocusedFrame()
       if (w == mTrackPanel) {
          return TrackPanelHasFocus;
       }
-
+      // LIE if Lyrics window has focus.
+      // we want to act as if TrackPanel has focus.
+      if (w== mLyricsWindow) {
+         return TrackPanelHasFocus;
+      }
       if (w == mToolManager->GetBotDock()) {
          return BotDockHasFocus;
       }
