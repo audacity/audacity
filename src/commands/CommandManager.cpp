@@ -1236,8 +1236,10 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
 
    auto missingFlags = flagsRequired & (~flagsGot );
    if( missingFlags & AudioIONotBusyFlag )
+      // This reason will not be shown, because options that require it will be greyed our.
       reason = _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
    else if( missingFlags & StereoRequiredFlag )
+      // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
       reason = _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
    // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
    else if(( missingFlags & TimeSelectedFlag ) || (missingFlags &CutCopyAvailableFlag )){
