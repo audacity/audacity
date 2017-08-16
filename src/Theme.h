@@ -186,6 +186,7 @@ class auStaticText : public wxWindow
 public:
    auStaticText(wxWindow* parent, wxString text);
    void OnPaint(wxPaintEvent & evt);
+   bool AcceptsFocus() const override { return false; }
    DECLARE_EVENT_TABLE();
 };
 
