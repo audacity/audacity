@@ -1505,6 +1505,15 @@ void AudacityProject::CreateMenusAndCommands()
 
 
       SetMenuBar(menubar.release());
+      // Bug 143 workaround.
+      // The bug is in wxWidgets.  For a menu that has scrollers, the
+      // scrollers have an ID of 0 (not wxID_NONE which is -3).
+      // Therefore wxWidgets attempts to find a help string. See
+      // wxFrameBase::ShowMenuHelp(int menuId)
+      // It finds a bogus automatic help string of "Recent &Files"
+      // from that submenu.
+      // So we set the help string for command with Id 0 to empty.
+      mRecentFilesMenu->GetParent()->SetHelpString( 0, "" );
    }
 
 
