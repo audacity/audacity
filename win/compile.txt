@@ -35,18 +35,19 @@ Cygwin" section below. This is not maintained (for a very long time!).
 
 
 ------------------------------------------------------------------------
-MSVC++ STEP 1:  Download and Install wxWidgets
+MSVC++ STEP 1:  Download wxWidgets
 ------------------------------------------------------------------------
 
 To simplify the implementation of a near-identical user
 interface across platforms, Audacity uses wxWidgets, a  
 GUI framework. 
 
-Audacity 2.1.3 requires wxWidgets 3.0.2.
+Audacity 2.1.3 requires a patched version of wxWidgets 3.0.2.
+Download the patched wxWidgets from the 'audacity-fixes'
+branch of https://github.com/audacity/wxWidgets
 
-To be able to build Audacity for Windows, download and install 
-wxWidgets from http://www.wxwidgets.org/.
-
+Alternatively the unpatched sourcecode may be downloaded from 
+http://www.wxwidgets.org/ and patched as described below.
 
 ------------------------------------------------------------------------
 MSVC++ STEP 2:  Download source code for Audacity
@@ -59,18 +60,19 @@ at https://github.com/audacity/audacity/ (see GitHub for help).
 ------------------------------------------------------------------------
 MSVC++ STEP 3:  Build wxWidgets
 ------------------------------------------------------------------------
+These steps assume the wxWidgets source code was extracted to
+the root of C:\ and renamed "C:\wxWidgets-3.0.2\".
 
 3.1. Open "C:\wxWidgets-3.0.2\build\msw\wx_dll.dsw" with 
    Microsoft Visual Studio. 
-   Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
-   does not have the correct dependencies for the DLL builds.
    When you open wx_dll.dsw, Visual Studio will prompt whether
    to convert. Click "Yes To All". Next time you open a Visual
    Studio session, you can avoid this prompt by opening 
    "C\wxWidgets-3.0.2\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-3.2. We have patched wxWidgets with four patches.  You should apply all 
+3.2. If using the unpatched wcWidgets:
+   We have patched wxWidgets with four patches.  You should apply all 
    four.  You can do this in one step by copying the folder
      "audacity\win\wxWidgets_additions\wxWidgets-3.0.2\"
    over your: 
