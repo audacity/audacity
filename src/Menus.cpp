@@ -3598,6 +3598,7 @@ void AudacityProject::NextOrPrevFrame(bool forward)
       GetTrackPanel(),
       mToolManager->GetBotDock(),
    };
+
    const auto end = begin + rotationSize;
 
    // helper functions
@@ -3623,12 +3624,18 @@ void AudacityProject::NextOrPrevFrame(bool forward)
 
    while( idx != (idx2 = (idx2 + increment) % rotationSize) ) {
       wxWindow *toFocus = begin[idx2];
-      toFocus->SetFocus();
-      if ( FindAncestor() == idx2 )
-         // The focus took!
-         break;
-      // else, one of the tool docks might be empty because all bars were
-      // dragged off it.  Skip it and try another.
+      bool bIsAnEmptyDock=false;
+      if( idx2 != 1 )
+         bIsAnEmptyDock = ((idx2==0)?mToolManager->GetTopDock() : mToolManager->GetBotDock())->
+         GetChildren().GetCount() < 1;
+
+      // Skip docks that are empty (Bug 1564).
+      if( !bIsAnEmptyDock ){
+         toFocus->SetFocus();
+         if ( FindAncestor() == idx2 )
+            // The focus took!
+            break;
+      }
    }
 }
 
