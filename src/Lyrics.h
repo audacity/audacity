@@ -58,7 +58,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-class Lyrics final : public wxPanel
+class Lyrics final : public wxPanelWrapper
 {
    DECLARE_DYNAMIC_CLASS(Lyrics)
 

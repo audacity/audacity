@@ -83,7 +83,7 @@ IMPLEMENT_CLASS(Lyrics, wxPanel)
 Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
                const wxPoint& pos /*= wxDefaultPosition*/,
                const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size, wxWANTS_CHARS),
+   wxPanelWrapper(parent, id, pos, size, wxWANTS_CHARS),
    mWidth(size.x), mHeight(size.y)
 {
    mKaraokeHeight = mHeight;
