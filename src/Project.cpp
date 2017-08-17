@@ -2020,7 +2020,6 @@ std::shared_ptr<Track> AudacityProject::GetFirstVisible()
 {
    std::shared_ptr<Track> pTrack;
    if (GetTracks()) {
-      // Recompute on demand and memo-ize
       TrackListIterator iter(GetTracks());
       for (Track *t = iter.First(); t; t = iter.Next()) {
          int y = t->GetY();
