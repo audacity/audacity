@@ -470,7 +470,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    auto &seq = GetSeq();
    seq.convert_to_seconds();
    newTrack->mSeq.reset(seq.cut(t0 - GetOffset(), len, false));
-   newTrack->SetOffset(GetOffset());
+   newTrack->SetOffset(0);
 
    // Not needed
    // Alg_seq::cut seems to handle this
