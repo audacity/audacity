@@ -813,6 +813,7 @@ private:
 public:
    Scrubber &GetScrubber() { return *mScrubber; }
    const Scrubber &GetScrubber() const { return *mScrubber; }
+private:
 #endif
 
 private:
@@ -820,8 +821,6 @@ private:
 
 public:
    friend MenuCommandHandler &GetMenuCommandHandler(AudacityProject &project);
-
-public:
 
    class PlaybackScroller final : public wxEvtHandler
    {
@@ -847,6 +846,8 @@ public:
       AudacityProject *mProject;
       Mode mMode { Mode::Off };
    };
+
+private:
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
 
 public:
