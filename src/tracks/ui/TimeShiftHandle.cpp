@@ -712,7 +712,7 @@ UIHandle::Result TimeShiftHandle::Drag
          TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
          WaveClip *const pSrcClip = trackClip.clip;
          if (pSrcClip)
-            ok = trackClip.dstTrack->CanInsertClip(pSrcClip);
+            ok = trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount);
       }
 
       if (!ok) {

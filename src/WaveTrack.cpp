@@ -2372,11 +2372,12 @@ bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
       return true;
 }
 
-bool WaveTrack::CanInsertClip(WaveClip* clip)
+bool WaveTrack::CanInsertClip(WaveClip* clip, double slideBy)
 {
    for (const auto &c : mClips)
    {
-      if (c->GetStartTime() < clip->GetEndTime() && c->GetEndTime() > clip->GetStartTime())
+      if (c->GetStartTime() < (clip->GetEndTime()+slideBy) && 
+         c->GetEndTime() > (clip->GetStartTime()+slideBy))
          return false; // clips overlap
    }
 
