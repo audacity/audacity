@@ -794,9 +794,10 @@ void CommandManager::AddItem(const wxChar *name,
                              const wxChar *accel,
                              CommandFlag flags,
                              CommandMask mask,
-                             int checkmark)
+                             int checkmark,
+                             const CommandParameter &parameter)
 {
-   CommandListEntry *entry = NewIdentifier(name, label_in, accel, CurrentMenu(), callback, false, 0, 0);
+   CommandListEntry *entry = NewIdentifier(name, label_in, accel, CurrentMenu(), callback, false, 0, 0, parameter);
    int ID = entry->id;
    wxString label = GetLabelWithDisabledAccel(entry);
 
@@ -858,7 +859,7 @@ void CommandManager::AddCommand(const wxChar *name,
                                 CommandFlag flags,
                                 CommandMask mask)
 {
-   NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
+   NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0, {});
 
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
@@ -870,7 +871,7 @@ void CommandManager::AddGlobalCommand(const wxChar *name,
                                       const CommandFunctorPointer &callback,
                                       const wxChar *accel)
 {
-   CommandListEntry *entry = NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0);
+   CommandListEntry *entry = NewIdentifier(name, label_in, accel, NULL, callback, false, 0, 0, {});
 
    entry->enabled = false;
    entry->isGlobal = true;
@@ -916,7 +917,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
                         callback,
                         multi,
                         index,
-                        count);
+                        count, {});
 }
 
 CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
@@ -926,7 +927,8 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
    const CommandFunctorPointer &callback,
    bool multi,
    int index,
-   int count)
+   int count,
+   const CommandParameter &parameter)
 {
    // If we have the identifier already, reuse it.
    CommandListEntry *prev = mCommandNameHash[name];
@@ -956,6 +958,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
 
       mCurrentID = NextIdentifier(mCurrentID);
       entry->id = mCurrentID;
+      entry->parameter = parameter;
 
 #if defined(__WXMAC__)
       if (name == wxT("Preferences"))
@@ -1469,7 +1472,7 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
          return true;
    }
 
-   CommandContext context{ *proj, evt, entry->index };
+   CommandContext context{ *proj, evt, entry->index, entry->parameter };
    (*(entry->callback))(context);
 
    return true;

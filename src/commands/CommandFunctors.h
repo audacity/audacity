@@ -16,20 +16,25 @@
 class AudacityProject;
 class wxEvent;
 
+using CommandParameter = wxString;
+
 struct CommandContext {
    CommandContext(
       AudacityProject &p
       , const wxEvent *e = nullptr
       , int ii = 0
+      , const CommandParameter &param = {}
    )
       : project{ p }
       , pEvt{ e }
       , index{ ii }
+      , parameter{ param }
    {}
 
    AudacityProject &project;
    const wxEvent *pEvt;
    int index;
+   CommandParameter parameter;
 };
 
 class wxEvent;

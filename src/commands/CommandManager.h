@@ -65,6 +65,7 @@ struct CommandListEntry
    wxString labelTop;
    wxMenu *menu;
    CommandFunctorPointer callback;
+   CommandParameter parameter;
    bool multi;
    int index;
    int count;
@@ -156,7 +157,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 const wxChar *accel,
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
-                int checkmark = -1);
+                int checkmark = -1,
+                const CommandParameter &parameter = {});
 
    void AddSeparator();
 
@@ -293,7 +295,8 @@ protected:
                                    const CommandFunctorPointer &callback,
                                    bool multi,
                                    int index,
-                                   int count);
+                                   int count,
+                                   const CommandParameter &parameter);
 
    //
    // Executing commands
