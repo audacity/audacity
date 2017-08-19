@@ -193,13 +193,13 @@ void ScrubbingToolBar::OnButton(wxCommandEvent &event)
 
    switch (id) {
       case STBScrubID:
-         scrubber.OnScrub();
+         scrubber.OnScrub(*p);
          break;
       case STBSeekID:
-         scrubber.OnSeek();
+         scrubber.OnSeek(*p);
          break;
       case STBRulerID:
-         scrubber.OnToggleScrubRuler();
+         scrubber.OnToggleScrubRuler(*p);
          break;
       default:
          wxASSERT(false);

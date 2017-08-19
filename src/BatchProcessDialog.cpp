@@ -362,7 +362,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       auto success = GuardedCall< bool >( [&] {
          project->Import(files[i]);
          project->ZoomAfterImport(nullptr);
-         project->OnSelectAll();
+         project->OnSelectAll(*project);
          if (!mBatchCommands.ApplyChain())
             return false;
 
@@ -377,10 +377,10 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       
       UndoManager *um = project->GetUndoManager();
       um->ClearStates();
-      project->OnSelectAll();
-      project->OnRemoveTracks();
+      project->OnSelectAll(*project);
+      project->OnRemoveTracks(*project);
    }
-   project->OnRemoveTracks();
+   project->OnRemoveTracks(*project);
 
    // Under Linux an EndModal() here crashes (Bug #1221).
    // But sending a close message instead is OK.

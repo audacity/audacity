@@ -224,7 +224,7 @@ namespace {
       wxString label;
       wxString status;
       CommandFlag flags;
-      void (Scrubber::*memFn)();
+      void (Scrubber::*memFn)(const CommandContext&);
       bool seek;
       bool (Scrubber::*StatusTest)() const;
 
@@ -921,19 +921,19 @@ void Scrubber::OnScrubOrSeek(bool seek)
    scrubbingToolBar->RegenerateTooltips();
 }
 
-void Scrubber::OnScrub()
+void Scrubber::OnScrub(const CommandContext&)
 {
    OnScrubOrSeek(false);
    CheckMenuItems();
 }
 
-void Scrubber::OnSeek()
+void Scrubber::OnSeek(const CommandContext&)
 {
    OnScrubOrSeek(true);
    CheckMenuItems();
 }
 
-void Scrubber::OnToggleScrubRuler()
+void Scrubber::OnToggleScrubRuler(const CommandContext&)
 {
    mProject->GetRulerPanel()->OnToggleScrubRuler();
    const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
@@ -1014,13 +1014,13 @@ void Scrubber::AddMenuItems()
    for (const auto &item : menuItems) {
       if (item.StatusTest)
          cm->AddCheck(item.name, wxGetTranslation(item.label),
-                      findme, FNT(Scrubber, this, item.memFn),
+                      findme, static_cast<CommandFunctorPointer>(item.memFn),
                       false,
                       item.flags, item.flags);
       else
          // The start item
          cm->AddItem(item.name, wxGetTranslation(item.label),
-                     findme, FNT(Scrubber, this, item.memFn),
+                     findme, static_cast<CommandFunctorPointer>(item.memFn),
                      item.flags, item.flags);
    }
    cm->EndSubMenu();

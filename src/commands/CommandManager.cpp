@@ -1493,7 +1493,8 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    }
 
    CommandContext context{ *proj, evt, entry->index, entry->parameter };
-   (*(entry->callback))(context);
+   auto &handler = entry->finder(*proj);
+   (handler.*(entry->callback))(context);
 
    return true;
 }

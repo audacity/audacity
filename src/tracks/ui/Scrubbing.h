@@ -18,9 +18,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../Experimental.h"
 #include "../../widgets/Overlay.h"
+#include "../../commands/CommandFunctors.h"
 #include "../../../include/audacity/Types.h"
 
 class AudacityProject;
+extern AudacityProject *GetActiveProject();
 
 // Conditionally compile either a separate thead, or else use a timer in the main
 // thread, to poll the mouse and update scrubbing speed and direction.  The advantage of
@@ -123,13 +125,14 @@ public:
    void PopulatePopupMenu(wxMenu &menu);
 
    void OnScrubOrSeek(bool seek);
-   void OnScrub();
-   void OnSeek();
-   void OnToggleScrubRuler();
+   void OnScrub(const CommandContext&);
+   void OnSeek(const CommandContext&);
+   void OnToggleScrubRuler(const CommandContext&);
 
    // Convenience wrapper for the above
-   template<void (Scrubber::*pfn)()> void Thunk(wxCommandEvent &dummy)
-   { (this->*pfn)(); }
+   template<void (Scrubber::*pfn)(const CommandContext&)>
+      void Thunk(wxCommandEvent &dummy)
+         { (this->*pfn)(*GetActiveProject()); }
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.

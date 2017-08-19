@@ -44,7 +44,8 @@ bool OpenProjectCommand::Apply(CommandExecutionContext context)
    wxString oldFileName = context.GetProject()->GetFileName();
    if(fileName == wxEmptyString)
    {
-      context.GetProject()->OnOpen();
+      auto project = context.GetProject();
+      project->OnOpen(*project);
    }
    else
    {

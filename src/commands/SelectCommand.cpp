@@ -61,12 +61,14 @@ bool SelectCommand::Apply(CommandExecutionContext context)
    if (mode.IsSameAs(wxT("None")))
    {
       // select none
-      context.GetProject()->OnSelectNone();
+      auto project = context.GetProject();
+      project->OnSelectNone(*project);
    }
    else if (mode.IsSameAs(wxT("All")))
    {
       // select all
-      context.GetProject()->OnSelectAll();
+      auto project = context.GetProject();
+      project->OnSelectAll(*project);
    }
    else if (mode.IsSameAs(wxT("Range")))
    {

@@ -2319,7 +2319,7 @@ bool AudacityProject::TryToMakeActionAllowed
 
    // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
    // selecting all tracks is enough, we just do that.
-   OnSelectSomething();
+   OnSelectSomething(*this);
    flags = GetUpdateFlags();
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
@@ -3235,7 +3235,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                mTrackPanel->Refresh(true);
                */
             closed = true;
-            this->OnClose();
+            this->OnClose(*this);
             return;
          }
          else if (status & FSCKstatus_CHANGED)
@@ -4217,7 +4217,7 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
 
 void AudacityProject::ZoomAfterImport(Track *pTrack)
 {
-   OnZoomFit();
+   OnZoomFit(*this);
 
    mTrackPanel->SetFocus();
    RedrawProject();
@@ -4289,7 +4289,7 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       //TODO: All we want is a SelectAll()
       SelectNone();
       SelectAllIfNone();
-      OnEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
+      DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
                OnEffectFlags::kConfigured);
    }
 
@@ -5373,7 +5373,7 @@ void AudacityProject::OnAudioIOStopRecording()
       // Reset timer record 
       if (IsTimerRecordCancelled())
       {
-         OnUndo();
+         OnUndo(*this);
          ResetTimerRecordFlag();
       }
 
