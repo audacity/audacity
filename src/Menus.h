@@ -484,7 +484,8 @@ public:
    static const int kDontRepeatLast = 0x04;
 };
 
-bool OnEffect(const PluginID & ID, int flags = OnEffectFlags::kNone);
+bool DoEffect(const PluginID & ID, int flags);
+void OnEffect(const PluginID & ID, int);
 void OnRepeatLastEffect(int index);
 void OnApplyChain();
 void OnEditChains();

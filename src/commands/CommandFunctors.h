@@ -120,7 +120,7 @@ private:
 };
 
 template<typename OBJ>
-using audCommandPluginFunction = bool (OBJ::*)(const PluginID &, int);
+using audCommandPluginFunction = void (OBJ::*)(const PluginID &, int);
 
 template<typename OBJ>
 class PluginFunctor final : public CommandFunctor

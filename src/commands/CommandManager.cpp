@@ -1560,7 +1560,7 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, CommandFlag flag
    {
       if (em.GetEffectIdentifier(plug->GetID()).IsSameAs(Str))
       {
-         return proj->OnEffect(plug->GetID(), AudacityProject::OnEffectFlags::kConfigured);
+         return proj->DoEffect(plug->GetID(), AudacityProject::OnEffectFlags::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }

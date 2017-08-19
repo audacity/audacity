@@ -4293,11 +4293,11 @@ void AudacityProject::OnZeroCrossing()
 // Effect Menus
 //
 
-/// OnEffect() takes a PluginID and has the EffectManager execute the assocated effect.
+/// DoEffect() takes a PluginID and has the EffectManager execute the assocated effect.
 ///
 /// At the moment flags are used only to indicate whether to prompt for parameters,
 /// whether to save the state to history and whether to allow 'Repeat Last Effect'.
-bool AudacityProject::OnEffect(const PluginID & ID, int flags)
+bool AudacityProject::DoEffect(const PluginID & ID, int flags)
 {
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
@@ -4422,6 +4422,11 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    }
 
    return true;
+}
+
+void AudacityProject::OnEffect(const PluginID & ID, int flags)
+{
+   DoEffect(ID, flags);
 }
 
 void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
