@@ -13,6 +13,25 @@
 #include <wx/event.h>
 #include "../MemoryX.h"
 
+class AudacityProject;
+class wxEvent;
+
+struct CommandContext {
+   CommandContext(
+      AudacityProject &p
+      , const wxEvent *e = nullptr
+      , int ii = 0
+   )
+      : project{ p }
+      , pEvt{ e }
+      , index{ ii }
+   {}
+
+   AudacityProject &project;
+   const wxEvent *pEvt;
+   int index;
+};
+
 class wxEvent;
 typedef wxString PluginID;
 
@@ -21,7 +40,7 @@ class AUDACITY_DLL_API CommandFunctor /* not final */
 public:
    CommandFunctor(){};
    virtual ~CommandFunctor(){};
-   virtual void operator()(int index, const wxEvent *e) = 0;
+   virtual void operator()(const CommandContext &context) = 0;
 };
 
 using CommandFunctorPointer = std::shared_ptr <CommandFunctor>;
@@ -39,7 +58,7 @@ class VoidFunctor final : public CommandFunctor
 public:
    explicit VoidFunctor(OBJ *This, audCommandFunction<OBJ> pfn)
    : mThis{ This }, mCommandFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
+   void operator () (const CommandContext &context) override
    { (mThis->*mCommandFunction) (); }
 private:
    OBJ *const mThis;
@@ -55,8 +74,8 @@ class KeyFunctor final : public CommandFunctor
 public:
    explicit KeyFunctor(OBJ *This, audCommandKeyFunction<OBJ> pfn)
    : mThis{ This }, mCommandKeyFunction{ pfn } {}
-   void operator () (int, const wxEvent *evt) override
-   { (mThis->*mCommandKeyFunction) (evt); }
+   void operator () (const CommandContext &context) override
+   { (mThis->*mCommandKeyFunction) (context.pEvt); }
 private:
    OBJ *const mThis;
    const audCommandKeyFunction<OBJ> mCommandKeyFunction;
@@ -73,7 +92,7 @@ class PopupFunctor final : public CommandFunctor
 public:
    explicit PopupFunctor(OBJ *This, audCommandPopupFunction<OBJ> pfn)
    : mThis{ This }, mCommandPopupFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
+   void operator () (const CommandContext &context) override
    { wxCommandEvent dummy; (mThis->*mCommandPopupFunction) (dummy); }
 private:
    OBJ *const mThis;
@@ -89,8 +108,8 @@ class ListFunctor final : public CommandFunctor
 public:
    explicit ListFunctor(OBJ *This, audCommandListFunction<OBJ> pfn)
    : mThis{ This }, mCommandListFunction{ pfn } {}
-   void operator () (int index, const wxEvent *) override
-   { (mThis->*mCommandListFunction)(index); }
+   void operator () (const CommandContext &context) override
+   { (mThis->*mCommandListFunction)(context.index); }
 private:
    OBJ *const mThis;
    const audCommandListFunction<OBJ> mCommandListFunction;
@@ -105,7 +124,7 @@ class PluginFunctor final : public CommandFunctor
 public:
    explicit PluginFunctor(OBJ *This, const PluginID &id, audCommandPluginFunction<OBJ> pfn)
    : mPluginID{ id }, mThis{ This }, mCommandPluginFunction{ pfn } {}
-   void operator () (int, const wxEvent *) override
+   void operator () (const CommandContext &context) override
    { (mThis->*mCommandPluginFunction)
       (mPluginID,
        0 // AudacityProject::OnEffectFlags::kNone

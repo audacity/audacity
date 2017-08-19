@@ -1447,11 +1447,11 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    if (!entry || !entry->enabled)
       return false;
 
+   auto proj = GetActiveProject();
+
    auto combinedMask = (mask & entry->mask);
    if (combinedMask) {
 
-      AudacityProject * proj;
-      proj = GetActiveProject();
       wxASSERT( proj );
       if( !proj )
          return false;
@@ -1469,7 +1469,8 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
          return true;
    }
 
-   (*(entry->callback))(entry->index, evt);
+   CommandContext context{ *proj, evt, entry->index };
+   (*(entry->callback))(context);
 
    return true;
 }
