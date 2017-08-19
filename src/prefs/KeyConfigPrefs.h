@@ -16,8 +16,6 @@
 
 class ShuttleGui;
 
-#if defined(EXPERIMENTAL_KEY_VIEW)
-
 #include <wx/defs.h>
 #include <wx/imaglist.h>
 #include <wx/listctrl.h>
@@ -95,63 +93,6 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#else
-
-#include <wx/defs.h>
-#include <wx/listctrl.h>
-#include <wx/textctrl.h>
-#include <wx/string.h>
-
-#include "../commands/CommandManager.h"
-
-#include "PrefsPanel.h"
-
-class KeyConfigPrefs final : public PrefsPanel
-{
- public:
-   KeyConfigPrefs(wxWindow * parent);
-   ~KeyConfigPrefs();
-   bool Commit() override;
-   void Cancel() override;
-   wxString HelpPageName() override;
-
- private:
-   void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
-   void CreateList();
-   void RepopulateBindingsList();
-   wxString NameFromKey( const wxString & key );
-   void SetKeyForSelected( const wxString & key );
-
-   void OnDefaults(wxCommandEvent & e);
-   void OnImport(wxCommandEvent & e);
-   void OnExport(wxCommandEvent & e);
-   void OnSet(wxCommandEvent & e);
-   void OnClear(wxCommandEvent & e);
-   void OnCategory(wxCommandEvent & e);
-   void OnItemSelected(wxListEvent & e);
-   void OnKeyDown(wxListEvent & e);
-
-   void OnCaptureKeyDown(wxKeyEvent & e);
-   void OnCaptureChar(wxKeyEvent & e);
-
-   wxChoice *mCat;
-   wxTextCtrl *mKey;
-   wxListCtrl *mList;
-
-   CommandManager *mManager;
-   int mCommandSelected;
-
-   wxArrayString mCats;
-   wxArrayString mNames;
-   wxArrayString mDefaultKeys;
-   wxArrayString mKeys;
-   wxArrayString mNewKeys; // Used for work in progress.
-
-   DECLARE_EVENT_TABLE()
-};
-
-#endif
 
 class KeyConfigPrefsFactory final : public PrefsPanelFactory
 {
