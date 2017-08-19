@@ -86,24 +86,6 @@ private:
    const audCommandKeyFunction<OBJ> mCommandKeyFunction;
 };
 
-// This allows functions to be used either by command manager or by a wxMenu popup,
-// but the functions MUST ignore the argument!
-template<typename OBJ>
-using audCommandPopupFunction = void (OBJ::*)(wxCommandEvent&);
-
-template<typename OBJ>
-class PopupFunctor final : public CommandFunctor
-{
-public:
-   explicit PopupFunctor(OBJ *This, audCommandPopupFunction<OBJ> pfn)
-   : mThis{ This }, mCommandPopupFunction{ pfn } {}
-   void operator () (const CommandContext &context) override
-   { wxCommandEvent dummy; (mThis->*mCommandPopupFunction) (dummy); }
-private:
-   OBJ *const mThis;
-   const audCommandPopupFunction<OBJ> mCommandPopupFunction;
-};
-
 template<typename OBJ>
 using audCommandListFunction = void (OBJ::*)(int);
 
@@ -149,11 +131,6 @@ template<typename OBJ>
 inline CommandFunctorPointer MakeFunctor(OBJ *This,
                                          audCommandKeyFunction<OBJ> pfn)
 { return CommandFunctorPointer{ safenew KeyFunctor<OBJ>{ This, pfn } }; }
-
-template<typename OBJ>
-inline CommandFunctorPointer MakeFunctor(OBJ *This,
-                                         audCommandPopupFunction<OBJ> pfn)
-{ return CommandFunctorPointer{ safenew PopupFunctor<OBJ>{ This, pfn } }; }
 
 template<typename OBJ>
 inline CommandFunctorPointer MakeFunctor(OBJ *This,

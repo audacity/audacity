@@ -123,9 +123,13 @@ public:
    void PopulatePopupMenu(wxMenu &menu);
 
    void OnScrubOrSeek(bool seek);
-   void OnScrub(wxCommandEvent&);
-   void OnSeek(wxCommandEvent&);
-   void OnToggleScrubRuler(wxCommandEvent&);
+   void OnScrub();
+   void OnSeek();
+   void OnToggleScrubRuler();
+
+   // Convenience wrapper for the above
+   template<void (Scrubber::*pfn)()> void Thunk(wxCommandEvent &dummy)
+   { (this->*pfn)(); }
 
    // A string to put in the leftmost part of the status bar
    // when scrub or seek is in progress, or else empty.

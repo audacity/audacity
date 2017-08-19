@@ -224,7 +224,7 @@ namespace {
       wxString label;
       wxString status;
       CommandFlag flags;
-      void (Scrubber::*memFn)(wxCommandEvent&);
+      void (Scrubber::*memFn)();
       bool seek;
       bool (Scrubber::*StatusTest)() const;
 
@@ -921,19 +921,19 @@ void Scrubber::OnScrubOrSeek(bool seek)
    scrubbingToolBar->RegenerateTooltips();
 }
 
-void Scrubber::OnScrub(wxCommandEvent&)
+void Scrubber::OnScrub()
 {
    OnScrubOrSeek(false);
    CheckMenuItems();
 }
 
-void Scrubber::OnSeek(wxCommandEvent&)
+void Scrubber::OnSeek()
 {
    OnScrubOrSeek(true);
    CheckMenuItems();
 }
 
-void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
+void Scrubber::OnToggleScrubRuler()
 {
    mProject->GetRulerPanel()->OnToggleScrubRuler();
    const auto toolbar = mProject->GetToolManager()->GetToolBar(ScrubbingBarID);
@@ -943,10 +943,12 @@ void Scrubber::OnToggleScrubRuler(wxCommandEvent&)
 
 enum { CMD_ID = 8000 };
 
+#define THUNK(Name) Scrubber::Thunk<&Scrubber::Name>
+
 BEGIN_EVENT_TABLE(Scrubber, wxEvtHandler)
-   EVT_MENU(CMD_ID,     Scrubber::OnScrub)
-   EVT_MENU(CMD_ID + 1, Scrubber::OnSeek)
-   EVT_MENU(CMD_ID + 2, Scrubber::OnToggleScrubRuler)
+   EVT_MENU(CMD_ID,     THUNK(OnScrub))
+   EVT_MENU(CMD_ID + 1, THUNK(OnSeek))
+   EVT_MENU(CMD_ID + 2, THUNK(OnToggleScrubRuler))
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(Scrubber::Forwarder, wxEvtHandler)

@@ -2845,10 +2845,10 @@ void AdornedRulerPanel::UpdateStatusBarAndTooltips(StatusChoice choice)
 // This version toggles ruler state indirectly via the scrubber
 // to ensure that all the places where the state is shown update.
 // For example buttons and menus must update.
-void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent& Evt)
+void AdornedRulerPanel::OnToggleScrubRulerFromMenu(wxCommandEvent&)
 {
    auto &scrubber = mProject->GetScrubber();
-   scrubber.OnToggleScrubRuler( Evt );
+   scrubber.OnToggleScrubRuler( );
 }
 
 void AdornedRulerPanel::OnToggleScrubRuler(/*wxCommandEvent&*/)
