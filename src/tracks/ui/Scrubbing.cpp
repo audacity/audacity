@@ -1002,6 +1002,10 @@ bool Scrubber::CanScrub() const
    return cm->GetEnabled(menuItems[ 0 ].name);
 }
 
+// To supply the "finder" argument
+static CommandHandlerObject &findme(AudacityProject &project)
+{ return project.GetScrubber(); }
+
 void Scrubber::AddMenuItems()
 {
    auto cm = mProject->GetCommandManager();
@@ -1010,13 +1014,13 @@ void Scrubber::AddMenuItems()
    for (const auto &item : menuItems) {
       if (item.StatusTest)
          cm->AddCheck(item.name, wxGetTranslation(item.label),
-                      FNT(Scrubber, this, item.memFn),
+                      findme, FNT(Scrubber, this, item.memFn),
                       false,
                       item.flags, item.flags);
       else
          // The start item
          cm->AddItem(item.name, wxGetTranslation(item.label),
-                     FNT(Scrubber, this, item.memFn),
+                     findme, FNT(Scrubber, this, item.memFn),
                      item.flags, item.flags);
    }
    cm->EndSubMenu();

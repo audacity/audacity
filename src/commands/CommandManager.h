@@ -64,6 +64,7 @@ struct CommandListEntry
    wxString labelPrefix;
    wxString labelTop;
    wxMenu *menu;
+   CommandHandlerFinder finder;
    CommandFunctorPointer callback;
    CommandParameter parameter;
    bool multi;
@@ -125,36 +126,42 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
 
    void InsertItem(const wxString & name,
                    const wxString & label,
-                   const CommandFunctorPointer &callback,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
                    const wxString & after,
                    int checkmark = -1);
 
    void AddItemList(const wxString & name,
                     const wxArrayString & labels,
-                    const CommandFunctorPointer &callback);
+                    CommandHandlerFinder finder,
+                    CommandFunctorPointer callback);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
-                 const CommandFunctorPointer &callback,
+                 CommandHandlerFinder finder,
+                 CommandFunctorPointer callback,
                  int checkmark = 0);
 
    void AddCheck(const wxChar *name,
                  const wxChar *label,
-                 const CommandFunctorPointer &callback,
+                 CommandHandlerFinder finder,
+                 CommandFunctorPointer callback,
                  int checkmark,
                  CommandFlag flags,
                  CommandMask mask);
 
    void AddItem(const wxChar *name,
                 const wxChar *label,
-                const CommandFunctorPointer &callback,
+                CommandHandlerFinder finder,
+                CommandFunctorPointer callback,
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
                 const CommandParameter &parameter = {});
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,
-                const CommandFunctorPointer &callback,
+                CommandHandlerFinder finder,
+                CommandFunctorPointer callback,
                 const wxChar *accel,
                 CommandFlag flags = NoFlagsSpecifed,
                 CommandMask mask   = NoFlagsSpecifed,
@@ -167,20 +174,23 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
    // keyboard shortcut.
    void AddCommand(const wxChar *name,
                    const wxChar *label,
-                   const CommandFunctorPointer &callback,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
                    CommandFlag flags = NoFlagsSpecifed,
                    CommandMask mask   = NoFlagsSpecifed);
 
    void AddCommand(const wxChar *name,
                    const wxChar *label,
-                   const CommandFunctorPointer &callback,
+                   CommandHandlerFinder finder,
+                   CommandFunctorPointer callback,
                    const wxChar *accel,
                    CommandFlag flags = NoFlagsSpecifed,
                    CommandMask mask   = NoFlagsSpecifed);
 
    void AddGlobalCommand(const wxChar *name,
                          const wxChar *label,
-                         const CommandFunctorPointer &callback,
+                         CommandHandlerFinder finder,
+                         CommandFunctorPointer callback,
                          const wxChar *accel);
    //
    // Command masks
@@ -285,7 +295,8 @@ protected:
    CommandListEntry *NewIdentifier(const wxString & name,
                                    const wxString & label,
                                    wxMenu *menu,
-                                   const CommandFunctorPointer &callback,
+                                   CommandHandlerFinder finder,
+                                   CommandFunctorPointer callback,
                                    bool multi,
                                    int index,
                                    int count);
@@ -293,7 +304,8 @@ protected:
                                    const wxString & label,
                                    const wxString & accel,
                                    wxMenu *menu,
-                                   const CommandFunctorPointer &callback,
+                                   CommandHandlerFinder finder,
+                                   CommandFunctorPointer callback,
                                    bool multi,
                                    int index,
                                    int count,

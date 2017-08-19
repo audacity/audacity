@@ -285,6 +285,11 @@ static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor 
 /// changes in configured preferences - for example changes in key-bindings
 /// affect the short-cut key legend that appears beside each command,
 
+// To supply the "finder" argument in AddItem calls
+static CommandHandlerObject &ident(AudacityProject &project) { return project; }
+
+#define FN(X) ident, FNT(AudacityProject, this, & AudacityProject :: X)
+
 void AudacityProject::CreateMenusAndCommands()
 {
    CommandManager *c = &mCommandManager;
