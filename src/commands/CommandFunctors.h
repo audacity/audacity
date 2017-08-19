@@ -127,15 +127,14 @@ template<typename OBJ>
 class PluginFunctor final : public CommandFunctor
 {
 public:
-   explicit PluginFunctor(OBJ *This, const PluginID &id, audCommandPluginFunction<OBJ> pfn)
-   : mPluginID{ id }, mThis{ This }, mCommandPluginFunction{ pfn } {}
+   explicit PluginFunctor(OBJ *This, audCommandPluginFunction<OBJ> pfn)
+   : mThis{ This }, mCommandPluginFunction{ pfn } {}
    void operator () (const CommandContext &context) override
    { (mThis->*mCommandPluginFunction)
-      (mPluginID,
+      (context.parameter,
        0 // AudacityProject::OnEffectFlags::kNone
       ); }
 private:
-   const PluginID mPluginID;
    OBJ *const mThis;
    const audCommandPluginFunction<OBJ> mCommandPluginFunction;
 };
@@ -162,15 +161,13 @@ inline CommandFunctorPointer MakeFunctor(OBJ *This,
 { return CommandFunctorPointer{ safenew ListFunctor<OBJ>{ This, pfn } }; }
 
 template<typename OBJ>
-inline CommandFunctorPointer MakeFunctor(OBJ *This, const PluginID &id,
+inline CommandFunctorPointer MakeFunctor(OBJ *This,
                                          audCommandPluginFunction<OBJ> pfn)
-{ return CommandFunctorPointer{ safenew PluginFunctor<OBJ>{ This, id, pfn } }; }
+{ return CommandFunctorPointer{ safenew PluginFunctor<OBJ>{ This, pfn } }; }
 
 // Now define the macro abbreviations that call the factory
 #define FNT(OBJ, This, X) (MakeFunctor<OBJ>(This, X ))
-#define FNTS(OBJ, This, X, S) (MakeFunctor<OBJ>(This, (S), X ))
 
 #define FN(X) FNT(AudacityProject, this, & AudacityProject :: X)
-#define FNS(X, S) FNTS(AudacityProject, this, & AudacityProject :: X, S)
 
 #endif

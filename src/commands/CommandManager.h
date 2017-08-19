@@ -149,7 +149,8 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
                 const wxChar *label,
                 const CommandFunctorPointer &callback,
                 CommandFlag flags = NoFlagsSpecifed,
-                CommandMask mask   = NoFlagsSpecifed);
+                CommandMask mask   = NoFlagsSpecifed,
+                const CommandParameter &parameter = {});
 
    void AddItem(const wxChar *name,
                 const wxChar *label_in,

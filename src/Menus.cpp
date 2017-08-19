@@ -1875,9 +1875,9 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
             wxString item = PluginManager::Get().GetPlugin(plugs[i])->GetPath();
             c->AddItem(item,
                        item,
-                       FNS(OnEffect, plugs[i]),
+                       FN(OnEffect),
                        flags[i],
-                       flags[i]);
+                       flags[i], plugs[i]);
 
             i++;
          }
@@ -1888,9 +1888,9 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
       {
          c->AddItem(names[i],
                     names[i],
-                    FNS(OnEffect, plugs[i]),
+                    FN(OnEffect),
                     flags[i],
-                    flags[i]);
+                    flags[i], plugs[i]);
       }
 
       if (max > 0)

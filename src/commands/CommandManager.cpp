@@ -783,9 +783,10 @@ void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label,
                              const CommandFunctorPointer &callback,
                              CommandFlag flags,
-                             CommandMask mask)
+                             CommandMask mask,
+                             const CommandParameter &parameter)
 {
-   AddItem(name, label, callback, wxT(""), flags, mask);
+   AddItem(name, label, callback, wxT(""), flags, mask, -1, parameter);
 }
 
 void CommandManager::AddItem(const wxChar *name,
