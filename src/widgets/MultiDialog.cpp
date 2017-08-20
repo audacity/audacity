@@ -153,7 +153,7 @@ void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 {
    auto project = GetActiveProject();
-   project->OnShowLog(*project);
+   GetMenuCommandHandler(*project).OnShowLog(*project);
 }
 
 

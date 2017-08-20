@@ -95,6 +95,9 @@ class AUDACITY_DLL_API UndoManager {
    UndoManager();
    ~UndoManager();
 
+   UndoManager( const UndoManager& ) = delete;
+   UndoManager& operator = ( const UndoManager& ) = delete;
+
    void PushState(const TrackList * l,
                   const SelectedRegion &selectedRegion,
                   const std::shared_ptr<Tags> &tags,

@@ -549,7 +549,8 @@ UIHandle::Result SelectHandle::Click
       // text boxes.
       bool bShift = event.ShiftDown();
       bool unsafe = pProject->IsAudioActive();
-      pProject->HandleListSelection(pTrack, bShift, true, !unsafe);
+      GetMenuCommandHandler(*pProject)
+         .HandleListSelection(*pProject, pTrack, bShift, true, !unsafe);
       // Do not start a drag
       return RefreshAll | Cancelled;
    }

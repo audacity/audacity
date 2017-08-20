@@ -617,7 +617,7 @@ void Scrubber::ContinueScrubbingUI()
       // Dragging scrub can stop with mouse up
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      mProject->DoPlayStopSelect(true, bShift);
+      GetMenuCommandHandler(*mProject).DoPlayStopSelect(*mProject, true, bShift);
       wxCommandEvent evt;
       mProject->GetControlToolBar()->OnStop(evt);
       return;
@@ -683,7 +683,8 @@ void Scrubber::StopScrubbing()
       const wxMouseState state(::wxGetMouseState());
       // Stop and set cursor
       bool bShift = state.ShiftDown();
-      mProject->DoPlayStopSelect(true, bShift);
+      GetMenuCommandHandler(*mProject).
+         DoPlayStopSelect(*mProject, true, bShift);
    }
 
    mScrubStartPosition = -1;

@@ -95,6 +95,7 @@ scroll information.  It also has some status flags.
 #include "AudacityApp.h"
 #include "AColor.h"
 #include "AudioIO.h"
+#include "BatchProcessDialog.h"
 #include "Dependencies.h"
 #include "Diags.h"
 #include "HistoryWindow.h"
@@ -105,6 +106,7 @@ scroll information.  It also has some status flags.
 #include "import/Import.h"
 #include "LabelTrack.h"
 #include "Legacy.h"
+#include "LyricsWindow.h"
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
@@ -469,7 +471,7 @@ public:
          for (const auto &name : sortednames) {
 #ifdef USE_MIDI
             if (Importer::IsMidi(name))
-               AudacityProject::DoImportMIDI(mProject, name);
+               MenuCommandHandler::DoImportMIDI(mProject, name);
             else
 #endif
                mProject->Import(name);
@@ -978,6 +980,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    // Initialize view info (shared with TrackPanel)
    //
 
+   mMenuCommandHandler = std::make_unique<MenuCommandHandler>();
+
    UpdatePrefs();
 
    mLockPlayRegion = false;
@@ -1137,7 +1141,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mTrackPanel->AddOverlay(mScrubOverlay.get());
 #endif
 
-   CreateMenusAndCommands();
+   mMenuCommandHandler->CreateMenusAndCommands(*this);
 
    mTrackPanel->SetBackgroundCell(mBackgroundCell);
 
@@ -1262,12 +1266,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                      &AudacityProject::OnCapture,
                      this);
 
-   //Initialize the last selection adjustment time.
-   mLastSelectionAdjustment = ::wxGetLocalTimeMillis();
 #ifdef EXPERIMENTAL_DA2
    ClearBackground();// For wxGTK.
 #endif
-   mLastF0 = mLastF1 = SelectedRegion::UndefinedFrequency;
 }
 
 AudacityProject::~AudacityProject()
@@ -1275,11 +1276,6 @@ AudacityProject::~AudacityProject()
    // Tool manager gives us capture sometimes
    if(HasCapture())
       ReleaseMouse();
-
-   if (wxGetApp().GetRecentFiles())
-   {
-      wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
-   }
 
    if(mTrackPanel) {
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
@@ -1332,17 +1328,6 @@ void AudacityProject::UpdatePrefsVariables()
 #else
    gPrefs->Read(wxT("/GUI/Help"), &mHelpPref, wxT("Local") );
 #endif
-   bool bSelectAllIfNone;
-   gPrefs->Read(wxT("/GUI/SelectAllOnNone"), &bSelectAllIfNone, false);
-   // 0 is grey out, 1 is Autoselect, 2 is Give warnings.
-#ifdef EXPERIMENTAL_DA
-   // DA warns or greys out.
-   mWhatIfNoSelection = bSelectAllIfNone ? 2 : 0;
-#else
-   // Audacity autoselects or warns.
-   mWhatIfNoSelection = bSelectAllIfNone ? 1 : 2;
-#endif
-   mStopIfWasPaused = true;  // not configurable for now, but could be later.
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
    gPrefs->Read(wxT("/GUI/Solo"), &mSoloPref, wxT("Simple"));
    // Update the old default to the NEW default.
@@ -1368,9 +1353,6 @@ void AudacityProject::UpdatePrefsVariables()
 #endif
 
    mDefaultFormat = QualityPrefs::SampleFormatChoice();
-
-   gPrefs->Read(wxT("/AudioIO/SeekShortPeriod"), &mSeekShort, 1.0);
-   gPrefs->Read(wxT("/AudioIO/SeekLongPeriod"), &mSeekLong, 15.0);
 }
 
 void AudacityProject::UpdatePrefs()
@@ -1379,8 +1361,7 @@ void AudacityProject::UpdatePrefs()
 
    SetProjectTitle();
 
-   gPrefs->Read(wxT("/GUI/CircularTrackNavigation"), &mCircularTrackNavigation,
-                false);
+   GetMenuCommandHandler(*this).UpdatePrefs();
 
    if (mTrackPanel) {
       mTrackPanel->UpdatePrefs();
@@ -1492,6 +1473,11 @@ bool AudacityProject::IsAudioActive() const
 const Tags *AudacityProject::GetTags()
 {
    return mTags.get();
+}
+
+void AudacityProject::SetTags( const std::shared_ptr<Tags> &tags )
+{
+   mTags = tags;
 }
 
 wxString AudacityProject::GetName()
@@ -2073,7 +2059,7 @@ void AudacityProject::FixScrollbars()
       mTrackPanel->Refresh(false);
    }
 
-   UpdateMenus();
+   GetMenuCommandHandler(*this).UpdateMenus(*this);
 
    if (oldhstate != newhstate || oldvstate != newvstate) {
       UpdateLayout();
@@ -2320,13 +2306,14 @@ void AudacityProject::DoScroll()
          GetTrackPanel()->HandleCursorForPresentMouseState(); } );
 }
 
-bool AudacityProject::ReportIfActionNotAllowed
-   ( const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+bool MenuCommandHandler::ReportIfActionNotAllowed
+( AudacityProject &project,
+  const wxString & Name, CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
-   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd, mask );
+   bool bAllowed = TryToMakeActionAllowed( project, flags, flagsRqd, mask );
    if( bAllowed )
       return true;
-   CommandManager* cm = GetCommandManager();
+   CommandManager* cm = project.GetCommandManager();
       if (!cm) return false;
    cm->TellUserWhyDisallowed( Name, flags & mask, flagsRqd & mask);
    return false;
@@ -2336,13 +2323,14 @@ bool AudacityProject::ReportIfActionNotAllowed
 /// Determines if flags for command are compatible with current state.
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
-bool AudacityProject::TryToMakeActionAllowed
-   ( CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
+bool MenuCommandHandler::TryToMakeActionAllowed
+( AudacityProject &project,
+  CommandFlag & flags, CommandFlag flagsRqd, CommandFlag mask )
 {
    bool bAllowed;
 
    if( !flags )
-      flags = GetUpdateFlags();
+      flags = GetUpdateFlags(project);
 
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    if( bAllowed )
@@ -2353,9 +2341,9 @@ bool AudacityProject::TryToMakeActionAllowed
    auto MissingFlags = (~flags & flagsRqd) & mask;
 
    if( mStopIfWasPaused && (MissingFlags & AudioIONotBusyFlag ) ){
-      StopIfPaused();
+      project.StopIfPaused();
       // Hope this will now reflect stopped audio.
-      flags = GetUpdateFlags();
+      flags = GetUpdateFlags(project);
       bAllowed = ((flags & mask) == (flagsRqd & mask));
       if( bAllowed )
          return true;
@@ -2384,8 +2372,8 @@ bool AudacityProject::TryToMakeActionAllowed
 
    // This was 'OnSelectAll'.  Changing it to OnSelectSomething means if
    // selecting all tracks is enough, we just do that.
-   OnSelectSomething(*this);
-   flags = GetUpdateFlags();
+   GetMenuCommandHandler(project).OnSelectSomething(project);
+   flags = GetUpdateFlags(project);
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    return bAllowed;
 }
@@ -2405,9 +2393,9 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
       return;
    }
 #endif
-   bool handled = mCommandManager.HandleMenuID(event.GetId(),
-                                               GetUpdateFlags(),
-                                               NoFlagsSpecifed);
+   bool handled = mCommandManager.HandleMenuID(
+      event.GetId(), GetMenuCommandHandler(*this).GetUpdateFlags(*this),
+      NoFlagsSpecifed);
 
    if (handled)
       event.Skip(false);
@@ -2419,7 +2407,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
 
 void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 {
-   UpdateMenus();
+   GetMenuCommandHandler(*this).UpdateMenus(*this);
 }
 
 void AudacityProject::MacShowUndockedToolbars(bool show)
@@ -3102,7 +3090,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
 #ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
       // Is it a plug-in?
       if (PluginManager::Get().DropFile(fileName)) {
-         RebuildAllMenuBars();
+         MenuCommandHandler::RebuildAllMenuBars();
       }
       else
       // No, so import.
@@ -3111,7 +3099,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       {
 #ifdef USE_MIDI
          if (Importer::IsMidi(fileName))
-            DoImportMIDI(this, fileName);
+            MenuCommandHandler::DoImportMIDI(this, fileName);
          else
 #endif
             Import(fileName);
@@ -3317,7 +3305,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                mTrackPanel->Refresh(true);
                */
             closed = true;
-            this->OnClose(*this);
+            GetMenuCommandHandler(*this).OnClose(*this);
             return;
          }
          else if (status & FSCKstatus_CHANGED)
@@ -4398,7 +4386,7 @@ AudacityProject::AddImportedTracks(const wxString &fileName,
 
 void AudacityProject::ZoomAfterImport(Track *pTrack)
 {
-   OnZoomFit(*this);
+   GetMenuCommandHandler(*this).OnZoomFit(*this);
 
    mTrackPanel->SetFocus();
    RedrawProject();
@@ -4467,9 +4455,10 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       SelectNone();
       SelectAllIfNone();
       const CommandContext context( *this);
-      DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
+      GetMenuCommandHandler(*this)
+         .DoEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
          context,
-         OnEffectFlags::kConfigured);
+         MenuCommandHandler::OnEffectFlags::kConfigured);
    }
 
    // This is a no-fail:
@@ -4716,9 +4705,9 @@ void AudacityProject::InitialState()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   ModifyUndoMenuItems();
+   GetMenuCommandHandler(*this).ModifyUndoMenuItems(*this);
 
-   UpdateMenus();
+   GetMenuCommandHandler(*this).UpdateMenus(*this);
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 }
@@ -4754,9 +4743,9 @@ void AudacityProject::PushState(const wxString &desc,
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   ModifyUndoMenuItems();
+   GetMenuCommandHandler(*this).ModifyUndoMenuItems(*this);
 
-   UpdateMenus();
+   GetMenuCommandHandler(*this).UpdateMenus(*this);
 
    // Some state pushes, like changing a track gain control (& probably others),
    // should not repopulate Lyrics Window and MixerBoard.
@@ -4770,7 +4759,7 @@ void AudacityProject::PushState(const wxString &desc,
    }
 
    if (GetTracksFitVerticallyZoomed())
-      this->DoZoomFitV();
+      GetMenuCommandHandler(*this).DoZoomFitV(*this);
    if((flags & UndoPush::AUTOSAVE) != UndoPush::MINIMAL)
       AutoSave();
 
@@ -4842,7 +4831,7 @@ void AudacityProject::PopState(const UndoState &state)
 
    HandleResize();
 
-   UpdateMenus();
+   GetMenuCommandHandler(*this).UpdateMenus(*this);
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 
@@ -4858,7 +4847,7 @@ void AudacityProject::SetStateTo(unsigned int n)
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
-   ModifyUndoMenuItems();
+   GetMenuCommandHandler(*this).ModifyUndoMenuItems(*this);
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 }
@@ -5359,7 +5348,7 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
             auto dest = ( wt->*action )( region.start, region.end );
             if( dest )
             {
-               FinishCopy( wt, dest.get() );
+               MenuCommandHandler::FinishCopy( wt, dest.get() );
                if( !merged )
                   merged = std::move(dest);
                else
@@ -5663,8 +5652,8 @@ You are saving directly to a slow external storage device\n\
       // Reset timer record 
       if (IsTimerRecordCancelled())
       {
-         OnUndo(*this);
-         ResetTimerRecordFlag();
+         GetMenuCommandHandler(*this).OnUndo(*this);
+         ResetTimerRecordCancelled();
       }
 
       // Refresh the project window
@@ -6053,8 +6042,8 @@ bool AudacityProject::IsProjectSaved() {
 
 // This is done to empty out the tracks, but without creating a new project.
 void AudacityProject::ResetProjectToEmpty() {
-   OnSelectAll(*this);
-   OnRemoveTracks(*this);
+   GetMenuCommandHandler(*this).OnSelectAll(*this);
+   GetMenuCommandHandler(*this).OnRemoveTracks(*this);
    // A new DirManager.
    mDirManager = std::make_shared<DirManager>();
    mTrackFactory.reset(safenew TrackFactory{ mDirManager, &mViewInfo });
@@ -6350,4 +6339,62 @@ void AudacityProject::PlaybackScroller::OnTimer(wxCommandEvent &event)
 bool AudacityProject::IsFocused( const wxWindow *window ) const
 {
    return window == mFocusLender || window == wxWindow::FindFocus();
+}
+
+LyricsWindow* AudacityProject::GetLyricsWindow(bool create)
+{
+   if (create && !mLyricsWindow)
+      mLyricsWindow = safenew LyricsWindow{ this };
+   return mLyricsWindow;
+}
+
+MixerBoardFrame* AudacityProject::GetMixerBoardFrame(bool create)
+{
+   if (create && !mMixerBoardFrame) {
+      mMixerBoardFrame = safenew MixerBoardFrame{ this };
+      mMixerBoard = mMixerBoardFrame->mMixerBoard;
+   }
+   return mMixerBoardFrame;
+}
+
+HistoryWindow *AudacityProject::GetHistoryWindow(bool create)
+{
+   if (create && !mHistoryWindow)
+      mHistoryWindow = safenew HistoryWindow{ this, GetUndoManager() };
+   return mHistoryWindow;
+}
+
+MacrosWindow *AudacityProject::GetMacrosWindow(bool bExpanded, bool create)
+{
+   if (create && !mMacrosWindow)
+      mMacrosWindow = safenew MacrosWindow{ this, bExpanded };
+
+   if (mMacrosWindow) {
+      mMacrosWindow->Show();
+      mMacrosWindow->Raise();
+      mMacrosWindow->UpdateDisplay( bExpanded );
+   }
+   return mMacrosWindow;
+}
+
+FreqWindow *AudacityProject::GetFreqWindow(bool create)
+{
+   if (create && !mFreqWindow)
+      mFreqWindow.reset( safenew FreqWindow{
+         this, -1, _("Frequency Analysis"),
+         wxPoint{ 150, 150 }
+      } );
+   return mFreqWindow.get();
+}
+
+ContrastDialog *AudacityProject::GetContrastDialog(bool create)
+{
+   // All of this goes away when the Contrast Dialog is converted to a module
+   if(create && !mContrastDialog)
+      mContrastDialog.reset( safenew ContrastDialog{
+         this, -1, _("Contrast Analysis (WCAG 2 compliance)"),
+         wxPoint{ 150, 150 }
+      } );
+
+   return mContrastDialog.get();
 }

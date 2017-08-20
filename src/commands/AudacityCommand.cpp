@@ -185,7 +185,7 @@ bool AudacityCommand::SetAutomationParameters(const wxString & parms)
    return TransferDataToWindow();
 }
 
-bool AudacityCommand::DoAudacityCommand(wxWindow *parent, 
+bool AudacityCommand::DoAudacityCommand(wxWindow *parent,
                       const CommandContext & context,
                       bool shouldPrompt /* = true */)
 {

@@ -389,7 +389,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // If file is a midi
       if (Importer::IsMidi(targetfile))
       {
-         mProject = AudacityProject::DoImportMIDI(mProject, targetfile);
+         mProject = MenuCommandHandler::DoImportMIDI(mProject, targetfile);
       }
 
       // If not a midi, open audio file

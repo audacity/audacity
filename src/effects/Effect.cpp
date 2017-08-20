@@ -763,12 +763,13 @@ void Effect::SetDuration(double seconds)
 
 bool Effect::Apply()
 {
-   CommandContext context( *GetActiveProject() );
+   auto &project = *GetActiveProject();
+   CommandContext context( project );
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   return GetActiveProject()->DoEffect(GetID(), context,
-      AudacityProject::OnEffectFlags::kConfigured);
+   return GetMenuCommandHandler(project).DoEffect(GetID(), context,
+      MenuCommandHandler::OnEffectFlags::kConfigured);
 }
 
 void Effect::Preview()
@@ -3278,7 +3279,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       mProject->mViewInfo.selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
-      bool allowed = mProject->ReportIfActionNotAllowed(
+      bool allowed =
+         GetMenuCommandHandler(*mProject).ReportIfActionNotAllowed(
+         *mProject,
          mEffect->GetTranslatedName(),
          flags,
          WaveTracksSelectedFlag | TimeSelectedFlag,

@@ -73,7 +73,8 @@ bool SetPreferenceCommand::Apply(const CommandContext & context)
 {
    bool bOK = gPrefs->Write(mName, mValue) && gPrefs->Flush();
    if( bOK && mbReload ){
-      context.GetProject()->OnReloadPreferences( context );
+      auto &project = context.project;
+      GetMenuCommandHandler(project).OnReloadPreferences( context );
    }
    return bOK;
 }

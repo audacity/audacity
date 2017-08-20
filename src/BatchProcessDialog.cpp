@@ -461,7 +461,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       auto success = GuardedCall< bool >( [&] {
          project->Import(files[i]);
          project->ZoomAfterImport(nullptr);
-         project->OnSelectAll(*project);
+         GetMenuCommandHandler(*project).OnSelectAll(*project);
          if (!mMacroCommands.ApplyMacro(mCatalog))
             return false;
 
@@ -476,6 +476,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       
       project->ResetProjectToEmpty();
    }
+
    Show();
    Raise();
 }
@@ -747,7 +748,8 @@ void MacrosWindow::AddItem(const wxString &Action, const wxString &Params)
 void MacrosWindow::UpdateMenus()
 {
    // OK even on mac, as dialog is modal.
-   GetActiveProject()->RebuildMenuBar();
+   auto p = GetActiveProject();
+   GetMenuCommandHandler(*p).RebuildMenuBar(*p);
 }
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )

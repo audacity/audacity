@@ -2881,7 +2881,7 @@ auto AdornedRulerPanel::QPHandle::Click
          if(scrubber.HasMark()) {
             // We can't stop scrubbing yet (see comments in Bug 1391),
             // but we can pause it.
-            pProject->OnPause( *pProject );
+            GetMenuCommandHandler(*pProject).OnPause(*pProject);
          }
 
          // Store the initial play region state
@@ -2905,7 +2905,7 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
    // Temporarily unlock locked play region
    if (mPlayRegionLock && evt.LeftDown()) {
       //mPlayRegionLock = true;
-      mProject->OnUnlockPlayRegion(*mProject);
+      GetMenuCommandHandler(*mProject).OnUnlockPlayRegion(*mProject);
    }
 
    mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
@@ -3155,7 +3155,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       if (mPlayRegionLock) {
          // Restore Locked Play region
          SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
-         mProject->OnLockPlayRegion(*mProject);
+         GetMenuCommandHandler(*mProject).OnLockPlayRegion(*mProject);
          // and release local lock
          mPlayRegionLock = false;
       }
@@ -3177,7 +3177,7 @@ auto AdornedRulerPanel::QPHandle::Cancel
             mParent->mOldPlayRegionStart, mParent->mOldPlayRegionEnd);
          if (mParent->mPlayRegionLock) {
             // Restore Locked Play region
-            pProject->OnLockPlayRegion(*pProject);
+            GetMenuCommandHandler(*pProject).OnLockPlayRegion(*pProject);
             // and release local lock
             mParent->mPlayRegionLock = false;
          }
@@ -3313,7 +3313,7 @@ void AdornedRulerPanel::UpdateButtonStates()
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 {
-   mProject->OnTogglePinnedHead(*mProject);
+   GetMenuCommandHandler(*mProject).OnTogglePinnedHead(*mProject);
    UpdateButtonStates();
 }
 
@@ -3451,9 +3451,9 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
 {
    if (mProject->IsPlayRegionLocked())
-      mProject->OnUnlockPlayRegion(*mProject);
+      GetMenuCommandHandler(*mProject).OnUnlockPlayRegion(*mProject);
    else
-      mProject->OnLockPlayRegion(*mProject);
+      GetMenuCommandHandler(*mProject).OnLockPlayRegion(*mProject);
 }
 
 

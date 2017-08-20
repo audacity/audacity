@@ -46,7 +46,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    if(mFileName.IsEmpty())
    {
       auto project = context.GetProject();
-      project->OnOpen(*project);
+      GetMenuCommandHandler(*project).OnOpen(*project);
    }
    else
    {

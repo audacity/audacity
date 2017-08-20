@@ -12,6 +12,7 @@
 #include "Audacity.h"
 #include "AudacityApp.h"
 #include "Project.h"
+#include "commands/CommandContext.h"
 
 #undef USE_COCOA
 
@@ -23,7 +24,7 @@
 #include <objc/objc.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-void AudacityProject::DoMacMinimize(AudacityProject *project)
+void MenuCommandHandler::DoMacMinimize(AudacityProject *project)
 {
    auto window = project;
    if (window) {
@@ -41,25 +42,25 @@ void AudacityProject::DoMacMinimize(AudacityProject *project)
 #endif
 
       // So that the Minimize menu command disables
-      project->UpdateMenus();
+      GetMenuCommandHandler(*project).UpdateMenus(*project);
    }
 }
 
-void AudacityProject::OnMacMinimize(const CommandContext &)
+void MenuCommandHandler::OnMacMinimize(const CommandContext &context)
 {
-   DoMacMinimize(this);
+   DoMacMinimize(&context.project);
 }
 
-void AudacityProject::OnMacMinimizeAll(const CommandContext &)
+void MenuCommandHandler::OnMacMinimizeAll(const CommandContext &)
 {
    for (const auto project : gAudacityProjects) {
       DoMacMinimize(project.get());
    }
 }
 
-void AudacityProject::OnMacZoom(const CommandContext &)
+void MenuCommandHandler::OnMacZoom(const CommandContext &context)
 {
-   auto window = this;
+   auto window = &context.project;
    auto topWindow = static_cast<wxTopLevelWindow*>(window);
    auto maximized = topWindow->IsMaximized();
    if (window) {
@@ -77,7 +78,7 @@ void AudacityProject::OnMacZoom(const CommandContext &)
    }
 }
 
-void AudacityProject::OnMacBringAllToFront(const CommandContext &)
+void MenuCommandHandler::OnMacBringAllToFront(const CommandContext &)
 {
    // Reall this de-miniaturizes all, which is not exactly the standard
    // behavior.

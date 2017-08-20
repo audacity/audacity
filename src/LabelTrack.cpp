@@ -2103,7 +2103,8 @@ bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
       gPrefs->Read(wxT("/Gui/DialogForNameNewLabel"), &useDialog, false);
       if (useDialog) {
          wxString title;
-         if (p->DialogForLabelName(charCode, title) == wxID_CANCEL) {
+         if (MenuCommandHandler::DialogForLabelName(*p, charCode, title) ==
+             wxID_CANCEL) {
             return false;
          }
          SetSelected(true);
@@ -2239,7 +2240,7 @@ void LabelTrack::OnContextMenu(wxCommandEvent & evt)
    case OnEditSelectedLabelID: {
       int ndx = GetLabelIndex(p->GetSel0(), p->GetSel1());
       if (ndx != -1)
-         p->DoEditLabels(this, ndx);
+         GetMenuCommandHandler(*p).DoEditLabels(*p, this, ndx);
    }
       break;
    }

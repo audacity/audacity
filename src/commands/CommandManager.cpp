@@ -1484,7 +1484,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       return false;
    }
 
-   auto flags = project->GetUpdateFlags();
+   auto flags = GetMenuCommandHandler(*project).GetUpdateFlags(*project);
 
    wxKeyEvent temp = evt;
 
@@ -1578,8 +1578,9 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
       NiceName.Replace("&", "");// remove &
       NiceName.Replace(".","");// remove ...
       // NB: The call may have the side effect of changing flags.
-      bool allowed = proj->ReportIfActionNotAllowed(
-         NiceName, flags, entry->flags, combinedMask );
+      bool allowed =
+         GetMenuCommandHandler(*proj).ReportIfActionNotAllowed( *proj,
+            NiceName, flags, entry->flags, combinedMask );
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
       // Otherwise we may get other handlers having a go at obeying the command.
@@ -1613,7 +1614,7 @@ bool CommandManager::HandleMenuID(int id, CommandFlag flags, CommandMask mask)
       factories.push_back(&keyConfigPrefsFactory);
       GlobalPrefsDialog dialog(GetActiveProject(), factories);
       dialog.ShowModal();
-      AudacityProject::RebuildAllMenuBars();
+      MenuCommandHandler::RebuildAllMenuBars();
       return true;
    }
 #endif
@@ -1664,7 +1665,7 @@ bool CommandManager::HandleTextualCommand(const wxString & Str, const CommandCon
    {
       if (em.GetCommandIdentifier(plug->GetID()).IsSameAs(Str, false))
       {
-         return proj->DoEffect(plug->GetID(), context, AudacityProject::OnEffectFlags::kConfigured);
+         return GetMenuCommandHandler(*proj).DoEffect(plug->GetID(), context, MenuCommandHandler::OnEffectFlags::kConfigured);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }

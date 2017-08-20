@@ -1402,7 +1402,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      p->DoEffect(ID, CommandContext(*p), 0);
+      GetMenuCommandHandler(*p).DoEffect(ID, CommandContext(*p), 0);
 
       mRunning = false;
       UpdateWindowUI();
