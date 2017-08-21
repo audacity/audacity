@@ -276,12 +276,12 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
                      ((float *)buffer.ptr())[j] =
                      ((float *)srcbuffer.ptr())[numChannels*j+c];
                }
-               
-               iter->get()->Append(buffer.ptr(), format, block);
+
+               iter->get()->Append(buffer.ptr(), (format == int16Sample)?int16Sample:floatSample, block);
             }
             framescompleted += block;
          }
-         
+
          updateResult = progress.Update(
             framescompleted.as_long_long(),
             totalFrames.as_long_long()
