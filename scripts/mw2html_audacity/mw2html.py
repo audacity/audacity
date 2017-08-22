@@ -187,12 +187,17 @@ def monobook_fix_html(doc, page_url):
     if config.made_by:
         doc = doc.replace('<html xmlns=', MADE_BY_COMMENT + '\n<html xmlns=')
 
-    doc = remove_tag(doc, '<div class="portlet" id="p-personal">', '</div>', '<div')
-    doc = remove_tag(doc, '<div id="p-search" class="portlet">', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="portlet" id="p-personal"', '</div>', '<div')
+    doc = remove_tag(doc, '<div id="p-search" class="portlet"', '</div>', '<div')
     doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
-    doc = remove_tag(doc, '<div id=\'catlinks\' class=\'catlinks catlinks-allhidden\'>', '</div>', '<div')    
+    doc = remove_tag(doc, '<div id=\'catlinks\' class=\'catlinks catlinks-allhidden\'>', '</div>', '<div')
     #James also remove the page/discussion/source/history/ div.
     doc = remove_tag(doc, '<li id="ca-', '</li>', '<li')
+    doc = remove_tag(doc, '<div class="editornote2"', '</div>', '<div')
+    doc = remove_tag(doc, '<div id="p-cactions"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="generated-sidebar portlet" id="p-For_Editors"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="generated-sidebar portlet" id="p-ToDo"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="portlet" id="p-tb"', '</div>', '<div')
 
     #andre special mode
     if config.special_mode:
@@ -278,6 +283,10 @@ def pos_html_transform(doc, url):
 
         # Remove external javascript
         doc = re.sub(r'<script type="text/javascript" src="http://[\s\S]+?</script>', r'', doc)
+
+    # Add back relevant stylesheet.
+    doc = re.sub(r'</head>', '<link rel="stylesheet" href="../m/skins/monobook/main.css/303.css" media="screen" />\n</head>', doc, flags=re.DOTALL)
+
 
     # Replace remaining text with footer, if available (this needs to be done after parse_html to avoid rewriting of urls
     if config.footer is not None:
@@ -868,8 +877,9 @@ def parse_html(doc, url):
     doc = doc.replace('<!--', BEGIN_COMMENT_REPLACE)
     doc = doc.replace('-->', END_COMMENT_REPLACE)
 
+
     L = htmldata.urlextract(doc, url, 'text/html')
-    
+
     # in this code we change each absolute url in L
     # into a relative one.
     # we also kick-off zillions of subthreads to collect 
@@ -889,7 +899,7 @@ def parse_html(doc, url):
             #  item.url = ''
             if config.debug:
                 print 'NOT INCLUDED     - ', u
-                
+
     newdoc = htmldata.urljoin(doc, L)
     newdoc = newdoc.replace(BEGIN_COMMENT_REPLACE, '<!--')
     newdoc = newdoc.replace(END_COMMENT_REPLACE, '-->')
