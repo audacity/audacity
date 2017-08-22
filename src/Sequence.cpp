@@ -1810,12 +1810,12 @@ void Sequence::ConsistencyCheck
    // gives a little more discrimination
    InconsistencyException ex;
 
+   unsigned int numBlocks = mBlock.size();
+
    unsigned int i;
-   sampleCount pos = mBlock[from].start;
+   sampleCount pos = from < numBlocks ? mBlock[from].start : mNumSamples;
    if ( from == 0 && pos != 0 )
       ex = CONSTRUCT_INCONSISTENCY_EXCEPTION, bError = true;
-
-   unsigned int numBlocks = mBlock.size();
 
    for (i = from; !bError && i < numBlocks; i++) {
       const SeqBlock &seqBlock = mBlock[i];
