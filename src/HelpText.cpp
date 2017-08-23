@@ -112,6 +112,10 @@ static wxString LinkExpand( const wxString & Text )
       {
          Replacement = TypedLink( Key, LinkText );
       }
+      else if( Key.StartsWith( wxT("https:") ))
+      {
+         Replacement = TypedLink( Key, LinkText );
+      }
       else if( Key.StartsWith( wxT("mailto:") ))
       {
          Replacement = TypedLink( Key, LinkText );
