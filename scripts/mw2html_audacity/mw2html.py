@@ -196,7 +196,6 @@ def monobook_fix_html(doc, page_url):
 
     # Obselete substitutions.
     # doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
-    # doc = remove_tag(doc, '<div id=\'catlinks\' class=\'catlinks catlinks-allhidden\'>', '</div>', '<div')
     #James also remove the page/discussion/source/history/ div.
     doc = remove_tag(doc, '<li id="ca-', '</li>', '<li')
     doc = remove_tag(doc, '<div id="p-search" class="portlet"', '</div>', '<div')
@@ -206,6 +205,7 @@ def monobook_fix_html(doc, page_url):
     doc = remove_tag(doc, '<div class="generated-sidebar portlet" id="p-For_Editors"', '</div>', '<div')
     doc = remove_tag(doc, '<div class="generated-sidebar portlet" id="p-ToDo"', '</div>', '<div')
     doc = remove_tag(doc, '<div class="portlet" id="p-tb"', '</div>', '<div')
+    doc = remove_tag(doc, '<div id="catlinks"', '</div>', '<div')
     #remove javascript.
     doc = remove_tag(doc, '<script', '</script>', '<script')
 
@@ -245,6 +245,8 @@ def monobook_fix_html(doc, page_url):
     # Remove edit links
     doc = remove_tag(doc, '<div class="editsection"', '</div>', '<div')
     doc = remove_tag(doc, '<span class="editsection"', '</span>', '<span')
+    doc = re.sub(r'<h2>Navigation menu</h2>', r'', doc)
+
 
     return doc
 
@@ -299,16 +301,24 @@ def pos_html_transform(doc, url,filename):
 
     # Add back relevant stylesheet.
     top_level_dir = config.outdir
-    if( os.path.dirname(os.path.dirname( filename )) == config.outdir ):
-        doc = re.sub(r'</head>', '<link rel="stylesheet" href="m/skins/monobook/main.css/303.css" media="screen" />\n</head>', doc, flags=re.DOTALL)
+    if (os.path.dirname(os.path.dirname(filename)) == config.outdir):
+        doc = re.sub(r'</head>',
+                     '<link rel="stylesheet" href="m/skins/monobook/main.css/303.css" media="screen" />\n</head>', doc,
+                     flags=re.DOTALL)
+    elif (os.path.dirname(os.path.dirname(os.path.dirname(filename))) == config.outdir):
+        doc = re.sub(r'</head>',
+                     '<link rel="stylesheet" href="../m/skins/monobook/main.css/303.css" media="screen" />\n</head>',
+                     doc,
+                     flags=re.DOTALL)
     else:
         doc = re.sub(r'</head>',
-                 '<link rel="stylesheet" href="../m/skins/monobook/main.css/303.css" media="screen" />\n</head>', doc,
-                 flags=re.DOTALL)
+                     '<link rel="stylesheet" href="../../m/skins/monobook/main.css/303.css" media="screen" />\n</head>',
+                     doc,
+                     flags=re.DOTALL)
 
     # Replace remaining text with footer, if available (this needs to be done after parse_html to avoid rewriting of urls
     if config.footer is not None:
-        s1 = '<div id="footer">'
+        s1 = '<div id="footer"'
 
     # match correct divs
     (i1, i2) = find_tag_limits(doc, s1, '</div>', '<div')
@@ -684,7 +694,7 @@ def url_to_filename(url):
 
     #don't sanitize / for path
     L[0] = ''
-    L[2] = urllib.quote_plus(L[2], '/')
+    L[2] = urllib.quote_plus(L[2],'/')
     L[3] = urllib.quote_plus(L[3])
     L[4] = urllib.quote_plus(L[4])
     L[5] = urllib.quote_plus(L[5])
@@ -905,7 +915,7 @@ def parse_html(doc, url, filename):
     # more pages.
     for item in L:
         u = item.url
-        follow = should_follow(u) # and (counter < 10)
+        follow = should_follow(u) #and (counter < 10)
         if follow:
             if config.debug:
                 print 'ACCEPTED   - ', u
@@ -926,6 +936,17 @@ def parse_html(doc, url, filename):
     newdoc = pos_html_transform(newdoc, url,filename)
 
     return (newdoc, new_urls)
+
+def deploy_file( src, dest ):
+    src_dir = os.path.dirname(os.path.realpath(__file__))
+    src = os.path.join(src_dir, src)
+    dest = os.path.join(config.outdir, dest)
+    print "copying from", src, "to", dest
+    directory = os.path.dirname(dest)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    copyfile(src,dest)
+
 
 def run(out=sys.stdout):
     """
@@ -1030,24 +1051,15 @@ def run(out=sys.stdout):
     print counter, "httplib requests done"
     print errors, "errors not recovered"
 
-
-    src_dir = os.path.dirname(os.path.realpath(__file__))
-    src = os.path.join(src_dir, "AudacityLogo.png")
-    subfile = r"alphamanual.audacityteam.org\m\resources\assets\AudacityLogo.png"
-    dest = os.path.join(config.outdir, subfile)
-    print "copying from", src, "to", dest
-    directory = os.path.dirname(dest)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    copyfile(src,dest)
-    src = os.path.join(src_dir, "303.css")
-    subfile = r"alphamanual.audacityteam.org\m\skins\monobook\main.css\303.css"
-    dest = os.path.join(config.outdir, subfile)
-    print "copying from", src, "to", dest
-    directory = os.path.dirname(dest)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    copyfile(src,dest)
+    deploy_file( "AudacityLogo.png", r"alphamanual.audacityteam.org\m\resources\assets\AudacityLogo.png")
+    deploy_file( "303.css", r"alphamanual.audacityteam.org\m\skins\monobook\main.css\303.css")
+    deploy_file( "headbg.jpg", r"alphamanual.audacityteam.org\m\skins\monobook\headbg.jpg")
+    deploy_file( "audio.png", r"alphamanual.audacityteam.org\m\skins\monobook\audio.png")
+    deploy_file( "bullet.gif", r"alphamanual.audacityteam.org\m\skins\monobook\bullet.gif")
+    deploy_file( "external.png", r"alphamanual.audacityteam.org\m\skins\monobook\external.png")
+    deploy_file( "external_rtl.png", r"alphamanual.audacityteam.org\m\skins\monobook\external_rtl.png")
+    deploy_file( "user.gif", r"alphamanual.audacityteam.org\m\skins\monobook\user.gif")
+    deploy_file( "video.png", r"alphamanual.audacityteam.org\m\skins\monobook\video.png")
 
 
 

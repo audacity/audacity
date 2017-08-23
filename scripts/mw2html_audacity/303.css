@@ -8,6 +8,13 @@
 ** Michael Zeltner and Geir Bækholt)
 ** All you guys rock :)
 */
+body {
+    font: x-small sans-serif;
+    background: #f9f9f9 url(../headbg.jpg) 0 0 no-repeat;
+    color: black;
+    margin: 0;
+    padding: 0;
+}
 
 #column-content {
 	width: 100%;
