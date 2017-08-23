@@ -505,7 +505,8 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginSubMenu(_("&Labels"));
 
-      c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
+      c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels),
+                 AudioIONotBusyFlag, AudioIONotBusyFlag);
 
       c->AddSeparator();
 
@@ -572,7 +573,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->EndSubMenu();
 
       c->AddItem(wxT("EditMetaData"), _("Me&tadata..."), FN(OnEditMetadata),
-         AlwaysEnabledFlag, AlwaysEnabledFlag);
+         AudioIONotBusyFlag, AudioIONotBusyFlag);
 
       /////////////////////////////////////////////////////////////////////////////
 
@@ -849,6 +850,8 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
       // JKC: I decided to duplicate this between play and record, rather than put it 
       // at the top level.  AddItem can now cope with simple duplicated items.
+      // PRL:  This second registration of wxT("Pause"),"Audacity did not recognize the type of the file '%s'.\nTry installing FFmpeg. For uncompressed files, also try File > Import > Raw Data." with unspecified flags,
+      // in fact will use the same flags as in the previous registration.
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->EndSubMenu();
 
@@ -860,9 +863,13 @@ void AudacityProject::CreateMenusAndCommands()
       // selection. 'Cursor to' does neither. 'Center at' might describe it better than 'Skip'.   
       c->BeginSubMenu(_("&Cursor to"));
 
-      c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart));
-      c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd));
+      c->AddItem(wxT("CursSelStart"), _("Selection Star&t"), FN(OnCursorSelStart),
+                 TimeSelectedFlag, TimeSelectedFlag);
+      c->AddItem(wxT("CursSelEnd"), _("Selection En&d"), FN(OnCursorSelEnd),
+                 TimeSelectedFlag, TimeSelectedFlag);
 
+      // PRL:  I thought these two should require TracksSelectedFlag but there
+      // was complaint about an unhelpful error message
       c->AddItem(wxT("CursTrackStart"), _("Track &Start"), FN(OnCursorTrackStart), wxT("J"),
          AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->AddItem(wxT("CursTrackEnd"), _("Track &End"), FN(OnCursorTrackEnd), wxT("K"),
@@ -895,12 +902,18 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-      c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
+      c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices),
+                 AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                 AudioIONotBusyFlag | CanStopAudioStreamFlag);
 
       c->BeginSubMenu(_("Transport &Options"));
       // Sound Activated recording options
-      c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
-      c->AddCheck(wxT("SoundActivation"), _("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0);
+      c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated),
+                 AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                 AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      c->AddCheck(wxT("SoundActivation"), _("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
       c->AddSeparator();
 
       c->AddCheck(wxT("PinnedHead"), _("Pinned Play/Record &Head (on/off)"),
@@ -908,12 +921,18 @@ void AudacityProject::CreateMenusAndCommands()
                   // Switching of scrolling on and off is permitted even during transport
                   AlwaysEnabledFlag, AlwaysEnabledFlag);
 
-      c->AddCheck(wxT("Duplex"), _("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0);
-      c->AddCheck(wxT("SWPlaythrough"), _("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0);
+      c->AddCheck(wxT("Duplex"), _("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
+      c->AddCheck(wxT("SWPlaythrough"), _("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
 
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0);
+      c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToggleAutomatedInputLevelAdjustment), 0,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag,
+                  AudioIONotBusyFlag | CanStopAudioStreamFlag);
 #endif
       c->EndSubMenu();
 
@@ -1230,7 +1249,8 @@ void AudacityProject::CreateMenusAndCommands()
 #if defined(EXPERIMENTAL_CRASH_REPORT)
       c->AddItem(wxT("CrashReport"), _("&Generate Support Data..."), FN(OnCrashReport));
 #endif
-      c->AddItem(wxT("CheckDeps"), _("Chec&k Dependencies..."), FN(OnCheckDependencies));
+      c->AddItem(wxT("CheckDeps"), _("Chec&k Dependencies..."), FN(OnCheckDependencies),
+                 AudioIONotBusyFlag, AudioIONotBusyFlag);
       c->EndSubMenu();
 
 #ifndef __WXMAC__
@@ -1278,8 +1298,8 @@ void AudacityProject::CreateMenusAndCommands()
          WaveTracksExistFlag | AudioIONotBusyFlag);
       /* i18n-hint: (verb) Stop playing audio*/
       c->AddItem(wxT("Stop"), _("Sto&p"), FN(OnStop),
-         AudioIOBusyFlag,
-         AudioIOBusyFlag);
+         AudioIOBusyFlag | CanStopAudioStreamFlag,
+         AudioIOBusyFlag | CanStopAudioStreamFlag);
 
       c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
 
@@ -1404,14 +1424,26 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddItem(wxT("SelStart"), _("Selection to &Start"), FN(OnSelToStart), wxT("Shift+Home"));
       c->AddItem(wxT("SelEnd"), _("Selection to En&d"), FN(OnSelToEnd), wxT("Shift+End"));
-      c->AddItem(wxT("SelExtLeft"), _("Selection Extend &Left"), FN(OnSelExtendLeft), wxT("Shift+Left\twantKeyup\tallowDup"));
-      c->AddItem(wxT("SelExtRight"), _("Selection Extend &Right"), FN(OnSelExtendRight), wxT("Shift+Right\twantKeyup\tallowDup"));
+      c->AddItem(wxT("SelExtLeft"), _("Selection Extend &Left"), FN(OnSelExtendLeft), wxT("Shift+Left\twantKeyup\tallowDup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("SelExtRight"), _("Selection Extend &Right"), FN(OnSelExtendRight), wxT("Shift+Right\twantKeyup\tallowDup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
 
-      c->AddItem(wxT("SelSetExtLeft"), _("Set (or Extend) Le&ft Selection"), FN(OnSelSetExtendLeft));
-      c->AddItem(wxT("SelSetExtRight"), _("Set (or Extend) Rig&ht Selection"), FN(OnSelSetExtendRight));
+      c->AddItem(wxT("SelSetExtLeft"), _("Set (or Extend) Le&ft Selection"), FN(OnSelSetExtendLeft),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("SelSetExtRight"), _("Set (or Extend) Rig&ht Selection"), FN(OnSelSetExtendRight),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
 
-      c->AddItem(wxT("SelCntrLeft"), _("Selection Contract L&eft"), FN(OnSelContractLeft), wxT("Ctrl+Shift+Right\twantKeyup"));
-      c->AddItem(wxT("SelCntrRight"), _("Selection Contract R&ight"), FN(OnSelContractRight), wxT("Ctrl+Shift+Left\twantKeyup"));
+      c->AddItem(wxT("SelCntrLeft"), _("Selection Contract L&eft"), FN(OnSelContractLeft), wxT("Ctrl+Shift+Right\twantKeyup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("SelCntrRight"), _("Selection Contract R&ight"), FN(OnSelContractRight), wxT("Ctrl+Shift+Left\twantKeyup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
 
       c->EndSubMenu();
 
@@ -1456,15 +1488,31 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(TracksExistFlag, TracksExistFlag );
       c->BeginSubMenu(_("&Cursor"));
 
-      c->AddItem(wxT("CursorLeft"), _("Cursor &Left"), FN(OnCursorLeft), wxT("Left\twantKeyup\tallowDup"));
-      c->AddItem(wxT("CursorRight"), _("Cursor &Right"), FN(OnCursorRight), wxT("Right\twantKeyup\tallowDup"));
-      c->AddItem(wxT("CursorShortJumpLeft"), _("Cursor Sh&ort Jump Left"), FN(OnCursorShortJumpLeft), wxT(","));
-      c->AddItem(wxT("CursorShortJumpRight"), _("Cursor Shor&t Jump Right"), FN(OnCursorShortJumpRight), wxT("."));
-      c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long J&ump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
-      c->AddItem(wxT("CursorLongJumpRight"), _("Cursor Long Ju&mp Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
+      c->AddItem(wxT("CursorLeft"), _("Cursor &Left"), FN(OnCursorLeft), wxT("Left\twantKeyup\tallowDup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("CursorRight"), _("Cursor &Right"), FN(OnCursorRight), wxT("Right\twantKeyup\tallowDup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("CursorShortJumpLeft"), _("Cursor Sh&ort Jump Left"), FN(OnCursorShortJumpLeft), wxT(","),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("CursorShortJumpRight"), _("Cursor Shor&t Jump Right"), FN(OnCursorShortJumpRight), wxT("."),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("CursorLongJumpLeft"), _("Cursor Long J&ump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("CursorLongJumpRight"), _("Cursor Long Ju&mp Right"), FN(OnCursorLongJumpRight), wxT("Shift+."),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
 
-      c->AddItem(wxT("ClipLeft"), _("Clip L&eft"), FN(OnClipLeft), wxT("\twantKeyup"));
-      c->AddItem(wxT("ClipRight"), _("Clip Rig&ht"), FN(OnClipRight), wxT("\twantKeyup"));
+      c->AddItem(wxT("ClipLeft"), _("Clip L&eft"), FN(OnClipLeft), wxT("\twantKeyup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("ClipRight"), _("Clip Rig&ht"), FN(OnClipRight), wxT("\twantKeyup"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
       c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
@@ -1472,20 +1520,48 @@ void AudacityProject::CreateMenusAndCommands()
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->BeginSubMenu(_("&Track"));
 
-      c->AddItem(wxT("TrackPan"), _("Change p&an on focused track"), FN(OnTrackPan), wxT("Shift+P"));
-      c->AddItem(wxT("TrackPanLeft"), _("Pan &left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"));
-      c->AddItem(wxT("TrackPanRight"), _("Pan &right on focused track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"));
-      c->AddItem(wxT("TrackGain"), _("Change gai&n on focused track"), FN(OnTrackGain), wxT("Shift+G"));
-      c->AddItem(wxT("TrackGainInc"), _("&Increase gain on focused track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"));
-      c->AddItem(wxT("TrackGainDec"), _("&Decrease gain on focused track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"));
-      c->AddItem(wxT("TrackMenu"), _("Op&en menu on focused track"), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"));
-      c->AddItem(wxT("TrackMute"), _("M&ute/Unmute focused track"), FN(OnTrackMute), wxT("Shift+U"));
-      c->AddItem(wxT("TrackSolo"), _("&Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"));
-      c->AddItem(wxT("TrackClose"), _("&Close focused track"), FN(OnTrackClose), wxT("Shift+C"));
-      c->AddItem(wxT("TrackMoveUp"), _("Move focused track u&p"), FN(OnTrackMoveUp));
-      c->AddItem(wxT("TrackMoveDown"), _("Move focused track do&wn"), FN(OnTrackMoveDown));
-      c->AddItem(wxT("TrackMoveTop"), _("Move focused track to t&op"), FN(OnTrackMoveTop));
-      c->AddItem(wxT("TrackMoveBottom"), _("Move focused track to &bottom"), FN(OnTrackMoveBottom));
+      c->AddItem(wxT("TrackPan"), _("Change p&an on focused track"), FN(OnTrackPan), wxT("Shift+P"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackPanLeft"), _("Pan &left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackPanRight"), _("Pan &right on focused track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackGain"), _("Change gai&n on focused track"), FN(OnTrackGain), wxT("Shift+G"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackGainInc"), _("&Increase gain on focused track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackGainDec"), _("&Decrease gain on focused track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackMenu"), _("Op&en menu on focused track"), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("TrackMute"), _("M&ute/Unmute focused track"), FN(OnTrackMute), wxT("Shift+U"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("TrackSolo"), _("&Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"),
+                 TracksExistFlag | TrackPanelHasFocus,
+                 TracksExistFlag | TrackPanelHasFocus);
+      c->AddItem(wxT("TrackClose"), _("&Close focused track"), FN(OnTrackClose), wxT("Shift+C"),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackMoveUp"), _("Move focused track u&p"), FN(OnTrackMoveUp),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackMoveDown"), _("Move focused track do&wn"), FN(OnTrackMoveDown),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackMoveTop"), _("Move focused track to t&op"), FN(OnTrackMoveTop),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+      c->AddItem(wxT("TrackMoveBottom"), _("Move focused track to &bottom"), FN(OnTrackMoveBottom),
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
+                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
       c->EndSubMenu();
 
       // Accel key is not bindable.
