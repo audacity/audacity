@@ -2382,16 +2382,18 @@ bool WaveTrack::CanInsertClip(WaveClip* clip,  double &slideBy, double &toleranc
       {
          // clips overlap.
          // Try to rescue it.
-         // The rescue logic is not perfect, but 
-         // a) will not move the clip by more than once
-         // b) is OK in simple scenarios.
+         // The rescue logic is not perfect, and will typically
+         // move the clip at most once.  
+         // We divide by 1000 rather than set to 0, to allow for 
+         // a second 'micro move' that is really about rounding error.
          if( -d1 < tolerance ){
+            // right edge of clip overlaps slightly.
+            // slide clip left a small amount.
             slideBy +=d1;
-            d2 += d1;
             tolerance /=1000;
-         }
-         
-         if( -d2 < tolerance ){
+         } else if( -d2 < tolerance ){
+            // left edge of clip overlaps slightly.
+            // slide clip right a small amount.
             slideBy -= d2;
             tolerance /=1000;
          }

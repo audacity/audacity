@@ -711,7 +711,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // The tolerance is supposed to be the time for one pixel, i.e. one pixel tolerance 
       // at current zoom.
       double slide = desiredSlideAmount; // remember amount requested.
-      double tolerance = viewInfo.PositionToTime(event.m_x+1) - viewInfo.PositionToTime(event.m_x+1);
+      double tolerance = viewInfo.PositionToTime(event.m_x+1) - viewInfo.PositionToTime(event.m_x);
 
       // The desiredSlideAmount may change and the tolerance may get used up.
       for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
@@ -722,24 +722,61 @@ UIHandle::Result TimeShiftHandle::Drag
             ok = trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
       }
 
+      if( ok ) {
+         // fits ok, but desiredSlideAmount could have been updated to get the clip to fit.
+         // Check again, in the new position, this time with zero tolerance.
+         tolerance = 0.0;
+         for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
+               ok && ii < nn; ++ii) {
+            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip)
+               ok = trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
+         }
+      }
+
       if (!ok) {
          // Failure, even with using tolerance.
-         // Failure -- put clips back where they were
+         // Failure -- we'll put clips back where they were
+         // ok will next indicate if a horizontal slide is OK.
+         ok = true; // assume slide is OK.
+         tolerance = 0.0;
+         desiredSlideAmount = slide;
          for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
                ii < nn;  ++ii) {
             TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip){
+               // back to the track it came from...
+               trackClip.dstTrack = static_cast<WaveTrack*>(trackClip.track);
+               ok = ok && trackClip.dstTrack->CanInsertClip(pSrcClip, desiredSlideAmount, tolerance);
+            }
+         }
+         for ( unsigned ii = 0, nn = mClipMoveState.capturedClipArray.size();
+               ii < nn;  ++ii) {
+            TrackClip &trackClip = mClipMoveState.capturedClipArray[ii];
+            WaveClip *const pSrcClip = trackClip.clip;
+            if (pSrcClip){
+
                // Attempt to move to a new track did not work.
                // Put the clip back appropriately shifted!
-               trackClip.holder->Offset(slide);
+               if( ok) 
+                  trackClip.holder->Offset(slide);
                // Assume track is wave because it has a clip
                   static_cast<WaveTrack*>(trackClip.track)->
                      AddClip(std::move(trackClip.holder));
             }
          }
          // Make the offset permanent; start from a "clean slate"
-         mMouseClickX = event.m_x;
+         if( ok ) {
+            mMouseClickX = event.m_x;
+            if (mClipMoveState.capturedClipIsSelection) {
+               // Slide the selection, too
+               viewInfo.selectedRegion.move( slide );
+            }
+            mClipMoveState.hSlideAmount = 0;
+         }
+
          return RefreshAll;
       }
       else {
@@ -777,7 +814,6 @@ UIHandle::Result TimeShiftHandle::Drag
       // Slide the selection, too
       viewInfo.selectedRegion.move( mClipMoveState.hSlideAmount );
    }
-
 
    if (slidVertically) {
       // NEW origin
