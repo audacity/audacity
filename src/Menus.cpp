@@ -1203,12 +1203,15 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu( _("&Tools") );
       c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
-#if IS_ALPHA
+// PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
+// as they used to in 1.3.x
+//#if IS_ALPHA
       // TODO: What should we do here?  Make benchmark a plug-in?
       // Easy enough to do.  We'd call it mod-self-test.
 
       c->AddItem(wxT("Benchmark"), _("&Run Benchmark..."), FN(OnBenchmark));
-#endif
+//#endif
+
       c->EndSubMenu();
       c->AddSeparator();
 
