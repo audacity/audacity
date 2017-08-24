@@ -1051,15 +1051,16 @@ def run(out=sys.stdout):
     print counter, "httplib requests done"
     print errors, "errors not recovered"
 
-    deploy_file( "AudacityLogo.png", r"alphamanual.audacityteam.org\m\resources\assets\AudacityLogo.png")
-    deploy_file( "303.css", r"alphamanual.audacityteam.org\m\skins\monobook\main.css\303.css")
-    deploy_file( "headbg.jpg", r"alphamanual.audacityteam.org\m\skins\monobook\headbg.jpg")
-    deploy_file( "audio.png", r"alphamanual.audacityteam.org\m\skins\monobook\audio.png")
-    deploy_file( "bullet.gif", r"alphamanual.audacityteam.org\m\skins\monobook\bullet.gif")
-    deploy_file( "external.png", r"alphamanual.audacityteam.org\m\skins\monobook\external.png")
-    deploy_file( "external_rtl.png", r"alphamanual.audacityteam.org\m\skins\monobook\external_rtl.png")
-    deploy_file( "user.gif", r"alphamanual.audacityteam.org\m\skins\monobook\user.gif")
-    deploy_file( "video.png", r"alphamanual.audacityteam.org\m\skins\monobook\video.png")
+    # use / not \ so as to work on both windows and mac.
+    deploy_file( "AudacityLogo.png", r"alphamanual.audacityteam.org/m/resources/assets/AudacityLogo.png")
+    deploy_file( "303.css", r"alphamanual.audacityteam.org/m/skins/monobook/main.css/303.css")
+    deploy_file( "headbg.jpg", r"alphamanual.audacityteam.org/m/skins/monobook/headbg.jpg")
+    deploy_file( "audio.png", r"alphamanual.audacityteam.org/m/skins/monobook/audio.png")
+    deploy_file( "bullet.gif", r"alphamanual.audacityteam.org/m/skins/monobook/bullet.gif")
+    deploy_file( "external.png", r"alphamanual.audacityteam.org/m/skins/monobook/external.png")
+    deploy_file( "external_rtl.png", r"alphamanual.audacityteam.org/m/skins/monobook/external_rtl.png")
+    deploy_file( "user.gif", r"alphamanual.audacityteam.org/m/skins/monobook/user.gif")
+    deploy_file( "video.png", r"alphamanual.audacityteam.org/m/skins/monobook/video.png")
 
 
 
