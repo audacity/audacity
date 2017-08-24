@@ -327,7 +327,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
 
-      WaveTrack* track = tracks[index];
+      WaveTrack* track = tracks[index].get();
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
@@ -412,7 +412,7 @@ void RecordingRecoveryHandler::HandleXMLEndTag(const wxChar *tag)
       wxASSERT(false);
    }
    else {
-      WaveTrack* track = tracks[index];
+      WaveTrack* track = tracks[index].get();
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 

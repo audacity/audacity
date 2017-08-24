@@ -1857,7 +1857,7 @@ void AudioIO::StartMonitoring(double sampleRate)
    }
 }
 
-int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
+int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
                          const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                          const NoteTrackArray &midiPlaybackTracks,
@@ -1926,6 +1926,19 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiPlaybackTracks = midiPlaybackTracks;
 #endif
+
+   bool commit = false;
+   auto cleanupTracks = finally([&]{
+      if (!commit) {
+         // Don't keep unnecessary shared pointers to tracks
+         mPlaybackTracks.clear();
+         mCaptureTracks.clear();
+#ifdef EXPERIMENTAL_MIDI_OUT
+         mMidiPlaybackTracks.clear();
+#endif
+      }
+   });
+
    mPlayMode = options.playLooped ? PLAY_LOOPED : PLAY_STRAIGHT;
    mCutPreviewGapStart = options.cutPreviewGapStart;
    mCutPreviewGapLen = options.cutPreviewGapLen;
@@ -2109,8 +2122,10 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
                mPlaybackBuffers[i] = std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
+               WaveTrackConstArray tracks;
+               tracks.push_back(mPlaybackTracks[i]);
                mPlaybackMixers[i] = std::make_unique<Mixer>
-                  (WaveTrackConstArray{ mPlaybackTracks[i] },
+                  (tracks,
                   // Don't throw for read errors, just play silence:
                   false,
                   warpOptions,
@@ -2184,7 +2199,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
       int group = 0;
       for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt; i++)
       {
-         const WaveTrack *vt = gAudioIO->mPlaybackTracks[i];
+         const WaveTrack *vt = gAudioIO->mPlaybackTracks[i].get();
 
          unsigned chanCnt = 1;
          if (vt->GetLinked())
@@ -2319,6 +2334,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    // Enable warning popups for unfound aliased blockfiles.
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
+   commit = true;
    return mStreamToken;
 }
 
@@ -2371,7 +2387,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    mIterator = std::make_unique<Alg_iterator>(nullptr, false);
    // Iterator not yet intialized, must add each track...
    for (i = 0; i < nTracks; i++) {
-      NoteTrack *t = mMidiPlaybackTracks[i];
+      NoteTrack *t = mMidiPlaybackTracks[i].get();
       Alg_seq_ptr seq = &t->GetSeq();
       // mark sequence tracks as "in use" since we're handing this
       // off to another thread and want to make sure nothing happens
@@ -2635,7 +2651,7 @@ void AudioIO::StopStream()
       // set in_use flags to false
       int nTracks = mMidiPlaybackTracks.size();
       for (int i = 0; i < nTracks; i++) {
-         NoteTrack *t = mMidiPlaybackTracks[i];
+         NoteTrack *t = mMidiPlaybackTracks[i].get();
          Alg_seq_ptr seq = &t->GetSeq();
          seq->set_in_use(false);
       }
@@ -2709,7 +2725,7 @@ void AudioIO::StopStream()
             // If the other track operations fail their strong guarantees, then
             // the shift for latency correction may be skipped.
             GuardedCall<void>( [&] {
-               WaveTrack* track = mCaptureTracks[i];
+               WaveTrack* track = mCaptureTracks[i].get();
 
                // use NOFAIL-GUARANTEE that track is flushed,
                // PARTIAL-GUARANTEE that some initial length of the recording
@@ -2726,7 +2742,7 @@ void AudioIO::StopStream()
                   bool appendRecord = false;
                   for (unsigned int j = 0; j < playbackTracks.size(); j++)
                   {  // find if we are recording into an existing track (append-record)
-                     WaveTrack* trackP = playbackTracks[j];
+                     WaveTrack* trackP = playbackTracks[j].get();
                      if( track == trackP )
                      {
                         if( track->GetStartTime() != mT0 )  // in a NEW track if these are equal
@@ -2793,6 +2809,10 @@ void AudioIO::StopStream()
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
+
+   mPlaybackTracks.clear();
+   mCaptureTracks.clear();
+   mMidiPlaybackTracks.clear();
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    mScrubQueue.reset();
@@ -4908,7 +4928,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          decltype(framesPerBuffer) maxLen = 0;
          for (unsigned t = 0; t < numPlaybackTracks; t++)
          {
-            const WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
+            const WaveTrack *vt = gAudioIO->mPlaybackTracks[t].get();
 
             chans[chanCnt] = vt;
 

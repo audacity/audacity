@@ -4136,9 +4136,12 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 #endif
 
 
-void AudacityProject::AddImportedTracks(const wxString &fileName,
-                                        TrackHolders &&newTracks)
+std::vector< std::shared_ptr< Track > >
+AudacityProject::AddImportedTracks(const wxString &fileName,
+                                   TrackHolders &&newTracks)
 {
+   std::vector< std::shared_ptr< Track > > results;
+
    const auto numTracks = newTracks.size();
    SelectNone();
 
@@ -4151,6 +4154,7 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
       ++i;
 
       auto newTrack = mTracks->Add(std::move(uNewTrack));
+      results.push_back(Track::Pointer(newTrack));
       if (newRate == 0 && newTrack->GetKind() == Track::Wave) {
          newRate = ((WaveTrack *)newTrack)->GetRate();
       }
@@ -4213,6 +4217,8 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
    //   HandleResize();
 
    newTracks.clear();
+
+   return results;
 }
 
 void AudacityProject::ZoomAfterImport(Track *pTrack)
@@ -4271,18 +4277,16 @@ bool AudacityProject::Import(const wxString &fileName, WaveTrackArray* pTrackArr
       return false;
    }
 
-   // Have to set up newTrackList before calling AddImportedTracks,
-   // because AddImportedTracks deletes newTracks.
+   // PRL: Undo history is incremented inside this:
+   auto newSharedTracks = AddImportedTracks(fileName, std::move(newTracks));
+
    if (pTrackArray) {
-      for (const auto &newTrack : newTracks) {
-         if (newTrack->GetKind() == Track::Wave) {
-            pTrackArray->push_back(static_cast<WaveTrack *>(newTrack.get()));
-         }
+      for (const auto &newTrack : newSharedTracks) {
+         if (newTrack->GetKind() == Track::Wave)
+            pTrackArray->push_back(
+               std::static_pointer_cast<WaveTrack>(newTrack));
       }
    }
-
-   // PRL: Undo history is incremented inside this:
-   AddImportedTracks(fileName, std::move(newTracks));
 
    int mode = gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"), 0L);
    if (mode == 1) {

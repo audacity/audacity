@@ -2126,7 +2126,7 @@ void TrackArtist::DrawSpectrum(const WaveTrack *track,
    DrawBackgroundWithSelection(&dc, rect, track, blankSelectedBrush, blankBrush,
          selectedRegion, zoomInfo);
 
-   WaveTrackCache cache(track);
+   WaveTrackCache cache(Track::Pointer<const WaveTrack>(track));
    for (const auto &clip: track->GetClips()) {
       DrawClipSpectrum(cache, clip.get(), dc, rect, selectedRegion, zoomInfo);
    }

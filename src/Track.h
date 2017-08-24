@@ -48,27 +48,9 @@ class SelectHandle;
 class TimeShiftHandle;
 
 WX_DEFINE_USER_EXPORTED_ARRAY(Track*, TrackArray, class AUDACITY_DLL_API);
-using WaveTrackArray = std::vector < WaveTrack* > ;
-
-class WaveTrackConstArray : public std::vector < const WaveTrack* > {
-public:
-   WaveTrackConstArray() {}
-   // I'd like to use an inherited constructor, but that's not here yet in MSVC compiler...
-#ifdef __AUDACITY_OLD_STD__
-   WaveTrackConstArray
-      (std::initializer_list<value_type> tracks) 
-   {
-      reserve(tracks.size());
-      for (const auto &track : tracks)
-         push_back(track);
-   }
-#else
-   WaveTrackConstArray
-      (std::initializer_list<value_type> tracks) : std::vector<value_type>(tracks) {}
-#endif
-};
-
-using NoteTrackArray  = std::vector < NoteTrack* >;
+using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
+using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
+using NoteTrackArray  = std::vector < std::shared_ptr < NoteTrack > >;
 
 #if defined(USE_MIDI)
 class NoteTrack;

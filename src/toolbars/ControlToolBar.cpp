@@ -973,7 +973,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          if ( ! shifted ) {
             // msmeyer: Delete recently added tracks if opening stream fails
             for ( auto track : recordingTracks )
-               trackList->Remove(track);
+               trackList->Remove(track.get());
          }
 
          SetPlay(false);
@@ -1066,7 +1066,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // playback.
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
-               WaveTrack *wt = static_cast<WaveTrack *>(tt);
+               auto wt = Track::Pointer<WaveTrack>(tt);
                if (duplex) {
                   auto end = playbackTracks.end();
                   auto it = std::find(playbackTracks.begin(), end, wt);
@@ -1184,7 +1184,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
             // Let the list hold the track, and keep a pointer to it
             recordingTracks.push_back(
-               static_cast<WaveTrack*>(
+               Track::Pointer<WaveTrack>(
                   trackList->Add(
                      std::move(newTrack))));
          }

@@ -1324,7 +1324,8 @@ namespace {
          if (track->GetKind() == Track::Wave &&
             (includeMuted || !wt->GetMute()) &&
             (track->GetSelected() || !selectionOnly)) {
-            waveTrackArray.push_back(static_cast<WaveTrack*>(track.get()));
+            waveTrackArray.push_back(
+               std::static_pointer_cast<WaveTrack>(track));
          }
       }
 
@@ -1350,7 +1351,7 @@ NoteTrackArray TrackList::GetNoteTrackArray(bool selectionOnly)
    for(const auto &track : *this) {
       if (track->GetKind() == Track::Note &&
          (track->GetSelected() || !selectionOnly)) {
-         noteTrackArray.push_back(static_cast<NoteTrack*>(track.get()));
+         noteTrackArray.push_back(std::static_pointer_cast<NoteTrack>(track));
       }
    }
 

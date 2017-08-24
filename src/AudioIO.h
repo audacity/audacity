@@ -32,7 +32,7 @@
 #include "../lib-src/header-substitutes/allegro.h"
 
 class NoteTrack;
-using NoteTrackArray = std::vector < NoteTrack* >;
+using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
 
 #endif // EXPERIMENTAL_MIDI_OUT
 
@@ -60,8 +60,8 @@ class SelectedRegion;
 class AudacityProject;
 
 class WaveTrack;
-using WaveTrackArray = std::vector < WaveTrack* >;
-using ConstWaveTrackArray = std::vector < const WaveTrack* >;
+using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
+using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
@@ -164,7 +164,7 @@ class AUDACITY_DLL_API AudioIO final {
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive() below */
 
-   int StartStream(const ConstWaveTrackArray &playbackTracks, const WaveTrackArray &captureTracks,
+   int StartStream(const WaveTrackConstArray &playbackTracks, const WaveTrackArray &captureTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                    const NoteTrackArray &midiTracks,
 #endif
@@ -637,7 +637,7 @@ private:
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
-   ConstWaveTrackArray mPlaybackTracks;
+   WaveTrackConstArray mPlaybackTracks;
 
    ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
    volatile int        mStreamToken;

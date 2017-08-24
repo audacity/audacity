@@ -92,7 +92,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         waveArray.push_back(static_cast<const WaveTrack *>(t));
+         waveArray.push_back(Track::Pointer<const WaveTrack>(t));
          tstart = t->GetStartTime();
          tend = t->GetEndTime();
          if (tend > mixEndTime)

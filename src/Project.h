@@ -267,8 +267,10 @@ public:
 
    void ZoomAfterImport(Track *pTrack);
 
-   void AddImportedTracks(const wxString &fileName,
-                          TrackHolders &&newTracks);
+   // Takes array of unique pointers; returns array of shared
+   std::vector< std::shared_ptr<Track> >
+   AddImportedTracks(const wxString &fileName,
+                     TrackHolders &&newTracks);
 
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
    bool SaveAs(bool bWantSaveCompressed = false);

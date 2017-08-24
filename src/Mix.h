@@ -23,6 +23,7 @@
 #include "MemoryX.h"
 #include <wx/string.h>
 #include "SampleFormat.h"
+#include <vector>
 
 class Resample;
 class DirManager;
@@ -30,7 +31,7 @@ class TimeTrack;
 class TrackFactory;
 class TrackList;
 class WaveTrack;
-class WaveTrackConstArray;
+using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 class WaveTrackCache;
 
 /** @brief Mixes together all input tracks, applying any envelopes, amplitude

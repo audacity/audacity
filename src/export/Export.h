@@ -32,7 +32,7 @@ class TrackList;
 class MixerSpec;
 class TimeTrack;
 class Mixer;
-class WaveTrackConstArray;
+using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 enum class ProgressResult : unsigned;
 
 class AUDACITY_DLL_API FormatInfo
