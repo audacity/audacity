@@ -655,6 +655,10 @@ namespace
       // TODO:  make a finer distinction between refreshing the track control area,
       // and the waveform area.  As it is, redraw both whenever you must redraw either.
 
+      // Copy data from the underlying tracks to the pending tracks that are
+      // really displayed
+      panel->GetProject()->GetTracks()->UpdatePendingTracks();
+
       using namespace RefreshCode;
 
       if (refreshResult & DestroyedCell) {
