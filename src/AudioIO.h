@@ -437,6 +437,11 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    void PrepareMidiIterator(bool send = true, double offset = 0);
    bool StartPortMidiStream();
+
+   // Compute nondecreasing time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime();
+
    void OutputEvent();
    void FillMidiBuffers();
    void GetNextEvent();
@@ -542,7 +547,9 @@ private:
    /// How many frames of zeros were output due to pauses?
    volatile long    mNumPauseFrames;
    /// total of backward jumps
-   volatile double  mMidiLoopOffset;
+   volatile int     mMidiLoopPasses;
+   inline double MidiLoopOffset() { return mMidiLoopPasses * (mT1 - mT0); }
+
    volatile long    mAudioFramesPerBuffer;
    /// Used by Midi process to record that pause has begun,
    /// so that AllNotesOff() is only delivered once
@@ -613,12 +620,17 @@ private:
    double              mT1;
    /// Current time position during playback, in seconds.  Between mT0 and mT1.
    double              mTime;
-   /// Current time after warping, starting at zero (unlike mTime).
-   /// Length in real seconds between mT0 and mTime.
+
+   /// Accumulated real time (not track position), starting at zero (unlike
+   ///  mTime), and wrapping back to zero each time around looping play.
+   /// Thus, it is the length in real seconds between mT0 and mTime.
    double              mWarpedTime;
-   /// Total length after warping via a time track.
+
+   /// Real length to be played (if looping, for each pass) after warping via a
+   /// time track, computed just once when starting the stream.
    /// Length in real seconds between mT0 and mT1.  Always positive.
    double              mWarpedLength;
+
    double              mSeek;
    double              mPlaybackRingBufferSecs;
    double              mCaptureRingBufferSecs;

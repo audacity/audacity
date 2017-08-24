@@ -214,7 +214,8 @@
   special "event" of sending all notes off. After that, we destroy
   the iterator and use PrepareMidiIterator() to set up a NEW one.
   At each iteration, time must advance by (mT1 - mT0), so the
-  accumulated time is held in mMidiLoopOffset.
+  accumulated complete loop time (in "unwarped," track time) is computed
+  by MidiLoopOffset().
 
   \todo run through all functions called from audio and portaudio threads
   to verify they are thread-safe. Note that synchronization of the style:
@@ -2144,7 +2145,7 @@ bool AudioIO::StartPortMidiStream()
    if (mLastPmError == pmNoError) {
       mMidiStreamActive = true;
       mMidiPaused = false;
-      mMidiLoopOffset = 0;
+      mMidiLoopPasses = 0;
       mMidiOutputComplete = false;
       PrepareMidiIterator();
 
@@ -3804,6 +3805,19 @@ void AudioIO::SetListener(AudioIOListener* listener)
 static Alg_update gAllNotesOff; // special event for loop ending
 // the fields of this event are never used, only the address is important
 
+double AudioIO::UncorrectedMidiEventTime()
+{
+   double time;
+   if (mTimeTrack)
+      time =
+         mTimeTrack->ComputeWarpedLength(mT0, mNextEventTime - MidiLoopOffset())
+            + mT0 + (mMidiLoopPasses * mWarpedLength);
+   else
+      time = mNextEventTime;
+
+   return time + PauseTime();
+}
+
 void AudioIO::OutputEvent()
 {
    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
@@ -3811,13 +3825,10 @@ void AudioIO::OutputEvent()
    int data1 = -1;
    int data2 = -1;
 
-   double eventTime;
-   if (mTimeTrack)
-      eventTime = mTimeTrack->ComputeWarpedLength(mT0, mNextEventTime) + mT0;
-   else
-      eventTime = mNextEventTime;
+   double eventTime = UncorrectedMidiEventTime();
+
    // 0.0005 is for rounding
-   double time = eventTime + PauseTime() + 0.0005 -
+   double time = eventTime + 0.0005 -
                  ((mMidiLatency + mSynthLatency) * 0.001);
 
    time += 1; // MidiTime() has a 1s offset
@@ -3833,8 +3844,8 @@ void AudioIO::OutputEvent()
       AllNotesOff();
       if (mPlayMode == gAudioIO->PLAY_LOOPED) {
          // jump back to beginning of loop
-         mMidiLoopOffset += (mT1 - mT0);
-         PrepareMidiIterator(false, mMidiLoopOffset);
+         ++mMidiLoopPasses;
+         PrepareMidiIterator(false, MidiLoopOffset());
       } else {
          mNextEvent = NULL;
       }
@@ -3958,18 +3969,19 @@ void AudioIO::GetNextEvent()
         mNextEvent = NULL;
         return;
    }
+   auto midiLoopOffset = MidiLoopOffset();
    mNextEvent = mIterator->next(&mNextIsNoteOn,
                                 (void **) &mNextEventTrack,
-                                &nextOffset, mT1 + mMidiLoopOffset);
+                                &nextOffset, mT1 + midiLoopOffset);
 
-   mNextEventTime  = mT1 + mMidiLoopOffset + 1;
+   mNextEventTime  = mT1 + midiLoopOffset + 1;
    if (mNextEvent) {
       mNextEventTime = (mNextIsNoteOn ? mNextEvent->time :
                               mNextEvent->get_end_time()) + nextOffset;;
    } 
-   if (mNextEventTime > (mT1 + mMidiLoopOffset)){ // terminate playback at mT1
+   if (mNextEventTime > (mT1 + midiLoopOffset)){ // terminate playback at mT1
       mNextEvent = &gAllNotesOff;
-      mNextEventTime = mT1 + mMidiLoopOffset - ALG_EPS;
+      mNextEventTime = mT1 + midiLoopOffset - ALG_EPS;
       mNextIsNoteOn = true; // do not look at duration
       mIterator->end();
       mIterator.reset(); // debugging aid
@@ -4000,12 +4012,10 @@ void AudioIO::FillMidiBuffers()
          break;
       }
    SetHasSolo(hasSolo);
-   // Compute the current track time differently depending upon
-   // whether audio playback is in effect:
-   double time = AudioTime() - PauseTime();
+   double time = AudioTime();
    while (mNextEvent &&
-          (mTimeTrack ? (mTimeTrack->ComputeWarpedLength(mT0, mNextEventTime) + mT0) : mNextEventTime)
-             < time + ((MIDI_SLEEP + mSynthLatency) * 0.001)) {
+          UncorrectedMidiEventTime() <
+             time + ((MIDI_SLEEP + mSynthLatency) * 0.001)) {
       OutputEvent();
       GetNextEvent();
    }
