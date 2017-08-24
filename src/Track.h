@@ -16,6 +16,7 @@
 #include "MemoryX.h"
 #include <vector>
 #include <list>
+#include <functional>
 #include <wx/dynarray.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -68,6 +69,7 @@ class ViewInfo;
 // It does not persist between sessions
 // Default constructed value is not equal to the id of any track that has ever
 // been added to a TrackList, or (directly or transitively) copied from such
+// (A pending additional track that is not yet applied is not considered added)
 // TrackIds are assigned uniquely across projects
 class TrackId
 {
@@ -747,24 +749,35 @@ class TrackList final : public wxEvtHandler, public ListOfTracks
 
 private:
    bool isNull(TrackNodePointer p) const
-   { return p == ListOfTracks::end(); }
+   { return p == ListOfTracks::end()
+      || p == mPendingUpdates.end()
+      || p == mPendingAdditions.end(); }
    TrackNodePointer getEnd() const
-   { return const_cast<TrackList*>(this)->ListOfTracks::end(); }
-   TrackNodePointer getBegin() const
-   { return const_cast<TrackList*>(this)->ListOfTracks::begin(); }
+   { return const_cast<TrackList*>(this)->mPendingAdditions.end(); }
+   TrackNodePointer getBegin() const {
+      auto p = const_cast<TrackList*>(this)->ListOfTracks::begin();
+      if ( p == this->ListOfTracks::end() )
+         p = const_cast<TrackList*>(this)->mPendingAdditions.begin();
+      return p;
+   }
 
    // Move an iterator to the next node, if any; else stay at end
    TrackNodePointer getNext(TrackNodePointer p) const
    {
-      if ( isNull(p) )
+      if (p == mPendingAdditions.end())
          return p;
       auto q = p;
-      return ++q;
+      ++q;
+      if (q == this->ListOfTracks::end())
+         return const_cast<TrackList*>(this)->mPendingAdditions.begin();
+      return q;
    }
 
    // Move an iterator to the previous node, if any; else wrap to end
    TrackNodePointer getPrev(TrackNodePointer p) const
    {
+      if (p == mPendingAdditions.begin())
+         p = const_cast<TrackList*>(this)->ListOfTracks::end();
       if (p == this->ListOfTracks::begin())
          return getEnd();
       else {
@@ -788,6 +801,71 @@ private:
    // Nonpersistent.
    // Used to assign ids to added tracks.
    static long mCounter;
+
+public:
+   using Updater = std::function< void(Track &dest, const Track &src) >;
+   // Start a deferred update of the project.
+   // The return value is a duplicate of the given track.
+   // While ApplyPendingTracks or ClearPendingTracks is not yet called,
+   // there may be other direct changes to the project that push undo history.
+   // Meanwhile the returned object can accumulate other changes for a deferred
+   // push, and temporarily shadow the actual project track for display purposes.
+   // The Updater function, if not null, merges state (from the actual project
+   // into the pending track) which is not meant to be overridden by the
+   // accumulated pending changes.
+   // To keep the display consistent, the Y and Height values, minimized state,
+   // and Linked state must be copied, and this will be done even if the
+   // Updater does not do it.
+   // Pending track will have the same TrackId as the actual.
+   // Pending changed tracks will not occur in iterations.
+   std::shared_ptr<Track> RegisterPendingChangedTrack(
+      Updater updater,
+      Track *src
+   );
+
+   // Like the previous, but for a NEW track, not a replacement track.  Caller
+   // supplies the track, and there are no updates.
+   // Pending track will have an unassigned TrackId.
+   // Pending changed tracks WILL occur in iterations, always after actual
+   // tracks, and in the sequence that they were added.  They can be
+   // distinguished from actual tracks by TrackId.
+   void RegisterPendingNewTrack( const std::shared_ptr<Track> &pTrack );
+
+   // Invoke the updaters of pending tracks.  Pass any exceptions from the
+   // updater functions.
+   void UpdatePendingTracks();
+
+   // Forget pending track additions and changes.
+   void ClearPendingTracks();
+
+   // Change the state of the project.
+   // Strong guarantee for project state in case of exceptions.
+   // Will always clear the pending updates.
+   // Return true if the state of the track list really did change.
+   bool ApplyPendingTracks();
+
+   // Find anything registered with RegisterPendingChangedTrack and not yet
+   // cleared or applied
+   std::shared_ptr<Track> FindPendingChangedTrack(TrackId id) const;
+
+   // List tracks given to RegisterPendingChangedTrack and not yet cleared or
+   // applied, in the same sequence as they were added
+   const ListOfTracks &FindPendingNewTracks() const
+   {
+      return mPendingAdditions;
+   }
+
+   bool HasPendingChanges() const
+   {
+      return !( mPendingUpdates.empty() && mPendingAdditions.empty() );
+   }
+
+private:
+   // Need to put pending tracks into lists so that GetLink() works
+   ListOfTracks mPendingAdditions;
+   ListOfTracks mPendingUpdates;
+   // This is in correspondence with mPendingUpdates
+   std::vector< Updater > mUpdaters;
 };
 
 class AUDACITY_DLL_API TrackFactory
