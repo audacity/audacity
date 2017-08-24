@@ -2317,6 +2317,7 @@ void AudioIO::StopStream()
       while (mMidiThreadFillBuffersLoopActive) {
          wxMilliSleep(1);
       }
+      mMidiOutputComplete = true;
       // now we can assume "ownership" of the mMidiStream
       // if output in progress, send all off, etc.
       AllNotesOff();
@@ -2970,7 +2971,7 @@ MidiThread::ExitCode MidiThread::Entry()
             gAudioIO->FillMidiBuffers();
 
             // test for end
-            double realTime = gAudioIO->mT0 + gAudioIO->MidiTime() * 0.001 -
+            double realTime = gAudioIO->MidiTime() * 0.001 -
                                gAudioIO->PauseTime();
             realTime -= 1; // MidiTime() runs ahead 1s
 
