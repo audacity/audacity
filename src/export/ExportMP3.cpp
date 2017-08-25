@@ -676,7 +676,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      wxString page = wxT("http://manual.audacityteam.org/man/faq_installation_and_plug_ins.html#lame");
+      wxString page = wxT("faq_installation_and_plug_ins.html#lame");
       ::OpenInDefaultBrowser(page);
    }
 

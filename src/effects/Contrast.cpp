@@ -323,7 +323,7 @@ void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    // Original help page is back on-line (March 2016), but the manual should be more reliable.
    // http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm
-   HelpSystem::ShowHelpDialog(this, wxT("Contrast"));
+   HelpSystem::ShowHelp(this, wxT("Contrast"));
 }
 
 void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))

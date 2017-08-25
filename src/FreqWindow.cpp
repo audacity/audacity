@@ -530,7 +530,7 @@ void FreqWindow::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    // Original help page is back on-line (March 2016), but the manual should be more reliable.
    // http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm
-   HelpSystem::ShowHelpDialog(this, wxT("Plot Spectrum"));
+   HelpSystem::ShowHelp(this, wxT("Plot Spectrum"));
 }
 
 bool FreqWindow::Show(bool show)

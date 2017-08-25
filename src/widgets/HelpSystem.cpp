@@ -197,7 +197,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    return;
 }
 
-void HelpSystem::ShowHelpDialog(wxWindow *parent,
+// Shows help in browser, or possibly in own dialog.
+void HelpSystem::ShowHelp(wxWindow *parent,
                     const wxString &localFileName,
                     const wxString &remoteURL,
                     bool bModal,
@@ -240,7 +241,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // Always go to remote URL.  Use External browser.
       OpenInDefaultBrowser( remoteURL );
    }
-   else if( !wxFileExists( localfile ))
+   else if( localfile.IsEmpty() || !wxFileExists( localfile ))
    {
       // If you give an empty remote URL, you should have already ensured
       // that the file exists!
@@ -263,9 +264,9 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    }
 }
 
-void HelpSystem::ShowHelpDialog(wxWindow *parent,
-                                const wxString &PageName,
-                                bool bModal)
+void HelpSystem::ShowHelp(wxWindow *parent,
+                          const wxString &PageName,
+                          bool bModal)
 {
    wxString localHelpPage;
    wxString webHelpPath;
@@ -299,7 +300,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    {
       releasePageName = wxT("index") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
-      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
+      webHelpPath = wxT("https://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
    }
    else if (releasePageName == wxT("Quick_Help"))
    {
@@ -311,8 +312,15 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
 #else
       releasePageName = wxT("quick_help") + HelpSystem::ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
-      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
+      webHelpPath = wxT("https://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
 #endif
+   }
+   // not a page name, but rather a full path (e.g. to wiki)
+   // in which case do not do any substitutions.
+   else if (releasePageName.StartsWith( "http" ) )
+   {
+      localHelpPage = "";
+      webHelpPage = releasePageName + anchor;
    }
    else
    {
@@ -343,7 +351,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // Other than index and quick_help, all local pages are in subdirectory 'LocalHelpManDir'.
       localHelpPage = wxFileName(FileNames::HtmlHelpDir() + LocalHelpManDir, releasePageName).GetFullPath();
       // Other than index and quick_help, all on-line pages are in subdirectory 'HelpServerManDir'.
-      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerManDir;
+      webHelpPath = wxT("https://")+HelpSystem::HelpHostname+HelpSystem::HelpServerManDir;
    }
 
 #if IS_ALPHA
@@ -359,7 +367,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
 
    wxASSERT(parent); // to justify safenew
 
-   HelpSystem::ShowHelpDialog(
+   HelpSystem::ShowHelp(
       parent, 
       localHelpPage,
       webHelpPage,

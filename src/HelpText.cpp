@@ -39,7 +39,7 @@ static wxString WrapText( const wxString & Text )
       wxT("</body></html>");
 }
 
-static wxString Link( const wxString &Key, const wxString& Text )
+static wxString InnerLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='innerlink:") +
@@ -52,7 +52,7 @@ static wxString Link( const wxString &Key, const wxString& Text )
 static wxString WikiLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
-      wxT("<a href='http://www.audacityteam.org/wiki/index.php?title=") +
+      wxT("<a href='https://www.audacityteam.org/wiki/index.php?title=") +
       Key +
       wxT("'>") +
       Text +
@@ -126,7 +126,7 @@ static wxString LinkExpand( const wxString & Text )
       }
       else
       {
-         Replacement = Link( Key, LinkText );
+         Replacement = InnerLink( Key, LinkText );
       }
 
 
@@ -225,8 +225,8 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          _(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
 
          wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
-         wxT(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
-         wxT(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>");
+         wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
+         wxT(" [[https://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>");
 #else
          wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 

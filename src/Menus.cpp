@@ -8260,14 +8260,14 @@ void AudacityProject::OnHelpWelcome()
 
 void AudacityProject::OnQuickHelp()
 {
-   HelpSystem::ShowHelpDialog(
+   HelpSystem::ShowHelp(
       this,
       wxT("Quick_Help"));
 }
 
 void AudacityProject::OnManual()
 {
-   HelpSystem::ShowHelpDialog(
+   HelpSystem::ShowHelp(
       this,
       wxT("Main_Page"));
 }

@@ -2625,7 +2625,7 @@ void Effect::Preview(bool dryOnly)
       else {
          ShowErrorDialog(FocusDialog, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
+                         wxT("faq_errors.html#sound_device"), false);
       }
    }
 }
@@ -3245,13 +3245,13 @@ void EffectUIHost::OnCancel(wxCommandEvent & evt)
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
    if (mEffect->GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
-      // Old ShowHelpDialog required when there is no on-line manual.
+      // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
-      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
    }
    else {
-      // otherwise use the NEW ShowHelpDialog
-      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
+      // otherwise use the NEW ShowHelp
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
    }
 }
 

@@ -434,7 +434,7 @@ void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    // So we change the page name in the case of a page on its own.
    if( !mCategories)
       page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
-   HelpSystem::ShowHelpDialog(this, page, true);
+   HelpSystem::ShowHelp(this, page, true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)

@@ -718,7 +718,7 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          // Show error message if stream could not be opened
          ShowErrorDialog(this, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
+                         wxT("faq_errors.html#sound_device"), false);
          });
       }
    }
@@ -1200,7 +1200,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // Show error message if stream could not be opened
          ShowErrorDialog(this, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, recording device and the project sample rate."),
-                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
+                         wxT("faq_errors.html#sound_device"), false);
       }
    }
 }

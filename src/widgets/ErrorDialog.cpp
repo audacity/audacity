@@ -76,7 +76,7 @@ ErrorDialog::ErrorDialog(
    wxWindow *parent,
    const wxString & dlogTitle,
    const wxString & message,
-   const wxString & helpURL,
+   const wxString & helpPage,
    const bool Close, const bool modal):
    wxDialogWrapper(parent, (wxWindowID)-1, dlogTitle)
 {
@@ -85,8 +85,8 @@ ErrorDialog::ErrorDialog(
    long buttonMask;
 
    // only add the help button if we have a URL
-   buttonMask = (helpURL == wxT("")) ? eOkButton : (eHelpButton | eOkButton);
-   dhelpURL = helpURL;
+   buttonMask = (helpPage == wxT("")) ? eOkButton : (eHelpButton | eOkButton);
+   dhelpPage = helpPage;
    dClose = Close;
    dModal = modal;
 
@@ -152,17 +152,18 @@ void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 
 void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if( dhelpURL.StartsWith(wxT("innerlink:")) )
+   if( dhelpPage.StartsWith(wxT("innerlink:")) )
    {
       HelpSystem::ShowHtmlText(
          this,
-         TitleText(dhelpURL.Mid( 10 ) ),
-         HelpText( dhelpURL.Mid( 10 )),
+         TitleText(dhelpPage.Mid( 10 ) ),
+         HelpText( dhelpPage.Mid( 10 )),
          false,
          true );
       return;
    }
-   OpenInDefaultBrowser( dhelpURL );
+   HelpSystem::ShowHelp( this, dhelpPage, dClose );
+   //OpenInDefaultBrowser( dhelpURL );
    if(dClose)
       EndModal(true);
 }
@@ -170,26 +171,31 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 void ShowErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
                      const wxString &message,
-                     const wxString &helpURL,
+                     const wxString &helpPage,
                      const bool Close)
 {
-   ErrorDialog dlog(parent, dlogTitle, message, helpURL, Close);
+   ErrorDialog dlog(parent, dlogTitle, message, helpPage, Close);
    dlog.CentreOnParent();
    dlog.ShowModal();
 }
 
+
+// unused.
 void ShowModelessErrorDialog(wxWindow *parent,
                              const wxString &dlogTitle,
                              const wxString &message,
-                             const wxString &helpURL,
+                             const wxString &helpPage,
                              const bool Close)
 {
+   // ensure it has some parent.
+   if( !parent )
+      parent = wxTheApp->GetTopWindow();
    wxASSERT(parent);
-   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
+   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpPage, Close, false);
    dlog->CentreOnParent();
    dlog->Show();
-   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
-   // ANSWER-ME: This is unused. Delete it or are there plans for it?
+   // ANSWER-ME: Vigilant Sentry flagged this method as not deleting dlog, so 
+   // is this actually a mem leak.
    // PRL: answer is that the parent window guarantees destruction of the dialog
    // but in practice Destroy() in OnOK does that
 }
@@ -197,11 +203,11 @@ void ShowModelessErrorDialog(wxWindow *parent,
 void ShowAliasMissingDialog(AudacityProject *parent,
                             const wxString &dlogTitle,
                             const wxString &message,
-                            const wxString &helpURL,
+                            const wxString &helpPage,
                             const bool Close)
 {
    wxASSERT(parent); // to justify safenew
-   ErrorDialog *dlog = safenew AliasedFileMissingDialog(parent, dlogTitle, message, helpURL, Close, false);
+   ErrorDialog *dlog = safenew AliasedFileMissingDialog(parent, dlogTitle, message, helpPage, Close, false);
    // Don't center because in many cases (effect, export, etc) there will be a progress bar in the center that blocks this.
    // instead put it just above or on the top of the project.
    wxPoint point;
