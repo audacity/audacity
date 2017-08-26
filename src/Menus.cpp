@@ -1521,23 +1521,23 @@ void AudacityProject::CreateMenusAndCommands()
       c->BeginSubMenu(_("&Track"));
 
       c->AddItem(wxT("TrackPan"), _("Change p&an on focused track"), FN(OnTrackPan), wxT("Shift+P"),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+                 TrackPanelHasFocus | TracksExistFlag,
+                 TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackPanLeft"), _("Pan &left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+                 TrackPanelHasFocus | TracksExistFlag,
+                 TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackPanRight"), _("Pan &right on focused track"), FN(OnTrackPanRight), wxT("Alt+Shift+Right"),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+                 TrackPanelHasFocus | TracksExistFlag,
+                 TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackGain"), _("Change gai&n on focused track"), FN(OnTrackGain), wxT("Shift+G"),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+                 TrackPanelHasFocus | TracksExistFlag,
+                 TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackGainInc"), _("&Increase gain on focused track"), FN(OnTrackGainInc), wxT("Alt+Shift+Up"),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+                 TrackPanelHasFocus | TracksExistFlag,
+                 TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackGainDec"), _("&Decrease gain on focused track"), FN(OnTrackGainDec), wxT("Alt+Shift+Down"),
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag,
-                 AudioIONotBusyFlag | TrackPanelHasFocus | TracksExistFlag);
+                 TrackPanelHasFocus | TracksExistFlag,
+                 TrackPanelHasFocus | TracksExistFlag);
       c->AddItem(wxT("TrackMenu"), _("Op&en menu on focused track"), FN(OnTrackMenu), wxT("Shift+M\tskipKeydown"),
                  TracksExistFlag | TrackPanelHasFocus,
                  TracksExistFlag | TrackPanelHasFocus);
