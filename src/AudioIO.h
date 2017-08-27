@@ -528,20 +528,27 @@ private:
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
    PmError          mLastPmError;
-   /// Latency value for PortMidi
-   long             mMidiLatency;
+   PaTime           mMidiTimeCorrection; // seconds
    /// Latency of MIDI synthesizer
-   long             mSynthLatency;
+   long             mSynthLatency; // ms
 
    // These fields are used to synchronize MIDI with audio:
 
    /// PortAudio's clock time
    volatile double  mAudioCallbackClockTime;
-   /// PortAudio's currentTime -- its origin is unspecified!  So that's why
-   /// we also record the above
+
+   /// PRL: no longer using the next two because they are not reliably
+   /// reported to the audio callback on Linux.
+   /// Compute the approximate difference of them by other means now:
+   /// use PaStreamInfo::outputLatency.
+
+   /*
+   /// PortAudio's currentTime -- its origin is unspecified!
    volatile double  mAudioCallbackOutputCurrentTime;
    /// PortAudio's outTime
    volatile double  mAudioCallbackOutputDacTime;
+    */
+
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
    /// How many frames of zeros were output due to pauses?
