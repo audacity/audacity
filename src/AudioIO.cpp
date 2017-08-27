@@ -904,7 +904,9 @@ void InitAudioIO()
    gAudioIO = ugAudioIO.get();
    gAudioIO->mThread->Run();
 #ifdef EXPERIMENTAL_MIDI_OUT
+#ifdef USE_MIDI_THREAD
    gAudioIO->mMidiThread->Run();
+#endif
 #endif
 
    // Make sure device prefs are initialized
@@ -1033,8 +1035,12 @@ AudioIO::AudioIO()
 
       // Same logic for PortMidi as described above for PortAudio
    }
+
+#ifdef USE_MIDI_THREAD
    mMidiThread = std::make_unique<MidiThread>();
    mMidiThread->Create();
+#endif
+
 #endif
 
    // Start thread
@@ -1083,8 +1089,11 @@ AudioIO::~AudioIO()
    /* Delete is a "graceful" way to stop the thread.
    (Kill is the not-graceful way.) */
 
+#ifdef USE_MIDI_THREAD
    mMidiThread->Delete();
    mMidiThread.reset();
+#endif
+
 #endif
 
    /* Delete is a "graceful" way to stop the thread.
@@ -2323,13 +2332,19 @@ void AudioIO::StopStream()
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* Stop Midi playback */
    if ( mMidiStream ) {
+
       mMidiStreamActive = false;
+
+#ifdef USE_MIDI_THREAD
       mMidiThreadFillBuffersLoopRunning = false; // stop output to stream
       // but output is in another thread. Wait for output to stop...
       while (mMidiThreadFillBuffersLoopActive) {
          wxMilliSleep(1);
       }
+#endif
+
       mMidiOutputComplete = true;
+
       // now we can assume "ownership" of the mMidiStream
       // if output in progress, send all off, etc.
       AllNotesOff();
@@ -2969,49 +2984,7 @@ MidiThread::ExitCode MidiThread::Entry()
           // mNumFrames signals at least one callback, needed for MidiTime()
           gAudioIO->mNumFrames > 0)
       {
-         // Keep track of time paused. If not paused, fill buffers.
-         if (gAudioIO->IsPaused()) {
-            if (!gAudioIO->mMidiPaused) {
-               gAudioIO->mMidiPaused = true;
-               gAudioIO->AllNotesOff(); // to avoid hanging notes during pause
-            }
-         } else {
-            if (gAudioIO->mMidiPaused) {
-               gAudioIO->mMidiPaused = false;
-            }
-
-            gAudioIO->FillMidiBuffers();
-
-            // test for end
-            double realTime = gAudioIO->MidiTime() * 0.001 -
-                               gAudioIO->PauseTime();
-            realTime -= 1; // MidiTime() runs ahead 1s
-
-            // XXX Is this still true now?  It seems to break looping --Poke
-            //
-            // The TrackPanel::OnTimer() method updates the time position
-            // indicator every 200ms, so it tends to not advance the
-            // indicator to the end of the selection (mT1) but instead stop
-            // up to 200ms before the end. At this point, output is shut
-            // down and the indicator is removed, but for a brief time, the
-            // indicator is clearly stopped before reaching mT1. To avoid
-            // this, we do not set mMidiOutputComplete until we are actually
-            // 0.22s beyond mT1 (even though we stop playing at mT1). This
-            // gives OnTimer() time to wake up and draw the final time
-            // position at mT1 before shutting down the stream.
-            const double loopDelay = 0.220;
-
-            double timeAtSpeed;
-            if (gAudioIO->mTimeTrack)
-               timeAtSpeed = gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mT0, realTime);
-            else
-               timeAtSpeed = realTime;
-
-            gAudioIO->mMidiOutputComplete =
-               (gAudioIO->mPlayMode == gAudioIO->PLAY_STRAIGHT && // PRL:  what if scrubbing?
-                timeAtSpeed >= gAudioIO->mT1 + loopDelay);
-            // !gAudioIO->mNextEvent);
-         }
+         gAudioIO->FillMidiBuffers();
       }
       gAudioIO->mMidiThreadFillBuffersLoopActive = false;
       Sleep(MIDI_SLEEP);
@@ -4009,6 +3982,19 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 
 void AudioIO::FillMidiBuffers()
 {
+   // Keep track of time paused. If not paused, fill buffers.
+   if (gAudioIO->IsPaused()) {
+      if (!gAudioIO->mMidiPaused) {
+         gAudioIO->mMidiPaused = true;
+         gAudioIO->AllNotesOff(); // to avoid hanging notes during pause
+      }
+      return;
+   }
+
+   if (gAudioIO->mMidiPaused) {
+      gAudioIO->mMidiPaused = false;
+   }
+
    bool hasSolo = false;
    auto numPlaybackTracks = gAudioIO->mPlaybackTracks.size();
    for(unsigned t = 0; t < numPlaybackTracks; t++ )
@@ -4030,6 +4016,36 @@ void AudioIO::FillMidiBuffers()
       OutputEvent();
       GetNextEvent();
    }
+
+   // test for end
+   double realTime = gAudioIO->MidiTime() * 0.001 -
+                      gAudioIO->PauseTime();
+   realTime -= 1; // MidiTime() runs ahead 1s
+
+   // XXX Is this still true now?  It seems to break looping --Poke
+   //
+   // The TrackPanel::OnTimer() method updates the time position
+   // indicator every 200ms, so it tends to not advance the
+   // indicator to the end of the selection (mT1) but instead stop
+   // up to 200ms before the end. At this point, output is shut
+   // down and the indicator is removed, but for a brief time, the
+   // indicator is clearly stopped before reaching mT1. To avoid
+   // this, we do not set mMidiOutputComplete until we are actually
+   // 0.22s beyond mT1 (even though we stop playing at mT1). This
+   // gives OnTimer() time to wake up and draw the final time
+   // position at mT1 before shutting down the stream.
+   const double loopDelay = 0.220;
+
+   double timeAtSpeed;
+   if (gAudioIO->mTimeTrack)
+      timeAtSpeed = gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mT0, realTime);
+   else
+      timeAtSpeed = realTime;
+
+   gAudioIO->mMidiOutputComplete =
+      (gAudioIO->mPlayMode == gAudioIO->PLAY_STRAIGHT && // PRL:  what if scrubbing?
+       timeAtSpeed >= gAudioIO->mT1 + loopDelay);
+   // !gAudioIO->mNextEvent);
 }
 
 double AudioIO::PauseTime()
@@ -4314,6 +4330,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    if(gAudioIO->IsPaused())
       gAudioIO->mNumPauseFrames += framesPerBuffer;
    gAudioIO->mNumFrames += framesPerBuffer;
+
+#ifndef USE_MIDI_THREAD
+   if (gAudioIO->mMidiStream)
+      gAudioIO->FillMidiBuffers();
+#endif
+
 #endif
 
    unsigned int i;

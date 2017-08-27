@@ -93,6 +93,12 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
+// If we always run a portaudio output stream (even just to produce silence)
+// whenever we play Midi, then we can use just one thread for both, which
+// simplifies synchronization problems and avoids the rush of notes at start of
+// play.  PRL.
+#undef USE_MIDI_THREAD
+
 struct ScrubbingOptions;
 
 // To avoid growing the argument list of StartStream, add fields here
@@ -607,7 +613,9 @@ private:
 
    std::unique_ptr<AudioThread> mThread;
 #ifdef EXPERIMENTAL_MIDI_OUT
+#ifdef USE_MIDI_THREAD
    std::unique_ptr<AudioThread> mMidiThread;
+#endif
 #endif
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
