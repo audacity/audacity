@@ -1369,7 +1369,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          case WXK_RIGHT:
          case WXK_UP:
          case WXK_DOWN:
-         case WXK_SPACE:
+         // Don't trap WXK_SPACE (Bug 1727 - SPACE not starting/stopping playback
+         // when cursor is in a time control)
+         // case WXK_SPACE:
          case WXK_TAB:
          case WXK_BACK:
          case WXK_HOME:
