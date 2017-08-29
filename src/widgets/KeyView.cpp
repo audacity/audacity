@@ -66,6 +66,8 @@ KeyView::KeyView(wxWindow *parent,
    SetAccessible(mAx = safenew KeyViewAx(this));
 #endif
 
+   SetMinSize({-1, 150});
+
    // The default view
    mViewType = ViewByTree;
 

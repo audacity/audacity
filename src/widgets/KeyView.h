@@ -107,12 +107,12 @@ public:
    void ExpandAll();
    void CollapseAll();
 
+   void SelectNode(int index);
+
 private:
    void RecalcExtents();
    void UpdateHScroll();
    void RefreshLines(bool bSort = true);
-
-   void SelectNode(int index);
 
    int LineToIndex(int line) const;
    int IndexToLine(int index) const;

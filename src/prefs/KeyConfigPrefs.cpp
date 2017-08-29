@@ -72,7 +72,7 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_TIMER(FilterTimerID, KeyConfigPrefs::OnFilterTimer)
 END_EVENT_TABLE()
 
-KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent)
+KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, const wxString &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
 :  PrefsPanel(parent, _("Keyboard")),
    mView(NULL),
@@ -82,6 +82,10 @@ KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent)
    mFilterPending(false)
 {
    Populate();
+   if (!name.empty()) {
+      auto index = mView->GetIndexByName(name);
+      mView->SelectNode(index);
+   }
 }
 
 KeyConfigPrefs::~KeyConfigPrefs()
@@ -746,5 +750,6 @@ wxString KeyConfigPrefs::HelpPageName()
 PrefsPanel *KeyConfigPrefsFactory::Create(wxWindow *parent)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew KeyConfigPrefs(parent);
+   auto result = safenew KeyConfigPrefs{ parent, mName };
+   return result;
 }

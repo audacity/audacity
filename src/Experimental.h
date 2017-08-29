@@ -224,10 +224,6 @@
 // scrolling past zero is enabled. Perhaps that lessens confusion.
 #define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
-// Paul Licameli (PRL) 28 Dec 2017
-// Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
-// #define EXPERIMENTAL_DRAG_DROP_PLUG_INS
-
 #ifndef IN_RC
 // Define to include crash reporting
 #include <wx/defs.h>
@@ -247,5 +243,13 @@
 // using delibrately ugly pens and brushes until there is better cooperation
 // with themes
 //#define EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+
+// Paul Licameli (PRL) 28 Dec 2017
+// Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
+// #define EXPERIMENTAL_DRAG_DROP_PLUG_INS
+
+// PRL 5 Jan 2018
+// Easy change of keystroke bindings for menu items
+#define EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 
 #endif
