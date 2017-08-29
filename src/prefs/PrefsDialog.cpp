@@ -291,7 +291,7 @@ PrefsDialog::PrefsDialog
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
          mUniquePage = factory.Create(this);
-         wxWindow * uniquePageWindow = S.AddWindow(mUniquePage, wxEXPAND);
+         wxWindow * uniquePageWindow = S.Prop(1).AddWindow(mUniquePage, wxEXPAND);
          // We're not in the wxTreebook, so add the accelerator here
          wxAcceleratorEntry entries[1];
 #if defined(__WXMAC__)
