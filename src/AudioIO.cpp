@@ -326,6 +326,19 @@ enum {
 
 #include "tracks/ui/Scrubbing.h"
 
+#ifdef __WXGTK__
+   // Might #define this for a useful thing on Linux
+   #undef REALTIME_ALSA_THREAD
+#else
+   // never on the other operating systems
+   #undef REALTIME_ALSA_THREAD
+#endif
+
+#ifdef REALTIME_ALSA_THREAD
+#include "pa_linux_alsa.h"
+#endif
+
+
 /*
 This work queue class, with the aid of the playback ring
 buffers, coordinates three threads during scrub play:
@@ -2002,6 +2015,23 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
+
+#ifdef REALTIME_ALSA_THREAD
+      // PRL: Do this in hope of less thread scheduling jitter in calls to
+      // audacityAudioCallback.
+      // Not needed to make audio playback work smoothly.
+      // But needed in case we also play MIDI, so that the variable "offset"
+      // in AudioIO::MidiTime() is a better approximation of the duration
+      // between the call of audacityAudioCallback and the actual output of
+      // the first audio sample.
+      // (Which we should be able to determine from fields of
+      // PaStreamCallbackTimeInfo, but that seems not to work as documented with
+      // ALSA.)
+      wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+      if (hostName == "ALSA")
+         // Perhaps we should do this only if also playing MIDI ?
+         PaAlsa_EnableRealtimeScheduling( mPortStreamV19, 1 );
+#endif
 
       // Now start the PortAudio stream!
       PaError err;
