@@ -72,6 +72,7 @@ class AboutDialog final : public wxDialogWrapper {
    enum Role {
       roleTeamMember,
       roleEmeritusTeam,
+      roleDeceased,
       roleContributor,
       roleTranslators,
       roleLibrary,

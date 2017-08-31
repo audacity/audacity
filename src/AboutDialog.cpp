@@ -104,8 +104,10 @@ const wxString VerCheckHtml(){
 
 void AboutDialog::CreateCreditsList()
 {
+   // Deceased team members
+   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleDeceased);
+
    // The Audacity Team: developers and support
-   AddCredit(wxString(wxT("Gale Andrews, ")) + _("quality assurance"), roleTeamMember);
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
@@ -394,6 +396,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") + wxString::Format(_("DarkAudacity Customisation")) + wxT("</b><br>") +
       wxT("James Crook, art, coding &amp; design<br>") +
 #endif
+
+      /* i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages */
+      wxT("<p><b>") + wxString::Format(_("In Memoriam")) + wxT("</b><br>") +
+      GetCreditsByRole(roleDeceased) +
 
       wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
