@@ -39,7 +39,7 @@
 // Its value may be more than 1 for pre-release "Beta" builds that differ only in the
 // welcome screen.
 // Use "#if IS_ALPHA" not #ifdef
-#define IS_ALPHA 1
+#define IS_ALPHA 2
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
