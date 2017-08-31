@@ -348,11 +348,11 @@ Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac,
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    wxString par2StrUntranslated = wxT(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
 For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
 visit our [[http://forum.audacityteam.org/|forum]].");
    wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
 For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
 visit our [[http://forum.audacityteam.org/|forum]].");
 
