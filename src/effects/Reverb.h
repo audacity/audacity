@@ -98,7 +98,7 @@ private:
 
 private:
    unsigned mNumChans {};
-   ArrayOf<Reverb_priv_t> mP;
+   Reverb_priv_t *mP;
 
    Params mParams;
 
