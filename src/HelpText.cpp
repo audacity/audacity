@@ -201,7 +201,11 @@ wxString TitleText( const wxString & Key )
 
 static wxString HelpTextBuiltIn( const wxString & Key )
 {
-   if(Key==wxT("welcome"))
+   // PRL:  Is it necessary to define these outside of conditional compilation so that both get into the .pot file?
+   auto alphamsg = _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.");
+   auto betamsg = _("<br><br>The version of Audacity you are using is a <b>Beta test version</b>.");
+
+      if (Key == wxT("welcome"))
    {
       /// TO-DO: Make the links to help here use the widgets/HelpSystem mechanism
       /// so that they are consistent
@@ -211,8 +215,13 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 #if IS_ALPHA
          wxT("<hr><center><h3>") + _("Get the Official Released Version of Audacity") + wxT("</h3></center>") +
          VerCheckHtml() +
-         _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.") + " " +
-         _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")+
+#if IS_ALPHA == 1
+         alphamsg
+#else
+         betamsg
+#endif
+         + " " +
+         _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>") +
          _("You can help us get Audacity ready for release by joining our [[http://www.audacityteam.org/community/|community]].<hr><br><br>")+
 #endif   
 

@@ -549,7 +549,7 @@ msgstr ""
 msgid "Contributors"
 msgstr ""
 
-#: src/AboutDialog.cpp:406
+#: src/AboutDialog.cpp:406 
 msgid "Translators"
 msgstr ""
 
