@@ -1283,8 +1283,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
       NULL,
       title,
       reason, 
-      helpPage,
-      false);
+      helpPage);
 }
 
 wxString CommandManager::DescribeCommandsAndShortcuts
