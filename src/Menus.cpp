@@ -4596,9 +4596,14 @@ void AudacityProject::OnExportMIDI(){
       t = iter.Next();
    }
 
-   if(numNoteTracksSelected != 1){
-      wxMessageBox(wxString::Format(wxT(
-         "Please select only one MIDI track at a time.")));
+   if(numNoteTracksSelected > 1) {
+      wxMessageBox(wxString::Format(_(
+         "Please select only one Note Track at a time.")));
+      return;
+   }
+   else if(numNoteTracksSelected < 1) {
+      wxMessageBox(wxString::Format(_(
+         "Please select a Note Track.")));
       return;
    }
 
