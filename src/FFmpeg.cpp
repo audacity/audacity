@@ -22,6 +22,7 @@ License: GPL v2.  See License.txt.
 #include "FileNames.h"
 #include "Internat.h"
 #include "widgets/HelpSystem.h"
+#include "widgets/ErrorDialog.h"
 
 #include <wx/file.h>
 #include <wx/filedlg.h>
@@ -99,7 +100,7 @@ void FFmpegStartup()
    {
       if (enabled)
       {
-         wxMessageBox(_("FFmpeg was configured in Preferences and successfully loaded before, \
+         AudacityMessageBox(_("FFmpeg was configured in Preferences and successfully loaded before, \
                         \nbut this time Audacity failed to load it at startup. \
                         \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
                       _("FFmpeg startup failed"));
@@ -702,7 +703,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    if (!ValidLibsLoaded()) {
       wxString msg = _("Failed to find compatible FFmpeg libraries.");
       if (showerr)
-         wxMessageBox(msg);
+         AudacityMessageBox(msg);
       wxLogError(msg);
       return false;
    }

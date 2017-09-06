@@ -25,7 +25,6 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>
@@ -39,6 +38,7 @@
 
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/ErrorDialog.h"
 
 #include "../../LabelTrack.h"
 #include "../../WaveTrack.h"

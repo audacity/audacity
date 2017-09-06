@@ -19,12 +19,12 @@
 
 #include <wx/defs.h>
 #include <wx/listctrl.h>
-#include <wx/msgdlg.h>
 #include <wx/dnd.h>
 
 #include "../Audacity.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 
 #define EXTIMPORT_MIME_SUPPORT 0
 
@@ -506,7 +506,7 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
       {
          if (!askedAboutSpaces)
          {
-            fixSpaces = wxMessageBox(_(
+            fixSpaces = AudacityMessageBox(_(
 "There are space characters (spaces, newlines, tabs or linefeeds) in one of \
 the items. They are likely to break the pattern matching. Unless you know \
 what you are doing, it is recommended to trim spaces. Do you want \
@@ -597,7 +597,7 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
       return;
    auto &items = Importer::Get().GetImportItems();
 
-   int msgres = wxMessageBox (_("Do you really want to delete selected rule?"),
+   int msgres = AudacityMessageBox (_("Do you really want to delete selected rule?"),
       _("Rule deletion confirmation"), wxYES_NO, RuleTable);
    if (msgres == wxNO || msgres != wxYES)
       return;

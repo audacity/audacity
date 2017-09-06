@@ -43,6 +43,7 @@
 #include "../Theme.h"
 #include "../widgets/Grabber.h"
 #include "../DeviceManager.h"
+#include "../widgets/ErrorDialog.h"
 
 IMPLEMENT_CLASS(DeviceToolBar, ToolBar);
 
@@ -777,7 +778,7 @@ void DeviceToolBar::ShowChannelsDialog()
 void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
 {
    if (!combo || combo->GetCount() == 0) {
-      wxMessageBox(_("Device information is not available."));
+      AudacityMessageBox(_("Device information is not available."));
       return;
    }
 

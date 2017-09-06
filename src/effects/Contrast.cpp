@@ -20,6 +20,7 @@
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "../widgets/ErrorDialog.h"
 
 #include <cmath>
 #include <limits>
@@ -512,7 +513,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      wxMessageBox(_("Couldn't write to file: ") + fName);
+      AudacityMessageBox(_("Couldn't write to file: ") + fName);
       return;
    }
 

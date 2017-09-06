@@ -19,7 +19,6 @@
 
 #include <wx/defs.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/checkbox.h>
 
 #include "../FFT.h"
@@ -32,6 +31,7 @@
 #include <algorithm>
 
 #include "../Experimental.h"
+#include "../widgets/ErrorDialog.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, WaveTrack *wt)
 :  PrefsPanel(parent, wt ? _("Spectrogram Settings") : _("Spectrograms"))
@@ -314,48 +314,48 @@ bool SpectrumPrefs::Validate()
 
    long maxFreq;
    if (!mMaxFreq->GetValue().ToLong(&maxFreq)) {
-      wxMessageBox(_("The maximum frequency must be an integer"));
+      AudacityMessageBox(_("The maximum frequency must be an integer"));
       return false;
    }
 
    long minFreq;
    if (!mMinFreq->GetValue().ToLong(&minFreq)) {
-      wxMessageBox(_("The minimum frequency must be an integer"));
+      AudacityMessageBox(_("The minimum frequency must be an integer"));
       return false;
    }
 
    long gain;
    if (!mGain->GetValue().ToLong(&gain)) {
-      wxMessageBox(_("The gain must be an integer"));
+      AudacityMessageBox(_("The gain must be an integer"));
       return false;
    }
 
    long range;
    if (!mRange->GetValue().ToLong(&range)) {
-      wxMessageBox(_("The range must be a positive integer"));
+      AudacityMessageBox(_("The range must be a positive integer"));
       return false;
    }
 
    long frequencygain;
    if (!mFrequencyGain->GetValue().ToLong(&frequencygain)) {
-      wxMessageBox(_("The frequency gain must be an integer"));
+      AudacityMessageBox(_("The frequency gain must be an integer"));
       return false;
    }
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    long findNotesMinA;
    if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
-      wxMessageBox(_("The minimum amplitude (dB) must be an integer"));
+      AudacityMessageBox(_("The minimum amplitude (dB) must be an integer"));
       return false;
    }
 
    long findNotesN;
    if (!mFindNotesN->GetValue().ToLong(&findNotesN)) {
-      wxMessageBox(_("The maximum number of notes must be an integer"));
+      AudacityMessageBox(_("The maximum number of notes must be an integer"));
       return false;
    }
    if (findNotesN < 1 || findNotesN > 128) {
-      wxMessageBox(_("The maximum number of notes must be in the range 1..128"));
+      AudacityMessageBox(_("The maximum number of notes must be in the range 1..128"));
       return false;
    }
 #endif //EXPERIMENTAL_FIND_NOTES

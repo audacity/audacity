@@ -26,6 +26,7 @@ MP3 and FFmpeg encoding libraries.
 #include "../export/ExportMP3.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "LibraryPrefs.h"
 
@@ -207,7 +208,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
    // Libs are fine, don't show "locate" dialog unless user really wants it
    if (!locate) {
-      int response = wxMessageBox(_("Audacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
+      int response = AudacityMessageBox(_("Audacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
                                   wxT("Success"),
                                   wxCENTRE | wxYES_NO | wxNO_DEFAULT |wxICON_QUESTION);
       if (response == wxYES) {

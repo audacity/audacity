@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ViewInfo.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../../images/Cursors.h"
+#include "../../../../widgets/ErrorDialog.h"
 
 
 static const int SMOOTHING_KERNEL_RADIUS = 3;
@@ -183,7 +184,7 @@ namespace {
       const int display = wt->GetDisplay();
       if (WaveTrack::Waveform != display)
       {
-         wxMessageBox(_(
+         AudacityMessageBox(_(
 "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."),
                       _("Draw Tool"));
          return false;
@@ -193,7 +194,7 @@ namespace {
       const double time = adjustTime(wt, viewInfo.PositionToTime(event.m_x, rect.x));
       if (!SampleResolutionTest(viewInfo, wt, time, width))
       {
-         wxMessageBox(_(
+         AudacityMessageBox(_(
 "To use Draw, zoom in further until you can see the individual samples."),
                       _("Draw Tool"));
          return false;

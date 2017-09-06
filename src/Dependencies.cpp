@@ -54,6 +54,7 @@ AliasedFile s.
 #include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
+#include "widgets/ErrorDialog.h"
 
 WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
                     wxStringHash, wxStringEqual, AliasedFileHash);
@@ -523,7 +524,7 @@ void DependencyDialog::OnCancel(wxCommandEvent& WXUNUSED(event))
 {
    if (mIsSaving)
    {
-      int ret = wxMessageBox(
+      int ret = AudacityMessageBox(
          _("If you proceed, your project will not be saved to disk. Is this what you want?"),
          _("Cancel Save"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
       if (ret != wxYES)
@@ -568,7 +569,7 @@ _("Your project is currently self-contained; it does not depend on any external 
 \n\nIf you change the project to a state that has external dependencies on imported \
 files, it will no longer be self-contained. If you then Save without copying those files in, \
 you may lose data.");
-         wxMessageBox(msg,
+         AudacityMessageBox(msg,
                       _("Dependency Check"),
                       wxOK | wxICON_INFORMATION,
                       project);

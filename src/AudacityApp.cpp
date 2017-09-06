@@ -35,7 +35,6 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/window.h>
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/msgdlg.h>
 #include <wx/snglinst.h>
 #include <wx/splash.h>
 #include <wx/stdpaths.h>
@@ -802,7 +801,7 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
       }
       else {
          // File doesn't exist - remove file from history
-         wxMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."),
+         AudacityMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."),
                       fullPathStr.c_str()));
          return(false);
       }
@@ -1008,7 +1007,7 @@ wxString AudacityApp::InitLang( const wxString & lang )
    if (!lang.empty()) {
       info = wxLocale::FindLanguageInfo(lang);
       if (!info)
-         ::wxMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
+         ::AudacityMessageBox(wxString::Format(_("Language \"%s\" is unknown"), lang));
    }
    if (!info)
    {
@@ -1761,9 +1760,9 @@ bool AudacityApp::InitTempDir()
    if (temp == wxT("")) {
       // Failed
       if( !IsTempDirectoryNameOK( tempFromPrefs ) ) {
-         wxMessageBox(_("Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+         AudacityMessageBox(_("Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       } else {
-         wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+         AudacityMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       }
 
       // Only want one page of the preferences
@@ -1773,7 +1772,7 @@ bool AudacityApp::InitTempDir()
       GlobalPrefsDialog dialog(NULL, factories);
       dialog.ShowModal();
 
-      wxMessageBox(_("Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."));
+      AudacityMessageBox(_("Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."));
       return false;
    }
 
@@ -1818,7 +1817,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
          runningTwoCopiesStr +
          _("Do you still want to start Audacity?");
-      int action = wxMessageBox(prompt,
+      int action = AudacityMessageBox(prompt,
                                 _("Error Locking Temporary Folder"),
                                 wxYES_NO | wxICON_EXCLAMATION,
                                 NULL);
@@ -1912,7 +1911,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          _("The system has detected that another copy of Audacity is running.\n") +
          runningTwoCopiesStr +
          _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
-      wxMessageBox(prompt, _("Audacity is already running"),
+      AudacityMessageBox(prompt, _("Audacity is already running"),
             wxOK | wxICON_ERROR);
       return false;
    }
@@ -2287,7 +2286,7 @@ void AudacityApp::AssociateFileTypes()
          // Either there's no pref or user does want associations
          // and they got stepped on, so ask.
          int wantAssoc =
-            wxMessageBox(
+            AudacityMessageBox(
                _("Audacity project (.AUP) files are not currently \nassociated with Audacity. \n\nAssociate them, so they open on double-click?"),
                _("Audacity Project Files"),
                wxYES_NO | wxICON_QUESTION);

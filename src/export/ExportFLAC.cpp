@@ -28,7 +28,6 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include <wx/progdlg.h>
 #include <wx/ffile.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 
 #include "FLAC++/encoder.h"
 
@@ -42,6 +41,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Tags.h"
 
 #include "../Track.h"
+#include "../widgets/ErrorDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
@@ -301,7 +301,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 #else
    wxFFile f;     // will be closed when it goes out of scope
    if (!f.Open(fName, wxT("w+b"))) {
-      wxMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName.c_str()));
+      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName.c_str()));
       return ProgressResult::Cancelled;
    }
 
@@ -310,7 +310,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // libflac can't (under Windows).
    int status = encoder.init(f.fp());
    if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-      wxMessageBox(wxString::Format(_("FLAC encoder failed to initialize\nStatus: %d"), status));
+      AudacityMessageBox(wxString::Format(_("FLAC encoder failed to initialize\nStatus: %d"), status));
       return ProgressResult::Cancelled;
    }
 #endif

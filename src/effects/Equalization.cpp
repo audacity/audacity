@@ -60,7 +60,6 @@
 
 #include <wx/bitmap.h>
 #include <wx/button.h>
-#include <wx/msgdlg.h>
 #include <wx/brush.h>
 #include <wx/button.h>  // not really needed here
 #include <wx/dcmemory.h>

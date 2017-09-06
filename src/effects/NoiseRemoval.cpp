@@ -68,7 +68,6 @@
 #include <wx/dcmemory.h>
 #include <wx/image.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>

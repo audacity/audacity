@@ -32,6 +32,7 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
+#include "../widgets/ErrorDialog.h"
 
 // Declaration of RegionList
 class RegionList : public std::list < Region > {};

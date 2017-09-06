@@ -23,7 +23,8 @@ got to show.
 #include "AudacityException.h"
 
 #include <wx/atomic.h>
-#include <wx/msgdlg.h>
+
+#include "widgets/ErrorDialog.h"
 
 AudacityException::~AudacityException()
 {
@@ -100,9 +101,9 @@ void MessageBoxException::DelayedHandlerAction()
       // common cause such as exhaustion of disk space so that the others
       // give the user no useful added information.
       if ( wxAtomicDec( sOutstandingMessages ) == 0 )
-         ::wxMessageBox(
+         ::AudacityMessageBox(
             ErrorMessage(),
-            caption.IsEmpty() ? wxMessageBoxCaptionStr : caption,
+            caption.IsEmpty() ? AudacityMessageBoxCaptionStr() : caption,
             wxICON_ERROR
          );
       moved = true;

@@ -29,13 +29,13 @@
 #include <wx/event.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
-#include <wx/msgdlg.h>
 #include <wx/utils.h>
 
 #include "../Prefs.h"
 #include "../AudacityApp.h"
 #include "../Internat.h"
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 #include "DirectoriesPrefs.h"
 
 enum {
@@ -205,7 +205,7 @@ bool DirectoriesPrefs::Validate()
 
    wxString path{tempDir.GetPath()};
    if( !AudacityApp::IsTempDirectoryNameOK( path ) ) {
-      wxMessageBox(
+      AudacityMessageBox(
          wxString::Format(_("Directory %s is not suitable (at risk of being cleaned out)"),
                            path.c_str()),
          _("Error"),
@@ -213,7 +213,7 @@ bool DirectoriesPrefs::Validate()
       return false;
    }
    if (!tempDir.DirExists()) {
-      int ans = wxMessageBox(
+      int ans = AudacityMessageBox(
          wxString::Format(_("Directory %s does not exist. Create it?"),
                           path.c_str()),
          _("New Temporary Directory"),
@@ -234,7 +234,7 @@ bool DirectoriesPrefs::Validate()
       tempDir.AppendDir(wxT("canicreate"));
       path =  tempDir.GetPath();
       if (!tempDir.Mkdir(0755)) {
-         wxMessageBox(
+         AudacityMessageBox(
             wxString::Format(_("Directory %s is not writable"),
                              path.c_str()),
             _("Error"),
@@ -248,7 +248,7 @@ bool DirectoriesPrefs::Validate()
    wxFileName oldDir;
    oldDir.SetPath(gPrefs->Read(wxT("/Directories/TempDir")));
    if (tempDir != oldDir) {
-      wxMessageBox(
+      AudacityMessageBox(
          _("Changes to temporary directory will not take effect until Audacity is restarted"),
          _("Temp Directory Update"),
          wxOK | wxCENTRE | wxICON_INFORMATION);

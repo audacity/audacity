@@ -41,6 +41,7 @@
 #include <wx/evtloop.h>
 #include <wx/frame.h>
 #include <wx/intl.h>
+#include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/sound.h>

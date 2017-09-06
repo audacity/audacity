@@ -37,7 +37,6 @@ effects from this one class.
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/menu.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbox.h>

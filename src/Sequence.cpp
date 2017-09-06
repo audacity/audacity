@@ -52,6 +52,8 @@
 
 #include "InconsistencyException.h"
 
+#include "widgets/ErrorDialog.h"
+
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 
 // Sequence methods
@@ -1060,7 +1062,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
             wxString::Format(
                _("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length."),
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
-         wxMessageBox(sMsg, _("Warning - Truncating Overlong Block File"), wxICON_EXCLAMATION | wxOK);
+         AudacityMessageBox(sMsg, _("Warning - Truncating Overlong Block File"), wxICON_EXCLAMATION | wxOK);
          wxLogWarning(sMsg);
          bb.f->SetLength(mMaxSamples);
       }

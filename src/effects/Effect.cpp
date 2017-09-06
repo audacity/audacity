@@ -28,7 +28,6 @@ greater use in future.
 
 #include <wx/defs.h>
 #include <wx/hashmap.h>
-#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stockitem.h>
 #include <wx/string.h>
@@ -2646,7 +2645,7 @@ int Effect::MessageBox
       title = GetTranslatedName();
    else
       title = wxString::Format(_("%s: %s"), GetTranslatedName(), titleStr);
-   return wxMessageBox(message, title, style, mUIParent);
+   return AudacityMessageBox(message, title, style, mUIParent);
 }
 
 BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
@@ -3554,7 +3553,7 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
 {
    wxString preset = mUserPresets[evt.GetId() - kDeletePresetID];
 
-   int res = wxMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset.c_str()),
+   int res = AudacityMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset.c_str()),
                           _("Delete Preset"),
                           wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)

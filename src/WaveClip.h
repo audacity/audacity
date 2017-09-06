@@ -24,7 +24,6 @@
 
 #include <wx/gdicmn.h>
 #include <wx/longlong.h>
-#include <wx/msgdlg.h>
 
 #include <vector>
 

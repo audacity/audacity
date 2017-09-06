@@ -27,6 +27,7 @@
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/valnum.h"
 #include "../SampleFormat.h"
 

@@ -306,7 +306,7 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(const wxString &filen
       //officially supported by this plugin.
       //If we don't have FFmpeg configured - tell the user about it.
       //Since this will be happening often, use disableable "FFmpeg not found" dialog
-      //insdead of usual wxMessageBox()
+      //insdead of usual AudacityMessageBox()
       bool newsession = false;
       gPrefs->Read(wxT("/NewImportingSession"), &newsession);
       if (!FFmpegLibsInst()->ValidLibsLoaded())

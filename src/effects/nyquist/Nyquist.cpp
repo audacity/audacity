@@ -36,7 +36,6 @@ effects from this one class.
 #include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/sstream.h>
 #include <wx/textdlg.h>
 #include <wx/txtstrm.h>
@@ -55,6 +54,7 @@ effects from this one class.
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
+#include "../../widgets/ErrorDialog.h"
 #include "../../Prefs.h"
 #include "../../prefs/WaveformSettings.h"
 

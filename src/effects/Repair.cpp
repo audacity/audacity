@@ -26,10 +26,10 @@ the audio, rather than actually finding the clicks.
 #include <math.h>
 
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 
 #include "../InterpolateAudio.h"
 #include "../WaveTrack.h"
+#include "../widgets/ErrorDialog.h"
 
 #include "Repair.h"
 

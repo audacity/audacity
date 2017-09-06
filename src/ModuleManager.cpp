@@ -22,7 +22,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/string.h>
 #include <wx/filename.h>
 
@@ -48,6 +47,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/arrimpl.cpp>
 
 #include "Experimental.h"
+#include "widgets/ErrorDialog.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -116,7 +116,7 @@ bool Module::Load()
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
+      AudacityMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
       wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName.c_str()));
       mLib->Unload();
       return false;
@@ -125,7 +125,7 @@ bool Module::Load()
    wxString moduleVersion = versionFn();
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
+      AudacityMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
       wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName.c_str(), moduleVersion.c_str()));
       mLib->Unload();
       return false;

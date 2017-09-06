@@ -26,7 +26,6 @@
 #include <wx/dcmemory.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
@@ -37,6 +36,7 @@
 #include "../widgets/valnum.h"
 
 #include "../WaveTrack.h"
+#include "../widgets/ErrorDialog.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

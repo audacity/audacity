@@ -23,7 +23,6 @@
 #include "Export.h"
 
 #include <wx/log.h>
-#include <wx/msgdlg.h>
 #include <wx/slider.h>
  
 #include <vorbis/vorbisenc.h>
@@ -37,6 +36,7 @@
 #include "../Internat.h"
 #include "../Tags.h"
 #include "../Track.h"
+#include "../widgets/ErrorDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportOGGOptions
@@ -179,7 +179,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    FileIO outFile(fName, FileIO::Output);
 
    if (!outFile.IsOpened()) {
-      wxMessageBox(_("Unable to open target file for writing"));
+      AudacityMessageBox(_("Unable to open target file for writing"));
       return ProgressResult::Cancelled;
    }
 

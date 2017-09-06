@@ -45,6 +45,7 @@
 #include "../Prefs.h"
 
 #include "../WaveTrack.h"
+#include "../widgets/ErrorDialog.h"
 
 #include <algorithm>
 #include <vector>
