@@ -172,6 +172,7 @@ different formats.
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../Project.h"
+#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 #include <math.h>
@@ -199,6 +200,11 @@ struct BuiltinFormatString
 {
    wxString name;
    wxString formatStr;
+
+   BuiltinFormatString Translate() const
+   {
+      return { wxGetTranslation( name ), wxGetTranslation( formatStr ) };
+   }
 };
 
 //
@@ -270,11 +276,13 @@ WX_DEFINE_OBJARRAY(DigitInfoArray);
 
 namespace {
 
+const std::vector<BuiltinFormatString> &TimeConverterFormats() {
+
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-const BuiltinFormatString TimeConverterFormats[] =  {
+static const BuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
    _("seconds"),
@@ -462,11 +470,28 @@ const BuiltinFormatString TimeConverterFormats[] =  {
    },
 };
 
+class FormatsArray final
+   : public TranslatableArray< std::vector< BuiltinFormatString > >
+{
+   void Populate() override
+   {
+      for (auto &format : TimeConverterFormats_)
+         mContents.push_back( format.Translate() );
+   }
+};
+
+static FormatsArray theArray;
+return theArray.Get();
+
+} // end function
+
+const std::vector<BuiltinFormatString> &FrequencyConverterFormats() {
+
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-const BuiltinFormatString FrequencyConverterFormats[] =  {
+static const BuiltinFormatString FrequencyConverterFormats_[] =  {
    /* i18n-hint: Name of display format that shows frequency in hertz */
    {
       _("Hz"),
@@ -483,11 +508,28 @@ const BuiltinFormatString FrequencyConverterFormats[] =  {
    },
 };
 
+class FormatsArray final
+   : public TranslatableArray< std::vector< BuiltinFormatString > >
+{
+   void Populate() override
+   {
+      for (auto &format : FrequencyConverterFormats_)
+         mContents.push_back( format.Translate() );
+   }
+};
+
+static FormatsArray theArray;
+return theArray.Get();
+
+} // end function
+
+const std::vector<BuiltinFormatString> &BandwidthConverterFormats() {
+
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-const BuiltinFormatString BandwidthConverterFormats[] = {
+static const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
@@ -520,6 +562,34 @@ const BuiltinFormatString BandwidthConverterFormats[] = {
    },
 };
 
+
+class FormatsArray final
+   : public TranslatableArray< std::vector< BuiltinFormatString > >
+{
+   void Populate() override
+   {
+      for (auto &format : BandwidthConverterFormats_)
+         mContents.push_back( format.Translate() );
+   }
+};
+
+static FormatsArray theArray;
+return theArray.Get();
+
+} // end function
+
+   const std::vector<BuiltinFormatString> &ChooseBuiltinFormatStrings
+      (NumericConverter::Type type)
+   {
+      switch (type) {
+         case NumericConverter::TIME:
+            return TimeConverterFormats();
+         case NumericConverter::FREQUENCY:
+            return FrequencyConverterFormats();
+         case NumericConverter::BANDWIDTH:
+            return BandwidthConverterFormats();
+      }
+   }
 }
 
 //
@@ -531,6 +601,7 @@ NumericConverter::NumericConverter(Type type,
                                    const wxString & formatName,
                                    double value,
                                    double sampleRate)
+   : mBuiltinFormatStrings( ChooseBuiltinFormatStrings( type ) )
 {
    ResetMinValue();
    ResetMaxValue();
@@ -539,25 +610,11 @@ NumericConverter::NumericConverter(Type type,
    mDefaultNdx = 0;
 
    mType = type;
-   switch (type) {
-      case TIME:
-         mBuiltinFormatStrings = TimeConverterFormats;
-         mNBuiltins = sizeof(TimeConverterFormats) /
-            sizeof (TimeConverterFormats[0]);
-         mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
-         break;
-      case FREQUENCY:
-         mBuiltinFormatStrings = FrequencyConverterFormats;
-         mNBuiltins = sizeof(FrequencyConverterFormats) /
-            sizeof (FrequencyConverterFormats[0]);
-         break;
-      case BANDWIDTH:
-         mBuiltinFormatStrings = BandwidthConverterFormats;
-         mNBuiltins = sizeof(BandwidthConverterFormats) /
-            sizeof(BandwidthConverterFormats[0]);
-      default:
-         break;
-   }
+
+   if (type == NumericConverter::TIME )
+      mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
+
+   mNBuiltins = mBuiltinFormatStrings.size();
 
    mPrefix = wxT("");
    mValueTemplate = wxT("");
