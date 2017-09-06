@@ -353,7 +353,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          hRuler->ruler.SetLog(true);
          hRuler->ruler.SetRange(10, 20000);
          hRuler->ruler.SetFormat(Ruler::RealFormat);
-         hRuler->ruler.SetUnits(wxT("Hz"));
+         hRuler->ruler.SetUnits(_("Hz"));
          hRuler->ruler.SetFlip(true);
          hRuler->ruler.SetLabelEdges(true);
          int h;
@@ -390,12 +390,12 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
          {
-            S.AddPrompt(wxT("Cursor:"));
+            S.AddPrompt(_("Cursor:"));
 
             S.SetStyle(wxTE_READONLY);
             mCursorText = S.AddTextBox(wxT(""), wxT(""), 10);
 
-            S.AddPrompt(wxT("Peak:"));
+            S.AddPrompt(_("Peak:"));
 
             S.SetStyle(wxTE_READONLY);
             mPeakText = S.AddTextBox(wxT(""), wxT(""), 10);
