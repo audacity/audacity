@@ -1028,7 +1028,7 @@ void Scrubber::PopulatePopupMenu(wxMenu &menu)
    for (const auto &item : menuItems) {
       if (cm->GetEnabled(item.name)) {
          auto test = item.StatusTest;
-         menu.Append(id, item.label, wxString{},
+         menu.Append(id, wxGetTranslation(item.label), wxString{},
                      test ? wxITEM_CHECK : wxITEM_NORMAL);
          if(test && (this->*test)())
             menu.FindItem(id)->Check();
