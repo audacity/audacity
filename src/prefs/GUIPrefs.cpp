@@ -91,10 +91,14 @@ void GUIPrefs::Populate()
    mThemeCodes.Add( wxT("high-contrast") );
    mThemeCodes.Add( wxT("custom") );
 
+   /* i18n-hint: describing the "classic" or traditional appearance of older versions of Audacity */
    mThemeChoices.Add( _("Classic") );
+   /* i18n-hint: Light meaning opposite of dark */
    mThemeChoices.Add( _("Light") );
    mThemeChoices.Add( _("Dark") );
+   /* i18n-hint: greater difference between foreground and background colors */
    mThemeChoices.Add( _("High Contrast") );
+   /* i18n-hint: user defined */
    mThemeChoices.Add( _("Custom") );
 
    GetRangeChoices(&mRangeChoices, &mRangeCodes);
