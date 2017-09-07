@@ -74,7 +74,7 @@ public:
    LV2EffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~LV2EffectsModule();
 
-   // IdentInterface implementatino
+   // IdentInterface implementation
 
    wxString GetPath() override;
    wxString GetSymbol() override;

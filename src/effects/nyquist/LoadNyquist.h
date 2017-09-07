@@ -24,7 +24,7 @@ public:
    NyquistEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~NyquistEffectsModule();
 
-   // IdentInterface implementatino
+   // IdentInterface implementation
 
    wxString GetPath() override;
    wxString GetSymbol() override;

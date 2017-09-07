@@ -229,7 +229,7 @@ public:
    AudioUnitEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~AudioUnitEffectsModule();
 
-   // IdentInterface implementatino
+   // IdentInterface implementation
 
    wxString GetPath() override;
    wxString GetSymbol() override;
