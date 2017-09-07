@@ -498,7 +498,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    auto &seq = GetSeq();
    seq.convert_to_seconds();
    newTrack->mSeq.reset(seq.copy(t0 - GetOffset(), len, false));
-   newTrack->SetOffset(GetOffset());
+   newTrack->SetOffset(0);
 
    // What should be done with the rest of newTrack's members?
    // (mBottomNote, mDirManager, mSerializationBuffer,
