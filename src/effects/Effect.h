@@ -261,6 +261,15 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    /* not virtual */ bool IsRealtimeActive();
 
    virtual bool IsHidden();
+
+   // Nonvirtual
+   // Display a message box, using effect's (translated) name as the prefix
+   // for the title.
+   enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
+   int MessageBox(const wxString& message,
+                  long style = DefaultMessageBoxStyle,
+                  const wxString& titleStr = wxString{});
+
 //
 // protected virtual methods
 //
@@ -268,6 +277,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 // do its processing.
 //
 protected:
+
    // Called once each time an effect is called.  Perform any initialization;
    // make sure that the effect can be performed on the selected tracks and
    // return false otherwise

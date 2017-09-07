@@ -248,7 +248,8 @@ void EffectRack::Add(Effect *effect, bool active, bool favorite)
    bb->SetToolTip(_("Remove effect from the rack"));
    mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   wxStaticText *text = safenew wxStaticText(mPanel, ID_NAME + mNumEffects, effect->GetName());
+   wxStaticText *text = safenew wxStaticText(mPanel, ID_NAME + mNumEffects,
+      effect->GetTranslatedName() );
    text->SetToolTip(_("Name of the effect"));
    mMainSizer->Add(text, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
 

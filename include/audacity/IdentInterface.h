@@ -59,6 +59,10 @@ public:
    virtual wxString GetVendor() = 0;
    virtual wxString GetVersion() = 0;
    virtual wxString GetDescription() = 0;
+
+   // non-virtual convenience functions
+   const wxString& GetTranslatedName();
+   const wxString& GetTranslatedDescription();
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__
