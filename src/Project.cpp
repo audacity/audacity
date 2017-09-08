@@ -2906,18 +2906,20 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.
 // The %s is to be filled with the version string.
-static wxString gsLegacyFileWarning =
+// PRL:  Do not statically allocate a string in _() !
+static wxString gsLegacyFileWarning() { return
 _("This file was saved by Audacity version %s. The format has changed. \
 \n\nAudacity can try to open and save this file, but saving it in this \
 \nversion will then prevent any 1.2 or earlier version opening it. \
 \n\nAudacity might corrupt the file in opening it, so you should \
 back it up first. \
 \n\nOpen this file now?");
+}
 
 bool AudacityProject::WarnOfLegacyFile( )
 {
    wxString msg;
-   msg.Printf(gsLegacyFileWarning, _("1.0 or earlier"));
+   msg.Printf(gsLegacyFileWarning(), _("1.0 or earlier"));
 
    // Stop icon, and choose 'NO' by default.
    int action =
@@ -3523,7 +3525,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // Specifically detect older versions of Audacity
    if ( bIsOld | bIsVeryOld ) {
       wxString msg;
-      msg.Printf(gsLegacyFileWarning, audacityVersion.c_str());
+      msg.Printf(gsLegacyFileWarning(), audacityVersion.c_str());
 
       int icon_choice = wxICON_EXCLAMATION;
       if( bIsVeryOld )
