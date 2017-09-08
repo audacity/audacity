@@ -565,6 +565,14 @@ void NoteTrack::Paste(double t, const Track *src)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       return;
 
+   auto myOffset = this->GetOffset();
+   if (t < myOffset) {
+      // workaround strange behavior described at
+      // http://bugzilla.audacityteam.org/show_bug.cgi?id=1735#c3
+      SetOffset(t);
+      InsertSilence(t, myOffset - t);
+   }
+
    NoteTrack* other = (NoteTrack*)src;
 
    double delta = 0.0;
