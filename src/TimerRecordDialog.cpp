@@ -412,7 +412,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
       // Create the message string
       wxString sMessage = "";
-      sMessage.Printf("You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s",
+      sMessage.Printf(_("You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s"),
          sPlannedTime,
          sRemainingTime);
 
@@ -492,7 +492,7 @@ bool TimerRecordDialog::RemoveAllAutoSaveFiles()
       {
          // I don't think this error message is actually useful.
          // -dmazzoni
-         //wxMessageBox(wxT("Could not remove auto save file: " + files[i]),
+         //wxMessageBox(_("Could not remove auto save file: " + files[i]),
          //             _("Error"), wxICON_STOP);
          return false;
       }
@@ -622,18 +622,18 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
 
       if (m_bAutoSaveEnabled) {
          if (bSaveOK) {
-            sMessage.Printf("%s\n\nRecording saved: %s",
+            sMessage.Printf(_("%s\n\nRecording saved: %s"),
                             sMessage, m_fnAutoSaveFile.GetFullPath());
          } else {
-            sMessage.Printf("%s\n\nError saving recording.", sMessage);
+            sMessage.Printf(_("%s\n\nError saving recording."), sMessage);
          }
       }
       if (m_bAutoExportEnabled) {
          if (bExportOK) {
-            sMessage.Printf("%s\n\nRecording exported: %s",
+            sMessage.Printf(_("%s\n\nRecording exported: %s"),
                             sMessage, m_fnAutoExportFile.GetFullPath());
          } else {
-            sMessage.Printf("%s\n\nError exporting recording.", sMessage);
+            sMessage.Printf(_("%s\n\nError exporting recording."), sMessage);
          }
       }
 
@@ -642,7 +642,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          if ((iOverriddenAction != iPostRecordAction) &&
              (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
             // Inform the user that we have overridden the selected action
-            sMessage.Printf("%s\n\n'%s' has been canceled due to the error(s) noted above.",
+            sMessage.Printf(_("%s\n\n'%s' has been canceled due to the error(s) noted above."),
                             sMessage,
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
@@ -652,7 +652,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
       } else {
 
          if (bWasStopped && (iOverriddenAction != POST_TIMER_RECORD_NOTHING)) {
-            sMessage.Printf("%s\n\n'%s' has been canceled as the recording was stopped.",
+            sMessage.Printf(_("%s\n\n'%s' has been canceled as the recording was stopped."),
                             sMessage,
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }

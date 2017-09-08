@@ -752,8 +752,9 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       {
          wxMessageBox(
             wxString::Format(
-            wxT("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
-               FileName.c_str() ));
+//            _("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
+               FileName.c_str() )
+                            );
          return;
       }
 #endif
@@ -775,7 +776,11 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       }
       wxMessageBox(
          wxString::Format(
-            wxT("Theme written to:\n  %s."),
+/* i18n-hint: A theme is a consistent visual style across an application's
+ graphical user interface, including choices of colors, and similarity of images
+ such as those on button controls.  Audacity can load and save alternative
+ themes. */
+            _("Theme written to:\n  %s."),
             FileName.c_str() ));
    }
    // ELSE saving to a C code textual version.
@@ -801,7 +806,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       }
       wxMessageBox(
          wxString::Format(
-            wxT("Theme as Cee code written to:\n  %s."),
+            /* i18n-hint "Cee" means the C computer programming language */
+            _("Theme as Cee code written to:\n  %s."),
             FileName.c_str() ));
    }
 }
@@ -1181,7 +1187,7 @@ void ThemeBase::SaveComponents()
    }
    wxMessageBox(
       wxString::Format(
-         wxT("Theme written to:\n  %s."),
+         _("Theme written to:\n  %s."),
          FileNames::ThemeComponentsDir().c_str() ));
 }
 
