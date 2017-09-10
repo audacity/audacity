@@ -230,12 +230,12 @@ bool EffectAutoDuck::Init()
          }
          else
          {
-            wxMessageBox(
+            Effect::MessageBox(
                _("You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
                /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
                 * of the audio automatically when there is sound on another track.  Not as
                 * in 'Donald-Duck'!*/
-               _("Auto Duck"), wxICON_ERROR, mUIParent);
+               wxICON_ERROR);
             return false;
          }
       }
@@ -245,9 +245,9 @@ bool EffectAutoDuck::Init()
 
    if (!controlTrackCandidate)
    {
-      wxMessageBox(
+      Effect::MessageBox(
          _("Auto Duck needs a control track which must be placed below the selected track(s)."),
-         _("Auto Duck"), wxICON_ERROR, mUIParent);
+         wxICON_ERROR);
       return false;
    }
 

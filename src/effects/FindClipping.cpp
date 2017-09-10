@@ -172,7 +172,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
       buffer.reinit(blockSize);
    }
    catch( const std::bad_alloc & ) {
-      wxMessageBox(_("Requested value exceeds memory capacity."));
+      Effect::MessageBox(_("Requested value exceeds memory capacity."));
       return false;
    }
 

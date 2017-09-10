@@ -451,10 +451,10 @@ bool NyquistEffect::Init()
       }
 
       if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-         wxMessageBox(_("To use 'Spectral effects', enable 'Spectral Selection'\n"
+         Effect::MessageBox(_("To use 'Spectral effects', enable 'Spectral Selection'\n"
                         "in the track Spectrogram settings and select the\n"
                         "frequency range for the effect to act on."), 
-            _("Error"), wxOK | wxICON_EXCLAMATION | wxCENTRE);
+            wxOK | wxICON_EXCLAMATION | wxCENTRE, _("Error"));
 
          return false;
       }
@@ -665,9 +665,8 @@ bool NyquistEffect::Process()
 
             mCurTrack[1] = (WaveTrack *)iter.Next();
             if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
-               wxMessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
-                            wxT("Nyquist"),
-                            wxOK | wxCENTRE, mUIParent);
+               Effect::MessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
+                            wxOK | wxCENTRE);
                success = false;
                goto finish;
             }
@@ -690,7 +689,7 @@ bool NyquistEffect::Process()
 _("Selection too long for Nyquist code.\nMaximum allowed selection is %ld samples\n(about %.1f hours at 44100 Hz sample rate)."),
                (long)NYQ_MAX_LEN, hours
             );
-            wxMessageBox(message, _("Nyquist Error"), wxOK | wxCENTRE);
+            Effect::MessageBox(message, wxOK | wxCENTRE, _("Nyquist Error"));
             if (!mProjectChanged)
                em.SetSkipStateFlag(true);
             return false;
@@ -1213,7 +1212,7 @@ bool NyquistEffect::ProcessOne()
    if (rval == nyx_string) {
       wxString msg = NyquistToWxString(nyx_get_string());
       if (!msg.IsEmpty())  // Not currently a documented feature, but could be useful as a No-Op.
-         wxMessageBox(msg, mName, wxOK | wxCENTRE, mUIParent);
+         Effect::MessageBox(msg);
 
       // True if not process type.
       // If not returning audio from process effect,
@@ -1226,8 +1225,7 @@ bool NyquistEffect::ProcessOne()
       wxString str;
       str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %f")),
                  nyx_get_double());
-      wxMessageBox(str, wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+      Effect::MessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
@@ -1235,8 +1233,7 @@ bool NyquistEffect::ProcessOne()
       wxString str;
       str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %d")),
                  nyx_get_int());
-      wxMessageBox(str, wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+      Effect::MessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
@@ -1275,23 +1272,17 @@ bool NyquistEffect::ProcessOne()
 
    int outChannels = nyx_get_audio_num_channels();
    if (outChannels > (int)mCurNumChannels) {
-      wxMessageBox(_("Nyquist returned too many audio channels.\n"),
-                   wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+      Effect::MessageBox(_("Nyquist returned too many audio channels.\n"));
       return false;
    }
 
    if (outChannels == -1) {
-      wxMessageBox(_("Nyquist returned one audio channel as an array.\n"),
-                   wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+      Effect::MessageBox(_("Nyquist returned one audio channel as an array.\n"));
       return false;
    }
 
    if (outChannels == 0) {
-      wxMessageBox(_("Nyquist returned an empty array.\n"),
-                   wxT("Nyquist"),
-                   wxOK | wxCENTRE, mUIParent);
+      Effect::MessageBox(_("Nyquist returned an empty array.\n"));
       return false;
    }
 
@@ -1340,9 +1331,7 @@ bool NyquistEffect::ProcessOne()
       mOutputTime = outputTrack[i]->GetEndTime();
 
       if (mOutputTime <= 0) {
-         wxMessageBox(_("Nyquist returned nil audio.\n"),
-                      wxT("Nyquist"),
-                      wxOK | wxCENTRE, mUIParent);
+         Effect::MessageBox(_("Nyquist returned nil audio.\n"));
          return true;
       }
    }
@@ -1740,7 +1729,7 @@ void NyquistEffect::Parse(const wxString &line)
                        tokens[3].c_str(), mFileName.GetFullPath().c_str());
 
             // Too disturbing to show alert before Audacity frame is up.
-            //    wxMessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);
+            //    Effect::MessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);
 
             // Note that the AudacityApp's mLogger has not yet been created,
             // so this brings up an alert box, but after the Audacity frame is up.
@@ -1854,11 +1843,11 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    {
       /* i1n-hint: SAL and LISP are names for variant syntaxes for the
        Nyquist programming language.  Leave them, and 'return', untranslated. */
-      wxMessageBox(_("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
+      Effect::MessageBox(_("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
 For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
 or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
-                   _("Error in Nyquist code"),
-                   wxOK | wxCENTRE);
+                  Effect::DefaultMessageBoxStyle,
+                   _("Error in Nyquist code"));
       /* i18n-hint: refers to programming "languages" */
       mInitError = _("Could not determine language");
       return false;
@@ -2311,8 +2300,7 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 {
    if (mCommandText->IsModified())
    {
-      if (wxMessageBox(_("Current program has been modified.\nDiscard changes?"),
-                       GetName(),
+      if (Effect::MessageBox(_("Current program has been modified.\nDiscard changes?"),
                        wxYES_NO) == wxNO)
       {
          return;
@@ -2335,7 +2323,7 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 
    if (!mCommandText->LoadFile(mFileName.GetFullPath()))
    {
-      wxMessageBox(_("File could not be loaded"), GetName());
+      Effect::MessageBox(_("File could not be loaded"));
    }
 }
 
@@ -2357,7 +2345,7 @@ void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
 
    if (!mCommandText->SaveFile(mFileName.GetFullPath()))
    {
-      wxMessageBox(_("File could not be saved"), GetName());
+      Effect::MessageBox(_("File could not be saved"));
    }
 }
 

@@ -348,7 +348,7 @@ bool EffectScienFilter::Init()
          {
             if (t->GetRate() != rate)
             {
-               wxMessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
+               Effect::MessageBox(_("To apply a filter, all selected tracks must have the same sample rate."));
                return false;
             }
          }

@@ -192,9 +192,8 @@ bool EffectClickRemoval::Process()
       count++;
    }
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.
-      wxMessageBox(
+      Effect::MessageBox(
          wxString::Format(_("Algorithm not effective on this audio. Nothing changed.")),
-         GetName(),
          wxOK | wxICON_ERROR);
 
    this->ReplaceProcessedTracks(bGoodResult && mbDidSomething);
@@ -205,10 +204,9 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 {
    if (len <= windowSize / 2)
    {
-      wxMessageBox(
+      Effect::MessageBox(
          wxString::Format(_("Selection must be larger than %d samples."),
                           windowSize / 2),
-         GetName(),
          wxOK | wxICON_ERROR);
       return false;
    }

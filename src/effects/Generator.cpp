@@ -54,9 +54,10 @@ bool Generator::Process()
              track->IsEmpty(mT0, mT1+1.0/track->GetRate()) &&
              !track->IsEmpty(mT0, mT0+GetDuration()-(mT1-mT0)-1.0/track->GetRate()))
          {
-            wxMessageBox(
+            Effect::MessageBox(
                   _("There is not enough room available to generate the audio"),
-                  _("Error"), wxICON_STOP);
+                  wxICON_STOP,
+                  _("Error"));
             Failure();
             return false;
          }
