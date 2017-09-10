@@ -24,6 +24,7 @@
 
 #include "Resample.h"
 #include "Prefs.h"
+#include "TranslatableStringArray.h"
 
 #include <soxr.h>
 
@@ -52,11 +53,28 @@ int Resample::GetNumMethods() { return 4; }
 
 wxString Resample::GetMethodName(int index)
 {
-   static char const * const soxr_method_names[] = {
-      "Low Quality (Fastest)", "Medium Quality", "High Quality", "Best Quality (Slowest)"
+   static const wxString soxr_method_names[] = {
+      XO("Low Quality (Fastest)"),
+      XO("Medium Quality"),
+      XO("High Quality"),
+      XO("Best Quality (Slowest)")
    };
 
-   return wxString(wxString::FromAscii(soxr_method_names[index]));
+   wxASSERT( GetNumMethods() ==
+      sizeof(soxr_method_names) / sizeof(*soxr_method_names) );
+
+   class MethodNamesArray final : public TranslatableStringArray
+   {
+      void Populate() override
+      {
+         for (auto &name : soxr_method_names)
+            mContents.push_back( wxGetTranslation( name ) );
+      }
+   };
+
+   static MethodNamesArray theArray;
+
+   return theArray.Get()[ index ];
 }
 
 const wxString Resample::GetFastMethodKey()

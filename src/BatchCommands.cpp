@@ -366,13 +366,13 @@ double BatchCommands::GetEndTime()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( wxT("No project to process!") );
+      //wxMessageBox( _("No project to process!") );
       return -1.0;
    }
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( wxT("No tracks to process!") );
+      //wxMessageBox( _("No tracks to process!") );
       return -1.0;
    }
 
@@ -385,14 +385,14 @@ bool BatchCommands::IsMono()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( wxT("No project and no Audio to process!") );
+      //wxMessageBox( _("No project and no Audio to process!") );
       return false;
    }
 
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( wxT("No tracks to process!") );
+      //wxMessageBox( _("No tracks to process!") );
       return false;
    }
 

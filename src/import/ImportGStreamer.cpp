@@ -955,8 +955,8 @@ GStreamerImportFileHandle::Init()
    // Add the decoder to the pipeline
    if (!gst_bin_add(GST_BIN(mPipeline.get()), mDec))
    {
-      wxMessageBox(wxT("Unable to add decoder to pipeline"),
-                   wxT("GStreamer Importer"));
+      wxMessageBox(_("Unable to add decoder to pipeline"),
+                   _("GStreamer Importer"));
 
       // Cleanup expected to occur in destructor
       return false;
@@ -966,8 +966,8 @@ GStreamerImportFileHandle::Init()
    GstStateChangeReturn state = gst_element_set_state(mPipeline.get(), GST_STATE_PAUSED);
    if (state == GST_STATE_CHANGE_FAILURE)
    {
-      wxMessageBox(wxT("Unable to set stream state to paused."),
-                   wxT("GStreamer Importer"));
+      wxMessageBox(_("Unable to set stream state to paused."),
+                   _("GStreamer Importer"));
       return false;
    }
 
@@ -1095,8 +1095,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    // Can't do much if we don't have any streams to process
    if (!haveStreams)
    {
-      wxMessageBox(wxT("File doesn't contain any audio streams."),
-                   wxT("GStreamer Importer"));
+      wxMessageBox(_("File doesn't contain any audio streams."),
+                   _("GStreamer Importer"));
       return ProgressResult::Failed;
    }
 
@@ -1104,8 +1104,8 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    GstStateChangeReturn state = gst_element_set_state(mPipeline.get(), GST_STATE_PLAYING);
    if (state == GST_STATE_CHANGE_FAILURE)
    {
-      wxMessageBox(wxT("Unable to import file, state change failed."),
-                   wxT("GStreamer Importer"));
+      wxMessageBox(_("Unable to import file, state change failed."),
+                   _("GStreamer Importer"));
       return ProgressResult::Failed;
    }
 
@@ -1235,7 +1235,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
                debug ? wxT("\n") : wxT(""),
                debug ? wxString::FromUTF8(debug.get()).c_str() : wxT(""));
 #if defined(_DEBUG)
-            wxMessageBox(m, wxT("GStreamer Error:"));
+            wxMessageBox(wxString::Format(_("GStreamer Error: %s"), m));
 #else
             wxLogMessage(wxT("GStreamer Error: %s"), m.c_str());
 #endif

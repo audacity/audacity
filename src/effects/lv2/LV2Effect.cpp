@@ -1034,7 +1034,7 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
    mMaster = InitInstance(mSampleRate);
    if (mMaster == NULL)
    {
-      wxMessageBox(wxT("Couldn't instantiate effect"));
+      wxMessageBox(_("Couldn't instantiate effect"));
       return false;
    }
    

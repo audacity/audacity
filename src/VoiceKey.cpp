@@ -818,7 +818,7 @@ void VoiceKey::CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCoun
    text+=            wxString::Format(_("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"),mSignChangesMean,mSignChangesSD);
    text += wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"), mDirectionChangesMean, mDirectionChangesSD);
    wxMessageDialog{ NULL, text,
-      wxT("Calibration Complete"),
+      _("Calibration Complete"),
       wxOK | wxICON_INFORMATION,
       wxPoint(-1, -1) }
    .ShowModal();

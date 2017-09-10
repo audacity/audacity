@@ -215,6 +215,7 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 #undef wxPLURAL
 #endif
 
+// Note:  The strings will go to the .pot file (do not use _(...)).
 #define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
 
 

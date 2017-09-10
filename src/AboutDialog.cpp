@@ -422,7 +422,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+      wxT("<p><br>") + _("Audacity website: ") + wxT("[[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
