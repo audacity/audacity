@@ -309,7 +309,7 @@ public:
 private:
    wxWindow *mParent;
    EffectEqualization *mEffect;
-   std::unique_ptr<EnvelopeEditor> mEditor;
+   std::unique_ptr<EnvelopeEditor> mLinEditor, mLogEditor;
 
    bool mRecalcRequired;
 

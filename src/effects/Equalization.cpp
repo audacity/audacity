@@ -2851,7 +2851,8 @@ EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *paren
    mWidth = 0;
    mHeight = 0;
 
-   mEditor = std::make_unique<EnvelopeEditor>(*mEffect->mEnvelope, false);
+   mLinEditor = std::make_unique<EnvelopeEditor>(*mEffect->mLinEnvelope, false);
+   mLogEditor = std::make_unique<EnvelopeEditor>(*mEffect->mLogEnvelope, false);
    mEffect->mEnvelope->Flatten(0.);
    mEffect->mEnvelope->SetTrackLen(1.0);
 
@@ -3073,7 +3074,8 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
       CaptureMouse();
    }
 
-   if (mEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
+   auto &pEditor = (mEffect->mLin ? mLinEditor : mLogEditor);
+   if (pEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
       false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax))
    {
