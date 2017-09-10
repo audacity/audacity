@@ -193,7 +193,7 @@ private:
    bool              mOK;
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
-   wxString          mName;   ///< Name of the Effect
+   wxString          mName;   ///< Name of the Effect (untranslated)
    wxString          mAction;
    wxString          mInfo;
    wxString          mAuthor;

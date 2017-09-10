@@ -149,6 +149,10 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
+      /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
+       Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+       In the translations of this and other strings, you may transliterate the
+       name into another alphabet.  */
       mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
@@ -159,6 +163,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    if (fName == NYQUIST_WORKER_ID) {
       // Effect spawned from Nyquist Prompt
+/* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */
       mName = XO("Nyquist Worker");
       return;
    }
@@ -1389,6 +1394,8 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
     if (nyqString != NULL && nyqString[0] && str.IsEmpty()) {
         // invalid UTF-8 string, convert as Latin-1
         str = _("[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]");
+       // TODO: internationalization of strings from Nyquist effects, at least
+       // from those shipped with Audacity
         str += LAT1CTOWX(nyqString);
     }
     return str;
@@ -1835,6 +1842,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    }
    if (!mFoundType && mIsPrompt)
    {
+      /* i1n-hint: SAL and LISP are names for variant syntaxes for the
+       Nyquist programming language.  Leave them, and 'return', untranslated. */
       wxMessageBox(_("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
 For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
 or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),

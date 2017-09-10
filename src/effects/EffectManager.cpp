@@ -149,7 +149,7 @@ wxString EffectManager::GetEffectDescription(const PluginID & ID)
 
    if (effect)
    {
-      return wxString::Format(_("Applied effect: %s"), effect->GetName().c_str());
+      return wxString::Format(_("Applied effect: %s"), GetEffectName(ID).c_str());
    }
 
    return wxEmptyString;

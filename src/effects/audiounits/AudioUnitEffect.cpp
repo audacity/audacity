@@ -892,7 +892,8 @@ wxString AudioUnitEffect::GetVersion()
 
 wxString AudioUnitEffect::GetDescription()
 {
-   return wxT("N/A");
+   /* i18n-hint: Can mean "not available," "not applicable," "no answer" */
+   return XO("n/a");
 }
 
 // ============================================================================
