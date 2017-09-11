@@ -3498,6 +3498,7 @@ wxString AudioIO::GetMidiDeviceInfo()
       s << wxT("No MIDI playback device found for '") << playDevice << wxT("'.") << e;
    }
 
+   // Mention our conditional compilation flags for Alpha only
 #ifdef IS_ALPHA
 
    s << wxT("==============================") << e;

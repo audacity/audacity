@@ -212,10 +212,10 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       wxString result = 
          wxString(wxT("")) + 
-#if IS_ALPHA
+#if defined(IS_ALPHA) || defined(IS_BETA)
          wxT("<hr><center><h3>") + _("Get the Official Released Version of Audacity") + wxT("</h3></center>") +
          VerCheckHtml() +
-#if IS_ALPHA == 1
+#ifdef IS_ALPHA
          alphamsg
 #else
          betamsg
@@ -246,7 +246,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>");
 #endif
 
-#if IS_ALPHA
+#ifdef USE_ALPHA_MANUAL
       result.Replace( "//manual.audacityteam.org/quick_help.html","//alphamanual.audacityteam.org/man/Quick_Help" );
       result.Replace( "//manual.audacityteam.org/","//alphamanual.audacityteam.org/man/" );
 #endif

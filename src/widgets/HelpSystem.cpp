@@ -36,7 +36,7 @@
 #include "ErrorDialog.h"
 #include "HelpSystem.h"
 
-#if IS_ALPHA
+#ifdef USE_ALPHA_MANUAL
 const wxString HelpSystem::HelpHostname = wxT("alphamanual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/man/");
 const wxString HelpSystem::HelpServerManDir = wxT("/man/");
@@ -354,7 +354,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       webHelpPath = wxT("https://")+HelpSystem::HelpHostname+HelpSystem::HelpServerManDir;
    }
 
-#if IS_ALPHA
+#ifdef USE_ALPHA_MANUAL
    webHelpPage = webHelpPath + PageName;
 #else
    webHelpPage = webHelpPath + releasePageName;

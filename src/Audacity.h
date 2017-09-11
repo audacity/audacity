@@ -34,12 +34,30 @@
 
 
 // We only do alpha builds, beta builds, and release versions.
-// Most of the time we're in development, so IS_ALPHA should be defined
-// to 1.
-// Its value may be more than 1 for pre-release "Beta" builds that differ only in the
-// welcome screen.
-// Use "#if IS_ALPHA" not #ifdef
-#define IS_ALPHA 2
+// Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
+// defined to 0.
+// Its value may be more than 0 for pre-release "Beta" builds that differ only
+// in the welcome screen, and hiding of some development menu commands, but
+// still link to the alpha manual online.
+#define AUDACITY_BUILD_LEVEL 1
+
+// used #ifdef not #if for IS_ALPHA, IS_BETA, IS_RELEASE, USE_ALPHA_MANUAL
+#undef IS_ALPHA
+#undef IS_BETA
+#undef IS_RELEASE
+#undef USE_ALPHA_MANUAL
+
+#if AUDACITY_BUILD_LEVEL == 0
+   #define IS_ALPHA
+   #define USE_ALPHA_MANUAL
+#elif AUDACITY_BUILD_LEVEL == 1
+   #define IS_BETA
+   #define USE_ALPHA_MANUAL
+#else
+   #define IS_RELEASE
+#endif
+
+
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
@@ -47,9 +65,9 @@
 #define AUDACITY_REVISION  0
 #define AUDACITY_MODLEVEL  0
 
-#if IS_ALPHA > 1
+#if defined(IS_BETA)
    #define AUDACITY_SUFFIX wxT("-beta-") __TDATE__
-#elif IS_ALPHA
+#elif defined(IS_ALPHA)
    #define AUDACITY_SUFFIX wxT("-alpha-") __TDATE__
 #else
    #define AUDACITY_SUFFIX    wxT("") // for a stable release
@@ -147,7 +165,7 @@ void QuitAudacity();
 // Put extra symbol information in the release build, for the purpose of gathering
 // profiling information (as from Windows Process Monitor), when there otherwise
 // isn't a need for AUDACITY_DLL_API.
-#if IS_ALPHA
+#ifdef IS_ALPHA
    #define PROFILE_DLL_API AUDACITY_DLL_API
 #else
    #define PROFILE_DLL_API

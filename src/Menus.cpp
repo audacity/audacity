@@ -1224,7 +1224,7 @@ void AudacityProject::CreateMenusAndCommands()
 
 // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
 // as they used to in 1.3.x
-//#if IS_ALPHA
+//#ifdef IS_ALPHA
       // TODO: What should we do here?  Make benchmark a plug-in?
       // Easy enough to do.  We'd call it mod-self-test.
 
@@ -8285,7 +8285,7 @@ void AudacityProject::OnCheckForUpdates()
 // Only does the update checks if it's an ALPHA build and not disabled by preferences.
 void AudacityProject::MayCheckForUpdates()
 {
-#if IS_ALPHA
+#ifdef IS_ALPHA
    OnCheckForUpdates();
 #endif
 }
