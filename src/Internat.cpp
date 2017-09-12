@@ -298,12 +298,3 @@ wxString Internat::StripAccelerators(const wxString &s)
    }
    return result;
 }
-
-wxString Internat::Parenthesize(const wxString &str)
-{
-   /* i18n-hint: An opening parenthesis, in some languages a right parenthesis */
-   auto open = _("(");
-   /* i18n-hint: A closing parenthesis, in some languages a left parenthesis */
-   auto close = _(")");
-   return open + str + close;
-}

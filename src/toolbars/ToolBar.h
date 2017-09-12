@@ -161,9 +161,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
        // non-user-visible command names.  If a shortcut key is defined
        // for the command, then it is appended, parenthesized, after the
        // user-visible string.
-       const std::vector<wxString> &commands,
-       // If more than one pair of strings is given, then use this separator.
-       const wxString &separator = wxT(" / "));
+       const std::vector<wxString> &commands);
 
  protected:
    void SetButton(bool down, AButton *button);

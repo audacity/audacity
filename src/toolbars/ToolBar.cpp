@@ -832,7 +832,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 }
 
 void ToolBar::SetButtonToolTip
-(AButton &button, const std::vector<wxString> &commands, const wxString &separator)
+(AButton &button, const std::vector<wxString> &commands)
 {
    wxString result;
    const auto project = GetActiveProject();
@@ -840,7 +840,7 @@ void ToolBar::SetButtonToolTip
       project ? project->GetCommandManager() : nullptr;
    if (commandManager)
       result =
-         commandManager->DescribeCommandsAndShortcuts(commands, separator);
+         commandManager->DescribeCommandsAndShortcuts(commands);
    button.SetToolTip(result);
 }
 

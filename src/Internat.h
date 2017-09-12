@@ -76,8 +76,6 @@ public:
     * when they aren't, saving translators effort. */
    static wxString StripAccelerators(const wxString& str);
 
-   static wxString Parenthesize(const wxString &str);
-
    static const wxArrayString &GetExcludedCharacters()
    { return exclude; }
 
