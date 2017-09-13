@@ -681,6 +681,7 @@ void ToolManager::ReadConfig()
 {
    wxString oldpath = gPrefs->GetPath();
    wxArrayInt unordered[ DockCount ];
+   std::vector<ToolBar*> dockedAndHidden;
    bool show[ ToolBarCount ];
    int width[ ToolBarCount ];
    int height[ ToolBarCount ];
@@ -808,6 +809,9 @@ void ToolManager::ReadConfig()
             }
          }
 #endif
+         // make a note of docked and hidden toolbars
+         if (!show[ndx])
+            dockedAndHidden.push_back(bar);         
 
          if (!ordered)
          {
@@ -917,6 +921,13 @@ void ToolManager::ReadConfig()
       }
    }
 
+   // hidden docked toolbars
+   for (auto bar : dockedAndHidden) {
+      bar->SetVisible(false );
+      bar->GetDock()->Dock(bar, false);
+      bar->Expose(false);
+   }
+
    // Restore original config path
    gPrefs->SetPath( oldpath );
 
@@ -958,8 +969,10 @@ void ToolManager::WriteConfig()
       bool bo = mBotDock->GetConfiguration().Contains( bar );
 
       // Save
-      gPrefs->Write( wxT("Dock"), (int) (to ? TopDockID : bo ? BotDockID : NoDockID ));
-      auto dock = to ? mTopDock : bo ? mBotDock : nullptr;
+      ToolDock* dock = bar->GetDock();       // dock for both shown and hidden toolbars
+      gPrefs->Write( wxT("Dock"), static_cast<int>(dock == mTopDock ? TopDockID : dock == mBotDock ? BotDockID : NoDockID ));
+
+      dock = to ? mTopDock : bo ? mBotDock : nullptr;    // dock for shown toolbars
       ToolBarConfiguration::Write
          (dock ? &dock->GetConfiguration() : nullptr, bar);
 
