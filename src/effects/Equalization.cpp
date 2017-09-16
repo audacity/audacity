@@ -242,12 +242,14 @@ EffectEqualization::EffectEqualization()
    mLogEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
-       1.0);
+       0.0);
+   mLogEnvelope->SetTrackLen(1.0);
 
    mLinEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
-       1.0);
+       0.0);
+   mLinEnvelope->SetTrackLen(1.0);
 
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
