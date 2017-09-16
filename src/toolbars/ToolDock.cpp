@@ -237,11 +237,7 @@ bool ToolBarConfiguration::Read
 {
    bool result = true;
 
-   // Future: might remember visibility in the configuration, not forgetting
-   // positions of hidden bars.
-   gPrefs->Read( wxT("Show"), &visible, defaultVisible);
-
-   if (pConfiguration && visible) {
+   if (pConfiguration) {
       int ord;
       gPrefs->Read( wxT("Order"), &ord, -1 );
       // Index was written 1-based
@@ -270,6 +266,10 @@ bool ToolBarConfiguration::Read
          }
       }
    }
+
+   // Future: might remember visibility in the configuration, not forgetting
+   // positions of hidden bars.
+   gPrefs->Read( wxT("Show"), &visible, defaultVisible);
 
    return result;
 }
@@ -376,8 +376,8 @@ void ToolDock::Undock( ToolBar *bar )
    if( mConfiguration.Contains( bar ) )
    {
       mConfiguration.Remove( bar );
+      mBars[ bar->GetId() ] = nullptr;
    }
-   mBars[ bar->GetId() ] = nullptr;
 }
 
 //
@@ -403,15 +403,14 @@ void ToolDock::Dock( ToolBar *bar, bool deflate, ToolBarConfiguration::Position 
    );
 
    // Park the NEW bar in the correct berth
-   if (!mConfiguration.Contains(bar) && bar->IsVisible())
+   if (!mConfiguration.Contains(bar))
       mConfiguration.Insert( bar, position );
 
    // Inform toolbar of change
    bar->SetDocked( this, false );
 
    // Rearrange our world
-   if (bar->IsVisible())
-      LayoutToolBars();
+   LayoutToolBars();
    Updated();
 }
 
