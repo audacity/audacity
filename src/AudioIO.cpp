@@ -4678,6 +4678,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                if ((gAudioIO->ReversedTime()
                   ? gAudioIO->mTime <= gAudioIO->mT1
                   : gAudioIO->mTime >= gAudioIO->mT1))
+                  gAudioIO->mMidiOutputComplete = true,
                   callbackReturn = paComplete;
             }
             
@@ -4738,6 +4739,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                ? gAudioIO->mTime <= gAudioIO->mT1
                : gAudioIO->mTime >= gAudioIO->mT1)) {
 
+               gAudioIO->mMidiOutputComplete = true,
                callbackReturn = paComplete;
             }
          }
