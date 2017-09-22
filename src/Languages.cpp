@@ -149,6 +149,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    localLanguageName[wxT("en")] = wxT("English");
    localLanguageName[wxT("es")] = wxT("Espanol");
    localLanguageName[wxT("eu")] = wxT("Euskara");
+   localLanguageName[wxT("eu_ES")] = wxT("Euskara (Espainiako)");
    localLanguageName[wxT("fa")] = wxT("Farsi");
    localLanguageName[wxT("fi")] = wxT("Suomi");
    localLanguageName[wxT("fr")] = wxT("Francais");
