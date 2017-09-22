@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.2.0\n"
@@ -13,9 +12,9 @@ msgstr ""
 "Last-Translator: Osoitz <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: eu\n"
+"Language: eu_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
