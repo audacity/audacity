@@ -2217,6 +2217,7 @@ bool AudioIO::StartPortMidiStream()
       mMidiPaused = false;
       mMidiLoopPasses = 0;
       mMidiOutputComplete = false;
+      mMaxMidiTimestamp = 0;
       PrepareMidiIterator();
 
       // It is ok to call this now, but do not send timestamped midi
@@ -2405,9 +2406,10 @@ void AudioIO::StopStream()
       // respond to these messages. This is probably a bug in PortMidi
       // if the All Off messages do not get out, but for security,
       // delay a bit so that messages can be delivered before closing
-      // the stream. It should take about 16ms to send All Off messages,
-      // so this will add 24ms latency.
-      wxMilliSleep(40); // deliver the all-off messages
+      // the stream. Add 2ms of "padding" to avoid any rounding errors.
+      while (mMaxMidiTimestamp + 2 > MidiTime()) {
+          wxMilliSleep(1); // deliver the all-off messages
+      }
       Pm_Close(mMidiStream);
       mMidiStream = NULL;
       mIterator->end();
@@ -3873,11 +3875,12 @@ void AudioIO::OutputEvent()
    if (time < 0 || mSendMidiState) time = 0;
    PmTimestamp timestamp = (PmTimestamp) (time * 1000); /* s to ms */
 
-   // The special event gAllNotesOffEvent means "end of playback, send
+   // The special event gAllNotesOff means "end of playback, send
    // all notes off on all channels"
    if (mNextEvent == &gAllNotesOff) {
-      AllNotesOff();
-      if (mPlayMode == gAudioIO->PLAY_LOOPED) {
+      bool looping = (mPlayMode == gAudioIO->PLAY_LOOPED);
+      AllNotesOff(looping);
+      if (looping) {
          // jump back to beginning of loop
          ++mMidiLoopPasses;
          PrepareMidiIterator(false, MidiLoopOffset());
@@ -3984,6 +3987,10 @@ void AudioIO::OutputEvent()
          }
       }
       if (command != -1) {
+         // keep track of greatest timestamp used
+         if (timestamp > mMaxMidiTimestamp) {
+            mMaxMidiTimestamp = timestamp;
+         }
          Pm_WriteShort(mMidiStream, timestamp,
                     Pm_Message((int) (command + channel),
                                   (long) data1, (long) data2));
@@ -4143,13 +4150,46 @@ PmTimestamp AudioIO::MidiTime()
    )));
 }
 
-void AudioIO::AllNotesOff()
+
+void AudioIO::AllNotesOff(bool looping)
 {
+#ifdef __WXGTK__
+   bool doDelay = !looping;
+#else
+   bool doDelay = false;
+   WXUNUSED(looping);
+#endif
+
+   // to keep track of when MIDI should all be delivered,
+   // update mMaxMidiTimestamp to now:
+   PmTimestamp now = MidiTime();
+   if (mMaxMidiTimestamp < now) {
+       mMaxMidiTimestamp = now;
+   }
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+   // PRL:
    // Send individual note-off messages for each note-on not yet paired.
+
+   // RBD:
+   // Even this did not work as planned. My guess is ALSA does not use
+   // a "stable sort" for timed messages, so that when a note-off is
+   // added later at the same time as a future note-on, the order is
+   // not respected, and the note-off can go first, leaving a stuck note.
+   // The workaround here is to use mMaxMidiTimestamp to ensure that
+   // note-offs come at least 1ms later than any previous message
+
+   // PRL:
+   // I think we should do that only when stopping or pausing, not when looping
+   // Note that on Linux, MIDI always uses ALSA, no matter whether portaudio
+   // uses some other host api.
+
+   mMaxMidiTimestamp += 1;
    for (const auto &pair : mPendingNotesOff) {
-      Pm_WriteShort(mMidiStream, 0, Pm_Message(
+      Pm_WriteShort(mMidiStream,
+                    (doDelay ? mMaxMidiTimestamp : 0),
+                    Pm_Message(
          0x90 + pair.first, pair.second, 0));
+      mMaxMidiTimestamp++; // allow 1ms per note-off
    }
    mPendingNotesOff.clear();
 
@@ -4157,7 +4197,10 @@ void AudioIO::AllNotesOff()
 #endif
 
    for (int chan = 0; chan < 16; chan++) {
-      Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
+      Pm_WriteShort(mMidiStream,
+                    (doDelay ? mMaxMidiTimestamp : 0),
+                    Pm_Message(0xB0 + chan, 0x7B, 0));
+      mMaxMidiTimestamp++; // allow 1ms per all-notes-off
    }
 }
 

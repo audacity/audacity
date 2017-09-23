@@ -460,7 +460,7 @@ private:
    void GetNextEvent();
    double AudioTime() { return mT0 + mNumFrames / mRate; }
    double PauseTime();
-   void AllNotesOff();
+   void AllNotesOff(bool looping = false);
 #endif
 
    /** \brief Get the number of audio samples free in all of the playback
@@ -573,6 +573,10 @@ private:
    /// Used by Midi process to record that pause has begun,
    /// so that AllNotesOff() is only delivered once
    volatile bool    mMidiPaused;
+   /// The largest timestamp written so far, used to delay
+   /// stream closing until last message has been delivered
+   PmTimestamp mMaxMidiTimestamp;
+
 
    Alg_seq_ptr      mSeq;
    std::unique_ptr<Alg_iterator> mIterator;
