@@ -2039,12 +2039,30 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          PaAlsa_EnableRealtimeScheduling( mPortStreamV19, 1 );
 #endif
 
+      //
+      // Generate a unique value each time, to be returned to
+      // clients accessing the AudioIO API, so they can query if they
+      // are the ones who have reserved AudioIO or not.
+      //
+      // It is important to set this before setting the portaudio stream in
+      // motion -- otherwise it may play an unspecified number of leading
+      // zeroes.
+      mStreamToken = (++mNextStreamToken);
+
+      // This affects the AudioThread (not the portaudio callback).
+      // Probably not needed so urgently before portaudio thread start for usual
+      // playback, since our ring buffers have been primed already with 4 sec
+      // of audio, but then we might be scrubbing, so do it.
+      mAudioThreadFillBuffersLoopRunning = true;
+
       // Now start the PortAudio stream!
       PaError err;
       err = Pa_StartStream( mPortStreamV19 );
 
       if( err != paNoError )
       {
+         mStreamToken = 0;
+         mAudioThreadFillBuffersLoopRunning = false;
          if (mListener && mNumCaptureChannels > 0)
             mListener->OnAudioIOStopRecording();
          StartStreamCleanup();
@@ -2075,17 +2093,8 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
       wxTheApp->ProcessEvent(e);
    }
 
-   mAudioThreadFillBuffersLoopRunning = true;
-
    // Enable warning popups for unfound aliased blockfiles.
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
-
-   //
-   // Generate an unique value each time, to be returned to
-   // clients accessing the AudioIO API, so they can query if
-   // are the ones who have reserved AudioIO or not.
-   //
-   mStreamToken = (++mNextStreamToken);
 
    return mStreamToken;
 }
