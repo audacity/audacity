@@ -81,6 +81,78 @@
   speed at mTime. This effectively integrates speed to get position.
   Negative speeds are allowed too, for instance in scrubbing.
 
+  \par The Big Picture
+@verbatim
+
+Sample
+Time (in seconds, = total_sample_count / sample_rate)
+  ^
+  |                                             /         /
+  |             y=x-mSystemTimeMinusAudioTime /         /
+  |                                         /     #   /
+  |                                       /         /
+  |                                     /   # <- callbacks (#) showing
+  |                                   /#        /   lots of timing jitter.
+  |       top line is "full buffer" /         /     Some are later,
+  |                     condition /         /       indicating buffer is
+  |                             /         /         getting low. Plot
+  |                           /     #   /           shows sample time
+  |                         /    #    /             (based on how many
+  |                       /    #    /               samples previously
+  |                     /         /                 *written*) vs. real
+  |                   / #       /                   time.
+  |                 /<------->/ audio latency
+  |               /#       v/
+  |             /         / bottom line is "empty buffer"
+  |           /   #     /      condition = DAC output time =
+  |         /         /
+  |       /      # <-- rapid callbacks as buffer is filled
+  |     /         /
+0 +...+---------#---------------------------------------------------->
+  0 ^ |         |                                            real time
+    | |         first callback time
+    | mSystemMinusAudioTime
+    |
+    Probably the actual real times shown in this graph are very large
+    in practice (> 350,000 sec.), so the X "origin" might be when
+    the computer was booted or 1970 or something.
+
+
+@endverbatim
+
+  To estimate the true DAC time (needed to synchronize MIDI), we need
+  a mapping from track time to DAC time. The estimate is the theoretical
+  time of the full buffer (top diagonal line) + audio latency. To
+  estimate the top diagonal line, we "draw" the line to be at least
+  as high as any sample time corresponding to a callback (#), and we
+  slowly lower the line in case the sample clock is slow or the system
+  clock is fast, preventing the estimated line from drifting too far
+  from the actual callback observations. The line is occasionally
+  "bumped" up by new callback observations, but continuously
+  "lowered" at a very low rate.  All adjustment is accomplished
+  by changing mSystemMinusAudioTime, shown here as the X-intercept.\n
+    theoreticalFullBufferTime = realTime - mSystemMinusAudioTime\n
+  To estimate audio latency, notice that the first callback happens on
+  an empty buffer, but the buffer soon fills up. This will cause a rapid
+  re-estimation of mSystemMinusAudioTime. (The first estimate of
+  mSystemMinusAudioTime will simply be the real time of the first
+  callback time.) By watching these changes, which happen within ms of
+  starting, we can estimate the buffer size and thus audio latency.
+  So, to map from track time to real time, we compute:\n
+    DACoutputTime = trackTime + mSystemMinusAudioTime\n
+  There are some additional details to avoid counting samples while
+  paused or while waiting for initialization, MIDI latency, etc.
+  Also, in the code, track time is measured with respect to the track
+  origin, so there's an extra term to add (mT0) if you start somewhere
+  in the middle of the track.
+  Finally, when a callback occurs, you might expect there is room in
+  the output buffer for the requested frames, so maybe the "full buffer"
+  sample time should be based not on the first sample of the callback, but
+  the last sample time + 1 sample. I suspect, at least on Linux, that the
+  callback occurs as soon as the last callback completes, so the buffer is
+  really full, and the callback thread is going to block waiting for space
+  in the output buffer.
+
   \par Midi Time
   MIDI is not warped according to the speed control. This might be
   something that should be changed. (Editorial note: Wouldn't it
@@ -95,33 +167,61 @@
   \par
   Therefore, we define the following interface for MIDI timing:
   \li \c AudioTime() is the time based on all samples written so far, including zeros output during pauses. AudioTime() is based on the start location mT0, not zero.
-  \li \c PauseTime() is the amount of time spent paused, based on a count of zero samples output.
-  \li \c MidiTime() is an estimate in milliseconds of the current audio output time + 1s. In other words, what audacity track time corresponds to the audio (including pause insertions) at the output?
+  \li \c PauseTime() is the amount of time spent paused, based on a count of zero-padding samples output.
+  \li \c MidiTime() is an estimate in milliseconds of the current audio output time + 1s. In other words, what audacity track time corresponds to the audio (plus pause insertions) at the DAC output?
 
   \par AudioTime() and PauseTime() computation
   AudioTime() is simply mT0 + mNumFrames / mRate.
   mNumFrames is incremented in each audio callback. Similarly, PauseTime()
   is mNumPauseFrames / mRate. mNumPauseFrames is also incremented in
-  each audio callback when a pause is in effect.
+  each audio callback when a pause is in effect or audio output is ready to start.
 
   \par MidiTime() computation
   MidiTime() is computed based on information from PortAudio's callback,
   which estimates the system time at which the current audio buffer will
   be output. Consider the (unimplemented) function RealToTrack() that
-  maps real time to track time. If outputTime is PortAudio's time
-  estimate for the most recent output buffer, then \n
-  RealToTrack(outputTime) = AudioTime() - PauseTime() - bufferDuration \n
-  We want to know RealToTrack of the current time, so we use this
-  approximation for small d: \n
-  RealToTrack(t + d) = RealToTrack(t) + d \n
-  Letting t = outputTime and d = (systemTime - outputTime), we can
+  maps real audio write time to track time. If writeTime is the system
+  time for the first sample of the current output buffer, and
+  if we are in the callback, so AudioTime() also refers to the first sample
+  of the buffer, then \n
+  RealToTrack(writeTime) = AudioTime() - PauseTime()\n
+  We want to know RealToTrack of the current time (when we are not in the
+  callback, so we use this approximation for small d: \n
+  RealToTrack(t + d) = RealToTrack(t) + d, or \n
+  Letting t = writeTime and d = (systemTime - writeTime), we can
   substitute to get:\n
-  RealToTrack(systemTime) = AudioTime() - PauseTime() - bufferduration + (systemTime - outputTime) \n
-  MidiTime() should include pause time, so add PauseTime() to both sides of
-  the equation. Also MidiTime() is offset by 1 second to avoid negative
-  time at startup, so add 1 to both sides:
-  MidiTime() in seconds = RealToTrack(systemTime) + PauseTime() + 1 = \n
-  AudioTime() - bufferduration + (systemTime - outputTime) + 1
+  RealToTrack(systemTime)
+     = RealToTrack(writeTime) + systemTime - writeTime\n
+     = AudioTime() - PauseTime() + (systemTime - writeTime) \n
+  MidiTime() should include pause time, so that it increases smoothly,
+  and audioLatency so that MidiTime() corresponds to the time of audio
+  output rather than audio write times.  Also MidiTime() is offset by 1
+  second to avoid negative time at startup, so add 1: \n
+  MidiTime(systemTime) in seconds\n
+     = RealToTrack(systemTime) + PauseTime() - audioLatency + 1 \n
+     = AudioTime() + (systemTime - writeTime) - audioLatency + 1 \n
+  (Note that audioLatency is called mAudioOutLatency in the code.)
+  When we schedule a MIDI event with track time TT, we need
+  to map TT to a PortMidi timestamp. The PortMidi timestamp is exactly
+  MidiTime(systemTime) in ms units, and \n
+     MidiTime(x) = RealToTrack(x) + PauseTime() + 1, so \n
+     timestamp = TT + PauseTime() + 1 - midiLatency \n
+  Note 1: The timestamp is incremented by the PortMidi stream latency
+  (midiLatency) so we subtract midiLatency here for the timestamp
+  passed to PortMidi. \n
+  Note 2: Here, we're setting x to the time at which RealToTrack(x) = TT,
+  so then MidiTime(x) is the desired timestamp. To be completely
+  correct, we should assume that MidiTime(x + d) = MidiTime(x) + d,
+  and consider that we compute MidiTime(systemTime) based on the
+  *current* system time, but we really want the MidiTime(x) for some
+  future time corresponding when MidiTime(x) = TT.)
+
+  \par
+  Also, we should assume PortMidi was opened with mMidiLatency, and that
+  MIDI messages become sound with a delay of mSynthLatency. Therefore,
+  the final timestamp calculation is: \n
+     timestamp = TT + PauseTime() + 1 - (mMidiLatency + mSynthLatency) \n
+  (All units here are seconds; some conversion is needed in the code.)
 
   \par
   The difference AudioTime() - PauseTime() is the time "cursor" for
@@ -129,34 +229,92 @@
   unsynchronized. In particular, MIDI will not be synchronized with
   the visual cursor, which moves with scaled time reported in mTime.
 
-  \par Midi Synchronization
-  The goal of MIDI playback is to deliver MIDI messages synchronized to
-  audio (assuming no speed variation for now). If a midi event has time
-  tmidi, then the timestamp for that message should be \n
-  timestamp (in seconds) = tmidi + PauseTime() + 1.0 - latency.\n
-  (This is actually off by 1ms; see "PortMidi Latency Parameter" below for
-  more detail.)
-  Notice the extra 1.0, added because MidiTime() is offset by 1s to avoid
-  starting at a negative value. Also notice that we subtract latency.
-  The user must set device latency using preferences. Some software
-  synthesizers have very high latency (on the order of 100ms), so unless
-  we lower timestamps and send messages early, the final output will not
-  be synchronized.
-  This timestamp is interpreted by PortMidi relative to MidiTime(), which
-  is synchronized to audio output. So the only thing we need to do is
-  output Midi messages shortly before they will be played with the correct
-  timestamp. We will take "shortly before" to mean "at about the same time
-  as corresponding audio". Based on this, output the event when
-  AudioTime() - PauseTime() > mtime - latency,
-  adjusting the event time by adding PauseTime() + 1 - latency.
-  This gives at least mAudioOutputLatency for
-  the MIDI output to be generated (we want to generate MIDI output before
-  the actual output time because events generated early are accurately timed
-  according to their timestamp). However, the MIDI thread sleeps for
-  MIDI_SLEEP in its polling loop, so the worst case is really
-  mAudioOutputLatency + MIDI_SLEEP. In case the audio output latency is
-  very low, we will output events when
-  AudioTime() + MIDI_SLEEP - PauseTime() > mtime - latency.
+  \par Timing in Linux
+  It seems we cannot get much info from Linux. We can read the time
+  when we get a callback, and we get a variable frame count (it changes
+  from one callback to the next). Returning to the RealToTrack()
+  equations above: \n
+  RealToTrack(outputTime) = AudioTime() - PauseTime() - bufferDuration \n
+  where outputTime should be PortAudio's estimate for the most recent output
+  buffer, but at least on my Dell Latitude E7450, PortAudio is getting zero
+  from ALSA, so we need to find a proxy for this.
+
+  \par Estimating outputTime (Plan A, assuming double-buffered, fixed-size buffers, please skip to Plan B)
+  One can expect the audio callback to happen as soon as there is room in
+  the output for another block of samples, so we could just measure system
+  time at the top of the callback. Then we could add the maximum delay
+  buffered in the system. E.g. if there is simple double buffering and the
+  callback is computing one of the buffers, the callback happens just as
+  one of the buffers empties, meaning the other buffer is full, so we have
+  exactly one buffer delay before the next computed sample is output.
+
+  If computation falls behind a bit, the callback will be later, so the
+  delay to play the next computed sample will be less. I think a reasonable
+  way to estimate the actual output time is to assume that the computer is
+  mostly keeping up and that *most* callbacks will occur immediately when
+  there is space. Note that the most likely reason for the high-priority
+  audio thread to fall behind is the callback itself, but the start of the
+  callback should be pretty consistently keeping up.
+
+  Also, we do not have to have a perfect estimate of the time. Suppose we
+  estimate a linear mapping from sample count to system time by saying
+  that the sample count maps to the system time at the most recent callback,
+  and set the slope to 1% slower than real time (as if the sample clock is
+  slow). Now, at each callback, if the callback seems to occur earlier than
+  expected, we can adjust the mapping to be earlier. The earlier the
+  callback, the more accurate it must be. On the other hand, if the callback
+  is later than predicted, it must be a delayed callback (or else the
+  sample clock is more than 1% slow, which is really a hardware problem.)
+  How bad can this be? Assuming callbacks every 30ms (this seems to be what
+  I'm observing in a default setup), you'll be a maximum of 1ms off even if
+  2 out of 3 callbacks are late. This is pretty reasonable given that
+  PortMIDI clock precision is 1ms. If buffers are larger and callback timing
+  is more erratic, errors will be larger, but even a few ms error is
+  probably OK.
+
+  \par Estimating outputTime (Plan B, variable framesPerBuffer in callback, please skip to Plan C)
+  ALSA is complicated because we get varying values of
+  framesPerBuffer from callback to callback. Assume you get more frames
+  when the callback is later (because there is more accumulated input to
+  deliver and more more accumulated room in the output buffers). So take
+  the current time and subtract the duration of the frame count in the
+  current callback. This should be a time position that is relatively
+  jitter free (because we estimated the lateness by frame count and
+  subtracted that out). This time position intuitively represents the
+  current ADC time, or if no input, the time of the tail of the output
+  buffer. If we wanted DAC time, we'd have to add the total output
+  buffer duration, which should be reported by PortAudio. (If PortAudio
+  is wrong, we'll be systematically shifted in time by the error.)
+
+  Since there is still bound to be jitter, we can smooth these estimates.
+  First, we will assume a linear mapping from system time to audio time
+  with slope = 1, so really it's just the offset we need, which is going
+  to be a double that we can read/write atomically without locks or
+  anything fancy. (Maybe it should be "volatile".)
+
+  To improve the estimate, we get a new offset every callback, so we can
+  create a "smooth" offset by using a simple regression model (also
+  this could be seen as a first order filter). The following formula
+  updates smooth_offset with a new offset estimate in the callback:
+      smooth_offset = smooth_offset * 0.9 + new_offset_estimate * 0.1
+  Since this is smooth, we'll have to be careful to give it a good initial
+  value to avoid a long convergence.
+
+  \par Estimating outputTime (Plan C)
+  ALSA is complicated because we get varying values of
+  framesPerBuffer from callback to callback. It seems there is a lot
+  of variation in callback times and buffer space. One solution would
+  be to go to fixed size double buffer, but Audacity seems to work
+  better as is, so Plan C is to rely on one invariant which is that
+  the output buffer cannot overflow, so there's a limit to how far
+  ahead of the DAC time we can be writing samples into the
+  buffer. Therefore, we'll assume that the audio clock runs slow by
+  about 0.2% and we'll assume we're computing at that rate. If the
+  actual output position is ever ahead of the computed position, we'll
+  increase the computed position to the actual position. Thus whenever
+  the buffer is less than near full, we'll stay ahead of DAC time,
+  falling back at a rate of about 0.2% until eventually there's
+  another near-full buffer callback that will push the time back ahead.
 
   \par Interaction between MIDI, Audio, and Pause
   When Pause is used, PauseTime() will increase at the same rate as
