@@ -441,8 +441,14 @@ writing audio.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
-   // how long do we think the thread might be delayed due to other threads?
-   #define THREAD_LATENCY 10 /* milliseconds */
+   // how long do we think the thread that fills MIDI buffers,
+   // if it is separate from the portaudio thread,
+   // might be delayed due to other threads?
+   #ifdef USE_MIDI_THREAD
+      #define THREAD_LATENCY 10 /* milliseconds */
+   #else
+      #define THREAD_LATENCY 0 /* milliseconds */
+   #endif
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
    #include "../lib-src/portmidi/pm_common/portmidi.h"
@@ -4987,6 +4993,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                if ((gAudioIO->ReversedTime()
                   ? gAudioIO->mTime <= gAudioIO->mT1
                   : gAudioIO->mTime >= gAudioIO->mT1))
+                  // PRL: singalling MIDI output complete is necessary if
+                  // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
                   gAudioIO->mMidiOutputComplete = true,
                   callbackReturn = paComplete;
             }
@@ -5048,6 +5056,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                ? gAudioIO->mTime <= gAudioIO->mT1
                : gAudioIO->mTime >= gAudioIO->mT1)) {
 
+               // PRL: singalling MIDI output complete is necessary if
+               // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
                gAudioIO->mMidiOutputComplete = true,
                callbackReturn = paComplete;
             }

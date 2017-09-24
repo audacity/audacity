@@ -93,11 +93,15 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
+// PRL:
 // If we always run a portaudio output stream (even just to produce silence)
-// whenever we play Midi, then we can use just one thread for both, which
-// simplifies synchronization problems and avoids the rush of notes at start of
-// play.  PRL.
-#undef USE_MIDI_THREAD
+// whenever we play Midi, then we might use just one thread for both.
+// I thought this would improve MIDI synch problems on Linux/ALSA, but RBD
+// convinced me it was neither a necessary nor sufficient fix.  Perhaps too the
+// MIDI thread might block in some error situations but we should then not
+// also block the audio thread.
+// So leave the separate thread ENABLED.
+#define USE_MIDI_THREAD
 
 struct ScrubbingOptions;
 
