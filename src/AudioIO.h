@@ -727,6 +727,8 @@ private:
 
    const TimeTrack *mTimeTrack;
 
+   bool mUsingAlsa { false };
+
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
    static wxArrayLong mCachedPlaybackRates;

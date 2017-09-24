@@ -1678,6 +1678,12 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
          wxMilliSleep( 50 );
    }
 
+#ifdef __WXGTK__
+   // Detect whether ALSA is the chosen host, and do the various involved MIDI
+   // timing compensations only then.
+   mUsingAlsa = (gPrefs->Read(wxT("/AudioIO/Host"), wxT("")) == "ALSA");
+#endif
+
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
    gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mPauseRec, false);
    int silenceLevelDB;
@@ -2033,8 +2039,7 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
       // (Which we should be able to determine from fields of
       // PaStreamCallbackTimeInfo, but that seems not to work as documented with
       // ALSA.)
-      wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-      if (hostName == "ALSA")
+      if (mUsingAlsa)
          // Perhaps we should do this only if also playing MIDI ?
          PaAlsa_EnableRealtimeScheduling( mPortStreamV19, 1 );
 #endif
