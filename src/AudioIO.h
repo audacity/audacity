@@ -565,6 +565,8 @@ private:
    /// stream closing until last message has been delivered
    PmTimestamp mMaxMidiTimestamp;
 
+   /// audio output latency reported by PortAudio
+   double mAudioOutLatency;
 
    Alg_seq_ptr      mSeq;
    std::unique_ptr<Alg_iterator> mIterator;

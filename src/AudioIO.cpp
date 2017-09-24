@@ -283,6 +283,8 @@ writing audio.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
+   // how long do we think the thread might be delayed due to other threads?
+   #define THREAD_LATENCY 10 /* milliseconds */
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
    #include "../lib-src/portmidi/pm_common/portmidi.h"
@@ -1444,6 +1446,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
 #ifdef EXPERIMENTAL_MIDI_OUT
    mNumFrames = 0;
    mNumPauseFrames = 0;
+   mAudioOutLatency = 0.0; // set when stream is opened
 #endif
    mOwningProject = GetActiveProject();
    mInputMeter = NULL;
@@ -1586,6 +1589,14 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       #endif
    }
 #endif
+
+   // We use audio latency to estimate how far ahead of DACS we are writing
+   if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
+      const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
+      // this is an initial guess, but for PA/Linux/ALSA it's wrong and will be
+      // updated with a better value:
+      mAudioOutLatency = info->outputLatency;
+   }
 
    return (mLastPaError == paNoError);
 }
@@ -4057,10 +4068,20 @@ void AudioIO::FillMidiBuffers()
          break;
       }
    SetHasSolo(hasSolo);
-   double time = AudioTime();
+   // If we compute until mNextEventTime > current audio track time,
+   // we would have a built-in compute-ahead of mAudioOutLatency, and
+   // it's probably good to compute MIDI when we compute audio (so when
+   // we stop, both stop about the same time).
+   double time = AudioTime(); // compute to here
+   // But if mAudioOutLatency is very low, we might need some extra
+   // compute-ahead to deal with mSynthLatency or even this thread.
+   double actual_latency  = (MIDI_SLEEP + THREAD_LATENCY +
+                             MIDI_MINIMAL_LATENCY_MS + mSynthLatency) * 0.001;
+   if (actual_latency > mAudioOutLatency) {
+       time += actual_latency - mAudioOutLatency;
+   }
    while (mNextEvent &&
-          UncorrectedMidiEventTime() <
-             time + ((MIDI_SLEEP + mSynthLatency) * 0.001)) {
+          UncorrectedMidiEventTime() < time) {
       OutputEvent();
       GetNextEvent();
    }
