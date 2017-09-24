@@ -1554,9 +1554,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    int  userData = 24;
    int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
 
-#ifndef USE_TIME_INFO
-   mMidiTimeCorrection = 0;
-#endif
    mLastPaError = Pa_OpenStream( &mPortStreamV19,
                                  useCapture ? &captureParameters : NULL,
                                  usePlayback ? &playbackParameters : NULL,
@@ -1570,13 +1567,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    Px_SetInputVolume(mPortMixer, oldRecordVolume);
 #endif
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-
-#ifndef USE_TIME_INFO
-      auto info = Pa_GetStreamInfo(mPortStreamV19);
-      if (info)
-         mMidiTimeCorrection =
-            info->outputLatency - (MIDI_MINIMAL_LATENCY_MS / 1000.0);
-#endif
 
       #ifdef __WXMAC__
       if (mPortMixer) {
@@ -4130,16 +4120,7 @@ PmTimestamp AudioIO::MidiTime()
    // have the virtue of keeping the Midi output synched with audio, even though
    // pmlinuxalsa.c does not implement any synchronization of its own.
 
-#ifdef USE_TIME_INFO
    auto offset = mAudioCallbackOutputDacTime - mAudioCallbackOutputCurrentTime;
-#else
-   // We are now using mMidiTimeCorrection, computed once after opening the
-   // portaudio stream, rather than the difference of dac and current
-   // times reported to the audio callback; because on Linux with ALSA,
-   // the dac and current times were not reliable, and that caused irregular
-   // timing of Midi playback because latency was effectively zero.
-   auto offset = mMidiTimeCorrection;
-#endif
 
    auto clockChange = PaUtil_GetTime() - mAudioCallbackClockTime;
    // auto offset = mAudioCallbackOutputDacTime - mAudioCallbackOutputCurrentTime;
@@ -4147,7 +4128,7 @@ PmTimestamp AudioIO::MidiTime()
       AudioTime() + 1.0005 -
       mAudioFramesPerBuffer / mRate +
       clockChange - offset
-   )));
+   ))) + MIDI_MINIMAL_LATENCY_MS;
 }
 
 
@@ -4418,10 +4399,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
    /* GSW: Save timeInfo in case MidiPlayback needs it */
    gAudioIO->mAudioCallbackClockTime = PaUtil_GetTime();
 
-#ifdef USE_TIME_INFO
    gAudioIO->mAudioCallbackOutputDacTime = timeInfo->outputBufferDacTime;
    gAudioIO->mAudioCallbackOutputCurrentTime = timeInfo->currentTime;
-#endif
 
    // printf("in callback, mAudioCallbackOutputDacTime %g\n", gAudioIO->mAudioCallbackOutputDacTime); //DBG
    gAudioIO->mAudioFramesPerBuffer = framesPerBuffer;

@@ -99,13 +99,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 // play.  PRL.
 #undef USE_MIDI_THREAD
 
-// Whether we trust all of the time info passed to audacityAudioCallback
-#ifdef __WXGTK__
-   #undef USE_TIME_INFO
-#else
-   #define USE_TIME_INFO
-#endif
-
 struct ScrubbingOptions;
 
 // To avoid growing the argument list of StartStream, add fields here
@@ -542,10 +535,6 @@ private:
    PmStream        *mMidiStream;
    PmError          mLastPmError;
 
-#ifndef USE_TIME_INFO
-   PaTime           mMidiTimeCorrection; // seconds
-#endif
-
    /// Latency of MIDI synthesizer
    long             mSynthLatency; // ms
 
@@ -554,12 +543,11 @@ private:
    /// PortAudio's clock time
    volatile double  mAudioCallbackClockTime;
 
-#ifdef USE_TIME_INFO
+   /// Rely on these two only if not using the Alsa host api:
    /// PortAudio's currentTime -- its origin is unspecified!
    volatile double  mAudioCallbackOutputCurrentTime;
    /// PortAudio's outTime
    volatile double  mAudioCallbackOutputDacTime;
-#endif
 
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
