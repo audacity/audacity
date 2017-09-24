@@ -543,12 +543,6 @@ private:
    /// PortAudio's clock time
    volatile double  mAudioCallbackClockTime;
 
-   /// Rely on these two only if not using the Alsa host api:
-   /// PortAudio's currentTime -- its origin is unspecified!
-   volatile double  mAudioCallbackOutputCurrentTime;
-   /// PortAudio's outTime
-   volatile double  mAudioCallbackOutputDacTime;
-
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
    /// How many frames of zeros were output due to pauses?
@@ -565,8 +559,26 @@ private:
    /// stream closing until last message has been delivered
    PmTimestamp mMaxMidiTimestamp;
 
+   /// Offset from ideal sample computation time to system time,
+   /// where "ideal" means when we would get the callback if there
+   /// were no scheduling delays or computation time
+   double mSystemMinusAudioTime;
    /// audio output latency reported by PortAudio
+   /// (initially; for Alsa, we adjust it to the largest "observed" value)
    double mAudioOutLatency;
+
+   // Next two are used to adjust the previous two, if
+   // PortAudio does not provide the info (using ALSA):
+
+   /// time of first callback
+   /// used to find "observed" latency
+   double mStartTime;
+   /// number of callbacks since stream start
+   long mCallbackCount;
+
+   /// Make just one variable to communicate from audio to MIDI thread,
+   /// to avoid problems of atomicity of updates
+   volatile double mSystemMinusAudioTimePlusLatency;
 
    Alg_seq_ptr      mSeq;
    std::unique_ptr<Alg_iterator> mIterator;
@@ -782,4 +794,3 @@ private:
 };
 
 #endif
-
