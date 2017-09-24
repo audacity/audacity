@@ -799,6 +799,26 @@ private:
 };
 #endif
 
+// return the system time as a double
+static double streamStartTime = 0; // bias system time to small number
+
+static double SystemTime(bool usingAlsa)
+{
+#ifdef __WXGTK__
+   if (usingAlsa) {
+      struct timespec now;
+      // CLOCK_MONOTONIC_RAW is unaffected by NTP or adj-time
+      clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+      //return now.tv_sec + now.tv_nsec * 0.000000001;
+      return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
+   }
+#else
+   WXUNUSED(usingAlsa);
+#endif
+
+   return PaUtil_GetTime() - streamStartTime;
+}
+
 const int AudioIO::StandardRates[] = {
    8000,
    11025,
@@ -1722,6 +1742,9 @@ int AudioIO::StartStream(const ConstWaveTrackArray &playbackTracks,
    mResample.reset();
 
    double playbackTime = 4.0;
+
+   streamStartTime = 0;
+   streamStartTime = SystemTime(mUsingAlsa);
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    bool scrubbing = (options.pScrubbingOptions != nullptr);
