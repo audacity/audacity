@@ -11493,31 +11493,31 @@ msgstr "Hautatu esportatutako fitxategiak gordetzeko  kokalekua"
 #: src/export/ExportMultiple.cpp:573
 #, c-format
 msgid "Successfully exported the following %lld file(s)."
-msgstr "Hurrengo %ld fitxategia(k) behar bezala esportatu d(ir)a"
+msgstr "Hurrengo %lld fitxategia(k) behar bezala esportatu d(ir)a"
 
 #: src/export/ExportMultiple.cpp:574
 #, c-format
 msgid "Something went wrong after exporting the following %lld file(s)."
-msgstr "Hurrengo %ld fitxategia(k) esportatu ondoren okerren bat gertatu da."
+msgstr "Hurrengo %lld fitxategia(k) esportatu ondoren okerren bat gertatu da."
 
 #: src/export/ExportMultiple.cpp:575
 #, c-format
 msgid "Export canceled after exporting the following %lld file(s)."
 msgstr ""
-"Esportazioa bertan bera utzi da hurrengo %ld fitxategia(k) esportatu "
+"Esportazioa bertan bera utzi da hurrengo %lld fitxategia(k) esportatu "
 "ondoren."
 
 #: src/export/ExportMultiple.cpp:576
 #, c-format
 msgid "Export stopped after exporting the following %lld file(s)."
-msgstr "Esportazioa gelditu da hurrengo %ld fitxategia(k) esportatu ondoren."
+msgstr "Esportazioa gelditu da hurrengo %lld fitxategia(k) esportatu ondoren."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
 msgid ""
 "Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
-"Hurrengo %ld fitxategia(k) esportatu ondoren oker handiren bat gertatu da."
+"Hurrengo %lld fitxategia(k) esportatu ondoren oker handiren bat gertatu da."
 
 #: src/export/ExportMultiple.cpp:626
 #, c-format
