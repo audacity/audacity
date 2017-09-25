@@ -977,10 +977,13 @@ AudacityLogger *AudacityApp::GetLogger()
 #define WL(lang,sublang)
 #endif
 
-#if !wxCHECK_VERSION(3, 0, 1)
+#if wxCHECK_VERSION(3, 0, 1)
 wxLanguageInfo userLangs[] =
 {
-   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT) wxT("Bosnian"), wxLayout_LeftToRight }
+   // Bosnian is defined in wxWidgets already
+//   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT) wxT("Bosnian"), wxLayout_LeftToRight },
+
+   { wxLANGUAGE_USER_DEFINED, wxT("eu"), WL(0, SUBLANG_DEFAULT) wxT("Basque"), wxLayout_LeftToRight },
 };
 #endif
 
@@ -1373,7 +1376,7 @@ bool AudacityApp::OnInit()
    //
    // TODO:  The whole Language initialization really need to be reworked.
    //        It's all over the place.
-#if !wxCHECK_VERSION(3, 0, 1)
+#if wxCHECK_VERSION(3, 0, 1)
    for (size_t i = 0, cnt = WXSIZEOF(userLangs); i < cnt; i++)
    {
       wxLocale::AddLanguage(userLangs[i]);
