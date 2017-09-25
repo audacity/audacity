@@ -80,7 +80,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "Screenshot.h"
 #include "Sequence.h"
 #include "WaveTrack.h"
-#include "Internat.h"
 #include "prefs/PrefsDialog.h"
 #include "Theme.h"
 #include "PlatformCompatibility.h"

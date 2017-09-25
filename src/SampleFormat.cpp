@@ -43,6 +43,7 @@
 #include "SampleFormat.h"
 #include "Prefs.h"
 #include "Dither.h"
+#include "Internat.h"
 
 static Dither::DitherType gLowQualityDither = Dither::none;
 static Dither::DitherType gHighQualityDither = Dither::none;

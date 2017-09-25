@@ -34,6 +34,7 @@
 
 #include "../Audacity.h"
 #include "../Experimental.h"
+#include "MousePrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -41,7 +42,7 @@
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "MousePrefs.h"
+#include "../Internat.h"
 
 // The numbers of the columns of the mList.
 enum

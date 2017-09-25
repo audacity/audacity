@@ -26,6 +26,7 @@
 #include "Grid.h"
 #include "NumericTextCtrl.h"
 #include "../SelectedRegion.h"
+#include "../Internat.h"
 
 NumericEditor::NumericEditor
    (NumericConverter::Type type, const wxString &format, double rate)

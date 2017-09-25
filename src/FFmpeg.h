@@ -18,6 +18,8 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #include "MemoryX.h"
 
+#include "Internat.h"
+
 // TODO: Determine whether the libav* headers come from the FFmpeg or libav
 // project and set IS_FFMPEG_PROJECT depending on it.
 #define IS_FFMPEG_PROJECT 1

@@ -28,6 +28,7 @@
 #include "../WaveTrack.h"
 
 #include "../Experimental.h"
+#include "../Internat.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 

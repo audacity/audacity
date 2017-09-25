@@ -57,6 +57,7 @@ with changes in the SpectralSelectionBar.
 #include "../widgets/NumericTextCtrl.h"
 
 #include "../Experimental.h"
+#include "../Internat.h"
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 

@@ -66,6 +66,7 @@
 
 #include "Prefs.h"
 #include "widgets/ErrorDialog.h"
+#include "Internat.h"
 
 std::unique_ptr<wxFileConfig> ugPrefs {};
 wxFileConfig *gPrefs = NULL;

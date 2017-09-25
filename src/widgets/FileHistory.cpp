@@ -20,6 +20,7 @@
 #include <wx/menu.h>
 
 #include "FileHistory.h"
+#include "../Internat.h"
 
 FileHistory::FileHistory(size_t maxfiles, wxWindowID base)
 {

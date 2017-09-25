@@ -42,6 +42,7 @@
 #include "../../widgets/wxPanelWrapper.h"
 
 #include "AudioUnitEffect.h"
+#include "../../Internat.h"
 
 struct CFReleaser
    { void operator () (const void *p) const { if (p) CFRelease(p); } };

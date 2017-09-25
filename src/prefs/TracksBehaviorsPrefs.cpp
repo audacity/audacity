@@ -20,6 +20,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Experimental.h"
+#include "../Internat.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent)
 /* i18n-hint: two nouns */

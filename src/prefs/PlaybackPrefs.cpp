@@ -26,6 +26,7 @@
 
 #include "../ShuttleGui.h"
 #include "../Prefs.h"
+#include "../Internat.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Playback"))
