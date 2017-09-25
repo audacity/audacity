@@ -93,18 +93,15 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
+// PRL:
 // If we always run a portaudio output stream (even just to produce silence)
-// whenever we play Midi, then we can use just one thread for both, which
-// simplifies synchronization problems and avoids the rush of notes at start of
-// play.  PRL.
-#undef USE_MIDI_THREAD
-
-// Whether we trust all of the time info passed to audacityAudioCallback
-#ifdef __WXGTK__
-   #undef USE_TIME_INFO
-#else
-   #define USE_TIME_INFO
-#endif
+// whenever we play Midi, then we might use just one thread for both.
+// I thought this would improve MIDI synch problems on Linux/ALSA, but RBD
+// convinced me it was neither a necessary nor sufficient fix.  Perhaps too the
+// MIDI thread might block in some error situations but we should then not
+// also block the audio thread.
+// So leave the separate thread ENABLED.
+#define USE_MIDI_THREAD
 
 struct ScrubbingOptions;
 
@@ -460,7 +457,7 @@ private:
    void GetNextEvent();
    double AudioTime() { return mT0 + mNumFrames / mRate; }
    double PauseTime();
-   void AllNotesOff();
+   void AllNotesOff(bool looping = false);
 #endif
 
    /** \brief Get the number of audio samples free in all of the playback
@@ -542,10 +539,6 @@ private:
    PmStream        *mMidiStream;
    PmError          mLastPmError;
 
-#ifndef USE_TIME_INFO
-   PaTime           mMidiTimeCorrection; // seconds
-#endif
-
    /// Latency of MIDI synthesizer
    long             mSynthLatency; // ms
 
@@ -553,13 +546,6 @@ private:
 
    /// PortAudio's clock time
    volatile double  mAudioCallbackClockTime;
-
-#ifdef USE_TIME_INFO
-   /// PortAudio's currentTime -- its origin is unspecified!
-   volatile double  mAudioCallbackOutputCurrentTime;
-   /// PortAudio's outTime
-   volatile double  mAudioCallbackOutputDacTime;
-#endif
 
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
@@ -573,6 +559,30 @@ private:
    /// Used by Midi process to record that pause has begun,
    /// so that AllNotesOff() is only delivered once
    volatile bool    mMidiPaused;
+   /// The largest timestamp written so far, used to delay
+   /// stream closing until last message has been delivered
+   PmTimestamp mMaxMidiTimestamp;
+
+   /// Offset from ideal sample computation time to system time,
+   /// where "ideal" means when we would get the callback if there
+   /// were no scheduling delays or computation time
+   double mSystemMinusAudioTime;
+   /// audio output latency reported by PortAudio
+   /// (initially; for Alsa, we adjust it to the largest "observed" value)
+   double mAudioOutLatency;
+
+   // Next two are used to adjust the previous two, if
+   // PortAudio does not provide the info (using ALSA):
+
+   /// time of first callback
+   /// used to find "observed" latency
+   double mStartTime;
+   /// number of callbacks since stream start
+   long mCallbackCount;
+
+   /// Make just one variable to communicate from audio to MIDI thread,
+   /// to avoid problems of atomicity of updates
+   volatile double mSystemMinusAudioTimePlusLatency;
 
    Alg_seq_ptr      mSeq;
    std::unique_ptr<Alg_iterator> mIterator;
@@ -727,6 +737,8 @@ private:
 
    const TimeTrack *mTimeTrack;
 
+   bool mUsingAlsa { false };
+
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
    static wxArrayLong mCachedPlaybackRates;
@@ -786,4 +798,3 @@ private:
 };
 
 #endif
-
