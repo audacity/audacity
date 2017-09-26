@@ -137,8 +137,6 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mRestoreSplits = true;  // Default: Restore split lines. 
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
 
-   mDebugButton = true; // Debug button enabled by default.
-
    mVersion = 4;
 
    mStop = false;
@@ -427,7 +425,8 @@ bool NyquistEffect::Init()
    if (mIsPrompt) {
       mType = EffectTypeProcess;
       mName = XO("Nyquist Prompt");
-      mDebugButton = true; // Debug button always enabled for Nyquist Prompt.
+      mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
+      mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
    }
 
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
@@ -1814,6 +1813,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mHelpFileExists = false;
    mDebug = false;
    mTrace = false;
+   mDebugButton = true;    // Debug button enabled by default.
+   mEnablePreview = true;  // Preview button enabled by default.
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
@@ -1865,8 +1866,6 @@ void NyquistEffect::ParseFile()
 
 bool NyquistEffect::ParseCommand(const wxString & cmd)
 {
-   mEnablePreview = true;
-
    wxStringInputStream stream(cmd + wxT(" "));
 
    return ParseProgram(stream);
