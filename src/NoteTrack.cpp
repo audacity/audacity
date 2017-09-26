@@ -540,14 +540,29 @@ void NoteTrack::Clear(double t0, double t1)
    double len = t1-t0;
 
    auto &seq = GetSeq();
-   //auto delta = -(
-      //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
-   //);
-   seq.clear(t0 - GetOffset(), len, false);
 
-   // Not needed
-   // Alg_seq::clear seems to handle this
-   // AddToDuration( delta );
+   auto offset = GetOffset();
+   auto start = t0 - offset;
+   if (start < 0.0) {
+      // AlgSeq::clear will shift the cleared interval, not changing len, if
+      // start is negative.  That's not what we want to happen.
+      if (len > -start) {
+         seq.clear(0, len + start, false);
+         SetOffset(t0);
+      }
+      else
+         SetOffset(offset - len);
+   }
+   else {
+      //auto delta = -(
+      //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
+      //);
+      seq.clear(start, len, false);
+
+      // Not needed
+      // Alg_seq::clear seems to handle this
+      // AddToDuration( delta );
+   }
 }
 
 void NoteTrack::Paste(double t, const Track *src)
