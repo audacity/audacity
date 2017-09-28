@@ -342,7 +342,7 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
       mThreshT->SetValidator(vldThresh);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mThreshS = S.Id(ID_Thresh).AddSlider(wxT(""), mThresholdLevel, MAX_Threshold, MIN_Threshold);
+      mThreshS = S.Id(ID_Thresh).AddSlider( {}, mThresholdLevel, MAX_Threshold, MIN_Threshold);
       mThreshS->SetName(_("Threshold"));
       mThreshS->SetValidator(wxGenericValidator(&mThresholdLevel));
       mThreshS->SetMinSize(wxSize(150, -1));
@@ -356,7 +356,7 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
       mWidthT->SetValidator(vldWidth);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mWidthS = S.Id(ID_Width).AddSlider(wxT(""), mClickWidth, MAX_Width, MIN_Width);
+      mWidthS = S.Id(ID_Width).AddSlider( {}, mClickWidth, MAX_Width, MIN_Width);
       mWidthS->SetName(_("Max Spike Width"));
       mWidthS->SetValidator(wxGenericValidator(&mClickWidth));
       mWidthS->SetMinSize(wxSize(150, -1));

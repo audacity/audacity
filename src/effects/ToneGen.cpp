@@ -321,7 +321,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
       if (mChirp)
       {
-         S.AddFixedText(wxT(""));
+         S.AddFixedText( {} );
          S.StartHorizontalLay(wxEXPAND);
          {
             S.StartHorizontalLay(wxLEFT, 50);
@@ -345,7 +345,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             {
                FloatingPointValidator<double> vldStartFreq(6, &mFrequency[0], NUM_VAL_NO_TRAILING_ZEROES);
                vldStartFreq.SetRange(MIN_StartFreq, GetActiveProject()->GetRate() / 2.0);
-               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Frequency Hertz Start"));
                t->SetValidator(vldStartFreq);
             }
@@ -355,7 +355,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             {
                FloatingPointValidator<double> vldEndFreq(6, &mFrequency[1], NUM_VAL_NO_TRAILING_ZEROES);
                vldEndFreq.SetRange(MIN_EndFreq, GetActiveProject()->GetRate() / 2.0);
-               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Frequency Hertz End"));
                t->SetValidator(vldEndFreq);
             }
@@ -370,7 +370,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             {
                FloatingPointValidator<double> vldStartAmp(6, &mAmplitude[0], NUM_VAL_NO_TRAILING_ZEROES);
                vldStartAmp.SetRange(MIN_StartAmp, MAX_StartAmp);
-               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Amplitude Start"));
                t->SetValidator(vldStartAmp);
             }
@@ -380,7 +380,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             {
                FloatingPointValidator<double> vldEndAmp(6, &mAmplitude[1], NUM_VAL_NO_TRAILING_ZEROES);
                vldEndAmp.SetRange(MIN_EndAmp, MAX_EndAmp);
-               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Amplitude End"));
                t->SetValidator(vldEndAmp);
             }

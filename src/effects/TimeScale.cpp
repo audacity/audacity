@@ -208,7 +208,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
             vldRatePercentChangeStart.SetRange(MIN_RatePercentStart, MAX_RatePercentStart);
          
             m_pTextCtrl_RatePercentChangeStart = S.Id(ID_RatePercentChangeStart)
-               .AddTextBox(wxT(""), wxT(""), 12);
+               .AddTextBox( {}, wxT(""), 12);
             m_pTextCtrl_RatePercentChangeStart->SetValidator(vldRatePercentChangeStart);
          }
          S.EndMultiColumn();
@@ -216,7 +216,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStyle(wxSL_HORIZONTAL);
             m_pSlider_RatePercentChangeStart = S.Id(ID_RatePercentChangeStart)
-               .AddSlider(wxT(""), DEF_RatePercentStart, MAX_RatePercentStart, MIN_RatePercentStart);
+               .AddSlider( {}, DEF_RatePercentStart, MAX_RatePercentStart, MIN_RatePercentStart);
          }
          S.EndHorizontalLay();
       }
@@ -231,7 +231,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
             vldRatePercentChangeEnd.SetRange(MIN_RatePercentEnd, MAX_RatePercentEnd);
          
             m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_RatePercentChangeEnd)
-               .AddTextBox(wxT(""), wxT(""), 12);
+               .AddTextBox( {}, wxT(""), 12);
             m_pTextCtrl_RatePercentChangeEnd->SetValidator(vldRatePercentChangeEnd);
          }
          S.EndMultiColumn();
@@ -239,7 +239,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStyle(wxSL_HORIZONTAL);
             m_pSlider_RatePercentChangeEnd = S.Id(ID_RatePercentChangeEnd)
-               .AddSlider(wxT(""), DEF_RatePercentEnd, MAX_RatePercentEnd, MIN_RatePercentEnd);
+               .AddSlider( {}, DEF_RatePercentEnd, MAX_RatePercentEnd, MIN_RatePercentEnd);
          }
          S.EndHorizontalLay();
       }

@@ -273,8 +273,8 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
                           formats[mFilterIndex],
                           formats,
                           formats);
-            S.AddVariableText(wxT(""), false);
-            S.AddVariableText(wxT(""), false);
+            S.AddVariableText( {}, false);
+            S.AddVariableText( {}, false);
 
             S.AddPrompt(_("Options:"));
             if (!mBook)
@@ -290,8 +290,8 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
                mBook->ChangeSelection(mFormat->GetSelection());
             }
             S.AddWindow(mBook);
-            S.AddVariableText(wxT(""), false);
-            S.AddVariableText(wxT(""), false);
+            S.AddVariableText( {}, false);
+            S.AddVariableText( {}, false);
          }
          S.EndMultiColumn();
       }
@@ -325,13 +325,13 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
                .AddCheckBox(_("Include audio before first label"), wxT("false"));
 
             // Row 4
-            S.AddVariableText(wxT(""), false);
+            S.AddVariableText( {}, false);
             S.StartMultiColumn(2, wxEXPAND);
             S.SetStretchyCol(1);
             {
                mFirstFileLabel = S.AddVariableText(_("First file name:"), false);
                mFirstFileName = S.Id(FirstFileNameID)
-                  .Prop(1).TieTextBox(wxT(""),
+                  .Prop(1).TieTextBox( {},
                               name,
                               30);
                mFirstFileName->SetName(_("First file name"));
@@ -368,7 +368,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             S.AddVariableText(wxT("   "), false);
             mPrefixLabel = S.AddVariableText(_("File name prefix:"), false);
             mPrefix = S.Id(PrefixID)
-               .TieTextBox(wxT(""),
+               .TieTextBox( {},
                            name,
                            30);
             mPrefix->SetName(_("File name prefix"));

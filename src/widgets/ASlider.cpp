@@ -201,7 +201,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
 
    S.StartVerticalLay();
    {
-      mTextCtrl = S.AddTextBox(wxEmptyString,
+      mTextCtrl = S.AddTextBox( {},
                                wxEmptyString,
                                15);
       mTextCtrl->SetValidator(wxTextValidator(wxFILTER_NUMERIC));

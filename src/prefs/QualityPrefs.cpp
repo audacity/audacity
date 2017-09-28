@@ -133,7 +133,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
             // We make sure it uses the ID we want, so that we get changes
             S.Id(ID_SAMPLE_RATE_CHOICE);
             // We make sure we have a pointer to it, so that we can drive it.
-            mSampleRates = S.TieChoice(wxT(""),
+            mSampleRates = S.TieChoice( {},
                                        wxT("/SamplingRate/DefaultProjectSampleRate"),
                                        AudioIO::GetOptimalSupportedSampleRate(),
                                        mSampleRateNames,
@@ -141,7 +141,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetSizeHints(mSampleRateNames);
 
             // Now do the edit box...
-            mOtherSampleRate = S.TieNumericTextBox(wxT(""),
+            mOtherSampleRate = S.TieNumericTextBox( {},
                                                    mOtherSampleRateValue,
                                                    15);
          }

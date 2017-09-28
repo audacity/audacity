@@ -225,7 +225,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          mBassT->SetValidator(vldBass);
 
          S.SetStyle(wxSL_HORIZONTAL);
-         mBassS = S.Id(ID_Bass).AddSlider(wxT(""), 0, MAX_Bass * SCL_Bass, MIN_Bass * SCL_Bass);
+         mBassS = S.Id(ID_Bass).AddSlider( {}, 0, MAX_Bass * SCL_Bass, MIN_Bass * SCL_Bass);
          mBassS->SetName(_("Bass"));
 
          // Treble control
@@ -235,7 +235,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          mTrebleT->SetValidator(vldTreble);
 
          S.SetStyle(wxSL_HORIZONTAL);
-         mTrebleS = S.Id(ID_Treble).AddSlider(wxT(""), 0, MAX_Treble * SCL_Treble, MIN_Treble * SCL_Treble);
+         mTrebleS = S.Id(ID_Treble).AddSlider( {}, 0, MAX_Treble * SCL_Treble, MIN_Treble * SCL_Treble);
          mTrebleS->SetName(_("Treble"));
       }
       S.EndMultiColumn();
@@ -255,7 +255,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
          mGainT->SetValidator(vldGain);
 
          S.SetStyle(wxSL_HORIZONTAL);
-         mGainS = S.Id(ID_Gain).AddSlider(wxT(""), 0, MAX_Gain * SCL_Gain, MIN_Gain * SCL_Gain);
+         mGainS = S.Id(ID_Gain).AddSlider( {}, 0, MAX_Gain * SCL_Gain, MIN_Gain * SCL_Gain);
          mGainS->SetName(_("Level"));
       }
       S.EndMultiColumn();

@@ -628,10 +628,10 @@ public:
             if (mLibPath.GetFullPath().IsEmpty()) {
                /* i18n-hint: There is a  button to the right of the arrow.*/
                text.Printf(_("To find %s, click here -->"), mName);
-               mPathText = S.AddTextBox(wxT(""), text, 0);
+               mPathText = S.AddTextBox( {}, text, 0);
             }
             else {
-               mPathText = S.AddTextBox(wxT(""), mLibPath.GetFullPath(), 0);
+               mPathText = S.AddTextBox( {}, mLibPath.GetFullPath(), 0);
             }
             S.Id(ID_BROWSE).AddButton(_("Browse..."), wxALIGN_RIGHT);
             /* i18n-hint: There is a  button to the right of the arrow.*/

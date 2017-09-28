@@ -130,7 +130,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                                             wxT("/GUI/TrackNames/RecordingNameCustom"),
                                             mUseCustomTrackName ? true : false);
 
-            mToggleCustomName = S.TieTextBox(wxT(""),
+            mToggleCustomName = S.TieTextBox( {},
                                               wxT("/GUI/TrackNames/RecodingTrackName"),
                                              _("Recorded_Audio"),
                                              30);
@@ -139,7 +139,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndMultiColumn();
 
-         S.AddFixedText( "" );
+         S.AddFixedText(  {} );
          S.StartMultiColumn(3);
          {
             S.TieCheckBox(_("&Track Number"),

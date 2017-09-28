@@ -161,7 +161,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 
    S.StartHorizontalLay(wxCENTER, false);
    {
-      S.StartStatic(wxT(""), false);   // deliberately not translated (!)
+      S.StartStatic( {}, false);   // deliberately not translated (!)
       {
          S.SetBorder(20);
          S.AddFixedText(wxString::Format(_("Applying '%s' to current project"),

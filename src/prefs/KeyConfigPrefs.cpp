@@ -123,7 +123,7 @@ void KeyConfigPrefs::Populate()
    if (!project) {
       S.StartVerticalLay(true);
       {
-         S.StartStatic(wxEmptyString, true);
+         S.StartStatic( {}, true);
          {
             S.AddTitle(_("Keyboard preferences currently unavailable."));
             S.AddTitle(_("Open a new project to modify keyboard shortcuts."));

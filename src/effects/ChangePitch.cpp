@@ -263,7 +263,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
             m_pChoice_FromPitch->SetName(_("from"));
             m_pChoice_FromPitch->SetSizeHints(80, -1);
 
-            m_pSpin_FromOctave = S.Id(ID_FromOctave).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN);
+            m_pSpin_FromOctave = S.Id(ID_FromOctave).AddSpinCtrl( {}, m_nFromOctave, INT_MAX, INT_MIN);
             m_pSpin_FromOctave->SetName(_("from Octave"));
             m_pSpin_FromOctave->SetSizeHints(50, -1);
 
@@ -272,7 +272,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
             m_pChoice_ToPitch->SetSizeHints(80, -1);
 
             m_pSpin_ToOctave =
-               S.Id(ID_ToOctave).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN);
+               S.Id(ID_ToOctave).AddSpinCtrl( {}, m_nToOctave, INT_MAX, INT_MIN);
             m_pSpin_ToOctave->SetName(_("to Octave"));
             m_pSpin_ToOctave->SetSizeHints(50, -1);
          }
@@ -323,7 +323,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStyle(wxSL_HORIZONTAL);
             m_pSlider_PercentChange = S.Id(ID_PercentChange)
-               .AddSlider(wxT(""), 0, (int)kSliderMax, (int)MIN_Percentage);
+               .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
             m_pSlider_PercentChange->SetName(_("Percent Change"));
          }
          S.EndHorizontalLay();

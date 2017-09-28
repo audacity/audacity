@@ -102,7 +102,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    StatusChoices.Add( _("New" ) );
    S.SetBorder(2);
 
-   S.StartStatic(wxT(""));
+   S.StartStatic( {} );
    {
       S.AddFixedText(_("These are experimental modules. Enable them only if you've read the Audacity Manual\nand know what you are doing.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the module each time it starts.") );

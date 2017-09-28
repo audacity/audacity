@@ -2215,7 +2215,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             {
                S.AddSpace(10, 10);
             
-               wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox(wxT(""), wxT(""), 12);
+               wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox( {}, wxT(""), 12);
                item->SetValidator(wxGenericValidator(&ctrl.valStr));
             }
             else if (ctrl.type == NYQ_CTRL_CHOICE)
@@ -2223,7 +2223,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                S.AddSpace(10, 10);
 
                wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
-               S.Id(ID_Choice + i).AddChoice(wxT(""), wxT(""), &choices);
+               S.Id(ID_Choice + i).AddChoice( {}, wxT(""), &choices);
             }
             else
             {
@@ -2233,7 +2233,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   S.AddSpace(10, 10);
                }
 
-               wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox(wxT(""), wxT(""), 
+               wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""),
                                                              (ctrl.type == NYQ_CTRL_INT_TEXT ||
                                                               ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
 
@@ -2263,7 +2263,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_REAL)
                {
                   S.SetStyle(wxSL_HORIZONTAL);
-                  S.Id(ID_Slider + i).AddSlider(wxT(""), 0, ctrl.ticks, 0);
+                  S.Id(ID_Slider + i).AddSlider( {}, 0, ctrl.ticks, 0);
                   S.SetSizeHints(150, -1);
                }
             }

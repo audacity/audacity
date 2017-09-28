@@ -253,7 +253,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mStagesT->SetValidator(vldStages);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mStagesS = S.Id(ID_Stages).AddSlider(wxT(""), DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
+      mStagesS = S.Id(ID_Stages).AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
       mStagesS->SetName(_("Stages"));
       mStagesS->SetLineSize(2);
       mStagesS->SetMinSize(wxSize(100, -1));
@@ -264,7 +264,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDryWetT->SetValidator(vldDryWet);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDryWetS = S.Id(ID_DryWet).AddSlider(wxT(""), DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
+      mDryWetS = S.Id(ID_DryWet).AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
       mDryWetS->SetName(_("Dry Wet"));
       mDryWetS->SetMinSize(wxSize(100, -1));
 
@@ -274,7 +274,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFreqT->SetValidator(vldFreq);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFreqS = S.Id(ID_Freq).AddSlider(wxT(""), DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
+      mFreqS = S.Id(ID_Freq).AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
       mFreqS ->SetName(_("LFO frequency in hertz"));
       mFreqS ->SetMinSize(wxSize(100, -1));
 
@@ -284,7 +284,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mPhaseT->SetValidator(vldPhase);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mPhaseS = S.Id(ID_Phase).AddSlider(wxT(""), DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
+      mPhaseS = S.Id(ID_Phase).AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetName(_("LFO start phase in degrees"));
       mPhaseS->SetLineSize(10);
       mPhaseS->SetMinSize(wxSize(100, -1));
@@ -295,7 +295,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mDepthT->SetValidator(vldDepth);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDepthS = S.Id(ID_Depth).AddSlider(wxT(""), DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
+      mDepthS = S.Id(ID_Depth).AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetName(_("Depth in percent"));
       mDepthS->SetMinSize(wxSize(100, -1));
 
@@ -305,7 +305,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackT->SetValidator(vldFeedback);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFeedbackS = S.Id(ID_Feedback).AddSlider(wxT(""), DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
+      mFeedbackS = S.Id(ID_Feedback).AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
       mFeedbackS->SetName(_("Feedback in percent"));
       mFeedbackS->SetLineSize(10);
       mFeedbackS->SetMinSize(wxSize(100, -1));
@@ -316,7 +316,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mOutGainT->SetValidator(vldoutgain);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mOutGainS = S.Id(ID_OutGain).AddSlider(wxT(""), DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
+      mOutGainS = S.Id(ID_OutGain).AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
       mOutGainS->SetName(_("Output gain (dB)"));
       mOutGainS->SetMinSize(wxSize(100, -1));
    }

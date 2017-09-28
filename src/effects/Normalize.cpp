@@ -287,12 +287,12 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
 
                FloatingPointValidator<double> vldLevel(2, &mLevel, NUM_VAL_ONE_TRAILING_ZERO);
                vldLevel.SetRange(MIN_Level, MAX_Level);
-               mLevelTextCtrl = S.AddTextBox(wxT(""), wxT(""), 10);
+               mLevelTextCtrl = S.AddTextBox( {}, wxT(""), 10);
                mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
                mLevelTextCtrl->SetValidator(vldLevel);
                mLeveldB = S.AddVariableText(_("dB"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               mWarning = S.AddVariableText( wxT(""), false,
+               mWarning = S.AddVariableText( {}, false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             }
             S.EndHorizontalLay();

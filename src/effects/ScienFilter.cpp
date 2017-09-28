@@ -408,14 +408,14 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddVariableText(_("+ dB"), false, wxCENTER);
          S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-         mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 10, 20, 0);
+         mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 10, 20, 0);
 #if wxUSE_ACCESSIBILITY
          mdBMaxSlider->SetName(_("Max dB"));
          mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
 
          S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-         mdBMinSlider = S.Id(ID_dBMin).AddSlider(wxT(""), -10, -10, -120);
+         mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -10, -10, -120);
          S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
          mdBMinSlider->SetName(_("Min dB"));
@@ -483,7 +483,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          vldRipple.SetRange(MIN_Passband, MAX_Passband);
          
          mRippleCtlP = S.AddVariableText(_("&Passband Ripple:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mRippleCtl = S.Id(ID_Ripple).AddTextBox(wxT(""), wxT(""), 10);
+         mRippleCtl = S.Id(ID_Ripple).AddTextBox( {}, wxT(""), 10);
          mRippleCtl->SetName(_("Passband Ripple (dB)"));
          mRippleCtl->SetValidator(vldRipple);
          mRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -512,7 +512,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          vldStopbandRipple.SetRange(MIN_Stopband, MAX_Stopband);
          
          mStopbandRippleCtlP = S.AddVariableText(_("Minimum S&topband Attenuation:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mStopbandRippleCtl = S.Id(ID_StopbandRipple).AddTextBox(wxT(""), wxT(""), 10);
+         mStopbandRippleCtl = S.Id(ID_StopbandRipple).AddTextBox( {}, wxT(""), 10);
          mStopbandRippleCtl->SetName(_("Minimum S&topband Attenuation (dB)"));
          mStopbandRippleCtl->SetValidator(vldStopbandRipple);
          mStopbandRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);

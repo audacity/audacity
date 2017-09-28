@@ -95,7 +95,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddButton(_("C&hoose..."));
 
          S.AddFixedText(_("Free Space:"));
-         mFreeSpace = S.AddVariableText(wxT(""));
+         mFreeSpace = S.AddVariableText( {} );
       }
       S.EndMultiColumn();
    }

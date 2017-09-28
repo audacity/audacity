@@ -425,7 +425,7 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
          AddSpinCtrl( p, DEF_ ## n, MAX_ ## n, MIN_ ## n); \
       S.SetStyle(wxSL_HORIZONTAL); \
       m ## n ## S = S.Id(ID_ ## n). \
-         AddSlider(wxT(""), DEF_ ## n, MAX_ ## n, MIN_ ## n);
+         AddSlider( {}, DEF_ ## n, MAX_ ## n, MIN_ ## n);
 
       SpinSlider(RoomSize,       _("&Room Size (%):"))
       SpinSlider(PreDelay,       _("&Pre-delay (ms):"))

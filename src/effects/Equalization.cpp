@@ -650,14 +650,14 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText(_("+ dB"), false, wxCENTER);
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMaxSlider = S.Id(ID_dBMax).AddSlider(wxT(""), 30, 60, 0);
+            mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
             mdBMaxSlider->SetName(_("Max dB"));
             mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, wxString(wxT("%d ")) + _("dB")));
 #endif
 
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMinSlider = S.Id(ID_dBMin).AddSlider(wxT(""), -30, -10, -120);
+            mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -30, -10, -120);
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
             mdBMinSlider->SetName(_("Min dB"));
@@ -770,7 +770,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrI = S.GetSizer();
 
-               mInterpChoice = S.Id(ID_Interp).AddChoice(wxT(""), wxT(""), &mInterpolations);
+               mInterpChoice = S.Id(ID_Interp).AddChoice( {}, wxT(""), &mInterpolations);
                mInterpChoice->SetName(_("Interpolation type"));
                mInterpChoice->SetSelection(0);
             }
@@ -802,7 +802,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxEXPAND, 1);
             {
                S.SetStyle(wxSL_HORIZONTAL);
-               mMSlider = S.Id(ID_Length).AddSlider(wxT(""), (mM - 1) / 2, 4095, 10);
+               mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
                mMSlider->SetName(_("Length of Filter"));
             }
             S.EndHorizontalLay();
@@ -844,7 +844,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                   curves.Add(mCurves[ i ].Name);
                }
 
-               mCurve = S.Id(ID_Curve).AddChoice(wxT(""), wxT(""), &curves);
+               mCurve = S.Id(ID_Curve).AddChoice( {}, wxT(""), &curves);
                mCurve->SetName(_("Select Curve"));
             }
             S.EndHorizontalLay();
@@ -3185,7 +3185,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
    S.AddStandardButtons();
    S.StartStatic(_("Help"));
-   S.AddConstTextBox(wxT(""), _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
+   S.AddConstTextBox( {}, _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
    S.EndStatic();
    PopulateList(mPosition);
    Fit();

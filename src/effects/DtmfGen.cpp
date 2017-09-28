@@ -341,7 +341,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 
       S.AddFixedText(_("Tone/silence ratio:"), false);
       S.SetStyle(wxSL_HORIZONTAL | wxEXPAND);
-      mDtmfDutyCycleS = S.Id(ID_DutyCycle).AddSlider(wxT(""),
+      mDtmfDutyCycleS = S.Id(ID_DutyCycle).AddSlider( {},
                                                      dtmfDutyCycle * SCL_DutyCycle,
                                                      MAX_DutyCycle * SCL_DutyCycle, 
                                                      MIN_DutyCycle * SCL_DutyCycle);

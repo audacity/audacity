@@ -385,14 +385,14 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             mThresholdTxt = S.AddVariableText(defaultLabel(0), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldThreshold(2, &mParams.mThreshold_dB);
             vldThreshold.SetRange(MIN_Threshold_dB, MAX_Threshold_dB);
-            mThresholdT = S.Id(ID_Threshold).AddTextBox(wxT(""), wxT(""), 10);
+            mThresholdT = S.Id(ID_Threshold).AddTextBox( {}, wxT(""), 10);
             mThresholdT->SetName(defaultLabel(0));
             mThresholdT->SetValidator(vldThreshold);
 
             S.SetStyle(wxSL_HORIZONTAL);
             double maxLin = DB_TO_LINEAR(MAX_Threshold_dB) * SCL_Threshold_dB;
             double minLin = DB_TO_LINEAR(MIN_Threshold_dB) * SCL_Threshold_dB;
-            mThresholdS = S.Id(ID_Threshold).AddSlider(wxT(""), 0, maxLin, minLin);
+            mThresholdS = S.Id(ID_Threshold).AddSlider( {}, 0, maxLin, minLin);
             mThresholdS->SetName(defaultLabel(0));
             S.AddSpace(20, 0);
 
@@ -400,12 +400,12 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             mNoiseFloorTxt = S.AddVariableText(defaultLabel(1), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldfloor(2, &mParams.mNoiseFloor);
             vldfloor.SetRange(MIN_NoiseFloor, MAX_NoiseFloor);
-            mNoiseFloorT = S.Id(ID_NoiseFloor).AddTextBox(wxT(""), wxT(""), 10);
+            mNoiseFloorT = S.Id(ID_NoiseFloor).AddTextBox( {}, wxT(""), 10);
             mNoiseFloorT->SetName(defaultLabel(1));
             mNoiseFloorT->SetValidator(vldfloor);
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mNoiseFloorS = S.Id(ID_NoiseFloor).AddSlider(wxT(""), 0, MAX_NoiseFloor, MIN_NoiseFloor);
+            mNoiseFloorS = S.Id(ID_NoiseFloor).AddSlider( {}, 0, MAX_NoiseFloor, MIN_NoiseFloor);
             mNoiseFloorS->SetName(defaultLabel(1));
             S.AddSpace(20, 0);
          }
@@ -425,12 +425,12 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             mParam1Txt = S.AddVariableText(defaultLabel(2), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldparam1(2, &mParams.mParam1);
             vldparam1.SetRange(MIN_Param1, MAX_Param1);
-            mParam1T = S.Id(ID_Param1).AddTextBox(wxT(""), wxT(""), 10);
+            mParam1T = S.Id(ID_Param1).AddTextBox( {}, wxT(""), 10);
             mParam1T->SetName(defaultLabel(2));
             mParam1T->SetValidator(vldparam1);
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mParam1S = S.Id(ID_Param1).AddSlider(wxT(""), 0, MAX_Param1, MIN_Param1);
+            mParam1S = S.Id(ID_Param1).AddSlider( {}, 0, MAX_Param1, MIN_Param1);
             mParam1S->SetName(defaultLabel(2));
             S.AddSpace(20, 0);
 
@@ -438,12 +438,12 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             mParam2Txt = S.AddVariableText(defaultLabel(3), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldParam2(2, &mParams.mParam2);
             vldParam2.SetRange(MIN_Param2, MAX_Param2);
-            mParam2T = S.Id(ID_Param2).AddTextBox(wxT(""), wxT(""), 10);
+            mParam2T = S.Id(ID_Param2).AddTextBox( {}, wxT(""), 10);
             mParam2T->SetName(defaultLabel(3));
             mParam2T->SetValidator(vldParam2);
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mParam2S = S.Id(ID_Param2).AddSlider(wxT(""), 0, MAX_Param2, MIN_Param2);
+            mParam2S = S.Id(ID_Param2).AddSlider( {}, 0, MAX_Param2, MIN_Param2);
             mParam2S->SetName(defaultLabel(3));
             S.AddSpace(20, 0);
 
@@ -451,12 +451,12 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             mRepeatsTxt = S.AddVariableText(defaultLabel(4), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             IntegerValidator<int>vldRepeats(&mParams.mRepeats);
             vldRepeats.SetRange(MIN_Repeats, MAX_Repeats);
-            mRepeatsT = S.Id(ID_Repeats).AddTextBox(wxT(""), wxT(""), 10);
+            mRepeatsT = S.Id(ID_Repeats).AddTextBox( {}, wxT(""), 10);
             mRepeatsT->SetName(defaultLabel(4));
             mRepeatsT->SetValidator(vldRepeats);
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mRepeatsS = S.Id(ID_Repeats).AddSlider(wxT(""), DEF_Repeats, MAX_Repeats, MIN_Repeats);
+            mRepeatsS = S.Id(ID_Repeats).AddSlider( {}, DEF_Repeats, MAX_Repeats, MIN_Repeats);
             mRepeatsS->SetName(defaultLabel(4));
             S.AddSpace(20, 0);
          }

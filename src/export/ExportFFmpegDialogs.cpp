@@ -1459,9 +1459,9 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(1);
          S.SetStretchyCol(3);
          S.Id(FEFormatLabelID).AddFixedText(_("Format:"));
-         mFormatName = S.Id(FEFormatNameID).AddVariableText(wxT(""));
+         mFormatName = S.Id(FEFormatNameID).AddVariableText( {} );
          S.Id(FECodecLabelID).AddFixedText(_("Codec:"));
-         mCodecName = S.Id(FECodecNameID).AddVariableText(wxT(""));
+         mCodecName = S.Id(FECodecNameID).AddVariableText( {} );
       }
       S.EndMultiColumn();
       S.AddVariableText(_("Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."), false);
@@ -1491,11 +1491,11 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
 
                   S.AddSpace( 20,0 );
                   S.AddVariableText(_("Bit Reservoir"));
-                  S.Id(FEBitReservoirID).TieCheckBox(wxEmptyString, wxT("/FileFormats/FFmpegBitReservoir"), true);
+                  S.Id(FEBitReservoirID).TieCheckBox( {}, wxT("/FileFormats/FFmpegBitReservoir"), true);
 
                   S.AddSpace( 20,0 );
                   S.AddVariableText(_("VBL"));
-                  S.Id(FEVariableBlockLenID).TieCheckBox(wxEmptyString, wxT("/FileFormats/FFmpegVariableBlockLen"), true);
+                  S.Id(FEVariableBlockLenID).TieCheckBox( {}, wxT("/FileFormats/FFmpegVariableBlockLen"), true);
                }
                S.EndMultiColumn();
                S.StartMultiColumn(4, wxALIGN_LEFT);
@@ -1555,7 +1555,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mMaxPartitionOrderSpin->SetToolTip(_("Maximal partition order\nOptional\n-1 - default\nmin - 0\nmax - 8"));
 
                   S.AddVariableText(_("Use LPC"));
-                  S.Id(FEUseLPCID).TieCheckBox(wxEmptyString, wxT("/FileFormats/FFmpegUseLPC"), true);
+                  S.Id(FEUseLPCID).TieCheckBox( {}, wxT("/FileFormats/FFmpegUseLPC"), true);
                }
                S.EndMultiColumn();
             }

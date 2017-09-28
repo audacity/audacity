@@ -188,10 +188,10 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       {
 
          // Headings
-         S.AddFixedText(wxT(""));   // spacer
+         S.AddFixedText( {} );   // spacer
          S.AddFixedText(_("Start"));
          S.AddFixedText(_("End"));
-         S.AddFixedText(wxT(""));   // spacer
+         S.AddFixedText( {} );   // spacer
          S.AddFixedText(_("Volume    "));
 
          //Foreground
@@ -231,7 +231,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddWindow(mForegroundEndT);
 
          m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
-         mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 17);
+         mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
          mForegroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
 
          //Background
@@ -271,7 +271,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddWindow(mBackgroundEndT);
 
          m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
-         mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 17);
+         mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
          mBackgroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
       }
       S.EndMultiColumn();
@@ -284,11 +284,11 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
       S.StartMultiColumn(3, wxCENTER);
       {
          S.AddFixedText(_("Co&ntrast Result:"));
-         mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox(wxT(""), wxT(""), 50);
+         mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox( {}, wxT(""), 50);
          mPassFailText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
          S.AddFixedText(_("&Difference:"));
-         mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox(wxT(""), wxT(""), 50);
+         mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox( {}, wxT(""), 50);
          mDiffText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }

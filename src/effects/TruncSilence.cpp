@@ -735,7 +735,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay();
       {
          // Action choices
-         mActionChoice = S.AddChoice(wxT(""), wxT(""), &actionChoices);
+         mActionChoice = S.AddChoice( {}, wxT(""), &actionChoices);
          mActionChoice->SetValidator(wxGenericValidator(&mActionIndex));
          S.SetSizeHints(-1, -1);
       }

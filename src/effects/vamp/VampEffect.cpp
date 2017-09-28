@@ -581,7 +581,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Program"));
 
                S.Id(ID_Program);
-               mProgram = S.AddChoice(wxT(""), currentProgram, &choices);
+               mProgram = S.AddChoice( {}, currentProgram, &choices);
                mProgram->SetName(_("Program"));
                mProgram->SetSizeHints(-1, -1);
                wxSizer *s = mProgram->GetContainingSizer();
@@ -618,7 +618,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                    mParameters[p].maxValue == 1.0)
                {
                   S.Id(ID_Toggles + p);
-                  mToggles[p] = S.AddCheckBox(wxT(""),
+                  mToggles[p] = S.AddCheckBox( {},
                                               value > 0.5 ? wxT("true") : wxT("false"));
                   mToggles[p]->SetName(labelText);
                   if (!tip.IsEmpty())
@@ -651,7 +651,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   }
 
                   S.Id(ID_Choices + p);
-                  mChoices[p] = S.AddChoice(wxT(""), selected, &choices);
+                  mChoices[p] = S.AddChoice( {}, selected, &choices);
                   mChoices[p]->SetName(labelText);
                   mChoices[p]->SetSizeHints(-1, -1);
                   if (!tip.IsEmpty())
@@ -678,7 +678,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   vld.SetStyle(style);
 
                   S.Id(ID_Texts + p);
-                  mFields[p] = S.AddTextBox(wxT(""), wxT(""), 12);
+                  mFields[p] = S.AddTextBox( {}, wxT(""), 12);
                   mFields[p]->SetName(labelText);
                   mFields[p]->SetValidator(vld);
                   if (!tip.IsEmpty())
@@ -693,7 +693,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
                   S.SetStyle(wxSL_HORIZONTAL);
                   S.Id(ID_Sliders + p);
-                  mSliders[p] = S.AddSlider(wxT(""), 0, 1000, 0);
+                  mSliders[p] = S.AddSlider( {}, 0, 1000, 0);
                   mSliders[p]->SetName(labelText);
                   mSliders[p]->SetSizeHints(150, -1);
                   if (!tip.IsEmpty())
