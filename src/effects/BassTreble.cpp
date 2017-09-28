@@ -242,7 +242,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic("Output");
+   S.StartStatic(_("Output"));
    {
       S.StartMultiColumn(3, wxEXPAND);
       {

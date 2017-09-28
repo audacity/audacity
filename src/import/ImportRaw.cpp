@@ -433,7 +433,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          mPercentText = S.AddTextBox(_("Amount to import:"),
                                      wxT("100"),
                                      12);
-         S.AddUnits(wxT("%"));
+         S.AddUnits(_("%"));
 
          // Rate text
          /* i18n-hint: (noun)*/
