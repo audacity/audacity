@@ -28,6 +28,7 @@
 #endif
 
 
+#include "../Audacity.h"
 #include "numformatter.h"
 #include <wx/intl.h>
 

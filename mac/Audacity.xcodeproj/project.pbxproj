@@ -8488,6 +8488,7 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(WX_CXXFLAGS)",
 					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",
@@ -8816,6 +8817,7 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(WX_CXXFLAGS)",
 					"$(FFMPEG_CXXFLAGS)",
+					"-DWXINTL_NO_GETTEXT_MACRO",
 				);
 				OTHER_LDFLAGS = (
 					"$(WX_LDFLAGS)",

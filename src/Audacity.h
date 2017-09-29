@@ -227,7 +227,7 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 #define _TS( s ) GetCustomSubstitution( s )
 
 
-#define WXINTL_NO_GETTEXT_MACRO
+//#define WXINTL_NO_GETTEXT_MACRO
 
 #ifdef wxPLURAL
 #undef wxPLURAL
