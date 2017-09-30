@@ -61,6 +61,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Tags.h"
+#include "../TranslatableStringArray.h"
 
 #include "Export.h"
 
@@ -1191,22 +1192,43 @@ int ExportFFmpegOptions::iAACProfileValues[] = {
 };
 
 /// Names of AAC profiles to be displayed
-const wxChar *ExportFFmpegOptions::iAACProfileNames[] = {
-   _("LC"),
-   _("Main"),
-   /*_("SSR"),*/ //SSR is not supported
-   _("LTP")
-};
+static wxString iAACProfileNames(int index)
+{
+   static const wxString names[] = {
+       XO("LC"),
+       XO("Main"),
+       /*_("SSR"),*/ //SSR is not supported
+       XO("LTP")
+   };
+
+   class NamesArray final : public TranslatableStringArray
+   {
+      void Populate() override
+      {
+         for (auto &name : names)
+            mContents.push_back( wxGetTranslation( name ) );
+      }
+   };
+
+   static NamesArray theArray;
+
+   return theArray.Get()[ index ];
+}
 
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
 {
-   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_VERSION_INT(-1,-1,-1), true,  _("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
-   {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, _("AC3 Files (FFmpeg)"),               AV_CODEC_ID_AC3,    true},
-   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, _("AMR (narrow band) Files (FFmpeg)"), AV_CODEC_ID_AMR_NB, true},
-   {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, _("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
-   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_VERSION_INT(-1,-1,-1), true,  _("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
+   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_VERSION_INT(-1,-1,-1), true,  XO("M4A (AAC) Files (FFmpeg)"),         AV_CODEC_ID_AAC,    true},
+   {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, XO("AC3 Files (FFmpeg)"),               AV_CODEC_ID_AC3,    true},
+   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, XO("AMR (narrow band) Files (FFmpeg)"), AV_CODEC_ID_AMR_NB, true},
+   {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, XO("WMA (version 2) Files (FFmpeg)"),   AV_CODEC_ID_WMAV2,  true},
+   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_VERSION_INT(-1,-1,-1), true,  XO("Custom FFmpeg Export"),             AV_CODEC_ID_NONE,   true}
 };
+
+wxString ExposedFormat::Description() const
+{
+   return wxGetTranslation(description_);
+}
 
 /// Sample rates supported by AAC encoder (must end with zero-element)
 const int ExportFFmpegOptions::iAACSampleRates[] = { 7350, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 64000, 88200, 0 };
@@ -1297,7 +1319,31 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
 };
 
 /// Prediction order method - names. Labels are indices of this array.
-const wxChar *ExportFFmpegOptions::PredictionOrderMethodNames[] = { _("Estimate"), _("2-level"), _("4-level"), _("8-level"), _("Full search"), _("Log search")};
+static wxString PredictionOrderMethodNames(int index)
+{
+   static const wxString names[] = {
+      XO("Estimate"),
+      XO("2-level"),
+      XO("4-level"),
+      XO("8-level"),
+      XO("Full search"),
+      XO("Log search")
+   };
+
+   class NamesArray final : public TranslatableStringArray
+   {
+      void Populate() override
+      {
+         for (auto &name : names)
+            mContents.push_back( wxGetTranslation( name ) );
+      }
+   };
+
+   static NamesArray theArray;
+
+   return theArray.Get()[ index ];
+}
+
 
 
 ExportFFmpegOptions::~ExportFFmpegOptions()
@@ -1325,12 +1371,12 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
       for (unsigned int i = 0; i < 6; i++)
       {
          mPredictionOrderMethodLabels.Add(i);
-         mPredictionOrderMethodNames.Add(wxString::Format(wxT("%s"),PredictionOrderMethodNames[i]));
+         mPredictionOrderMethodNames.Add(wxString::Format(wxT("%s"),PredictionOrderMethodNames(i)));
       }
 
       for (unsigned int i=0; i < (sizeof(iAACProfileValues)/sizeof(int)); i++)
       {
-         mProfileNames.Add(wxString::Format(wxT("%s"),iAACProfileNames[i]));
+         mProfileNames.Add(wxString::Format(wxT("%s"),iAACProfileNames(i)));
          mProfileLabels.Add(iAACProfileValues[i]);
       }
 

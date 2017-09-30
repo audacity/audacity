@@ -45,6 +45,7 @@
 #include "Internat.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
+#include "TranslatableStringArray.h"
 #include "widgets/Grid.h"
 #include "xml/XMLFileReader.h"
 
@@ -675,24 +676,41 @@ public:
 // Editor
 //
 
-#define LABEL_ARTIST    _("Artist Name")
-#define LABEL_TITLE     _("Track Title")
-#define LABEL_ALBUM     _("Album Title")
-#define LABEL_TRACK     _("Track Number")
-#define LABEL_YEAR      _("Year")
-#define LABEL_GENRE     _("Genre")
-#define LABEL_COMMENTS  _("Comments")
+#define LABEL_ARTIST    XO("Artist Name")
+#define LABEL_TITLE     XO("Track Title")
+#define LABEL_ALBUM     XO("Album Title")
+#define LABEL_TRACK     XO("Track Number")
+#define LABEL_YEAR      XO("Year")
+#define LABEL_GENRE     XO("Genre")
+#define LABEL_COMMENTS  XO("Comments")
 
-static wxString names[] =
+static wxArrayString names()
 {
-   LABEL_ARTIST,
-   LABEL_TITLE,
-   LABEL_ALBUM,
-   LABEL_TRACK,
-   LABEL_YEAR,
-   LABEL_GENRE,
-   LABEL_COMMENTS
-};
+   static wxString theNames[] =
+   {
+      LABEL_ARTIST,
+      LABEL_TITLE,
+      LABEL_ALBUM,
+      LABEL_TRACK,
+      LABEL_YEAR,
+      LABEL_GENRE,
+      LABEL_COMMENTS
+   };
+
+   class NamesArray final : public TranslatableStringArray
+   {
+      void Populate() override
+      {
+         for (auto &name : theNames)
+            mContents.push_back( wxGetTranslation( name ) );
+      }
+   };
+
+   static NamesArray theArray;
+
+   // Yes, return array by value
+   return theArray.Get();
+}
 
 static struct
 {
@@ -750,14 +768,6 @@ TagsEditor::TagsEditor(wxWindow * parent,
    mEditTrack(editTrack)
 {
    SetName(GetTitle());
-
-   names[0] = LABEL_ARTIST;
-   names[1] = LABEL_TITLE;
-   names[2] = LABEL_ALBUM;
-   names[3] = LABEL_TRACK;
-   names[4] = LABEL_YEAR;
-   names[5] = LABEL_GENRE;
-   names[6] = LABEL_COMMENTS;
 
    labelmap[0].label = LABEL_ARTIST;
    labelmap[1].label = LABEL_TITLE;
@@ -858,7 +868,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
 
          mGrid->SetColLabelSize(mGrid->GetDefaultRowSize());
 
-         wxArrayString cs(WXSIZEOF(names), names);
+         wxArrayString cs(names());
 
          // Build the initial (empty) grid
          mGrid->CreateGrid(0, 2);

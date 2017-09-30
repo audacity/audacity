@@ -310,20 +310,26 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
    PopulateOrExchange(S);
 }
 
-const wxString kStdMsg =
+static const wxString kStdMsg()
+{
+   return
 _("Copying these files into your project will remove this dependency.\
 \nThis is safer, but needs more disk space.");
+}
 
-const wxString kExtraMsgForMissingFiles =
+static const wxString kExtraMsgForMissingFiles()
+{
+   return
 _("\n\nFiles shown as MISSING have been moved or deleted and cannot be copied.\
 \nRestore them to their original location to be able to copy into project.");
+}
 
 void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 {
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      mMessageStaticText = S.AddVariableText(kStdMsg, false);
+      mMessageStaticText = S.AddVariableText(kStdMsg(), false);
 
       S.StartStatic(_("Project Dependencies"));
       {
@@ -422,9 +428,9 @@ void DependencyDialog::PopulateList()
       ++i;
    }
 
-   wxString msg = kStdMsg;
+   wxString msg = kStdMsg();
    if (mHasMissingFiles)
-      msg += kExtraMsgForMissingFiles;
+      msg += kExtraMsgForMissingFiles();
    mMessageStaticText->SetLabel(msg);
 
    if (mCopyAllFilesButton)

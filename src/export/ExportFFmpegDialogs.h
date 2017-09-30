@@ -44,9 +44,11 @@ struct ExposedFormat
    unsigned maxchannels;      //!< how many channels this format could handle
    int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
-   const wxChar *description; //!< format description (will be shown in export dialog)
+   const wxChar *description_; //!< format description (will be shown in export dialog) (untranslated!)
    AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
    bool compiledIn;           //!< support for this codec/format is compiled in (checked at runtime)
+
+   wxString Description() const; // get translation
 };
 
 
@@ -199,11 +201,9 @@ public:
    // Static tables
    static CompatibilityEntry CompatibilityList[];
    static int iAACProfileValues[];
-   static const wxChar *iAACProfileNames[];
    static ExposedFormat fmts[];
    static const int iAACSampleRates[];
    static ApplicableFor apptable[];
-   static const wxChar *PredictionOrderMethodNames[];
 
 private:
 

@@ -1047,6 +1047,11 @@ wxString AudacityApp::InitLang( const wxString & lang )
       ProcessEvent(evt);
    }
 
+   // PRL: Moved this, do it only after language intialized
+   // Unused strings that we want to be translated, even though
+   // we're not using them yet...
+   wxString future1 = _("Master Gain Control");
+
    return result;
 }
 
@@ -1255,10 +1260,6 @@ bool AudacityApp::OnInit()
    // Explicitly set since OSX will use it for the "Quit" menu item
    wxTheApp->SetAppDisplayName(appName);
    wxTheApp->SetVendorName(appName);
-
-   // Unused strings that we want to be translated, even though
-   // we're not using them yet...
-   wxString future1 = _("Master Gain Control");
 
    ::wxInitAllImageHandlers();
 
