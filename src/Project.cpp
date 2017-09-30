@@ -4920,7 +4920,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
             ODManager::Instance()->SignalTaskQueueLoop();
 
 
-            msg.Printf(_("On-demand import and waveform calculation complete."));
+            msg = _("On-demand import and waveform calculation complete.");
             mStatusBar->SetStatusText(msg, mainStatusBarField);
 
          }

@@ -524,12 +524,12 @@ int TimerRecordDialog::RunWaitDialog()
 
       // Two column layout. Line spacing must match for both columns.
       // First column
-      wxString strMsg = wxString::Format(_("Recording start:\n") +
+      wxString strMsg = _("Recording start:\n") +
                                          _("Duration:\n") +
                                          _("Recording end:\n\n") +
                                          _("Automatic Save enabled:\n") +
                                          _("Automatic Export enabled:\n") +
-                                         _("Action after Timer Recording:"));
+                                         _("Action after Timer Recording:");
 
       strMsg += ProgressDialog::ColoumnSplitMarker;
 
@@ -1009,12 +1009,12 @@ ProgressResult TimerRecordDialog::WaitForStart()
 
    // Two column layout. Line spacing must match for both columns.
    // First column
-   wxString strMsg = wxString::Format(_("Waiting to start recording at:\n") +
+   wxString strMsg = _("Waiting to start recording at:\n") +
                                       _("Recording duration:\n") +
                                       _("Scheduled to stop at:\n\n") +
                                       _("Automatic Save enabled:\n") +
                                       _("Automatic Export enabled:\n") +
-                                      _("Action after Timer Recording:"));
+                                      _("Action after Timer Recording:");
 
    strMsg += ProgressDialog::ColoumnSplitMarker;
 
@@ -1054,10 +1054,10 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
 
    // Two column layout. Line spacing must match for both columns.
    // First column
-   wxString strMsg = wxString::Format(_("Timer Recording completed.\n\n") +
+   wxString strMsg = _("Timer Recording completed.\n\n") +
                                       _("Recording Saved:\n") +
                                       _("Recording Exported:\n") +
-                                      _("Action after Timer Recording:"));
+                                      _("Action after Timer Recording:");
 
    strMsg += ProgressDialog::ColoumnSplitMarker;
 

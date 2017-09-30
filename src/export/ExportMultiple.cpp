@@ -307,12 +307,12 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
          // Row 1
          S.SetBorder(1);
          mTrack = S.Id(TrackID)
-            .AddRadioButton(wxString(_("Tracks")));
+            .AddRadioButton(_("Tracks"));
          mTrack->SetName(_("Tracks"));
 
          // Row 2
          S.SetBorder(1);
-         mLabel = S.Id(LabelID).AddRadioButtonToGroup(wxString(_("Labels")));
+         mLabel = S.Id(LabelID).AddRadioButtonToGroup(_("Labels"));
          mLabel->SetName(_("Labels"));
          S.SetBorder(3);
 

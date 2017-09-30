@@ -193,7 +193,7 @@ bool EffectClickRemoval::Process()
    }
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.
       Effect::MessageBox(
-         wxString::Format(_("Algorithm not effective on this audio. Nothing changed.")),
+         _("Algorithm not effective on this audio. Nothing changed."),
          wxOK | wxICON_ERROR);
 
    this->ReplaceProcessedTracks(bGoodResult && mbDidSomething);

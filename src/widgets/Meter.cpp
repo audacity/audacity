@@ -2235,11 +2235,11 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
          // always retain the leading space. Therefore a space has
          // been added to ensure at least one space, and stop
          // words from being merged
-         *name += wxT(" ") + wxString::Format(_(" Monitoring "));
+         *name += wxT(" ") + _(" Monitoring ");
       }
       else if (m->mActive)
       {
-         *name += wxT(" ") + wxString::Format(_(" Active "));
+         *name += wxT(" ") + _(" Active ");
       }
 
       float peak = 0.;
@@ -2262,7 +2262,7 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
 
       if (clipped)
       {
-         *name += wxT(" ") + wxString::Format(_(" Clipped "));
+         *name += wxT(" ") + _(" Clipped ");
       }
    }
 

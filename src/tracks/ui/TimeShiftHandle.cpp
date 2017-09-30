@@ -875,7 +875,7 @@ UIHandle::Result TimeShiftHandle::Release
    wxString msg;
    bool consolidate;
    if (mDidSlideVertically) {
-      msg.Printf(_("Moved clips to another track"));
+      msg = _("Moved clips to another track");
       consolidate = false;
    }
    else {

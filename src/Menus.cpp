@@ -1123,7 +1123,7 @@ void AudacityProject::CreateMenusAndCommands()
             EffectManager::Get().GetEffectName(mLastEffect));
       }
       else
-         buildMenuLabel.Printf(_("Repeat Last Effect"));
+         buildMenuLabel = _("Repeat Last Effect");
 
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       c->AddItem(wxT("ManageEffects"), _("Add / Remove Plug-ins..."), FN(OnManageEffects));
@@ -1937,7 +1937,7 @@ void AudacityProject::ModifyUndoMenuItems()
    }
    else {
       mCommandManager.Modify(wxT("Undo"),
-                             wxString::Format(_("&Undo")));
+                             _("&Undo"));
    }
 
    if (GetUndoManager()->RedoAvailable()) {
@@ -1949,7 +1949,7 @@ void AudacityProject::ModifyUndoMenuItems()
    }
    else {
       mCommandManager.Modify(wxT("Redo"),
-                             wxString::Format(_("&Redo")));
+                             _("&Redo"));
       mCommandManager.Enable(wxT("Redo"), false);
    }
 }
@@ -4602,13 +4602,13 @@ void AudacityProject::OnExportMIDI(){
    }
 
    if(numNoteTracksSelected > 1) {
-      AudacityMessageBox(wxString::Format(_(
-         "Please select only one Note Track at a time.")));
+      AudacityMessageBox(_(
+         "Please select only one Note Track at a time."));
       return;
    }
    else if(numNoteTracksSelected < 1) {
-      AudacityMessageBox(wxString::Format(_(
-         "Please select a Note Track.")));
+      AudacityMessageBox(_(
+         "Please select a Note Track."));
       return;
    }
 

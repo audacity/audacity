@@ -408,7 +408,7 @@ namespace {
             return wxString::Format(_("%.2f dB RMS"), diffdB);
          else
             /* i18n-hint: dB abbreviates decibels */
-            return wxString::Format(_("Infinite dB difference"));
+            return _("Infinite dB difference");
       }
    }
 
@@ -463,27 +463,27 @@ void ContrastDialog::results()
    if (mForegroundIsDefined) {
       mForegroundRMSText->SetName(_("Measured foreground level"));   // Read by screen-readers
       if(std::isinf(- foregrounddB))
-         mForegroundRMSText->ChangeValue(wxString::Format(_("zero")));
+         mForegroundRMSText->ChangeValue(_("zero"));
       else
          mForegroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), foregrounddB));   // i18n-hint: short form of 'decibels'        
    }
    else {
       mForegroundRMSText->SetName(_("No foreground measured"));   // Read by screen-readers
       mForegroundRMSText->ChangeValue(wxT(""));
-      mPassFailText->ChangeValue(wxString::Format(_("Foreground not yet measured")));
+      mPassFailText->ChangeValue(_("Foreground not yet measured"));
    }
 
    if (mBackgroundIsDefined) {
       mBackgroundRMSText->SetName(_("Measured background level"));
       if(std::isinf(- backgrounddB))
-         mBackgroundRMSText->ChangeValue(wxString::Format(_("zero")));
+         mBackgroundRMSText->ChangeValue(_("zero"));
       else
          mBackgroundRMSText->ChangeValue(wxString::Format(_("%.2f dB"), backgrounddB));
    }
    else {
       mBackgroundRMSText->SetName(_("No background measured"));
       mBackgroundRMSText->ChangeValue(wxT(""));
-      mPassFailText->ChangeValue(wxString::Format(_("Background not yet measured")));
+      mPassFailText->ChangeValue(_("Background not yet measured"));
    }
 }
 

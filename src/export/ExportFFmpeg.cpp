@@ -288,7 +288,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    mEncFormatCtx.reset(avformat_alloc_context());
    if (!mEncFormatCtx)
    {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't allocate output format context.")),
+      AudacityMessageBox(_("FFmpeg : ERROR - Can't allocate output format context."),
                    _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
       return false;
    }
@@ -546,8 +546,10 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    mEncAudioFifoOutBuf.reset(static_cast<int16_t*>(av_malloc(mEncAudioFifoOutBufSiz)));
    if (!mEncAudioFifoOutBuf)
    {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.")),
-                   _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+      AudacityMessageBox(
+         _("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."),
+         _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+      );
       return false;
    }
 
@@ -576,22 +578,28 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       buffer_size = av_samples_get_buffer_size(NULL, avctx->channels, frame->nb_samples,
                                               avctx->sample_fmt, 0);
       if (buffer_size < 0) {
-         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not get sample buffer size")),
-                      _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+         AudacityMessageBox(
+            _("FFmpeg : ERROR - Could not get sample buffer size"),
+            _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+         );
          return buffer_size;
       }
       samples.reset(static_cast<uint8_t*>(av_malloc(buffer_size)));
       if (!samples) {
-         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not allocate bytes for samples buffer")),
-                      _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+         AudacityMessageBox(
+            _("FFmpeg : ERROR - Could not allocate bytes for samples buffer"),
+            _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+         );
          return AVERROR(ENOMEM);
       }
       /* setup the data pointers in the AVFrame */
       ret = avcodec_fill_audio_frame(frame.get(), avctx->channels, avctx->sample_fmt,
                                   samples.get(), buffer_size, 0);
       if (ret < 0) {
-         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Could not setup audio frame")),
-                      _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+         AudacityMessageBox(
+            _("FFmpeg : ERROR - Could not setup audio frame"),
+            _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+         );
          return ret;
       }
 
@@ -638,8 +646,10 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
 
    ret = avcodec_encode_audio2(avctx, pkt, frame.get(), &got_output);
    if (ret < 0) {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - encoding frame failed")),
-                   _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+      AudacityMessageBox(
+         _("FFmpeg : ERROR - encoding frame failed"),
+         _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+      );
       return ret;
    }
 
@@ -664,8 +674,10 @@ bool ExportFFmpeg::Finalize()
          int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
 
          if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz || nFifoBytes > mEncAudioFifoOutBufSiz) {
-            AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Too much remaining data.")),
-               _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION);
+            AudacityMessageBox(
+               _("FFmpeg : ERROR - Too much remaining data."),
+               _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
+            );
             return false;
          }
 
@@ -727,8 +739,10 @@ bool ExportFFmpeg::Finalize()
 
          if (av_interleaved_write_frame(mEncFormatCtx.get(), &pkt) != 0)
          {
-            AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Couldn't write last audio frame to output file.")),
-               _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION);
+            AudacityMessageBox(
+               _("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
+               _("FFmpeg Error"), wxOK | wxCENTER | wxICON_EXCLAMATION
+            );
             break;
          }
       }
@@ -777,8 +791,10 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       return false;
 
    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz) {
-      AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - nAudioFrameSizeOut too large.")),
-                   _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+      AudacityMessageBox(
+         _("FFmpeg : ERROR - nAudioFrameSizeOut too large."),
+         _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+      );
       return false;
    }
 
@@ -795,8 +811,10 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
          default_frame_size);
       if (ret < 0)
       {
-         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't encode audio frame.")),
-                      _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+         AudacityMessageBox(
+            _("FFmpeg : ERROR - Can't encode audio frame."),
+            _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+         );
          return false;
       }
       if (ret == 0)
@@ -814,8 +832,10 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       // Write the encoded audio frame to the output file.
       if ((ret = av_interleaved_write_frame(mEncFormatCtx.get(), &pkt)) < 0)
       {
-         AudacityMessageBox(wxString::Format(_("FFmpeg : ERROR - Failed to write audio frame to file.")),
-                      _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
+         AudacityMessageBox(
+            _("FFmpeg : ERROR - Failed to write audio frame to file."),
+            _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION
+         );
          return false;
       }
    }
