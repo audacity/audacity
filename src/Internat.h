@@ -29,7 +29,16 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 // Marks strings for extraction only...must use wxGetTranslation() to translate.
 #define XO(s)  wxT(s)
 
-#define _(s) GetCustomTranslation((s))
+#ifdef __WXDEBUG__
+   #include <signal.h>
+   // Force a crash if you misuse _ in a static initializer, so that translation
+   // is looked up too early and not found.
+   // Raise a signal because it's even too early to use wxASSERT for this.
+   #define _(s) ((wxTranslations::Get() || raise(SIGTRAP)), \
+                GetCustomTranslation((s)))
+#else
+   #define _(s) GetCustomTranslation((s))
+#endif
 
 // The two string arugments will go to the .pot file, as
 // msgid sing
