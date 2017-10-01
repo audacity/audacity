@@ -213,8 +213,8 @@ private:
    bool BuildFancy();
    bool BuildPlain();
 
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() /* not override */;
+   bool TransferDataFromWindow() /* not override */;
    void SetSlider(wxSlider *slider, const LV2Port & ctrl);
 
    void OnTrigger(wxCommandEvent & evt);

@@ -76,14 +76,14 @@ class EditToolBar final : public ToolBar {
    EditToolBar();
    virtual ~EditToolBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
    void OnButton(wxCommandEvent & event);
 
-   void Populate();
-   void Repaint(wxDC * WXUNUSED(dc)) {};
-   void EnableDisableButtons();
-   void UpdatePrefs();
+   void Populate() override;
+   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void EnableDisableButtons() override;
+   void UpdatePrefs() override;
 
  private:
 

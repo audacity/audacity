@@ -29,9 +29,9 @@ class MixerToolBar final : public ToolBar {
    MixerToolBar();
    virtual ~MixerToolBar();
 
-   void Create(wxWindow * parent);
+   void Create(wxWindow * parent) override;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
    void UpdateControls();
    void SetMixer(wxCommandEvent &event);
 

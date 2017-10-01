@@ -122,7 +122,7 @@ public:
 
    /// Creates options panel
    ///\param format - index of export type
-   wxWindow *OptionsCreate(wxWindow *parent, int format);
+   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
    /// Check whether or not current project sample rate is compatible with the export codec
    bool CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates);

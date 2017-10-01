@@ -78,7 +78,10 @@ private:
 
    wxString GetDisplayDate(wxDateTime & dt);
    void PopulateOrExchange(ShuttleGui& S);
-   bool TransferDataFromWindow();
+
+   bool TransferDataFromWindow() override;
+   // no TransferDataFromWindow() because ??
+
    void UpdateDuration(); // Update m_TimeSpan_Duration and ctrl based on m_DateTime_Start and m_DateTime_End.
    void UpdateEnd(); // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
    ProgressResult WaitForStart();

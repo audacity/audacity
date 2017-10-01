@@ -52,8 +52,8 @@ public:
    // Effect implementation
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataFromWindow();
-   bool TransferDataToWindow();
+   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow() override;
 
 private:
    // EffectToneGen implementation

@@ -146,8 +146,8 @@ public:
                                    bool set_sizer = true);
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    // handlers

@@ -51,7 +51,7 @@ class ToolsToolBar final : public ToolBar {
    ToolsToolBar();
    virtual ~ToolsToolBar();
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
 
    void OnTool(wxCommandEvent & evt);
 
@@ -62,7 +62,7 @@ class ToolsToolBar final : public ToolBar {
    bool IsDown(int tool) const;
    int GetDownTool();
 
-   void Populate();
+   void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
    void EnableDisableButtons() override {};
 

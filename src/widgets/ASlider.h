@@ -334,8 +334,8 @@ class SliderDialog final : public wxDialogWrapper
    float Get();
 
  private:
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    void OnSlider(wxCommandEvent &event);
 

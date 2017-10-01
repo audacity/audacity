@@ -124,7 +124,7 @@ class ToolBar /* not final */ : public wxPanelWrapper
    void SetVisible( bool bVisible );
    void SetPositioned(){ mPositioned = true;};
 
-   /// Resizable toolbars should implement this.
+   /// Resizable toolbars should implement these.
    // NEW virtuals:
    virtual int GetInitialWidth() { return -1; }
    virtual int GetMinToolbarWidth() { return GetInitialWidth(); }

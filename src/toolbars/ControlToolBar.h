@@ -46,9 +46,9 @@ class ControlToolBar final : public ToolBar {
    ControlToolBar();
    virtual ~ControlToolBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
    void OnKeyEvent(wxKeyEvent & event);
 
    // msmeyer: These are public, but it's far better to
@@ -97,7 +97,7 @@ class ControlToolBar final : public ToolBar {
    // Pause - used by AudioIO to pause sound activate recording
    void Pause();
 
-   void Populate();
+   void Populate() override;
    void Repaint(wxDC *dc) override;
    void EnableDisableButtons() override;
 

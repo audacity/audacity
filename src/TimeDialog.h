@@ -39,8 +39,8 @@ class TimeDialog final : public wxDialogWrapper
  private:
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    void OnUpdate(wxCommandEvent &event);
 

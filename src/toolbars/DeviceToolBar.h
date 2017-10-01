@@ -29,9 +29,9 @@ class DeviceToolBar final : public ToolBar {
    DeviceToolBar();
    virtual ~DeviceToolBar();
 
-   void Create(wxWindow * parent);
+   void Create(wxWindow * parent) override;
 
-   void UpdatePrefs();
+   void UpdatePrefs() override;
 
    void DeinitChildren();
    void Populate() override;
@@ -45,7 +45,7 @@ class DeviceToolBar final : public ToolBar {
 
    /// When the prefs don't exist this value is used.
    /// It should be small enough to work on tiny screens
-   int GetInitialWidth() { return 620; }
+   int GetInitialWidth()  override{ return 620; }
    int GetMinToolbarWidth() override { return 200; }
 
    void ShowInputDialog();

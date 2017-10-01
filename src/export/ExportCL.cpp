@@ -48,8 +48,8 @@ public:
    virtual ~ExportCLOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    void OnBrowse(wxCommandEvent & event);
 
@@ -284,7 +284,7 @@ public:
    ExportCL();
 
    // Required
-   wxWindow *OptionsCreate(wxWindow *parent, int format);
+   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
 
    ProgressResult Export(AudacityProject *project,
                unsigned channels,

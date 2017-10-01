@@ -89,8 +89,8 @@ public:
    virtual ~ExportMP2Options();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
    wxArrayString mBitRateNames;
@@ -172,7 +172,7 @@ public:
 
    // Required
 
-   wxWindow *OptionsCreate(wxWindow *parent, int format);
+   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
    ProgressResult Export(AudacityProject *project,
                unsigned channels,
                const wxString &fName,

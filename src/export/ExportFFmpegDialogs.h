@@ -69,8 +69,8 @@ public:
    virtual ~ExportFFmpegAC3Options();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    /// Bit Rates supported by AC3 encoder
    static const int iAC3BitRates[];
@@ -95,8 +95,8 @@ public:
    virtual ~ExportFFmpegAACOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
 private:
 
@@ -111,8 +111,8 @@ public:
    virtual ~ExportFFmpegAMRNBOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    static int iAMRNBBitRate[];
 
@@ -133,8 +133,8 @@ public:
    ~ExportFFmpegWMAOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    static const int iWMASampleRates[];
    static const int iWMABitRate[];
@@ -156,8 +156,8 @@ public:
    ~ExportFFmpegCustomOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    void OnOpen(wxCommandEvent & evt);
 

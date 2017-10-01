@@ -72,7 +72,7 @@ class TranscriptionToolBar final : public ToolBar {
    TranscriptionToolBar();
    virtual ~TranscriptionToolBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
    void OnKeyEvent(wxKeyEvent & event);
    void OnPlaySpeed(wxCommandEvent & event);

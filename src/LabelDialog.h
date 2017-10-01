@@ -54,8 +54,8 @@ class LabelDialog final : public wxDialogWrapper
 
  private:
 
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
    bool Validate();
    void FindAllLabels();
    void AddLabels(const LabelTrack *t);

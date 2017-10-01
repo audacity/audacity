@@ -34,7 +34,7 @@ public:
    SpectralSelectionBar();
    virtual ~SpectralSelectionBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};

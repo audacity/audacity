@@ -64,7 +64,7 @@ class SelectionBar final : public ToolBar {
    SelectionBar();
    virtual ~SelectionBar();
 
-   void Create(wxWindow *parent);
+   void Create(wxWindow *parent) override;
 
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};

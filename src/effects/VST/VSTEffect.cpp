@@ -187,67 +187,67 @@ public:
 
    // EffectClientInterface implementation
 
-   wxString GetPath()
+   wxString GetPath() override
    {
       return mPath;
    }
 
-   wxString GetSymbol()
+   wxString GetSymbol() override
    {
       return mName;
    }
 
-   wxString GetName()
+   wxString GetName() override
    {
       return GetSymbol();
    }
 
-   wxString GetVendor()
+   wxString GetVendor() override
    {
       return mVendor;
    }
 
-   wxString GetVersion()
+   wxString GetVersion() override
    {
       return mVersion;
    }
 
-   wxString GetDescription()
+   wxString GetDescription() override
    {
       return mDescription;
    }
 
-   wxString GetFamily()
+   wxString GetFamily() override
    {
       return VSTPLUGINTYPE;
    }
 
-   EffectType GetType()
+   EffectType GetType() override
    {
       return mType;
    }
 
-   bool IsInteractive()
+   bool IsInteractive() override
    {
       return mInteractive;
    }
 
-   bool IsDefault()
+   bool IsDefault() override
    {
       return false;
    }
 
-   bool IsLegacy()
+   bool IsLegacy() override
    {
       return false;
    }
 
-   bool SupportsRealtime()
+   bool SupportsRealtime() override
    {
       return mType == EffectTypeProcess;
    }
 
-   bool SupportsAutomation()
+   bool SupportsAutomation() override
    {
       return mAutomatable;
    }

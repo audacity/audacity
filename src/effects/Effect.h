@@ -317,8 +317,8 @@ protected:
    virtual void Preview(bool dryOnly);
 
    virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
+   virtual bool TransferDataToWindow() /* not override */;
+   virtual bool TransferDataFromWindow() /* not override */;
    virtual bool EnableApply(bool enable = true);
    virtual bool EnablePreview(bool enable = true);
    virtual void EnableDebug(bool enable = true);

@@ -65,27 +65,27 @@ public:
    {
    }
 
-   virtual bool HasGroup(const wxString & strName) const
+   virtual bool HasGroup(const wxString & strName) const override
    {
       return wxFileConfig::HasGroup(NormalizeName(strName));
    }
 
-   virtual bool HasEntry(const wxString& strName) const
+   virtual bool HasEntry(const wxString& strName) const override
    {
       return wxFileConfig::HasEntry(NormalizeName(strName));
    }
 
-   virtual bool DoReadString(const wxString & key, wxString *pStr) const
+   virtual bool DoReadString(const wxString & key, wxString *pStr) const override
    {
       return wxFileConfig::DoReadString(NormalizeName(key), pStr);
    }
 
-   virtual bool DoReadLong(const wxString & key, long *pl) const
+   virtual bool DoReadLong(const wxString & key, long *pl) const override
    {
       return wxFileConfig::DoReadLong(NormalizeName(key), pl);
    }
 
-   virtual bool DoReadDouble(const wxString & key, double *pd) const
+   virtual bool DoReadDouble(const wxString & key, double *pd) const override
    {
       wxString str;
       if (Read(key, &str))
@@ -102,17 +102,17 @@ public:
       return false;
    }
 
-   virtual bool DoWriteString(const wxString & key, const wxString & szValue)
+   virtual bool DoWriteString(const wxString & key, const wxString & szValue) override
    {
       return wxFileConfig::DoWriteString(NormalizeName(key), szValue);
    }
 
-   virtual bool DoWriteLong(const wxString & key, long lValue)
+   virtual bool DoWriteLong(const wxString & key, long lValue) override
    {
       return wxFileConfig::DoWriteLong(NormalizeName(key), lValue);
    }
 
-   virtual bool DoWriteDouble(const wxString & key, double value)
+   virtual bool DoWriteDouble(const wxString & key, double value) override
    {
       return DoWriteString(key, wxString::Format(wxT("%.12f"), value));
    }
