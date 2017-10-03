@@ -163,10 +163,10 @@ static const double kThirdOct[] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type        Key                     Def      Min      Max      Scale
-Param( FilterLength, int,     XO("FilterLength"),        4001,    21,      8191,    0      );
-Param( CurveName,    wxChar*, XO("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
-Param( InterpLin,    bool,    XO("InterpolateLin"),      false,   false,   true,    false  );
-Param( InterpMeth,   int,     XO("InterpolationMethod"), 0,       0,       0,       0      );
+Param( FilterLength, int,     wxT("FilterLength"),        4001,    21,      8191,    0      );
+Param( CurveName,    wxChar*, wxT("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
+Param( InterpLin,    bool,    wxT("InterpolateLin"),      false,   false,   true,    false  );
+Param( InterpMeth,   int,     wxT("InterpolationMethod"), 0,       0,       0,       0      );
 Param( DrawMode,     bool,    wxT(""),                   true,    false,   true,    false  );
 Param( DrawGrid,     bool,    wxT(""),                   true,    false,   true,    false  );
 Param( dBMin,        float,   wxT(""),                   -30.0,   -120.0,  -10.0,   0      );

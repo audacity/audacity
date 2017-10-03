@@ -57,13 +57,13 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type     Key                  Def      Min      Max      Scale
-Param( Threshold,    double,  XO("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
-Param( NoiseFloor,   double,  XO("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
-Param( Ratio,        double,  XO("Ratio"),         2.0,     1.1,     10.0,    10  );
-Param( AttackTime,   double,  XO("AttackTime"),    0.2,     0.1,     5.0,     100 );
-Param( ReleaseTime,  double,  XO("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
-Param( Normalize,    bool,    XO("Normalize"),     true,    false,   true,    1   );
-Param( UsePeak,      bool,    XO("UsePeak"),       false,   false,   true,    1   );
+Param( Threshold,    double,  wxT("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
+Param( NoiseFloor,   double,  wxT("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
+Param( Ratio,        double,  wxT("Ratio"),         2.0,     1.1,     10.0,    10  );
+Param( AttackTime,   double,  wxT("AttackTime"),    0.2,     0.1,     5.0,     100 );
+Param( ReleaseTime,  double,  wxT("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
+Param( Normalize,    bool,    wxT("Normalize"),     true,    false,   true,    1   );
+Param( UsePeak,      bool,    wxT("UsePeak"),       false,   false,   true,    1   );
 
 //----------------------------------------------------------------------------
 // EffectCompressor

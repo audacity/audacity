@@ -43,12 +43,12 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def      Min      Max      Scale
-Param( Freq,      double,  XO("Freq"),       1.5,     0.1,     4.0,     10  );
-Param( Phase,     double,  XO("Phase"),      0.0,     0.0,     360.0,   1   );
-Param( Depth,     int,     XO("Depth"),      70,      0,       100,     1   ); // scaled to 0-1 before processing
-Param( Res,       double,  XO("Resonance"),  2.5,     0.1,     10.0,    10  );
-Param( FreqOfs,   int,     XO("Offset"),     30,      0,       100,     1   ); // scaled to 0-1 before processing
-Param( OutGain,   double,  XO("Gain"),      -6.0,    -30.0,    30.0,    1   );
+Param( Freq,      double,  wxT("Freq"),       1.5,     0.1,     4.0,     10  );
+Param( Phase,     double,  wxT("Phase"),      0.0,     0.0,     360.0,   1   );
+Param( Depth,     int,     wxT("Depth"),      70,      0,       100,     1   ); // scaled to 0-1 before processing
+Param( Res,       double,  wxT("Resonance"),  2.5,     0.1,     10.0,    10  );
+Param( FreqOfs,   int,     wxT("Offset"),     30,      0,       100,     1   ); // scaled to 0-1 before processing
+Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 30

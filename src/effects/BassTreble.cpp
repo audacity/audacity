@@ -41,10 +41,10 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                  Def      Min      Max      Scale
-Param( Bass,      double,  XO("Bass"),          0.0,     -30.0,   30.0,    1  );
-Param( Treble,    double,  XO("Treble"),        0.0,     -30.0,   30.0,    1  );
-Param( Gain,      double,  XO("Gain"),          0.0,     -30.0,   30.0,    1  );
-Param( Link,      bool,    XO("Link Sliders"),  false,    false,  true,    1  );
+Param( Bass,      double,  wxT("Bass"),          0.0,     -30.0,   30.0,    1  );
+Param( Treble,    double,  wxT("Treble"),        0.0,     -30.0,   30.0,    1  );
+Param( Gain,      double,  wxT("Gain"),          0.0,     -30.0,   30.0,    1  );
+Param( Link,      bool,    wxT("Link Sliders"),  false,    false,  true,    1  );
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(EffectBassTrebleStateArray);

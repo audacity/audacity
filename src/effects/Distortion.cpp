@@ -76,13 +76,13 @@ static const wxString kTableTypeStrings[kNumTableTypes] =
 // (Note: 'Repeats' is the total number of times the effect is applied.)
 //
 //     Name             Type     Key                   Def     Min      Max                 Scale
-Param( TableTypeIndx,   int,     XO("Type"),           0,       0,      kNumTableTypes-1,    1    );
-Param( DCBlock,         bool,    XO("DC Block"),      false,   false,   true,                1    );
-Param( Threshold_dB,    double,  XO("Threshold dB"),  -6.0,  -100.0,     0.0,             1000.0f );
-Param( NoiseFloor,      double,  XO("Noise Floor"),   -70.0,  -80.0,   -20.0,                1    );
-Param( Param1,          double,  XO("Parameter 1"),    50.0,    0.0,   100.0,                1    );
-Param( Param2,          double,  XO("Parameter 2"),    50.0,    0.0,   100.0,                1    );
-Param( Repeats,         int,     XO("Repeats"),        1,       0,       5,                  1    );
+Param( TableTypeIndx,   int,     wxT("Type"),           0,       0,      kNumTableTypes-1,    1    );
+Param( DCBlock,         bool,    wxT("DC Block"),      false,   false,   true,                1    );
+Param( Threshold_dB,    double,  wxT("Threshold dB"),  -6.0,  -100.0,     0.0,             1000.0f );
+Param( NoiseFloor,      double,  wxT("Noise Floor"),   -70.0,  -80.0,   -20.0,                1    );
+Param( Param1,          double,  wxT("Parameter 1"),    50.0,    0.0,   100.0,                1    );
+Param( Param2,          double,  wxT("Parameter 2"),    50.0,    0.0,   100.0,                1    );
+Param( Repeats,         int,     wxT("Repeats"),        1,       0,       5,                  1    );
 
 // How many samples are processed before recomputing the lookup table again
 #define skipsamples 1000

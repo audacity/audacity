@@ -112,12 +112,12 @@ static const wxChar *kSubTypeStrings[] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                     Def            Min   Max               Scale
-Param( Type,      int,     XO("FilterType"),       kButterworth,  0,    kNumTypes - 1,    1  );
-Param( Subtype,   int,     XO("FilterSubtype"),    kLowPass,      0,    kNumSubTypes - 1, 1  );
-Param( Order,     int,     XO("Order"),            1,             1,    10,               1  );
-Param( Cutoff,    float,   XO("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
-Param( Passband,  float,   XO("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
-Param( Stopband,  float,   XO("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
+Param( Type,      int,     wxT("FilterType"),       kButterworth,  0,    kNumTypes - 1,    1  );
+Param( Subtype,   int,     wxT("FilterSubtype"),    kLowPass,      0,    kNumSubTypes - 1, 1  );
+Param( Order,     int,     wxT("Order"),            1,             1,    10,               1  );
+Param( Cutoff,    float,   wxT("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
+Param( Passband,  float,   wxT("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
+Param( Stopband,  float,   wxT("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
 
 static const double s_fChebyCoeffs[MAX_Order][MAX_Order + 1] =
 {

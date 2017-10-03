@@ -45,8 +45,8 @@ static const wxChar *kTypeStrings[kNumTypes] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type     Key               Def      Min   Max            Scale
-Param( Type,   int,     XO("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
-Param( Amp,    double,  XO("Amplitude"),  0.8,     0.0,  1.0,           1  );
+Param( Type,   int,     wxT("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
+Param( Amp,    double,  wxT("Amplitude"),  0.8,     0.0,  1.0,           1  );
 
 //
 // EffectNoise

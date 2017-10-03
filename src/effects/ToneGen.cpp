@@ -65,14 +65,14 @@ static const wxString kWaveStrings[kNumWaveforms] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key                  Def      Min      Max                     Scale
-Param( StartFreq, double,  XO("StartFreq"),     440.0,   1.0,     DBL_MAX,                1  );
-Param( EndFreq,   double,  XO("EndFreq"),       1320.0,  1.0,     DBL_MAX,                1  );
-Param( StartAmp,  double,  XO("StartAmp"),      0.8,     0.0,     1.0,                    1  );
-Param( EndAmp,    double,  XO("EndAmp"),        0.1,     0.0,     1.0,                    1  );
-Param( Frequency, double,  XO("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
-Param( Amplitude, double,  XO("Amplitude"),     0.8,     0.0,     1.0,                    1  );
-Param( Waveform,  int,     XO("Waveform"),      0,       0,       kNumWaveforms - 1,      1  );
-Param( Interp,    int,     XO("Interpolation"), 0,       0,       kNumInterpolations - 1, 1  );
+Param( StartFreq, double,  wxT("StartFreq"),     440.0,   1.0,     DBL_MAX,                1  );
+Param( EndFreq,   double,  wxT("EndFreq"),       1320.0,  1.0,     DBL_MAX,                1  );
+Param( StartAmp,  double,  wxT("StartAmp"),      0.8,     0.0,     1.0,                    1  );
+Param( EndAmp,    double,  wxT("EndAmp"),        0.1,     0.0,     1.0,                    1  );
+Param( Frequency, double,  wxT("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
+Param( Amplitude, double,  wxT("Amplitude"),     0.8,     0.0,     1.0,                    1  );
+Param( Waveform,  int,     wxT("Waveform"),      0,       0,       kNumWaveforms - 1,      1  );
+Param( Interp,    int,     wxT("Interpolation"), 0,       0,       kNumInterpolations - 1, 1  );
 
 //
 // EffectToneGen

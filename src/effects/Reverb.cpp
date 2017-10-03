@@ -44,16 +44,16 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name          Type     Key                  Def      Min      Max   Scale
-Param( RoomSize,     double,  XO("RoomSize"),      75,      0,       100,  1  );
-Param( PreDelay,     double,  XO("Delay"),         10,      0,       200,  1  );
-Param( Reverberance, double,  XO("Reverberance"),  50,      0,       100,  1  );
-Param( HfDamping,    double,  XO("HfDamping"),     50,      0,       100,  1  );
-Param( ToneLow,      double,  XO("ToneLow"),       100,     0,       100,  1  );
-Param( ToneHigh,     double,  XO("ToneHigh"),      100,     0,       100,  1  );
-Param( WetGain,      double,  XO("WetGain"),       -1,      -20,     10,   1  );
-Param( DryGain,      double,  XO("DryGain"),       -1,      -20,     10,   1  );
-Param( StereoWidth,  double,  XO("StereoWidth"),   100,     0,       100,  1  );
-Param( WetOnly,      bool,    XO("WetOnly"),       false,   false,   true, 1  );
+Param( RoomSize,     double,  wxT("RoomSize"),      75,      0,       100,  1  );
+Param( PreDelay,     double,  wxT("Delay"),         10,      0,       200,  1  );
+Param( Reverberance, double,  wxT("Reverberance"),  50,      0,       100,  1  );
+Param( HfDamping,    double,  wxT("HfDamping"),     50,      0,       100,  1  );
+Param( ToneLow,      double,  wxT("ToneLow"),       100,     0,       100,  1  );
+Param( ToneHigh,     double,  wxT("ToneHigh"),      100,     0,       100,  1  );
+Param( WetGain,      double,  wxT("WetGain"),       -1,      -20,     10,   1  );
+Param( DryGain,      double,  wxT("DryGain"),       -1,      -20,     10,   1  );
+Param( StereoWidth,  double,  wxT("StereoWidth"),   100,     0,       100,  1  );
+Param( WetOnly,      bool,    wxT("WetOnly"),       false,   false,   true, 1  );
 
 static const struct
 {

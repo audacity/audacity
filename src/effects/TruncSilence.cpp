@@ -58,12 +58,12 @@ static const wxChar *kActionStrings[kNumActions] =
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def         Min      Max                        Scale
-Param( DbIndex,   int,     XO("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
-Param( ActIndex,  int,     XO("Action"),     kTruncate,  0,       kNumActions - 1,           1  );
-Param( Minimum,   double,  XO("Minimum"),    0.5,        0.001,   10000.0,                   1  );
-Param( Truncate,  double,  XO("Truncate"),   0.5,        0.0,     10000.0,                   1  );
-Param( Compress,  double,  XO("Compress"),   50.0,       0.0,     99.9,                      1  );
-Param( Independent, bool,  XO("Independent"), false,     false,   true,                      1  );
+Param( DbIndex,   int,     wxT("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
+Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       kNumActions - 1,           1  );
+Param( Minimum,   double,  wxT("Minimum"),    0.5,        0.001,   10000.0,                   1  );
+Param( Truncate,  double,  wxT("Truncate"),   0.5,        0.0,     10000.0,                   1  );
+Param( Compress,  double,  wxT("Compress"),   50.0,       0.0,     99.9,                      1  );
+Param( Independent, bool,  wxT("Independent"), false,     false,   true,                      1  );
 
 static const size_t DEF_BlendFrameCount = 100;
 

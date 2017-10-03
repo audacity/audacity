@@ -45,13 +45,13 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type     Key               Def   Min   Max         Scale
-Param( Stages,    int,     XO("Stages"),     2,    2,    NUM_STAGES, 1  );
-Param( DryWet,    int,     XO("DryWet"),     128,  0,    255,        1  );
-Param( Freq,      double,  XO("Freq"),       0.4,  0.001,4.0,        10.0 );
-Param( Phase,     double,  XO("Phase"),      0.0,  0.0,  360.0,      1  );
-Param( Depth,     int,     XO("Depth"),      100,  0,    255,        1  );
-Param( Feedback,  int,     XO("Feedback"),   0,    -100, 100,        1  );
-Param( OutGain,   double,  XO("Gain"),      -6.0,    -30.0,    30.0,    1   );
+Param( Stages,    int,     wxT("Stages"),     2,    2,    NUM_STAGES, 1  );
+Param( DryWet,    int,     wxT("DryWet"),     128,  0,    255,        1  );
+Param( Freq,      double,  wxT("Freq"),       0.4,  0.001,4.0,        10.0 );
+Param( Phase,     double,  wxT("Phase"),      0.0,  0.0,  360.0,      1  );
+Param( Depth,     int,     wxT("Depth"),      100,  0,    255,        1  );
+Param( Feedback,  int,     wxT("Feedback"),   0,    -100, 100,        1  );
+Param( OutGain,   double,  wxT("Gain"),      -6.0,    -30.0,    30.0,    1   );
 
 //
 #define phaserlfoshape 4.0

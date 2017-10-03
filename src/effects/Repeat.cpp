@@ -38,7 +38,7 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type  Key             Def  Min   Max      Scale
-Param( Count,  int,  XO("Count"),    1,  1,    INT_MAX, 1  );
+Param( Count,  int,  wxT("Count"),    1,  1,    INT_MAX, 1  );
 
 BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)

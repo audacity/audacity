@@ -44,9 +44,9 @@ enum
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type        Key               Def                   Min      Max      Scale
-Param( Sequence,  wxString,   XO("Sequence"),   wxT(SHORT_APP_NAME),  wxT(""), wxT(""), wxT(""));
-Param( DutyCycle, double,     XO("Duty Cycle"), 55.0,                 0.0,     100.0,   10.0   );
-Param( Amplitude, double,     XO("Amplitude"),  0.8,                  0.001,   1.0,     1      );
+Param( Sequence,  wxString,   wxT("Sequence"),   wxT(SHORT_APP_NAME),  wxT(""), wxT(""), wxT(""));
+Param( DutyCycle, double,     wxT("Duty Cycle"), 55.0,                 0.0,     100.0,   10.0   );
+Param( Amplitude, double,     wxT("Amplitude"),  0.8,                  0.001,   1.0,     1      );
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
 

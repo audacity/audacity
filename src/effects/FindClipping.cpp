@@ -36,8 +36,8 @@
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name    Type  Key               Def   Min   Max      Scale
-Param( Start,  int,  XO("Duty Cycle"), 3,    1,    INT_MAX, 1   );
-Param( Stop,   int,  XO("Duty Cycle"), 3,    1,    INT_MAX, 1   );
+Param( Start,  int,  wxT("Duty Cycle"), 3,    1,    INT_MAX, 1   );
+Param( Stop,   int,  wxT("Duty Cycle"), 3,    1,    INT_MAX, 1   );
 
 EffectFindClipping::EffectFindClipping()
 {
