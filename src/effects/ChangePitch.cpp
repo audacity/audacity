@@ -228,18 +228,8 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
    wxArrayString pitch;
-   pitch.Add(wxT("C"));
-   pitch.Add(wxT("C#/Db"));
-   pitch.Add(wxT("D"));
-   pitch.Add(wxT("D#/Eb"));
-   pitch.Add(wxT("E"));
-   pitch.Add(wxT("F"));
-   pitch.Add(wxT("F#/Gb"));
-   pitch.Add(wxT("G"));
-   pitch.Add(wxT("G#/Ab"));
-   pitch.Add(wxT("A"));
-   pitch.Add(wxT("A#/Bb"));
-   pitch.Add(wxT("B"));
+   for (int ii = 0; ii < 12; ++ii)
+      pitch.Add( PitchName( ii, PitchNameChoice::Both ) );
 
    S.SetBorder(5);
 

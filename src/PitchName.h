@@ -40,15 +40,20 @@ unsigned int PitchIndex(const double dMIDInote);
 // MIDI note number 0 is C-1 in Scientific pitch notation.
 int PitchOctave(const double dMIDInote);
 
+enum class PitchNameChoice { Sharps, Flats, Both };
+
 // PitchName takes dMIDInote (per result from
 // FreqToMIDInote) and returns a standard pitch/note name [C, C#, etc.).
-// Sharps are the default, unless, bWantFlats is true.
-wxChar * PitchName(const double dMIDInote, const bool bWantFlats = false);
+wxString PitchName(
+   const double dMIDInote,
+   const PitchNameChoice choice = PitchNameChoice::Sharps );
 
 // PitchName_Absolute does the same thing as PitchName, but appends
 // the octave number, e.g., instead of "C" it will return "C4"
 // if the dMIDInote corresonds to middle C, i.e., is 60.
-wxChar * PitchName_Absolute(const double dMIDInote, const bool bWantFlats = false);
+wxString PitchName_Absolute(
+   const double dMIDInote,
+   const PitchNameChoice choice = PitchNameChoice::Sharps);
 
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave);
 
