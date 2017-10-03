@@ -628,7 +628,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
       if (plugType == PluginTypeEffect)
       {
-         item.name = plug.GetName();
+         item.name = plug.GetTranslatedName();
       }
       // This is not right and will not work when other plugin types are added.
       // But it's presumed that the plugin manager dialog will be fully developed
@@ -1145,9 +1145,9 @@ const wxString & PluginDescriptor::GetSymbol() const
    return mSymbol;
 }
 
-wxString PluginDescriptor::GetName(bool translate) const
+wxString PluginDescriptor::GetUntranslatedName() const
 {
-   return translate ? wxString(wxGetTranslation(mName)) : mName;
+   return mName;
 }
 
 wxString PluginDescriptor::GetUntranslatedVersion() const
@@ -1155,9 +1155,19 @@ wxString PluginDescriptor::GetUntranslatedVersion() const
    return mVersion;
 }
 
-wxString PluginDescriptor::GetVendor(bool translate) const
+wxString PluginDescriptor::GetTranslatedName() const
 {
-   return translate ? wxString(wxGetTranslation(mVendor)) : mVendor;
+   return wxGetTranslation(mName);
+}
+
+wxString PluginDescriptor::GetUntranslatedVendor() const
+{
+   return mVendor;
+}
+
+wxString PluginDescriptor::GetTranslatedVendor() const
+{
+   return wxGetTranslation(mVendor);
 }
 
 bool PluginDescriptor::IsEnabled() const
@@ -1222,9 +1232,14 @@ void PluginDescriptor::SetValid(bool valid)
 
 // Effects
 
-wxString PluginDescriptor::GetEffectFamily(bool translate) const
+wxString PluginDescriptor::GetUntranslatedEffectFamily() const
 {
-   return translate ? wxString(wxGetTranslation(mEffectFamily)) : mEffectFamily;
+   return mEffectFamily;
+}
+
+wxString PluginDescriptor::GetTranslatedEffectFamily() const
+{
+   return wxGetTranslation(mEffectFamily);
 }
 
 EffectType PluginDescriptor::GetEffectType() const
@@ -1987,7 +2002,7 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
       // Get the symbol...use name if not found
       if (!pRegistry->Read(KEY_SYMBOL, &strVal))
       {
-         strVal = plug.GetName();
+         strVal = plug.GetTranslatedName();
       }
       plug.SetSymbol(strVal);
 
@@ -2205,9 +2220,9 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
 
       pRegistry->Write(KEY_PATH, plug.GetPath());
       pRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
-      pRegistry->Write(KEY_NAME, plug.GetName(false));
+      pRegistry->Write(KEY_NAME, plug.GetUntranslatedName());
       pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
-      pRegistry->Write(KEY_VENDOR, plug.GetVendor(false));
+      pRegistry->Write(KEY_VENDOR, plug.GetUntranslatedVendor());
       // Write a blank -- see comments in LoadGroup:
       pRegistry->Write(KEY_DESCRIPTION, wxString{});
       pRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
@@ -2244,7 +2259,7 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
                stype = KEY_EFFECTTYPE_HIDDEN;
             }
             pRegistry->Write(KEY_EFFECTTYPE, stype);
-            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily(false));
+            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetUntranslatedEffectFamily());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
             pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
             pRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
@@ -2442,7 +2457,7 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
       bool familyEnabled = true;
       if (type == PluginTypeEffect)
       {
-         gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+         gPrefs->Read(plug.GetTranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
       if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
@@ -2461,7 +2476,7 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
       bool familyEnabled = true;
       if (type == PluginTypeEffect)
       {
-         gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+         gPrefs->Read(plug.GetTranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
       if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
@@ -2481,7 +2496,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
       PluginDescriptor & plug = mPluginsIter->second;
 
       bool familyEnabled;
-      gPrefs->Read(plug.GetEffectFamily(false) + wxT("/Enable"), &familyEnabled, true);
+      gPrefs->Read(plug.GetUntranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
@@ -2504,7 +2519,7 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
    {
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
-      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      gPrefs->Read(plug.GetTranslatedEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
@@ -2557,7 +2572,7 @@ wxString PluginManager::GetName(const PluginID & ID)
       return wxEmptyString;
    }
 
-   return mPlugins[ID].GetName();
+   return mPlugins[ID].GetTranslatedName();
 }
 
 IdentInterface *PluginManager::GetInstance(const PluginID & ID)
@@ -2893,9 +2908,9 @@ wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
    
    wxString id = GetPluginTypeString(plug.GetPluginType()) +
                  wxT("_") +
-                 plug.GetEffectFamily(false) + // is empty for non-Effects
+                 plug.GetUntranslatedEffectFamily() + // is empty for non-Effects
                  wxT("_") +
-                 plug.GetVendor(false) +
+                 plug.GetUntranslatedVendor() +
                  wxT("_") +
                  (shared ? wxT("") : plug.GetSymbol());
 

@@ -171,8 +171,8 @@ enum {
 WX_DEFINE_ARRAY_PTR(const PluginDescriptor *, EffectPlugs);
 static int SortEffectsByName(const PluginDescriptor **a, const PluginDescriptor **b)
 {
-   wxString akey = (*a)->GetName();
-   wxString bkey = (*b)->GetName();
+   wxString akey = (*a)->GetTranslatedName();
+   wxString bkey = (*b)->GetTranslatedName();
 
    akey += (*a)->GetPath();
    bkey += (*b)->GetPath();
@@ -182,8 +182,8 @@ static int SortEffectsByName(const PluginDescriptor **a, const PluginDescriptor 
 
 static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescriptor **b)
 {
-   wxString akey = (*a)->GetVendor();
-   wxString bkey = (*b)->GetVendor();
+   wxString akey = (*a)->GetTranslatedVendor();
+   wxString bkey = (*b)->GetTranslatedVendor();
 
    if (akey.IsEmpty())
    {
@@ -194,8 +194,8 @@ static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescri
       bkey = _("Uncategorized");
    }
 
-   akey += (*a)->GetName();
-   bkey += (*b)->GetName();
+   akey += (*a)->GetTranslatedName();
+   bkey += (*b)->GetTranslatedName();
 
    akey += (*a)->GetPath();
    bkey += (*b)->GetPath();
@@ -205,8 +205,8 @@ static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescri
 
 static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const PluginDescriptor **b)
 {
-   wxString akey = (*a)->GetVendor();
-   wxString bkey = (*b)->GetVendor();
+   wxString akey = (*a)->GetTranslatedVendor();
+   wxString bkey = (*b)->GetTranslatedVendor();
 
    if ((*a)->IsEffectDefault())
    {
@@ -217,8 +217,8 @@ static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const Plugi
       bkey = wxEmptyString;
    }
 
-   akey += (*a)->GetName();
-   bkey += (*b)->GetName();
+   akey += (*a)->GetTranslatedName();
+   bkey += (*b)->GetTranslatedName();
 
    akey += (*a)->GetPath();
    bkey += (*b)->GetPath();
@@ -228,8 +228,8 @@ static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const Plugi
 
 static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDescriptor **b)
 {
-   wxString akey = (*a)->GetEffectFamily();
-   wxString bkey = (*b)->GetEffectFamily();
+   wxString akey = (*a)->GetTranslatedEffectFamily();
+   wxString bkey = (*b)->GetTranslatedEffectFamily();
 
    if (akey.IsEmpty())
    {
@@ -249,8 +249,8 @@ static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDesc
       bkey = wxEmptyString;
    }
 
-   akey += (*a)->GetName();
-   bkey += (*b)->GetName();
+   akey += (*a)->GetTranslatedName();
+   bkey += (*b)->GetTranslatedName();
 
    akey += (*a)->GetPath();
    bkey += (*b)->GetPath();
@@ -260,8 +260,8 @@ static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDesc
 
 static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor **b)
 {
-   wxString akey = (*a)->GetEffectFamily();
-   wxString bkey = (*b)->GetEffectFamily();
+   wxString akey = (*a)->GetTranslatedEffectFamily();
+   wxString bkey = (*b)->GetTranslatedEffectFamily();
 
    if (akey.IsEmpty())
    {
@@ -272,8 +272,8 @@ static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor 
       bkey = _("Uncategorized");
    }
 
-   akey += (*a)->GetName();
-   bkey += (*b)->GetName();
+   akey += (*a)->GetTranslatedName();
+   bkey += (*b)->GetTranslatedName();
 
    akey += (*a)->GetPath();
    bkey += (*b)->GetPath();
@@ -1711,7 +1711,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          const PluginDescriptor *plug = plugs[i];
 
-         wxString name = plug->GetName();
+         wxString name = plug->GetTranslatedName();
 
          if (plug->IsEffectInteractive())
          {
@@ -1720,7 +1720,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 
          if (groupBy == wxT("groupby:publisher"))
          {
-            current = plug->GetVendor();
+            current = plug->GetTranslatedVendor();
             if (current.IsEmpty())
             {
                current = _("Unknown");
@@ -1728,7 +1728,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          }
          else if (groupBy == wxT("groupby:type"))
          {
-            current = plug->GetEffectFamily();
+            current = plug->GetTranslatedEffectFamily();
             if (current.IsEmpty())
             {
                current = _("Unknown");
@@ -1775,7 +1775,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          const PluginDescriptor *plug = plugs[i];
 
-         wxString name = plug->GetName();
+         wxString name = plug->GetTranslatedName();
 
          if (plug->IsEffectInteractive())
          {
@@ -1785,11 +1785,11 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          wxString group = wxEmptyString;
          if (groupBy == wxT("sortby:publisher:name"))
          {
-            group = plug->GetVendor();
+            group = plug->GetTranslatedVendor();
          }
          else if (groupBy == wxT("sortby:type:name"))
          {
-            group = plug->GetEffectFamily();
+            group = plug->GetTranslatedEffectFamily();
          }
 
          if (plug->IsEffectDefault())

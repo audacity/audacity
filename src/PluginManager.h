@@ -63,10 +63,13 @@ public:
    const wxString & GetSymbol() const;
 
    wxString GetUntranslatedVersion() const;
+   // There is no translated version
 
-   // These return translated strings (if available and if requested)
-   wxString GetName(bool translate = true) const;
-   wxString GetVendor(bool translate = true) const;
+   wxString GetUntranslatedName() const;
+   wxString GetTranslatedName() const;
+
+   wxString GetUntranslatedVendor() const;
+   wxString GetTranslatedVendor() const;
    bool IsEnabled() const;
    bool IsValid() const;
 
@@ -87,8 +90,8 @@ public:
 
    // Effect plugins only
 
-   // Will return an untranslated string
-   wxString GetEffectFamily(bool translate = true) const;
+   wxString GetUntranslatedEffectFamily() const;
+   wxString GetTranslatedEffectFamily() const;
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;
