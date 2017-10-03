@@ -52,7 +52,7 @@ enum kVinyl
 
 static const wxChar *kVinylStrings[kNumVinyl] =
 {
-   wxT("33 1/3"),
+   wxT("33\u2153"),
    wxT("45"),
    wxT("78"),
    /* i18n-hint: n/a is an English abbreviation meaning "not applicable". */
