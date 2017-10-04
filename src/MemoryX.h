@@ -909,11 +909,27 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    template <typename T> iterator find(const T &t) const
    { return std::find(this->begin(), this->end(), t); }
 
+   template <typename T> long index(const T &t) const
+   {
+      auto iter = this->find(t);
+      if (iter == this->end())
+         return -1;
+      return std::distance(this->begin(), iter);
+   }
+
    template <typename T> bool contains(const T &t) const
    { return this->end() != this->find(t); }
 
    template <typename F> iterator find_if(const F &f) const
    { return std::find_if(this->begin(), this->end(), f); }
+
+   template <typename F> long index_if(const F &f) const
+   {
+      auto iter = this->find_if(f);
+      if (iter == this->end())
+         return -1;
+      return std::distance(this->begin(), iter);
+   }
 
    // to do: use std::all_of, any_of, none_of when available on all platforms
    template <typename F> bool all_of(const F &f) const
