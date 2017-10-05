@@ -66,7 +66,6 @@ public:
    wxString GetName(bool translate = true) const;
    wxString GetVersion(bool translate = true) const;
    wxString GetVendor(bool translate = true) const;
-   wxString GetDescription(bool translate = true) const;
    bool IsEnabled() const;
    bool IsValid() const;
 
@@ -81,7 +80,6 @@ public:
    void SetName(const wxString & name);
    void SetVersion(const wxString & version);
    void SetVendor(const wxString & vendor);
-   void SetDescription(const wxString & description);
 
    void SetEnabled(bool enable);
    void SetValid(bool valid);
@@ -135,7 +133,6 @@ private:
    wxString mName;
    wxString mVersion;
    wxString mVendor;
-   wxString mDescription;
    wxString mProviderID;
    bool mEnabled;
    bool mValid;

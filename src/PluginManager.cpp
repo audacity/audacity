@@ -1160,11 +1160,6 @@ wxString PluginDescriptor::GetVendor(bool translate) const
    return translate ? wxString(wxGetTranslation(mVendor)) : mVendor;
 }
 
-wxString PluginDescriptor::GetDescription(bool translate) const
-{
-   return translate ? wxString(wxGetTranslation(mDescription)) : mDescription;
-}
-
 bool PluginDescriptor::IsEnabled() const
 {
    return mEnabled;
@@ -1213,11 +1208,6 @@ void PluginDescriptor::SetVersion(const wxString & version)
 void PluginDescriptor::SetVendor(const wxString & vendor)
 {
    mVendor = vendor;
-}
-
-void PluginDescriptor::SetDescription(const wxString & description)
-{
-   mDescription = description;
 }
 
 void PluginDescriptor::SetEnabled(bool enable)
@@ -2015,12 +2005,18 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
       }
       plug.SetVendor(strVal);
 
+#if 0
+      // This was done before version 2.2.2, but the value was not really used
+      // But absence of a value will cause early versions to skip the group
+      // Therefore we still write a blank to keep pluginregistry.cfg
+      // backwards-compatible
+
       // Get the description and bypass group if not found
       if (!pRegistry->Read(KEY_DESCRIPTION, &strVal))
       {
          continue;
       }
-      plug.SetDescription(strVal);
+#endif
 
       // Is it enabled...default to no if not found
       pRegistry->Read(KEY_ENABLED, &boolVal, false);
@@ -2212,7 +2208,8 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
       pRegistry->Write(KEY_NAME, plug.GetName(false));
       pRegistry->Write(KEY_VERSION, plug.GetVersion(false));
       pRegistry->Write(KEY_VENDOR, plug.GetVendor(false));
-      pRegistry->Write(KEY_DESCRIPTION, plug.GetDescription(false));
+      // Write a blank -- see comments in LoadGroup:
+      pRegistry->Write(KEY_DESCRIPTION, wxString{});
       pRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
       pRegistry->Write(KEY_ENABLED, plug.IsEnabled());
       pRegistry->Write(KEY_VALID, plug.IsValid());
@@ -2660,7 +2657,6 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
    plug.SetName(ident->GetName());
    plug.SetVendor(ident->GetVendor());
    plug.SetVersion(ident->GetVersion());
-   plug.SetDescription(ident->GetDescription());
 
    return plug;
 }
