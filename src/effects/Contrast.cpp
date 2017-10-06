@@ -226,7 +226,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundStartT = safenew
                NumericTextCtrl(this, ID_FOREGROUNDSTART_T,
                          NumericConverter::TIME,
-                         _("hh:mm:ss + hundredths"),
+                         NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);
@@ -239,7 +239,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundEndT = safenew
                NumericTextCtrl(this, ID_FOREGROUNDEND_T,
                          NumericConverter::TIME,
-                         _("hh:mm:ss + hundredths"),
+                         NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);
@@ -258,7 +258,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundStartT = safenew
                NumericTextCtrl(this, ID_BACKGROUNDSTART_T,
                          NumericConverter::TIME,
-                         _("hh:mm:ss + hundredths"),
+                         NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);
@@ -271,7 +271,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundEndT = safenew
                NumericTextCtrl(this, ID_BACKGROUNDEND_T,
                          NumericConverter::TIME,
-                         _("hh:mm:ss + hundredths"),
+                         NumericConverter::HundredthsFormat(),
                          0.0,
                          mProjectRate,
                          options);

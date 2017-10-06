@@ -203,8 +203,8 @@ auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer 
 
 
 NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * pSizer ){
-   wxString formatName = mListener ? mListener->AS_GetSelectionFormat() 
-      : wxString(wxEmptyString);
+   auto formatName = mListener ? mListener->AS_GetSelectionFormat()
+      : NumericFormatId{};
    auto pCtrl = safenew NumericTextCtrl(
       this, id, NumericConverter::TIME, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
@@ -426,8 +426,13 @@ void SelectionBar::SetListener(SelectionBarListener *l)
 void SelectionBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
-   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName));
+   auto formatName =
+      mListener
+         ? mListener->AS_GetSelectionFormat()
+         : NumericFormatId{};
+   mSnapTo->SetToolTip(
+      wxString::Format(
+         _("Snap Clicks/Selections to %s"), formatName.Translation() ));
 #endif
 }
 
@@ -567,11 +572,11 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    evt.Skip(false);
 
-   wxString format;
-
    // Save format name before recreating the controls so they resize properly
-   format = mStartTime->GetBuiltinName(index);
-   mListener->AS_SetSelectionFormat(format);
+   {
+      auto format = mStartTime->GetBuiltinName(index);
+      mListener->AS_SetSelectionFormat(format);
+   }
 
    RegenerateTooltips();
 
@@ -587,7 +592,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    ValuesToControls();
 
-   format = mStartTime->GetBuiltinFormat(index);
+   auto format = mStartTime->GetBuiltinFormat(index);
    for( i=0;i<5;i++)
       (*Ctrls[i])->SetFormatString( format );
 
@@ -765,7 +770,7 @@ void SelectionBar::SetSnapTo(int snap)
    mSnapTo->SetSelection(snap);
 }
 
-void SelectionBar::SetSelectionFormat(const wxString & format)
+void SelectionBar::SetSelectionFormat(const NumericFormatId & format)
 {
    mStartTime->SetFormatString(mStartTime->GetBuiltinFormat(format));
 

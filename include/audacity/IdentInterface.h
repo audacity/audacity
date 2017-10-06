@@ -58,7 +58,7 @@ class IdentInterfaceSymbol
 {
 public:
    IdentInterfaceSymbol() = default;
-
+   
    // Allows implicit construction from a msgid re-used as an internal string
    IdentInterfaceSymbol( const wxString &msgid )
       : mInternal{ msgid }, mMsgid{ msgid }

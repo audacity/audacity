@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
                        const wxString &title,
-                       const wxString &format,
+                       const NumericFormatId &format,
                        double rate,
                        double time,
                        const wxString &prompt)
@@ -100,7 +100,7 @@ const double TimeDialog::GetTimeValue()
    return mTime;
 }
 
-void TimeDialog::SetFormatString(const wxString &formatString)
+void TimeDialog::SetFormatString(const NumericFormatId &formatString)
 {
    mFormat = formatString;
    TransferDataToWindow();

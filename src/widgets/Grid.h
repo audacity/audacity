@@ -20,6 +20,7 @@
 #include <wx/string.h>
 #include <wx/window.h>
 #include "NumericTextCtrl.h"
+#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
@@ -29,6 +30,7 @@ class GridAx;
 #endif
 
 class NumericTextCtrl;
+using NumericFormatId = IdentInterfaceSymbol;
 
 // ----------------------------------------------------------------------------
 // NumericEditor
@@ -43,7 +45,7 @@ class NumericEditor /* not final */ : public wxGridCellEditor
 public:
 
    NumericEditor
-      (NumericConverter::Type type, const wxString &format, double rate);
+      (NumericConverter::Type type, const NumericFormatId &format, double rate);
 
    ~NumericEditor();
 
@@ -62,9 +64,9 @@ public:
 
    void Reset() override;
 
-   wxString GetFormat() const;
+   NumericFormatId GetFormat() const;
    double GetRate() const;
-   void SetFormat(const wxString &format);
+   void SetFormat(const NumericFormatId &format);
    void SetRate(double rate);
 
    wxGridCellEditor *Clone() const override;
@@ -75,7 +77,7 @@ public:
 
  private:
 
-   wxString mFormat;
+   NumericFormatId mFormat;
    double mRate;
    NumericConverter::Type mType;
    double mOld;

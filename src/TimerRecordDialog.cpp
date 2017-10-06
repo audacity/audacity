@@ -793,7 +793,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
          * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
          */
-         wxString strFormat = _("099 h 060 m 060 s");
+         auto strFormat = _("099 h 060 m 060 s");
          using Options = NumericTextCtrl::Options;
          S.StartStatic(_("Start Date and Time"), true);
          {
@@ -811,7 +811,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
                this, ID_TIMETEXT_START, NumericConverter::TIME,
-               wxEmptyString, 0, 44100,
+               {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
                   .Format(strFormat)
@@ -840,7 +840,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
             m_pTimeTextCtrl_End = safenew NumericTextCtrl(
                this, ID_TIMETEXT_END, NumericConverter::TIME,
-               wxEmptyString, 0, 44100,
+               {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
                   .Format(strFormat)
@@ -860,10 +860,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             * number displayed is minutes, and the 's' indicates that the fourth number displayed is
             * seconds.
             */
-            wxString strFormat1 = _("099 days 024 h 060 m 060 s");
+            auto strFormat1 = _("099 days 024 h 060 m 060 s");
             m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
                this, ID_TIMETEXT_DURATION, NumericConverter::TIME,
-               wxEmptyString, 0, 44100,
+               {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
                   .Format(strFormat1)

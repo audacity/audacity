@@ -59,6 +59,7 @@ typedef enum EffectType
    EffectTypeTool,
 } EffectType;
 
+using NumericFormatId = IdentInterfaceSymbol;
 class ShuttleParams;
 
 /*************************************************************************************//**
@@ -149,7 +150,7 @@ public:
 
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
-   virtual wxString GetDurationFormat() = 0;
+   virtual NumericFormatId GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 
    virtual bool Apply() = 0;

@@ -29,7 +29,7 @@
 #include "../Internat.h"
 
 NumericEditor::NumericEditor
-   (NumericConverter::Type type, const wxString &format, double rate)
+   (NumericConverter::Type type, const NumericFormatId &format, double rate)
 {
    mType = type;
    mFormat = format;
@@ -131,7 +131,7 @@ wxString NumericEditor::GetValue() const
    return wxString::Format(wxT("%g"), GetNumericTextControl()->GetValue());
 }
 
-wxString NumericEditor::GetFormat() const
+NumericFormatId NumericEditor::GetFormat() const
 {
    return mFormat;
 }
@@ -141,7 +141,7 @@ double NumericEditor::GetRate() const
    return mRate;
 }
 
-void NumericEditor::SetFormat(const wxString &format)
+void NumericEditor::SetFormat(const NumericFormatId &format)
 {
    mFormat = format;
 }
@@ -396,12 +396,14 @@ Grid::Grid(wxWindow *parent,
    RegisterDataType(GRID_VALUE_TIME,
                     safenew NumericRenderer{ NumericConverter::TIME },
                     safenew NumericEditor
-                      { NumericTextCtrl::TIME, wxT("seconds"), 44100.0 });
+                      { NumericTextCtrl::TIME,
+                        NumericConverter::SecondsFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_FREQUENCY,
                     safenew NumericRenderer{ NumericConverter::FREQUENCY },
                     safenew NumericEditor
-                    { NumericTextCtrl::FREQUENCY, wxT("Hz"), 44100.0 });
+                    { NumericTextCtrl::FREQUENCY,
+                      NumericConverter::HertzFormat(), 44100.0 });
 
    RegisterDataType(GRID_VALUE_CHOICE,
                     safenew wxGridCellStringRenderer,

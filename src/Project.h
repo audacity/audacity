@@ -104,6 +104,7 @@ class Track;
 class WaveClip;
 class BackgroundCell;
 
+
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 void RedrawAllProjects();
@@ -438,16 +439,16 @@ public:
 
    // Selection Format
 
-   void SetSelectionFormat(const wxString & format);
-   const wxString & GetSelectionFormat() const;
+   void SetSelectionFormat(const NumericFormatId & format);
+   const NumericFormatId & GetSelectionFormat() const;
 
    // Spectral Selection Formats
 
-   void SetFrequencySelectionFormatName(const wxString & format);
-   const wxString & GetFrequencySelectionFormatName() const;
+   void SetFrequencySelectionFormatName(const NumericFormatId & format);
+   const NumericFormatId & GetFrequencySelectionFormatName() const;
 
-   void SetBandwidthSelectionFormatName(const wxString & format);
-   const wxString & GetBandwidthSelectionFormatName() const;
+   void SetBandwidthSelectionFormatName(const NumericFormatId & format);
+   const NumericFormatId & GetBandwidthSelectionFormatName() const;
 
    // Scrollbars
 
@@ -526,19 +527,19 @@ public:
    void AS_SetRate(double rate) override;
    int AS_GetSnapTo() override;
    void AS_SetSnapTo(int snap) override;
-   const wxString & AS_GetSelectionFormat() override;
-   void AS_SetSelectionFormat(const wxString & format) override;
+   const NumericFormatId & AS_GetSelectionFormat() override;
+   void AS_SetSelectionFormat(const NumericFormatId & format) override;
    void AS_ModifySelection(double &start, double &end, bool done) override;
 
    // SpectralSelectionBarListener callback methods
 
    double SSBL_GetRate() const override;
 
-   const wxString & SSBL_GetFrequencySelectionFormatName() override;
-   void SSBL_SetFrequencySelectionFormatName(const wxString & formatName) override;
+   const NumericFormatId & SSBL_GetFrequencySelectionFormatName() override;
+   void SSBL_SetFrequencySelectionFormatName(const NumericFormatId & formatName) override;
 
-   const wxString & SSBL_GetBandwidthSelectionFormatName() override;
-   void SSBL_SetBandwidthSelectionFormatName(const wxString & formatName) override;
+   const NumericFormatId & SSBL_GetBandwidthSelectionFormatName() override;
+   void SSBL_SetBandwidthSelectionFormatName(const NumericFormatId & formatName) override;
 
    void SSBL_ModifySpectralSelection(double &bottom, double &top, bool done) override;
 
@@ -631,9 +632,9 @@ public:
    std::shared_ptr<TrackList> mTracks;
 
    int mSnapTo;
-   wxString mSelectionFormat;
-   wxString mFrequencySelectionFormatName;
-   wxString mBandwidthSelectionFormatName;
+   NumericFormatId mSelectionFormat;
+   NumericFormatId mFrequencySelectionFormatName;
+   NumericFormatId mBandwidthSelectionFormatName;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
 

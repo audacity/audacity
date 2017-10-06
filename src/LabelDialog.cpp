@@ -98,7 +98,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          int index,
                          ViewInfo &viewinfo,
                          double rate,
-                         const wxString & format, const wxString &freqFormat)
+                         const NumericFormatId & format,
+                         const NumericFormatId &freqFormat)
 : wxDialogWrapper(parent,
            wxID_ANY,
            _("Edit Labels"),
@@ -528,7 +529,8 @@ void LabelDialog::FindInitialRow()
 void LabelDialog::OnUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
-   mFormat = event.GetString();
+   mFormat = NumericConverter::LookupFormat(
+      NumericConverter::TIME, event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);
@@ -537,7 +539,8 @@ void LabelDialog::OnUpdate(wxCommandEvent &event)
 void LabelDialog::OnFreqUpdate(wxCommandEvent &event)
 {
    // Remember the NEW format and repopulate grid
-   mFreqFormat = event.GetString();
+   mFreqFormat = NumericConverter::LookupFormat(
+      NumericConverter::FREQUENCY, event.GetString() );
    TransferDataToWindow();
 
    event.Skip(false);

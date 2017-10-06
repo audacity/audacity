@@ -93,7 +93,7 @@ EffectChangeSpeed::EffectChangeSpeed()
    mToVinyl = kVinyl_33AndAThird;
    mFromLength = 0.0;
    mToLength = 0.0;
-   mFormat = _("hh:mm:ss + milliseconds");
+   mFormat = NumericConverter::DefaultSelectionFormat();
    mbLoopDetect = false;
 
    SetLinearEffectFlag(true);
@@ -153,7 +153,7 @@ bool EffectChangeSpeed::SetAutomationParameters(CommandParameters & parms)
 bool EffectChangeSpeed::LoadFactoryDefaults()
 {
    mFromVinyl = kVinyl_33AndAThird;
-   mFormat = _("hh:mm:ss + milliseconds");
+   mFormat = NumericConverter::DefaultSelectionFormat();
 
    return Effect::LoadFactoryDefaults();
 }
@@ -188,8 +188,9 @@ bool EffectChangeSpeed::Startup()
       // Retrieve last used control values
       gPrefs->Read(base + wxT("PercentChange"), &m_PercentChange, 0);
 
-      // default format "4" is the same as the Selection toolbar: "hh:mm:ss + milliseconds";
-      gPrefs->Read(base + wxT("TimeFormat"), &mFormat, _("hh:mm:ss + milliseconds"));
+      wxString format;
+      gPrefs->Read(base + wxT("TimeFormat"), &format, wxString{});
+      mFormat = NumericConverter::LookupFormat( NumericConverter::TIME, format );
 
       gPrefs->Read(base + wxT("VinylChoice"), &mFromVinyl, 0);
       if (mFromVinyl == kVinyl_NA)
@@ -197,7 +198,7 @@ bool EffectChangeSpeed::Startup()
          mFromVinyl = kVinyl_33AndAThird;
       }
 
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat);
+      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
       SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
       SaveUserPreset(GetCurrentSettingsGroup());
@@ -294,7 +295,13 @@ bool EffectChangeSpeed::Process()
 
 void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 {
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat, mFormat);
+   {
+      wxString formatId;
+      GetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"),
+                       formatId, mFormat.Internal());
+      mFormat = NumericConverter::LookupFormat(
+         NumericConverter::TIME, formatId );
+   }
    GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    S.SetBorder(5);
@@ -451,7 +458,7 @@ bool EffectChangeSpeed::TransferDataFromWindow()
    }
    m_PercentChange = exactPercent;
 
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat);
+   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
    SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
    return true;
@@ -674,7 +681,8 @@ void EffectChangeSpeed::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(evt))
 
 void EffectChangeSpeed::OnTimeCtrlUpdate(wxCommandEvent & evt)
 {
-   mFormat = evt.GetString();
+   mFormat = NumericConverter::LookupFormat(
+      NumericConverter::TIME, evt.GetString() );
 
    mpFromLengthCtrl->SetFormatName(mFormat);
    // Update From/To Length controls (precision has changed).

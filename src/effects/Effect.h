@@ -165,8 +165,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    double GetDefaultDuration() override;
    double GetDuration() override;
-   wxString GetDurationFormat() override;
-   virtual wxString GetSelectionFormat() /* not override? */; // time format in Selection toolbar
+   NumericFormatId GetDurationFormat() override;
+   virtual NumericFormatId GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
    bool Apply() override;
@@ -515,7 +515,7 @@ private:
 
    bool mIsSelection;
    double mDuration;
-   wxString mDurationFormat;
+   NumericFormatId mDurationFormat;
 
    bool mIsPreview;
 

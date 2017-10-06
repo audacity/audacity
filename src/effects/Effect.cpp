@@ -55,6 +55,7 @@ greater use in future.
 #include "nyquist/Nyquist.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ErrorDialog.h"
 #include "../FileNames.h"
 #include "../commands/AudacityCommand.h"
@@ -757,12 +758,12 @@ double Effect::GetDuration()
    return mDuration;
 }
 
-wxString Effect::GetDurationFormat()
+NumericFormatId Effect::GetDurationFormat()
 {
    return mDurationFormat;
 }
 
-wxString Effect::GetSelectionFormat()
+NumericFormatId Effect::GetSelectionFormat()
 {
    return GetActiveProject()->GetSelectionFormat();
 }
@@ -1221,7 +1222,9 @@ bool Effect::DoEffect(wxWindow *parent,
       isSelection = true;
    }
 
-   mDurationFormat = isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds");
+   mDurationFormat = isSelection
+      ? NumericConverter::TimeAndSampleFormat()
+      : NumericConverter::DefaultSelectionFormat();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion->f0();

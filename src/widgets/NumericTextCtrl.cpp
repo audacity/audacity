@@ -198,27 +198,12 @@ different formats.
  * to the user */
 struct BuiltinFormatString
 {
-   wxString name;
-   wxString formatStr;
-};
-
-//
-// ----------------------------------------------------------------------------
-// UntranslatedBuiltinFormatString Struct
-// ----------------------------------------------------------------------------
-//
-/** \brief struct to hold a formatting control string and its untranslated name
- * Used in an array to hold the built-in time formats that are always available
- * to the user */
-struct UntranslatedBuiltinFormatString
-{
-   wxString name;
+   NumericFormatId name;
    wxString formatStr;
 
-   BuiltinFormatString Translate() const
-   {
-      return { wxGetTranslation( name ), wxGetTranslation( formatStr ) };
-   }
+   friend inline bool operator ==
+      (const BuiltinFormatString &a, const BuiltinFormatString &b)
+         { return a.name == b.name; }
 };
 
 //
@@ -290,16 +275,14 @@ public:
 
 namespace {
 
-const std::vector<BuiltinFormatString> &TimeConverterFormats() {
-
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
+static const BuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
-   XO("seconds"),
+   { XO("seconds") },
    /* i18n-hint: Format string for displaying time in seconds. Change the comma
     * in the middle to the 1000s separator for your locale, and the 'seconds'
     * on the end to the word for seconds. Don't change the numbers. */
@@ -309,7 +292,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes
     * and seconds */
-   XO("hh:mm:ss"),
+   { XO("hh:mm:ss") },
    /* i18n-hint: Format string for displaying time in hours, minutes and
     * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
@@ -321,7 +304,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in days, hours,
     * minutes and seconds */
-   XO("dd:hh:mm:ss"),
+   { XO("dd:hh:mm:ss") },
    /* i18n-hint: Format string for displaying time in days, hours, minutes and
     * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes and 's' to the
@@ -333,7 +316,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and hundredths of a second (1/100 second) */
-   XO("hh:mm:ss + hundredths"),
+   { XO("hh:mm:ss + hundredths") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and hundredths of a second. Change the 'h' to the abbreviation for hours,
     * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
@@ -345,7 +328,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and milliseconds (1/1000 second) */
-   XO("hh:mm:ss + milliseconds"),
+   { XO("hh:mm:ss + milliseconds") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -357,7 +340,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and samples (at the current project sample rate) */
-   XO("hh:mm:ss + samples"),
+   { XO("hh:mm:ss + samples") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes, 's' to the abbreviation for seconds and
@@ -371,7 +354,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
     * current project sample rate).  For example the number of a sample at 1
     * second into a recording at 44.1KHz would be 44,100.
     */
-   XO("samples"),
+   { XO("samples") },
    /* i18n-hint: Format string for displaying time in samples (lots of samples).
     * Change the ',' to the 1000s separator for your locale, and translate
     * samples. If 1000s aren't a base multiple for your number system, then you
@@ -382,7 +365,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at 24 frames per second (commonly used for films) */
-   XO("hh:mm:ss + film frames (24 fps)"),
+   { XO("hh:mm:ss + film frames (24 fps)") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames at 24 frames per second. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -394,7 +377,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames (lots of
     * frames) at 24 frames per second (commonly used for films) */
-   XO("film frames (24 fps)"),
+   { XO("film frames (24 fps)") },
    /* i18n-hint: Format string for displaying time in frames at 24 frames per
     * second. Change the comma
     * in the middle to the 1000s separator for your locale,
@@ -406,7 +389,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at NTSC TV drop-frame rate (used for American /
     * Japanese TV, and very odd) */
-   XO("hh:mm:ss + NTSC drop frames"),
+   { XO("hh:mm:ss + NTSC drop frames") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -418,7 +401,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at NTSC TV non-drop-frame rate (used for American /
     * Japanese TV, and doesn't quite match wall time */
-   XO("hh:mm:ss + NTSC non-drop frames"),
+   { XO("hh:mm:ss + NTSC non-drop frames") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -430,7 +413,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames at NTSC
     * TV frame rate (used for American / Japanese TV */
-   XO("NTSC frames"),
+   { XO("NTSC frames") },
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
     * in the middle to the 1000s separator for your locale, 
@@ -442,7 +425,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at PAL TV frame rate (used for European TV) */
-   XO("hh:mm:ss + PAL frames (25 fps)"),
+   { XO("hh:mm:ss + PAL frames (25 fps)") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with PAL TV frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -453,7 +436,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames at PAL
     * TV frame rate (used for European TV) */
-   XO("PAL frames (25 fps)"),
+   { XO("PAL frames (25 fps)") },
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
     * in the middle to the 1000s separator for your locale, 
@@ -464,7 +447,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at CD Audio frame rate (75 frames per second) */
-   XO("hh:mm:ss + CDDA frames (75 fps)"),
+   { XO("hh:mm:ss + CDDA frames (75 fps)") },
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with CD Audio frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
@@ -475,7 +458,7 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in frames at CD
     * Audio frame rate (75 frames per second) */
-   XO("CDDA frames (75 fps)"),
+   { XO("CDDA frames (75 fps)") },
    /* i18n-hint: Format string for displaying time in frames with CD Audio
     * frames. Change the comma
     * in the middle to the 1000s separator for your locale, 
@@ -484,70 +467,36 @@ static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    },
 };
 
-class FormatsArray final
-   : public TranslatableArray< std::vector< BuiltinFormatString > >
-{
-   void Populate() override
-   {
-      for (auto &format : TimeConverterFormats_)
-         mContents.push_back( format.Translate() );
-   }
-};
-
-static FormatsArray theArray;
-return theArray.Get();
-
-} // end function
-
-const std::vector<BuiltinFormatString> &FrequencyConverterFormats() {
-
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-static const UntranslatedBuiltinFormatString FrequencyConverterFormats_[] =  {
+static const BuiltinFormatString FrequencyConverterFormats_[] = {
    /* i18n-hint: Name of display format that shows frequency in hertz */
    {
-      XO("Hz"),
+      { XO("Hz") },
          /* i18n-hint: Format string for displaying frequency in hertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
          XO("0100000.0100 Hz")
    },
 
    {
-      XO("kHz"),
+      { XO("kHz") },
          /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
          XO("01000.01000 kHz|0.001")
    },
 };
 
-class FormatsArray final
-   : public TranslatableArray< std::vector< BuiltinFormatString > >
-{
-   void Populate() override
-   {
-      for (auto &format : FrequencyConverterFormats_)
-         mContents.push_back( format.Translate() );
-   }
-};
-
-static FormatsArray theArray;
-return theArray.Get();
-
-} // end function
-
-const std::vector<BuiltinFormatString> &BandwidthConverterFormats() {
-
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
+static const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
-   XO("octaves"),
+   { XO("octaves") },
    /* i18n-hint: Format string for displaying log of frequency in octaves.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (2)
@@ -557,7 +506,7 @@ static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in semitones and cents */
-   XO("semitones + cents"),
+   { XO("semitones + cents") },
    /* i18n-hint: Format string for displaying log of frequency in semitones
     * and cents.
     * Change the decimal points for your locale. Don't change the numbers. */
@@ -568,7 +517,7 @@ static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in decades */
-   XO("decades"),
+   { XO("decades") },
    /* i18n-hint: Format string for displaying log of frequency in decades.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (10)
@@ -576,33 +525,31 @@ static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    },
 };
 
-
-class FormatsArray final
-   : public TranslatableArray< std::vector< BuiltinFormatString > >
-{
-   void Populate() override
-   {
-      for (auto &format : BandwidthConverterFormats_)
-         mContents.push_back( format.Translate() );
-   }
-};
-
-static FormatsArray theArray;
-return theArray.Get();
-
-} // end function
-
-   const std::vector<BuiltinFormatString> &ChooseBuiltinFormatStrings
+   const BuiltinFormatString *ChooseBuiltinFormatStrings
       (NumericConverter::Type type)
    {
       switch (type) {
          default:
          case NumericConverter::TIME:
-            return TimeConverterFormats();
+            return TimeConverterFormats_;
          case NumericConverter::FREQUENCY:
-            return FrequencyConverterFormats();
+            return FrequencyConverterFormats_;
          case NumericConverter::BANDWIDTH:
-            return BandwidthConverterFormats();
+            return BandwidthConverterFormats_;
+      }
+   }
+
+   size_t ChooseNBuiltinFormatStrings
+      (NumericConverter::Type type)
+   {
+      switch (type) {
+         default:
+         case NumericConverter::TIME:
+            return WXSIZEOF(TimeConverterFormats_);
+         case NumericConverter::FREQUENCY:
+            return WXSIZEOF(FrequencyConverterFormats_);
+         case NumericConverter::BANDWIDTH:
+            return WXSIZEOF(BandwidthConverterFormats_);
       }
    }
 }
@@ -612,11 +559,42 @@ return theArray.Get();
 // NumericConverter Class
 // ----------------------------------------------------------------------------
 //
+NumericFormatId NumericConverter::DefaultSelectionFormat()
+{ return TimeConverterFormats_[4].name; }
+NumericFormatId NumericConverter::TimeAndSampleFormat()
+{ return TimeConverterFormats_[5].name; }
+NumericFormatId NumericConverter::SecondsFormat()
+{ return TimeConverterFormats_[0].name; }
+NumericFormatId NumericConverter::HundredthsFormat()
+{ return TimeConverterFormats_[3].name; }
+
+NumericFormatId NumericConverter::HertzFormat()
+{ return FrequencyConverterFormats_[0].name; }
+
+NumericFormatId NumericConverter::LookupFormat( Type type, const wxString& id)
+{
+   if (id.empty()) {
+      if (type == TIME)
+         return DefaultSelectionFormat();
+      else
+         return ChooseBuiltinFormatStrings(type)[0].name;
+   }
+   else {
+      auto begin = ChooseBuiltinFormatStrings(type);
+      auto end = begin + ChooseNBuiltinFormatStrings(type);
+      auto iter = std::find( begin, end, BuiltinFormatString{ id, {} } );
+      if (iter == end)
+         iter = begin;
+      return iter->name;
+   }
+}
+
 NumericConverter::NumericConverter(Type type,
-                                   const wxString & formatName,
+                                   const NumericFormatId & formatName,
                                    double value,
                                    double sampleRate)
    : mBuiltinFormatStrings( ChooseBuiltinFormatStrings( type ) )
+   , mNBuiltins( ChooseNBuiltinFormatStrings( type ) )
 {
    ResetMinValue();
    ResetMaxValue();
@@ -628,8 +606,6 @@ NumericConverter::NumericConverter(Type type,
 
    if (type == NumericConverter::TIME )
       mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
-
-   mNBuiltins = mBuiltinFormatStrings.size();
 
    mPrefix = wxT("");
    mValueTemplate = wxT("");
@@ -992,7 +968,7 @@ void NumericConverter::ControlsToValue()
    mValue = std::max(mMinValue, std::min(mMaxValue, t));
 }
 
-void NumericConverter::SetFormatName(const wxString & formatName)
+void NumericConverter::SetFormatName(const NumericFormatId & formatName)
 {
    SetFormatString(GetBuiltinFormat(formatName));
 }
@@ -1055,11 +1031,6 @@ double NumericConverter::GetValue()
    return mValue;
 }
 
-wxString NumericConverter::GetFormatString()
-{
-   return mFormatString;
-}
-
 int NumericConverter::GetFormatIndex()
 {
    // int ndx = 1;
@@ -1081,12 +1052,12 @@ int NumericConverter::GetNumBuiltins()
    return mNBuiltins;
 }
 
-wxString NumericConverter::GetBuiltinName(const int index)
+NumericFormatId NumericConverter::GetBuiltinName(const int index)
 {
    if (index >= 0 && index < GetNumBuiltins())
       return mBuiltinFormatStrings[index].name;
 
-   return wxEmptyString;
+   return {};
 }
 
 wxString NumericConverter::GetBuiltinFormat(const int index)
@@ -1094,20 +1065,17 @@ wxString NumericConverter::GetBuiltinFormat(const int index)
    if (index >= 0 && index < GetNumBuiltins())
       return mBuiltinFormatStrings[index].formatStr;
 
-   return wxEmptyString;
+   return {};
 }
 
-wxString NumericConverter::GetBuiltinFormat(const wxString &name)
+wxString NumericConverter::GetBuiltinFormat(const NumericFormatId &name)
 {
-   int ndx = mDefaultNdx;
-   int i;
-
-   for (i = 0; i < GetNumBuiltins(); i++) {
-      if (name == GetBuiltinName(i)) {
-         ndx = i;
-         break;
-      }
-   }
+   int ndx =
+      std::find( mBuiltinFormatStrings, mBuiltinFormatStrings + mNBuiltins,
+         BuiltinFormatString{ name, {} } )
+            - mBuiltinFormatStrings;
+   if (ndx == mNBuiltins)
+      ndx = mDefaultNdx;
 
    return GetBuiltinFormat(ndx);
 }
@@ -1241,7 +1209,7 @@ IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 
 NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
                            NumericConverter::Type type,
-                           const wxString &formatName,
+                           const NumericFormatId &formatName,
                            double timeValue,
                            double sampleRate,
                            const Options &options,
@@ -1314,7 +1282,7 @@ void NumericTextCtrl::UpdateAutoFocus()
    }
 }
 
-void NumericTextCtrl::SetFormatName(const wxString & formatName)
+void NumericTextCtrl::SetFormatName(const NumericFormatId & formatName)
 {
    SetFormatString(GetBuiltinFormat(formatName));
 }
@@ -1570,7 +1538,7 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    int currentSelection = -1;
    for (i = 0; i < GetNumBuiltins(); i++) {
-      menu.AppendRadioItem(ID_MENU + i, GetBuiltinName(i));
+      menu.AppendRadioItem(ID_MENU + i, GetBuiltinName(i).Translation());
       if (mFormatString == GetBuiltinFormat(i)) {
          menu.Check(ID_MENU + i, true);
          currentSelection = i;
@@ -1606,7 +1574,7 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
       
          wxCommandEvent e(eventType, GetId());
          e.SetInt(i);
-         e.SetString(GetBuiltinName(i));
+         e.SetString(GetBuiltinName(i).Internal());
          GetParent()->GetEventHandler()->AddPendingEvent(e);
       }
    }

@@ -126,12 +126,12 @@ void SpectralSelectionBar::Populate()
    * look-ups static because they depend on translations which are done at
    * runtime */
 
-   wxString frequencyFormatName = mListener
+   auto frequencyFormatName = mListener
       ? mListener->SSBL_GetFrequencySelectionFormatName()
-      : wxString(wxEmptyString);
-   wxString bandwidthFormatName = mListener
+      : NumericFormatId{};
+   auto bandwidthFormatName = mListener
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
-      : wxString(wxEmptyString);
+      : NumericFormatId{};
 
    wxFlexGridSizer *mainSizer;
    Add((mainSizer = safenew wxFlexGridSizer(1, 1, 1)), 0,wxALIGN_TOP | wxLEFT | wxTOP, 5);
@@ -352,12 +352,12 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    wxEventType type = evt.GetEventType();
    if (type == EVT_FREQUENCYTEXTCTRL_UPDATED) {
       NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
-      wxString frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
+      auto frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
       mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
    }
    else if (mbCenterAndWidth &&
             type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
-      wxString bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
+      auto bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
       mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
    }
 
@@ -431,7 +431,7 @@ void SpectralSelectionBar::SetFrequencies(double bottom, double top)
    ValuesToControls();
 }
 
-void SpectralSelectionBar::SetFrequencySelectionFormatName(const wxString & formatName)
+void SpectralSelectionBar::SetFrequencySelectionFormatName(const NumericFormatId & formatName)
 {
    NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
    frequencyCtrl->SetFormatName(formatName);
@@ -441,7 +441,7 @@ void SpectralSelectionBar::SetFrequencySelectionFormatName(const wxString & form
    OnUpdate(e);
 }
 
-void SpectralSelectionBar::SetBandwidthSelectionFormatName(const wxString & formatName)
+void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
 {
    if (mbCenterAndWidth) {
       mWidthCtrl->SetFormatName(formatName);

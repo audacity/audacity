@@ -27,12 +27,12 @@ class TimeDialog final : public wxDialogWrapper
 
    TimeDialog(wxWindow *parent,
               const wxString &title,
-              const wxString &format,
+              const NumericFormatId &format,
               double rate,
               double time,
               const wxString &prompt = _("Duration"));
 
-   void SetFormatString(const wxString &formatString);
+   void SetFormatString(const NumericFormatId &formatString);
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
    const double GetTimeValue();
@@ -48,7 +48,7 @@ class TimeDialog final : public wxDialogWrapper
  private:
 
    wxString mPrompt;
-   wxString mFormat;
+   NumericFormatId mFormat;
    double mRate;
    double mTime;
 

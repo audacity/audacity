@@ -16,6 +16,7 @@
 #define __AUDACITY_TIME_TEXT_CTRL__
 
 #include "../MemoryX.h"
+#include "../../include/audacity/IdentInterface.h"
 #include <vector>
 #include <wx/defs.h>
 #include <wx/event.h>
@@ -25,6 +26,7 @@
 #include <wx/textctrl.h>
 
 #include "../Audacity.h"
+#include "../Internat.h"
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
@@ -47,6 +49,8 @@ class NumericField;
 
 class DigitInfo;
 
+using NumericFormatId = IdentInterfaceSymbol;
+
 class NumericConverter /* not final */
 {
 public:
@@ -57,8 +61,16 @@ public:
       BANDWIDTH,
    };
 
+   static NumericFormatId DefaultSelectionFormat();
+   static NumericFormatId TimeAndSampleFormat();
+   static NumericFormatId SecondsFormat();
+   static NumericFormatId HundredthsFormat();
+   static NumericFormatId HertzFormat();
+   
+   static NumericFormatId LookupFormat( Type type, const wxString& id);
+
    NumericConverter(Type type,
-                    const wxString & formatName = wxEmptyString,
+                    const NumericFormatId & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
 
@@ -74,10 +86,12 @@ public:
    // raw value (mValue).
    virtual void ControlsToValue();
 
-   virtual void ParseFormatString(const wxString & format);
+private:
+   void ParseFormatString(const wxString & format);
 
+public:
    void PrintDebugInfo();
-   void SetFormatName(const wxString & formatName);
+   void SetFormatName(const NumericFormatId & formatName);
    void SetFormatString(const wxString & formatString);
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
@@ -90,13 +104,12 @@ public:
 
    wxString GetString();
 
-   wxString GetFormatString();
    int GetFormatIndex();
 
    int GetNumBuiltins();
-   wxString GetBuiltinName(const int index);
+   NumericFormatId GetBuiltinName(const int index);
    wxString GetBuiltinFormat(const int index);
-   wxString GetBuiltinFormat(const wxString & name);
+   wxString GetBuiltinFormat(const NumericFormatId & name);
 
    // Adjust the value by the number "steps" in the active format.
    // Increment if "dir" is 1, decrement if "dir" is -1.
@@ -130,8 +143,8 @@ protected:
    int            mFocusedDigit;
    std::vector<DigitInfo> mDigits;
 
-   const std::vector<BuiltinFormatString> &mBuiltinFormatStrings;
-   int mNBuiltins;
+   const BuiltinFormatString *mBuiltinFormatStrings;
+   const size_t mNBuiltins;
    int mDefaultNdx;
 };
 
@@ -159,14 +172,16 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
       Options &MenuEnabled (bool value) { menuEnabled = value; return *this; }
       Options &InvalidValue (bool has, double value = -1.0)
          { hasInvalidValue = has, invalidValue = value; return *this; }
-      Options &Format (const wxString &value) { format = value; return *this; }
+      // use a custom format not in the tables:
+      Options &Format (const wxString &value)
+         { format = value; return *this; }
       Options &Value (bool has, double v)
          { hasValue = has, value = v; return *this; }
    };
 
    NumericTextCtrl(wxWindow *parent, wxWindowID winid,
                    NumericConverter::Type type,
-                   const wxString &formatName = wxEmptyString,
+                   const NumericFormatId &formatName = {},
                    double value = 0.0,
                    double sampleRate = 44100,
                    const Options &options = {},
@@ -181,7 +196,7 @@ class NumericTextCtrl final : public wxControl, public NumericConverter
    void SetSampleRate(double sampleRate);
    void SetValue(double newValue);
    void SetFormatString(const wxString & formatString);
-   void SetFormatName(const wxString & formatName);
+   void SetFormatName(const NumericFormatId & formatName);
 
    void SetFieldFocus(int /* digit */);
 

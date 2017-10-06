@@ -923,9 +923,15 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat(QualityPrefs::SampleFormatChoice()),
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
-     mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
-     mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
-     mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
+     mSelectionFormat( NumericTextCtrl::LookupFormat(
+         NumericConverter::TIME,
+         gPrefs->Read(wxT("/SelectionFormat"), wxT("")) ) ),
+     mFrequencySelectionFormatName( NumericTextCtrl::LookupFormat(
+         NumericConverter::FREQUENCY,
+         gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) ) ),
+     mBandwidthSelectionFormatName( NumericTextCtrl::LookupFormat(
+         NumericConverter::BANDWIDTH,
+         gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) ) ),
      mUndoManager(std::make_unique<UndoManager>())
 {
    mTracks = TrackList::Create();
@@ -1539,16 +1545,16 @@ void AudacityProject::AS_SetSnapTo(int snap)
    RedrawProject();
 }
 
-const wxString & AudacityProject::AS_GetSelectionFormat()
+const NumericFormatId & AudacityProject::AS_GetSelectionFormat()
 {
    return GetSelectionFormat();
 }
 
-void AudacityProject::AS_SetSelectionFormat(const wxString & format)
+void AudacityProject::AS_SetSelectionFormat(const NumericFormatId & format)
 {
    mSelectionFormat = format;
 
-   gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat);
+   gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat.Internal());
    gPrefs->Flush();
 
    if (SnapSelection() && GetTrackPanel())
@@ -1571,29 +1577,31 @@ double AudacityProject::SSBL_GetRate() const
    return rate;
 }
 
-const wxString & AudacityProject::SSBL_GetFrequencySelectionFormatName()
+const NumericFormatId & AudacityProject::SSBL_GetFrequencySelectionFormatName()
 {
    return GetFrequencySelectionFormatName();
 }
 
-void AudacityProject::SSBL_SetFrequencySelectionFormatName(const wxString & formatName)
+void AudacityProject::SSBL_SetFrequencySelectionFormatName(const NumericFormatId & formatName)
 {
    mFrequencySelectionFormatName = formatName;
 
-   gPrefs->Write(wxT("/FrequencySelectionFormatName"), mFrequencySelectionFormatName);
+   gPrefs->Write(wxT("/FrequencySelectionFormatName"),
+                 mFrequencySelectionFormatName.Internal());
    gPrefs->Flush();
 }
 
-const wxString & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
+const NumericFormatId & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
 {
    return GetBandwidthSelectionFormatName();
 }
 
-void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const wxString & formatName)
+void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
 {
    mBandwidthSelectionFormatName = formatName;
 
-   gPrefs->Write(wxT("/BandwidthSelectionFormatName"), mBandwidthSelectionFormatName);
+   gPrefs->Write(wxT("/BandwidthSelectionFormatName"),
+      mBandwidthSelectionFormatName.Internal());
    gPrefs->Flush();
 }
 
@@ -1615,12 +1623,12 @@ void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, 
 #endif
 }
 
-const wxString & AudacityProject::GetFrequencySelectionFormatName() const
+const NumericFormatId & AudacityProject::GetFrequencySelectionFormatName() const
 {
    return mFrequencySelectionFormatName;
 }
 
-void AudacityProject::SetFrequencySelectionFormatName(const wxString & formatName)
+void AudacityProject::SetFrequencySelectionFormatName(const NumericFormatId & formatName)
 {
    SSBL_SetFrequencySelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1630,12 +1638,12 @@ void AudacityProject::SetFrequencySelectionFormatName(const wxString & formatNam
 #endif
 }
 
-const wxString & AudacityProject::GetBandwidthSelectionFormatName() const
+const NumericFormatId & AudacityProject::GetBandwidthSelectionFormatName() const
 {
    return mBandwidthSelectionFormatName;
 }
 
-void AudacityProject::SetBandwidthSelectionFormatName(const wxString & formatName)
+void AudacityProject::SetBandwidthSelectionFormatName(const NumericFormatId & formatName)
 {
    SSBL_SetBandwidthSelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -1645,7 +1653,7 @@ void AudacityProject::SetBandwidthSelectionFormatName(const wxString & formatNam
 #endif
 }
 
-void AudacityProject::SetSelectionFormat(const wxString & format)
+void AudacityProject::SetSelectionFormat(const NumericFormatId & format)
 {
    AS_SetSelectionFormat(format);
    if (GetSelectionBar()) {
@@ -1653,7 +1661,7 @@ void AudacityProject::SetSelectionFormat(const wxString & format)
    }
 }
 
-const wxString & AudacityProject::GetSelectionFormat() const
+const NumericFormatId & AudacityProject::GetSelectionFormat() const
 {
    return mSelectionFormat;
 }
@@ -3499,13 +3507,16 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       else if (!wxStrcmp(attr, wxT("selectionformat")))
-         SetSelectionFormat(value);
+         SetSelectionFormat(
+            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
 
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
-         SetFrequencySelectionFormatName(value);
+         SetFrequencySelectionFormatName(
+            NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
 
       else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-         SetBandwidthSelectionFormatName(value);
+         SetBandwidthSelectionFormatName(
+            NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
    } // while
 
    mViewInfo.UpdatePrefs();
@@ -3688,9 +3699,12 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile, bool bWantSaveCompressed)
    mViewInfo.WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
-   xmlFile.WriteAttr(wxT("selectionformat"), GetSelectionFormat());
-   xmlFile.WriteAttr(wxT("frequencyformat"), GetFrequencySelectionFormatName());
-   xmlFile.WriteAttr(wxT("bandwidthformat"), GetBandwidthSelectionFormatName());
+   xmlFile.WriteAttr(wxT("selectionformat"),
+                     GetSelectionFormat().Internal());
+   xmlFile.WriteAttr(wxT("frequencyformat"),
+                     GetFrequencySelectionFormatName().Internal());
+   xmlFile.WriteAttr(wxT("bandwidthformat"),
+                     GetBandwidthSelectionFormatName().Internal());
 
    mTags->WriteXML(xmlFile);
 

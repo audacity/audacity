@@ -55,7 +55,7 @@ SnapManager::SnapManager(const TrackList *tracks,
 
    mSnapTo = 0;
    mRate = 0.0;
-   mFormat.Empty();
+   mFormat = {};
 
    // Two time points closer than this are considered the same
    mEpsilon = 1 / 44100.0;
@@ -71,7 +71,7 @@ void SnapManager::Reinit()
 {
    int snapTo = mProject->GetSnapTo();
    double rate = mProject->GetRate();
-   wxString format = mProject->GetSelectionFormat();
+   auto format = mProject->GetSelectionFormat();
 
    // No need to reinit if these are still the same
    if (snapTo == mSnapTo && rate == mRate && format == mFormat)

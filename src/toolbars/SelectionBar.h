@@ -60,7 +60,7 @@ class SelectionBar final : public ToolBar {
    void SetTimes(double start, double end, double audio);
    void SetField(const wxChar *msg, int fieldNum);
    void SetSnapTo(int);
-   void SetSelectionFormat(const wxString & format);
+   void SetSelectionFormat(const NumericFormatId & format);
    void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
    void RegenerateTooltips() override;
