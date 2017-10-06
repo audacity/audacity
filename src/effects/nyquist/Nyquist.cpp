@@ -91,8 +91,8 @@ enum
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
-static const wxChar *KEY_Version = XO("Version");
-static const wxChar *KEY_Command = XO("Command");
+static const wxChar *KEY_Version = wxT("Version");
+static const wxChar *KEY_Command = wxT("Command");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
