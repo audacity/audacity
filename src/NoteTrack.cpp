@@ -1003,6 +1003,12 @@ void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
    Zoom(rect, (start + end) / 2, trialPitchHeight / mPitchHeight, true);
 }
 
+int NoteTrack::PitchToY(double p) const {
+   int ip = (int)p;
+   double offset = p - ip;
+   return IPitchToY(ip) - (int)(GetPitchHeight(1) * offset);
+}
+
 int NoteTrack::YToIPitch(int y)
 {
    y = mBottom - y; // pixels above pitch 0
