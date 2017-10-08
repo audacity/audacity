@@ -3038,53 +3038,43 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
                   nr.x = TIME_TO_X(xx);
                   nr.width = TIME_TO_X(x1) - nr.x;
 
-                  if (nr.x + nr.width >= rect.x && nr.x < rect.x + rect.width) {
-                     if (nr.x < rect.x) {
-                        nr.width -= (rect.x - nr.x);
-                        nr.x = rect.x;
-                     }
-                     if (nr.x + nr.width > rect.x + rect.width) // clip on right
-                        nr.width = rect.x + rect.width - nr.x;
-
-                     if (nr.y + nr.height < rect.y + marg + 3) {
-                         // too high for window
-                         nr.y = rect.y;
-                         nr.height = marg;
-                         dc.SetBrush(*wxBLACK_BRUSH);
-                         dc.SetPen(*wxBLACK_PEN);
-                         dc.DrawRectangle(nr);
-                     } else if (nr.y >= rect.y + rect.height - marg - 1) {
-                         // too low for window
-                         nr.y = rect.y + rect.height - marg;
-                         nr.height = marg;
-                         dc.SetBrush(*wxBLACK_BRUSH);
-                         dc.SetPen(*wxBLACK_PEN);
-                         dc.DrawRectangle(nr);
-                     } else {
-                        if (nr.y + nr.height > rect.y + rect.height - marg)
-                           nr.height = rect.y + rect.height - nr.y;
-                        if (nr.y < rect.y + marg) {
-                           int offset = rect.y + marg - nr.y;
-                           nr.height -= offset;
-                           nr.y += offset;
-                        }
-                        // nr.y += rect.y;
-                        if (muted)
-                           AColor::LightMIDIChannel(&dc, note->chan + 1);
-                        else
-                           AColor::MIDIChannel(&dc, note->chan + 1);
+                  if (nr.y + nr.height < rect.y + marg + 3) {
+                        // too high for window
+                        nr.y = rect.y;
+                        nr.height = marg;
+                        dc.SetBrush(*wxBLACK_BRUSH);
+                        dc.SetPen(*wxBLACK_PEN);
                         dc.DrawRectangle(nr);
-                        if (track->GetPitchHeight(1) > 2) {
-                           AColor::LightMIDIChannel(&dc, note->chan + 1);
-                           AColor::Line(dc, nr.x, nr.y, nr.x + nr.width-2, nr.y);
-                           AColor::Line(dc, nr.x, nr.y, nr.x, nr.y + nr.height-2);
-                           AColor::DarkMIDIChannel(&dc, note->chan + 1);
-                           AColor::Line(dc, nr.x+nr.width-1, nr.y,
-                                 nr.x+nr.width-1, nr.y+nr.height-1);
-                           AColor::Line(dc, nr.x, nr.y+nr.height-1,
-                                 nr.x+nr.width-1, nr.y+nr.height-1);
-                        }
-//                        }
+                  } else if (nr.y >= rect.y + rect.height - marg - 1) {
+                        // too low for window
+                        nr.y = rect.y + rect.height - marg;
+                        nr.height = marg;
+                        dc.SetBrush(*wxBLACK_BRUSH);
+                        dc.SetPen(*wxBLACK_PEN);
+                        dc.DrawRectangle(nr);
+                  } else {
+                     if (nr.y + nr.height > rect.y + rect.height - marg)
+                        nr.height = rect.y + rect.height - nr.y;
+                     if (nr.y < rect.y + marg) {
+                        int offset = rect.y + marg - nr.y;
+                        nr.height -= offset;
+                        nr.y += offset;
+                     }
+
+                     if (muted)
+                        AColor::LightMIDIChannel(&dc, note->chan + 1);
+                     else
+                        AColor::MIDIChannel(&dc, note->chan + 1);
+                     dc.DrawRectangle(nr);
+                     if (track->GetPitchHeight(1) > 2) {
+                        AColor::LightMIDIChannel(&dc, note->chan + 1);
+                        AColor::Line(dc, nr.x, nr.y, nr.x + nr.width-2, nr.y);
+                        AColor::Line(dc, nr.x, nr.y, nr.x, nr.y + nr.height-2);
+                        AColor::DarkMIDIChannel(&dc, note->chan + 1);
+                        AColor::Line(dc, nr.x+nr.width-1, nr.y,
+                              nr.x+nr.width-1, nr.y+nr.height-1);
+                        AColor::Line(dc, nr.x, nr.y+nr.height-1,
+                              nr.x+nr.width-1, nr.y+nr.height-1);
                      }
                   }
                } else if (shape) {
