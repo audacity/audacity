@@ -110,7 +110,6 @@ class AUDACITY_DLL_API TrackArtist {
                      wxDC & dc, const wxRect & rect,
                      const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo);
 #ifdef USE_MIDI
-   int GetBottom(NoteTrack *t, const wxRect &rect);
    void DrawNoteBackground(const NoteTrack *track, wxDC &dc,
                            const wxRect &rect, const wxRect &sel,
                            const ZoomInfo &zoomInfo,

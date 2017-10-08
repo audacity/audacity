@@ -598,7 +598,6 @@ void TrackArtist::DrawVRuler
       rect.y += 1;
       rect.height -= 1;
 
-      //int bottom = GetBottom((NoteTrack *) t, rect);
       const NoteTrack *track = (NoteTrack *) t;
       track->PrepareIPitchToY(rect);
 
