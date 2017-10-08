@@ -999,7 +999,7 @@ wxString LWSlider::GetTip(float value) const
 #endif
       }
 
-      label.Printf(wxT("%s: %s"), mName, val);
+      label.Printf(_("%s: %s"), mName, val);
    }
    else
    {
@@ -1042,7 +1042,7 @@ wxString LWSlider::GetMaxTip() const
 #endif
       }
 
-      label.Printf(wxT("%s: %s"), mName, val);
+      label.Printf(_("%s: %s"), mName, val);
    }
    else
    {
