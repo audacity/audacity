@@ -120,6 +120,7 @@ class AUDACITY_DLL_API TrackArtist {
                       wxDC & dc, const wxRect & rect,
                       const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo,
                       bool muted);
+   void DrawNoteSegment(wxDC & dc, const wxRect & rect, int x1, int x2, int y, int pitchHeight, int marg, bool first, bool last, int chan, bool muted);
 #endif // USE_MIDI
 
    void DrawLabelTrack(TrackPanelDrawingContext &context,
