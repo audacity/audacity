@@ -879,14 +879,11 @@ UIHandle::Result TimeShiftHandle::Release
       consolidate = false;
    }
    else {
-      wxString direction = mClipMoveState.hSlideAmount > 0 ?
-         /* i18n-hint: a direction as in left or right.*/
-         _("right") :
-         /* i18n-hint: a direction as in left or right.*/
-         _("left");
-      /* i18n-hint: %s is a direction like left or right */
-      msg.Printf(_("Time shifted tracks/clips %s %.02f seconds"),
-         direction, fabs( mClipMoveState.hSlideAmount ));
+      msg.Printf(
+         ( mClipMoveState.hSlideAmount > 0
+           ? _("Time shifted tracks/clips right %.02f seconds")
+           : _("Time shifted tracks/clips left %.02f seconds") ),
+         fabs( mClipMoveState.hSlideAmount ) );
       consolidate = true;
    }
    pProject->PushState(msg, _("Time-Shift"),

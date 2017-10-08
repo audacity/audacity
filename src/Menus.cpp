@@ -4001,14 +4001,15 @@ void AudacityProject::OnTrackMoveBottom()
 
 void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
 {
-   wxString direction;
+   wxString longDesc, shortDesc;
 
    auto pt = dynamic_cast<PlayableTrack*>(target);
    switch (choice)
    {
    case OnMoveTopID:
-      /* i18n-hint: where the track is moving to.*/
-      direction = _("to Top");
+      /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
+      longDesc = _("Moved '%s' to Top");
+      shortDesc = _("Move Track to Top");
 
       while (mTracks->CanMoveUp(target)) {
          if (mTracks->Move(target, true)) {
@@ -4019,8 +4020,9 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
       }
       break;
    case OnMoveBottomID:
-      /* i18n-hint: where the track is moving to.*/
-      direction = _("to Bottom");
+      /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
+      longDesc = _("Moved '%s' to Bottom");
+      shortDesc = _("Move Track to Bottom");
 
       while (mTracks->CanMoveDown(target)) {
          if (mTracks->Move(target, false)) {
@@ -4032,24 +4034,24 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
       break;
    default:
       bool bUp = (OnMoveUpID == choice);
-      /* i18n-hint: a direction.*/
-      direction = bUp ? _("Up") : _("Down");
 
       if (mTracks->Move(target, bUp)) {
          MixerBoard* pMixerBoard = this->GetMixerBoard();
          if (pMixerBoard && pt)
             pMixerBoard->MoveTrackCluster(pt, bUp);
       }
+      longDesc =
+         /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
+         bUp? _("Moved '%s' Up")
+         : _("Moved '%s' Down");
+      shortDesc =
+         /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
+         bUp? _("Move Track Up")
+         : _("Move Track Down");
+
    }
 
-   /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
-   wxString longDesc = (_("Moved"));
-   /* i18n-hint: The direction of movement will be up, down, to top or to bottom.. */
-   wxString shortDesc = (_("Move Track"));
-
-   longDesc = (wxString::Format(wxT("%s '%s' %s"), longDesc,
-      target->GetName(), direction));
-   shortDesc = (wxString::Format(wxT("%s %s"), shortDesc, direction));
+   longDesc = longDesc.Format(target->GetName());
 
    PushState(longDesc, shortDesc);
    GetTrackPanel()->Refresh(false);
@@ -7497,39 +7499,78 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    switch(index) {
    case kAlignStartZero:
       delta = -minOffset;
-      action = _("start to zero");
-      shortAction = _("Start");
+      action = moveSel
+         /* i18n-hint: In this and similar messages describing editing actions,
+            the starting or ending points of tracks are re-"aligned" to other
+            times, and the time selection may be "moved" too.  The first
+            noun -- "start" in this example -- is the object of a verb (not of
+            an implied preposition "from"). */
+         ? _("Aligned/Moved start to zero")
+         : _("Aligned start to zero");
+         /* i18n-hint: This and similar messages give shorter descriptions of
+            the aligning and moving editing actions */
+      shortAction = moveSel
+         ? _("Align/Move Start")
+         : _("Align Start");
       break;
    case kAlignStartSelStart:
       delta = mViewInfo.selectedRegion.t0() - minOffset;
-      action = _("start to cursor/selection start");
-      shortAction = _("Start");
+      action = moveSel
+         ? _("Aligned/Moved start to cursor/selection start")
+         : _("Aligned start to cursor/selection start");
+      shortAction = moveSel
+         ? _("Align/Move Start")
+         : _("Align Start");
       break;
    case kAlignStartSelEnd:
       delta = mViewInfo.selectedRegion.t1() - minOffset;
-      action = _("start to selection end");
-      shortAction = _("Start");
+      action = moveSel
+         ? _("Aligned/Moved start to selection end")
+         : _("Aligned start to selection end");
+      shortAction = moveSel
+         ? _("Align/Move Start")
+         : _("Align Start");
       break;
    case kAlignEndSelStart:
       delta = mViewInfo.selectedRegion.t0() - maxEndOffset;
-      action = _("end to cursor/selection start");
-      shortAction = _("End");
+      action = moveSel
+         ? _("Aligned/Moved end to cursor/selection start")
+         : _("Aligned end to cursor/selection start");
+      shortAction =
+         moveSel
+         ? _("Align/Move End")
+         : _("Align End");
       break;
    case kAlignEndSelEnd:
       delta = mViewInfo.selectedRegion.t1() - maxEndOffset;
-      action = _("end to selection end");
-      shortAction = _("End");
+      action = moveSel
+         ? _("Aligned/Moved end to selection end")
+         : _("Aligned end to selection end");
+      shortAction =
+         moveSel
+         ? _("Align/Move End")
+         : _("Align End");
       break;
    // index set in alignLabelsNoSync
    case kAlignEndToEnd:
       newPos = firstTrackOffset;
-      action = _("end to end");
-      shortAction = _("End to End");
+      action = moveSel
+         ? _("Aligned/Moved end to end")
+         : _("Aligned end to end");
+      shortAction =
+         moveSel
+         ? _("Align/Move End to End")
+         : _("Align End to End");
       break;
    case kAlignTogether:
       newPos = avgOffset;
-      action = _("together");
-      shortAction = _("Together");
+      action = moveSel
+         ? _("Aligned/Moved together")
+         : _("Aligned together");
+      shortAction =
+         moveSel
+         ? _("Align/Move Together")
+         : _("Align Together");
    }
 
    if ((unsigned)index >= mAlignLabelsCount) { // This is an alignLabelsNoSync command.
@@ -7598,16 +7639,10 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       }
    }
 
-   if (moveSel) {
+   if (moveSel)
       mViewInfo.selectedRegion.move(delta);
-      action = wxString::Format(_("Aligned/Moved %s"), action);
-      shortAction = wxString::Format(_("Align %s/Move"),shortAction);
-      PushState(action, shortAction);
-   } else {
-      action = wxString::Format(_("Aligned %s"), action);
-      shortAction = wxString::Format(_("Align %s"),shortAction);
-      PushState(action, shortAction);
-   }
+
+   PushState(action, shortAction);
 
    RedrawProject();
 }

@@ -187,13 +187,12 @@ UIHandle::Result TrackSelectHandle::Release
    wxASSERT( mpTrack );
    if (mRearrangeCount != 0) {
       AudacityProject *const project = ::GetActiveProject();
-      wxString dir;
-      /* i18n-hint: a direction as in up or down.*/
-      dir = mRearrangeCount < 0 ? _("up") : _("down");
-/* i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.*/
-      project->PushState(wxString::Format(_("Moved '%s' %s"),
-         mpTrack->GetName(),
-         dir),
+      project->PushState(
+         wxString::Format(
+            /* i18n-hint: will substitute name of track for %s */
+            ( mRearrangeCount < 0 ? _("Moved '%s' up") : _("Moved '%s' down") ),
+            mpTrack->GetName()
+         ),
          _("Move Track"));
    }
    // Bug 1677

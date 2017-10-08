@@ -5799,8 +5799,6 @@ wxString AudacityProject::GetHoursMinsString(int iMinutes)
 {
 
    wxString sFormatted = wxEmptyString;
-   wxString sHours = wxEmptyString;
-   wxString sMins = wxEmptyString;
 
    if (iMinutes < 1) {
       // Less than a minute...
@@ -5812,12 +5810,13 @@ wxString AudacityProject::GetHoursMinsString(int iMinutes)
    int iHours = iMinutes / 60;
    int iMins = iMinutes % 60;
 
-   // Use wxPLURAL to get strings
-   sHours = wxPLURAL("hour", "hours", iHours);
-   sMins = wxPLURAL("minute", "minutes", iMins);
+   auto sHours =
+      wxString::Format( wxPLURAL("%d hour", "%d hours", iHours), iHours );
+   auto sMins =
+      wxString::Format( wxPLURAL("%d minute", "%d minutes", iMins), iMins );
 
    /* i18n-hint: A time in hours and minutes. Only translate the "and". */
-   sFormatted.Printf(_("%d %s and %d %s."), iHours, sHours, iMins, sMins);
+   sFormatted.Printf( _("%s and %s."), sHours, sMins);
    return sFormatted;
 }
 

@@ -250,17 +250,28 @@ static wxString AskCopyOrEdit()
       wxBoxSizer *vbox;
       dialog.SetSizer(vbox = safenew wxBoxSizer(wxVERTICAL));
 
-      wxStaticText *message = safenew wxStaticText(&dialog, -1, wxString::Format(_("\
-When importing uncompressed audio files you can either copy them \
-into the project, or read them directly from their current location (without copying).\n\n\
-Your current preference is set to %s.\n\n\
-\
-Reading the files directly allows you to play or edit them almost immediately.  \
-This is less safe than copying in, because you must retain the files with their \
-original names in their original location.\n\
-File > Check Dependencies will show the original names and location of any files that you are reading directly.\n\n\
-\
-How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
+      wxString clause1 = _(
+"When importing uncompressed audio files you can either copy them into the project,"
+" or read them directly from their current location (without copying).\n\n"
+      );
+
+      wxString clause2 = oldCopyPref == wxT("copy")
+         ? _("Your current preference is set to copy in.\n\n")
+         : _("Your current preference is set to read directly.\n\n")
+      ;
+
+      wxString clause3 = _(
+"Reading the files directly allows you to play or edit them almost immediately.  "
+"This is less safe than copying in, because you must retain the files with their "
+"original names in their original locations.\n"
+"File > Check Dependencies will show the original names and locations of any files "
+"that you are reading directly.\n\n"
+"How do you want to import the current file(s)?"
+      );
+
+      wxStaticText *message =
+         safenew wxStaticText(&dialog, -1, clause1 + clause2 + clause3);
+
       message->Wrap(500);
       message->SetName(message->GetLabel());
 
