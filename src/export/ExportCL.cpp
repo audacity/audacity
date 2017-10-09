@@ -351,7 +351,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
       }
    }
 
-   wxSetEnv(wxT("PATH"),npath.c_str());
+   wxSetEnv(wxT("PATH"),npath);
 #endif
 
    // Kick off the command
@@ -361,7 +361,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 #if defined(__WXMSW__)
       auto cleanup = finally( [&] {
          if (!opath.IsEmpty()) {
-            wxSetEnv(wxT("PATH"),opath.c_str());
+            wxSetEnv(wxT("PATH"),opath);
          }
       } );
 #endif
@@ -371,7 +371,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
    if (!rc) {
       AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                    fName.c_str()));
+                                    fName));
       process.Detach();
       process.CloseOutput();
 

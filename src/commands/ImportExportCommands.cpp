@@ -104,17 +104,17 @@ bool ExportCommand::Apply(CommandExecutionContext context)
 
    bool exportSuccess = exporter.Process(context.GetProject(),
                                          std::max(0L, numChannels),
-                                         extension.c_str(), filename,
+                                         extension, filename,
                                          selection, t0, t1);
 
    if (exportSuccess)
    {
       Status(wxString::Format(wxT("Exported to %s format: %s"),
-                              extension.c_str(), filename.c_str()));
+                              extension, filename));
       return true;
    }
 
-   Error(wxString::Format(wxT("Could not export to %s format!"), extension.c_str()));
+   Error(wxString::Format(wxT("Could not export to %s format!"), extension));
    return false;
 }
 

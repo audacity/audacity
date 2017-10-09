@@ -402,7 +402,7 @@ wxString LabelDialog::TrackName(int & index, const wxString &dflt)
    // Generate a NEW track name if the passed index is out of range
    if (index < 1 || index >= (int)mTrackNames.GetCount()) {
       index = mTrackNames.GetCount();
-      mTrackNames.Add(wxString::Format(wxT("%d - %s"), index, dflt.c_str()));
+      mTrackNames.Add(wxString::Format(wxT("%d - %s"), index, dflt));
    }
 
    // Return the track name
@@ -638,7 +638,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    fName = FileNames::SelectFile(FileNames::Operation::Export,
       _("Export Labels As:"),
       wxEmptyString,
-      fName.c_str(),
+      fName,
       wxT("txt"),
       wxT("*.txt"),
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,

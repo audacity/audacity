@@ -180,7 +180,7 @@ void InitPreferences()
       bool gone = wxRemoveFile(fullPath);  // remove FirstTime.ini
       if (!gone)
       {
-         AudacityMessageBox(wxString::Format(_("Failed to remove %s"), fullPath.c_str()), _("Failed!"));
+         AudacityMessageBox(wxString::Format(_("Failed to remove %s"), fullPath), _("Failed!"));
       }
    }
 

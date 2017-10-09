@@ -176,8 +176,8 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
             pMixerBoard->UpdateName(pt);
 
          proj->PushState(wxString::Format(_("Renamed '%s' to '%s'"),
-            oldName.c_str(),
-            newName.c_str()),
+            oldName,
+            newName),
             _("Name Change"));
 
          mpData->result = RefreshCode::RefreshAll;

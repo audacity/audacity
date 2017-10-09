@@ -455,7 +455,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
       if (!sf) {
          AudacityMessageBox(wxString::Format(_("Cannot export audio to %s"),
-                                       fName.c_str()));
+                                       fName));
          return ProgressResult::Cancelled;
       }
       // Retrieve tags if not given a set
@@ -492,9 +492,9 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          ProgressDialog progress(wxFileName(fName).GetName(),
                                  selectionOnly ?
                                  wxString::Format(_("Exporting the selected audio as %s"),
-                                                  formatStr.c_str()) :
+                                                  formatStr) :
                                  wxString::Format(_("Exporting the audio as %s"),
-                                                  formatStr.c_str()));
+                                                  formatStr));
 
          while (updateResult == ProgressResult::Success) {
             sf_count_t samplesWritten;
@@ -518,8 +518,8 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                               * is usually something unhelpful (and untranslated) like "system
                                               * error" */
                                              _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
-                                             formatStr.c_str(),
-                                             wxString::FromAscii(buffer2).c_str()));
+                                             formatStr,
+                                             wxString::FromAscii(buffer2)));
                updateResult = ProgressResult::Cancelled;
                break;
             }

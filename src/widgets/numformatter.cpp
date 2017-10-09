@@ -207,7 +207,7 @@ void NumberFormatter::RemoveTrailingZeroes(wxString& s, size_t retain /* = 0 */)
 {
    const size_t posDecSep = s.find(GetDecimalSeparator());
    wxCHECK_RET( posDecSep != wxString::npos,
-               wxString::Format(wxT("No decimal separator in \"%s\""), s.c_str()) );
+               wxString::Format(wxT("No decimal separator in \"%s\""), s) );
    wxCHECK_RET( posDecSep, wxT("Can't start with decimal separator" ));
 
    // Find the last character to keep.

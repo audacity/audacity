@@ -223,8 +223,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
       partner->SetWaveColorIndex(newWaveColor);
 
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName().
-      c_str(),
+      pTrack->GetName(),
       GetWaveColorStr(newWaveColor)),
       _("WaveColor Change"));
 
@@ -345,8 +344,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
       partner->ConvertToSampleFormat(newFormat);
 
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName().
-      c_str(),
+      pTrack->GetName(),
       GetSampleFormatStr(newFormat)),
       _("Format Change"));
 
@@ -448,7 +446,7 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
    // Separate conversion of "rate" enables changing the decimals without affecting i18n
    wxString rateString = wxString::Format(wxT("%.3f"), rate);
    project->PushState(wxString::Format(_("Changed '%s' to %s Hz"),
-      pTrack->GetName().c_str(), rateString.c_str()),
+      pTrack->GetName(), rateString),
       _("Rate Change"));
 }
 
@@ -837,7 +835,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
    pTrack->SetChannel(channel);
    AudacityProject *const project = ::GetActiveProject();
    project->PushState(wxString::Format(_("Changed '%s' to %s"),
-      pTrack->GetName().c_str(),
+      pTrack->GetName(),
       channelmsg),
       _("Channel"));
    mpData->result = RefreshCode::RefreshAll;
@@ -891,8 +889,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 
       AudacityProject *const project = ::GetActiveProject();
       project->PushState(wxString::Format(_("Made '%s' a stereo track"),
-         pTrack->GetName().
-         c_str()),
+         pTrack->GetName()),
          _("Make Stereo"));
    }
    else
@@ -985,7 +982,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
       project->GetTrackPanel()->SetFocusedTrack(partner);
 
    project->PushState(wxString::Format(_("Swapped Channels in '%s'"),
-      pTrack->GetName().c_str()),
+      pTrack->GetName()),
       _("Swap Channels"));
 
    mpData->result = RefreshCode::RefreshAll;
@@ -998,7 +995,7 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
    project->PushState(wxString::Format(_("Split stereo track '%s'"),
-      pTrack->GetName().c_str()),
+      pTrack->GetName()),
       _("Split"));
 
    mpData->result = RefreshCode::RefreshAll;
@@ -1011,7 +1008,7 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    AudacityProject *const project = ::GetActiveProject();
    project->PushState(wxString::Format(_("Split Stereo to Mono '%s'"),
-      pTrack->GetName().c_str()),
+      pTrack->GetName()),
       _("Split to Mono"));
 
    mpData->result = RefreshCode::RefreshAll;

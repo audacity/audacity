@@ -301,7 +301,7 @@ bool ConvertLegacyProjectFile(const wxFileName &filename)
       xmlFile.EndTag(wxT("audacityproject"));
       xmlFile.Commit();
 
-      ::AudacityMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), xmlFile.GetBackupName().c_str()),
+      ::AudacityMessageBox(wxString::Format(_("Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'"), xmlFile.GetBackupName()),
                      _("Opening Audacity Project"));
 
       return true;

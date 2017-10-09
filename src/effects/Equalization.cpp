@@ -1390,7 +1390,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    {
       wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath.c_str(), reader.GetErrorStr().c_str());
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fullPath, reader.GetErrorStr());
       // Inform user of load failure
       Effect::MessageBox( msg,
          wxOK | wxCENTRE,
@@ -1444,7 +1444,7 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    mCurves.Clear();
    // We only wamt to look for the shipped EQDefaultCurves.xml
    wxFileName fn = wxFileName(FileNames::ResourcesDir(), wxT("EQDefaultCurves.xml"));
-   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),fn.GetFullPath().c_str());
+   wxLogDebug(wxT("Attempting to load EQDefaultCurves.xml from %s"),fn.GetFullPath());
    XMLFileReader reader;
 
    if(!reader.Parse(this, fn.GetFullPath())) {
@@ -1559,7 +1559,7 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
    {
       // LLL:  Is there really a need for an error message at all???
       //wxString errorMessage;
-      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+      //errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir());
       //ShowErrorDialog(mUIParent, _("EQCurves.xml and EQDefaultCurves.xml missing"),
       //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
 
@@ -1957,7 +1957,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                for(size_t i=0;i<mCurves.GetCount();i++)
                {
                   if(n>0)
-                     strValueTemp.Printf(wxT("%s (%d)"),strValue.c_str(),n);
+                     strValueTemp.Printf(wxT("%s (%d)"),strValue,n);
                   if(mCurves[i].Name == strValueTemp)
                   {
                      exists = true;
@@ -3536,7 +3536,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
       mEffect->SaveCurves(fileName);
       mEffect->mCurves = temp;
       wxString message;
-      message.Printf(_("%d curves exported to %s"), i, fileName.c_str());
+      message.Printf(_("%d curves exported to %s"), i, fileName);
       mEffect->Effect::MessageBox(message,
                                   Effect::DefaultMessageBoxStyle,
                                   _("Curves exported"));

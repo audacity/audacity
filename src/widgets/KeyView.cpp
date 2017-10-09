@@ -715,10 +715,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
          node.isparent,
          node.iscat,
          node.ispfx,
-         node.name.c_str(),
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
+         node.name,
+         node.category,
+         node.prefix,
+         node.label);
    }
 #endif
 
@@ -969,10 +969,10 @@ KeyView::RefreshLines(bool bSort)
          node.isparent,
          node.iscat,
          node.ispfx,
-         node.name.c_str(),
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
+         node.name,
+         node.category,
+         node.prefix,
+         node.label);
    }
 #endif
 

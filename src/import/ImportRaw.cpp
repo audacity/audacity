@@ -238,7 +238,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
       wxString msg;
 
-      msg.Printf(_("Importing %s"), wxFileName::FileName(fileName).GetFullName().c_str());
+      msg.Printf(_("Importing %s"), wxFileName::FileName(fileName).GetFullName());
 
       /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.*/
       ProgressDialog progress(_("Import Raw"), msg);

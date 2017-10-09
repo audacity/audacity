@@ -924,7 +924,7 @@ HitTestPreview SelectHandle::Preview
          /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
          tip = wxString::Format(
             _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
-            keyStr.c_str());
+            keyStr);
          // Later in this function we may point to some other string instead.
          if (!pTrack->GetSelected() ||
              !viewInfo.bAdjustSelectionEdges)

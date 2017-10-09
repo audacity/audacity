@@ -1052,8 +1052,8 @@ bool Effect::SetAutomationParameters(const wxString & parms)
       Effect::MessageBox(
          wxString::Format(
             _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
-            GetTranslatedName().c_str(),
-            preset.c_str()
+            GetTranslatedName(),
+            preset
          )
       );
 
@@ -1217,7 +1217,7 @@ bool Effect::DoEffect(wxWindow *parent,
       auto name = GetTranslatedName();
       ProgressDialog progress{
          name,
-         wxString::Format(_("Applying %s..."), name.c_str()),
+         wxString::Format(_("Applying %s..."), name),
          pdlgHideStopButton
       };
       auto vr = valueRestorer( mProgress, &progress );
@@ -3344,11 +3344,11 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    {
       auto sub = std::make_unique<wxMenu>();
 
-      sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
-      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName().c_str()));
-      sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
-      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
-      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetTranslatedDescription().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily()));
+      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName()));
+      sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor()));
+      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetTranslatedDescription()));
 
       menu.Append(0, _("About"), sub.release());
    }
@@ -3553,7 +3553,7 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
 {
    wxString preset = mUserPresets[evt.GetId() - kDeletePresetID];
 
-   int res = AudacityMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset.c_str()),
+   int res = AudacityMessageBox(wxString::Format(_("Are you sure you want to delete \"%s\"?"), preset),
                           _("Delete Preset"),
                           wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)

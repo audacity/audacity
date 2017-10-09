@@ -203,8 +203,8 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
       if (itemAtIndex.IsSameAs(interf)) {
          wxString name = wxSafeConvertMB2WX(info->name);
          wxString device = wxString::Format(wxT("%s: %s"),
-                                            interf.c_str(),
-                                            name.c_str());
+                                            interf,
+                                            name);
          int index;
 
          if (info->output) {
@@ -263,16 +263,16 @@ bool MidiIOPrefs::Commit()
    if (info) {
       gPrefs->Write(wxT("/MidiIO/PlaybackDevice"),
                     wxString::Format(wxT("%s: %s"),
-                                     wxString(wxSafeConvertMB2WX(info->interf)).c_str(),
-                                     wxString(wxSafeConvertMB2WX(info->name)).c_str()));
+                                     wxString(wxSafeConvertMB2WX(info->interf)),
+                                     wxString(wxSafeConvertMB2WX(info->name))));
    }
 #ifdef EXPERIMENTAL_MIDI_IN
    info = (const PmDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
    if (info) {
       gPrefs->Write(wxT("/MidiIO/RecordingDevice"),
                     wxString::Format(wxT("%s: %s"),
-                                     wxString(wxSafeConvertMB2WX(info->interf)).c_str(),
-                                     wxString(wxSafeConvertMB2WX(info->name)).c_str()));
+                                     wxString(wxSafeConvertMB2WX(info->interf)),
+                                     wxString(wxSafeConvertMB2WX(info->name))));
    }
 #endif
    return gPrefs->Flush();

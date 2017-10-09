@@ -598,7 +598,7 @@ wxString ScreenshotCommand::MakeFileName(const wxString &path, const wxString &b
    int i = 0;
    do {
       filename.Printf(wxT("%s%s%03d.png"),
-                      prefix.c_str(), basename.c_str(), i);
+                      prefix, basename, i);
       i++;
    } while (::wxFileExists(filename));
 

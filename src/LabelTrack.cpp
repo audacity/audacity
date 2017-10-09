@@ -1331,9 +1331,9 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
 void LabelStruct::Export(wxTextFile &file) const
 {
    file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
-      Internat::ToString(getT0(), FLT_DIG).c_str(),
-      Internat::ToString(getT1(), FLT_DIG).c_str(),
-      title.c_str()
+      Internat::ToString(getT0(), FLT_DIG),
+      Internat::ToString(getT1(), FLT_DIG),
+      title
    ));
 
    // Do we need more lines?
@@ -1346,8 +1346,8 @@ void LabelStruct::Export(wxTextFile &file) const
    // Write a \ character at the start of a second line,
    // so that earlier versions of Audacity ignore it.
    file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
-      Internat::ToString(f0, FLT_DIG).c_str(),
-      Internat::ToString(f1, FLT_DIG).c_str()
+      Internat::ToString(f0, FLT_DIG),
+      Internat::ToString(f1, FLT_DIG)
    ));
 
    // Additional lines in future formats should also start with '\'.

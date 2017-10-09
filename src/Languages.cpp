@@ -48,18 +48,18 @@ static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
 {
    wxArrayString results;
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/audacity.mo"),
-                                                   code.c_str()),
+                                                   code),
                                   audacityPathList,
                                   results);
 #if defined(__WXMAC__)
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s.lproj/audacity.mo"),
-                                                   code.c_str()),
+                                                   code),
                                   audacityPathList,
                                   results);
 #endif
 
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/LC_MESSAGES/audacity.mo"),
-                                                   code.c_str()),
+                                                   code),
                                   audacityPathList,
                                   results);
 
@@ -212,9 +212,9 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
          tempHash[code] = name;
 
 /*         wxLogDebug(wxT("code=%s name=%s fullCode=%s name=%s -> %s"),
-                      code.c_str(), localLanguageName[code].c_str(),
-                      fullCode.c_str(), localLanguageName[fullCode].c_str(),
-                      name.c_str());*/
+                      code, localLanguageName[code],
+                      fullCode, localLanguageName[fullCode],
+                      name);*/
       }
    }
 

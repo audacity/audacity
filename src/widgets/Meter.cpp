@@ -142,7 +142,7 @@ bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
    if (len >= (int)(mBufferSize-1))
       return false;
 
-   //wxLogDebug(wxT("Put: %s"), msg.toString().c_str());
+   //wxLogDebug(wxT("Put: %s"), msg.toString());
 
    mBuffer[mEnd] = msg;
    mEnd = (mEnd+1)%mBufferSize;

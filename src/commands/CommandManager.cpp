@@ -996,7 +996,7 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       // For key bindings for commands with a list, such as effects,
       // the name in prefs is the category name plus the effect name.
       if (multi) {
-         entry->name = wxString::Format(wxT("%s:%s"), name.c_str(), label.c_str());
+         entry->name = wxString::Format(wxT("%s:%s"), name, label);
       }
 
       // Key from preferences overridse the default key given
@@ -1023,13 +1023,13 @@ CommandListEntry *CommandManager::NewIdentifier(const wxString & name,
       if( prev->label != entry->label )
       {
          wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name.c_str(),
-                    prev->label.BeforeFirst(wxT('\t')).c_str(),
-                    entry->label.BeforeFirst(wxT('\t')).c_str());
+                    entry->name,
+                    prev->label.BeforeFirst(wxT('\t')),
+                    entry->label.BeforeFirst(wxT('\t')));
          wxFAIL_MSG(wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
-                    entry->name.c_str(),
-                    prev->label.BeforeFirst(wxT('\t')).c_str(),
-                    entry->label.BeforeFirst(wxT('\t')).c_str()));
+                    entry->name,
+                    prev->label.BeforeFirst(wxT('\t')),
+                    entry->label.BeforeFirst(wxT('\t'))));
       }
    }
 #endif
@@ -1806,9 +1806,9 @@ void CommandManager::CheckDups()
          if (mCommandList[i]->key == mCommandList[j]->key) {
             wxString msg;
             msg.Printf(wxT("key combo '%s' assigned to '%s' and '%s'"),
-                       mCommandList[i]->key.c_str(),
-                       mCommandList[i]->label.BeforeFirst(wxT('\t')).c_str(),
-                       mCommandList[j]->label.BeforeFirst(wxT('\t')).c_str());
+                       mCommandList[i]->key,
+                       mCommandList[i]->label.BeforeFirst(wxT('\t')),
+                       mCommandList[j]->label.BeforeFirst(wxT('\t')));
             wxASSERT_MSG(mCommandList[i]->key != mCommandList[j]->key, msg);
          }
       }

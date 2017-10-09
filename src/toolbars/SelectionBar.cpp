@@ -435,7 +435,7 @@ void SelectionBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
-   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
+   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName));
 #endif
 }
 

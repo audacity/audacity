@@ -192,8 +192,8 @@ UIHandle::Result TrackSelectHandle::Release
       dir = mRearrangeCount < 0 ? _("up") : _("down");
 /* i18n-hint: will substitute name of track for first %s, "up" or "down" for the other.*/
       project->PushState(wxString::Format(_("Moved '%s' %s"),
-         mpTrack->GetName().c_str(),
-         dir.c_str()),
+         mpTrack->GetName(),
+         dir),
          _("Move Track"));
    }
    // Bug 1677

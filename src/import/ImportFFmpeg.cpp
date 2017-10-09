@@ -365,7 +365,7 @@ bool FFmpegImportFileHandle::Init()
    err = ufile_fopen_input(tempContext, mName);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName.c_str());
+      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName);
       return false;
    }
    wxASSERT(tempContext.get());
@@ -374,7 +374,7 @@ bool FFmpegImportFileHandle::Init()
    err = avformat_find_stream_info(mFormatContext, NULL);
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName);
       return false;
    }
 
@@ -444,7 +444,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             lang.FromUTF8(tag->value);
          }
-         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
+         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang,bitrate,sc->m_stream->codec->channels, duration);
          mStreamInfo.Add(strinfo);
          mScs->get()[mNumStreams++] = std::move(sc);
       }

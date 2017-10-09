@@ -937,16 +937,16 @@ void FreqWindow::PlotPaint(wxPaintEvent & event)
       if (mAlg == SpectrumAnalyst::Spectrum) {
          xpitch = PitchName_Absolute(FreqToMIDInote(xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(bestpeak));
-         xp = xpitch.c_str();
-         pp = peakpitch.c_str();
+         xp = xpitch;
+         pp = peakpitch;
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
          cursor.Printf(_("%d Hz (%s) = %d dB"), (int)(xPos + 0.5), xp, (int)(value + 0.5));
          peak.Printf(_("%d Hz (%s) = %.1f dB"), (int)(bestpeak + 0.5), pp, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
          xpitch = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
-         xp = xpitch.c_str();
-         pp = peakpitch.c_str();
+         xp = xpitch;
+         pp = peakpitch;
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          cursor.Printf(_("%.4f sec (%d Hz) (%s) = %f"),

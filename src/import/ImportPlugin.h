@@ -137,7 +137,7 @@ public:
       wxFileName ff(mFilename);
       wxString title;
 
-      title.Printf(_("Importing %s"), GetFileDescription().c_str());
+      title.Printf(_("Importing %s"), GetFileDescription());
       mProgress.create(title, ff.GetFullName());
    }
 

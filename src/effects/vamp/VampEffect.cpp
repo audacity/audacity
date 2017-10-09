@@ -445,7 +445,7 @@ bool VampEffect::Process()
       addedTracks.push_back(AddAnalysisTrack(
          multiple
          ? wxString::Format(wxT("%s: %s"),
-            left->GetName().c_str(), GetName().c_str())
+            left->GetName(), GetName())
          : GetName()
       ));
       LabelTrack *ltrack = addedTracks.back()->get();

@@ -165,7 +165,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
       {
          S.SetBorder(20);
          S.AddFixedText(wxString::Format(_("Applying '%s' to current project"),
-                                         name.c_str()));
+                                         name));
       }
       S.EndStatic();
    }
@@ -642,7 +642,7 @@ bool EditChainsDialog::ChangeOK()
       wxString msg;
       int id;
 
-      title.Printf(_("%s changed"), mActiveChain.c_str());
+      title.Printf(_("%s changed"), mActiveChain);
       msg = _("Do you want to save the changes?");
 
       id = AudacityMessageBox(msg, title, wxYES_NO | wxCANCEL);
@@ -833,7 +833,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    wxString name = mChains->GetItemText(item);
    AudacityMessageDialog m(this,
    /*i18n-hint: %s will be replaced by the name of a file.*/
-                     wxString::Format(_("Are you sure you want to delete %s?"), name.c_str()),
+                     wxString::Format(_("Are you sure you want to delete %s?"), name),
                      GetTitle(),
                      wxYES_NO | wxICON_QUESTION);
    if (m.ShowModal() == wxID_NO) {

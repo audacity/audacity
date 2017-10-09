@@ -128,10 +128,10 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
       /* i18n-hint: The %s's are replaced by translated and untranslated
        * versions of language names. */
       msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
-                 mLangNames[ndx].c_str(),
-                 mLang.c_str(),
-                 sname.c_str(),
-                 slang.c_str());
+                 mLangNames[ndx],
+                 mLang,
+                 sname,
+                 slang);
       if (AudacityMessageBox(msg, _("Confirm"), wxYES_NO) == wxNO) {
          return;
       }

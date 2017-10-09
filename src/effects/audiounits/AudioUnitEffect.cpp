@@ -270,10 +270,10 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
             wxString name = wxCFStringRef::AsString(cfName);
       
             effects.Add(wxString::Format(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
-                        FromOSType(found.componentManufacturer).c_str(),
-                        FromOSType(found.componentType).c_str(),
-                        FromOSType(found.componentSubType).c_str(),
-                        name.c_str()));
+                        FromOSType(found.componentManufacturer),
+                        FromOSType(found.componentType),
+                        FromOSType(found.componentSubType),
+                        name));
          }
       }
 
@@ -306,7 +306,7 @@ wxString AudioUnitEffectsModule::FromOSType(OSType type)
                 (type & 0x0000ff00) << 8  |
                 (type & 0x000000ff) << 24;
    
-   return wxString::FromUTF8((char *)&rev, 4).c_str();
+   return wxString::FromUTF8((char *)&rev, 4);
 }
 
 OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
@@ -568,9 +568,9 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       wxString path;
       path.Printf(wxT("%s/%s/%s/%s.aupreset"),
                   PRESET_USER_PATH,
-                  mEffect->mVendor.c_str(),
-                  mEffect->mName.c_str(),
-                  name.c_str());
+                  mEffect->mVendor,
+                  mEffect->mName,
+                  name);
       wxFileName fn(path);
       fn.Normalize();
       fn.Mkdir(0755, wxPATH_MKDIR_FULL);
@@ -705,8 +705,8 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    wxString path;
    path.Printf(wxT("%s/%s/%s"),
                PRESET_LOCAL_PATH,
-               mEffect->mVendor.c_str(),
-               mEffect->mName.c_str());
+               mEffect->mVendor,
+               mEffect->mName);
    wxFileName fn(path);
    fn.Normalize();
    
@@ -715,8 +715,8 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
 
    path.Printf(wxT("%s/%s/%s"),
                PRESET_USER_PATH,
-               mEffect->mVendor.c_str(),
-               mEffect->mName.c_str());
+               mEffect->mVendor,
+               mEffect->mName);
    fn = path;
    fn.Normalize();
 
@@ -764,8 +764,8 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
       wxString path;
       path.Printf(wxT("%s/%s.aupreset"),
-                  item.GetText().c_str(),
-                  mList->GetItemText(sel).c_str());
+                  item.GetText(),
+                  mList->GetItemText(sel));
 
       // Create the CFURL for the path
       CFunique_ptr<const __CFURL> url {

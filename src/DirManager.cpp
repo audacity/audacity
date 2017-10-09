@@ -314,7 +314,7 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
 
    auto nn = filePathArray.size();
    for (unsigned int i = 0; i < nn; i++) {
-      const wxChar *file = filePathArray[i].c_str();
+      const wxChar *file = filePathArray[i];
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs) {
@@ -768,14 +768,14 @@ bool DirManager::AssignFile(wxFileNameWrapper &fileName,
       // set to true only if called from MakeFileBlockName().
 
       wxString filespec;
-      filespec.Printf(wxT("%s.*"),value.c_str());
+      filespec.Printf(wxT("%s.*"),value);
       if(checkit.HasFiles(filespec)){
          // collision with on-disk state!
          wxString collision;
          checkit.GetFirst(&collision,filespec);
 
          wxLogWarning(_("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
-                      collision.c_str());
+                      collision);
 
          return FALSE;
       }
@@ -844,7 +844,7 @@ void DirManager::BalanceFileAdd(int midkey)
 
 void DirManager::BalanceInfoAdd(const wxString &file)
 {
-   const wxChar *s=file.c_str();
+   const wxChar *s=file;
    if(s[0]==wxT('e')){
       // this is one of the modern two-deep managed files
       // convert filename to keys
@@ -899,7 +899,7 @@ void DirManager::BalanceInfoDel(const wxString &file)
    auto &dirTopPool = balanceInfo.dirTopPool;
    auto &dirTopFull = balanceInfo.dirTopFull;
 
-   const wxChar *s=file.c_str();
+   const wxChar *s=file;
    if(s[0]==wxT('e')){
       // this is one of the modern two-deep managed files
 
@@ -1419,7 +1419,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       /* i18n-hint: This is the pattern for filenames that are created
        * when a file needs to be backed up to a different name.  For
        * example, mysong would become mysong-old1, mysong-old2, etc. */
-      renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName().c_str(), i));
+      renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName(), i));
    } while (renamedFileName.FileExists());
 
    // Test creating a file by that name to make sure it will
@@ -1430,7 +1430,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
    if (!testFile.IsOpened()) {
       { // need braces to avoid compiler warning about ambiguous else, see the macro
          wxLogSysError(_("Unable to open/create test file."),
-               renamedFullPath.c_str());
+               renamedFullPath);
       }
       return false;
    }
@@ -1442,12 +1442,12 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
       /* i18n-hint: %s is the name of a file.*/
       { // need braces to avoid compiler warning about ambiguous else, see the macro
          wxLogSysError(_("Unable to remove '%s'."),
-            renamedFullPath.c_str());
+            renamedFullPath);
       }
       return false;
    }
 
-   wxPrintf(_("Renamed file: %s\n"), renamedFullPath.c_str());
+   wxPrintf(_("Renamed file: %s\n"), renamedFullPath);
 
    // Go through our block files and see if any indeed point to
    // the file we're concerned about.  If so, point the block file
@@ -1497,8 +1497,8 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
 
          // Print error message and cancel the export
          wxLogSysError(_("Unable to rename '%s' to '%s'."),
-                       fullPath.c_str(),
-                       renamedFullPath.c_str());
+                       fullPath,
+                       renamedFullPath);
 
          // Destruction of readLocks puts things back where they were
          return false;
@@ -1518,7 +1518,7 @@ bool DirManager::EnsureSafeFilename(const wxFileName &fName)
                {
                   ab->ChangeAliasedFileName(wxFileNameWrapper{ renamedFileName });
                   wxPrintf(_("Changed block %s to new alias name\n"),
-                           b->GetFileName().name.GetFullName().c_str());
+                           b->GetFileName().name.GetFullName());
 
                }
                else if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
@@ -1622,7 +1622,7 @@ _("Project check of \"%s\" folder \
 \nproject in its current state, unless you \"Close \
 \nproject immediately\" on further error alerts.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (long long) missingAliasedFilePathHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAliasedFilePathHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"),
@@ -1700,7 +1700,7 @@ _("Project check of \"%s\" folder \
 \nAudacity can fully regenerate these files \
 \nfrom the current audio in the project.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (long long) missingAUFHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAUFHash.size());
          const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
                                     _("Fill in silence for missing display data (this session only)"),
                                     _("Close project immediately with no further changes"),
@@ -1772,7 +1772,7 @@ _("Project check of \"%s\" folder \
 \n\nNote that for the second option, the waveform \
 \nmay not show silence.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (long long) missingAUHash.size());
+         msg.Printf(msgA, this->projName, (long long) missingAUHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no further changes"),
                _("Treat missing audio as silence (this session only)"),
@@ -1844,7 +1844,7 @@ _("Project check of \"%s\" folder \
 other projects. \
 \nThey are doing no harm and are small.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), (int)orphanFilePathArray.GetCount());
+         msg.Printf(msgA, this->projName, (int)orphanFilePathArray.GetCount());
 
          const wxChar *buttons[] =
             {_("Continue without deleting; ignore the extra files this session"),
@@ -1937,7 +1937,7 @@ void DirManager::FindMissingAliasedFiles(
    iter = missingAliasedFilePathHash.begin();
    while (iter != missingAliasedFilePathHash.end())
    {
-      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first.c_str());
+      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first);
       ++iter;
    }
 }
@@ -1962,7 +1962,7 @@ void DirManager::FindMissingAUFs(
             {
                missingAUFHash[key] = b;
                wxLogWarning(_("Missing alias (.auf) block file: '%s'"),
-                            fileName.GetFullPath().c_str());
+                            fileName.GetFullPath());
             }
          }
       }
@@ -1989,8 +1989,7 @@ void DirManager::FindMissingAUs(
                 wxFile{ path }.Length() == 0)
             {
                missingAUHash[key] = b;
-               wxLogWarning(_("Missing data block file: '%s'"),
-                            path.c_str());
+               wxLogWarning(_("Missing data block file: '%s'"), path);
             }
          }
       }
@@ -2033,7 +2032,7 @@ void DirManager::FindOrphanBlockFiles(
       }
    }
    for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++)
-      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i].c_str());
+      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i]);
 }
 
 

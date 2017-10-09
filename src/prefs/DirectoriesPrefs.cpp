@@ -207,7 +207,7 @@ bool DirectoriesPrefs::Validate()
    if( !AudacityApp::IsTempDirectoryNameOK( path ) ) {
       AudacityMessageBox(
          wxString::Format(_("Directory %s is not suitable (at risk of being cleaned out)"),
-                           path.c_str()),
+                           path),
          _("Error"),
          wxOK | wxICON_ERROR);
       return false;
@@ -215,7 +215,7 @@ bool DirectoriesPrefs::Validate()
    if (!tempDir.DirExists()) {
       int ans = AudacityMessageBox(
          wxString::Format(_("Directory %s does not exist. Create it?"),
-                          path.c_str()),
+                          path),
          _("New Temporary Directory"),
          wxYES_NO | wxCENTRE | wxICON_EXCLAMATION);
 
@@ -236,7 +236,7 @@ bool DirectoriesPrefs::Validate()
       if (!tempDir.Mkdir(0755)) {
          AudacityMessageBox(
             wxString::Format(_("Directory %s is not writable"),
-                             path.c_str()),
+                             path),
             _("Error"),
             wxOK | wxICON_ERROR);
          return false;

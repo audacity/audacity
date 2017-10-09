@@ -535,9 +535,9 @@ int TimerRecordDialog::RunWaitDialog()
 
       // Second column
       strMsg += wxString::Format(wxT("%s\n%s\n%s\n\n%s\n%s\n%s"),
-                                       GetDisplayDate(m_DateTime_Start).c_str(),
+                                       GetDisplayDate(m_DateTime_Start),
                                        m_TimeSpan_Duration.Format(),
-                                       GetDisplayDate(m_DateTime_End).c_str(),
+                                       GetDisplayDate(m_DateTime_End),
                                        (m_bAutoSaveEnabled ? _("Yes") : _("No")),
                                        (m_bAutoExportEnabled ? _("Yes") : _("No")),
                                        sPostAction);
@@ -755,7 +755,7 @@ wxString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
 #endif
 
    // Use default formatting
-wxPrintf(wxT("%s\n"), dt.Format().c_str());
+wxPrintf(wxT("%s\n"), dt.Format());
    return dt.FormatDate() + wxT(" ") + dt.FormatTime();
 }
 
@@ -1020,9 +1020,9 @@ ProgressResult TimerRecordDialog::WaitForStart()
 
    // Second column
    strMsg += wxString::Format(wxT("%s\n%s\n%s\n\n%s\n%s\n%s"),
-                                    GetDisplayDate(m_DateTime_Start).c_str(),
+                                    GetDisplayDate(m_DateTime_Start),
                                     m_TimeSpan_Duration.Format(),
-                                    GetDisplayDate(m_DateTime_End).c_str(),
+                                    GetDisplayDate(m_DateTime_End),
                                     (m_bAutoSaveEnabled ? _("Yes") : _("No")),
                                     (m_bAutoExportEnabled ? _("Yes") : _("No")),
                                     sPostAction);

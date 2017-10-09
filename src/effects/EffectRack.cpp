@@ -151,7 +151,7 @@ EffectRack::EffectRack()
       wxString slot;
       gPrefs->Read(wxString::Format(wxT("/EffectsRack/Slot%02d"), i), &slot);
 
-      Effect *effect = em.GetEffect(slot.AfterFirst(wxT(',')).c_str());
+      Effect *effect = em.GetEffect(slot.AfterFirst(wxT(',')));
       if (effect)
       {
          Add(effect, slot.BeforeFirst(wxT(',')) == wxT("1"), true);
@@ -173,7 +173,7 @@ EffectRack::~EffectRack()
          gPrefs->Write(wxString::Format(wxT("/EffectsRack/Slot%02d"), i),
                        wxString::Format(wxT("%d,%s"),
                                         mPowerState[i],
-                                        effect->GetID().c_str()));
+                                        effect->GetID()));
       }
    }
 }

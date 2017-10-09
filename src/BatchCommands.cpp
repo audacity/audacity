@@ -427,7 +427,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
       int minute = now.GetMinute();
       int second = now.GetSecond();
       justName = wxString::Format(wxT("%d-%s-%02d-%02d-%02d-%02d"),
-           year, monthName.c_str(), dom, hour, minute, second);
+           year, monthName, dom, hour, minute, second);
 
 //      SetName(cleanedFileName);
 //      bool isStereo;
@@ -436,7 +436,7 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
       //OnSelectAll();
       pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
       ::AudacityMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
-            pathName.c_str(), cleanedString.c_str(), justName.c_str(), extension.c_str()),
+            pathName, cleanedString, justName, extension),
          _("Export recording"),
          wxOK | wxCENTRE);
       pathName += wxFileName::GetPathSeparator();
@@ -585,7 +585,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
       return false;
 #endif
    }
-   AudacityMessageBox(wxString::Format(_("Command %s not implemented yet"),command.c_str()));
+   AudacityMessageBox(wxString::Format(_("Command %s not implemented yet"),command));
    return false;
 }
 // end CLEANSPEECH remnant
@@ -641,7 +641,7 @@ bool BatchCommands::ApplyCommand(const wxString & command, const wxString & para
 
    AudacityMessageBox(
       wxString::Format(
-      _("Your batch command of %s was not recognized."), command.c_str() ));
+      _("Your batch command of %s was not recognized."), command ));
 
    return false;
 }
@@ -703,8 +703,8 @@ bool BatchCommands::ApplyChain(const wxString & filename)
    else
    {
       /* i18n-hint: active verb in past tense */
-      longDesc = wxString::Format(_("Applied batch chain '%s'"), name.c_str());
-      shortDesc = wxString::Format(_("Apply '%s'"), name.c_str());
+      longDesc = wxString::Format(_("Applied batch chain '%s'"), name);
+      shortDesc = wxString::Format(_("Apply '%s'"), name);
    }
 
    if (!proj)
@@ -762,12 +762,12 @@ bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & par
    //TODO: Add a cancel button to these, and add the logic so that we can abort.
    if( params != wxT("") )
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command.c_str(), params.c_str()),
+      AudacityMessageBox( wxString::Format(_("Apply %s with parameter(s)\n\n%s"),command, params),
          _("Test Mode"));
    }
    else
    {
-      AudacityMessageBox( wxString::Format(_("Apply %s"),command.c_str()),
+      AudacityMessageBox( wxString::Format(_("Apply %s"),command),
          _("Test Mode"));
    }
    return true;

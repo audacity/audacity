@@ -43,7 +43,7 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
 {
    wxFFile theXMLFile(fname, wxT("rb"));
    if (!theXMLFile.IsOpened()) {
-      mErrorStr.Printf(_("Could not open file: \"%s\""), fname.c_str());
+      mErrorStr.Printf(_("Could not open file: \"%s\""), fname);
       return false;
    }
 
@@ -72,7 +72,7 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
    if (mBaseHandler)
       return true;
    else {
-      mErrorStr.Printf(_("Could not load file: \"%s\""), fname.c_str());
+      mErrorStr.Printf(_("Could not load file: \"%s\""), fname);
       return false;
    }
 }

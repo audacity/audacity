@@ -473,7 +473,7 @@ void ExportMultiple::OnCreate(wxCommandEvent& WXUNUSED(event))
    }
 
    ::AudacityMessageBox(wxString::Format(_("\"%s\" successfully created."),
-                                   fn.GetPath().c_str()),
+                                   fn.GetPath()),
                   _("Export Multiple"),
                   wxOK | wxCENTRE, this);
 }
@@ -624,7 +624,7 @@ bool ExportMultiple::DirOk()
    wxString prompt;
 
    prompt.Printf(_("\"%s\" doesn't exist.\n\nWould you like to create it?"),
-                 fn.GetFullPath().c_str());
+                 fn.GetFullPath());
 
    int action = AudacityMessageBox(prompt,
                              wxT("Warning"),
@@ -662,7 +662,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
    setting.destfile.SetPath(mDir->GetValue());
    setting.destfile.SetExt(mPlugins[mPluginIndex]->GetExtension(mSubFormatIndex));
    wxLogDebug(wxT("Plug-in index = %d, Sub-format = %d"), mPluginIndex, mSubFormatIndex);
-   wxLogDebug(wxT("File extension is %s"), setting.destfile.GetExt().c_str());
+   wxLogDebug(wxT("File extension is %s"), setting.destfile.GetExt());
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
 
@@ -701,7 +701,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
 
       // Numbering files...
       if( !byName ) {
-         name.Printf(wxT("%s-%02d"), prefix.c_str(), l+1);
+         name.Printf(wxT("%s-%02d"), prefix, l+1);
       } else if( addNumber ) {
          // Following discussion with GA, always have 2 digits
          // for easy file-name sorting (on Windows)
@@ -845,7 +845,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
          }
       }
       else {
-         name = (wxString::Format(wxT("%s-%02d"), prefix.c_str(), l+1));
+         name = (wxString::Format(wxT("%s-%02d"), prefix, l+1));
       }
 
       // store sanitised and user checked name in object
@@ -938,7 +938,7 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
 {
    wxFileName name;
 
-   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (inName.GetFullName()).c_str());
+   wxLogDebug(wxT("Doing multiple Export: File name \"%s\""), (inName.GetFullName()));
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);
    if (selectedOnly)
       wxLogDebug(wxT("Selected Region Only"));
@@ -957,7 +957,7 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
       int i = 2;
       wxString base(name.GetName());
       while (name.FileExists()) {
-         name.SetName(wxString::Format(wxT("%s-%d"), base.c_str(), i++));
+         name.SetName(wxString::Format(wxT("%s-%d"), base, i++));
       }
    }
 
@@ -998,12 +998,12 @@ wxString ExportMultiple::MakeFileName(const wxString &input)
       // TODO: For Russian langauge we should have separate cases for 2 and more than 2 letters.
       if( excluded.Length() > 1 ){
          // i18n-hint: The second %s gives some letters that can't be used.
-         msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input.c_str(),
-            excluded.c_str());
+         msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input,
+            excluded);
       } else {
          // i18n-hint: The second %s gives a letter that can't be used.
-         msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\nUse..."), input.c_str(),
-            excluded.c_str());
+         msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\nUse..."), input,
+            excluded);
       }
 
       AudacityTextEntryDialog dlg( this, msg, _("Save As..."), newname );

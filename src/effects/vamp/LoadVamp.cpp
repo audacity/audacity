@@ -185,7 +185,7 @@ wxArrayString VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUS
             if (outputName != name)
             {
                name = wxString::Format(wxT("%s: %s"),
-                                       name.c_str(), outputName.c_str());
+                                       name, outputName);
             }
          }
 
@@ -318,7 +318,7 @@ std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const wxString & pat
          if (outputName != name)
          {
             name = wxString::Format(wxT("%s: %s"),
-                                    name.c_str(), outputName.c_str());
+                                    name, outputName);
          }
       }
 

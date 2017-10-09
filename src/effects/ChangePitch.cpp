@@ -250,7 +250,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
          S.AddTitle(_("Change Pitch without Changing Tempo"));
          S.AddTitle(
             wxString::Format(_("Estimated Start Pitch: %s%d (%.3f Hz)"),
-                              pitch[m_nFromPitch].c_str(), m_nFromOctave, m_FromFrequency));
+                              pitch[m_nFromPitch], m_nFromOctave, m_FromFrequency));
       }
       S.EndVerticalLay();
 

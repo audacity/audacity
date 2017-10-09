@@ -301,7 +301,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 #else
    wxFFile f;     // will be closed when it goes out of scope
    if (!f.Open(fName, wxT("w+b"))) {
-      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName.c_str()));
+      AudacityMessageBox(wxString::Format(_("FLAC export couldn't open %s"), fName));
       return ProgressResult::Cancelled;
    }
 

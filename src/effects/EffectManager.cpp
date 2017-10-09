@@ -149,7 +149,7 @@ wxString EffectManager::GetEffectDescription(const PluginID & ID)
 
    if (effect)
    {
-      return wxString::Format(_("Applied effect: %s"), GetEffectName(ID).c_str());
+      return wxString::Format(_("Applied effect: %s"), GetEffectName(ID));
    }
 
    return wxEmptyString;
@@ -718,7 +718,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       }
 
       AudacityMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
-                                    PluginManager::Get().GetName(ID).c_str()),
+                                    PluginManager::Get().GetName(ID)),
                    _("Effect failed to initialize"));
 
       return NULL;

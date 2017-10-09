@@ -62,7 +62,7 @@ out.
 #ifdef DEBUG_BLOCKFILE
 #define BLOCKFILE_DEBUG_OUTPUT(op, i) \
    wxPrintf(wxT("[BlockFile %x %s] %s: %i\n"), (unsigned)this, \
-            mFileName.GetFullName().c_str(), wxT(op), i);
+            mFileName.GetFullName(), wxT(op), i);
 #else
 #define BLOCKFILE_DEBUG_OUTPUT(op, i)
 #endif
@@ -693,7 +693,7 @@ void AliasBlockFile::WriteSummary()
       // Never silence the Log w.r.t write errors; they always count
       // as NEW errors
       wxLogError(wxT("Unable to write summary data to file %s"),
-                   mFileName.GetFullPath().c_str());
+                   mFileName.GetFullPath());
       // If we can't write, there's nothing to do.
       return;
    }

@@ -506,7 +506,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
       wxString effectID = effectTzr.GetNextToken();
 
       wxString cmd;
-      cmd.Printf(wxT("\"%s\" %s \"%s;%s\""), cmdpath.c_str(), VSTCMDKEY, path.c_str(), effectID.c_str());
+      cmd.Printf(wxT("\"%s\" %s \"%s;%s\""), cmdpath, VSTCMDKEY, path, effectID);
 
       VSTSubProcess proc;
       try
@@ -519,7 +519,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
       }
       catch (...)
       {
-         wxLogMessage(_("VST plugin registration failed for %s\n"), path.c_str());
+         wxLogMessage(_("VST plugin registration failed for %s\n"), path);
          error = true;
          valid = false;
       }
@@ -557,7 +557,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                if (idCnt > 3)
                {
                   progress.create( _("Scanning Shell VST"),
-                        wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt, proc.GetName().c_str()),
+                        wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt, proc.GetName()),
                         static_cast<int>(idCnt),
                         nullptr,
                         wxPD_APP_MODAL |
@@ -631,7 +631,7 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
                {
                   idNdx++;
                   cont = progress->Update(idNdx,
-                                          wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt, proc.GetName().c_str()));
+                                          wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt, proc.GetName()));
                }
 
                if (!skip && cont)
@@ -709,16 +709,16 @@ void VSTEffectsModule::Check(const wxChar *path)
             subids += wxString::Format(wxT("%d;"), effectIDs[i]);
          }
 
-         out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast().c_str());
+         out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast());
       }
       else
       {
          out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect.GetPath().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect.GetName().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect.GetVendor().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion().c_str());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription().c_str());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect.GetPath());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect.GetName());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect.GetVendor());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion());
+         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect.GetType());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect.IsInteractive());
          out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect.SupportsAutomation());
@@ -1043,9 +1043,9 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
 
 #if defined(VST_DEBUG)
 #if defined(__WXMSW__)
-         wxLogDebug(wxT("VST canDo: %s"), wxString::FromAscii((char *)ptr).c_str());
+         wxLogDebug(wxT("VST canDo: %s"), wxString::FromAscii((char *)ptr));
 #else
-         wxPrintf(wxT("VST canDo: %s\n"), wxString::FromAscii((char *)ptr).c_str());
+         wxPrintf(wxT("VST canDo: %s\n"), wxString::FromAscii((char *)ptr));
 #endif
 #endif
 
@@ -2960,14 +2960,14 @@ void VSTEffect::RefreshParameters(int skip)
       {
          text.Printf(wxT("%.5g"),callGetParameter(i));
       }
-      mDisplays[i]->SetLabel(wxString::Format(wxT("%8s"), text.c_str()));
+      mDisplays[i]->SetLabel(wxString::Format(wxT("%8s"), text));
       name += wxT(' ') + text;
 
       text = GetString(effGetParamDisplay, i);
       if (!text.IsEmpty())
       {
-         text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i).c_str());
-         mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text.c_str()));
+         text.Printf(wxT("%-8s"), GetString(effGetParamLabel, i));
+         mLabels[i]->SetLabel(wxString::Format(wxT("%8s"), text));
          name += wxT(' ') + text;
       }
 
@@ -3438,7 +3438,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    wxFFile f(fullPath, wxT("wb"));
    if (!f.IsOpened())
    {
-      AudacityMessageBox(wxString::Format(_("Could not open file: \"%s\""), fullPath.c_str()),
+      AudacityMessageBox(wxString::Format(_("Could not open file: \"%s\""), fullPath),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3505,7 +3505,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
 
    if (f.Error())
    {
-      AudacityMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fullPath.c_str()),
+      AudacityMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fullPath),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3523,7 +3523,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    wxFFile f(fullPath, wxT("wb"));
    if (!f.IsOpened())
    {
-      AudacityMessageBox(wxString::Format(_("Could not open file: \"%s\""), fullPath.c_str()),
+      AudacityMessageBox(wxString::Format(_("Could not open file: \"%s\""), fullPath),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);
@@ -3538,7 +3538,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    f.Write(buf.GetData(), buf.GetDataLen());
    if (f.Error())
    {
-      AudacityMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fullPath.c_str()),
+      AudacityMessageBox(wxString::Format(_("Error writing to file: \"%s\""), fullPath),
                    _("Error Saving VST Presets"),
                    wxOK | wxCENTRE,
                    mParent);

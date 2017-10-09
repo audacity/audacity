@@ -886,7 +886,7 @@ UIHandle::Result TimeShiftHandle::Release
          _("left");
       /* i18n-hint: %s is a direction like left or right */
       msg.Printf(_("Time shifted tracks/clips %s %.02f seconds"),
-         direction.c_str(), fabs( mClipMoveState.hSlideAmount ));
+         direction, fabs( mClipMoveState.hSlideAmount ));
       consolidate = true;
    }
    pProject->PushState(msg, _("Time-Shift"),

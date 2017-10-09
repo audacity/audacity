@@ -325,7 +325,7 @@ ProgressResult OggImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
          if (bytesRead == OV_HOLE) {
             wxFileName ff(mFilename);
             wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
-               ff.GetFullName().c_str());
+               ff.GetFullName());
             /* http://lists.xiph.org/pipermail/vorbis-dev/2001-February/003223.html
              * is the justification for doing this - best effort for malformed file,
              * hence the message.

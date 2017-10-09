@@ -95,7 +95,7 @@ void FileNames::MakeNameUnique(wxArrayString &otherNames, wxFileName &newName)
       int i=2;
       wxString orig = newName.GetName();
       do {
-         newName.SetName(wxString::Format(wxT("%s-%d"), orig.c_str(), i));
+         newName.SetName(wxString::Format(wxT("%s-%d"), orig, i));
          i++;
       } while (otherNames.Index(newName.GetFullName(), false) >= 0);
    }

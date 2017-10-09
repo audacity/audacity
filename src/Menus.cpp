@@ -1120,7 +1120,7 @@ void AudacityProject::CreateMenusAndCommands()
       wxString buildMenuLabel;
       if (!mLastEffect.IsEmpty()) {
          buildMenuLabel.Printf(_("Repeat %s"),
-            EffectManager::Get().GetEffectName(mLastEffect).c_str());
+            EffectManager::Get().GetEffectName(mLastEffect));
       }
       else
          buildMenuLabel.Printf(_("Repeat Last Effect"));
@@ -1933,7 +1933,7 @@ void AudacityProject::ModifyUndoMenuItems()
       GetUndoManager()->GetShortDescription(cur, &desc);
       mCommandManager.Modify(wxT("Undo"),
                              wxString::Format(_("&Undo %s"),
-                                              desc.c_str()));
+                                              desc));
    }
    else {
       mCommandManager.Modify(wxT("Undo"),
@@ -1944,7 +1944,7 @@ void AudacityProject::ModifyUndoMenuItems()
       GetUndoManager()->GetShortDescription(cur+1, &desc);
       mCommandManager.Modify(wxT("Redo"),
                              wxString::Format(_("&Redo %s"),
-                                              desc.c_str()));
+                                              desc));
       mCommandManager.Enable(wxT("Redo"), true);
    }
    else {
@@ -4047,9 +4047,9 @@ void AudacityProject::MoveTrack(Track* target, MoveChoice choice)
    /* i18n-hint: The direction of movement will be up, down, to top or to bottom.. */
    wxString shortDesc = (_("Move Track"));
 
-   longDesc = (wxString::Format(wxT("%s '%s' %s"), longDesc.c_str(),
-      target->GetName().c_str(), direction.c_str()));
-   shortDesc = (wxString::Format(wxT("%s %s"), shortDesc.c_str(), direction.c_str()));
+   longDesc = (wxString::Format(wxT("%s '%s' %s"), longDesc,
+      target->GetName(), direction));
+   shortDesc = (wxString::Format(wxT("%s %s"), shortDesc, direction));
 
    PushState(longDesc, shortDesc);
    GetTrackPanel()->Refresh(false);
@@ -4371,7 +4371,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
          wxString lastEffectDesc;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
-         lastEffectDesc.Printf(_("Repeat %s"), shortDesc.c_str());
+         lastEffectDesc.Printf(_("Repeat %s"), shortDesc);
          mCommandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
       }
    }
@@ -6894,7 +6894,7 @@ void AudacityProject::OnImportLabels()
       mTracks->Add(std::move(newTrack));
 
       PushState(wxString::
-                Format(_("Imported labels from '%s'"), fileName.c_str()),
+                Format(_("Imported labels from '%s'"), fileName),
                 _("Import Labels"));
 
       ZoomAfterImport(nullptr);
@@ -6934,7 +6934,7 @@ AudacityProject *AudacityProject::DoImportMIDI(
       pTrack->SetSelected(true);
 
       pProject->PushState(wxString::Format(_("Imported MIDI from '%s'"),
-         fileName.c_str()), _("Import MIDI"));
+         fileName), _("Import MIDI"));
 
       pProject->ZoomAfterImport(pTrack);
       pNewProject = nullptr;
@@ -7050,7 +7050,7 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
       // Smart history/undo message
       if (selectedCount==1) {
          wxString msg;
-         msg.Printf(_("Rendered all audio in track '%s'"), firstName.c_str());
+         msg.Printf(_("Rendered all audio in track '%s'"), firstName);
          /* i18n-hint: Convert the audio into a more usable form, so apply
           * panning and amplification and write to some external file.*/
          PushState(msg, _("Render"));
@@ -7600,12 +7600,12 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
 
    if (moveSel) {
       mViewInfo.selectedRegion.move(delta);
-      action = wxString::Format(_("Aligned/Moved %s"), action.c_str());
-      shortAction = wxString::Format(_("Align %s/Move"),shortAction.c_str());
+      action = wxString::Format(_("Aligned/Moved %s"), action);
+      shortAction = wxString::Format(_("Align %s/Move"),shortAction);
       PushState(action, shortAction);
    } else {
-      action = wxString::Format(_("Aligned %s"), action.c_str());
-      shortAction = wxString::Format(_("Align %s"),shortAction.c_str());
+      action = wxString::Format(_("Aligned %s"), action);
+      shortAction = wxString::Format(_("Align %s"),shortAction);
       PushState(action, shortAction);
    }
 

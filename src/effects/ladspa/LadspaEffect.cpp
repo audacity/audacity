@@ -616,7 +616,7 @@ LadspaEffect::~LadspaEffect()
 
 wxString LadspaEffect::GetPath()
 {
-   return wxString::Format(wxT("%s;%d"), mPath.c_str(), mIndex);
+   return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
 wxString LadspaEffect::GetSymbol()

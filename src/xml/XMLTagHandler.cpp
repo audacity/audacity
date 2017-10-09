@@ -194,18 +194,18 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
 // added by a cast after creating the array of pointers-to-non-const chars.
    auto out_attrs = std::make_unique<const wxChar *[]>(tmp_attrs.GetCount() + 1);
    for (size_t i=0; i<tmp_attrs.GetCount(); i++) {
-      out_attrs[i] = tmp_attrs[i].c_str();
+      out_attrs[i] = tmp_attrs[i];
    }
    out_attrs[tmp_attrs.GetCount()] = 0;
 
-   bool result = HandleXMLTag(UTF8CTOWX(tag).c_str(), out_attrs.get());
+   bool result = HandleXMLTag(UTF8CTOWX(tag), out_attrs.get());
 
    return result;
 }
 
 void XMLTagHandler::ReadXMLEndTag(const char *tag)
 {
-   HandleXMLEndTag(UTF8CTOWX(tag).c_str());
+   HandleXMLEndTag(UTF8CTOWX(tag));
 }
 
 void XMLTagHandler::ReadXMLContent(const char *s, int len)
@@ -215,5 +215,5 @@ void XMLTagHandler::ReadXMLContent(const char *s, int len)
 
 XMLTagHandler *XMLTagHandler::ReadXMLChild(const char *tag)
 {
-   return HandleXMLChild(UTF8CTOWX(tag).c_str());
+   return HandleXMLChild(UTF8CTOWX(tag));
 }

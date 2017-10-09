@@ -707,7 +707,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          // No href in html.  Uses title not alt.
          wxRect R( mFlow.Rect() );
          wxLogDebug( wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
-            mBitmapNames[i].c_str(),
+            mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
 #endif
       }
@@ -737,7 +737,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       // No href in html.  Uses title not alt.
       wxRect R( mFlow.Rect() );
       wxLogDebug( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
-         mColourNames[i].c_str(),
+         mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
 #endif
    }
@@ -759,7 +759,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          AudacityMessageBox(
             wxString::Format(
 //            _("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
-               FileName.c_str() )
+               FileName )
                             );
          return;
       }
@@ -777,7 +777,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          AudacityMessageBox(
             wxString::Format(
             _("Audacity could not write file:\n  %s."),
-               FileName.c_str() ));
+               FileName ));
          return;
       }
       AudacityMessageBox(
@@ -787,7 +787,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
  such as those on button controls.  Audacity can load and save alternative
  themes. */
             _("Theme written to:\n  %s."),
-            FileName.c_str() ));
+            FileName ));
    }
    // ELSE saving to a C code textual version.
    else
@@ -799,7 +799,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          AudacityMessageBox(
             wxString::Format(
             _("Audacity could not open file:\n  %s\nfor writing."),
-            FileName.c_str() ));
+            FileName ));
          return;
       }
       if( !ImageCache.SaveFile(OutStream, wxBITMAP_TYPE_PNG ) )
@@ -807,14 +807,14 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          AudacityMessageBox(
             wxString::Format(
             _("Audacity could not write images to file:\n  %s."),
-            FileName.c_str() ));
+            FileName ));
          return;
       }
       AudacityMessageBox(
          wxString::Format(
             /* i18n-hint "Cee" means the C computer programming language */
             _("Theme as Cee code written to:\n  %s."),
-            FileName.c_str() ));
+            FileName ));
    }
 }
 
@@ -850,7 +850,7 @@ void ThemeBase::WriteImageMap( )
          wxRect R( mFlow.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-            mBitmapNames[i].c_str(),
+            mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
       }
    }
@@ -863,7 +863,7 @@ void ThemeBase::WriteImageMap( )
       // No href in html.  Uses title not alt.
       wxRect R( mFlow.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-         mColourNames[i].c_str(),
+         mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
    }
    File.Write( wxT("</map>\r\n") );
@@ -900,14 +900,14 @@ void ThemeBase::WriteImageDefs( )
          Temp.Replace( wxT("  "), wxT(" | ") );
 
          File.Write( wxString::Format( wxT("\r\n   SET_THEME_FLAGS( %s );\r\n"),
-            Temp.c_str() ));
+            Temp ));
       }
       File.Write( wxString::Format(
          wxT("   DEFINE_IMAGE( bmp%s, wxImage( %i, %i ), wxT(\"%s\"));\r\n"),
-         mBitmapNames[i].c_str(),
+         mBitmapNames[i],
          SrcImage.GetWidth(),
          SrcImage.GetHeight(),
-         mBitmapNames[i].c_str()
+         mBitmapNames[i]
          ));
    }
 }
@@ -968,7 +968,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          AudacityMessageBox(
             wxString::Format(
             _("Audacity could not find file:\n  %s.\nTheme not loaded."),
-               FileName.c_str() ));
+               FileName ));
          return false;
       }
       if( !ImageCache.LoadFile( FileName, wxBITMAP_TYPE_PNG ))
@@ -977,7 +977,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          AudacityMessageBox(
             wxString::Format(
             _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
-               FileName.c_str() ));
+               FileName ));
          return false;
       }
    }
@@ -1095,7 +1095,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
                AudacityMessageBox(
                   wxString::Format(
                   _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
-                     FileName.c_str() ));
+                     FileName ));
                return;
             }
             /// JKC: \bug (wxWidgets) A png may have been saved with alpha, but when you
@@ -1104,7 +1104,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
             /// and that transfers the mask into the alpha channel, and we're done.
             if( ! mImages[i].HasAlpha() )
             {
-               // wxLogDebug( wxT("File %s lacked alpha"), mBitmapNames[i].c_str() );
+               // wxLogDebug( wxT("File %s lacked alpha"), mBitmapNames[i] );
                mImages[i].InitAlpha();
             }
             mBitmaps[i] = wxBitmap( mImages[i] );
@@ -1117,7 +1117,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
       if( bOkIfNotFound )
          return;
       AudacityMessageBox(wxString::Format(_("None of the expected theme component files\n were found in:\n  %s."),
-                                    FileNames::ThemeComponentsDir().c_str()));
+                                    FileNames::ThemeComponentsDir()));
    }
 }
 
@@ -1141,7 +1141,7 @@ void ThemeBase::SaveComponents()
          AudacityMessageBox(
             wxString::Format(
             _("Could not create directory:\n  %s"),
-               FileNames::ThemeComponentsDir().c_str() ));
+               FileNames::ThemeComponentsDir() ));
          return;
       }
    }
@@ -1169,7 +1169,7 @@ void ThemeBase::SaveComponents()
          AudacityMessageBox(
             wxString::Format(
                _("Some required files in:\n  %s\nwere already present.  Overwrite?"),
-               FileNames::ThemeComponentsDir().c_str()),
+               FileNames::ThemeComponentsDir()),
                AudacityMessageBoxCaptionStr(),
                wxYES_NO | wxNO_DEFAULT);
       if(result == wxNO)
@@ -1186,7 +1186,7 @@ void ThemeBase::SaveComponents()
             AudacityMessageBox(
                wxString::Format(
                _("Audacity could not save file:\n  %s"),
-                  FileName.c_str() ));
+                  FileName ));
             return;
          }
       }
@@ -1194,7 +1194,7 @@ void ThemeBase::SaveComponents()
    AudacityMessageBox(
       wxString::Format(
          _("Theme written to:\n  %s."),
-         FileNames::ThemeComponentsDir().c_str() ));
+         FileNames::ThemeComponentsDir() ));
 }
 
 

@@ -40,7 +40,7 @@ bool HelpCommand::Apply(CommandExecutionContext WXUNUSED(context))
    CommandType *type = CommandDirectory::Get()->LookUp(commandName);
    if (type == NULL)
    {
-      Error(wxString::Format(wxT("Command '%s' does not exist!"), commandName.c_str()));
+      Error(wxString::Format(wxT("Command '%s' does not exist!"), commandName));
       return false;
    }
    Status(type->Describe());

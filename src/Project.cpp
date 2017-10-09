@@ -503,7 +503,7 @@ bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          strAttr = fileName.GetFullPath();
       else
       {
-         wxLogWarning(wxT("Could not import file: %s"), strAttr.c_str());
+         wxLogWarning(wxT("Could not import file: %s"), strAttr);
          return false;
       }
    }
@@ -1472,7 +1472,7 @@ void AudacityProject::SetProjectTitle( int number)
    if( number >= 0 ){
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
       name = wxString::Format( _TS("[Project %02i] Audacity \"%s\""), number+1 ,
-         name.IsEmpty() ? "<untitled>" : (const char *)name.c_str() );
+         name.IsEmpty() ? "<untitled>" : (const char *)name );
    }
    // If we are not showing numbers, then <untitled> shows as 'Audacity'.
    else if( name.IsEmpty() )
@@ -2532,7 +2532,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       if (GetUndoManager()->UnsavedChanges()) {
          TitleRestorer Restorer( this );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
-         wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
+         wxString Title =  wxString::Format(_("%sSave changes to %s?"), Restorer.sProjNumber, Restorer.sProjName);
          wxString Message = _("Save project before closing?");
          if( !bHasTracks )
          {
@@ -2853,7 +2853,7 @@ bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
       {
          wxString errMsg =
             wxString::Format(_("%s is already open in another window."),
-                              newProjPathName.GetName().c_str());
+                              newProjPathName.GetName());
          wxLogError(errMsg);
          AudacityMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
          return true;
@@ -3105,7 +3105,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          {
             wxLogWarning(
                wxT("Track %s had error reading clip values from project file."),
-               t->GetName().c_str());
+               t->GetName());
             err = true;
          }
 
@@ -3122,7 +3122,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                {
                   wxLogWarning(
                      wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
-                     t->GetName().c_str(), l->GetName().c_str());
+                     t->GetName(), l->GetName());
                   err = true;
                   l->SetLinked(false);
                }
@@ -3135,7 +3135,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
                {
                   wxLogWarning(
                      wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
-                     t->GetName().c_str(), l->GetName().c_str());
+                     t->GetName(), l->GetName());
                   err = true;
                   t->SetLinked(false);
                }
@@ -3144,7 +3144,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
             {
                wxLogWarning(
                   wxT("Track %s had link to NULL track. Setting it to not be linked."),
-                  t->GetName().c_str());
+                  t->GetName());
                err = true;
                t->SetLinked(false);
             }
@@ -3286,7 +3286,7 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
       mFileName = wxT("");
       SetProjectTitle();
 
-      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName.c_str(), xmlFile.GetErrorStr().c_str());
+      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, xmlFile.GetErrorStr());
       AudacityMessageBox(xmlFile.GetErrorStr(),
                    _("Error Opening Project"),
                    wxOK | wxCENTRE, this);
@@ -3461,7 +3461,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                projName = GetName() + wxT("_data");
                if (!mDirManager->SetProject(projPath, projName, false)) {
                   AudacityMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
-                                             projName.c_str()),
+                                             projName),
                                              _("Error Opening Project"),
                                              wxOK | wxCENTRE, this);
                   return false;
@@ -3517,7 +3517,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       wxString msg;
       /* i18n-hint: %s will be replaced by the version number.*/
       msg.Printf(_("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file."),
-                 audacityVersion.c_str(),
+                 audacityVersion,
                  AUDACITY_VERSION_STRING);
       AudacityMessageBox(msg,
                    _("Can't open project file"),
@@ -3544,7 +3544,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // Specifically detect older versions of Audacity
    if ( bIsOld | bIsVeryOld ) {
       wxString msg;
-      msg.Printf(gsLegacyFileWarning(), audacityVersion.c_str());
+      msg.Printf(gsLegacyFileWarning(), audacityVersion);
 
       int icon_choice = wxICON_EXCLAMATION;
       if( bIsVeryOld )
@@ -3841,7 +3841,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       // saving compressed
       if (!success) {
          AudacityMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
-                                       project.c_str()),
+                                       project),
                       _("Error Saving Project"),
                       wxICON_ERROR, this);
 
@@ -3867,7 +3867,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       if( !wxDir::Exists( projPath ) ){
          AudacityMessageBox(wxString::Format(
             _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
-            projPath.c_str()),
+            projPath),
                       _("Error Saving Project"),
                       wxICON_ERROR, this);
          return (success = false);
@@ -4017,7 +4017,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       safetyFileName = wxT("");
 
    mStatusBar->SetStatusText(wxString::Format(_("Saved %s"),
-                                              mFileName.c_str()), mainStatusBarField);
+                                              mFileName), mainStatusBarField);
 
    return true;
 }
@@ -4183,7 +4183,7 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
       GetSelectionBar()->SetRate(mRate);
    }
 
-   PushState(wxString::Format(_("Imported '%s'"), fileName.c_str()),
+   PushState(wxString::Format(_("Imported '%s'"), fileName),
              _("Import"));
 
 #if defined(__WXGTK__)
@@ -4363,7 +4363,7 @@ To open a compressed project takes longer than usual, as it imports \n\
 each compressed track.\n"),
                            true) != wxID_OK)
          return false;
-      sDialogTitle.Printf(_("%sSave Compressed Project \"%s\" As..."), Restorer.sProjNumber.c_str(),Restorer.sProjName.c_str());
+      sDialogTitle.Printf(_("%sSave Compressed Project \"%s\" As..."), Restorer.sProjNumber,Restorer.sProjName);
    }
    else
    {
@@ -4373,7 +4373,7 @@ each compressed track.\n"),
 For an audio file that will open in other apps, use 'Export'.\n"),
                            true) != wxID_OK)
          return false;
-      sDialogTitle.Printf(_("%sSave Project \"%s\" As..."), Restorer.sProjNumber.c_str(), Restorer.sProjName.c_str());
+      sDialogTitle.Printf(_("%sSave Project \"%s\" As..."), Restorer.sProjNumber, Restorer.sProjName);
    }
 
    // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
@@ -5524,7 +5524,7 @@ void AudacityProject::RemoveTrack(Track * toRemove)
 
    PushState(
       wxString::Format(_("Removed track '%s.'"),
-      name.c_str()),
+      name),
       _("Track Remove"));
 
    TP_RedrawScrollbars();

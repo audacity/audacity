@@ -611,13 +611,13 @@ public:
       S.SetBorder(10);
       S.StartVerticalLay(true);
       {
-         text.Printf(_("Audacity needs the file %s to create MP3s."), mName.c_str());
+         text.Printf(_("Audacity needs the file %s to create MP3s."), mName);
          S.AddTitle(text);
 
          S.SetBorder(3);
          S.StartHorizontalLay(wxALIGN_LEFT, true);
          {
-            text.Printf(_("Location of %s:"), mName.c_str());
+            text.Printf(_("Location of %s:"), mName);
             S.AddTitle(text);
          }
          S.EndHorizontalLay();
@@ -627,7 +627,7 @@ public:
          {
             if (mLibPath.GetFullPath().IsEmpty()) {
                /* i18n-hint: There is a  button to the right of the arrow.*/
-               text.Printf(_("To find %s, click here -->"), mName.c_str());
+               text.Printf(_("To find %s, click here -->"), mName);
                mPathText = S.AddTextBox(wxT(""), text, 0);
             }
             else {
@@ -659,7 +659,7 @@ public:
       /* i18n-hint: It's asking for the location of a file, for
        * example, "Where is lame_enc.dll?" - you could translate
        * "Where would I find the file %s" instead if you want. */
-      question.Printf(_("Where is %s?"), mName.c_str());
+      question.Printf(_("Where is %s?"), mName);
 
       wxString path = FileNames::SelectFile(FileNames::Operation::_None,
                                    question,
@@ -1070,7 +1070,7 @@ void MP3Exporter::SetChannel(int mode)
 
 bool MP3Exporter::InitLibrary(wxString libpath)
 {
-   wxLogMessage(wxT("Loading LAME from %s"), libpath.c_str());
+   wxLogMessage(wxT("Loading LAME from %s"), libpath);
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    if (!lame_lib.Load(libpath, wxDL_LAZY)) {
@@ -1079,7 +1079,7 @@ bool MP3Exporter::InitLibrary(wxString libpath)
    }
 
    wxLogMessage(wxT("Actual LAME path %s"),
-              FileNames::PathFromAddr(lame_lib.GetSymbol(wxT("lame_init"))).c_str());
+              FileNames::PathFromAddr(lame_lib.GetSymbol(wxT("lame_init"))));
 
    lame_init = (lame_init_t *)
       lame_lib.GetSymbol(wxT("lame_init"));
@@ -1829,13 +1829,13 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
          title.Printf(selectionOnly ?
             _("Exporting selected audio with %s preset") :
             _("Exporting the audio with %s preset"),
-            FindName(setRates, WXSIZEOF(setRates), brate).c_str());
+            FindName(setRates, WXSIZEOF(setRates), brate));
       }
       else if (rmode == MODE_VBR) {
          title.Printf(selectionOnly ?
             _("Exporting selected audio with VBR quality %s") :
             _("Exporting the audio with VBR quality %s"),
-            FindName(varRates, WXSIZEOF(varRates), brate).c_str());
+            FindName(varRates, WXSIZEOF(varRates), brate));
       }
       else {
          title.Printf(selectionOnly ?
