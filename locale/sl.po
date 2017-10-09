@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-09-10 19:31-0400\n"
-"PO-Revision-Date: 2017-10-05 17:09+0200\n"
+"PO-Revision-Date: 2017-10-07 13:13+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language: sl\n"
@@ -7402,7 +7402,7 @@ msgstr "Mehkejše rezanje -12 dB, 80 % povratna ojačitev"
 
 #: src/effects/Distortion.cpp:105
 msgid "Fuzz Box"
-msgstr ""
+msgstr "Fuzz-škatlica"
 
 #: src/effects/Distortion.cpp:106
 msgid "Walkie-talkie"
@@ -7410,11 +7410,11 @@ msgstr "Voki-toki"
 
 #: src/effects/Distortion.cpp:107
 msgid "Blues drive sustain"
-msgstr ""
+msgstr "Zadrževanje zvenenja »blues drive«"
 
 #: src/effects/Distortion.cpp:108
 msgid "Light Crunch Overdrive"
-msgstr ""
+msgstr "»Overdrive« z lahkim »crunch«"
 
 #: src/effects/Distortion.cpp:109
 msgid "Heavy Overdrive"
@@ -7426,7 +7426,7 @@ msgstr "Čista kvinta"
 
 #: src/effects/Distortion.cpp:111
 msgid "Valve Overdrive"
-msgstr ""
+msgstr "»Overdrive« z zaklopko"
 
 #: src/effects/Distortion.cpp:112
 msgid "2nd Harmonic (Octave)"
@@ -7434,7 +7434,7 @@ msgstr "Oktava"
 
 #: src/effects/Distortion.cpp:113
 msgid "Gated Expansion Distortion"
-msgstr ""
+msgstr "Prek vrat razširjeno popačenje"
 
 #: src/effects/Distortion.cpp:114
 msgid "Leveller, Light, -70dB noise floor"
@@ -7505,7 +7505,6 @@ msgid "Clipping level"
 msgstr "Raven rezanja"
 
 #: src/effects/Distortion.cpp:681
-#, fuzzy
 msgid "Drive"
 msgstr "Vodilo"
 
@@ -14019,7 +14018,7 @@ msgstr "Pripni udarce/izbore na %s"
 #. i18n-hint: %s is replaced e.g by 'Length', to indicate that it will be
 #. calculated from other parameters.
 #: src/toolbars/SelectionBar.cpp:723
-#, fuzzy, c-format
+#, c-format
 msgid "%s - driven"
 msgstr "%s – vodeno"
 
@@ -15464,276 +15463,3 @@ msgstr "Napaka: %hs v %lu. vrstici"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Napaka pri odpiranju datoteke: »%s«"
-
-#~ msgid ""
-#~ "Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam."
-#~ "org/]]"
-#~ msgstr ""
-#~ "Spletišče Audacity: [[http://www.audacityteam.org/|http://www."
-#~ "audacityteam.org/]]"
-
-#~ msgid "Size"
-#~ msgstr "Velikost"
-
-#~ msgid "to Selection Star&t"
-#~ msgstr "na za&četek izbora"
-
-#~ msgid "to Selection En&d"
-#~ msgstr "na kone&c izbora"
-
-#~ msgid "Re&gion Save"
-#~ msgstr "Shra&ni območje"
-
-#~ msgid "Regio&n Restore"
-#~ msgstr "O&bnovi območje"
-
-#~ msgid "Fit &Vertically"
-#~ msgstr "Prilagodi &navpično"
-
-#~ msgid "Go to Selection Sta&rt"
-#~ msgstr "Pojdi na za&četek izbora"
-
-#~ msgid "Go to Selection En&d"
-#~ msgstr "Pojdi na &konec izbora"
-
-#~ msgid "Co&mbined Meter Toolbar"
-#~ msgstr "Vrstica &kombiniranega merilnika"
-
-#~ msgid "S&kip to Start"
-#~ msgstr "Skoči na &začetek"
-
-#~ msgid "Skip to E&nd"
-#~ msgstr "Skoči na &konec"
-
-#~ msgid "Appen&d Record"
-#~ msgstr "Snemaj z &dodajanjem"
-
-#~ msgid "Pinned Recording/Playback &Head"
-#~ msgstr "Pripeta &glava snemanja/predvajanja"
-
-#~ msgid "Stereo Trac&k to Mono"
-#~ msgstr "Stere&o sled v mono"
-
-#~ msgid "Move Sele&ction when Aligning"
-#~ msgstr "Premakni i&zbor pri poravnavanju"
-
-#~ msgid "Play at speed"
-#~ msgstr "Predvajaj pri hitrosti"
-
-#~ msgid "Couldn't write to file \"%s\": %s"
-#~ msgstr "Napaka pri zapisovanju v datoteko »%s«: %s"
-
-#~ msgid "Error Writing Autosave File"
-#~ msgstr "Napaka pri shranjevanju samodejno shranjene datoteke"
-
-#~ msgid "&Mono"
-#~ msgstr "&Mono"
-
-#~ msgid "&Left Channel"
-#~ msgstr "&Levi kanal"
-
-#~ msgid "&Right Channel"
-#~ msgstr "&Desni kanal"
-
-#~ msgid "Click and drag to stretch within selected region."
-#~ msgstr "Kliknite in povlecite, da raztegnete v izbranem območju."
-
-#~ msgid "Click to move selection boundary to cursor."
-#~ msgstr "Kliknite, da bi premaknili mejo izbora h kazalcu."
-
-#~ msgid "%.2f dB Average RMS"
-#~ msgstr "%.2f dB povprečnega RMS"
-
-#~ msgid "Average RMS = %.2f dB."
-#~ msgstr "Povprečni RMS = %.2f dB."
-
-#~ msgid "Average RMS = zero."
-#~ msgstr "Povprečni RMS = nič."
-
-#~ msgid "Average RMS =  dB."
-#~ msgstr "Povprečni RMS =  dB."
-
-#~ msgid "You must select audio in the project window."
-#~ msgstr "V projektnem oknu morate izbrati zvok."
-
-#~ msgid "Moderate"
-#~ msgstr "zmerno"
-
-#~ msgid "Heavy"
-#~ msgstr "močneje"
-
-#~ msgid "Heavier"
-#~ msgstr "najmočneje"
-
-#~ msgid "Heaviest"
-#~ msgstr "močno"
-
-#~ msgid "Passes"
-#~ msgstr "Prehodi"
-
-#~ msgid ""
-#~ "A simple, combined compressor and limiter effect for reducing the dynamic "
-#~ "range of audio"
-#~ msgstr ""
-#~ "Enostaven, kombiniran učinek kompresorja in omejevalnika za zmanjšanje "
-#~ "dinamičnega razpona zvoka."
-
-#~ msgid "Degree of Leveling:"
-#~ msgstr "Stopnja izravnavanja:"
-
-#~ msgid "Noise Threshold:"
-#~ msgstr "Prag šuma:"
-
-#~ msgid "Nyquist"
-#~ msgstr "Nyquist"
-
-#~ msgid "Undefined return value.\n"
-#~ msgstr "Nedoločena vrnjena vrednost.\n"
-
-#~ msgid "Edit Metadata Tags for Export"
-#~ msgstr "Uredi metazaznamke za izvoz"
-
-#~ msgid "Effects in menus are:"
-#~ msgstr "Učinki v menijih so:"
-
-#~ msgid "&Ergonomic order of Transport Toolbar buttons"
-#~ msgstr "&Ergonomsko zaporedje gumbov v Vrstici transporta"
-
-#~ msgid "S&how 'How to Get Help' dialog box at program start up"
-#~ msgstr "Po&kaži pogovorno okno 'Kako do pomoči' ob zagonu"
-
-#~ msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
-#~ msgstr "Vedno &mešaj vse sledi na stereo ali mono kanal(a)."
-
-#~ msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
-#~ msgstr "&Uporabi mešanje po meri (npr. za izvoz večkanalne datoteke 5.1)"
-
-#~ msgid "When exporting track to an Allegro (.gro) file"
-#~ msgstr "Pri izvozu sledi v datoteko Allegro (.gro)"
-
-#~ msgid "Represent times and durations in &seconds"
-#~ msgstr "Predstavi časovne vrednosti in trajanje v &sekundah"
-
-#~ msgid "Represent times and durations in &beats"
-#~ msgstr "Predstavi časovne vrednosti in trajanje v &dobah"
-
-#~ msgid "All"
-#~ msgstr "Vse"
-
-#~ msgid "Set"
-#~ msgstr "Nastavi"
-
-#~ msgid "Key Combination"
-#~ msgstr "Kombinacija tipk"
-
-#~ msgid ""
-#~ "The keyboard shortcut '%s' is already assigned to:\n"
-#~ "\n"
-#~ "'%s'"
-#~ msgstr ""
-#~ "Tipka za bližnjico »%s« je že dodeljena k:\n"
-#~ "\n"
-#~ "'%s'"
-
-#~ msgid "Host:"
-#~ msgstr "Gostitelj:"
-
-#~ msgid "Device:"
-#~ msgstr "Naprava:"
-
-#~ msgid "&Length of preview:"
-#~ msgstr "&Dolžina predposlušanja:"
-
-#~ msgid "&Hardware Playthrough: Listen to input while recording or monitoring"
-#~ msgstr ""
-#~ "&Strojno predvajanje skozi: poslušaj vhod med njegovim snemanjem ali "
-#~ "preverjanjem"
-
-#~ msgid "&Software Playthrough: Listen to input while recording or monitoring"
-#~ msgstr ""
-#~ "&Programsko predvajanje skozi: poslušaj vhod med njegovim snemanjem ali "
-#~ "preverjanjem"
-
-#~ msgid "(uncheck when recording computer playback)"
-#~ msgstr "(ne označite, če snemate predvajanje računalnika)"
-
-#~ msgid "Audio to &buffer:"
-#~ msgstr "Zvok v &medpomnilnik:"
-
-#~ msgid "milliseconds (higher = more latency)"
-#~ msgstr "milisekund (večje = več latence)"
-
-#~ msgid "L&atency correction:"
-#~ msgstr "Popravek &latence:"
-
-#~ msgid "milliseconds (negative = backwards)"
-#~ msgstr "milisekund (negativno = nazaj)"
-
-#~ msgid "Sound Activated &Recording"
-#~ msgstr "Z zvokom &aktivirano snemanje"
-
-#~ msgid "Sound Activation Le&vel (dB):"
-#~ msgstr "Ra&ven zvoka za aktivacijo (dB):"
-
-#~ msgid "Add &Track Number"
-#~ msgstr "Dodaj &številko sledi"
-
-#~ msgid "S&how the spectrum using grayscale colors"
-#~ msgstr "Pokaži spekter s &sivinskimi odtenki"
-
-#~ msgid ""
-#~ "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be "
-#~ "loaded\n"
-#~ "when the program starts up."
-#~ msgstr ""
-#~ "Če je vključen 'Naloži medpomnilnik tem ob zagonu', bo medpomnilnik tem "
-#~ "naložen,\n"
-#~ "ko zaženete program."
-
-#~ msgid "Load Theme Cache At Startup"
-#~ msgstr "Naloži medpomnilnik tem ob zagonu"
-
-#~ msgid "&Update display when Recording/Playback head unpinned"
-#~ msgstr "&Posodobi zaslon, ko je glava snemanja/predvajanja odpeta"
-
-#~ msgid "Automatically &fit tracks vertically zoomed"
-#~ msgstr "Samodejno &umeri sledi na navpično povečavo"
-
-#~ msgid "&Select then act on entire project, if no audio selected"
-#~ msgstr "&Izberi, nato uveljavi na celem projektu, če ni izbran noben zvok"
-
-#~ msgid "Enable &dragging of left and right selection edges"
-#~ msgstr "Omogoči &vleko levega in desnega roba izbora"
-
-#~ msgid "Record Below"
-#~ msgstr "Snemaj pod"
-
-#~ msgid "Silence Audio"
-#~ msgstr "Utišaj zvok"
-
-#~ msgid "Fit Selection"
-#~ msgstr "Umeri izbor"
-
-#~ msgid "Fit Project"
-#~ msgstr "Umeri projekt"
-
-#~ msgid "Snap To:"
-#~ msgstr "Pripni na:"
-
-#~ msgid "hidden"
-#~ msgstr "skrito"
-
-#~ msgid "Selection "
-#~ msgstr "Izbor"
-
-#~ msgid "Unpinned Record/Play head"
-#~ msgstr "Odpeta glava snemanja/predvajanja"
-
-#~ msgid "Error Flushing File"
-#~ msgstr "Napaka pri izpisovanju v datoteko"
-
-#~ msgid "Error Closing File"
-#~ msgstr "Napaka pri zapiranju datoteke"
-
-#~ msgid "Error Writing to File"
-#~ msgstr "Napaka pri pisanju v datoteko"
