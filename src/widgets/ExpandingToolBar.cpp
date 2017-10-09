@@ -955,7 +955,7 @@ void ToolBarArea::LayoutOne(int childIndex)
       wxPoint p = mChildArray[childIndex]->GetPosition();
       wxSize s = mChildArray[childIndex]->GetSize();
 
-      printf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
+      wxPrintf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
              childIndex, mRowArray[childIndex],
              p.x, p.y, s.x, s.y);
       #endif
@@ -1007,7 +1007,7 @@ void ToolBarArea::LayoutOne(int childIndex)
    wxPoint p = mChildArray[childIndex]->GetPosition();
    wxSize s = mChildArray[childIndex]->GetSize();
 
-   printf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
+   wxPrintf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
           childIndex, mRowArray[childIndex],
           p.x, p.y, s.x, s.y);
    #endif

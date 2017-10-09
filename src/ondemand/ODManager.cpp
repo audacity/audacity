@@ -224,10 +224,10 @@ void ODManager::Init()
 
 //   startThread->SetPriority(0);//default of 50.
    startThread->Create();
-//   printf("starting thread from init\n");
+//   wxPrintf("starting thread from init\n");
    startThread->Run();
 
-//   printf("started thread from init\n");
+//   wxPrintf("started thread from init\n");
    //destruction of thread is taken care of by thread library
 }
 
@@ -248,14 +248,14 @@ void ODManager::Start()
    mNeedsDraw=0;
 
    //wxLog calls not threadsafe.  are printfs?  thread-messy for sure, but safe?
-//   printf("ODManager thread strating \n");
+//   wxPrintf("ODManager thread strating \n");
    //TODO: Figure out why this has no effect at all.
    //wxThread::This()->SetPriority(30);
    mTerminateMutex.Lock();
    while(!mTerminate)
    {
       mTerminateMutex.Unlock();
-//    printf("ODManager thread running \n");
+//    wxPrintf("ODManager thread running \n");
 
       //we should look at our WaveTrack queues to see if we can process a NEW task to the running queue.
       UpdateQueues();
@@ -331,7 +331,7 @@ void ODManager::Start()
    mTerminatedMutex.Unlock();
 
    //wxLogDebug Not thread safe.
-   //printf("ODManager thread terminating\n");
+   //wxPrintf("ODManager thread terminating\n");
 }
 
 //static function that prevents ODTasks from being scheduled

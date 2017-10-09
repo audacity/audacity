@@ -583,18 +583,18 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    if (t0 > t1)
       return true;
 
-   //printf("Searching for overlap in %.6f...%.6f\n", t0, t1);
+   //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
    for (const auto &clip : mClips)
    {
       if (!clip->BeforeClip(t1) && !clip->AfterClip(t0)) {
-         //printf("Overlapping clip: %.6f...%.6f\n",
+         //wxPrintf("Overlapping clip: %.6f...%.6f\n",
          //       clip->GetStartTime(),
          //       clip->GetEndTime());
          // We found a clip that overlaps this region
          return false;
       }
    }
-   //printf("No overlap found\n");
+   //wxPrintf("No overlap found\n");
 
    // Otherwise, no clips overlap this region
    return true;
@@ -708,7 +708,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       if (t0 <= clip->GetStartTime() && t1 >= clip->GetEndTime())
       {
          // Whole clip is in copy region
-         //printf("copy: clip %i is in copy region\n", (int)clip);
+         //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
 
          newTrack->mClips.push_back
             (make_movable<WaveClip>(*clip, mDirManager, ! forClipboard));
@@ -718,7 +718,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       else if (t1 > clip->GetStartTime() && t0 < clip->GetEndTime())
       {
          // Clip is affected by command
-         //printf("copy: clip %i is affected by command\n", (int)clip);
+         //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
          const double clip_t0 = std::max(t0, clip->GetStartTime());
          const double clip_t1 = std::min(t1, clip->GetEndTime());
@@ -726,7 +726,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          auto newClip = make_movable<WaveClip>
             (*clip, mDirManager, ! forClipboard, clip_t0, clip_t1);
 
-         //printf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
+         //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
          newClip->Offset(-t0);
          if (newClip->GetOffset() < 0)
@@ -1299,7 +1299,7 @@ void WaveTrack::Paste(double t0, const Track *src)
    if (other->GetNumClips() == 0)
       return;
 
-   //printf("paste: we have at least one clip\n");
+   //wxPrintf("paste: we have at least one clip\n");
 
    bool singleClipMode = (other->GetNumClips() == 1 &&
          other->GetStartTime() == 0.0);
@@ -1312,7 +1312,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       // a new clip.
       return;
 
-   //printf("Check if we need to make room for the pasted data\n");
+   //wxPrintf("Check if we need to make room for the pasted data\n");
 
    // Make room for the pasted data
    if (editClipCanMove) {
@@ -1338,7 +1338,7 @@ void WaveTrack::Paste(double t0, const Track *src)
    if (singleClipMode)
    {
       // Single clip mode
-      // printf("paste: checking for single clip mode!\n");
+      // wxPrintf("paste: checking for single clip mode!\n");
 
       WaveClip *insideClip = NULL;
 
@@ -1348,7 +1348,7 @@ void WaveTrack::Paste(double t0, const Track *src)
          {
             if (clip->WithinClip(t0))
             {
-               //printf("t0=%.6f: inside clip is %.6f ... %.6f\n",
+               //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                //       t0, clip->GetStartTime(), clip->GetEndTime());
                insideClip = clip.get();
                break;
@@ -1369,7 +1369,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       if (insideClip)
       {
          // Exhibit traditional behaviour
-         //printf("paste: traditional behaviour\n");
+         //wxPrintf("paste: traditional behaviour\n");
          if (!editClipCanMove)
          {
             // We did not move other clips out of the way already, so
@@ -1395,7 +1395,7 @@ void WaveTrack::Paste(double t0, const Track *src)
    }
 
    // Insert NEW clips
-   //printf("paste: multi clip mode!\n");
+   //wxPrintf("paste: multi clip mode!\n");
 
    if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
       // STRONG-GUARANTEE in case of this path
@@ -1589,7 +1589,7 @@ void WaveTrack::Join(double t0, double t1)
          for (; it != end; ++it)
             if ((*it)->GetStartTime() > clip->GetStartTime())
                break;
-         //printf("Insert clip %.6f at position %d\n", clip->GetStartTime(), i);
+         //wxPrintf("Insert clip %.6f at position %d\n", clip->GetStartTime(), i);
          clipsToDelete.insert(it, clip.get());
       }
    }
@@ -1603,19 +1603,19 @@ void WaveTrack::Join(double t0, double t1)
    newClip->SetOffset(t);
    for (const auto &clip : clipsToDelete)
    {
-      //printf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
+      //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
       //       t, clip->GetOffset(), clip->GetStartTime(), clip->GetEndTime());
 
       if (clip->GetOffset() - t > (1.0 / mRate)) {
          double addedSilence = (clip->GetOffset() - t);
-         //printf("Adding %.6f seconds of silence\n");
+         //wxPrintf("Adding %.6f seconds of silence\n");
          auto offset = clip->GetOffset();
          auto value = clip->GetEnvelope()->GetValue( offset );
          newClip->AppendSilence( addedSilence, value );
          t += addedSilence;
       }
 
-      //printf("Pasting at %.6f\n", t);
+      //wxPrintf("Pasting at %.6f\n", t);
       newClip->Paste(t, clip);
 
       t = newClip->GetEndTime();

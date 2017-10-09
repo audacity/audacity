@@ -56,7 +56,7 @@ out.
 #include "FileFormats.h"
 #include "AudacityApp.h"
 
-// msmeyer: Define this to add debug output via printf()
+// msmeyer: Define this to add debug output via wxPrintf()
 //#define DEBUG_BLOCKFILE
 
 #ifdef DEBUG_BLOCKFILE

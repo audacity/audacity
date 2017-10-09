@@ -82,7 +82,7 @@ FormatClassifier::FormatClassifier(const char* filename) :
 #ifdef FORMATCLASSIFIER_SIGNAL_DEBUG
    for (unsigned int n = 0; n < mClasses.size(); n++)
    {
-      printf("Class [%i] Machine [%i]: Mono: %3.7f Stereo: %3.7f\n", mClasses[n].format, mClasses[n].endian, mMonoFeat[n], mStereoFeat[n]);
+      wxPrintf("Class [%i] Machine [%i]: Mono: %3.7f Stereo: %3.7f\n", mClasses[n].format, mClasses[n].endian, mMonoFeat[n], mStereoFeat[n]);
    }
 #endif
 

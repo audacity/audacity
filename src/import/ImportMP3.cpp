@@ -240,12 +240,12 @@ ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory, TrackHold
 
    if (!res) {
       /* failure */
-      /* printf("failure\n"); */
+      /* wxPrintf("failure\n"); */
       return (privateData.updateResult);
    }
 
    /* success */
-   /* printf("success\n"); */
+   /* wxPrintf("success\n"); */
 
       /* copy the WaveTrack pointers into the Track pointer list that
        * we are expected to fill */
@@ -299,14 +299,14 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
    for (int i = 0; i < (int) tp->nframes; i++) {
       struct id3_frame *frame = tp->frames[i];
 
-      // printf("ID: %08x '%4s'\n", (int) *(int *)frame->id, frame->id);
-      // printf("Desc: %s\n", frame->description);
-      // printf("Num fields: %d\n", frame->nfields);
+      // wxPrintf("ID: %08x '%4s'\n", (int) *(int *)frame->id, frame->id);
+      // wxPrintf("Desc: %s\n", frame->description);
+      // wxPrintf("Num fields: %d\n", frame->nfields);
 
       // for (int j = 0; j < (int) frame->nfields; j++) {
-      //    printf("field %d type %d\n", j, frame->fields[j].type );
+      //    wxPrintf("field %d type %d\n", j, frame->fields[j].type );
       //    if (frame->fields[j].type == ID3_FIELD_TYPE_STRINGLIST) {
-      //       printf("num strings %d\n", frame->fields[j].stringlist.nstrings);
+      //       wxPrintf("num strings %d\n", frame->fields[j].stringlist.nstrings);
       //    }
       // }
 
@@ -550,7 +550,7 @@ enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stre
      MAD_FLOW_IGNORE   = 0x0020
    }; */
    /*
-   printf("decoding error 0x%04x (%s)\n",
+   wxPrintf("decoding error 0x%04x (%s)\n",
       stream->error, mad_stream_errorstr(stream));
    */
 

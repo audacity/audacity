@@ -344,7 +344,7 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
       ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
 
       if(ret < 0) {
-         printf("ODDecodeBlockFile Decode failure\n");
+         wxPrintf("ODDecodeBlockFile Decode failure\n");
          return ret; //failure
       }
    }

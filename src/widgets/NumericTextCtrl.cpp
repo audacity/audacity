@@ -149,7 +149,7 @@ in sanpping without having a window created each time.
 \class BuiltinFormatString
 \brief BuiltinFormatString is a structure used in the NumericTextCtrl
 and holds both a descriptive name for the string format and a
-printf inspired style format string, optimised for displaying time in
+wxPrintf inspired style format string, optimised for displaying time in
 different formats.
 
 *//****************************************************************//**
@@ -803,25 +803,25 @@ void NumericConverter::PrintDebugInfo()
 {
    unsigned int i;
 
-   printf("%s", (const char *)mPrefix.mb_str());
+   wxPrintf("%s", (const char *)mPrefix.mb_str());
 
    for(i=0; i<mFields.GetCount(); i++) {
       if (mFields[i].frac) {
-         printf("(t * %d) %% %d '%s' ",
+         wxPrintf("(t * %d) %% %d '%s' ",
                 mFields[i].base,
                 mFields[i].range,
                 (const char *)mFields[i].label.mb_str());
 
       }
       else {
-         printf("(t / %d) %% %d '%s' ",
+         wxPrintf("(t / %d) %% %d '%s' ",
                 mFields[i].base,
                 mFields[i].range,
                 (const char *)mFields[i].label.mb_str());
       }
    }
 
-   printf("\n");
+   wxPrintf("\n");
 }
 
 NumericConverter::~NumericConverter()

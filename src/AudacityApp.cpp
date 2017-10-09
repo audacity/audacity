@@ -249,9 +249,9 @@ DEFINE_EVENT_TYPE(EVT_LANGUAGE_CHANGE);
 static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
 {
    if (msg)
-      printf("ASSERTION FAILED: %s\n%s: %d\n", (const char *)wxString(msg).mb_str(), (const char *)wxString(fileName).mb_str(), lineNumber);
+      wxPrintf("ASSERTION FAILED: %s\n%s: %d\n", (const char *)wxString(msg).mb_str(), (const char *)wxString(fileName).mb_str(), lineNumber);
    else
-      printf("ASSERTION FAILED!\n%s: %d\n", (const char *)wxString(fileName).mb_str(), lineNumber);
+      wxPrintf("ASSERTION FAILED!\n%s: %d\n", (const char *)wxString(fileName).mb_str(), lineNumber);
 
    // Force core dump
    int *i = 0;

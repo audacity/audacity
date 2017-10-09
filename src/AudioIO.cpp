@@ -1611,7 +1611,7 @@ void AudioIO::HandleDeviceChange()
 
 
    #if 0
-   printf("PortMixer: Playback: %s Recording: %s\n",
+   wxPrintf("PortMixer: Playback: %s Recording: %s\n",
           mEmulateMixerOutputVol? "emulated": "native",
           mInputMixerWorks? "hardware": "no control");
    #endif
@@ -2399,7 +2399,7 @@ bool AudioIO::StartPortMidiStream()
    if (nTracks == 0)
       return false;
 
-   //printf("StartPortMidiStream: mT0 %g mTime %g\n",
+   //wxPrintf("StartPortMidiStream: mT0 %g mTime %g\n",
    //       gAudioIO->mT0, gAudioIO->mTime);
 
    /* get midi playback device */
@@ -4212,7 +4212,7 @@ void AudioIO::OutputEvent()
          Pm_WriteShort(mMidiStream, timestamp,
                     Pm_Message((int) (command + channel),
                                   (long) data1, (long) data2));
-         /* printf("Pm_WriteShort %lx (%p) @ %d, advance %d\n",
+         /* wxPrintf("Pm_WriteShort %lx (%p) @ %d, advance %d\n",
                 Pm_Message((int) (command + channel),
                            (long) data1, (long) data2),
                            mNextEvent, timestamp, timestamp - Pt_Time()); */
@@ -4362,7 +4362,7 @@ PmTimestamp AudioIO::MidiTime()
    ts = (PmTimestamp) ((unsigned long)
          (1000 * (now + 1.0005 -
                   mSystemMinusAudioTimePlusLatency)));
-   // printf("AudioIO::MidiTime() %d time %g sys-aud %g\n",
+   // wxPrintf("AudioIO::MidiTime() %d time %g sys-aud %g\n",
    //        ts, now, mSystemMinusAudioTime);
    return ts + MIDI_MINIMAL_LATENCY_MS;
 }
@@ -4454,7 +4454,7 @@ bool AudioIO::AILAIsActive() {
 
 void AudioIO::AILASetStartTime() {
    mAILAAbsolutStartTime = Pa_GetStreamTime(mPortStreamV19);
-   printf("START TIME %f\n\n", mAILAAbsolutStartTime);
+   wxPrintf("START TIME %f\n\n", mAILAAbsolutStartTime);
 }
 
 double AudioIO::AILAGetLastDecisionTime() {
@@ -4466,7 +4466,7 @@ void AudioIO::AILAProcess(double maxPeak) {
    if (proj && mAILAActive) {
       if (mInputMeter->IsClipping()) {
          mAILAClipped = true;
-         printf("clipped");
+         wxPrintf("clipped");
       }
 
       mAILAMax = max(mAILAMax, maxPeak);
@@ -4476,17 +4476,17 @@ void AudioIO::AILAProcess(double maxPeak) {
          mAILAMax = mInputMeter->ToLinearIfDB(mAILAMax);
          double iv = (double) Px_GetInputVolume(mPortMixer);
          unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
-         printf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
-         printf("\tmAILAClipped:%d\n", mAILAClipped);
-         printf("\tmAILAMax (linear):%f\n", mAILAMax);
-         printf("\tmAILAGoalPoint:%f\n", mAILAGoalPoint);
-         printf("\tmAILAGoalDelta:%f\n", mAILAGoalDelta);
-         printf("\tiv:%f\n", iv);
-         printf("\tmAILAChangeFactor:%f\n", mAILAChangeFactor);
+         wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
+         wxPrintf("\tmAILAClipped:%d\n", mAILAClipped);
+         wxPrintf("\tmAILAMax (linear):%f\n", mAILAMax);
+         wxPrintf("\tmAILAGoalPoint:%f\n", mAILAGoalPoint);
+         wxPrintf("\tmAILAGoalDelta:%f\n", mAILAGoalDelta);
+         wxPrintf("\tiv:%f\n", iv);
+         wxPrintf("\tmAILAChangeFactor:%f\n", mAILAChangeFactor);
          if (mAILAClipped || mAILAMax > mAILAGoalPoint + mAILAGoalDelta) {
-            printf("too high:\n");
+            wxPrintf("too high:\n");
             mAILATopLevel = min(mAILATopLevel, iv);
-            printf("\tmAILATopLevel:%f\n", mAILATopLevel);
+            wxPrintf("\tmAILATopLevel:%f\n", mAILATopLevel);
             //if clipped or too high
             if (iv <= LOWER_BOUND) {
                //we can't improve it more now
@@ -4494,7 +4494,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                   mAILAActive = false;
                   proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
                }
-               printf("\talready min vol:%f\n", iv);
+               wxPrintf("\talready min vol:%f\n", iv);
             }
             else {
                float vol = (float) max(LOWER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
@@ -4503,36 +4503,36 @@ void AudioIO::AILAProcess(double maxPeak) {
                msg.Printf(_("Automated Recording Level Adjustment decreased the volume to %f."), vol);
                proj->TP_DisplayStatusMessage(msg);
                changetype = 1;
-               printf("\tnew vol:%f\n", vol);
+               wxPrintf("\tnew vol:%f\n", vol);
                float check = Px_GetInputVolume(mPortMixer);
-               printf("\tverified %f\n", check);
+               wxPrintf("\tverified %f\n", check);
             }
          }
          else if ( mAILAMax < mAILAGoalPoint - mAILAGoalDelta ) {
             //if too low
-            printf("too low:\n");
+            wxPrintf("too low:\n");
             if (iv >= UPPER_BOUND || iv + 0.005 > mAILATopLevel) { //condition for too low volumes and/or variable volumes that cause mAILATopLevel to decrease too much
                //we can't improve it more
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
                   proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
                }
-               printf("\talready max vol:%f\n", iv);
+               wxPrintf("\talready max vol:%f\n", iv);
             }
             else {
                float vol = (float) min(UPPER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
                if (vol > mAILATopLevel) {
                   vol = (iv + mAILATopLevel)/2.0;
-                  printf("\tTruncated vol:%f\n", vol);
+                  wxPrintf("\tTruncated vol:%f\n", vol);
                }
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
                msg.Printf(_("Automated Recording Level Adjustment increased the volume to %.2f."), vol);
                proj->TP_DisplayStatusMessage(msg);
                changetype = 2;
-               printf("\tnew vol:%f\n", vol);
+               wxPrintf("\tnew vol:%f\n", vol);
                float check = Px_GetInputVolume(mPortMixer);
-               printf("\tverified %f\n", check);
+               wxPrintf("\tverified %f\n", check);
             }
          }
 
@@ -4544,7 +4544,7 @@ void AudioIO::AILAProcess(double maxPeak) {
          //mAILAAnalysisEndTime = mTime+latency;
          mAILAAnalysisEndTime = Pa_GetStreamTime(mPortStreamV19) - mAILAAbsolutStartTime;
          mAILAMax             = 0;
-         printf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
+         wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
          mAILAClipped         = false;
          mAILALastStartTime   = mTime;
 

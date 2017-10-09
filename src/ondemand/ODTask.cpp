@@ -71,7 +71,7 @@ void ODTask::DoSome(float amountWork)
    SetIsRunning(true);
    mBlockUntilTerminateMutex.Lock();
 
-//   printf("%s %i subtask starting on NEW thread with priority\n", GetTaskName(),GetTaskNumber());
+//   wxPrintf("%s %i subtask starting on NEW thread with priority\n", GetTaskName(),GetTaskNumber());
 
    mDoingTask=mTaskStarted=true;
 
@@ -139,7 +139,7 @@ void ODTask::DoSome(float amountWork)
       }
 
 
-//      printf("%s %i is %f done\n", GetTaskName(),GetTaskNumber(),PercentComplete());
+//      wxPrintf("%s %i is %f done\n", GetTaskName(),GetTaskNumber(),PercentComplete());
    }
    else
    {
@@ -164,7 +164,7 @@ void ODTask::DoSome(float amountWork)
          }
       }
 
-//      printf("%s %i complete\n", GetTaskName(),GetTaskNumber());
+//      wxPrintf("%s %i complete\n", GetTaskName(),GetTaskNumber());
    }
    mTerminateMutex.Unlock();
    SetIsRunning(false);

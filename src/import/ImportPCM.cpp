@@ -615,14 +615,14 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
             for (int i = 0; i < (int) tp->nframes; i++) {
                struct id3_frame *frame = tp->frames[i];
 
-               // printf("ID: %08x '%4s'\n", (int) *(int *)frame->id, frame->id);
-               // printf("Desc: %s\n", frame->description);
-               // printf("Num fields: %d\n", frame->nfields);
+               // wxPrintf("ID: %08x '%4s'\n", (int) *(int *)frame->id, frame->id);
+               // wxPrintf("Desc: %s\n", frame->description);
+               // wxPrintf("Num fields: %d\n", frame->nfields);
 
                // for (int j = 0; j < (int) frame->nfields; j++) {
-               //    printf("field %d type %d\n", j, frame->fields[j].type );
+               //    wxPrintf("field %d type %d\n", j, frame->fields[j].type );
                //    if (frame->fields[j].type == ID3_FIELD_TYPE_STRINGLIST) {
-               //       printf("num strings %d\n", frame->fields[j].stringlist.nstrings);
+               //       wxPrintf("num strings %d\n", frame->fields[j].stringlist.nstrings);
                //    }
                // }
 

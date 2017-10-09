@@ -596,7 +596,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          else
             sampleDuration = ((sampleCount)mFormatContext->duration *sc->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
-         //      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)sc->m_stream->codec->sample_rate, (int)sampleDuration/sc->m_stream->codec->sample_rate);
+         //      wxPrintf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)sc->m_stream->codec->sample_rate, (int)sampleDuration/sc->m_stream->codec->sample_rate);
 
          //for each wavetrack within the stream add coded blockfiles
          for (int c = 0; c < sc->m_stream->codec->channels; c++) {

@@ -96,16 +96,16 @@ void ODFLACFile::error_callback(FLAC__StreamDecoderErrorStatus status)
    switch (status)
    {
    case FLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC:
-      printf("Flac Error: Lost sync\n");
+      wxPrintf("Flac Error: Lost sync\n");
       break;
    case FLAC__STREAM_DECODER_ERROR_STATUS_FRAME_CRC_MISMATCH:
-      printf("Flac Error: Crc mismatch\n");
+      wxPrintf("Flac Error: Crc mismatch\n");
       break;
    case FLAC__STREAM_DECODER_ERROR_STATUS_BAD_HEADER:
-      printf("Flac Error: Bad Header\n");
+      wxPrintf("Flac Error: Bad Header\n");
       break;
    default:
-      printf("Flac Error: Unknown error code\n");
+      wxPrintf("Flac Error: Unknown error code\n");
       break;
    }
 }

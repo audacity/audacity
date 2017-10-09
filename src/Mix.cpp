@@ -212,10 +212,10 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
 
    // Note: these shouldn't be translated - they're for debugging
    // and profiling only.
-   printf("      Tracks: %d\n", numWaves);
-   printf("  Mix length: %f sec\n", totalTime);
-   printf("Elapsed time: %f sec\n", elapsedTime);
-   printf("Max number of tracks to mix in real time: %f\n", maxTracks);
+   wxPrintf("      Tracks: %d\n", numWaves);
+   wxPrintf("  Mix length: %f sec\n", totalTime);
+   wxPrintf("Elapsed time: %f sec\n", elapsedTime);
+   wxPrintf("Max number of tracks to mix in real time: %f\n", maxTracks);
 #endif
    }
 }

@@ -1728,14 +1728,14 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
 void Envelope::print() const
 {
    for( unsigned int i = 0; i < mEnv.size(); i++ )
-      printf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
+      wxPrintf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
 }
 
 static void checkResult( int n, double a, double b )
 {
    if( (a-b > 0 ? a-b : b-a) > 0.0000001 )
    {
-      printf( "Envelope:  Result #%d is: %f, should be %f\n", n, a, b );
+      wxPrintf( "Envelope:  Result #%d is: %f, should be %f\n", n, a, b );
       //exit( -1 );
    }
 }

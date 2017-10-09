@@ -22,6 +22,7 @@
 #include <wx/button.h>
 #include <wx/control.h>
 #include <wx/dir.h>
+#include <wx/crt.h>
 
 #ifdef __WXMAC__
 #include <wx/evtloop.h>
@@ -1266,7 +1267,7 @@ bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelN
                                  sizeof(AURenderCallbackStruct));
    if (result != noErr)
    {
-      printf("Setting input render callback failed.\n");
+      wxPrintf("Setting input render callback failed.\n");
       return false;
    }
 
@@ -1320,7 +1321,7 @@ size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t b
                             mOutputList.get());
    if (result != noErr)
    {
-      printf("Render failed: %d %4.4s\n", (int)result, (char *)&result);
+      wxPrintf("Render failed: %d %4.4s\n", (int)result, (char *)&result);
       return 0;
    }
 
@@ -1948,7 +1949,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                  sizeof(Float64));
    if (result != noErr)
    {
-      printf("%ls Didn't accept sample rate on global\n", GetName().wx_str());
+      wxPrintf("%ls Didn't accept sample rate on global\n", GetName().wx_str());
       return false;
    }
 
@@ -1962,7 +1963,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     sizeof(Float64));
       if (result != noErr)
       {
-         printf("%ls Didn't accept sample rate on input\n", GetName().wx_str());
+         wxPrintf("%ls Didn't accept sample rate on input\n", GetName().wx_str());
          return false;
       }
 
@@ -1974,7 +1975,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     sizeof(AudioStreamBasicDescription));
       if (result != noErr)
       {
-         printf("%ls didn't accept stream format on input\n", GetName().wx_str());
+         wxPrintf("%ls didn't accept stream format on input\n", GetName().wx_str());
          return false;
       }
    }
@@ -1989,7 +1990,7 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     sizeof(Float64));
       if (result != noErr)
       {
-         printf("%ls Didn't accept sample rate on output\n", GetName().wx_str());
+         wxPrintf("%ls Didn't accept sample rate on output\n", GetName().wx_str());
          return false;
       }
    
@@ -2003,7 +2004,7 @@ bool AudioUnitEffect::SetRateAndChannels()
    
       if (result != noErr)
       {
-         printf("%ls didn't accept stream format on output\n", GetName().wx_str());
+         wxPrintf("%ls didn't accept stream format on output\n", GetName().wx_str());
          return false;
       }
    }
@@ -2011,7 +2012,7 @@ bool AudioUnitEffect::SetRateAndChannels()
    result = AudioUnitInitialize(mUnit);
    if (result != noErr)
    {
-      printf("Couldn't initialize audio unit\n");
+      wxPrintf("Couldn't initialize audio unit\n");
       return false;
    }
 
@@ -2038,7 +2039,7 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
                                    &size);
    if (result != 0)
    {
-      printf("Couldn't get number of parameters\n");
+      wxPrintf("Couldn't get number of parameters\n");
       return false;
    }
 
@@ -2054,7 +2055,7 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
                                    &size);
    if (result != 0)
    {
-      printf("Couldn't get parameter list\n");
+      wxPrintf("Couldn't get parameter list\n");
       return false;
    }
 
@@ -2070,7 +2071,7 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
                                        &parameterValue);
       if (result != 0)
       {
-         printf("Couldn't get parameter %d: ID=%d\n", i, (int)parameters[i]);
+         wxPrintf("Couldn't get parameter %d: ID=%d\n", i, (int)parameters[i]);
          continue;
       }
 
@@ -2082,7 +2083,7 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
                                        0);
       if (result != 0)
       {
-         printf("Couldn't set parameter %d: ID=%d\n", i, (int)parameters[i]);
+         wxPrintf("Couldn't set parameter %d: ID=%d\n", i, (int)parameters[i]);
       }
    }
 

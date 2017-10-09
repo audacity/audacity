@@ -40,6 +40,7 @@ and sample size to help you importing data of an unknown format.
 #include <stdint.h>
 #include <vector>
 
+#include <wx/crt.h>
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -165,7 +166,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       if (!sndFile){
          char str[1000];
          sf_error_str((SNDFILE *)NULL, str, 1000);
-         printf("%s\n", str);
+         wxPrintf("%s\n", str);
 
          throw FileException{ FileException::Cause::Open, fileName };
       }
@@ -174,7 +175,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       if (result != 0) {
          char str[1000];
          sf_error_str(sndFile.get(), str, 1000);
-         printf("%s\n", str);
+         wxPrintf("%s\n", str);
 
          throw FileException{ FileException::Cause::Read, fileName };
       }

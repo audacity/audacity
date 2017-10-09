@@ -244,11 +244,11 @@ public:
             if (dev)
             {
 #if 0
-               printf("Got Device\n");
-               printf("   Node: %s\n", udev_device_get_devnode(dev));
-               printf("   Subsystem: %s\n", udev_device_get_subsystem(dev));
-               printf("   Devtype: %s\n", udev_device_get_devtype(dev));
-               printf("   Action: %s\n", udev_device_get_action(dev));
+               wxPrintf("Got Device\n");
+               wxPrintf("   Node: %s\n", udev_device_get_devnode(dev));
+               wxPrintf("   Subsystem: %s\n", udev_device_get_subsystem(dev));
+               wxPrintf("   Devtype: %s\n", udev_device_get_devtype(dev));
+               wxPrintf("   Action: %s\n", udev_device_get_action(dev));
 #endif
                if (This->mEnabled)
                {
@@ -339,10 +339,10 @@ public:
       for (int i = 0; i < numberAddresses; i++)
       {
 #if 0
-         printf("address %d\n", i);
-         printf("selector %08x\n", inAddresses[i].mSelector);
-         printf("scope %08x\n", inAddresses[i].mScope);
-         printf("element %08x\n", inAddresses[i].mElement);
+         wxPrintf("address %d\n", i);
+         wxPrintf("selector %08x\n", inAddresses[i].mSelector);
+         wxPrintf("scope %08x\n", inAddresses[i].mScope);
+         wxPrintf("element %08x\n", inAddresses[i].mElement);
 #endif
          if (This->mEnabled)
          {
