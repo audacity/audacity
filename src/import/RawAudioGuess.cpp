@@ -304,7 +304,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
 
   #if RAW_GUESS_DEBUG
    FILE *af = g_raw_debug_file;
-   fprintf(af, "Testing float\n");
+   wxFprintf(af, "Testing float\n");
   #endif
 
    ArrayOf<float> data1{ dataSize + 4 };
@@ -336,7 +336,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
             float smoothAvg = 0;
 
            #if RAW_GUESS_DEBUG
-            fprintf(af, "prec=%d endian=%d offset=%d\n",
+            wxFprintf(af, "prec=%d endian=%d offset=%d\n",
                     prec, endian, (int)offset);
            #endif
 
@@ -385,7 +385,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
             smoothAvg /= numTests;
 
            #if RAW_GUESS_DEBUG
-            fprintf(af, "finite: %ud/%ud maxmin: %ud/%ud smooth: %f\n",
+            wxFprintf(af, "finite: %ud/%ud maxmin: %ud/%ud smooth: %f\n",
                     finiteVotes, numTests, maxminVotes, numTests,
                     smoothAvg);
            #endif
@@ -444,7 +444,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
    }
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "stereo: %ud mono: %ud\n", stereoVotes, monoVotes);
+   wxFprintf(af, "stereo: %ud mono: %ud\n", stereoVotes, monoVotes);
   #endif
 
    guessStereo = (stereoVotes > monoVotes);
@@ -467,7 +467,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
          redundant = RedundantStereo(data1.get(), len1);
 
         #if RAW_GUESS_DEBUG
-         fprintf(af, "redundant: %f\n", redundant);
+         wxFprintf(af, "redundant: %f\n", redundant);
         #endif
 
          if (redundant > 0.8)
@@ -477,7 +477,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
       }
 
      #if RAW_GUESS_DEBUG
-      fprintf(af, "rstereo: %ud rmono: %ud\n", rstereoVotes, rmonoVotes);
+      wxFprintf(af, "rstereo: %ud rmono: %ud\n", rstereoVotes, rmonoVotes);
      #endif
 
       guessStereo = (rstereoVotes > rmonoVotes);
@@ -486,9 +486,9 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
 
   #if RAW_GUESS_DEBUG
    if (guessStereo)
-      fprintf(af, "stereo\n");
+      wxFprintf(af, "stereo\n");
    else
-      fprintf(af, "mono\n");
+      wxFprintf(af, "mono\n");
   #endif
 
    *out_offset = bestOffset;
@@ -527,7 +527,7 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
 
   #if RAW_GUESS_DEBUG
    FILE *af = g_raw_debug_file;
-   fprintf(af, "8-bit\n");
+   wxFprintf(af, "8-bit\n");
   #endif
 
    /*
@@ -567,16 +567,16 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
    }
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "sign: %ud unsign: %ud\n", signvotes, unsignvotes);
+   wxFprintf(af, "sign: %ud unsign: %ud\n", signvotes, unsignvotes);
   #endif
 
    guessSigned = (signvotes > unsignvotes);
 
   #if RAW_GUESS_DEBUG
    if (guessSigned)
-      fprintf(af, "signed\n");
+      wxFprintf(af, "signed\n");
    else
-      fprintf(af, "unsigned\n");
+      wxFprintf(af, "unsigned\n");
   #endif
 
    /* Finally we test stereo/mono.  We use the same JumpStat, and say
@@ -604,7 +604,7 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
    }
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "stereo: %ud mono: %ud\n", stereoVotes, monoVotes);
+   wxFprintf(af, "stereo: %ud mono: %ud\n", stereoVotes, monoVotes);
   #endif
 
    guessStereo = (stereoVotes > monoVotes);
@@ -624,7 +624,7 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
          redundant = RedundantStereo(data1.get(), len1);
 
         #if RAW_GUESS_DEBUG
-         fprintf(af, "redundant: %f\n", redundant);
+         wxFprintf(af, "redundant: %f\n", redundant);
         #endif
 
          if (redundant > 0.8)
@@ -634,7 +634,7 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
       }
 
      #if RAW_GUESS_DEBUG
-      fprintf(af, "rstereo: %ud rmono: %ud\n", rstereoVotes, rmonoVotes);
+      wxFprintf(af, "rstereo: %ud rmono: %ud\n", rstereoVotes, rmonoVotes);
      #endif
 
       guessStereo = (rstereoVotes > rmonoVotes);
@@ -643,9 +643,9 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
 
   #if RAW_GUESS_DEBUG
    if (guessStereo)
-      fprintf(af, "stereo\n");
+      wxFprintf(af, "stereo\n");
    else
-      fprintf(af, "mono\n");
+      wxFprintf(af, "mono\n");
   #endif
 
    if (guessStereo)
@@ -682,7 +682,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
 
   #if RAW_GUESS_DEBUG
    FILE *af = g_raw_debug_file;
-   fprintf(af, "16-bit\n");
+   wxFprintf(af, "16-bit\n");
   #endif
 
    /*
@@ -721,16 +721,16 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
    }
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "sign: %ud unsign: %ud\n", signvotes, unsignvotes);
+   wxFprintf(af, "sign: %ud unsign: %ud\n", signvotes, unsignvotes);
   #endif
 
    guessSigned = (signvotes > unsignvotes);
 
   #if RAW_GUESS_DEBUG
    if (guessSigned)
-      fprintf(af, "signed\n");
+      wxFprintf(af, "signed\n");
    else
-      fprintf(af, "unsigned\n");
+      wxFprintf(af, "unsigned\n");
   #endif
 
    /*
@@ -761,7 +761,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
    }
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "stereoVotes: %ud monoVotes: %ud\n", stereoVotes, monoVotes);
+   wxFprintf(af, "stereoVotes: %ud monoVotes: %ud\n", stereoVotes, monoVotes);
   #endif
 
    guessStereo = (stereoVotes > monoVotes);
@@ -794,7 +794,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
       }
 
      #if RAW_GUESS_DEBUG
-      fprintf(af, "rstereoVotes: %ud rmonoVotes: %ud\n",
+      wxFprintf(af, "rstereoVotes: %ud rmonoVotes: %ud\n",
               rstereoVotes, rmonoVotes);
      #endif
 
@@ -804,9 +804,9 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
 
   #if RAW_GUESS_DEBUG
    if (guessStereo)
-      fprintf(af, "stereo\n");
+      wxFprintf(af, "stereo\n");
    else
-      fprintf(af, "mono\n");
+      wxFprintf(af, "mono\n");
   #endif
 
    /*
@@ -820,7 +820,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
    guessOffset = 0;
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "evenMSB: %d BE: %d\n", evenMSB, guessBigEndian);
+   wxFprintf(af, "evenMSB: %d BE: %d\n", evenMSB, guessBigEndian);
   #endif
 
    for (unsigned test = 0; test < numTests; test++) {
@@ -870,7 +870,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
       }
 
      #if RAW_GUESS_DEBUG
-      fprintf(af, "former: %f latter: %f\n", former, latter);
+      wxFprintf(af, "former: %f latter: %f\n", former, latter);
      #endif
 
       if (former <= latter)
@@ -880,7 +880,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
    }
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "former (BE/LE): %ud latter (LE+/BE+): %ud\n",
+   wxFprintf(af, "former (BE/LE): %ud latter (LE+/BE+): %ud\n",
            formerVotes, latterVotes);
   #endif
 
@@ -892,16 +892,16 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
 
   #if RAW_GUESS_DEBUG
    if (guessBigEndian)
-      fprintf(af, "big endian\n");
+      wxFprintf(af, "big endian\n");
    else
-      fprintf(af, "little endian\n");
+      wxFprintf(af, "little endian\n");
   #endif
 
   #if RAW_GUESS_DEBUG
    if (guessOffset)
-      fprintf(af, "offset 1 byte\n");
+      wxFprintf(af, "offset 1 byte\n");
    else
-      fprintf(af, "no byte offset\n");
+      wxFprintf(af, "no byte offset\n");
   #endif
 
    format = SF_FORMAT_RAW | SF_FORMAT_PCM_16;
@@ -966,7 +966,7 @@ static int GuessIntFormats(unsigned numTests, const ArrayOf<char> rawData[], siz
       odd = AmpStat(data2.get(), len2);
       if ((even > 0.15) && (odd > 0.15)) {
         #if RAW_GUESS_DEBUG
-         fprintf(af, "Both appear random: %.2f, %.2f.\n", even, odd);
+         wxFprintf(af, "Both appear random: %.2f, %.2f.\n", even, odd);
         #endif
       }
       else if ((even > 0.15) || (odd > 0.15))
@@ -984,9 +984,9 @@ static int GuessIntFormats(unsigned numTests, const ArrayOf<char> rawData[], siz
    evenMSB = (evenMSBVotes > oddMSBVotes);
 
   #if RAW_GUESS_DEBUG
-   fprintf(af, "evenMSBVote: %ud oddMSBVote: %ud\n",
+   wxFprintf(af, "evenMSBVote: %ud oddMSBVote: %ud\n",
            evenMSBVotes, oddMSBVotes);
-   fprintf(af, "vote8: %ud vote16: %ud\n", vote8, vote16);
+   wxFprintf(af, "vote8: %ud vote16: %ud\n", vote8, vote16);
   #endif
 
    guess16bit = (vote8 <= vote16);
@@ -1015,7 +1015,7 @@ int RawAudioGuess(const wxString &in_fname,
   #if RAW_GUESS_DEBUG
    FILE *af = fopen("raw.txt", "a");
    g_raw_debug_file = af;
-   fprintf(af, "File: %s\n", in_fname);
+   wxFprintf(af, "File: %s\n", in_fname);
   #endif
 
    *out_offset = 0;

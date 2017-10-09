@@ -72,7 +72,7 @@ static bool IsPowerOfTwo(size_t x)
 static size_t NumberOfBitsNeeded(size_t PowerOfTwo)
 {
    if (PowerOfTwo < 2) {
-      fprintf(stderr, "Error: FFT called with size %ld\n", PowerOfTwo);
+      wxFprintf(stderr, "Error: FFT called with size %ld\n", PowerOfTwo);
       exit(1);
    }
 
@@ -136,7 +136,7 @@ void FFT(size_t NumSamples,
    double tr, ti;                /* temp real, temp imaginary */
 
    if (!IsPowerOfTwo(NumSamples)) {
-      fprintf(stderr, "%ld is not a power of two\n", NumSamples);
+      wxFprintf(stderr, "%ld is not a power of two\n", NumSamples);
       exit(1);
    }
 
@@ -367,7 +367,7 @@ void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float
 
    switch (whichFunction) {
    default:
-      fprintf(stderr, "FFT::WindowFunc - Invalid window function: %d\n", whichFunction);
+      wxFprintf(stderr, "FFT::WindowFunc - Invalid window function: %d\n", whichFunction);
       break;
    case eWinFuncRectangular:
       // Multiply all by 1.0f -- do nothing
@@ -682,6 +682,6 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
    }
       break;
    default:
-      fprintf(stderr, "FFT::DerivativeOfWindowFunc - Invalid window function: %d\n", whichFunction);
+      wxFprintf(stderr, "FFT::DerivativeOfWindowFunc - Invalid window function: %d\n", whichFunction);
    }
 }

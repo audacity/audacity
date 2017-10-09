@@ -399,7 +399,7 @@ void NoteTrack::PrintSequence()
    FILE *debugOutput;
 
    debugOutput = fopen("debugOutput.txt", "wt");
-   fprintf(debugOutput, "Importing MIDI...\n");
+   wxFprintf(debugOutput, "Importing MIDI...\n");
 
    // This is called for debugging purposes.  Do not compute mSeq on demand
    // with GetSeq()
@@ -407,38 +407,38 @@ void NoteTrack::PrintSequence()
       int i = 0;
 
       while(i < mSeq->length()) {
-         fprintf(debugOutput, "--\n");
-         fprintf(debugOutput, "type: %c\n",
+         wxFprintf(debugOutput, "--\n");
+         wxFprintf(debugOutput, "type: %c\n",
             ((Alg_event_ptr)mSeq->track_list.tracks[i])->get_type());
-         fprintf(debugOutput, "time: %f\n",
+         wxFprintf(debugOutput, "time: %f\n",
             ((Alg_event_ptr)mSeq->track_list.tracks[i])->time);
-         fprintf(debugOutput, "channel: %li\n",
+         wxFprintf(debugOutput, "channel: %li\n",
             ((Alg_event_ptr)mSeq->track_list.tracks[i])->chan);
 
          if(((Alg_event_ptr)mSeq->track_list.tracks[i])->get_type() == wxT('n'))
          {
-            fprintf(debugOutput, "pitch: %f\n",
+            wxFprintf(debugOutput, "pitch: %f\n",
                ((Alg_note_ptr)mSeq->track_list.tracks[i])->pitch);
-            fprintf(debugOutput, "duration: %f\n",
+            wxFprintf(debugOutput, "duration: %f\n",
                ((Alg_note_ptr)mSeq->track_list.tracks[i])->dur);
-            fprintf(debugOutput, "velocity: %f\n",
+            wxFprintf(debugOutput, "velocity: %f\n",
                ((Alg_note_ptr)mSeq->track_list.tracks[i])->loud);
          }
          else if(((Alg_event_ptr)mSeq->track_list.tracks[i])->get_type() == wxT('n'))
          {
-            fprintf(debugOutput, "key: %li\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->get_identifier());
-            fprintf(debugOutput, "attribute type: %c\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_type());
-            fprintf(debugOutput, "attribute: %s\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_name());
+            wxFprintf(debugOutput, "key: %li\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->get_identifier());
+            wxFprintf(debugOutput, "attribute type: %c\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_type());
+            wxFprintf(debugOutput, "attribute: %s\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_name());
 
             if(((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_type() == wxT('r'))
             {
-               fprintf(debugOutput, "value: %f\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.r);
+               wxFprintf(debugOutput, "value: %f\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.r);
             }
             else if(((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_type() == wxT('i')) {
-               fprintf(debugOutput, "value: %li\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.i);
+               wxFprintf(debugOutput, "value: %li\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.i);
             }
             else if(((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.attr_type() == wxT('s')) {
-               fprintf(debugOutput, "value: %s\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.s);
+               wxFprintf(debugOutput, "value: %s\n", ((Alg_update_ptr)mSeq->track_list.tracks[i])->parameter.s);
             }
             else {}
          }
@@ -447,7 +447,7 @@ void NoteTrack::PrintSequence()
       }
    }
    else {
-      fprintf(debugOutput, "No sequence defined!\n");
+      wxFprintf(debugOutput, "No sequence defined!\n");
    }
 
    fclose(debugOutput);

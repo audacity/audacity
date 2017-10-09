@@ -7672,8 +7672,8 @@ class ASAProgress final : public SAProgress {
       #ifdef COLLECT_TIMING_DATA
          long ms = 0;
          wxDateTime now = wxDateTime::UNow();
-         fprintf(mTimeFile, "Phase %d begins at %s\n",
-                 i, now.FormatTime().c_str());
+         wxFprintf(mTimeFile, "Phase %d begins at %s\n",
+                 i, now.FormatTime());
          if (i != 0)
             ms = now.Subtract(mStartTime).GetMilliseconds().ToLong();
          mStartTime = now;
@@ -7700,25 +7700,25 @@ class ASAProgress final : public SAProgress {
             mTotalWork += work3;
          }
          #ifdef COLLECT_TIMING_DATA
-            fprintf(mTimeFile, " mTotalWork (an estimate) = %g\n", mTotalWork);
-            fprintf(mTimeFile, " work0 = %g, frames %g, is_audio %d\n",
+            wxFprintf(mTimeFile, " mTotalWork (an estimate) = %g\n", mTotalWork);
+            wxFprintf(mTimeFile, " work0 = %g, frames %g, is_audio %d\n",
                     work[0], mFrames[0], is_audio[0]);
-            fprintf(mTimeFile, " work1 = %g, frames %g, is_audio %d\n",
+            wxFprintf(mTimeFile, " work1 = %g, frames %g, is_audio %d\n",
                     work[1], mFrames[1], is_audio[1]);
-            fprintf(mTimeFile, "work2 = %g, work3 = %g\n", work2, work3);
+            wxFprintf(mTimeFile, "work2 = %g, work3 = %g\n", work2, work3);
          #endif
          mProgress.create(_("Synchronize MIDI with Audio"),
                                _("Synchronizing MIDI and Audio Tracks"));
       } else if (i < 3) {
-         fprintf(mTimeFile,
+         wxFprintf(mTimeFile,
                "Phase %d took %d ms for %g frames, coefficient = %g s/frame\n",
                i - 1, ms, mFrames[i - 1], (ms * 0.001) / mFrames[i - 1]);
       } else if (i == 3) {
-        fprintf(mTimeFile,
+        wxFprintf(mTimeFile,
                 "Phase 2 took %d ms for %d cells, coefficient = %g s/cell\n",
                 ms, mCellCount, (ms * 0.001) / mCellCount);
       } else if (i == 4) {
-        fprintf(mTimeFile, "Phase 3 took %d ms for %d iterations on %g frames, coefficient = %g s per frame per iteration\n",
+        wxFprintf(mTimeFile, "Phase 3 took %d ms for %d iterations on %g frames, coefficient = %g s per frame per iteration\n",
                 ms, iterations, wxMax(mFrames[0], mFrames[1]),
                 (ms * 0.001) / (wxMax(mFrames[0], mFrames[1]) * iterations));
       }
