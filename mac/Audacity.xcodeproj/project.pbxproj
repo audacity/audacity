@@ -1250,7 +1250,7 @@
 		5E74D2E51CC4429700D88B0B /* Scrubbing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E74D2E11CC4429700D88B0B /* Scrubbing.cpp */; };
 		5E78388E1DE4995F003270C0 /* AudacityException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E78388D1DE4995E003270C0 /* AudacityException.cpp */; };
 		5E79B3411D5CC38D001D677D /* ImportGStreamer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E79B33F1D5CC38D001D677D /* ImportGStreamer.cpp */; };
-		5E89EEEA1F78D017000F5E82 /* zh_CN.po in Resources */ = {isa = PBXBuildFile; fileRef = 5E89EEE91F78D017000F5E82 /* zh_CN.po */; };
+		5E89EEEA1F78D017000F5E82 /* zh_CN.po in Sources */ = {isa = PBXBuildFile; fileRef = 5E89EEE91F78D017000F5E82 /* zh_CN.po */; };
 		5E94A1BA1D1F1C8400A8713A /* wxPanelWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E94A1B81D1F1C8400A8713A /* wxPanelWrapper.cpp */; };
 		5EA018281EC7B226001F2996 /* NoteTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA0181C1EC7B226001F2996 /* NoteTrackControls.cpp */; };
 		5EA018291EC7B226001F2996 /* NoteTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA0181E1EC7B226001F2996 /* NoteTrackUI.cpp */; };
@@ -1258,8 +1258,8 @@
 		5EA0182B1EC7B226001F2996 /* WaveTrackControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018231EC7B226001F2996 /* WaveTrackControls.cpp */; };
 		5EA0182C1EC7B226001F2996 /* WaveTrackUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018251EC7B226001F2996 /* WaveTrackUI.cpp */; };
 		5EA0182D1EC7B226001F2996 /* WaveTrackVRulerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EA018261EC7B226001F2996 /* WaveTrackVRulerControls.cpp */; };
-		5EBD243D1F74C50800132E0A /* eu_ES.po in Resources */ = {isa = PBXBuildFile; fileRef = 5EBD243C1F74C50800132E0A /* eu_ES.po */; };
-		5EBD35861F78D37A0084D13F /* pt_PT.po in Resources */ = {isa = PBXBuildFile; fileRef = 5EBD35851F78D37A0084D13F /* pt_PT.po */; };
+		5EBD243D1F74C50800132E0A /* eu_ES.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD243C1F74C50800132E0A /* eu_ES.po */; };
+		5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD35851F78D37A0084D13F /* pt_PT.po */; };
 		5EC7ED061E101C5C0052CAE2 /* NotYetAvailableException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EC7ED041E101C5C0052CAE2 /* NotYetAvailableException.cpp */; };
 		5ED1D0AD1CDE55BD00471E3C /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0A91CDE55BD00471E3C /* Overlay.cpp */; };
 		5ED1D0AE1CDE55BD00471E3C /* OverlayPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ED1D0AB1CDE55BD00471E3C /* OverlayPanel.cpp */; };
@@ -7091,8 +7091,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EBD243D1F74C50800132E0A /* eu_ES.po in Resources */,
-				5EBD35861F78D37A0084D13F /* pt_PT.po in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
@@ -7101,7 +7099,6 @@
 				174F73D5098D516D009CD6E0 /* AudacityProject.icns in Resources */,
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
-				5E89EEEA1F78D017000F5E82 /* zh_CN.po in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7947,6 +7944,9 @@
 				ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */,
 				ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */,
 				8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */,
+				5EBD243D1F74C50800132E0A /* eu_ES.po in Sources */,
+				5EBD35861F78D37A0084D13F /* pt_PT.po in Sources */,
+				5E89EEEA1F78D017000F5E82 /* zh_CN.po in Sources */,
 				28884943131B6CF600B59735 /* af.po in Sources */,
 				28884944131B6CF600B59735 /* ar.po in Sources */,
 				5E667A651F0BEE8C00C942A5 /* NoteTrackButtonHandle.cpp in Sources */,
