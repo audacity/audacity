@@ -33,10 +33,31 @@
 #endif
 
 
-// We only do alpha builds and release versions.
-// Most of the time we're in development, so IS_ALPHA should be defined
-// to 1.
-#define IS_ALPHA 1
+// We only do alpha builds, beta builds, and release versions.
+// Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
+// defined to 0.
+// Its value may be more than 0 for pre-release "Beta" builds that differ only
+// in the welcome screen, and hiding of some development menu commands, but
+// still link to the alpha manual online.
+#define AUDACITY_BUILD_LEVEL 2
+
+// used #ifdef not #if for IS_ALPHA, IS_BETA, IS_RELEASE, USE_ALPHA_MANUAL
+#undef IS_ALPHA
+#undef IS_BETA
+#undef IS_RELEASE
+#undef USE_ALPHA_MANUAL
+
+#if AUDACITY_BUILD_LEVEL == 0
+   #define IS_ALPHA
+   #define USE_ALPHA_MANUAL
+#elif AUDACITY_BUILD_LEVEL == 1
+   #define IS_BETA
+   #define USE_ALPHA_MANUAL
+#else
+   #define IS_RELEASE
+#endif
+
+
 
 // Increment as appropriate every time we release a NEW version.
 #define AUDACITY_VERSION   2
@@ -44,11 +65,13 @@
 #define AUDACITY_REVISION  0
 #define AUDACITY_MODLEVEL  0
 
-#if IS_ALPHA
+#if defined(IS_BETA)
+   #define AUDACITY_SUFFIX wxT("-beta-") __TDATE__
+#elif defined(IS_ALPHA)
    #define AUDACITY_SUFFIX wxT("-alpha-") __TDATE__
 #else
-   //#define AUDACITY_SUFFIX    wxT("") // for a stable release
-   #define AUDACITY_SUFFIX wxT("x  ") __TDATE__
+   #define AUDACITY_SUFFIX    wxT("") // for a stable release
+   //#define AUDACITY_SUFFIX wxT("x  ") __TDATE__
 #endif
 
 #define AUDACITY_MAKESTR( x ) #x
@@ -142,7 +165,7 @@ void QuitAudacity();
 // Put extra symbol information in the release build, for the purpose of gathering
 // profiling information (as from Windows Process Monitor), when there otherwise
 // isn't a need for AUDACITY_DLL_API.
-#if IS_ALPHA
+#ifdef IS_ALPHA
    #define PROFILE_DLL_API AUDACITY_DLL_API
 #else
    #define PROFILE_DLL_API
@@ -210,6 +233,7 @@ extern const wxString& GetCustomSubstitution(const wxString& str1 );
 #undef wxPLURAL
 #endif
 
+// Note:  The strings will go to the .pot file (do not use _(...)).
 #define wxPLURAL(sing, plur, n)  wxGetTranslation((sing), (plur), n)
 
 

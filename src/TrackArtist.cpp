@@ -2259,6 +2259,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
    wxImage image((int)mid.width, (int)mid.height);
    if (!image.IsOk())
       return;
+#ifdef EXPERIMENTAL_SPECTROGRAM_OVERLAY
+   image.SetAlpha();
+   unsigned char *alpha = image.GetAlpha();
+#endif
    unsigned char *data = image.GetData();
 
    const auto half = settings.GetFFTLength() / 2;
@@ -2599,7 +2603,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
          }
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-         int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
+         int px = ((mid.height - 1 - yy) * mid.width + xx);
+#ifdef EXPERIMENTAL_SPECTROGRAM_OVERLAY
+         // More transparent the closer to zero intensity.
+         alpha[px]= wxMin( 200, (value+0.3) * 500) ;
+#endif
+         px *=3;
          data[px++] = rv;
          data[px++] = gv;
          data[px] = bv;
@@ -2808,7 +2817,9 @@ void TrackArtist::DrawNoteBackground(const NoteTrack *track, wxDC &dc,
 {
    dc.SetBrush(wb);
    dc.SetPen(wp);
+#ifndef EXPERIMENTAL_NOTETRACK_OVERLAY
    dc.DrawRectangle(sel); // fill rectangle with white keys background
+#endif
 
    int left = TIME_TO_X(track->GetOffset());
    if (left < sel.x) left = sel.x; // clip on left
@@ -2922,6 +2933,12 @@ void TrackArtist::DrawNoteTrack(const NoteTrack *track,
    // bottomNote is displayed, and to that
    // we add the height of bottomNote from the position of pitch 0
    track->PrepareIPitchToY(rect);
+
+#ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
+   DrawBackgroundWithSelection(&dc, rect, track,
+         AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
+         selectedRegion, zoomInfo);
+#endif
 
    // Background comes in 4 colors, that are now themed.
    //   214, 214,214 -- unselected white keys

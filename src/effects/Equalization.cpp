@@ -242,12 +242,14 @@ EffectEqualization::EffectEqualization()
    mLogEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
-       1.0);
+       0.0);
+   mLogEnvelope->SetTrackLen(1.0);
 
    mLinEnvelope = std::make_unique<Envelope>
       (false,
        MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
-       1.0);
+       0.0);
+   mLinEnvelope->SetTrackLen(1.0);
 
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
@@ -2851,7 +2853,8 @@ EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *paren
    mWidth = 0;
    mHeight = 0;
 
-   mEditor = std::make_unique<EnvelopeEditor>(*mEffect->mEnvelope, false);
+   mLinEditor = std::make_unique<EnvelopeEditor>(*mEffect->mLinEnvelope, false);
+   mLogEditor = std::make_unique<EnvelopeEditor>(*mEffect->mLogEnvelope, false);
    mEffect->mEnvelope->Flatten(0.);
    mEffect->mEnvelope->SetTrackLen(1.0);
 
@@ -3073,7 +3076,8 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
       CaptureMouse();
    }
 
-   if (mEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
+   auto &pEditor = (mEffect->mLin ? mLinEditor : mLogEditor);
+   if (pEditor->MouseEvent(event, mEnvRect, ZoomInfo(0.0, mEnvRect.width),
       false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax))
    {
@@ -3536,7 +3540,8 @@ void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnLibrary( wxCommandEvent & WXUNUSED(event))
 {
-   wxLaunchDefaultBrowser(wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"));
+   // full path to wiki.
+   wxLaunchDefaultBrowser(wxT("https://wiki.audacityteam.org/wiki/EQCurvesDownload"));
 }
 
 void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))

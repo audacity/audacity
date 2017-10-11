@@ -39,7 +39,7 @@ static wxString WrapText( const wxString & Text )
       wxT("</body></html>");
 }
 
-static wxString Link( const wxString &Key, const wxString& Text )
+static wxString InnerLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='innerlink:") +
@@ -52,7 +52,7 @@ static wxString Link( const wxString &Key, const wxString& Text )
 static wxString WikiLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
-      wxT("<a href='http://www.audacityteam.org/wiki/index.php?title=") +
+      wxT("<a href='https://www.audacityteam.org/wiki/index.php?title=") +
       Key +
       wxT("'>") +
       Text +
@@ -112,6 +112,10 @@ static wxString LinkExpand( const wxString & Text )
       {
          Replacement = TypedLink( Key, LinkText );
       }
+      else if( Key.StartsWith( wxT("https:") ))
+      {
+         Replacement = TypedLink( Key, LinkText );
+      }
       else if( Key.StartsWith( wxT("mailto:") ))
       {
          Replacement = TypedLink( Key, LinkText );
@@ -122,7 +126,7 @@ static wxString LinkExpand( const wxString & Text )
       }
       else
       {
-         Replacement = Link( Key, LinkText );
+         Replacement = InnerLink( Key, LinkText );
       }
 
 
@@ -197,18 +201,27 @@ wxString TitleText( const wxString & Key )
 
 static wxString HelpTextBuiltIn( const wxString & Key )
 {
-   if(Key==wxT("welcome"))
+   // PRL:  Is it necessary to define these outside of conditional compilation so that both get into the .pot file?
+   auto alphamsg = _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.");
+   auto betamsg = _("<br><br>The version of Audacity you are using is a <b>Beta test version</b>.");
+
+      if (Key == wxT("welcome"))
    {
       /// TO-DO: Make the links to help here use the widgets/HelpSystem mechanism
       /// so that they are consistent
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       wxString result = 
          wxString(wxT("")) + 
-#if IS_ALPHA
+#if defined(IS_ALPHA) || defined(IS_BETA)
          wxT("<hr><center><h3>") + _("Get the Official Released Version of Audacity") + wxT("</h3></center>") +
          VerCheckHtml() +
-         _("<br><br>The version of Audacity you are using is an <b>Alpha test version</b>.") + " " +
-         _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")+
+#ifdef IS_ALPHA
+         alphamsg
+#else
+         betamsg
+#endif
+         + " " +
+         _("We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>") +
          _("You can help us get Audacity ready for release by joining our [[http://www.audacityteam.org/community/|community]].<hr><br><br>")+
 #endif   
 
@@ -221,8 +234,8 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          _(" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.") + wxT("</li></ul>") +
 
          wxT("<br><br>Audacity has these support methods:") + wxT("<ul><li>") +
-         wxT(" [[http://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
-         wxT(" [[http://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>");
+         wxT(" [[https://manual.audacityteam.org/|Manual]] - for comprehensive Audacity documentation") + wxT("</li><li>") +
+         wxT(" [[https://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.") + wxT("</li></ul>");
 #else
          wxT("<center><h3>Audacity ") + AUDACITY_VERSION_STRING + wxT("</h3><h3>") +
          _("How to get help") + wxT("</h3></center>") + 
@@ -233,7 +246,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          _("More:</b> Visit our [[http://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins.") + wxT("</p>");
 #endif
 
-#if IS_ALPHA
+#ifdef USE_ALPHA_MANUAL
       result.Replace( "//manual.audacityteam.org/quick_help.html","//alphamanual.audacityteam.org/man/Quick_Help" );
       result.Replace( "//manual.audacityteam.org/","//alphamanual.audacityteam.org/man/" );
 #endif

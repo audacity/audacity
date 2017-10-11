@@ -57,6 +57,16 @@
 // DA: Enables dark audacity theme and customisations.
 #define EXPERIMENTAL_DA
 
+// Define this so that sync-lock tiles shine through spectrogram.
+// The spectrogram pastes a bitmap over the tiles.
+// This makes it use alpha blending, most transparent where least intense.
+#define EXPERIMENTAL_SPECTROGRAM_OVERLAY
+
+// Define this so that sync-lock tiles shine through note/MIDI track.
+// The note track then relies on the same code for drawing background as
+// Wavetrack, and draws its notes and lines over the top.
+#define EXPERIMENTAL_NOTETRACK_OVERLAY
+
 // EXPERIMENTAL_THEMING is mostly mainstream now.
 // the define is still present to mark out old code before theming, that we might
 // conceivably need.
@@ -117,11 +127,17 @@
 // Paul Licameli (PRL) 29 Nov 2014
 // #define EXPERIMENTAL_IMPROVED_SEEKING
 
+#ifdef USE_MIDI
 // RBD, 1 Sep 2008
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work
-#ifdef USE_MIDI
 #define EXPERIMENTAL_MIDI_OUT
+// JKC, 17 Aug 2017
+// Enables the MIDI note stretching feature, which currently
+// a) Is broken on Linux (Bug 1646)
+// b) Crashes with Sync-Lock (Bug 1719)
+// c) Needs UI design review.
+//#define EXPERIMENTAL_MIDI_STRETCHING
 #endif
 
 // USE_MIDI must be defined in order for EXPERIMENTAL_SCOREALIGN to work

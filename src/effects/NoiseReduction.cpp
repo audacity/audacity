@@ -97,9 +97,10 @@ enum DiscriminationMethod {
 const struct DiscriminationMethodInfo {
    const wxChar *name;
 } discriminationMethodInfo[DM_N_METHODS] = {
-      { _("Median") },
-      { _("Second greatest") },
-      { _("Old") },
+   // Experimental only, don't need translations
+      { wxT("Median") },
+      { wxT("Second greatest") },
+      { wxT("Old") },
 };
 
 // magic number used only in the old statistics
@@ -130,13 +131,14 @@ const struct WindowTypesInfo {
    // is the product of the windows' two constant terms,
    // plus one half the product of the first cosine coefficients.
 
-   { _("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
-   { _("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
-   { _("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
-   { _("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
-   { _("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
-   { _("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
-   { _("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
+   // Experimental only, don't need translations
+   { wxT("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
+   { wxT("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
+   { wxT("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
+   { wxT("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
+   { wxT("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
+   { wxT("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
+   { wxT("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
 };
 
 enum {

@@ -1050,10 +1050,10 @@ bool Effect::SetAutomationParameters(const wxString & parms)
 
    if (!success)
    {
-      wxMessageBox(
+      Effect::MessageBox(
          wxString::Format(
             _("%s: Could not load settings below. Default settings will be used.\n\n%s"),
-            GetName().c_str(),
+            GetTranslatedName().c_str(),
             preset.c_str()
          )
       );
@@ -1215,9 +1215,10 @@ bool Effect::DoEffect(wxWindow *parent,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
+      auto name = GetTranslatedName();
       ProgressDialog progress{
-         GetName(),
-         wxString::Format(_("Applying %s..."), GetName().c_str()),
+         name,
+         wxString::Format(_("Applying %s..."), name.c_str()),
          pdlgHideStopButton
       };
       auto vr = valueRestorer( mProgress, &progress );
@@ -2563,7 +2564,7 @@ void Effect::Preview(bool dryOnly)
    // Apply effect
    if (!dryOnly) {
       ProgressDialog progress{
-         GetName(),
+         GetTranslatedName(),
          _("Preparing preview"),
          pdlgHideCancelButton
       }; // Have only "Stop" button.
@@ -2608,7 +2609,7 @@ void Effect::Preview(bool dryOnly)
          // The progress dialog blocks these events.
          {
             ProgressDialog progress
-            (GetName(), _("Previewing"), pdlgHideCancelButton);
+            (GetTranslatedName(), _("Previewing"), pdlgHideCancelButton);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
                ::wxMilliSleep(100);
@@ -2625,9 +2626,20 @@ void Effect::Preview(bool dryOnly)
       else {
          ShowErrorDialog(FocusDialog, _("Error"),
                          _("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("http://manual.audacityteam.org/man/faq_errors.html#sound_device"), false);
+                         wxT("Error_opening_sound_device"));
       }
    }
+}
+
+int Effect::MessageBox
+(const wxString& message, long style, const wxString &titleStr)
+{
+   wxString title;
+   if (titleStr.empty())
+      title = GetTranslatedName();
+   else
+      title = wxString::Format(_("%s: %s"), GetTranslatedName(), titleStr);
+   return wxMessageBox(message, title, style, mUIParent);
 }
 
 BEGIN_EVENT_TABLE(EffectDialog, wxDialogWrapper)
@@ -2807,7 +2819,7 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
                            Effect *effect,
                            EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, effect->GetName(),
+:  wxDialogWrapper(parent, wxID_ANY, effect->GetTranslatedName(),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 {
@@ -2816,7 +2828,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    [[((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
 
-   SetName(effect->GetName());
+   SetName( effect->GetTranslatedName() );
    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
 
    mParent = parent;
@@ -3177,7 +3189,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed = mProject->ReportIfActionNotAllowed(
-         mEffect->GetName(),
+         mEffect->GetTranslatedName(),
          flags,
          WaveTracksSelectedFlag | TimeSelectedFlag,
          WaveTracksSelectedFlag | TimeSelectedFlag);
@@ -3245,13 +3257,13 @@ void EffectUIHost::OnCancel(wxCommandEvent & evt)
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
    if (mEffect->GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY) && (mEffect->ManualPage().IsEmpty())) {
-      // Old ShowHelpDialog required when there is no on-line manual.
+      // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
-      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
    }
    else {
-      // otherwise use the NEW ShowHelpDialog
-      HelpSystem::ShowHelpDialog(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
+      // otherwise use the NEW ShowHelp
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
    }
 }
 
@@ -3335,10 +3347,10 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       auto sub = std::make_unique<wxMenu>();
 
       sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
-      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetTranslatedName().c_str()));
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
-      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
+      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetTranslatedDescription().c_str()));
 
       menu.Append(0, _("About"), sub.release());
    }

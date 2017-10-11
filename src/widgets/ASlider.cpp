@@ -558,7 +558,7 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    int thumbOrtho; // position in axis orthogonal to mOrientation
    if (mOrientation == wxHORIZONTAL){
       thumbOrtho = mCenterY - (mThumbHeight/2);
-      thumbPos += 3-mThumbWidth/2;
+      thumbPos += 1-mThumbWidth/2;
    }
    else{
       thumbOrtho = mCenterX - (mThumbWidth/2);

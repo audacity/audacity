@@ -38,7 +38,7 @@
 #include "ViewInfo.h"
 #include "widgets/NumericTextCtrl.h"
 
-#include "FileDialog.h"
+#include "FileNames.h"
 #include <limits>
 
 enum Column
@@ -585,12 +585,11 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
 
 void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
 {
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
-
    // Ask user for a filename
    wxString fileName =
-       FileSelector(_("Select a text file containing labels"),
-                    path,     // Path
+       FileNames::SelectFile(FileNames::Operation::Open,
+                    _("Select a text file containing labels"),
+                    wxEmptyString,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
                     _("Text files (*.txt)|*.txt|All files|*"),
@@ -599,10 +598,6 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
 
    // They gave us one...
    if (fileName != wxT("")) {
-      path =::wxPathOnly(fileName);
-      gPrefs->Write(wxT("/DefaultOpenPath"), path);
-      gPrefs->Flush();
-
       wxTextFile f;
 
       // Get at the data
@@ -640,7 +635,8 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    // Extract the actual name.
    wxString fName = mTrackNames[mTrackNames.GetCount() - 1].AfterFirst(wxT('-')).Mid(1);
 
-   fName = FileSelector(_("Export Labels As:"),
+   fName = FileNames::SelectFile(FileNames::Operation::Export,
+      _("Export Labels As:"),
       wxEmptyString,
       fName.c_str(),
       wxT("txt"),

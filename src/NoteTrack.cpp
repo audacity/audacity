@@ -470,7 +470,7 @@ Track::Holder NoteTrack::Cut(double t0, double t1)
    auto &seq = GetSeq();
    seq.convert_to_seconds();
    newTrack->mSeq.reset(seq.cut(t0 - GetOffset(), len, false));
-   newTrack->SetOffset(GetOffset());
+   newTrack->SetOffset(0);
 
    // Not needed
    // Alg_seq::cut seems to handle this
@@ -498,7 +498,7 @@ Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
    auto &seq = GetSeq();
    seq.convert_to_seconds();
    newTrack->mSeq.reset(seq.copy(t0 - GetOffset(), len, false));
-   newTrack->SetOffset(GetOffset());
+   newTrack->SetOffset(0);
 
    // What should be done with the rest of newTrack's members?
    // (mBottomNote, mDirManager, mSerializationBuffer,
@@ -540,14 +540,29 @@ void NoteTrack::Clear(double t0, double t1)
    double len = t1-t0;
 
    auto &seq = GetSeq();
-   //auto delta = -(
-      //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
-   //);
-   seq.clear(t0 - GetOffset(), len, false);
 
-   // Not needed
-   // Alg_seq::clear seems to handle this
-   // AddToDuration( delta );
+   auto offset = GetOffset();
+   auto start = t0 - offset;
+   if (start < 0.0) {
+      // AlgSeq::clear will shift the cleared interval, not changing len, if
+      // start is negative.  That's not what we want to happen.
+      if (len > -start) {
+         seq.clear(0, len + start, false);
+         SetOffset(t0);
+      }
+      else
+         SetOffset(offset - len);
+   }
+   else {
+      //auto delta = -(
+      //( std::min( t1, GetEndTime() ) ) - ( std::max( t0, GetStartTime() ) )
+      //);
+      seq.clear(start, len, false);
+
+      // Not needed
+      // Alg_seq::clear seems to handle this
+      // AddToDuration( delta );
+   }
 }
 
 void NoteTrack::Paste(double t, const Track *src)
@@ -564,6 +579,14 @@ void NoteTrack::Paste(double t, const Track *src)
    if (src == NULL || src->GetKind() != Track::Note)
       // THROW_INCONSISTENCY_EXCEPTION; // ?
       return;
+
+   auto myOffset = this->GetOffset();
+   if (t < myOffset) {
+      // workaround strange behavior described at
+      // http://bugzilla.audacityteam.org/show_bug.cgi?id=1735#c3
+      SetOffset(t);
+      InsertSilence(t, myOffset - t);
+   }
 
    NoteTrack* other = (NoteTrack*)src;
 

@@ -78,7 +78,6 @@
 // TODO:  Unfortunately we have some dependencies on Audacity provided 
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
 
-#include "FileDialog.h"
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../PlatformCompatibility.h"
@@ -1798,8 +1797,9 @@ void VSTEffect::ExportPresets()
    // Ask the user for the real name
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the FileSelector().
-   path = FileSelector(_("Save VST Preset As:"),
+   // upon returning from the FileNames::SelectFile().
+   path = FileNames::SelectFile(FileNames::Operation::_None,
+                       _("Save VST Preset As:"),
                        FileNames::DataDir(),
                        wxEmptyString,
                        wxT("xml"),
@@ -1850,7 +1850,8 @@ void VSTEffect::ImportPresets()
    wxString path;
 
    // Ask the user for the real name
-   path = FileSelector(_("Load VST Preset:"),
+   path = FileNames::SelectFile(FileNames::Operation::_None,
+                       _("Load VST Preset:"),
                        FileNames::DataDir(),
                        wxEmptyString,
                        wxT("xml"),

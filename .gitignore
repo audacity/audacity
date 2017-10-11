@@ -181,6 +181,7 @@ win/.vs/
 
 # All those help files
 help/manual*
+win/help/manual*
 
 # Misc
 src/RevisionIdent.h

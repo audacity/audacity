@@ -30,10 +30,12 @@ std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
 #ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_STRETCHING
    result = StretchHandle::HitTest(
       mStretchHandle, state, pProject, Pointer<NoteTrack>(this) );
    if (result)
       results.push_back(result);
+#endif
 #endif
 
    return results;

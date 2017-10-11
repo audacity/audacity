@@ -18,7 +18,7 @@ Minor tweaks (for Audacity) By James Crook, Nov 2009.
 ...
 """
 
-__version__ = '0.1.0.0'
+__version__ = '0.1.0.1'
 
 import re
 import sys
@@ -34,6 +34,7 @@ import hashlib
 import httplib
 #import pdb
 from time import strftime
+from shutil import copyfile
 
 try:
     set
@@ -46,6 +47,8 @@ except:
     print 'Requires Python htmldata module:'
     print '  http://www.connellybarnes.com/code/htmldata/'
     sys.exit()
+
+
 
 config = None
 MOVE_HREF = 'movehref'
@@ -121,6 +124,10 @@ def normalize_url(url, lower=True):
 
     if url.startswith('http://'):
         url = url[len('http://'):]
+
+    # if url.startswith('https://'):
+    #    url = url[len('https://'):]
+
     if url.startswith('www.'):
         url = url[len('www.'):]
 
@@ -187,12 +194,22 @@ def monobook_fix_html(doc, page_url):
     if config.made_by:
         doc = doc.replace('<html xmlns=', MADE_BY_COMMENT + '\n<html xmlns=')
 
-    doc = remove_tag(doc, '<div class="portlet" id="p-personal">', '</div>', '<div')
-    doc = remove_tag(doc, '<div id="p-search" class="portlet">', '</div>', '<div')
-    doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
-    doc = remove_tag(doc, '<div id=\'catlinks\' class=\'catlinks catlinks-allhidden\'>', '</div>', '<div')    
+    # Obselete substitutions.
+    # doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
     #James also remove the page/discussion/source/history/ div.
     doc = remove_tag(doc, '<li id="ca-', '</li>', '<li')
+    doc = remove_tag(doc, '<div id="p-search" class="portlet"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="portlet" id="p-personal"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="editornote2"', '</div>', '<div')
+    doc = remove_tag(doc, '<div id="p-cactions"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="generated-sidebar portlet" id="p-For_Editors"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="generated-sidebar portlet" id="p-ToDo"', '</div>', '<div')
+    doc = remove_tag(doc, '<div class="portlet" id="p-tb"', '</div>', '<div')
+    doc = remove_tag(doc, '<div id="catlinks"', '</div>', '<div')
+    #remove javascript.
+    doc = remove_tag(doc, '<script', '</script>', '<script')
+
+
 
     #andre special mode
     if config.special_mode:
@@ -228,6 +245,8 @@ def monobook_fix_html(doc, page_url):
     # Remove edit links
     doc = remove_tag(doc, '<div class="editsection"', '</div>', '<div')
     doc = remove_tag(doc, '<span class="editsection"', '</span>', '<span')
+    doc = re.sub(r'<h2>Navigation menu</h2>', r'', doc)
+
 
     return doc
 
@@ -257,7 +276,7 @@ def pre_html_transform(doc, url):
 
     return doc
 
-def pos_html_transform(doc, url):
+def pos_html_transform(doc, url,filename):
     global footer_text, config, sidebar_html
     url = normalize_url(url, False)
 
@@ -267,7 +286,7 @@ def pos_html_transform(doc, url):
         sidebar_html = f.read()
         f.close()
 
-    doc = re.sub(r'(<!-- end of the left \(by default at least\) column -->)', sidebar_html + r'\1', doc)
+    # doc = re.sub(r'(<!-- end of the left \(by default at least\) column -->)', sidebar_html + r'\1', doc)
 
     # Remove empty links
     doc = clean_tag(doc, 'href=""', '</a>', '<a ');
@@ -279,9 +298,27 @@ def pos_html_transform(doc, url):
         # Remove external javascript
         doc = re.sub(r'<script type="text/javascript" src="http://[\s\S]+?</script>', r'', doc)
 
+
+    # Add back relevant stylesheet.
+    top_level_dir = config.outdir
+    if (os.path.dirname(os.path.dirname(filename)) == config.outdir):
+        doc = re.sub(r'</head>',
+                     '<link rel="stylesheet" href="m/skins/monobook/main.css/303.css" media="screen" />\n</head>', doc,
+                     flags=re.DOTALL)
+    elif (os.path.dirname(os.path.dirname(os.path.dirname(filename))) == config.outdir):
+        doc = re.sub(r'</head>',
+                     '<link rel="stylesheet" href="../m/skins/monobook/main.css/303.css" media="screen" />\n</head>',
+                     doc,
+                     flags=re.DOTALL)
+    else:
+        doc = re.sub(r'</head>',
+                     '<link rel="stylesheet" href="../../m/skins/monobook/main.css/303.css" media="screen" />\n</head>',
+                     doc,
+                     flags=re.DOTALL)
+
     # Replace remaining text with footer, if available (this needs to be done after parse_html to avoid rewriting of urls
     if config.footer is not None:
-        s1 = '<div id="footer">'
+        s1 = '<div id="footer"'
 
     # match correct divs
     (i1, i2) = find_tag_limits(doc, s1, '</div>', '<div')
@@ -348,8 +385,8 @@ def html_remove_translation_links(doc):
     The second version deals with links like /pt_PT and /zh_CN
     We are case sensitive, so as not to treat FAQ as a language code.
     """
-    doc = re.sub(r'<a href="[^"]+/[a-z]{2,3}[/"][\s\S]+?</a>', r'<!--Removed Translation Flag-->', doc)
-    doc = re.sub(r'<a href="[^"]+/[a-z]{2}_[A-Z]{2}[/"][\s\S]+?</a>', r'<!--Removed Translation Flag2-->', doc)
+    doc = re.sub(r'<a href="[^"]+/[a-z]{2,3}[/"][\s\S]+?</a>', r'', doc)
+    doc = re.sub(r'<a href="[^"]+/[a-z]{2}_[A-Z]{2}[/"][\s\S]+?</a>', r'', doc)
     return doc
 
 def monobook_hack_skin_html(doc):
@@ -657,7 +694,7 @@ def url_to_filename(url):
 
     #don't sanitize / for path
     L[0] = ''
-    L[2] = urllib.quote_plus(L[2], '/')
+    L[2] = urllib.quote_plus(L[2],'/')
     L[3] = urllib.quote_plus(L[3])
     L[4] = urllib.quote_plus(L[4])
     L[5] = urllib.quote_plus(L[5])
@@ -850,12 +887,13 @@ def should_follow(url):
 
     return True
 
-def parse_html(doc, url):
+def parse_html(doc, url, filename):
     """
     Returns (modified_doc, new_urls), where new_urls are absolute URLs for
     all links we want to spider in the HTML.
     """
     global config
+    global counter
 
     BEGIN_COMMENT_REPLACE = '<BEGINCOMMENT-' + str(random.random()) + '>'
     END_COMMENT_REPLACE = '<ENDCOMMENT-' + str(random.random()) + '>'
@@ -868,15 +906,16 @@ def parse_html(doc, url):
     doc = doc.replace('<!--', BEGIN_COMMENT_REPLACE)
     doc = doc.replace('-->', END_COMMENT_REPLACE)
 
+
     L = htmldata.urlextract(doc, url, 'text/html')
-    
+
     # in this code we change each absolute url in L
     # into a relative one.
     # we also kick-off zillions of subthreads to collect 
     # more pages.
     for item in L:
         u = item.url
-        follow = should_follow(u)
+        follow = should_follow(u) #and (counter < 10)
         if follow:
             if config.debug:
                 print 'ACCEPTED   - ', u
@@ -889,14 +928,24 @@ def parse_html(doc, url):
             #  item.url = ''
             if config.debug:
                 print 'NOT INCLUDED     - ', u
-                
+
     newdoc = htmldata.urljoin(doc, L)
     newdoc = newdoc.replace(BEGIN_COMMENT_REPLACE, '<!--')
     newdoc = newdoc.replace(END_COMMENT_REPLACE, '-->')
 
-    newdoc = pos_html_transform(newdoc, url)
+    newdoc = pos_html_transform(newdoc, url,filename)
 
     return (newdoc, new_urls)
+
+def deploy_file( src, dest ):
+    src_dir = os.path.dirname(os.path.realpath(__file__))
+    src = os.path.join(src_dir, src)
+    dest = os.path.join(config.outdir, dest)
+    print "copying from", src, "to", dest
+    directory = os.path.dirname(dest)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    copyfile(src,dest)
 
 
 def run(out=sys.stdout):
@@ -966,7 +1015,7 @@ def run(out=sys.stdout):
         new_urls = []
 
         if filename.endswith('.html'):
-            (doc, new_urls) = parse_html(doc, url)
+            (doc, new_urls) = parse_html(doc, url, filename)
         elif filename.endswith('.css'):
             (doc, new_urls) = parse_css(doc, url)
 
@@ -1001,6 +1050,18 @@ def run(out=sys.stdout):
     out.write(str(n) + ' files saved\n')
     print counter, "httplib requests done"
     print errors, "errors not recovered"
+
+    # use / not \ so as to work on both windows and mac.
+    deploy_file( "AudacityLogo.png", r"alphamanual.audacityteam.org/m/resources/assets/AudacityLogo.png")
+    deploy_file( "303.css", r"alphamanual.audacityteam.org/m/skins/monobook/main.css/303.css")
+    deploy_file( "headbg.jpg", r"alphamanual.audacityteam.org/m/skins/monobook/headbg.jpg")
+    deploy_file( "audio.png", r"alphamanual.audacityteam.org/m/skins/monobook/audio.png")
+    deploy_file( "bullet.gif", r"alphamanual.audacityteam.org/m/skins/monobook/bullet.gif")
+    deploy_file( "external.png", r"alphamanual.audacityteam.org/m/skins/monobook/external.png")
+    deploy_file( "external_rtl.png", r"alphamanual.audacityteam.org/m/skins/monobook/external_rtl.png")
+    deploy_file( "user.gif", r"alphamanual.audacityteam.org/m/skins/monobook/user.gif")
+    deploy_file( "video.png", r"alphamanual.audacityteam.org/m/skins/monobook/video.png")
+
 
 
 def usage():

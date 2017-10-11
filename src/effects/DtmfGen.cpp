@@ -103,7 +103,7 @@ wxString EffectDtmf::GetDescription()
 
 wxString EffectDtmf::ManualPage()
 {
-   return wxT("Generate_Menu#dtmf");
+   return wxT("DTMF_Tones");
 }
 
 // EffectIdentInterface implementation

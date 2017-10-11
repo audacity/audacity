@@ -774,9 +774,7 @@ bool AudacityApp::MRUOpen(const wxString &fullPathStr) {
       // verify that the file exists
       if (wxFile::Exists(fullPathStr))
       {
-         if (!gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr)) ||
-               !gPrefs->Flush())
-            return false;
+         FileNames::UpdateDefaultPath(FileNames::Operation::Open, fullPathStr);
 
          // Make sure it isn't already open.
          // Test here even though AudacityProject::OpenFile() also now checks, because
@@ -979,10 +977,13 @@ AudacityLogger *AudacityApp::GetLogger()
 #define WL(lang,sublang)
 #endif
 
-#if !wxCHECK_VERSION(3, 0, 1)
+#if wxCHECK_VERSION(3, 0, 1)
 wxLanguageInfo userLangs[] =
 {
-   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT) wxT("Bosnian"), wxLayout_LeftToRight }
+   // Bosnian is defined in wxWidgets already
+//   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT) wxT("Bosnian"), wxLayout_LeftToRight },
+
+   { wxLANGUAGE_USER_DEFINED, wxT("eu"), WL(0, SUBLANG_DEFAULT) wxT("Basque"), wxLayout_LeftToRight },
 };
 #endif
 
@@ -1045,6 +1046,11 @@ wxString AudacityApp::InitLang( const wxString & lang )
       wxCommandEvent evt(EVT_LANGUAGE_CHANGE);
       ProcessEvent(evt);
    }
+
+   // PRL: Moved this, do it only after language intialized
+   // Unused strings that we want to be translated, even though
+   // we're not using them yet...
+   wxString future1 = _("Master Gain Control");
 
    return result;
 }
@@ -1255,10 +1261,6 @@ bool AudacityApp::OnInit()
    wxTheApp->SetAppDisplayName(appName);
    wxTheApp->SetVendorName(appName);
 
-   // Unused strings that we want to be translated, even though
-   // we're not using them yet...
-   wxString future1 = _("Master Gain Control");
-
    ::wxInitAllImageHandlers();
 
    // AddHandler takes ownership
@@ -1375,7 +1377,7 @@ bool AudacityApp::OnInit()
    //
    // TODO:  The whole Language initialization really need to be reworked.
    //        It's all over the place.
-#if !wxCHECK_VERSION(3, 0, 1)
+#if wxCHECK_VERSION(3, 0, 1)
    for (size_t i = 0, cnt = WXSIZEOF(userLangs); i < cnt; i++)
    {
       wxLocale::AddLanguage(userLangs[i]);

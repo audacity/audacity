@@ -697,7 +697,11 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
    // Get all presets in the local domain for this effect
    wxDir::GetAllFiles(fn.GetFullPath(), &presets, wxT("*.aupreset"));
 
-   fn.PrependDir(wxT("~"));
+   path.Printf(wxT("%s/%s/%s"),
+               PRESET_USER_PATH,
+               mEffect->mVendor.c_str(),
+               mEffect->mName.c_str());
+   fn = path;
    fn.Normalize();
 
    // Get all presets in the user domain for this effect
@@ -892,7 +896,8 @@ wxString AudioUnitEffect::GetVersion()
 
 wxString AudioUnitEffect::GetDescription()
 {
-   return wxT("N/A");
+   /* i18n-hint: Can mean "not available," "not applicable," "no answer" */
+   return XO("n/a");
 }
 
 // ============================================================================

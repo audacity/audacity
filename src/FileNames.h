@@ -15,6 +15,7 @@
 #include "Audacity.h"
 
 class wxFileName;
+class wxFileNameWrapper;
 class wxArrayString;
 
 // Uh, this is really a namespace rather than a class,
@@ -64,6 +65,44 @@ public:
 
    // Obtain name of loaded module that contains address
    static wxString PathFromAddr(void *addr);
+
+   static wxFileNameWrapper DefaultToDocumentsFolder
+      (const wxString &preference);
+
+   // If not None, determines a preference key (for the default path string) to
+   // be read and updated
+   enum class Operation {
+      // _ on None to defeat some macro that is expanding this.
+      _None,
+      Open,
+      Export
+   };
+
+   static wxString FindDefaultPath(Operation op);
+   static void UpdateDefaultPath(Operation op, const wxString &path);
+
+   // F is a function taking a wxString, returning wxString
+   template<typename F>
+   static wxString WithDefaultPath
+   (Operation op, const wxString &defaultPath, F function)
+   {
+      auto path = defaultPath;
+      if (path.empty())
+         path = FileNames::FindDefaultPath(op);
+      auto result = function(path);
+      FileNames::UpdateDefaultPath(op, result);
+      return result;
+   }
+
+   static wxString
+   SelectFile(Operation op,   // op matters only when default_path is empty
+              const wxString& message,
+                const wxString& default_path,
+                const wxString& default_filename,
+                const wxString& default_extension,
+                const wxString& wildcard,
+                int flags,
+                wxWindow *parent);
 
 private:
    // Private constructors: No one is ever going to instantiate it.

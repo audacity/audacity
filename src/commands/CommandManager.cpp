@@ -89,12 +89,14 @@ CommandManager.  It holds the callback for one command.
 #include "../AudacityException.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../Lyrics.h"
 
 #include "Keyboard.h"
 #include "../PluginManager.h"
 #include "../effects/EffectManager.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/ErrorDialog.h"
+#include "../widgets/HelpSystem.h"
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
@@ -1232,12 +1234,14 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    wxString reason = _("There was a problem with your last action. If you think\nthis is a bug, please tell us exactly where it occurred.");
    // The default title string is 'Disallowed'.
    wxString title = _("Disallowed");
-   wxString help_url ="";
+   wxString helpPage ="";
 
    auto missingFlags = flagsRequired & (~flagsGot );
    if( missingFlags & AudioIONotBusyFlag )
+      // This reason will not be shown, because options that require it will be greyed our.
       reason = _("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
    else if( missingFlags & StereoRequiredFlag )
+      // This reason will not be shown, because the stereo-to-mono is greyed out if not allowed.
       reason = _("You must first select some stereo audio to perform this\naction. (You cannot use this with mono.)");
    // In reporting the issue with cut or copy, we don't tell the user they could also select some text in a label.
    else if(( missingFlags & TimeSelectedFlag ) || (missingFlags &CutCopyAvailableFlag )){
@@ -1261,7 +1265,7 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
       ), Name );
 #endif
 #endif
-      help_url = "http://alphamanual.audacityteam.org/man/Selecting_Audio_-_the_basics";
+      helpPage = "Selecting_Audio_-_the_basics";
    }
    else if( missingFlags & WaveTracksSelectedFlag)
       reason = _("You must first select some audio to perform this action.\n(Selecting other kinds of track won't work.)");
@@ -1275,51 +1279,60 @@ void CommandManager::TellUserWhyDisallowed( const wxString & Name, CommandFlag f
    else if( missingFlags == TrackPanelHasFocus )
       return;
 
-
-#if 0
    // Does not have the warning icon...
    ShowErrorDialog(
       NULL,
       title,
       reason, 
-      help_url,
-      false);
-#endif
-
-   // JKC: I tried building a custom error dialog with the warning icon, and a 
-   // help button linking to our html (without closing).
-   // In the end I decided it was easier (more portable across different
-   // OS's) to use the stock one.
-   int result = ::wxMessageBox(reason, title,  wxICON_WARNING | wxOK | 
-      (help_url.IsEmpty() ? 0 : wxHELP) );
-   // if they click help, we fetch that help, and pop the dialog (without a
-   // help button) up again.
-   if( result == wxHELP ){
-      wxHtmlLinkInfo link( help_url );
-      OpenInDefaultBrowser(link);
-      ::wxMessageBox(reason, title,  wxICON_WARNING | wxOK );
-   }
+      helpPage);
 }
 
 wxString CommandManager::DescribeCommandsAndShortcuts
-(const std::vector<wxString> &commands, const wxString &separator) const
+(const std::vector<wxString> &commands) const
 {
+   wxString mark;
+   // This depends on the language setting and may change in-session after
+   // change of preferences:
+   bool rtl = (wxLayout_RightToLeft == wxTheApp->GetLayoutDirection());
+   if (rtl)
+      mark = wxT("\u200f");
+
+   static const wxString &separatorFormat = wxT("%s / %s");
    wxString result;
    auto iter = commands.begin(), end = commands.end();
    while (iter != end) {
-      result += *iter++;
+      // If RTL, then the control character forces right-to-left sequencing of
+      // "/" -separated command names, and puts any "(...)" shortcuts to the
+      // left, consistently with accelerators in menus (assuming matching
+      // operating system prefernces for language), even if the command name
+      // was missing from the translation file and defaulted to the English.
+      auto piece = wxString::Format(wxT("%s%s"), mark, *iter++);
+
       if (iter != end) {
          if (!iter->empty()) {
             auto keyStr = GetKeyFromName(*iter);
             if (!keyStr.empty()){
-               result += wxT(" ");
-               result += Internat::Parenthesize(KeyStringDisplay(keyStr, true));
+               auto keyString = KeyStringDisplay(keyStr, true);
+               auto format = wxT("%s %s(%s)");
+#ifdef __WXMAC__
+               // The unicode controls push and pop left-to-right embedding.
+               // This keeps the directionally weak characters, such as uparrow
+               // for Shift, left of the key name,
+               // consistently with how menu accelerators appear, even when the
+               // system language is RTL.
+               format = wxT("%s %s(\u202a%s\u202c)");
+#endif
+               // The mark makes correctly placed parentheses for RTL, even
+               // in the case that the piece is untranslated.
+               piece = wxString::Format(format, piece, mark, keyString);
             }
          }
          ++iter;
       }
-      if (iter != end)
-         result += separator;
+      if (result.empty())
+         result = piece;
+      else
+         result = wxString::Format(separatorFormat, result, piece);
    }
    return result;
 }
@@ -1368,9 +1381,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
       wxWindow * pWnd = wxWindow::FindFocus();
       wxWindow * pTrackPanel = (wxWindow*)GetActiveProject()->GetTrackPanel();
       bool bIntercept = pWnd !=  pTrackPanel;
-      // Intercept keys from windows that are NOT panels
+      // Intercept keys from windows that are NOT the Lyrics panel
       if( bIntercept ){
-         bIntercept = pWnd && ( dynamic_cast<wxPanel*>(pWnd) == NULL );
+         bIntercept = pWnd && ( dynamic_cast<Lyrics*>(pWnd) == NULL );
       }
       //wxLogDebug("Focus: %p TrackPanel: %p", pWnd, pTrackPanel );
       // We allow the keystrokes below to be handled by wxWidgets controls IF we are 
@@ -1383,7 +1396,9 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
          case WXK_RIGHT:
          case WXK_UP:
          case WXK_DOWN:
-         case WXK_SPACE:
+         // Don't trap WXK_SPACE (Bug 1727 - SPACE not starting/stopping playback
+         // when cursor is in a time control)
+         // case WXK_SPACE:
          case WXK_TAB:
          case WXK_BACK:
          case WXK_HOME:

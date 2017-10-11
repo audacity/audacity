@@ -93,6 +93,16 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
+// PRL:
+// If we always run a portaudio output stream (even just to produce silence)
+// whenever we play Midi, then we might use just one thread for both.
+// I thought this would improve MIDI synch problems on Linux/ALSA, but RBD
+// convinced me it was neither a necessary nor sufficient fix.  Perhaps too the
+// MIDI thread might block in some error situations but we should then not
+// also block the audio thread.
+// So leave the separate thread ENABLED.
+#define USE_MIDI_THREAD
+
 struct ScrubbingOptions;
 
 // To avoid growing the argument list of StartStream, add fields here
@@ -437,12 +447,17 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    void PrepareMidiIterator(bool send = true, double offset = 0);
    bool StartPortMidiStream();
+
+   // Compute nondecreasing time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime();
+
    void OutputEvent();
    void FillMidiBuffers();
    void GetNextEvent();
    double AudioTime() { return mT0 + mNumFrames / mRate; }
    double PauseTime();
-   void AllNotesOff();
+   void AllNotesOff(bool looping = false);
 #endif
 
    /** \brief Get the number of audio samples free in all of the playback
@@ -523,25 +538,51 @@ private:
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
    PmError          mLastPmError;
-   /// Latency value for PortMidi
-   long             mMidiLatency;
+
    /// Latency of MIDI synthesizer
-   long             mSynthLatency;
+   long             mSynthLatency; // ms
 
    // These fields are used to synchronize MIDI with audio:
 
-   /// PortAudio's outTime
-   volatile double  mAudioCallbackOutputTime;
+   /// PortAudio's clock time
+   volatile double  mAudioCallbackClockTime;
+
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
    /// How many frames of zeros were output due to pauses?
    volatile long    mNumPauseFrames;
    /// total of backward jumps
-   volatile double  mMidiLoopOffset;
+   volatile int     mMidiLoopPasses;
+   inline double MidiLoopOffset() { return mMidiLoopPasses * (mT1 - mT0); }
+
    volatile long    mAudioFramesPerBuffer;
    /// Used by Midi process to record that pause has begun,
    /// so that AllNotesOff() is only delivered once
    volatile bool    mMidiPaused;
+   /// The largest timestamp written so far, used to delay
+   /// stream closing until last message has been delivered
+   PmTimestamp mMaxMidiTimestamp;
+
+   /// Offset from ideal sample computation time to system time,
+   /// where "ideal" means when we would get the callback if there
+   /// were no scheduling delays or computation time
+   double mSystemMinusAudioTime;
+   /// audio output latency reported by PortAudio
+   /// (initially; for Alsa, we adjust it to the largest "observed" value)
+   double mAudioOutLatency;
+
+   // Next two are used to adjust the previous two, if
+   // PortAudio does not provide the info (using ALSA):
+
+   /// time of first callback
+   /// used to find "observed" latency
+   double mStartTime;
+   /// number of callbacks since stream start
+   long mCallbackCount;
+
+   /// Make just one variable to communicate from audio to MIDI thread,
+   /// to avoid problems of atomicity of updates
+   volatile double mSystemMinusAudioTimePlusLatency;
 
    Alg_seq_ptr      mSeq;
    std::unique_ptr<Alg_iterator> mIterator;
@@ -558,7 +599,7 @@ private:
    /// Track of next event
    NoteTrack        *mNextEventTrack;
    /// True when output reaches mT1
-   bool             mMidiOutputComplete;
+   bool             mMidiOutputComplete{ true };
    /// Is the next event a note-on?
    bool             mNextIsNoteOn;
    /// mMidiStreamActive tells when mMidiStream is open for output
@@ -588,7 +629,9 @@ private:
 
    std::unique_ptr<AudioThread> mThread;
 #ifdef EXPERIMENTAL_MIDI_OUT
+#ifdef USE_MIDI_THREAD
    std::unique_ptr<AudioThread> mMidiThread;
+#endif
 #endif
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
@@ -608,12 +651,17 @@ private:
    double              mT1;
    /// Current time position during playback, in seconds.  Between mT0 and mT1.
    double              mTime;
-   /// Current time after warping, starting at zero (unlike mTime).
-   /// Length in real seconds between mT0 and mTime.
+
+   /// Accumulated real time (not track position), starting at zero (unlike
+   ///  mTime), and wrapping back to zero each time around looping play.
+   /// Thus, it is the length in real seconds between mT0 and mTime.
    double              mWarpedTime;
-   /// Total length after warping via a time track.
+
+   /// Real length to be played (if looping, for each pass) after warping via a
+   /// time track, computed just once when starting the stream.
    /// Length in real seconds between mT0 and mT1.  Always positive.
    double              mWarpedLength;
+
    double              mSeek;
    double              mPlaybackRingBufferSecs;
    double              mCaptureRingBufferSecs;
@@ -689,6 +737,8 @@ private:
 
    const TimeTrack *mTimeTrack;
 
+   bool mUsingAlsa { false };
+
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
    static wxArrayLong mCachedPlaybackRates;
@@ -748,4 +798,3 @@ private:
 };
 
 #endif
-

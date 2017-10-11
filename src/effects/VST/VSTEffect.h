@@ -371,7 +371,7 @@ public:
    VSTEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~VSTEffectsModule();
 
-   // IdentInterface implementatino
+   // IdentInterface implementation
 
    wxString GetPath() override;
    wxString GetSymbol() override;

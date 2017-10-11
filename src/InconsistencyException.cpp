@@ -30,12 +30,12 @@ wxString InconsistencyException::ErrorMessage() const
 
 #ifdef __func__
    return wxString::Format(
-_("Internal error in %s at %s line %d.\nPlease inform the Audacity team at feedback@audacityteam.org."),
+_("Internal error in %s at %s line %d.\nPlease inform the Audacity team at https://forum.audacityteam.org/."),
       func, path, line
    );
 #else
    return wxString::Format(
-_("Internal error at %s line %d.\nPlease inform the Audacity team at feedback@audacityteam.org."),
+_("Internal error at %s line %d.\nPlease inform the Audacity team at https://forum.audacityteam.org/."),
       path, line
    );
 #endif

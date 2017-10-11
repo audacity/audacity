@@ -48,6 +48,9 @@
     <msgfmt Include="..\..\..\locale\eu.po">
       <Filter>Source Files</Filter>
     </msgfmt>
+    <msgfmt Include="..\..\..\locale\eu_ES.po">
+      <Filter>Source Files</Filter>
+    </msgfmt>
     <msgfmt Include="..\..\..\locale\fa.po">
       <Filter>Source Files</Filter>
     </msgfmt>

@@ -78,12 +78,12 @@ BEGIN_EVENT_TABLE(Lyrics, wxPanelWrapper)
    //    EVT_COMMAND_LEFT_CLICK(kHighlightTextCtrlID, Lyrics::OnHighlightTextCtrl)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(Lyrics, wxPanelWrapper)
+IMPLEMENT_CLASS(Lyrics, wxPanel)
 
 Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
                const wxPoint& pos /*= wxDefaultPosition*/,
                const wxSize& size /*= wxDefaultSize*/):
-   wxPanelWrapper(parent, id, pos, size),
+   wxPanelWrapper(parent, id, pos, size, wxWANTS_CHARS),
    mWidth(size.x), mHeight(size.y)
 {
    mKaraokeHeight = mHeight;

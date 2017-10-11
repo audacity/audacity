@@ -93,7 +93,11 @@ class ScreenFrame final : public wxFrame
    DECLARE_EVENT_TABLE()
 };
 
-using ScreenFramePtr = Destroy_ptr<ScreenFrame>;
+// Static pointer to the unique ScreenFrame window.
+// Formerly it was parentless, therefore this was a Destroy_ptr<ScreenFrame>
+// But now the window is owned, so just use a bare pointer, and null it when
+// the unique window is destroyed.
+using ScreenFramePtr = ScreenFrame*;
 ScreenFramePtr mFrame;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +105,12 @@ ScreenFramePtr mFrame;
 void OpenScreenshotTools()
 {
    if (!mFrame) {
-      mFrame = ScreenFramePtr{ safenew ScreenFrame(wxGetApp().GetTopWindow(), -1) };
+      auto parent = wxGetApp().GetTopWindow();
+      if (!parent) {
+         wxASSERT(false);
+         return;
+      }
+      mFrame = ScreenFramePtr{ safenew ScreenFrame(parent, -1) };
    }
    mFrame->Show();
    mFrame->Raise();
@@ -109,13 +118,7 @@ void OpenScreenshotTools()
 
 void CloseScreenshotTools()
 {
-   // The code below looks like a memory leak,
-   // but actually wxWidgets will take care of deleting the
-   // screenshot window, becuase the parent window is
-   // being deleted.  So we only need to free up our pointer
-   // to it, not actually delete the underlying object.
-   if( mFrame )
-      mFrame.release();
+   mFrame = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -166,15 +169,19 @@ enum
    IdDelayCheckBox,
 
    IdCaptureFirst,
-   IdCaptureWindowContents = IdCaptureFirst,
+   // No point delaying the capture of sets of things.
+   IdCaptureMenus= IdCaptureFirst,
+   IdCaptureEffects,
+   IdCapturePreferences,
+
+   // Put all events that need delay between AllDelayed and LastDelayed.
+   IdAllDelayedEvents,
+   IdCaptureToolbars  =IdAllDelayedEvents,
+   IdCaptureWindowContents,
    IdCaptureFullWindow,
    IdCaptureWindowPlus,
    IdCaptureFullScreen,
   
-   IdCaptureToolbars,
-   IdCaptureMenus,
-   IdCaptureEffects,
-   IdCapturePreferences,
    IdCaptureSelectionBar,
    IdCaptureTimeBar,
    IdCaptureSpectralSelection,
@@ -196,14 +203,11 @@ enum
    IdCaptureSecondTrack,
    IdCaptureLast = IdCaptureSecondTrack,
 
+   IdLastDelayedEvent,
+
    IdToggleBackgroundBlue,
    IdToggleBackgroundWhite,
 
-   // Put all events that might need delay below:
-   IdAllDelayedEvents,
-
-
-   IdLastDelayedEvent,
 };
 
 BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
@@ -282,8 +286,11 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 
 ScreenFrame::~ScreenFrame()
 {
-   if( mFrame )
-      mFrame.release();
+   if (this == mFrame)
+      mFrame = nullptr;
+   else
+      // There should only be one!
+      wxASSERT(false);
 }
 
 void ScreenFrame::Populate()
@@ -468,16 +475,20 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
 {
    int id = e.GetId();
 
+   // If split into two parts to make for easier breakpoint
+   // when testing timer.
    if (mDelayCheckBox &&
        mDelayCheckBox->GetValue() &&
        e.IsCommandEvent() &&
-       e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED &&
-       id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
+       e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED)
+   {
+      if( id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
        e.GetEventObject() != NULL) {
-      // safenew because it's a one-shot that deletes itself
-      ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
-      timer->Start(5000, true);
-      return true;
+         // safenew because it's a one-shot that deletes itself
+         ScreenFrameTimer *timer = safenew ScreenFrameTimer(this, e);
+         timer->Start(5000, true);
+         return true;
+      }
    }
 
    if (e.IsCommandEvent() && e.GetEventObject() == NULL) {
@@ -488,8 +499,6 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
 
 void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
-   if (this == mFrame.get())
-      mFrame.release();
    Destroy();
 }
 
@@ -590,14 +599,15 @@ void ScreenFrame::OnCaptureSomething(wxCommandEvent &  event)
 
    wxArrayString Names;
 
+   Names.Add(wxT("menus"));
+   Names.Add(wxT("effects"));
+   Names.Add(wxT("preferences"));
+
+   Names.Add(wxT("toolbars"));
    Names.Add(wxT("window"));
    Names.Add(wxT("fullwindow"));
    Names.Add(wxT("windowplus"));
    Names.Add(wxT("fullscreen"));
-   Names.Add(wxT("toolbars"));
-   Names.Add(wxT("menus"));
-   Names.Add(wxT("effects"));
-   Names.Add(wxT("preferences"));
    Names.Add(wxT("selectionbar"));
    Names.Add(wxT("timebar"));
    Names.Add(wxT("spectralselection"));

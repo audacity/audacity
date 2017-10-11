@@ -44,7 +44,7 @@ wxString EffectSilence::GetDescription()
 
 wxString EffectSilence::ManualPage()
 {
-   return wxT("Generate_Menu#silence");
+   return wxT("Silence");
 }
 
 

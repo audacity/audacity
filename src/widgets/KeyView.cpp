@@ -500,9 +500,9 @@ KeyView::UpdateHScroll()
 
    // Calculate the full line width
    mWidth = KV_LEFT_MARGIN +
-            mCommandWidth +
-            KV_COLUMN_SPACER +
             mKeyWidth +
+            KV_COLUMN_SPACER +
+            mCommandWidth +
             KV_VSCROLL_WIDTH;
 
    // Retrieve the current horizontal scroll amount
@@ -1056,23 +1056,26 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
 {
    const KeyNode *node = mLines[line];
    wxRect r = rect;
+   wxRect r2 = rect; // for just the key shortcut.
    wxCoord indent = 0;
 
    // When in tree view mode, each younger branch gets indented by the
    // width of the open/close bitmaps
    if (mViewType == ViewByTree)
    {
-      indent += node->depth * KV_BITMAP_SIZE;
+      indent += mKeyWidth + KV_COLUMN_SPACER + node->depth * KV_BITMAP_SIZE;
    }
 
    // Offset left side by the indentation (if any) and scroll amounts
    r.x = indent - mScrollX;
+   r2.x = -mScrollX;
 
    // If the line width is less than the client width, then we want to
    // extend the background to the right edge of the client view.  Otherwise,
    // go all the way to the end of the line width...this will draw past the
    // right edge, but that's what we want.
    r.width = wxMax(mWidth, r.width);
+   r2.width = mKeyWidth;
 
    // Selected lines get a solid background
    if (IsSelected(line))
@@ -1083,13 +1086,18 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
          dc.SetPen(*wxTRANSPARENT_PEN);
          dc.SetBrush(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)));
          dc.DrawRectangle(r);
-
+         
          // and they also get a dotted focus rect.  This could just be left out.
          // The focus rect does very little for us, as it is the same size as the 
          // rectangle itself.  Consequently for themes that have black text it
          // disappears.  But on HiContrast you do get a dotted green border which
          // may have some utility.
          AColor::DrawFocus(dc, r);
+
+         if (mViewType == ViewByTree){
+            dc.DrawRectangle(r2);
+            AColor::DrawFocus(dc, r2);
+         }
       }
       else
       {
@@ -1097,6 +1105,8 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
          dc.SetPen(*wxTRANSPARENT_PEN);
          dc.SetBrush(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)));
          dc.DrawRectangle(r);
+         if (mViewType == ViewByTree)
+            dc.DrawRectangle(r2);
       }
    }
    else
@@ -1104,6 +1114,8 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
       // Non-selected lines get a thin bottom border
       dc.SetPen(wxColour(240, 240, 240));
       dc.DrawLine(r.GetLeft(), r.GetBottom(), r.GetRight(), r.GetBottom());
+      if (mViewType == ViewByTree )
+         dc.DrawLine(r2.GetLeft(), r2.GetBottom(), r2.GetRight(), r2.GetBottom());
    }
 }
 
@@ -1139,7 +1151,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
 
       if (node->iscat || node->ispfx)
       {
-         wxCoord bx = x;
+         wxCoord bx = x + mKeyWidth  + KV_COLUMN_SPACER;
          wxCoord by = rect.y;
 
          if (node->ispfx)
@@ -1164,9 +1176,9 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       // Indent text
       x += KV_LEFT_MARGIN;
 
-      // Draw the command and key columns
-      dc.DrawText(label, x + node->depth * KV_BITMAP_SIZE, rect.y);
-      dc.DrawText(node->key, x + mCommandWidth + KV_COLUMN_SPACER, rect.y);
+      // Draw the key and command columns
+      dc.DrawText(node->key, x , rect.y);
+      dc.DrawText(label, x + mKeyWidth  + KV_COLUMN_SPACER + node->depth * KV_BITMAP_SIZE, rect.y);
    }
    else
    {
@@ -1179,14 +1191,8 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
          label = node->prefix + wxT(" - ") + label;
       }
 
-      // Swap the columns based on view type
-      if(mViewType == ViewByName)
-      {
-         // Draw command column and then key column
-         dc.DrawText(label, x, rect.y);
-         dc.DrawText(node->key, x + mCommandWidth + KV_COLUMN_SPACER, rect.y);
-      }
-      else if(mViewType == ViewByKey)
+      // don't swap the columns based on view type
+      if((mViewType == ViewByName) || (mViewType == ViewByKey))
       {
          // Draw key columnd and then command column
          dc.DrawText(node->key, x, rect.y);

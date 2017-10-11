@@ -950,20 +950,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mLastSavedTracks.reset();
 
-   // Register for tracklist updates
-   mTracks->Connect(EVT_TRACKLIST_PERMUTED,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                    NULL,
-                    this);
-   mTracks->Connect(EVT_TRACKLIST_DELETION,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                    NULL,
-                    this);
-   mTracks->Connect(EVT_TRACKLIST_RESIZING,
-                    wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                    NULL,
-                    this);
-
    //
    // Initialize view info (shared with TrackPanel)
    //
@@ -2006,9 +1992,6 @@ void AudacityProject::FixScrollbars()
       rescroll = false;
    }
 
-   if (lastv != mViewInfo.vpos)
-      InvalidateFirstVisible();
-
    // wxScrollbar only supports int values but we need a greater range, so
    // we scale the scrollbar coordinates on demand. We only do this if we
    // would exceed the int range, so we can always use the maximum resolution
@@ -2057,9 +2040,8 @@ void AudacityProject::FixScrollbars()
 
 std::shared_ptr<Track> AudacityProject::GetFirstVisible()
 {
-   auto pTrack = mViewInfo.track.lock();
-   if (!pTrack && GetTracks()) {
-      // Recompute on demand and memo-ize
+   std::shared_ptr<Track> pTrack;
+   if (GetTracks()) {
       TrackListIterator iter(GetTracks());
       for (Track *t = iter.First(); t; t = iter.Next()) {
          int y = t->GetY();
@@ -2070,15 +2052,9 @@ std::shared_ptr<Track> AudacityProject::GetFirstVisible()
             break;
          }
       }
-      mViewInfo.track = pTrack;
    }
 
    return pTrack;
-}
-
-void AudacityProject::InvalidateFirstVisible()
-{
-   mViewInfo.track.reset();
 }
 
 void AudacityProject::UpdateLayout()
@@ -2086,10 +2062,14 @@ void AudacityProject::UpdateLayout()
    if (!mTrackPanel)
       return;
 
-   // Layout first to get our NEW width,
-   // Then and only then we can arrange the toolbars.
+   // 1. Layout panel, to get widths of the docks.
    Layout();
+   // 2. Layout toolbars to pack the toolbars correctly in docks which 
+   // are now the correct width.
    mToolManager->LayoutToolBars();
+   // 3. Layout panel, to resize docks, in particular reducing the height 
+   // of any empty docks, or increasing the height of docks that need it.
+   Layout();
 
    // Retrieve size of this projects window
    wxSize mainsz = GetSize();
@@ -2235,14 +2215,6 @@ void AudacityProject::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
-// The projects tracklist has been updated
-void AudacityProject::OnTrackListUpdate(wxCommandEvent & event)
-{
-   InvalidateFirstVisible();
-
-   event.Skip();
-}
-
 ///Handles the redrawing necessary for tasks as they partially update in the background.
 void AudacityProject::OnODTaskUpdate(wxCommandEvent & WXUNUSED(event))
 {
@@ -2288,9 +2260,6 @@ void AudacityProject::DoScroll()
 
    int lastv = mViewInfo.vpos;
    mViewInfo.vpos = mVsbar->GetThumbPosition() * mViewInfo.scrollStep;
-
-   if (lastv != mViewInfo.vpos)
-      InvalidateFirstVisible();
 
    //mchinen: do not always set this project to be the active one.
    //a project may autoscroll while playing in the background
@@ -2700,20 +2669,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    mImportXMLTagHandler.reset();
 
-   // Unregister for tracklist updates
-   mTracks->Disconnect(EVT_TRACKLIST_PERMUTED,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_DELETION,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                       NULL,
-                       this);
-   mTracks->Disconnect(EVT_TRACKLIST_RESIZING,
-                       wxCommandEventHandler(AudacityProject::OnTrackListUpdate),
-                       NULL,
-                       this);
-
    // Delete all the tracks to free up memory and DirManager references.
    mTracks->Clear();
    mTracks.reset();
@@ -2855,7 +2810,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    // we built up earlier into the mask
 
    // Retrieve saved path and type
-   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),::wxGetCwd());
+   auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
    wxString type = gPrefs->Read(wxT("/DefaultOpenType"),mask.BeforeFirst(wxT('|')));
 
    // Convert the type to the filter index
@@ -2952,8 +2907,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       if (AudacityProject::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fileName));
-      gPrefs->Flush();
+      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       // DMM: If the project is dirty, that means it's been touched at
       // all, and it's not safe to open a NEW project directly in its
@@ -2977,18 +2931,20 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global.
 // The %s is to be filled with the version string.
-static wxString gsLegacyFileWarning =
+// PRL:  Do not statically allocate a string in _() !
+static wxString gsLegacyFileWarning() { return
 _("This file was saved by Audacity version %s. The format has changed. \
 \n\nAudacity can try to open and save this file, but saving it in this \
 \nversion will then prevent any 1.2 or earlier version opening it. \
 \n\nAudacity might corrupt the file in opening it, so you should \
 back it up first. \
 \n\nOpen this file now?");
+}
 
 bool AudacityProject::WarnOfLegacyFile( )
 {
    wxString msg;
-   msg.Printf(gsLegacyFileWarning, _("1.0 or earlier"));
+   msg.Printf(gsLegacyFileWarning(), _("1.0 or earlier"));
 
    // Stop icon, and choose 'NO' by default.
    int action =
@@ -3100,7 +3056,10 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
    // FIXME: //v Surely we could be smarter about this, like checking much earlier that this is a .aup file.
    if (temp.Mid(0, 6) != wxT("<?xml ")) {
       // If it's not XML, try opening it as any other form of audio
-      Import(fileName);
+      if (Importer::IsMidi(fileName))
+         DoImportMIDI(this, fileName);
+      else
+         Import(fileName);
       return;
    }
 
@@ -3546,7 +3505,6 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (longVpos != 0) {
       // PRL: It seems this must happen after SetSnapTo
-       mViewInfo.track.reset();
        mViewInfo.vpos = longVpos;
        mbInitializingScrollbar = true;
    }
@@ -3592,7 +3550,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // Specifically detect older versions of Audacity
    if ( bIsOld | bIsVeryOld ) {
       wxString msg;
-      msg.Printf(gsLegacyFileWarning, audacityVersion.c_str());
+      msg.Printf(gsLegacyFileWarning(), audacityVersion.c_str());
 
       int icon_choice = wxICON_EXCLAMATION;
       if( bIsVeryOld )
@@ -4157,14 +4115,15 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
       // remember this to show a warning later
       if (newTrack->GetKind() == WaveTrack::Wave)
       {
-         WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0);
-         BlockArray &blocks = clip->GetSequence()->GetBlockArray();
-         if (clip && blocks.size())
-         {
-            SeqBlock& block = blocks[0];
-            if (block.f->IsAlias())
+         if (WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0)) {
+            BlockArray &blocks = clip->GetSequence()->GetBlockArray();
+            if (blocks.size())
             {
-               mImportedDependencies = true;
+               SeqBlock& block = blocks[0];
+               if (block.f->IsAlias())
+               {
+                  mImportedDependencies = true;
+               }
             }
          }
       }
@@ -4339,16 +4298,7 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    // Bug 1304: Set a default file path if none was given.  For Save/SaveAs
    if( filename.GetFullPath().IsEmpty() ){
       bHasPath = false;
-      filename.AssignHomeDir();
-#ifdef __WIN32__
-      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "\\Documents\\Audacity"));
-      // The path might not exist.
-      // There is no error if the path could not be created.  That's OK.
-      // The dialog that Audacity offers will allow the user to select a valid directory.
-      filename.Mkdir(0755, wxPATH_MKDIR_FULL);
-#else
-      filename.SetPath(gPrefs->Read( wxT("/SaveAs/Path"), filename.GetPath() + "/Documents"));
-#endif
+      filename = FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path"));
    }
 
    wxString sDialogTitle;
@@ -4383,7 +4333,8 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    // for overwrite ourselves later, and we disallow it.
    // We disallow overwrite because we would have to DELETE the many
    // smaller files too, or prompt to move them.
-   wxString fName = FileSelector(sDialogTitle,
+   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+                                 sDialogTitle,
                                  filename.GetPath(),
                                  filename.GetFullName(),
                                  wxT("aup"),
@@ -4704,6 +4655,16 @@ void AudacityProject::Zoom(double level)
 {
    mViewInfo.SetZoom(level);
    FixScrollbars();
+   // See if we can center the selection on screen, and have it actually fit.
+   // tOnLeft is the amount of time we would need before the selection left edge to center it.
+   float t0 = mViewInfo.selectedRegion.t0();
+   float t1 = mViewInfo.selectedRegion.t1();
+   float tAvailable = GetScreenEndTime() - mViewInfo.h;
+   float tOnLeft = (tAvailable - t0 + t1)/2.0;
+   // Bug 1292 (Enh) is effectively a request to do this scrolling of  the selection into view.
+   // If tOnLeft is positive, then we have room for the selection, so scroll to it.
+   if( tOnLeft >=0 )
+      TP_ScrollWindow( t0-tOnLeft);
 }
 
 // Utility function called by other zoom methods

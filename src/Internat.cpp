@@ -29,8 +29,8 @@ and on Mac OS X for the filesystem.
 #include <math.h> // for pow()
 
 #include "Internat.h"
-#include "FileDialog.h"
 #include "Experimental.h"
+#include "FileNames.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -246,7 +246,8 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
          wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
          ext = ff.GetExt();
-         name = FileSelector(_("Specify New Filename:"),
+         name = FileNames::SelectFile(FileNames::Operation::_None,
+                             _("Specify New Filename:"),
                              wxEmptyString,
                              name,
                              ext,
@@ -296,13 +297,4 @@ wxString Internat::StripAccelerators(const wxString &s)
          result += s[i];
    }
    return result;
-}
-
-wxString Internat::Parenthesize(const wxString &str)
-{
-   /* i18n-hint: An opening parenthesis, in some languages a right parenthesis */
-   auto open = _("(");
-   /* i18n-hint: A closing parenthesis, in some languages a left parenthesis */
-   auto close = _(")");
-   return open + str + close;
 }

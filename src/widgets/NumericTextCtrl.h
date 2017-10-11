@@ -16,6 +16,7 @@
 #define __AUDACITY_TIME_TEXT_CTRL__
 
 #include "../MemoryX.h"
+#include <vector>
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/event.h>
@@ -135,7 +136,7 @@ protected:
    int            mFocusedDigit;
    DigitInfoArray mDigits;
 
-   const BuiltinFormatString *mBuiltinFormatStrings;
+   const std::vector<BuiltinFormatString> &mBuiltinFormatStrings;
    int mNBuiltins;
    int mDefaultNdx;
 };

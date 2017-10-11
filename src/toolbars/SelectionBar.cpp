@@ -207,8 +207,9 @@ wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name,
    return pBtn;
 }
 
-wxStaticText * SelectionBar::AddTitle( const wxString & Title, int id, wxSizer * pSizer ){
-   wxStaticText * pTitle = safenew wxStaticText(this, id,Title );
+auStaticText * SelectionBar::AddTitle( const wxString & Title, wxSizer * pSizer ){
+   auStaticText * pTitle = safenew auStaticText(this, Title );
+   pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pSizer->Add( pTitle,0, wxALIGN_CENTER_VERTICAL | wxRIGHT,  (Title.Length() == 1 ) ? 0:5);
    return pTitle;
@@ -221,7 +222,6 @@ NumericTextCtrl * SelectionBar::AddTime( const wxString Name, int id, wxSizer * 
    NumericTextCtrl * pCtrl = safenew NumericTextCtrl(
       NumericConverter::TIME, this, id, formatName, 0.0, mRate);
    pCtrl->SetName(Name);
-   pCtrl->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pCtrl->EnableMenu();
    pSizer->Add(pCtrl, 0, wxALIGN_TOP | wxRIGHT, 5);
    return pCtrl;
@@ -272,24 +272,17 @@ void SelectionBar::Populate()
 
    wxColour clrText =  theTheme.Colour( clrTrackPanelText );
    wxColour clrText2 = *wxBLUE;
-   wxStaticText * pProjRate = safenew wxStaticText(this, -1, _("Project Rate (Hz):"),
-   // LLL:  On my Ubuntu 7.04 install, the label wraps to two lines
-   //       and I could not figure out why.  Thus...hackage.
-#if defined(__WXGTK__)
-                  wxDefaultPosition, wxSize(110, -1));
-#else
-                  wxDefaultPosition, wxDefaultSize);
-#endif
-   pProjRate->SetForegroundColour( clrText );
-   mainSizer->Add(pProjRate,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   AddTitle( _("Project Rate (Hz):"), mainSizer );
    AddVLine( mainSizer );
-
-   AddTitle( _("Snap-To"), -1, mainSizer );
+   AddTitle( _("Snap-To"), mainSizer );
 #ifdef OPTIONS_BUTTON
    // Not enough room to say 'Selection Options".  There is a tooltip instead.
-   AddTitle( wxT(""), -1, mainSizer );
+   AddTitle( wxT(""), mainSizer );
 #endif
+
    AddVLine( mainSizer );
+   //AddTitle( _("Audio Position"), mainSizer );
+
 
    {
 #ifdef SEL_RADIO_TITLE
@@ -334,6 +327,13 @@ void SelectionBar::Populate()
        0, wxDefaultValidator, "");
    mChoice->SetName(wxT("\a"));     // stop Jaws screen reader using nearby text for name when name is empty
    mChoice->SetSelection(0);
+#ifdef __WXGTK__
+   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
+   // be three units high.
+   wxSize sz = mChoice->GetBestSize();
+   sz.SetHeight( sz.y-4);
+   mChoice->SetMinSize( sz );
+#endif
    mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
 #endif
 
@@ -394,12 +394,29 @@ void SelectionBar::Populate()
                       NULL,
                       this);
 
+#ifdef __WXGTK__
+   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
+   // be three units high.
+   wxSize sz = mRateBox->GetBestSize();
+   sz.SetHeight( sz.y-4);
+   mRateBox->SetMinSize( sz );
+#endif
+
    mainSizer->Add(mRateBox, 0, wxALIGN_TOP | wxRIGHT, 5);
    AddVLine( mainSizer );
 
    mSnapTo = safenew wxChoice(this, SnapToID,
                           wxDefaultPosition, wxDefaultSize,
                           SnapManager::GetSnapLabels());
+
+#ifdef __WXGTK__
+   // Combo boxes are taller on Linux, and if we don't do the following, the selection toolbar will
+   // be three units high.
+   sz = mSnapTo->GetBestSize();
+   sz.SetHeight( sz.y-4);
+   mSnapTo->SetMinSize( sz );
+#endif
+
    mainSizer->Add(mSnapTo,
                   0, wxALIGN_TOP | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));

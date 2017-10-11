@@ -28,7 +28,7 @@ void OverlayPanel::AddOverlay(Overlay *pOverlay)
 bool OverlayPanel::RemoveOverlay(Overlay *pOverlay)
 {
    const size_t oldSize = mOverlays.size();
-   std::remove(mOverlays.begin(), mOverlays.end(), pOverlay);
+   mOverlays.erase(std::remove(mOverlays.begin(), mOverlays.end(), pOverlay), mOverlays.end());
    return oldSize != mOverlays.size();
 }
 

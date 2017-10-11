@@ -39,6 +39,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
+#include "../TranslatableStringArray.h"
 
 enum kTableType
 {
@@ -122,14 +123,29 @@ FactoryPresets[] =
    { XO("Percussion Limiter"),                    {10,        0,      -12.0,      -70.0,     100.0,    30.0,    0 } },
 };
 
-const wxString defaultLabel[5] =
+wxString defaultLabel(int index)
 {
-   _("Upper Threshold"),
-   _("Noise Floor"),
-   _("Parameter 1"),
-   _("Parameter 2"),
-   _("Number of repeats"),
-};
+   static const wxString names[] = {
+      XO("Upper Threshold"),
+      XO("Noise Floor"),
+      XO("Parameter 1"),
+      XO("Parameter 2"),
+      XO("Number of repeats"),
+   };
+
+   class NamesArray final : public TranslatableStringArray
+   {
+      void Populate() override
+      {
+         for (auto &name : names)
+            mContents.push_back( wxGetTranslation( name ) );
+      }
+   };
+
+   static NamesArray theArray;
+
+   return theArray.Get()[ index ];
+}
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(EffectDistortionStateArray);
@@ -167,11 +183,6 @@ EffectDistortion::EffectDistortion()
    mParams.mRepeats = DEF_Repeats;
    mMakeupGain = 1.0;
    mbSavedFilterState = DEF_DCBlock;
-
-   for (int i = 0; i < kNumTableTypes; i++)
-   {
-      mTableTypes.Add(wxGetTranslation(kTableTypeStrings[i]));
-   }
 
    SetLinearEffectFlag(false);
 }
@@ -341,6 +352,11 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 {
+   for (int i = 0; i < kNumTableTypes; i++)
+   {
+      mTableTypes.Add(wxGetTranslation(kTableTypeStrings[i]));
+   }
+
    S.AddSpace(0, 5);
    S.StartVerticalLay();
    {
@@ -366,31 +382,31 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0); 
 
             // Upper threshold control
-            mThresholdTxt = S.AddVariableText(defaultLabel[0], false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mThresholdTxt = S.AddVariableText(defaultLabel(0), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldThreshold(2, &mParams.mThreshold_dB);
             vldThreshold.SetRange(MIN_Threshold_dB, MAX_Threshold_dB);
             mThresholdT = S.Id(ID_Threshold).AddTextBox(wxT(""), wxT(""), 10);
-            mThresholdT->SetName(defaultLabel[0]);
+            mThresholdT->SetName(defaultLabel(0));
             mThresholdT->SetValidator(vldThreshold);
 
             S.SetStyle(wxSL_HORIZONTAL);
             double maxLin = DB_TO_LINEAR(MAX_Threshold_dB) * SCL_Threshold_dB;
             double minLin = DB_TO_LINEAR(MIN_Threshold_dB) * SCL_Threshold_dB;
             mThresholdS = S.Id(ID_Threshold).AddSlider(wxT(""), 0, maxLin, minLin);
-            mThresholdS->SetName(defaultLabel[0]);
+            mThresholdS->SetName(defaultLabel(0));
             S.AddSpace(20, 0);
 
             // Noise floor control
-            mNoiseFloorTxt = S.AddVariableText(defaultLabel[1], false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mNoiseFloorTxt = S.AddVariableText(defaultLabel(1), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldfloor(2, &mParams.mNoiseFloor);
             vldfloor.SetRange(MIN_NoiseFloor, MAX_NoiseFloor);
             mNoiseFloorT = S.Id(ID_NoiseFloor).AddTextBox(wxT(""), wxT(""), 10);
-            mNoiseFloorT->SetName(defaultLabel[1]);
+            mNoiseFloorT->SetName(defaultLabel(1));
             mNoiseFloorT->SetValidator(vldfloor);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mNoiseFloorS = S.Id(ID_NoiseFloor).AddSlider(wxT(""), 0, MAX_NoiseFloor, MIN_NoiseFloor);
-            mNoiseFloorS->SetName(defaultLabel[1]);
+            mNoiseFloorS->SetName(defaultLabel(1));
             S.AddSpace(20, 0);
          }
          S.EndMultiColumn();
@@ -406,42 +422,42 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0); 
 
             // Parameter1 control
-            mParam1Txt = S.AddVariableText(defaultLabel[2], false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mParam1Txt = S.AddVariableText(defaultLabel(2), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldparam1(2, &mParams.mParam1);
             vldparam1.SetRange(MIN_Param1, MAX_Param1);
             mParam1T = S.Id(ID_Param1).AddTextBox(wxT(""), wxT(""), 10);
-            mParam1T->SetName(defaultLabel[2]);
+            mParam1T->SetName(defaultLabel(2));
             mParam1T->SetValidator(vldparam1);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mParam1S = S.Id(ID_Param1).AddSlider(wxT(""), 0, MAX_Param1, MIN_Param1);
-            mParam1S->SetName(defaultLabel[2]);
+            mParam1S->SetName(defaultLabel(2));
             S.AddSpace(20, 0);
 
             // Parameter2 control
-            mParam2Txt = S.AddVariableText(defaultLabel[3], false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mParam2Txt = S.AddVariableText(defaultLabel(3), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             FloatingPointValidator<double> vldParam2(2, &mParams.mParam2);
             vldParam2.SetRange(MIN_Param2, MAX_Param2);
             mParam2T = S.Id(ID_Param2).AddTextBox(wxT(""), wxT(""), 10);
-            mParam2T->SetName(defaultLabel[3]);
+            mParam2T->SetName(defaultLabel(3));
             mParam2T->SetValidator(vldParam2);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mParam2S = S.Id(ID_Param2).AddSlider(wxT(""), 0, MAX_Param2, MIN_Param2);
-            mParam2S->SetName(defaultLabel[3]);
+            mParam2S->SetName(defaultLabel(3));
             S.AddSpace(20, 0);
 
             // Repeats control
-            mRepeatsTxt = S.AddVariableText(defaultLabel[4], false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mRepeatsTxt = S.AddVariableText(defaultLabel(4), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             IntegerValidator<int>vldRepeats(&mParams.mRepeats);
             vldRepeats.SetRange(MIN_Repeats, MAX_Repeats);
             mRepeatsT = S.Id(ID_Repeats).AddTextBox(wxT(""), wxT(""), 10);
-            mRepeatsT->SetName(defaultLabel[4]);
+            mRepeatsT->SetName(defaultLabel(4));
             mRepeatsT->SetValidator(vldRepeats);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mRepeatsS = S.Id(ID_Repeats).AddSlider(wxT(""), DEF_Repeats, MAX_Repeats, MIN_Repeats);
-            mRepeatsS->SetName(defaultLabel[4]);
+            mRepeatsS->SetName(defaultLabel(4));
             S.AddSpace(20, 0);
          }
          S.EndMultiColumn();
@@ -677,10 +693,10 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
          UpdateControl(ID_Threshold, true, _("Clipping level"));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Drive"));
          UpdateControl(ID_Param2, true, _("Make-up Gain"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       case kSoftClip:
@@ -691,10 +707,10 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
          UpdateControl(ID_Threshold, true, _("Clipping threshold"));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Hardness"));
          UpdateControl(ID_Param2, true, _("Make-up Gain"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       case kHalfSinCurve:
@@ -704,11 +720,11 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
          UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       case kExpCurve:
@@ -718,11 +734,11 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
          UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       case kLogCurve:
@@ -732,11 +748,11 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
          UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       case kCubic:
@@ -746,8 +762,8 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, true);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
          UpdateControl(ID_Param2, true, _("Output level"));
          UpdateControl(ID_Repeats, true, _("Repeat processing"));
@@ -760,11 +776,11 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
          UpdateControl(ID_Param2, true, _("Harmonic brightness"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, true, wxEmptyString);
          break;
       case kSinCurve:
@@ -774,11 +790,11 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, true);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
          UpdateControl(ID_Param2, true, _("Output level"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       case kLeveller:
@@ -788,10 +804,10 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, false);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, true);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, true, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, true, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Levelling fine adjustment"));
-         UpdateControl(ID_Param2, false, defaultLabel[3]);
+         UpdateControl(ID_Param2, false, defaultLabel(3));
          UpdateControl(ID_Repeats, true, _("Degree of Levelling"));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
@@ -802,11 +818,11 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mParam2T, mOldParam2Txt, false);
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
-         UpdateControl(ID_Threshold, false, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_Threshold, false, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Distortion amount"));
-         UpdateControl(ID_Param2, false, defaultLabel[3]);
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Param2, false, defaultLabel(3));
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, true, wxEmptyString);
          break;
       case kHardLimiter:
@@ -817,18 +833,18 @@ void EffectDistortion::UpdateUI()
          UpdateControlText(mRepeatsT, mOldRepeatsTxt, false);
 
          UpdateControl(ID_Threshold, true, _("dB Limit"));
-         UpdateControl(ID_NoiseFloor, false, defaultLabel[1]);
+         UpdateControl(ID_NoiseFloor, false, defaultLabel(1));
          UpdateControl(ID_Param1, true, _("Wet level"));
          UpdateControl(ID_Param2, true, _("Residual level"));
-         UpdateControl(ID_Repeats, false, defaultLabel[4]);
+         UpdateControl(ID_Repeats, false, defaultLabel(4));
          UpdateControl(ID_DCBlock, false, wxEmptyString);
          break;
       default:
-         UpdateControl(ID_Threshold,   true, defaultLabel[0]);
-         UpdateControl(ID_NoiseFloor,  true, defaultLabel[1]);
-         UpdateControl(ID_Param1,      true, defaultLabel[2]);
-         UpdateControl(ID_Param2,      true, defaultLabel[3]);
-         UpdateControl(ID_Repeats,     true, defaultLabel[4]);
+         UpdateControl(ID_Threshold,   true, defaultLabel(0));
+         UpdateControl(ID_NoiseFloor,  true, defaultLabel(1));
+         UpdateControl(ID_Param1,      true, defaultLabel(2));
+         UpdateControl(ID_Param2,      true, defaultLabel(3));
+         UpdateControl(ID_Repeats,     true, defaultLabel(4));
          UpdateControl(ID_DCBlock,     false, wxEmptyString);
    }
 }

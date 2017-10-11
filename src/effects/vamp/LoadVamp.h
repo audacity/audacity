@@ -28,7 +28,7 @@ public:
    VampEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~VampEffectsModule();
 
-   // IdentInterface implementatino
+   // IdentInterface implementation
 
    wxString GetPath() override;
    wxString GetSymbol() override;

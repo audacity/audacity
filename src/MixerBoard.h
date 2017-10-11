@@ -70,6 +70,7 @@ class NoteTrack;
 class PlayableTrack;
 
 class WaveTrack;
+class auStaticText;
 
 class MixerTrackCluster final : public wxPanelWrapper
 {
@@ -140,7 +141,7 @@ private:
    AudacityProject* mProject;
 
    // controls
-   wxStaticText* mStaticText_TrackName;
+   auStaticText* mStaticText_TrackName;
    wxBitmapButton* mBitmapButton_MusicalInstrument;
    AButton* mToggleButton_Mute;
    AButton* mToggleButton_Solo;

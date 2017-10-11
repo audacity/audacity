@@ -250,15 +250,18 @@ bool ThemeBase::LoadPreferredTheme()
 void Theme::ApplyUpdatedImages()
 {
    AColor::ReInit();
-   AudacityProject *p = GetActiveProject();
-   p->ApplyUpdatedTheme();
-   for( int ii = 0; ii < ToolBarCount; ++ii )
-   {
-      ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
-      if( pToolBar )
-         pToolBar->ReCreateButtons();
+
+   for (size_t i = 0; i < gAudacityProjects.size(); i++) {
+      AudacityProject *p = gAudacityProjects[i].get();
+      p->ApplyUpdatedTheme();
+      for( int ii = 0; ii < ToolBarCount; ++ii )
+      {
+         ToolBar *pToolBar = p->GetToolManager()->GetToolBar(ii);
+         if( pToolBar )
+            pToolBar->ReCreateButtons();
+      }
+      p->GetRulerPanel()->ReCreateButtons();
    }
-   p->GetRulerPanel()->ReCreateButtons();
 }
 
 void Theme::RegisterImages()
@@ -445,12 +448,17 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
    return Img1;
 }
 
+// Legacy function to allow use of an XPM where no theme image was defined.
+// Bit depth and mask needs review.
+// Note that XPMs don't offer translucency, so unsuitable for a round shape overlay, 
+// for example.
 void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString & Name )
 {
-
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
-   wxBitmap Bmp( pXpm ); // a 24 bit bitmap.
+   wxBitmap Bmp( pXpm );
    wxImage Img( Bmp.ConvertToImage() );
+   // The next line recommended by http://forum.audacityteam.org/viewtopic.php?f=50&t=96765
+   Img.SetMaskColour(0xDE, 0xDE, 0xDE);
    Img.InitAlpha();
 
    //dmazzoni: the top line does not work on wxGTK
@@ -744,8 +752,9 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       {
          wxMessageBox(
             wxString::Format(
-            wxT("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
-               FileName.c_str() ));
+//            _("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
+               FileName.c_str() )
+                            );
          return;
       }
 #endif
@@ -767,7 +776,11 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       }
       wxMessageBox(
          wxString::Format(
-            wxT("Theme written to:\n  %s."),
+/* i18n-hint: A theme is a consistent visual style across an application's
+ graphical user interface, including choices of colors, and similarity of images
+ such as those on button controls.  Audacity can load and save alternative
+ themes. */
+            _("Theme written to:\n  %s."),
             FileName.c_str() ));
    }
    // ELSE saving to a C code textual version.
@@ -793,7 +806,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       }
       wxMessageBox(
          wxString::Format(
-            wxT("Theme as Cee code written to:\n  %s."),
+            /* i18n-hint "Cee" means the C computer programming language */
+            _("Theme as Cee code written to:\n  %s."),
             FileName.c_str() ));
    }
 }
@@ -1173,7 +1187,7 @@ void ThemeBase::SaveComponents()
    }
    wxMessageBox(
       wxString::Format(
-         wxT("Theme written to:\n  %s."),
+         _("Theme written to:\n  %s."),
          FileNames::ThemeComponentsDir().c_str() ));
 }
 
@@ -1265,3 +1279,36 @@ void ThemeBase::RotateImageInto( int iTo, int iFrom, bool bClockwise )
    wxImage img2 = img.Rotate90( bClockwise );
    ReplaceImage( iTo, &img2 );
 }
+
+BEGIN_EVENT_TABLE(auStaticText, wxWindow)
+    EVT_PAINT(auStaticText::OnPaint)
+END_EVENT_TABLE()
+
+ 
+auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
+ wxWindow(parent, wxID_ANY)
+{
+   int textWidth, textHeight;
+
+   int fontSize = 11;
+   #ifdef __WXMSW__
+      fontSize = 9;
+   #endif
+   wxFont font(fontSize, wxDEFAULT, wxNORMAL, wxNORMAL);
+   GetTextExtent(textIn, &textWidth, &textHeight, NULL, NULL, &font);
+
+   SetFont( font );
+   SetMinSize( wxSize(textWidth, textHeight) );
+   SetBackgroundColour( theTheme.Colour( clrMedium));
+   SetForegroundColour( theTheme.Colour( clrTrackPanelText));
+   SetName(textIn);
+}
+ 
+void auStaticText::OnPaint(wxPaintEvent & evt)
+{
+   wxPaintDC dc(this);
+   //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
+   dc.DrawText( GetName(), 0,0);
+}
+
+

@@ -84,9 +84,12 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
          xx = event.m_x;
          center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
       }
+
       // Time corresponding to last (most far right) audio.
       double audioEndTime = pProject->GetTracks()->GetEndTime();
 
+// Disabled this code to fix Bug 1923 (tricky to wheel-zoom right of waveform).
+#if 0
       // When zooming in in empty space, it's easy to 'lose' the waveform.
       // This prevents it.
       // IF zooming in
@@ -97,11 +100,19 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
             // Zooming brings far right of audio to mouse.
             center_h = audioEndTime;
       }
+#endif
 
+      wxCoord xTrackEnd = viewInfo.TimeToPosition( audioEndTime );
       viewInfo.ZoomBy(pow(2.0, steps));
 
       double new_center_h = viewInfo.PositionToTime(xx, trackLeftEdge);
       viewInfo.h += (center_h - new_center_h);
+
+      // If wave has gone off screen, bring it back.
+      // This means that the end of the track stays where it was.
+      if( viewInfo.h > audioEndTime )
+         viewInfo.h += audioEndTime - viewInfo.PositionToTime( xTrackEnd );
+
 
       result |= FixScrollbars;
    }

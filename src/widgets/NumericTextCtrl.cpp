@@ -172,6 +172,7 @@ different formats.
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../Project.h"
+#include "../TranslatableStringArray.h"
 
 #include <algorithm>
 #include <math.h>
@@ -199,6 +200,25 @@ struct BuiltinFormatString
 {
    wxString name;
    wxString formatStr;
+};
+
+//
+// ----------------------------------------------------------------------------
+// UntranslatedBuiltinFormatString Struct
+// ----------------------------------------------------------------------------
+//
+/** \brief struct to hold a formatting control string and its untranslated name
+ * Used in an array to hold the built-in time formats that are always available
+ * to the user */
+struct UntranslatedBuiltinFormatString
+{
+   wxString name;
+   wxString formatStr;
+
+   BuiltinFormatString Translate() const
+   {
+      return { wxGetTranslation( name ), wxGetTranslation( formatStr ) };
+   }
 };
 
 //
@@ -270,78 +290,80 @@ WX_DEFINE_OBJARRAY(DigitInfoArray);
 
 namespace {
 
+const std::vector<BuiltinFormatString> &TimeConverterFormats() {
+
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-const BuiltinFormatString TimeConverterFormats[] =  {
+static const UntranslatedBuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
-   _("seconds"),
+   XO("seconds"),
    /* i18n-hint: Format string for displaying time in seconds. Change the comma
     * in the middle to the 1000s separator for your locale, and the 'seconds'
     * on the end to the word for seconds. Don't change the numbers. */
-   _("01000,01000 seconds")
+   XO("01000,01000 seconds")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes
     * and seconds */
-   _("hh:mm:ss"),
+   XO("hh:mm:ss"),
    /* i18n-hint: Format string for displaying time in hours, minutes and
     * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
     * change the numbers unless there aren't 60 seconds in a minute in your
     * locale */
-   _("0100 h 060 m 060 s")
+   XO("0100 h 060 m 060 s")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in days, hours,
     * minutes and seconds */
-   _("dd:hh:mm:ss"),
+   XO("dd:hh:mm:ss"),
    /* i18n-hint: Format string for displaying time in days, hours, minutes and
     * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes and 's' to the
     * abbreviation for seconds. Don't change the numbers unless there aren't
     * 24 hours in a day in your locale */
-   _("0100 days 024 h 060 m 060 s")
+   XO("0100 days 024 h 060 m 060 s")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and hundredths of a second (1/100 second) */
-   _("hh:mm:ss + hundredths"),
+   XO("hh:mm:ss + hundredths"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and hundredths of a second. Change the 'h' to the abbreviation for hours,
     * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
     * (the hundredths are shown as decimal seconds) . Don't change the numbers
     * unless there aren't 60 minutes in an hour in your locale */
-   _("0100 h 060 m 060.0100 s")
+   XO("0100 h 060 m 060.0100 s")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and milliseconds (1/1000 second) */
-   _("hh:mm:ss + milliseconds"),
+   XO("hh:mm:ss + milliseconds"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds (the
     * milliseconds are shown as decimal seconds) . Don't change the numbers
     * unless there aren't 60 minutes in an hour in your locale */
-   _("0100 h 060 m 060.01000 s")
+   XO("0100 h 060 m 060.01000 s")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours,
     * minutes, seconds and samples (at the current project sample rate) */
-   _("hh:mm:ss + samples"),
+   XO("hh:mm:ss + samples"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes, 's' to the abbreviation for seconds and
     * translate samples . Don't change the numbers
     * unless there aren't 60 seconds in a minute in your locale */
-   _("0100 h 060 m 060 s+.# samples")
+   XO("0100 h 060 m 060 s+.# samples")
    },
 
    {
@@ -349,177 +371,239 @@ const BuiltinFormatString TimeConverterFormats[] =  {
     * current project sample rate).  For example the number of a sample at 1
     * second into a recording at 44.1KHz would be 44,100.
     */
-   _("samples"),
+   XO("samples"),
    /* i18n-hint: Format string for displaying time in samples (lots of samples).
     * Change the ',' to the 1000s separator for your locale, and translate
     * samples. If 1000s aren't a base multiple for your number system, then you
     * can change the numbers to an appropriate one, and put a 0 on the front */
-   _("01000,01000,01000 samples|#")
+   XO("01000,01000,01000 samples|#")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at 24 frames per second (commonly used for films) */
-   _("hh:mm:ss + film frames (24 fps)"),
+   XO("hh:mm:ss + film frames (24 fps)"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames at 24 frames per second. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames' . Don't change the numbers
     * unless there aren't 60 seconds in a minute in your locale */
-   _("0100 h 060 m 060 s+.24 frames")
+   XO("0100 h 060 m 060 s+.24 frames")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in frames (lots of
     * frames) at 24 frames per second (commonly used for films) */
-   _("film frames (24 fps)"),
+   XO("film frames (24 fps)"),
    /* i18n-hint: Format string for displaying time in frames at 24 frames per
     * second. Change the comma
     * in the middle to the 1000s separator for your locale,
     * translate 'frames' and leave the rest alone */
-   _("01000,01000 frames|24")
+   XO("01000,01000 frames|24")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at NTSC TV drop-frame rate (used for American /
     * Japanese TV, and very odd) */
-   _("hh:mm:ss + NTSC drop frames"),
+   XO("hh:mm:ss + NTSC drop frames"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames'. Leave the |N alone, it's important! */
-   _("0100 h 060 m 060 s+.30 frames|N")
+   XO("0100 h 060 m 060 s+.30 frames|N")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at NTSC TV non-drop-frame rate (used for American /
     * Japanese TV, and doesn't quite match wall time */
-   _("hh:mm:ss + NTSC non-drop frames"),
+   XO("hh:mm:ss + NTSC non-drop frames"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames'. Leave the | .999000999 alone,
     * the whole things really is slightly off-speed! */
-   _("0100 h 060 m 060 s+.030 frames| .999000999")
+   XO("0100 h 060 m 060 s+.030 frames| .999000999")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in frames at NTSC
     * TV frame rate (used for American / Japanese TV */
-   _("NTSC frames"),
+   XO("NTSC frames"),
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
     * in the middle to the 1000s separator for your locale, 
     * translate 'frames' and leave the rest alone. That really is the frame
     * rate! */
-   _("01000,01000 frames|29.97002997")
+   XO("01000,01000 frames|29.97002997")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at PAL TV frame rate (used for European TV) */
-   _("hh:mm:ss + PAL frames (25 fps)"),
+   XO("hh:mm:ss + PAL frames (25 fps)"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with PAL TV frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames'. Nice simple time code! */
-   _("0100 h 060 m 060 s+.25 frames")
+   XO("0100 h 060 m 060 s+.25 frames")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in frames at PAL
     * TV frame rate (used for European TV) */
-   _("PAL frames (25 fps)"),
+   XO("PAL frames (25 fps)"),
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Change the comma
     * in the middle to the 1000s separator for your locale, 
     * translate 'frames' and leave the rest alone. */
-   _("01000,01000 frames|25")
+   XO("01000,01000 frames|25")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in hours, minutes,
     * seconds and frames at CD Audio frame rate (75 frames per second) */
-   _("hh:mm:ss + CDDA frames (75 fps)"),
+   XO("hh:mm:ss + CDDA frames (75 fps)"),
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with CD Audio frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames'. */
-   _("0100 h 060 m 060 s+.75 frames")
+   XO("0100 h 060 m 060 s+.75 frames")
    },
 
    {
    /* i18n-hint: Name of time display format that shows time in frames at CD
     * Audio frame rate (75 frames per second) */
-   _("CDDA frames (75 fps)"),
+   XO("CDDA frames (75 fps)"),
    /* i18n-hint: Format string for displaying time in frames with CD Audio
     * frames. Change the comma
     * in the middle to the 1000s separator for your locale, 
     * translate 'frames' and leave the rest alone */
-   _("01000,01000 frames|75")
+   XO("01000,01000 frames|75")
    },
 };
+
+class FormatsArray final
+   : public TranslatableArray< std::vector< BuiltinFormatString > >
+{
+   void Populate() override
+   {
+      for (auto &format : TimeConverterFormats_)
+         mContents.push_back( format.Translate() );
+   }
+};
+
+static FormatsArray theArray;
+return theArray.Get();
+
+} // end function
+
+const std::vector<BuiltinFormatString> &FrequencyConverterFormats() {
 
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-const BuiltinFormatString FrequencyConverterFormats[] =  {
+static const UntranslatedBuiltinFormatString FrequencyConverterFormats_[] =  {
    /* i18n-hint: Name of display format that shows frequency in hertz */
    {
-      _("Hz"),
+      XO("Hz"),
          /* i18n-hint: Format string for displaying frequency in hertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
-         _("0100000.0100 Hz")
+         XO("0100000.0100 Hz")
    },
 
    {
-      _("kHz"),
+      XO("kHz"),
          /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
-         _("01000.01000 kHz|0.001")
+         XO("01000.01000 kHz|0.001")
    },
 };
+
+class FormatsArray final
+   : public TranslatableArray< std::vector< BuiltinFormatString > >
+{
+   void Populate() override
+   {
+      for (auto &format : FrequencyConverterFormats_)
+         mContents.push_back( format.Translate() );
+   }
+};
+
+static FormatsArray theArray;
+return theArray.Get();
+
+} // end function
+
+const std::vector<BuiltinFormatString> &BandwidthConverterFormats() {
 
 /** \brief array of formats the control knows about internally
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-const BuiltinFormatString BandwidthConverterFormats[] = {
+static const UntranslatedBuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
-   _("octaves"),
+   XO("octaves"),
    /* i18n-hint: Format string for displaying log of frequency in octaves.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (2)
-   _("100.01000 octaves|1.442695041")
+   XO("100.01000 octaves|1.442695041")
    },
 
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in semitones and cents */
-   _("semitones + cents"),
+   XO("semitones + cents"),
    /* i18n-hint: Format string for displaying log of frequency in semitones
     * and cents.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 12 / ln (2)
-   _("1000 semitones .0100 cents|17.312340491")
+   XO("1000 semitones .0100 cents|17.312340491")
    },
    
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in decades */
-   _("decades"),
+   XO("decades"),
    /* i18n-hint: Format string for displaying log of frequency in decades.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (10)
-   _("10.01000 decades|0.434294482")
+   XO("10.01000 decades|0.434294482")
    },
 };
 
+
+class FormatsArray final
+   : public TranslatableArray< std::vector< BuiltinFormatString > >
+{
+   void Populate() override
+   {
+      for (auto &format : BandwidthConverterFormats_)
+         mContents.push_back( format.Translate() );
+   }
+};
+
+static FormatsArray theArray;
+return theArray.Get();
+
+} // end function
+
+   const std::vector<BuiltinFormatString> &ChooseBuiltinFormatStrings
+      (NumericConverter::Type type)
+   {
+      switch (type) {
+         case NumericConverter::TIME:
+            return TimeConverterFormats();
+         case NumericConverter::FREQUENCY:
+            return FrequencyConverterFormats();
+         case NumericConverter::BANDWIDTH:
+            return BandwidthConverterFormats();
+      }
+   }
 }
 
 //
@@ -531,6 +615,7 @@ NumericConverter::NumericConverter(Type type,
                                    const wxString & formatName,
                                    double value,
                                    double sampleRate)
+   : mBuiltinFormatStrings( ChooseBuiltinFormatStrings( type ) )
 {
    ResetMinValue();
    ResetMaxValue();
@@ -539,25 +624,11 @@ NumericConverter::NumericConverter(Type type,
    mDefaultNdx = 0;
 
    mType = type;
-   switch (type) {
-      case TIME:
-         mBuiltinFormatStrings = TimeConverterFormats;
-         mNBuiltins = sizeof(TimeConverterFormats) /
-            sizeof (TimeConverterFormats[0]);
-         mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
-         break;
-      case FREQUENCY:
-         mBuiltinFormatStrings = FrequencyConverterFormats;
-         mNBuiltins = sizeof(FrequencyConverterFormats) /
-            sizeof (FrequencyConverterFormats[0]);
-         break;
-      case BANDWIDTH:
-         mBuiltinFormatStrings = BandwidthConverterFormats;
-         mNBuiltins = sizeof(BandwidthConverterFormats) /
-            sizeof(BandwidthConverterFormats[0]);
-      default:
-         break;
-   }
+
+   if (type == NumericConverter::TIME )
+      mDefaultNdx = 4; // Default to "hh:mm:ss + milliseconds".
+
+   mNBuiltins = mBuiltinFormatStrings.size();
 
    mPrefix = wxT("");
    mValueTemplate = wxT("");

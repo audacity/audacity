@@ -75,25 +75,12 @@ FactoryPresets[] =
    { XO("Cathedral"),         { 90,   16,    90,     50,      100, 0,     0,   -20,  100,   false } },
 };
 
-#if 0
-//initialisations not supported in MSVC 2013.
-//Gives error C2905
-// Do not make conditional on compiler.
-struct Reverb_priv_t
-{
-   reverb_t reverb;
-   float *dry {};
-   float *wet[2] { {}, {} };
-};
-#else
-// WARNING: This structure may need initialisation.
 struct Reverb_priv_t
 {
    reverb_t reverb;
    float *dry;
    float *wet[2];
 };
-#endif
 
 //
 // EffectReverb
@@ -189,7 +176,7 @@ bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
       mNumChans = 2;
    }
 
-   mP.reinit(mNumChans, true);
+   mP = (Reverb_priv_t *) calloc(sizeof(*mP), mNumChans);
 
    for (int i = 0; i < mNumChans; i++)
    {
@@ -212,7 +199,12 @@ bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
 
 bool EffectReverb::ProcessFinalize()
 {
-   mP.reset();
+   for (int i = 0; i < mNumChans; i++)
+   {
+      reverb_delete(&mP[i].reverb);
+   }
+
+   free(mP);
 
    return true;
 }

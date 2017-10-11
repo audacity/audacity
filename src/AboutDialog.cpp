@@ -104,8 +104,10 @@ const wxString VerCheckHtml(){
 
 void AboutDialog::CreateCreditsList()
 {
+   // Deceased team members
+   AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleDeceased);
+
    // The Audacity Team: developers and support
-   AddCredit(wxString(wxT("Gale Andrews, ")) + _("quality assurance"), roleTeamMember);
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
    AddCredit(wxString(wxT("James Crook, ")) + _("developer"), roleTeamMember);
    AddCredit(wxString(wxT("Roger Dannenberg, ")) + _("co-founder and developer"), roleTeamMember);
@@ -346,11 +348,11 @@ Audacity is [[http://www.audacityteam.org/download|available]] for Windows, Mac,
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    wxString par2StrUntranslated = wxT(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
 For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
 visit our [[http://forum.audacityteam.org/|forum]].");
    wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write, in English, to our [[mailto:feedback@audacityteam.org|feedback address]]. \
+"If you find a bug or have a suggestion for us, please write, in English, to our [[http://forum.audacityteam.org/|forum]]. \
 For help, view the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or \
 visit our [[http://forum.audacityteam.org/|forum]].");
 
@@ -395,6 +397,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("James Crook, art, coding &amp; design<br>") +
 #endif
 
+      /* i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages */
+      wxT("<p><b>") + wxString::Format(_("In Memoriam")) + wxT("</b><br>") +
+      GetCreditsByRole(roleDeceased) +
+
       wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
 
@@ -416,7 +422,7 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
 
-      wxT("<p><br>Audacity website: [[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
+      wxT("<p><br>") + _("Audacity website: ") + wxT("[[http://www.audacityteam.org/|http://www.audacityteam.org/]]") +
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA

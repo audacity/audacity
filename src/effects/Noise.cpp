@@ -80,7 +80,7 @@ wxString EffectNoise::GetDescription()
 
 wxString EffectNoise::ManualPage()
 {
-   return wxT("Generate_Menu#noise");
+   return wxT("Noise");
 }
 
 // EffectIdentInterface implementation

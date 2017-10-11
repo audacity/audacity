@@ -137,8 +137,6 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    mRestoreSplits = true;  // Default: Restore split lines. 
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
 
-   mDebugButton = true; // Debug button enabled by default.
-
    mVersion = 4;
 
    mStop = false;
@@ -149,6 +147,10 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
+      /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
+       Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+       In the translations of this and other strings, you may transliterate the
+       name into another alphabet.  */
       mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
@@ -159,6 +161,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    if (fName == NYQUIST_WORKER_ID) {
       // Effect spawned from Nyquist Prompt
+/* i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt" */
       mName = XO("Nyquist Worker");
       return;
    }
@@ -422,7 +425,8 @@ bool NyquistEffect::Init()
    if (mIsPrompt) {
       mType = EffectTypeProcess;
       mName = XO("Nyquist Prompt");
-      mDebugButton = true; // Debug button always enabled for Nyquist Prompt.
+      mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
+      mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
    }
 
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
@@ -1021,7 +1025,7 @@ bool NyquistEffect::ProcessOne()
          if (!std::isinf(maxPeak) && !std::isnan(maxPeak) && (maxPeak < FLT_MAX)) {
             peakString += wxString::Format(wxT("(float %s) "), Internat::ToString(maxPeak).c_str());
          } else {
-            peakString += wxT("nil");
+            peakString += wxT("nil ");
          }
 
          float rms = mCurTrack[i]->GetRMS(mT0, mT1); // may throw
@@ -1389,6 +1393,8 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
     if (nyqString != NULL && nyqString[0] && str.IsEmpty()) {
         // invalid UTF-8 string, convert as Latin-1
         str = _("[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]");
+       // TODO: internationalization of strings from Nyquist effects, at least
+       // from those shipped with Audacity
         str += LAT1CTOWX(nyqString);
     }
     return str;
@@ -1807,6 +1813,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mHelpFileExists = false;
    mDebug = false;
    mTrace = false;
+   mDebugButton = true;    // Debug button enabled by default.
+   mEnablePreview = true;  // Preview button enabled by default.
 
    mFoundType = false;
    while (!stream.Eof() && stream.IsOk())
@@ -1835,6 +1843,8 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    }
    if (!mFoundType && mIsPrompt)
    {
+      /* i1n-hint: SAL and LISP are names for variant syntaxes for the
+       Nyquist programming language.  Leave them, and 'return', untranslated. */
       wxMessageBox(_("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
 For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
 or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
@@ -1856,8 +1866,6 @@ void NyquistEffect::ParseFile()
 
 bool NyquistEffect::ParseCommand(const wxString & cmd)
 {
-   mEnablePreview = true;
-
    wxStringInputStream stream(cmd + wxT(" "));
 
    return ParseProgram(stream);

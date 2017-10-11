@@ -66,7 +66,7 @@ unsigned EffectStereoToMono::GetAudioOutCount()
    return 1;
 }
 
-// Effect implementatino
+// Effect implementation
 
 bool EffectStereoToMono::Process()
 {

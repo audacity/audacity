@@ -158,8 +158,6 @@ public:
 
    // Scroll info
 
-   std::weak_ptr<Track> track;                // first visible track
-
    double total;                // total width in secs
    // Current horizontal scroll bar positions, in pixels
    wxInt64 sbarH;

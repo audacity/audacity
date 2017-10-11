@@ -69,6 +69,7 @@
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
+#include <wx/filedlg.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/mimetype.h>
@@ -90,8 +91,6 @@
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/LinkingHtmlWindow.h"
-
-#include "FileDialog.h"
 
 #include "Export.h"
 
@@ -661,7 +660,8 @@ public:
        * "Where would I find the file %s" instead if you want. */
       question.Printf(_("Where is %s?"), mName.c_str());
 
-      wxString path = FileSelector(question,
+      wxString path = FileNames::SelectFile(FileNames::Operation::_None,
+                                   question,
                                    mLibPath.GetPath(),
                                    mLibPath.GetName(),
                                    wxT(""),
@@ -676,7 +676,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      wxString page = wxT("http://manual.audacityteam.org/man/faq_installation_and_plug_ins.html#lame");
+      wxString page = wxT("faq_installation_and_plug_ins.html#lame");
       ::OpenInDefaultBrowser(page);
    }
 

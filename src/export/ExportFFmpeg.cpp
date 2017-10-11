@@ -223,7 +223,7 @@ ExportFFmpeg::ExportFFmpeg()
       }
 
       SetMaxChannels(ExportFFmpegOptions::fmts[newfmt].maxchannels,fmtindex);
-      SetDescription(ExportFFmpegOptions::fmts[newfmt].description,fmtindex);
+      SetDescription(ExportFFmpegOptions::fmts[newfmt].Description(), fmtindex);
 
       int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
       if (canmeta && (canmeta == AV_VERSION_INT(-1,-1,-1) || canmeta <= avfver))
@@ -326,7 +326,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    {
       if ((err = ufile_fopen(&mEncFormatCtx->pb, mName, AVIO_FLAG_WRITE)) < 0)
       {
-         wxMessageBox(wxString::Format(wxT("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName.c_str(), err),
+         wxMessageBox(wxString::Format(_("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."), mName.c_str(), err),
                       _("FFmpeg Error"), wxOK|wxCENTER|wxICON_EXCLAMATION);
          return false;
       }
@@ -872,8 +872,8 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    {
       ProgressDialog progress(wxFileName(fName).GetName(),
          selectionOnly ?
-         wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
-         wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
+         wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()) :
+         wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].Description()));
 
       while (updateResult == ProgressResult::Success) {
          auto pcmNumSamples = mixer->Process(pcmBufferSize);

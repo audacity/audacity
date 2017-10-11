@@ -366,13 +366,13 @@ double BatchCommands::GetEndTime()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( wxT("No project to process!") );
+      //wxMessageBox( _("No project to process!") );
       return -1.0;
    }
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( wxT("No tracks to process!") );
+      //wxMessageBox( _("No tracks to process!") );
       return -1.0;
    }
 
@@ -385,14 +385,14 @@ bool BatchCommands::IsMono()
    AudacityProject *project = GetActiveProject();
    if( project == NULL )
    {
-      //wxMessageBox( wxT("No project and no Audio to process!") );
+      //wxMessageBox( _("No project and no Audio to process!") );
       return false;
    }
 
    TrackList * tracks = project->GetTracks();
    if( tracks == NULL )
    {
-      //wxMessageBox( wxT("No tracks to process!") );
+      //wxMessageBox( _("No tracks to process!") );
       return false;
    }
 
@@ -415,8 +415,9 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
    const wxFileName newFileName{ fileName };
    wxString justName = newFileName.GetName();
    wxString pathName = newFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
+   const auto cleanedString = _("cleaned");
 
-   if (justName == wxT("")) {
+   if (justName.empty()) {
       wxDateTime now = wxDateTime::Now();
       int year = now.GetYear();
       wxDateTime::Month month = now.GetMonth();
@@ -433,23 +434,23 @@ wxString BatchCommands::BuildCleanFileName(const wxString &fileName, const wxStr
 //      double endTime = project->mTracks->GetEndTime();
 //      double startTime = 0.0;
       //OnSelectAll();
-      pathName = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
-      ::wxMessageBox(wxString::Format(wxT("Export recording to %s\n/cleaned/%s%s"),
-                                      pathName.c_str(), justName.c_str(), extension.c_str()),
-                     wxT("Export recording"),
-                  wxOK | wxCENTRE);
-      pathName += wxT("/");
+      pathName = FileNames::FindDefaultPath(FileNames::Operation::Export);
+      ::wxMessageBox(wxString::Format(_("Export recording to %s\n/%s/%s%s"),
+            pathName.c_str(), cleanedString.c_str(), justName.c_str(), extension.c_str()),
+         _("Export recording"),
+         wxOK | wxCENTRE);
+      pathName += wxFileName::GetPathSeparator();
    }
    wxString cleanedName = pathName;
-   cleanedName += wxT("cleaned");
+   cleanedName += cleanedString;
    bool flag  = ::wxFileName::FileExists(cleanedName);
    if (flag == true) {
-      ::wxMessageBox(wxT("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
-      return wxT("");
+      ::wxMessageBox(_("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
+      return wxString{};
    }
    ::wxFileName::Mkdir(cleanedName, 0777, wxPATH_MKDIR_FULL); // make sure it exists
 
-   cleanedName += wxT("/");
+   cleanedName += wxFileName::GetPathSeparator();
    cleanedName += justName;
    cleanedName += extension;
    wxGetApp().AddFileToHistory(cleanedName);

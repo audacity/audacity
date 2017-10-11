@@ -83,7 +83,7 @@ class SelectionBar final : public ToolBar {
  private:
    wxRadioButton * AddRadioButton( const wxString & Name, int id, 
       wxSizer * pSizer, long style);
-   wxStaticText * AddTitle( const wxString & Title, int id, 
+   auStaticText * AddTitle( const wxString & Title, 
       wxSizer * pSizer );
    NumericTextCtrl * AddTime( const wxString Name, int id, wxSizer * pSizer );
    void AddVLine(  wxSizer * pSizer );

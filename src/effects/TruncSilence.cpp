@@ -723,7 +723,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          vldDur.SetRange(MIN_Minimum, MAX_Minimum);
          mInitialAllowedSilenceT = S.AddTextBox(_("Duration:"), wxT(""), 12);
          mInitialAllowedSilenceT->SetValidator(vldDur);
-         S.AddUnits(wxT("seconds"));
+         S.AddUnits(_("seconds"));
       }
       S.EndMultiColumn();
    }
@@ -747,13 +747,13 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          vldTrunc.SetRange(MIN_Truncate, MAX_Truncate);
          mTruncLongestAllowedSilenceT = S.AddTextBox(_("Truncate to:"), wxT(""), 12);
          mTruncLongestAllowedSilenceT->SetValidator(vldTrunc);
-         S.AddUnits(wxT("seconds"));
+         S.AddUnits(_("seconds"));
 
          FloatingPointValidator<double> vldComp(3, &mSilenceCompressPercent, NUM_VAL_NO_TRAILING_ZEROES);
          vldComp.SetRange(MIN_Compress, MAX_Compress);
          mSilenceCompressPercentT = S.AddTextBox(_("Compress to:"), wxT(""), 12);
          mSilenceCompressPercentT->SetValidator(vldComp);
-         S.AddUnits(wxT("percent"));
+         S.AddUnits(_("%"));
       }
       S.EndMultiColumn();
 

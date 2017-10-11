@@ -209,7 +209,7 @@ public:
    LadspaEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
    virtual ~LadspaEffectsModule();
 
-   // IdentInterface implementatino
+   // IdentInterface implementation
 
    wxString GetPath() override;
    wxString GetSymbol() override;

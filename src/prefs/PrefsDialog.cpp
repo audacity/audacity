@@ -294,7 +294,7 @@ PrefsDialog::PrefsDialog
          const PrefsNode &node = factories[0];
          PrefsPanelFactory &factory = *node.pFactory;
          mUniquePage = factory.Create(this);
-         wxWindow * uniquePageWindow = S.AddWindow(mUniquePage, wxEXPAND);
+         wxWindow * uniquePageWindow = S.Prop(1).AddWindow(mUniquePage, wxEXPAND);
          // We're not in the wxTreebook, so add the accelerator here
          wxAcceleratorEntry entries[1];
 #if defined(__WXMAC__)
@@ -437,7 +437,7 @@ void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    // So we change the page name in the case of a page on its own.
    if( !mCategories)
       page.Replace( "Spectrograms_Preferences", "Spectrogram_Settings" );
-   HelpSystem::ShowHelpDialog(this, page, true);
+   HelpSystem::ShowHelp(this, page, true);
 }
 
 void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)

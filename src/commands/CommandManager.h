@@ -270,9 +270,7 @@ class AUDACITY_DLL_API CommandManager final : public XMLTagHandler
        // non-user-visible command names.  If a shortcut key is defined
        // for the command, then it is appended, parenthesized, after the
        // user-visible string.
-       const std::vector<wxString> &commands,
-       // If more than one pair of strings is given, then use this separator.
-       const wxString &separator = wxT(" / ")) const;
+       const std::vector<wxString> &commands) const;
 
 protected:
 

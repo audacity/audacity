@@ -241,13 +241,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
 
 
    // Bug 1304: Set the default file path.  It's used if none stored in config.
-   wxFileName filename("foo");
-   filename.AssignHomeDir();
-#ifdef __WIN32__
-   filename.SetPath(filename.GetPath() + "\\Documents\\Audacity");
-#else
-   filename.SetPath(filename.GetPath() + "/Documents");
-#endif
+   auto filename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
    wxString DefaultPath = filename.GetPath();
 
    if (mPluginIndex == -1)
@@ -268,7 +262,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
             mDir = S.Id(DirID)
                .TieTextBox(_("Folder:"),
                            wxT("/Export/MultiplePath"),
-                           gPrefs->Read(wxT("/Export/Path"), DefaultPath ),
+                           DefaultPath,
                            64);
             S.Id(ChooseID).AddButton(_("Choose..."));
             S.Id(CreateID).AddButton(_("Create"));

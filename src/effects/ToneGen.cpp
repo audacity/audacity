@@ -136,8 +136,8 @@ wxString EffectToneGen::GetDescription()
 wxString EffectToneGen::ManualPage()
 {
    return mChirp
-      ? wxT("Generate_Menu#chirp")
-      : wxT("Generate_Menu#tone");
+      ? wxT("Chirp")
+      : wxT("Tone");
 }
 
 // EffectIdentInterface implementation

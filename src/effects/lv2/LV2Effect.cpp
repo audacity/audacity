@@ -1034,7 +1034,7 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
    mMaster = InitInstance(mSampleRate);
    if (mMaster == NULL)
    {
-      wxMessageBox(wxT("Couldn't instantiate effect"));
+      wxMessageBox(_("Couldn't instantiate effect"));
       return false;
    }
    
@@ -1868,7 +1868,8 @@ bool LV2Effect::TransferDataToWindow()
          if (ctrl.mToggle)
          {
             wxCheckBox *c = wxDynamicCast(mParent->FindWindow(ID_Toggles + p), wxCheckBox);
-            c->SetValue(ctrl.mVal > 0);
+            if (c)
+               c->SetValue(ctrl.mVal > 0);
          }
          else if (ctrl.mEnumeration)      // Check before integer
          {
@@ -1887,17 +1888,19 @@ bool LV2Effect::TransferDataToWindow()
             }
 
             wxChoice *c = wxDynamicCast(mParent->FindWindow(ID_Choices + p), wxChoice);
-            c->SetSelection(s);
+            if (c)
+               c->SetSelection(s);
          }
          else if (ctrl.mInput)
          {
             ctrl.mTmp = ctrl.mVal * (ctrl.mSampleRate ? mSampleRate : 1.0);
-            SetSlider(mSliders[p], ctrl);
+            if (mSliders && mSliders[p])
+               SetSlider(mSliders[p], ctrl);
          }
       }
    }
 
-   if (!mParent->TransferDataToWindow())
+   if (mParent && !mParent->TransferDataToWindow())
    {
       return false;
    }
