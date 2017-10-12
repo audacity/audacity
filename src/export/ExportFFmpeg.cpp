@@ -227,7 +227,7 @@ ExportFFmpeg::ExportFFmpeg()
       SetDescription(ExportFFmpegOptions::fmts[newfmt].Description(), fmtindex);
 
       int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
-      if (canmeta && (canmeta == AV_VERSION_INT(-1,-1,-1) || canmeta <= avfver))
+      if (canmeta && (canmeta == AV_CANMETA || canmeta <= avfver))
       {
          SetCanMetaData(true,fmtindex);
       }
