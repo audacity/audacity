@@ -309,7 +309,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    // If project already exists then abort - we do not allow users to overwrite an existing project
    // unless it is the current project.
    if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
-      wxMessageDialog m(
+      AudacityMessageDialog m(
          NULL,
          _("The selected file name could not be used\nfor Timer Recording because it \
 would overwrite another project.\nPlease try again and select an original name."),
@@ -416,7 +416,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
          sPlannedTime,
          sRemainingTime);
 
-      wxMessageDialog dlgMessage(NULL,
+      AudacityMessageDialog dlgMessage(NULL,
          sMessage,
          _("Timer Recording Disk Space Warning"),
          wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);

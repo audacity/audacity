@@ -54,7 +54,7 @@ bool ContrastDialog::GetDB(float &dB)
    while (t) {
       numberSelecteTracks++;
       if (numberSelecteTracks > 1 && !isStereo) {
-         wxMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
+         AudacityMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
          m.ShowModal();
          return false;
       }
@@ -73,14 +73,14 @@ bool ContrastDialog::GetDB(float &dB)
 
       if(SelT0 > SelT1)
       {
-         wxMessageDialog m(NULL, _("Invalid audio selection.\nPlease ensure that audio is selected."), _("Error"), wxOK);
+         AudacityMessageDialog m(NULL, _("Invalid audio selection.\nPlease ensure that audio is selected."), _("Error"), wxOK);
          m.ShowModal();
          return false;
       }
 
       if(SelT0 == SelT1)
       {
-         wxMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
+         AudacityMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
          m.ShowModal();
          return false;
       }
@@ -95,7 +95,7 @@ bool ContrastDialog::GetDB(float &dB)
    rms = (meanSq > 0.0)? sqrt(meanSq/(double)numberSelecteTracks) : 0.0;
 
    if(numberSelecteTracks == 0) {
-      wxMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
+      AudacityMessageDialog m(NULL, _("Please select an audio track."), _("Error"), wxOK);
       m.ShowModal();
       return false;
    }

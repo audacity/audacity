@@ -4300,7 +4300,7 @@ bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompres
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if( !bOwnsNewAupName && wxFileExists(newFileName)) {
-      wxMessageDialog m(
+      AudacityMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Project"),
@@ -4401,7 +4401,7 @@ For an audio file that will open in other apps, use 'Export'.\n"),
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if (!bOwnsNewAupName && filename.FileExists()) {
-      wxMessageDialog m(
+      AudacityMessageDialog m(
          NULL,
          _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."),
          _("Error Saving Project"),

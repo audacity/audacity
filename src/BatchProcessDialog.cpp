@@ -831,7 +831,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    }
 
    wxString name = mChains->GetItemText(item);
-   wxMessageDialog m(this,
+   AudacityMessageDialog m(this,
    /*i18n-hint: %s will be replaced by the name of a file.*/
                      wxString::Format(_("Are you sure you want to delete %s?"), name.c_str()),
                      GetTitle(),

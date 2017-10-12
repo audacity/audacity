@@ -2754,7 +2754,7 @@ void AudioIO::StopStream()
                         // Bug 96: Only warn for the first track.
                         if( i==0 )
                         {
-                           wxMessageDialog m(NULL, _(
+                           AudacityMessageDialog m(NULL, _(
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\nAudacity has brought it back to start at zero.\nYou may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."),
                            _("Latency problem"), wxOK);
                            m.ShowModal();

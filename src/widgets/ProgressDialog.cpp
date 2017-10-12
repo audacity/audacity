@@ -49,6 +49,7 @@
 #include <wx/window.h>
 
 #include "ProgressDialog.h"
+#include "ErrorDialog.h"
 #include "../Prefs.h"
 
 // This really should be a Preferences setting
@@ -1573,7 +1574,7 @@ bool ProgressDialog::ConfirmAction(const wxString & sPrompt,
       return true;
    }
 
-   wxMessageDialog dlgMessage(this,
+   AudacityMessageDialog dlgMessage(this,
       sPrompt,
       sTitle,
       wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
