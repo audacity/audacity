@@ -3315,7 +3315,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
       {   // Show the dialog and bail if the user cancels
          bad = false;
          // build the dialog
-         wxTextEntryDialog dlg( this,
+         AudacityTextEntryDialog dlg( this,
             _("Rename '") + mEditCurves[ item ].Name + _("' to..."),
             _("Rename...") );
          dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );

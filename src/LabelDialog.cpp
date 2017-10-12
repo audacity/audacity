@@ -774,7 +774,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
 
    // User selected the "New..." choice so ask for a NEW name
    if (mTrackNames.Index(val) == 0) {
-      wxTextEntryDialog d(this,
+      AudacityTextEntryDialog d(this,
                           _("New Label Track"),
                           _("Enter track name"),
                           /* i18n-hint: (noun) it's the name of a kind of track.*/

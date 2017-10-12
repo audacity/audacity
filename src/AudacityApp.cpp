@@ -1137,7 +1137,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
 
    if (ok && rpt.Process())
    {
-      wxTextEntryDialog dlg(NULL,
+      AudacityTextEntryDialog dlg(NULL,
                               _("Report generated to:"),
                               _("Audacity Support Data"),
                               rpt.GetCompressedFileName(),

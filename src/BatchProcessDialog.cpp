@@ -779,7 +779,7 @@ void EditChainsDialog::OnChainsEndEdit(wxListEvent &event)
 void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    while (true) {
-      wxTextEntryDialog d(this,
+      AudacityTextEntryDialog d(this,
                           _("Enter name of new chain"),
                           _("Name of new chain"));
       d.SetName(d.GetTitle());

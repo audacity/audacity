@@ -1006,7 +1006,7 @@ wxString ExportMultiple::MakeFileName(const wxString &input)
             excluded.c_str());
       }
 
-      wxTextEntryDialog dlg( this, msg, _("Save As..."), newname );
+      AudacityTextEntryDialog dlg( this, msg, _("Save As..."), newname );
 
 
       // And tell the validator about excluded chars

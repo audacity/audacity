@@ -98,4 +98,23 @@ inline int AudacityMessageBox(const wxString& message,
    return ::wxMessageBox(message, caption, style, parent, x, y);
 }
 
+// Similarly wrap wxTextEntryDialog, to prohibit the default,
+// unlocalized caption
+#include <wx/textdlg.h>
+
+class AudacityTextEntryDialog : public wxTabTraversalWrapper< wxTextEntryDialog >
+{
+public:
+    AudacityTextEntryDialog(
+         wxWindow *parent,
+         const wxString& message,
+         const wxString& caption, // don't use = wxGetTextFromUserPromptStr,
+         const wxString& value = wxEmptyString,
+         long style = wxTextEntryDialogStyle,
+         const wxPoint& pos = wxDefaultPosition)
+   : wxTabTraversalWrapper< wxTextEntryDialog>
+      { parent, message, caption, value, style, pos }
+   {}
+};
+
 #endif // __AUDACITY_ERRORDIALOG__
