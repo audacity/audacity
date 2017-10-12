@@ -4090,14 +4090,15 @@ void AudacityProject::AddImportedTracks(const wxString &fileName,
       // remember this to show a warning later
       if (newTrack->GetKind() == WaveTrack::Wave)
       {
-         WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0);
-         BlockArray &blocks = clip->GetSequence()->GetBlockArray();
-         if (clip && blocks.size())
-         {
-            SeqBlock& block = blocks[0];
-            if (block.f->IsAlias())
+         if (WaveClip* clip = ((WaveTrack*)newTrack)->GetClipByIndex(0)) {
+            BlockArray &blocks = clip->GetSequence()->GetBlockArray();
+            if (blocks.size())
             {
-               mImportedDependencies = true;
+               SeqBlock& block = blocks[0];
+               if (block.f->IsAlias())
+               {
+                  mImportedDependencies = true;
+               }
             }
          }
       }
