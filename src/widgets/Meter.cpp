@@ -190,20 +190,44 @@ enum {
    OnPreferencesID
 };
 
-BEGIN_EVENT_TABLE(Meter, wxPanelWrapper)
+BEGIN_EVENT_TABLE(Meter, ASlider)
+   EVT_CHAR(ASlider::OnKeyEvent)
+   //EVT_MOUSE_EVENTS(ASlider::OnMouseEvent)
+   EVT_MOUSE_CAPTURE_LOST(ASlider::OnCaptureLost)
+
    EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
+   EVT_SLIDER(wxID_ANY, Meter::SetMixer)
+   EVT_SET_FOCUS(ASlider::OnSetFocus)
+   EVT_KILL_FOCUS(ASlider::OnKillFocus)
+   EVT_TIMER(wxID_ANY, ASlider::OnTimer)
+
+
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_CONTEXT_MENU(Meter::OnContext)
-   EVT_KEY_DOWN(Meter::OnKeyDown)
-   EVT_KEY_UP(Meter::OnKeyUp)
-   EVT_SET_FOCUS(Meter::OnSetFocus)
-   EVT_KILL_FOCUS(Meter::OnKillFocus)
+   //EVT_KEY_DOWN(Meter::OnKeyDown)
+   //EVT_KEY_UP(Meter::OnKeyUp)
+   //EVT_SET_FOCUS(Meter::OnSetFocus)
+   //EVT_KILL_FOCUS(Meter::OnKillFocus)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
    EVT_PAINT(Meter::OnPaint)
    EVT_SIZE(Meter::OnSize)
    EVT_MENU(OnMonitorID, Meter::OnMonitor)
    EVT_MENU(OnPreferencesID, Meter::OnPreferences)
 END_EVENT_TABLE()
+
+#if 0
+BEGIN_EVENT_TABLE(ASlider, wxWindow)
+   EVT_PAINT(ASlider::OnPaint)
+   EVT_SIZE(ASlider::OnSize)
+   EVT_ERASE_BACKGROUND(ASlider::OnErase)
+   EVT_SLIDER(wxID_ANY, ASlider::OnSlider)
+   EVT_SET_FOCUS(ASlider::OnSetFocus)
+   EVT_KILL_FOCUS(ASlider::OnKillFocus)
+   EVT_TIMER(wxID_ANY, ASlider::OnTimer)
+END_EVENT_TABLE()
+#endif
+
+
 
 IMPLEMENT_CLASS(Meter, wxPanelWrapper)
 
@@ -214,7 +238,16 @@ Meter::Meter(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanelWrapper(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
+: ASlider(parent, id, 
+      "Meter",
+      pos, 
+      size, 
+      FRAC_SLIDER,
+      true, // popup
+      true, // can use shift
+      STEP_CONTINUOUS,
+      wxHORIZONTAL ),
+
    mProject(project),
    mQueue(1024),
    mWidth(size.x),
@@ -243,6 +276,7 @@ Meter::Meter(AudacityProject *project,
    wxUnusedVar(SpeakerMenu_xpm);
    wxUnusedVar(MicMenu_xpm);
    wxUnusedVar(PrefStyles);
+   SetOverdraw( true );
 
    mStyle = mDesiredStyle;
 
@@ -668,6 +702,34 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
    }
 
+#if 0 
+   //def EXPERIMENTAL_METER_SLIDERS
+   wxOrientation orientation = mBar[0].vert ? wxVERTICAL : wxHORIZONTAL;
+   int x = (mBar[1].r.GetRight() + mBar[0].r.GetLeft())/2;
+   int y = (mBar[1].r.GetBottom() + mBar[0].r.GetTop())/2;
+   bool bHighlited = GetClientRect().Contains(
+      ScreenToClient( ::wxGetMousePosition() ) );
+   wxBitmap &Bmp = theTheme.Bitmap( 
+      (orientation==wxHORIZONTAL) ?
+         (bHighlited ? bmpSliderThumbHilited : bmpSliderThumb) :
+         (bHighlited ? bmpSliderThumbRotatedHilited : bmpSliderThumbRotated) );
+   x -= Bmp.GetWidth()/2;
+   y -= Bmp.GetHeight()/2;
+
+   if (orientation == wxHORIZONTAL)
+   {
+      destDC.DrawBitmap( Bmp , x,y, true);
+   }
+   else
+   {
+      // TODO: Don't use pixel-count hack in positioning.  
+      destDC.DrawBitmap( Bmp, x,y, true);
+   }
+#endif
+
+   ASlider::SetOverdraw( true );
+   ASlider::OnPaint( destDC );
+
    if (mIsFocused)
    {
       wxRect r = mIconRect;
@@ -675,10 +737,9 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 }
 
-void Meter::OnSize(wxSizeEvent & WXUNUSED(event))
+void Meter::OnSize(wxSizeEvent &event)
 {
    GetClientSize(&mWidth, &mHeight);
-
    mLayoutValid = false;
 }
 
@@ -690,6 +751,7 @@ bool Meter::InIcon(wxMouseEvent *pEvent) const
 
 void Meter::OnMouse(wxMouseEvent &evt)
 {
+   // Highlighting of icon
    bool shouldHighlight = InIcon(&evt);
    if ((evt.GetEventType() == wxEVT_MOTION || evt.Entering() || evt.Leaving()) &&
        (mHighlighted != shouldHighlight)) {
@@ -738,18 +800,25 @@ void Meter::OnMouse(wxMouseEvent &evt)
          ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
       }
    }
-   else if (evt.LeftDown()) {
-      if (mIsInput) {
-         if (mActive && !mMonitoring) {
-            Reset(mRate, true);
+   else 
+   {
+#ifdef EXPERIMENTAL_METER_SLIDERS
+      ASlider::OnMouseEvent( evt );
+#else
+      if (evt.LeftDown()) {
+         if (mIsInput) {
+            if (mActive && !mMonitoring) {
+               Reset(mRate, true);
+            }
+            else {
+               StartMonitoring();
+            }
          }
          else {
-            StartMonitoring();
+            Reset(mRate, true);
          }
       }
-      else {
-         Reset(mRate, true);
-      }
+#endif
    }
 }
 
@@ -855,6 +924,58 @@ void Meter::SetStyle(Style newStyle)
       Refresh(false);
    }
 }
+
+void Meter::UpdateControl()
+{
+#if USE_PORTMIXER
+   float inputVolume;
+   float playbackVolume;
+   int inputSource;
+
+   gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+
+   if( mIsInput ){
+      // Show or hide the input slider based on whether it works
+      Enable(gAudioIO->InputMixerWorks());
+      if (Get() != inputVolume) {
+         Set(inputVolume);
+         //mInputSliderVolume = inputVolume;
+         //SetToolTips();
+      }
+   }
+   else
+   {
+      if( Get() != playbackVolume) {
+         Set(playbackVolume);
+         //mOutputSliderVolume = playbackVolume;
+         //SetToolTips();
+      }
+   }
+
+#endif // USE_PORTMIXER
+}
+
+void Meter::SetMixer(wxCommandEvent & event)
+{
+#if USE_PORTMIXER
+   float inputVolume;
+   float outputVolume;
+   int inputSource;
+
+   ASlider::OnSlider( event );
+   gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
+   if( mIsInput )
+      inputVolume = Get();
+   else
+      outputVolume = Get();
+   gAudioIO->SetMixer(inputSource, inputVolume, outputVolume);
+
+   //mOutputSliderVolume = outputVolume;
+   //mInputSliderVolume = inputVolume;
+   //SetToolTips();
+#endif // USE_PORTMIXER
+}
+
 
 void Meter::Reset(double sampleRate, bool resetClipping)
 {
@@ -1525,6 +1646,11 @@ void Meter::HandleLayout(wxDC &dc)
       mRuler.OfflimitsPixels(0, 0);
       break;
    }
+
+   wxRect r( mBar[0].r.GetBottomLeft(), mBar[1].r.GetTopRight() );
+   r.Inflate( 0, 10 );
+   r.Offset( 0,-5 );
+   ASlider::SetRect( r );
 
    mLayoutValid = true;
 }

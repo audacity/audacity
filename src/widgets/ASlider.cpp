@@ -463,8 +463,8 @@ void LWSlider::Init(wxWindow * parent,
    mTipPanel = NULL;
 
    AdjustSize(size);
-
    Move(pos);
+   Refresh();
 }
 
 LWSlider::~LWSlider()
@@ -510,6 +510,11 @@ void LWSlider::Move(const wxPoint &newpos)
    mTop = newpos.y;
 }
 
+wxRect LWSlider::GetRect()
+{
+   return wxRect( mLeft, mTop, mWidth, mHeight );
+}
+
 void LWSlider::AdjustSize(const wxSize & sz)
 {
    mWidth = sz.GetWidth();
@@ -542,11 +547,9 @@ void LWSlider::AdjustSize(const wxSize & sz)
       mBottomY = mHeight - mThumbWidth/2 - 1;
       mHeightY = mBottomY - mTopY;
    }
-
-   Refresh();
 }
 
-void LWSlider::OnPaint(wxDC &dc, bool highlight)
+void LWSlider::OnPaint(wxDC &dc, bool highlight, bool bOverdraw)
 {
    if (!mBitmap || !mThumbBitmap || !mThumbBitmapHilited)
    {
@@ -566,7 +569,7 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    }
 
 #if !defined(__WXMAC__)
-   if( mHW )
+   if( mHW && !bOverdraw)
    {
       dc.Clear();
    }
@@ -594,8 +597,13 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
 void LWSlider::OnSize( wxSizeEvent & event )
 {
    AdjustSize(event.GetSize());
-
    Refresh();
+}
+
+void LWSlider::SetRect( wxRect r )
+{
+   AdjustSize( r.GetSize() );
+   Move( r.GetPosition() );
 }
 
 void LWSlider::Draw(wxDC & paintDC)
@@ -1542,7 +1550,7 @@ ASlider::ASlider( wxWindow * parent,
                   bool canUseShift,
                   float stepValue,
                   int orientation /*= wxHORIZONTAL*/)
-: wxPanel( parent, id, pos, size, wxWANTS_CHARS )
+: wxPanelWrapper( parent, id, pos, size, wxWANTS_CHARS | wxTAB_TRAVERSAL | wxNO_BORDER)
 {
    //wxColour Col(parent->GetBackgroundColour());
    //SetBackgroundColour( Col );
@@ -1558,6 +1566,7 @@ ASlider::ASlider( wxWindow * parent,
    mLWSlider->mStepValue = stepValue;
    mLWSlider->SetId( id );
    SetName( name );
+   SetOverdraw( false );
 
    mSliderIsFocused = false;
 
@@ -1603,24 +1612,28 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
    // Ignore it to prevent flashing
 }
 
-void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
+void ASlider::OnPaint(wxDC & dc)
 {
-   wxPaintDC dc(this);
-
    bool highlighted =
       GetClientRect().Contains(
          ScreenToClient(
             ::wxGetMousePosition() ) );
-   mLWSlider->OnPaint(dc, highlighted);
+   mLWSlider->OnPaint(dc, highlighted, bOverdraw);
 
    if ( mSliderIsFocused )
    {
-      wxRect r( 0, 0, mLWSlider->mWidth, mLWSlider->mHeight );
-
+      wxRect r( mLWSlider->GetRect());
       r.Deflate( 1, 1 );
 
       AColor::DrawFocus( dc, r );
    }
+}
+
+
+void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
+{
+   wxPaintDC dc(this);
+   OnPaint( dc );
 }
 
 void ASlider::OnMouseEvent(wxMouseEvent &event)
@@ -1689,6 +1702,13 @@ void ASlider::Set(float value)
 {
    mLWSlider->Set(value);
 }
+
+#if 0
+void ASlider::Enable( bool bEnable )
+{
+   mLWSlider->Enable(bEnable);
+}
+#endif
 
 void ASlider::Increase(float steps)
 {

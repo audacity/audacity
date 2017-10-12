@@ -57,6 +57,10 @@
 // DA: Enables dark audacity theme and customisations.
 #define EXPERIMENTAL_DA
 
+#ifdef EXPERIMENTAL_DA
+#define EXPERIMENTAL_METER_SLIDERS
+#endif
+
 // Define this so that sync-lock tiles shine through spectrogram.
 // The spectrogram pastes a bitmap over the tiles.
 // This makes it use alpha blending, most transparent where least intense.

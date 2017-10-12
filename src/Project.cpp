@@ -146,6 +146,8 @@ scroll information.  It also has some status flags.
 
 #include "UndoManager.h"
 
+#include "widgets/Meter.h"
+
 #include "toolbars/ToolManager.h"
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/DeviceToolBar.h"
@@ -4847,6 +4849,14 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
    MixerToolBar *mixerToolBar = GetMixerToolBar();
    if( mixerToolBar )
       mixerToolBar->UpdateControls();
+
+   Meter *meter;
+   meter = GetPlaybackMeter();
+   if( meter )
+      meter->UpdateControl();
+   meter = GetCaptureMeter();
+   if( meter )
+      meter->UpdateControl();
 
    if (::wxGetUTCTime() - mLastStatusUpdateTime < 3)
       return;

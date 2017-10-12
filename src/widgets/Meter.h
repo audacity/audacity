@@ -21,6 +21,7 @@
 
 #include "../SampleFormat.h"
 #include "Ruler.h"
+#include "ASlider.h"
 
 // Event used to notify all meters of preference changes
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_METER_PREFERENCES_CHANGED, -1);
@@ -85,7 +86,7 @@ class MeterUpdateQueue
 
 class MeterAx;
 
-class Meter final : public wxPanelWrapper
+class Meter final : public ASlider
 {
    DECLARE_DYNAMIC_CLASS(Meter)
 
@@ -181,6 +182,9 @@ class Meter final : public wxPanelWrapper
    struct State{ bool mSaved, mMonitoring, mActive; };
    State SaveState();
    void RestoreState(const State &state);
+   void UpdateControl();
+   void SetMixer(wxCommandEvent & event);
+
 
  private:
    static bool s_AcceptsFocus;

@@ -20,7 +20,7 @@
 #include <wx/window.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
@@ -142,11 +142,13 @@ class LWSlider
 
    void AdjustSize(const wxSize & sz);
 
-   void OnPaint(wxDC &dc, bool highlighted);
+   void OnPaint(wxDC &dc, bool highlighted, bool bOverdraw=false);
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyEvent(wxKeyEvent & event);
    void Refresh();
+   void SetRect( wxRect r );
+   wxRect GetRect();
 
    bool ShowDialog();
    bool ShowDialog(wxPoint pos);
@@ -239,7 +241,7 @@ class LWSlider
    bool mEnabled;
 };
 
-class ASlider /* not final */ : public wxPanel
+class ASlider /* not final */ : public wxPanelWrapper
 {
    friend class ASliderAx;
 
@@ -274,6 +276,11 @@ class ASlider /* not final */ : public wxPanel
    bool ShowDialog(wxPoint pos = wxPoint(-1, -1));
 
    void SetSpeed(float speed);
+   void SetOverdraw(bool bEnabled){ bOverdraw = bEnabled ;};
+   void OnPaint(wxDC & dc);
+   void SetRect( wxRect r ){ mLWSlider->SetRect(r);};
+   wxRect GetRect(){ return mLWSlider->GetRect();};
+
 
    void OnErase(wxEraseEvent & event);
    void OnPaint(wxPaintEvent & event);
@@ -297,6 +304,7 @@ private:
 
 public:
    static TempAllowFocus TemporarilyAllowFocus();
+   bool bOverdraw;
 
  private:
    std::unique_ptr<LWSlider> mLWSlider;
