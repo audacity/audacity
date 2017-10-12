@@ -32,10 +32,72 @@ public:
    }
 };
 
-class wxPanel;
-using wxPanelWrapper = wxTabTraversalWrapper<wxPanel>;
+class wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>
+{
+public:
+   // Constructors
+   wxPanelWrapper() {}
 
-class wxDialog;
-using wxDialogWrapper = wxTabTraversalWrapper<wxDialog>;
+   wxPanelWrapper(
+         wxWindow *parent,
+         wxWindowID winid = wxID_ANY,
+         const wxPoint& pos = wxDefaultPosition,
+         const wxSize& size = wxDefaultSize,
+         long style = wxTAB_TRAVERSAL | wxNO_BORDER,
+         // Important:  default window name localizes!
+         const wxString& name = _("Panel"))
+   : wxTabTraversalWrapper<wxPanel> { parent, winid, pos, size, style, name }
+   {}
+
+    // Pseudo ctor
+    bool Create(
+         wxWindow *parent,
+         wxWindowID winid = wxID_ANY,
+         const wxPoint& pos = wxDefaultPosition,
+         const wxSize& size = wxDefaultSize,
+         long style = wxTAB_TRAVERSAL | wxNO_BORDER,
+         // Important:  default window name localizes!
+         const wxString& name = _("Panel"))
+   {
+      return wxTabTraversalWrapper<wxPanel>::Create(
+         parent, winid, pos, size, style, name
+      );
+   }
+};
+
+class wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
+{
+public:
+   // Constructors
+   wxDialogWrapper() {}
+
+   // Constructor with no modal flag - the new convention.
+   wxDialogWrapper(
+      wxWindow *parent, wxWindowID id,
+      const wxString& title,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      long style = wxDEFAULT_DIALOG_STYLE,
+      // Important:  default window name localizes!
+      const wxString& name = _("Dialog"))
+   : wxTabTraversalWrapper<wxDialog>
+      { parent, id, title, pos, size, style, name }
+   {}
+
+   // Pseudo ctor
+   bool Create(
+      wxWindow *parent, wxWindowID id,
+      const wxString& title,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      long style = wxDEFAULT_DIALOG_STYLE,
+      // Important:  default window name localizes!
+      const wxString& name = _("Dialog"))
+   {
+      return wxTabTraversalWrapper<wxDialog>::Create(
+         parent, id, title, pos, size, style, name
+      );
+   }
+};
 
 #endif
