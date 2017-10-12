@@ -100,4 +100,41 @@ public:
    }
 };
 
+#include <wx/dirdlg.h>
+
+class wxDirDialogWrapper : public wxTabTraversalWrapper<wxDirDialog>
+{
+public:
+   wxDirDialogWrapper() {}
+
+   // Constructor with no modal flag - the new convention.
+   wxDirDialogWrapper(
+      wxWindow *parent,
+      const wxString& message = _("Select a directory"),
+      const wxString& defaultPath = wxT(""),
+      long style = wxDD_DEFAULT_STYLE,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      // Important:  default window name localizes!
+      const wxString& name = _("Directory Dialog"))
+   : wxTabTraversalWrapper<wxDirDialog>
+      { parent, message, defaultPath, style, pos, size, name }
+   {}
+
+   void Create(
+      wxWindow *parent,
+      const wxString& message = _("Select a directory"),
+      const wxString& defaultPath = wxT(""),
+      long style = wxDD_DEFAULT_STYLE,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      // Important:  default window name localizes!
+      const wxString& name = _("Directory Dialog"))
+   {
+      return wxTabTraversalWrapper<wxDirDialog>::Create(
+         parent, message, defaultPath, style, pos, size, name
+      );
+   }
+};
+
 #endif

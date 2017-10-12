@@ -135,7 +135,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
    if( !AudacityApp::IsTempDirectoryNameOK( oldTempDir ) )
       oldTempDir = wxGetApp().defaultTempDir;
 
-   wxDirDialog dlog(this,
+   wxDirDialogWrapper dlog(this,
                     _("Choose a location to place the temporary directory"),
                     oldTempDir );
    int retval = dlog.ShowModal();

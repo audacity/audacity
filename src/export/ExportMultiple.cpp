@@ -480,7 +480,7 @@ void ExportMultiple::OnCreate(wxCommandEvent& WXUNUSED(event))
 
 void ExportMultiple::OnChoose(wxCommandEvent& WXUNUSED(event))
 {
-   wxDirDialog dlog(this,
+   wxDirDialogWrapper dlog(this,
                     _("Choose a location to save the exported files"),
                     mDir->GetValue());
    dlog.ShowModal();
