@@ -2307,7 +2307,7 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
       }
    }
 
-   FileDialog dlog(mUIParent,
+   FileDialogWrapper dlog(mUIParent,
                    _("Load Nyquist script"),
                    mFileName.GetPath(),
                    wxEmptyString,
@@ -2329,7 +2329,7 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 
 void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
 {
-   FileDialog dlog(mUIParent,
+   FileDialogWrapper dlog(mUIParent,
                    _("Save Nyquist script"),
                    mFileName.GetPath(),
                    mFileName.GetFullName(),

@@ -1856,7 +1856,7 @@ void ExportFFmpegOptions::OnLoadPreset(wxCommandEvent& WXUNUSED(event))
 void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
-   FileDialog dlg(this,
+   FileDialogWrapper dlg(this,
                   _("Select xml file with presets to import"),
                   gPrefs->Read(wxT("/FileFormats/FFmpegPresetDir")),
                   wxEmptyString,
@@ -1875,7 +1875,7 @@ void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& WXUNUSED(event))
 void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
-   FileDialog dlg(this,
+   FileDialogWrapper dlg(this,
                   _("Select xml file to export presets into"),
                   gPrefs->Read(wxT("/FileFormats/FFmpegPresetDir")),
                   wxEmptyString,

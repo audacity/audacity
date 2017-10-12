@@ -537,7 +537,7 @@ bool Exporter::GetFilename()
          auto useFileName = mFilename;
          if (!useFileName.HasExt())
             useFileName.SetExt(defext);
-         FileDialog fd(mProject,
+         FileDialogWrapper fd(mProject,
                        mFileDialogTitle,
                        mFilename.GetPath(),
                        useFileName.GetFullName(),

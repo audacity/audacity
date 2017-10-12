@@ -280,7 +280,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    }
 
    auto path = FileNames::FindDefaultPath(FileNames::Operation::Open);
-   FileDialog dlog(this,
+   FileDialogWrapper dlog(this,
                    prompt,
                    path,
                    wxT(""),

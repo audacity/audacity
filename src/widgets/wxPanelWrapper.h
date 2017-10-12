@@ -137,4 +137,45 @@ public:
    }
 };
 
+#include "../lib-src/FileDialog/FileDialog.h"
+
+class FileDialogWrapper : public wxTabTraversalWrapper<FileDialog>
+{
+public:
+   FileDialogWrapper() {}
+
+   // Constructor with no modal flag - the new convention.
+   FileDialogWrapper(
+      wxWindow *parent,
+      const wxString& message = _("Select a file"),
+      const wxString& defaultDir = wxEmptyString,
+      const wxString& defaultFile = wxEmptyString,
+      const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+      long style = wxFD_DEFAULT_STYLE,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& sz = wxDefaultSize,
+      // Important:  default window name localizes!
+      const wxString& name = _("File Dialog"))
+   : wxTabTraversalWrapper<FileDialog>
+   { parent, message, defaultDir, defaultFile, wildCard, style, pos, sz, name }
+   {}
+
+   void Create(
+      wxWindow *parent,
+      const wxString& message = _("Select a file"),
+      const wxString& defaultDir = wxEmptyString,
+      const wxString& defaultFile = wxEmptyString,
+      const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+      long style = wxFD_DEFAULT_STYLE,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& sz = wxDefaultSize,
+      // Important:  default window name localizes!
+      const wxString& name = _("File Dialog"))
+   {
+      return wxTabTraversalWrapper<FileDialog>::Create(
+         parent, message, defaultDir, defaultFile, wildCard, style, pos, sz, name
+      );
+   }
+};
+
 #endif

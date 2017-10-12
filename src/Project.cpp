@@ -2815,7 +2815,7 @@ wxArrayString AudacityProject::ShowOpenDialog(const wxString &extraformat, const
    // Construct and display the file dialog
    wxArrayString selected;
 
-   FileDialog dlog(NULL,
+   FileDialogWrapper dlog(NULL,
                    _("Select one or more files"),
                    path,
                    wxT(""),

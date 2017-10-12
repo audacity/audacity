@@ -21,7 +21,7 @@
 #include "../SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h"
 
-class FileDialog;
+class FileDialogWrapper;
 class wxFileCtrlEvent;
 class wxMemoryDC;
 class wxStaticText;
@@ -187,7 +187,7 @@ private:
 
 private:
    wxString mFormatName;
-   FileDialog *mDialog;
+   FileDialogWrapper *mDialog;
    wxString mFileDialogTitle;
    AudacityProject *mProject;
    std::unique_ptr<MixerSpec> mMixerSpec;
