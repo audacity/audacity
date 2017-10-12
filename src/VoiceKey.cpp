@@ -306,8 +306,15 @@ sampleCount VoiceKey::OnBackward (
          //Initialize these trend markers atrend and ztrend.  They keep track of the
          //up/down trends at the start and end of the evaluation window.
          int atrend = sgn(buffer[remaining - 2]-buffer[remaining - 1]);
+
          int ztrend = sgn(buffer[remaining - WindowSizeInt - 2] -
-                          buffer[remaining - WindowSizeInt - 2]);
+                          buffer[remaining - WindowSizeInt
+                                 // PVS-Studio detected a probable error here
+                                 // when it read - 2.
+                                 // is - 1 correct?
+                                 // This code is unused. I didn't study further.
+                                  - 1
+                           ]);
 
          double erg=0;
          double sc = 0;
