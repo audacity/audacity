@@ -602,7 +602,8 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
 
    int msgres = AudacityMessageBox (_("Do you really want to delete selected rule?"),
       _("Rule deletion confirmation"), wxYES_NO, RuleTable);
-   if (msgres == wxNO || msgres != wxYES)
+   // Yes or no, there is no third!
+   if (msgres != wxYES)
       return;
 
    RuleTable->DeleteRows (last_selected);
