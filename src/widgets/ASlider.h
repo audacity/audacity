@@ -161,7 +161,7 @@ class LWSlider
  private:
 
    wxString GetTip(float value) const;
-   wxString GetMaxTip() const;
+   wxArrayString GetWidestTips() const;
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();

@@ -88,7 +88,7 @@ const int sliderFontSize = 12;
 class TipPanel final : public wxFrame
 {
  public:
-   TipPanel(wxWindow *parent, const wxString & label);
+   TipPanel(wxWindow *parent, const wxArrayString & labels);
    virtual ~TipPanel() {}
 
    wxSize GetSize() const;
@@ -102,7 +102,6 @@ private:
 #endif
 
 private:
-   wxString mMaxLabel;
    wxString mLabel;
    int mWidth;
    int mHeight;
@@ -117,15 +116,20 @@ BEGIN_EVENT_TABLE(TipPanel, wxFrame)
 #endif
 END_EVENT_TABLE()
 
-TipPanel::TipPanel(wxWindow *parent, const wxString & maxLabel)
+TipPanel::TipPanel(wxWindow *parent, const wxArrayString & labels)
 :  wxFrame(parent, wxID_ANY, wxString{}, wxDefaultPosition, wxDefaultSize,
            wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT)
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-   mMaxLabel = maxLabel;
    wxFont labelFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL);
-   GetTextExtent(mMaxLabel, &mWidth, &mHeight, NULL, NULL, &labelFont);
+   mWidth = mHeight = 0;
+   for ( const auto &label : labels ) {
+      int width, height;
+      GetTextExtent(label, &width, &height, NULL, NULL, &labelFont);
+      mWidth =  std::max( mWidth,  width );
+      mHeight = std::max( mHeight, height );
+   }
 
    mWidth += 8;
    mHeight += 8;
@@ -915,7 +919,7 @@ void LWSlider::ShowTip(bool show)
 
 void LWSlider::CreatePopWin()
 {
-   mTipPanel = std::make_unique<TipPanel>(mParent, GetMaxTip());
+   mTipPanel = std::make_unique<TipPanel>(mParent, GetWidestTips());
 }
 
 void LWSlider::SetPopWinPosition()
@@ -962,15 +966,22 @@ wxString LWSlider::GetTip(float value) const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf(wxT("%.2f"), value);
+         val.Printf( wxT("%.2f"), value );
          break;
    
       case DB_SLIDER:
-         val.Printf(wxT("%+.1f dB"), value);
+         val.Printf( wxT("%+.1f dB"), value );
+
+            /*
+             // PRL:  This erroneous code never had effect because
+             // the condition was always false (at least for the English format
+             // string), and the body had no side effect
          if (val.Right(1) == wxT("0"))
          {
             val.Left(val.Length() - 2);
          }
+             */
+
          break;
 
       case PAN_SLIDER:
@@ -980,22 +991,30 @@ wxString LWSlider::GetTip(float value) const
          }
          else
          {
-            val.Printf(wxT("%.0f%% %s"),
-               value * (value < 0.0 ? -100.0f : 100.0f),
-               value < 0.0 ? _("Left") : _("Right"));
+            const auto v = 100.0f * fabsf(value);
+            if (value < 0.0)
+               /* i18n-hint: Stereo pan setting */
+               val = wxString::Format( _("%.0f%% Left"), v );
+            else
+               /* i18n-hint: Stereo pan setting */
+               val = wxString::Format( _("%.0f%% Right"), v );
          }
          break;
 
       case SPEED_SLIDER:
-         val.Printf(wxT("%.2fx"), value);
+         /* i18n-hint: "x" suggests a multiplicative factor */
+         val.Printf( wxT("%.2fx"), value );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
-          val.Printf(wxT("%s%d"),
-                     (value > 0.0f ? _("+") : wxT("")),
-                     (int) value);
-          break;
+         if (value > 0.0f)
+            // Signed
+            val.Printf( wxT("%+d"), (int) value );
+         else
+            // Zero, or signed negative
+            val.Printf( wxT("%d"), (int) value );
+         break;
 #endif
       }
 
@@ -1009,9 +1028,9 @@ wxString LWSlider::GetTip(float value) const
    return label;
 }
 
-wxString LWSlider::GetMaxTip() const
+wxArrayString LWSlider::GetWidestTips() const
 {
-   wxString label;
+   wxArrayString results;
 
    if (mTipTemplate.IsEmpty())
    {
@@ -1020,36 +1039,38 @@ wxString LWSlider::GetMaxTip() const
       switch(mStyle)
       {
       case FRAC_SLIDER:
-         val.Printf(wxT("%d.99"), (int) (mMinValue - mMaxValue));
+         results.push_back( GetTip( -1.99f ) );
          break;
 
       case DB_SLIDER:
-         val = wxT("-99.999 dB");
+         results.push_back( GetTip( -99.9f ) );
          break;
 
       case PAN_SLIDER:
-         val = wxT("-100% Right");
+         // Don't assume we know which of "Left", "Right", or "Center"
+         // is the longest string, when localized
+         results.push_back( GetTip(  0.f ) );
+         results.push_back( GetTip(  1.f ) );
+         results.push_back( GetTip( -1.f ) );
          break;
 
       case SPEED_SLIDER:
-         val = wxT("9.99x");
+         results.push_back( GetTip( 9.99f ) );
          break;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
-          val = wxT("+127");
+          results.push_back( GetTip( 999.f ) );
           break;
 #endif
       }
-
-      label.Printf(_("%s: %s"), mName, val);
    }
    else
    {
-      label.Printf(mTipTemplate, floor(mMaxValue - mMinValue) + 0.999);
+      results.push_back( GetTip( floor(mMaxValue - mMinValue) + 0.999 ) );
    }
 
-   return label;
+   return results;
 }
 
 bool LWSlider::ShowDialog()
