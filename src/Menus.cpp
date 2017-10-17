@@ -332,10 +332,7 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
 
-      {
-         auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-            c->BeginSubMenu( _("&Export") );
-      }
+      c->BeginSubMenu( _("&Export") );
 
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),

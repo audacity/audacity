@@ -30,13 +30,11 @@ wxString FileException::ErrorMessage() const
       case Cause::Read:
          format = _("Audacity failed to read from a file in %s.");
          break;
-      case Cause::Write: {
-         auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-            format =
+      case Cause::Write:
+         format =
 _("Audacity failed to write to a file.\n"
   "Perhaps %s is not writable or the disk is full.");
          break;
-      }
       case Cause::Rename:
          format =
 _("Audacity successfully wrote a file in %s but failed to rename it as %s.");
