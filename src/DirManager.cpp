@@ -496,10 +496,15 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
    wxString cleanupLoc1=oldLoc;
    wxString cleanupLoc2=projFull;
 
+   bool created = false;
+
    if (bCreate) {
-      if (!wxDirExists(projFull))
+      if (!wxDirExists(projFull)) {
          if (!wxMkdir(projFull))
             return false;
+         else
+            created = true;
+      }
 
       #ifdef __UNIX__
       chmod(OSFILENAME(projFull), 0775);
@@ -583,6 +588,14 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          this->projFull = oldFull;
          this->projPath = oldPath;
          this->projName = oldName;
+
+         if (created)
+            CleanDir(
+               cleanupLoc2,
+               wxEmptyString,
+               wxEmptyString,
+               _("Cleaning up after failed save"),
+               kCleanTopDirToo);
 
          return false;
       }
