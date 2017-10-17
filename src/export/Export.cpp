@@ -395,7 +395,7 @@ bool Exporter::Process(AudacityProject *project, unsigned numChannels,
          {
             mFormat = i;
             mSubFormat = j;
-            return ExportTracks();
+            return CheckFilename() && ExportTracks();
          }
       }
    }
