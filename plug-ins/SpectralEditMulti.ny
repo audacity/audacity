@@ -2,6 +2,7 @@
 ;version 4
 ;type process spectral
 ;name "Spectral edit multi tool"
+;manpage "Spectral_edit_multi_tool"
 ;action "Filtering..."
 ;author "Paul Licameli"
 ;copyright "Released under terms of the GNU General Public License version 2"
