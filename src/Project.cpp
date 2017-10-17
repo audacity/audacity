@@ -5048,6 +5048,11 @@ void AudacityProject::EditClipboardByLabel( EditDestFunction action )
 // TrackPanel callback method
 void AudacityProject::TP_DisplayStatusMessage(const wxString &msg)
 {
+   // Bug1756:  If recording, let the status message for remaining disk space
+   // prevail
+   if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0)
+      return;
+
    mStatusBar->SetStatusText(msg, mainStatusBarField);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 }
