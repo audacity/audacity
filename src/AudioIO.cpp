@@ -1643,6 +1643,12 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    mAudioFramesPerBuffer = 0;
 #endif
    mOwningProject = GetActiveProject();
+
+   // PRL:  Protection from crash reported by David Bailes, involving starting
+   // and stopping with frequent changes of active window, hard to reproduce
+   if (!mOwningProject)
+      return false;
+
    mInputMeter = NULL;
    mOutputMeter = NULL;
 
