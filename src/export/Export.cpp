@@ -842,6 +842,11 @@ bool Exporter::ExportTracks()
             ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
          }
       }
+      else {
+         if ( ! success )
+            // Remove any new, and only partially written, file.
+            ::wxRemoveFile(mFilename.GetFullPath());
+      }
    } );
 
    auto result = mPlugins[mFormat]->Export(mProject,
