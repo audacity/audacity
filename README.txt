@@ -5,7 +5,7 @@ User suppport is provided on Audacity Forum:
 http://forum.audacityteam.org/ .
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
-and bug reports at feedback@audacityteam.org .
+and bug reports. Please visit http://audacityteam.org/contact/#feedback .
 
 Audacity is copyright (c) 1999-2017 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
@@ -29,12 +29,12 @@ best to discuss functional code changes with us first on audacity-devel:
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
 
-Version 2.1.3 
+Version 2.2.0
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.1.2 
+2.  Changes since version 2.1.3
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,47 +64,62 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.1.2: 
+2. Changes since version 2.1.3: 
 
-Changes and Improvements:
-   
- * Interface:  
-   * (macOS) Support for horizontal scroll on Magic Mouse / Trackpad and for
-     Trackpad pinch/expand zoom gestures.
-   * Pinned option on waveform makes waveform move and recording/playing head
-     stay still.
-   * Timer Record options to save/export/exit after recording.
-   * Scrub Ruler and optional Scrub Toolbar.
-   * New shortcuts ALT+RIGHT and ALT+LEFT (move to labels without editing). 
-   
- * Effects:
-   * Effects no longer grayed out when paused.
-   * New Distortion effect (replaces Leveller).
-   * SBSMS (higher quality but slower) option on Change Tempo / Change Pitch 
-     effects.
-   * New Rhythm Track generator (replaces Click Track). 
-   * New Generator for Sample Data Import.
-   * Nyquist effects now significantly faster.
-   
- * Other Changes:   
-   * Upgraded the PortAudio library to v19 rev r1966.  This gives Audacity 
-     Windows 10 support.
-   * (Windows) DirectSound now records 24-bit samples. 
-   * (macOS) Audacity.app now has its resources inside it rather than in a
-     separate folder, so installation to /Applications/ is cleaner.
-   * (macOS) Audacity 2.1.3 provides partial support for Sierra. Details at 
-     http://wiki.audacityteam.org/wiki/Partial_Support_for_Mac_Sierra_in_2.1.3 .
+Improvements
 
-Bug fixes:
+    * Four Selectable themes provided, with new 'Light' theme as default, 
+      plus option to customize
+    * Many menu changes:
+        * Menus Reorganized
+        * Extended menu bar provided
+        * New keyboard commands for working with clips 
+    * Help buttons ? in Preferences, Effects, Generators and Analyzers - and 
+      other places
+    * Non-Greying out of effects when no selection (and explanatory dialog 
+      with help button)
+    * Playback of MIDI (and Allegro) files imported into Note Tracks is 
+      now available.
+    * 'Center' option in Selection Toolbar
+    * Stem plots
+    * Major overhaul to documentation/manual including many new images and 
+      streamlined text on landing pages for in-program help. 
 
- Over 60 bugs fixed, including five longstanding bugs.
- 
+Other Changes
+
+    * Append-record is now the default (use Shift + Record for old behavior, 
+	to record on a new track)
+    * The Esc key now cancels all click-and-drag actions. It also chooses among 
+      overlapping mouse click targets, which is especially useful in the Multi-Tool.
+    * Sync-Lock button removed (use menu item or keyboard shortcut instead)
+    * New preferences and preference pages
+    * Overhaul of much code:
+        * Overhaul of envelope handling code to deal with some anomalies
+        * Overhaul of exception handling for greater safety 
+   *  New Logo 
+
+Bug Fixes
+
+   * Major work on bug fixing. 198 bugs that were in 2.1.3 were fixed for 2.2.0.
+        * The most serious bug fixed this time round was bug 437 which was 
+          about what happens when Audacity is recording and runs out of storage.
+        * Most of the bugs fixed were more minor, such as bug 463 which was 
+          about a case in which the numbering on the timeline could display
+          incorrect times. 
+
+ See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.2.0
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.1.3:
+3. Known Issues in 2.2.0:
 
-For known issues at release of 2.1.3 please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.1.3#known .
+For known issues at release of 2.2.0 please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.2.0/Issues 
+
+Please also check:
+  http://wiki.audacityteam.org/index.php?title=Known_Issues
+
+for details of any issues that have been identified after release of
+this version.
 
 
 -------------------------------------------------------------------------------
