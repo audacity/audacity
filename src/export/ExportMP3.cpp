@@ -83,6 +83,7 @@
 
 #include "../FileNames.h"
 #include "../float_cast.h"
+#include "../HelpSystem.h"
 #include "../Internat.h"
 #include "../Mix.h"
 #include "../Prefs.h"
@@ -676,8 +677,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      wxString page = wxT("faq_installation_and_plug_ins.html#lame");
-      ::OpenInDefaultBrowser(page);
+      HelpSystem::ShowHelp(this, wxT("FAQ:Installation_and_Plug-Ins#lame"));
    }
 
    wxString GetLibPath()
