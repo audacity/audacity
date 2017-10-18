@@ -32,7 +32,7 @@ wxString FileException::ErrorMessage() const
          break;
       case Cause::Write: {
          auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-         if (lang.empty())
+         if (lang.empty() || lang.Left(2) == wxT("en"))
             // PRL: last-minute improved message for 2.2.0 RC1.
             // It was too late to translate the new message, so improve it
             // in English only.
