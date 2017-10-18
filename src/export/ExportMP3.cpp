@@ -83,7 +83,6 @@
 
 #include "../FileNames.h"
 #include "../float_cast.h"
-#include "../HelpSystem.h"
 #include "../Internat.h"
 #include "../Mix.h"
 #include "../Prefs.h"
@@ -91,6 +90,7 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
+#include "../widgets/HelpSystem.h"
 #include "../widgets/LinkingHtmlWindow.h"
 
 #include "Export.h"
