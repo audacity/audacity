@@ -76,7 +76,7 @@ Improvements
         * New keyboard commands for working with clips 
     * Help buttons ? in Preferences, Effects, Generators and Analyzers - and 
       other places
-    * Non-Greying out of effects when no selection (and explanatory dialog 
+    * Non-Graying out of effects when no selection (and explanatory dialog 
       with help button)
     * Playback of MIDI (and Allegro) files imported into Note Tracks is 
       now available.
