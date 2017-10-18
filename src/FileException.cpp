@@ -50,15 +50,24 @@ _("Audacity successfully wrote a file in %s but failed to rename it as %s.");
       default:
          break;
    }
-   wxString target = fileName.GetVolume();
-   if (target.empty()) {
-      // Shorten the path, arbitrarily to 3 components
-      auto path = fileName;
-      path.SetFullName(wxString{});
-      while(path.GetDirCount() > 3)
-         path.RemoveLastDir();
-      target = path.GetFullPath();
-   }
+   wxString target;
+
+#ifdef __WXMSW__
+
+   // Drive letter plus colon
+   target = fileName.GetVolume() + wxT(":");
+
+#else
+
+   // Shorten the path, arbitrarily to 3 components
+   auto path = fileName;
+   path.SetFullName(wxString{});
+   while(path.GetDirCount() > 3)
+      path.RemoveLastDir();
+   target = path.GetFullPath();
+
+#endif
+
    return wxString::Format(
       format, target, renameTarget.GetFullName() );
 }
