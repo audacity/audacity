@@ -199,6 +199,23 @@ wxString TitleText( const wxString & Key )
    return Key;
 }
 
+namespace {
+   // This is ugly transitional stuff for 2.2.0 only
+   // The target string may have been localized but contains a link that we
+   // need to change to fix remote help, while preserving the translated
+   // material.
+   // In future we should not put Wiki and HTML markup inside
+   // internationalized strings!  Descriptive text for the link should be
+   // localized separately, then replaced using string formatting.
+   wxString Substitute(wxString target,
+                   const wxString &given,
+                       const wxString &replacement) {
+      target.Replace(given, replacement);
+      return target;
+
+   }
+}
+
 static wxString HelpTextBuiltIn( const wxString & Key )
 {
    // PRL:  Is it necessary to define these outside of conditional compilation so that both get into the .pot file?
@@ -261,10 +278,14 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 compressed WAV files from portable recorders and audio from video files) if you download and install \
 the optional [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| \
 FFmpeg library]] to your computer.") + wxT("</p><p>") +
+Substitute(
          _("You can also read our help on importing \
 [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI files]] \
 and tracks from [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| \
-audio CDs]].") + wxT("</p>")
+audio CDs]]."),
+                       wxT("faq_opening_and_saving_files.html#midi"),
+                       wxT("playing_and_recording.html#midi")
+) + wxT("</p>")
       );
    }
 
