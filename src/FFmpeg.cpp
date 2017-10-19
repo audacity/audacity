@@ -535,7 +535,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      HelpSystem::ShowHelp(this, wxT("FAQ:Installation_and_Plug-Ins#ffdown"));
+      HelpSystem::ShowHelp(this, wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"));
    }
 
    wxString GetLibPath()

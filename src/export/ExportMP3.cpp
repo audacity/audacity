@@ -677,7 +677,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      HelpSystem::ShowHelp(this, wxT("FAQ:Installation_and_Plug-Ins#lame"));
+      HelpSystem::ShowHelp(this, wxT("FAQ:Installing_the_LAME_MP3_Encoder"));
    }
 
    wxString GetLibPath()
