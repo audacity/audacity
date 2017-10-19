@@ -224,7 +224,6 @@ class ToolBar /* not final */ : public wxPanelWrapper
    ToolBarResizer *mResizer;
 
    wxBoxSizer *mHSizer;
-   wxSizerItem *mSpacer;
 
    bool mVisible;
    bool mResizable;

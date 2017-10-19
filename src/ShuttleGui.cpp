@@ -701,7 +701,6 @@ wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
 wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
 {
    UseUpId();
-   mBoxName = Str;
    if( mShuttleMode != eIsCreating )
       return NULL;
    wxStaticBox * pBox = safenew wxStaticBox(GetParent(), miId,
@@ -2061,33 +2060,6 @@ GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
 #else
    return NULL;
 #endif
-}
-
-RulerPanel * ShuttleGui::AddRulerVertical(float low, float hi, const wxString & Units )
-{
-   UseUpId();
-   if( mShuttleMode != eIsCreating )
-      return (RulerPanel*)NULL;
-//    return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), RulerPanel);
-   RulerPanel * pRulerPanel;
-   miProp=0;
-   mpWind = pRulerPanel = safenew RulerPanel(
-      GetParent(),
-      miId,
-      wxDefaultPosition,
-      wxDefaultSize
-      );
-   Ruler & Ruler = pRulerPanel->ruler;
-   Ruler.SetOrientation(wxVERTICAL);
-   Ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-   Ruler.SetRange(low, hi);
-   Ruler.SetFormat(Ruler::RealFormat);
-   Ruler.SetUnits(Units);
-   Ruler.SetLabelEdges(true);
-
-   mpWind->SetMinSize(wxSize(38,50));
-   UpdateSizers();
-   return pRulerPanel;
 }
 
 AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )

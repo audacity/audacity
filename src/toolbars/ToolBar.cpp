@@ -324,7 +324,6 @@ ToolBar::ToolBar( int type,
    // Initialize everything
    mParent = NULL;
    mHSizer = NULL;
-   mSpacer = NULL;
    mVisible = false;
    mPositioned = false;
 

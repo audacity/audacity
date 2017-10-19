@@ -187,7 +187,7 @@ void SelectionBar::Create(wxWindow * parent)
 wxRadioButton * SelectionBar::AddRadioButton( const wxString & Name, 
    int id, wxSizer *pSizer, long style )
 {
-   bool bUseNativeRadioButton = theTheme.IsUsingSyestemTextColour();
+   bool bUseNativeRadioButton = theTheme.IsUsingSystemTextColour();
    wxRadioButton * pBtn;
    // Safenew because the button is being create dinto this window.
    pBtn = safenew wxRadioButton(this, id,bUseNativeRadioButton ? Name : wxT(""),

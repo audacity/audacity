@@ -264,7 +264,6 @@ public:
       return mpParent;
    }
    ShuttleGuiBase & Prop( int iProp );
-   int GetId() {return miIdNext;};
    void UseUpId();
 
    wxSizer * GetSizer() {return mpSizer;}
@@ -284,7 +283,6 @@ protected:
    wxWindow * mpLastWind;
    wxWindow * mpDlg;
    wxSizer * pSizerStack[ nMaxNestedSizers ];
-   wxString mBoxName;
 
    std::unique_ptr<Shuttle> mpShuttle; /*! Controls source/destination of shuttled data.  You can
    leave this NULL if you are shuttling to variables */
@@ -328,7 +326,6 @@ extern void SetIfCreated( wxTextCtrl *&Var, wxTextCtrl * Val );
 extern void SetIfCreated( wxStaticText *&Var, wxStaticText * Val );
 
 class GuiWaveTrack;
-class RulerPanel;
 class AttachableScrollBar;
 class ViewInfo;
 #include <wx/scrolbar.h>  // to get wxSB_HORIZONTAL
@@ -376,12 +373,10 @@ public:
    // Prop() sets the proportion value, defined as in wxSizer::Add().
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
-   RulerPanel * AddRulerVertical( float low, float hi, const wxString & Units );
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
    void AddStandardButtons( long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
-   int GetBorder() { return miBorder; };
 
    void SetSizeHints( int minX = -1, int minY = -1 );
    void SetSizeHints( const wxArrayString & items );
