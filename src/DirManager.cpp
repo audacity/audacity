@@ -553,7 +553,9 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
                success = MoveToNewProjectDirectory( &*b );
             }
 
-            progress.Update(count, total);
+            if( progress.Update(count, total) != ProgressResult::Success )
+               success = false;
+
             count++;
          }
          ++iter;
