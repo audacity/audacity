@@ -642,7 +642,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndVerticalLay();
 
-         mPanel = safenew EqualizationPanel(this, parent);
+         mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
          S.Prop(1);
          S.AddWindow(mPanel, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
          S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
@@ -2844,8 +2844,9 @@ BEGIN_EVENT_TABLE(EqualizationPanel, wxPanelWrapper)
    EVT_SIZE(EqualizationPanel::OnSize)
 END_EVENT_TABLE()
 
-EqualizationPanel::EqualizationPanel(EffectEqualization *effect, wxWindow *parent)
-:  wxPanelWrapper(parent)
+EqualizationPanel::EqualizationPanel(
+   wxWindow *parent, wxWindowID winid, EffectEqualization *effect)
+:  wxPanelWrapper(parent, winid)
 {
    mParent = parent;
    mEffect = effect;

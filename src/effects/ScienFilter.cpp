@@ -395,7 +395,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndVerticalLay();
 
-      mPanel = safenew EffectScienFilterPanel(this, parent);
+      mPanel = safenew EffectScienFilterPanel(parent, wxID_ANY, this);
       mPanel->SetFreqRange(mLoFreq, mNyquist);
 
       S.SetBorder(5);
@@ -1010,8 +1010,9 @@ BEGIN_EVENT_TABLE(EffectScienFilterPanel, wxPanelWrapper)
     EVT_SIZE(EffectScienFilterPanel::OnSize)
 END_EVENT_TABLE()
 
-EffectScienFilterPanel::EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent)
-:  wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 200))
+EffectScienFilterPanel::EffectScienFilterPanel(
+   wxWindow *parent, wxWindowID winid, EffectScienFilter *effect)
+:  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(400, 200))
 {
    mEffect = effect;
    mParent = parent;

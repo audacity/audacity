@@ -139,7 +139,8 @@ private:
 class EffectScienFilterPanel final : public wxPanelWrapper
 {
 public:
-   EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent);
+   EffectScienFilterPanel(
+      wxWindow *parent, wxWindowID winid, EffectScienFilter *effect);
    virtual ~EffectScienFilterPanel();
 
    // We don't need or want to accept focus.

@@ -298,7 +298,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       }
       S.EndVerticalLay();
 
-      mFreqPlot = safenew FreqPlot(this);
+      mFreqPlot = safenew FreqPlot(this, wxID_ANY);
       mFreqPlot->SetMinSize(wxSize(wxDefaultCoord, FREQ_WINDOW_HEIGHT));
       S.Prop(1);
       S.AddWindow(mFreqPlot, wxEXPAND);
@@ -481,7 +481,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    S.AddSpace(5);
 
-   mProgress = safenew FreqGauge(this); //, wxID_ANY, wxST_SIZEGRIP);
+   mProgress = safenew FreqGauge(this, wxID_ANY); //, wxST_SIZEGRIP);
    S.AddWindow(mProgress, wxEXPAND);
 
    // Log-frequency axis works for spectrum plots only.
@@ -1109,8 +1109,8 @@ BEGIN_EVENT_TABLE(FreqPlot, wxWindow)
    EVT_MOUSE_EVENTS(FreqPlot::OnMouseEvent)
 END_EVENT_TABLE()
 
-FreqPlot::FreqPlot(wxWindow *parent)
-:  wxWindow(parent, wxID_ANY)
+FreqPlot::FreqPlot(wxWindow *parent, wxWindowID winid)
+:  wxWindow(parent, winid)
 {
    freqWindow = (FreqWindow *) parent;
 }
@@ -1135,8 +1135,8 @@ void FreqPlot::OnMouseEvent(wxMouseEvent & event)
    freqWindow->PlotMouseEvent(event);
 }
 
-FreqGauge::FreqGauge(wxWindow * parent)
-:  wxStatusBar(parent, wxID_ANY, wxST_SIZEGRIP)
+FreqGauge::FreqGauge(wxWindow * parent, wxWindowID winid)
+:  wxStatusBar(parent, winid, wxST_SIZEGRIP)
 {
    mRange = 0;
 }
