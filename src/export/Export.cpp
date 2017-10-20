@@ -220,12 +220,8 @@ bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(form
    return false;
 }
 
-wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
+void ExportPlugin::OptionsCreate(ShuttleGui &S, int WXUNUSED(format))
 {
-   wxASSERT(parent); // To justify safenew
-   wxPanel *p = safenew wxPanelWrapper(parent, wxID_ANY);
-   ShuttleGui S(p, eIsCreatingFromPrefs);
-
    S.StartHorizontalLay(wxCENTER);
    {
       S.StartHorizontalLay(wxCENTER, 0);
@@ -235,8 +231,6 @@ wxWindow *ExportPlugin::OptionsCreate(wxWindow *parent, int WXUNUSED(format))
       S.EndHorizontalLay();
    }
    S.EndHorizontalLay();
-
-   return p;
 }
 
 //Create a mixer by computing the time warp factor
@@ -994,17 +988,21 @@ void Exporter::CreateUserPane(wxWindow *parent)
       {
          S.StartStatic(_("Format Options"), 1);
          {
-            mBook = safenew wxSimplebook(S.GetParent());
-            S.Position(wxEXPAND)
-               .AddWindow(mBook);
+            mBook = S.Position(wxEXPAND)
+               .StartSimplebook();
 
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
-                  mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
+                  // Name of simple book page is not displayed
+                  S.StartNotebookPage( wxEmptyString );
+                  pPlugin->OptionsCreate(S, j);
+                  S.EndNotebookPage();
                }
             }
+
+            S.EndSimplebook();
          }
          S.EndStatic();
       }

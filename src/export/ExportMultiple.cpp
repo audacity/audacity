@@ -294,19 +294,25 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddVariableText( {}, false);
 
             S.AddPrompt(_("Options:"));
-            if (!mBook)
+
+            mBook = S.Id(OptionsID)
+               .Style(wxBORDER_STATIC)
+               .StartSimplebook();
+            if (S.GetMode() == eIsCreating)
             {
-               mBook = safenew wxSimplebook(S.GetParent(), OptionsID, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC);
                for (const auto &pPlugin : mPlugins)
                {
                   for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                   {
-                     mBook->AddPage(pPlugin->OptionsCreate(mBook, j), wxEmptyString);
+                     // Name of simple book page is not displayed
+                     S.StartNotebookPage( wxEmptyString );
+                     pPlugin->OptionsCreate(S, j);
+                     S.EndNotebookPage();
                   }
                }
                mBook->ChangeSelection(mFormat->GetSelection());
             }
-            S.AddWindow(mBook);
+            S.EndSimplebook();
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
          }

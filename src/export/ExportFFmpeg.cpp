@@ -122,7 +122,7 @@ public:
 
    /// Creates options panel
    ///\param format - index of export type
-   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
 
    /// Check whether or not current project sample rate is compatible with the export codec
    bool CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates);
@@ -1067,33 +1067,42 @@ int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, 
    return wxAtoi(choice->GetStringSelection());
 }
 
-wxWindow *ExportFFmpeg::OptionsCreate(wxWindow *parent, int format)
+void ExportFFmpeg::OptionsCreate(ShuttleGui &S, int format)
 {
-   wxASSERT(parent); // to justify safenew
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(format);
    if (mSubFormat == FMT_M4A)
    {
-      return safenew ExportFFmpegAACOptions(parent, format);
+      S.AddWindow(
+         safenew ExportFFmpegAACOptions{ S.GetParent(), format } );
+      return;
    }
    else if (mSubFormat == FMT_AC3)
    {
-      return safenew ExportFFmpegAC3Options(parent, format);
+      S.AddWindow(
+         safenew ExportFFmpegAC3Options{ S.GetParent(), format } );
+      return;
    }
    else if (mSubFormat == FMT_AMRNB)
    {
-      return safenew ExportFFmpegAMRNBOptions(parent, format);
+      S.AddWindow(
+         safenew ExportFFmpegAMRNBOptions{ S.GetParent(), format } );
+      return;
    }
    else if (mSubFormat == FMT_WMA2)
    {
-      return safenew ExportFFmpegWMAOptions(parent, format);
+      S.AddWindow(
+         safenew ExportFFmpegWMAOptions{ S.GetParent(), format } );
+      return;
    }
    else if (mSubFormat == FMT_OTHER)
    {
-      return safenew ExportFFmpegCustomOptions(parent, format);
+      S.AddWindow(
+         safenew ExportFFmpegCustomOptions{ S.GetParent(), format } );
+      return;
    }
 
-   return ExportPlugin::OptionsCreate(parent, format);
+   ExportPlugin::OptionsCreate(S, format);
 }
 
 static Exporter::RegisteredExportPlugin

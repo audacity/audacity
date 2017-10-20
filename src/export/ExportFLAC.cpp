@@ -212,7 +212,7 @@ public:
 
    // Required
 
-   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
@@ -435,10 +435,9 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    return updateResult;
 }
 
-wxWindow *ExportFLAC::OptionsCreate(wxWindow *parent, int format)
+void ExportFLAC::OptionsCreate(ShuttleGui &S, int format)
 {
-   wxASSERT(parent); // to justify safenew
-   return safenew ExportFLACOptions(parent, format);
+   S.AddWindow( safenew ExportFLACOptions{ S.GetParent(), format } );
 }
 
 // LL:  There's a bug in libflac++ 1.1.2 that prevents us from using

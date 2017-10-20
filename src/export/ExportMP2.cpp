@@ -205,7 +205,7 @@ public:
 
    // Required
 
-   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
@@ -377,10 +377,9 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    return updateResult;
 }
 
-wxWindow *ExportMP2::OptionsCreate(wxWindow *parent, int format)
+void ExportMP2::OptionsCreate(ShuttleGui &S, int format)
 {
-   wxASSERT(parent); // to justify safenew
-   return safenew ExportMP2Options(parent, format);
+   S.AddWindow( safenew ExportMP2Options{ S.GetParent(), format } );
 }
 
 

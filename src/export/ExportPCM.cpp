@@ -327,7 +327,7 @@ public:
 
    // Required
 
-   wxWindow *OptionsCreate(wxWindow *parent, int format) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
@@ -929,16 +929,16 @@ bool ExportPCM::AddID3Chunk(
    return true;
 }
 
-wxWindow *ExportPCM::OptionsCreate(wxWindow *parent, int format)
+void ExportPCM::OptionsCreate(ShuttleGui &S, int format)
 {
-   wxASSERT(parent); // to justify safenew
    // default, full user control
    if (format < 0 || static_cast<unsigned int>(format) >= WXSIZEOF(kFormats))
    {
-      return safenew ExportPCMOptions(parent, format);
+      S.AddWindow( safenew ExportPCMOptions{ S.GetParent(), format } );
+      return;
    }
 
-   return ExportPlugin::OptionsCreate(parent, format);
+   ExportPlugin::OptionsCreate(S, format);
 }
 
 FileExtension ExportPCM::GetExtension(int index)

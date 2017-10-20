@@ -31,6 +31,7 @@ class Tags;
 class TrackList;
 class MixerSpec;
 class ProgressDialog;
+class ShuttleGui;
 class Mixer;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 enum class ProgressResult : unsigned;
@@ -92,8 +93,7 @@ public:
 
    virtual bool DisplayOptions(wxWindow *parent, int format = 0);
    
-   // Precondition: parent != NULL
-   virtual wxWindow *OptionsCreate(wxWindow *parent, int format) = 0;
+   virtual void OptionsCreate(ShuttleGui &S, int format) = 0;
 
    virtual bool CheckFileName(wxFileName &filename, int format = 0);
    /** @brief Exporter plug-ins may override this to specify the number
