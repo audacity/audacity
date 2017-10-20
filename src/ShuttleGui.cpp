@@ -787,6 +787,7 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
       wxVERTICAL );
    miSizerProp = iProp;
    UpdateSizers();
+   mpParent = pBox;
    return pBox;
 }
 
@@ -795,6 +796,7 @@ void ShuttleGuiBase::EndStatic()
    if( mShuttleMode != eIsCreating )
       return;
    PopSizer();
+   mpParent = mpParent->GetParent();
 }
 
 /// This allows subsequent controls and static boxes to be in

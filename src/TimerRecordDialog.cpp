@@ -808,7 +808,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartStatic(_("Start Date and Time"), true);
          {
             m_pDatePickerCtrl_Start =
-               safenew wxDatePickerCtrl(this, // wxWindow *parent,
+               safenew wxDatePickerCtrl(S.GetParent(), // wxWindow *parent,
                ID_DATEPICKER_START, // wxWindowID id,
                m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime,
             // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
@@ -820,7 +820,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddWindow(m_pDatePickerCtrl_Start);
 
             m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
-               this, ID_TIMETEXT_START, NumericConverter::TIME,
+               S.GetParent(), ID_TIMETEXT_START, NumericConverter::TIME,
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
@@ -834,7 +834,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartStatic(_("End Date and Time"), true);
          {
             m_pDatePickerCtrl_End =
-               safenew wxDatePickerCtrl(this, // wxWindow *parent,
+               safenew wxDatePickerCtrl(S.GetParent(), // wxWindow *parent,
                ID_DATEPICKER_END, // wxWindowID id,
                m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
             // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
@@ -849,7 +849,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddWindow(m_pDatePickerCtrl_End);
 
             m_pTimeTextCtrl_End = safenew NumericTextCtrl(
-               this, ID_TIMETEXT_END, NumericConverter::TIME,
+               S.GetParent(), ID_TIMETEXT_END, NumericConverter::TIME,
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
@@ -872,7 +872,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             */
             auto strFormat1 = _("099 days 024 h 060 m 060 s");
             m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
-               this, ID_TIMETEXT_DURATION, NumericConverter::TIME,
+               S.GetParent(), ID_TIMETEXT_DURATION, NumericConverter::TIME,
                {}, 0, 44100,
                Options{}
                   .MenuEnabled(false)
@@ -902,7 +902,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   sInitialValue = _("Current Project");
                }
                S.AddPrompt(_("Save Project As:"));
-               m_pTimerSavePathTextCtrl = NewPathControl(this, ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
+               m_pTimerSavePathTextCtrl = NewPathControl(
+                  S.GetParent(), ID_AUTOSAVEPATH_TEXT, _("Save Project As:"), sInitialValue);
                m_pTimerSavePathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerSavePathTextCtrl);
                m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(_("Select..."));
@@ -917,7 +918,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(3, wxEXPAND);
             {
                S.AddPrompt(_("Export Project As:"));
-               m_pTimerExportPathTextCtrl = NewPathControl(this, ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
+               m_pTimerExportPathTextCtrl = NewPathControl(
+                  S.GetParent(), ID_AUTOEXPORTPATH_TEXT, _("Export Project As:"), wxT(""));
                m_pTimerExportPathTextCtrl->SetEditable(false);
                S.AddWindow(m_pTimerExportPathTextCtrl);
                m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(_("Select..."));
