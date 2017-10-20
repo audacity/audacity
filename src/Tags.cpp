@@ -587,6 +587,8 @@ class ComboEditor final : public wxGridCellChoiceEditor
 public:
    ComboEditor(const wxArrayString& choices, bool allowOthers = false)
    :  wxGridCellChoiceEditor(choices, allowOthers)
+   ,  m_choices{ choices }
+   ,  m_allowOthers{ allowOthers }
    {
    }
 
@@ -595,7 +597,7 @@ public:
       // Ignore it (a must on the Mac as the erasure causes problems.)
    }
 
-   void SetParameters(const wxString& params)
+   void SetParameters(const wxString& params) override
    {
       wxGridCellChoiceEditor::SetParameters(params);
 
@@ -606,7 +608,7 @@ public:
       }
    }
 
-   void SetSize(const wxRect& rectOrig)
+   void SetSize(const wxRect& rectOrig) override
    {
       wxRect rect(rectOrig);
       wxRect r = Combo()->GetRect();
@@ -620,7 +622,7 @@ public:
 
    // Fix for Bug 1389
    // July 2016: ANSWER-ME: Does this need reporting upstream to wxWidgets?
-   virtual void StartingKey(wxKeyEvent& event)
+   virtual void StartingKey(wxKeyEvent& event) override
    {
        // Lifted from wxGridCellTextEditor and adapted to combo.
 
@@ -670,6 +672,15 @@ public:
        }
    }
 
+   // Clone is required by wxwidgets; implemented via copy constructor
+   wxGridCellEditor *Clone() const override
+   {
+      return safenew ComboEditor{ m_choices, m_allowOthers };
+   }
+
+private:
+   wxArrayString   m_choices;
+   bool            m_allowOthers;
 };
 
 //
