@@ -107,6 +107,7 @@ for registering for changes.
 #include <wx/grid.h>
 #include <wx/listctrl.h>
 #include <wx/notebook.h>
+#include <wx/simplebook.h>
 #include <wx/treectrl.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
@@ -977,12 +978,33 @@ void ShuttleGuiBase::EndNotebook()
 }
 
 
+wxSimplebook * ShuttleGuiBase::StartSimplebook()
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSimplebook);
+   wxSimplebook * pNotebook;
+   mpWind = pNotebook = safenew wxSimplebook(GetParent(),
+      miId, wxDefaultPosition, wxDefaultSize, GetStyle( 0 ));
+   SetProportions( 1 );
+   UpdateSizers();
+   mpParent = pNotebook;
+   return pNotebook;
+}
+
+void ShuttleGuiBase::EndSimplebook()
+{
+   //PopSizer();
+   mpParent = mpParent->GetParent();
+}
+
+
 wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   wxNotebook * pNotebook = (wxNotebook*)mpParent;
+   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
    wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
    pPage->SetName(Name);
 
@@ -1004,7 +1026,7 @@ void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * 
    if( mShuttleMode != eIsCreating )
       return;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   wxNotebook * pNotebook = (wxNotebook*)mpParent;
+   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
 //   wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
    pPage->Create( mpParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("panel"));
    pPage->SetName(Name);

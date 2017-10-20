@@ -58,6 +58,7 @@ class wxTreeCtrl;
 class wxTextCtrl;
 class wxSlider;
 class wxNotebook;
+class wxSimplebook;
 typedef wxWindow wxNotebookPage;  // so far, any window can be a page
 class wxButton;
 class wxBitmapButton;
@@ -360,11 +361,16 @@ public:
    wxNotebook * StartNotebook();
    void EndNotebook();
 
+   wxSimplebook * StartSimplebook();
+   void EndSimplebook();
+
+   // Use within any kind of book control:
    // IDs of notebook pages cannot be chosen by the caller
    wxNotebookPage * StartNotebookPage( const wxString & Name );
    void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
 
    void EndNotebookPage();
+
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
