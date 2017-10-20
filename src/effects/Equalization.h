@@ -263,7 +263,7 @@ private:
    wxSizerItem *mLeftSpacer;
 
    EqualizationPanel *mPanel;
-   wxPanel *mGraphicPanel;
+   //wxPanel *mGraphicPanel;
    wxRadioButton *mDraw;
    wxRadioButton *mGraphic;
    wxCheckBox *mLinFreq;

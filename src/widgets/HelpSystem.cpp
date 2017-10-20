@@ -160,7 +160,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    pFrame->SetTransparent(0);
    ShuttleGui S( pWnd, eIsCreating );
 
-   wxPanel *pPan = S.Style( wxNO_BORDER | wxTAB_TRAVERSAL )
+   S.Style( wxNO_BORDER | wxTAB_TRAVERSAL )
       .Prop(true)
       .StartPanel();
    {
@@ -181,7 +181,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       }
       S.EndHorizontalLay();
 
-      html = safenew LinkingHtmlWindow(pPan, wxID_ANY,
+      html = safenew LinkingHtmlWindow(S.GetParent(), wxID_ANY,
                                    wxDefaultPosition,
                                    bIsFile ? wxSize(500, 400) : wxSize(480, 240),
                                    wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);

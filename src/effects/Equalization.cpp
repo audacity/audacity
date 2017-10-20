@@ -725,8 +725,6 @@ bool EffectEqualization::CloseUI()
 
 void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 {
-   wxWindow *const parent = S.GetParent();
-
    //LoadCurves();
 
    auto trackList = inputTracks();
@@ -770,7 +768,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.StartVerticalLay(wxEXPAND, 1);
          {
             mdBRuler = safenew RulerPanel(
-               parent, wxID_ANY, wxVERTICAL,
+               S.GetParent(), wxID_ANY, wxVERTICAL,
                wxSize{ 100, 100 }, // Ruler can't handle small sizes
                RulerPanel::Range{ 60.0, -120.0 },
                Ruler::LinearDBFormat,
@@ -789,7 +787,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndVerticalLay();
 
-         mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
+         mPanel = safenew EqualizationPanel(S.GetParent(), wxID_ANY, this);
          S.Prop(1)
             .Position(wxEXPAND)
             .MinSize( { wxDefaultCoord, wxDefaultCoord } )
@@ -827,7 +825,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.AddSpace(1, 1);
 
          mFreqRuler  = safenew RulerPanel(
-            parent, wxID_ANY, wxHORIZONTAL,
+            S.GetParent(), wxID_ANY, wxHORIZONTAL,
             wxSize{ 100, 100 }, // Ruler can't handle small sizes
             RulerPanel::Range{ mLoFreq, mHiFreq },
             Ruler::IntFormat,
