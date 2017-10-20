@@ -225,7 +225,7 @@ void ShuttleGuiBase::HandleOptionality(const wxString &Prompt)
 }
 
 /// Right aligned text string.
-void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
+void ShuttleGuiBase::AddPrompt(const wxString &Prompt, int wrapWidth)
 {
    if( mShuttleMode != eIsCreating )
       return;
@@ -239,35 +239,44 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
    if( Prompt.empty() )
       return;
    miProp=1;
-   mpWind = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
+   auto text = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_RIGHT ));
+   mpWind = text;
+   if (wrapWidth > 0)
+      text->Wrap(wrapWidth);
    mpWind->SetName(wxStripMenuCodes(Prompt)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL, true );
 }
 
 /// Left aligned text string.
-void ShuttleGuiBase::AddUnits(const wxString &Prompt)
+void ShuttleGuiBase::AddUnits(const wxString &Prompt, int wrapWidth)
 {
    if( Prompt.empty() )
       return;
    if( mShuttleMode != eIsCreating )
       return;
-   miProp=1;
-   mpWind = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
+   miProp = 1;
+   auto text = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_LEFT ));
+   mpWind = text;
+   if (wrapWidth > 0)
+      text->Wrap(wrapWidth);
    mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL );
 }
 
 /// Centred text string.
-void ShuttleGuiBase::AddTitle(const wxString &Prompt)
+void ShuttleGuiBase::AddTitle(const wxString &Prompt, int wrapWidth)
 {
    if( Prompt.empty() )
       return;
    if( mShuttleMode != eIsCreating )
       return;
-   mpWind = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
+   auto text = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_CENTRE ));
+   mpWind = text;
+   if (wrapWidth > 0)
+      text->Wrap(wrapWidth);
    mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
 }
@@ -411,13 +420,16 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt,
    return AddChoice( Prompt, choices, choices.Index( Selected ) );
 }
 
-void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter)
+void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter, int wrapWidth)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return;
-   mpWind = safenew wxStaticText(GetParent(), miId, Str, wxDefaultPosition, wxDefaultSize,
+   auto text = safenew wxStaticText(GetParent(), miId, Str, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_LEFT ));
+   mpWind = text;
+   if ( wrapWidth > 0 )
+      text->Wrap( wrapWidth );
    mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
    {
@@ -428,15 +440,19 @@ void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter)
       UpdateSizers();
 }
 
-wxStaticText * ShuttleGuiBase::AddVariableText(const wxString &Str, bool bCenter, int PositionFlags)
+wxStaticText * ShuttleGuiBase::AddVariableText(
+   const wxString &Str, bool bCenter, int PositionFlags, int wrapWidth )
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxStaticText);
 
    wxStaticText *pStatic;
-   mpWind = pStatic = safenew wxStaticText(GetParent(), miId, Str, wxDefaultPosition, wxDefaultSize,
+   auto text = pStatic = safenew wxStaticText(GetParent(), miId, Str, wxDefaultPosition, wxDefaultSize,
       GetStyle( wxALIGN_LEFT ));
+   mpWind = text;
+   if ( wrapWidth > 0 )
+      text->Wrap( wrapWidth );
    mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
    {

@@ -137,7 +137,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndTwoColumn();
 
-      S.AddVariableText(_("If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."))->Wrap(600);
+      S.AddVariableText(_("If the available system memory falls below this value, audio will no longer\nbe cached in memory and will be written to disk."),
+         false, 0, 600);
    }
    S.EndStatic();
 #endif // DEPRECATED_AUDIO_CACHE
