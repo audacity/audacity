@@ -37,6 +37,8 @@
 #include "sndfile.h"
 
 #include "../WaveClip.h"
+#include "../ShuttleGui.h"
+
 #include "../ondemand/ODManager.h"
 #include "../ondemand/ODComputeSummaryTask.h"
 #include "../blockfile/ODPCMAliasBlockFile.h"
@@ -318,9 +320,6 @@ static wxString AskCopyOrEdit()
       wxDialogWrapper dialog( nullptr, -1, XO("Warning") );
       dialog.SetName();
 
-      wxBoxSizer *vbox;
-      dialog.SetSizer(vbox = safenew wxBoxSizer(wxVERTICAL));
-
       wxString clause1 = _(
 "When importing uncompressed audio files you can either copy them into the project,"
 " or read them directly from their current location (without copying).\n\n"
@@ -340,36 +339,31 @@ static wxString AskCopyOrEdit()
 "How do you want to import the current file(s)?"
       );
 
-      wxStaticText *message =
-         safenew wxStaticText(&dialog, -1, clause1 + clause2 + clause3);
-
-      message->Wrap(500);
-      message->SetName(message->GetLabel());
-
-      vbox->Add(message, 1, wxALL | wxEXPAND, 10);
-
-      wxStaticBox *box = safenew wxStaticBoxWrapper(&dialog, -1, _("Choose an import method"));
-      box->SetName(box->GetLabel());
+      ShuttleGui S{ &dialog, eIsCreating };
+      S.SetBorder(10);
+      S
+         .Position( wxALL | wxEXPAND )
+         .AddUnits( clause1 + clause2 + clause3, 500);
 
       wxRadioButton *aliasRadio;
       wxRadioButton *copyRadio;
       wxCheckBox *dontAskNextTimeBox;
 
+      S.StartStatic(_("Choose an import method"));
       {
-         auto boxsizer = std::make_unique<wxStaticBoxSizer>(box, wxVERTICAL);
+         S.SetBorder(0);
 
-         copyRadio = safenew wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-         boxsizer->Add(copyRadio, 0, wxALL);
-         copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
+         copyRadio = S.AddRadioButton(
+            _("Make a &copy of the files before editing (safer)") );
 
-         aliasRadio = safenew wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
-         boxsizer->Add(aliasRadio, 0, wxALL);
-         aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
+         aliasRadio = S.AddRadioButtonToGroup(
+            _("Read the files &directly from the original (faster)") );
 
-         dontAskNextTimeBox = safenew wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
-         boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
-         vbox->Add(boxsizer.release(), 0, wxALL, 10);
+         dontAskNextTimeBox = S.AddCheckBox(
+            _("Don't &warn again and always use my choice above"),
+            wxT("false"));
       }
+      S.EndStatic();
 
       dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
 
@@ -377,8 +371,8 @@ static wxString AskCopyOrEdit()
       wxRadioButton *prefsRadio = oldCopyPref == wxT("copy") ? copyRadio : aliasRadio;
       prefsRadio->SetValue(true);
 
-      wxSizer *buttonSizer = dialog.CreateButtonSizer(wxOK | wxCANCEL);
-      vbox->Add(buttonSizer, 0, wxALL | wxEXPAND, 10);
+      S.SetBorder( 10 );
+      S.AddStandardButtons( eOkButton | eCancelButton );
 
       dialog.SetSize(dialog.GetBestSize());
       dialog.Layout();
