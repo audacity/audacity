@@ -2744,7 +2744,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             if (start1 == end0) {
                const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
-               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1))
+               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1, fillZero, mayThrow))
                   return 0;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
@@ -2769,7 +2769,8 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          mOverlapBuffer.Resize(len, format);
          // initLen is not more than len:
          auto sinitLen = initLen.as_size_t();
-         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen))
+         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen,
+                           fillZero, mayThrow))
             return 0;
          wxASSERT( sinitLen <= remaining );
          remaining -= sinitLen;
@@ -2818,7 +2819,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             mOverlapBuffer.Resize(len, format);
             buffer = mOverlapBuffer.ptr();
          }
-         if (!mPTrack->Get(buffer, format, start, remaining))
+         if (!mPTrack->Get(buffer, format, start, remaining, fillZero, mayThrow))
             return 0;
       }
 
@@ -2827,7 +2828,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
 
    // Cache works only for float format.
    mOverlapBuffer.Resize(len, format);
-   if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len))
+   if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
       return mOverlapBuffer.ptr();
    else
       return 0;
