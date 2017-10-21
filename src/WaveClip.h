@@ -184,7 +184,8 @@ private:
 
 public:
    // typical constructor
-   WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, int rate);
+   WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, 
+      int rate, int colourIndex);
 
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
@@ -213,6 +214,8 @@ public:
    // the length of the clip
    void Resample(int rate, ProgressDialog *progress = NULL);
 
+   void SetColourIndex( int index ){ mColourIndex = index;};
+   int GetColourIndex( ) const { return mColourIndex;};
    void SetOffset(double offset);
    double GetOffset() const { return mOffset; }
    void Offset(double delta) // NOFAIL-GUARANTEE
@@ -369,6 +372,8 @@ protected:
    double mOffset { 0 };
    int mRate;
    int mDirty { 0 };
+   int mColourIndex;
+
    std::unique_ptr<Sequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
 

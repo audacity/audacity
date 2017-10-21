@@ -298,9 +298,10 @@ static void ComputeSpectrumUsingRealFFTf
 }
 
 WaveClip::WaveClip(const std::shared_ptr<DirManager> &projDirManager,
-                   sampleFormat format, int rate)
+                   sampleFormat format, int rate, int colourIndex)
 {
    mRate = rate;
+   mColourIndex = colourIndex;
    mSequence = std::make_unique<Sequence>(projDirManager, format);
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
@@ -320,6 +321,7 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mOffset = orig.mOffset;
    mRate = orig.mRate;
+   mColourIndex = orig.mColourIndex;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, projDirManager);
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
@@ -345,6 +347,7 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mOffset = orig.mOffset;
    mRate = orig.mRate;
+   mColourIndex = orig.mColourIndex;
 
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
@@ -1540,7 +1543,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
       // Nested wave clips are cut lines
       mCutLines.push_back(
          make_movable<WaveClip>(mSequence->GetDirManager(),
-            mSequence->GetSampleFormat(), mRate));
+            mSequence->GetSampleFormat(), mRate, 0 /*colourindex*/));
       return mCutLines.back().get();
    }
    else
