@@ -577,6 +577,23 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
          // Commit changes to filenames in the BlockFile objects, and removal
          // of files at old paths, ONLY NOW!  This must be nothrow.
+
+         // This copy-then-delete procedure is needed to make it safe to
+         // attempt save to another storage device, but fail.
+
+         // It has the consequence that saving a project from one part of
+         // the device to another will not succeed unless there is sufficient
+         // space to hold originals and copies at the same time.  Perhaps the
+         // extra cautions are not needed in that case, and the old procedure
+         // of renaming first, and reversing the renamings in case of failure,
+         // could still work safely.
+
+         // But I don't know whether wxWidgets gives us a reliable means to
+         // distinguish that case.
+
+         // I will err on the side of safety and simplicity and follow the
+         // same procedure in all cases.
+
          size_t ii = 0;
          for (const auto &pair : mBlockFileHash)
          {
