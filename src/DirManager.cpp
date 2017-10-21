@@ -500,8 +500,12 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
    if (bCreate) {
       if (!wxDirExists(projFull)) {
-         if (!wxMkdir(projFull))
+         if (!wxMkdir(projFull)) {
+            this->projFull = oldFull;
+            this->projPath = oldPath;
+            this->projName = oldName;
             return false;
+         }
          else
             created = true;
       }
@@ -515,8 +519,12 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       #endif
 
    } else {
-      if (!wxDirExists(projFull))
+      if (!wxDirExists(projFull)) {
+         this->projFull = oldFull;
+         this->projPath = oldPath;
+         this->projName = oldName;
          return false;
+      }
    }
 
    /* Move all files into this NEW directory.  Files which are
