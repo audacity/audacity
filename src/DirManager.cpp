@@ -1978,11 +1978,13 @@ void DirManager::FindMissingAUs(
             wxFileNameWrapper fileName{ MakeBlockFilePath(key) };
             fileName.SetName(key);
             fileName.SetExt(wxT("au"));
-            if (!fileName.FileExists())
+            const auto path = fileName.GetFullPath();
+            if (!fileName.FileExists() ||
+                wxFile{ path }.Length() == 0)
             {
                missingAUHash[key] = b;
                wxLogWarning(_("Missing data block file: '%s'"),
-                            fileName.GetFullPath().c_str());
+                            path.c_str());
             }
          }
       }
