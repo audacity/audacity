@@ -13,7 +13,11 @@ wxAtomicInt sOutstandingMessages {};
 MessageBoxException::MessageBoxException( const wxString &caption_ )
    : caption{ caption_ }
 {
-   wxAtomicInc( sOutstandingMessages );
+   if (!caption.empty())
+      wxAtomicInc( sOutstandingMessages );
+   else
+      // invalidate me
+      moved = true;
 }
 
 // The class needs a copy constructor to be throwable

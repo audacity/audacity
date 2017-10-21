@@ -19,7 +19,7 @@ public:
 
    explicit FileException
       ( Cause cause_, const wxFileName &fileName_,
-        const wxString &caption = wxString{},
+        const wxString &caption = _("File Error"),
         const wxFileName &renameTarget_ = {})
    : MessageBoxException{ caption }
    , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }

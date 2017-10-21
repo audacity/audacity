@@ -55,6 +55,7 @@ class MessageBoxException /* not final */ : public AudacityException
    void DelayedHandlerAction() override;
 
 protected:
+   // If default-constructed with empty caption, it makes no message box.
    explicit MessageBoxException( const wxString &caption = wxString{} );
    ~MessageBoxException() override;
 
@@ -74,7 +75,7 @@ class SimpleMessageBoxException /* not final */ : public MessageBoxException
 {
 public:
    explicit SimpleMessageBoxException( const wxString &message_,
-      const wxString &caption = wxString{} )
+      const wxString &caption = _("Message") )
       : MessageBoxException{ caption }
       , message{ message_ }
    {}

@@ -22,7 +22,8 @@ public:
 
    explicit InconsistencyException
       ( const char *fn, const char *f, unsigned l )
-         : func { fn }, file { f }, line { l }
+         : MessageBoxException{ _("Internal Error") }
+         , func { fn }, file { f }, line { l }
    {}
 
    InconsistencyException(InconsistencyException&& that)
