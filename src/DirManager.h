@@ -107,8 +107,7 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
    void SaveBlockFile(BlockFile * f, wxTextFile * out);
 #endif
 
-   bool MoveToNewProjectDirectory(BlockFile *f);
-   bool CopyToNewProjectDirectory(BlockFile *f);
+   std::pair<bool, wxString> CopyToNewProjectDirectory(BlockFile *f);
 
    bool EnsureSafeFilename(const wxFileName &fName);
 
@@ -188,8 +187,6 @@ class PROFILE_DLL_API DirManager final : public XMLTagHandler {
 
    wxFileNameWrapper MakeBlockFileName();
    wxFileNameWrapper MakeBlockFilePath(const wxString &value);
-
-   bool MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy);
 
    BlockHash mBlockFileHash; // repository for blockfiles
 

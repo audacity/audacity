@@ -475,7 +475,7 @@ void DirManager::CleanDir(
 
 bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
 {
-   bool copying = false;
+   bool moving = true;
    wxString oldPath = this->projPath;
    wxString oldName = this->projName;
    wxString oldFull = projFull;
@@ -534,12 +534,13 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
       int total = mBlockFileHash.size();
 
-      BlockHash::iterator iter = mBlockFileHash.begin();
       bool success = true;
       int count = 0;
-      while ((iter != mBlockFileHash.end()) && success)
+      wxArrayString newPaths;
+      for (const auto &pair : mBlockFileHash)
       {
-         BlockFilePtr b = iter->second.lock();
+         wxString newPath;
+         BlockFilePtr b = pair.second.lock();
          if (b) {
             // FIXME: TRAP_ERR
             // JKC: The 'success' variable and recovery strategy looks 
@@ -547,46 +548,57 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
             // failure in one of the copies/moves.  Besides which,
             // our temporary files are going to be deleted when we exit 
             // anyway, if saving from temporary to named project.
-            if (b->IsLocked())
-               success = CopyToNewProjectDirectory( &*b ), copying = true;
-            else{
-               success = MoveToNewProjectDirectory( &*b );
-            }
 
             if( progress.Update(count, total) != ProgressResult::Success )
                success = false;
+            else {
+               moving = moving && !b->IsLocked();
+               auto result = CopyToNewProjectDirectory( &*b );
+               success = result.first;
+               newPath = result.second;
+            }
 
-            count++;
+            if (success) {
+               count++;
+            }
+            else
+               break;
          }
-         ++iter;
+
+         newPaths.push_back( newPath );
       }
 
       // in case there are any nulls
       trueTotal = count;
 
-      if (!success) {
-         // If the move failed, we try to move/copy as many files
-         // back as possible so that no damage was done.  (No sense
-         // in checking for errors this time around - there's nothing
-         // that could be done about it.)
-         // Likely causes: directory was not writeable, disk was full
+      if (success) {
+         auto size = newPaths.size();
+         wxASSERT( size == mBlockFileHash.size() );
 
-         projFull = oldLoc;
-
-         BlockHash::iterator iter = mBlockFileHash.begin();
-         while (iter != mBlockFileHash.end())
+         // Commit changes to filenames in the BlockFile objects, and removal
+         // of files at old paths, ONLY NOW!  This must be nothrow.
+         size_t ii = 0;
+         for (const auto &pair : mBlockFileHash)
          {
-            BlockFilePtr b = iter->second.lock();
+            BlockFilePtr b = pair.second.lock();
+
             if (b) {
-               MoveToNewProjectDirectory(&*b);
+               if (moving) {
+                  auto result = b->GetFileName();
+                  auto oldPath = result.name.GetFullPath();
+                  if (!oldPath.empty())
+                     wxRemoveFile( oldPath );
+               }
 
-               if (count >= 0)
-                  progress.Update(count, total);
-               count--;
+               if (ii < size)
+                  b->SetFileName(
+                     wxFileNameWrapper{ wxFileName{ newPaths[ii] } } );
             }
-            ++iter;
-         }
 
+            ++ii;
+         }
+      }
+      else {
          this->projFull = oldFull;
          this->projPath = oldPath;
          this->projName = oldName;
@@ -611,7 +623,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
    // Do the cleanup of the temporary directory only if not saving-as, which we
    // detect by having done copies rather than moves.
-   if (!copying && trueTotal > 0) {
+   if (moving && trueTotal > 0) {
       // Clean up after ourselves; boldly remove all files and directories
       // in the tree.  (Unlike what the earlier version of this comment said.)
       // Because this is a relocation of the project, not the case of closing
@@ -1291,8 +1303,9 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
+std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
 {
+   wxString newPath;
    auto result = f->GetFileName();
    const auto &oldFileNameRef = result.name;
 
@@ -1300,27 +1313,28 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case
    //    (!oldFileName.IsOk()) is a more correct check?
    if (oldFileNameRef.GetName().IsEmpty()) {
-      return true;
+      return { true, newPath };
    }
 
    wxFileNameWrapper newFileName;
    if (!this->AssignFile(newFileName, oldFileNameRef.GetFullName(), false))
-      return false;
+      return { false, {} };
 
    if (newFileName != oldFileNameRef) {
       //check to see that summary exists before we copy.
       bool summaryExisted = f->IsSummaryAvailable();
       auto oldPath = oldFileNameRef.GetFullPath();
-      auto newPath = newFileName.GetFullPath();
+      newPath = newFileName.GetFullPath();
       if (summaryExisted) {
-         auto success = copy
-         ? wxCopyFile(oldPath, newPath)
-         : wxRenameFile(oldPath, newPath);
+         auto success = wxCopyFile(oldPath, newPath);
          if (!success)
-            return false;
+            return { false, {} };
       }
 
       if (!summaryExisted && (f->IsSummaryAvailable() || f->IsSummaryBeingComputed())) {
+         // PRL:  These steps apply only in case of "on-demand" files that have
+         // not completed their asynchronous loading yet -- a very unusual
+         // circumstance.
 
          // We will need to remember the old file name, so copy it
          wxFileName oldFileName{ oldFileNameRef };
@@ -1344,30 +1358,13 @@ bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
          if (oldFileName.FileExists())
          {
             bool ok = wxCopyFile(oldPath, newPath);
-            if(ok && !copy)
-               wxRemoveFile(oldPath);
-            else if (!ok)
-               return false;
+            if (!ok)
+               return { false, {} };
          }
-      }
-      else {
-         // Can free this now, and must, because of nonrecursive mutexes
-         result.mLocker.reset();
-         f->SetFileName(std::move(newFileName));
       }
    }
 
-   return true;
-}
-
-bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
-{
-   return MoveOrCopyToNewProjectDirectory(f, false);
-}
-
-bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
-{
-   return MoveOrCopyToNewProjectDirectory(f, true);
+   return { true, newPath };
 }
 
 bool DirManager::EnsureSafeFilename(const wxFileName &fName)
