@@ -2024,7 +2024,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
    }
    if (doClear)
    {
-      // Usually we fill in empty sapce with zero
+      // Usually we fill in empty space with zero
       if( fill == fillZero )
          ClearSamples(buffer, format, 0, len);
       // but we don't have to.
