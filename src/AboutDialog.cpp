@@ -104,8 +104,10 @@ const wxString VerCheckHtml(){
 
 void AboutDialog::CreateCreditsList()
 {
+#ifndef EXPERIMENTAL_DA
    // Deceased team members
    AddCredit(wxString(wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]], ")) + _("quality assurance"), roleDeceased);
+#endif
 
    // The Audacity Team: developers and support
    AddCredit(wxString(wxT("Arturo \"Buanzo\" Busleiman, ")) + _("system administration"), roleTeamMember);
@@ -122,6 +124,9 @@ void AboutDialog::CreateCreditsList()
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
+#ifdef EXPERIMENTAL_DA
+   AddCredit(wxString(wxT("Gale Andrews, ")) + _("quality assurance"), roleEmeritusTeam);
+#endif
    AddCredit(wxString(wxT("Richard Ash, ")) + _("developer"), roleEmeritusTeam); 
    AddCredit(wxString(wxT("Christian Brochec, ")) + _("documentation and support, French"), roleEmeritusTeam);
    AddCredit(wxString(wxT("Matt Brubeck, ")) + _("developer"), roleEmeritusTeam);
@@ -376,10 +381,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
 #ifdef EXPERIMENTAL_DA
       #undef _
       #define _(s) wxGetTranslation((s))
-      wxT("<h3>DarkAudacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</center></h3>") +
-      wxT("Customised version of the Audacity free, open source, cross-platform software " ) +
+      wxT("<h3>Dark Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("x </center></h3>") +
+      wxT("Customised version of Audacity<sup>&reg;</sup> the free, open source, cross-platform software " ) +
       wxT("for recording and editing sounds.") +
-      wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
+      wxT("<p><br>&nbsp; &nbsp; <b>Audacity</b> software is copyright &copy; 1999-2017 Audacity Team.<br>") +
       wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>") +
 
 #else
@@ -397,9 +402,11 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("James Crook, art, coding &amp; design<br>") +
 #endif
 
+#ifndef EXPERIMENTAL_DA
       /* i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages */
       wxT("<p><b>") + wxString::Format(_("In Memoriam")) + wxT("</b><br>") +
       GetCreditsByRole(roleDeceased) +
+#endif
 
       wxT("<p><b>") + wxString::Format(_("Audacity Team Members")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamMember) +
@@ -411,9 +418,12 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
 
+#ifndef EXPERIMENTAL_DA
+      // DarkAudacity is not officially translated.  Besides this list of translators is anything but current.
       wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
       translatorCredits +
       GetCreditsByRole(roleTranslators) +
+#endif
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
       _("Audacity includes code from the following projects:") + wxT("<br><br>") +

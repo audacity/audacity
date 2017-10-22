@@ -227,7 +227,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 
 // DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
-         wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("</h3></center>") +
+         wxT("<center><h3>DarkAudacity ") + AUDACITY_VERSION_STRING + wxT("x</h3></center>") +
          _("<br><br>DarkAudacity is based on Audacity:") + wxT("<ul><li>") +
          _(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.") + wxT("</li><li>") +
          _(" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.") + wxT("</li><li>") +
