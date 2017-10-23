@@ -272,6 +272,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jason Pepas"), roleThanks);
    AddCredit(wxT("Jonathan Ryshpan"), roleThanks);
    AddCredit(wxT("Michael Schwendt"), roleThanks);
+   AddCredit(wxT("Cliff Scott"), roleThanks);
    AddCredit(wxT("Patrick Shirkey"), roleThanks);
    AddCredit(wxT("Tuomas Suutari"), roleThanks);
    AddCredit(wxT("Mark Tomlinson"), roleThanks);
