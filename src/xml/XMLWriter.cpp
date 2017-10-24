@@ -302,10 +302,10 @@ XMLFileWriter::~XMLFileWriter()
 {
    // Don't let a destructor throw!
    GuardedCall< void >( [&] {
-      if (!mCommitted) {
+      if (IsOpened()) {
+         // Was not committed
          auto fileName = GetName();
-         if ( IsOpened() )
-            CloseWithoutEndingTags();
+         CloseWithoutEndingTags();
          ::wxRemoveFile( fileName );
       }
    } );
@@ -340,8 +340,6 @@ void XMLFileWriter::Commit()
       throw FileException{
          FileException::Cause::Rename, tempPath, mCaption, mOutputPath
       };
-
-   mCommitted = true;
 }
 
 void XMLFileWriter::CloseWithoutEndingTags()

@@ -3807,43 +3807,25 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          return false;
       }
    }
-
-   bool success = true;
-   wxString project, projName, projPath;
-
    auto cleanup = finally( [&] {
       if (safetyFileName != wxT("")) {
          if (wxFileExists(mFileName))
             wxRemove(mFileName);
          wxRename(safetyFileName, mFileName);
       }
-
-      // mStrOtherNamesArray is a temporary array of file names, used only when
-      // saving compressed
-      if (!success) {
-         wxMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
-                                       project.c_str()),
-                      _("Error Saving Project"),
-                      wxICON_ERROR, this);
-
-         // Make the export of tracks succeed all-or-none.
-         auto dir = project + wxT("_data");
-         for ( auto &name : mStrOtherNamesArray )
-            wxRemoveFile( dir + wxFileName::GetPathSeparator() + name);
-         // This has effect only if the folder is empty
-         wxFileName::Rmdir( dir );
-      }
-      // Success or no, we can forget the names
-      mStrOtherNamesArray.clear();
    } );
 
    if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
+      // Write the tracks.
+
       // This block of code is duplicated in WriteXML, for now...
-      project = mFileName;
+      wxString project = mFileName;
       if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
          project = project.Mid(0, project.Len() - 4);
-      projName = wxFileNameFromPath(project) + wxT("_data");
-      projPath = wxPathOnly(project);
+      wxString projName = wxFileNameFromPath(project) + wxT("_data");
+      wxString projPath = wxPathOnly(project);
+
+      bool success = false;
 
       if( !wxDir::Exists( projPath ) ){
          wxMessageBox(wxString::Format(
@@ -3851,42 +3833,17 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
             projPath.c_str()),
                       _("Error Saving Project"),
                       wxICON_ERROR, this);
-         return (success = false);
+         return false;
       }
 
       if (bWantSaveCompressed)
       {
-         // Do this before saving the .aup, because we accumulate
-         // mStrOtherNamesArray which affects the contents of the .aup
-
          //v Move this condition into SaveCompressedWaveTracks() if want to support other formats.
          #ifdef USE_LIBVORBIS
-            // This populates the array mStrOtherNamesArray
             success = this->SaveCompressedWaveTracks(project);
          #endif
       }
-
-      if (!success)
-         return false;
-   }
-
-   // Write the .aup now, before DirManager::SetProject,
-   // because it's easier to clean up the effects of successful write of .aup
-   // followed by failed SetProject, than the other way about.
-   // And that cleanup is done by the destructor of saveFile, if Commit() is
-   // not done.
-   // (SetProject, when it fails, cleans itself up.)
-   XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
-   success = GuardedCall< bool >( [&] {
-      WriteXMLHeader(saveFile);
-      WriteXML(saveFile, bWantSaveCompressed);
-      return true;
-   } );
-   if (!success)
-      return false;
-
-   if (fromSaveAs || mDirManager->GetProjectName() == wxT("")) {
-      if (!bWantSaveCompressed)
+      else
       {
          // We are about to move files from the current directory to
          // the NEW directory.  We need to make sure files that belonged
@@ -3914,14 +3871,25 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          success = mDirManager->SetProject(projPath, projName, !overwrite);
       }
 
-      if (!success)
+      if (!success) {
+         wxMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
+                                       project.c_str()),
+                      _("Error Saving Project"),
+                      wxICON_ERROR, this);
          return false;
+      }
    }
 
-   // Commit the writing of the .aup only now, after we know that the _data
-   // folder also saved with no problems.
-   success = success && GuardedCall< bool >( [&] {
+   auto success = GuardedCall< bool >( [&] {
+      // Write the AUP file.
+      XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
+
+      WriteXMLHeader(saveFile);
+      WriteXML(saveFile, bWantSaveCompressed);
+      mStrOtherNamesArray.Clear();
+
       saveFile.Commit();
+
       return true;
    } );
 
@@ -4055,11 +4023,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
       // Export all WaveTracks to OGG.
       bool bSuccess = true;
-
-      // This accumulates the names of the .ogg files, to be written as
-      // dependencies in the .aup file
-      mStrOtherNamesArray.clear();
-
       Exporter theExporter;
       Track* pRightTrack;
       wxFileName uniqueTrackFileName;
@@ -4085,8 +4048,6 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
                                     pTrack->GetStartTime(), pTrack->GetEndTime());
 
             if (!bSuccess)
-               // If only some exports succeed, the cleanup is not done here
-               // but trusted to the caller
                break;
          }
       }

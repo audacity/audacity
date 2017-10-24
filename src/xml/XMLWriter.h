@@ -111,8 +111,6 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
    const bool mKeepBackup;
 
    wxFFile mBackupFile;
-
-   bool mCommitted{ false };
 };
 
 ///
