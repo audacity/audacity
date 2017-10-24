@@ -86,7 +86,15 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
    /// Close all tags and then close the file.
    /// Might throw.  If not, then create
    /// or modify the file at the output path.
+   /// Composed of two steps, PreCommit() and PostCommit()
    void Commit();
+
+   /// Does the part of Commit that might fail because of exhaustion of space
+   void PreCommit();
+
+   /// Does other parts of Commit that are not likely to fail for exhaustion
+   /// of space, but might for other reasons
+   void PostCommit();
 
    /// Write to file. Might throw.
    void Write(const wxString &data) override;

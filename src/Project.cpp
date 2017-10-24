@@ -3873,15 +3873,24 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
    // Write the .aup now, before DirManager::SetProject,
    // because it's easier to clean up the effects of successful write of .aup
    // followed by failed SetProject, than the other way about.
-   // And that cleanup is done by the destructor of saveFile, if Commit() is
+   // And that cleanup is done by the destructor of saveFile, if PostCommit() is
    // not done.
    // (SetProject, when it fails, cleans itself up.)
    XMLFileWriter saveFile{ mFileName, _("Error Saving Project") };
    success = GuardedCall< bool >( [&] {
-      WriteXMLHeader(saveFile);
-      WriteXML(saveFile, bWantSaveCompressed);
-      return true;
-   } );
+         WriteXMLHeader(saveFile);
+         WriteXML(saveFile, bWantSaveCompressed);
+         // Flushes files, forcing space exhaustion errors before trying
+         // SetProject():
+         saveFile.PreCommit();
+         return true;
+      },
+      MakeSimpleGuard(false),
+      // Suppress the usual error dialog for failed write,
+      // which is redundant here:
+      [](void*){}
+   );
+
    if (!success)
       return false;
 
@@ -3920,9 +3929,14 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 
    // Commit the writing of the .aup only now, after we know that the _data
    // folder also saved with no problems.
+   // Error recovery in case this fails might not be correct -- there is no
+   // provision to undo the effects of SetProject -- but it is very unlikely
+   // that this will happen:  only renaming and removing of files happens,
+   // not writes that might exhaust space.  So DO give a second dialog in
+   // case the unusual happens.
    success = success && GuardedCall< bool >( [&] {
-      saveFile.Commit();
-      return true;
+         saveFile.PostCommit();
+         return true;
    } );
 
    if (!success)

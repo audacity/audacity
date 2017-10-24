@@ -314,13 +314,24 @@ XMLFileWriter::~XMLFileWriter()
 void XMLFileWriter::Commit()
 // may throw
 {
+   PreCommit();
+   PostCommit();
+}
+
+void XMLFileWriter::PreCommit()
+// may throw
+{
    while (mTagstack.GetCount()) {
       EndTag(mTagstack[0]);
    }
 
-   auto tempPath = GetName();
    CloseWithoutEndingTags();
+}
 
+void XMLFileWriter::PostCommit()
+// may throw
+{
+   auto tempPath = GetName();
    if (mKeepBackup) {
       if (! mBackupFile.Close() ||
           ! wxRenameFile( mOutputPath, mBackupName ) )
