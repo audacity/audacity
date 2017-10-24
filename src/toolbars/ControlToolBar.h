@@ -120,7 +120,9 @@ class ControlToolBar final : public ToolBar {
 
  private:
 
-   AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+   static AButton *MakeButton(
+      ControlToolBar *pBar,
+      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id,
       bool processdownevents,
       const wxChar *label);

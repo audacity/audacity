@@ -137,13 +137,14 @@ void TranscriptionToolBar::Create(wxWindow * parent)
 /// MakeButtons() with fewer arguments
 /// Very similar to code in ControlToolBar...
 AButton *TranscriptionToolBar::AddButton(
+   TranscriptionToolBar *pBar,
    teBmps eFore, teBmps eDisabled,
    int id,
    const wxChar *label)
 {
-   AButton *&r = mButtons[id];
+   AButton *&r = pBar->mButtons[id];
 
-   r = ToolBar::MakeButton(this,
+   r = ToolBar::MakeButton(pBar,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall,bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       wxWindowID(id),
@@ -155,7 +156,7 @@ AButton *TranscriptionToolBar::AddButton(
 // JKC: Unlike ControlToolBar, does not have a focus rect.  Shouldn't it?
 // r->SetFocusRect( r->GetRect().Deflate( 4, 4 ) );
 
-   Add( r, 0, wxALIGN_CENTER );
+   pBar->Add( r, 0, wxALIGN_CENTER );
 
    return r;
 }
@@ -177,7 +178,7 @@ void TranscriptionToolBar::Populate()
 // Very similar to code in EditToolBar
    MakeButtonBackgroundsSmall();
 
-   AddButton(bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
+   AddButton(this, bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
       _("Play at selected speed"));
    MakeAlternateImages(bmpLoop, bmpLoopDisabled, TTB_PlaySpeed, 1);
    MakeAlternateImages(bmpCutPreview, bmpCutPreviewDisabled, TTB_PlaySpeed, 2);
@@ -212,23 +213,23 @@ void TranscriptionToolBar::Populate()
 // If we need these strings translated, then search and replace
 // TRANSLATBLE by _ and remove this #define.
 #define TRANSLATABLE( x ) wxT( x )
-   AddButton(bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
+   AddButton(this, bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
       TRANSLATABLE("Adjust left selection to next onset"));
-   AddButton(bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,
+   AddButton(this, bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,
       TRANSLATABLE("Adjust right selection to previous offset"));
-   AddButton(bmpTnStartOff,    bmpTnStartOffDisabled,  TTB_StartOff,
+   AddButton(this, bmpTnStartOff,    bmpTnStartOffDisabled,  TTB_StartOff,
       TRANSLATABLE("Adjust left selection to next offset"));
-   AddButton(bmpTnEndOff,      bmpTnEndOffDisabled,    TTB_EndOff,
+   AddButton(this, bmpTnEndOff,      bmpTnEndOffDisabled,    TTB_EndOff,
       TRANSLATABLE("Adjust right selection to previous onset"));
-   AddButton(bmpTnSelectSound, bmpTnSelectSoundDisabled, TTB_SelectSound,
+   AddButton(this, bmpTnSelectSound, bmpTnSelectSoundDisabled, TTB_SelectSound,
       TRANSLATABLE("Select region of sound around cursor"));
-   AddButton(bmpTnSelectSilence, bmpTnSelectSilenceDisabled, TTB_SelectSilence,
+   AddButton(this, bmpTnSelectSilence, bmpTnSelectSilenceDisabled, TTB_SelectSilence,
       TRANSLATABLE("Select region of silence around cursor"));
-   AddButton(bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
+   AddButton(this, bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
       TRANSLATABLE("Automatically make labels from words"));
-   AddButton(bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,
+   AddButton(this, bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,
       TRANSLATABLE("Add label at selection"));
-   AddButton(bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
+   AddButton(this, bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
       TRANSLATABLE("Calibrate voicekey"));
 
    mSensitivitySlider = safenew ASlider(this,

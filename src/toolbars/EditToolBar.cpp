@@ -98,14 +98,15 @@ void EditToolBar::AddSeparator()
 /// MakeButtons() with fewer arguments
 /// Very similar to code in ControlToolBar...
 AButton *EditToolBar::AddButton(
+   EditToolBar *pBar,
    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
    int id,
    const wxChar *label,
    bool toggle)
 {
-   AButton *&r = mButtons[id];
+   AButton *&r = pBar->mButtons[id];
 
-   r = ToolBar::MakeButton(this,
+   r = ToolBar::MakeButton(pBar,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
@@ -117,7 +118,7 @@ AButton *EditToolBar::AddButton(
 // JKC: Unlike ControlToolBar, does not have a focus rect.  Shouldn't it?
 // r->SetFocusRect( r->GetRect().Deflate( 4, 4 ) );
 
-   Add( r, 0, wxALIGN_CENTER );
+   pBar->Add( r, 0, wxALIGN_CENTER );
 
    return r;
 }
@@ -129,28 +130,28 @@ void EditToolBar::Populate()
 
    /* Buttons */
    // Tooltips slightly more verbose than the menu entries are.
-   AddButton(bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
+   AddButton(this, bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
       _("Cut selection"));
-   AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
+   AddButton(this, bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
       _("Copy selection"));
-   AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
+   AddButton(this, bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
       _("Paste"));
-   AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
+   AddButton(this, bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
       _("Trim audio outside selection"));
-   AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
+   AddButton(this, bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
       _("Silence audio selection"));
 
    AddSeparator();
 
-   AddButton(bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
+   AddButton(this, bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
       _("Undo"));
-   AddButton(bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
+   AddButton(this, bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
       _("Redo"));
 
    AddSeparator();
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
+   AddButton(this, bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
 
    AddSeparator();
@@ -158,17 +159,17 @@ void EditToolBar::Populate()
 
    // Tooltips match menu entries.
    // We previously had longer tooltips which were not more clear.
-   AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
+   AddButton(this, bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
       _("Zoom In"));
-   AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
+   AddButton(this, bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
       _("Zoom Out"));
-   AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
+   AddButton(this, bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
       _("Zoom to Selection"));
-   AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
+   AddButton(this, bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
       _("Fit to Width"));
 
 #ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
-   AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
+   AddButton(this, bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
       _("Zoom Toggle"));
 #endif
 
@@ -190,7 +191,7 @@ void EditToolBar::Populate()
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    AddSeparator();
-   AddButton(bmpEditEffects, bmpEditEffects, bmpEditEffects, ETBEffectsID,
+   AddButton(this, bmpEditEffects, bmpEditEffects, bmpEditEffects, ETBEffectsID,
       _("Show Effects Rack"), true);
 #endif
 

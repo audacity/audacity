@@ -129,12 +129,13 @@ void ControlToolBar::Create(wxWindow * parent)
 
 // This is a convenience function that allows for button creation in
 // MakeButtons() with fewer arguments
-AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+AButton *ControlToolBar::MakeButton(ControlToolBar *pBar,
+                                    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
                                     int id,
                                     bool processdownevents,
                                     const wxChar *label)
 {
-   AButton *r = ToolBar::MakeButton(this,
+   AButton *r = ToolBar::MakeButton(pBar,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
@@ -170,10 +171,10 @@ void ControlToolBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsLarge();
 
-   mPause = MakeButton(bmpPause, bmpPause, bmpPauseDisabled,
+   mPause = MakeButton(this, bmpPause, bmpPause, bmpPauseDisabled,
       ID_PAUSE_BUTTON,  true,  _("Pause"));
 
-   mPlay = MakeButton( bmpPlay, bmpPlay, bmpPlayDisabled,
+   mPlay = MakeButton(this, bmpPlay, bmpPlay, bmpPlayDisabled,
       ID_PLAY_BUTTON, true, _("Play"));
    MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
    MakeAlternateImages(*mPlay, 2,
@@ -184,16 +185,16 @@ void ControlToolBar::Populate()
                        bmpSeek, bmpSeek, bmpSeekDisabled);
    mPlay->FollowModifierKeys();
 
-   mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
+   mStop = MakeButton(this, bmpStop, bmpStop, bmpStopDisabled ,
       ID_STOP_BUTTON, false, _("Stop"));
 
-   mRewind = MakeButton(bmpRewind, bmpRewind, bmpRewindDisabled,
+   mRewind = MakeButton(this, bmpRewind, bmpRewind, bmpRewindDisabled,
       ID_REW_BUTTON, false, _("Skip to Start"));
 
-   mFF = MakeButton(bmpFFwd, bmpFFwd, bmpFFwdDisabled,
+   mFF = MakeButton(this, bmpFFwd, bmpFFwd, bmpFFwdDisabled,
       ID_FF_BUTTON, false, _("Skip to End"));
 
-   mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
+   mRecord = MakeButton(this, bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, false, _("Record"));
 
    bool bPreferNewTrack;
