@@ -1161,6 +1161,34 @@ bool DirManager::ContainsBlockFile(const wxString &filepath) const
       BlockFilePtr{ it->second.lock() };
 }
 
+namespace {
+   bool MyCopyFile(const wxString& file1, const wxString& file2,
+                                 bool overwrite = true)
+   {
+#ifdef __WXMSW__
+
+      // workaround not needed
+      return wxCopyFile(file1, file2, overwrite);
+
+#else
+      // PRL:  Compensate for buggy wxCopyFile that returns false success,
+      // which was a cause of case 4 in comment 10 of
+      // http://bugzilla.audacityteam.org/show_bug.cgi?id=1759
+      // Destination file was created, but was empty
+      // Bug was introduced after wxWidgets 2.8.12 at commit
+      // 0597e7f977c87d107e24bf3e95ebfa3d60efc249 of wxWidgets repo
+
+      bool existed = wxFileExists(file2);
+      bool result = wxCopyFile(file1, file2, overwrite) &&
+         wxFile{ file1 }.Length() == wxFile{ file2 }.Length();
+      if (!result && !existed)
+         wxRemoveFile(file2);
+      return result;
+
+#endif
+   }
+}
+
 // Adds one to the reference count of the block file,
 // UNLESS it is "locked", then it makes a NEW copy of
 // the BlockFile.
@@ -1204,7 +1232,7 @@ BlockFilePtr DirManager::CopyBlockFile(const BlockFilePtr &b)
       //a summary file, so we should check before we copy.
       if(b->IsSummaryAvailable())
       {
-         if( !wxCopyFile(fn.GetFullPath(),
+         if( !MyCopyFile(fn.GetFullPath(),
                   newFile.GetFullPath()) )
             // Disk space exhaustion, maybe
             throw FileException{
@@ -1351,7 +1379,7 @@ std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
       auto oldPath = oldFileNameRef.GetFullPath();
       newPath = newFileName.GetFullPath();
       if (summaryExisted) {
-         auto success = wxCopyFile(oldPath, newPath);
+         auto success = MyCopyFile(oldPath, newPath);
          if (!success)
             return { false, {} };
       }
@@ -1382,7 +1410,7 @@ std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
          //if it doesn't, we can assume it was written to the NEW name, which is fine.
          if (oldFileName.FileExists())
          {
-            bool ok = wxCopyFile(oldPath, newPath);
+            bool ok = MyCopyFile(oldPath, newPath);
             if (!ok)
                return { false, {} };
          }
