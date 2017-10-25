@@ -154,6 +154,7 @@ void ToolsToolBar::RegenerateTooltips()
 void ToolsToolBar::UpdatePrefs()
 {
    RegenerateTooltips();
+   ToolBar::UpdatePrefs();
 }
 
 AButton * ToolsToolBar::MakeTool( teBmps eTool,
