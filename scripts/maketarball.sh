@@ -96,7 +96,6 @@ function cleanfulltree {
    printf "Done\n"
 
    printf "removing unused libraries from GIT tree ..."
-   myrmrvf $1 lib-src/portmidi
    myrmrvf $1 lib-src/libscorealign
    printf "Done\n"
 }
@@ -131,6 +130,18 @@ function slimtree {
    myrmrvf $1 lib-src/portaudio-v19/pa_sgi
    myrmrvf $1 lib-src/portaudio-v19/pa_mac_sm
    myrmrvf $1 lib-src/portaudio-v19/testcvs
+   printf "Done\n"
+
+   printf "removing unused portmidi directories ... "
+   myrmrvf $1 lib-src/portmidi/pm_cl
+   myrmrvf $1 lib-src/portmidi/pm_csharp
+   myrmrvf $1 lib-src/portmidi/pm_dylib
+   myrmrvf $1 lib-src/portmidi/pm_java
+   myrmrvf $1 lib-src/portmidi/pm_mingw
+   myrmrvf $1 lib-src/portmidi/pm_python
+   myrmrvf $1 lib-src/portmidi/pm_qt
+   myrmrvf $1 lib-src/portmidi/pm_test
+   myrmrvf $1 lib-src/portmidi/portmidi_cdt.zip
    printf "Done\n"
 
    printf "removing Nyquist plug-ins that are just for show ... "
