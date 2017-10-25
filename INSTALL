@@ -26,7 +26,7 @@ versions must be used.
 libsndfile library is required and is included in the Audacity source.
 
 libsoxr resampling library. If libsoxr-dev is not available as a system library,
-the source code is included in the Audacity  tarball.
+the source code is included in the Audacity tarball.
 CMake ( http://www.cmake.org/ ) is required to build a local copy of libsoxr.
 
 Information about optional libraries may be available on:
@@ -46,7 +46,7 @@ without STL (also default). Full instructions for compilation can be found in:
 Compiling and installing Audacity:
 
 As there have been fixes to several of the included libraries, compiling with
-the included ('local') libraries is recommended, This also reduces the number of
+the included ('local') libraries is recommended. This also reduces the number of
 dependencies that need to be installed. One common exception to this is the optional
 FFmpeg library (see below)
 
@@ -61,7 +61,7 @@ Run the configure command with your preferred options, then 'make'
    ../configure -with-lib-preference="local system"
    make
 
-On a multi-core  system, build time can be considerably reduce by setting the -j (jobs)
+On a multi-core system, build time can be considerably reduced by setting the -j (jobs)
 switch equal to the number of cores. For example, on a quad core processor:
    make -j4
 
