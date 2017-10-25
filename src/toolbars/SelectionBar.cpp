@@ -528,7 +528,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    RegenerateTooltips();
 
-   // ToolBar::ReCreateButtons() will get rid of our sizers and controls
+   // ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    for( i=0;i<5;i++)
       *Ctrls[i]=NULL;
@@ -536,7 +536,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    mRateBox = NULL;
    mRateText = NULL;
 
-   ToolBar::ReCreateButtons();
+   ReCreateButtons();
 
    ValuesToControls();
 

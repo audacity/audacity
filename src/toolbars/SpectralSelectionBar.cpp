@@ -406,12 +406,12 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
          mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
    }
 
-   // ToolBar::ReCreateButtons() will get rid of our sizers and controls
+   // ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    mCenterCtrl = mWidthCtrl = NULL;
    mLowCtrl = mHighCtrl = NULL;
 
-   ToolBar::ReCreateButtons();
+   ReCreateButtons();
    ValuesToControls();
 
 
