@@ -179,6 +179,8 @@ build system break. Not suitable for upstream, what is needed is more
 powerful autoconf features to pass the right options to portaudio's configure
 script, which suffers from the broken-ness of autoconf's subdirectory support
 
+* linkage.patch  allows compilation as C++ with correct "C" linkage of one function
+
 portmidi
 -------
 http://portmedia.sourceforge.net/
