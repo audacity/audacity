@@ -19,9 +19,8 @@ http://www.audacityteam.org/download/source/ .
 
 Other required dependencies:
 
-The PortAudio and PortMidi libraries used by Audacity 2.2.0 include fixes
-that are not yet available in the upstream versions, so the local (included)
-versions must be used.
+Audacity 2.2.0 requires the local (included) versions of PortAudio and PortMidi.
+Attempting to build with system library versions will fail.
 
 libsndfile library is required and is included in the Audacity source.
 
