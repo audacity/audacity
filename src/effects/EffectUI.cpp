@@ -858,54 +858,57 @@ int EffectUIHost::ShowModal()
 
 bool EffectUIHost::Initialize()
 {
-   EffectPanel *w = safenew EffectPanel(this);
-   RTL_WORKAROUND(w);
+   EffectPanel *w {};
    {
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       {
          auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         
+
+         Destroy_ptr<EffectPanel> uw{ safenew EffectPanel(this) };
+         RTL_WORKAROUND(uw.get());
+
          // Try to give the window a sensible default/minimum size
-         w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
-                              mParent->GetSize().GetHeight() / 2));
-         
+         uw->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
+            mParent->GetSize().GetHeight() / 2));
+
          auto gAudioIO = AudioIO::Get();
          mDisableTransport = !gAudioIO->IsAvailable(mProject);
          mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
          mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
-         
-         if (!mClient->PopulateUI(w))
+
+         ShuttleGui S1{ uw.get(), eIsCreating };
+         if (!mClient->PopulateUI(S1))
          {
             return false;
          }
-         
-         hs->Add(w, 1, wxEXPAND);
+
+         hs->Add((w = uw.release()), 1, wxEXPAND);
          vs->Add(hs.release(), 1, wxEXPAND);
       }
-      
+
       wxPanel *buttonPanel = safenew wxPanelWrapper(this, wxID_ANY);
       wxPanel *const bar = safenew wxPanelWrapper(buttonPanel, wxID_ANY);
-      
+
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       bar->SetName(wxT("\a"));
       bar->SetLabel(wxT("\a"));
-      
+
       {
          auto bs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         
+
          mSupportsRealtime = mEffect && mEffect->SupportsRealtime();
          mIsGUI = mClient->IsGraphicalUI();
          mIsBatch = (mEffect && mEffect->IsBatchProcessing()) ||
-         (mCommand && mCommand->IsBatchProcessing());
-         
+            (mCommand && mCommand->IsBatchProcessing());
+
          wxBitmapButton *bb;
-         
+
          int margin = 0;
-         
+
 #if defined(__WXMAC__)
          margin = 3; // I'm sure it's needed because of the order things are created...
 #endif
-         
+
          if (!mIsGUI)
          {
             wxASSERT(bar); // To justify safenew
@@ -925,9 +928,9 @@ bool EffectUIHost::Initialize()
             bs->Add(mMenuBtn);
          }
          mMenuBtn->SetToolTip(_("Manage presets and options"));
-         
+
          bs->Add(5, 5);
-         
+
          if (!mIsBatch)
          {
             if (!mIsGUI)
@@ -940,9 +943,9 @@ bool EffectUIHost::Initialize()
                   bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
                }
                else if (mEffect &&
-                        (mEffect->GetType() != EffectTypeAnalyze) &&
-                        (mEffect->GetType() != EffectTypeTool)
-                        )
+                  (mEffect->GetType() != EffectTypeAnalyze) &&
+                  (mEffect->GetType() != EffectTypeTool)
+                  )
                {
                   wxASSERT(bar); // To justify safenew
                   mPlayToggleBtn = safenew wxButton(bar, kPlayID, _("&Preview"));
@@ -972,7 +975,7 @@ bool EffectUIHost::Initialize()
 #endif
                }
             }
-            
+
             if (mSupportsRealtime)
             {
                if (!mIsGUI)
@@ -996,7 +999,7 @@ bool EffectUIHost::Initialize()
                   bs->Add(mRewindBtn);
                }
                mRewindBtn->SetToolTip(_("Skip backward"));
-               
+
                if (!mIsGUI)
                {
                   wxASSERT(bar); // To justify safenew
@@ -1018,19 +1021,19 @@ bool EffectUIHost::Initialize()
                   bs->Add(mFFwdBtn);
                }
                mFFwdBtn->SetToolTip(_("Skip forward"));
-               
+
                bs->Add(5, 5);
-               
+
                mEnableCb = safenew wxCheckBox(bar, kEnableID, _("&Enable"));
                mEnableCb->SetValue(mEnabled);
                mEnableCb->SetName(_("Enable"));
                bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
             }
          }
-         
+
          bar->SetSizerAndFit(bs.release());
       }
-      
+
       long buttons;
       if ( mEffect && mEffect->ManualPage().empty() && mEffect->HelpPage().empty()) {
          buttons = eApplyButton + eCloseButton;
@@ -1047,33 +1050,33 @@ bool EffectUIHost::Initialize()
          wxAcceleratorTable accel(1, entries);
          this->SetAcceleratorTable(accel);
       }
-      
+
       if (mEffect && mEffect->mUIDebug) {
          buttons += eDebugButton;
       }
-      
+
       buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar).release());
       vs->Add(buttonPanel, 0, wxEXPAND);
-      
+
       SetSizer(vs.release());
    }
-   
+
    Layout();
    Fit();
    Center();
-   
+
    mApplyBtn = (wxButton *) FindWindow(wxID_APPLY);
    mCloseBtn = (wxButton *) FindWindow(wxID_CANCEL);
-   
+
    UpdateControls();
-   
+
    w->SetAccept(!mIsGUI);
    (!mIsGUI ? w : FindWindow(wxID_APPLY))->SetFocus();
-   
+
    LoadUserPresets();
-   
+
    InitializeRealtime();
-   
+
    SetMinSize(GetSize());
    return true;
 }

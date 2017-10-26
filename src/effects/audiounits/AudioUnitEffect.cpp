@@ -1717,10 +1717,11 @@ void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
    mUIHost = host;
 }
 
-bool AudioUnitEffect::PopulateUI(wxWindow *parent)
+bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
 {
    // OSStatus result;
 
+   auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
 

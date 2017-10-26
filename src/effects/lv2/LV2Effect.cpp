@@ -1548,8 +1548,9 @@ void LV2Effect::SetHostUI(EffectUIHostInterface *host)
    mUIHost = host;
 }
 
-bool LV2Effect::PopulateUI(wxWindow *parent)
+bool LV2Effect::PopulateUI(ShuttleGui &S)
 {
+   auto parent = S.GetParent();
    mParent = parent;
 
    mParent->PushEventHandler(this);
