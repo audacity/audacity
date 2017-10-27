@@ -73,40 +73,6 @@ ErrorDialog::ErrorDialog(
    GetSizer()->Fit(this);
    SetMinSize(GetSize());
    Center();
-
-#if 0
-   // Original non ShuttleGui based code.
-   // Layout did not look good on Windows.
-   wxBoxSizer mainSizer;
-   {
-      auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      mainSizer = uMainSizer.get();
-      auto vSizer = make_unique<xBoxSizer>(wxVERTICAL);
-
-      auto hSizer = make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-      wxStaticText *statText = safenew wxStaticText(this, -1, message);
-      mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
-
-      wxButton *help = safenew wxButton(this, wxID_HELP, _("Help"));
-      hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
-
-      wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
-      ok->SetDefault();
-      ok->SetFocus();
-      hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
-
-      vSizer->Add(hSizer.release(), 0, wxALIGN_CENTER|wxALL, 5);
-
-      mainSizer->Add(vSizer.release(), 0, wxALL, 15 );
-
-      SetAutoLayout(true);
-      SetSizer(uMainSizer.release());
-   }
-
-   mainSizer->Fit(this);
-   mainSizer->SetSizeHints(this);
-#endif
 }
 
 void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
