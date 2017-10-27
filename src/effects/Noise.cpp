@@ -231,17 +231,14 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
 
       S.AddPrompt(_("Duration:"));
       mNoiseDurationT = safenew
-         NumericTextCtrl(NumericConverter::TIME,
-                         S.GetParent(),
-                         wxID_ANY,
+         NumericTextCtrl(S.GetParent(), wxID_ANY,
+                         NumericConverter::TIME,
                          GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         NumericTextCtrl::Options{}
+                            .AutoPos(true));
       mNoiseDurationT->SetName(_("Duration"));
-      mNoiseDurationT->EnableMenu();
       S.AddWindow(mNoiseDurationT, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);
    }
    S.EndMultiColumn();

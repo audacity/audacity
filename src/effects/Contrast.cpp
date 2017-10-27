@@ -200,39 +200,36 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText( {} );   // spacer
          S.AddFixedText(_("Volume    "));
 
+         const auto options = NumericTextCtrl::Options{}
+            .AutoPos(true)
+            .MenuEnabled(false)
+            .ReadOnly(true);
+
          //Foreground
          S.AddFixedText(_("&Foreground:"), false);
          if (S.GetMode() == eIsCreating)
          {
             mForegroundStartT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_FOREGROUNDSTART_T,
+               NumericTextCtrl(this, ID_FOREGROUNDSTART_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mForegroundStartT->SetName(_("Foreground start time"));
-            mForegroundStartT->EnableMenu(false);
-            mForegroundStartT->SetReadOnly(true);
          }
          S.AddWindow(mForegroundStartT);
 
          if (S.GetMode() == eIsCreating)
          {
             mForegroundEndT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_FOREGROUNDEND_T,
+               NumericTextCtrl(this, ID_FOREGROUNDEND_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mForegroundEndT->SetName(_("Foreground end time"));
-            mForegroundEndT->EnableMenu(false);
-            mForegroundEndT->SetReadOnly(true);
          }
          S.AddWindow(mForegroundEndT);
 
@@ -245,34 +242,26 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundStartT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_BACKGROUNDSTART_T,
+               NumericTextCtrl(this, ID_BACKGROUNDSTART_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mBackgroundStartT->SetName(_("Background start time"));
-            mBackgroundStartT->EnableMenu(false);
-            mBackgroundStartT->SetReadOnly(true);
          }
          S.AddWindow(mBackgroundStartT);
 
          if (S.GetMode() == eIsCreating)
          {
             mBackgroundEndT = safenew
-               NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_BACKGROUNDEND_T,
+               NumericTextCtrl(this, ID_BACKGROUNDEND_T,
+                         NumericConverter::TIME,
                          _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         options);
             mBackgroundEndT->SetName(_("Background end time"));
-            mBackgroundEndT->EnableMenu(false);
-            mBackgroundEndT->SetReadOnly(true);
          }
          S.AddWindow(mBackgroundEndT);
 

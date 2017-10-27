@@ -1239,22 +1239,21 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(NumericTextCtrl, wxControl)
 
-NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
-                           wxWindow *parent,
-                           wxWindowID id,
+NumericTextCtrl::NumericTextCtrl(wxWindow *parent, wxWindowID id,
+                           NumericConverter::Type type,
                            const wxString &formatName,
                            double timeValue,
                            double sampleRate,
+                           const Options &options,
                            const wxPoint &pos,
-                           const wxSize &size,
-                           bool autoPos):
+                           const wxSize &size):
    wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
    NumericConverter(type, formatName, timeValue, sampleRate),
    mBackgroundBitmap{},
    mDigitFont{},
    mLabelFont{},
    mLastField(1),
-   mAutoPos(autoPos)
+   mAutoPos(options.autoPos)
    , mType(type)
 {
    mAllowInvalidValue = false;
@@ -1262,8 +1261,8 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    mDigitBoxW = 10;
    mDigitBoxH = 16;
 
-   mReadOnly = false;
-   mMenuEnabled = true;
+   mReadOnly = options.readOnly;
+   mMenuEnabled = options.menuEnabled;
    mButtonWidth = 9;
 
    Layout();
@@ -1282,6 +1281,9 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    SetName(wxT(""));
    SetAccessible(safenew NumericTextCtrlAx(this));
 #endif
+
+   if (options.hasInvalidValue)
+      SetInvalidValue( options.invalidValue );
 }
 
 NumericTextCtrl::~NumericTextCtrl()

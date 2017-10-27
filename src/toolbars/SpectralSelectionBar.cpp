@@ -166,31 +166,39 @@ void SpectralSelectionBar::Populate()
       auto subSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       mCenterCtrl = safenew NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
-      mCenterCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+         this, OnCenterID,
+         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, SelectedRegion::UndefinedFrequency )
+      );
       mCenterCtrl->SetName(_("Center Frequency:"));
-      mCenterCtrl->EnableMenu();
       subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mWidthCtrl = safenew NumericTextCtrl(
-         NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
-      mWidthCtrl->SetInvalidValue(-1.0);
+         this, OnWidthID,
+         NumericConverter::BANDWIDTH, bandwidthFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, -1.0 )
+      );
       mWidthCtrl->SetName(wxString(_("Bandwidth:")));
-      mWidthCtrl->EnableMenu();
       subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mLowCtrl = safenew NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
-      mLowCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+         this, OnLowID,
+         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, SelectedRegion::UndefinedFrequency )
+      );
       mLowCtrl->SetName(_("Low Frequency:"));
-      mLowCtrl->EnableMenu();
       subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mHighCtrl = safenew NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
-      mHighCtrl->SetInvalidValue(SelectedRegion::UndefinedFrequency);
+         this, OnHighID,
+         NumericConverter::FREQUENCY, frequencyFormatName, 0.0, 44100.0,
+         NumericTextCtrl::Options{}
+            .InvalidValue( true, SelectedRegion::UndefinedFrequency )
+      );
       mHighCtrl->SetName(wxString(_("High Frequency:")));
-      mHighCtrl->EnableMenu();
       subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
       mCenterCtrl->Show(mbCenterAndWidth);

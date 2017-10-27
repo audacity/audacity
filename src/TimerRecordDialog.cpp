@@ -793,6 +793,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
          */
          wxString strFormat = _("099 h 060 m 060 s");
+         const auto options = NumericTextCtrl::Options{}.MenuEnabled(false);
          S.StartStatic(_("Start Date and Time"), true);
          {
             m_pDatePickerCtrl_Start =
@@ -808,13 +809,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddWindow(m_pDatePickerCtrl_Start);
 
             m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
-               NumericConverter::TIME, this, ID_TIMETEXT_START);
+               this, ID_TIMETEXT_START, NumericConverter::TIME,
+               wxEmptyString, 0, 44100, options);
             m_pTimeTextCtrl_Start->SetName(_("Start Time"));
             m_pTimeTextCtrl_Start->SetFormatString(strFormat);
             m_pTimeTextCtrl_Start->
                SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
             S.AddWindow(m_pTimeTextCtrl_Start);
-            m_pTimeTextCtrl_Start->EnableMenu(false);
          }
          S.EndStatic();
 
@@ -836,12 +837,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.AddWindow(m_pDatePickerCtrl_End);
 
             m_pTimeTextCtrl_End = safenew NumericTextCtrl(
-               NumericConverter::TIME, this, ID_TIMETEXT_END);
+               this, ID_TIMETEXT_END, NumericConverter::TIME,
+               wxEmptyString, 0, 44100, options);
             m_pTimeTextCtrl_End->SetName(_("End Time"));
             m_pTimeTextCtrl_End->SetFormatString(strFormat);
             m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
             S.AddWindow(m_pTimeTextCtrl_End);
-            m_pTimeTextCtrl_End->EnableMenu(false);
          }
          S.EndStatic();
 
@@ -856,12 +857,13 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             * seconds.
             */
             wxString strFormat1 = _("099 days 024 h 060 m 060 s");
-            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
+            m_pTimeTextCtrl_Duration = safenew NumericTextCtrl(
+               this, ID_TIMETEXT_DURATION, NumericConverter::TIME,
+               wxEmptyString, 0, 44100, options);
             m_pTimeTextCtrl_Duration->SetName(_("Duration"));
             m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);
             m_pTimeTextCtrl_Duration->SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
             S.AddWindow(m_pTimeTextCtrl_Duration);
-            m_pTimeTextCtrl_Duration->EnableMenu(false);
          }
          S.EndStatic();
       }

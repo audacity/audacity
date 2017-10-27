@@ -369,31 +369,29 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             S.AddPrompt(_("Current Length:"));
 
             mpFromLengthCtrl = safenew
-                  NumericTextCtrl(NumericConverter::TIME,
-                                 S.GetParent(),
-                                 wxID_ANY,
+                  NumericTextCtrl(S.GetParent(), wxID_ANY,
+                                 NumericConverter::TIME,
                                  mFormat,
                                  mFromLength,
-                                 mProjectRate);
+                                 mProjectRate,
+                                 NumericTextCtrl::Options{}
+                                  .ReadOnly(true)
+                                  .MenuEnabled(false));
 
             mpFromLengthCtrl->SetName(_("from"));
             mpFromLengthCtrl->SetToolTip(_("Current length of selection."));
-            mpFromLengthCtrl->SetReadOnly(true);
-            mpFromLengthCtrl->EnableMenu(false);
             S.AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
 
             S.AddPrompt(_("New Length:"));
 
             mpToLengthCtrl = safenew
-                  NumericTextCtrl(NumericConverter::TIME,
-                                 S.GetParent(),
-                                 ID_ToLength,
+                  NumericTextCtrl(S.GetParent(), ID_ToLength,
+                                 NumericConverter::TIME,
                                  mFormat,
                                  mToLength,
                                  mProjectRate);
 
             mpToLengthCtrl->SetName(_("to"));
-            mpToLengthCtrl->EnableMenu();
             S.AddWindow(mpToLengthCtrl, wxALIGN_LEFT);
          }
          S.EndMultiColumn();

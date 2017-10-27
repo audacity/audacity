@@ -56,17 +56,15 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
       {
          mTimeCtrl = safenew
             NumericTextCtrl(
-               NumericConverter::TIME, this,
-                         wxID_ANY,
+               this, wxID_ANY,
+                         NumericConverter::TIME,
                          mFormat,
                          mTime,
                          mRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         NumericTextCtrl::Options{}
+                            .AutoPos(true));
          mTimeCtrl->SetName(mPrompt);
          S.AddWindow(mTimeCtrl);
-         mTimeCtrl->EnableMenu();
       }
       S.EndStatic();
    }

@@ -326,17 +326,14 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 
       S.AddPrompt(_("Duration:"));
       mDtmfDurationT = safenew
-         NumericTextCtrl(NumericConverter::TIME,
-                         S.GetParent(),
-                         ID_Duration,
+         NumericTextCtrl(S.GetParent(), ID_Duration,
+                         NumericConverter::TIME,
                          GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
+                         NumericTextCtrl::Options{}
+                            .AutoPos(true));
       mDtmfDurationT->SetName(_("Duration"));
-      mDtmfDurationT->EnableMenu();
       S.AddWindow(mDtmfDurationT);
 
       S.AddFixedText(_("Tone/silence ratio:"), false);
