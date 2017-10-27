@@ -1009,23 +1009,24 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 
 bool EffectUIHost::Initialize()
 {
-   EffectPanel *w {};
    {
-      auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      {
-         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+      auto gAudioIO = AudioIO::Get();
+      mDisableTransport = !gAudioIO->IsAvailable(mProject);
+      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
+      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
+   }
 
-         Destroy_ptr<EffectPanel> uw{ safenew EffectPanel(this) };
+   EffectPanel *w {};
+   ShuttleGui S{ this, eIsCreating };
+   {
+      S.StartHorizontalLay( wxEXPAND );
+      {
+         Destroy_ptr<EffectPanel> uw{ safenew EffectPanel( S.GetParent() ) };
          RTL_WORKAROUND(uw.get());
 
          // Try to give the window a sensible default/minimum size
          uw->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
             mParent->GetSize().GetHeight() / 2));
-
-         auto gAudioIO = AudioIO::Get();
-         mDisableTransport = !gAudioIO->IsAvailable(mProject);
-         mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-         mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
 
          ShuttleGui S1{ uw.get(), eIsCreating };
          if (!mClient->PopulateUI(S1))
@@ -1033,38 +1034,40 @@ bool EffectUIHost::Initialize()
             return false;
          }
 
-         hs->Add((w = uw.release()), 1, wxEXPAND);
-         vs->Add(hs.release(), 1, wxEXPAND);
+         S.Prop( 1 )
+            .Position(wxEXPAND)
+            .AddWindow((w = uw.release()));
       }
+      S.EndHorizontalLay();
 
-      wxPanel *buttonPanel = safenew wxPanelWrapper(this, wxID_ANY);
-      const auto bar = BuildButtonBar( buttonPanel );
+      S.StartPanel();
+      {
+         const auto bar = BuildButtonBar( S.GetParent() );
 
-      long buttons;
-      if ( mEffect && mEffect->ManualPage().empty() && mEffect->HelpPage().empty()) {
-         buttons = eApplyButton + eCloseButton;
-         this->SetAcceleratorTable(wxNullAcceleratorTable);
-      }
-      else {
-         buttons = eApplyButton + eCloseButton + eHelpButton;
-         wxAcceleratorEntry entries[1];
+         long buttons;
+         if ( mEffect && mEffect->ManualPage().empty() && mEffect->HelpPage().empty()) {
+            buttons = eApplyButton | eCloseButton;
+            this->SetAcceleratorTable(wxNullAcceleratorTable);
+         }
+         else {
+            buttons = eApplyButton | eCloseButton | eHelpButton;
+            wxAcceleratorEntry entries[1];
 #if defined(__WXMAC__)
-         // Is there a standard shortcut on Mac?
+            // Is there a standard shortcut on Mac?
 #else
-         entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
+            entries[0].Set(wxACCEL_NORMAL, (int) WXK_F1, wxID_HELP);
 #endif
-         wxAcceleratorTable accel(1, entries);
-         this->SetAcceleratorTable(accel);
+            wxAcceleratorTable accel(1, entries);
+            this->SetAcceleratorTable(accel);
+         }
+
+         if (mEffect && mEffect->mUIDebug) {
+            buttons |= eDebugButton;
+         }
+
+         S.AddStandardButtons(buttons, bar);
       }
-
-      if (mEffect && mEffect->mUIDebug) {
-         buttons += eDebugButton;
-      }
-
-      buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar).release());
-      vs->Add(buttonPanel, 0, wxEXPAND);
-
-      SetSizer(vs.release());
+      S.EndPanel();
    }
 
    Layout();
