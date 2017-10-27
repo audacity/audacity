@@ -697,7 +697,7 @@ public:
    // The first of these buttons, if any, that is included will be default:
    // Apply, Yes, OK
    void AddStandardButtons(
-      long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
+      long buttons = eOkButton | eCancelButton, wxWindow *extra = NULL );
 
    wxSizerItem * AddSpace( int width, int height );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };

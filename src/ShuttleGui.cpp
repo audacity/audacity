@@ -2381,7 +2381,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
    return std::unique_ptr<wxSizer>{ s.release() };
 }
 
-void ShuttleGui::AddStandardButtons(long buttons, wxButton *extra)
+void ShuttleGui::AddStandardButtons(long buttons, wxWindow *extra)
 {
    if( mShuttleMode != eIsCreating )
       return;
