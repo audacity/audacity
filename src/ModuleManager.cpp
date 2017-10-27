@@ -271,9 +271,8 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       // and let the user decide for each one.
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
-         wxString msg;
-         msg.Printf(_("Module \"%s\" found."), ShortName);
-         msg += _("\n\nOnly use modules from trusted sources");
+         auto msg = XO("Module \"%s\" found.").Format( ShortName );
+         msg += XO("\n\nOnly use modules from trusted sources");
          const TranslatableStrings buttons{
             XO("Yes"), XO("No"),
          };  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.

@@ -24,7 +24,7 @@ const TranslatableString &DefaultMultiDialogMessage();
 
 // Display a dialog with radio buttons.
 // Return the zero-based index of the chosen button.
-int ShowMultiDialog(const wxString &message,
+int ShowMultiDialog(const TranslatableString &message,
                     const TranslatableString &title,
                     const TranslatableStrings &buttons,
                     const TranslatableString &boxMsg

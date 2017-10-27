@@ -21,6 +21,8 @@ for each problem encountered, since there can be many orphans.
 #include "../Audacity.h"
 #include "MultiDialog.h"
 
+#include "../ShuttleGui.h"
+
 #include <wx/app.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -39,7 +41,7 @@ class MultiDialog final : public wxDialogWrapper
 {
 public:
    MultiDialog(wxWindow * pParent, 
-               wxString message,
+               const TranslatableString &message,
                const TranslatableString &title,
                const TranslatableStrings &buttons,
                const TranslatableString &boxMsg, bool log);
@@ -62,7 +64,7 @@ BEGIN_EVENT_TABLE(MultiDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 MultiDialog::MultiDialog(wxWindow * pParent,
-                         wxString message,
+                         const TranslatableString &message,
                          const TranslatableString &title,
                          const TranslatableStrings &buttons,
                          const TranslatableString &boxMsg, bool log)
@@ -72,27 +74,25 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 {
    SetName();
 
-   wxBoxSizer *mainSizer;
+   ShuttleGui S{ this, eIsCreating };
    {
-      auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      mainSizer = uMainSizer.get();
-
+      S.SetBorder( 5 );
+      S.StartVerticalLay( 0 );
       {
-         auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+         S.StartHorizontalLay(wxALIGN_LEFT | wxALL, 0);
          {
-            auto iconAndTextSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
+            S.SetBorder( 0 );
             wxBitmap bitmap = wxArtProvider::GetIcon(wxART_WARNING,
                wxART_MESSAGE_BOX);
-            wxStaticBitmap *icon = safenew wxStaticBitmap(this, -1, bitmap);
-            iconAndTextSizer->Add(icon, 0, wxCENTER);
+            auto icon = safenew wxStaticBitmap(S.GetParent(), -1, bitmap);
+            S
+               .Position( wxCENTER )
+               .AddWindow( icon );
 
-            wxStaticText *statText = safenew wxStaticText(this, -1, message);
-            statText->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-            iconAndTextSizer->Add(statText, 1, wxCENTER | wxLEFT, 15);
-
-            vSizer->Add(iconAndTextSizer.release(), 0, wxALIGN_LEFT | wxALL, 5);
+            S.SetBorder( 15 );
+            S.Prop(1).AddVariableText( message, false, wxCENTER | wxLEFT );
          }
+         S.EndHorizontalLay();
 
          const auto buttonLabels = transform_container<wxArrayStringEx>(
             buttons, std::mem_fn( &TranslatableString::Translation ) );
@@ -101,46 +101,45 @@ MultiDialog::MultiDialog(wxWindow * pParent,
          
          const auto boxStr = boxMsg.Translation();
 
-         mRadioBox = safenew wxRadioBox(this, -1,
+         S.SetBorder( 5 );
+
+         mRadioBox = safenew wxRadioBox(S.GetParent(), -1,
             boxStr,
             wxDefaultPosition, wxDefaultSize,
             count, count ? &buttonLabels[0] : nullptr,
             1, wxRA_SPECIFY_COLS);
-         mRadioBox->SetName(boxStr);
          mRadioBox->SetSelection(0);
-         vSizer->Add(mRadioBox, 1, wxEXPAND | wxALL, 5);
+         S.Prop( 1 )
+            .Name( boxMsg )
+            .Position(wxEXPAND | wxALL)
+            .AddWindow( mRadioBox );
 
 
+         S.StartHorizontalLay(wxALIGN_CENTER | wxALL, 0);
          {
-            auto buttonSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-            wxButton* pButton;
             if (log)
             {
-               pButton = safenew wxButton(this, ID_SHOW_LOG_BUTTON, _("Show Log for Details"));
-               buttonSizer->Add(pButton, 0, wxALIGN_LEFT | wxALL, 5);
-               pButton->SetDefault(); // Encourage user to look at files.
+               S
+                  .Id( ID_SHOW_LOG_BUTTON )
+                  .AddButton(
+                     XO("Show Log for Details"), wxALIGN_LEFT | wxALL,
+                     // set default to encourage user to look at files.
+                     true );
 
-               buttonSizer->AddSpacer(40);
+               S.AddSpace( 40, 0 );
             }
 
-            pButton = safenew wxButton(this, wxID_OK, _("OK"));
-            if (!log)
-               pButton->SetDefault();
-            buttonSizer->Add(pButton, 0, wxALL, 5);
-
-            vSizer->Add(buttonSizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
+            auto pButton = S.Id( wxID_OK )
+               .AddButton( XO("OK"), wxALIGN_CENTER, !log );
          }
-
-         mainSizer->Add(vSizer.release(), 0, wxALL, 5);
+         S.EndHorizontalLay();
       }
-
-      SetAutoLayout(true);
-      SetSizer(uMainSizer.release());
+      S.EndVerticalLay();
    }
 
-   mainSizer->Fit(this);
-   mainSizer->SetSizeHints(this);
+   SetAutoLayout(true);
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
 }
 
 void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
@@ -157,7 +156,7 @@ void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 }
 
 
-int ShowMultiDialog(const wxString &message,
+int ShowMultiDialog(const TranslatableString &message,
    const TranslatableString &title,
    const TranslatableStrings &buttons,
    const TranslatableString &boxMsg, bool log)

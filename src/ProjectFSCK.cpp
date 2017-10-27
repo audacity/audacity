@@ -55,7 +55,7 @@ int ProjectFSCK(
          This error message is about the tags that hold the sequence information.
          The error message is confusing to users in English, and could just say
          "Found problems with <sequence> when checking project file." */
-      wxString msg = _("Project check read faulty Sequence tags.");
+      auto msg = XO("Project check read faulty Sequence tags.");
       const TranslatableStrings buttons{
          XO("Close project immediately with no changes"),
          XO("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts.")
@@ -95,8 +95,8 @@ int ProjectFSCK(
          action = 2;
       else
       {
-         wxString msgA =
-_("Project check of \"%s\" folder \
+         auto msg =
+XO("Project check of \"%s\" folder \
 \ndetected %lld missing external audio file(s) \
 \n('aliased files'). There is no way for Audacity \
 \nto recover these files automatically. \
@@ -107,9 +107,10 @@ _("Project check of \"%s\" folder \
 \nmay not show silence. \
 \n\nIf you choose the third option, this will save the \
 \nproject in its current state, unless you \"Close \
-\nproject immediately\" on further error alerts.");
-         wxString msg;
-         msg.Printf(msgA, dm.GetProjectName(), (long long) missingAliasFilesPathHash.size());
+\nproject immediately\" on further error alerts.")
+            .Format(
+               dm.GetProjectName(),
+               (long long) missingAliasFilesPathHash.size() );
          const TranslatableStrings buttons{
             XO("Close project immediately with no changes"),
             XO("Treat missing audio as silence (this session only)"),
@@ -181,13 +182,13 @@ _("Project check of \"%s\" folder \
          action = 0;
       else
       {
-         wxString msgA =
-_("Project check of \"%s\" folder \
+         auto msg =
+XO("Project check of \"%s\" folder \
 \ndetected %lld missing alias (.auf) blockfile(s). \
 \nAudacity can fully regenerate these files \
-\nfrom the current audio in the project.");
-         wxString msg;
-         msg.Printf(msgA, dm.GetProjectName(), (long long) missingAUFHash.size());
+\nfrom the current audio in the project.")
+            .Format(
+               dm.GetProjectName(), (long long) missingAUFHash.size() );
          const TranslatableStrings buttons{
             XO("Regenerate alias summary files (safe and recommended)"),
             XO("Fill in silence for missing display data (this session only)"),
@@ -248,8 +249,8 @@ _("Project check of \"%s\" folder \
          action = 2;
       else
       {
-         wxString msgA =
-_("Project check of \"%s\" folder \
+         auto msg =
+XO("Project check of \"%s\" folder \
 \ndetected %lld missing audio data (.au) blockfile(s), \
 \nprobably due to a bug, system crash, or accidental \
 \ndeletion. There is no way for Audacity to recover \
@@ -258,9 +259,9 @@ _("Project check of \"%s\" folder \
 \nyou can try to find and restore the missing files \
 \nto their previous location. \
 \n\nNote that for the second option, the waveform \
-\nmay not show silence.");
-         wxString msg;
-         msg.Printf(msgA, dm.GetProjectName(), (long long) missingAUHash.size());
+\nmay not show silence.")
+            .Format(
+               dm.GetProjectName(), (long long) missingAUHash.size() );
          const TranslatableStrings buttons{
             XO("Close project immediately with no further changes"),
             XO("Treat missing audio as silence (this session only)"),
@@ -325,14 +326,13 @@ _("Project check of \"%s\" folder \
       }
       else
       {
-         wxString msgA =
-_("Project check of \"%s\" folder \
+         auto msg =
+XO("Project check of \"%s\" folder \
 \nfound %d orphan block file(s). These files are \
 \nunused by this project, but might belong to \
 other projects. \
-\nThey are doing no harm and are small.");
-         wxString msg;
-         msg.Printf(msgA, dm.GetProjectName(), (int)orphanFilePathArray.size());
+\nThey are doing no harm and are small.")
+            .Format( dm.GetProjectName(), (int)orphanFilePathArray.size() );
 
          const TranslatableStrings buttons{
             XO("Continue without deleting; ignore the extra files this session"),
