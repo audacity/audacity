@@ -172,6 +172,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Jean Claude Risset, ")) + _("composer"), roleContributor);
    AddCredit(wxString(wxT("Augustus Saunders, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Benjamin Schwartz, ")) + _("developer"), roleContributor);
+   AddCredit(wxString(wxT("Cliff Scott, ")) + _("tester"), roleContributor);
    AddCredit(wxString(wxT("David R. Sky, ")) + _("Nyquist plug-ins"), roleContributor);
    AddCredit(wxString(wxT("Rob Sykes, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Mike Underwood, ")) + _("developer"), roleContributor);
@@ -272,7 +273,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jason Pepas"), roleThanks);
    AddCredit(wxT("Jonathan Ryshpan"), roleThanks);
    AddCredit(wxT("Michael Schwendt"), roleThanks);
-   AddCredit(wxT("Cliff Scott"), roleThanks);
    AddCredit(wxT("Patrick Shirkey"), roleThanks);
    AddCredit(wxT("Tuomas Suutari"), roleThanks);
    AddCredit(wxT("Mark Tomlinson"), roleThanks);
