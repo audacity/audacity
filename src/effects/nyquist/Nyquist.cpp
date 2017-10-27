@@ -3193,42 +3193,34 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 {
    SetName();
 
-   wxBoxSizer *mainSizer;
+   ShuttleGui S{ this, eIsCreating };
    {
-      auto uMainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      mainSizer = uMainSizer.get();
-      wxButton   *button;
-      wxControl  *item;
+      S.SetBorder(10);
 
-      const auto translated = prompt.Translation();
-      item = safenew wxStaticText(this, -1, translated);
-      item->SetName(translated);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
+      S.AddVariableText( prompt, false, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT );
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
-      item = safenew wxTextCtrl(this, -1, message.Translation(),
-                            wxDefaultPosition, wxSize(480, 250),
-                            wxTE_MULTILINE | wxTE_READONLY);
-      mainSizer->Add(item, 1, wxEXPAND | wxALL, 10);
+      S.Prop( 1 )
+         .Position(wxEXPAND | wxALL)
+         .MinSize( { 480, 250 } )
+         .Style(wxTE_MULTILINE | wxTE_READONLY)
+         .AddTextWindow( message.Translation() );
 
+      S.SetBorder( 5 );
+
+      S.StartHorizontalLay(wxALIGN_CENTRE | wxLEFT | wxBOTTOM | wxRIGHT, 0 );
       {
-         auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
          /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
-         button = safenew wxButton(this, wxID_OK, _("OK"));
-         button->SetDefault();
-         hSizer->Add(button, 0, wxALIGN_CENTRE | wxALL, 5);
-
-         mainSizer->Add(hSizer.release(), 0, wxALIGN_CENTRE | wxLEFT | wxBOTTOM | wxRIGHT, 5);
+         S.Id(wxID_OK).AddButton( XO("OK"), wxALIGN_CENTRE, true );
       }
+      S.EndHorizontalLay();
 
-      SetAutoLayout(true);
-      SetSizer(uMainSizer.release());
    }
 
-   mainSizer->Fit(this);
-   mainSizer->SetSizeHints(this);
+   SetAutoLayout(true);
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
 }
 
 // ============================================================================
