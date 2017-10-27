@@ -714,7 +714,7 @@ public:
    void AddStandardButtons(
       long buttons = eOkButton | eCancelButton, wxWindow *extra = NULL );
 
-   wxSizerItem * AddSpace( int width, int height );
+   wxSizerItem * AddSpace( int width, int height, int prop = 0 );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
 
    // Calculate width of a choice control adequate for the items, maybe after

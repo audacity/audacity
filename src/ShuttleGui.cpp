@@ -2419,12 +2419,15 @@ void ShuttleGui::AddStandardButtons(long buttons, wxWindow *extra)
    EndVerticalLay();
 }
 
-wxSizerItem * ShuttleGui::AddSpace( int width, int height )
+wxSizerItem * ShuttleGui::AddSpace( int width, int height, int prop )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
-   SetProportions(0);
-   return mpSizer->Add( width, height, miProp);
+
+//   SetProportions(0);
+  // return mpSizer->Add( width, height, miProp);
+
+   return mpSizer->Add( width, height, prop );
 }
 
 void ShuttleGui::SetMinSize( wxWindow *window, const wxArrayStringEx & items )
