@@ -588,6 +588,12 @@ void TrackArtist::DrawVRuler
    if (kind == Track::Note) {
       UpdateVRuler(t, rect);
 
+      // Vertical lines on the sides
+      // While these areas are initially black, they aren't repainted as black elsewhere, so
+      // the color gets messed up over time if they aren't redrawn
+      AColor::Line(*dc, rect.x, rect.y, rect.x, rect.y + rect.height);
+      AColor::Line(*dc, rect.x + rect.width, rect.y, rect.x + rect.width, rect.y + rect.height);
+
       dc->SetPen(highlight ? AColor::uglyPen : *wxTRANSPARENT_PEN);
       dc->SetBrush(*wxWHITE_BRUSH);
       wxRect bev = rect;
