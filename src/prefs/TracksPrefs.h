@@ -25,7 +25,7 @@ class ShuttleGui;
 class TracksPrefs final : public PrefsPanel
 {
  public:
-   TracksPrefs(wxWindow * parent);
+   TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -52,6 +52,6 @@ class TracksPrefs final : public PrefsPanel
 class TracksPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

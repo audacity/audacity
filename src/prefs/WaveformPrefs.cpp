@@ -26,9 +26,9 @@ Paul Licameli
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
-WaveformPrefs::WaveformPrefs(wxWindow * parent, WaveTrack *wt)
+WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid, WaveTrack *wt)
 /* i18n-hint: A waveform is a visual representation of vibration */
-: PrefsPanel(parent, _("Waveforms"))
+: PrefsPanel(parent, winid, _("Waveforms"))
 , mWt(wt)
 , mPopulating(false)
 {
@@ -250,8 +250,8 @@ WaveformPrefsFactory::WaveformPrefsFactory(WaveTrack *wt)
 {
 }
 
-PrefsPanel *WaveformPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *WaveformPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew WaveformPrefs(parent, mWt);
+   return safenew WaveformPrefs(parent, winid, mWt);
 }

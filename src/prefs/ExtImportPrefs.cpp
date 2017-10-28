@@ -56,10 +56,10 @@ BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
    EVT_BUTTON(EIPMoveFilterDown,ExtImportPrefs::OnFilterMoveDown)
 END_EVENT_TABLE()
 
-ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
+ExtImportPrefs::ExtImportPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Title of dialog governing "Extended", or "advanced,"
  * audio file import options */
-:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
+:   PrefsPanel(parent, winid, _("Extended Import")), RuleTable(NULL),
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
@@ -811,8 +811,8 @@ void ExtImportPrefsDropTarget::OnLeave()
 {
 }
 
-PrefsPanel *ExtImportPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ExtImportPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ExtImportPrefs(parent);
+   return safenew ExtImportPrefs(parent, winid);
 }

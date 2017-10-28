@@ -32,8 +32,8 @@
 #include "../Experimental.h"
 #include "../Internat.h"
 
-EffectsPrefs::EffectsPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Effects"))
+EffectsPrefs::EffectsPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Effects"))
 {
    Populate();
 }
@@ -176,8 +176,8 @@ wxString EffectsPrefs::HelpPageName()
    return "Effects_Preferences";
 }
 
-PrefsPanel *EffectsPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *EffectsPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew EffectsPrefs(parent);
+   return safenew EffectsPrefs(parent, winid);
 }

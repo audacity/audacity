@@ -28,8 +28,8 @@
 #include "../Prefs.h"
 #include "../Internat.h"
 
-PlaybackPrefs::PlaybackPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Playback"))
+PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Playback"))
 {
    Populate();
 }
@@ -132,9 +132,9 @@ wxString PlaybackPrefs::HelpPageName()
    return "Playback_Preferences";
 }
 
-PrefsPanel *PlaybackPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *PlaybackPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew PlaybackPrefs(parent);
+   return safenew PlaybackPrefs(parent, winid);
 }
 

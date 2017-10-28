@@ -24,7 +24,7 @@ class ShuttleGui;
 class WarningsPrefs final : public PrefsPanel
 {
  public:
-   WarningsPrefs(wxWindow * parent);
+   WarningsPrefs(wxWindow * parent, wxWindowID winid);
    ~WarningsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -37,6 +37,6 @@ class WarningsPrefs final : public PrefsPanel
 class WarningsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

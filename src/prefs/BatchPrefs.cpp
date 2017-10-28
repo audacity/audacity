@@ -32,8 +32,8 @@ BEGIN_EVENT_TABLE(BatchPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 /// Constructor
-BatchPrefs::BatchPrefs(wxWindow * parent):
-   PrefsPanel(parent, _("Batch"))
+BatchPrefs::BatchPrefs(wxWindow * parent, wxWindowID winid):
+   PrefsPanel(parent, winid, _("Batch"))
 {
    Populate();
 }
@@ -83,8 +83,8 @@ BatchPrefs::~BatchPrefs()
 {
 }
 
-PrefsPanel *BatchPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *BatchPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew BatchPrefs(parent);
+   return safenew BatchPrefs(parent, winid);
 }

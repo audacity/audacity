@@ -25,7 +25,7 @@ class ShuttleGui;
 class EffectsPrefs final : public PrefsPanel
 {
  public:
-   EffectsPrefs(wxWindow * parent);
+   EffectsPrefs(wxWindow * parent, wxWindowID winid);
    ~EffectsPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -38,6 +38,6 @@ class EffectsPrefs final : public PrefsPanel
 class EffectsPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

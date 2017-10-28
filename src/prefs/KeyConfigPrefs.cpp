@@ -72,9 +72,10 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_TIMER(FilterTimerID, KeyConfigPrefs::OnFilterTimer)
 END_EVENT_TABLE()
 
-KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, const wxString &name)
+KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
+                               const wxString &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
-:  PrefsPanel(parent, _("Keyboard")),
+:  PrefsPanel(parent, winid, _("Keyboard")),
    mView(NULL),
    mKey(NULL),
    mFilter(NULL),
@@ -749,9 +750,9 @@ wxString KeyConfigPrefs::HelpPageName()
    return "Keyboard_Preferences";
 }
 
-PrefsPanel *KeyConfigPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *KeyConfigPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   auto result = safenew KeyConfigPrefs{ parent, mName };
+   auto result = safenew KeyConfigPrefs{ parent, winid, mName };
    return result;
 }

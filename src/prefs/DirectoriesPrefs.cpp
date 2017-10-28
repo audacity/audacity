@@ -48,9 +48,9 @@ BEGIN_EVENT_TABLE(DirectoriesPrefs, PrefsPanel)
    EVT_BUTTON(ChooseButtonID, DirectoriesPrefs::OnChooseTempDir)
 END_EVENT_TABLE()
 
-DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent)
+DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Directories, also called folders, in computer file systems */
-:  PrefsPanel(parent, _("Directories")),
+:  PrefsPanel(parent, winid, _("Directories")),
    mFreeSpace(NULL),
    mTempDir(NULL)
 {
@@ -273,8 +273,8 @@ wxString DirectoriesPrefs::HelpPageName()
    return "Directories_Preferences";
 }
 
-PrefsPanel *DirectoriesPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *DirectoriesPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew DirectoriesPrefs(parent);
+   return safenew DirectoriesPrefs(parent, winid);
 }

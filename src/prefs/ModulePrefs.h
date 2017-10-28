@@ -34,7 +34,7 @@ enum {
 class ModulePrefs final : public PrefsPanel
 {
  public:
-   ModulePrefs(wxWindow * parent);
+   ModulePrefs(wxWindow * parent, wxWindowID winid);
    ~ModulePrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -54,6 +54,6 @@ class ModulePrefs final : public PrefsPanel
 class ModulePrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif

@@ -23,7 +23,7 @@ class ShuttleGui;
 class PlaybackPrefs final : public PrefsPanel
 {
  public:
-   PlaybackPrefs(wxWindow * parent);
+   PlaybackPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~PlaybackPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -36,7 +36,7 @@ class PlaybackPrefs final : public PrefsPanel
 class PlaybackPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 
 #endif

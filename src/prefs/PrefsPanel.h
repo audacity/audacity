@@ -43,8 +43,8 @@ ThemePrefs.
 class PrefsPanel /* not final */ : public wxPanelWrapper
 {
  public:
-   PrefsPanel(wxWindow * parent, const wxString &title)
-   :  wxPanelWrapper(parent, wxID_ANY)
+   PrefsPanel(wxWindow * parent, wxWindowID winid, const wxString &title)
+   :  wxPanelWrapper(parent, winid)
    {
       SetLabel(title);     // Provide visual label
       SetName(title);      // Provide audible label
@@ -71,7 +71,7 @@ class PrefsPanelFactory /* not final */
 {
 public:
    // Precondition: parent != NULL
-   virtual PrefsPanel *Create(wxWindow *parent) = 0;
+   virtual PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) = 0;
 };
 
 #endif

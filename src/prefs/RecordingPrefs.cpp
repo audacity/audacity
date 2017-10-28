@@ -45,8 +45,8 @@ BEGIN_EVENT_TABLE(RecordingPrefs, PrefsPanel)
    EVT_CHECKBOX(UseCustomTrackNameID, RecordingPrefs::OnToggleCustomName)
 END_EVENT_TABLE()
 
-RecordingPrefs::RecordingPrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Recording"))
+RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Recording"))
 {
    gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &mUseCustomTrackName, false);
    mOldNameChoice = mUseCustomTrackName;
@@ -268,8 +268,8 @@ wxString RecordingPrefs::HelpPageName()
    return "Recording_Preferences";
 }
 
-PrefsPanel *RecordingPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *RecordingPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew RecordingPrefs(parent);
+   return safenew RecordingPrefs(parent, winid);
 }

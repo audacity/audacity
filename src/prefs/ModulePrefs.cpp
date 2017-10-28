@@ -29,8 +29,8 @@ with names like mnod-script-pipe that add NEW features.
 ////////////////////////////////////////////////////////////////////////////////
 
 /* i18n-hint: Modules are optional extensions to Audacity that add NEW features.*/
-ModulePrefs::ModulePrefs(wxWindow * parent)
-:  PrefsPanel(parent, _("Modules"))
+ModulePrefs::ModulePrefs(wxWindow * parent, wxWindowID winid)
+:  PrefsPanel(parent, winid, _("Modules"))
 {
    Populate();
 }
@@ -168,8 +168,8 @@ wxString ModulePrefs::HelpPageName()
    return "Modules_Preferences";
 }
 
-PrefsPanel *ModulePrefsFactory::Create(wxWindow *parent)
+PrefsPanel *ModulePrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew ModulePrefs(parent);
+   return safenew ModulePrefs(parent, winid);
 }

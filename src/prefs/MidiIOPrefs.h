@@ -29,7 +29,7 @@ class ShuttleGui;
 class MidiIOPrefs final : public PrefsPanel
 {
  public:
-   MidiIOPrefs(wxWindow * parent);
+   MidiIOPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~MidiIOPrefs();
    bool Commit() override;
    bool Validate() override;
@@ -66,7 +66,7 @@ class MidiIOPrefs final : public PrefsPanel
 class MidiIOPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif
 

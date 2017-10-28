@@ -36,9 +36,9 @@
 #include "../AColor.h"
 #include "../Internat.h"
 
-GUIPrefs::GUIPrefs(wxWindow * parent)
+GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
-:  PrefsPanel(parent, _("Interface"))
+:  PrefsPanel(parent, winid, _("Interface"))
 {
    Populate();
 }
@@ -233,8 +233,8 @@ wxString GUIPrefs::HelpPageName()
    return "Interface_Preferences";
 }
 
-PrefsPanel *GUIPrefsFactory::Create(wxWindow *parent)
+PrefsPanel *GUIPrefsFactory::operator () (wxWindow *parent, wxWindowID winid)
 {
    wxASSERT(parent); // to justify safenew
-   return safenew GUIPrefs(parent);
+   return safenew GUIPrefs(parent, winid);
 }

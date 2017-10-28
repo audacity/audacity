@@ -24,7 +24,7 @@ class ShuttleGui;
 class RecordingPrefs final : public PrefsPanel
 {
  public:
-   RecordingPrefs(wxWindow * parent);
+   RecordingPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~RecordingPrefs();
    bool Commit() override;
    wxString HelpPageName() override;
@@ -44,6 +44,6 @@ class RecordingPrefs final : public PrefsPanel
 class RecordingPrefsFactory final : public PrefsPanelFactory
 {
 public:
-   PrefsPanel *Create(wxWindow *parent) override;
+   PrefsPanel *operator () (wxWindow *parent, wxWindowID winid) override;
 };
 #endif
