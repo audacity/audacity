@@ -248,7 +248,8 @@ public:
       const wxString &Prompt,
       const SettingSpec< int > &Setting,
       const wxArrayStringEx & Choices,
-      const std::vector<int> * pInternalChoices = nullptr );
+      const std::vector<int> * pInternalChoices = nullptr,
+      int iNoMatchSelector = 0 );
 
    virtual wxTextCtrl * TieTextBox(
       const wxString &Prompt,
@@ -277,7 +278,6 @@ public:
    void SetSizeHints( int minX, int minY );
    void SetBorder( int Border ) {miBorder = Border;};
    void SetStyle( int Style ) {miStyle = Style;};
-   void SetNoMatchSelector( int iSelector ) {miNoMatchSelector = iSelector;};
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );

@@ -1924,7 +1924,8 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const wxString &Prompt,
    const SettingSpec< int > &Setting,
    const wxArrayStringEx & Choices,
-   const std::vector<int> * pInternalChoices)
+   const std::vector<int> * pInternalChoices,
+   int iNoMatchSelector)
 {
    auto fn = [](int arg){ return wxString::Format( "%d", arg ); };
 
@@ -1936,7 +1937,11 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(
       for ( int ii = 0; ii < Choices.size(); ++ii )
          InternalChoices.push_back( fn( ii ) );
 
+
    const auto Default = Setting.GetDefault();
+
+   miNoMatchSelector = iNoMatchSelector;
+
    long defaultIndex;
    if ( pInternalChoices )
       defaultIndex =  make_iterator_range( *pInternalChoices ).index( Default );
