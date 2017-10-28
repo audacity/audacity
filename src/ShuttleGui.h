@@ -184,8 +184,11 @@ public:
 
    wxNotebook * StartNotebook();
    void EndNotebook();
+
+   // IDs of notebook pages cannot be chosen by the caller
    wxNotebookPage * StartNotebookPage( const wxString & Name );
    void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
+
    void EndNotebookPage();
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
