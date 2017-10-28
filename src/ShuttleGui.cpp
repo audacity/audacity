@@ -1005,11 +1005,11 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
    pNotebook->AddPage(
       pPage,
       Name);
-   PushSizer();
 
    SetProportions( 1 );
    mpParent = pPage;
    pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
+   PushSizer();
    mpSizer->SetMinSize(250, 500);
    //   UpdateSizers();
    return pPage;
@@ -1028,11 +1028,11 @@ void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * 
    pNotebook->AddPage(
       pPage,
       Name);
-   PushSizer();
 
    SetProportions( 1 );
    mpParent = pPage;
    pPage->SetSizer(mpSizer = safenew wxBoxSizer(wxVERTICAL));
+   PushSizer();
    mpSizer->SetMinSize(250, 500);
    //   UpdateSizers();
 }
