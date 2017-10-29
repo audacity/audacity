@@ -324,9 +324,10 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             // so that name can be set on a standard control
             mPanScroller->SetAccessible(safenew WindowAccessible(mPanScroller));
 #endif
-            mPanScroller->SetName(_("Scroll"));
             S.Prop(1);
-            S.AddWindow(mPanScroller, wxALIGN_LEFT | wxTOP);
+            S
+               .Name(XO("Scroll"))
+               .AddWindow(mPanScroller, wxALIGN_LEFT | wxTOP);
          }
          S.EndVerticalLay();
 
@@ -340,12 +341,13 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             mZoomSlider = safenew wxSliderWrapper(this, FreqZoomSliderID, 100, 1, 100,
                wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL);
             S.Prop(1);
-            S.AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
+            S
+               .Name(XO("Zoom"))
+               .AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
 #if wxUSE_ACCESSIBILITY
             // so that name can be set on a standard control
             mZoomSlider->SetAccessible(safenew WindowAccessible(mZoomSlider));
 #endif
-            mZoomSlider->SetName(_("Zoom"));
 
             S.AddSpace(5);
 

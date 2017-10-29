@@ -213,9 +213,10 @@ void BenchmarkDialog::MakeBenchmarkDialog()
                            false);
 
       //
-      mText = S.Id(StaticTextID).AddTextWindow(wxT(""));
-      /* i18n-hint noun */
-      mText->SetName(_("Output"));
+      mText = S.Id(StaticTextID)
+         /* i18n-hint noun */
+         .Name(XO("Output"))
+         .AddTextWindow(wxT(""));
       mText->SetSizeHints(wxSize(500,200));
 
       //

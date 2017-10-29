@@ -1439,8 +1439,8 @@ struct ControlInfo {
       S.SetStyle(wxSL_HORIZONTAL);
       wxSlider *const slider =
          S.Id(id)
+            .Name( sliderName )
             .AddSlider( {}, 0, sliderMax);
-      slider->SetName(sliderName.Translation());
       slider->SetSizeHints(150, -1);
    }
 

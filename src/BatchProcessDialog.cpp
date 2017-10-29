@@ -145,19 +145,21 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartHorizontalLay(wxEXPAND, 0);
    {
       S.AddPrompt( _("Apply Macro to:") );
-      wxButton* btn = S.Id(ApplyToProjectID).AddButton(_("&Project"));
+      wxButton* btn = S.Id(ApplyToProjectID)
+         .Name(XO("Apply macro to project"))
+         .AddButton(_("&Project"));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
 #endif
-      btn->SetName(_("Apply macro to project"));
 
-      btn = S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      btn = S.Id(ApplyToFilesID)
+         .Name(XO("Apply macro to files..."))
+         .AddButton(_("&Files..."));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
 #endif
-      btn->SetName(_("Apply macro to files..."));
    }
    S.EndHorizontalLay();
 
@@ -676,19 +678,21 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       mResize = S.Id(ShrinkID).AddButton(_("Shrin&k"));
       // Using variable text just to get the positioning options.
       S.Prop(0).AddVariableText( _("Apply Macro to:"), false, wxALL | wxALIGN_CENTRE_VERTICAL );
-      wxButton* btn = S.Id(ApplyToProjectID).AddButton(_("&Project"));
+      wxButton* btn = S.Id(ApplyToProjectID)
+         .Name(XO("Apply macro to project"))
+         .AddButton(_("&Project"));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
 #endif
-      btn->SetName(_("Apply macro to project"));
 
-      btn = S.Id(ApplyToFilesID).AddButton(_("&Files..."));
+      btn = S.Id(ApplyToFilesID)
+         .Name(XO("Apply macro to files..."))
+         .AddButton(_("&Files..."));
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
 #endif
-      btn->SetName(_("Apply macro to files..."));
       S.Prop(1).AddSpace( 10 );
       S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
    }

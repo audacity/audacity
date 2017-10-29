@@ -262,8 +262,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("&Stages:"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mStagesS = S.Id(ID_Stages).AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
-      mStagesS->SetName(_("Stages"));
+      mStagesS = S.Id(ID_Stages)
+         .Name(XO("Stages"))
+         .AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
       mStagesS->SetLineSize(2);
       mStagesS->SetMinSize(wxSize(100, -1));
 
@@ -273,8 +274,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("&Dry/Wet:"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDryWetS = S.Id(ID_DryWet).AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
-      mDryWetS->SetName(_("Dry Wet"));
+      mDryWetS = S.Id(ID_DryWet)
+         .Name(XO("Dry Wet"))
+         .AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
       mDryWetS->SetMinSize(wxSize(100, -1));
 
       mFreqT = S.Id(ID_Freq)
@@ -283,8 +285,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFreqS = S.Id(ID_Freq).AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
-      mFreqS ->SetName(_("LFO frequency in hertz"));
+      mFreqS = S.Id(ID_Freq)
+         .Name(XO("LFO frequency in hertz"))
+         .AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
       mFreqS ->SetMinSize(wxSize(100, -1));
 
       mPhaseT = S.Id(ID_Phase)
@@ -293,8 +296,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mPhaseS = S.Id(ID_Phase).AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
-      mPhaseS->SetName(_("LFO start phase in degrees"));
+      mPhaseS = S.Id(ID_Phase)
+         .Name(XO("LFO start phase in degrees"))
+         .AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetLineSize(10);
       mPhaseS->SetMinSize(wxSize(100, -1));
 
@@ -304,8 +308,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("Dept&h:"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDepthS = S.Id(ID_Depth).AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
-      mDepthS->SetName(_("Depth in percent"));
+      mDepthS = S.Id(ID_Depth)
+         .Name(XO("Depth in percent"))
+         .AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetMinSize(wxSize(100, -1));
 
       mFeedbackT = S.Id(ID_Feedback)
@@ -314,8 +319,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("Feedbac&k (%):"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFeedbackS = S.Id(ID_Feedback).AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
-      mFeedbackS->SetName(_("Feedback in percent"));
+      mFeedbackS = S.Id(ID_Feedback)
+         .Name(XO("Feedback in percent"))
+         .AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
       mFeedbackS->SetLineSize(10);
       mFeedbackS->SetMinSize(wxSize(100, -1));
 
@@ -325,8 +331,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mOutGainS = S.Id(ID_OutGain).AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
-      mOutGainS->SetName(_("Output gain (dB)"));
+      mOutGainS = S.Id(ID_OutGain)
+         .Name(XO("Output gain (dB)"))
+         .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
       mOutGainS->SetMinSize(wxSize(100, -1));
    }
    S.EndMultiColumn();

@@ -722,8 +722,8 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
             .AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
          mGainS = S.Id(ID_GAIN_SLIDER)
+            .Name(XO("Noise reduction"))
             .AddSlider(wxT(""), 0, GAIN_MAX, GAIN_MIN);
-         mGainS->SetName(_("Noise reduction"));
          mGainS->SetSizeHints(150, -1);
 
          mSensitivityT = S.Id(ID_SENSITIVITY_TEXT)
@@ -731,8 +731,8 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
             .AddTextBox(_("&Sensitivity (dB):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER)
+            .Name(XO("Sensitivity"))
             .AddSlider(wxT(""), 0, SENSITIVITY_MAX, SENSITIVITY_MIN);
-         mSensitivityS->SetName(_("Sensitivity"));
          mSensitivityS->SetSizeHints(150, -1);
 
          mFreqT = S.Id(ID_FREQ_TEXT)
@@ -740,8 +740,8 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
             .AddTextBox(_("Fr&equency smoothing (Hz):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
          mFreqS = S.Id(ID_FREQ_SLIDER)
+            .Name(XO("Frequency smoothing"))
             .AddSlider(wxT(""), 0, FREQ_MAX, FREQ_MIN);
-         mFreqS->SetName(_("Frequency smoothing"));
          mFreqS->SetSizeHints(150, -1);
 
          mTimeT = S.Id(ID_TIME_TEXT)
@@ -749,8 +749,8 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
             .AddTextBox(_("Attac&k/decay time (secs):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
          mTimeS = S.Id(ID_TIME_SLIDER)
+            .Name(XO("Attack/decay time"))
             .AddSlider(wxT(""), 0, TIME_MAX, TIME_MIN);
-         mTimeS->SetName(_("Attack/decay time"));
          mTimeS->SetSizeHints(150, -1);
 
          S.AddPrompt(_("Noise:"));

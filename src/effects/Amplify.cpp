@@ -245,8 +245,9 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND);
       {
          S.SetStyle(wxSL_HORIZONTAL);
-         mAmpS = S.Id(ID_Amp).AddSlider( {}, 0, MAX_Amp * SCL_Amp, MIN_Amp * SCL_Amp);
-         mAmpS->SetName(_("Amplification dB"));
+         mAmpS = S.Id(ID_Amp)
+            .Name(XO("Amplification dB"))
+            .AddSlider( {}, 0, MAX_Amp * SCL_Amp, MIN_Amp * SCL_Amp);
       }
       S.EndHorizontalLay();
 

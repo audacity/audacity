@@ -146,8 +146,25 @@ struct Item {
       return std::move( *this );
    }
 
+   // Menu codes in the translation will be stripped
+   Item&& Name( const TranslatableString &name ) &&
+   {
+      mName = name;
+      return std::move( *this );
+   }
+
+   // Append a space, then the translation of the given string, to control name
+   // (not the title or label:  this affects the screen reader behavior)
+   Item&& NameSuffix( const TranslatableString &suffix ) &&
+   {
+      mNameSuffix = suffix;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
+   TranslatableString mName;
+   TranslatableString mNameSuffix;
 };
 
 }
@@ -175,6 +192,8 @@ public:
    // Pass the same initValue to the sequence of calls to AddRadioButton and
    // AddRadioButtonToGroup.
    // The radio button is filled if selector == initValue
+   // Spoken name of the button defaults to the same as the prompt
+   // (after stripping menu codes):
    wxRadioButton * AddRadioButton(
       const wxString & Prompt, int selector = 0, int initValue = 0 );
    wxRadioButton * AddRadioButtonToGroup(
@@ -507,6 +526,21 @@ public:
    ShuttleGui & ToolTip( const TranslatableString &tip )
    {
       std::move( mItem ).ToolTip( tip );
+      return *this;
+   }
+
+   // Menu codes in the translation will be stripped
+   ShuttleGui & Name( const TranslatableString &name )
+   {
+      std::move( mItem ).Name( name );
+      return *this;
+   }
+
+   // Append a space, then the translation of the given string, to control name
+   // (not the title or label:  this affects the screen reader behavior)
+   ShuttleGui & NameSuffix( const TranslatableString &suffix )
+   {
+      std::move( mItem ).NameSuffix( suffix );
       return *this;
    }
 

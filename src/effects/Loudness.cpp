@@ -296,14 +296,14 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
                                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
                mLevelTextCtrl = S
+                  /* i18n-hint: LUFS is a particular method for measuring loudnesss */
+                  .Name( XO("Loudness LUFS") )
                   .Validator<FloatingPointValidator<double>>(
                      2, &mLUFSLevel,
                      NumValidatorStyle::ONE_TRAILING_ZERO,
                      MIN_LUFSLevel, MAX_LUFSLevel
                   )
                   .AddTextBox( {}, wxT(""), 10);
-               /* i18n-hint: LUFS is a particular method for measuring loudnesss */
-               mLevelTextCtrl->SetName( _("Loudness LUFS"));
                /* i18n-hint: LUFS is a particular method for measuring loudnesss */
                mLeveldB = S.AddVariableText(_("LUFS"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);

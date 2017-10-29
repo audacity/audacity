@@ -832,12 +832,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                ID_DATEPICKER_START, // wxWindowID id,
                m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime,
             // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
-            m_pDatePickerCtrl_Start->SetName(_("Start Date"));
             m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
 #if wxUSE_ACCESSIBILITY
             m_pDatePickerCtrl_Start->SetAccessible( safenew DatePickerCtrlAx(m_pDatePickerCtrl_Start));
 #endif
-            S.AddWindow(m_pDatePickerCtrl_Start);
+            S.Name(XO("Start Date"))
+               .AddWindow(m_pDatePickerCtrl_Start);
 
             m_pTimeTextCtrl_Start = safenew NumericTextCtrl(
                S.GetParent(), ID_TIMETEXT_START, NumericConverter::TIME,
@@ -846,8 +846,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   .MenuEnabled(false)
                   .Format(strFormat)
                   .Value(true, wxDateTime_to_AudacityTime(m_DateTime_Start)));
-            m_pTimeTextCtrl_Start->SetName(_("Start Time"));
-            S.AddWindow(m_pTimeTextCtrl_Start);
+            S.Name(XO("Start Time"))
+               .AddWindow(m_pTimeTextCtrl_Start);
          }
          S.EndStatic();
 
@@ -862,11 +862,11 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             //                            const wxValidator& validator = wxDefaultValidator,
             //                            const wxString& name = "datectrl")
             m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
-            m_pDatePickerCtrl_End->SetName(_("End Date"));
 #if wxUSE_ACCESSIBILITY
             m_pDatePickerCtrl_End->SetAccessible( safenew DatePickerCtrlAx(m_pDatePickerCtrl_End));
 #endif
-            S.AddWindow(m_pDatePickerCtrl_End);
+            S.Name(XO("End Date"))
+               .AddWindow(m_pDatePickerCtrl_End);
 
             m_pTimeTextCtrl_End = safenew NumericTextCtrl(
                S.GetParent(), ID_TIMETEXT_END, NumericConverter::TIME,
@@ -875,8 +875,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   .MenuEnabled(false)
                   .Format(strFormat)
                   .Value(true, wxDateTime_to_AudacityTime(m_DateTime_End)));
-            m_pTimeTextCtrl_End->SetName(_("End Time"));
-            S.AddWindow(m_pTimeTextCtrl_End);
+            S.Name(XO("End Time"))
+               .AddWindow(m_pTimeTextCtrl_End);
          }
          S.EndStatic();
 
@@ -897,8 +897,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                   .MenuEnabled(false)
                   .Format(strFormat1)
                   .Value(true, m_TimeSpan_Duration.GetSeconds().ToDouble()));
-            m_pTimeTextCtrl_Duration->SetName(_("Duration"));
-            S.AddWindow(m_pTimeTextCtrl_Duration);
+            S.Name(XO("Duration"))
+               .AddWindow(m_pTimeTextCtrl_Duration);
          }
          S.EndStatic();
       }

@@ -245,8 +245,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
             5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Freq, MAX_Freq)
          .AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
-      mFreqS = S.Id(ID_Freq).AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
-      mFreqS->SetName(_("LFO frequency in hertz"));
+      mFreqS = S.Id(ID_Freq)
+         .Name(XO("LFO frequency in hertz"))
+         .AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
       mFreqS->SetMinSize(wxSize(100, -1));
 
       mPhaseT = S.Id(ID_Phase)
@@ -255,8 +256,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mPhaseS = S.Id(ID_Phase).AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
-      mPhaseS->SetName(_("LFO start phase in degrees"));
+      mPhaseS = S.Id(ID_Phase)
+         .Name(XO("LFO start phase in degrees"))
+         .AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetLineSize(10);
       mPhaseS->SetMinSize(wxSize(100, -1));
 
@@ -266,8 +268,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("Dept&h (%):"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mDepthS = S.Id(ID_Depth).AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
-      mDepthS->SetName(_("Depth in percent"));
+      mDepthS = S.Id(ID_Depth)
+         .Name(XO("Depth in percent"))
+         .AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetMinSize(wxSize(100, -1));
 
       mResT = S.Id(ID_Res)
@@ -276,8 +279,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("Reso&nance:"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mResS = S.Id(ID_Res).AddSlider( {}, DEF_Res * SCL_Res, MAX_Res * SCL_Res, MIN_Res * SCL_Res);
-      mResS->SetName(_("Resonance"));
+      mResS = S.Id(ID_Res)
+         .Name(XO("Resonance"))
+         .AddSlider( {}, DEF_Res * SCL_Res, MAX_Res * SCL_Res, MIN_Res * SCL_Res);
       mResS->SetMinSize(wxSize(100, -1));
 
       mFreqOfsT = S.Id(ID_FreqOfs)
@@ -286,8 +290,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("Wah Frequency Offse&t (%):"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mFreqOfsS = S.Id(ID_FreqOfs).AddSlider( {}, DEF_FreqOfs * SCL_FreqOfs, MAX_FreqOfs * SCL_FreqOfs, MIN_FreqOfs * SCL_FreqOfs);
-      mFreqOfsT->SetName(_("Wah frequency offset in percent"));
+      mFreqOfsS = S.Id(ID_FreqOfs)
+         .Name(XO("Wah frequency offset in percent"))
+         .AddSlider( {}, DEF_FreqOfs * SCL_FreqOfs, MAX_FreqOfs * SCL_FreqOfs, MIN_FreqOfs * SCL_FreqOfs);
       mFreqOfsT->SetMinSize(wxSize(100, -1));
 
       mOutGainT = S.Id(ID_OutGain)
@@ -296,8 +301,9 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mOutGainS = S.Id(ID_OutGain).AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
-      mOutGainS->SetName(_("Output gain (dB)"));
+      mOutGainS = S.Id(ID_OutGain)
+         .Name(XO("Output gain (dB)"))
+         .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
       mOutGainS->SetMinSize(wxSize(100, -1));
    }
    S.EndMultiColumn();

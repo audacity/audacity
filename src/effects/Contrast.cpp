@@ -234,9 +234,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          0.0,
                          mProjectRate,
                          options);
-            mForegroundStartT->SetName(_("Foreground start time"));
          }
-         S.AddWindow(mForegroundStartT);
+         S.Name(XO("Foreground start time"))
+            .AddWindow(mForegroundStartT);
 
          if (S.GetMode() == eIsCreating)
          {
@@ -247,9 +247,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          0.0,
                          mProjectRate,
                          options);
-            mForegroundEndT->SetName(_("Foreground end time"));
          }
-         S.AddWindow(mForegroundEndT);
+         S.Name(XO("Foreground end time"))
+            .AddWindow(mForegroundEndT);
 
          m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
          mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
@@ -266,9 +266,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          0.0,
                          mProjectRate,
                          options);
-            mBackgroundStartT->SetName(_("Background start time"));
          }
-         S.AddWindow(mBackgroundStartT);
+         S.Name(XO("Background start time"))
+            .AddWindow(mBackgroundStartT);
 
          if (S.GetMode() == eIsCreating)
          {
@@ -279,9 +279,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
                          0.0,
                          mProjectRate,
                          options);
-            mBackgroundEndT->SetName(_("Background end time"));
          }
-         S.AddWindow(mBackgroundEndT);
+         S.Name(XO("Background end time"))
+            .AddWindow(mBackgroundEndT);
 
          m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox( {}, wxT(""), 17);
@@ -296,17 +296,19 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    {
       S.StartMultiColumn(3, wxCENTER);
       {
-         wxString label = _("Co&ntrast Result:");
-         S.AddFixedText(label);
-         mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox( {}, wxT(""), 50);
-         mPassFailText->SetName(wxStripMenuCodes(label));
+         auto label = XO("Co&ntrast Result:");
+         S.AddFixedText(label.Translation());
+         mPassFailText = S.Id(ID_RESULTS_TEXT)
+            .Name(label)
+            .AddTextBox( {}, wxT(""), 50);
          mPassFailText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
 
-         label = _("&Difference:");
-         S.AddFixedText(label);
-         mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox( {}, wxT(""), 50);
-         mDiffText->SetName(wxStripMenuCodes(label));
+         label = XO("&Difference:");
+         S.AddFixedText(label.Translation());
+         mDiffText = S.Id(ID_RESULTSDB_TEXT)
+            .Name(label)
+            .AddTextBox( {}, wxT(""), 50);
          mDiffText->Bind(wxEVT_KEY_DOWN, OnChar);
          m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }

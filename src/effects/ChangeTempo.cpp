@@ -246,8 +246,8 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStyle(wxSL_HORIZONTAL);
          m_pSlider_PercentChange = S.Id(ID_PercentChange)
+            .Name(XO("Percent Change"))
             .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
-         m_pSlider_PercentChange->SetName(_("Percent Change"));
       }
       S.EndHorizontalLay();
 
@@ -256,22 +256,24 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
             m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
+               .Name(XO("Beats per minute, from"))
                .Validator<FloatingPointValidator<double>>(
                   3, &m_FromBPM,
                   NumValidatorStyle::THREE_TRAILING_ZEROES
                      | NumValidatorStyle::ZERO_AS_BLANK)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("from"), wxT(""), 12);
-            m_pTextCtrl_FromBPM->SetName(_("Beats per minute, from"));
 
             m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
+               /* i18n-hint: changing a quantity "from" one value "to" another */
+               .Name(XO("Beats per minute, to"))
                .Validator<FloatingPointValidator<double>>(
                   3, &m_ToBPM,
                   NumValidatorStyle::THREE_TRAILING_ZEROES
                      | NumValidatorStyle::ZERO_AS_BLANK)
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .AddTextBox(_("to"), wxT(""), 12);
-            m_pTextCtrl_ToBPM->SetName(_("Beats per minute, to"));
          }
          S.EndHorizontalLay();
       }

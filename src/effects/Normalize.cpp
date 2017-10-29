@@ -306,6 +306,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                mGainCheckBox->SetMinSize( mGainCheckBox->GetSize());
 
                mLevelTextCtrl = S
+                  .Name(XO("Peak amplitude dB"))
                   .Validator<FloatingPointValidator<double>>(
                      2,
                      &mPeakLevel,
@@ -314,7 +315,6 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
                      MAX_PeakLevel
                   )
                   .AddTextBox( {}, wxT(""), 10);
-               mLevelTextCtrl->SetName(_("Peak amplitude dB"));
                mLeveldB = S.AddVariableText(_("dB"), false,
                                             wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,

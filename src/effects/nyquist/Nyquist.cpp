@@ -2637,8 +2637,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
 
                   auto item = S.Id(ID_Text + i)
                      .Validator<wxGenericValidator>(&ctrl.valStr)
+                     .Name( TranslatableString{ prompt } )
                      .AddTextBox( {}, wxT(""), 12);
-                  item->SetName(prompt);
                }
                else if (ctrl.type == NYQ_CTRL_CHOICE)
                {
@@ -2663,8 +2663,9 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                                      ctrl.val,
                                      mProjectRate,
                                      options);
-                  time->SetName(prompt);
-                  S.AddWindow(time, wxALIGN_LEFT | wxALL);
+                  S
+                     .Name( TranslatableString{ prompt } )
+                     .AddWindow(time, wxALIGN_LEFT | wxALL);
                }
                else if (ctrl.type == NYQ_CTRL_FILE)
                {
@@ -2686,9 +2687,10 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   }
                   resolveFilePath(ctrl.valStr, defaultExtension);
 
-                  wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""), 40);
+                  wxTextCtrl *item = S.Id(ID_Text+i)
+                     .Name( TranslatableString{ prompt } )
+                     .AddTextBox( {}, wxT(""), 40);
                   item->SetValidator(wxGenericValidator(&ctrl.valStr));
-                  item->SetName(prompt);
 
                   if (ctrl.label.empty())
                      // We'd expect wxFileSelectorPromptStr to already be translated, but apparently not.
@@ -2725,10 +2727,11 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                         &ctrl.val, NumValidatorStyle::DEFAULT,
                         (int) ctrl.low, (int) ctrl.high);
                   }
-                  wxTextCtrl *item = S.AddTextBox( {}, wxT(""),
-                                                               (ctrl.type == NYQ_CTRL_INT_TEXT ||
-                                                               ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
-                  item->SetName(prompt);
+                  wxTextCtrl *item = S
+                     .Name( TranslatableString{ prompt } )
+                     .AddTextBox( {}, wxT(""),
+                        (ctrl.type == NYQ_CTRL_INT_TEXT ||
+                         ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
 
                   if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_FLOAT)
                   {

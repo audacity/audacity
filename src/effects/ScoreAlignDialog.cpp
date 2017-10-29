@@ -99,40 +99,44 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mFramePeriodLabel = S.AddVariableText(_("Frame Period:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mFramePeriodSlider = S.Id(ID_FRAMEPERIOD).AddSlider(wxT(""),
+   mFramePeriodSlider = S.Id(ID_FRAMEPERIOD)
+      .Name(XO("Frame Period"))
+      .AddSlider(wxT(""),
        /*pos*/ (int) (p.mFramePeriod * 100 + 0.5), /*max*/ 50, /*min*/ 5);
    S.SetSizeHints(300, -1);
-   mFramePeriodSlider->SetName(_("Frame Period"));
    mFramePeriodText = S.AddVariableText(SA_DFT_FRAME_PERIOD_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    mWindowSizeLabel = S.AddVariableText(_("Window Size:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mWindowSizeSlider = S.Id(ID_WINDOWSIZE).AddSlider(wxT(""),
+   mWindowSizeSlider = S.Id(ID_WINDOWSIZE)
+      .Name(XO("Window Size"))
+      .AddSlider(wxT(""),
        /*pos*/ (int) (p.mWindowSize * 100 + 0.5), /*max*/ 100, /*min*/ 5);
-   mWindowSizeSlider->SetName(_("Window Size"));
    mWindowSizeText = S.AddVariableText(SA_DFT_WINDOW_SIZE_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   mForceFinalAlignmentCheckBox = S.Id(ID_FORCEFINALALIGNMENT).AddCheckBox(
+   mForceFinalAlignmentCheckBox = S.Id(ID_FORCEFINALALIGNMENT)
+      .Name(XO("Force Final Alignment"))
+      .AddCheckBox(
                 wxT("Force Final Alignment"),
                 p.mForceFinalAlignment);
-   mForceFinalAlignmentCheckBox->SetName(_("Force Final Alignment"));
-   mIgnoreSilenceCheckBox = S.Id(ID_IGNORESILENCE).AddCheckBox(
-                              wxT("Ignore Silence at Beginnings and Endings"),
-                              p.mIgnoreSilence);
-   mIgnoreSilenceCheckBox->SetName(
-                     _("Ignore Silence at Beginnings and Endings"));
+   mIgnoreSilenceCheckBox = S.Id(ID_IGNORESILENCE)
+      .Name(XO("Ignore Silence at Beginnings and Endings"))
+      .AddCheckBox(
+         wxT("Ignore Silence at Beginnings and Endings"),
+         p.mIgnoreSilence );
    // need a third column after checkboxes:
    S.AddVariableText(wxT(""), true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
    mSilenceThresholdLabel = S.AddVariableText(_("Silence Threshold:"),
                              true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mSilenceThresholdSlider = S.Id(ID_SILENCETHRESHOLD).AddSlider(wxT(""),
+   mSilenceThresholdSlider = S.Id(ID_SILENCETHRESHOLD)
+      .Name(XO("Silence Threshold"))
+      .AddSlider(wxT(""),
          /*pos*/ (int) (p.mSilenceThreshold * 1000 + 0.5), /*max*/ 500);
-   mSilenceThresholdSlider->SetName(_("Silence Threshold"));
    mSilenceThresholdText = S.AddVariableText(SA_DFT_SILENCE_THRESHOLD_TEXT,
                               true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -143,9 +147,10 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mPresmoothLabel = S.AddVariableText(_("Presmooth Time:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mPresmoothSlider = S.Id(ID_PRESMOOTH).AddSlider(wxT(""),
+   mPresmoothSlider = S.Id(ID_PRESMOOTH)
+      .Name(XO("Presmooth Time"))
+      .AddSlider(wxT(""),
                /*pos*/ (int) (p.mPresmoothTime * 100 + 0.5), /*max*/ 500);
-   mPresmoothSlider->SetName(_("Presmooth Time"));
    mPresmoothText = S.AddVariableText(SA_DFT_PRESMOOTH_TIME_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -156,9 +161,10 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mLineTimeLabel = S.AddVariableText(_("Line Time:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mLineTimeSlider = S.Id(ID_LINETIME).AddSlider(wxT(""),
+   mLineTimeSlider = S.Id(ID_LINETIME)
+      .Name(XO("Line Time"))
+      .AddSlider(wxT(""),
                     /*pos*/ (int) (p.mLineTime * 100 + 0.5), /*max*/ 500);
-   mLineTimeSlider->SetName(_("Line Time"));
    mLineTimeText = S.AddVariableText(SA_DFT_LINE_TIME_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -169,9 +175,10 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    mSmoothTimeLabel = S.AddVariableText(_("Smooth Time:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mSmoothTimeSlider = S.Id(ID_SMOOTHTIME).AddSlider(wxT(""),
+   mSmoothTimeSlider = S.Id(ID_SMOOTHTIME)
+      .Name(XO("Smooth Time"))
+      .AddSlider(wxT(""),
                   /*pos*/ (int) (p.mSmoothTime * 100 + 0.5), /*max*/ 500);
-   mSmoothTimeSlider->SetName(_("Smooth Time"));
    mSmoothTimeText = S.AddVariableText(SA_DFT_SMOOTH_TIME_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 

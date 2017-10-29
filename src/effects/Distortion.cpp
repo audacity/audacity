@@ -129,7 +129,7 @@ FactoryPresets[] =
    { XO("Percussion Limiter"),                    {10,        0,      -12.0,      -70.0,     100.0,    30.0,    0 } },
 };
 
-wxString defaultLabel(int index)
+TranslatableString defaultLabelUntranslated(int index)
 {
    static const TranslatableString names[] = {
       XO("Upper Threshold"),
@@ -139,18 +139,12 @@ wxString defaultLabel(int index)
       XO("Number of repeats"),
    };
 
-   class NamesArray final : public TranslatableStringArray
-   {
-      void Populate() override
-      {
-         for (auto &name : names)
-            mContents.push_back( name.Translation() );
-      }
-   };
+   return names[ index ];
+}
 
-   static NamesArray theArray;
-
-   return theArray.Get()[ index ];
+wxString defaultLabel(int index)
+{
+   return defaultLabelUntranslated(index).Translation();
 }
 
 //
@@ -396,33 +390,34 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             // Upper threshold control
             mThresholdTxt = S.AddVariableText(defaultLabel(0), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mThresholdT = S.Id(ID_Threshold)
+               .Name(defaultLabelUntranslated(0))
                .Validator<FloatingPointValidator<double>>(
                   2, &mParams.mThreshold_dB, NumValidatorStyle::DEFAULT,
                   MIN_Threshold_dB, MAX_Threshold_dB)
                .AddTextBox( {}, wxT(""), 10);
-            mThresholdT->SetName(defaultLabel(0));
 
             S.SetStyle(wxSL_HORIZONTAL);
             mThresholdS = S.Id(ID_Threshold)
+               .Name(defaultLabelUntranslated(0))
                .AddSlider( {}, 0,
                   DB_TO_LINEAR(MAX_Threshold_dB) * SCL_Threshold_dB,
                   DB_TO_LINEAR(MIN_Threshold_dB) * SCL_Threshold_dB);
-            mThresholdS->SetName(defaultLabel(0));
             S.AddSpace(20, 0);
 
             // Noise floor control
             mNoiseFloorTxt = S.AddVariableText(defaultLabel(1), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mNoiseFloorT = S.Id(ID_NoiseFloor)
+               .Name(defaultLabelUntranslated(1))
                .Validator<FloatingPointValidator<double>>(
                   2, &mParams.mNoiseFloor, NumValidatorStyle::DEFAULT,
                   MIN_NoiseFloor, MAX_NoiseFloor
                )
                .AddTextBox( {}, wxT(""), 10);
-            mNoiseFloorT->SetName(defaultLabel(1));
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mNoiseFloorS = S.Id(ID_NoiseFloor).AddSlider( {}, 0, MAX_NoiseFloor, MIN_NoiseFloor);
-            mNoiseFloorS->SetName(defaultLabel(1));
+            mNoiseFloorS = S.Id(ID_NoiseFloor)
+               .Name(defaultLabelUntranslated(1))
+               .AddSlider( {}, 0, MAX_NoiseFloor, MIN_NoiseFloor);
             S.AddSpace(20, 0);
          }
          S.EndMultiColumn();
@@ -440,46 +435,49 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
             // Parameter1 control
             mParam1Txt = S.AddVariableText(defaultLabel(2), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mParam1T = S.Id(ID_Param1)
+               .Name(defaultLabelUntranslated(2))
                .Validator<FloatingPointValidator<double>>(
                   2, &mParams.mParam1, NumValidatorStyle::DEFAULT,
                   MIN_Param1, MAX_Param1
                )
                .AddTextBox( {}, wxT(""), 10);
-            mParam1T->SetName(defaultLabel(2));
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mParam1S = S.Id(ID_Param1).AddSlider( {}, 0, MAX_Param1, MIN_Param1);
-            mParam1S->SetName(defaultLabel(2));
+            mParam1S = S.Id(ID_Param1)
+               .Name(defaultLabelUntranslated(2))
+               .AddSlider( {}, 0, MAX_Param1, MIN_Param1);
             S.AddSpace(20, 0);
 
             // Parameter2 control
             mParam2Txt = S.AddVariableText(defaultLabel(3), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mParam2T = S.Id(ID_Param2)
+               .Name(defaultLabelUntranslated(3))
                .Validator<FloatingPointValidator<double>>(
                   2, &mParams.mParam2, NumValidatorStyle::DEFAULT,
                   MIN_Param2, MAX_Param2
                )
                .AddTextBox( {}, wxT(""), 10);
-            mParam2T->SetName(defaultLabel(3));
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mParam2S = S.Id(ID_Param2).AddSlider( {}, 0, MAX_Param2, MIN_Param2);
-            mParam2S->SetName(defaultLabel(3));
+            mParam2S = S.Id(ID_Param2)
+               .Name(defaultLabelUntranslated(3))
+               .AddSlider( {}, 0, MAX_Param2, MIN_Param2);
             S.AddSpace(20, 0);
 
             // Repeats control
             mRepeatsTxt = S.AddVariableText(defaultLabel(4), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
             mRepeatsT = S.Id(ID_Repeats)
+               .Name(defaultLabelUntranslated(4))
                .Validator<IntegerValidator<int>>(
                   &mParams.mRepeats, NumValidatorStyle::DEFAULT,
                   MIN_Repeats, MAX_Repeats
                )
                .AddTextBox( {}, wxT(""), 10);
-            mRepeatsT->SetName(defaultLabel(4));
 
             S.SetStyle(wxSL_HORIZONTAL);
-            mRepeatsS = S.Id(ID_Repeats).AddSlider( {}, DEF_Repeats, MAX_Repeats, MIN_Repeats);
-            mRepeatsS->SetName(defaultLabel(4));
+            mRepeatsS = S.Id(ID_Repeats)
+               .Name(defaultLabelUntranslated(4))
+               .AddSlider( {}, DEF_Repeats, MAX_Repeats, MIN_Repeats);
             S.AddSpace(20, 0);
          }
          S.EndMultiColumn();

@@ -349,9 +349,9 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
 
       S.SetStyle(wxSL_HORIZONTAL);
       mThreshS = S.Id(ID_Thresh)
+         .Name(XO("Threshold"))
          .Validator<wxGenericValidator>(&mThresholdLevel)
          .AddSlider( {}, mThresholdLevel, MAX_Threshold, MIN_Threshold);
-      mThreshS->SetName(_("Threshold"));
       mThreshS->SetMinSize(wxSize(150, -1));
 
       // Click width
@@ -364,9 +364,9 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
 
       S.SetStyle(wxSL_HORIZONTAL);
       mWidthS = S.Id(ID_Width)
+         .Name(XO("Max Spike Width"))
          .Validator<wxGenericValidator>(&mClickWidth)
          .AddSlider( {}, mClickWidth, MAX_Width, MIN_Width);
-      mWidthS->SetName(_("Max Spike Width"));
       mWidthS->SetMinSize(wxSize(150, -1));
    }
    S.EndMultiColumn();

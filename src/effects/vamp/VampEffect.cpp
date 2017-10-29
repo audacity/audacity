@@ -561,7 +561,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Program"));
 
                S.Id(ID_Program);
-               mProgram = S
+               mProgram = S.Name(XO("Program"))
                   .AddChoice( {},
                      [&]{
                         wxArrayStringEx choices;
@@ -571,7 +571,6 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                      }(),
                      wxString::FromUTF8(mPlugin->getCurrentProgram().c_str())
                   );
-               mProgram->SetName(_("Program"));
                mProgram->SetSizeHints(-1, -1);
                wxSizer *s = mProgram->GetContainingSizer();
                s->GetItem(mProgram)->SetFlag(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL);
@@ -608,9 +607,9 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                {
                   S.Id(ID_Toggles + p);
                   mToggles[p] = S.ToolTip( TranslatableString{ tip } )
+                     .Name( TranslatableString{ labelText } )
                      .AddCheckBox( {},
                                   value > 0.5 );
-                  mToggles[p]->SetName(labelText);
                   wxSizer *s = mToggles[p]->GetContainingSizer();
                   s->GetItem(mToggles[p])->SetFlag(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -638,8 +637,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
                   S.Id(ID_Choices + p);
                   mChoices[p] = S.ToolTip( TranslatableString{ tip } )
+                     .Name( TranslatableString{ labelText } )
                      .AddChoice( {}, choices, selected );
-                  mChoices[p]->SetName(labelText);
                   mChoices[p]->SetSizeHints(-1, -1);
                   wxSizer *s = mChoices[p]->GetContainingSizer();
                   s->GetItem(mChoices[p])->SetFlag(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL);
@@ -656,6 +655,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
                   S.Id(ID_Texts + p);
                   mFields[p] = S.ToolTip( TranslatableString{ tip } )
+                     .Name( TranslatableString{ labelText } )
                      .Validator<FloatingPointValidator<float>>(
                         6, &mValues[p],
                         (range < 10
@@ -665,7 +665,6 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                               : NumValidatorStyle::ONE_TRAILING_ZERO),
                         mParameters[p].minValue, mParameters[p].maxValue)
                      .AddTextBox( {}, wxT(""), 12);
-                  mFields[p]->SetName(labelText);
                   wxSizer *s = mFields[p]->GetContainingSizer();
                   s->GetItem(mFields[p])->SetFlag(wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -675,8 +674,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   S.SetStyle(wxSL_HORIZONTAL);
                   S.Id(ID_Sliders + p);
                   mSliders[p] = S.ToolTip( TranslatableString{ tip } )
+                     .Name( TranslatableString{ labelText } )
                      .AddSlider( {}, 0, 1000, 0);
-                  mSliders[p]->SetName(labelText);
                   mSliders[p]->SetSizeHints(150, -1);
                   
                   str = Internat::ToDisplayString(mParameters[p].maxValue);

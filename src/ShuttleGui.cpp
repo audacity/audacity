@@ -2078,6 +2078,13 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          if ( !mItem.mToolTip.empty() )
             mpWind->SetToolTip( mItem.mToolTip.Translation() );
 
+         if ( !mItem.mName.empty() )
+            mpWind->SetName( wxStripMenuCodes( mItem.mName.Translation() ) );
+
+         if ( !mItem.mNameSuffix.empty() )
+            mpWind->SetName(
+               mpWind->GetName() + mItem.mNameSuffix.Translation() );
+
          // Reset to defaults
          mItem = {};
       }

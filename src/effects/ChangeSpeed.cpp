@@ -335,9 +335,9 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND);
       {
          S.SetStyle(wxSL_HORIZONTAL);
-         mpSlider_PercentChange =
-            S.Id(ID_PercentChange).AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
-         mpSlider_PercentChange->SetName(_("Percent Change"));
+         mpSlider_PercentChange = S.Id(ID_PercentChange)
+            .Name(XO("Percent Change"))
+            .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
       }
       S.EndHorizontalLay();
 
@@ -348,14 +348,15 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
          S.AddUnits(_("Standard Vinyl rpm:"));
 
          mpChoice_FromVinyl = S.Id(ID_FromVinyl)
+            .Name(XO("From rpm"))
             /* i18n-hint: changing a quantity "from" one value "to" another */
             .AddChoice(_("from"), vinylChoices);
-         mpChoice_FromVinyl->SetName(_("From rpm"));
          mpChoice_FromVinyl->SetSizeHints(100, -1);
 
-         mpChoice_ToVinyl =
-            S.Id(ID_ToVinyl).AddChoice(_("to"), vinylChoices);
-         mpChoice_ToVinyl->SetName(_("To rpm"));
+         mpChoice_ToVinyl = S.Id(ID_ToVinyl)
+            /* i18n-hint: changing a quantity "from" one value "to" another */
+            .Name(XO("To rpm"))
+            .AddChoice(_("to"), vinylChoices);
          mpChoice_ToVinyl->SetSizeHints(100, -1);
       }
       S.EndMultiColumn();
@@ -377,9 +378,10 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                                   .ReadOnly(true)
                                   .MenuEnabled(false));
 
-            mpFromLengthCtrl->SetName(_("from"));
-            S.ToolTip(XO("Current length of selection.")).
-               AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
+            S.ToolTip(XO("Current length of selection."))
+               /* i18n-hint: changing a quantity "from" one value "to" another */
+               .Name(XO("from"))
+               .AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
 
             S.AddPrompt(_("New Length:"));
 
@@ -390,8 +392,9 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                                  mToLength,
                                  mProjectRate);
 
-            mpToLengthCtrl->SetName(_("to"));
-            S.AddWindow(mpToLengthCtrl, wxALIGN_LEFT);
+            /* i18n-hint: changing a quantity "from" one value "to" another */
+            S.Name(XO("to"))
+               .AddWindow(mpToLengthCtrl, wxALIGN_LEFT);
          }
          S.EndMultiColumn();
       }

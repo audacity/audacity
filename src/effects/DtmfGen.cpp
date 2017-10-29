@@ -349,8 +349,8 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
                          mProjectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
-      mDtmfDurationT->SetName(_("Duration"));
-      S.AddWindow(mDtmfDurationT);
+      S.Name(XO("Duration"))
+         .AddWindow(mDtmfDurationT);
 
       S.AddFixedText(_("Tone/silence ratio:"), false);
       S.SetStyle(wxSL_HORIZONTAL | wxEXPAND);

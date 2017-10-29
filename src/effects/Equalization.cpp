@@ -797,17 +797,19 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText(_("+ dB"), false, wxCENTER);
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMaxSlider = S.Id(ID_dBMax).AddSlider( {}, 30, 60, 0);
+            mdBMaxSlider = S.Id(ID_dBMax)
+               .Name(XO("Max dB"))
+               .AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
-            mdBMaxSlider->SetName(_("Max dB"));
             mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
 
             S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
-            mdBMinSlider = S.Id(ID_dBMin).AddSlider( {}, -30, -10, -120);
+            mdBMinSlider = S.Id(ID_dBMin)
+               .Name(XO("Min dB"))
+               .AddSlider( {}, -30, -10, -120);
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
-            mdBMinSlider->SetName(_("Min dB"));
             mdBMinSlider->SetAccessible(safenew SliderAx(mdBMinSlider, _("%d dB")));
 #endif
          }
@@ -866,18 +868,18 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                               // ignore it
                               [](wxEvent&){});
 #if wxUSE_ACCESSIBILITY
-            wxString name;
-            if( kThirdOct[i] < 1000.)
-               name.Printf(_("%d Hz"), (int)kThirdOct[i]);
-            else
-               name.Printf(_("%g kHz"), kThirdOct[i]/1000.);
-            mSliders[i]->SetName(name);
             mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], _("%d dB")));
 #endif
             mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
             //S.SetSizerProportion(1);
-            S.Prop(1).AddWindow( mSliders[i], wxEXPAND );
+            S.Prop(1)
+               .Name( TranslatableString{
+                  kThirdOct[i] < 1000.
+                     ? wxString::Format(_("%d Hz"), (int)kThirdOct[i])
+                     : wxString::Format(_("%g kHz"), kThirdOct[i]/1000.)
+               } )
+               .AddWindow( mSliders[i], wxEXPAND );
          }
          S.AddSpace(15,0);
       }
@@ -905,11 +907,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
-                  mDraw = S.Id(ID_Draw).AddRadioButton(_("&Draw"));
-                  mDraw->SetName(_("Draw Curves"));
+                  mDraw = S.Id(ID_Draw)
+                     .Name(XO("Draw Curves"))
+                     .AddRadioButton(_("&Draw"));
 
-                  mGraphic = S.Id(ID_Graphic).AddRadioButtonToGroup(_("&Graphic"));
-                  mGraphic->SetName(_("Graphic EQ"));
+                  mGraphic = S.Id(ID_Graphic)
+                     .Name(XO("Graphic EQ"))
+                     .AddRadioButtonToGroup(_("&Graphic"));
                }
                S.EndHorizontalLay();
             }
@@ -925,13 +929,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                szrI = S.GetSizer();
 
                mInterpChoice = S.Id(ID_Interp)
+                  .Name(XO("Interpolation type"))
                   .AddChoice( {},
                      LocalizedStrings(kInterpStrings, nInterpolations), 0 );
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                mInterpChoice->SetAccessible(safenew WindowAccessible(mInterpChoice));
 #endif
-               mInterpChoice->SetName(_("Interpolation type"));
             }
             S.EndHorizontalLay();
 
@@ -939,8 +943,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             {
                szrL = S.GetSizer();
 
-               mLinFreq = S.Id(ID_Linear).AddCheckBox(_("Li&near Frequency Scale"), false);
-               mLinFreq->SetName(_("Linear Frequency Scale"));
+               mLinFreq = S.Id(ID_Linear)
+                  .Name(XO("Linear Frequency Scale"))
+                  .AddCheckBox(_("Li&near Frequency Scale"), false);
             }
             S.EndHorizontalLay();
          }
@@ -962,8 +967,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                S.StartHorizontalLay(wxEXPAND, 1);
                {
                   S.SetStyle(wxSL_HORIZONTAL);
-                  mMSlider = S.Id(ID_Length).AddSlider( {}, (mM - 1) / 2, 4095, 10);
-                  mMSlider->SetName(_("Length of Filter"));
+                  mMSlider = S.Id(ID_Length)
+                     .Name(XO("Length of Filter"))
+                     .AddSlider( {}, (mM - 1) / 2, 4095, 10);
                }
                S.EndHorizontalLay();
 
@@ -971,8 +977,10 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                {
                   wxString label;
                   label.Printf(wxT("%ld"), mM);
-                  mMText = S.AddVariableText(label);
-                  mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+                  mMText = S.Name( TranslatableString{ label } )
+                  // fix for bug 577 (NVDA/Narrator screen readers do not
+                  // read static text in dialogs)
+                     .AddVariableText(label);
                }
                S.EndHorizontalLay();
             }
@@ -996,6 +1004,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 1);
                {
                   mCurve = S.Id(ID_Curve)
+                     .Name(XO("Select Curve"))
                      .AddChoice( {},
                         [this]{
                            wxArrayStringEx curves;
@@ -1004,7 +1013,6 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                            return curves;
                         }()
                      );
-                  mCurve->SetName(_("Select Curve"));
                }
                S.EndHorizontalLay();
             }
@@ -1018,8 +1026,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             S.Id(ID_Clear).AddButton(_("Fla&tten"));
             S.Id(ID_Invert).AddButton(_("&Invert"));
 
-            mGridOnOff = S.Id(ID_Grid).AddCheckBox(_("Show g&rid lines"), false);
-            mGridOnOff->SetName(_("Show grid lines"));
+            mGridOnOff = S.Id(ID_Grid)
+               .Name(XO("Show grid lines"))
+               .AddCheckBox(_("Show g&rid lines"), false);
          }
          S.EndHorizontalLay();
 

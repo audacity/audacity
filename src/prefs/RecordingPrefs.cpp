@@ -157,14 +157,14 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                                             {wxT("/GUI/TrackNames/RecordingNameCustom"),
                                              mUseCustomTrackName});
 
-            mToggleCustomName = S.TieTextBox( {},
-                                              {wxT("/GUI/TrackNames/RecodingTrackName"),
-                                               _("Recorded_Audio")},
-                                             30);
-            if( mToggleCustomName ) {
-               mToggleCustomName->SetName(_("Custom name text"));
+            mToggleCustomName = S
+               .Name(XO("Custom name text"))
+               .TieTextBox( {},
+                  {wxT("/GUI/TrackNames/RecodingTrackName"),
+                   _("Recorded_Audio")},
+               30);
+            if ( mToggleCustomName )
                mToggleCustomName->Enable(mUseCustomTrackName);
-            }
          }
          S.EndMultiColumn();
 
@@ -239,20 +239,22 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartThreeColumn();
          {
-            auto w = S.TieNumericTextBox(_("Pre-ro&ll:"),
-               {AUDIO_PRE_ROLL_KEY,
-                DEFAULT_PRE_ROLL_SECONDS},
-               9);
+            auto w = S
+               .NameSuffix(XO("seconds"))
+               .TieNumericTextBox(_("Pre-ro&ll:"),
+                  {AUDIO_PRE_ROLL_KEY,
+                   DEFAULT_PRE_ROLL_SECONDS},
+                  9);
             S.AddUnits(_("seconds"));
-            w->SetName(w->GetName() + wxT(" ") + _("seconds"));
          }
          {
-            auto w = S.TieNumericTextBox(_("Cross&fade:"),
-               {AUDIO_ROLL_CROSSFADE_KEY,
-                DEFAULT_ROLL_CROSSFADE_MS},
-               9);
+            auto w = S
+               .NameSuffix(XO("milliseconds"))
+               .TieNumericTextBox(_("Cross&fade:"),
+                  {AUDIO_ROLL_CROSSFADE_KEY,
+                   DEFAULT_ROLL_CROSSFADE_MS},
+                  9);
             S.AddUnits(_("milliseconds"));
-            w->SetName(w->GetName() + wxT(" ") + _("milliseconds"));
          }
          S.EndThreeColumn();
       }

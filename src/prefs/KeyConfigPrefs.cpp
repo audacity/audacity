@@ -184,12 +184,15 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                0 // tree
             });
             {
-               mViewByTree = S.Id(ViewByTreeID).TieRadioButton();
-               if( mViewByTree ) mViewByTree->SetName(_("View by tree"));
-               mViewByName = S.Id(ViewByNameID).TieRadioButton();
-               if( mViewByName ) mViewByName->SetName(_("View by name"));
-               mViewByKey = S.Id(ViewByKeyID).TieRadioButton();
-               if( mViewByKey ) mViewByKey->SetName(_("View by key"));
+               mViewByTree = S.Id(ViewByTreeID)
+                  .Name(XO("View by tree"))
+                  .TieRadioButton();
+               mViewByName = S.Id(ViewByNameID)
+                  .Name(XO("View by name"))
+                  .TieRadioButton();
+               mViewByKey = S.Id(ViewByKeyID)
+                  .Name(XO("View by key"))
+                  .TieRadioButton();
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                if (mViewByTree) mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
