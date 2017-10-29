@@ -31,7 +31,11 @@ using std::isinf;
 // To define make_shared
 #include <tr1/memory>
 
+// To define function
+#include <tr1/functional>
+
 namespace std {
+   using std::tr1::function;
    using std::tr1::shared_ptr;
    using std::tr1::weak_ptr;
    using std::tr1::static_pointer_cast;
