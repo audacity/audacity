@@ -2075,6 +2075,9 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
          if ( mItem.mValidatorSetter )
             mItem.mValidatorSetter( mpWind );
 
+         if ( !mItem.mToolTip.empty() )
+            mpWind->SetToolTip( mItem.mToolTip.Translation() );
+
          // Reset to defaults
          mItem = {};
       }

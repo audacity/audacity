@@ -607,13 +607,10 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                    mParameters[p].maxValue == 1.0)
                {
                   S.Id(ID_Toggles + p);
-                  mToggles[p] = S.AddCheckBox( {},
-                                              value > 0.5);
+                  mToggles[p] = S.ToolTip( TranslatableString{ tip } )
+                     .AddCheckBox( {},
+                                  value > 0.5 );
                   mToggles[p]->SetName(labelText);
-                  if (!tip.empty())
-                  {
-                     mToggles[p]->SetToolTip(tip);
-                  }
                   wxSizer *s = mToggles[p]->GetContainingSizer();
                   s->GetItem(mToggles[p])->SetFlag(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -640,13 +637,10 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   }
 
                   S.Id(ID_Choices + p);
-                  mChoices[p] = S.AddChoice( {}, choices, selected );
+                  mChoices[p] = S.ToolTip( TranslatableString{ tip } )
+                     .AddChoice( {}, choices, selected );
                   mChoices[p]->SetName(labelText);
                   mChoices[p]->SetSizeHints(-1, -1);
-                  if (!tip.empty())
-                  {
-                     mChoices[p]->SetToolTip(tip);
-                  }
                   wxSizer *s = mChoices[p]->GetContainingSizer();
                   s->GetItem(mChoices[p])->SetFlag(wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -661,7 +655,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   float range = mParameters[p].maxValue - mParameters[p].minValue;
 
                   S.Id(ID_Texts + p);
-                  mFields[p] = S
+                  mFields[p] = S.ToolTip( TranslatableString{ tip } )
                      .Validator<FloatingPointValidator<float>>(
                         6, &mValues[p],
                         (range < 10
@@ -672,10 +666,6 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                         mParameters[p].minValue, mParameters[p].maxValue)
                      .AddTextBox( {}, wxT(""), 12);
                   mFields[p]->SetName(labelText);
-                  if (!tip.empty())
-                  {
-                     mFields[p]->SetToolTip(tip);
-                  }
                   wxSizer *s = mFields[p]->GetContainingSizer();
                   s->GetItem(mFields[p])->SetFlag(wxALIGN_CENTER_VERTICAL | wxALL);
 
@@ -684,13 +674,10 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
                   S.SetStyle(wxSL_HORIZONTAL);
                   S.Id(ID_Sliders + p);
-                  mSliders[p] = S.AddSlider( {}, 0, 1000, 0);
+                  mSliders[p] = S.ToolTip( TranslatableString{ tip } )
+                     .AddSlider( {}, 0, 1000, 0);
                   mSliders[p]->SetName(labelText);
                   mSliders[p]->SetSizeHints(150, -1);
-                  if (!tip.empty())
-                  {
-                     mSliders[p]->SetToolTip(tip);
-                  }
                   
                   str = Internat::ToDisplayString(mParameters[p].maxValue);
                   S.AddUnits(str);

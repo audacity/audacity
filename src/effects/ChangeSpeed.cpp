@@ -378,8 +378,8 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
                                   .MenuEnabled(false));
 
             mpFromLengthCtrl->SetName(_("from"));
-            mpFromLengthCtrl->SetToolTip(_("Current length of selection."));
-            S.AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
+            S.ToolTip(XO("Current length of selection.")).
+               AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
 
             S.AddPrompt(_("New Length:"));
 

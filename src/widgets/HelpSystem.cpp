@@ -165,14 +165,18 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    {
       S.StartHorizontalLay( wxEXPAND, false );
       {
-         wxButton * pWndBackwards = S.Id( wxID_BACKWARD ).AddButton( _("<") );
-         wxButton * pWndForwards  = S.Id( wxID_FORWARD  ).AddButton( _(">") );
+         wxButton * pWndBackwards = S.Id( wxID_BACKWARD )
+#if wxUSE_TOOLTIPS
+            .ToolTip( XO("Backwards" ) )
+#endif
+            .AddButton( _("<") );
+         wxButton * pWndForwards  = S.Id( wxID_FORWARD  )
+#if wxUSE_TOOLTIPS
+            .ToolTip( XO("Forwards" ) )
+#endif
+            .AddButton( _(">") );
          pWndForwards->Enable( false );
          pWndBackwards->Enable( false );
-         #if wxUSE_TOOLTIPS
-         pWndForwards->SetToolTip( _("Forwards" ));
-         pWndBackwards->SetToolTip( _("Backwards" ));
-         #endif
       }
       S.EndHorizontalLay();
 

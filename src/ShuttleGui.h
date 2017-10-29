@@ -140,7 +140,14 @@ struct Item {
    Item&& Validator( Args&&... args ) &&
    { return std::move(*this).Validator( [args...]{ return V( args... ); } ); }
 
+   Item&& ToolTip( const TranslatableString &tip ) &&
+   {
+      mToolTip = tip;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
+   TranslatableString mToolTip;
 };
 
 }
@@ -496,6 +503,12 @@ public:
 public:
    ShuttleGui & Optional( bool & bVar );
    ShuttleGui & Id(int id );
+
+   ShuttleGui & ToolTip( const TranslatableString &tip )
+   {
+      std::move( mItem ).ToolTip( tip );
+      return *this;
+   }
 
    template<typename Factory>
    ShuttleGui& Validator( const Factory &f )
