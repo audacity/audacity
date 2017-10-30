@@ -168,13 +168,13 @@ public:
     void SetMin(ValueType min)
     {
         this->DoSetMin(min);
-        BaseValidator::m_minSet = true;
+        BaseValidator::m_minSet = (min != std::numeric_limits<T>::min());
     }
 
     void SetMax(ValueType max)
     {
         this->DoSetMax(max);
-        BaseValidator::m_maxSet = true;
+        BaseValidator::m_maxSet = (max != std::numeric_limits<T>::max());
     }
 
     void SetRange(ValueType min, ValueType max)
@@ -342,11 +342,14 @@ public:
     //
     // Sets the range appropriately for the type, including setting 0 as the
     // minimal value for the unsigned types.
-    IntegerValidator(ValueType *value = NULL, int style = NUM_VAL_DEFAULT)
+    IntegerValidator(
+         ValueType *value = NULL,
+         int style = NUM_VAL_DEFAULT,
+         ValueType min = std::numeric_limits<ValueType>::min(),
+         ValueType max = std::numeric_limits<ValueType>::max())
         : Base(value, style)
     {
-        this->DoSetMin(std::numeric_limits<ValueType>::min());
-        this->DoSetMax(std::numeric_limits<ValueType>::max());
+       this->SetRange(min, max);
     }
 
     // Clone is required by wxwidgets; implemented via copy constructor
@@ -451,10 +454,12 @@ public:
     // Ctor specifying an explicit precision.
     FloatingPointValidator(int precision,
                       ValueType *value = NULL,
-                      int style = NUM_VAL_DEFAULT)
+                      int style = NUM_VAL_DEFAULT,
+                      ValueType min = -std::numeric_limits<ValueType>::max(),
+                      ValueType max =  std::numeric_limits<ValueType>::max())
         : Base(value, style)
     {
-        DoSetMinMax();
+        this->SetRange( min, max );
 
         this->SetPrecision(precision);
     }
