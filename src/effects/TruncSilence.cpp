@@ -720,7 +720,7 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          S.AddSpace(0); // 'choices' already includes units.
 
          // Ignored silence
-         FloatingPointValidator<double> vldDur(3, &mInitialAllowedSilence, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldDur(3, &mInitialAllowedSilence, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldDur.SetRange(MIN_Minimum, MAX_Minimum);
          mInitialAllowedSilenceT = S.AddTextBox(_("Duration:"), wxT(""), 12);
          mInitialAllowedSilenceT->SetValidator(vldDur);
@@ -744,13 +744,13 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
       {
          // Truncation / Compression factor
 
-         FloatingPointValidator<double> vldTrunc(3, &mTruncLongestAllowedSilence, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldTrunc(3, &mTruncLongestAllowedSilence, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldTrunc.SetRange(MIN_Truncate, MAX_Truncate);
          mTruncLongestAllowedSilenceT = S.AddTextBox(_("Truncate to:"), wxT(""), 12);
          mTruncLongestAllowedSilenceT->SetValidator(vldTrunc);
          S.AddUnits(_("seconds"));
 
-         FloatingPointValidator<double> vldComp(3, &mSilenceCompressPercent, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldComp(3, &mSilenceCompressPercent, NumValidatorStyle::NO_TRAILING_ZEROES);
          vldComp.SetRange(MIN_Compress, MAX_Compress);
          mSilenceCompressPercentT = S.AddTextBox(_("Compress to:"), wxT(""), 12);
          mSilenceCompressPercentT->SetValidator(vldComp);

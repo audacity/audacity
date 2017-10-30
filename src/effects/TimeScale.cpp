@@ -202,7 +202,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(1, wxCENTER);
          {
             FloatingPointValidator<double>
-               vldRatePercentChangeStart(3, &m_RatePercentChangeStart, NUM_VAL_NO_TRAILING_ZEROES);
+               vldRatePercentChangeStart(3, &m_RatePercentChangeStart, NumValidatorStyle::NO_TRAILING_ZEROES);
             vldRatePercentChangeStart.SetRange(MIN_RatePercentStart, MAX_RatePercentStart);
          
             m_pTextCtrl_RatePercentChangeStart = S.Id(ID_RatePercentChangeStart)
@@ -225,7 +225,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(1, wxCENTER);
          {
             FloatingPointValidator<double>
-               vldRatePercentChangeEnd(3, &m_RatePercentChangeEnd, NUM_VAL_NO_TRAILING_ZEROES);
+               vldRatePercentChangeEnd(3, &m_RatePercentChangeEnd, NumValidatorStyle::NO_TRAILING_ZEROES);
             vldRatePercentChangeEnd.SetRange(MIN_RatePercentEnd, MAX_RatePercentEnd);
          
             m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_RatePercentChangeEnd)
@@ -249,7 +249,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             FloatingPointValidator<double>
-               vldPitchHalfStepsStart(3, &m_PitchHalfStepsStart, NUM_VAL_NO_TRAILING_ZEROES);
+               vldPitchHalfStepsStart(3, &m_PitchHalfStepsStart, NumValidatorStyle::NO_TRAILING_ZEROES);
             vldPitchHalfStepsStart.SetRange(MIN_HalfStepsStart, MAX_HalfStepsStart);
          
             m_pTextCtrl_PitchHalfStepsStart = S.Id(ID_PitchHalfStepsStart)
@@ -257,7 +257,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
             m_pTextCtrl_PitchHalfStepsStart->SetValidator(vldPitchHalfStepsStart);
 
             FloatingPointValidator<double>
-               vldPitchPercentChangeStart(3, &m_PitchPercentChangeStart, NUM_VAL_NO_TRAILING_ZEROES);
+               vldPitchPercentChangeStart(3, &m_PitchPercentChangeStart, NumValidatorStyle::NO_TRAILING_ZEROES);
             vldPitchPercentChangeStart.SetRange(MIN_PitchPercentStart, MAX_PitchPercentStart);
          
             m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_PitchPercentChangeStart)
@@ -274,7 +274,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          S.StartMultiColumn(2, wxCENTER);
          {
             FloatingPointValidator<double>
-               vldPitchHalfStepsEnd(3, &m_PitchHalfStepsEnd, NUM_VAL_NO_TRAILING_ZEROES);
+               vldPitchHalfStepsEnd(3, &m_PitchHalfStepsEnd, NumValidatorStyle::NO_TRAILING_ZEROES);
             vldPitchHalfStepsEnd.SetRange(MIN_HalfStepsEnd, MAX_HalfStepsEnd);
          
             m_pTextCtrl_PitchHalfStepsEnd = S.Id(ID_PitchHalfStepsEnd)
@@ -282,7 +282,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
             m_pTextCtrl_PitchHalfStepsEnd->SetValidator(vldPitchHalfStepsEnd);
 
             FloatingPointValidator<double>
-               vldPitchPercentChangeEnd(3, &m_PitchPercentChangeEnd, NUM_VAL_NO_TRAILING_ZEROES);
+               vldPitchPercentChangeEnd(3, &m_PitchPercentChangeEnd, NumValidatorStyle::NO_TRAILING_ZEROES);
             vldPitchPercentChangeEnd.SetRange(MIN_PitchPercentStart, MAX_PitchPercentStart);
          
             m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_PitchPercentChangeEnd)

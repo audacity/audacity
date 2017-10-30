@@ -671,9 +671,9 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   vld.SetRange(mParameters[p].minValue, mParameters[p].maxValue);
 
                   float range = mParameters[p].maxValue - mParameters[p].minValue;
-                  int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
-                              range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
-                              NUM_VAL_ONE_TRAILING_ZERO;
+                  auto style = range < 10 ? NumValidatorStyle::THREE_TRAILING_ZEROES :
+                              range < 100 ? NumValidatorStyle::TWO_TRAILING_ZEROES :
+                              NumValidatorStyle::ONE_TRAILING_ZERO;
                   vld.SetStyle(style);
 
                   S.Id(ID_Texts + p);

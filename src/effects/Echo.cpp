@@ -160,11 +160,11 @@ void EffectEcho::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      FloatingPointValidator<double> vldDelay(3, &delay, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldDelay(3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldDelay.SetRange(MIN_Delay, MAX_Delay);
       S.AddTextBox(_("Delay time (seconds):"), wxT(""), 10)->SetValidator(vldDelay);
 
-      FloatingPointValidator<double> vldDecay(3, &decay, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldDecay(3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldDecay.SetRange(MIN_Decay, MAX_Decay);
       S.AddTextBox(_("Decay factor:"), wxT(""), 10)->SetValidator(vldDecay);
    }

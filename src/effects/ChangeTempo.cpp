@@ -209,7 +209,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       //
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NUM_VAL_THREE_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES);
          vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
          m_pTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .AddTextBox(_("Percent Change:"), wxT(""), 12);
@@ -231,13 +231,13 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+            FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NumValidatorStyle::THREE_TRAILING_ZEROES | NumValidatorStyle::ZERO_AS_BLANK);
             m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
                .AddTextBox(_("from"), wxT(""), 12);
             m_pTextCtrl_FromBPM->SetName(_("Beats per minute, from"));
             m_pTextCtrl_FromBPM->SetValidator(vldFromBPM);
 
-            FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+            FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NumValidatorStyle::THREE_TRAILING_ZEROES | NumValidatorStyle::ZERO_AS_BLANK);
             m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
                .AddTextBox(_("to"), wxT(""), 12);
             m_pTextCtrl_ToBPM->SetName(_("Beats per minute, to"));
@@ -253,13 +253,13 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
             int precission = 2;
-            FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NumValidatorStyle::TWO_TRAILING_ZEROES);
             m_pTextCtrl_FromLength = S.Id(ID_FromLength)
                .AddTextBox(_("from"), wxT(""), 12);
             m_pTextCtrl_FromLength->SetValidator(vldFromLength);
             m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
 
-            FloatingPointValidator<double> vldToLength(2, &m_ToLength, NUM_VAL_TWO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldToLength(2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES);
 
             // min and max need same precision as what we're validating (bug 963)
             double minLength = (m_FromLength * 100.0) / (100.0 + MAX_Percentage);

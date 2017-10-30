@@ -231,7 +231,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol(2);
 
-      FloatingPointValidator<double> vldfreq(5, &mFreq, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<double> vldfreq(5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldfreq.SetRange(MIN_Freq, MAX_Freq);
       mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 12);
       mFreqT->SetValidator(vldfreq);

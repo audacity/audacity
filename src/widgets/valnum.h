@@ -24,16 +24,22 @@
 #define wxTextEntry wxTextCtrl
 
 // Bit masks used for numeric validator styles.
-enum NumValidatorStyle
+enum class NumValidatorStyle : int
 {
-    NUM_VAL_DEFAULT               = 0x0,
-    NUM_VAL_THOUSANDS_SEPARATOR   = 0x1,
-    NUM_VAL_ZERO_AS_BLANK         = 0x2,
-    NUM_VAL_NO_TRAILING_ZEROES    = 0x4,
-    NUM_VAL_ONE_TRAILING_ZERO     = 0x8,
-    NUM_VAL_TWO_TRAILING_ZEROES   = 0x10,
-    NUM_VAL_THREE_TRAILING_ZEROES = 0x20
+    DEFAULT               = 0x0,
+    THOUSANDS_SEPARATOR   = 0x1,
+    ZERO_AS_BLANK         = 0x2,
+    NO_TRAILING_ZEROES    = 0x4,
+    ONE_TRAILING_ZERO     = 0x8,
+    TWO_TRAILING_ZEROES   = 0x10,
+    THREE_TRAILING_ZEROES = 0x20
 };
+
+inline NumValidatorStyle operator | (NumValidatorStyle x, NumValidatorStyle y)
+{ return NumValidatorStyle( int(x) | int(y) ); }
+
+inline int operator & (NumValidatorStyle x, NumValidatorStyle y)
+{ return int(x) & int(y); }
 
 // ----------------------------------------------------------------------------
 // Base class for all numeric validators.
@@ -43,14 +49,14 @@ class NumValidatorBase /* not final */ : public wxValidator
 {
 public:
     // Change the validator style. Usually it's specified during construction.
-    void SetStyle(int style) { m_style = style; }
+    void SetStyle(NumValidatorStyle style) { m_style = style; }
 
     // Called when the value in the window must be validated.
     // This function can pop up an error message.
     bool Validate(wxWindow * parent) override;
 
 protected:
-    NumValidatorBase(int style)
+    NumValidatorBase(NumValidatorStyle style)
     {
         m_style = style;
         m_minSet = false;
@@ -74,7 +80,7 @@ protected:
     // still test the return value for safety.
     wxTextEntry *GetTextEntry() const;
 
-    // Convert NUM_VAL_THOUSANDS_SEPARATOR and NUM_VAL_NO_TRAILING_ZEROES
+    // Convert NumValidatorStyle::THOUSANDS_SEPARATOR and NumValidatorStyle::NO_TRAILING_ZEROES
     // bits of our style to the corresponding NumberFormatter::Style values.
     int GetFormatFlags() const;
 
@@ -124,7 +130,7 @@ private:
 
 
     // Combination of wxVAL_NUM_XXX values.
-    int m_style;
+    NumValidatorStyle m_style;
 
     DECLARE_EVENT_TABLE()
 
@@ -211,7 +217,7 @@ public:
 
             const wxString s(control->GetValue());
             LongestValueType value;
-            if ( s.empty() && BaseValidator::HasFlag(NUM_VAL_ZERO_AS_BLANK) )
+            if ( s.empty() && BaseValidator::HasFlag(NumValidatorStyle::ZERO_AS_BLANK) )
                 value = 0;
             else if ( !BaseValidator::FromString(s, &value) )
                 return false;
@@ -226,7 +232,7 @@ public:
     }
 
 protected:
-    NumValidator(ValueType *value, int style)
+    NumValidator(ValueType *value, NumValidatorStyle style)
         : BaseValidator(style),
           m_value(value)
     {
@@ -244,11 +250,11 @@ protected:
 private:
     // Just a helper which is a common part of TransferToWindow() and
     // NormalizeString(): returns string representation of a number honouring
-    // NUM_VAL_ZERO_AS_BLANK flag.
+    // NumValidatorStyle::ZERO_AS_BLANK flag.
     wxString NormalizeValue(LongestValueType value) const
     {
         wxString s;
-        if ( value != 0 || !BaseValidator::HasFlag(NUM_VAL_ZERO_AS_BLANK) )
+        if ( value != 0 || !BaseValidator::HasFlag(NumValidatorStyle::ZERO_AS_BLANK) )
             s = this->ToString(value);
 
         return s;
@@ -282,16 +288,16 @@ protected:
     typedef long LongestValueType;
 #endif
 
-    IntegerValidatorBase(int style)
+    IntegerValidatorBase(NumValidatorStyle style)
         : NumValidatorBase(style)
     {
-        wxASSERT_MSG( !(style & NUM_VAL_NO_TRAILING_ZEROES),
+        wxASSERT_MSG( !(style & NumValidatorStyle::NO_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
-        wxASSERT_MSG( !(style & NUM_VAL_ONE_TRAILING_ZERO),
+        wxASSERT_MSG( !(style & NumValidatorStyle::ONE_TRAILING_ZERO),
                       wxT("This style doesn't make sense for integers.") );
-        wxASSERT_MSG( !(style & NUM_VAL_TWO_TRAILING_ZEROES),
+        wxASSERT_MSG( !(style & NumValidatorStyle::TWO_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
-        wxASSERT_MSG( !(style & NUM_VAL_THREE_TRAILING_ZEROES),
+        wxASSERT_MSG( !(style & NumValidatorStyle::THREE_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
     }
 
@@ -344,10 +350,10 @@ public:
     // minimal value for the unsigned types.
     IntegerValidator(
          ValueType *value = NULL,
-         int style = NUM_VAL_DEFAULT,
+         NumValidatorStyle style = NumValidatorStyle::DEFAULT,
          ValueType min = std::numeric_limits<ValueType>::min(),
          ValueType max = std::numeric_limits<ValueType>::max())
-        : Base(value, style)
+      : Base(value, style)
     {
        this->SetRange(min, max);
     }
@@ -363,7 +369,7 @@ private:
 // explicitly specifying the type as it deduces it from its parameter.
 template <typename T>
 inline IntegerValidator<T>
-MakeIntegerValidator(T *value, int style = NUM_VAL_DEFAULT)
+MakeIntegerValidator(T *value, NumValidatorStyle style = NumValidatorStyle::DEFAULT)
 {
     return IntegerValidator<T>(value, style);
 }
@@ -388,7 +394,7 @@ protected:
     // float).
     typedef double LongestValueType;
 
-    FloatingPointValidatorBase(int style)
+    FloatingPointValidatorBase(NumValidatorStyle style)
         : NumValidatorBase(style)
     {
     }
@@ -443,7 +449,7 @@ public:
 
     // Ctor using implicit (maximal) precision for this type.
     FloatingPointValidator(ValueType *value = NULL,
-                             int style = NUM_VAL_DEFAULT)
+                             NumValidatorStyle style = NumValidatorStyle::DEFAULT)
         : Base(value, style)
     {
         DoSetMinMax();
@@ -454,7 +460,7 @@ public:
     // Ctor specifying an explicit precision.
     FloatingPointValidator(int precision,
                       ValueType *value = NULL,
-                      int style = NUM_VAL_DEFAULT,
+                      NumValidatorStyle style = NumValidatorStyle::DEFAULT,
                       ValueType min = -std::numeric_limits<ValueType>::max(),
                       ValueType max =  std::numeric_limits<ValueType>::max())
         : Base(value, style)
@@ -488,14 +494,14 @@ private:
 //     do need two different functions.
 template <typename T>
 inline FloatingPointValidator<T>
-MakeFloatingPointValidator(T *value, int style = NUM_VAL_DEFAULT)
+MakeFloatingPointValidator(T *value, NumValidatorStyle style = NumValidatorStyle::DEFAULT)
 {
     return FloatingPointValidator<T>(value, style);
 }
 
 template <typename T>
 inline FloatingPointValidator<T>
-MakeFloatingPointValidator(int precision, T *value, int style = NUM_VAL_DEFAULT)
+MakeFloatingPointValidator(int precision, T *value, NumValidatorStyle style = NumValidatorStyle::DEFAULT)
 {
     return FloatingPointValidator<T>(precision, value, style);
 }

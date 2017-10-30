@@ -1694,9 +1694,9 @@ bool LV2Effect::BuildPlain()
 
                      // Set number of decimal places
                      float range = ctrl.mHi - ctrl.mLo;
-                     int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
-                        range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
-                        NUM_VAL_ONE_TRAILING_ZERO;
+                     auto style = range < 10 ? NumValidatorStyle::THREE_TRAILING_ZEROES :
+                        range < 100 ? NumValidatorStyle::TWO_TRAILING_ZEROES :
+                        NumValidatorStyle::ONE_TRAILING_ZERO;
                      vld.SetStyle(style);
 
                      mFields[p]->SetValidator(vld);

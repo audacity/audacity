@@ -320,7 +320,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       mDtmfSequenceT = S.Id(ID_Sequence).AddTextBox(_("DTMF sequence:"), wxT(""), 10);
       mDtmfSequenceT->SetValidator(vldDtmf);
 
-      FloatingPointValidator<double> vldAmp(3, &dtmfAmplitude, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldAmp(3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES);
       vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
       S.Id(ID_Amplitude).AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
 

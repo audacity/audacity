@@ -198,7 +198,7 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
        */
       S.AddTextBox(_("Stretch Factor:"), wxT(""), 10)->SetValidator(vldAmount);
 
-      FloatingPointValidator<float> vldTime(3, &mTime_resolution, NUM_VAL_ONE_TRAILING_ZERO);
+      FloatingPointValidator<float> vldTime(3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO);
       vldTime.SetMin(MIN_Time);
       S.AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10)->SetValidator(vldTime);
    }

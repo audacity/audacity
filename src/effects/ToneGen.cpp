@@ -343,7 +343,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               FloatingPointValidator<double> vldStartFreq(6, &mFrequency[0], NUM_VAL_NO_TRAILING_ZEROES);
+               FloatingPointValidator<double> vldStartFreq(6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES);
                vldStartFreq.SetRange(MIN_StartFreq, GetActiveProject()->GetRate() / 2.0);
                t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Frequency Hertz Start"));
@@ -353,7 +353,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               FloatingPointValidator<double> vldEndFreq(6, &mFrequency[1], NUM_VAL_NO_TRAILING_ZEROES);
+               FloatingPointValidator<double> vldEndFreq(6, &mFrequency[1], NumValidatorStyle::NO_TRAILING_ZEROES);
                vldEndFreq.SetRange(MIN_EndFreq, GetActiveProject()->GetRate() / 2.0);
                t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Frequency Hertz End"));
@@ -368,7 +368,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          {
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               FloatingPointValidator<double> vldStartAmp(6, &mAmplitude[0], NUM_VAL_NO_TRAILING_ZEROES);
+               FloatingPointValidator<double> vldStartAmp(6, &mAmplitude[0], NumValidatorStyle::NO_TRAILING_ZEROES);
                vldStartAmp.SetRange(MIN_StartAmp, MAX_StartAmp);
                t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Amplitude Start"));
@@ -378,7 +378,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               FloatingPointValidator<double> vldEndAmp(6, &mAmplitude[1], NUM_VAL_NO_TRAILING_ZEROES);
+               FloatingPointValidator<double> vldEndAmp(6, &mAmplitude[1], NumValidatorStyle::NO_TRAILING_ZEROES);
                vldEndAmp.SetRange(MIN_EndAmp, MAX_EndAmp);
                t = S.AddTextBox( {}, wxT(""), 12);
                t->SetName(_("Amplitude End"));
@@ -393,12 +393,12 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
       }
       else
       {
-         FloatingPointValidator<double> vldFrequency(6, &mFrequency[0], NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldFrequency(6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES);
          vldFrequency.SetRange(MIN_Frequency, GetActiveProject()->GetRate() / 2.0);
          t = S.AddTextBox(_("Frequency (Hz):"), wxT(""), 12);
          t->SetValidator(vldFrequency);
 
-         FloatingPointValidator<double> vldAmplitude(6, &mAmplitude[0], NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldAmplitude(6, &mAmplitude[0], NumValidatorStyle::NO_TRAILING_ZEROES);
          vldAmplitude.SetRange(MIN_Amplitude, MAX_Amplitude);
          t = S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12);
          t->SetValidator(vldAmplitude);
