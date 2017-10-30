@@ -373,9 +373,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(4, wxCENTER);
       {
          mTypeChoiceCtrl = S.Id(ID_Type)
+            .Validator<wxGenericValidator>(&mParams.mTableChoiceIndx)
             .AddChoice(_("Distortion type:"),
                LocalizedStrings(kTableTypeStrings, nTableTypes));
-         mTypeChoiceCtrl->SetValidator(wxGenericValidator(&mParams.mTableChoiceIndx));
          S.SetSizeHints(-1, -1);
 
          mDCBlockCheckBox = S.Id(ID_DCBlock).AddCheckBox(_("DC blocking filter"),
@@ -395,11 +395,12 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 
             // Upper threshold control
             mThresholdTxt = S.AddVariableText(defaultLabel(0), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            FloatingPointValidator<double> vldThreshold(2, &mParams.mThreshold_dB);
-            vldThreshold.SetRange(MIN_Threshold_dB, MAX_Threshold_dB);
-            mThresholdT = S.Id(ID_Threshold).AddTextBox( {}, wxT(""), 10);
+            mThresholdT = S.Id(ID_Threshold)
+               .Validator<FloatingPointValidator<double>>(
+                  2, &mParams.mThreshold_dB, NumValidatorStyle::DEFAULT,
+                  MIN_Threshold_dB, MAX_Threshold_dB)
+               .AddTextBox( {}, wxT(""), 10);
             mThresholdT->SetName(defaultLabel(0));
-            mThresholdT->SetValidator(vldThreshold);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mThresholdS = S.Id(ID_Threshold)
@@ -411,11 +412,13 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 
             // Noise floor control
             mNoiseFloorTxt = S.AddVariableText(defaultLabel(1), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            FloatingPointValidator<double> vldfloor(2, &mParams.mNoiseFloor);
-            vldfloor.SetRange(MIN_NoiseFloor, MAX_NoiseFloor);
-            mNoiseFloorT = S.Id(ID_NoiseFloor).AddTextBox( {}, wxT(""), 10);
+            mNoiseFloorT = S.Id(ID_NoiseFloor)
+               .Validator<FloatingPointValidator<double>>(
+                  2, &mParams.mNoiseFloor, NumValidatorStyle::DEFAULT,
+                  MIN_NoiseFloor, MAX_NoiseFloor
+               )
+               .AddTextBox( {}, wxT(""), 10);
             mNoiseFloorT->SetName(defaultLabel(1));
-            mNoiseFloorT->SetValidator(vldfloor);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mNoiseFloorS = S.Id(ID_NoiseFloor).AddSlider( {}, 0, MAX_NoiseFloor, MIN_NoiseFloor);
@@ -436,11 +439,13 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 
             // Parameter1 control
             mParam1Txt = S.AddVariableText(defaultLabel(2), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            FloatingPointValidator<double> vldparam1(2, &mParams.mParam1);
-            vldparam1.SetRange(MIN_Param1, MAX_Param1);
-            mParam1T = S.Id(ID_Param1).AddTextBox( {}, wxT(""), 10);
+            mParam1T = S.Id(ID_Param1)
+               .Validator<FloatingPointValidator<double>>(
+                  2, &mParams.mParam1, NumValidatorStyle::DEFAULT,
+                  MIN_Param1, MAX_Param1
+               )
+               .AddTextBox( {}, wxT(""), 10);
             mParam1T->SetName(defaultLabel(2));
-            mParam1T->SetValidator(vldparam1);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mParam1S = S.Id(ID_Param1).AddSlider( {}, 0, MAX_Param1, MIN_Param1);
@@ -449,11 +454,13 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 
             // Parameter2 control
             mParam2Txt = S.AddVariableText(defaultLabel(3), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            FloatingPointValidator<double> vldParam2(2, &mParams.mParam2);
-            vldParam2.SetRange(MIN_Param2, MAX_Param2);
-            mParam2T = S.Id(ID_Param2).AddTextBox( {}, wxT(""), 10);
+            mParam2T = S.Id(ID_Param2)
+               .Validator<FloatingPointValidator<double>>(
+                  2, &mParams.mParam2, NumValidatorStyle::DEFAULT,
+                  MIN_Param2, MAX_Param2
+               )
+               .AddTextBox( {}, wxT(""), 10);
             mParam2T->SetName(defaultLabel(3));
-            mParam2T->SetValidator(vldParam2);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mParam2S = S.Id(ID_Param2).AddSlider( {}, 0, MAX_Param2, MIN_Param2);
@@ -462,11 +469,13 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
 
             // Repeats control
             mRepeatsTxt = S.AddVariableText(defaultLabel(4), false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            IntegerValidator<int>vldRepeats(&mParams.mRepeats);
-            vldRepeats.SetRange(MIN_Repeats, MAX_Repeats);
-            mRepeatsT = S.Id(ID_Repeats).AddTextBox( {}, wxT(""), 10);
+            mRepeatsT = S.Id(ID_Repeats)
+               .Validator<IntegerValidator<int>>(
+                  &mParams.mRepeats, NumValidatorStyle::DEFAULT,
+                  MIN_Repeats, MAX_Repeats
+               )
+               .AddTextBox( {}, wxT(""), 10);
             mRepeatsT->SetName(defaultLabel(4));
-            mRepeatsT->SetValidator(vldRepeats);
 
             S.SetStyle(wxSL_HORIZONTAL);
             mRepeatsS = S.Id(ID_Repeats).AddSlider( {}, DEF_Repeats, MAX_Repeats, MIN_Repeats);

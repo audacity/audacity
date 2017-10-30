@@ -123,6 +123,24 @@ namespace DialogDefinition {
 
 struct Item {
    Item() = default;
+
+   // Factory is a class that returns a value of some subclass of wxValidator
+   // We must wrap it in another lambda to allow the return type of f to
+   // vary, and avoid the "slicing" problem.
+   // (That is, std::function<wxValidator()> would not work.)
+   template<typename Factory>
+   Item&& Validator( const Factory &f ) &&
+   {
+      mValidatorSetter = [f](wxWindow *p){ p->SetValidator(f()); };
+      return std::move(*this);
+   }
+
+   // This allows further abbreviation of the previous:
+   template<typename V, typename... Args>
+   Item&& Validator( Args&&... args ) &&
+   { return std::move(*this).Validator( [args...]{ return V( args... ); } ); }
+
+   std::function< void(wxWindow*) > mValidatorSetter;
 };
 
 }
@@ -478,6 +496,24 @@ public:
 public:
    ShuttleGui & Optional( bool & bVar );
    ShuttleGui & Id(int id );
+
+   template<typename Factory>
+   ShuttleGui& Validator( const Factory &f )
+   {
+      if ( GetMode() == eIsCreating )
+         std::move( mItem ).Validator( f );
+      return *this;
+   }
+
+   // This allows further abbreviation of the previous:
+   template<typename V, typename...Args>
+   ShuttleGui& Validator( Args&& ...args )
+   {
+      if ( GetMode() == eIsCreating )
+         std::move( mItem ).Validator<V>( std::forward<Args>(args)... );
+      return *this;
+   }
+
    // Prop() sets the proportion value, defined as in wxSizer::Add().
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);

@@ -225,13 +225,13 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxCENTER);
    {
-      S
-         .AddChoice(_("Noise type:"), LocalizedStrings(kTypeStrings, nTypes))
-         ->SetValidator(wxGenericValidator(&mType));
+      S.Validator<wxGenericValidator>(&mType)
+         .AddChoice(_("Noise type:"), LocalizedStrings(kTypeStrings, nTypes));
 
-      FloatingPointValidator<double> vldAmp(6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES);
-      vldAmp.SetRange(MIN_Amp, MAX_Amp);
-      S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12)->SetValidator(vldAmp);
+      S.Validator<FloatingPointValidator<double>>(
+            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, MIN_Amp, MAX_Amp
+         )
+         .AddTextBox(_("Amplitude (0-1):"), wxT(""), 12);
 
       S.AddPrompt(_("Duration:"));
       mNoiseDurationT = safenew

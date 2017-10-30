@@ -160,7 +160,6 @@ void BenchmarkDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 void BenchmarkDialog::MakeBenchmarkDialog()
 {
    ShuttleGui S(this, eIsCreating);
-   wxControl *item;
 
    // Strings don't need to be translated because this class doesn't
    // ever get used in a stable release.
@@ -171,47 +170,47 @@ void BenchmarkDialog::MakeBenchmarkDialog()
       S.StartMultiColumn(4);
       {
          //
-         item = S.Id(BlockSizeID).AddTextBox(_("Disk Block Size (KB):"),
+         S.Id(BlockSizeID)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mBlockSizeStr)
+            .AddTextBox(_("Disk Block Size (KB):"),
                                              wxT(""),
                                              12);
-         item->SetValidator(wxTextValidator(wxFILTER_NUMERIC,
-                                         &mBlockSizeStr));
 
          //
-         item = S.Id(NumEditsID).AddTextBox(_("Number of Edits:"),
+         S.Id(NumEditsID)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mNumEditsStr)
+            .AddTextBox(_("Number of Edits:"),
                                             wxT(""),
                                             12);
-         item->SetValidator(wxTextValidator(wxFILTER_NUMERIC,
-                                         &mNumEditsStr));
 
          //
-         item = S.Id(DataSizeID).AddTextBox(_("Test Data Size (MB):"),
+         S.Id(DataSizeID)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mDataSizeStr)
+            .AddTextBox(_("Test Data Size (MB):"),
                                             wxT(""),
                                             12);
-         item->SetValidator(wxTextValidator(wxFILTER_NUMERIC,
-                                         &mDataSizeStr));
 
          ///
-         /* i18n-hint: A "seed" is a number that initializes a
-            pseudorandom number generating algorithm */
-         item = S.Id(RandSeedID).AddTextBox(_("Random Seed:"),
+         S.Id(RandSeedID)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC, &mRandSeedStr)
+            /* i18n-hint: A "seed" is a number that initializes a
+               pseudorandom number generating algorithm */
+            .AddTextBox(_("Random Seed:"),
                                             wxT(""),
                                             12);
-         item->SetValidator(wxTextValidator(wxFILTER_NUMERIC,
-                                         &mRandSeedStr));
 
       }
       S.EndMultiColumn();
 
       //
-      item = S.AddCheckBox(_("Show detailed info about each block file"),
+      S.Validator<wxGenericValidator>(&mBlockDetail)
+         .AddCheckBox(_("Show detailed info about each block file"),
                            false);
-      item->SetValidator(wxGenericValidator(&mBlockDetail));
 
       //
-      item = S.AddCheckBox(_("Show detailed info about each editing operation"),
+      S.Validator<wxGenericValidator>(&mEditDetail)
+         .AddCheckBox(_("Show detailed info about each editing operation"),
                            false);
-      item->SetValidator(wxGenericValidator(&mEditDetail));
 
       //
       mText = S.Id(StaticTextID).AddTextWindow(wxT(""));

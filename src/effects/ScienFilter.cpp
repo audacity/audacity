@@ -456,13 +456,14 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
          wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
          mFilterTypeCtl = S.Id(ID_Type)
+            .Validator<wxGenericValidator>(&mFilterType)
             .AddChoice(_("&Filter Type:"),
                LocalizedStrings(kTypeStrings, nTypes)
             );
-         mFilterTypeCtl->SetValidator(wxGenericValidator(&mFilterType));
          S.SetSizeHints(-1, -1);
 
          mFilterOrderCtl = S.Id(ID_Order)
+            .Validator<wxGenericValidator>(&mOrderIndex)
             /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
             .AddChoice(_("O&rder:"),
                []{
@@ -472,41 +473,40 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
                   return orders;
                }()
             );
-         mFilterOrderCtl->SetValidator(wxGenericValidator(&mOrderIndex));
          S.SetSizeHints(-1, -1);
          S.AddSpace(1, 1);
 
-         FloatingPointValidator<float> vldRipple(1, &mRipple);
-         vldRipple.SetRange(MIN_Passband, MAX_Passband);
-         
          mRippleCtlP = S.AddVariableText(_("&Passband Ripple:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mRippleCtl = S.Id(ID_Ripple).AddTextBox( {}, wxT(""), 10);
+         mRippleCtl = S.Id(ID_Ripple)
+            .Validator<FloatingPointValidator<float>>(
+               1, &mRipple, NumValidatorStyle::DEFAULT,
+               MIN_Passband, MAX_Passband)
+            .AddTextBox( {}, wxT(""), 10);
          mRippleCtl->SetName(_("Passband Ripple (dB)"));
-         mRippleCtl->SetValidator(vldRipple);
          mRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
          mFilterSubTypeCtl = S.Id(ID_SubType)
+            .Validator<wxGenericValidator>(&mFilterSubtype)
             .AddChoice(_("&Subtype:"),
                LocalizedStrings(kSubTypeStrings, nSubTypes)
             );
-         mFilterSubTypeCtl->SetValidator(wxGenericValidator(&mFilterSubtype));
          S.SetSizeHints(-1, -1);
       
-         FloatingPointValidator<float> vldCutoff(1, &mCutoff);
-         vldCutoff.SetRange(MIN_Cutoff, mNyquist - 1);
-         
-         mCutoffCtl = S.Id(ID_Cutoff).AddTextBox(_("C&utoff:"), wxT(""), 10);
+         mCutoffCtl = S.Id(ID_Cutoff)
+            .Validator<FloatingPointValidator<float>>(
+               1, &mCutoff, NumValidatorStyle::DEFAULT,
+               MIN_Cutoff, mNyquist - 1)
+            .AddTextBox(_("C&utoff:"), wxT(""), 10);
          mCutoffCtl->SetName(_("Cutoff (Hz)"));
-         mCutoffCtl->SetValidator(vldCutoff);
          S.AddUnits(_("Hz"));
 
-         FloatingPointValidator<float> vldStopbandRipple(1, &mStopbandRipple);
-         vldStopbandRipple.SetRange(MIN_Stopband, MAX_Stopband);
-         
          mStopbandRippleCtlP = S.AddVariableText(_("Minimum S&topband Attenuation:"), false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mStopbandRippleCtl = S.Id(ID_StopbandRipple).AddTextBox( {}, wxT(""), 10);
+         mStopbandRippleCtl = S.Id(ID_StopbandRipple)
+            .Validator<FloatingPointValidator<float>>(
+               1, &mStopbandRipple, NumValidatorStyle::DEFAULT,
+               MIN_Stopband, MAX_Stopband)
+            .AddTextBox( {}, wxT(""), 10);
          mStopbandRippleCtl->SetName(_("Minimum S&topband Attenuation (dB)"));
-         mStopbandRippleCtl->SetValidator(vldStopbandRipple);
          mStopbandRippleCtlU = S.AddVariableText(_("dB"), false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
       S.EndMultiColumn();

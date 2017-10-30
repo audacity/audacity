@@ -2072,6 +2072,9 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
       if (!prompt) {
          // Apply certain optional window attributes here
 
+         if ( mItem.mValidatorSetter )
+            mItem.mValidatorSetter( mpWind );
+
          // Reset to defaults
          mItem = {};
       }

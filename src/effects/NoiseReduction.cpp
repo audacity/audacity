@@ -1427,15 +1427,16 @@ struct ControlInfo {
 
    void CreateControls(int id, ShuttleGui &S) const
    {
-      FloatingPointValidator<double> vld2(2);// precision.
-      if (formatAsInt)
-         vld2.SetPrecision( 0 );
-      vld2.SetRange( valueMin, valueMax );
-      wxTextCtrl *const text =
-         S.Id(id + 1).AddTextBox(textBoxCaption.Translation(), wxT(""), 0);
-      S.SetStyle(wxSL_HORIZONTAL);
-      text->SetValidator(vld2);
+      wxTextCtrl *const text = S.Id(id + 1)
+         .Validator<FloatingPointValidator<double>>(
+            formatAsInt ? 0 : 2,
+            nullptr,
+            NumValidatorStyle::DEFAULT,
+            valueMin, valueMax
+         )
+         .AddTextBox(textBoxCaption.Translation(), wxT(""), 0);
 
+      S.SetStyle(wxSL_HORIZONTAL);
       wxSlider *const slider =
          S.Id(id)
             .AddSlider( {}, 0, sliderMax);

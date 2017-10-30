@@ -2635,8 +2635,9 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                {
                   S.AddSpace(10, 10);
 
-                  wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox( {}, wxT(""), 12);
-                  item->SetValidator(wxGenericValidator(&ctrl.valStr));
+                  auto item = S.Id(ID_Text + i)
+                     .Validator<wxGenericValidator>(&ctrl.valStr)
+                     .AddTextBox( {}, wxT(""), 12);
                   item->SetName(prompt);
                }
                else if (ctrl.type == NYQ_CTRL_CHOICE)
@@ -2702,33 +2703,32 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                      S.AddSpace(10, 10);
                   }
 
-                  wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox( {}, wxT(""),
-                                                               (ctrl.type == NYQ_CTRL_INT_TEXT ||
-                                                               ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
-                  item->SetName(prompt);
-
-                  double range = ctrl.high - ctrl.low;
-
+                  S.Id(ID_Text+i);
                   if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT)
                   {
-                     // > 12 decimal places can cause rounding errors in display.
-                     FloatingPointValidator<double> vld(12, &ctrl.val);
-                     vld.SetRange(ctrl.low, ctrl.high);
-
-                     // Set number of decimal places
-                     auto style = range < 10 ? NumValidatorStyle::THREE_TRAILING_ZEROES :
-                                 range < 100 ? NumValidatorStyle::TWO_TRAILING_ZEROES :
-                                 NumValidatorStyle::ONE_TRAILING_ZERO;
-                     vld.SetStyle(style);
-
-                     item->SetValidator(vld);
+                     double range = ctrl.high - ctrl.low;
+                     S.Validator<FloatingPointValidator<double>>(
+                        // > 12 decimal places can cause rounding errors in display.
+                        12, &ctrl.val,
+                        // Set number of decimal places
+                        (range < 10
+                           ? NumValidatorStyle::THREE_TRAILING_ZEROES
+                           : range < 100
+                              ? NumValidatorStyle::TWO_TRAILING_ZEROES
+                              : NumValidatorStyle::ONE_TRAILING_ZERO),
+                        ctrl.low, ctrl.high
+                     );
                   }
                   else
                   {
-                     IntegerValidator<double> vld(&ctrl.val);
-                     vld.SetRange((int) ctrl.low, (int) ctrl.high);
-                     item->SetValidator(vld);
+                     S.Validator<IntegerValidator<double>>(
+                        &ctrl.val, NumValidatorStyle::DEFAULT,
+                        (int) ctrl.low, (int) ctrl.high);
                   }
+                  wxTextCtrl *item = S.AddTextBox( {}, wxT(""),
+                                                               (ctrl.type == NYQ_CTRL_INT_TEXT ||
+                                                               ctrl.type == NYQ_CTRL_FLOAT_TEXT) ? 25 : 12);
+                  item->SetName(prompt);
 
                   if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_FLOAT)
                   {

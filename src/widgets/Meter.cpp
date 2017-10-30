@@ -2005,14 +2005,14 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
          S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
          S.StartHorizontalLay();
          {
-            rate = S.AddTextBox(_("Meter refresh rate per second [1-100]: "),
+            rate = S
+               .Validator<IntegerValidator<long>>(
+                  &mMeterRefreshRate, NumValidatorStyle::DEFAULT,
+                  MIN_REFRESH_RATE, MAX_REFRESH_RATE)
+               .AddTextBox(_("Meter refresh rate per second [1-100]: "),
                                 wxString::Format(wxT("%d"), meterRefreshRate),
                                 10);
             rate->SetName(_("Meter refresh rate per second [1-100]"));
-            IntegerValidator<long> vld(&mMeterRefreshRate);
-
-            vld.SetRange(MIN_REFRESH_RATE, MAX_REFRESH_RATE);
-            rate->SetValidator(vld);
          }
          S.EndHorizontalLay();
       }

@@ -717,40 +717,37 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         wxTextValidator vld(wxFILTER_NUMERIC);
-         mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
+         mGainT = S.Id(ID_GAIN_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
-         mGainT->SetValidator(vld);
          mGainS = S.Id(ID_GAIN_SLIDER)
             .AddSlider(wxT(""), 0, GAIN_MAX, GAIN_MIN);
          mGainS->SetName(_("Noise reduction"));
          mGainS->SetSizeHints(150, -1);
 
-         mSensitivityT = S.Id(ID_SENSITIVITY_TEXT).AddTextBox(_("&Sensitivity (dB):"),
-                                                wxT(""),
-                                                0);
+         mSensitivityT = S.Id(ID_SENSITIVITY_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("&Sensitivity (dB):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
-         mSensitivityT->SetValidator(vld);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER)
             .AddSlider(wxT(""), 0, SENSITIVITY_MAX, SENSITIVITY_MIN);
          mSensitivityS->SetName(_("Sensitivity"));
          mSensitivityS->SetSizeHints(150, -1);
 
-         mFreqT = S.Id(ID_FREQ_TEXT).AddTextBox(_("Fr&equency smoothing (Hz):"),
-                                                wxT(""),
-                                                0);
+         mFreqT = S.Id(ID_FREQ_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("Fr&equency smoothing (Hz):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
-         mFreqT->SetValidator(vld);
          mFreqS = S.Id(ID_FREQ_SLIDER)
             .AddSlider(wxT(""), 0, FREQ_MAX, FREQ_MIN);
          mFreqS->SetName(_("Frequency smoothing"));
          mFreqS->SetSizeHints(150, -1);
 
-         mTimeT = S.Id(ID_TIME_TEXT).AddTextBox(_("Attac&k/decay time (secs):"),
-                                                wxT(""),
-                                                0);
+         mTimeT = S.Id(ID_TIME_TEXT)
+            .Validator<wxTextValidator>(wxFILTER_NUMERIC)
+            .AddTextBox(_("Attac&k/decay time (secs):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
-         mTimeT->SetValidator(vld);
          mTimeS = S.Id(ID_TIME_SLIDER)
             .AddSlider(wxT(""), 0, TIME_MAX, TIME_MIN);
          mTimeS->SetName(_("Attack/decay time"));

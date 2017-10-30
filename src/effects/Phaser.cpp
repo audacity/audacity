@@ -256,10 +256,10 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol(2);
 
-      IntegerValidator<int> vldStages(&mStages);
-      vldStages.SetRange(MIN_Stages, MAX_Stages);
-      mStagesT = S.Id(ID_Stages).AddTextBox(_("&Stages:"), wxT(""), 15);
-      mStagesT->SetValidator(vldStages);
+      mStagesT = S.Id(ID_Stages)
+         .Validator<IntegerValidator<int>>(
+            &mStages, NumValidatorStyle::DEFAULT, MIN_Stages, MAX_Stages)
+         .AddTextBox(_("&Stages:"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mStagesS = S.Id(ID_Stages).AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
@@ -267,30 +267,30 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mStagesS->SetLineSize(2);
       mStagesS->SetMinSize(wxSize(100, -1));
 
-      IntegerValidator<int> vldDryWet(&mDryWet);
-      vldDryWet.SetRange(MIN_DryWet, MAX_DryWet);
-      mDryWetT = S.Id(ID_DryWet).AddTextBox(_("&Dry/Wet:"), wxT(""), 15);
-      mDryWetT->SetValidator(vldDryWet);
+      mDryWetT = S.Id(ID_DryWet)
+         .Validator<IntegerValidator<int>>(
+            &mDryWet, NumValidatorStyle::DEFAULT, MIN_DryWet, MAX_DryWet)
+         .AddTextBox(_("&Dry/Wet:"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mDryWetS = S.Id(ID_DryWet).AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
       mDryWetS->SetName(_("Dry Wet"));
       mDryWetS->SetMinSize(wxSize(100, -1));
 
-      FloatingPointValidator<double> vldFreq(5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO);
-      vldFreq.SetRange(MIN_Freq, MAX_Freq);
-      mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
-      mFreqT->SetValidator(vldFreq);
+      mFreqT = S.Id(ID_Freq)
+         .Validator<FloatingPointValidator<double>>(
+            5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Freq, MAX_Freq)
+         .AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mFreqS = S.Id(ID_Freq).AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
       mFreqS ->SetName(_("LFO frequency in hertz"));
       mFreqS ->SetMinSize(wxSize(100, -1));
 
-      FloatingPointValidator<double> vldPhase(1, &mPhase);
-      vldPhase.SetRange(MIN_Phase, MAX_Phase);
-      mPhaseT = S.Id(ID_Phase).AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
-      mPhaseT->SetValidator(vldPhase);
+      mPhaseT = S.Id(ID_Phase)
+         .Validator<FloatingPointValidator<double>>(
+            1, &mPhase, NumValidatorStyle::DEFAULT, MIN_Phase, MAX_Phase)
+         .AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mPhaseS = S.Id(ID_Phase).AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
@@ -298,20 +298,20 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mPhaseS->SetLineSize(10);
       mPhaseS->SetMinSize(wxSize(100, -1));
 
-      IntegerValidator<int> vldDepth(&mDepth);
-      vldDepth.SetRange(MIN_Depth, MAX_Depth);
-      mDepthT = S.Id(ID_Depth).AddTextBox(_("Dept&h:"), wxT(""), 15);
-      mDepthT->SetValidator(vldDepth);
+      mDepthT = S.Id(ID_Depth)
+         .Validator<IntegerValidator<int>>(
+            &mDepth, NumValidatorStyle::DEFAULT, MIN_Depth, MAX_Depth)
+         .AddTextBox(_("Dept&h:"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mDepthS = S.Id(ID_Depth).AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetName(_("Depth in percent"));
       mDepthS->SetMinSize(wxSize(100, -1));
 
-      IntegerValidator<int> vldFeedback(&mFeedback);
-      vldFeedback.SetRange(MIN_Feedback, MAX_Feedback);
-      mFeedbackT = S.Id(ID_Feedback).AddTextBox(_("Feedbac&k (%):"), wxT(""), 15);
-      mFeedbackT->SetValidator(vldFeedback);
+      mFeedbackT = S.Id(ID_Feedback)
+         .Validator<IntegerValidator<int>>(
+            &mFeedback, NumValidatorStyle::DEFAULT, MIN_Feedback, MAX_Feedback)
+         .AddTextBox(_("Feedbac&k (%):"), wxT(""), 15);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mFeedbackS = S.Id(ID_Feedback).AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
@@ -319,10 +319,10 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackS->SetLineSize(10);
       mFeedbackS->SetMinSize(wxSize(100, -1));
 
-      FloatingPointValidator<double> vldoutgain(1, &mOutGain);
-      vldoutgain.SetRange(MIN_OutGain, MAX_OutGain);
-      mOutGainT = S.Id(ID_OutGain).AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
-      mOutGainT->SetValidator(vldoutgain);
+      mOutGainT = S.Id(ID_OutGain)
+         .Validator<FloatingPointValidator<double>>(
+            1, &mOutGain, NumValidatorStyle::DEFAULT, MIN_OutGain, MAX_OutGain)
+         .AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
 
       S.SetStyle(wxSL_HORIZONTAL);
       mOutGainS = S.Id(ID_OutGain).AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);

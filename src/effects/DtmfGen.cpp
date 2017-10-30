@@ -326,14 +326,19 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
    S.AddSpace(0, 5);
    S.StartMultiColumn(2, wxCENTER);
    {
-      wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST, &dtmfSequence);
-      vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
-      mDtmfSequenceT = S.Id(ID_Sequence).AddTextBox(_("DTMF sequence:"), wxT(""), 10);
-      mDtmfSequenceT->SetValidator(vldDtmf);
+      mDtmfSequenceT = S.Id(ID_Sequence)
+         .Validator([this]{
+            wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST, &dtmfSequence);
+            vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
+            return vldDtmf;
+         })
+         .AddTextBox(_("DTMF sequence:"), wxT(""), 10);
 
-      FloatingPointValidator<double> vldAmp(3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES);
-      vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
-      S.Id(ID_Amplitude).AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
+      S.Id(ID_Amplitude)
+         .Validator<FloatingPointValidator<double>>(
+            3, &dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES,
+            MIN_Amplitude, MAX_Amplitude)
+         .AddTextBox(_("Amplitude (0-1):"), wxT(""), 10);
 
       S.AddPrompt(_("Duration:"));
       mDtmfDurationT = safenew

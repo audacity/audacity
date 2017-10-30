@@ -551,4 +551,9 @@ bool FloatingPointValidatorBase::ValidatePrecision(const wxString& s) const
    return ( (int)(posExp - posSep) - 1 <= (int)m_precision );
 }
 
+double RoundValue(int precision, double value)
+{
+   return Internat::CompatibleToDouble( Internat::ToString(value, precision) );
+}
+
 #endif // wxUSE_VALIDATORS && wxUSE_TEXTCTRL
