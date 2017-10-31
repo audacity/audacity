@@ -2664,7 +2664,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                                      options);
                   S
                      .Name( TranslatableString{ prompt } )
-                     .AddWindow(time, wxALIGN_LEFT | wxALL);
+                     .Position(wxALIGN_LEFT | wxALL)
+                     .AddWindow(time);
                }
                else if (ctrl.type == NYQ_CTRL_FILE)
                {

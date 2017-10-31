@@ -396,7 +396,8 @@ visit our [[https://forum.audacityteam.org/|forum]].");
    html->SetPage(creditStr);
 
    /* locate the html renderer where it fits in the dialogue */
-   S.Prop(1).Focus().AddWindow( html, wxEXPAND );
+   S.Prop(1).Position( wxEXPAND ).Focus()
+      .AddWindow( html );
 
    S.EndVerticalLay();
    S.EndNotebookPage();
@@ -650,7 +651,9 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr = FormatHtmlText( informationStr );
 
    html->SetPage(informationStr);   // push the page into the html renderer
-   S.Prop(2).AddWindow( html, wxEXPAND ); // make it fill the page
+   S.Prop(2)
+      .Position( wxEXPAND )
+      .AddWindow( html ); // make it fill the page
    // I think the 2 here goes with the StartVerticalLay() call above?
    S.EndVerticalLay();     // end window
    S.EndNotebookPage(); // end the tab
@@ -958,7 +961,9 @@ wxT("POSSIBILITY OF SUCH DAMAGES.\n"));
 
    html->SetPage( PageText );
 
-   S.Prop(1).AddWindow( html, wxEXPAND );
+   S.Prop(1)
+      .Position( wxEXPAND )
+      .AddWindow( html );
 
    S.EndVerticalLay();
    S.EndNotebookPage();

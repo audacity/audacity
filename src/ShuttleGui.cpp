@@ -271,13 +271,13 @@ void ShuttleGuiBase::AddTitle(const wxString &Prompt)
 
 /// Very generic 'Add' function.  We can add anything we like.
 /// Useful for unique controls
-wxWindow * ShuttleGuiBase::AddWindow(wxWindow * pWindow, int Flags )
+wxWindow * ShuttleGuiBase::AddWindow(wxWindow * pWindow)
 {
    if( mShuttleMode != eIsCreating )
       return pWindow;
    mpWind = pWindow;
    SetProportions( 0 );
-   UpdateSizersCore(false, Flags);
+   UpdateSizersCore(false, wxALIGN_CENTRE | wxALL);
    return pWindow;
 }
 
@@ -2042,14 +2042,20 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 {
    if( mpWind && mpParent )
    {
+      int useFlags = Flags;
+
+      if ( !prompt && mItem.mWindowPositionFlags )
+         // override the given Flags
+         useFlags = mItem.mWindowPositionFlags;
+
       if( mpSizer){
          if( bPrepend )
          {
-            mpSizer->Prepend(mpWind, miProp, Flags,miBorder);
+            mpSizer->Prepend(mpWind, miProp, useFlags, miBorder);
          }
          else
          {
-            mpSizer->Add(mpWind, miProp, Flags,miBorder);
+            mpSizer->Add(mpWind, miProp, useFlags, miBorder);
          }
       }
 

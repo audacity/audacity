@@ -290,7 +290,8 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                             size,
                             ASlider::Options{}
                                .Style( style ).Line( line ).Page( page ) );
-      S.AddWindow(mSlider, wxEXPAND);
+      S.Position(wxEXPAND)
+         .AddWindow(mSlider);
    }
    S.EndVerticalLay();
 

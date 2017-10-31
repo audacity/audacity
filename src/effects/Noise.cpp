@@ -243,7 +243,8 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))
-         .AddWindow(mNoiseDurationT, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);
+         .Position(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL)
+         .AddWindow(mNoiseDurationT);
    }
    S.EndMultiColumn();
 }

@@ -386,8 +386,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
          S.SetBorder(1);
          S.AddSpace(1, 1);
-         S.Prop(1);
-         S.AddWindow(mdBRuler, wxALIGN_RIGHT | wxTOP);
+         S.Prop(1)
+            .Position(wxALIGN_RIGHT | wxTOP)
+            .AddWindow(mdBRuler);
          S.AddSpace(1, 1);
       }
       S.EndVerticalLay();
@@ -399,8 +400,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.SetBorder(5);
       S.Prop(1)
+         .Position(wxEXPAND | wxRIGHT)
          .MinSize( { -1, -1 } )
-         .AddWindow(mPanel, wxEXPAND | wxRIGHT);
+         .AddWindow(mPanel);
 
       S.StartVerticalLay();
       {
@@ -442,8 +444,9 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
             .LabelEdges(true)
       );
 
-      S.Prop(1);
-      S.AddWindow(mfreqRuler, wxEXPAND | wxALIGN_LEFT | wxRIGHT);
+      S.Prop(1)
+         .Position(wxEXPAND | wxALIGN_LEFT | wxRIGHT)
+         .AddWindow(mfreqRuler);
 
       S.AddSpace(1, 1);
 

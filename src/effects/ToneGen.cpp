@@ -451,7 +451,8 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))
-         .AddWindow(mToneDurationT, wxALIGN_LEFT | wxALL);
+         .Position(wxALIGN_LEFT | wxALL)
+         .AddWindow(mToneDurationT);
    }
    S.EndMultiColumn();
 

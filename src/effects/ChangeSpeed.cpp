@@ -381,7 +381,8 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
             S.ToolTip(XO("Current length of selection."))
                /* i18n-hint: changing a quantity "from" one value "to" another */
                .Name(XO("from"))
-               .AddWindow(mpFromLengthCtrl, wxALIGN_LEFT);
+               .Position(wxALIGN_LEFT)
+               .AddWindow(mpFromLengthCtrl);
 
             S.AddPrompt(_("New Length:"));
 
@@ -394,7 +395,8 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 
             /* i18n-hint: changing a quantity "from" one value "to" another */
             S.Name(XO("to"))
-               .AddWindow(mpToLengthCtrl, wxALIGN_LEFT);
+               .Position(wxALIGN_LEFT)
+               .AddWindow(mpToLengthCtrl);
          }
          S.EndMultiColumn();
       }

@@ -215,6 +215,12 @@ struct Item {
       return std::move ( *this );
    }
 
+   Item&& Position( int flags ) &&
+   {
+      mWindowPositionFlags = flags;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
@@ -223,6 +229,9 @@ struct Item {
    std::vector<std::pair<wxEventType, wxObjectEventFunction>> mRootConnections;
 
    long miStyle{};
+
+   // Applies to windows, not to subsizers
+   int mWindowPositionFlags{ 0 };
 
    wxSize mMinSize{ -1, -1 };
    bool mHasMinSize{ false };
@@ -248,8 +257,8 @@ public:
    void AddPrompt(const wxString &Prompt);
    void AddUnits(const wxString &Prompt);
    void AddTitle(const wxString &Prompt);
-   // Applies wxALL (which affects borders) only when in Flags:
-   wxWindow * AddWindow(wxWindow * pWindow, int Flags = wxALIGN_CENTRE | wxALL );
+   wxWindow * AddWindow(wxWindow * pWindow);
+
    wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min);
@@ -645,6 +654,12 @@ public:
         >::type
    {
       std::move( mItem ).ConnectRoot( eventType, func );
+      return *this;
+   }
+
+   ShuttleGui & Position( int flags )
+   {
+      std::move( mItem ).Position( flags );
       return *this;
    }
 

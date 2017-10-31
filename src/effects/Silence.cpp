@@ -74,7 +74,8 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
                                NumericTextCtrl::Options{}
                                   .AutoPos(true));
          S.Name(XO("Duration"))
-            .AddWindow(mDurationT, wxALIGN_CENTER | wxALL);
+            .Position(wxALIGN_CENTER | wxALL)
+            .AddWindow(mDurationT);
       }
       S.EndHorizontalLay();
    }

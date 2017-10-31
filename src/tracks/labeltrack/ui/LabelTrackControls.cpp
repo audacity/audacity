@@ -134,7 +134,8 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
          lb->SetSelection( make_iterator_range( facenames ).index( facename ));
          S
             .Name(XO("Face name"))
-            .AddWindow(lb, wxALIGN_LEFT | wxEXPAND | wxALL);
+            .Position(  wxALIGN_LEFT | wxEXPAND | wxALL )
+            .AddWindow(lb);
 
          /* i18n-hint: (noun) The size of the typeface*/
          S.AddPrompt(_("Face size"));
@@ -146,7 +147,8 @@ void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
             8, 48, fontsize);
          S
             .Name(XO("Face size"))
-            .AddWindow(sc, wxALIGN_LEFT | wxALL);
+            .Position( wxALIGN_LEFT | wxALL )
+            .AddWindow(sc);
       }
       S.EndMultiColumn();
       S.AddStandardButtons();

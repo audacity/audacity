@@ -192,7 +192,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       else
          html->SetPage( HtmlText);
 
-      S.Prop(1).Focus().AddWindow( html, wxEXPAND );
+      S.Prop(1).Focus().Position( wxEXPAND )
+         .AddWindow( html );
 
       S.Id( wxID_CANCEL ).AddButton( _("Close"), wxALIGN_CENTER, true );
    }

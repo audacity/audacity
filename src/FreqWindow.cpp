@@ -303,16 +303,18 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          );
 
          S.AddSpace(wxDefaultCoord, 1);
-         S.Prop(1);
-         S.AddWindow(vRuler, wxALIGN_RIGHT | wxALIGN_TOP);
+         S.Prop(1)
+            .Position(wxALIGN_RIGHT | wxALIGN_TOP)
+            .AddWindow(vRuler);
          S.AddSpace(wxDefaultCoord, 1);
       }
       S.EndVerticalLay();
 
       mFreqPlot = safenew FreqPlot(this, wxID_ANY);
       S.Prop(1)
+         .Position(wxEXPAND)
          .MinSize( { wxDefaultCoord, FREQ_WINDOW_HEIGHT } )
-         .AddWindow(mFreqPlot, wxEXPAND);
+         .AddWindow(mFreqPlot);
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
@@ -327,14 +329,16 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             S.Prop(1);
             S
                .Name(XO("Scroll"))
-               .AddWindow(mPanScroller, wxALIGN_LEFT | wxTOP);
+               .Position( wxALIGN_LEFT | wxTOP)
+               .AddWindow(mPanScroller);
          }
          S.EndVerticalLay();
 
          S.StartVerticalLay();
          {
             wxStaticBitmap *zi = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomIn));
-            S.AddWindow((wxWindow *) zi, wxALIGN_CENTER);
+            S.Position(wxALIGN_CENTER)
+               .AddWindow(zi);
 
             S.AddSpace(5);
 
@@ -343,7 +347,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             S.Prop(1);
             S
                .Name(XO("Zoom"))
-               .AddWindow(mZoomSlider, wxALIGN_CENTER_HORIZONTAL);
+               .Position(wxALIGN_CENTER_HORIZONTAL)
+               .AddWindow(mZoomSlider);
 #if wxUSE_ACCESSIBILITY
             // so that name can be set on a standard control
             mZoomSlider->SetAccessible(safenew WindowAccessible(mZoomSlider));
@@ -352,7 +357,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
             S.AddSpace(5);
 
             wxStaticBitmap *zo = safenew wxStaticBitmap(this, wxID_ANY, wxBitmap(ZoomOut));
-            S.AddWindow((wxWindow *) zo, wxALIGN_CENTER);
+            S.Position(wxALIGN_CENTER)
+               .AddWindow(zo);
          }
          S.EndVerticalLay();
 
@@ -382,8 +388,9 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          );
 
          S.AddSpace(1, wxDefaultCoord);
-         S.Prop(1);
-         S.AddWindow(hRuler, wxALIGN_LEFT | wxALIGN_TOP);
+         S.Prop(1)
+            .Position(wxALIGN_LEFT | wxALIGN_TOP)
+            .AddWindow(hRuler);
          S.AddSpace(1, wxDefaultCoord);
       }
       S.EndHorizontalLay();
@@ -502,7 +509,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    S.AddSpace(5);
 
    mProgress = safenew FreqGauge(this, wxID_ANY); //, wxST_SIZEGRIP);
-   S.AddWindow(mProgress, wxEXPAND);
+   S.Position(wxEXPAND)
+      .AddWindow(mProgress);
 
    // Log-frequency axis works for spectrum plots only.
    if (mAlg != SpectrumAnalyst::Spectrum)

@@ -227,12 +227,12 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                         wxTE_PROCESS_ENTER);
                mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
             }
-            S
+            S.Position(wxALIGN_NOT | wxALIGN_LEFT)
                .ConnectRoot(wxEVT_KEY_DOWN,
                             &KeyConfigPrefs::OnFilterKeyDown)
                .ConnectRoot(wxEVT_CHAR,
                             &KeyConfigPrefs::OnFilterChar)
-               .AddWindow(mFilter, wxALIGN_NOT | wxALIGN_LEFT);
+               .AddWindow(mFilter);
          }
          S.EndHorizontalLay();
       }
@@ -245,8 +245,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             mView = safenew KeyView(S.GetParent(), CommandsListID);
             mView->SetName(_("Bindings"));
          }
-         S.Prop(true);
-         S.AddWindow(mView, wxEXPAND);
+         S.Prop(true)
+            .Position(wxEXPAND)
+            .AddWindow(mView);
       }
       S.EndHorizontalLay();
 

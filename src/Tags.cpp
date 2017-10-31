@@ -925,8 +925,9 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
          mGrid->SetColSize(0, tc.GetSize().x);
          mGrid->SetColMinimalWidth(0, tc.GetSize().x);
       }
-      S.Prop(1);
-      S.AddWindow(mGrid, wxEXPAND | wxALL);
+      S.Prop(1)
+         .Position(wxEXPAND | wxALL)
+         .AddWindow(mGrid);
 
       S.StartMultiColumn(4, wxALIGN_CENTER);
       {

@@ -782,16 +782,18 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
             );
 
             S.Prop(0).AddSpace(0, 1);
-            S.Prop(1).AddWindow(mdBRuler, wxEXPAND );
+            S.Prop(1)
+               .Position(wxEXPAND)
+               .AddWindow(mdBRuler);
             S.AddSpace(0, 1);
          }
          S.EndVerticalLay();
 
          mPanel = safenew EqualizationPanel(parent, wxID_ANY, this);
-         S.Prop(1);
-         S
+         S.Prop(1)
+            .Position(wxEXPAND)
             .MinSize( { wxDefaultCoord, wxDefaultCoord } )
-            .AddWindow(mPanel, wxEXPAND );
+            .AddWindow(mPanel);
 
          S.SetBorder(5);
          S.StartVerticalLay();
@@ -839,7 +841,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          );
 
          S.SetBorder(1);
-         S.Prop(1).AddWindow(mFreqRuler, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT);
+         S.Prop(1)
+            .Position(wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxLEFT)
+            .AddWindow(mFreqRuler);
          S.SetBorder(0);
 
          // Column 3 is empty
@@ -857,9 +861,12 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
          // Panel used to host the sliders since they will be positioned manually.
          //mGraphicPanel = safenew wxPanelWrapper(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 150));
-         //S.Prop(1).AddWindow(mGraphicPanel, wxEXPAND);
+         //S.Prop(1)
+            //.Position(wxEXPAND)
+            //.AddWindow(mGraphicPanel);
          wxWindow *pParent = S.GetParent();
          S.AddSpace(15,0);
+
          for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= mHiFreq); ++i)
          {
             mSliders[i] = safenew wxSliderWrapper(pParent, ID_Slider + i, 0, -20, +20,
@@ -880,7 +887,8 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
                } )
                .ConnectRoot(
                   wxEVT_ERASE_BACKGROUND, &EffectEqualization::OnErase)
-               .AddWindow( mSliders[i], wxEXPAND );
+               .Position(wxEXPAND)
+               .AddWindow( mSliders[i] );
          }
          S.AddSpace(15,0);
       }
