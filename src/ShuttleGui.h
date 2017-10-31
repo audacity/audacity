@@ -119,6 +119,14 @@ private:
    T mDefaultValue;
 };
 
+namespace DialogDefinition {
+
+struct Item {
+   Item() = default;
+};
+
+}
+
 class AUDACITY_DLL_API ShuttleGuiBase /* not final */
 {
 public:
@@ -344,7 +352,7 @@ protected:
    void PushSizer();
    void PopSizer();
 
-   void UpdateSizersCore( bool bPrepend, int Flags );
+   void UpdateSizersCore( bool bPrepend, int Flags, bool prompt = false );
    void UpdateSizers();
    void UpdateSizersC();
    void UpdateSizersAtStart();
@@ -412,6 +420,9 @@ private:
    wxString mRadioValueString; /// Unwrapped string value.
    wxRadioButton * DoAddRadioButton(
       const wxString &Prompt, int style, int selector, int initValue);
+
+protected:
+   DialogDefinition::Item mItem;
 };
 
 // A rarely used helper function that sets a pointer

@@ -255,7 +255,7 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
    mpWind = safenew wxStaticText(GetParent(), -1, Prompt, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_RIGHT ));
    mpWind->SetName(wxStripMenuCodes(Prompt)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL );
+   UpdateSizersCore( false, wxALL | wxALIGN_CENTRE_VERTICAL, true );
 }
 
 /// Left aligned text string.
@@ -2054,7 +2054,7 @@ void ShuttleGuiBase::SetProportions( int Default )
 }
 
 
-void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags)
+void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
 {
    if( mpWind && mpParent )
    {
@@ -2067,6 +2067,13 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags)
          {
             mpSizer->Add(mpWind, miProp, Flags,miBorder);
          }
+      }
+
+      if (!prompt) {
+         // Apply certain optional window attributes here
+
+         // Reset to defaults
+         mItem = {};
       }
    }
 
