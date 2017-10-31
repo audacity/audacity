@@ -1436,10 +1436,10 @@ struct ControlInfo {
          )
          .AddTextBox(textBoxCaption.Translation(), wxT(""), 0);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       wxSlider *const slider =
          S.Id(id)
             .Name( sliderName )
+            .Style(wxSL_HORIZONTAL)
             .AddSlider( {}, 0, sliderMax);
       slider->SetSizeHints(150, -1);
    }

@@ -353,9 +353,9 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxEXPAND);
          {
-            S.SetStyle(wxSL_HORIZONTAL);
             m_pSlider_PercentChange = S.Id(ID_PercentChange)
                .Name(XO("Percent Change"))
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
          }
          S.EndHorizontalLay();

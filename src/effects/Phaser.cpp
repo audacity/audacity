@@ -261,9 +261,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             &mStages, NumValidatorStyle::DEFAULT, MIN_Stages, MAX_Stages)
          .AddTextBox(_("&Stages:"), wxT(""), 15);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mStagesS = S.Id(ID_Stages)
          .Name(XO("Stages"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
       mStagesS->SetLineSize(2);
       mStagesS->SetMinSize(wxSize(100, -1));
@@ -273,9 +273,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             &mDryWet, NumValidatorStyle::DEFAULT, MIN_DryWet, MAX_DryWet)
          .AddTextBox(_("&Dry/Wet:"), wxT(""), 15);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mDryWetS = S.Id(ID_DryWet)
          .Name(XO("Dry Wet"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
       mDryWetS->SetMinSize(wxSize(100, -1));
 
@@ -284,9 +284,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Freq, MAX_Freq)
          .AddTextBox(_("LFO Freq&uency (Hz):"), wxT(""), 15);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mFreqS = S.Id(ID_Freq)
          .Name(XO("LFO frequency in hertz"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, 0.0);
       mFreqS ->SetMinSize(wxSize(100, -1));
 
@@ -295,9 +295,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             1, &mPhase, NumValidatorStyle::DEFAULT, MIN_Phase, MAX_Phase)
          .AddTextBox(_("LFO Sta&rt Phase (deg.):"), wxT(""), 15);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mPhaseS = S.Id(ID_Phase)
          .Name(XO("LFO start phase in degrees"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetLineSize(10);
       mPhaseS->SetMinSize(wxSize(100, -1));
@@ -307,9 +307,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             &mDepth, NumValidatorStyle::DEFAULT, MIN_Depth, MAX_Depth)
          .AddTextBox(_("Dept&h:"), wxT(""), 15);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mDepthS = S.Id(ID_Depth)
          .Name(XO("Depth in percent"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetMinSize(wxSize(100, -1));
 
@@ -318,9 +318,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             &mFeedback, NumValidatorStyle::DEFAULT, MIN_Feedback, MAX_Feedback)
          .AddTextBox(_("Feedbac&k (%):"), wxT(""), 15);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mFeedbackS = S.Id(ID_Feedback)
          .Name(XO("Feedback in percent"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
       mFeedbackS->SetLineSize(10);
       mFeedbackS->SetMinSize(wxSize(100, -1));
@@ -330,9 +330,9 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
             1, &mOutGain, NumValidatorStyle::DEFAULT, MIN_OutGain, MAX_OutGain)
          .AddTextBox(_("&Output gain (dB):"), wxT(""), 12);
 
-      S.SetStyle(wxSL_HORIZONTAL);
       mOutGainS = S.Id(ID_OutGain)
          .Name(XO("Output gain (dB)"))
+         .Style(wxSL_HORIZONTAL)
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
       mOutGainS->SetMinSize(wxSize(100, -1));
    }

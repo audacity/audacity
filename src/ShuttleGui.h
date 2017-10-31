@@ -161,10 +161,18 @@ struct Item {
       return std::move( *this );
    }
 
+   Item&& Style( long style ) &&
+   {
+      miStyle = style;
+      return std::move( *this );
+   }
+
    std::function< void(wxWindow*) > mValidatorSetter;
    TranslatableString mToolTip;
    TranslatableString mName;
    TranslatableString mNameSuffix;
+
+   long miStyle{};
 };
 
 }
@@ -373,7 +381,6 @@ public:
    void EnableCtrl( bool bEnable );
    void SetSizeHints( int minX, int minY );
    void SetBorder( int Border ) {miBorder = Border;};
-   void SetStyle( int Style ) {miStyle = Style;};
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );
@@ -401,7 +408,7 @@ protected:
    void UpdateSizersC();
    void UpdateSizersAtStart();
 
-   long Style( long Style );
+   long GetStyle( long Style );
 
 private:
    void SetSizeHints( const wxArrayStringEx & items );
@@ -428,7 +435,6 @@ protected:
    int miSizerProp;
    int mSizerDepth;
    int miBorder;
-   long miStyle;
    int miProp;
 
    // See UseUpId() for explanation of these three.
@@ -563,6 +569,13 @@ public:
 
    // Prop() sets the proportion value, defined as in wxSizer::Add().
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
+
+   ShuttleGui & Style( long iStyle )
+   {
+      std::move( mItem ).Style( iStyle );
+      return *this;
+   }
+
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
 

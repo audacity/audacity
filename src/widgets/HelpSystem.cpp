@@ -106,9 +106,9 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
    S.StartVerticalLay(1);
    {
       S.AddTitle( shortMsg);
-      S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
-         wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL );
-      S.AddTextWindow(message);
+      S.Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 |
+              wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL )
+         .AddTextWindow(message);
 
       S.SetBorder( 0 );
       S.StartHorizontalLay(wxALIGN_CENTER_HORIZONTAL, 0);
@@ -160,8 +160,9 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    pFrame->SetTransparent(0);
    ShuttleGui S( pWnd, eIsCreating );
 
-   S.SetStyle( wxNO_BORDER | wxTAB_TRAVERSAL );
-   wxPanel *pPan = S.Prop(true).StartPanel();
+   wxPanel *pPan = S.Style( wxNO_BORDER | wxTAB_TRAVERSAL )
+      .Prop(true)
+      .StartPanel();
    {
       S.StartHorizontalLay( wxEXPAND, false );
       {

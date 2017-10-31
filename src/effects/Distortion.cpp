@@ -396,9 +396,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
                   MIN_Threshold_dB, MAX_Threshold_dB)
                .AddTextBox( {}, wxT(""), 10);
 
-            S.SetStyle(wxSL_HORIZONTAL);
             mThresholdS = S.Id(ID_Threshold)
                .Name(defaultLabelUntranslated(0))
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0,
                   DB_TO_LINEAR(MAX_Threshold_dB) * SCL_Threshold_dB,
                   DB_TO_LINEAR(MIN_Threshold_dB) * SCL_Threshold_dB);
@@ -414,9 +414,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            S.SetStyle(wxSL_HORIZONTAL);
             mNoiseFloorS = S.Id(ID_NoiseFloor)
                .Name(defaultLabelUntranslated(1))
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, MAX_NoiseFloor, MIN_NoiseFloor);
             S.AddSpace(20, 0);
          }
@@ -442,9 +442,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            S.SetStyle(wxSL_HORIZONTAL);
             mParam1S = S.Id(ID_Param1)
                .Name(defaultLabelUntranslated(2))
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, MAX_Param1, MIN_Param1);
             S.AddSpace(20, 0);
 
@@ -458,9 +458,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            S.SetStyle(wxSL_HORIZONTAL);
             mParam2S = S.Id(ID_Param2)
                .Name(defaultLabelUntranslated(3))
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, 0, MAX_Param2, MIN_Param2);
             S.AddSpace(20, 0);
 
@@ -474,9 +474,9 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
                )
                .AddTextBox( {}, wxT(""), 10);
 
-            S.SetStyle(wxSL_HORIZONTAL);
             mRepeatsS = S.Id(ID_Repeats)
                .Name(defaultLabelUntranslated(4))
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, DEF_Repeats, MAX_Repeats, MIN_Repeats);
             S.AddSpace(20, 0);
          }

@@ -547,8 +547,8 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
    mChoices.reinit( count );
    mValues.reinit( count );
 
-   S.SetStyle(wxVSCROLL | wxTAB_TRAVERSAL);
-   wxScrolledWindow *scroller = S.StartScroller(2);
+   wxScrolledWindow *scroller = S.Style(wxVSCROLL | wxTAB_TRAVERSAL)
+      .StartScroller(2);
    {
       S.StartStatic(_("Plugin Settings"));
       {
@@ -671,10 +671,10 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
                   wxString str = Internat::ToDisplayString(mParameters[p].minValue);
                   S.AddPrompt(str);
 
-                  S.SetStyle(wxSL_HORIZONTAL);
                   S.Id(ID_Sliders + p);
                   mSliders[p] = S.ToolTip( TranslatableString{ tip } )
                      .Name( TranslatableString{ labelText } )
+                     .Style(wxSL_HORIZONTAL)
                      .AddSlider( {}, 0, 1000, 0);
                   mSliders[p]->SetSizeHints(150, -1);
                   

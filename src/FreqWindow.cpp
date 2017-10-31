@@ -412,13 +412,13 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
          {
             S.AddPrompt(_("Cursor:"));
 
-            S.SetStyle(wxTE_READONLY);
-            mCursorText = S.AddTextBox( {}, wxT(""), 10);
+            mCursorText = S.Style(wxTE_READONLY)
+               .AddTextBox( {}, wxT(""), 10);
 
             S.AddPrompt(_("Peak:"));
 
-            S.SetStyle(wxTE_READONLY);
-            mPeakText = S.AddTextBox( {}, wxT(""), 10);
+            mPeakText = S.Style(wxTE_READONLY)
+               .AddTextBox( {}, wxT(""), 10);
             S.AddSpace(5);
 
             mGridOnOff = S.Id(GridOnOffID).AddCheckBox(_("&Grids"), mDrawGrid);

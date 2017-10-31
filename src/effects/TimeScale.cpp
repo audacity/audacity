@@ -217,8 +217,8 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          S.EndMultiColumn();
          S.StartHorizontalLay(wxEXPAND, 0);
          {
-            S.SetStyle(wxSL_HORIZONTAL);
             m_pSlider_RatePercentChangeStart = S.Id(ID_RatePercentChangeStart)
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, DEF_RatePercentStart, MAX_RatePercentStart, MIN_RatePercentStart);
          }
          S.EndHorizontalLay();
@@ -240,8 +240,8 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
          S.EndMultiColumn();
          S.StartHorizontalLay(wxEXPAND, 0);
          {
-            S.SetStyle(wxSL_HORIZONTAL);
             m_pSlider_RatePercentChangeEnd = S.Id(ID_RatePercentChangeEnd)
+               .Style(wxSL_HORIZONTAL)
                .AddSlider( {}, DEF_RatePercentEnd, MAX_RatePercentEnd, MIN_RatePercentEnd);
          }
          S.EndHorizontalLay();

@@ -45,8 +45,9 @@ void ShowDiagnostics(
    wxTextCtrl *text;
    S.StartVerticalLay();
    {
-      S.SetStyle(wxTE_MULTILINE | wxTE_READONLY);
-      text = S.Id(wxID_STATIC).AddTextWindow(info);
+      text = S.Id(wxID_STATIC)
+         .Style(wxTE_MULTILINE | wxTE_READONLY)
+         .AddTextWindow(info);
       S.AddStandardButtons(eOkButton | eCancelButton);
    }
    S.EndVerticalLay();

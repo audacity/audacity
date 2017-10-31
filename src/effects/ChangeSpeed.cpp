@@ -334,9 +334,9 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       // Percent change slider.
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.SetStyle(wxSL_HORIZONTAL);
          mpSlider_PercentChange = S.Id(ID_PercentChange)
             .Name(XO("Percent Change"))
+            .Style(wxSL_HORIZONTAL)
             .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
       }
       S.EndHorizontalLay();

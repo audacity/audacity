@@ -98,9 +98,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
 
    mFramePeriodLabel = S.AddVariableText(_("Frame Period:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-   S.SetStyle(wxSL_HORIZONTAL);
    mFramePeriodSlider = S.Id(ID_FRAMEPERIOD)
       .Name(XO("Frame Period"))
+      .Style(wxSL_HORIZONTAL)
       .AddSlider(wxT(""),
        /*pos*/ (int) (p.mFramePeriod * 100 + 0.5), /*max*/ 50, /*min*/ 5);
    S.SetSizeHints(300, -1);
@@ -109,9 +109,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
 
    mWindowSizeLabel = S.AddVariableText(_("Window Size:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-   S.SetStyle(wxSL_HORIZONTAL);
    mWindowSizeSlider = S.Id(ID_WINDOWSIZE)
       .Name(XO("Window Size"))
+      .Style(wxSL_HORIZONTAL)
       .AddSlider(wxT(""),
        /*pos*/ (int) (p.mWindowSize * 100 + 0.5), /*max*/ 100, /*min*/ 5);
    mWindowSizeText = S.AddVariableText(SA_DFT_WINDOW_SIZE_TEXT, true,
@@ -132,9 +132,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
 
    mSilenceThresholdLabel = S.AddVariableText(_("Silence Threshold:"),
                              true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-   S.SetStyle(wxSL_HORIZONTAL);
    mSilenceThresholdSlider = S.Id(ID_SILENCETHRESHOLD)
       .Name(XO("Silence Threshold"))
+      .Style(wxSL_HORIZONTAL)
       .AddSlider(wxT(""),
          /*pos*/ (int) (p.mSilenceThreshold * 1000 + 0.5), /*max*/ 500);
    mSilenceThresholdText = S.AddVariableText(SA_DFT_SILENCE_THRESHOLD_TEXT,
@@ -146,9 +146,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
       It is OK to leave it in English. */
    mPresmoothLabel = S.AddVariableText(_("Presmooth Time:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-   S.SetStyle(wxSL_HORIZONTAL);
    mPresmoothSlider = S.Id(ID_PRESMOOTH)
       .Name(XO("Presmooth Time"))
+      .Style(wxSL_HORIZONTAL)
       .AddSlider(wxT(""),
                /*pos*/ (int) (p.mPresmoothTime * 100 + 0.5), /*max*/ 500);
    mPresmoothText = S.AddVariableText(SA_DFT_PRESMOOTH_TIME_TEXT, true,
@@ -160,9 +160,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
       It is OK to leave it in English. */
    mLineTimeLabel = S.AddVariableText(_("Line Time:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-   S.SetStyle(wxSL_HORIZONTAL);
    mLineTimeSlider = S.Id(ID_LINETIME)
       .Name(XO("Line Time"))
+      .Style(wxSL_HORIZONTAL)
       .AddSlider(wxT(""),
                     /*pos*/ (int) (p.mLineTime * 100 + 0.5), /*max*/ 500);
    mLineTimeText = S.AddVariableText(SA_DFT_LINE_TIME_TEXT, true,
@@ -174,9 +174,9 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
       It is OK to leave it in English. */
    mSmoothTimeLabel = S.AddVariableText(_("Smooth Time:"), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-   S.SetStyle(wxSL_HORIZONTAL);
    mSmoothTimeSlider = S.Id(ID_SMOOTHTIME)
       .Name(XO("Smooth Time"))
+      .Style(wxSL_HORIZONTAL)
       .AddSlider(wxT(""),
                   /*pos*/ (int) (p.mSmoothTime * 100 + 0.5), /*max*/ 500);
    mSmoothTimeText = S.AddVariableText(SA_DFT_SMOOTH_TIME_TEXT, true,

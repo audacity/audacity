@@ -2606,8 +2606,8 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 
 void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
 {
-   S.SetStyle(wxVSCROLL | wxTAB_TRAVERSAL);
-   wxScrolledWindow *scroller = S.StartScroller(2);
+   wxScrolledWindow *scroller = S.Style(wxVSCROLL | wxTAB_TRAVERSAL)
+      .StartScroller(2);
    {
       S.StartMultiColumn(4);
       {
@@ -2735,8 +2735,9 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
 
                   if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_FLOAT)
                   {
-                     S.SetStyle(wxSL_HORIZONTAL);
-                     S.Id(ID_Slider + i).AddSlider( {}, 0, ctrl.ticks, 0);
+                     S.Id(ID_Slider + i)
+                        .Style(wxSL_HORIZONTAL)
+                        .AddSlider( {}, 0, ctrl.ticks, 0);
                      S.SetSizeHints(150, -1);
                   }
                }

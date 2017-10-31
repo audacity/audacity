@@ -796,17 +796,17 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
          S.StartVerticalLay();
          {
             S.AddVariableText(_("+ dB"), false, wxCENTER);
-            S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
             mdBMaxSlider = S.Id(ID_dBMax)
                .Name(XO("Max dB"))
+               .Style(wxSL_VERTICAL | wxSL_INVERSE)
                .AddSlider( {}, 30, 60, 0);
 #if wxUSE_ACCESSIBILITY
             mdBMaxSlider->SetAccessible(safenew SliderAx(mdBMaxSlider, _("%d dB")));
 #endif
 
-            S.SetStyle(wxSL_VERTICAL | wxSL_INVERSE);
             mdBMinSlider = S.Id(ID_dBMin)
                .Name(XO("Min dB"))
+               .Style(wxSL_VERTICAL | wxSL_INVERSE)
                .AddSlider( {}, -30, -10, -120);
             S.AddVariableText(_("- dB"), false, wxCENTER);
 #if wxUSE_ACCESSIBILITY
@@ -966,9 +966,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 
                S.StartHorizontalLay(wxEXPAND, 1);
                {
-                  S.SetStyle(wxSL_HORIZONTAL);
                   mMSlider = S.Id(ID_Length)
                      .Name(XO("Length of Filter"))
+                     .Style(wxSL_HORIZONTAL)
                      .AddSlider( {}, (mM - 1) / 2, 4095, 10);
                }
                S.EndHorizontalLay();
@@ -3344,8 +3344,8 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartStatic(_("&Curves"), 1);
       {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
          mList = S.Id(CurvesListID)
+            .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .AddListControlReportMode({
                { _("Curve Name"), wxLIST_FORMAT_RIGHT }
             });
