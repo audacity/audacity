@@ -280,17 +280,16 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.StartVerticalLay(2);
       {
-         vRuler = safenew RulerPanel(this, wxID_ANY);
-         vRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         vRuler->ruler.SetOrientation(wxVERTICAL);
-         vRuler->ruler.SetRange(0.0, -dBRange);
-         vRuler->ruler.SetFormat(Ruler::LinearDBFormat);
-         vRuler->ruler.SetUnits(_("dB"));
-         vRuler->ruler.SetLabelEdges(true);
-         int w;
-         vRuler->ruler.GetMaxSize(&w, NULL);
-         vRuler->SetMinSize(wxSize(w, 150));  // height needed for wxGTK
-         vRuler->SetTickColour( theTheme.Colour( clrGraphLabels ));
+         vRuler = safenew RulerPanel(
+            this, wxID_ANY, wxVERTICAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ 0.0, -dBRange },
+            Ruler::LinearDBFormat,
+            _("dB"),
+            RulerPanel::Options{}
+               .LabelEdges(true)
+               .TickColour( theTheme.Colour( clrGraphLabels ) )
+         );
 
          S.AddSpace(wxDefaultCoord, 1);
          S.Prop(1);
@@ -348,19 +347,18 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
-         hRuler  = safenew RulerPanel(this, wxID_ANY);
-         hRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
-         hRuler->ruler.SetOrientation(wxHORIZONTAL);
-         hRuler->ruler.SetLog(true);
-         hRuler->ruler.SetRange(10, 20000);
-         hRuler->ruler.SetFormat(Ruler::RealFormat);
-         hRuler->ruler.SetUnits(_("Hz"));
-         hRuler->ruler.SetFlip(true);
-         hRuler->ruler.SetLabelEdges(true);
-         int h;
-         hRuler->ruler.GetMaxSize(NULL, &h);
-         hRuler->SetMinSize(wxSize(wxDefaultCoord, h));
-         hRuler->SetTickColour( theTheme.Colour( clrGraphLabels ));
+         hRuler  = safenew RulerPanel(
+            this, wxID_ANY, wxHORIZONTAL,
+            wxSize{ 100, 100 }, // Ruler can't handle small sizes
+            RulerPanel::Range{ 10, 20000 },
+            Ruler::RealFormat,
+            _("Hz"),
+            RulerPanel::Options{}
+               .Log(true)
+               .Flip(true)
+               .LabelEdges(true)
+               .TickColour( theTheme.Colour( clrGraphLabels ) )
+         );
 
          S.AddSpace(1, wxDefaultCoord);
          S.Prop(1);
