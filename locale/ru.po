@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-26 12:22+0300\n"
-"PO-Revision-Date: 2017-08-17 18:10+0300\n"
+"PO-Revision-Date: 2017-11-02 19:18+0200\n"
 "Last-Translator: Johnny Storm <x24cm5b8c54q6szxw@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/klyok/audacity/language/"
 "ru/)\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
 #, c-format
@@ -6089,7 +6089,7 @@ msgid ""
 "Select the audio for %s to use (for example, Cmd + A to Select All) then try "
 "again."
 msgstr ""
-"Выберите аудио чтобы воспользоваться %s (например, Cmd + A - Выбрать всеl) и "
+"Выберите аудио чтобы воспользоваться %s (например, Cmd + A - Выбрать все) и "
 "попробуйте заново."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
@@ -6099,8 +6099,8 @@ msgid ""
 "Select the audio for %s to use (for example, Ctrl + A to Select All) then "
 "try again."
 msgstr ""
-"Выберите аудио чтобы воспользоваться %s (например, Ctrl + A - Выбрать всеl) "
-"и попробуйте заново."
+"Выберите аудио чтобы воспользоваться %s (например, Ctrl + A - Выбрать все) и "
+"попробуйте заново."
 
 #: src/commands/CommandManager.cpp:1267
 msgid ""
@@ -9249,7 +9249,7 @@ msgstr "Восстановить"
 
 #: src/effects/Repeat.h:23
 msgid "Repeat"
-msgstr "Повтор..."
+msgstr "Повтор"
 
 #: src/effects/Reverse.h:20
 msgid "Reverse"
@@ -13380,7 +13380,7 @@ msgstr "Длительность-Середина"
 
 #: src/toolbars/SelectionBar.cpp:331
 msgid "Start and End of Selection"
-msgstr "Начало и длительность выделения"
+msgstr "Начало и конец выделения"
 
 #: src/toolbars/SelectionBar.cpp:332
 msgid "Start and Length of Selection"
