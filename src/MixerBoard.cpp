@@ -62,13 +62,8 @@ MixerTrackSlider::MixerTrackSlider(wxWindow * parent,
                                     const wxString &name,
                                     const wxPoint & pos,
                                     const wxSize & size,
-                                    int style /*= FRAC_SLIDER*/,
-                                    bool popup /*= true*/,
-                                    bool canUseShift /*= true*/,
-                                    float stepValue /*= STEP_CONTINUOUS*/,
-                                    int orientation /*= wxHORIZONTAL*/)
-: ASlider(parent, id, name, pos, size,
-            style, popup, canUseShift, stepValue, orientation)
+                                    const ASlider::Options &options)
+: ASlider(parent, id, name, pos, size, options)
 {
 }
 
@@ -209,8 +204,10 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
             this, ID_SLIDER_GAIN,
             /* i18n-hint: title of the Gain slider, used to adjust the volume */
             _("Gain"),
-            ctrlPos, ctrlSize, DB_SLIDER, true,
-            true, 0.0, wxVERTICAL);
+            ctrlPos, ctrlSize,
+            ASlider::Options{}
+               .Style( DB_SLIDER )
+               .Orientation( wxVERTICAL ));
    mSlider_Gain->SetName(_("Gain"));
    this->UpdateGain();
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -219,8 +216,10 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
             this, ID_SLIDER_VELOCITY,
             /* i18n-hint: title of the MIDI Velocity slider */
             _("Velocity"),
-            ctrlPos, ctrlSize, VEL_SLIDER, true,
-            true, 0.0, wxVERTICAL);
+            ctrlPos, ctrlSize,
+            ASlider::Options{}
+               .Style( VEL_SLIDER )
+               .Orientation( wxVERTICAL ));
    mSlider_Velocity->SetName(_("Velocity"));
    this->UpdateVelocity();
 #endif
@@ -254,7 +253,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
             this, ID_SLIDER_PAN,
             /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
             _("Pan"),
-            ctrlPos, ctrlSize, PAN_SLIDER, true);
+            ctrlPos, ctrlSize,
+            ASlider::Options{}.Style( PAN_SLIDER ));
    mSlider_Pan->SetName(_("Pan"));
 
    this->UpdatePan();

@@ -186,15 +186,18 @@ void TranscriptionToolBar::Populate()
    //Add a slider that controls the speed of playback.
    const int SliderWidth=100;
    mPlaySpeedSlider = safenew ASlider(this,
-                                  TTB_PlaySpeedSlider,
-                                  _("Playback Speed"),
-                                  wxDefaultPosition,
-                                  wxSize(SliderWidth,25),
-                                  SPEED_SLIDER);
+      TTB_PlaySpeedSlider,
+      _("Playback Speed"),
+      wxDefaultPosition,
+      wxSize(SliderWidth,25),
+      ASlider::Options{}
+         .Style( SPEED_SLIDER )
+         //  6 steps using page up/down, and 60 using arrow keys
+         .Line( 0.16667f )
+         .Page( 0.16667f )
+   );
    mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
-   //  6 steps using page up/down, and 60 using arrow keys
-   mPlaySpeedSlider->SetScroll(0.16667f, 1.6667f);
    Add( mPlaySpeedSlider, 0, wxALIGN_CENTER );
    mPlaySpeedSlider->Connect(wxEVT_SET_FOCUS,
                  wxFocusEventHandler(TranscriptionToolBar::OnFocus),

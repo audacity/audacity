@@ -215,9 +215,8 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                             title,
                             wxDefaultPosition,
                             size,
-                            style,
-                            false);
-      mSlider->SetScroll(line, page);
+                            ASlider::Options{}
+                               .Style( style ).Line( line ).Page( page ) );
       S.AddWindow(mSlider, wxEXPAND);
    }
    S.EndVerticalLay();
@@ -1557,11 +1556,7 @@ ASlider::ASlider( wxWindow * parent,
                   const wxString &name,
                   const wxPoint & pos,
                   const wxSize & size,
-                  int style,
-                  bool popup,
-                  bool canUseShift,
-                  float stepValue,
-                  int orientation /*= wxHORIZONTAL*/)
+                  const Options &options)
 : wxPanel( parent, id, pos, size, wxWANTS_CHARS )
 {
    //wxColour Col(parent->GetBackgroundColour());
@@ -1571,23 +1566,25 @@ ASlider::ASlider( wxWindow * parent,
                              name,
                              wxPoint(0,0),
                              size,
-                             style,
-                             canUseShift,
-                             popup,
-                             orientation);
-   mLWSlider->mStepValue = stepValue;
+                             options.style,
+                             options.canUseShift,
+                             options.popup,
+                             options.orientation);
+   mLWSlider->mStepValue = options.stepValue;
    mLWSlider->SetId( id );
    SetName( name );
 
    mSliderIsFocused = false;
 
-   mStyle = style;
+   mStyle = options.style;
 
    mTimer.SetOwner(this);
 
 #if wxUSE_ACCESSIBILITY
    SetAccessible( safenew ASliderAx( this ) );
 #endif
+
+   mLWSlider->SetScroll( options.line, options.page );
 }
 
 
