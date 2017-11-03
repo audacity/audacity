@@ -585,7 +585,7 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
          FileList += '\n';
       }
 
-      CallAfter( [=] {
+      GuardedCall<void>( [&] {
          // This results dialog is a child of this dialog.
          HelpSystem::ShowInfoDialog( this,
                                     _("Export Multiple"),
