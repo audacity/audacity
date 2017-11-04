@@ -1591,7 +1591,7 @@ void NyquistEffect::Parse(const wxString &line)
    if (len >= 2 && tokens[0] == wxT("version")) {
       long v;
       tokens[1].ToLong(&v);
-      if (v < 1 && v > 4) {
+      if (v < 1 || v > 4) {
          // This is an unsupported plug-in version
          mOK = false;
          return;
