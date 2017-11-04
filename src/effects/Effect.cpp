@@ -1523,6 +1523,7 @@ bool Effect::ProcessTrack(int count,
    auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
 
    std::unique_ptr<WaveTrack> genLeft, genRight;
+
    decltype(len) genLength = 0;
    bool isGenerator = GetType() == EffectTypeGenerate;
    bool isProcessor = GetType() == EffectTypeProcess;
@@ -1543,9 +1544,12 @@ bool Effect::ProcessTrack(int count,
 
       // Create temporary tracks
       genLeft = mFactory->NewWaveTrack(left->GetSampleFormat(), left->GetRate());
+      genLeft->SetWaveColorIndex( left->GetWaveColorIndex() );
+
       if (right)
       {
          genRight = mFactory->NewWaveTrack(right->GetSampleFormat(), right->GetRate());
+         genRight->SetWaveColorIndex( right->GetWaveColorIndex() );
       }
    }
 

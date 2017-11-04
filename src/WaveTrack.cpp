@@ -1765,7 +1765,11 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("autosaveid")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mAutoSaveIdent = (int) nValue;
-
+         else if (!wxStrcmp(attr, wxT("colorindex")) &&
+                  XMLValueChecker::IsGoodString(strValue) &&
+                  strValue.ToLong(&nValue))
+            // Don't use SetWaveColorIndex as it sets the clips too.
+            mWaveColorIndex  = nValue;
       } // while
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       VirtualStereoInit();
@@ -1846,6 +1850,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("gain"), (double)mGain);
    xmlFile.WriteAttr(wxT("pan"), (double)mPan);
+   xmlFile.WriteAttr(wxT("colorindex"), mWaveColorIndex );
 
    for (const auto &clip : mClips)
    {
@@ -2273,7 +2278,7 @@ Sequence* WaveTrack::GetSequenceAtX(int xcoord)
 
 WaveClip* WaveTrack::CreateClip()
 {
-   mClips.push_back(make_movable<WaveClip>(mDirManager, mFormat, mRate,0 /*colurindex*/));
+   mClips.push_back(make_movable<WaveClip>(mDirManager, mFormat, mRate, GetWaveColorIndex()));
    return mClips.back().get();
 }
 

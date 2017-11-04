@@ -1503,6 +1503,7 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (!wxStrcmp(tag, wxT("waveclip")))
    {
       double dblValue;
+      long longValue;
       while (*attrs)
       {
          const wxChar *attr = *attrs++;
@@ -1518,6 +1519,13 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                   !Internat::CompatibleToDouble(strValue, &dblValue))
                return false;
             SetOffset(dblValue);
+         }
+         if (!wxStrcmp(attr, wxT("colorindex")))
+         {
+            if (!XMLValueChecker::IsGoodString(strValue) ||
+                  !strValue.ToLong( &longValue))
+               return false;
+            SetColourIndex(longValue);
          }
       }
       return true;
@@ -1555,6 +1563,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 {
    xmlFile.StartTag(wxT("waveclip"));
    xmlFile.WriteAttr(wxT("offset"), mOffset, 8);
+   xmlFile.WriteAttr(wxT("colorindex"), mColourIndex );
 
    mSequence->WriteXML(xmlFile);
    mEnvelope->WriteXML(xmlFile);
