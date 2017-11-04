@@ -882,9 +882,8 @@ void TrackList::DeletionEvent()
 
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   auto e = std::make_unique<wxCommandEvent>(EVT_TRACKLIST_RESIZING);
-   if (!isNull(node))
-      e->SetClientData(node->get());
+   auto e = std::make_unique<TrackListEvent>(EVT_TRACKLIST_RESIZING);
+   e->mpTrack = *node;
    // wxWidgets will own the event object
    QueueEvent(e.release());
 }

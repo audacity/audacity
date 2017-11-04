@@ -518,11 +518,23 @@ class AUDACITY_DLL_API SyncLockedTracksIterator final : public TrackListIterator
  * Clear, and Contains, plus serialization of the list of tracks.
  */
 
+struct TrackListEvent : public wxCommandEvent
+{
+   TrackListEvent(wxEventType commandType = wxEVT_NULL, int winid = 0)
+   : wxCommandEvent{ commandType, winid } {}
+
+   TrackListEvent( const TrackListEvent& ) = default;
+
+   wxEvent *Clone() const override { return new TrackListEvent(*this); }
+
+   std::weak_ptr<Track> mpTrack;
+};
+
 // Posted when tracks are reordered but otherwise unchanged.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_PERMUTED, -1);
 
 // Posted when some track was added or changed its height.
-// The wxCommandEvent::GetClientData() method can be used to retrieve it.
+// Cast to TrackListEvent and examine mpTrack to retrieve it.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TRACKLIST_RESIZING, -1);
 
 // Posted when a track has been deleted from a tracklist.

@@ -1158,10 +1158,10 @@ void TrackPanel::OnPlayback(wxCommandEvent &e)
 // ruler size for the track that triggered the event.
 void TrackPanel::OnTrackListResizing(wxCommandEvent & e)
 {
-   Track *t = (Track *) e.GetClientData();
+   auto t = static_cast<TrackListEvent&>(e).mpTrack.lock();
    // A deleted track can trigger the event.  In which case do nothing here.
    if( t )
-      UpdateVRuler(t);
+      UpdateVRuler(t.get());
    e.Skip();
 }
 
