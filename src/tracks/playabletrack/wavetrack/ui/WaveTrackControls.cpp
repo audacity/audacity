@@ -121,6 +121,11 @@ enum {
    OnChannelMonoID,
 
    OnMergeStereoID,
+   OnWaveColorID,
+   OnInstrument1ID,
+   OnInstrument2ID,
+   OnInstrument3ID,
+   OnInstrument4ID,
 
    OnSwapChannelsID,
    OnSplitStereoID,
@@ -128,6 +133,106 @@ enum {
 
    ChannelMenuID,
 };
+
+
+//=============================================================================
+// Table class for a sub-menu
+class WaveColorMenuTable : public PopupMenuTable
+{
+   WaveColorMenuTable() : mpData(NULL) {}
+   DECLARE_POPUP_MENU(WaveColorMenuTable);
+
+public:
+   static WaveColorMenuTable &Instance();
+
+private:
+   void InitMenu(Menu *pMenu, void *pUserData) override;
+
+   void DestroyMenu() override
+   {
+      mpData = NULL;
+   }
+
+   TrackControls::InitMenuData *mpData;
+
+   int IdOfWaveColor(int WaveColor);
+   void OnWaveColorChange(wxCommandEvent & event);
+};
+
+WaveColorMenuTable &WaveColorMenuTable::Instance()
+{
+   static WaveColorMenuTable instance;
+   return instance;
+}
+
+void WaveColorMenuTable::InitMenu(Menu *pMenu, void *pUserData)
+{
+   mpData = static_cast<TrackControls::InitMenuData*>(pUserData);
+   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto WaveColorId = IdOfWaveColor( pTrack->GetWaveColorIndex());
+   SetMenuChecks(*pMenu, [=](int id){ return id == WaveColorId; });
+
+   AudacityProject *const project = ::GetActiveProject();
+   bool unsafe = project->IsAudioActive();
+   for (int i = OnInstrument1ID; i <= OnInstrument4ID; i++) {
+      pMenu->Enable(i, !unsafe);
+   }
+}
+
+const wxString GetWaveColorStr(int colorIndex)
+{
+   return wxString::Format( _("Instrument %i"), colorIndex+1 );
+}
+
+
+BEGIN_POPUP_MENU(WaveColorMenuTable)
+   POPUP_MENU_RADIO_ITEM(OnInstrument1ID,
+      GetWaveColorStr(0), OnWaveColorChange)
+   POPUP_MENU_RADIO_ITEM(OnInstrument2ID,
+      GetWaveColorStr(1), OnWaveColorChange)
+   POPUP_MENU_RADIO_ITEM(OnInstrument3ID,
+      GetWaveColorStr(2), OnWaveColorChange)
+   POPUP_MENU_RADIO_ITEM(OnInstrument4ID,
+      GetWaveColorStr(3), OnWaveColorChange)
+END_POPUP_MENU()
+
+/// Converts a WaveColor enumeration to a wxWidgets menu item Id.
+int WaveColorMenuTable::IdOfWaveColor(int WaveColor)
+{  return OnInstrument1ID + WaveColor;}
+
+/// Handles the selection from the WaveColor submenu of the
+/// track menu.
+void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
+{
+   int id = event.GetId();
+   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
+   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   wxASSERT(pTrack && pTrack->GetKind() == Track::Wave);
+
+   int newWaveColor = id - OnInstrument1ID;
+
+   AudacityProject *const project = ::GetActiveProject();
+//   TrackList *const tracks = project->GetTracks();
+
+   pTrack->SetWaveColorIndex(newWaveColor);
+
+   // Assume partner is wave or null
+   const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
+   if (partner)
+      partner->SetWaveColorIndex(newWaveColor);
+
+   project->PushState(wxString::Format(_("Changed '%s' to %s"),
+      pTrack->GetName().
+      c_str(),
+      GetWaveColorStr(newWaveColor)),
+      _("WaveColor Change"));
+
+   using namespace RefreshCode;
+   mpData->result = RefreshAll | FixScrollbars;
+}
+
+
+
 
 //=============================================================================
 // Table class for a sub-menu
@@ -550,8 +655,12 @@ void WaveTrackMenuTable::InitMenu(Menu *pMenu, void *pUserData)
    pMenu->Enable(OnSwapChannelsID, !isMono && !unsafe);
    pMenu->Enable(OnSplitStereoID, !isMono && !unsafe);
 
-   // Several menu items no longer needed....
+#ifndef EXPERIMENTAL_DA
+   // Can be achieved by split stereo and then dragging pan slider.
    pMenu->Enable(OnSplitStereoMonoID, !isMono && !unsafe);
+#endif
+
+   // Several menu items no longer needed....
 #if 0
    pMenu->Enable(OnChannelMonoID, isMono);
    pMenu->Enable(OnChannelLeftID, isMono);
@@ -580,7 +689,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    POPUP_MENU_ITEM(OnSplitStereoMonoID, _("Split Stereo to Mo&no"), OnSplitStereoMono)
 #endif
    POPUP_MENU_SEPARATOR()
+   POPUP_MENU_SUB_MENU(0, _("&Wave Color"), WaveColorMenuTable)
 
+   POPUP_MENU_SEPARATOR()
    POPUP_MENU_SUB_MENU(0, _("&Format"), FormatMenuTable)
    POPUP_MENU_SEPARATOR()
    POPUP_MENU_SUB_MENU(0, _("Rat&e"), RateMenuTable)

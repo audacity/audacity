@@ -275,7 +275,7 @@ TrackArtist::TrackArtist()
    mSampleDisplay = 1;// Stem plots by default.
    UpdatePrefs();
 
-   SetColours();
+   SetColours(0);
    vruler = std::make_unique<Ruler>();
 }
 
@@ -283,7 +283,7 @@ TrackArtist::~TrackArtist()
 {
 }
 
-void TrackArtist::SetColours()
+void TrackArtist::SetColours( int iColorIndex)
 {
    theTheme.SetBrushColour( blankBrush,      clrBlank );
    theTheme.SetBrushColour( unselectedBrush, clrUnselected);
@@ -296,17 +296,38 @@ void TrackArtist::SetColours()
    theTheme.SetPenColour(   blankPen,        clrBlank);
    theTheme.SetPenColour(   unselectedPen,   clrUnselected);
    theTheme.SetPenColour(   selectedPen,     clrSelected);
-   theTheme.SetPenColour(   samplePen,       clrSample);
-   theTheme.SetPenColour(   selsamplePen,    clrSelSample);
    theTheme.SetPenColour(   muteSamplePen,   clrMuteSample);
    theTheme.SetPenColour(   odProgressDonePen, clrProgressDone);
    theTheme.SetPenColour(   odProgressNotYetPen, clrProgressNotYet);
-   theTheme.SetPenColour(   rmsPen,          clrRms);
-   theTheme.SetPenColour(   muteRmsPen,      clrMuteRms);
    theTheme.SetPenColour(   shadowPen,       clrShadow);
    theTheme.SetPenColour(   clippedPen,      clrClipped);
    theTheme.SetPenColour(   muteClippedPen,  clrMuteClipped);
    theTheme.SetPenColour(   blankSelectedPen,clrBlankSelected);
+
+   theTheme.SetPenColour(   selsamplePen,    clrSelSample);
+   theTheme.SetPenColour(   muteRmsPen,      clrMuteRms);
+
+   switch( iColorIndex %4 )
+   {
+      default:
+      case 0:
+         theTheme.SetPenColour(   samplePen,       clrSample);
+         theTheme.SetPenColour(   rmsPen,          clrRms);
+         break;
+      case 1: // RED
+         samplePen.SetColour( wxColor( 160,10,10 ) );
+         rmsPen.SetColour( wxColor( 230,80,80 ) );
+         break;
+      case 2: // GREEN
+         samplePen.SetColour( wxColor( 35,110,35 ) );
+         rmsPen.SetColour( wxColor( 75,200,75 ) );
+         break;
+      case 3: //BLACK
+         samplePen.SetColour( wxColor( 0,0,0 ) );
+         rmsPen.SetColour( wxColor( 100,100,100 ) );
+         break;
+
+   }
 }
 
 void TrackArtist::SetMargins(int left, int top, int right, int bottom)
@@ -1827,6 +1848,8 @@ void TrackArtist::DrawClipWaveform(TrackPanelDrawingContext &context,
    const float dBRange = track->GetWaveformSettings().dBRange;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
+   int iColorIndex = clip->GetColourIndex();
+   SetColours( iColorIndex );
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
@@ -3304,7 +3327,7 @@ void TrackArtist::UpdatePrefs()
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
    gPrefs->Read(wxT("/GUI/SampleView"), &mSampleDisplay, 1);
-   SetColours();
+   SetColours(0);
 }
 
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC

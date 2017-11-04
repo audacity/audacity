@@ -108,6 +108,7 @@ WaveTrack::WaveTrack(const std::shared_ptr<DirManager> &projDirManager, sampleFo
    mRate = (int) rate;
    mGain = 1.0;
    mPan = 0.0;
+   mWaveColorIndex = 0;
    SetDefaultName(TracksPrefs::GetDefaultAudioTrackNamePreference());
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
@@ -148,6 +149,7 @@ void WaveTrack::Init(const WaveTrack &orig)
 {
    PlayableTrack::Init(orig);
    mFormat = orig.mFormat;
+   mWaveColorIndex = orig.mWaveColorIndex;
    mRate = orig.mRate;
    mGain = orig.mGain;
    mPan = orig.mPan;
@@ -538,6 +540,15 @@ float WaveTrack::GetChannelGain(int channel) const
       return right*mGain;
 }
 
+void WaveTrack::SetWaveColorIndex(int colorIndex)
+// STRONG-GUARANTEE
+{
+   for (const auto &clip : mClips)
+      clip->SetColourIndex( colorIndex );
+   mWaveColorIndex = colorIndex;
+}
+
+
 void WaveTrack::ConvertToSampleFormat(sampleFormat format)
 // WEAK-GUARANTEE
 // might complete on only some tracks
@@ -711,7 +722,8 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    {
       auto placeholder = make_movable<WaveClip>(mDirManager,
             newTrack->GetSampleFormat(),
-            static_cast<int>(newTrack->GetRate()));
+            static_cast<int>(newTrack->GetRate()),
+            0 /*colourindex*/);
       placeholder->SetIsPlaceholder(true);
       placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
       placeholder->Offset(newTrack->GetEndTime());
@@ -1425,7 +1437,7 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate);
+      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate, 0 /*colourindex*/);
       clip->InsertSilence(0, len);
       // use NOFAIL-GUARANTEE
       mClips.push_back( std::move( clip ) );
@@ -2261,7 +2273,7 @@ Sequence* WaveTrack::GetSequenceAtX(int xcoord)
 
 WaveClip* WaveTrack::CreateClip()
 {
-   mClips.push_back(make_movable<WaveClip>(mDirManager, mFormat, mRate));
+   mClips.push_back(make_movable<WaveClip>(mDirManager, mFormat, mRate,0 /*colurindex*/));
    return mClips.back().get();
 }
 

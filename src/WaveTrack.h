@@ -161,6 +161,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void SetVirtualState(bool state, bool half=false);
 #endif
+
+   int GetWaveColorIndex() const { return mWaveColorIndex; };
+   void SetWaveColorIndex(int colorIndex);
+
    sampleFormat GetSampleFormat() const { return mFormat; }
    void ConvertToSampleFormat(sampleFormat format);
 
@@ -606,6 +610,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    int           mRate;
    float         mGain;
    float         mPan;
+   int           mWaveColorIndex;
 
 
    //
