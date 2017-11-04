@@ -1248,7 +1248,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
    /* counters for tracks panned different places */
    int numLeft = 0;
    int numRight = 0;
-   int numMono = 0;
+   //int numMono = 0;
    /* track iteration kit */
    const Track *tr;
    TrackListConstIterator iter;
@@ -1289,7 +1289,7 @@ unsigned TrackList::GetNumExportChannels(bool selectionOnly) const
             numRight++;
          }
          else if (pan == 0) { // panned dead center
-            numMono++;
+            // numMono++;
          }
          else {   // panned somewhere else
             numLeft++;

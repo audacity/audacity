@@ -2249,7 +2249,7 @@ WaveClip* WaveTrack::GetClipAtTime(double time)
    // If "time" is the end time of the first of two such clips, and the end time is slightly
    // less than the start time of the second clip, then the first rather than the
    // second clip is found by the above code. So correct this.
-   if (p != clips.rend() & p != clips.rbegin() &&
+   if (p != clips.rend() && p != clips.rbegin() &&
       time == (*p)->GetEndTime() &&
       (*p)->SharesBoundaryWithNextClip(*(p-1))) {
       p--;

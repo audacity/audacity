@@ -57,7 +57,7 @@ enum Column
 class RowData
 {
  public:
-   RowData(int index_, const wxString &title_, SelectedRegion selectedRegion_)
+   RowData(int index_, const wxString &title_, const SelectedRegion &selectedRegion_)
       : index(index_), title(title_), selectedRegion(selectedRegion_)
    {}
 

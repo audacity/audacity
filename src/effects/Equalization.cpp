@@ -2379,7 +2379,7 @@ void EffectEqualization::ErrMin(void)
             error += err*err;
          }
       }
-      while( (error < oldError) & flag );
+      while( (error < oldError) && flag );
       if( error > oldError )
       {
          mEQVals[i] = mEQValsOld;   //last one didn't work

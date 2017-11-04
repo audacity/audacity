@@ -2542,7 +2542,6 @@ bool LabelTrack::PasteOver(double t, const Track * src)
          labelStruct.title
       };
       mLabels.insert(mLabels.begin() + pos++, l);
-      len++;
    }
 
    return true;

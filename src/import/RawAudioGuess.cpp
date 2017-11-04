@@ -345,10 +345,13 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
 
                size_t i = 0;
                for(; i < len1; i++)
+                  // This code is testing for NaNs.
+                  // We'd like to know if all data is finite.
                   if (!(data1[i]>=0 || data1[i]<=0) ||
                       !(data2[i]>=0 || data2[i]<=0))
                      break;
                if (i == len1)
+                  // all data is finite.
                   finiteVotes++;
 
                min = data1[0];
