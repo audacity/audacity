@@ -3035,6 +3035,9 @@ void AudacityProject::OpenFile(const wxString &fileNameArg, bool addtohistory)
          DoImportMIDI(this, fileName);
       else
          Import(fileName);
+
+      ZoomAfterImport(nullptr);
+
       return;
    }
 
