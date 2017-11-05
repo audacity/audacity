@@ -783,8 +783,10 @@ UIHandle::Result SelectHandle::Click
       Connect(pProject);
       return RefreshAll | UpdateSelection;
    }
-
-   return RefreshAll;
+   else {
+      Connect(pProject);
+      return RefreshAll;
+   }
 }
 
 UIHandle::Result SelectHandle::Drag
