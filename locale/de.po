@@ -12498,7 +12498,7 @@ msgstr "Klassisch"
 #. i18n-hint: Light meaning opposite of dark
 #: src/prefs/GUIPrefs.cpp:97
 msgid "Light"
-msgstr "Leicht"
+msgstr "Hell"
 
 #: src/prefs/GUIPrefs.cpp:98
 msgid "Dark"
