@@ -465,8 +465,6 @@ TimeTrack and AudioIOListener and whether the playback is looped.
    #define ROUND(x) (int) ((x)+0.5)
 
    #include "portmidi.h"
-   // PaUtil_GetTime is not part of the public API, so we hardcode a path to the header
-   #include "../lib-src/portaudio-v19/src/common/pa_util.h"
    #include "NoteTrack.h"
 #endif
 
@@ -978,24 +976,29 @@ private:
 #endif
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-// return the system time as a double
-static double streamStartTime = 0; // bias system time to small number
 
-static double SystemTime(bool usingAlsa)
+void AudioIO::ResetSystemTime() {
+   streamStartTime = 0;
+   streamStartTime = SystemTime();
+}
+
+double AudioIO::SystemTime()
 {
 #ifdef __WXGTK__
-   if (usingAlsa) {
+   if (mUsingAlsa) {
       struct timespec now;
       // CLOCK_MONOTONIC_RAW is unaffected by NTP or adj-time
       clock_gettime(CLOCK_MONOTONIC_RAW, &now);
       //return now.tv_sec + now.tv_nsec * 0.000000001;
       return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
    }
-#else
-   usingAlsa;//compiler food.
 #endif
 
-   return PaUtil_GetTime() - streamStartTime;
+   // Pa_GetStreamTime requires a valid stream pointer.  If the stream is invalid,
+   // return a time after the end so that playback stops
+   wxCHECK_MSG(mPortStreamV19 != NULL, mWarpedLength + 60,
+      "Attempted to call SystemTime when PortAudio stream not active");
+   return Pa_GetStreamTime(mPortStreamV19) - streamStartTime;
 }
 #endif
 
@@ -1642,21 +1645,6 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
                                    unsigned int numCaptureChannels,
                                    sampleFormat captureFormat)
 {
-#ifdef EXPERIMENTAL_MIDI_OUT
-   mNumFrames = 0;
-   mNumPauseFrames = 0;
-   // we want this initial value to be way high. It should be
-   // sufficient to assume AudioTime is zero and therefore
-   // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
-   // for good measure. On the first callback, this should be
-   // reduced to SystemTime() - mT0, and note that mT0 is always
-   // positive.
-   mSystemMinusAudioTimePlusLatency =
-      mSystemMinusAudioTime = SystemTime(mUsingAlsa) + 1000;
-   mAudioOutLatency = 0.0; // set when stream is opened
-   mCallbackCount = 0;
-   mAudioFramesPerBuffer = 0;
-#endif
    mOwningProject = GetActiveProject();
 
    // PRL:  Protection from crash reported by David Bailes, involving starting
@@ -1806,6 +1794,22 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
 #endif
 
 #ifdef EXPERIMENTAL_MIDI_OUT
+   ResetSystemTime();
+
+   mNumFrames = 0;
+   mNumPauseFrames = 0;
+   // we want this initial value to be way high. It should be
+   // sufficient to assume AudioTime is zero and therefore
+   // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
+   // for good measure. On the first callback, this should be
+   // reduced to SystemTime() - mT0, and note that mT0 is always
+   // positive.
+   mSystemMinusAudioTimePlusLatency =
+      mSystemMinusAudioTime = SystemTime() + 1000;
+   mAudioOutLatency = 0.0; // set when stream is opened
+   mCallbackCount = 0;
+   mAudioFramesPerBuffer = 0;
+
    // We use audio latency to estimate how far ahead of DACS we are writing
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
       const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
@@ -1959,11 +1963,6 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
 
    double playbackTime = 4.0;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   streamStartTime = 0;
-   streamStartTime = SystemTime(mUsingAlsa);
-#endif
-
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    bool scrubbing = (options.pScrubbingOptions != nullptr);
 
@@ -2072,7 +2071,6 @@ int AudioIO::StartStream(const WaveTrackConstArray &playbackTracks,
    successAudio = StartPortAudioStream(sampleRate, playbackChannels,
                                        captureChannels, captureFormat);
 #ifdef EXPERIMENTAL_MIDI_OUT
-
    // TODO: it may be that midi out will not work unless audio in or out is
    // active -- this would be a bug and may require a change in the
    // logic here.
@@ -2604,9 +2602,9 @@ void AudioIO::StopStream()
   #endif
 
    if (mPortStreamV19) {
+      // Stop outputting to the stream now
+      // but keep it open until we're done using it for timing
       Pa_AbortStream( mPortStreamV19 );
-      Pa_CloseStream( mPortStreamV19 );
-      mPortStreamV19 = NULL;
    }
 
    if (mNumPlaybackChannels > 0)
@@ -2670,6 +2668,13 @@ void AudioIO::StopStream()
       mIterator.reset(); // just in case someone tries to reference it
    }
 #endif
+
+   if (mPortStreamV19) {
+      // Now that we've finished with MIDI output and nothing is
+      // checking the time, it's safe to close the stream
+      Pa_CloseStream( mPortStreamV19 );
+      mPortStreamV19 = NULL;
+   }
 
    // If there's no token, we were just monitoring, so we can
    // skip this next part...
@@ -4408,7 +4413,7 @@ PmTimestamp AudioIO::MidiTime()
    // subtract latency here because mSystemMinusAudioTime gets us
    // to the current *write* time, but we're writing ahead by audio output
    // latency (mAudioOutLatency).
-   double now = SystemTime(mUsingAlsa);
+   double now = SystemTime();
    ts = (PmTimestamp) ((unsigned long)
          (1000 * (now + 1.0005 -
                   mSystemMinusAudioTimePlusLatency)));
@@ -4684,14 +4689,14 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (gAudioIO->mCallbackCount++ == 0) {
        // This is effectively mSystemMinusAudioTime when the buffer is empty:
-       gAudioIO->mStartTime = SystemTime(gAudioIO->mUsingAlsa) - gAudioIO->mT0;
+       gAudioIO->mStartTime = gAudioIO->SystemTime() - gAudioIO->mT0;
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 
    /* for Linux, estimate a smooth audio time as a slowly-changing
       offset from system time */
    // rnow is system time as a double to simplify math
-   double rnow = SystemTime(gAudioIO->mUsingAlsa);
+   double rnow = gAudioIO->SystemTime();
    // anow is next-sample-to-be-computed audio time as a double
    double anow = gAudioIO->AudioTime();
 

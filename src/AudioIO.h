@@ -242,6 +242,15 @@ class AUDACITY_DLL_API AudioIO final {
  public:
    bool SetHasSolo(bool hasSolo);
    bool GetHasSolo() { return mHasSolo; }
+
+ private:
+   double streamStartTime = 0;
+
+ public:
+   // Used to bias system time to a small number
+   void ResetSystemTime();
+   // Returns the system time as a double
+   double SystemTime();
 #endif
 
    /** \brief Returns true if the stream is active, or even if audio I/O is
