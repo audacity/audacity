@@ -36,6 +36,7 @@
 #include "../AColor.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent)
+/* i18n-hint: refers to Audacity's user interface settings */
 :  PrefsPanel(parent, _("Interface"))
 {
    Populate();

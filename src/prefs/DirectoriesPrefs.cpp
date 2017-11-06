@@ -49,6 +49,7 @@ BEGIN_EVENT_TABLE(DirectoriesPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent)
+/* i18n-hint:  Directories, also called folders, in computer file systems */
 :  PrefsPanel(parent, _("Directories")),
    mFreeSpace(NULL),
    mTempDir(NULL)

@@ -73,6 +73,7 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent)
+/* i18n-hint: as in computer keyboard (not musical!) */
 :  PrefsPanel(parent, _("Keyboard")),
    mView(NULL),
    mKey(NULL),

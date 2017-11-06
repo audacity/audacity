@@ -34,6 +34,7 @@ BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 QualityPrefs::QualityPrefs(wxWindow * parent)
+/* i18n-hint: meaning accuracy in reproduction of sounds */
 :  PrefsPanel(parent, _("Quality"))
 {
    Populate();
@@ -168,6 +169,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      mConverterLabels);
          S.SetSizeHints(mConverterNames);
 
+         /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("&Dither:"),
                      wxT("/Quality/DitherAlgorithm"),
                      Dither::none,
@@ -190,6 +192,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      mConverterLabels);
          S.SetSizeHints(mConverterNames);
 
+         /* i18n-hint: technical term for randomization to reduce undesirable resampling artifacts */
          S.TieChoice(_("Dit&her:"),
                      wxT("/Quality/HQDitherAlgorithm"),
                      Dither::shaped,

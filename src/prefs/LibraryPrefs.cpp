@@ -46,6 +46,7 @@ BEGIN_EVENT_TABLE(LibraryPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 LibraryPrefs::LibraryPrefs(wxWindow * parent)
+/* i18-hint: refers to optional plug-in software libraries */
 :   PrefsPanel(parent, _("Libraries"))
 {
    Populate();

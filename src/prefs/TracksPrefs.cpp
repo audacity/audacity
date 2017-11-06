@@ -45,6 +45,9 @@ namespace {
 
 
 TracksPrefs::TracksPrefs(wxWindow * parent)
+/* i18n-hint: "Tracks" include audio recordings but also other collections of
+ * data associated with a time line, such as sequences of labels, and musical
+ * notes */
 :  PrefsPanel(parent, _("Tracks"))
 {
    // Bugs 1043, 1044

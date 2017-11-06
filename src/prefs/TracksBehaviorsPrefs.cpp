@@ -22,6 +22,7 @@
 #include "../Experimental.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent)
+/* i18n-hint: two nouns */
 :  PrefsPanel(parent, _("Tracks Behaviors"))
 {
    Populate();

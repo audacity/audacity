@@ -57,6 +57,8 @@ BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
+/* i18n-hint:  Title of dialog governing "Extended", or "advanced,"
+ * audio file import options */
 :   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)

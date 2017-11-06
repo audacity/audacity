@@ -57,6 +57,10 @@ BEGIN_EVENT_TABLE(ThemePrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 ThemePrefs::ThemePrefs(wxWindow * parent)
+/* i18n-hint: A theme is a consistent visual style across an application's
+ graphical user interface, including choices of colors, and similarity of images
+ such as those on button controls.  Audacity can load and save alternative
+ themes. */
 :  PrefsPanel(parent, _("Theme"))
 {
    Populate();

@@ -27,6 +27,7 @@ Paul Licameli
 #include "../WaveTrack.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, WaveTrack *wt)
+/* i18n-hint: A waveform is a visual representation of vibration */
 : PrefsPanel(parent, _("Waveforms"))
 , mWt(wt)
 , mPopulating(false)

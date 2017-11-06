@@ -55,6 +55,7 @@ BEGIN_EVENT_TABLE(MidiIOPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 MidiIOPrefs::MidiIOPrefs(wxWindow * parent)
+/* i18n-hint: untranslatable acronym for "Musical Instrument Device Interface" */
 :  PrefsPanel(parent, _("MIDI Devices"))
 {
    Populate();
