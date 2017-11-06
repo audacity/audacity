@@ -4688,9 +4688,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 
-   /* GSW: Save timeInfo in case MidiPlayback needs it */
-   gAudioIO->mAudioCallbackClockTime = PaUtil_GetTime();
-
    /* for Linux, estimate a smooth audio time as a slowly-changing
       offset from system time */
    // rnow is system time as a double to simplify math
