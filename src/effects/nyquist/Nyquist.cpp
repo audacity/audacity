@@ -529,7 +529,7 @@ bool NyquistEffect::Process()
 
    mDebugOutput.Clear();
    if (!mHelpFile.IsEmpty() && !mHelpFileExists) {
-      mDebugOutput = wxString::Format(wxT("error: File \"%s\" specified in header but not found in plug-in path.\n"), mHelpFile);
+      mDebugOutput = wxString::Format(_("error: File \"%s\" specified in header but not found in plug-in path.\n"), mHelpFile);
    }
 
    if (mVersion >= 4)

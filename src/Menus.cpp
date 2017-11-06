@@ -4512,6 +4512,7 @@ void AudacityProject::OnExportLabels()
 
    TrackListIterator iter(GetTracks());
 
+   /* i18n-hint: filename containing exported text from label tracks */
    wxString fName = _("labels.txt");
    t = iter.First();
    while (t) {

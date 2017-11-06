@@ -177,7 +177,7 @@ bool EffectNormalize::Process()
    else if(!mDC && mGain)
       topMsg = _("Normalizing without removing DC offset...\n");
    else if(!mDC && !mGain)
-      topMsg = wxT("Not doing anything)...\n");   // shouldn't get here
+      topMsg = _("Not doing anything)...\n");   // shouldn't get here
 
    while (track) {
       //Get start and end times from track
@@ -345,7 +345,7 @@ bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const wxString &msg,
       while (track->GetODFlags()) {
          // update the gui
          if (ProgressResult::Cancelled == mProgress->Update(
-            0, wxT("Waiting for waveform to finish computing...")) )
+            0, _("Waiting for waveform to finish computing...")) )
             return false;
          wxMilliSleep(100);
       }

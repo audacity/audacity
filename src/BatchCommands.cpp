@@ -696,13 +696,15 @@ bool BatchCommands::ApplyChain(const wxString & filename)
    wxString name = gPrefs->Read(wxT("/Batch/ActiveChain"), wxEmptyString);
    if (name.IsEmpty())
    {
-      longDesc = wxT("Applied batch chain");
-      shortDesc = wxT("Apply chain");
+      /* i18n-hint: active verb in past tense */
+      longDesc = _("Applied batch chain");
+      shortDesc = _("Apply chain");
    }
    else
    {
-      longDesc = wxString::Format(wxT("Applied batch chain '%s'"), name.c_str());
-      shortDesc = wxString::Format(wxT("Apply '%s'"), name.c_str());
+      /* i18n-hint: active verb in past tense */
+      longDesc = wxString::Format(_("Applied batch chain '%s'"), name.c_str());
+      shortDesc = wxString::Format(_("Apply '%s'"), name.c_str());
    }
 
    if (!proj)
