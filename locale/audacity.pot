@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2017-11-06 11:01-0500\n"
+"POT-Creation-Date: 2017-11-06 13:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -8147,7 +8147,7 @@ msgid "Normalizing without removing DC offset...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp:180
-msgid "Not doing anything)...\n"
+msgid "Not doing anything...\n"
 msgstr ""
 
 #: src/effects/Normalize.cpp:198

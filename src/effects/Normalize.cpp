@@ -177,7 +177,7 @@ bool EffectNormalize::Process()
    else if(!mDC && mGain)
       topMsg = _("Normalizing without removing DC offset...\n");
    else if(!mDC && !mGain)
-      topMsg = _("Not doing anything)...\n");   // shouldn't get here
+      topMsg = _("Not doing anything...\n");   // shouldn't get here
 
    while (track) {
       //Get start and end times from track
