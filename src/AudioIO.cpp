@@ -464,8 +464,11 @@ TimeTrack and AudioIOListener and whether the playback is looped.
    #endif
    #define ROUND(x) (int) ((x)+0.5)
 
-   #include "portmidi.h"
    #include "NoteTrack.h"
+#endif
+#ifdef USE_PORTMIDI
+   // Since PortMidi methods are used in diagnostics, we want this even if EXPERIMENTAL_MIDI_OUT isn't defined
+   #include "portmidi.h"
 #endif
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
@@ -3704,8 +3707,7 @@ wxString AudioIO::GetDeviceInfo()
    return o.GetString();
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-// FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke
+#ifdef USE_PORTMIDI
 wxString AudioIO::GetMidiDeviceInfo()
 {
    wxStringOutputStream o;

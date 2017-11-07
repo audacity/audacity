@@ -520,7 +520,7 @@ void OnSimulateRecordingErrors(const CommandContext &context );
 void OnDetectUpstreamDropouts(const CommandContext &context );
 void OnScreenshot(const CommandContext &context );
 void OnAudioDeviceInfo(const CommandContext &context );
-#ifdef EXPERIMENTAL_MIDI_OUT
+#ifdef USE_PORTMIDI
 void OnMidiDeviceInfo(const CommandContext &context );
 #endif
 

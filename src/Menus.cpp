@@ -1265,7 +1265,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
-#ifdef EXPERIMENTAL_MIDI_OUT
+#ifdef USE_PORTMIDI
       c->AddItem(wxT("MidiDeviceInfo"), _("&MIDI Device Info..."), FN(OnMidiDeviceInfo),
          AudioIONotBusyFlag,
          AudioIONotBusyFlag);
@@ -8473,7 +8473,7 @@ void AudacityProject::OnAudioDeviceInfo(const CommandContext &WXUNUSED(context) 
    }
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
+#ifdef USE_PORTMIDI
 void AudacityProject::OnMidiDeviceInfo(const CommandContext &WXUNUSED(context) )
 {
    wxString info = gAudioIO->GetMidiDeviceInfo();
