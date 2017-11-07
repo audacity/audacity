@@ -181,6 +181,7 @@ win/Release
 win/Projects/*/Debug
 win/Projects/*/Release
 win/.vs/
+win/packages
 
 # All those help files
 help/manual*
