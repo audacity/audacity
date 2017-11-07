@@ -2437,7 +2437,6 @@ void WaveTrack::SplitAt(double t)
    {
       if (c->WithinClip(t))
       {
-         double val;
          t = LongSamplesToTime(TimeToLongSamples(t)); // put t on a sample
          auto newClip = make_movable<WaveClip>( *c, mDirManager, true );
          c->Clear(t, c->GetEndTime());

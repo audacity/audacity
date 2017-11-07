@@ -53,7 +53,7 @@ try
    mAudioFileName = std::move(audioFileName);
    mFormat = int16Sample;
 }
-catch ( const FileException & e )
+catch ( const FileException & WXUNUSED(e) )
 {
    // The constructor SimpleBlockFile sometimes throws this,
    // but it never will for the arguments that were passed to it here.
@@ -319,7 +319,7 @@ bool ODDecodeBlockFile::IsSummaryAvailable() const
 
 bool ODDecodeBlockFile::IsDataAvailable() const
 {
-   return mDataAvailable;
+   return mDataAvailable != 0;
 }
 
 /// Write the summary to disk, using the derived ReadData() to get the data

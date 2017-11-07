@@ -1595,7 +1595,7 @@ void LabelTrack::HandleGlyphClick
          float t = 0.0;
          // We move if we hit the centre, we adjust one edge if we hit a chevron.
          // This is if we are moving just one edge.
-         hit.mbIsMoving = hit.mEdge & 4;
+         hit.mbIsMoving = (hit.mEdge & 4)!=0;
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays

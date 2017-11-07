@@ -54,7 +54,7 @@ enum {
 
 bool SelectHandle::IsClicked() const
 {
-   return mSelectionStateChanger.get();
+   return mSelectionStateChanger.get() != NULL;
 }
 
 namespace

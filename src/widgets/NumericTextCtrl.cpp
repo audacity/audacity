@@ -596,6 +596,7 @@ return theArray.Get();
       (NumericConverter::Type type)
    {
       switch (type) {
+         default:
          case NumericConverter::TIME:
             return TimeConverterFormats();
          case NumericConverter::FREQUENCY:

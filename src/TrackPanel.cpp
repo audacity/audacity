@@ -3214,7 +3214,7 @@ void TrackInfo::DrawBordersWithin
 
    GetMuteSoloRect( rect, buttonRect, false, true, &track );
 
-   bool bHasMuteSolo = dynamic_cast<const PlayableTrack*>( &track );
+   bool bHasMuteSolo = dynamic_cast<const PlayableTrack*>( &track ) != NULL;
    if( bHasMuteSolo && !TrackInfo::HideTopItem( rect, buttonRect ) )
    {
       // above mute/solo
