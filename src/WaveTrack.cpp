@@ -1437,7 +1437,7 @@ void WaveTrack::InsertSilence(double t, double len)
    if (mClips.empty())
    {
       // Special case if there is no clip yet
-      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate, 0 /*colourindex*/);
+      auto clip = make_movable<WaveClip>(mDirManager, mFormat, mRate, this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
       // use NOFAIL-GUARANTEE
       mClips.push_back( std::move( clip ) );

@@ -1074,6 +1074,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   // Pad the recording track with silence, up to the
                   // maximum time.
                   auto newTrack = p->GetTrackFactory()->NewWaveTrack();
+                  newTrack->SetWaveColorIndex( wt->GetWaveColorIndex() );
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
                   wt->Clear(t1, t0);
