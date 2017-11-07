@@ -850,7 +850,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
       // JKC: I decided to duplicate this between play and record, rather than put it 
       // at the top level.  AddItem can now cope with simple duplicated items.
-      // PRL:  This second registration of wxT("Pause"),"Audacity did not recognize the type of the file '%s'.\nTry installing FFmpeg. For uncompressed files, also try File > Import > Raw Data." with unspecified flags,
+      // PRL:  This second registration of wxT("Pause"), with unspecified flags,
       // in fact will use the same flags as in the previous registration.
       c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"));
       c->EndSubMenu();
