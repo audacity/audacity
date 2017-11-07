@@ -20,7 +20,7 @@ install:
     - xcopy %AUDACITY_ROOT%\win\wxWidgets_additions\wxWidgets-3.0.2 %WXWIN% /s /y /f
     - xcopy %WXWIN%\include\wx\setup_redirect.h %WXWIN%\include\wx\setup.h* /f
     # build wxWidgets
-    - msbuild /m %WXWIN%\build\msw\wx_vc12.sln "/p:Configuration=DLL Release;PlatformToolset=v120_xp" /target:adv,base,core,html,net,qa,wxexpat,wxjpeg,wxpng,wxtiff,wxzlib /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    - msbuild /m %WXWIN%\build\msw\wx_vc12.sln "/p:Configuration=DLL Release;PlatformToolset=v120_xp" /target:adv,base,core,html,net,qa,wxexpat,wxjpeg,wxpng,wxtiff,wxzlib,xml /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 environment:
     WXWIN: '%APPVEYOR_BUILD_FOLDER%\..\wxWidgets'
     AUDACITY_ROOT: '%APPVEYOR_BUILD_FOLDER%'
