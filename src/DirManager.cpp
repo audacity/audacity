@@ -608,7 +608,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
             BlockFilePtr b = pair.second.lock();
 
             if (b) {
-               if (moving) {
+               if (moving || !b->IsLocked()) {
                   auto result = b->GetFileName();
                   auto oldPath = result.name.GetFullPath();
                   if (!oldPath.empty())
