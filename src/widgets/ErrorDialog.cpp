@@ -10,7 +10,12 @@
 *******************************************************************//**
 
 \class ErrorDialog
-Gives an Error message with an option for help.
+\brief Gives an Error message with an option for help.
+
+*//*****************************************************************//**
+
+\class AliasedFileMissingDialog
+\brief Special case of ErrorDialog for reporting missing alias files.
 
 *//********************************************************************/
 

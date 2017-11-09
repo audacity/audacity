@@ -11,6 +11,9 @@
 \class EffectAutoDuck
 \brief Implements the Auto Ducking effect
 
+\class AutoDuckRegion
+\brief a struct that holds a start and end time.
+
 *******************************************************************/
 
 #include "../Audacity.h"

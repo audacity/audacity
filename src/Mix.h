@@ -7,7 +7,15 @@
   Dominic Mazzoni
   Markus Meyer
 
-**********************************************************************/
+********************************************************************//**
+
+\class ArrayOf
+\brief Memory.h template class for making an array of float, bool, etc.
+
+\class ArraysOf
+\brief memory.h template class for making an array of arrays.
+
+*//********************************************************************/
 
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__

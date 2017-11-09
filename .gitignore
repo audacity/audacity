@@ -90,6 +90,9 @@ mac/po/
 mac/src/
 mac/tests/
 
+# Doxygen output
+dox/
+
 # Compiled Object files
 *.slo
 *.lo

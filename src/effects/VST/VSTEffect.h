@@ -67,6 +67,12 @@ using VSTEffectArray = std::vector < movable_ptr<VSTEffect> > ;
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
+///////////////////////////////////////////////////////////////////////////////
+///
+/// VSTEffect is an Audacity EffectClientInterface that forwards actual 
+/// audio processing via a VSTEffectLink
+///
+///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final : public wxEvtHandler,
                   public EffectClientInterface,
                   public EffectUIClientInterface,
@@ -360,11 +366,11 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffectsModule
-//
+///
+/// VSTEffectsModule is an Audacity ModuleInterface, in other words it 
+/// represents one plug in.
+///
 ///////////////////////////////////////////////////////////////////////////////
-
 class VSTEffectsModule final : public ModuleInterface
 {
 public:

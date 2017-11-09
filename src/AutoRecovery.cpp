@@ -12,6 +12,10 @@
 \brief The AutoRecoveryDialog prompts the user whether to
 recover previous Audacity projects that were closed incorrectly.
 
+\class AutoSaveFile
+\brief a class wrapping reading and writing of arbitrary data in 
+text or binary format to a file.
+
 *//********************************************************************/
 
 #include "AutoRecovery.h"

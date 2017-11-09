@@ -15,12 +15,22 @@
 \brief Represents a context to which a command may be applied.
 
 \class Command
-\brief Base class which encapsulates a process.
+\brief Abstract base class for command interface.  It implements 
+Command::SetParameter() and defers all other operations to derived classes.
 
 That process may depend on certain parameters (determined by the command's
 signature) and may produce output on various channels. Any process which is to
 be controlled by a script should be separated out into its own Command class.
 (And that class should be registered with the CommandDirectory).
+
+\class ApplyAndSendResponse
+\brief Decorator command that performs the given command and then 
+outputs a status message according to the result.
+
+\class CommandImplementation,
+\brief is derived from Command.  It validates and 
+applies the command.  CommandImplementation::Apply() is overloaded in 
+classes derived from it.
 
 *//*******************************************************************/
 
@@ -56,7 +66,7 @@ public:
    };
 };
 
-// Interface
+// Abstract base class for command interface.  
 class Command /* not final */
 {
 public:
@@ -72,7 +82,7 @@ public:
 
 using CommandHolder = std::shared_ptr<Command>;
 
-// Command which wraps another command
+/// Command which wraps another command
 class DecoratedCommand /* not final */ : public Command
 {
 protected:

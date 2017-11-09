@@ -19,7 +19,20 @@
    presents a dialog to the user and lets them copy those block
    files into the project, making it self-contained.
 
-**********************************************************************/
+********************************************************************//**
+
+\class AliasedFile
+\brief An audio file that is referenced (pointed into) directly from
+an Audacity .aup file rather thna Audacity having its own copies of the
+data.
+
+*//*****************************************************************//**
+
+\class DependencyDialog
+\brief DependencyDialog shows dependencies of an AudacityProject on 
+AliasedFile s.
+
+*//********************************************************************/
 
 #include "Audacity.h"
 #include "Dependencies.h"

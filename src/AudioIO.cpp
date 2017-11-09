@@ -390,6 +390,18 @@ Time (in seconds, = total_sample_count / sample_rate)
 use wxWidgets wxThread), this class sits in a thread loop reading and
 writing audio.
 
+*//****************************************************************//**
+
+\class AudioIOListener
+\brief Monitors record play start/stop and new blockfiles.  Has 
+callbacks for these events.
+
+*//****************************************************************//**
+
+\class AudioIOStartStreamOptions
+\brief struct holding stream options, including a pointer to the 
+TimeTrack and AudioIOListener and whether the playback is looped.
+
 *//*******************************************************************/
 
 #include "Audacity.h"

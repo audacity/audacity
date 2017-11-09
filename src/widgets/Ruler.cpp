@@ -44,6 +44,16 @@
 
 *//***************************************************************//**
 
+\class AdornedRulerPanel
+\brief This is an Audacity Specific ruler panel which additionally
+  has border, selection markers, play marker.
+  
+  Once TrackPanel uses wxSizers, we will derive it from some
+  wxWindow and the GetSize and SetSize functions
+  will then be wxWidgets functions instead.
+
+*//***************************************************************//**
+
 \class Ruler::Label
 \brief An array of these created by the Ruler is used to determine
 what and where text annotations to the numbers on the Ruler get drawn.

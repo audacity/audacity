@@ -13,6 +13,12 @@
 Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
+\class AudioTrack
+\brief A Track that can load/save audio data to/from XML.
+
+\class PlayableTrack
+\brief An AudioTrack that can be played and stopped.
+
 *//*******************************************************************/
 
 #include <algorithm>

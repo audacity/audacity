@@ -10,7 +10,12 @@
   loaded in a platform-specific way and passed into the constructor,
   but from here this class handles the interfacing.
 
-**********************************************************************/
+********************************************************************//**
+
+\class AEffect
+\brief VST Effects class, conforming to VST layout.
+
+*//********************************************************************/
 
 //#define VST_DEBUG
 //#define DEBUG_VST
@@ -126,6 +131,12 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 DECLARE_BUILTIN_MODULE(VSTBuiltin);
 
+
+///////////////////////////////////////////////////////////////////////////////
+///
+/// Auto created at program start up, this initialises VST.
+///
+///////////////////////////////////////////////////////////////////////////////
 class VSTSubEntry final : public wxModule
 {
 public:
@@ -176,6 +187,12 @@ enum InfoKeys
    kKeyEnd
 };
 
+
+///////////////////////////////////////////////////////////////////////////////
+///
+/// Information about one VST effect.
+///
+///////////////////////////////////////////////////////////////////////////////
 class VSTSubProcess final : public wxProcess,
                       public EffectIdentInterface
 {
@@ -692,10 +709,10 @@ void VSTEffectsModule::Check(const wxChar *path)
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// VSTEffectOptionsDialog
+// Dialog for configuring latency, buffer size and graphics mode for a
+// VST effect.
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
@@ -826,11 +843,12 @@ void VSTEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffectTimer
-//
+///
+/// Wrapper for wxTimer that calls a VST effect at regular intervals.
+///
+/// \todo should there be tests for no timer available?
+///
 ///////////////////////////////////////////////////////////////////////////////
-
 class VSTEffectTimer final : public wxTimer
 {
 public:
@@ -858,7 +876,6 @@ private:
 // VSTEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 enum
 {
    ID_Duration = 20000,
@@ -1513,32 +1530,32 @@ bool VSTEffect::RealtimeProcessEnd()
    return true;
 }
 
-//
-// Some history...
-//
-// Before we ran into the Antress plugin problem with buffer size limitations,
-// (see below) we just had a plain old effect loop...get the input samples, pass
-// them to the effect, save the output samples.
-//
-// But, the hack I put in to limit the buffer size to only 8k (normally 512k or so)
-// severely impacted performance.  So, Michael C. added some intermediate buffering
-// that sped things up quite a bit and this is how things have worked for quite a
-// while.  It still didn't get the performance back to the pre-hack stage, but it
-// was a definite benefit.
-//
-// History over...
-//
-// I've recently (May 2014) tried newer versions of the Antress effects and they
-// no longer seem to have a problem with buffer size.  So, I've made a bit of a
-// compromise...I've made the buffer size user configurable.  Should have done this
-// from the beginning.  I've left the default 8k, just in case, but now the user
-// can set the buffering based on their specific setup and needs.
-//
-// And at the same time I added buffer delay compensation, which allows Audacity
-// to account for latency introduced by some effects.  This is based on information
-// provided by the effect, so it will not work with all effects since they don't
-// all provide the information (kn0ck0ut is one).
-//
+///
+/// Some history...
+///
+/// Before we ran into the Antress plugin problem with buffer size limitations,
+/// (see below) we just had a plain old effect loop...get the input samples, pass
+/// them to the effect, save the output samples.
+///
+/// But, the hack I put in to limit the buffer size to only 8k (normally 512k or so)
+/// severely impacted performance.  So, Michael C. added some intermediate buffering
+/// that sped things up quite a bit and this is how things have worked for quite a
+/// while.  It still didn't get the performance back to the pre-hack stage, but it
+/// was a definite benefit.
+///
+/// History over...
+///
+/// I've recently (May 2014) tried newer versions of the Antress effects and they
+/// no longer seem to have a problem with buffer size.  So, I've made a bit of a
+/// compromise...I've made the buffer size user configurable.  Should have done this
+/// from the beginning.  I've left the default 8k, just in case, but now the user
+/// can set the buffering based on their specific setup and needs.
+///
+/// And at the same time I added buffer delay compensation, which allows Audacity
+/// to account for latency introduced by some effects.  This is based on information
+/// provided by the effect, so it will not work with all effects since they don't
+/// all provide the information (kn0ck0ut is one).
+///
 bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    if (mDialog)

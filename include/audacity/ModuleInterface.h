@@ -56,9 +56,11 @@
 // ============================================================================
 
 // ============================================================================
-//
-// ModuleInterface class
-//
+///
+/// ModuleInterface is a generic dll or so interface for Audacity, that is
+/// used for plug ins.  Classes derived from it can handle more specific plug 
+/// in types.
+///
 // ============================================================================
 
 class ModuleInterface  /* not final */ : public IdentInterface

@@ -51,6 +51,12 @@ This class is currently used by Theme to pack its images into the image
 cache.  Perhaps someday we will improve FlowPacker and make it more flexible,
 and use it for toolbar and window layouts too.
 
+*//*****************************************************************//**
+
+\class auStaticText
+\brief is like wxStaticText, except it can be themed.  wxStaticText 
+can't be.
+
 *//*****************************************************************/
 
 #include "Audacity.h"

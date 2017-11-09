@@ -276,11 +276,7 @@ private:
 class QuickPlayIndicatorOverlay;
 class QuickPlayRulerOverlay;
 
-// This is an Audacity Specific ruler panel which additionally
-// has border, selection markers, play marker.
-// Once TrackPanel uses wxSizers, we will derive it from some
-// wxWindow and the GetSize and SetSize functions
-// will then be wxWidgets functions instead.
+// This is an Audacity Specific ruler panel.
 class AUDACITY_DLL_API AdornedRulerPanel final : public OverlayPanel
 {
 public:
