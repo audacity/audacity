@@ -35,13 +35,17 @@ AC_DEFUN([AUDACITY_CHECKLIB_FFMPEG], [
 
    dnl see if ffmpeg is available locally, or rather that we have some headers
    dnl in lib-src/ffmpeg/ we can use.
-   AC_CHECK_FILE(${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h,
-                 avcodec_h_found="yes",
-                 avcodec_h_found="no")
+   if test -f "${srcdir}/lib-src/ffmpeg/libavcodec/avcodec.h"; then
+                 avcodec_h_found="yes"
+   else
+                 avcodec_h_found="no"
+   fi
 
-   AC_CHECK_FILE(${srcdir}/lib-src/ffmpeg/libavformat/avformat.h,
-                 avformat_h_found="yes",
-                 avformat_h_found="no")
+   if test -f "${srcdir}/lib-src/ffmpeg/libavformat/avformat.h"; then
+                 avformat_h_found="yes"
+   else
+                 avformat_h_found="no"
+   fi
 
    if test "$avcodec_h_found" = "yes" -a "$avformat_h_found" = "yes"; then
       FFMPEG_LOCAL_AVAILABLE="yes"

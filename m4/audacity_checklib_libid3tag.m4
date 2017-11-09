@@ -25,9 +25,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBID3TAG], [
 
    dnl see if libid3tag is available in the local tree
 
-   AC_CHECK_FILE(${srcdir}/lib-src/libid3tag/frame.h,
-                 LIBID3TAG_LOCAL_AVAILABLE="yes",
-                 LIBID3TAG_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/libid3tag/frame.h"; then
+                 LIBID3TAG_LOCAL_AVAILABLE="yes"
+   else
+                 LIBID3TAG_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBID3TAG_LOCAL_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([libid3tag libraries are available in the local tree])

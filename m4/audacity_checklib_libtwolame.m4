@@ -25,9 +25,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBTWOLAME], [
 
    dnl see if libtwolame is available locally
 
-   AC_CHECK_FILE(${srcdir}/lib-src/twolame/libtwolame/twolame.h,
-                 LIBTWOLAME_LOCAL_AVAILABLE="yes",
-                 LIBTWOLAME_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/twolame/libtwolame/twolame.h"; then
+                 LIBTWOLAME_LOCAL_AVAILABLE="yes"
+   else
+                 LIBTWOLAME_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBTWOLAME_LOCAL_AVAILABLE" = "yes"; then
       dnl disable programs we don't need to build
