@@ -31,9 +31,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTAUDIO], [
 
    dnl see if portaudio is available locally
 
-   AC_CHECK_FILE(${srcdir}/lib-src/portaudio-v19/include/portaudio.h,
-                 PORTAUDIO_LOCAL_AVAILABLE="yes",
-                 PORTAUDIO_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/portaudio-v19/include/portaudio.h"; then
+                 PORTAUDIO_LOCAL_AVAILABLE="yes"
+   else
+                 PORTAUDIO_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$PORTAUDIO_LOCAL_AVAILABLE" = "yes"; then
       dnl We need to override the pkg-config check for portmixer by passing

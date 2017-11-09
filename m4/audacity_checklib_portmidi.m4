@@ -21,9 +21,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTMIDI], [
       AC_MSG_NOTICE([portmidi library is NOT available as system library])
    fi
 
-   AC_CHECK_FILE(${srcdir}/lib-src/portmidi/pm_common/portmidi.h,
-                 PORTMIDI_LOCAL_AVAILABLE="yes",
-                 PORTMIDI_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/portmidi/pm_common/portmidi.h"; then
+                 PORTMIDI_LOCAL_AVAILABLE="yes"
+   else
+                 PORTMIDI_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$PORTMIDI_LOCAL_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([portmidi library is available in the local tree])

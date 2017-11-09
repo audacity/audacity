@@ -17,9 +17,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBNYQUIST], [
 
    dnl see if Nyquist is available locally
 
-   AC_CHECK_FILE(${srcdir}/lib-src/libnyquist/nyx.h,
-                 LIBNYQUIST_LOCAL_AVAILABLE="yes",
-                 LIBNYQUIST_LOCAL_AVAILABLE="no")
+   if test -f "${srcdir}/lib-src/libnyquist/nyx.h"; then
+                 LIBNYQUIST_LOCAL_AVAILABLE="yes"
+   else
+                 LIBNYQUIST_LOCAL_AVAILABLE="no"
+   fi
 
    if test "$LIBNYQUIST_LOCAL_AVAILABLE" = "yes" ; then
       AC_MSG_NOTICE([nyquist libraries are available in the local tree])
