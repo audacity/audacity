@@ -2534,13 +2534,11 @@ void Effect::Preview(bool dryOnly)
          return;
 
       mixLeft->Offset(-mixLeft->GetStartTime());
-      mixLeft->InsertSilence(0.0, mT0);
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
       mTracks->Add(std::move(mixLeft));
       if (mixRight) {
          mixRight->Offset(-mixRight->GetStartTime());
-         mixRight->InsertSilence(0.0, mT0);
          mixRight->SetSelected(true);
          mTracks->Add(std::move(mixRight));
       }
@@ -2552,7 +2550,6 @@ void Effect::Preview(bool dryOnly)
       {
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
-            dest->InsertSilence(0.0, mT0);
             dest->SetSelected(src->GetSelected());
             static_cast<WaveTrack*>(dest.get())->SetDisplay(WaveTrack::NoDisplay);
             mTracks->Add(std::move(dest));
@@ -2560,6 +2557,11 @@ void Effect::Preview(bool dryOnly)
          src = (WaveTrack *) iter.Next();
       }
    }
+
+   // NEW tracks start at time zero.
+   // Adjust mT0 and mT1 to be the times to play back in these tracks.
+   mT1 -= mT0;
+   mT0 = 0.0;
 
 
    // Update track/group counts
