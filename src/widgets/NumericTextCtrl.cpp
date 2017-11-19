@@ -841,7 +841,10 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
          floor(rawValue * mSampleRate + (nearest ? 0.5f : 0.0f))
             / mSampleRate; // put on a sample
    double theValue =
-      rawValue * mScalingFactor + .000001; // what's this .000001 for? // well, no log of 0
+      rawValue * mScalingFactor
+         // PRL:  what WAS this .000001 for?  Nobody could explain.
+         // + .000001
+      ;
    sampleCount t_int;
    bool round = true;
    // We round on the last field.  If we have a fractional field we round using it.
