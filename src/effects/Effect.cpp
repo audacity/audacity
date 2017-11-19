@@ -2559,7 +2559,8 @@ void Effect::Preview(bool dryOnly)
    }
 
    // NEW tracks start at time zero.
-   // Adjust mT0 and mT1 to be the times to play back in these tracks.
+   // Adjust mT0 and mT1 to be the times to process, and to
+   // play back in these tracks
    mT1 -= mT0;
    mT0 = 0.0;
 
