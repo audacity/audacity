@@ -282,15 +282,18 @@ class AUDACITY_DLL_API Track /* not final */
 
    // Create a NEW track and modify this track
    // Return non-NULL or else throw
+   // May assume precondition: t0 <= t1
    virtual Holder Cut(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
    // Create a NEW track and don't modify this track
    // Return non-NULL or else throw
    // Note that subclasses may want to distinguish tracks stored in a clipboard
    // from those stored in a project
+   // May assume precondition: t0 <= t1
    virtual Holder Copy
       (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
 
+   // May assume precondition: t0 <= t1
    virtual void Clear(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
 
    virtual void Paste(double WXUNUSED(t), const Track * WXUNUSED(src)) = 0;
@@ -299,7 +302,10 @@ class AUDACITY_DLL_API Track /* not final */
    // is replaced by one of a different length.
    virtual void SyncLockAdjust(double oldT1, double newT1);
 
+   // May assume precondition: t0 <= t1
    virtual void Silence(double WXUNUSED(t0), double WXUNUSED(t1)) = 0;
+
+   // May assume precondition: t0 <= t1
    virtual void InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) = 0;
 
    virtual int GetKind() const { return None; }

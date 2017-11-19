@@ -193,6 +193,7 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
 
    void Clear(double t0, double t1) override;
    void Paste(double t0, const Track *src) override;
+   // May assume precondition: t0 <= t1
    void ClearAndPaste(double t0, double t1,
                               const Track *src,
                               bool preserve = true,
@@ -205,15 +206,20 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void SplitAt(double t) /* not override */;
    void Split(double t0, double t1) /* not override */;
    // Track::Holder CutAndAddCutLine(double t0, double t1) /* not override */;
+   // May assume precondition: t0 <= t1
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
    Track::Holder SplitCut(double t0, double t1) /* not override */;
+   // May assume precondition: t0 <= t1
    void SplitDelete(double t0, double t1) /* not override */;
    void Join(double t0, double t1) /* not override */;
+   // May assume precondition: t0 <= t1
    void Disjoin(double t0, double t1) /* not override */;
 
+   // May assume precondition: t0 <= t1
    void Trim(double t0, double t1) /* not override */;
 
+   // May assume precondition: t0 <= t1
    void HandleClear(double t0, double t1, bool addCutLines, bool split);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
@@ -278,8 +284,10 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const;
 
+   // May assume precondition: t0 <= t1
    std::pair<float, float> GetMinMax(
       double t0, double t1, bool mayThrow = true) const;
+   // May assume precondition: t0 <= t1
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
    //

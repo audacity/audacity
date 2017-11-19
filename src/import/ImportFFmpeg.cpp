@@ -557,7 +557,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          stream_delay = sc->m_stream->start_time;
          wxLogDebug(wxT("Stream %d start_time = %lld, that would be %f milliseconds."), s, (long long) sc->m_stream->start_time, double(sc->m_stream->start_time)/AV_TIME_BASE*1000);
       }
-      if (stream_delay != 0)
+      if (stream_delay > 0)
       {
          int c = -1;
          for (auto &channel : stream)

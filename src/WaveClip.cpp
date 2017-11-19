@@ -1833,8 +1833,9 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
          [=](const WaveClipHolder &p) { return p.get() == cutline; });
       if (it != end)
          mCutLines.erase(it); // deletes cutline!
-      else
-         THROW_INCONSISTENCY_EXCEPTION;
+      else {
+         wxASSERT(false);
+      }
    }
 }
 

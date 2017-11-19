@@ -471,7 +471,7 @@ bool EffectTruncSilence::DoRemoval
                            mTruncLongestAllowedSilence);
       }
 
-      double cutLen = inLength - outLength;
+      double cutLen = std::max(0.0, inLength - outLength);
       totalCutLen += cutLen;
 
       TrackListIterator iterOut(mOutputTracks.get());
