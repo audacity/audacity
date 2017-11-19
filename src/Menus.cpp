@@ -331,7 +331,18 @@ void AudacityProject::CreateMenusAndCommands()
          AudioIONotBusyFlag | UnsavedChangesFlag,
          AudioIONotBusyFlag | UnsavedChangesFlag);
       c->AddItem(wxT("SaveAs"), _("Save Project &As..."), FN(OnSaveAs));
-      c->BeginSubMenu( _("&Export") );
+
+      {
+         auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+         if (lang.empty() || lang.Left(2) == wxT("en"))
+            // PRL: last-minute improved message for 2.2.1 RC1, English only.
+            c->BeginSubMenu( _("&Export") );
+         else
+            // This string was already in catalogs for 2.2.0
+            // So the translation may still replace "Save Other"
+            // But translation will have no accelerator.
+            c->BeginSubMenu( _("Export") );
+      }
 
       // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMp3"), _("Export as MP&3"), FN(OnExportMp3), wxT(""),
