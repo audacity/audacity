@@ -5,6 +5,7 @@ GenericName[ca]=Editor d'àudio
 GenericName[da]=Lydredigeringsprogram
 GenericName[de]=Audio-Editor
 GenericName[fr]=Éditeur audio
+GenericName[pt_BR]=Editor de áudio
 GenericName[ru]=Редактор звуковых файлов
 GenericName[uk]=Редактор звукових файлів
 Comment=Record and edit audio files
@@ -12,6 +13,7 @@ Comment[ca]=Enregistreu i editeu els fitxers d'àudio
 Comment[da]=Optag og rediger lydfiler
 Comment[de]=Audio-Dateien aufnehmen und bearbeiten
 Comment[fr]=Enregistrer et éditer des fichiers audio
+Comment[pt_BR]=Gravar e editar arquivos de áudio
 Comment[ru]=Запись и редактирование звуковых файлов
 Comment[uk]=Запис і редагування звукових файлів
 
