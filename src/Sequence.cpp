@@ -1162,29 +1162,62 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
 // STRONG-GUARANTEE
 {
+   const auto size = mBlock.size();
+
    if (start < 0 || start >= mNumSamples ||
        start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   SampleBuffer scratch(mMaxSamples, mSampleFormat);
+   size_t tempSize = mMaxSamples;
+   // to do:  allocate this only on demand
+   SampleBuffer scratch(tempSize, mSampleFormat);
 
    SampleBuffer temp;
    if (buffer && format != mSampleFormat) {
-      const auto size = limitSampleBufferSize( mMaxSamples, len );
-      temp.Allocate(size, mSampleFormat);
+      temp.Allocate(tempSize, mSampleFormat);
    }
 
    int b = FindBlock(start);
    BlockArray newBlock;
    std::copy( mBlock.begin(), mBlock.begin() + b, std::back_inserter(newBlock) );
 
-   while (len != 0) {
+   while (len > 0
+      // Redundant termination condition,
+      // but it guards against infinite loop in case of inconsistencies
+      // (too-small files, not yet seen?)
+      // that cause the loop to make no progress because blen == 0
+      && b < size
+   ) {
       newBlock.push_back( mBlock[b] );
       SeqBlock &block = newBlock.back();
       // start is within block
       const auto bstart = ( start - block.start ).as_size_t();
       const auto fileLength = block.f->GetLength();
-      const auto blen = limitSampleBufferSize( fileLength - bstart, len );
+
+      // the std::min is a guard against inconsistent Sequence
+      const auto blen =
+         limitSampleBufferSize( fileLength - std::min( bstart, fileLength ),
+                                len );
+      wxASSERT(blen == 0 || bstart + blen <= fileLength);
+
+#if 0
+      // PRL:  This inconsistency (too-big file) has been seen in "the wild"
+      // in 2.2.0.  It is the least problematic kind of inconsistency.
+      // We will tolerate it for 2.2.1.
+      // Not known whether it is only in projects saved in earlier versions.
+      // After 2.2.1, we should detect and correct it at file loading time.
+      if (fileLength > mMaxSamples) {
+         THROW_INCONSISTENCY_EXCEPTION;
+      }
+#endif
+
+      if ( fileLength > tempSize ) {
+         // Not normal, correcting for inconsistent Sequence
+         // Reallocate so that copying does not overflow below
+         scratch.Allocate( tempSize = fileLength, mSampleFormat );
+         if ( temp.ptr() )
+            temp.Allocate( tempSize, mSampleFormat );
+      }
 
       samplePtr useBuffer = buffer;
       if (buffer && format != mSampleFormat)
@@ -1198,11 +1231,8 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       // we copy the old block entirely into memory, dereference it,
       // make the change, and then write the NEW block to disk.
 
-      if (!(fileLength <= mMaxSamples &&
-            bstart + blen <= fileLength))
-         THROW_INCONSISTENCY_EXCEPTION;
-
       if ( bstart > 0 || blen < fileLength ) {
+         // First or last block is only partially overwritten
          Read(scratch.ptr(), mSampleFormat, block, 0, fileLength, true);
 
          if (useBuffer) {
@@ -1225,11 +1255,14 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
             block.f = make_blockfile<SilentBlockFile>(fileLength);
       }
 
+      // blen might be zero for inconsistent Sequence...
       if( buffer )
          buffer += (blen * SAMPLE_SIZE(format));
 
       len -= blen;
       start += blen;
+
+      // ... but this, at least, always guarantees some loop progress:
       b++;
    }
 
