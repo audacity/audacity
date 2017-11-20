@@ -303,7 +303,7 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
       {
          parms.Write(ctrl.var, d);
       }
-      else if (ctrl.type == NYQ_CTRL_INT)
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
       {
          parms.Write(ctrl.var, (int) d);
       }
