@@ -1123,8 +1123,7 @@ bool Sequence::Get(samplePtr buffer, sampleFormat format,
       return len == 0;
    }
 
-   if (start < 0 || start > mNumSamples ||
-       start + len > mNumSamples) {
+   if (start < 0 || start + len > mNumSamples) {
       if (mayThrow)
          THROW_INCONSISTENCY_EXCEPTION;
       ClearSamples( buffer, floatSample, 0, len );
@@ -1164,8 +1163,7 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
 {
    const auto size = mBlock.size();
 
-   if (start < 0 || start >= mNumSamples ||
-       start + len > mNumSamples)
+   if (start < 0 || start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
 
    size_t tempSize = mMaxSamples;
@@ -1660,7 +1658,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
    if (len == 0)
       return;
 
-   if (len < 0 || start < 0 || start >= mNumSamples)
+   if (len < 0 || start < 0 || start + len > mNumSamples)
       THROW_INCONSISTENCY_EXCEPTION;
 
    //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
