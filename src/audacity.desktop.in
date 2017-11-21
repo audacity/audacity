@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Audacity
 GenericName=Sound Editor
+GenericName[ar]=محرر أصوات
 GenericName[ca]=Editor d'àudio
 GenericName[da]=Lydredigeringsprogram
 GenericName[de]=Audio-Editor
@@ -11,6 +12,7 @@ GenericName[pt_PT]=Editor de áudio
 GenericName[ru]=Редактор звуковых файлов
 GenericName[uk]=Редактор звукових файлів
 Comment=Record and edit audio files
+Comment[ar]=سجل و حرر ملفات صوت
 Comment[ca]=Enregistreu i editeu els fitxers d'àudio
 Comment[da]=Optag og rediger lydfiler
 Comment[de]=Audio-Dateien aufnehmen und bearbeiten
