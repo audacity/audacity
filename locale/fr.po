@@ -9,13 +9,14 @@
 # Louis Boucherie, 2015
 # Lucas Lechat <lucaslechat@outlook.com>, 2013
 # Tubuntu <tubuntu@testimonium.be>, 2013-2015
+# Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-22 11:50+0100\n"
-"PO-Revision-Date: 2015-06-17 17:29+0000\n"
-"Last-Translator: Tubuntu <tubuntu@testimonium.be>\n"
+"PO-Revision-Date: 2017-11-21 19:03+0100\n"
+"Last-Translator: Olivier Humbert (trebmuh/olinuxx) <ttrebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
 "Language: fr\n"
@@ -62,7 +63,7 @@ msgstr "Type de &filtre :"
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
 msgid "File dialog failed with error code %0lx."
-msgstr ""
+msgstr "Le dialogue de fichier a échoué avec le code d'erreur %0lx."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:188
 msgid "&Nyquist Workbench..."
