@@ -45,6 +45,8 @@ public:
 
    ~InconsistencyException() override;
 
+   unsigned GetLine() const { return line; }
+
 private:
    std::unique_ptr< AudacityException > Move() override;
 

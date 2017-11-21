@@ -1869,7 +1869,8 @@ void Sequence::ConsistencyCheck
 
    if ( bError )
    {
-      wxLogError(wxT("*** Consistency check failed after %s. ***"), whereStr);
+      wxLogError(wxT("*** Consistency check failed at %d after %s. ***"),
+                 ex.GetLine(), whereStr);
       wxString str;
       DebugPrintf(mBlock, mNumSamples, &str);
       wxLogError(wxT("%s"), str.c_str());
@@ -1877,9 +1878,9 @@ void Sequence::ConsistencyCheck
                  wxT("Recommended course of action:\n")
                  wxT("Undo the failed operation(s), then export or save your work and quit."));
 
-      if (mayThrow)
-         throw ex;
-      else
+      //if (mayThrow)
+         //throw ex;
+      //else
          wxASSERT(false);
    }
 }
