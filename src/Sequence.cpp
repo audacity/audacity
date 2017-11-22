@@ -129,6 +129,31 @@ bool Sequence::SetSampleFormat(sampleFormat format)
 }
 */
 
+namespace {
+   void ensureSampleBufferSize(SampleBuffer &buffer, sampleFormat format,
+                               size_t &size, size_t required,
+                               SampleBuffer *pSecondBuffer = nullptr)
+   {
+      // This should normally do nothing, but it is a defense against corrupt
+      // projects than might have inconsistent block files bigger than the
+      // expected maximum size.
+      if (size < required) {
+         // reallocate
+         buffer.Allocate(required, format);
+         if (pSecondBuffer && pSecondBuffer->ptr())
+            pSecondBuffer->Allocate(required, format);
+         if (!buffer.ptr() || (pSecondBuffer && !pSecondBuffer->ptr())) {
+            // malloc failed
+            // Perhaps required is a really crazy value,
+            // and perhaps we should throw an AudacityException, but that is
+            // a second-order concern
+            THROW_INCONSISTENCY_EXCEPTION;
+         }
+         size = required;
+      }
+   }
+}
+
 bool Sequence::ConvertToSampleFormat(sampleFormat format)
 // STRONG-GUARANTEE
 {
@@ -167,16 +192,20 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
       (1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
 
    {
-      SampleBuffer bufferOld(oldMaxSamples, oldFormat);
-      SampleBuffer bufferNew(oldMaxSamples, format);
+      size_t oldSize = oldMaxSamples;
+      SampleBuffer bufferOld(oldSize, oldFormat);
+      size_t newSize = oldMaxSamples;
+      SampleBuffer bufferNew(newSize, format);
 
       for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
       {
          SeqBlock &oldSeqBlock = mBlock[i];
          const auto &oldBlockFile = oldSeqBlock.f;
          const auto len = oldBlockFile->GetLength();
+         ensureSampleBufferSize(bufferOld, oldFormat, oldSize, len);
          Read(bufferOld.ptr(), oldFormat, oldSeqBlock, 0, len, true);
 
+         ensureSampleBufferSize(bufferNew, format, newSize, len);
          CopySamples(bufferOld.ptr(), oldFormat, bufferNew.ptr(), format, len);
 
          // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451,
@@ -377,7 +406,8 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
 
    dest->mBlock.reserve(b1 - b0 + 1);
 
-   SampleBuffer buffer(mMaxSamples, mSampleFormat);
+   auto bufferSize = mMaxSamples;
+   SampleBuffer buffer(bufferSize, mSampleFormat);
 
    int blocklen;
 
@@ -390,6 +420,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       blocklen =
          ( std::min(s1, block0.start + file->GetLength()) - s0 ).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
+      ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
       Get(b0, buffer.ptr(), mSampleFormat, s0, blocklen, true);
 
       dest->Append(buffer.ptr(), mSampleFormat, blocklen);
@@ -410,6 +441,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       blocklen = (s1 - block.start).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       if (blocklen < file->GetLength()) {
+         ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
          Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen, true);
          dest->Append(buffer.ptr(), mSampleFormat, blocklen);
       }
@@ -1209,18 +1241,14 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       }
 #endif
 
-      if ( fileLength > tempSize ) {
-         // Not normal, correcting for inconsistent Sequence
-         // Reallocate so that copying does not overflow below
-         scratch.Allocate( tempSize = fileLength, mSampleFormat );
-         if ( temp.ptr() )
-            temp.Allocate( tempSize, mSampleFormat );
-      }
+      ensureSampleBufferSize(scratch, mSampleFormat, tempSize, fileLength,
+                             &temp);
 
       samplePtr useBuffer = buffer;
       if (buffer && format != mSampleFormat)
       {
          // To do: remove the extra movement.
+         // Note: we ensured temp can hold fileLength.  blen is not more
          CopySamples(buffer, format, temp.ptr(), mSampleFormat, blen);
          useBuffer = temp.ptr();
       }
@@ -1495,7 +1523,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
          wxASSERT(rmsDenom > 0);
          const float *const pv =
             temp.get() + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
-         MinMaxSumsq values(pv, rmsDenom, divisor);
+         MinMaxSumsq values(pv, std::max(0, rmsDenom), divisor);
 
          // Assign results
          std::fill(&min[pixel], &min[pixelX], values.min);
@@ -1528,7 +1556,7 @@ size_t Sequence::GetIdealAppendLen() const
       return max;
 
    const auto lastBlockLen = mBlock.back().f->GetLength();
-   if (lastBlockLen == max)
+   if (lastBlockLen >= max)
       return max;
    else
       return max - lastBlockLen;
@@ -1552,7 +1580,8 @@ void Sequence::Append(samplePtr buffer, sampleFormat format,
    int numBlocks = mBlock.size();
    SeqBlock *pLastBlock;
    decltype(pLastBlock->f->GetLength()) length;
-   SampleBuffer buffer2(mMaxSamples, mSampleFormat);
+   size_t bufferSize = mMaxSamples;
+   SampleBuffer buffer2(bufferSize, mSampleFormat);
    bool replaceLast = false;
    if (numBlocks > 0 &&
        (length =
@@ -1678,8 +1707,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
    // One buffer for reuse in various branches here
    SampleBuffer scratch;
-   // The maximum size that will ever be needed
-   const auto scratchSize = mMaxSamples + mMinSamples;
+   // The maximum size that should ever be needed
+   auto scratchSize = mMaxSamples + mMinSamples;
 
    // Special case: if the samples to DELETE are all within a single
    // block and the resulting length is not too small, perform the
@@ -1689,12 +1718,16 @@ void Sequence::Delete(sampleCount start, sampleCount len)
       SeqBlock &b = *pBlock;
       // start is within block
       auto pos = ( start - b.start ).as_size_t();
+
+      // Guard against failure of this anyway below with limitSampleBufferSize
       wxASSERT(len < length);
+
       // len must be less than length
       // because start + len - 1 is also in the block...
-      auto newLen = ( length - len ).as_size_t();
+      auto newLen = ( length - limitSampleBufferSize( length, len ) );
 
       scratch.Allocate(scratchSize, mSampleFormat);
+      ensureSampleBufferSize(scratch, mSampleFormat, scratchSize, newLen);
 
       Read(scratch.ptr(), mSampleFormat, b, 0, pos, true);
       Read(scratch.ptr() + (pos * sampleSize), mSampleFormat,
@@ -1745,6 +1778,7 @@ void Sequence::Delete(sampleCount start, sampleCount len)
       if (preBufferLen >= mMinSamples || b0 == 0) {
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
+         ensureSampleBufferSize(scratch, mSampleFormat, scratchSize, preBufferLen);
          Read(scratch.ptr(), mSampleFormat, preBlock, 0, preBufferLen, true);
          auto pFile =
             mDirManager->NewSimpleBlockFile(scratch.ptr(), preBufferLen, mSampleFormat);
@@ -1757,6 +1791,8 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
          if (!scratch.ptr())
             scratch.Allocate(scratchSize, mSampleFormat);
+         ensureSampleBufferSize(scratch, mSampleFormat, scratchSize,
+                                sum);
 
          Read(scratch.ptr(), mSampleFormat, prepreBlock, 0, prepreLen, true);
          Read(scratch.ptr() + prepreLen*sampleSize, mSampleFormat,
