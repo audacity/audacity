@@ -1370,7 +1370,11 @@ std::pair<bool, wxString> DirManager::CopyToNewProjectDirectory(BlockFile *f)
    }
 
    wxFileNameWrapper newFileName;
-   if (!this->AssignFile(newFileName, oldFileNameRef.GetFullName(), false))
+   if (!this->AssignFile(newFileName, oldFileNameRef.GetFullName(), false)
+       // Another sanity check against blockfiles getting reassigned an empty
+       // name, as apparently happened in
+       // http://forum.audacityteam.org/viewtopic.php?f=47&t=97787 :
+       || newFileName.GetFullName().empty() )
       return { false, {} };
 
    if (newFileName != oldFileNameRef) {
