@@ -1285,7 +1285,11 @@ void WaveTrack::Paste(double t0, const Track *src)
          other->GetStartTime() == 0.0);
 
    const double insertDuration = other->GetEndTime();
-   if( insertDuration < 1.0/mRate )
+   if( insertDuration != 0 && insertDuration < 1.0/mRate )
+      // PRL:  I added this check to avoid violations of preconditions in other WaveClip and Sequence
+      // methods, but allow the value 0 so I don't subvert the purpose of commit
+      // 739422ba70ceb4be0bb1829b6feb0c5401de641e which causes append-recording always to make
+      // a new clip.
       return;
 
    //printf("Check if we need to make room for the pasted data\n");
