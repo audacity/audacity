@@ -9,13 +9,14 @@
 # Louis Boucherie, 2015
 # Lucas Lechat <lucaslechat@outlook.com>, 2013
 # Tubuntu <tubuntu@testimonium.be>, 2013-2015
+# Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-22 11:50+0100\n"
-"PO-Revision-Date: 2015-06-17 17:29+0000\n"
-"Last-Translator: Tubuntu <tubuntu@testimonium.be>\n"
+"PO-Revision-Date: 2017-11-24 22:38+0100\n"
+"Last-Translator: Olivier Humbert (trebmuh/olinuxx) <ttrebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
 "Language: fr\n"
@@ -55,18 +56,17 @@ msgid "Error"
 msgstr "Erreur"
 
 #: lib-src/FileDialog/mac/FileDialogPrivate.mm:484
-#, fuzzy
 msgid "File type:"
-msgstr "Type de &filtre :"
+msgstr "Type de filtre :"
 
 #: lib-src/FileDialog/win/FileDialogPrivate.cpp:860
 #, c-format
 msgid "File dialog failed with error code %0lx."
-msgstr ""
+msgstr "Le dialogue de fichier a échoué avec le code d'erreur %0lx."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:188
 msgid "&Nyquist Workbench..."
-msgstr ""
+msgstr "Panoplie &Nyquist..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:745
 msgid "&Undo\tCtrl+Z"
@@ -91,40 +91,45 @@ msgid "&Paste\tCtrl+V"
 msgstr "Co&ller"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:751
+#, fuzzy
 msgid "Cle&ar\tCtrl+L"
-msgstr ""
+msgstr "Nettoyer\tCtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:753
+#, fuzzy
 msgid "Select A&ll\tCtrl+A"
-msgstr ""
+msgstr "Sélectionner Tout\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:755
+#, fuzzy
 msgid "&Find...\tCtrl+F"
-msgstr ""
+msgstr "Trouver...\tCtrl+F"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:758
+#, fuzzy
 msgid "&Matching Paren\tF8"
 msgstr ""
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:759
 msgid "&Top S-expr\tF9"
-msgstr ""
+msgstr "S-expr du hau&t\tF9"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:760
 msgid "&Higher S-expr\tF10"
-msgstr ""
+msgstr "S-expr plus &haut\tF10"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:761
 msgid "&Previous S-expr\tF11"
-msgstr ""
+msgstr "S-expr &précédent\tF11"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:762
 msgid "&Next S-expr\tF12"
-msgstr ""
+msgstr "S-expr suiva&nt\tF12"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:763
+#, fuzzy
 msgid "&Go to"
-msgstr ""
+msgstr "Aller à"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:769
 #, fuzzy
@@ -144,35 +149,33 @@ msgstr "Horizontal"
 #: lib-src/mod-nyq-bench/NyqBench.cpp:774
 #, fuzzy
 msgid "Show S&cript"
-msgstr "Montrer la sortie"
+msgstr "Montrer les s&cript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:775
 #, fuzzy
 msgid "Show &Output"
-msgstr "Montrer la sortie"
+msgstr "Montrer la s&ortie"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:778
-#, fuzzy
 msgid "&Large Icons"
-msgstr "Large espace"
+msgstr "Icônes &larges"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:779
 msgid "&Small Icons"
-msgstr ""
+msgstr "Petit&s icônes"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:780
-#, fuzzy
 msgid "Toolbar"
-msgstr "Barres d'ou&tils"
+msgstr "Barre d'outils"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:784
+#, fuzzy
 msgid "&Go\tF5"
-msgstr ""
+msgstr "Aller\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:785
-#, fuzzy
 msgid "&Stop\tF6"
-msgstr "Stop"
+msgstr "&Stop\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:789
 #: lib-src/mod-nyq-bench/NyqBench.cpp:792
@@ -184,30 +187,30 @@ msgstr "À propos"
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1600
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1615
 msgid "Script"
-msgstr ""
+msgstr "Script"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:943
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1603
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1612
 #, fuzzy
 msgid "Output"
-msgstr "Commande"
+msgstr "Sortie"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1051
 #: src/effects/nyquist/Nyquist.cpp:2304
 msgid "Load Nyquist script"
-msgstr ""
+msgstr "Charger un script Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1054
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1100
 #: src/effects/nyquist/Nyquist.cpp:2329
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
+msgstr "Scripts Nyquist (*.ny)|*.ny|scripts Lisp (*.lsp)|*.lsp|Tous les fichiers|*"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1082
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1112
 msgid "Script was not saved."
-msgstr ""
+msgstr "Le script n'a pas été sauvé."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1083
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1113
@@ -221,57 +224,54 @@ msgstr "Attention"
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1097
 #: src/effects/nyquist/Nyquist.cpp:2326
 msgid "Save Nyquist script"
-msgstr ""
+msgstr "Enregistrer le script Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1196
 msgid "Find dialog"
-msgstr ""
+msgstr "Dialogue de recherche"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1415
 msgid "Harvey Lubin (logo)"
-msgstr ""
+msgstr "Harvey Lubin (logo)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1416
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
+msgstr "Gallerie d'icône Tango (icônes de barre d'outils)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1417
 msgid "Leland Lucius"
-msgstr ""
+msgstr "Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1418
 msgid "(C) 2009 by Leland Lucius"
-msgstr ""
+msgstr "(C) 2009 par Leland Lucius"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1419
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
+"Module Audacity externe qui fourni un IDE simple pour l'écriture d'effets."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1420
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1488
-#, fuzzy
 msgid "Nyquist Effect Workbench"
-msgstr "Effets Nyquist"
+msgstr "Panoplie d'effet Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1487
-#, fuzzy
 msgid "No matches found"
-msgstr "Aucun périphérique trouvé"
+msgstr "Aucune correspondance trouvée"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1624
 msgid "Code has been modified.  Are you sure?"
-msgstr ""
+msgstr "Le code a été modifié.  Êtes-vous sûr ?"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1638
-#, fuzzy
 msgid "Untitled"
-msgstr "sans titre"
+msgstr "Sans titre"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1644
-#, fuzzy
 msgid "Nyquist Effect Workbench - "
-msgstr "Effets Nyquist"
+msgstr "Panoplie d'effet Nyquist - "
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1708 src/PluginManager.cpp:491
 #: src/prefs/ModulePrefs.cpp:102
@@ -280,46 +280,39 @@ msgstr "Nouveau"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1708
 msgid "New script"
-msgstr ""
+msgstr "Nouveau script"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1709
-#, fuzzy
 msgid "Open"
-msgstr "&Ouvrir..."
+msgstr "Ouvrir"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1709
-#, fuzzy
 msgid "Open script"
-msgstr "Ouvrir les fichiers récents"
+msgstr "Ouvrir un script"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1710
-#, fuzzy
 msgid "Save"
-msgstr "&Sauvegarder"
+msgstr "Enregistrer"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1710
-#, fuzzy
 msgid "Save script"
-msgstr "Enregistrer la présélection"
+msgstr "Enregistrer le script"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1711
-#, fuzzy
 msgid "Save As"
-msgstr "Enregistrer sous..."
+msgstr "Enregistrer sous"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1711
-#, fuzzy
 msgid "Save script as..."
-msgstr "Enregistrer le projet &sous..."
+msgstr "Enregistrer le script sous..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1713 src/toolbars/EditToolBar.cpp:216
 msgid "Copy"
 msgstr "Copier"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1713
-#, fuzzy
 msgid "Copy to clipboard"
-msgstr "Couper vers le presse-papier"
+msgstr "Copier vers le presse-papier"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1714 src/Menus.cpp:4803
 #: src/toolbars/EditToolBar.cpp:215
@@ -327,7 +320,6 @@ msgid "Cut"
 msgstr "Couper et raccorder"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1714
-#, fuzzy
 msgid "Cut to clipboard"
 msgstr "Couper vers le presse-papier"
 
@@ -338,29 +330,24 @@ msgid "Paste"
 msgstr "Coller"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1715
-#, fuzzy
 msgid "Paste from clipboard"
-msgstr "Collé depuis le presse-papier"
+msgstr "Coller depuis le presse-papier"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Clear"
-msgstr "Effa&cer"
+msgstr "Effacer"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1716
-#, fuzzy
 msgid "Clear selection"
-msgstr "&Mesurer la sélection"
+msgstr "Effacer la sélection"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Select All"
-msgstr "Sélection"
+msgstr "Tout sélectionner"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1717
-#, fuzzy
 msgid "Select all text"
-msgstr "Début de la sélection"
+msgstr "Sélectionner tout le texte"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1719 src/prefs/KeyConfigPrefs.cpp:970
 #: src/toolbars/EditToolBar.cpp:145 src/toolbars/EditToolBar.cpp:220
@@ -369,9 +356,8 @@ msgid "Undo"
 msgstr "Annuler"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1719
-#, fuzzy
 msgid "Undo last change"
-msgstr "Format :"
+msgstr "Annuler la dernière modification"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720 src/prefs/KeyConfigPrefs.cpp:973
 #: src/toolbars/EditToolBar.cpp:147 src/toolbars/EditToolBar.cpp:221
@@ -381,21 +367,19 @@ msgstr "Refaire"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1720
 msgid "Redo previous change"
-msgstr ""
+msgstr "Refaire la dernière modification"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722
 msgid "Find"
-msgstr ""
+msgstr "Chercher"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1722
-#, fuzzy
 msgid "Find text"
-msgstr "Touver les notes"
+msgstr "Chercher du texte"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
-#, fuzzy
 msgid "Match"
-msgstr "Traitement en lot"
+msgstr "Correspondance"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1724
 msgid "Go to matching paren"
@@ -404,11 +388,11 @@ msgstr ""
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1725
 #, fuzzy
 msgid "Top"
-msgstr "tout en haut"
+msgstr "Tout en haut"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1725
 msgid "Go to top S-expr"
-msgstr ""
+msgstr "Aller au S-expr du haut"
 
 #. i18n-hint: a direction.
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726 src/Menus.cpp:3938
@@ -417,16 +401,15 @@ msgstr "Haut"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1726
 msgid "Go to higher S-expr"
-msgstr ""
+msgstr "Aller au S-expr du dessus"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
-#, fuzzy
 msgid "Previous"
-msgstr "Outil précédent"
+msgstr "Précédent"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1727
 msgid "Go to previous S-expr"
-msgstr ""
+msgstr "Aller au S-expr précédent"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1728
 #, fuzzy
@@ -435,7 +418,7 @@ msgstr "Outil suivant"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1728
 msgid "Go to next S-expr"
-msgstr ""
+msgstr "Aller au S-expr suivant"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1730 src/Menus.cpp:7384
 #: src/Menus.cpp:7389 src/Menus.cpp:7394 src/effects/Contrast.cpp:191
@@ -445,9 +428,8 @@ msgid "Start"
 msgstr "Début"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1730
-#, fuzzy
 msgid "Start script"
-msgstr "Décalage de début :"
+msgstr "Démarrer le script"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731 src/effects/Effect.cpp:3736
 #: src/toolbars/ControlToolBar.cpp:188 src/widgets/ProgressDialog.cpp:1212
@@ -456,19 +438,19 @@ msgstr "Stop"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1731
 msgid "Stop script"
-msgstr ""
+msgstr "Arrêter le script"
 
 #: src/AboutDialog.cpp:99
 msgid "Check Online"
-msgstr ""
+msgstr "Vérifier en ligne"
 
 #: src/AboutDialog.cpp:108
 msgid "quality assurance"
-msgstr "Assurance qualité"
+msgstr "assurance qualité"
 
 #: src/AboutDialog.cpp:109
 msgid "system administration"
-msgstr ""
+msgstr "administration système"
 
 #: src/AboutDialog.cpp:110 src/AboutDialog.cpp:113 src/AboutDialog.cpp:115
 #: src/AboutDialog.cpp:117 src/AboutDialog.cpp:123 src/AboutDialog.cpp:125
@@ -488,44 +470,41 @@ msgstr ""
 #: src/AboutDialog.cpp:174 src/AboutDialog.cpp:175 src/AboutDialog.cpp:176
 #: src/AboutDialog.cpp:177 src/AboutDialog.cpp:178 src/AboutDialog.cpp:179
 #: src/AboutDialog.cpp:180 src/AboutDialog.cpp:181
-#, fuzzy
 msgid "developer"
-msgstr "Outil de niveau (enveloppe)"
+msgstr "développeur"
 
 #: src/AboutDialog.cpp:111 src/AboutDialog.cpp:132
 msgid "co-founder and developer"
-msgstr ""
+msgstr "co-fondateur et développeur"
 
 #: src/AboutDialog.cpp:114 src/AboutDialog.cpp:118 src/AboutDialog.cpp:136
 #: src/AboutDialog.cpp:137
 msgid "documentation and support"
-msgstr ""
+msgstr "documentation et support"
 
 #: src/AboutDialog.cpp:124
 msgid "documentation and support, French"
-msgstr ""
+msgstr "documentation and support, français"
 
 #: src/AboutDialog.cpp:142
 msgid "accessibility advisor"
-msgstr ""
+msgstr "conseiller accessibilité"
 
 #: src/AboutDialog.cpp:161
 msgid "graphic artist"
-msgstr ""
+msgstr "artiste graphique"
 
 #: src/AboutDialog.cpp:168
 msgid "composer"
-msgstr ""
+msgstr "compositeur"
 
 #: src/AboutDialog.cpp:171
-#, fuzzy
 msgid "Nyquist plug-ins"
-msgstr "Console Nyquist"
+msgstr "Greffons Nyquist"
 
 #: src/AboutDialog.cpp:245
-#, fuzzy
 msgid "incorporating"
-msgstr "Erreur d'importation"
+msgstr "incorporation"
 
 #: src/AboutDialog.cpp:299
 msgid "About Audacity"
@@ -544,21 +523,23 @@ msgid ""
 "audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
 "other Unix-like systems)."
 msgstr ""
+"Audacity est un programme libre écrit par un équipe planétaire de"
+" [[http://www.audacityteam.org/about/credits|volunteers]]. Audacity est"
+" [[http://www.audacityteam.org/download|disponible]] pour Windows, Mac, et"
+" GNU/Linux (et d'autres systèmes Unix-like)."
 
 #: src/AboutDialog.cpp:351
-#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our [[mailto:feedback@audacityteam.org|feedback address]]. For help, view "
 "the tips and tricks on our [[http://wiki.audacityteam.org/|wiki]] or visit "
 "our [[http://forum.audacityteam.org/|forum]]."
 msgstr ""
-"Si vous trouver un bogue ou que vous avez des suggestions, veuillez nous "
-"écrire, en anglais, à notre <a href=\"mailto:feedback@audacityteam.org"
-"\">adresse de feedback</a>. Pour de l'aide, consultez les trucs et astuces "
-"sur notre <a href=\"http://wiki.audacityteam.org/wiki/French_Front_Page"
-"\">wiki</a> ou visitez notre <a href=\"http://forum.audacityteam.org/"
-"\">forum</a>."
+"Si vous trouver un bogue ou que vous avez une suggestion pour nous, veuillez "
+"nous écrire, en anglais, à notre [[mailto:feedback@audacityteam.org|adresse "
+"de retour]]. Pour de l'aide, consultez les trucs et astuces sur notre "
+"[[http://wiki.audacityteam.org/|wiki (en anglais)]] ou visitez notre "
+"[[http://forum.audacityteam.org/|forum (en anglais)]]."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -566,24 +547,23 @@ msgstr ""
 #. *
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp:364 src/AboutDialog.cpp:366
+#, fuzzy
 msgid "translator_credits"
 msgstr ""
 "Traduction française de Christian Brochec. \n"
 "Pour toute remarque ou suggestion  :  christian@audacityteam.org"
 
 #: src/AboutDialog.cpp:382
-#, fuzzy
 msgid "<h3>Audacity "
-msgstr "Audacity"
+msgstr "<h3>Audacity "
 
 #: src/AboutDialog.cpp:383
-#, fuzzy
 msgid ""
 "Audacity the free, open source, cross-platform software for recording and "
 "editing sounds."
 msgstr ""
-"gratuit, open source, logiciel multi-plateforme pour l'enregistrement et "
-"l'édition de sons<br>"
+"Audacity est un logiciel libre, à source ouverte, multi-plateformes pour "
+"l'enregistrement et l'édition de sons."
 
 #: src/AboutDialog.cpp:388
 msgid "Credits"
@@ -591,57 +571,55 @@ msgstr "Crédits"
 
 #: src/AboutDialog.cpp:392
 msgid "DarkAudacity Customisation"
-msgstr ""
+msgstr "Personnalisation DarkAudacity"
 
 #: src/AboutDialog.cpp:396
-#, fuzzy
 msgid "Audacity Team Members"
-msgstr "Développeurs d'Audacity"
+msgstr "Développeurs de l'équipe d'Audacity"
 
 #: src/AboutDialog.cpp:399
 msgid "Emeritus:"
-msgstr ""
+msgstr "Émérite :"
 
 #: src/AboutDialog.cpp:400
 msgid "Distinguished Audacity Team members, not currently active"
-msgstr ""
+msgstr "Éminent membres de l'équipe d'Audacity, pas actif actuellement"
 
 #: src/AboutDialog.cpp:403
-#, fuzzy
 msgid "Contributors"
-msgstr "Autres contributeurs :"
+msgstr "Contributeurs"
 
 #: src/AboutDialog.cpp:406
-#, fuzzy
 msgid "Translators"
-msgstr "Transport"
+msgstr "Traducteurs"
 
 #: src/AboutDialog.cpp:410 src/prefs/LibraryPrefs.cpp:49
 msgid "Libraries"
 msgstr "Bibliothèques"
 
 #: src/AboutDialog.cpp:411
-#, fuzzy
 msgid "Audacity includes code from the following projects:"
-msgstr "Audacity est basé sur le code des projets suivants :"
+msgstr "Audacity inclus du code des projets suivants :"
 
 #: src/AboutDialog.cpp:414
 msgid "Special thanks:"
 msgstr "Remerciements particuliers :"
 
 #: src/AboutDialog.cpp:423
-#, fuzzy
 msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
 "&copy; 1999-2017 Audacity Team.<br>"
-msgstr "Le logiciel <b>Audacity&reg;</b> est sous copyright"
+msgstr ""
+"<p>Le logiciel <br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> est sous "
+"copyright &copy; 1999-2017 Audacity Team.<br>"
 
 #: src/AboutDialog.cpp:424
-#, fuzzy
 msgid ""
 "&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
 "Mazzoni.<br><br>"
-msgstr "Le nom <b>Audacity&reg;</b>est une marque déposée par Dominic Mazzoni."
+msgstr ""
+"Le nom &nbsp; &nbsp; The name <b>Audacity</b> est une marque déposée par "
+"Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp:430 src/effects/Effect.cpp:190
 #: src/effects/Effect.cpp:220 src/effects/nyquist/Nyquist.cpp:207
@@ -651,7 +629,7 @@ msgstr "Audacity"
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp:483 src/AboutDialog.cpp:496 src/AboutDialog.cpp:674
 msgid "Build Information"
-msgstr "Informations système"
+msgstr "Informations de construction"
 
 #: src/AboutDialog.cpp:489 src/PluginManager.cpp:489
 #: src/prefs/ModulePrefs.cpp:99
@@ -674,19 +652,19 @@ msgstr "Importation de MP3"
 
 #: src/AboutDialog.cpp:520 src/AboutDialog.cpp:523
 msgid "Ogg Vorbis Import and Export"
-msgstr "Import et Export Ogg Vorbis "
+msgstr "Import et export Ogg Vorbis "
 
 #: src/AboutDialog.cpp:527 src/AboutDialog.cpp:530
 msgid "ID3 tag support"
-msgstr "support des tag ID3"
+msgstr "Support des tag ID3"
 
 #: src/AboutDialog.cpp:537 src/AboutDialog.cpp:540
 msgid "FLAC import and export"
-msgstr "Import et Export FLAC"
+msgstr "Import et export FLAC"
 
 #: src/AboutDialog.cpp:545 src/AboutDialog.cpp:548
 msgid "MP2 export"
-msgstr "export MP2"
+msgstr "Export MP2"
 
 #: src/AboutDialog.cpp:553 src/AboutDialog.cpp:556
 msgid "Import via QuickTime"
@@ -694,7 +672,7 @@ msgstr "Importer depuis QuickTime"
 
 #: src/AboutDialog.cpp:561 src/AboutDialog.cpp:563
 msgid "FFmpeg Import/Export"
-msgstr "Import/Export FFmpeg"
+msgstr "Import/export FFmpeg"
 
 #: src/AboutDialog.cpp:567 src/AboutDialog.cpp:569
 msgid "Import via GStreamer"
@@ -703,11 +681,11 @@ msgstr "Import via GStreamer"
 #. i18n-hint: Libraries that are essential to audacity
 #: src/AboutDialog.cpp:575
 msgid "Core Libraries"
-msgstr "Bibliothèques"
+msgstr "Bibliothèques centrales"
 
 #: src/AboutDialog.cpp:579
 msgid "Sample rate conversion"
-msgstr "Conversion de fréquence d'échantillonnage"
+msgstr "Conversion de taux d'échantillonnage"
 
 #: src/AboutDialog.cpp:582
 msgid "Audio playback and recording"
@@ -715,26 +693,27 @@ msgstr "Lecture et enregistrement audio"
 
 #: src/AboutDialog.cpp:585
 msgid "Cross-platform GUI library"
-msgstr ""
+msgstr "Bibliothèque graphique multi-plateforme"
 
 #: src/AboutDialog.cpp:589
 msgid "Features"
-msgstr "Fonctions"
+msgstr "Fonctionnalités"
 
 #: src/AboutDialog.cpp:593 src/AboutDialog.cpp:595
+#, fuzzy
 msgid "Dark Theme Extras"
-msgstr ""
+msgstr "Extra du thème Dark"
 
 #: src/AboutDialog.cpp:599 src/AboutDialog.cpp:602 src/AboutDialog.cpp:607
 #: src/AboutDialog.cpp:610 src/AboutDialog.cpp:615 src/AboutDialog.cpp:618
 #: src/AboutDialog.cpp:623 src/AboutDialog.cpp:626 src/AboutDialog.cpp:631
 #: src/AboutDialog.cpp:634 src/AboutDialog.cpp:639 src/AboutDialog.cpp:642
 msgid "Plug-in support"
-msgstr "Prise en charge des greffons"
+msgstr "Support de greffon"
 
 #: src/AboutDialog.cpp:647 src/AboutDialog.cpp:650
 msgid "Sound card mixer support"
-msgstr "Support du mixage de la carte son"
+msgstr "Support du mixeur de carte-son"
 
 #: src/AboutDialog.cpp:655 src/AboutDialog.cpp:658
 msgid "Pitch and Tempo Change support"
@@ -746,41 +725,42 @@ msgstr "Support du changement extrême de hauteur et de tempo"
 
 #: src/AboutDialog.cpp:678
 msgid "Program build date: "
-msgstr "Date de création du programme :"
+msgstr "Date de construction du programme :"
 
 #: src/AboutDialog.cpp:679
+#, fuzzy
 msgid "Commit Id:"
-msgstr ""
+msgstr "Identifiant de commit :"
 
 #: src/AboutDialog.cpp:681 src/AboutDialog.cpp:683
 msgid "Build type:"
-msgstr "Type de version :"
+msgstr "Type de construction :"
 
 #: src/AboutDialog.cpp:681
 msgid "Debug build"
-msgstr "Débogage"
+msgstr "Construction de débogage"
 
 #: src/AboutDialog.cpp:683
+#, fuzzy
 msgid "Release build"
-msgstr "Distribution"
+msgstr "Construction de version"
 
 #: src/AboutDialog.cpp:687 src/AboutDialog.cpp:693 src/AboutDialog.cpp:695
 #: src/AboutDialog.cpp:700
-#, fuzzy
 msgid "Compiler:"
-msgstr "Compresseur"
+msgstr "Compilateur :"
 
 #: src/AboutDialog.cpp:706
 msgid "Installation Prefix: "
-msgstr "Préfixe d'intallation"
+msgstr "Préfixe d'intallation : "
 
 #: src/AboutDialog.cpp:711
 msgid "Settings folder: "
-msgstr "Répertoire de paramêtres :"
+msgstr "Répertoire de paramêtres : "
 
 #: src/AboutDialog.cpp:728
 msgid "GPL License"
-msgstr "License GPL (en anglais)"
+msgstr "Licence GPL (en anglais)"
 
 #: src/AudacityApp.cpp:849
 #, c-format
@@ -806,15 +786,15 @@ msgid ""
 "Choose File > Check Dependencies to view a list of locations of the missing "
 "files."
 msgstr ""
-"Un  (ou plusieurs) fichier audio n'ont pu être trouvé(s).\n"
-"Ils ont pu être déplacés, effacés ou le lecteur sur lesquels ils se trouvent "
-"n'a pu être monté.\n"
+"Un (ou plusieurs) fichier audio n'ont pu être trouvé(s).\n"
+"Ils ont pu être déplacés, effacés, ou le lecteur sur lesquels ils se "
+"trouvaient a été démonté.\n"
 "L'audio concerné a été remplacé par du silence.\n"
 "Le premier fichier manquant détecté est :\n"
 "%s\n"
-"Il peut y avoir d'autres fichiers manquants.\n"
+"Il pourrait y avoir d'autres fichiers manquants.\n"
 "Choisissez Fichier > Vérifier les fichiers associés pour voir une liste "
-"d'emplacements des fichiers manquants."
+"des emplacements des fichiers manquants."
 
 #: src/AudacityApp.cpp:960
 msgid "Files Missing"
@@ -823,31 +803,33 @@ msgstr "Fichiers manquants"
 #: src/AudacityApp.cpp:1052
 #, c-format
 msgid "Language \"%s\" is unknown"
-msgstr ""
+msgstr "La langue \"%s\" est inconnue"
 
 #: src/AudacityApp.cpp:1178
+#, fuzzy
 msgid "Report generated to:"
-msgstr ""
+msgstr "Rapport généré pour : "
 
 #: src/AudacityApp.cpp:1179
+#, fuzzy
 msgid "Audacity Support Data"
-msgstr ""
+msgstr "Données de support Audacity"
 
 #: src/AudacityApp.cpp:1302
 msgid "Master Gain Control"
-msgstr "Contrôle du niveau Master"
+msgstr "Contrôle du niveau général"
 
 #: src/AudacityApp.cpp:1485
 msgid "Block size must be within 256 to 100000000\n"
-msgstr "La taille du bloc doit être entre 256 et 100000000\n"
+msgstr "La taille du bloc doit être comprise entre 256 et 100000000\n"
 
 #: src/AudacityApp.cpp:1498
 msgid "File decoded successfully\n"
-msgstr ""
+msgstr "Fichier décodé avec succès\n"
 
 #: src/AudacityApp.cpp:1502
 msgid "Decoding failed\n"
-msgstr ""
+msgstr "Échec du décodage\n"
 
 #: src/AudacityApp.cpp:1542
 msgid "Audacity is starting up..."
@@ -865,11 +847,11 @@ msgstr "&Ouvrir..."
 
 #: src/AudacityApp.cpp:1572
 msgid "Open &Recent..."
-msgstr "Ouvrir les fichiers &récents..."
+msgstr "Ouvrir un fichier &récent..."
 
 #: src/AudacityApp.cpp:1573 src/Menus.cpp:1242
 msgid "&About Audacity..."
-msgstr "&A propos d'Audacity..."
+msgstr "À propos d'&Audacity..."
 
 #: src/AudacityApp.cpp:1574
 msgid "&Preferences..."
@@ -880,15 +862,16 @@ msgid "&File"
 msgstr "&Fichier"
 
 #: src/AudacityApp.cpp:1810
-#, fuzzy
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
 "Audacity needs a place where automatic cleanup programs won't delete the "
 "temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Audacity ne peut pas trouver de place pour stocker les fichiers "
+"Audacity n'a pas pu trouver de place sûre pour stocker les fichiers "
 "temporaires.\n"
+"Audacity nécessite un endroit où les programmes de nettoyage automatique "
+"n'effaceront pas les fichiers temporaires.\n"
 "Veuillez entrer un répertoire approprié dans la boîte de dialogue des "
 "préférences."
 
@@ -897,7 +880,7 @@ msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Audacity ne peut pas trouver de place pour stocker les fichiers "
+"Audacity n'a pas pu trouver de place pour stocker les fichiers "
 "temporaires.\n"
 "Veuillez entrer un répertoire approprié dans la boîte de dialogue des "
 "préférences."
@@ -917,7 +900,7 @@ msgid ""
 "\n"
 msgstr ""
 "L'ouverture simultanée de deux sessions d'Audacity\n"
-"peut causer des pertes de données ou le crash du système.\n"
+"peut entraîner des pertes de données ou un crash du système.\n"
 "\n"
 
 #: src/AudacityApp.cpp:1864
@@ -925,7 +908,7 @@ msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
 msgstr ""
-"Audacity ne peut pas verrouiller le répertoire temporaire.\n"
+"Audacity n'a pas pu verrouiller le répertoire de fichiers temporaires.\n"
 "Ce répertoire est peut être déjà utilisé par une autre session d'Audacity.\n"
 
 #: src/AudacityApp.cpp:1866
@@ -938,19 +921,19 @@ msgstr "Erreur de verrouillage du répertoire temporaire"
 
 #: src/AudacityApp.cpp:1958
 msgid "The system has detected that another copy of Audacity is running.\n"
-msgstr "Le système a détecté qu'une autre session d'Audacity était ouverte.\n"
+msgstr "Le système a détecté qu'une autre session d'Audacity était lancée.\n"
 
 #: src/AudacityApp.cpp:1960
 msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
-"A partir de la session courante d'Audacity, utilisez Nouveau ou Ouvrir\n"
-"pour démarrer plusieurs projets simultannément.\n"
+"À partir de la session actuellement lancée d'Audacity, utilisez Nouveau ou\n"
+"Ouvrir pour démarrer plusieurs projets simultannément.\n"
 
 #: src/AudacityApp.cpp:1961
 msgid "Audacity is already running"
-msgstr "Audacity est déjà ouvert"
+msgstr "Audacity est déjà lancé"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
@@ -961,7 +944,7 @@ msgstr "définir la taille maximale de bloc disque en octets"
 #. i18n-hint: This decodes an autosave file
 #: src/AudacityApp.cpp:2047
 msgid "decode an autosave file"
-msgstr ""
+msgstr "décode un fichier auto-sauvegardé"
 
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp:2051
@@ -971,7 +954,7 @@ msgstr "ce message d'aide"
 #. i18n-hint: This runs a set of automatic tests on Audacity itself
 #: src/AudacityApp.cpp:2055
 msgid "run self diagnostics"
-msgstr "exécute les auto diagnostiques"
+msgstr "exécute les auto-diagnostiques"
 
 #. i18n-hint: This displays the Audacity version
 #: src/AudacityApp.cpp:2058
@@ -982,7 +965,7 @@ msgstr "affiche la version d'Audacity"
 #. *           should open upon startup
 #: src/AudacityApp.cpp:2062
 msgid "audio or project file name"
-msgstr "nom du fichier audio ou de projet"
+msgstr "nom du fichier audio ou du projet"
 
 #: src/AudacityApp.cpp:2337
 msgid ""
@@ -991,10 +974,10 @@ msgid ""
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Les projets Audacity(.AUP) ne sont actuellement pas\n"
-"associés à  Audacity. \n"
+"Les fichiers de projet Audacity(.AUP) ne sont actuellement pas\n"
+"associés avec Audacity. \n"
 "\n"
-"Voulez-vous les associer afin de pouvoir les ouvrir d'un double clic ?"
+"Voulez-vous les y associer afin de pouvoir les ouvrir d'un double clic ?"
 
 #: src/AudacityApp.cpp:2338
 msgid "Audacity Project Files"
@@ -1011,10 +994,11 @@ msgstr "Enregi&strer.."
 #: src/AudacityLogger.cpp:199 src/Tags.cpp:883
 #: src/prefs/KeyConfigPrefs.cpp:275 src/prefs/KeyConfigPrefs.cpp:877
 msgid "Cl&ear"
-msgstr "Effac&er"
+msgstr "&Effacer"
 
 #: src/AudacityLogger.cpp:200 src/FreqWindow.cpp:468 src/Menus.cpp:329
 #: src/ShuttleGui.cpp:2168 src/effects/Contrast.cpp:302
+#, fuzzy
 msgid "&Close"
 msgstr "F&ermer "
 
@@ -5270,10 +5254,10 @@ msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
-"'Enregistrer le projet' est pour un projet Audacity, par pour un fichier "
-"audio.\n"
-"Pour un fichier audio qui sera ouvert dans d'autres applications, utiliser "
-"'Exporter'.\n"
+"'Enregistrer le projet' concerne l'enregistrement d'un projet Audacity, pas "
+"d'un fichier audio.\n"
+"Pour un fichier audio qui pourra être ouvert dans d'autres applications, "
+"utiliser 'Exporter'.\n"
 
 #: src/Project.cpp:4373
 #, fuzzy, c-format
@@ -13280,7 +13264,7 @@ msgstr "Afficher une grille le long de l'axe &Y"
 #. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
 #: src/prefs/SpectrumPrefs.cpp:265
 msgid "FFT Find Notes"
-msgstr "Touver les notes FFT"
+msgstr "Trouver les notes FFT"
 
 #: src/prefs/SpectrumPrefs.cpp:270
 msgid "Minimum Amplitude (dB):"
@@ -13292,7 +13276,7 @@ msgstr "Nombre maximal  de notes (1...128) :"
 
 #: src/prefs/SpectrumPrefs.cpp:281
 msgid "&Find Notes"
-msgstr "Touver les notes"
+msgstr "Trouver les notes"
 
 #: src/prefs/SpectrumPrefs.cpp:284
 msgid "&Quantize Notes"
