@@ -1488,7 +1488,7 @@ msgstr "Kontrola úniků ukazatele souborů:\n"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Track # blocks: %d\n"
-msgstr "Stopa # bloky: \n"
+msgstr "Stopa # bloky: %d\n"
 
 #: src/Benchmark.cpp
 msgid "Disk # blocks: \n"
