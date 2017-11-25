@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-07-22 11:50+0100\n"
-"PO-Revision-Date: 2017-07-20 17:23+0200\n"
+"PO-Revision-Date: 2017-11-25 09:31+0100\n"
 "Last-Translator: Carmelo Battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.1\n"
 "X-Poedit-Bookmarks: 1308,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:75
@@ -169,14 +169,12 @@ msgstr "Script"
 msgid "Output"
 msgstr "Uscita"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1051
-#: src/effects/nyquist/Nyquist.cpp:2304
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1051 src/effects/nyquist/Nyquist.cpp:2304
 msgid "Load Nyquist script"
 msgstr "Carica script Nyquist"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp:1054
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1100
-#: src/effects/nyquist/Nyquist.cpp:2329
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1100 src/effects/nyquist/Nyquist.cpp:2329
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr "Script Nyquist (*.ny)|*.ny|Script Lisp (*.lsp)|*.lsp|Tutti i file|*"
 
@@ -194,8 +192,7 @@ msgstr "Lo script non è stato salvato."
 msgid "Warning"
 msgstr "Avvertimento"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp:1097
-#: src/effects/nyquist/Nyquist.cpp:2326
+#: lib-src/mod-nyq-bench/NyqBench.cpp:1097 src/effects/nyquist/Nyquist.cpp:2326
 msgid "Save Nyquist script"
 msgstr "Salva script Nyquist"
 
@@ -471,7 +468,7 @@ msgstr "compositore"
 
 #: src/AboutDialog.cpp:171
 msgid "Nyquist plug-ins"
-msgstr "Plug-in Nyquist: "
+msgstr "Plug-in Nyquist"
 
 #: src/AboutDialog.cpp:245
 msgid "incorporating"
@@ -519,11 +516,11 @@ msgstr ""
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp:364 src/AboutDialog.cpp:366
 msgid "translator_credits"
-msgstr "Traduzione italiana di Carmelo Battaglia"
+msgstr "traduzione italiana di Carmelo Battaglia"
 
 #: src/AboutDialog.cpp:382
 msgid "<h3>Audacity "
-msgstr "<h3>Audacity"
+msgstr "<h3>Audacity "
 
 #: src/AboutDialog.cpp:383
 msgid ""
@@ -717,11 +714,11 @@ msgstr "Compilatore:"
 
 #: src/AboutDialog.cpp:706
 msgid "Installation Prefix: "
-msgstr "Prefisso installazione:"
+msgstr "Prefisso installazione: "
 
 #: src/AboutDialog.cpp:711
 msgid "Settings folder: "
-msgstr "Cartella impostazioni:"
+msgstr "Cartella impostazioni: "
 
 #: src/AboutDialog.cpp:728
 msgid "GPL License"
@@ -952,8 +949,8 @@ msgstr "Audacity Log"
 msgid "&Save..."
 msgstr "&Salva..."
 
-#: src/AudacityLogger.cpp:199 src/Tags.cpp:883
-#: src/prefs/KeyConfigPrefs.cpp:275 src/prefs/KeyConfigPrefs.cpp:877
+#: src/AudacityLogger.cpp:199 src/Tags.cpp:883 src/prefs/KeyConfigPrefs.cpp:275
+#: src/prefs/KeyConfigPrefs.cpp:877
 msgid "Cl&ear"
 msgstr "Az&zera"
 
@@ -1306,7 +1303,7 @@ msgstr "Num"
 
 #: src/BatchProcessDialog.cpp:563
 msgid "Command  "
-msgstr "Comando"
+msgstr "Comando "
 
 #: src/BatchProcessDialog.cpp:564 src/effects/Contrast.cpp:184
 msgid "Parameters"
@@ -1456,7 +1453,7 @@ msgstr "Ogni volta che un progetto dipende da altri file:"
 
 #: src/Dependencies.cpp:414
 msgid "MISSING "
-msgstr "MANCANTE"
+msgstr "MANCANTE "
 
 #: src/Dependencies.cpp:508
 msgid ""
@@ -1996,7 +1993,7 @@ msgstr "Zoom"
 
 #: src/FreqWindow.cpp:423
 msgid "&Algorithm:"
-msgstr "&Algoritmo"
+msgstr "&Algoritmo:"
 
 #: src/FreqWindow.cpp:429
 msgid "&Size:"
@@ -2227,7 +2224,7 @@ msgid ""
 " [[file:quick_help.html|Quick Help]] - if not installed locally, [[http://"
 "manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-"[[file:quick_help.html|Guida rapida]] - se non installata localmente, "
+" [[file:quick_help.html|Guida rapida]] - se non installata localmente, "
 "[[http://manual.audacityteam.org/quick_help.html|visualizza online]]"
 
 #: src/HelpText.cpp:231
@@ -2235,7 +2232,7 @@ msgid ""
 " [[file:index.html|Manual]] - if not installed locally, [[http://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
-"[[file:index.html|Manuale]] - se non installato localmente, [[http://manual."
+" [[file:index.html|Manuale]] - se non installato localmente, [[http://manual."
 "audacityteam.org/|visualizza online]]"
 
 #: src/HelpText.cpp:232
@@ -2243,7 +2240,8 @@ msgid ""
 " [[http://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
-" [[http://forum.audacityteam.org/|Forum]] - poni direttamente domande, online"
+" [[http://forum.audacityteam.org/|Forum]] - poni direttamente domande, "
+"online."
 
 #: src/HelpText.cpp:233
 msgid ""
@@ -2583,7 +2581,7 @@ msgid ""
 "The old file has been saved as '%s'"
 msgstr ""
 "Ho convertito un file di progetto 1.0 nel nuovo formato.\n"
-"Il vecchio file é stato salvato come %s"
+"Il vecchio file é stato salvato come ‘%s’"
 
 #: src/Legacy.cpp:305
 msgid "Opening Audacity Project"
@@ -2677,7 +2675,7 @@ msgstr "Appl&ica concatenazione..."
 
 #: src/Menus.cpp:395
 msgid "Edit C&hains..."
-msgstr "Modifica con&catenazioni"
+msgstr "Modifica con&catenazioni…"
 
 #: src/Menus.cpp:400
 msgid "Pa&ge Setup..."
@@ -3231,9 +3229,8 @@ msgid "Remo&ve Tracks"
 msgstr "Rimuo&vi tracce"
 
 #: src/Menus.cpp:976
-#, fuzzy
 msgid "M&ute/Unmute"
-msgstr "Rendi m&uta/non muta la traccia evidenziata"
+msgstr "Rendi m&uta/non muta"
 
 #: src/Menus.cpp:977
 msgid "&Mute All Tracks"
@@ -3245,7 +3242,7 @@ msgstr "Rendi &udibili tutte le tracce"
 
 #: src/Menus.cpp:981
 msgid "&Pan"
-msgstr ""
+msgstr "&Pan"
 
 #: src/Menus.cpp:982
 msgid "&Left"
@@ -3309,11 +3306,11 @@ msgstr "&Ordina tracce"
 
 #: src/Menus.cpp:1049
 msgid "by &Start time"
-msgstr "Per tempo di &inizio"
+msgstr "per tempo di &inizio"
 
 #: src/Menus.cpp:1052
 msgid "by &Name"
-msgstr "Per &nome"
+msgstr "per &nome"
 
 #: src/Menus.cpp:1062
 msgid "Sync-&Lock Tracks (on/off)"
@@ -3427,7 +3424,7 @@ msgstr "&Controlla aggiornamenti..."
 #. i18n-hint: Ext-Bar is a menu with extra commands from tool bars
 #: src/Menus.cpp:1265
 msgid "Ext-&Bar"
-msgstr ""
+msgstr "&Barra extra"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/Menus.cpp:1278
@@ -3471,9 +3468,8 @@ msgid "Play C&ut Preview"
 msgstr "Riproduci anteprima di ta&glio"
 
 #: src/Menus.cpp:1304
-#, fuzzy
 msgid "T&ools"
-msgstr "Strumenti"
+msgstr "S&trumenti"
 
 #: src/Menus.cpp:1306
 msgid "&Selection Tool"
@@ -3508,9 +3504,8 @@ msgid "&Previous Tool"
 msgstr "Strumento &precedente"
 
 #: src/Menus.cpp:1320
-#, fuzzy
 msgid "Mi&xer"
-msgstr "Mi&x"
+msgstr "Mi&xer"
 
 #: src/Menus.cpp:1322
 msgid "Ad&just playback volume"
@@ -3545,9 +3540,8 @@ msgid "DeleteKey&2"
 msgstr "Tasto Canc&2"
 
 #: src/Menus.cpp:1347
-#, fuzzy
 msgid "Trans&cription"
-msgstr "Trascrizione"
+msgstr "Tras&crizione"
 
 #: src/Menus.cpp:1349
 msgid "Pl&ay-at-Speed"
@@ -3582,9 +3576,8 @@ msgid "Move to &Previous Label"
 msgstr "Vai all'etichetta &precedente"
 
 #: src/Menus.cpp:1367
-#, fuzzy
 msgid "Scru&b"
-msgstr "Scorri"
+msgstr "Sco&rri"
 
 #: src/Menus.cpp:1369
 msgid "Short seek &left during playback"
@@ -3603,9 +3596,8 @@ msgid "Long Seek rig&ht during playback"
 msgstr "Lunga ricerca a d&estra durante la riproduzione"
 
 #: src/Menus.cpp:1378
-#, fuzzy
 msgid "De&vice"
-msgstr "Dispositi&vo:"
+msgstr "Dispositi&vo"
 
 #: src/Menus.cpp:1380
 msgid "Change &recording device"
@@ -3624,9 +3616,8 @@ msgid "Change recording cha&nnels"
 msgstr "Cambia ca&nali di registrazione"
 
 #: src/Menus.cpp:1397
-#, fuzzy
 msgid "&Selection"
-msgstr "Selezione"
+msgstr "&Selezione"
 
 #: src/Menus.cpp:1399
 msgid "Snap To &Off"
@@ -3674,9 +3665,8 @@ msgstr "Contrai la selezione a d&estra"
 
 #. i18n-hint: Ext-Command is a menu with extra commands
 #: src/Menus.cpp:1425
-#, fuzzy
 msgid "Ext-Co&mmand"
-msgstr "Comando"
+msgstr "Co&mando extra"
 
 #: src/Menus.cpp:1427
 msgid "Move backward thru active windows"
@@ -3688,7 +3678,7 @@ msgstr "Sposta in avanti attraverso le finestre attive"
 
 #: src/Menus.cpp:1433
 msgid "F&ocus"
-msgstr ""
+msgstr "Fu&oco"
 
 #: src/Menus.cpp:1435
 msgid "Move &backward from toolbars to tracks"
@@ -3731,9 +3721,8 @@ msgid "Toggle Focuse&d Track"
 msgstr "Commuta la traccia evi&denziata"
 
 #: src/Menus.cpp:1455
-#, fuzzy
 msgid "&Cursor"
-msgstr "&Cursore a"
+msgstr "&Cursore"
 
 #: src/Menus.cpp:1457
 msgid "Cursor &Left"
@@ -3768,9 +3757,8 @@ msgid "Clip Rig&ht"
 msgstr "Clip des&tro"
 
 #: src/Menus.cpp:1471
-#, fuzzy
 msgid "&Track"
-msgstr "&Tracce"
+msgstr "&Traccia"
 
 #: src/Menus.cpp:1473
 msgid "Change p&an on focused track"
@@ -3839,7 +3827,7 @@ msgstr "Minimizza tutti i progetti"
 #: src/Menus.cpp:1539 src/effects/nyquist/Nyquist.cpp:152
 #: src/effects/nyquist/Nyquist.cpp:192 src/effects/nyquist/Nyquist.cpp:424
 msgid "Nyquist Prompt"
-msgstr "Scrivi comando Nyquist..."
+msgstr "Nyquist Prompt"
 
 #: src/Menus.cpp:1637 src/Menus.cpp:1645
 msgid "Unknown"
@@ -3888,7 +3876,7 @@ msgstr "Ordina per Nome"
 
 #: src/Menus.cpp:2967
 msgid "no label track"
-msgstr "Nessuna traccia etichetta"
+msgstr "nessuna traccia etichetta"
 
 #: src/Menus.cpp:2974
 msgid "no label track at or below focused track"
@@ -3906,9 +3894,8 @@ msgstr "Clip spostati a destra"
 msgid "Time shifted clips to the left"
 msgstr "Clip spostati temporalmente a sinistra"
 
-#: src/Menus.cpp:3471 src/prefs/MousePrefs.cpp:131
-#: src/prefs/MousePrefs.cpp:132 src/prefs/MousePrefs.cpp:133
-#: src/tracks/ui/TimeShiftHandle.cpp:842
+#: src/Menus.cpp:3471 src/prefs/MousePrefs.cpp:131 src/prefs/MousePrefs.cpp:132
+#: src/prefs/MousePrefs.cpp:133 src/tracks/ui/TimeShiftHandle.cpp:842
 msgid "Time-Shift"
 msgstr "Spostamento Temporale"
 
@@ -4118,7 +4105,7 @@ msgstr "Regioni audio con etichette eliminate"
 #. i18n-hint: (verb)
 #: src/Menus.cpp:5596
 msgid "Delete Labeled Audio"
-msgstr "Elimina regioni audio con etichette "
+msgstr "Elimina regioni audio con etichette"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on the labeled audio regions
 #: src/Menus.cpp:5610
@@ -4158,7 +4145,7 @@ msgstr "Audio con etichette unite (punti o regioni)"
 #. i18n-hint: (verb)
 #: src/Menus.cpp:5657
 msgid "Join Labeled Audio"
-msgstr "Unisci audio con etichette "
+msgstr "Unisci audio con etichette"
 
 #. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
@@ -5018,7 +5005,7 @@ msgstr "Attenzione - Progetto vuoto"
 
 #: src/Project.cpp:3866
 msgid "Could not create safety file: "
-msgstr "Impossibile creare file di di sicurezza:"
+msgstr "Impossibile creare file di di sicurezza: "
 
 #: src/Project.cpp:3893
 #, c-format
@@ -5052,7 +5039,7 @@ msgstr "Salvato %s"
 #: src/Project.cpp:4174
 #, c-format
 msgid "Imported '%s'"
-msgstr "'%s' importato"
+msgstr "Importato ‘%s’"
 
 #: src/Project.cpp:4175
 msgid "Import"
@@ -5154,11 +5141,11 @@ msgstr ""
 
 #: src/Project.cpp:5265
 msgid "Could not create autosave file: "
-msgstr "Impossibile creare file di salvataggio automatico"
+msgstr "Impossibile creare file di salvataggio automatico: "
 
 #: src/Project.cpp:5284
 msgid "Could not remove old autosave file: "
-msgstr "Impossibile eliminare vecchio file di salvataggio automatico:"
+msgstr "Impossibile eliminare vecchio file di salvataggio automatico: "
 
 #: src/Project.cpp:5314
 #, c-format
@@ -5184,7 +5171,7 @@ msgstr "Bilanciamento regolato"
 #: src/Project.cpp:5507
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "Rimossa traccia %s"
+msgstr "Rimossa traccia ‘%s’"
 
 #: src/Project.cpp:5509
 msgid "Track Remove"
@@ -5491,7 +5478,7 @@ msgstr "Titolo album"
 
 #: src/Tags.cpp:681
 msgid "Track Number"
-msgstr "Numero traccia:"
+msgstr "Numero traccia"
 
 #: src/Tags.cpp:682
 msgid "Year"
@@ -5715,7 +5702,7 @@ msgstr "Errore nel salvataggio automatico"
 
 #: src/TimerRecordDialog.cpp:381
 msgid "Automatic Export path is invalid."
-msgstr "Il percorso di esportazione automatica non è valido"
+msgstr "Il percorso di esportazione automatica non è valido."
 
 #: src/TimerRecordDialog.cpp:382
 msgid "Error in Automatic Export"
@@ -5910,7 +5897,7 @@ msgstr "Registrazione esportata:\n"
 
 #: src/TimerRecordDialog.cpp:1073
 msgid "Audacity Timer Record - Waiting"
-msgstr "Registrazione con timer di Audacity - In attesa "
+msgstr "Registrazione con timer di Audacity - In attesa"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
@@ -5933,7 +5920,7 @@ msgstr "Mono, "
 
 #: src/TrackPanel.cpp:2432
 msgid "Left, "
-msgstr "Sinistro,"
+msgstr "Sinistro, "
 
 #: src/TrackPanel.cpp:2434
 msgid "Right, "
@@ -5977,7 +5964,7 @@ msgstr " Seleziona attiva"
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp:419
 msgid " Sync Lock Selected"
-msgstr " Selezionato blocco sincronizzazione "
+msgstr " Selezionato blocco sincronizzazione"
 
 #: src/TrackPanelResizeHandle.cpp:43
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -6129,7 +6116,7 @@ msgid ""
 msgstr ""
 "Devi prima selezionare un audio per '%s' per agire.\n"
 "\n"
-"Ctrl + A seleziona tutto l'audio"
+"Ctrl + A seleziona tutto l'audio."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp:1251
@@ -6170,11 +6157,11 @@ msgstr "Caricamento scorciatoie da tastiera"
 
 #: src/commands/ScreenshotCommand.cpp:248
 msgid "Saved "
-msgstr "Salvato"
+msgstr "Salvato "
 
 #: src/commands/ScreenshotCommand.cpp:251
 msgid "Error trying to save file: "
-msgstr "Errore nel tentativo di salvare il file:"
+msgstr "Errore nel tentativo di salvare il file: "
 
 #: src/effects/Amplify.cpp:51 src/effects/Compressor.cpp:62
 #: src/effects/Compressor.cpp:244
@@ -6467,7 +6454,7 @@ msgstr "Moltiplicatore di velocità:"
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #: src/effects/ChangeSpeed.cpp:335
 msgid "Standard Vinyl rpm:"
-msgstr "rpm vinile standard:"
+msgstr "Standard Vinyl rpm:"
 
 #: src/effects/ChangeSpeed.cpp:354
 msgid "From rpm"
@@ -6601,7 +6588,7 @@ msgstr "Rapporto:"
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/Compressor.cpp:252
 msgid "Attack Time:"
-msgstr "Tempo di attacco: "
+msgstr "Tempo di attacco:"
 
 #: src/effects/Compressor.cpp:259
 msgid "Attack Time"
@@ -7212,7 +7199,7 @@ msgstr "Sequenza"
 #: src/effects/DtmfGen.cpp:48 src/effects/FindClipping.cpp:39
 #: src/effects/FindClipping.cpp:40
 msgid "Duty Cycle"
-msgstr "Ciclo Duty:"
+msgstr "Ciclo Duty"
 
 #: src/effects/DtmfGen.cpp:49 src/effects/Noise.cpp:49
 #: src/effects/ToneGen.cpp:73
@@ -7354,7 +7341,7 @@ msgstr "Effetto anteprima"
 
 #: src/effects/Effect.cpp:3001
 msgid "&Preview effect"
-msgstr "Effetto ante&prima "
+msgstr "Effetto ante&prima"
 
 #: src/effects/Effect.cpp:3011 src/effects/Effect.cpp:3021
 #: src/effects/Effect.cpp:3023
@@ -7854,7 +7841,7 @@ msgstr "&Rinomina..."
 
 #: src/effects/Equalization.cpp:3173
 msgid "D&elete..."
-msgstr "&Elimina"
+msgstr "&Elimina…"
 
 #: src/effects/Equalization.cpp:3174
 msgid "I&mport..."
@@ -7935,7 +7922,7 @@ msgstr "Conferma eliminazione"
 
 #: src/effects/Equalization.cpp:3445
 msgid "Delete "
-msgstr "Elimina"
+msgstr "Elimina "
 
 #: src/effects/Equalization.cpp:3445
 msgid "items?"
@@ -8435,7 +8422,7 @@ msgstr "Normalizzazione senza rimozione DC offset...\n"
 
 #: src/effects/Normalize.cpp:198
 msgid "Analyzing: "
-msgstr "Sto analizzando:"
+msgstr "Sto analizzando: "
 
 #: src/effects/Normalize.cpp:200
 msgid "Analyzing first track of stereo pair: "
@@ -8443,11 +8430,11 @@ msgstr "Analisi della prima traccia della coppia stereo: "
 
 #: src/effects/Normalize.cpp:212
 msgid "Processing: "
-msgstr "Elaborazione:"
+msgstr "Elaborazione: "
 
 #: src/effects/Normalize.cpp:214
 msgid "Processing stereo channels independently: "
-msgstr "Elaborazione canali stereo indipendentemente:"
+msgstr "Elaborazione canali stereo indipendentemente: "
 
 #: src/effects/Normalize.cpp:228
 msgid "Analyzing second track of stereo pair: "
@@ -8455,11 +8442,11 @@ msgstr "Analisi della seconda traccia della coppia stereo: "
 
 #: src/effects/Normalize.cpp:241
 msgid "Processing first track of stereo pair: "
-msgstr "Elaborazione della prima traccia della coppia stereo:"
+msgstr "Elaborazione della prima traccia della coppia stereo: "
 
 #: src/effects/Normalize.cpp:249
 msgid "Processing second track of stereo pair: "
-msgstr "Elaborazione della seconda traccia della coppia stereo:"
+msgstr "Elaborazione della seconda traccia della coppia stereo: "
 
 #: src/effects/Normalize.cpp:278
 msgid "Remove DC offset (center on 0.0 vertically)"
@@ -8625,7 +8612,7 @@ msgstr "&Guadagno uscita (dB):"
 
 #: src/effects/Phaser.cpp:320 src/effects/Wahwah.cpp:292
 msgid "Output gain (dB)"
-msgstr "Guadagno uscita (dB):"
+msgstr "Guadagno uscita (dB)"
 
 #: src/effects/Repair.cpp:53
 msgid "Sets the peak amplitude of a one or more tracks"
@@ -9144,7 +9131,7 @@ msgstr "Ampiezza finale"
 
 #: src/effects/ToneGen.cpp:391
 msgid "Interpolation:"
-msgstr "Interpolazione"
+msgstr "Interpolazione:"
 
 #: src/effects/TruncSilence.cpp:48
 msgid "Truncate Detected Silence"
@@ -9368,7 +9355,7 @@ msgstr "Fornisce supporto effetti unità audio ad Audacity"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:340
 msgid "Audio Unit Effect Options"
-msgstr "Opzioni effetti unità audio "
+msgstr "Opzioni effetti unità audio"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp:344
 #: src/effects/audiounits/AudioUnitEffect.cpp:426
@@ -9638,7 +9625,7 @@ msgstr "Elaborazione completa."
 #: src/effects/nyquist/Nyquist.cpp:1195
 #, c-format
 msgid "nyx_error returned from %s.\n"
-msgstr "Restituito nyx_error da %s.\n"
+msgstr "restituito nyx_error da %s.\n"
 
 #: src/effects/nyquist/Nyquist.cpp:1196
 msgid "plug-in"
@@ -9861,7 +9848,7 @@ msgstr "Salva preset VST come:"
 
 #: src/effects/VST/VSTEffect.cpp:1833 src/effects/VST/VSTEffect.cpp:1884
 msgid "Unrecognized file extension."
-msgstr "estensione file non riconosciuta."
+msgstr "Estensione file non riconosciuta."
 
 #: src/effects/VST/VSTEffect.cpp:1834 src/effects/VST/VSTEffect.cpp:3397
 #: src/effects/VST/VSTEffect.cpp:3464 src/effects/VST/VSTEffect.cpp:3482
@@ -10413,7 +10400,7 @@ msgid ""
 "Optional\n"
 "empty - automatic"
 msgstr ""
-"codice lingua ISO 639 3-lettere\n"
+"Codice lingua ISO 639 3-lettere\n"
 "Opzionale\n"
 "vuoto - automatico"
 
@@ -11491,7 +11478,7 @@ msgstr "File FLAC"
 
 #: src/import/ImportGStreamer.cpp:34
 msgid "GStreamer-compatible files"
-msgstr "File compatibili GStreamer "
+msgstr "File compatibili GStreamer"
 
 #: src/import/ImportLOF.cpp:97
 msgid "List of Files in basic text format"
@@ -11527,7 +11514,7 @@ msgstr "Parametro offset non valido di una traccia in un file LOF."
 #: src/import/ImportMIDI.cpp:31 src/import/ImportMIDI.cpp:39
 #: src/import/ImportMIDI.cpp:45 src/import/ImportMIDI.cpp:54
 msgid "Could not open file "
-msgstr "Impossibile aprire il file"
+msgstr "Impossibile aprire il file "
 
 #: src/import/ImportMIDI.cpp:31
 msgid ": Filename too short."
@@ -11687,7 +11674,7 @@ msgstr "Big-endian"
 #. know the correct technical word.
 #: src/import/ImportRaw.cpp:380
 msgid "Default endianness"
-msgstr " Endianness predefinito"
+msgstr "Endianness predefinito"
 
 #: src/import/ImportRaw.cpp:399
 msgid "1 Channel (Mono)"
@@ -11864,7 +11851,7 @@ msgid ""
 msgstr ""
 "Se la memoria di sistema scende al di sotto di questo valore, l'audio non "
 "sarà più\n"
-"posizionato nella memoria cache e verrà scritto su disco"
+"posizionato nella memoria cache e verrà scritto su disco."
 
 #: src/prefs/DirectoriesPrefs.cpp:138
 msgid "Choose a location to place the temporary directory"
@@ -12148,7 +12135,7 @@ msgstr "Conserva le e&tichette se la selezione si aggancia a un'etichetta"
 
 #: src/prefs/GUIPrefs.cpp:198
 msgid "B&lend system and Audacity theme"
-msgstr "Sistema di &fusione e tema Audacity "
+msgstr "Sistema di &fusione e tema Audacity"
 
 #: src/prefs/GUIPrefs.cpp:202
 msgid "&Display a mono channel as virtual stereo"
@@ -12747,7 +12734,7 @@ msgstr "Categoria"
 
 #: src/prefs/PrefsDialog.cpp:547 src/prefs/PrefsDialog.h:52
 msgid "Preferences: "
-msgstr "Preferenze:"
+msgstr "Preferenze: "
 
 #. i18n-hint: (noun) i.e Audacity projects.
 #: src/prefs/ProjectsPrefs.cpp:34
@@ -12888,7 +12875,7 @@ msgstr "Regolazione automatica del livello di registrazione"
 
 #: src/prefs/RecordingPrefs.cpp:172
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "Abilita regolazione automatica del livello di registrazione"
+msgstr "Abilita regolazione automatica del livello di registrazione."
 
 #. i18n-hint: Desired maximum (peak) volume for sound
 #: src/prefs/RecordingPrefs.cpp:181
@@ -12901,7 +12888,7 @@ msgstr "Entro:"
 
 #: src/prefs/RecordingPrefs.cpp:197
 msgid "Analysis Time:"
-msgstr "Tempo di analisi: "
+msgstr "Tempo di analisi:"
 
 #: src/prefs/RecordingPrefs.cpp:201
 msgid "milliseconds (time of one analysis)"
@@ -13048,7 +13035,7 @@ msgstr "&Tipo finestra:"
 
 #: src/prefs/SpectrumPrefs.cpp:243
 msgid "&Zero padding factor"
-msgstr "Fattore &Zero padding "
+msgstr "Fattore &Zero padding"
 
 #: src/prefs/SpectrumPrefs.cpp:254
 msgid "Ena&ble Spectral Selection"
@@ -13153,7 +13140,7 @@ msgstr ""
 "\n"
 "[Solo la Barra Attività e i colori nell'onda della traccia sono realmente "
 "influenzati, anche\n"
-"se il file immagine mostra altre icone.]"
+"se il file immagine mostra altre icone)."
 
 #: src/prefs/ThemePrefs.cpp:96
 msgid ""
@@ -13649,7 +13636,7 @@ msgstr "Lunghezza e fine della selezione"
 
 #: src/toolbars/SelectionBar.cpp:334
 msgid "Length and Center of Selection"
-msgstr "Lunghezza e centro della selezione."
+msgstr "Lunghezza e centro della selezione"
 
 #: src/toolbars/SelectionBar.cpp:348 src/toolbars/SelectionBar.cpp:459
 #: src/toolbars/SelectionBar.cpp:701
@@ -14566,7 +14553,9 @@ msgstr ""
 
 #: src/widgets/Meter.cpp:1960
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "Frequenza d'aggiornamento del monitor per secondo [1-100]:"
+msgstr ""
+"Frequenza d'aggiornamento\n"
+" monitor per secondo [1-100]:"
 
 #: src/widgets/Meter.cpp:1963
 msgid "Meter refresh rate per second [1-100]"
@@ -14624,7 +14613,7 @@ msgstr " Picco %.2f "
 
 #: src/widgets/Meter.cpp:2266
 msgid " Clipped "
-msgstr "Troncato"
+msgstr " Troncato"
 
 #: src/widgets/MultiDialog.cpp:120
 msgid "Show Log for Details"
@@ -14983,7 +14972,7 @@ msgstr "Vai allo scorrimento"
 
 #: src/widgets/Ruler.cpp:2120
 msgid "Drag to Seek.  Release to stop seeking."
-msgstr "Trascina nella ricerca.  Rilascia per interrompere la ricerca)"
+msgstr "Trascina nella ricerca.  Rilascia per interrompere la ricerca."
 
 #: src/widgets/Ruler.cpp:2122
 msgid "Drag to Seek.  Release and move to Scrub."
@@ -15006,9 +14995,8 @@ msgid "Quick-Play enabled"
 msgstr "Riproduzione rapida abilitata"
 
 #: src/widgets/Ruler.cpp:2853
-#, fuzzy
 msgid "Click to unpin"
-msgstr "Fai clic per sbloccare"
+msgstr "Clic per sbloccare"
 
 #: src/widgets/Ruler.cpp:2854
 msgid "Click to pin"
