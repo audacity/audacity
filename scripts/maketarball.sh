@@ -67,6 +67,7 @@ function cleanfulltree {
    printf "removing GIT directories ... "
    myrmrvf $1 .git .gitignore
    myrmrvf $1 .gitignore
+   myrmrvf $1 .gitattributes
    printf "Done\n"
 
    printf "removing vim / emacs temp files ... "
