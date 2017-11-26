@@ -6356,7 +6356,7 @@ msgstr "Piste de tempo"
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
-msgstr "(Échap pour annuler"
+msgstr "(Échap pour annuler)"
 
 #: src/TrackPanel.cpp
 msgid "Stereo, "
@@ -9392,7 +9392,7 @@ msgstr "Fournit le support des effets Audio Unit à Audacity"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
-msgstr "Options de leffet Audio Unit"
+msgstr "Options d'effet Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Full"
@@ -10321,7 +10321,7 @@ msgstr "WMA (version 2) Fichiers (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Custom FFmpeg Export"
-msgstr "Personalisation de l'export FFmpeg"
+msgstr "Personnalisation de l'export FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Estimate"
@@ -10349,7 +10349,7 @@ msgstr "Recherche dans le journal"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Configure custom FFmpeg options"
-msgstr "Configurer les options personalisées de FFmpeg"
+msgstr "Configurer les options personnalisées de FFmpeg"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Preset:"
@@ -10707,7 +10707,7 @@ msgstr "Fichiers XML (*.xml)|*.xml|Tous les fichiers|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Select xml file to export presets into"
-msgstr "Sélectionner un fichier XML pour exporter les préréglage sous "
+msgstr "Sélectionner un fichier XML pour exporter les préréglages sous "
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
