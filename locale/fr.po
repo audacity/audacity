@@ -515,7 +515,7 @@ msgstr ""
 "Traduction française par Olivier Humbert. \n"
 "Pour toute remarque ou suggestion, envoyez moi un courriel à : trebmuh@tuxfamily.org\n"
 "\n"
-"Précédent traducteur : Christian Brochec \n"
+"Précédent traducteur : Christian Brochec."
 
 #: src/AboutDialog.cpp
 msgid "<h3>Audacity "
@@ -11152,7 +11152,7 @@ msgstr "Les %lld fichier(s) suivants ont été exporté avec succès."
 #, c-format
 msgid "Something went wrong after exporting the following %lld file(s)."
 msgstr ""
-"Quelque chose n'a pas été après l'export des %lls fichier(s) suivants."
+"Quelque chose n'a pas été après l'export des %lld fichier(s) suivants."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -11168,7 +11168,7 @@ msgstr "Export arrêté après l'exportation des %lld fichier(s) suivant(s)."
 #, c-format
 msgid "Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
-"Quelque chose n'a vraiment pas été après l'exportation des %lls fichier(s) "
+"Quelque chose n'a vraiment pas été après l'exportation des %lld fichier(s) "
 "suivants."
 
 #: src/export/ExportMultiple.cpp
