@@ -4843,7 +4843,7 @@ msgstr "Sauvegarder les infos de périphérique MIDI"
 
 #: src/Menus.cpp
 msgid "Unable to save MIDI device info"
-msgstr "Impossible de sauvegarder les infos de périphérique MIDI".
+msgstr "Impossible de sauvegarder les infos de périphérique MIDI."
 
 #: src/Menus.cpp
 msgid ""
