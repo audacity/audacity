@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-27 17:25+0100\n"
+"PO-Revision-Date: 2017-11-27 18:00+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -513,7 +513,8 @@ msgstr ""
 # trebmuh to check
 msgid "translator_credits"
 msgstr ""
-"Traduction française par Olivier Humbert. \n"
+"Traduction française par Olivier Humbert dans le cadre du projet LibraZiK, \n"
+"et disponible pour tous les utilisateurs d'Audacity.\n"
 "Pour toute remarque ou suggestion à propos de la traduction française, \n"
 "envoyez moi un message à l'adresse de courriel : trebmuh@tuxfamily.org\n"
 "\n"
@@ -10261,6 +10262,8 @@ msgstr ""
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
 msgstr ""
+"FFmpeg : ERREUR - Ne peut déterminer la description du format pour le "
+"fichier \"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg Error"
@@ -10349,7 +10352,7 @@ msgstr "FFmpeg : ERREUR - Ne peut encoder la trame audio."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Failed to write audio frame to file."
-msgstr "FFmpeg : ERREUR - "
+msgstr "FFmpeg : ERREUR - Échec de l'écriture de la trame audio dans un fichier."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -10942,7 +10945,7 @@ msgid ""
 "Status: %d"
 msgstr ""
 "L'encodeur FLAC n'a pas pu s'initialiser\n"
-"Status:  %d"
+"Status : %d"
 
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
@@ -11116,7 +11119,7 @@ msgid ""
 "Extended Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr ""
 "Seulement libmp3lame.so|libmp3lame.so|Fichiers objets primairement partagés "
-" (*.so)|*.so|Libraries étendues (*.so*)|*.so*|Tous les fichiers (*)|*"
+" (*.so)|*.so|Bibliothèques étendues (*.so*)|*.so*|Tous les fichiers (*)|*"
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 Files"
@@ -12239,7 +12242,7 @@ msgstr "-60 dB (amplitude PCM d'échantillon 10 bits)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-82 dB (amplitude PCM d'échantillon 12 bits)"
+msgstr "-72 dB (amplitude PCM d'échantillon 12 bits)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-84 dB (PCM range of 14 bit samples)"
@@ -13818,7 +13821,7 @@ msgstr "Taux du projet (Hz) :"
 #: src/toolbars/SelectionBar.cpp
 # trebmuh to check (peut être que "magnétique" serait mieux, à voir)
 msgid "Snap-To"
-msgstr "Se coller à"
+msgstr "Se coller à (magnétique)"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Audio Position"
@@ -13880,6 +13883,7 @@ msgstr "Aligner les clics/sélections sur %s"
 #. i18n-hint: %s is replaced e.g by 'Length', to indicate that it will be calculated from other parameters.
 #: src/toolbars/SelectionBar.cpp
 #, c-format
+# trebmuh to check
 msgid "%s - driven"
 msgstr "%s - déterminé"
 
@@ -14389,7 +14393,7 @@ msgstr "Vitesse maximale"
 # trebmuh (à vérifier)
 #, c-format
 msgid "Set range to '%ld' - '%ld'"
-msgstr "Paramètre l'évential pour '%ld' - '%ld'"
+msgstr "Paramètre l'éventail pour '%ld' - '%ld'"
 
 #. i18n-hint: (verb)
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
@@ -14474,6 +14478,7 @@ msgid "Scrub &Ruler"
 msgstr "&Règle de frottement"
 
 #: src/tracks/ui/Scrubbing.cpp
+# trebmuh to check ("vers la rechercher" ou "pour rechercher" ?)
 msgid "Move mouse pointer to Seek"
 msgstr "Déplacer le pointeur de souris vers la recherche"
 
@@ -15193,10 +15198,11 @@ msgstr "Cliquer ou glisser pour démarrer Scrub"
 #: src/widgets/Ruler.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
 msgstr ""
-"Cliquez et déplacer pour le frottement. Cliquez et déplacer-tirer pour la "
+"Cliquez et déplacez pour le frottement. Cliquez et glissez-tirez pour la "
 "recherche."
 
 #: src/widgets/Ruler.cpp
+# trebmuh to check ("vers la rechercher" ou "pour rechercher" ?)
 msgid "Move to Seek"
 msgstr "Déplacer vers la recherche"
 
