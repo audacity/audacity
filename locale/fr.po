@@ -6647,7 +6647,7 @@ msgid ""
 "try again."
 msgstr ""
 "Sélectionnez l'audio que %s va utiliser (Ctrl + A pour tout sélectionner par "
-"exemple) puis réessayer".
+"exemple) puis réessayer."
 
 #: src/commands/CommandManager.cpp
 msgid ""
