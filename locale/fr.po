@@ -92,7 +92,7 @@ msgstr "Nettoyer\tCtrl+L"
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 # trebmuh to check
 msgid "Select A&ll\tCtrl+A"
-msgstr "Sélectionner Tout\tCtrl+A"
+msgstr "Sé&lectionner Tout\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 # trebmuh to check
@@ -121,32 +121,32 @@ msgid "&Next S-expr\tF12"
 msgstr "S-expr suiva&nt\tF12"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Go to"
 msgstr "Aller à"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur + "select" à traduire ou pas ?)
 msgid "Select &Font..."
 msgstr "&Police..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check ("split" à traduire ou pas ?)
 msgid "Split &Vertically"
-msgstr "Vertical"
+msgstr "&Vertical"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check ("split" à traduire ou pas ?)
 msgid "Split &Horizontally"
-msgstr "Horizontal"
+msgstr "&Horizontal"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check ("le script" ou pluriel peut être ?)
 msgid "Show S&cript"
-msgstr "Montrer les s&cripts"
+msgstr "Montrer le s&cript"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (voir l'action précise dans l'interface)
 msgid "Show &Output"
 msgstr "Montrer la s&ortie"
 
@@ -163,18 +163,18 @@ msgid "Toolbar"
 msgstr "Barre d'outils"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Go\tF5"
-msgstr "Aller\tF5"
+msgstr "Aller (&g)\tF5"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Stop\tF6"
 msgstr "&Stop\tF6"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&About"
-msgstr "À propos"
+msgstr "À propos (&a)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Script"
@@ -715,7 +715,7 @@ msgstr "Construction de débogage"
 #: src/AboutDialog.cpp
 # trebmuh to check
 msgid "Release build"
-msgstr "Version de construction"
+msgstr "Version construite"
 
 #: src/AboutDialog.cpp
 msgid "Compiler:"
@@ -967,7 +967,7 @@ msgstr "&Effacer"
 
 #: src/AudacityLogger.cpp src/Menus.cpp src/ShuttleGui.cpp
 #: src/effects/Contrast.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Close"
 msgstr "F&ermer "
 
@@ -1358,7 +1358,7 @@ msgstr "C&haîne (double-cliquer ou presser ESPACE pour éditer)"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
-# trebmuh to check
+# trebmuh to check ("N°" or "Num" ? Voir le rendu dans l'interace)
 msgid "Num"
 msgstr "N°"
 
@@ -1452,9 +1452,9 @@ msgstr "Taile de donnée de test (Mo) :"
 #. i18n-hint: A "seed" is a number that initializes a
 #. pseudorandom number generating algorithm
 #: src/Benchmark.cpp
-# trebmuh to check : trouver une traduction de "seed"
+# trebmuh to check (voir le rendu dans l'interface graphique)
 msgid "Random Seed:"
-msgstr "Seed aléatoire :"
+msgstr "Graine aléatoire :"
 
 #: src/Benchmark.cpp
 msgid "Show detailed info about each block file"
@@ -1463,7 +1463,7 @@ msgstr "Affiche de l'information détaillée à propos de chaque fichier de bloc
 #: src/Benchmark.cpp
 msgid "Show detailed info about each editing operation"
 msgstr ""
-"Affiche de l'information détaillée à propos de chaque opération d'édition"
+"Affiche des informations détaillées à propos de chaque opération d'édition"
 
 #: src/Benchmark.cpp
 msgid "Run"
@@ -1495,11 +1495,11 @@ msgstr "La taille de bloc devrait être comprise dans la gamme 1 - 1024 Ko."
 # trebmuh to check
 #| msgid "The maximum number of notes must be in the range 1..128"
 msgid "Number of edits should be in the range 1 - 10000."
-msgstr "Le nombre maximal d'édition doit être compris dans l'éventail 1 - 10000."
+msgstr "Le nombre maximal d'édition devrait être dans l'éventail 1 - 10000."
 
 #: src/Benchmark.cpp
 msgid "Test data size should be in the range 1 - 2000 MB."
-msgstr "La taille de donnée de test devrait être dans la gamme 1 - 2000 Mo."
+msgstr "La taille des données de test devrait être dans l'éventail 1 - 2000 Mo."
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1533,6 +1533,7 @@ msgstr "Couper : %d - %d \n"
 
 #: src/Benchmark.cpp
 #, c-format
+# trebmuh to check ("essai" ou "test" ou autre ? Voir le rendu dans le contexte)
 msgid "Trial %d\n"
 msgstr "Essai %d\n"
 
@@ -1567,10 +1568,12 @@ msgstr "Vérification des fuites de pointeur de fichier :\n"
 
 #: src/Benchmark.cpp
 #, c-format
+# trebmuh to check (voir dans le contexte de l'interface)
 msgid "Track # blocks: %d\n"
 msgstr "Piste # blocs : %d\n"
 
 #: src/Benchmark.cpp
+# trebmuh to check (voir dans le contexte de l'interface)
 msgid "Disk # blocks: \n"
 msgstr "Disque # blocs : \n"
 
@@ -1580,9 +1583,9 @@ msgstr "Vérification de justesse...\n"
 
 #: src/Benchmark.cpp
 #, c-format
-# trebmuh to check (trouver une meilleure traduction pour chunk peut être ?)
+# trebmuh to check (trouver une meilleure traduction pour chunk peut être ? Voir dans le contexte graphique.)
 msgid "Bad: chunk %d sample %d\n"
-msgstr "Mauvais : bout %d échantillon %d\n"
+msgstr "Mauvaise : partie %d échantillon %d\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
@@ -1591,7 +1594,7 @@ msgstr "Vérification de justesse réussie !\n"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Errors in %d/%d chunks\n"
-msgstr "Erreurs dans %d/%d bouts\n"
+msgstr "Erreurs dans %d/%d parties\n"
 
 #: src/Benchmark.cpp
 #, c-format
