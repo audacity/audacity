@@ -3063,7 +3063,7 @@ bool EffectUIHost::Initialize()
 #if defined(__WXMAC__)
                   mFFwdBtn->SetName(_("Skip &Forward"));
 #else
-                  mFFwdBtn->SetLabel(_("Skip &Foreward"));
+                  mFFwdBtn->SetLabel(_("Skip &Forward"));
 #endif
                   bs->Add(mFFwdBtn);
                }
