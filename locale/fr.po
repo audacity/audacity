@@ -1224,7 +1224,7 @@ msgstr "La commande %s n'est pas encore disponible"
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Your batch command of %s was not recognized."
-msgstr "Votre commande de traitement en lot de %s n'a pas été reconnue."
+msgstr "Votre commande de traitement par lot de %s n'a pas été reconnue."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
@@ -1243,7 +1243,7 @@ msgstr "Appliquer une chaîne"
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Applied batch chain '%s'"
-msgstr "Traitement de lot appliqué '%s'"
+msgstr "Traitement par lot appliqué '%s'"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1315,7 +1315,7 @@ msgstr "Veuillez d'abord sauvegarder et fermer le projet courant."
 
 #: src/BatchProcessDialog.cpp
 msgid "Select file(s) for batch processing..."
-msgstr "Sélectionner le(s) fichier(s) pour le traitement en lot..."
+msgstr "Sélectionner le(s) fichier(s) pour le traitement par lot..."
 
 #. i18n-hint: The vertical bars and * are essential here.
 #: src/BatchProcessDialog.cpp src/Project.cpp
@@ -2613,11 +2613,11 @@ msgstr "Niveaux d'ann&ulations disponibles"
 #: src/HistoryWindow.cpp
 # trebmuh to check
 msgid "&Levels To Discard"
-msgstr "&Niveau à abandonner"
+msgstr "&Niveaux à abandonner"
 
 #. i18n-hint: (verb)
 #: src/HistoryWindow.cpp
-# trebmuh to check
+# trebmuh to check (accelerator)
 msgid "&Discard"
 msgstr "Abandonner (&s)"
 
@@ -4108,7 +4108,7 @@ msgid "Cursor Long Ju&mp Right"
 msgstr "Grand saut de curseur à droite (&m)"
 
 #: src/Menus.cpp
-# trebmuh to check (clip comme "partie d'un audio" ou comme "clipping/saturation" ?)
+# trebmuh to check (accelerator + "clip" comme "partie d'un audio" ou comme "clipping/saturation" ?)
 msgid "Clip L&eft"
 msgstr "Clip gauch&e"
 
@@ -4790,7 +4790,7 @@ msgstr ""
 "L'enregistrement programmé ne peut pas être utilisé avec plus d'un projet "
 "ouvert.\n"
 "\n"
-"Veuillez fermet tout projet additionnel et réessayer."
+"Veuillez fermer tout projet additionnel et réessayer."
 
 #: src/Menus.cpp src/TimerRecordDialog.cpp
 msgid "Timer Recording"
@@ -4853,7 +4853,7 @@ msgid ""
 "end of project."
 msgstr ""
 "Ne peut pas verrouiller la région\n"
-"au dela de la fin du projet."
+"au delà de la fin du projet."
 
 #: src/Menus.cpp src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Resample"
@@ -5455,7 +5455,7 @@ msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
-"'Sauvegarder le projet' concerne la sauvegarder d'un projet Audacity, pas "
+"'Sauvegarder le projet' concerne la sauvegarde d'un projet Audacity, pas "
 "d'un fichier audio.\n"
 "Pour un fichier audio qui pourra être ouvert dans d'autres applications, "
 "utiliser 'Exporter'.\n"
@@ -6637,7 +6637,7 @@ msgid ""
 "again."
 msgstr ""
 "Sélectionnez l'audio que %s va utiliser (Cmd + A pour tout sélectionner, par "
-"exemple) puis réessayer."
+"exemple) puis réessayez."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/commands/CommandManager.cpp
@@ -6699,7 +6699,7 @@ msgid ""
 "Reduces (ducks) the volume of one or more tracks whenever the volume of a "
 "specified \"control\" track reaches a particular level"
 msgstr ""
-"Réduit (ducks) le volume d'une ou plusieurs piste(s) lorsque le volume d'une "
+"Réduit (duck) le volume d'une ou plusieurs piste(s) lorsque le volume d'une "
 "piste de \"contrôle\" spécifiée atteint un niveau particulier"
 
 #: src/effects/AutoDuck.cpp
@@ -7415,7 +7415,7 @@ msgstr "Limiteur dur 1413"
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Hard -12dB, 80% make-up gain"
+msgstr ""
 
 #: src/effects/Distortion.cpp
 #, no-c-format
@@ -7461,23 +7461,23 @@ msgstr ""
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Light, -70dB noise floor"
-msgstr "Nivelleur, léger, bruit plancer à -70dB"
+msgstr "Nivelleur, léger, bruit plancher à -70dB"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Nivelleur, modéré, bruit plancer à -70dB"
+msgstr "Nivelleur, modéré, bruit plancher à -70dB"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Nivelleur, lourd, bruit plancer à -70dB"
+msgstr "Nivelleur, lourd, bruit plancher à -70dB"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Nivelleur, plus lourd, bruit plancer à -70dB"
+msgstr "Nivelleur, plus lourd, bruit plancher à -70dB"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Nivelleur, encore plus lourd, bruit plancer à -70dB"
+msgstr "Nivelleur, encore plus lourd, bruit plancher à -70dB"
 
 #: src/effects/Distortion.cpp
 msgid "Half-wave Rectifier"
@@ -7621,7 +7621,7 @@ msgid ""
 "Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
 "keypad on telephones"
 msgstr ""
-"Génère une des tonalités multi-fréquencielle à tonalité-double (DTMF) comme "
+"Génère des tonalités multi-fréquentielle à tonalité-double (DTMF) comme "
 "celles produites par les touches de téléphones"
 
 #: src/effects/DtmfGen.cpp
@@ -7748,7 +7748,7 @@ msgid "&Preview effect"
 msgstr "A&perçu de l'effet"
 
 #: src/effects/Effect.cpp
-# trebmuh to check (accelerator)
+# trebmuh to check (accelerator + vérifier que "saut" et bien la définition correcte de ce que fait cette action)
 msgid "Skip &Backward"
 msgstr "Saut en arrière (&b)"
 
@@ -8025,7 +8025,7 @@ msgid ""
 msgstr ""
 "Afin d'utiliser cette courbe d'égalisation dans un traitement par lot, "
 "veuillez lui donnez un nouveau nom.\n"
-"Choisissez le bouton 'Sauvegarder/Gérer les courbes...' et renommez la "
+"Choisissez le bouton 'Sauvegarder/gérer les courbes...' et renommez la "
 "courbe 'sans nom' avant de l'utiliser."
 
 #: src/effects/Equalization.cpp
@@ -8359,11 +8359,11 @@ msgstr ""
 
 #: src/effects/Fade.cpp
 msgid "Applies a linear fade-in to the selected audio"
-msgstr "Applique un fondu à l'ouverture à l'audio sélectionnée"
+msgstr "Applique un fondu à l'ouverture linéaire à l'audio sélectionnée"
 
 #: src/effects/Fade.cpp
 msgid "Applies a linear fade-out to the selected audio"
-msgstr "Applique un fondu à la fermeture à l'audio sélectionnée"
+msgstr "Applique un fondu à la fermeture linéaire à l'audio sélectionnée"
 
 #: src/effects/FindClipping.cpp
 msgid "Creates labels where clipping is detected"
@@ -8769,7 +8769,7 @@ msgstr ".  Maximum 0dB."
 #: src/effects/Paulstretch.cpp
 msgid "Use Paulstretch only for an extreme time-stretch or \"stasis\" effect"
 msgstr ""
-"N'utiliser Paulstretch que pour un étirement temporel extrême ou pour un "
+"N'utilisez Paulstretch que pour un étirement temporel extrême ou pour un "
 "effet de \"stase\""
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
@@ -9714,7 +9714,7 @@ msgid ""
 "(about %.1f hours at 44100 Hz sample rate)."
 msgstr ""
 "La sélection est trop longue pour le code Nyquist.\n"
-"La sélection maximale autorisé est de %ld échantillons\n"
+"La sélection maximale autorisée est de %ld échantillons\n"
 "(environ %.1f heures à un taux d'échantillonnage de 44100 Hz)."
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -9743,7 +9743,7 @@ msgstr "Traitement terminé."
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "nyx_error returned from %s.\n"
-msgstr ""
+msgstr "nyx_error retourné par %s.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "plug-in"
@@ -9834,7 +9834,7 @@ msgid ""
 "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*."
 "txt|All files|*"
 msgstr ""
-"Scripts Nyquist (*.ny)|*.ny|Scripts Lisp (*.lsp)|*.lsp|Fichiers Texte (*.txt)|*."
+"Scripts Nyquist (*.ny)|*.ny|Scripts Lisp (*.lsp)|*.lsp|Fichiers texte (*.txt)|*."
 "txt|Tous les fichiers|*"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -10370,11 +10370,11 @@ msgstr "Confirmer l'effacement"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Please select format before saving a profile"
-msgstr "Veuillez sélectionnez le format avant de sauvegarder le profil"
+msgstr "Veuillez sélectionnez le format avant de sauvegarder un profil"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Please select codec before saving a profile"
-msgstr "Veuillez sélectionnez le codec avant de sauvegarder le profil"
+msgstr "Veuillez sélectionnez le codec avant de sauvegarder un profil"
 
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
@@ -11843,7 +11843,7 @@ msgstr "Décodage de la forme d'onde"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "Batch"
-msgstr "Traitement en lot"
+msgstr "Traitement par lot"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/GUIPrefs.cpp
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -11852,7 +11852,7 @@ msgstr "Comportements"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "&N'appliquer aucun effet en mode Traitement par lot"
+msgstr "&N'appliquer aucun effet en mode de traitement par lot"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
@@ -12574,9 +12574,10 @@ msgid "'New' means no choice has been made yet."
 msgstr "'Nouveau' signifie qu'aucun choix n'a encore été fait"
 
 #: src/prefs/ModulePrefs.cpp
+# trebmuh to check (meilleure traduction possible peut être ?)
 msgid "Changes to these settings only take effect when Audacity starts up."
 msgstr ""
-"Les modifications de ces paramètres prendront effet uniquement après avoir "
+"Les modifications de ces paramètres ne prendront effet qu'après avoir "
 "relancé Audacity."
 
 #: src/prefs/ModulePrefs.cpp
@@ -13346,6 +13347,7 @@ msgid "\"Move track focus\" c&ycles repeatedly through tracks"
 msgstr "Boucler \"Changer la &visée de piste\" "
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
+# trebmuh to check (une meilleure traduction que 'taper' peut être ?)
 msgid "&Type to create a label"
 msgstr "&Taper pour créer une étiquette"
 
@@ -13440,9 +13442,10 @@ msgid "Mixing down to &stereo during export"
 msgstr "Mixage en &stéréo durant l'export"
 
 #: src/prefs/WarningsPrefs.cpp
+# trebmuh to check (accelerator)
 msgid "Mixing down on export (&Custom FFmpeg or external program)"
 msgstr ""
-"Faire un mix rapide à l'export (FFmpeg personnalisé ou programme externe)"
+"Faire un mix rapide à l'export (FFmpeg personnalisé ou programme externe) (&c)"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "&Importing uncompressed audio files"
@@ -13509,7 +13512,7 @@ msgid ""
 "Try changing the audio host, recording device and the project sample rate."
 msgstr ""
 "Erreur lors de l'ouverture du périphérique audio.\n"
-"Essayez de changer l'hôte audio, le périphérique d'enregistrement et le taux "
+"Essayez de changer l'hôte audio, le périphérique d'enregistrement, et le taux "
 "d'échantillonnage du projet."
 
 #. i18n-hint: (noun) It's the device used for playback.
@@ -13659,7 +13662,7 @@ msgstr "Volume d'enregistrement : %.2f"
 
 #: src/toolbars/MixerToolBar.cpp
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Volume d'enregistrement (indisponible; utiliser le mixeur système.)"
+msgstr "Volume d'enregistrement (indisponible; utilisez le mixeur système.)"
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
@@ -14031,7 +14034,7 @@ msgstr "Clic-gauche pour étendre, clic-droit pour supprimer"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to merge clips"
-msgstr "clic-gauche pour fusionner les clps"
+msgstr "clic-gauche pour fusionner les clips"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merged Clips"
