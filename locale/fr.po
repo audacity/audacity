@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-27 03:55+0100\n"
+"PO-Revision-Date: 2017-11-27 14:38+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -101,7 +101,7 @@ msgstr "Trouver...\tCtrl+F"
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 # trebmuh to check (accelerator)
 msgid "&Matching Paren\tF8"
-msgstr "Parent correspondant (&m)\tF8"
+msgstr "Parenthèse correspondante (&m)\tF8"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
@@ -362,7 +362,7 @@ msgstr "Correspondance"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
-msgstr "Aller au parent correspondant"
+msgstr "Aller à la parenthèse correspondante"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 # trebmuh to check
