@@ -7587,7 +7587,7 @@ msgid "Skip &Forward"
 msgstr "Μεταπήδηση &μπροστά"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Foreward"
+msgid "Skip &Forward"
 msgstr "Μεταπήδηση &μπροστά"
 
 #: src/effects/Effect.cpp
@@ -9391,7 +9391,7 @@ msgstr ""
 "παρεχόμενου συστήματος."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for A basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr " Επιλέξτε \"Βασικό\" για μια βασική διεπαφή μόνο κειμένου. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -10444,7 +10444,7 @@ msgstr "Κατατομή:"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "AAC Profile\n"
-"Low Complexity -default\n"
+"Low Complexity - default\n"
 "Most players won't play anything other than LC"
 msgstr ""
 "Κατατομή AAC\n"

@@ -7585,7 +7585,7 @@ msgid "Skip &Forward"
 msgstr "&Avançar"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Foreward"
+msgid "Skip &Forward"
 msgstr "&Avançar"
 
 #: src/effects/Effect.cpp
@@ -9378,7 +9378,7 @@ msgstr ""
 " Selecione \"Genérica\" para usar a interface genérica do sistema fornecido."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for A basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr " Selecione \"Básica\" para uma interface básica de somente texto.  "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -10426,7 +10426,7 @@ msgstr "Perfil:"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "AAC Profile\n"
-"Low Complexity -default\n"
+"Low Complexity - default\n"
 "Most players won't play anything other than LC"
 msgstr ""
 "Perfil AAC \n"

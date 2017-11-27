@@ -7580,7 +7580,7 @@ msgid "Skip &Forward"
 msgstr "Vai &avanti"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Foreward"
+msgid "Skip &Forward"
 msgstr "Vai in &avanti"
 
 #: src/effects/Effect.cpp
@@ -9374,7 +9374,7 @@ msgstr ""
 " Seleziona \"Generico\" per usare il sistema con un'interfaccia generica."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for A basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr ""
 " Seleziona \"Elementare\" per un'interfaccia elementare con solo testo. "
 
@@ -10426,7 +10426,7 @@ msgstr "Profilo:"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "AAC Profile\n"
-"Low Complexity -default\n"
+"Low Complexity - default\n"
 "Most players won't play anything other than LC"
 msgstr ""
 "Profilo AAC\n"

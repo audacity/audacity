@@ -7411,7 +7411,7 @@ msgid "Skip &Forward"
 msgstr "前进(&F)"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Foreward"
+msgid "Skip &Forward"
 msgstr "前进"
 
 #: src/effects/Effect.cpp
@@ -9170,7 +9170,7 @@ msgid " Select \"Generic\" to use the system supplied generic interface."
 msgstr " 选择 \"常规\" 使用系统提供的通用接口。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for A basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr " 选择 \"基本\" 是基本的纯文本的界面. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -10171,11 +10171,11 @@ msgstr "配置："
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "AAC Profile\n"
-"Low Complexity -default\n"
+"Low Complexity - default\n"
 "Most players won't play anything other than LC"
 msgstr ""
 "AAC配置\n"
-"低复杂度 -default\n"
+"低复杂度 - default\n"
 "多数的播放器只能播放低复杂度的"
 
 #: src/export/ExportFFmpegDialogs.cpp

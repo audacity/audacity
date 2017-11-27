@@ -7563,7 +7563,7 @@ msgid "Skip &Forward"
 msgstr "Jauzi &aurrerantz"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Foreward"
+msgid "Skip &Forward"
 msgstr "Jauzi &aurrerantz"
 
 #: src/effects/Effect.cpp
@@ -9353,7 +9353,7 @@ msgstr ""
 "Hautatu \"Generikoa\" sistemarekin datorren interfaze generikoa erabiltzeko."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for A basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr ""
 "Hautatu \"Oinarrizkoa\" testu hutsezko oinarrizko interfazea erabiltzeko."
 
@@ -10393,7 +10393,7 @@ msgstr "Profila:"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "AAC Profile\n"
-"Low Complexity -default\n"
+"Low Complexity - default\n"
 "Most players won't play anything other than LC"
 msgstr ""
 "AAC profila\n"

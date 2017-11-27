@@ -7720,7 +7720,7 @@ msgid "Skip &Forward"
 msgstr "Kihagyás &előre"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Foreward"
+msgid "Skip &Forward"
 msgstr "Kihagyás &előre"
 
 #: src/effects/Effect.cpp
@@ -9514,7 +9514,7 @@ msgstr ""
 "felület használatához."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid " Select \"Basic\" for A basic text-only interface. "
+msgid " Select \"Basic\" for a basic text-only interface. "
 msgstr " Válassza az „Alap” lehetőséget egy alap, csak szöveges felülethez. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -10555,7 +10555,7 @@ msgstr "Profil:"
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "AAC Profile\n"
-"Low Complexity -default\n"
+"Low Complexity - default\n"
 "Most players won't play anything other than LC"
 msgstr ""
 "AAC-profil\n"

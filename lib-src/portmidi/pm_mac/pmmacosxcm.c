@@ -566,7 +566,7 @@ midi_write_short(PmInternal *midi, PmEvent *event)
     message[2] = Pm_MessageData2(what);
     messageLength = midi_length(what);
         
-    /* make sure we go foreward in time */
+    /* make sure we go forward in time */
     if (timestamp < m->min_next_time) timestamp = m->min_next_time;
 
     #ifdef LIMIT_RATE
@@ -612,7 +612,7 @@ midi_end_sysex(PmInternal *midi, PmTimestamp when)
     midi_macosxcm_type m = (midi_macosxcm_type) midi->descriptor;
     assert(m);
     
-    /* make sure we go foreward in time */
+    /* make sure we go forward in time */
     if (m->sysex_timestamp < m->min_next_time) 
         m->sysex_timestamp = m->min_next_time;
 
