@@ -1518,7 +1518,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
                   mProfileChoice = S.Id(FEProfileID).TieChoice(_("Profile:"), wxT("/FileFormats/FFmpegAACProfile"),
                      mProfileLabels[0], mProfileNames, mProfileLabels);
                   mProfileChoice->SetSizeHints( 100,-1);
-                  mProfileChoice->SetToolTip(_("AAC Profile\nLow Complexity -default\nMost players won't play anything other than LC"));
+                  mProfileChoice->SetToolTip(_("AAC Profile\nLow Complexity - default\nMost players won't play anything other than LC"));
 
                }
                S.EndMultiColumn();
