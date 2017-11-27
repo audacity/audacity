@@ -3061,7 +3061,7 @@ bool EffectUIHost::Initialize()
                   bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
                   mFFwdBtn = bb;
 #if defined(__WXMAC__)
-                  mFFwdBtn->SetName(_("Skip &Foreward"));
+                  mFFwdBtn->SetName(_("Skip &Forward"));
 #else
                   mFFwdBtn->SetLabel(_("Skip &Foreward"));
 #endif
