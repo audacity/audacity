@@ -1517,7 +1517,7 @@ msgstr "Préparation...\n"
 #, c-format
 # trebmuh to check (que signifier "len" dans ce contexte ? C'est length ?)
 msgid "Expected len %d, track len %lld.\n"
-msgstr "Attendu len %d, piste len %lls.\n"
+msgstr "Attendu len %d, piste len %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
