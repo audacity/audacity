@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-27 18:00+0100\n"
+"PO-Revision-Date: 2017-11-27 22:04+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -579,7 +579,6 @@ msgid "Special thanks:"
 msgstr "Remerciements particuliers :"
 
 #: src/AboutDialog.cpp
-#| msgid "Audacity First Run"
 msgid "Audacity website: "
 msgstr "Site d'Audacity sur la toile : "
 
@@ -1231,13 +1230,11 @@ msgstr "Votre commande de traitement par lot de %s n'a pas été reconnue."
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
 # trebmuh to check
-#| msgid "Apply Chain"
 msgid "Applied batch chain"
 msgstr "Traitement par lot appliqué"
 
 #: src/BatchCommands.cpp
 # trebmuh to check
-#| msgid "Apply Chain"
 msgid "Apply chain"
 msgstr "Appliquer une chaîne"
 
@@ -1250,7 +1247,6 @@ msgstr "Traitement par lot appliqué '%s'"
 #: src/BatchCommands.cpp
 #, c-format
 # trebmuh to check
-#| msgid "Apply %s"
 msgid "Apply '%s'"
 msgstr "Appliquer '%s'"
 
@@ -1493,7 +1489,6 @@ msgstr "La taille de bloc devrait être comprise dans la gamme 1 - 1024 Ko."
 
 #: src/Benchmark.cpp
 # trebmuh to check
-#| msgid "The maximum number of notes must be in the range 1..128"
 msgid "Number of edits should be in the range 1 - 10000."
 msgstr "Le nombre maximal d'édition devrait être dans l'éventail 1 - 10000."
 
@@ -1511,7 +1506,6 @@ msgstr ""
 
 #: src/Benchmark.cpp
 # trebmuh to check
-#| msgid "Preparing preview"
 msgid "Preparing...\n"
 msgstr "Préparation...\n"
 
@@ -1544,7 +1538,6 @@ msgstr "Couper (%d, %d) échoué.\n"
 
 #: src/Benchmark.cpp
 #, c-format
-#| msgid "Paste"
 msgid "Paste: %d\n"
 msgstr "Coller : %d\n"
 
@@ -1626,7 +1619,6 @@ msgstr "TEST ÉCHOUÉ !!!\n"
 
 #: src/Benchmark.cpp
 # trebmuh to check
-#| msgid "File decoded successfully\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "Test de performance complété avec succès.\n"
 
@@ -1772,7 +1764,6 @@ msgid "Saving project data files"
 msgstr "Sauvegarde des fichiers de données du projet"
 
 #: src/DirManager.cpp
-#| msgid "Cleaning up temporary files"
 msgid "Cleaning up after failed save"
 msgstr "Nettoyage après échec de sauvegarde"
 
@@ -2595,7 +2586,7 @@ msgid "History"
 msgstr "Historique"
 
 #: src/HistoryWindow.cpp
-# trebmuh to check
+# trebmuh to check (accélérateurs)
 msgid "&Manage History"
 msgstr "&Gérer l'historique"
 
@@ -2616,7 +2607,7 @@ msgid "&Undo Levels Available"
 msgstr "Niveaux d'ann&ulations disponibles"
 
 #: src/HistoryWindow.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans le contexte graphique)
 msgid "&Levels To Discard"
 msgstr "&Niveaux à abandonner"
 
@@ -2640,6 +2631,7 @@ msgstr "&OK"
 
 #: src/InconsistencyException.cpp
 #, c-format
+# trebmuh to check (vérifier le remplacement des %s dans un contexte graphique)
 msgid ""
 "Internal error in %s at %s line %d.\n"
 "Please inform the Audacity team at https://forum.audacityteam.org/."
@@ -2705,7 +2697,7 @@ msgid "Insert &After"
 msgstr "Insérer &après"
 
 #: src/LabelDialog.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Insert &Before"
 msgstr "Insérer a&vant"
 
@@ -2797,7 +2789,7 @@ msgstr "Marqueur ajouté"
 
 #. i18n-hint: (verb)
 #: src/LabelTrack.cpp src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cu&t"
 msgstr "Couper et &raccorder"
 
@@ -2808,12 +2800,12 @@ msgstr "&Copier"
 
 #. i18n-hint: (verb)
 #: src/LabelTrack.cpp src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Paste"
 msgstr "Co&ller"
 
 #: src/LabelTrack.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Delete Label"
 msgstr "&Supprimer le marqueur"
 
@@ -2908,7 +2900,7 @@ msgid "Expo&rt Selected Audio..."
 msgstr "Expo&rter l'audio sélectionné..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Export &Labels..."
 msgstr "Exporter les marq&ueurs..."
 
@@ -2933,7 +2925,7 @@ msgid "&Audio..."
 msgstr "&Audio..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Labels..."
 msgstr "Mar&queurs..."
 
@@ -2950,7 +2942,7 @@ msgid "C&hains"
 msgstr "C&haînes"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Appl&y Chain..."
 msgstr "Ap&pliquer la chaîne..."
 
@@ -2969,12 +2961,12 @@ msgstr "Im&primer..."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "E&xit"
 msgstr "&Quitter"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Edit"
 msgstr "É&dition"
 
@@ -2987,13 +2979,13 @@ msgid "&Redo"
 msgstr "&Refaire"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Delete"
 msgstr "&Effacer"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Duplic&ate"
 msgstr "Dupli&quer"
 
@@ -3003,13 +2995,13 @@ msgstr "Suppr&ession spéciale"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Spl&it Cut"
 msgstr "Cou&per-séparer"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur + c'est quoi ce "delete spécial" ?)
 msgid "Split D&elete"
 msgstr "Supprim&er-séparer"
 
@@ -3020,28 +3012,29 @@ msgstr "Silence audi&o"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Tri&m Audio"
 msgstr "Rog&nage audio"
 
 #: src/Menus.cpp
+# trebmuh to check (accélérateur)
 msgid "Clip B&oundaries"
 msgstr "Délimitati&ons du clip"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Sp&lit"
 msgstr "Scin&der"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Split Ne&w"
 msgstr "Scinder dans une &nouvelle piste"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Join"
 msgstr "&Fusionner"
 
@@ -3050,7 +3043,7 @@ msgid "Detac&h at Silences"
 msgstr "Détac&her aux silences"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Labels"
 msgstr "&Marqueurs"
 
@@ -3089,9 +3082,9 @@ msgstr "Couper et &raccorder"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (c'est quoi cette manière spéciale ?)
 msgid "&Split Cut"
-msgstr "&Couper-séparer"
+msgstr "Couper-&séparer"
 
 #: src/Menus.cpp
 # trebmuh to check
@@ -3286,7 +3279,7 @@ msgid "Sk&ip to"
 msgstr "Saut vers (&i)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Selection Sta&rt"
 msgstr "Début de la sélection (&r)"
 
@@ -3468,12 +3461,12 @@ msgid "Project E&nd"
 msgstr "Fi&n du projet"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Pla&y Region"
 msgstr "Lire la région (&y)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Lock"
 msgstr "Verroui&ller"
 
@@ -3490,9 +3483,9 @@ msgid "Transport &Options"
 msgstr "&Options de transport"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Sound Activation Le&vel..."
-msgstr "&Niveau de l'enregistrement automatique..."
+msgstr "Ni&veau de l'enregistrement automatique..."
 
 #: src/Menus.cpp
 # trebmuh to check
@@ -3500,7 +3493,7 @@ msgid "Sound A&ctivated Recording (on/off)"
 msgstr "Enregistrement &automatique (marche/arrêt)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Pinned Play/Record &Head (on/off)"
 msgstr "Tête de lecture/enregistrement épinglée (marché/arrêt) (&h)"
 
@@ -3549,7 +3542,7 @@ msgid "Mi&x and Render"
 msgstr "Mi&xage et Rendu"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Mix and Render to Ne&w Track"
 msgstr "Mix et rendu vers une nouvelle piste (&w)"
 
@@ -3580,7 +3573,7 @@ msgid "&Pan"
 msgstr "&Panoramique"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Left"
 msgstr "Gauche (&l)"
 
@@ -3626,7 +3619,7 @@ msgid "&Align Tracks"
 msgstr "&Aligner les pistes"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Move Selection with Tracks (on/off)"
 msgstr "Déplacer la sélection avec les pistes (marche/arrêt) (&m)"
 
@@ -3663,7 +3656,7 @@ msgstr "&Générer"
 
 #: src/Menus.cpp
 msgid "Add / Remove Plug-ins..."
-msgstr "Ajouter / supprimer de greffons..."
+msgstr "Ajouter / supprimer des greffons..."
 
 #: src/Menus.cpp
 # trebmuh to check
@@ -3694,7 +3687,7 @@ msgid "Plot Spectrum..."
 msgstr "Tracer le spectre..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Window"
 msgstr "fenêtre (&w)"
 
@@ -3764,7 +3757,7 @@ msgid "Chec&k Dependencies..."
 msgstr "Vérifier les fichiers &associés..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Check for Updates..."
 msgstr "Vérifier les mises à jour (&c)..."
 
@@ -3784,33 +3777,41 @@ msgstr "Lire une sec&onde"
 
 #: src/Menus.cpp
 msgid "Play To &Selection"
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgstr "Lire jusqu'à la &sélection"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play &Before Selection Start"
 msgstr "Lire avant le dé&but de la sélection"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play Af&ter Selection Start"
 msgstr "Lire après le début de la sélec&tion"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play Be&fore Selection End"
 msgstr "Lire avant la &fin de la sélection"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play Aft&er Selection End"
 msgstr "Lire après la fin de la sél&ection"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play Before a&nd After Selection Start"
 msgstr "Lire ava&nt et après le début de la sélection"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play Before an&d After Selection End"
 msgstr "Lire avant et après la fin &de la sélection"
 
 #: src/Menus.cpp
+# trebmuh to check (vérifier que tout ça fonctionne correctement)
 msgid "Play C&ut Preview"
 msgstr "Prélecture de la co&upe"
 
