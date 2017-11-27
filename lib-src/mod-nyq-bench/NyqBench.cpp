@@ -1721,7 +1721,7 @@ void NyqBench::RecreateToolbar(bool large)
    tb->AddSeparator();
    tb->AddTool(wxID_FIND, _("Find"), mPics[12], _("Find text"));
    tb->AddSeparator();
-   tb->AddTool(ID_MATCH, _("Match"), mPics[13], _("Go to matching paren"));
+   tb->AddTool(ID_MATCH, _("Match"), mPics[13], _("Go to matching parent"));
    tb->AddTool(ID_TOP, _("Top"), mPics[14], _("Go to top S-expr"));
    tb->AddTool(ID_UP, _("Up"), mPics[15], _("Go to higher S-expr"));
    tb->AddTool(ID_PREVIOUS, _("Previous"), mPics[16], _("Go to previous S-expr"));
