@@ -4,6 +4,7 @@
 # This file is distributed under the same license as the Audacity package.
 #
 # Translators:
+# Christian Brochec
 # Corentin Rossignon <corentin.rossignon@gmail.com>, 2013
 # Lucas Lechat <lucaslechat@outlook.com>, 2013
 # BobSynfig, 2014
