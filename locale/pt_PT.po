@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-23 01:32+0000\n"
+"PO-Revision-Date: 2017-11-28 14:50+0000\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -2235,7 +2235,7 @@ msgstr "&Tamanho:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "&Export..."
-msgstr "&Exportar ..."
+msgstr "&Exportar..."
 
 #: src/FreqWindow.cpp
 msgid "&Function:"
@@ -7039,7 +7039,7 @@ msgstr "&Diferença:"
 
 #: src/effects/Contrast.cpp src/effects/Equalization.cpp
 msgid "E&xport..."
-msgstr "&Exportar ..."
+msgstr "E&xportar..."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -7628,7 +7628,7 @@ msgstr "Importar ..."
 
 #: src/effects/Effect.cpp
 msgid "Export..."
-msgstr "Exportar ..."
+msgstr "Exportar..."
 
 #: src/effects/Effect.cpp src/widgets/Meter.cpp
 msgid "Options..."
@@ -8333,7 +8333,7 @@ msgstr "Suavização da frequência"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Sensiti&vity (dB):"
-msgstr "&Sensib&ilidade (dB):"
+msgstr "Sensib&ilidade (dB):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Old Sensitivity"
@@ -12129,7 +12129,7 @@ msgstr "Ao exportar faixas para um ficheiro de áudio"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Mix down to Stereo or Mono"
-msgstr "&Misturar e fundir as faixas para e&stéreo ou mono"
+msgstr "&Misturar e fundir as faixas para estéreo ou mono"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use custom mix"
@@ -12671,7 +12671,7 @@ msgstr "Ao guardar um projecto que dependa de outros ficheiros de áudio"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "&Copy all audio into project (safest)"
-msgstr "&Copiar sempre &todo o áudio para o projeto (mais seguro)"
+msgstr "&Copiar sempre todo o áudio para o projeto (mais seguro)"
 
 #: src/prefs/ProjectsPrefs.cpp
 msgid "Do &not copy any audio"
