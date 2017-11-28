@@ -7878,11 +7878,6 @@ msgstr "Framåt"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
-msgstr "Framåt"
-
-#: src/effects/Effect.cpp
-#, fuzzy
 msgid "Skip forward"
 msgstr "Gå till början"
 

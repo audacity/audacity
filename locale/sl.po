@@ -7526,10 +7526,6 @@ msgid "Skip &Forward"
 msgstr "Preskoči nap&rej"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
-msgstr "Preskoči nap&rej"
-
-#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "Preskoči naprej"
 

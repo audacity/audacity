@@ -7621,10 +7621,6 @@ msgid "Skip &Forward"
 msgstr "Гузариш ба Ибтидо"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
-msgstr ""
-
-#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "Гузариш ба Ибтидо"

@@ -7533,11 +7533,6 @@ msgid "Skip backward"
 msgstr ""
 
 #: src/effects/Effect.cpp
-#, fuzzy
-msgid "Skip &Forward"
-msgstr "Spring na begin"
-
-#: src/effects/Effect.cpp
 msgid "Skip &Forward"
 msgstr ""
 

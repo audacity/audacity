@@ -7933,11 +7933,6 @@ msgstr "Vpred"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
-msgstr "Vpred"
-
-#: src/effects/Effect.cpp
-#, fuzzy
 msgid "Skip forward"
 msgstr "Na začiatok"
 

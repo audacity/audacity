@@ -7634,11 +7634,6 @@ msgstr "Tiếp"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
-msgstr "Tiếp"
-
-#: src/effects/Effect.cpp
-#, fuzzy
 msgid "Skip forward"
 msgstr "Nhảy về đầu"
 

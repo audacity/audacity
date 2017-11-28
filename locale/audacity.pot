@@ -7231,10 +7231,6 @@ msgstr ""
 msgid "Skip backward"
 msgstr ""
 
-#: src/effects/Effect.cpp:3051
-msgid "Skip &Forward"
-msgstr ""
-
 #: src/effects/Effect.cpp:3061 src/effects/Effect.cpp:3063
 msgid "Skip &Forward"
 msgstr ""

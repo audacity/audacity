@@ -7506,10 +7506,6 @@ msgid "Skip &Forward"
 msgstr "Spring &fremad"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
-msgstr "Spring &fremad"
-
-#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "Spring fremad"
 

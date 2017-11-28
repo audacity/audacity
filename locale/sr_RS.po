@@ -7711,10 +7711,6 @@ msgid "Skip &Forward"
 msgstr "Премотај на&пред"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
-msgstr "Премотај &унапред"
-
-#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "Премотајте напред"
 

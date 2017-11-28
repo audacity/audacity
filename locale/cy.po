@@ -7441,11 +7441,6 @@ msgid "Skip backward"
 msgstr ""
 
 #: src/effects/Effect.cpp
-#, fuzzy
-msgid "Skip &Forward"
-msgstr "Neidio i'r Dechrau"
-
-#: src/effects/Effect.cpp
 msgid "Skip &Forward"
 msgstr ""
 

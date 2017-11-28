@@ -7485,10 +7485,6 @@ msgid "Skip &Forward"
 msgstr "Perkelti į Pradžią"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
-msgstr ""
-
-#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "Perkelti į Pradžią"
