@@ -364,10 +364,11 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
             updateResult = ProgressResult::Cancelled;
             break;
          }
+         if (updateResult == ProgressResult::Success)
+            updateResult =
+               progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-   if (updateResult == ProgressResult::Success)
-      updateResult = progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
 
    return updateResult;
 }
