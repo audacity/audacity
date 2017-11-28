@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-27 22:26+0100\n"
+"PO-Revision-Date: 2017-11-28 16:39+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -63,6 +63,7 @@ msgid "&Nyquist Workbench..."
 msgstr "Panoplie &Nyquist..."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
+# trebmuh to check (accélérateur)
 msgid "&Undo\tCtrl+Z"
 msgstr "&Annuler\tCtrl+Z"
 
@@ -71,31 +72,32 @@ msgid "&Redo\tCtrl+Y"
 msgstr "&Refaire\tCtrl+Y"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cu&t\tCtrl+X"
 msgstr "&Couper\tCtrl+X"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
+# trebmuh to check (accélérateur)
 msgid "&Copy\tCtrl+C"
 msgstr "Co&pier\tCtrl+C"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Paste\tCtrl+V"
 msgstr "Co&ller\tCtrl+V"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cle&ar\tCtrl+L"
 msgstr "Nettoyer\tCtrl+L"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Select A&ll\tCtrl+A"
 msgstr "Sé&lectionner Tout\tCtrl+A"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Find...\tCtrl+F"
 msgstr "Trouver...\tCtrl+F"
 
@@ -141,7 +143,7 @@ msgid "Split &Horizontally"
 msgstr "&Horizontal"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check ("le script" ou pluriel peut être ?)
+# trebmuh to check ("le script" ou "les scripts" pluriel peut être ?)
 msgid "Show S&cript"
 msgstr "Montrer le s&cript"
 
@@ -183,7 +185,7 @@ msgstr "Script"
 #. i18n-hint noun
 #: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #: src/effects/BassTreble.cpp
-# trebmuh to check
+# trebmuh to check (voir dans un contexte graphique)
 msgid "Output"
 msgstr "Sortie"
 
@@ -366,7 +368,7 @@ msgid "Go to matching paren"
 msgstr "Aller à la parenthèse correspondante"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (voir dans un contexte graphique)
 msgid "Top"
 msgstr "Tout en haut"
 
@@ -392,7 +394,7 @@ msgid "Go to previous S-expr"
 msgstr "Aller au S-expr précédent"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check
+# trebmuh to check (bejoin d'ajouter "outil" ?)
 msgid "Next"
 msgstr "Outil suivant"
 
@@ -511,7 +513,7 @@ msgstr ""
 #. *
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
-# trebmuh to check
+# trebmuh to check (voir dans un contexte graphique)
 msgid "translator_credits"
 msgstr ""
 "Traduction française par Olivier Humbert dans le cadre du projet LibraZiK, \n"
@@ -674,7 +676,7 @@ msgid "Features"
 msgstr "Fonctionnalités"
 
 #: src/AboutDialog.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Dark Theme Extras"
 msgstr "Extras du thème Dark"
 
@@ -699,7 +701,7 @@ msgid "Program build date: "
 msgstr "Date de construction du programme : "
 
 #: src/AboutDialog.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Commit Id:"
 msgstr "Identifiant de commit :"
 
@@ -712,7 +714,7 @@ msgid "Debug build"
 msgstr "Construction de débogage"
 
 #: src/AboutDialog.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Release build"
 msgstr "Version construite"
 
@@ -780,12 +782,12 @@ msgid "Master Gain Control"
 msgstr "Contrôle du niveau général"
 
 #: src/AudacityApp.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Report generated to:"
 msgstr "Rapport généré pour :"
 
 #: src/AudacityApp.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Audacity Support Data"
 msgstr "Données de support Audacity"
 
@@ -859,7 +861,7 @@ msgid ""
 "Audacity is now going to exit. Please launch Audacity again to use the new "
 "temporary directory."
 msgstr ""
-"Audacity va maintenant se fermer.  Veuillez relancer Audacity pour utiliser "
+"Audacity va maintenant se fermer. Veuillez relancer Audacity pour utiliser "
 "le nouveau répertoire temporaire."
 
 #: src/AudacityApp.cpp
@@ -1197,7 +1199,6 @@ msgstr ""
 "/%s/%s%s"
 
 #: src/BatchCommands.cpp
-# trebmuh to check
 msgid "Export recording"
 msgstr "Exporter l'enregistrement"
 
@@ -1229,12 +1230,12 @@ msgstr "Votre commande de traitement par lot de %s n'a pas été reconnue."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Applied batch chain"
 msgstr "Traitement par lot appliqué"
 
 #: src/BatchCommands.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Apply chain"
 msgstr "Appliquer une chaîne"
 
@@ -1246,7 +1247,7 @@ msgstr "Traitement par lot appliqué '%s'"
 
 #: src/BatchCommands.cpp
 #, c-format
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Apply '%s'"
 msgstr "Appliquer '%s'"
 
@@ -1294,7 +1295,7 @@ msgid "Apply to &Files..."
 msgstr "Appliquer aux &fichiers..."
 
 #: src/BatchProcessDialog.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Cancel"
 msgstr "&Annuler"
 
@@ -1371,12 +1372,12 @@ msgid "&Insert"
 msgstr "&Insérer"
 
 #: src/BatchProcessDialog.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "De&lete"
 msgstr "&Supprimer"
 
 #: src/BatchProcessDialog.cpp src/effects/Equalization.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Move &Up"
 msgstr "&Monter"
 
@@ -1428,7 +1429,7 @@ msgstr "Voulez-vous vraiment supprimer %s ?"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Benchmark"
 msgstr "Test de performance"
 
@@ -1437,7 +1438,7 @@ msgid "Disk Block Size (KB):"
 msgstr "Taille de bloc de disque (Ko) :"
 
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Number of Edits:"
 msgstr "Nombre d'éditions :"
 
@@ -1448,7 +1449,7 @@ msgstr "Taile de donnée de test (Mo) :"
 #. i18n-hint: A "seed" is a number that initializes a
 #. pseudorandom number generating algorithm
 #: src/Benchmark.cpp
-# trebmuh to check (voir le rendu dans l'interface graphique)
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Random Seed:"
 msgstr "Graine aléatoire :"
 
@@ -1479,7 +1480,7 @@ msgid "benchmark.txt"
 msgstr "performances.txt"
 
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Export Benchmark Data as:"
 msgstr "Exporter les données du test de performance sous :"
 
@@ -1488,7 +1489,7 @@ msgid "Block size should be in the range 1 - 1024 KB."
 msgstr "La taille de bloc devrait être comprise dans la gamme 1 - 1024 Ko."
 
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Number of edits should be in the range 1 - 10000."
 msgstr "Le nombre maximal d'édition devrait être dans l'éventail 1 - 10000."
 
@@ -1498,20 +1499,20 @@ msgstr "La taille des données de test devrait être dans l'éventail 1 - 2000 M
 
 #: src/Benchmark.cpp
 #, c-format
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Using %d chunks of %d samples each, for a total of %.1f MB.\n"
 msgstr ""
 "Utiliser %d parties de %d échantillons chaque fois, pour un total de %.1f "
 "Mo.\n"
 
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Preparing...\n"
 msgstr "Préparation...\n"
 
 #: src/Benchmark.cpp
 #, c-format
-# trebmuh to check (que signifier "len" dans ce contexte ? C'est length ?)
+# trebmuh to check (que signifie "len" dans ce contexte ? length peut être ?)
 msgid "Expected len %d, track len %lld.\n"
 msgstr "Attendu len %d, piste len %lld.\n"
 
@@ -1527,7 +1528,7 @@ msgstr "Couper : %d - %d \n"
 
 #: src/Benchmark.cpp
 #, c-format
-# trebmuh to check ("essai" ou "test" ou autre ? Voir le rendu dans le contexte)
+# trebmuh to check ("essai" ou "test" ou autre ? Voir le rendu dans le contexte graphique)
 msgid "Trial %d\n"
 msgstr "Essai %d\n"
 
@@ -1561,12 +1562,12 @@ msgstr "Vérification des fuites de pointeur de fichier :\n"
 
 #: src/Benchmark.cpp
 #, c-format
-# trebmuh to check (voir dans le contexte de l'interface)
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Track # blocks: %d\n"
 msgstr "Piste # blocs : %d\n"
 
 #: src/Benchmark.cpp
-# trebmuh to check (voir dans le contexte de l'interface)
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Disk # blocks: \n"
 msgstr "Disque # blocs : \n"
 
@@ -1576,7 +1577,7 @@ msgstr "Vérification de justesse...\n"
 
 #: src/Benchmark.cpp
 #, c-format
-# trebmuh to check (trouver une meilleure traduction pour chunk peut être ? Voir dans le contexte graphique.)
+# trebmuh to check (trouver une meilleure traduction pour chunk peut être ? vérifier dans le contexte graphique.)
 msgid "Bad: chunk %d sample %d\n"
 msgstr "Mauvaise : partie %d échantillon %d\n"
 
@@ -1595,7 +1596,7 @@ msgid "Time to check all data: %ld ms\n"
 msgstr "Durée pour la vérification de toutes les données : %ld ms\n"
 
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Reading data again...\n"
 msgstr "Relecture des données...\n"
 
@@ -1618,7 +1619,7 @@ msgid "TEST FAILED!!!\n"
 msgstr "TEST ÉCHOUÉ !!!\n"
 
 #: src/Benchmark.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Benchmark completed successfully.\n"
 msgstr "Test de performance complété avec succès.\n"
 
@@ -2244,7 +2245,7 @@ msgid "dB"
 msgstr "dB"
 
 #: src/FreqWindow.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Scroll"
 msgstr "Défilement"
 
@@ -2261,7 +2262,7 @@ msgid "Hz"
 msgstr "Hz"
 
 #: src/FreqWindow.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Cursor:"
 msgstr "Petit saut de curseur à gauche :"
 
@@ -2278,7 +2279,7 @@ msgid "&Algorithm:"
 msgstr "&Algorithme :"
 
 #: src/FreqWindow.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Size:"
 msgstr "&Taille :"
 
@@ -2608,6 +2609,7 @@ msgstr "Niveaux d'ann&ulations disponibles"
 
 #: src/HistoryWindow.cpp
 # trebmuh to check (vérifier dans le contexte graphique)
+# trebmuh to check (accélérateur)
 msgid "&Levels To Discard"
 msgstr "&Niveaux à abandonner"
 
@@ -3056,7 +3058,7 @@ msgid "Add Label At &Selection"
 msgstr "Placer un marqueur sur la &sélection"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Add Label At &Playback Position"
 msgstr "Placer un marqueur à la &position de lecture"
 
@@ -3065,18 +3067,18 @@ msgid "Paste Te&xt to New Label"
 msgstr "Coller le te&xte dans un nouveau marqueur"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Type to Create a Label (on/off)"
 msgstr "&Taper pour créer un marqueur (on/off)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "La&beled Audio"
 msgstr "Audio éti&queté"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Cut"
 msgstr "Couper et &raccorder"
 
@@ -3087,7 +3089,7 @@ msgid "&Split Cut"
 msgstr "Couper-&séparer"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Sp&lit Delete"
 msgstr "&Supprimer-séparer"
 
@@ -3102,7 +3104,7 @@ msgstr "Co&pier"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Spli&t"
 msgstr "Scin&der"
 
@@ -3133,7 +3135,7 @@ msgid "&Tracks"
 msgstr "Pis&tes"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "In All &Tracks"
 msgstr "dans &toutes les pistes"
 
@@ -3142,17 +3144,18 @@ msgid "In All &Sync-Locked Tracks"
 msgstr "dans toutes les pistes verrouillées-&synchro"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "R&egion"
 msgstr "Ré&gion"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
+# trebmuh to check (accélérateur)
 msgid "&Left at Playback Position"
 msgstr "de la limite &gauche de la sélection au point de lecture"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Right at Playback Position"
 msgstr "de la limite d&roite de la sélection au point de lecture"
 
@@ -3177,7 +3180,7 @@ msgid "S&pectral"
 msgstr "S&pectral"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "To&ggle spectral selection"
 msgstr "Basculer la sélection spectrale (&g)"
 
@@ -3190,17 +3193,17 @@ msgid "Next &Lower Peak Frequency"
 msgstr "Prochain pic p&lus bas de fréquence"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "limite précédente du clip au curseur (&v)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "curseur à la prochaine limite du clip (&x)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Previo&us Clip"
 msgstr "Clip précédent (&u)"
 
@@ -3217,12 +3220,12 @@ msgid "Store Cursor Pos&ition"
 msgstr "Stocke la pos&ition du curseur"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "At &Zero Crossings"
 msgstr "Rechercher les croisements avec le &zéro"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&View"
 msgstr "&Affichage"
 
@@ -3233,7 +3236,7 @@ msgid "&Zoom"
 msgstr "&Zoom"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Zoom &In"
 msgstr "Zoom a&vant"
 
@@ -3242,7 +3245,7 @@ msgid "Zoom &Normal"
 msgstr "Zoom &normal"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Zoom &Out"
 msgstr "Zoom a&rrière"
 
@@ -3255,7 +3258,7 @@ msgid "T&rack Size"
 msgstr "Taille de la piste (&r)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Fit to Width"
 msgstr "S'adapter à la largeur (&f)"
 
@@ -3264,17 +3267,17 @@ msgid "Fit to &Height"
 msgstr "S'adapter à la &hauteur"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Collapse All Tracks"
 msgstr "&Réduire toutes les pistes"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "E&xpand Collapsed Tracks"
 msgstr "Res&taurer toutes les pistes"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Sk&ip to"
 msgstr "Saut vers (&i)"
 
@@ -3306,7 +3309,7 @@ msgstr "Barres d'ou&tils"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Reset Toolb&ars"
 msgstr "Réinitialiser les b&arres d'outils"
 
@@ -3327,7 +3330,7 @@ msgstr "Barre de mesure d'enregist&rement"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the playback level meter
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Playback Meter Toolbar"
 msgstr "Barre de mesure de lecture (&p)"
 
@@ -3345,7 +3348,7 @@ msgstr "Barr&e d'édition"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Tra&nscription Toolbar"
 msgstr "Barre de lecture varia&ble"
 
@@ -3356,7 +3359,7 @@ msgstr "&Barre de frottement"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that manages devices
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Device Toolbar"
 msgstr "Barre de &périphériques"
 
@@ -3412,7 +3415,7 @@ msgid "&Record"
 msgstr "En&registrement"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Append Record"
 msgstr "Poursuite de l'en&registrement"
 
@@ -3421,12 +3424,12 @@ msgid "Record &New Track"
 msgstr "Enregistrer un &nouvelle piste"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Timer Record..."
 msgstr "Enregis&trement programmé..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Cursor to"
 msgstr "Petit saut de &curseur à"
 
@@ -3443,12 +3446,12 @@ msgid "Track &End"
 msgstr "à la fin de la pist&e"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Pre&vious Clip Boundary"
 msgstr "Délimitati&ons du clip précédent"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Ne&xt Clip Boundary"
 msgstr "Délimitati&ons du clip suivant"
 
@@ -3488,7 +3491,7 @@ msgid "Sound Activation Le&vel..."
 msgstr "Ni&veau de l'enregistrement automatique..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Sound A&ctivated Recording (on/off)"
 msgstr "Enregistrement &automatique (marche/arrêt)"
 
@@ -3557,7 +3560,7 @@ msgstr "Sup&primer la (les) piste(s)"
 #: src/Menus.cpp
 # trebmuh to check
 msgid "M&ute/Unmute"
-msgstr "Muet bascule marche/arrêt sur la piste visée"
+msgstr "Muet basc&ule marche/arrêt sur la piste visée"
 
 #: src/Menus.cpp
 msgid "&Mute All Tracks"
@@ -3578,7 +3581,7 @@ msgid "&Left"
 msgstr "Gauche (&l)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Right"
 msgstr "D&roit"
 
@@ -3632,17 +3635,17 @@ msgid "Synchronize MIDI with Audio"
 msgstr "Synchoniser le MIDI avec l'audio"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "S&ort Tracks"
 msgstr "&Trier les pistes"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "by &Start time"
 msgstr "Par heure de &début"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (min/maj)
 msgid "by &Name"
 msgstr "Par &nom"
 
@@ -3659,7 +3662,7 @@ msgid "Add / Remove Plug-ins..."
 msgstr "Ajouter / supprimer des greffons..."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Effe&ct"
 msgstr "E&ffets"
 
@@ -3852,7 +3855,7 @@ msgid "&Next Tool"
 msgstr "Outil suiva&nt"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check ("barre de" nécessaire ?)
 msgid "Mi&xer"
 msgstr "Barre de mi&xeur"
 
@@ -3861,7 +3864,7 @@ msgid "Ad&just playback volume"
 msgstr "A&juster le volume de lecture"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Increase playback volume"
 msgstr "Augmenter le volume de lecture (&i)"
 
@@ -3882,7 +3885,7 @@ msgid "D&ecrease recording volume"
 msgstr "Réduir&e le volume d'enregistrement"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&DeleteKey"
 msgstr "ToucheSuppression (&d)"
 
@@ -3919,7 +3922,6 @@ msgid "&Decrease playback speed"
 msgstr "Ré&duire la vitesse de lecture"
 
 #: src/Menus.cpp
-# trebmuh to check
 msgid "Move to &Previous Label"
 msgstr "Aller à l'étiquette &précédente"
 
@@ -3928,7 +3930,7 @@ msgid "Move to &Next Label"
 msgstr "Aller à l'étiquette suiva&nte"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier le scrub/frottement)
 msgid "Scru&b"
 msgstr "Scru&b"
 
@@ -3941,17 +3943,17 @@ msgid "Short seek &right during playback"
 msgstr "Court saut à d&roite durant la lecture"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Long seek le&ft during playback"
 msgstr "Long saut à gauche durant la lecture (&f)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Long Seek rig&ht during playback"
 msgstr "Long saut à droite durant la lecture (&h)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "De&vice"
 msgstr "Périphérique (&v)"
 
@@ -4057,7 +4059,7 @@ msgid "Move Focus to &Next Track"
 msgstr "Déplacer la visée sur la piste suiva&nte"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Move Focus to &First Track"
 msgstr "Déplacer la visée sur la première piste (&f)"
 
@@ -4082,17 +4084,17 @@ msgid "Toggle Focuse&d Track"
 msgstr "Bascule &de visée de piste"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Cursor"
 msgstr "Petit saut de &curseur à gauche"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cursor &Left"
 msgstr "Petit saut de curseur à gauche (&l)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cursor &Right"
 msgstr "Petit saut de curseur à dr&oite"
 
@@ -4109,7 +4111,7 @@ msgid "Cursor Long J&ump Left"
 msgstr "Grand saut de c&urseur à gauche"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Cursor Long Ju&mp Right"
 msgstr "Grand saut de curseur à droite (&m)"
 
@@ -4124,7 +4126,7 @@ msgid "Clip Rig&ht"
 msgstr "Clip droit (&h)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Track"
 msgstr "&Pistes"
 
@@ -4166,7 +4168,7 @@ msgid "&Solo/Unsolo focused track"
 msgstr "&Solo ou pas sur la piste visée"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Close focused track"
 msgstr "Fermer la piste visée (&c)"
 
@@ -4175,7 +4177,7 @@ msgid "Move focused track u&p"
 msgstr "Déplacer la piste visée vers le ha&ut"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Move focused track do&wn"
 msgstr "Déplacer la piste visée vers le bas (&w)"
 
@@ -4188,7 +4190,7 @@ msgid "Move focused track to &bottom"
 msgstr "Déplacer la piste visée tout en &bas"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Full screen (on/off)"
 msgstr "Plein écran (marche/arrêt) (&f)"
 
@@ -4331,7 +4333,7 @@ msgid "Please select only one Note Track at a time."
 msgstr "Veuillez ne sélectionner qu'une seule note à la fois."
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Please select a Note Track."
 msgstr "Veuillez sélectionner une piste de note."
 
@@ -4411,7 +4413,7 @@ msgstr "Rognage audio"
 #: src/Menus.cpp
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Audio supprimé de  %.2f secondes à t=%.2f"
+msgstr "Audio supprimé de %.2f secondes à t=%.2f"
 
 #: src/Menus.cpp
 msgid "Split Delete"
@@ -4420,7 +4422,7 @@ msgstr "Supprimer et raccorder"
 #: src/Menus.cpp
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
-msgstr "Détaché de  %.2f secondes à t=%.2f"
+msgstr "Détaché de %.2f secondes à t=%.2f"
 
 #: src/Menus.cpp
 msgid "Detach"
@@ -4429,7 +4431,7 @@ msgstr "Détacher"
 #: src/Menus.cpp
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Groupé de  %.2f secondes à t=%.2f"
+msgstr "Groupé de %.2f secondes à t=%.2f"
 
 #: src/Menus.cpp
 msgid "Join"
@@ -4972,7 +4974,7 @@ msgstr "Module inadapté"
 msgid ""
 "The module %s does not provide a version string.  It will not be loaded."
 msgstr ""
-"Le module %s ne fournit pas de chaîne de version. Il ne sera pas chargé."
+"Le module %s ne fournit pas de chaîne de version.  Il ne sera pas chargé."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -4990,7 +4992,7 @@ msgstr ""
 msgid ""
 "The module %s is matched with Audacity version %s.  It will not be loaded."
 msgstr ""
-"Le module %s correspond à la version %s d'Audacity. Il ne sera pas chargé."
+"Le module %s correspond à la version %s d'Audacity.  Il ne sera pas chargé."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -5054,7 +5056,7 @@ msgid "D&isabled"
 msgstr "Désact&ivé"
 
 #: src/PluginManager.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Show disabled"
 msgstr "Affichage désactivé"
 
@@ -5070,12 +5072,12 @@ msgstr "Affichage activé"
 
 #. i18n-hint: Radio button to show just the newly discovered effects
 #: src/PluginManager.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Ne&w"
 msgstr "Nouveau (&w)"
 
 #: src/PluginManager.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Show new"
 msgstr "Affiché les nouveaux"
 
@@ -5092,7 +5094,7 @@ msgid "&Select All"
 msgstr "&Sélectionner tout"
 
 #: src/PluginManager.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "C&lear All"
 msgstr "Nettoyer tout (&l)"
 
@@ -5341,7 +5343,7 @@ msgid ""
 "You are using Audacity %s. You may need to upgrade to a newer version to "
 "open this file."
 msgstr ""
-"Ce fichier a été enregistré avec  Audacity %s.\n"
+"Ce fichier a été enregistré avec Audacity %s.\n"
 "Vous utilisez Audacity %s. Vous devez mettre votre version à jour pour "
 "ouvrir ce fichier."
 
@@ -5371,7 +5373,7 @@ msgstr ""
 
 #: src/Project.cpp
 msgid "Warning - Empty Project"
-msgstr "Attention -  Projet vide"
+msgstr "Attention - Projet vide"
 
 #: src/Project.cpp
 msgid "Could not create safety file: "
@@ -5447,7 +5449,7 @@ msgstr ""
 "en ligne, \n"
 "mais il ont perde un peu en fidélité.\n"
 "\n"
-"L'ouverture d'un projet compressé prend plus de temps  que la normale, "
+"L'ouverture d'un projet compressé prend plus de temps que la normale, "
 "puisqu'il importe \n"
 "chaque piste compressée.\n"
 
@@ -5478,7 +5480,7 @@ msgstr "Nouveau projet créé"
 #: src/Project.cpp
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Effacé de  %.2f secondes à t=%.2f"
+msgstr "Effacé de %.2f secondes à t=%.2f"
 
 #: src/Project.cpp
 msgid "Delete"
@@ -5542,7 +5544,7 @@ msgstr "Panoramique ajusté"
 #: src/Project.cpp
 #, c-format
 msgid "Removed track '%s.'"
-msgstr "piste  '%s'  supprimée"
+msgstr "piste '%s' supprimée"
 
 #: src/Project.cpp
 msgid "Track Remove"
@@ -5819,12 +5821,12 @@ msgid "&Preview"
 msgstr "&Pré-écoute"
 
 #: src/ShuttleGui.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Dry Previe&w"
 msgstr "Pré-écoute originel (&w)"
 
 #: src/ShuttleGui.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Settings"
 msgstr "&Réglages"
 
@@ -6179,7 +6181,7 @@ msgstr "Sauvegarde automatique activée :\n"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export enabled:\n"
-msgstr "Exportation automatique activée :\n"
+msgstr "Export automatique activé :\n"
 
 #: src/TimerRecordDialog.cpp
 msgid "Action after Timer Recording:"
@@ -6502,7 +6504,7 @@ msgstr "Énergie                  -- soit: %1.4f  sd: (%1.4f)\n"
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "Changements de signe        --  signifie : %1.4f  sd: (%1.4f)\n"
+msgstr "Changements de signe        -- signifie : %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
@@ -6599,7 +6601,7 @@ msgstr ""
 "que c'est un bogue, merci de de décrire ce qui l'a produit."
 
 #: src/commands/CommandManager.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Disallowed"
 msgstr "Interdit"
 
@@ -6792,7 +6794,7 @@ msgid "Bass"
 msgstr "Grave"
 
 #: src/effects/BassTreble.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Treble (dB):"
 msgstr "&Aiguë (dB) :"
 
@@ -6801,7 +6803,7 @@ msgid "Treble"
 msgstr "Aiguë"
 
 #: src/effects/BassTreble.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Volume (dB):"
 msgstr "&Aiguë (dB) :"
 
@@ -6854,12 +6856,12 @@ msgid "to Octave"
 msgstr "à l'octave"
 
 #: src/effects/ChangePitch.cpp
-# trebmuh to check
+# trebmuh to check (half-step ?? voir dans le contexte graphique)
 msgid "Semitones (half-steps):"
 msgstr "Demi-tons :"
 
 #: src/effects/ChangePitch.cpp
-# trebmuh to check
+# trebmuh to check (voir ci-dessus)
 msgid "Semitones (half-steps)"
 msgstr "Demi-tons"
 
@@ -6979,7 +6981,7 @@ msgid "Length in seconds from"
 msgstr "Longueur en secondes depuis"
 
 #: src/effects/ClickRemoval.cpp
-# trebmuh to check
+# trebmuh to check (on laisse "click removal" ou on met "réducteur de bruit")
 msgid "Click Removal is designed to remove clicks on audio tracks"
 msgstr "Click Removal est conçu pour supprimer les clics sur des pistes audio"
 
@@ -7177,7 +7179,7 @@ msgid "&Measure selection"
 msgstr "&Mesurer la sélection"
 
 #: src/effects/Contrast.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Background:"
 msgstr "&Arrière-plan :"
 
@@ -7387,10 +7389,12 @@ msgid "Soft Overdrive"
 msgstr "Overdrive mou"
 
 #: src/effects/Distortion.cpp
+# trebmuh to check
 msgid "Medium Overdrive"
 msgstr "Overdrive moyen"
 
 #: src/effects/Distortion.cpp
+# trebmuh to check
 msgid "Hard Overdrive"
 msgstr "Overdrive dur"
 
@@ -7460,7 +7464,7 @@ msgstr "3ème harmonique (cinquième parfaite)"
 #: src/effects/Distortion.cpp
 # trebmuh to check
 msgid "Valve Overdrive"
-msgstr "Overdrive à lample"
+msgstr "Overdrive à lampe"
 
 #: src/effects/Distortion.cpp
 msgid "2nd Harmonic (Octave)"
@@ -7527,7 +7531,7 @@ msgid "Number of repeats"
 msgstr "Nombre de répétitions"
 
 #: src/effects/Distortion.cpp
-# trebmuh to check
+# trebmuh to check (à vérifier)
 msgid "Waveshaping distortion effect"
 msgstr "Effet de distorsion waveshapping"
 
@@ -7548,7 +7552,7 @@ msgid "Parameter controls"
 msgstr "Contrôles de paramètre"
 
 #: src/effects/Distortion.cpp
-# trebmuh to check
+# trebmuh to check (on laisse "clipping" entre parenthèse ou pas ?=
 msgid "Clipping level"
 msgstr "Niveau de saturation (clipping)"
 
@@ -7558,7 +7562,7 @@ msgid "Drive"
 msgstr "Drive"
 
 #: src/effects/Distortion.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans le contexte graphique)
 msgid "Make-up Gain"
 msgstr "Gain appliqué en entrée"
 
@@ -7591,12 +7595,12 @@ msgid "Levelling fine adjustment"
 msgstr "Ajustement fin du niveau"
 
 #: src/effects/Distortion.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Degree of Levelling"
 msgstr "Degré de nivellement"
 
 #: src/effects/Distortion.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "dB Limit"
 msgstr "Limit dB"
 
@@ -7887,7 +7891,7 @@ msgstr ""
 #. i18n-hint: The access key "&P" should be the same in
 #. "Stop &Playback" and "Start &Playback"
 #: src/effects/Effect.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Stop &Playback"
 msgstr "Arrêter la lecture (&p)"
 
@@ -7953,7 +7957,7 @@ msgid "Latency: 0"
 msgstr "Latence : 0"
 
 #: src/effects/EffectRack.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Bypass"
 msgstr "Court-circuit (&b)"
 
@@ -7962,7 +7966,8 @@ msgid "Active State"
 msgstr "État actif"
 
 #: src/effects/EffectRack.cpp
-# trebmuh to check
+# trebmuh to check (meilleure traduction à trouver)
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Set effect active state"
 msgstr "Rend actif l'état de l'effet"
 
@@ -8152,12 +8157,12 @@ msgid "Show grid lines"
 msgstr "Afficher les lignes de grille"
 
 #: src/effects/Equalization.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Processing: "
 msgstr "Traitement (&p) : "
 
 #: src/effects/Equalization.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "D&efault"
 msgstr "Par &défaut"
 
@@ -8245,7 +8250,7 @@ msgid "I&mport..."
 msgstr "I&mporter..."
 
 #: src/effects/Equalization.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Get More..."
 msgstr "En savoir plus... (&g)"
 
@@ -8494,7 +8499,7 @@ msgid "Selected noise profile is too short."
 msgstr "Le profil de bruit sélectionné est trop court."
 
 #: src/effects/NoiseReduction.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Noise reduction (dB):"
 msgstr "Réduction de bruit (dB) (&n) :"
 
@@ -8527,7 +8532,7 @@ msgid "Release time"
 msgstr "Durée de relâche"
 
 #: src/effects/NoiseReduction.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Frequency smoothing (bands):"
 msgstr "Adoucissement de &fréquence (bandes) :"
 
@@ -8540,7 +8545,7 @@ msgid "Sensiti&vity (dB):"
 msgstr "Sensibilité (dB) (&v) :"
 
 #: src/effects/NoiseReduction.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Old Sensitivity"
 msgstr "Ancienne sensibilité"
 
@@ -8751,7 +8756,7 @@ msgstr "Traitement : "
 
 #: src/effects/Normalize.cpp
 msgid "Processing stereo channels independently: "
-msgstr "Traiter indépendamment les canaux stéréo  : "
+msgstr "Traiter indépendamment les canaux stéréo : "
 
 #: src/effects/Normalize.cpp
 msgid "Analyzing second track of stereo pair: "
@@ -8861,7 +8866,7 @@ msgid "Stages"
 msgstr "Phases"
 
 #: src/effects/Phaser.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Dry/Wet:"
 msgstr "Originel/traité (&d) :"
 
@@ -8886,7 +8891,7 @@ msgid "LFO start phase in degrees"
 msgstr "Phase de départ LFO en degrés"
 
 #: src/effects/Phaser.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Dept&h:"
 msgstr "Profondeur (&h) :"
 
@@ -8895,7 +8900,7 @@ msgid "Depth in percent"
 msgstr "Profondeur en pourcentage"
 
 #: src/effects/Phaser.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Feedbac&k (%):"
 msgstr "Retour (%) (&k) :"
 
@@ -9006,7 +9011,7 @@ msgid "Cathedral"
 msgstr "Cathédrale"
 
 #: src/effects/Reverb.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Adds ambience or a \"hall effect\""
 msgstr "Ajoute une ambiance ou un \"effet hall\""
 
@@ -9234,11 +9239,11 @@ msgstr "Permet des changements continus du tempo et/ou de la hauteur"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
-msgstr "Changement initial du tempo  (%)"
+msgstr "Changement initial du tempo (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Tempo Change (%)"
-msgstr "Changement final du tempo  (%)"
+msgstr "Changement final du tempo (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Pitch Shift"
@@ -9376,12 +9381,12 @@ msgstr ""
 "années 1970"
 
 #: src/effects/Wahwah.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Dept&h (%):"
 msgstr "Profondeur (%) (&h) :"
 
 #: src/effects/Wahwah.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Reso&nance:"
 msgstr "Réso&nnance :"
 
@@ -9430,7 +9435,7 @@ msgid "Distortion"
 msgstr "Distorsion"
 
 #: src/effects/DtmfGen.h
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "DTMF Tones"
 msgstr "Tonalités DTMF"
 
@@ -9737,7 +9742,7 @@ msgstr "Application d'effet Nyquist..."
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Nyquist Worker"
 msgstr "Console Nyquist"
 
@@ -9826,7 +9831,7 @@ msgid "Nyquist returned an empty array.\n"
 msgstr "Nyquist renvoi un tableau vide.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist n'a pas retourné d'audio.\n"
 
@@ -9877,7 +9882,7 @@ msgid "&Use legacy (version 3) syntax."
 msgstr "&Utiliser l'ancienne syntaxe (version 3)."
 
 #: src/effects/nyquist/Nyquist.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Load"
 msgstr "Charger (&l)"
 
@@ -10090,7 +10095,7 @@ msgstr "Exporter l'audio"
 
 #: src/export/Export.cpp
 msgid "Exported Tags"
-msgstr "Exporter les balises"
+msgstr "Balises exportées"
 
 #: src/export/Export.cpp
 msgid "All selected audio is muted."
@@ -10155,7 +10160,7 @@ msgstr ""
 #: src/export/Export.cpp
 #, c-format
 msgid "A file named \"%s\" already exists.  Replace?"
-msgstr "Un fichier nommé \"%s\" existe déjà. Le remplacer ?"
+msgstr "Un fichier nommé \"%s\" existe déjà.  Le remplacer ?"
 
 #: src/export/Export.cpp
 msgid ""
@@ -10221,7 +10226,7 @@ msgid ""
 "window."
 msgstr ""
 "Les données seront dirigées vers l'entrée standard. \"%f\" utilise le nom de "
-"fichier dans la fenêtre d'export."
+"fichier dans la fenêtre d'exportation."
 
 #: src/export/ExportCL.cpp
 msgid "Find path to command"
@@ -10243,13 +10248,13 @@ msgstr "Exporter"
 #: src/export/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
 msgstr ""
-"Exportation de la sélection audio en utilisant un encodeur à ligne de "
+"Exportation de la sélection audio en utilisant un encodeur en ligne de "
 "commande"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the entire project using command-line encoder"
 msgstr ""
-"Exportation du projet entier en utilisant un encodeur à ligne de commande"
+"Exportation du projet entier en utilisant un encodeur en ligne de commande"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10376,7 +10381,7 @@ msgstr "Exporter la sélection audio sous %s"
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting entire file as %s"
-msgstr "Exporter le fichier entier à %s"
+msgstr "Exporter le fichier entier sous %s"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -10570,7 +10575,7 @@ msgid "Language:"
 msgstr "Langue :"
 
 #: src/export/ExportFFmpegDialogs.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid ""
 "ISO 639 3-letter language code\n"
 "Optional\n"
@@ -10628,7 +10633,7 @@ msgstr ""
 "Qualité générale, utilisée différemment selon les codecs\n"
 "Requis pour vorbis\n"
 "0 - automatique\n"
-"-1 - Arrêté  (remplacé par débit )"
+"-1 - Arrêté (remplacé par débit )"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Sample Rate:"
@@ -10652,7 +10657,7 @@ msgid ""
 "Optional\n"
 "0 - automatic"
 msgstr ""
-"Largeur de coupe bande audio (Hz)\n"
+"Largeur de coupe-bande audio (Hz)\n"
 "Optionnel\n"
 "0 - automatique"
 
@@ -10722,7 +10727,7 @@ msgid ""
 "min - 1\n"
 "max - 15"
 msgstr ""
-"Précision des coefficients LPC  \n"
+"Précision des coefficients LPC\n"
 "Optionnel\n"
 "0 - défaut\n"
 "min - 1\n"
@@ -10879,8 +10884,9 @@ msgid "XML files (*.xml)|*.xml|All files|*"
 msgstr "Fichiers XML (*.xml)|*.xml|Tous les fichiers|*"
 
 #: src/export/ExportFFmpegDialogs.cpp
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Select xml file to export presets into"
-msgstr "Sélectionner un fichier XML pour exporter les préréglages sous "
+msgstr "Sélectionner un fichier XML pour exporter les préréglages dedans "
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Failed to guess format"
@@ -11055,7 +11061,7 @@ msgstr "Stéréo,"
 
 #: src/export/ExportMP3.cpp
 msgid "Force export to mono"
-msgstr "Forcer l'export à être mono"
+msgstr "Forcer à exporter en mono"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
 #: src/export/ExportMP3.cpp
@@ -11205,7 +11211,7 @@ msgstr "Bibliothèque d'exportation MP3 non trouvée"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
-msgstr "Export Multiple"
+msgstr "Export multiple"
 
 #: src/export/ExportMultiple.cpp
 msgid "Cannot Export Multiple"
@@ -11290,19 +11296,20 @@ msgstr "\"%s\" a été créé avec succès."
 
 #: src/export/ExportMultiple.cpp
 msgid "Choose a location to save the exported files"
-msgstr "Choisir un emplacement pour placer les fichiers temporaires"
+msgstr "Choisir un emplacement pour sauvegarder les fichiers exportés"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Successfully exported the following %lld file(s)."
 msgstr "Les %lld fichier(s) suivants ont été exporté avec succès."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Something went wrong after exporting the following %lld file(s)."
 msgstr ""
-"Quelque chose n'a pas été après l'export des %lld fichier(s) suivants."
+"Quelque chose n'a pas été après l'exportation des %lld fichier(s) suivants."
 
 #: src/export/ExportMultiple.cpp
 #, c-format
@@ -11340,7 +11347,7 @@ msgid ""
 "Use..."
 msgstr ""
 "Le marqueur ou la piste \"%s\" n'ont pas un nom valide. Ne pas utiliser les "
-"caractères suivants :  %s\n"
+"caractères suivants : %s\n"
 "Utiliser..."
 
 #. i18n-hint: The second %s gives a letter that can't be used.
@@ -11401,7 +11408,7 @@ msgstr "Impossible d'exporter l'audio dans ce format."
 #: src/export/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
-msgstr "Exportation de la sélection audio à %s"
+msgstr "Exportation de la sélection audio sous %s"
 
 #: src/export/ExportPCM.cpp
 #, c-format
@@ -11551,7 +11558,7 @@ msgstr ""
 "Si vous pensez qu'il peut s'agir d'un fichier MP3, renommez-le avec "
 "l'extension \".mp3\" \n"
 "et essayez de l'importer à nouveau. Sinon, vous devez le convertir dans un "
-"format audio  \n"
+"format audio \n"
 "compatible, tel le WAV ou l'AIFF."
 
 #: src/import/Import.cpp
@@ -11630,10 +11637,10 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
-"Audacity a reconnu le type de ce fichier '%s'.\n"
+"Audacity a reconnu le type du fichier '%s'.\n"
 "Les importateurs supposés supporter de tels fichiers sont :\n"
 "%s,\n"
-"mais aucun n'a interprêté ce format de fichier."
+"mais aucun n'a compris ce format de fichier."
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -11959,9 +11966,9 @@ msgid "Playback"
 msgstr "Lecture"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Device:"
-msgstr "Périphérique (&d)"
+msgstr "Périphérique (&d) :"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/RecordingPrefs.cpp src/toolbars/ControlToolBar.cpp
@@ -12163,7 +12170,7 @@ msgstr "Import étendu"
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
 msgstr ""
-"Ten&ter d'utiliser d'abord le filtre dans la boîte de dialogue OuvrirFichier"
+"&Tenter d'utiliser d'abord le filtre dans la boîte de dialogue OuvrirFichier"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rules to choose import filters"
@@ -12194,8 +12201,9 @@ msgid "Move f&ilter up"
 msgstr "Monter le f&iltre"
 
 #: src/prefs/ExtImportPrefs.cpp
+# trebmuh to check (accélérateur)
 msgid "Move &filter down"
-msgstr "&Descendre le &filtre"
+msgstr "Descendre le &filtre"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "&Add new rule"
@@ -12318,7 +12326,7 @@ msgid "Meter dB &range:"
 msgstr "Gamme en dB du mesu&reur"
 
 #: src/prefs/GUIPrefs.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Show"
 msgstr "Affichage"
 
@@ -12353,20 +12361,20 @@ msgstr "&Afficher un canal mono en stéréo virtuel"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Import / Export"
-msgstr "Import / Export"
+msgstr "Import / export"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing audio files"
 msgstr "À l'importation de fichiers audio"
 
 #: src/prefs/ImportExportPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Copy uncompressed files into the project (safer)"
 msgstr ""
 "&Faire une copie des fichiers audio non compressés dans le projet (plus sûr)"
 
 #: src/prefs/ImportExportPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Read uncompressed files from original location (faster)"
 msgstr ""
 "&Lire les fichiers audio non compressés depuis l'emplacement originel (plus "
@@ -12381,7 +12389,7 @@ msgid "When exporting tracks to an audio file"
 msgstr "À l'exportation dans un fichier audio"
 
 #: src/prefs/ImportExportPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Mix down to Stereo or Mono"
 msgstr "Mixage en &stéréo ou mono"
 
@@ -12390,7 +12398,7 @@ msgid "&Use custom mix"
 msgstr "&Utiliser un mix personnalisé"
 
 #: src/prefs/ImportExportPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "S&how Metadata Tags editor before export"
 msgstr "Ouvrir l'éditeur de balises de &métadonnée avant d'exporter"
 
@@ -12418,10 +12426,10 @@ msgstr "Les préférences de clavier ne sont pas disponible pour l'instant."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
-msgstr "Ouvrir un nouveau projet  pour modifier les raccourcis clavier."
+msgstr "Ouvrir un nouveau projet pour modifier les raccourcis clavier."
 
 #: src/prefs/KeyConfigPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Hotkey:"
 msgstr "&Raccourci clavier:"
 
@@ -12434,7 +12442,7 @@ msgid "View by:"
 msgstr "Visualiser par :"
 
 #: src/prefs/KeyConfigPrefs.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Tree"
 msgstr "&Arborescence"
 
@@ -12451,7 +12459,7 @@ msgid "View by name"
 msgstr "Visualiser par nom"
 
 #: src/prefs/KeyConfigPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Key"
 msgstr "&Touches"
 
@@ -12473,7 +12481,7 @@ msgstr "Raccourci"
 
 #. i18n-hint: (verb)
 #: src/prefs/KeyConfigPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Set"
 msgstr "&Attribuer"
 
@@ -12500,7 +12508,7 @@ msgstr "Exporter les raccourcis clavier sous :"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Exporting Keyboard Shortcuts"
-msgstr "Erreur à la sauvegarde des raccourcis clavier"
+msgstr "Erreur à l'exportation des raccourcis clavier"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You may not assign a key to this entry"
@@ -12529,9 +12537,9 @@ msgstr ""
 "\n"
 "Cliquer OK pour plutôt assigner le raccourci à :\n"
 "\n"
-"\t'%s'\n"
+"\t'%s'.\n"
 "\n"
-"Sinon, cliquer sur Annuler."
+"  Sinon, cliquer sur Annuler."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "MP3 Export Library"
@@ -12554,7 +12562,7 @@ msgid "LAME MP3 Library:"
 msgstr "Bibliothèque MP3 LAME :"
 
 #: src/prefs/LibraryPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Download"
 msgstr "&Téléchargement"
 
@@ -12575,7 +12583,7 @@ msgid "FFmpeg Library:"
 msgstr "Bibliothèque FFmpeg :"
 
 #: src/prefs/LibraryPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Loca&te..."
 msgstr "Locali&ser..."
 
@@ -12584,7 +12592,7 @@ msgid "Dow&nload"
 msgstr "Téléchargeme&nt"
 
 #: src/prefs/LibraryPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Allow &background on-demand loading"
 msgstr "Autoriser le chargement en arrière-plan à la demande (&b)"
 
@@ -12731,7 +12739,7 @@ msgid "Wheel-Rotate"
 msgstr "Molette de souris"
 
 #: src/prefs/MousePrefs.cpp
-# trebmuh to check
+# trebmuh to check (cohérence scrub)
 msgid "Change scrub speed"
 msgstr "Modifier la vitesse de frottement"
 
@@ -12854,6 +12862,7 @@ msgid "Scroll tracks up or down"
 msgstr "Défilement des pistes haut ou bas"
 
 #: src/prefs/MousePrefs.cpp
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Shift-Wheel-Rotate"
 msgstr "Maj. et roulette de souris"
 
@@ -12862,7 +12871,7 @@ msgid "Scroll waveform"
 msgstr "Faire défiler la forme d'onde"
 
 #: src/prefs/MousePrefs.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "-Wheel-Rotate"
 msgstr "-molette-de-rotation"
 
@@ -12871,6 +12880,7 @@ msgid "Zoom waveform in or out"
 msgstr "Zoom avant ou arrière de la forme d'onde"
 
 #: src/prefs/MousePrefs.cpp
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "-Shift-Wheel-Rotate"
 msgstr "-Maj-molette-de-souris"
 
@@ -12904,12 +12914,14 @@ msgid "Seek Time when playing"
 msgstr "Saut de lecture"
 
 #: src/prefs/PlaybackPrefs.cpp
-# trebmuh to check
+# trebmuh to check ("period" non-traduit ?)
+# trebmuh to check (accélérateur)
 msgid "&Short period:"
 msgstr "Cour&t :"
 
 #: src/prefs/PlaybackPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
+# trebmuh to check ("period" non-traduit ?)
 msgid "Lo&ng period:"
 msgstr "Lo&ng :"
 
@@ -12943,9 +12955,9 @@ msgid "Do &not copy any audio"
 msgstr "&Ne pas copier d'audio"
 
 #: src/prefs/ProjectsPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "As&k"
-msgstr "&Demander à l'utilisateur (&k)"
+msgstr "Demander à l'utilisateur (&k)"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Rectangle"
@@ -12998,7 +13010,7 @@ msgstr "Conver&tisseur de taux d'échantillonnage :"
 
 #. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Dit&her:"
 msgstr "Li&ssage :"
 
@@ -13007,19 +13019,19 @@ msgid "Playthrough"
 msgstr "Passage audio"
 
 #: src/prefs/RecordingPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Other tracks while recording (overdub)"
 msgstr ""
 "&Doublage : lire les autres pistes pendant l'enregistrement d'une nouvelle "
 "(overdub)"
 
 #: src/prefs/RecordingPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Hardware Playthrough of input"
 msgstr "Lecture de l'entrée à travers le matériel (&h)"
 
 #: src/prefs/RecordingPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Software Playthrough of input"
 msgstr "Lecture de l'entrée à traver&s le logiciel"
 
@@ -13044,7 +13056,7 @@ msgid "Custom Track &Name"
 msgstr "&Nom de la piste personnalisée"
 
 #: src/prefs/RecordingPrefs.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "Recorded_Audio"
 msgstr "Audio_enregistré"
 
@@ -13061,7 +13073,7 @@ msgid "System &Date"
 msgstr "&Date du système"
 
 #: src/prefs/RecordingPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "System T&ime"
 msgstr "Temps du système (&i)"
 
@@ -13237,7 +13249,7 @@ msgid "Window &type:"
 msgstr "&Type de fenêtre :"
 
 #: src/prefs/SpectrumPrefs.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Zero padding factor"
 msgstr "Facteur délayage &zéro"
 
@@ -13260,7 +13272,7 @@ msgstr "Amplitude Minimale (dB) :"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Max. Number of Notes (1..128):"
-msgstr "Nombre maximal  de notes (1..128) :"
+msgstr "Nombre maximal de notes (1..128) :"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Find Notes"
@@ -13275,7 +13287,7 @@ msgid "Global settings"
 msgstr "Réglages globaux"
 
 #: src/prefs/SpectrumPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Ena&ble spectral selection"
 msgstr "Activer la sélection spectrale (&b)"
 
@@ -13348,7 +13360,7 @@ msgstr ""
 "Cliquer sur \"Charger le thème\" pour charger dans Audacity les images et "
 "couleurs modifiées.\n"
 "\n"
-"  (Seules la barre de contrôle et les couleurs de la piste d'onde sont "
+"(Seules la barre de contrôle et les couleurs de la piste d'onde sont "
 "affectées pour le moment,\n"
 "même si le fichier d'image montre également d'autres icônes.)"
 
@@ -13359,7 +13371,7 @@ msgid ""
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 "Ceci est une version de débogage d'Audacity, avec un bouton supplémentaire, "
-"'Output Sourcery'. Ceci sauvegardera une\n"
+"'Output Sourcery'.  Ceci sauvegardera une\n"
 "version C du cache image qui peut y être compilée e tant que défaut."
 
 #: src/prefs/ThemePrefs.cpp
@@ -13479,7 +13491,7 @@ msgid "Auto-&fit track height"
 msgstr "Adaptation-automatique de la hauteur de la piste"
 
 #: src/prefs/TracksPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Default &view mode:"
 msgstr "Mode d'affichage par défaut (&v) :"
 
@@ -13496,7 +13508,7 @@ msgid "Audio Track"
 msgstr "Piste audio"
 
 #: src/prefs/TracksPrefs.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Sho&w audio track name as overlay"
 msgstr "&Afficher le nom de piste audio dans la forme d'onde"
 
@@ -13888,7 +13900,7 @@ msgstr "Aligner les clics/sélections sur %s"
 #. i18n-hint: %s is replaced e.g by 'Length', to indicate that it will be calculated from other parameters.
 #: src/toolbars/SelectionBar.cpp
 #, c-format
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "%s - driven"
 msgstr "%s - déterminé"
 
@@ -14064,7 +14076,7 @@ msgid "Click to edit label text"
 msgstr "Cliquer pour éditer le texte du marqueur"
 
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Font..."
 msgstr "&Police..."
 
@@ -14180,7 +14192,7 @@ msgid "Changed '%s' to %s"
 msgstr " '%s' changé en %s"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique)
 msgid "WaveColor Change"
 msgstr "Changement de couleur d'onde"
 
@@ -14237,7 +14249,7 @@ msgid "384000 Hz"
 msgstr "384000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Other..."
 msgstr "A&utres..."
 
@@ -14438,7 +14450,7 @@ msgid "L&ogarithmic scale"
 msgstr "Échelle l&ogarithmique"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Range..."
 msgstr "&Gamme..."
 
@@ -14464,7 +14476,7 @@ msgstr "Enveloppe ajustée."
 #. "Seeking" is normal speed playback but with skips, ...
 #.
 #: src/tracks/ui/Scrubbing.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "&Scrub"
 msgstr "Frottement (&s)"
 
@@ -14493,7 +14505,7 @@ msgid "Move mouse pointer to Scrub"
 msgstr "Déplacer le pointeur de la souris au frottement"
 
 #: src/tracks/ui/Scrubbing.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Scru&bbing"
 msgstr "Frottement (&b)"
 
@@ -14591,12 +14603,12 @@ msgid "Move Track &Down"
 msgstr "Déplacer la piste vers le b&as"
 
 #: src/tracks/ui/TrackControls.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Move Track to &Top"
 msgstr "Déplacer la piste vers le hau&t"
 
 #: src/tracks/ui/TrackControls.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "Move Track to &Bottom"
 msgstr "Déplacer la piste tout en &bas"
 
@@ -15166,7 +15178,7 @@ msgid "Are you sure you wish to cancel?"
 msgstr "Voulez-vous vraiment annuler ?"
 
 #: src/widgets/ProgressDialog.cpp
-# trebmuh to check
+# trebmuh to check (vérifier dans un contexte graphique - l'effacement ou la suppression)
 msgid "Confirm Cancel"
 msgstr "Confirmer l'effacement"
 
@@ -15226,7 +15238,7 @@ msgstr ""
 
 #: src/widgets/Ruler.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "Déplacez pour le frottement.  Cliquez-tirez pour la recherche."
+msgstr "Déplacez pour le frottement. Cliquez-tirez pour la recherche."
 
 #: src/widgets/Ruler.cpp
 msgid "Timeline actions disabled during recording"
@@ -15511,7 +15523,7 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
 #~ msgstr ""
 #~ "&Utiliser un mixage personnalisé (par exemple exporter en multicanal "
-#~ "5.1)  "
+#~ "5.1)"
 
 #~ msgid "When exporting track to an Allegro (.gro) file"
 #~ msgstr "À l'exportation de la piste dans un fichier Allegro (.gro)"
@@ -15680,13 +15692,13 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgstr "Espace disque restant pour l'enregistrement : 1 heure et %d minutes"
 
 #~ msgid "Disk space remains for recording %d seconds."
-#~ msgstr "L'espace disque restant permet l'enregistrement de  %d seconds."
+#~ msgstr "L'espace disque restant permet l'enregistrement de %d seconds."
 
 #~ msgid "Out of disk space"
 #~ msgstr "Disque plein"
 
 #~ msgid "Warning - Length in Writing Sequence"
-#~ msgstr "Attention -  Longueur dasn la séquence d'écriture"
+#~ msgstr "Attention - Longueur dasn la séquence d'écriture"
 
 #~ msgid "Memory allocation failed -- NewSamples"
 #~ msgstr "Erreur d'allocation mémoire - Nouveaux échantillons"
@@ -15710,10 +15722,10 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgstr "Activ&er le contrôle du volume"
 
 #~ msgid "    No change to apply."
-#~ msgstr "Aucune changement à appliquer."
+#~ msgstr "    Aucune changement à appliquer."
 
 #~ msgid ":   Maximum 0 dB."
-#~ msgstr ": Maximum 0 dB."
+#~ msgstr ":   Maximum 0 dB."
 
 #~ msgid "From beats per minute"
 #~ msgstr "Depuis battements/minute"
@@ -15763,7 +15775,7 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ "The selection is too short.\n"
 #~ " It must be much longer than the Time Resolution."
 #~ msgstr ""
-#~ "Erreur dans  Paulstretch:\n"
+#~ "Erreur dans Paulstretch:\n"
 #~ "La sélection est trop courte.\n"
 #~ " Elle doit être plus longue que la Résolution."
 
