@@ -185,59 +185,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Mark Young, ")) + _("developer"), roleContributor);
    AddCredit(wxString(wxT("Wing Yu, ")) + _("developer"), roleContributor);
 
-#if 1
-   // Translators
-   // This list is not current, so should it be commented out?
-   // Also translators get a translation credit in Audacity about box by a special
-   // mechanism that shows it when their translation is being used - unlike
-   // on the website credits.
-   // Translators who are currently helping have queried our showing this inaccurate list,
-   // and in all languages.
-   AddCredit(wxT("Mikhail Balabanov (bg)"), roleTranslators);
-   AddCredit(wxT("Francesc Busquets (ca)"), roleTranslators);
-   AddCredit(wxT("Pau Crespo (ca)"), roleTranslators);
-   AddCredit(wxT("Ale\u0161 To\u0161ovsk\u00FD (cs)"), roleTranslators);
-   AddCredit(wxT("Henrik Clausen (da)"), roleTranslators);
-   AddCredit(wxT("Christoph Kobe (de)"), roleTranslators);
-   AddCredit(wxT("Daniel Winzen (de)"), roleTranslators);
-   AddCredit(wxT("Karsten Zeller (de)"), roleTranslators);
-   AddCredit(wxT("Antonio Paniagua (es)"), roleTranslators);
-   AddCredit(wxT("Ezequiel Plaza (es)"), roleTranslators);
-   AddCredit(wxT("Waldo Ramirez (es)"), roleTranslators);
-   AddCredit(wxT("Xabier Aramendi (eu)"), roleTranslators);
-   AddCredit(wxT("Petri Vuorio (fi)"), roleTranslators);
-   AddCredit(wxT("Lionel Allorge (fr)"), roleTranslators);
-   AddCredit(wxT("Olivier Ballestraz (fr)"), roleTranslators);
-   AddCredit(wxT("Christian Brochec (fr)"), roleTranslators);
-   AddCredit(wxT("Fabrice Silva (fr)"), roleTranslators);
-   AddCredit(wxT("Micil Sheain Mhicil (ga)"), roleTranslators);
-   AddCredit(wxT("Xos\u00E9 Ant\u00F3n Vicente Rodr\u00EDguez (gl)"), roleTranslators);
-   AddCredit(wxT("M\u00E1rton Bal\u00E1zs (hu)"), roleTranslators);
-   AddCredit(wxT("Jozsef Herczeg (hu)"), roleTranslators);
-   AddCredit(wxT("Aldo Boccacci (it)"), roleTranslators);
-   AddCredit(wxT("Ohkubo Kohei (ja)"), roleTranslators);
-   AddCredit(wxT("\u0160ar\u016Bnas Gliebus (lt)"), roleTranslators);
-   AddCredit(wxT("Ilija Iliev (mk)"), roleTranslators);
-   AddCredit(wxT("Kevin Brubeck Unhammer (nb)"), roleTranslators);
-   AddCredit(wxT("Tino Meinen (nl)"), roleTranslators);
-   AddCredit(wxT("Tomasz Bandura (pl)"), roleTranslators);
-   AddCredit(wxT("Marek Mularczyk (pl)"), roleTranslators);
-   AddCredit(wxT("Sebastian Pacholski (pl)"), roleTranslators);
-   AddCredit(wxT("Cleber Tavano (pt_BR)"), roleTranslators);
-   AddCredit(wxT("Victor Westmann (pt_BR)"), roleTranslators);
-   AddCredit(wxT("Manuel Ciosici (ro)"), roleTranslators);
-   AddCredit(wxT("Yuri Ilyin (ru)"), roleTranslators);
-   AddCredit(wxT("Alexandre Prokoudine (ru)"), roleTranslators);
-   AddCredit(wxT("Joe Yeti (sk)"), roleTranslators);
-   AddCredit(wxT("Rok Hecl (sl)"), roleTranslators);
-   AddCredit(wxT("Martin Srebotnjak (sl)"), roleTranslators);
-   AddCredit(wxT("Lars Carlsson (sv)"), roleTranslators);
-   AddCredit(wxT("Kaya Zeren (tr)"), roleTranslators);
-   AddCredit(wxT("Maxim Dziumanenko (uk)"), roleTranslators);
-   AddCredit(wxT("XiaoXi Liu (zh_CN)"), roleTranslators);
-   AddCredit(wxT("Chido (zh_TW)"), roleTranslators);
-   AddCredit(wxT("Panming Zhong (zh_TW)"), roleTranslators);
-#endif
    // Libraries
 
    AddCredit(wxT("[[http://libexpat.github.io/|expat]]"), roleLibrary);
@@ -412,9 +359,10 @@ visit our [[http://forum.audacityteam.org/|forum]].");
       wxT("<p><b>") + _("Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
 
-      wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
-      translatorCredits +
-      GetCreditsByRole(roleTranslators) +
+      (translatorCredits.empty()
+         ? wxT("")
+         : (wxT("<p><b>") + _("Translators") + wxT("</b><br>") +
+            translatorCredits)) +
 
       wxT("<p><b>") +  _("Libraries") + wxT("</b><br>") +
       _("Audacity includes code from the following projects:") + wxT("<br><br>") +
