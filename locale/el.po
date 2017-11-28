@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3 b\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-07 11:20+0200\n"
+"PO-Revision-Date: 2017-11-28 16:30+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
@@ -1253,7 +1253,7 @@ msgstr "Εφαρμογή στον τρέχον έ&ργο"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply to &Files..."
-msgstr "Ε&φαρμογή στα &αρχεία..."
+msgstr "Εφαρμογή στα &αρχεία..."
 
 #: src/BatchProcessDialog.cpp
 msgid "&Cancel"
