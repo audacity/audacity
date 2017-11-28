@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.2.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-07-26 13:06+0100\n"
+"PO-Revision-Date: 2017-11-28 16:57+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist en gmail.com>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "Language: es\n"
@@ -435,7 +435,7 @@ msgstr "compositor"
 
 #: src/AboutDialog.cpp
 msgid "tester"
-msgstr ""
+msgstr "probador"
 
 #: src/AboutDialog.cpp
 msgid "Nyquist plug-ins"
@@ -468,7 +468,6 @@ msgstr ""
 "Linux (y otros sistemas operativos tipo Unix)."
 
 #: src/AboutDialog.cpp
-#, fuzzy
 #| msgid ""
 #| "If you find a bug or have a suggestion for us, please write, in English, "
 #| "to our [[mailto:feedback@audacityteam.org|feedback address]]. For help, "
@@ -480,11 +479,11 @@ msgid ""
 "tricks on our [[http://wiki.audacityteam.org/|wiki]] or visit our [[http://"
 "forum.audacityteam.org/|forum]]."
 msgstr ""
-"Si encuentra algún error o tiene alguna sugerencia escríbanos a nuestra "
-"[[mailto:feedback@audacityteam.org|dirección de respuesta]]. Para obtener "
-"ayuda sobre el uso de Audacity, consulte los consejos y trucos de nuestro  "
-"[[http://wiki.audacityteam.org/|wiki]] o visite nuestro [[http://forum."
-"audacityteam.org/|foro]]."
+"Si encuentra algún error o tiene alguna sugerencia escríbanos a nuestro "
+" [[http://forum.audacityteam.org/|foro]]. Para obtener "
+"ayuda consulte los consejos y trucos de nuestro  "
+"[[http://wiki.audacityteam.org/|wiki]] o visite nuestro "
+"[[http://forum.audacityteam.org/|foro]]."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -520,7 +519,7 @@ msgstr "Apariencia DarkAudacity"
 #. i18n-hint: The Latin phrase, "In memory of" a deceased person, often untranslated in European languages
 #: src/AboutDialog.cpp
 msgid "In Memoriam"
-msgstr ""
+msgstr "En recuerdo"
 
 #: src/AboutDialog.cpp
 msgid "Audacity Team Members"
@@ -556,10 +555,9 @@ msgid "Special thanks:"
 msgstr "Agradecimientos especiales:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 #| msgid "Audacity First Run"
 msgid "Audacity website: "
-msgstr "Primera ejecución de Audacity"
+msgstr "Sitio web de Audacity:"
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -1152,7 +1150,7 @@ msgstr "Seleccionar &comando"
 
 #: src/BatchCommands.cpp
 msgid "cleaned"
-msgstr ""
+msgstr "limpiado"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1160,18 +1158,21 @@ msgid ""
 "Export recording to %s\n"
 "/%s/%s%s"
 msgstr ""
+"Exportar grabación a %s\n"
+"/%s/%s%s"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 #| msgid "Timer Recording"
 msgid "Export recording"
-msgstr "Grabación programada"
+msgstr "Exportar grabación"
 
 #: src/BatchCommands.cpp
 msgid ""
 "Cannot create directory 'cleaned'. \n"
 "File already exists that is not a directory"
 msgstr ""
+"No se puede crear la carpeta 'cleaned'. \n"
+"Ya existe un archivo que no es una carpeta"
 
 #: src/BatchCommands.cpp
 msgid "Ogg Vorbis support is not included in this build of Audacity"
@@ -1194,28 +1195,26 @@ msgstr "El comando de secuencia de %s no fue reconocido."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy
 #| msgid "Apply Chain"
 msgid "Applied batch chain"
-msgstr "Aplicar secuencia de comandos"
+msgstr "Aplicada secuencia de comandos"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 #| msgid "Apply Chain"
 msgid "Apply chain"
-msgstr "Aplicar secuencia de comandos"
+msgstr "Aplicar secuencia"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Applied batch chain '%s'"
-msgstr ""
+msgstr "Aplicada secuencia de comandos '%s'"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Apply %s"
 msgid "Apply '%s'"
-msgstr "Aplicar %s"
+msgstr "Aplicar '%s'"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1391,42 +1390,40 @@ msgstr "¿Está seguro de que desea borrar %s?"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "&Run Benchmark..."
 msgid "Benchmark"
-msgstr "Test de &rendimiento..."
+msgstr "Test de rendimiento"
 
 #: src/Benchmark.cpp
 msgid "Disk Block Size (KB):"
-msgstr ""
+msgstr "Tamaño de bloque de disco (KB):"
 
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "Number of repeats"
 msgid "Number of Edits:"
-msgstr "Número de repeticiones"
+msgstr "Número de ediciones:"
 
 #: src/Benchmark.cpp
 msgid "Test Data Size (MB):"
-msgstr ""
+msgstr "Tamaño de datos de prueba (MB):"
 
 #. i18n-hint: A "seed" is a number that initializes a
 #. pseudorandom number generating algorithm
 #: src/Benchmark.cpp
 msgid "Random Seed:"
-msgstr ""
+msgstr "Semilla aleatoria:"
 
 #: src/Benchmark.cpp
 msgid "Show detailed info about each block file"
-msgstr ""
+msgstr "Mostrar información detallada de cada bloque de archivo"
 
 #: src/Benchmark.cpp
 msgid "Show detailed info about each editing operation"
-msgstr ""
+msgstr "Mostrar información detallada de cada operación de edición"
 
 #: src/Benchmark.cpp
 msgid "Run"
-msgstr ""
+msgstr "Ejecutar"
 
 #. i18n-hint verb
 #: src/Benchmark.cpp src/tracks/ui/TrackButtonHandles.cpp
@@ -1437,73 +1434,69 @@ msgstr "Cerrar"
 #. i18n-hint: Benchmark means a software speed test;
 #. leave untranslated file extension .txt
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "&Run Benchmark..."
 msgid "benchmark.txt"
-msgstr "Test de &rendimiento..."
+msgstr "benchmark.txt"
 
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "Export Spectral Data As:"
 msgid "Export Benchmark Data as:"
-msgstr "Exportar datos del espectro como:"
+msgstr "Exportar test de rendimiento como:"
 
 #: src/Benchmark.cpp
 msgid "Block size should be in the range 1 - 1024 KB."
-msgstr ""
+msgstr "El tamaño de bloque debe estar entre 1 - 1024 KB."
 
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "The maximum number of notes must be in the range 1..128"
 msgid "Number of edits should be in the range 1 - 10000."
-msgstr "El máximo número de notas debe estar entre 1 y 128"
+msgstr "El número de ediciones debe estar entre 1 - 10000."
 
 #: src/Benchmark.cpp
 msgid "Test data size should be in the range 1 - 2000 MB."
-msgstr ""
+msgstr "El tamaño de los datos de prueba debe estar entre 1 - 2000 MB."
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Using %d chunks of %d samples each, for a total of %.1f MB.\n"
-msgstr ""
+msgstr "Usando %d trozos de %d muestras, con un total de %.1f MB.\n"
 
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "Preparing preview"
 msgid "Preparing...\n"
-msgstr "Preparando vista previa"
+msgstr "Preparando...\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Expected len %d, track len %lld.\n"
-msgstr ""
+msgstr "Longitud esperada %d, longitud de pista %lld.\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Performing Repeat"
 msgid "Performing %d edits...\n"
-msgstr "Aplicando repetición"
+msgstr "Aplicando %d ediciones...\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Cut: %d - %d \n"
-msgstr ""
+msgstr "Cortar: %d - %d \n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Trial %d\n"
-msgstr ""
+msgstr "Prueba %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Cut (%d, %d) failed.\n"
-msgstr ""
+msgstr "Fallo al cortar (%d, %d).\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Paste"
 msgid "Paste: %d\n"
-msgstr "Pegar"
+msgstr "Pegar: %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1511,58 +1504,59 @@ msgid ""
 "Trial %d\n"
 "Failed on Paste.\n"
 msgstr ""
+"Prueba %d\n"
+"Fallo al pegar.\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Time to perform %d edits: %ld ms\n"
-msgstr ""
+msgstr "Tiempo para realizar %d ediciones: %ld ms\n"
 
 #: src/Benchmark.cpp
 msgid "Checking file pointer leaks:\n"
-msgstr ""
+msgstr "Comprobando filtraciones de punteros de archivo:\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Track # blocks: %d\n"
-msgstr ""
+msgstr "Pista # bloques: %d\n"
 
 #: src/Benchmark.cpp
 msgid "Disk # blocks: \n"
-msgstr ""
+msgstr "Disco # bloques: \n"
 
 #: src/Benchmark.cpp
 msgid "Doing correctness check...\n"
-msgstr ""
+msgstr "Realizando el test de corrección...\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Bad: chunk %d sample %d\n"
-msgstr ""
+msgstr "Mal: trozo %d muestra %d\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
-msgstr ""
+msgstr "Test de corrección superado\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Errors in %d/%d chunks\n"
-msgstr ""
+msgstr "Errores en %d/%d trozos\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Time to check all data: %ld ms\n"
-msgstr ""
+msgstr "Tiempo de comprobación de todos los datos: %ld ms\n"
 
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "Recording duration:\n"
 msgid "Reading data again...\n"
-msgstr "Duración de la grabación:\n"
+msgstr "Leyendo los datos de nuevo...\n"
 
 #: src/Benchmark.cpp
 #, c-format
 msgid "Time to check all data (2): %ld ms\n"
-msgstr ""
+msgstr "Tiempo de comprobación de todos los datos (2): %ld ms\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1570,16 +1564,17 @@ msgid ""
 "At 44100 Hz, 16-bits per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
+"A 44100 Hz, 16-bits por muestra, número estimado de\n"
+"pistas que pueden reproducirse al mismo tiempo: %.1f\n"
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
-msgstr ""
+msgstr "FALLO EN EL TEST\n"
 
 #: src/Benchmark.cpp
-#, fuzzy
 #| msgid "File decoded successfully\n"
 msgid "Benchmark completed successfully.\n"
-msgstr "Archivo decodificado correctamente\n"
+msgstr "Test de rendimiento completado correctamente.\n"
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -1721,10 +1716,9 @@ msgid "Saving project data files"
 msgstr "Guardando archivos de datos del proyecto"
 
 #: src/DirManager.cpp
-#, fuzzy
 #| msgid "Cleaning up temporary files"
 msgid "Cleaning up after failed save"
-msgstr "Eliminando archivos temporales"
+msgstr "Eliminando los restos después del fallo al guardar"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2126,7 +2120,7 @@ msgid "Audacity failed to read from a file in %s."
 msgstr "Audacity ha fallado al leer de un archivo en %s."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Could not save project. Perhaps %s \n"
 #| "is not writable or the disk is full."
@@ -2134,8 +2128,8 @@ msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
 msgstr ""
-"No se ha podido guardar el proyecto. Tal vez %s \n"
-"no se pueda escribir o el disco esté lleno."
+"Audacity no ha podido escribir en un archivo.\n"
+"Tal vez %s no se pueda escribir o el disco esté lleno."
 
 #: src/FileException.cpp
 #, c-format
@@ -2216,16 +2210,14 @@ msgid "Hz"
 msgstr "Hz"
 
 #: src/FreqWindow.cpp
-#, fuzzy
 #| msgid "&Cursor"
 msgid "Cursor:"
-msgstr "&Cursor"
+msgstr "Cursor:"
 
 #: src/FreqWindow.cpp
-#, fuzzy
 #| msgid "UsePeak"
 msgid "Peak:"
-msgstr "Usar pico"
+msgstr "Pico:"
 
 #: src/FreqWindow.cpp
 msgid "&Grids"
@@ -2390,15 +2382,14 @@ msgstr ""
 "de prueba</b>."
 
 #: src/HelpText.cpp
-#, fuzzy
 #| msgid ""
 #| "<br><br>The version of Audacity you are using is an <b>Alpha test "
 #| "version</b>."
 msgid ""
 "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
 msgstr ""
-"<br><br>La versión de Audacity que está utilizando es una <b>versión Alpha "
-"de prueba</b>."
+"<br><br>La versión de Audacity que está utilizando es una <b>versión Beta de"
+" prueba</b>."
 
 #: src/HelpText.cpp
 msgid "Get the Official Released Version of Audacity"
@@ -2586,7 +2577,7 @@ msgid "&OK"
 msgstr "&Aceptar"
 
 #: src/InconsistencyException.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Internal error in %s at %s line %d.\n"
 #| "Please inform the Audacity team at feedback@audacityteam.org."
@@ -2595,11 +2586,10 @@ msgid ""
 "Please inform the Audacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Error interno en %s, en %s línea %d.\n"
-"Por favor, informe al equipo de Audacity mediante un correo a "
-"feedback@audacityteam.org."
+"Por favor, informe al equipo de Audacity en https://forum.audacityteam.org/."
 
 #: src/InconsistencyException.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Internal error at %s line %d.\n"
 #| "Please inform the Audacity team at feedback@audacityteam.org."
@@ -2608,8 +2598,7 @@ msgid ""
 "Please inform the Audacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Error interno en %s, línea %d.\n"
-"Por favor, informe al equipo de Audacity mediante un correo a "
-"feedback@audacityteam.org."
+"Por favor, informe al equipo de Audacity en https://forum.audacityteam.org/."
 
 #: src/Internat.cpp
 msgid "Unable to determine"
@@ -3225,10 +3214,9 @@ msgstr "&Barras de herramientas"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
-#, fuzzy
 #| msgid "&Reset Toolb&ars"
 msgid "Reset Toolb&ars"
-msgstr "&Restablecer b&arras de herramientas"
+msgstr "Restablecer b&arras de herramientas"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
 #: src/Menus.cpp
@@ -4187,16 +4175,14 @@ msgid "There are no label tracks to export."
 msgstr "No hay pistas de etiqueta que exportar."
 
 #: src/Menus.cpp
-#, fuzzy
 #| msgid "You can only measure one track at a time."
 msgid "Please select only one Note Track at a time."
-msgstr "Sólo se puede medir una pista cada vez."
+msgstr "Seleccione sólo una pista de nota cada vez."
 
 #: src/Menus.cpp
-#, fuzzy
 #| msgid "Please select an audio track."
 msgid "Please select a Note Track."
-msgstr "Seleccione una pista de audio"
+msgstr "Seleccione una pista de nota."
 
 #: src/Menus.cpp
 msgid "Export MIDI As:"
@@ -5413,14 +5399,14 @@ msgstr "Menos de un minuto"
 #: src/Project.cpp
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "hora"
+msgstr[1] "horas"
 
 #: src/Project.cpp
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "minuto"
+msgstr[1] "minutos"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/Project.cpp
@@ -5430,25 +5416,22 @@ msgstr "%d %s y %d %s."
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
-msgstr ""
+msgstr "Baja calidad (más rápido)"
 
 #: src/Resample.cpp
-#, fuzzy
 #| msgid "Quality"
 msgid "Medium Quality"
-msgstr "Calidad"
+msgstr "Calidad media"
 
 #: src/Resample.cpp
-#, fuzzy
 #| msgid "Quality"
 msgid "High Quality"
-msgstr "Calidad"
+msgstr "Calidad alta"
 
 #: src/Resample.cpp
-#, fuzzy
 #| msgid "(Best Quality)"
 msgid "Best Quality (Slowest)"
-msgstr "(mejor calidad)"
+msgstr "Mejor calidad (más lento)"
 
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp
@@ -5845,6 +5828,8 @@ msgid ""
 "Theme written to:\n"
 "  %s."
 msgstr ""
+"Tema creado por:\n"
+"  %s."
 
 #: src/Theme.cpp
 #, c-format
@@ -5873,6 +5858,8 @@ msgid ""
 "Theme as Cee code written to:\n"
 "  %s."
 msgstr ""
+"Tema en Cee escrito en:\n"
+"  %s."
 
 #: src/Theme.cpp
 #, c-format
@@ -5949,10 +5936,9 @@ msgid "Audacity Timer Record"
 msgstr "Grabación programada de Audacity"
 
 #: src/TimerRecordDialog.cpp
-#, fuzzy
 #| msgid "Timer Recording"
 msgid "Save Timer Recording As"
-msgstr "Grabación programada"
+msgstr "Guardar Grabación programada como"
 
 #: src/TimerRecordDialog.cpp
 msgid ""
@@ -6003,6 +5989,13 @@ msgid ""
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
+"Según la configuración actual puede que no tenga suficiente espacio libre "
+"para esta Grabación Programada\n"
+"\n"
+"¿Está seguro de que quiere continuar?\n"
+"\n"
+"Duración de la grabación:   %s\n"
+"Tiempo disponible en disco:   %s"
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording Disk Space Warning"
@@ -6053,31 +6046,40 @@ msgid "Timer Recording completed."
 msgstr "Grabación programada completada."
 
 #: src/TimerRecordDialog.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Recording Saved:\n"
 msgid ""
 "%s\n"
 "\n"
 "Recording saved: %s"
-msgstr "Grabación guardada:\n"
+msgstr ""
+"%s\n"
+"\n"
+"Grabación guardada: %s"
 
 #: src/TimerRecordDialog.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error Saving Timer Recording Project"
 msgid ""
 "%s\n"
 "\n"
 "Error saving recording."
-msgstr "Error al guardar el proyecto de grabación programada"
+msgstr ""
+"%s\n"
+"\n"
+"Error al guardar la grabación."
 
 #: src/TimerRecordDialog.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Recording Exported:\n"
 msgid ""
 "%s\n"
 "\n"
 "Recording exported: %s"
-msgstr "Grabación exportada:\n"
+msgstr ""
+"%s\n"
+"\n"
+"Grabación exportada: %s"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6086,6 +6088,9 @@ msgid ""
 "\n"
 "Error exporting recording."
 msgstr ""
+"%s\n"
+"\n"
+"Error al exportar la grabación."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6094,6 +6099,9 @@ msgid ""
 "\n"
 "'%s' has been canceled due to the error(s) noted above."
 msgstr ""
+"%s\n"
+"\n"
+"'%s' ha sido cancelada por el error indicado."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6102,6 +6110,9 @@ msgid ""
 "\n"
 "'%s' has been canceled as the recording was stopped."
 msgstr ""
+"%s\n"
+"\n"
+"'%s' ha sido cancelado porque se ha detenido la grabación."
 
 #. i18n-hint: This string is used to configure the controls for times when the recording is
 #. * started and stopped. As such it is important that only the alphabetic parts of the string
@@ -6350,10 +6361,9 @@ msgid "Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"
 msgstr "Cambios de dirección  -- significa: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
-#, fuzzy
 #| msgid "Calibration Results\n"
 msgid "Calibration Complete"
-msgstr "Resultados de la calibración\n"
+msgstr "Calibración completada"
 
 #: src/WaveClip.cpp
 msgid "Resampling failed."
@@ -6369,7 +6379,7 @@ msgstr "No hay espacio suficiente para expandir la línea de corte"
 
 #: src/AudacityException.h
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: src/FFmpeg.h
 msgid "FFmpeg not found"
@@ -6416,16 +6426,14 @@ msgstr ""
 "so*)|*.so*|Todos los archivos (*)|*"
 
 #: src/FileException.h
-#, fuzzy
 #| msgid "LOF Error"
 msgid "File Error"
-msgstr "Error de LOF"
+msgstr "Error de archivo"
 
 #: src/InconsistencyException.h
-#, fuzzy
 #| msgid "(external program)"
 msgid "Internal Error"
-msgstr "(programa externo)"
+msgstr "Error interno"
 
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
@@ -7556,7 +7564,7 @@ msgstr ""
 #: src/effects/Effect.cpp
 #, c-format
 msgid "%s: %s"
-msgstr ""
+msgstr "%s: %s"
 
 #: src/effects/Effect.cpp
 msgid "&Manage"
@@ -8533,7 +8541,7 @@ msgstr "Normalizando sin eliminar desplazamiento...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
-msgstr ""
+msgstr "Haciendo nada...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Analyzing: "
@@ -8581,7 +8589,7 @@ msgstr "Normalizar canales estéreo independientemente"
 
 #: src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
-msgstr ""
+msgstr "Esperando a que se termine de calcular la forma de onda..."
 
 #: src/effects/Normalize.cpp
 msgid ".  Maximum 0dB."
@@ -9152,7 +9160,7 @@ msgstr "Comprimir:"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
@@ -9500,7 +9508,7 @@ msgstr "Habilitar interfaz &gráfica"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
-msgstr ""
+msgstr "No se puede instanciar el efecto"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Generator"
@@ -9541,6 +9549,8 @@ msgstr ""
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
 msgstr ""
+"error: Se ha especificado el archivo \"%s\" en la cabecera pero no se ha"
+" encontrado en la ruta de complementos.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -10062,15 +10072,15 @@ msgstr ""
 "\"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
 #| "%d."
 msgid ""
 "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr ""
-"FFmpeg : ERROR - No se pueden escribir las cabeceras en el archivo de salida "
-"\"%s\". El código de error es %d."
+"FFmpeg : ERROR - No se puede abrir el archivo de salida \"%s\" en modo"
+" escritura. El código de error es %d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11422,38 +11432,34 @@ msgid "GStreamer-compatible files"
 msgstr "Archivos compatibles con GStreamer"
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy
 #| msgid "Unable to load presets file."
 msgid "Unable to add decoder to pipeline"
-msgstr "No se puede cargar el archivo de valores predefinidos."
+msgstr "No se puede añadir el decodificador al canal"
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy
 #| msgid "GStreamer startup failed"
 msgid "GStreamer Importer"
-msgstr "Fallo al iniciar GStreamer"
+msgstr "Importador GStreamer"
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy
 #| msgid "Unable to rename '%s' to '%s'."
 msgid "Unable to set stream state to paused."
-msgstr "No se puede renombrar '%s' a '%s'."
+msgstr "No se puede establecer el flujo de datos como pausado."
 
 #: src/import/ImportGStreamer.cpp
 msgid "File doesn't contain any audio streams."
-msgstr ""
+msgstr "El archivo no contiene ningún flujo de audio."
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy
 #| msgid "Unable to open/create test file."
 msgid "Unable to import file, state change failed."
-msgstr "No se puede abrir o crear el archivo de prueba."
+msgstr "No se puede importar el archivo, el cambio de estado ha fallado."
 
 #: src/import/ImportGStreamer.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "GStreamer %s: %s"
 msgid "GStreamer Error: %s"
-msgstr "GStreamer %s: %s"
+msgstr "GStreamer Error: %s"
 
 #: src/import/ImportLOF.cpp
 msgid "List of Files in basic text format"
@@ -13904,10 +13910,10 @@ msgid "Sample Edit"
 msgstr "Edición de muestra"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 #| msgid "Instrument"
 msgid "Instrument %i"
-msgstr "Instrumento"
+msgstr "Instrumento %i"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -13915,10 +13921,9 @@ msgid "Changed '%s' to %s"
 msgstr "Cambiado '%s' a %s"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 #| msgid "Rate Change"
 msgid "WaveColor Change"
-msgstr "Cambio de frecuencia"
+msgstr "Cambio de color de onda"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Format Change"
@@ -14022,10 +14027,9 @@ msgid "Split Stereo to Mo&no"
 msgstr "Dividir pista estéreo a mo&no"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 #| msgid "Waveform"
 msgid "&Wave Color"
-msgstr "Forma de onda"
+msgstr "&Color de onda"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
