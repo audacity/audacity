@@ -7501,7 +7501,7 @@ msgid "Skip &Forward"
 msgstr "Skočit &vpřed"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Skočit &vpřed"
 
 #: src/effects/Effect.cpp

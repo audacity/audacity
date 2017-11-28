@@ -7621,7 +7621,7 @@ msgid "Skip &Forward"
 msgstr "Гузариш ба Ибтидо"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr ""
 
 #: src/effects/Effect.cpp

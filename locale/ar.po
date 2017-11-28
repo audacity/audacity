@@ -7278,7 +7278,7 @@ msgid "Skip &Forward"
 msgstr "تخطى إلى الأمام"
 
 #: src/effects/Effect.cpp:3061 src/effects/Effect.cpp:3063
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "تخطى إلى الأمام"
 
 #: src/effects/Effect.cpp:3067

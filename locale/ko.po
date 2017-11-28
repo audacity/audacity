@@ -7466,7 +7466,7 @@ msgid "Skip &Forward"
 msgstr "앞으로 건너뛰기(&F)"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "앞으로 건너뛰기(&F)"
 
 #: src/effects/Effect.cpp

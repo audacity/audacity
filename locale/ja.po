@@ -7810,7 +7810,7 @@ msgid "Skip &Forward"
 msgstr "前方にスキップ(&F)"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "前方にスキップ(&F)"
 
 #: src/effects/Effect.cpp

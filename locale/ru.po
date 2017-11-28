@@ -7541,7 +7541,7 @@ msgid "Skip &Forward"
 msgstr "Перемотать вперед"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Перемотать вперед"
 
 #: src/effects/Effect.cpp

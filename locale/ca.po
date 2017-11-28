@@ -7779,7 +7779,7 @@ msgid "Skip &Forward"
 msgstr "Salta en&davant"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Salta a l'&inici"
 
 #: src/effects/Effect.cpp

@@ -7744,7 +7744,7 @@ msgid "Skip &Forward"
 msgstr "Fram"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "&Fremover"
 
 #: src/effects/Effect.cpp

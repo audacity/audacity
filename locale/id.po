@@ -7891,7 +7891,7 @@ msgstr "Percepat ke Akhir"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Percepat ke Akhir"
 
 #: src/effects/Effect.cpp

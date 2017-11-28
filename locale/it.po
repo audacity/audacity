@@ -7580,7 +7580,7 @@ msgid "Skip &Forward"
 msgstr "Vai &avanti"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Vai in &avanti"
 
 #: src/effects/Effect.cpp

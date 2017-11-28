@@ -7754,7 +7754,7 @@ msgid "Skip &Forward"
 msgstr "Hyppää &eteenpäin"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Hyppää &eteenpäin"
 
 #: src/effects/Effect.cpp

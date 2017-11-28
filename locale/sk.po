@@ -7933,7 +7933,7 @@ msgstr "Vpred"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Vpred"
 
 #: src/effects/Effect.cpp

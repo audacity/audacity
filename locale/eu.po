@@ -7528,7 +7528,7 @@ msgid "Skip &Forward"
 msgstr "Jauzi A&urrerantz"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Jauzi Au&rrerantz"
 
 #: src/effects/Effect.cpp

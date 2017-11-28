@@ -7724,7 +7724,7 @@ msgstr "ရှေ့ဆက်မှုများ"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "ရှေ့ဆက်မှုများ"
 
 #: src/effects/Effect.cpp

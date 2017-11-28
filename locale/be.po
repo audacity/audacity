@@ -7745,7 +7745,7 @@ msgstr "Наперад"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Наперад"
 
 #: src/effects/Effect.cpp

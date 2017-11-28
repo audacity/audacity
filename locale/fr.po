@@ -7780,7 +7780,7 @@ msgstr "Saut en avant (&f)"
 #: src/effects/Effect.cpp
 # trebmuh to check (accélérateur - mais celle-ci semble être une typo,
 # voir https://github.com/audacity/audacity/pull/219 )
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "Saut en avant (&f)"
 
 #: src/effects/Effect.cpp

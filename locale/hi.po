@@ -7526,7 +7526,7 @@ msgid "Skip &Forward"
 msgstr "आगे का छोड़ें (&F)"
 
 #: src/effects/Effect.cpp
-msgid "Skip &Forward"
+msgid "Skip &Foreward"
 msgstr "आगे का छोड़ें (&F)"
 
 #: src/effects/Effect.cpp
