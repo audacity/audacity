@@ -7786,6 +7786,10 @@ msgid "Skip &Forward"
 msgstr "移到起點"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "移到起點"

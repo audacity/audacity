@@ -7613,6 +7613,10 @@ msgid "Skip &Forward"
 msgstr "រំលង​ដើម្បី​ចាប់ផ្ដើម ដើម"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "រំលង​ដើម្បី​ចាប់ផ្ដើម ដើម"

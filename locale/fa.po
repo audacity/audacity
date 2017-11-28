@@ -7598,6 +7598,10 @@ msgid "Skip &Forward"
 msgstr "پرش به آغاز"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "پرش به آغاز"

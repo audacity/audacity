@@ -7451,6 +7451,10 @@ msgid "Skip &Forward"
 msgstr "Léim go dtí an Tosach"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "Léim go dtí an Tosach"

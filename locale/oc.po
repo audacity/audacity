@@ -7429,6 +7429,10 @@ msgid "Skip &Forward"
 msgstr "Enrèire a la començança"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "Enrèire a la començança"

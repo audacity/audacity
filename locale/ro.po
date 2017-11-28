@@ -7486,6 +7486,10 @@ msgid "Skip &Forward"
 msgstr "Sari peste î&nainte"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "Sari peste îna&poi"
 

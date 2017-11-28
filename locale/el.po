@@ -7587,6 +7587,10 @@ msgid "Skip &Forward"
 msgstr "Μεταπήδηση &μπροστά"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr "Μεταπήδηση &μπροστά"
+
+#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "Μεταπήδηση μπροστά"
 

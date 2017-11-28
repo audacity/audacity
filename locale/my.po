@@ -7724,6 +7724,11 @@ msgstr "ရှေ့ဆက်မှုများ"
 
 #: src/effects/Effect.cpp
 #, fuzzy
+msgid "Skip &Forward"
+msgstr "ရှေ့ဆက်မှုများ"
+
+#: src/effects/Effect.cpp
+#, fuzzy
 msgid "Skip forward"
 msgstr "အစကို ကျော်သွားပါ"
 

@@ -7662,6 +7662,11 @@ msgstr "Cap a avant"
 
 #: src/effects/Effect.cpp
 #, fuzzy
+msgid "Skip &Forward"
+msgstr "Cap a avant"
+
+#: src/effects/Effect.cpp
+#, fuzzy
 msgid "Skip forward"
 msgstr "Vés a l'inici"
 

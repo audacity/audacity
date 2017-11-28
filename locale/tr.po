@@ -7506,6 +7506,10 @@ msgid "Skip &Forward"
 msgstr "İle&riye Atla"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr "İle&riye Atla"
+
+#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "İleriye atlar"
 

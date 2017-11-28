@@ -7840,6 +7840,10 @@ msgid "Skip &Forward"
 msgstr "Անցնել սկիզբ"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "Անցնել սկիզբ"

@@ -7741,6 +7741,10 @@ msgstr "Tilbake"
 
 #: src/effects/Effect.cpp
 msgid "Skip &Forward"
+msgstr "Fram"
+
+#: src/effects/Effect.cpp
+msgid "Skip &Forward"
 msgstr "&Fremover"
 
 #: src/effects/Effect.cpp

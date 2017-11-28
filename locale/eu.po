@@ -7525,6 +7525,10 @@ msgstr "Jauzi atzerantz"
 
 #: src/effects/Effect.cpp
 msgid "Skip &Forward"
+msgstr "Jauzi A&urrerantz"
+
+#: src/effects/Effect.cpp
+msgid "Skip &Forward"
 msgstr "Jauzi Au&rrerantz"
 
 #: src/effects/Effect.cpp

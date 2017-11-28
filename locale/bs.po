@@ -7645,6 +7645,10 @@ msgid "Skip &Forward"
 msgstr "Skoči na početak"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr ""
+
+#: src/effects/Effect.cpp
 #, fuzzy
 msgid "Skip forward"
 msgstr "Skoči na početak"

@@ -7754,6 +7754,11 @@ msgstr "முன்னோக்கி"
 
 #: src/effects/Effect.cpp
 #, fuzzy
+msgid "Skip &Forward"
+msgstr "முன்னோக்கி"
+
+#: src/effects/Effect.cpp
+#, fuzzy
 msgid "Skip forward"
 msgstr "ஆரம்பத்திற்கு தவிர்த்து செல்"
 

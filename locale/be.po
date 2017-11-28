@@ -7745,6 +7745,11 @@ msgstr "Наперад"
 
 #: src/effects/Effect.cpp
 #, fuzzy
+msgid "Skip &Forward"
+msgstr "Наперад"
+
+#: src/effects/Effect.cpp
+#, fuzzy
 msgid "Skip forward"
 msgstr "Перайсці да пачатку дарожкі"
 

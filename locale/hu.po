@@ -7720,6 +7720,10 @@ msgid "Skip &Forward"
 msgstr "Kihagyás &előre"
 
 #: src/effects/Effect.cpp
+msgid "Skip &Forward"
+msgstr "Kihagyás &előre"
+
+#: src/effects/Effect.cpp
 msgid "Skip forward"
 msgstr "Kihagyás előre"
 

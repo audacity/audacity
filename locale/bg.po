@@ -7929,6 +7929,11 @@ msgstr "Напред"
 
 #: src/effects/Effect.cpp
 #, fuzzy
+msgid "Skip &Forward"
+msgstr "Напред"
+
+#: src/effects/Effect.cpp
+#, fuzzy
 msgid "Skip forward"
 msgstr "Превъртане до началото"
 
