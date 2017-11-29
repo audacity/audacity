@@ -2780,8 +2780,9 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
       options.playLooped = (loopEnabled && looped);
 
+      auto oldStart = mPlayRegionStart;
       if (!cutPreview)
-         options.pStartTime = &mPlayRegionStart;
+         options.pStartTime = &oldStart;
       else
          options.timeTrack = NULL;
 
