@@ -4,7 +4,10 @@
 # This file is distributed under the same license as the Audacity package.
 #
 # Translators:
+# Lionel Allorge
+# Olivier Ballestraz
 # Christian Brochec
+# Fabrice Silva
 # Corentin Rossignon <corentin.rossignon@gmail.com>, 2013
 # Lucas Lechat <lucaslechat@outlook.com>, 2013
 # BobSynfig, 2014
@@ -16,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-28 16:39+0100\n"
+"PO-Revision-Date: 2017-11-28 21:28+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -15370,20 +15373,8 @@ msgstr "Erreur : %hs à la ligne %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Impossible de charger le fichier : \"%s\""
 
-#~ msgid "unused message"
-#~ msgstr "message inutilisé"
-
-#~ msgid "Type"
-#~ msgstr "Type"
-
-#~ msgid "Threshold dB"
-#~ msgstr "Seuil de déclenchement en dB"
-
-#~ msgid "Repeats"
-#~ msgstr "Répétitions"
-
 #~ msgid "Delay"
-#~ msgstr "Délai "
+#~ msgstr "Délai"
 
 #~ msgid "Moderate"
 #~ msgstr "Modéré"
@@ -15397,50 +15388,14 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Heaviest"
 #~ msgstr "Très fort"
 
-#~ msgid "Passes"
-#~ msgstr "Passes"
-
 #~ msgid "Degree of Leveling:"
 #~ msgstr "Degré de nivellement :"
 
 #~ msgid "Noise Threshold:"
 #~ msgstr "Seuil de bruit :"
 
-#~ msgid "Median"
-#~ msgstr "Médian"
-
-#~ msgid "Freq"
-#~ msgstr "Fréq"
-
-#~ msgid "Phase"
-#~ msgstr "Phase"
-
-#~ msgid "Depth"
-#~ msgstr "Profondeur"
-
-#~ msgid "Count"
-#~ msgstr "Compte"
-
-#~ msgid "Interpolation"
-#~ msgstr "Interpolation"
-
-#~ msgid "Db"
-#~ msgstr "dB"
-
-#~ msgid "Minimum"
-#~ msgstr "Minimum"
-
-#~ msgid "All"
-#~ msgstr "Tout"
-
-#~ msgid "C&ategory:"
-#~ msgstr "C&atégorie :"
-
 #~ msgid "Set"
 #~ msgstr "Attribuer"
-
-#~ msgid "Key Combination"
-#~ msgstr "Combinaison de touches"
 
 #~ msgid ""
 #~ "The keyboard shortcut '%s' is already assigned to:\n"
@@ -15451,14 +15406,8 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ "\n"
 #~ "'%s'"
 
-#~ msgid "Size"
-#~ msgstr "Taille"
-
 #~ msgid "Edit Me&tadata Tags..."
 #~ msgstr "Modifier les balises de mé&tadonnées..."
-
-#~ msgid "Mo&ve Cursor"
-#~ msgstr "&Déplacer le curseur"
 
 #~ msgid "Fit &Vertically"
 #~ msgstr "Afficher &toutes les pistes"
@@ -15469,17 +15418,8 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Co&mbined Meter Toolbar"
 #~ msgstr "Barre d'outils de mesureur combinée"
 
-#~ msgid "S&kip to Start"
-#~ msgstr "S&aut au début"
-
-#~ msgid "Skip to E&nd"
-#~ msgstr "Saut à la fin&"
-
 #~ msgid "Appen&d Record"
 #~ msgstr "Poursuite de l'en&registrement"
-
-#~ msgid "Stereo Trac&k to Mono"
-#~ msgstr "Piste stéréo vers mono"
 
 #~ msgid "Move Sele&ction when Aligning"
 #~ msgstr "Déplacer la séle&ction lors de l'alignement"
@@ -15487,43 +15427,25 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Play at speed"
 #~ msgstr "Lecture à vitesse variable"
 
-#~ msgid "&Mono"
-#~ msgstr "&Mono"
-
-#~ msgid "&Left Channel"
-#~ msgstr "Canal &gauche"
-
-#~ msgid "&Right Channel"
-#~ msgstr "Canal &droit"
-
 #~ msgid "Click and drag to stretch within selected region."
 #~ msgstr "Cliquer-glisser pour étirer à l'intérieur de la région sélectionnée."
 
-#~ msgid "Nyquist"
-#~ msgstr "Nyquist"
-
-#~ msgid "Undefined return value.\n"
-#~ msgstr "Valeur de retour indéfinie.\n"
-
-#~ msgid "Effects in menus are:"
-#~ msgstr "Dans les menus les effets sont :"
-
 #~ msgid "&Ergonomic order of Transport Toolbar buttons"
-#~ msgstr "Barre de contrôle &ergonomique"
+#~ msgstr "Ordre &ergonomique des boutons de la barre d'outils de transport"
 
 #~ msgid "S&how 'How to Get Help' dialog box at program start up"
 #~ msgstr ""
-#~ "Au lancement du programme, affic&her le message d'accueil \"Pour bien "
-#~ "démarrer\" "
+#~ "Au lancement du programme, affic&her le message d'accueil 'Pour bien "
+#~ "démarrer' "
 
 #~ msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
 #~ msgstr ""
-#~ "&Toujours réduire la totalité des pistes à un mixage stéréo ou mono"
+#~ "&Toujours réduire toutes les pistes à un mixage stéréo ou mono"
 
 #~ msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
 #~ msgstr ""
-#~ "&Utiliser un mixage personnalisé (par exemple exporter en multicanal "
-#~ "5.1)"
+#~ "&Utiliser un mixage personnalisé (par exemple, exporter en multicanal "
+#~ "5.1 dans un fichier)"
 
 #~ msgid "When exporting track to an Allegro (.gro) file"
 #~ msgstr "À l'exportation de la piste dans un fichier Allegro (.gro)"
@@ -15534,36 +15456,18 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Represent times and durations in &beats"
 #~ msgstr "Représente le temps et la durée en &battements"
 
-#~ msgid "Host:"
-#~ msgstr "Hôte :"
-
-#~ msgid "Device:"
-#~ msgstr "Périphérique :"
-
-#~ msgid "&Length of preview:"
-#~ msgstr "&Durée d'aperçu :"
-
 #~ msgid "&Hardware Playthrough: Listen to input while recording or monitoring"
 #~ msgstr ""
-#~ "Passage audio matériel : Écouter l'entrée durant l'enregistrement ou le "
+#~ "Passage audio matériel : écouter l'entrée durant l'enregistrement ou le "
 #~ "monitoring (&h)"
 
 #~ msgid "&Software Playthrough: Listen to input while recording or monitoring"
 #~ msgstr ""
-#~ "Passage audio lo&giciel : Écouter l'entrée durant l'enregistrement ou le "
+#~ "Passage audio lo&giciel : écouter l'entrée durant l'enregistrement ou le "
 #~ "monitoring"
 
 #~ msgid "(uncheck when recording computer playback)"
 #~ msgstr "(décocher lors de l'enregistrement de la lecture de l'ordinateur)"
-
-#~ msgid "Audio to &buffer:"
-#~ msgstr "Audio vers &tampon :"
-
-#~ msgid "milliseconds (higher = more latency)"
-#~ msgstr "millisecondes (plus = plus de latence)"
-
-#~ msgid "L&atency correction:"
-#~ msgstr "Correction de l&atence :"
 
 #~ msgid "milliseconds (negative = backwards)"
 #~ msgstr "millisecondes (négatif = arrière)"
@@ -15574,9 +15478,6 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Sound Activation Le&vel (dB):"
 #~ msgstr "&Niveau sonore de déclenchement (dB) :"
 
-#~ msgid "Add &Track Number"
-#~ msgstr "Ajoute un numéro de pis&te"
-
 #~ msgid "S&how the spectrum using grayscale colors"
 #~ msgstr "Afficher le spectre en échelle de g&ris"
 
@@ -15585,11 +15486,11 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ "loaded\n"
 #~ "when the program starts up."
 #~ msgstr ""
-#~ "Si \"Charger le thème au démarrage\" est coché,\n"
+#~ "Si 'Charger le thème au démarrage' est coché,\n"
 #~ "le thème sera chargé quand le programme démarrera."
 
 #~ msgid "Load Theme Cache At Startup"
-#~ msgstr "À l'ouverture, charger le thème"
+#~ msgstr "Charger le thème à l'ouverture"
 
 #~ msgid "&Update display when Recording/Playback head unpinned"
 #~ msgstr ""
@@ -15597,46 +15498,22 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ "pas épinglée "
 
 #~ msgid "Automatically &fit tracks vertically zoomed"
-#~ msgstr "&Ajuster automatiquement les pistes à la hauteur de la fenêtre"
-
-#~ msgid "&Select then act on entire project, if no audio selected"
-#~ msgstr ""
-#~ ""
-#~ "&Sélectionner puis agir sur le projet entier, si aucun audio n'est "
-#~ "sélectionné"
-
-#~ msgid "Record Below"
-#~ msgstr "Enregistrement ci-dessous"
+#~ msgstr "&Adapter automatiquement les pistes à la hauteur de la fenêtre"
 
 #~ msgid "Silence Audio"
-#~ msgstr "Taire l'audio"
+#~ msgstr "Silencer l'audio"
 
 #~ msgid "Fit Selection"
-#~ msgstr "Afficher la sélection"
+#~ msgstr "Adapter à la sélection"
 
 #~ msgid "Fit Project"
-#~ msgstr "Afficher le projet"
+#~ msgstr "Adapter au projet"
 
 #~ msgid "Snap To:"
 #~ msgstr "Aligner à :"
 
-#~ msgid "hidden"
-#~ msgstr "caché"
-
-#~ msgid "Selection "
-#~ msgstr "Sélection"
-
-#~ msgid "Re&gion Save"
-#~ msgstr "Sauvegarder la Ré&gion"
-
-#~ msgid "Regio&n Restore"
-#~ msgstr "Restaurer la Régi&on"
-
-#~ msgid "Couldn't write to file \"%s\": %s"
-#~ msgstr "Impossible d'écrire dans le fichier \"%s\": %s"
-
 #~ msgid "Error Writing Autosave File"
-#~ msgstr "Erreur d'écriture de fichier de sauvegarde automatique"
+#~ msgstr "Erreur d'écriture du fichier de sauvegarde automatique"
 
 #~ msgid "Edit Metadata Tags for Export"
 #~ msgstr "Modifier les balises de métadonnées pour l'exportation"
@@ -15650,26 +15527,8 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Error Writing to File"
 #~ msgstr "Erreur d'écriture de fichier"
 
-#~ msgid "OK... Audacious!"
-#~ msgstr "OK... Audacieux !"
-
-#~ msgid "co-founder"
-#~ msgstr "co-fondateur"
-
-#~ msgid "Audacity Support Team"
-#~ msgstr "Équipe de soutien d'Audacity"
-
-#~ msgid "Emeritus Developers"
-#~ msgstr "Développeurs émérites"
-
-#~ msgid " Emeritus Team Members"
-#~ msgstr " Membres de l'équipe émérite"
-
 #~ msgid "<center><h3>How to Get Help</h3></center>"
 #~ msgstr "<center><h3>Pour bien démarrer</h3></center>"
-
-#~ msgid "Welcome to Audacity "
-#~ msgstr "Bienvenue dans Audacity"
 
 #~ msgid ""
 #~ " For even quicker answers, all the online resources above are "
@@ -15681,57 +15540,33 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ msgid "Undo History"
 #~ msgstr "Historique des annulations"
 
-#~ msgid "Edit Metadata"
-#~ msgstr "Éditer les métadonnées"
-
 #~ msgid "Disk space remains for recording %d hours and %d minutes."
 #~ msgstr ""
-#~ "Espace disque restant pour l'enregistrement : %d heures et %d minutes"
+#~ "Espace disque restant pour l'enregistrement : %d heures et %d minutes."
 
 #~ msgid "Disk space remains for recording 1 hour and %d minutes."
-#~ msgstr "Espace disque restant pour l'enregistrement : 1 heure et %d minutes"
+#~ msgstr "Espace disque restant pour l'enregistrement : 1 heure et %d minutes."
 
 #~ msgid "Disk space remains for recording %d seconds."
-#~ msgstr "L'espace disque restant permet l'enregistrement de %d seconds."
+#~ msgstr "L'espace disque restant permet l'enregistrement de %d secondes."
 
 #~ msgid "Out of disk space"
 #~ msgstr "Disque plein"
 
 #~ msgid "Warning - Length in Writing Sequence"
-#~ msgstr "Attention - Longueur dasn la séquence d'écriture"
+#~ msgstr "Attention - Longueur dans la séquence d'écriture"
 
 #~ msgid "Memory allocation failed -- NewSamples"
-#~ msgstr "Erreur d'allocation mémoire - Nouveaux échantillons"
-
-#~ msgid "Pre&view"
-#~ msgstr "&Aperçu"
-
-#~ msgid "R&ight Channel"
-#~ msgstr "Canal d&roit"
-
-#~ msgid "&Rate"
-#~ msgstr "Taux (&r)"
+#~ msgstr "Erreur d'allocation mémoire -- NouveauxÉchantillons"
 
 #~ msgid "Drag the track vertically to change the order of the tracks."
 #~ msgstr "Glisser la piste verticalement pour changer l'ordre des pistes."
 
-#~ msgid "&Bass (dB):"
-#~ msgstr "&Grave (dB) :"
-
-#~ msgid "&Enable level control"
-#~ msgstr "Activ&er le contrôle du volume"
-
-#~ msgid "    No change to apply."
-#~ msgstr "    Aucune changement à appliquer."
-
-#~ msgid ":   Maximum 0 dB."
-#~ msgstr ":   Maximum 0 dB."
-
 #~ msgid "From beats per minute"
-#~ msgstr "Depuis battements/minute"
+#~ msgstr "Depuis battements par minute"
 
 #~ msgid "To beats per minute"
-#~ msgstr "Vers battements/minute"
+#~ msgstr "Vers battements par minute"
 
 #~ msgid "From length in seconds"
 #~ msgstr "Depuis durée en secondes"
@@ -15741,20 +15576,14 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ "Please enter reasonable times."
 #~ msgstr ""
 #~ "Le chrono de début est après celui de fin !\n"
-#~ "Entrez des chronos cohérents."
+#~ "Veuillez entrez des chronos cohérents."
 
 #~ msgid ""
 #~ "Times are not reasonable!\n"
 #~ "Please enter reasonable times."
 #~ msgstr ""
 #~ "Les durées ne sont pas raisonnables !\n"
-#~ "Entrez des chronos cohérents."
-
-#~ msgid "Please select something to be measured."
-#~ msgstr "Sélectionnez quelque chose à mesurer."
-
-#~ msgid "Please enter valid times."
-#~ msgstr "Merci d'entrer des durées valides."
+#~ "Veuillez entrez des chronos cohérents."
 
 #~ msgid ""
 #~ "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
@@ -15767,237 +15596,27 @@ msgstr "Impossible de charger le fichier : \"%s\""
 #~ "\n"
 #~ "Sauvegarder les courbes sous %s"
 
-#~ msgid "EQCurves.xml and EQDefaultCurves.xml missing"
-#~ msgstr "EQCurves.xml et EQDefaultCurves.xml manquants"
-
-#~ msgid ""
-#~ "Error in Paulstretch:\n"
-#~ "The selection is too short.\n"
-#~ " It must be much longer than the Time Resolution."
-#~ msgstr ""
-#~ "Erreur dans Paulstretch:\n"
-#~ "La sélection est trop courte.\n"
-#~ " Elle doit être plus longue que la Résolution."
-
-#~ msgid "N/A"
-#~ msgstr "N/A"
-
-#~ msgid "-Left-Click"
-#~ msgstr "-clic-gauche"
-
-#~ msgid "-Left-Double-Click"
-#~ msgstr "-double-clic-gauche"
-
 #~ msgid "Time shift clip or move up/down between tracks"
 #~ msgstr "Glissement des clips temporellement ou d'une piste à l'autre "
-
-#~ msgid "Zoom in or out on Mouse Pointer"
-#~ msgstr "Zoom avant/arrière au pointeur de la souris"
 
 #~ msgid ") / Loop Play ("
 #~ msgstr ") / Lecture en boucle ("
 
 #~ msgid ") / Append Record ("
-#~ msgstr ") / Ajouter enregistrement ("
-
-#~ msgid "Multi-Tool Mode"
-#~ msgstr "Mode multi outils"
-
-#~ msgid "<DIR>"
-#~ msgstr "<DIR>"
-
-#~ msgid "<LINK>"
-#~ msgstr "<LINK>"
-
-#~ msgid "<DRIVE>"
-#~ msgstr "<DRIVE>"
-
-#~ msgid "%ld bytes"
-#~ msgstr "%ld octets"
-
-#~ msgid "Modified"
-#~ msgstr "Modifié"
-
-#~ msgid "Permissions"
-#~ msgstr "Permissions"
-
-#~ msgid "Attributes"
-#~ msgstr "Attributs"
-
-#~ msgid "NewName"
-#~ msgstr "NouveauNom"
-
-#~ msgid "Operation not permitted."
-#~ msgstr "Opération non permise."
-
-#~ msgid "."
-#~ msgstr "."
-
-#~ msgid ".."
-#~ msgstr ".."
-
-#~ msgid "Illegal directory name."
-#~ msgstr "Nom de répertoire illégal."
-
-#~ msgid "File name exists already."
-#~ msgstr "Le nom de fichier existe déjà."
-
-#~ msgid "View files as a list view"
-#~ msgstr "Afficher les fichiers sous forme de liste"
-
-#~ msgid "View files as a detailed view"
-#~ msgstr "Afficher les fichiers en vue détaillée"
-
-#~ msgid "Go to parent directory"
-#~ msgstr "Aller au répertoire parent"
-
-#~ msgid "Go to home directory"
-#~ msgstr "Aller au répertoire d'accueil"
-
-#~ msgid "Create new directory"
-#~ msgstr "Créer un nouveau répertoire"
-
-#~ msgid "Current directory:"
-#~ msgstr "Répertoire actuel :"
-
-#~ msgid "Illegal file specification."
-#~ msgstr "Spécification de fichiers illégale."
-
-#~ msgid "Directory doesn't exist."
-#~ msgstr "Le répertoire n'existe pas."
-
-#~ msgid "!Simplified View"
-#~ msgstr "! Affichage simplifié"
+#~ msgstr ") / Ajouter à l'enregistrement ("
 
 #~ msgid "Spectrogram l&og(f)"
 #~ msgstr "Spectre l&ogarithmique décimal"
 
-#~ msgid "Pitc&h (EAC)"
-#~ msgstr "&Hauteur (EAC)"
-
-#~ msgid "Set Sample &Format"
-#~ msgstr "Choisir un &format d'échantillonnage"
-
-#~ msgid "Set Ra&nge..."
-#~ msgstr "Régler l&'amplitude..."
-
-#~ msgid "&Draw Curves"
-#~ msgstr "&Dessiner les courbes"
-
-#~ msgid "Save and Manage Curves"
-#~ msgstr "Sauvegarder et gérer les courbes"
-
-#~ msgid "G&rids"
-#~ msgstr "G&rilles"
-
-#~ msgid "Grids"
-#~ msgstr "Grilles"
-
-#~ msgid "Default"
-#~ msgstr "Par défaut"
-
-#~ msgid "AVX"
-#~ msgstr "AVX"
-
 #~ msgid "AVX Threaded"
-#~ msgstr "AVX Multitâches"
-
-#~ msgid "&Options..."
-#~ msgstr "&Options..."
+#~ msgstr "AVX Multi-tâches"
 
 #~ msgid "Specify Command Line Encoder"
-#~ msgstr "Spécifier l'encodeur à ligne de commande"
-
-#~ msgid "Command Line Export Setup"
-#~ msgstr "Réglage de l'exportation en ligne de commande"
-
-#~ msgid "Specify AC3 Options"
-#~ msgstr "Spécifier les options AC3"
-
-#~ msgid "AC3 Export Setup"
-#~ msgstr "Réglage de l'exportation AC3"
-
-#~ msgid "Specify AAC Options"
-#~ msgstr "Spécifier les options AAC"
-
-#~ msgid "AAC Export Setup"
-#~ msgstr "Réglage de l'exportation AAC"
-
-#~ msgid "Specify AMR-NB Options"
-#~ msgstr "Spécifier les options AMR-NB"
-
-#~ msgid "AMR-NB Export Setup"
-#~ msgstr "Réglage de l'exportation AMR-NB"
-
-#~ msgid "Specify WMA Options"
-#~ msgstr "Spécifier les options WMA"
-
-#~ msgid "WMA Export Setup"
-#~ msgstr "Réglage de l'exportation WMA"
-
-#~ msgid "Specify Other Options"
-#~ msgstr "Spécifier les autres options"
-
-#~ msgid "Specify FLAC Options"
-#~ msgstr "Spécifier les options FLAC"
-
-#~ msgid "FLAC Export Setup"
-#~ msgstr "Réglage de l'exportation FLAC"
-
-#~ msgid "Specify MP2 Options"
-#~ msgstr "Spécifier les options MP2"
-
-#~ msgid "MP2 Export Setup"
-#~ msgstr "Réglage de l'exportation MP2"
-
-#~ msgid "Specify MP3 Options"
-#~ msgstr "Spécifier les options MP3"
-
-#~ msgid "MP3 Export Setup"
-#~ msgstr "Réglage de l'exportation MP3"
-
-#~ msgid "Export format:"
-#~ msgstr "Format d'export :"
-
-#~ msgid "Specify Ogg Vorbis Options"
-#~ msgstr "Spécifier les options Ogg Vorbis"
-
-#~ msgid "Ogg Vorbis Export Setup"
-#~ msgstr "Réglage de l'exportation Ogg Vorbis"
-
-#~ msgid "Specify Uncompressed Options"
-#~ msgstr "Spécifier les options de compression"
-
-#~ msgid "Uncompressed Export Setup"
-#~ msgstr "Réglage d'exportation non compressé"
+#~ msgstr "Spécifier l'encodeur en ligne de commande"
 
 #~ msgid "(Not all combinations of headers and encodings are possible.)"
 #~ msgstr ""
-#~ "(Les combinaison d'entête et d'encodage ne sont pas toutes possibles.)"
-
-#~ msgid "There are no options for this format.\n"
-#~ msgstr "Il n'y a pas d'options pour ce format.\n"
-
-#~ msgid "Ctrl-Left-Drag"
-#~ msgstr "Ctrl + glisser à gauche"
-
-#~ msgid "Ctrl-Left-Double-Click"
-#~ msgstr "Ctrl-Gauche-Double-Clic"
-
-#~ msgid "Ctrl-Wheel-Rotate"
-#~ msgstr "Ctrl + Roulette souris"
-
-#~ msgid "FFT Window"
-#~ msgstr "Affichage FFT "
+#~ "(Les combinaisons d'entêtes et d'encodages ne sont pas toutes possibles.)"
 
 #~ msgid "Spectrogram log(f)"
 #~ msgstr "Spectre logarithmique décimal"
-
-#~ msgid "Error while opening sound device. "
-#~ msgstr "Erreur à l'ouverture du périphérique son. "
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid ")"
-#~ msgstr ")"
