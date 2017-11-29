@@ -15404,7 +15404,7 @@ msgstr "ファイルが開けません: \"%s\""
 #  i18n-hint: '-help' is the option and needs to stay in
 #  * English. This displays a list of available options
 #, fuzzy
-#~| msgid "this help message"
+#~ msgid "this help message"
 #~ msgid "unused message"
 #~ msgstr "このヘルプメッセージ"
 

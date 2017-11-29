@@ -15079,7 +15079,7 @@ msgid "Could not load file: \"%s\""
 msgstr "Ei voitu ladata tiedostoa: \"%s\""
 
 #, fuzzy
-#~| msgid "this help message"
+#~ msgid "this help message"
 #~ msgid "unused message"
 #~ msgstr "tämä ohje"
 

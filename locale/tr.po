@@ -14915,6 +14915,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Dosya yüklenemedi: \"%s\""
 
 #, fuzzy
-#~| msgid "this help message"
+#~ msgid "this help message"
 #~ msgid "unused message"
 #~ msgstr "bu yardım iletisi"
