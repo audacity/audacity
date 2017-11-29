@@ -8412,7 +8412,7 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
-"音频选区太短，以至于无法预览。\n"
+"音频选区太短，无法预览。\n"
 "\n"
 "尝试增加音频选区至少 %.1f 秒，\n"
 "或减少“时间分辨率”至小于 %.1f 秒。"
@@ -9833,8 +9833,8 @@ msgstr "FFmpeg：错误 - 无法打开音频编码器 0x%x (Can't open audio cod
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
-"FFmpeg：错误 - 无法从音频 FIFO 文件中分配出可用缓存空间(FIFO文件用于暂存一定"
-"大小的RAW音频，防止已解码的RAW音频大小不足以进行编码)(Can't allocate buffer "
+"FFmpeg：错误 - 无法从音频 FIFO 文件中分配出可用缓存空间（FIFO文件用于暂存一定"
+"大小的RAW音频，防止已解码的RAW音频大小不足以进行编码）(Can't allocate buffer "
 "to read into from audio FIFO.)"
 
 #: src/export/ExportFFmpeg.cpp
@@ -11089,7 +11089,7 @@ msgid ""
 "Use the 'File > Open' command to open Audacity Projects."
 msgstr ""
 "“%s”是一个 Audacity 项目文件。\n"
-"使用 '文件 > 打开' 命令可以打开 Audacity 项目。"
+"使用 文件 > 打开 命令可以打开 Audacity 项目。"
 
 #: src/import/Import.cpp
 #, c-format
@@ -11098,9 +11098,10 @@ msgid ""
 "Try installing FFmpeg. For uncompressed files, also try File > Import > Raw "
 "Data."
 msgstr ""
-"Audacity无法识别文件'%s'的类型。\n"
-"如果它未被压缩，请尝试用\"导入原始数据\"将其导入。"
+"Audacity无法识别文件“%s”的类型。\n"
+"如果它未被压缩，请尝从 文件 > 导入 > 原始数据 将其导入。"
 
+# 这里我保留前人翻译的“读取”对译“understood”因为用“理解”可能会有点奇怪？ - mkpoli 2017-11-25
 #: src/import/Import.cpp
 #, c-format
 msgid ""
@@ -11109,14 +11110,14 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
-"Audacity 识别文件 '%s'的类型.\n"
+"Audacity 识别了文件“%s”的类型。\n"
 "估计支持这些文件的导入器有：\n"
-"%s,\n"
-"但它们都不能读取这个文件的格式."
+"%s，\n"
+"但它们都不能读取这个文件格式."
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
-msgstr "FFmpeg兼容文件"
+msgstr "FFmpeg 兼容文件"
 
 #: src/import/ImportFFmpeg.cpp
 #, c-format
@@ -11126,11 +11127,11 @@ msgstr "索引[%02x] 编解码器[%s], 语言[%s], 比特率[%s], 声道数[%d],
 
 #: src/import/ImportFLAC.cpp src/ondemand/ODDecodeFlacTask.cpp
 msgid "FLAC files"
-msgstr "FLAC文件"
+msgstr "FLAC 文件"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer-compatible files"
-msgstr "GStreamer兼容文件"
+msgstr "GStreamer 兼容文件"
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to add decoder to pipeline"
@@ -11974,13 +11975,13 @@ msgid ""
 "\n"
 "instead.  Otherwise, click Cancel."
 msgstr ""
-"键盘快捷键 '%s' 已被应用到：\n"
+"键盘快捷键“%s”已被应用到：\n"
 "\n"
-"\t'%s'\n"
+"\t“%s”\n"
 "\n"
 "点击确定用此快捷键\n"
 "\n"
-"\t'%s'\n"
+"\t“%s”\n"
 "\n"
 "替换，否则点取消。"
 
@@ -12777,8 +12778,8 @@ msgid ""
 "Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
-"编译 Audacity 时启用了 'Output Sourcery' 按钮，\n"
-"它会把图像缓存储存成 C 程序代码，以便加入到源码中编译。"
+"这是一个 Audacity 的调试版本，编译时启用了“Output Sourcery”按钮，\n"
+"这将会把图像缓存储存成 C 版本，以便作为默认加入到源码中编译。"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -13571,7 +13572,7 @@ msgstr "乐器 %i"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s"
-msgstr "已变更的'%s' 至 %s"
+msgstr "已将“%s”改变为 %s"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "WaveColor Change"
@@ -13636,7 +13637,7 @@ msgstr "其他(&O)..."
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
-msgstr "已将 '%s' 改变为 %s Hz"
+msgstr "已将“%s”改变为 %s Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Rate Change"
@@ -13721,7 +13722,7 @@ msgstr "声道"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
-msgstr "将'%s'制作为立体声轨"
+msgstr "已将“%s”改变为立体声轨"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Make Stereo"
