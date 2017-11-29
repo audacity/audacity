@@ -1296,7 +1296,7 @@ msgstr "&Kaldır"
 
 #: src/BatchProcessDialog.cpp
 msgid "Re&name"
-msgstr "Ye&niden &dlandır"
+msgstr "Ye&niden dlandır"
 
 #: src/BatchProcessDialog.cpp
 msgid "C&hain (Double-Click or press SPACE to edit)"
@@ -3267,7 +3267,7 @@ msgstr "Ye&ni İz Ekle"
 
 #: src/Menus.cpp
 msgid "&Timer Record..."
-msgstr "&Zamanlanmış Kayı&t..."
+msgstr "&Zamanlanmış Kayıt..."
 
 #: src/Menus.cpp
 msgid "&Cursor to"

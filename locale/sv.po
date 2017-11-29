@@ -11920,7 +11920,7 @@ msgstr "Skapa en &kopia av filerna innan redigering (säkrare)"
 
 #: src/import/ImportPCM.cpp
 msgid "Read the files &directly from the original (faster)"
-msgstr "&Läs filer &direkt från originalet (snabbare)"
+msgstr "Läs filer &direkt från originalet (snabbare)"
 
 #: src/import/ImportPCM.cpp
 msgid "Don't &warn again and always use my choice above"

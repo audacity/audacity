@@ -3313,7 +3313,7 @@ msgstr "Egi&tasmoaren Hasiera"
 
 #: src/Menus.cpp
 msgid "Project E&nd"
-msgstr "Egi&tasmoaren &Amaiera"
+msgstr "Egitasmoaren &Amaiera"
 
 #: src/Menus.cpp
 msgid "Pla&y Region"
@@ -3620,11 +3620,11 @@ msgstr "Irakurri Ha&utapena Hasi Aurretik"
 
 #: src/Menus.cpp
 msgid "Play Af&ter Selection Start"
-msgstr "Irakurri Ha&utapena Hasi &Ondoren"
+msgstr "Irakurri Hautapena Hasi &Ondoren"
 
 #: src/Menus.cpp
 msgid "Play Be&fore Selection End"
-msgstr "Irakurri Ha&utapena A&maitu Aurretik"
+msgstr "Irakurri Hautapena A&maitu Aurretik"
 
 #: src/Menus.cpp
 msgid "Play Aft&er Selection End"
@@ -3712,7 +3712,7 @@ msgstr "E&zabaTekla"
 
 #: src/Menus.cpp
 msgid "DeleteKey&2"
-msgstr "E&zabaTekla&2"
+msgstr "EzabaTekla&2"
 
 #: src/Menus.cpp
 msgid "Trans&cription"
@@ -12059,7 +12059,7 @@ msgstr "Bideak audio agiri batera esportatzerakoan"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Mix down to Stereo or Mono"
-msgstr "Behera &nahastu Estereora edo &Monoa"
+msgstr "Behera nahastu Estereora edo &Monoa"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use custom mix"
