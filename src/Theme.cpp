@@ -54,7 +54,7 @@ and use it for toolbar and window layouts too.
 *//*****************************************************************//**
 
 \class auStaticText
-\brief is like wxStaticText, except it can be themed.  wxStaticText 
+\brief is like wxStaticText, except it can be themed.  wxStaticText
 can't be.
 
 *//*****************************************************************/
@@ -204,6 +204,9 @@ static const unsigned char ClassicImageCacheAsData[] = {
 static const unsigned char HiContrastImageCacheAsData[] = {
 #include "HiContrastThemeAsCeeCode.h"
 };
+static const unsigned char protools_template_iconImageCacheAsData[] = {
+#include "ProToolsThemeAsCeeCode.h"
+};
 
 // theTheme is a global variable.
 AUDACITY_DLL_API Theme theTheme;
@@ -339,8 +342,8 @@ void ThemeBase::LoadTheme( teThemeType Theme )
    int TextColourDifference =  ColourDistance( CurrentText, DesiredText );
 
    bIsUsingSystemTextColour = ( TextColourDifference == 0 );
-   // Theming is very accepting of alternative text colours.  They just need to 
-   // have decent contrast to the background colour, if we're blending themes. 
+   // Theming is very accepting of alternative text colours.  They just need to
+   // have decent contrast to the background colour, if we're blending themes.
    if( !bIsUsingSystemTextColour ){
       int ContrastLevel        =  ColourDistance( Back, DesiredText );
       bIsUsingSystemTextColour = bRecolourOnLoad && (ContrastLevel > 250);
@@ -364,7 +367,7 @@ void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
 }
 
 int ThemeBase::ColourDistance( wxColour & From, wxColour & To ){
-   return 
+   return
       abs( From.Red() - To.Red() )
       + abs( From.Green() - To.Green() )
       + abs( From.Blue() - To.Blue() );
@@ -388,7 +391,7 @@ void ThemeBase::RecolourTheme()
    if( d  > 120 )
       return;
 
-   // A minor tint difference from standard does not need 
+   // A minor tint difference from standard does not need
    // to be recouloured either.  Includes case of d==0 which is nothing
    // needs to be done.
    if( d < 40 )
@@ -450,7 +453,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 
 // Legacy function to allow use of an XPM where no theme image was defined.
 // Bit depth and mask needs review.
-// Note that XPMs don't offer translucency, so unsuitable for a round shape overlay, 
+// Note that XPMs don't offer translucency, so unsuitable for a round shape overlay,
 // for example.
 void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString & Name )
 {
@@ -692,8 +695,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          ImageCache.SetRGB( mFlow.Rect(), 0xf2, 0xb0, 0x27 );
          if( (mFlow.mFlags & resFlagSkip) == 0 )
-            PasteSubImage( &ImageCache, &SrcImage, 
-               mFlow.mxPos + mFlow.mBorderWidth, 
+            PasteSubImage( &ImageCache, &SrcImage,
+               mFlow.mxPos + mFlow.mBorderWidth,
                mFlow.myPos + mFlow.mBorderWidth);
          else
             ImageCache.SetRGB( mFlow.RectInner(), 1,1,1);
@@ -773,7 +776,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 #if 0
       // Deliberate policy to use the fast/cheap blocky pixel-multiplication
       // algorithm, as this introduces no artifacts on repeated scale up/down.
-      ImageCache.Rescale( 
+      ImageCache.Rescale(
          ImageCache.GetWidth()*4,
          ImageCache.GetHeight()*4,
          wxIMAGE_QUALITY_NEAREST );
@@ -936,6 +939,7 @@ teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
    aThemes.Add( "dark" );
    aThemes.Add( "light" );
    aThemes.Add( "high-contrast" );
+   aThemes.Add( "protools" );
    aThemes.Add( "custom" );
    int themeIx = aThemes.Index( Name );
    if( themeIx < 0 )
@@ -993,23 +997,28 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       size_t ImageSize = 0;
       const unsigned char * pImage = nullptr;
       switch( type ){
-         default: 
-         case themeClassic : 
+         default:
+         case themeClassic :
             ImageSize = sizeof(ClassicImageCacheAsData);
             pImage = ClassicImageCacheAsData;
             break;
-         case themeLight : 
+         case themeLight :
             ImageSize = sizeof(LightImageCacheAsData);
             pImage = LightImageCacheAsData;
             break;
-         case themeDark : 
+         case themeDark :
             ImageSize = sizeof(DarkImageCacheAsData);
             pImage = DarkImageCacheAsData;
             break;
-         case themeHiContrast : 
+         case themeHiContrast :
             ImageSize = sizeof(HiContrastImageCacheAsData);
             pImage = HiContrastImageCacheAsData;
             break;
+         case themeProTools :
+            ImageSize = sizeof(ProToolsImageCacheAsData);
+            pImage = ProToolsImageCacheAsData;
+            break;
+
       }
       //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
@@ -1302,7 +1311,7 @@ BEGIN_EVENT_TABLE(auStaticText, wxWindow)
     EVT_ERASE_BACKGROUND(auStaticText::OnErase)
 END_EVENT_TABLE()
 
- 
+
 auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
  wxWindow(parent, wxID_ANY)
 {
@@ -1322,13 +1331,16 @@ auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
    SetName(textIn);
    SetLabel(textIn);
 }
+<<<<<<< HEAD
  
 void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
+=======
+
+void auStaticText::OnPaint(wxPaintEvent & evt)
+>>>>>>> 5d38ecf9a... Added Pro Tools theme
 {
    wxPaintDC dc(this);
    //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
    dc.Clear();
    dc.DrawText( GetLabel(), 0,0);
 }
-
-
