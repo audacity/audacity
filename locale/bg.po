@@ -15662,10 +15662,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Не бе възможно да се зареди файл: „%s“"
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (това съобщение)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Приглушаване:"
 

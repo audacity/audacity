@@ -15588,10 +15588,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Ne mogu da učitam datoteku: „%s“"
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (ova poruka)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Iznos utišanja:"
 

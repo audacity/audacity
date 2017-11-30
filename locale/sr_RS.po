@@ -15209,11 +15209,6 @@ msgstr "Грешка: %hs у реду %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Не могу да учитам датотеку: „%s“"
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "приказује ову поруку"
-
 #~ msgid "("
 #~ msgstr "("
 

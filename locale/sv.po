@@ -15611,10 +15611,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Det gick inte att öppna fil: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (detta meddelande)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Duckning mängd:"
 

@@ -15560,10 +15560,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (Տ-Օգնություն)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Ամբողջական խուսափում՝"
 

@@ -15672,10 +15672,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Tidak bisa mengambil file: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-bantuan (pesan ini)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Banyak Duck:"
 

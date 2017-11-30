@@ -15254,11 +15254,6 @@ msgstr "Hiba: %hs a(z) %lu. sorban"
 msgid "Could not load file: \"%s\""
 msgstr "Nem sikerült betölteni a fájlt: „%s”"
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "ez a súgó üzenet"
-
 #~ msgid "("
 #~ msgstr "("
 

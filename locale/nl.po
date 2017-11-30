@@ -14989,8 +14989,3 @@ msgstr "Fout: %hs op regel %lu"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Kon bestand \"%s\" niet laden"
-
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "deze hulptekst"

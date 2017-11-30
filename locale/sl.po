@@ -14943,11 +14943,6 @@ msgstr "Napaka: %hs v %lu. vrstici"
 msgid "Could not load file: \"%s\""
 msgstr "Napaka pri odpiranju datoteke: »%s«"
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "to sporočilo pomoči"
-
 #~ msgid "("
 #~ msgstr "("
 

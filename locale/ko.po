@@ -14817,8 +14817,3 @@ msgstr "오류: %hs, %lu번째 줄"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "파일을 불러올 수 없음: \"%s\""
-
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "이 도움말 메시지"

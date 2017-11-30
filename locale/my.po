@@ -15386,10 +15386,6 @@ msgid "Could not load file: \"%s\""
 msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (ဒီသတင်းတို အတွက်)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "ဒတ် ပမာဏ -"
 

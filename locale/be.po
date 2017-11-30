@@ -15330,10 +15330,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Не атрымалася загрузіць файл: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (гэта паведамленне)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Наколькі прыглушыць:"
 

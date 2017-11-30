@@ -15069,10 +15069,6 @@ msgid "Could not load file: \"%s\""
 msgstr "មិនអាច​ផ្ទុក​ឯកសារ ៖ \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (សារ​នេះ)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "ចំនួន​ Duck សរុប ៖"
 

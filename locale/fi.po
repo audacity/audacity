@@ -15078,11 +15078,6 @@ msgstr "Virhe: %hs rivillä %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Ei voitu ladata tiedostoa: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "tämä ohje"
-
 #~ msgid "DuckAmountDb"
 #~ msgstr "Pumppauksen määrä"
 

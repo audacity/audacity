@@ -14963,11 +14963,6 @@ msgstr "Akatsa: %hs lerro honetan: %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Ezin da agiria gertatu: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "laguntza mezu hau"
-
 #~ msgid "("
 #~ msgstr "("
 

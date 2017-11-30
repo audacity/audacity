@@ -15054,11 +15054,6 @@ msgstr "Помилка: %hs у рядку %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Не вдалося завантажити файл: «%s»"
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "це повідомлення"
-
 #~ msgid "("
 #~ msgstr "("
 

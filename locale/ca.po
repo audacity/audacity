@@ -15371,11 +15371,6 @@ msgstr "Error: %hs a la línia %lu"
 msgid "Could not load file: \"%s\""
 msgstr "No s'ha pogut carregar el fitxer: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "aquest missatge d'ajuda"
-
 #~ msgid "("
 #~ msgstr "("
 

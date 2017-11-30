@@ -15050,11 +15050,6 @@ msgstr "Erro %hs na linha %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Não foi possível carregar o arquivo: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "mostra essa mensagem"
-
 #~ msgid "("
 #~ msgstr "("
 

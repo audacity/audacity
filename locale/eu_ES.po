@@ -15014,11 +15014,6 @@ msgstr "Errorea: %hs, %lu lerroan"
 msgid "Could not load file: \"%s\""
 msgstr "Ezin izan da fitxategia kargatu: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "laguntza mezu hau"
-
 #~ msgid "("
 #~ msgstr "("
 

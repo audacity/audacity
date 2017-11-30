@@ -15176,10 +15176,6 @@ msgid "Could not load file: \"%s\""
 msgstr "\"%s\" :לא יכול לטעון את הקובץ"
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (הודעה זו)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr ":מידת ההתחמקות"
 

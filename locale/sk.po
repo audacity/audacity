@@ -15687,10 +15687,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Nie je možné nahrať súbor: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (táto správa)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Miera zoslabenia:"
 

@@ -15227,10 +15227,6 @@ msgid "Could not load file: \"%s\""
 msgstr "No s'ha pogut carregar el fitxer: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (este missatge)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Quantitat de \"Duck\":"
 

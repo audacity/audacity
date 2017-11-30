@@ -15146,10 +15146,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Greška pri otvaranju datoteke: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-help (ova poruka)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Količina spusta:"
 

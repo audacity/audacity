@@ -14913,11 +14913,6 @@ msgstr "Chyba: %hs na řádce %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Nelze načíst soubor: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "Toto sdělení s nápovědou"
-
 #~ msgid "("
 #~ msgstr "("
 

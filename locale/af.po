@@ -14955,10 +14955,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Kon nie lêer \"%s\" open nie."
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "-help (hierdie boodskap)"
-
-#, fuzzy
 #~ msgid "ThresholdDb"
 #~ msgstr "Drempel: "
 

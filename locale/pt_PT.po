@@ -15036,11 +15036,6 @@ msgstr "Erro %hs na linha %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Não foi possível carregar o ficheiro: \"%s\""
 
-#, fuzzy
-#~| msgid "this help message"
-#~ msgid "unused message"
-#~ msgstr "esta mensagem de ajuda"
-
 #~ msgid ""
 #~ "If you find a bug or have a suggestion for us, please write, in English, "
 #~ "to our [[mailto:feedback@audacityteam.org|feedback address]]. For help, "

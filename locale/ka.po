@@ -15341,10 +15341,6 @@ msgid "Could not load file: \"%s\""
 msgstr "შეუძლებელია ფაილის ჩატვირთვა: \"%s\""
 
 #, fuzzy
-#~ msgid "unused message"
-#~ msgstr "\t-დახმარება (ეს შეტყობინება)"
-
-#, fuzzy
 #~ msgid "DuckAmountDb"
 #~ msgstr "Duck რაოდენობა:"
 
