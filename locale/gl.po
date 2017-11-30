@@ -15528,7 +15528,7 @@ msgid "Could not load file: \"%s\""
 msgstr "Non foi posíbel abrir o ficheiro «%s»"
 
 #, fuzzy
-#~ msgid "this help message"
+#~| msgid "this help message"
 #~ msgid "unused message"
 #~ msgstr "esta mensaxe de axuda"
 

@@ -14719,7 +14719,7 @@ msgid "Could not load file: \"%s\""
 msgstr "无法载入文件： \"%s\""
 
 #, fuzzy
-#~ msgid "this help message"
+#~| msgid "this help message"
 #~ msgid "unused message"
 #~ msgstr "此帮助信息"
 

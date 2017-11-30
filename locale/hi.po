@@ -14912,7 +14912,7 @@ msgid "Could not load file: \"%s\""
 msgstr "फ़ाइल : \"%s\"  को लोड नहीं किया जा सका"
 
 #, fuzzy
-#~ msgid "this help message"
+#~| msgid "this help message"
 #~ msgid "unused message"
 #~ msgstr "यह मददगार संदेश"
 
