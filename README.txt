@@ -28,13 +28,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-
-Version 2.2.0
+Version 2.2.1
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.1.3
+2.  Changes since version 2.2.0
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,56 +63,41 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.1.3: 
+2. Changes since version 2.2.0: 
 
 Improvements
 
-    * Four Selectable themes provided, with new 'Light' theme as default, 
-      plus option to customize
-    * Many menu changes:
-        * Menus Reorganized
-        * Extended menu bar provided
-        * New keyboard commands for working with clips 
-    * Help buttons ? in Preferences, Effects, Generators and Analyzers - and 
-      other places
-    * Non-Graying out of effects when no selection (and explanatory dialog 
-      with help button)
-    * Playback of MIDI (and Allegro) files imported into Note Tracks is 
-      now available.
-    * 'Center' option in Selection Toolbar
-    * Stem plots
-    * Major overhaul to documentation/manual including many new images and 
-      streamlined text on landing pages for in-program help. 
-
-Other Changes
-
-    * Append-record is now the default (use Shift + Record for old behavior, 
-	to record on a new track)
-    * The Esc key now cancels all click-and-drag actions. It also chooses among 
-      overlapping mouse click targets, which is especially useful in the Multi-Tool.
-    * Sync-Lock button removed (use menu item or keyboard shortcut instead)
-    * New preferences and preference pages
-    * Overhaul of much code:
-        * Overhaul of envelope handling code to deal with some anomalies
-        * Overhaul of exception handling for greater safety 
-   *  New Logo 
+    * Waveform colorways
+      You can optionally change the colorway of the waveforms displayed in your project.
+      The setting is per track and not per project so you can have multiple colorways 
+          in the same project. 
+    * "Save Other" reverts to "Export" in the File menu
+      When we made the menu changes for 2.2.0 we introduced an entry into the File menu
+      called "Save Other" which led to a sub-menu for exporting various audio formats.
+      Many users were confused by this change and found it hard to find where they could
+      export audio from. So for 2.2.1 we have changed that menu entry to be File > Export. 
 
 Bug Fixes
 
-   * Major work on bug fixing. 198 bugs that were in 2.1.3 were fixed for 2.2.0.
-        * The most serious bug fixed this time round was bug 437 which was 
-          about what happens when Audacity is recording and runs out of storage.
-        * Most of the bugs fixed were more minor, such as bug 463 which was 
-          about a case in which the numbering on the timeline could display
-          incorrect times. 
+   * Release 2.2.1 is mainly a maintenance release. 
+     Soon after the release of 2.2.0 we discovered some problematical bugs in Audacity:
+       Bug #1767 - Opening a second project from Mac's Finder produces a second 
+         inaccessible instance of Audacity
+       Bug #1770 - Crash applying certain chain files
+       Bug #1783 - Preview fails when selection extends before zero
+       Bug #1787 - Auto-scroll stopped working in 2.2.0
+       Bug #1765 - Using File > Open to import audio gives wrong zoom level 
+         and no scroll bar slider 
 
- See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.2.0
+ See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.2.1
+ and: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.2.1
+
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.2.0:
+3. Known Issues in 2.2.1:
 
-For known issues at release of 2.2.0 please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.2.0/Issues 
+For known issues at release of 2.2.1 please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.2.1/Issues 
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
