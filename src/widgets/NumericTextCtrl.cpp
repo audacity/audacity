@@ -375,6 +375,18 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
    },
 
    {
+   /* i18n-hint: Name of time display format that shows time in hours, minutes,
+    * seconds and frames at 23.976 frames per second (commonly used for films) */
+   XO("hh:mm:ss + film frames (23.976 fps)"),
+   /* i18n-hint: Format string for displaying time in hours, minutes, seconds
+    * and frames at 23.976 frames per second. Change the 'h' to the abbreviation
+    * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
+    * for seconds and translate 'frames' . Don't change the numbers
+    * unless there aren't 60 seconds in a minute in your locale */
+   XO("0100 h 060 m 060 s+.24 frames|.999")
+   },
+
+   {
    /* i18n-hint: Name of time display format that shows time in frames (lots of
     * frames) at 24 frames per second (commonly used for films) */
    { XO("film frames (24 fps)") },
@@ -383,6 +395,17 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * in the middle to the 1000s separator for your locale,
     * translate 'frames' and leave the rest alone */
    XO("01000,01000 frames|24")
+   },
+
+   {
+   /* i18n-hint: Name of time display format that shows time in frames (lots of
+    * frames) at 23.976 frames per second (commonly used for films) */
+   XO("film frames (23.976 fps)"),
+   /* i18n-hint: Format string for displaying time in frames at 23.976 frames
+    * per second. Change the comma
+    * in the middle to the 1000s separator for your locale,
+    * translate 'frames' and leave the rest alone */
+   XO("01000,01000 frames|23.976")
    },
 
    {
