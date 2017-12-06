@@ -3,10 +3,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.2.0\n"
+"Project-Id-Version: Audacity 2.2.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-10-07 13:13+0200\n"
+"PO-Revision-Date: 2017-12-05 23:57+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language: sl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.5\n"
 
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -433,7 +433,7 @@ msgstr "skladatelj"
 
 #: src/AboutDialog.cpp
 msgid "tester"
-msgstr ""
+msgstr "preizkuševalec"
 
 #: src/AboutDialog.cpp
 msgid "Nyquist plug-ins"
@@ -1175,14 +1175,10 @@ msgstr "Vaš paketni ukaz za %s ni bil prepoznan."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Apply Chain"
 msgid "Applied batch chain"
-msgstr "Uporabi verigo"
+msgstr "Uporabljena paketna veriga"
 
 #: src/BatchCommands.cpp
-#, fuzzy
-#| msgid "Apply Chain"
 msgid "Apply chain"
 msgstr "Uporabi verigo"
 
@@ -1190,13 +1186,12 @@ msgstr "Uporabi verigo"
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Applied batch chain '%s'"
-msgstr ""
+msgstr "Uporabljena paketna veriga »%s«"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
-#| msgid "Apply %s"
+#, c-format
 msgid "Apply '%s'"
-msgstr "Uporabi %s"
+msgstr "Uporabi »%s«"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1688,10 +1683,8 @@ msgid "Saving project data files"
 msgstr "Shranjevanje projektnih datotek"
 
 #: src/DirManager.cpp
-#, fuzzy
-#| msgid "Cleaning up temporary files"
 msgid "Cleaning up after failed save"
-msgstr "Čiščenje začasnih datotek"
+msgstr "Čiščenje po neuspelem shranjevanju"
 
 #: src/DirManager.cpp
 msgid "Cleaning up cache directories"
@@ -2091,15 +2084,12 @@ msgid "Audacity failed to read from a file in %s."
 msgstr "Z Audacity ni mogoče brati iz datoteke v %s."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
-#| msgid ""
-#| "Could not save project. Perhaps %s \n"
-#| "is not writable or the disk is full."
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
 msgstr ""
-"Napaka pri shranjevanju projekta. Morda v %s \n"
+"Napaka pri pisanju v datoteko. Morda v %s \n"
 "ni mogoče pisati ali pa je disk poln."
 
 #: src/FileException.cpp
@@ -6305,7 +6295,7 @@ msgstr "Ni dovolj prostora, da bi razpostrli črto reza"
 
 #: src/AudacityException.h
 msgid "Message"
-msgstr ""
+msgstr "Sporočilo"
 
 #: src/FFmpeg.h
 msgid "FFmpeg not found"
@@ -6351,16 +6341,12 @@ msgstr ""
 "so*|Vse datoteke (*)|*"
 
 #: src/FileException.h
-#, fuzzy
-#| msgid "LOF Error"
 msgid "File Error"
-msgstr "Napaka LOF"
+msgstr "Datotečna napaka"
 
 #: src/InconsistencyException.h
-#, fuzzy
-#| msgid "(external program)"
 msgid "Internal Error"
-msgstr "(zunanji program)"
+msgstr "Notranja napaka"
 
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
@@ -8457,7 +8443,7 @@ msgstr "Normaliziranje brez odstranjevanja odmika DC ...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
-msgstr ""
+msgstr "Nič se ne dogaja …\n"
 
 #: src/effects/Normalize.cpp
 msgid "Analyzing: "
@@ -8505,7 +8491,7 @@ msgstr "Stereo kanala normaliziraj neodvisno"
 
 #: src/effects/Normalize.cpp
 msgid "Waiting for waveform to finish computing..."
-msgstr ""
+msgstr "Čakanje na signalno obliko, ki se izračunava …"
 
 #: src/effects/Normalize.cpp
 msgid ".  Maximum 0dB."
@@ -9074,7 +9060,7 @@ msgstr "Stisni na:"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate tracks independently"
@@ -9455,7 +9441,7 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr ""
+msgstr "Napaka: datoteke »%s« iz glave ni v poti vstavkov.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -13779,10 +13765,9 @@ msgid "Sample Edit"
 msgstr "Urejanje vzorcev"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-#| msgid "Musical Instrument"
+#, c-format
 msgid "Instrument %i"
-msgstr "Glasbilo"
+msgstr "Glasbilo %i"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -13790,10 +13775,8 @@ msgid "Changed '%s' to %s"
 msgstr "Spremenjeno: »%s« v %s"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
-#| msgid "Rate Change"
 msgid "WaveColor Change"
-msgstr "Sprememba mere"
+msgstr "Sprememba barve signalne oblike"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Format Change"
@@ -13897,10 +13880,8 @@ msgid "Split Stereo to Mo&no"
 msgstr "Razdvoji stereo v mo&no"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
-#| msgid "Waveform"
 msgid "&Wave Color"
-msgstr "Signalna oblika"
+msgstr "&Barva signalne oblike"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -14942,255 +14923,3 @@ msgstr "Napaka: %hs v %lu. vrstici"
 #, c-format
 msgid "Could not load file: \"%s\""
 msgstr "Napaka pri odpiranju datoteke: »%s«"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "DuckAmountDb"
-#~ msgstr "Količina spusta v Db"
-
-#~ msgid "InnerFadeDownLen"
-#~ msgstr "Dolžina notranjega pojemanja"
-
-#~ msgid "InnerFadeUpLen"
-#~ msgstr "Dolžina notranjega naraščanja"
-
-#~ msgid "OuterFadeDownLen"
-#~ msgstr "Dolžina zunanjega pojemanja"
-
-#~ msgid "OuterFadeUpLen"
-#~ msgstr "Dolžina zunanjega naraščanja"
-
-#~ msgid "ThresholdDb"
-#~ msgstr "Prag Db"
-
-#~ msgid "MaximumPause"
-#~ msgstr "Največji premor"
-
-#~ msgid "Link Sliders"
-#~ msgstr "Poveži drsnike"
-
-#~ msgid "Percentage"
-#~ msgstr "Odstotek"
-
-#~ msgid "SBSMS"
-#~ msgstr "SBSMS"
-
-#~ msgid "Width"
-#~ msgstr "Širina"
-
-#~ msgid "NoiseFloor"
-#~ msgstr "Tla šuma"
-
-#~ msgid "AttackTime"
-#~ msgstr "Napadalni čas"
-
-#~ msgid "ReleaseTime"
-#~ msgstr "Čas upada"
-
-#~ msgid "UsePeak"
-#~ msgstr "Uporabi vrh"
-
-#~ msgid "Type"
-#~ msgstr "Vrsta"
-
-#~ msgid "DC Block"
-#~ msgstr "Blokiran enosmerni tok"
-
-#~ msgid "Threshold dB"
-#~ msgstr "Prag v dB"
-
-#~ msgid "Repeats"
-#~ msgstr "Ponovitve"
-
-#~ msgid "Sequence"
-#~ msgstr "Sekvenca"
-
-#~ msgid "Duty Cycle"
-#~ msgstr "Delovni krog"
-
-#~ msgid "Amplitude"
-#~ msgstr "Amplituda"
-
-#~ msgid "Delay"
-#~ msgstr "Zamik"
-
-#~ msgid "Decay"
-#~ msgstr "Upad"
-
-#~ msgid "FilterLength"
-#~ msgstr "Dolžina filtra"
-
-#~ msgid "CurveName"
-#~ msgstr "Ime krivulje"
-
-#~ msgid "InterpolateLin"
-#~ msgstr "InterpolirajLin"
-
-#~ msgid "InterpolationMethod"
-#~ msgstr "Metoda interpolacije"
-
-#~ msgid "Median"
-#~ msgstr "Sredninsko"
-
-#~ msgid "Second greatest"
-#~ msgstr "Drugi največji"
-
-#~ msgid "Old"
-#~ msgstr "Stari"
-
-#~ msgid "none, Hann (2.0.6 behavior)"
-#~ msgstr "brez, Hann (vedenje 2.0.6)"
-
-#~ msgid "Hann, none"
-#~ msgstr "Hann, brez"
-
-#~ msgid "Hann, Hann (default)"
-#~ msgstr "Hann, Hann (privzeto)"
-
-#~ msgid "Blackman, Hann"
-#~ msgstr "Blackman, Hann"
-
-#~ msgid "Hamming, none"
-#~ msgstr "Hamming, brez"
-
-#~ msgid "Hamming, Hann"
-#~ msgstr "Hamming, Hann"
-
-#~ msgid "Hamming, Reciprocal Hamming"
-#~ msgstr "Hamming, recipročni Hamming"
-
-#~ msgid "RemoveDcOffset"
-#~ msgstr "Odstrani odmik DC"
-
-#~ msgid "ApplyGain"
-#~ msgstr "Uporabi okrepitev"
-
-#~ msgid "StereoIndependent"
-#~ msgstr "StereoNeodvisno"
-
-#~ msgid "Stretch Factor"
-#~ msgstr "Faktor raztega"
-
-#~ msgid "Time Resolution"
-#~ msgstr "Časovna ločljivost"
-
-#~ msgid "DryWet"
-#~ msgstr "Suho-vlažno"
-
-#~ msgid "Freq"
-#~ msgstr "Frek."
-
-#~ msgid "Phase"
-#~ msgstr "Faza"
-
-#~ msgid "Depth"
-#~ msgstr "Globina"
-
-#~ msgid "Feedback"
-#~ msgstr "Odboj"
-
-#~ msgid "Count"
-#~ msgstr "Število"
-
-#~ msgid "RoomSize"
-#~ msgstr "Velikost sobe"
-
-#~ msgid "Reverberance"
-#~ msgstr "Prostorski odboj"
-
-#~ msgid "HfDamping"
-#~ msgstr "Dušenje visokih frekvenc"
-
-#~ msgid "ToneLow"
-#~ msgstr "Nizki toni"
-
-#~ msgid "ToneHigh"
-#~ msgstr "Visoki toni"
-
-#~ msgid "WetGain"
-#~ msgstr "Vlažna okrepitev"
-
-#~ msgid "DryGain"
-#~ msgstr "Suha okrepitev"
-
-#~ msgid "StereoWidth"
-#~ msgstr "Širina sterea"
-
-#~ msgid "WetOnly"
-#~ msgstr "Samo vlažno"
-
-#~ msgid "FilterType"
-#~ msgstr "Vrsta filtra"
-
-#~ msgid "FilterSubtype"
-#~ msgstr "Podvrsta filtra"
-
-#~ msgid "Order"
-#~ msgstr "Razvrsti"
-
-#~ msgid "Cutoff"
-#~ msgstr "Porezava"
-
-#~ msgid "PassbandRipple"
-#~ msgstr "Pasovno prepustni prenihaj"
-
-#~ msgid "StopbandRipple"
-#~ msgstr "Pasovno zaporni prenihaj"
-
-#~ msgid "RatePercentChangeStart"
-#~ msgstr "Začetna sprememba hitrosti v odstotkih"
-
-#~ msgid "RatePercentChangeEnd"
-#~ msgstr "Končna sprememba hitrosti v odstotkih"
-
-#~ msgid "PitchHalfStepsStart"
-#~ msgstr "Začetni polkoraki višine tona"
-
-#~ msgid "PitchHalfStepsEnd"
-#~ msgstr "Končno polkoraki višine tona"
-
-#~ msgid "PitchPercentChangeStart"
-#~ msgstr "Začetna sprememba višine tona v odstotkih"
-
-#~ msgid "PitchPercentChangeEnd"
-#~ msgstr "Končna sprememba višine tona v odstotkih"
-
-#~ msgid "StartFreq"
-#~ msgstr "ZačetnaFrekv"
-
-#~ msgid "EndFreq"
-#~ msgstr "Končna frekvenca"
-
-#~ msgid "StartAmp"
-#~ msgstr "ZačetnaAmp"
-
-#~ msgid "EndAmp"
-#~ msgstr "Končna amplituda"
-
-#~ msgid "Interpolation"
-#~ msgstr "Interpolacija"
-
-#~ msgid "Db"
-#~ msgstr "Db"
-
-#~ msgid "Minimum"
-#~ msgstr "Najmanj"
-
-#~ msgid "Truncate"
-#~ msgstr "Poreži"
-
-#~ msgid "Compress"
-#~ msgstr "Stisni"
-
-#~ msgid "Independent"
-#~ msgstr "Neodvisno"
-
-#~ msgid "Offset"
-#~ msgstr "Zamik"
-
-#~ msgid "Version"
-#~ msgstr "Različica"
