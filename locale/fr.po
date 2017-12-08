@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-28 21:28+0100\n"
+"PO-Revision-Date: 2017-12-09 01:29+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -524,7 +524,7 @@ msgstr ""
 "Pour toute remarque ou suggestion à propos de la traduction française, \n"
 "envoyez moi un message à l'adresse de courriel : trebmuh@tuxfamily.org\n"
 "\n"
-"Précédent traducteur : Christian Brochec."
+"Précédent traducteur en français : Christian Brochec."
 
 #: src/AboutDialog.cpp
 msgid "<h3>Audacity "
@@ -592,7 +592,7 @@ msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
 "&copy; 1999-2017 Audacity Team.<br>"
 msgstr ""
-"<p>Le logiciel <br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> est sous "
+"<p><br>&nbsp; &nbsp; Le logiciel <b>Audacity<sup>&reg;</sup></b> est sous "
 "copyright &copy; 1999-2017 Audacity Team.<br>"
 
 #: src/AboutDialog.cpp
@@ -600,7 +600,7 @@ msgid ""
 "&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
 "Mazzoni.<br><br>"
 msgstr ""
-"Le nom &nbsp; &nbsp; The name <b>Audacity</b> est une marque déposée par "
+"&nbsp; &nbsp; Le nom <b>Audacity</b> est une marque déposée par "
 "Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp src/effects/Effect.cpp src/effects/nyquist/Nyquist.cpp
@@ -2531,7 +2531,7 @@ msgid ""
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
 "Davantage :</b> Visitez notre [[http://wiki.audacityteam.org/index.php|Wiki "
-"en anglais)]] pour des conseils, astuces, tutoriels et greffons d'effets "
+"(en anglais)]] pour des conseils, astuces, tutoriels et greffons d'effets "
 "supplémentaires."
 
 #: src/HelpText.cpp
@@ -2882,11 +2882,11 @@ msgstr "S&auvegarder le projet sous..."
 
 #: src/Menus.cpp
 msgid "Save Othe&r"
-msgstr "Aut&re sauvegarde"
+msgstr "Aut&re type de sauvegarde"
 
 #: src/Menus.cpp
 msgid "Export as MP&3"
-msgstr "Exporter enMP&3"
+msgstr "Exporter en MP&3"
 
 #: src/Menus.cpp
 msgid "Export as &WAV"
@@ -3140,11 +3140,11 @@ msgstr "Pis&tes"
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "In All &Tracks"
-msgstr "dans &toutes les pistes"
+msgstr "Dans &toutes les pistes"
 
 #: src/Menus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "dans toutes les pistes verrouillées-&synchro"
+msgstr "Dans toutes les pistes verrouillées-&synchro"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
@@ -3155,20 +3155,20 @@ msgstr "Ré&gion"
 # trebmuh to check (vérifier dans un contexte graphique)
 # trebmuh to check (accélérateur)
 msgid "&Left at Playback Position"
-msgstr "de la limite &gauche de la sélection au point de lecture"
+msgstr "De la limite &gauche de la sélection au point de lecture"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Right at Playback Position"
-msgstr "de la limite d&roite de la sélection au point de lecture"
+msgstr "De la limite d&roite de la sélection au point de lecture"
 
 #: src/Menus.cpp
 msgid "Track &Start to Cursor"
-msgstr "du début de la pi&ste jusqu'au curseur"
+msgstr "Du début de la pi&ste jusqu'au curseur"
 
 #: src/Menus.cpp
 msgid "Cursor to Track &End"
-msgstr "du curseur jusqu'à la fin de la pist&e"
+msgstr "Du curseur jusqu'à la fin de la pist&e"
 
 #: src/Menus.cpp
 msgid "S&tore Selection"
@@ -3198,12 +3198,12 @@ msgstr "Prochain pic p&lus bas de fréquence"
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "limite précédente du clip au curseur (&v)"
+msgstr "Limite précédente du clip au curseur (&v)"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "curseur à la prochaine limite du clip (&x)"
+msgstr "Curseur à la prochaine limite du clip (&x)"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
@@ -3216,7 +3216,7 @@ msgstr "Clip suivant (&e)"
 
 #: src/Menus.cpp
 msgid "Cursor to Stored &Cursor Position"
-msgstr "curseur à la position stockée du &curseur"
+msgstr "Curseur à la position stockée du &curseur"
 
 #: src/Menus.cpp
 msgid "Store Cursor Pos&ition"
@@ -3442,11 +3442,11 @@ msgstr "Débu&t de la sélection"
 
 #: src/Menus.cpp
 msgid "Track &Start"
-msgstr "au début de la pi&ste"
+msgstr "Début de la pi&ste"
 
 #: src/Menus.cpp
 msgid "Track &End"
-msgstr "à la fin de la pist&e"
+msgstr "Fin de la pist&e"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
@@ -3736,7 +3736,7 @@ msgstr "&Outils de capture d'écran..."
 
 #: src/Menus.cpp
 msgid "&Run Benchmark..."
-msgstr "&Lancer Test de performance..."
+msgstr "&Lancer le test de performance..."
 
 #: src/Menus.cpp
 msgid "&Diagnostics"
@@ -5205,11 +5205,11 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 "\n"
-"En cas de sauvegarde, le projet n'aura pas de piste.\n"
+"Si sauvegardé, le projet n'aura pas de piste.\n"
 "\n"
 "Pour sauvegarder toute piste précédemment ouverte :\n"
-"Annuler, Edition > Annuler, jusqu'à ce que toutes les pistes\n"
-"soient ouverte, puis Fichier > Sauvegarder le projet."
+"Annuler, Édition > Annuler, jusqu'à ce que toutes les pistes\n"
+"soient ouvertes, puis Fichier > Sauvegarder le projet."
 
 #: src/Project.cpp
 msgid "Select one or more files"
@@ -6422,19 +6422,19 @@ msgstr "(Échap pour annuler)"
 
 #: src/TrackPanel.cpp
 msgid "Stereo, "
-msgstr "Stéréo,"
+msgstr "Stéréo, "
 
 #: src/TrackPanel.cpp
 msgid "Mono, "
-msgstr "Mono,"
+msgstr "Mono, "
 
 #: src/TrackPanel.cpp
 msgid "Left, "
-msgstr "Gauche,"
+msgstr "Gauche, "
 
 #: src/TrackPanel.cpp
 msgid "Right, "
-msgstr "Droit,"
+msgstr "Droit, "
 
 #: src/TrackPanel.cpp
 msgid "Stereo, 999999Hz"
@@ -10483,7 +10483,7 @@ msgstr "LTP"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
-msgstr " Fichiers (FFmpeg) M4A (AAC)"
+msgstr "Fichiers (FFmpeg) M4A (AAC)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AC3 Files (FFmpeg)"
@@ -10491,7 +10491,7 @@ msgstr "Fichiers AC3 (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR (bande étroite) Fichiers (FFmpeg)"
+msgstr "Fichiers (FFmpeg) AMR (bande étroite)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -11060,7 +11060,7 @@ msgstr "canaux stéréo joints"
 
 #: src/export/ExportMP3.cpp
 msgid "Stereo"
-msgstr "Stéréo,"
+msgstr "Stéréo"
 
 #: src/export/ExportMP3.cpp
 msgid "Force export to mono"
@@ -13637,11 +13637,11 @@ msgstr "Canaux d'enregistrement"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1 (Mono) canal d'enregistrement"
+msgstr "1 canal d'enregistrement (mono)"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 (Stereo) canaux d'enregistrement"
+msgstr "2 canaux d'enregistrement (stéréo)"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
