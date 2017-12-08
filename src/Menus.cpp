@@ -1377,7 +1377,7 @@ void AudacityProject::CreateMenusAndCommands()
       //////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
-      c->BeginSubMenu(_("Trans&cription"));
+      c->BeginSubMenu(_("Transcri&ption"));
 
       c->AddItem(wxT("PlayAtSpeed"), _("Pl&ay-at-Speed"), FN(OnPlayAtSpeed));
       c->AddItem(wxT("PlayAtSpeedLooped"), _("&Loop Play-at-Speed"), FN(OnPlayAtSpeedLooped));
@@ -1397,7 +1397,7 @@ void AudacityProject::CreateMenusAndCommands()
       //////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(AudioIOBusyFlag, AudioIOBusyFlag);
-      c->BeginSubMenu(_("Scru&b"));
+      c->BeginSubMenu(_("See&k"));
 
       c->AddItem(wxT("SeekLeftShort"), _("Short seek &left during playback"), FN(OnSeekLeftShort), wxT("Left\tallowDup"));
       c->AddItem(wxT("SeekRightShort"), _("Short seek &right during playback"), FN(OnSeekRightShort), wxT("Right\tallowDup"));
