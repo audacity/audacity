@@ -384,7 +384,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 
 // There currently is only one clickable AButton
 // so we just do what it needs.
-void KeyConfigPrefs::OnDefaults(wxCommandEvent & event)
+void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
 {
    wxMenu Menu;
    Menu.Append( 1, _("Standard") );

@@ -701,20 +701,6 @@ void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
    // Don't recolour the buttons...
    MakeMacRecoloredImage( eBmpOut, eBmpIn );
-   return;
-   wxImage * pSrc = &theTheme.Image( eBmpIn );
-#if defined( __WXGTK__ )
-   wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
-#else
-   wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
-#endif
-
-   newColour = wxColour( 60,60,60 );
-   wxColour baseColour = wxColour( 204, 204, 204 );
-
-   auto pPattern = ChangeImageColour( pSrc, baseColour, newColour );
-
-   theTheme.ReplaceImage( eBmpOut, pPattern.get());
 }
 
 void ToolBar:: MakeButtonBackgroundsLarge()
@@ -880,49 +866,13 @@ void ToolBar::OnPaint( wxPaintEvent & event )
 #if defined( __WXGTK__ )
    //dc.SetBackground( wxBrush( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) ) );
 #endif
+
+   // Themed background colour.
    dc.SetBackground( wxBrush( theTheme.Colour( clrMedium  ) ) );
    dc.Clear();
 
-// EXPERIMENTAL_THEMING is set to not apply the gradient
-// on wxMAC builds.  on wxMAC we have the AQUA_THEME.
 #ifdef USE_AQUA_THEME
    Repaint( &dc );
-#else
-   return;
-#ifdef EXPERIMENTAL_THEMING
-   wxImage * mpBackGradient =   &theTheme.Image( bmpRecoloredUpLarge  );
-
-   if( mpBackGradient != NULL )
-   {
-      wxSize imSz( mpBackGradient->GetWidth(), mpBackGradient->GetHeight() );
-      wxSize sz = GetSize();
-      int y;
-      for(y=0;y<sz.y;y++)
-      {
-         int yPix = ((float)y * imSz.y - 1.0f)/(sz.y-1);
-         wxColour col(
-            mpBackGradient->GetRed( 0, yPix),
-            mpBackGradient->GetGreen( 0, yPix),
-            mpBackGradient->GetBlue( 0, yPix));
-
-         // Set background colour so that controls placed on this
-         // toolbar such as radio buttons will draw reasonably.
-         // It's a little tacky setting the background colour
-         // here, but we can't do it in the constructor as the gradient
-         // may not be available yet.
-         // Better than this would be to set the colour when the image
-         // is loaded.
-         // We use the colour at the half way point as a suitable 'average'.
-         if( y==(sz.y/2) )
-         {
-            SetBackgroundColour( col );
-         }
-         wxPen Pen( col );
-         dc.SetPen(Pen );
-         AColor::Line(dc, 0, y, sz.x, y );
-      }
-   }
-#endif
 #endif
 }
 

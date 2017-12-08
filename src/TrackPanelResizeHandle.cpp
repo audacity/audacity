@@ -57,7 +57,7 @@ TrackPanelResizeHandle::~TrackPanelResizeHandle()
 }
 
 UIHandle::Result TrackPanelResizeHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &WXUNUSED(evt), AudacityProject *WXUNUSED(pProject))
 {
    return RefreshCode::RefreshNone;
 }
@@ -164,7 +164,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    }
 
    // Common pieces of code for MONO_WAVE_PAN and otherwise.
-   auto doResizeBelow = [&] (Track *prev, bool vStereo) {
+   auto doResizeBelow = [&] (Track *prev, bool WXUNUSED(vStereo)) {
       double proportion = static_cast < double >(mInitialTrackHeight)
       / (mInitialTrackHeight + mInitialUpperTrackHeight);
 
@@ -188,7 +188,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       prev->SetHeight(newUpperTrackHeight);
    };
 
-   auto doResizeBetween = [&] (Track *next, bool vStereo) {
+   auto doResizeBetween = [&] (Track *next, bool WXUNUSED(vStereo)) {
       int newUpperTrackHeight = mInitialUpperTrackHeight + delta;
       int newTrackHeight = mInitialTrackHeight - delta;
 

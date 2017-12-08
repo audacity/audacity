@@ -23,8 +23,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "StretchHandle.h"
 
 std::vector<UIHandlePtr> NoteTrack::DetailedHitTest
-(const TrackPanelMouseState &state,
- const AudacityProject *pProject, int, bool )
+(const TrackPanelMouseState &WXUNUSED(state),
+ const AudacityProject *WXUNUSED(pProject), int, bool )
 {
    // Eligible for stretch?
    UIHandlePtr result;

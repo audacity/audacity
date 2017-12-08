@@ -112,7 +112,7 @@ void InterpolateAudio(float *buffer, const size_t len,
    const int IP =
       imin(imin(numBad * 3, 50), imax(firstBad - 1, len - (firstBad + numBad) - 1));
 
-   if (IP < 3 || IP >= N) {
+   if (IP < 3 || IP >= (int)N) {
       LinearInterpolateAudio(buffer, len, firstBad, numBad);
       return;
    }

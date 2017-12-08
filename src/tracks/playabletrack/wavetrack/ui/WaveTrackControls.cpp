@@ -336,8 +336,6 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
       return; // Nothing to do.
 
    AudacityProject *const project = ::GetActiveProject();
-   TrackList *const tracks = project->GetTracks();
-
    pTrack->ConvertToSampleFormat(newFormat);
 
    // Assume partner is wave or null
@@ -441,7 +439,6 @@ int RateMenuTable::IdOfRate(int rate)
 void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 {
    AudacityProject *const project = ::GetActiveProject();
-   TrackList *const tracks = project->GetTracks();
    pTrack->SetRate(rate);
    // Assume linked track is wave or null
    const auto partner = static_cast<WaveTrack*>(pTrack->GetLink());
@@ -1020,7 +1017,7 @@ void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 }
 
 //=============================================================================
-PopupMenuTable *WaveTrackControls::GetMenuExtension(Track *pTrack)
+PopupMenuTable *WaveTrackControls::GetMenuExtension(Track *WXUNUSED(pTrack))
 {
    return &WaveTrackMenuTable::Instance();
 }

@@ -535,8 +535,6 @@ KeyView::RefreshBindings(const wxArrayString & names,
                          bool bSort
                          )
 {
-   bool firsttime = mNodes.GetCount() == 0;
-
    // Start clean
    mNodes.Clear();
 

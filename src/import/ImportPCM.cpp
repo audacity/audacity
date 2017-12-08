@@ -478,7 +478,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
          else
             block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float *)srcbuffer.ptr(), block);
 
-         if(block < 0 || block > maxBlock) {
+         if(block < 0 || block > (long)maxBlock) {
             wxASSERT(false);
             block = maxBlock;
          }

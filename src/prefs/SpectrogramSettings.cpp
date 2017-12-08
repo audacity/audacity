@@ -364,14 +364,14 @@ namespace
    {
       // Create the requested window function
       window = Floats{ fftLen };
-      int ii;
+      size_t ii;
 
       const bool extra = padding > 0;
       wxASSERT(windowSize % 2 == 0);
       if (extra)
          // For windows that do not go to 0 at the edges, this improves symmetry
          ++windowSize;
-      const int endOfWindow = padding + windowSize;
+      const size_t endOfWindow = padding + windowSize;
       // Left and right padding
       for (ii = 0; ii < padding; ++ii) {
          window[ii] = 0.0;
@@ -387,7 +387,7 @@ namespace
          break;
       case TWINDOW:
          NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
-         for (int ii = padding, multiplier = -(int)windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
+         for (int ii = padding, multiplier = -(int)windowSize / 2; ii < (int)endOfWindow; ++ii, ++multiplier)
             window[ii] *= multiplier;
          break;
       case DWINDOW:

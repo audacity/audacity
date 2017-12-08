@@ -86,7 +86,6 @@ UIHandle::Result TrackSelectHandle::Click
    const auto pTrack = mpTrack;
    if (!pTrack)
       return Cancelled;
-   TrackPanel *const trackPanel = pProject->GetTrackPanel();
    const bool unsafe = pProject->IsAudioActive();
 
    // DM: If they weren't clicking on a particular part of a track label,

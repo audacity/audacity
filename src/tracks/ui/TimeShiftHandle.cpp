@@ -38,7 +38,7 @@ void TimeShiftHandle::Enter(bool)
 }
 
 HitTestPreview TimeShiftHandle::HitPreview
-(const AudacityProject *pProject, bool unsafe)
+(const AudacityProject *WXUNUSED(pProject), bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);

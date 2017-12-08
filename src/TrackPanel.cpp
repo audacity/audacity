@@ -882,7 +882,6 @@ void TrackPanel::HandleMotion( wxMouseState &inState, bool doHit )
    UpdateMouseState( inState );
 
    const auto foundCell = FindCell( inState.m_x, inState.m_y );
-   auto &track = foundCell.pTrack;
    auto &rect = foundCell.rect;
    auto &pCell = foundCell.pCell;
    const TrackPanelMouseState tpmState{ mLastMouseState, rect, pCell };
@@ -951,7 +950,7 @@ void TrackPanel::HandleMotion
          auto begin = mTargets.begin(), end = mTargets.end(),
             iter = std::find(begin, end, oldHandle);
          if (iter != end) {
-            auto newPosition = iter - begin;
+            unsigned int newPosition = iter - begin;
             if (newPosition <= oldPosition)
                mTarget = newPosition;
             // else, some NEW hit and this position takes priority
@@ -1746,9 +1745,7 @@ catch( ... )
 
 void TrackPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
 {
-   const auto &event = tpmEvent.event;
    auto pCell = tpmEvent.pCell;
-   const auto &rect = tpmEvent.rect;
    auto pTrack = static_cast<CommonTrackPanelCell *>( pCell.get() )->FindTrack();
 
    // Do hit test once more, in case the button really pressed was not the
@@ -2291,7 +2288,8 @@ void TrackInfo::VelocitySliderDrawFunction
 #endif
 
 void TrackInfo::MuteOrSoloDrawFunction
-( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, bool captured,
+( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
+  bool WXUNUSED(captured),
   bool solo, bool hit )
 {
    //bev.Inflate(-1, -1);

@@ -219,7 +219,6 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
 
          // Using Blockify will handle the cases where len > the NEW mMaxSamples. Previous code did not.
          const auto blockstart = oldSeqBlock.start;
-         const unsigned prevSize = newBlockArray.size();
          Blockify(*mDirManager, mMaxSamples, mSampleFormat,
                   newBlockArray, blockstart, bufferNew.ptr(), len);
       }
@@ -440,7 +439,7 @@ std::unique_ptr<Sequence> Sequence::Copy(sampleCount s0, sampleCount s1) const
       // s1 is within block:
       blocklen = (s1 - block.start).as_size_t();
       wxASSERT(file->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
-      if (blocklen < file->GetLength()) {
+      if (blocklen < (int)file->GetLength()) {
          ensureSampleBufferSize(buffer, mSampleFormat, bufferSize, blocklen);
          Get(b1, buffer.ptr(), mSampleFormat, block.start, blocklen, true);
          dest->Append(buffer.ptr(), mSampleFormat, blocklen);
@@ -1216,7 +1215,7 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       // but it guards against infinite loop in case of inconsistencies
       // (too-small files, not yet seen?)
       // that cause the loop to make no progress because blen == 0
-      && b < size
+      && (unsigned int)b < size
    ) {
       newBlock.push_back( mBlock[b] );
       SeqBlock &block = newBlock.back();
@@ -1870,7 +1869,7 @@ void Sequence::ConsistencyCheck(const wxChar *whereStr, bool mayThrow) const
 void Sequence::ConsistencyCheck
    (const BlockArray &mBlock, size_t maxSamples, size_t from,
     sampleCount mNumSamples, const wxChar *whereStr,
-    bool mayThrow)
+    bool WXUNUSED(mayThrow))
 {
    bool bError = false;
    // Construction of the exception at the appropriate line of the function

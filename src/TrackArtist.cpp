@@ -2347,7 +2347,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &waveTrackCache,
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
    if (!updated && clip->mSpecPxCache->valid &&
-      (clip->mSpecPxCache->len == hiddenMid.height * hiddenMid.width)
+      (clip->mSpecPxCache->len == (size_t)(hiddenMid.height * hiddenMid.width))
       && scaleType == clip->mSpecPxCache->scaleType
       && gain == clip->mSpecPxCache->gain
       && range == clip->mSpecPxCache->range

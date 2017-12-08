@@ -15,16 +15,6 @@
 
 #include "ToolBar.h"
 
-// PLAIN_TITLES give Start Length Center End above each field.
-// RADIO_TITLES give ()SE (*)Start-Length ()LE ()LC style.
-// BUTTON_TITLES give    < Start - Length >  style.
-// CHOICE gives a choice control
-//#define SEL_RADIO_TITLES
-//#define SEL_BUTTON_TITLES
-#define SEL_CHOICE
-
-// OPTIONS_BUTTON gives a button with three dots to select the option.
-
 // Column for 
 //   Project rate
 //   Snap To
@@ -34,11 +24,7 @@
 //   Vertical Line
 //   Cursor position
 
-#ifdef OPTIONS_BUTTON
-#define SIZER_COLS 8
-#else
 #define SIZER_COLS 7
-#endif
 
 class wxBitmap;
 class wxCheckBox;
@@ -136,46 +122,10 @@ class SelectionBar final : public ToolBar {
    NumericTextCtrl   *mLengthTime;
    NumericTextCtrl   *mEndTime;
    NumericTextCtrl   *mAudioTime;
-
-#ifdef SEL_CHOICE
    wxChoice * mChoice;
-#endif
-
-#ifdef PLAIN_TITLES
-   wxStaticText * mStartTitle;
-   wxStaticText * mCenterTitle;
-   wxStaticText * mLengthTitle;
-   wxStaticText * mEndTitle;
-
-#endif
-
-#ifdef SEL_RADIO_TITLES
-   // These are the radio buttons
-   wxRadioButton * mStartEndRadBtn;
-   wxRadioButton * mStartLengthRadBtn;
-   wxRadioButton * mLengthEndRadBtn;
-   wxRadioButton * mLengthCenterRadBtn;
-
-   // These provide proxy themable text for
-   // Radio buttons that couldn't be themed.
-   wxStaticText * mStartEndProxy;
-   wxStaticText * mStartLengthProxy;
-   wxStaticText * mLengthEndProxy;
-   wxStaticText * mLengthCenterProxy;
-
-#endif
-
-#ifdef SEL_BUTTON_TITLES
-   wxStaticText * mButtonTitles[3];
-   wxStaticText * mHyphen[3];
-#endif
-
    wxStaticText * mProxy;
-
-
    wxComboBox     *mRateBox;
    wxChoice       *mSnapTo;
-
    wxWindow       *mRateText;
 
    AButton * mButtons[numSelectionBarButtons];

@@ -87,7 +87,7 @@ SoloButtonHandle::~SoloButtonHandle()
 }
 
 UIHandle::Result SoloButtonHandle::CommitChanges
-(const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+(const wxMouseEvent &event, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
    auto pTrack = mpTrack.lock();
    if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )

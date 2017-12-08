@@ -843,8 +843,8 @@ void LabelTrack::Draw
 
    // Draw the label boxes.
    {
-      bool highlightTrack = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+      bool highlightTrack = false;
       auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
       highlightTrack = target && target->GetTrack().get() == this;
 #endif
@@ -1302,7 +1302,7 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
    // Advance index over all continuation lines first, before we might throw
    // any exceptions.
    int index2 = index;
-   while (index < file.GetLineCount() &&
+   while (index < (int)file.GetLineCount() &&
           file.GetLine(index).StartsWith(continuation))
       ++index;
 
@@ -1582,7 +1582,7 @@ void LabelTrack::HandleTextDragRelease(const wxMouseEvent & evt)
 void LabelTrack::HandleGlyphClick
 (LabelTrackHit &hit, const wxMouseEvent & evt,
  const wxRect & r, const ZoomInfo &zoomInfo,
- SelectedRegion *newSel)
+ SelectedRegion *WXUNUSED(newSel))
 {
    if (evt.ButtonDown())
    {
@@ -1638,6 +1638,8 @@ void LabelTrack::HandleTextClick(const wxMouseEvent & evt,
    const wxRect & r, const ZoomInfo &zoomInfo,
    SelectedRegion *newSel)
 {
+   r;//compiler food.
+   zoomInfo;//compiler food.
    if (evt.ButtonDown())
    {
 
@@ -1774,7 +1776,7 @@ unsigned LabelTrack::CaptureKey(wxKeyEvent & event, ViewInfo &, wxWindow *)
    return RefreshCode::RefreshNone;
 }
 
-unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *pParent)
+unsigned LabelTrack::KeyDown(wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent))
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();

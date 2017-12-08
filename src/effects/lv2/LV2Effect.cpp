@@ -2022,7 +2022,7 @@ LV2_URID LV2Effect::urid_map(LV2_URID_Map_Handle handle, const char *uri)
 LV2_URID LV2Effect::URID_Map(const char *uri)
 {
    size_t ndx = mURIMap.size();
-   for (int i = 0; i < ndx; i++)
+   for (size_t i = 0; i < ndx; i++)
    {
       if (strcmp(mURIMap[i].get(), uri) == 0)
       {

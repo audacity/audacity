@@ -989,7 +989,7 @@ static double SystemTime(bool usingAlsa)
       return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
    }
 #else
-   WXUNUSED(usingAlsa);
+   usingAlsa;//compiler food.
 #endif
 
    return PaUtil_GetTime() - streamStartTime;
@@ -2353,7 +2353,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
-PmTimestamp MidiTime(void *info)
+PmTimestamp MidiTime(void *WXUNUSED(info))
 {
    return gAudioIO->MidiTime();
 }
@@ -4374,7 +4374,7 @@ void AudioIO::AllNotesOff(bool looping)
    bool doDelay = !looping;
 #else
    bool doDelay = false;
-   WXUNUSED(looping);
+   looping;// compiler food.
 #endif
 
    // to keep track of when MIDI should all be delivered,
@@ -4588,7 +4588,7 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
                                   float *outputBuffer,
                                   int len)
 {
-   for (int i=0; i < inputChannels; i++) {
+   for (unsigned int i=0; i < inputChannels; i++) {
       samplePtr inputPtr = ((samplePtr)inputBuffer) + (i * SAMPLE_SIZE(inputFormat));
       samplePtr outputPtr = ((samplePtr)outputBuffer) + (i * SAMPLE_SIZE(floatSample));
 
@@ -4894,7 +4894,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
          const WaveTrack **chans = (const WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
          float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
-         for (int c = 0; c < numPlaybackChannels; c++)
+         for (unsigned int c = 0; c < numPlaybackChannels; c++)
          {
             tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
          }

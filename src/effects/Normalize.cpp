@@ -199,8 +199,8 @@ bool EffectNormalize::Process()
          else
             msg = topMsg + _("Analyzing first track of stereo pair: ") + trackName;
          float offset, min, max;
-         if (! ( bGoodResult =
-                 AnalyseTrack(track, msg, curTrackNum, offset, min, max) ) )
+         bGoodResult = AnalyseTrack(track, msg, curTrackNum, offset, min, max); 
+         if (!bGoodResult )
              break;
          if(!track->GetLinked() || mStereoInd) {
             // mono or 'stereo tracks independently'
@@ -227,8 +227,8 @@ bool EffectNormalize::Process()
             track = (WaveTrack *) iter.Next();  // get the next one
             msg = topMsg + _("Analyzing second track of stereo pair: ") + trackName;
             float offset2, min2, max2;
-            if ( ! ( bGoodResult =
-                     AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2) ) )
+            bGoodResult = AnalyseTrack(track, msg, curTrackNum + 1, offset2, min2, max2);
+            if ( !bGoodResult )
                 break;
             float extent = wxMax(fabs(min), fabs(max));
             extent = wxMax(extent, fabs(min2));

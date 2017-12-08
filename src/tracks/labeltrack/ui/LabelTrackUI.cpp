@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 
 std::vector<UIHandlePtr> LabelTrack::DetailedHitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *pProject, int, bool)
+ const AudacityProject *WXUNUSED(pProject), int, bool)
 {
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;

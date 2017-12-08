@@ -47,14 +47,13 @@ void SampleHandle::Enter(bool)
 }
 
 HitTestPreview SampleHandle::HitPreview
-(const wxMouseState &state, const AudacityProject *pProject, bool unsafe)
+(const wxMouseState &state, const AudacityProject *WXUNUSED(pProject), bool unsafe)
 {
    static auto disabledCursor =
       ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static wxCursor smoothCursor{ wxCURSOR_SPRAYCAN };
    static auto pencilCursor =
       ::MakeCursor(wxCURSOR_PENCIL, DrawCursorXpm, 12, 22);
-   const ToolsToolBar *const ttb = pProject->GetToolsToolBar();
 
    // TODO:  message should also mention the brush.  Describing the modifier key
    // (alt, or other) varies with operating system.
@@ -72,7 +71,7 @@ HitTestPreview SampleHandle::HitPreview
 
 UIHandlePtr SampleHandle::HitAnywhere
 (std::weak_ptr<SampleHandle> &holder,
- const wxMouseState &state, const std::shared_ptr<WaveTrack> &pTrack)
+ const wxMouseState &WXUNUSED(state), const std::shared_ptr<WaveTrack> &pTrack)
 {
    auto result = std::make_shared<SampleHandle>( pTrack );
    result = AssignUIHandlePtr(holder, result);

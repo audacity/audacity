@@ -2415,7 +2415,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          int minF = 0;
          for(size_t i = 0; i < NUM_PTS; i++)
          {
-            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < mBandsInUse) )
+            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < (int)mBandsInUse) )
                minF++;
             minF--;
             if( minF < 0 ) //before first slider
@@ -2453,7 +2453,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                   if(s < .5 )
                   {
                      value = mEQVals[minF]*(0.75 - s*s);
-                     if( minF+1 < mBandsInUse )
+                     if( minF+1 < (int)mBandsInUse )
                         value += mEQVals[minF+1]*(s+.5)*(s+.5)/2.;
                      if( minF-1 >= 0 )
                         value += mEQVals[minF-1]*(s-.5)*(s-.5)/2.;
@@ -2461,9 +2461,9 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                   else
                   {
                      value = mEQVals[minF]*(s-1.5)*(s-1.5)/2.;
-                     if( minF+1 < mBandsInUse )
+                     if( minF+1 < (int)mBandsInUse )
                         value += mEQVals[minF+1]*(.75-(1.-s)*(1.-s));
-                     if( minF+2 < mBandsInUse )
+                     if( minF+2 < (int)mBandsInUse )
                         value += mEQVals[minF+2]*(s-.5)*(s-.5)/2.;
                   }
                }
@@ -2481,7 +2481,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
          int minF = 0;
          for(size_t i = 0; i < NUM_PTS; i++)
          {
-            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < mBandsInUse) )
+            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < (int)mBandsInUse) )
                minF++;
             minF--;
             if( minF < 0 ) //before first slider

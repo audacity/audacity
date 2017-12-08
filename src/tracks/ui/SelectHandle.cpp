@@ -81,7 +81,6 @@ namespace
       wxInt64 trackTopEdge,
       int trackHeight)
    {
-      const double rate = wt->GetRate();
       const SpectrogramSettings &settings = wt->GetSpectrogramSettings();
       float minFreq, maxFreq;
       wt->GetSpectrumBounds(&minFreq, &maxFreq);

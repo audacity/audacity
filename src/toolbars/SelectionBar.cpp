@@ -129,13 +129,7 @@ SelectionBar::SelectionBar()
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mStartTime(NULL), mEndTime(NULL), mLengthTime(NULL), mCenterTime(NULL), 
   mAudioTime(NULL),
-#ifdef SEL_RADIO_TITLES
-  mStartTitle(NULL), mCenterTitle(NULL), mLengthTitle(NULL), mEndTitle(NULL),
-  mStartEndProxy(NULL), mStartLengthProxy(NULL), mLengthEndProxy(NULL), mLengthCenterProxy(NULL),
-#endif
-#ifdef SEL_CHOICE
   mChoice(NULL),
-#endif
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0)
 {
@@ -147,15 +141,6 @@ SelectionBar::SelectionBar()
    // Audacity to fail.
    mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
       AudioIO::GetOptimalSupportedSampleRate());
-
-#ifdef SEL_BUTTON_TITLES
-   mButtonTitles[0]=NULL;
-   mButtonTitles[1]=NULL;
-   mButtonTitles[2]=NULL; 
-   mHyphen[0]=NULL;
-   mHyphen[1]=NULL;
-   mHyphen[2]=NULL;
-#endif
 
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
@@ -240,10 +225,6 @@ void SelectionBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
 
    mStartTime = mEndTime = mLengthTime = mCenterTime = mAudioTime = nullptr;
-#ifdef SEL_RADIO_TITLE
-   mStartEndProxy = mStartLengthProxy = mLengthEndProxy = mLengthCenterProxy = nullptr;
-#endif
-
 
    // This will be inherited by all children:
    SetFont(wxFont(
@@ -286,37 +267,6 @@ void SelectionBar::Populate()
    AddVLine( mainSizer );
 
    {
-#ifdef SEL_RADIO_TITLE
-      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      (mStartEndRadBtn = AddRadioButton(  _("Start-End"), StartEndRadioID, hSizer.get(), wxRB_GROUP))
-         ->SetValue( mSelectionMode == 0 );
-      mStartEndProxy = mProxy;
-      (mStartLengthRadBtn  = AddRadioButton( _("Start-Length"), StartLengthRadioID, hSizer.get(), 0))
-         ->SetValue( mSelectionMode == 1 );
-      mStartLengthProxy = mProxy;
-      (mLengthEndRadBtn    = AddRadioButton( _("Length-End"), LengthEndRadioID, hSizer.get(), 0))
-         ->SetValue( mSelectionMode == 2 );
-      mLengthEndProxy = mProxy;
-      (mLengthCenterRadBtn = AddRadioButton( _("Length-Center"), LengthCenterRadioID, hSizer.get(), 0))
-         ->SetValue( mSelectionMode == 3 );
-      mLengthCenterProxy = mProxy;
-      mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP| wxRIGHT, 0);
-#endif
-
-#ifdef SEL_BUTTON_TITLES
-      auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      mButtonTitles[0] = AddTitle( "< ", LeftID, hSizer.get() );
-      mButtonTitles[1] = AddTitle( "Start - End ", CentralNameID, hSizer.get() );
-      mButtonTitles[2] = AddTitle( " >", RightID, hSizer.get() );
-      mButtonTitles[0]->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnModeDecClicked,this );
-      mButtonTitles[1]->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnChooserTitleClicked, this );
-      mButtonTitles[2]->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnModeIncClicked,this );
-      vSizer->Add( hSizer.release(), 0, wxALIGN_CENTER, 0);
-      mainSizer->Add(vSizer.release(), 0, wxALIGN_CENTER, 0 );
-#endif
-
-#ifdef SEL_CHOICE
    const wxString choices[4] = {
       _("Start and End of Selection"),
       _("Start and Length of Selection"),
@@ -336,21 +286,7 @@ void SelectionBar::Populate()
    mChoice->SetMinSize( sz );
 #endif
    mainSizer->Add(mChoice, 0, wxALIGN_TOP | wxEXPAND | wxRIGHT, 6);
-#endif
-
    }
-
-#ifdef SEL_PLAIN_TITLES
-   mStartTitle = AddTitle( _("Start"), mainSizer );
-   mLengthTitle = AddTitle( _("Length"), mainSizer );
-   mCenterTitle = AddTitle( _("Center"), mainSizer );
-   mEndTitle = AddTitle( _("End"), mainSizer );
-
-   mStartTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnStartTitleClicked,this );
-   mLengthTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnLengthTitleClicked,this );
-   mCenterTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnCenterTitleClicked,this );
-   mEndTitle->Bind( wxEVT_LEFT_DOWN,&SelectionBar::OnEndTitleClicked,this );
-#endif
 
    //
    // Botton row, (mostly time controls)
@@ -433,23 +369,6 @@ void SelectionBar::Populate()
                     NULL,
                     this);
 
-#ifdef OPTION_BUTTON
-   // Old code which placed a button from which to select options.
-   // Retained in case we want a button for selection-toolbar options at a future date.
-   AButton *& pBtn = mButtons[ SelTBMenuID - SelTBFirstButton];
-   pBtn = ToolBar::MakeButton(this,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      bmpOptions, bmpOptions, bmpOptionsDisabled, 
-      SelTBMenuID,
-      wxDefaultPosition,
-      false,
-      theTheme.ImageSize( bmpRecoloredUpSmall ));
-
-   pBtn->SetLabel(_("Selection options"));
-   pBtn->SetToolTip(_("Selection options"));
-   //pBtn->Disable();
-   mainSizer->Add( pBtn, 0,  wxALIGN_TOP | wxRIGHT, 5);
-#endif 
    AddVLine( mainSizer );
 
    mAudioTime = AddTime(_("Audio Position"), AudioTimeID, mainSizer );
@@ -467,32 +386,14 @@ void SelectionBar::Populate()
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       mStartTime  = AddTime(_("Start"), StartTimeID, hSizer.get() );
-#ifdef SEL_BUTTON_TITLES
-      mHyphen[0] = AddTitle( "-", -1, hSizer.get() );
-#endif
       mLengthTime = AddTime(_("Length"), LengthTimeID, hSizer.get() );
-#ifdef SEL_BUTTON_TITLES
-      mHyphen[1] = AddTitle( "-", -1, hSizer.get() );
-#endif
       mCenterTime = AddTime(_("Center"), CenterTimeID, hSizer.get() );
-#ifdef SEL_BUTTON_TITLES
-      mHyphen[2] = AddTitle( "-", -1, hSizer.get() );
-#endif
       mEndTime    = AddTime(_("End"), EndTimeID, hSizer.get() );
       mainSizer->Add(hSizer.release(), 0, wxALIGN_TOP | wxRIGHT, 0);
 
-#ifdef SEL_RADIO_TITLES
-      // Put choice of what fields to show immediately before the fields.
-      mStartEndRadBtn->MoveBeforeInTabOrder( mStartTime );
-      mStartLengthRadBtn->MoveAfterInTabOrder( mStartEndRadBtn );
-      mLengthEndRadBtn->MoveAfterInTabOrder( mStartLengthRadBtn );
-      mLengthCenterRadBtn->MoveAfterInTabOrder( mLengthEndRadBtn );
-#endif
    }
 
-#ifdef SEL_CHOICE
    mChoice->MoveBeforeInTabOrder( mStartTime );
-#endif
    // This shows/hides controls.
    // Do this before layout so that we are sized right.
    SetSelectionMode(mSelectionMode);
@@ -637,22 +538,22 @@ void SelectionBar::OnTitleClicked(int newDriver)
 }
 
 // These functions give the IDs of the associated control, NOT the ID of the title.
-void SelectionBar::OnStartTitleClicked(wxMouseEvent & event){ OnTitleClicked( StartTimeID );};
-void SelectionBar::OnLengthTitleClicked(wxMouseEvent & event){ OnTitleClicked( LengthTimeID );};
-void SelectionBar::OnCenterTitleClicked(wxMouseEvent & event){ OnTitleClicked( CenterTimeID );};
-void SelectionBar::OnEndTitleClicked(wxMouseEvent & event){ OnTitleClicked( EndTimeID );};
+void SelectionBar::OnStartTitleClicked(wxMouseEvent & WXUNUSED(event)){ OnTitleClicked( StartTimeID );};
+void SelectionBar::OnLengthTitleClicked(wxMouseEvent & WXUNUSED(event)){ OnTitleClicked( LengthTimeID );};
+void SelectionBar::OnCenterTitleClicked(wxMouseEvent & WXUNUSED(event)){ OnTitleClicked( CenterTimeID );};
+void SelectionBar::OnEndTitleClicked(wxMouseEvent & WXUNUSED(event)){ OnTitleClicked( EndTimeID );};
 
-void SelectionBar::OnModeDecClicked(wxMouseEvent & event){
+void SelectionBar::OnModeDecClicked(wxMouseEvent & WXUNUSED(event)){
    SetSelectionMode( (mSelectionMode +3)%4 );
    SelectionModeUpdated();
 }
 
-void SelectionBar::OnModeIncClicked(wxMouseEvent & event){
+void SelectionBar::OnModeIncClicked(wxMouseEvent & WXUNUSED(event)){
    SetSelectionMode( (mSelectionMode +1)%4 );
    SelectionModeUpdated();
 }
 
-void SelectionBar::OnChooserTitleClicked(wxMouseEvent & event){
+void SelectionBar::OnChooserTitleClicked(wxMouseEvent & WXUNUSED(event)){
    wxCommandEvent evt;
    OnButton( evt );
 }
@@ -708,9 +609,6 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
    mDrive1 = driver1;
    mDrive2 = driver2;
 
-#ifdef SEL_PLAIN_TITLES
-   wxStaticText ** Titles[4] = { &mStartTitle, &mCenterTitle, &mLengthTitle, &mEndTitle};
-#endif
    NumericTextCtrl ** Ctrls[4] = { &mStartTime, &mCenterTime, &mLengthTime, &mEndTime};
    wxString Text[4] = { _("Start"), _("Center"), _("Length"),  _("End")  };
 
@@ -726,11 +624,6 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
       wxString VoiceOverText = wxString::Format(_("Selection %s.  %s won't change."), Temp, Text[fixed]);
       // i18n-hint: %s is replaced e.g by 'Length'.  This is a tooltip on a numerical control.
       //wxString Tooltip = wxString::Format( _(" With %s fixed.  (Use context menu to change format.) "),  Text[fixed] );
-#ifdef SEL_PLAIN_TITLES
-      if( *Titles[i] ){
-         (*Titles[i])->SetLabelText( Title );
-      }
-#endif
       if( *Ctrls[i] ){
          (*Ctrls[i])->SetName( Temp );
          //(*Ctrls[i])->SetToolTip( Tooltip );
@@ -741,7 +634,7 @@ void SelectionBar::SetDrivers( int driver1, int driver2 )
 
 // There currently is only one clickable AButton
 // so we just do what it needs.
-void SelectionBar::OnButton(wxCommandEvent & event)
+void SelectionBar::OnButton(wxCommandEvent & WXUNUSED(event))
 {
    AudacityProject *p = GetActiveProject();
    if (!p) return;
@@ -757,13 +650,6 @@ void SelectionBar::OnButton(wxCommandEvent & event)
    Menu.AppendRadioItem( 1, _("Start - Length") );
    Menu.AppendRadioItem( 2, _("Length - End") );
    Menu.AppendRadioItem( 3, _("Length - Center") );
-#if 0
-   // These four options were found to be too confusing.
-   Menu.AppendRadioItem( 4, _("Start - Length - End") );
-   Menu.AppendRadioItem( 5, _("Start - Center - Length") );
-   Menu.AppendRadioItem( 6, _("Start - Center - End") );
-   Menu.AppendRadioItem( 7, _("Start - Length - Center - End") );
-#endif
    Menu.Check( mSelectionMode, true );
    // Pop it up where the mouse is.
    pBtn->PopupMenu(&Menu);//, wxPoint(0, 0));
@@ -807,66 +693,16 @@ void SelectionBar::SelectionModeUpdated()
 
 void SelectionBar::SetSelectionMode(int mode)
 {
-#if defined(SEL_BUTTON_TITLES) || defined( SEL_CHOICE)
-   // With SEL_BUTTON_TITLES only modes 0 to 3 are supported,
+   // Only modes 0 to 3 are now supported,
    // so fix up a mode that could have come from the config.
    const int maxMode = 3;
-#else 
-   const int maxMode = 7;
-#endif
 
    if( mode > maxMode )
       mode = 0;
    if( mode < 0 )
       mode = 0;
    mSelectionMode = mode;
-
-   int id = mode + StartEndRadioID;
-
-#ifdef SEL_RADIO_TITLES
-   if( mStartEndProxy == NULL ){
-      // The line breaks are a little funny in order that the i18n hints occur i the right place in 
-      // the .pot file
-      mStartEndRadBtn->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : 
-      // i18n-hint: S-E is an abbreviation of Start-End
-         _("S-E") );
-      mStartLengthRadBtn->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : 
-      // i18n-hint: S-L is an abbreviation of Start-Length
-         _("S-L") );
-      mLengthEndRadBtn->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : 
-      // i18n-hint: L-E is an abbreviation of Length-End
-         _("L-E") );
-      mLengthCenterRadBtn->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : 
-      // i18n-hint: L-C is an abbreviation of Length-Center
-         _("L-C") );
-   }
-   else
-   {
-      mStartEndProxy->SetLabelText(     (id == StartEndRadioID) ?      _("Start - End") : _("S-E") );
-      mStartLengthProxy->SetLabelText(  (id == StartLengthRadioID) ?   _("Start - Length") : _("S-L") );
-      mLengthEndProxy->SetLabelText(    (id == LengthEndRadioID) ?     _("Length - End") : _("L-E") );
-      mLengthCenterProxy->SetLabelText( (id == LengthCenterRadioID) ?  _("Length - Center") : _("L-C") );
-   }
-
-   mStartEndRadBtn->SetToolTip(     (id != StartEndRadioID) ?      _("Show start time and end time") : "" );
-   mStartLengthRadBtn->SetToolTip(  (id != StartLengthRadioID) ?   _("Show start time and length") : "" );
-   mLengthEndRadBtn->SetToolTip(    (id != LengthEndRadioID) ?     _("Show length and end time") : "" );
-   mLengthCenterRadBtn->SetToolTip( (id != LengthCenterRadioID) ?  _("Show length and center") : "" );
-
-   mStartEndRadBtn->SetValue(     id == StartEndRadioID     );
-   mStartLengthRadBtn->SetValue(  id == StartLengthRadioID  );
-   mLengthEndRadBtn->SetValue(    id == LengthEndRadioID    );
-   mLengthCenterRadBtn->SetValue( id == LengthCenterRadioID );
-#endif
-
-#ifdef SEL_BUTTON_TITLES
-   // Not translated.  This is old experiemental code that is probably on the way out.
-   wxString CenterNames[] = { "       Start  -  End        ", "       Start  -  Length   ", "   Length  -  End        ", "   Length  -  Center   " };
-   mButtonTitles[1]->SetLabel( CenterNames[mode] );
-#endif
-#ifdef SEL_CHOICE
    mChoice->SetSelection( mode ); 
-#endif
 
    // First decide which two controls drive the others...
    // For example the last option is with all controls shown, and in that mode we 
@@ -877,12 +713,6 @@ void SelectionBar::SetSelectionMode(int mode)
                     EndTimeID,   LengthTimeID, EndTimeID,    EndTimeID};
 
    SetDrivers( Drive1[mode], Drive2[mode] );
-#ifdef SEL_BUTTON_TITLES
-   // Show just the hyphen after the first of the items.
-   for(int i=0;i<3;i++){
-      mHyphen[i]->SetLabel( ((i+StartTimeID) == Drive2[mode]) ? "-  " : "" );
-   }
-#endif
    // Then show/hide the relevant controls.
    ShowHideControls( mode );
 }
@@ -897,17 +727,10 @@ void SelectionBar::ShowHideControls(int mode)
       15};
    int mask = masks[mode];
 
-#ifdef SEL_PLAIN_TITLES
-   wxStaticText    ** Titles[4] = { &mStartTitle, &mCenterTitle, &mLengthTitle, &mEndTitle};
-#endif
    NumericTextCtrl ** Ctrls[4]  = { &mStartTime,  &mCenterTime,  &mLengthTime,  &mEndTime};
    for(int i=0;i<4;i++){
       if( *Ctrls[i]) 
          (*Ctrls[i])->Show( (mask & (1<<i))!=0 );
-#ifdef SEL_PLAIN_TITLES
-      if( *Titles[i]) 
-         (*Titles[i])->Show( (mask & (1<<i))!=0 );
-#endif
    }
 }
 

@@ -312,7 +312,7 @@ static void RecursivelyRemove(wxArrayString& filePathArray, int count, int bias,
       progress.create( _("Progress"), message );
 
    auto nn = filePathArray.size();
-   for (int i = 0; i < nn; i++) {
+   for (unsigned int i = 0; i < nn; i++) {
       const wxChar *file = filePathArray[i].c_str();
       if (bFiles)
          ::wxRemoveFile(file);

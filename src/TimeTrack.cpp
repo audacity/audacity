@@ -128,7 +128,7 @@ void TimeTrack::Paste(double t, const Track * src)
       (t, static_cast<const TimeTrack*>(src)->mEnvelope.get(), sampleTime);
 }
 
-void TimeTrack::Silence(double t0, double t1)
+void TimeTrack::Silence(double WXUNUSED(t0), double WXUNUSED(t1))
 {
 }
 

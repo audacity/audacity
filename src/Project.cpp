@@ -1923,7 +1923,6 @@ void AudacityProject::FixScrollbars()
    mViewInfo.sbarScreen = (wxInt64)(panelWidth);
    mViewInfo.sbarH = (wxInt64) (mViewInfo.GetBeforeScreenWidth());
 
-   int lastv = mViewInfo.vpos;
    // PRL:  Can someone else find a more elegant solution to bug 812, than
    // introducing this boolean member variable?
    // Setting mVSbar earlier, int HandlXMLTag, didn't succeed in restoring
@@ -2236,7 +2235,6 @@ void AudacityProject::DoScroll()
       }
    }
 
-   int lastv = mViewInfo.vpos;
    mViewInfo.vpos = mVsbar->GetThumbPosition() * mViewInfo.scrollStep;
 
    //mchinen: do not always set this project to be the active one.

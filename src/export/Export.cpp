@@ -1099,13 +1099,13 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    angle = totAngle / ( mMixerSpec->GetNumTracks() + 1 );
 
    int max = 0, w, h;
-   for( int i = 1; i < mMixerSpec->GetNumTracks(); i++ )
+   for( unsigned int i = 1; i < mMixerSpec->GetNumTracks(); i++ )
       if( mTrackNames[ i ].length() > mTrackNames[ max ].length() )
          max = i;
 
    SetFont( memDC, mTrackNames[ max ], mBoxWidth, mTrackHeight );
 
-   for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
+   for( unsigned int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
    {
       mTrackRects[ i ].x = (int)( mBoxWidth * 2 + radius - radius *
          cos( totAngle / 2.0 - angle * ( i + 1 ) ) - mBoxWidth + 0.5 );
@@ -1116,7 +1116,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       mTrackRects[ i ].width = mBoxWidth;
       mTrackRects[ i ].height = mTrackHeight;
 
-      memDC.SetPen( mSelectedTrack == i ? *wxRED_PEN : *wxBLACK_PEN );
+      memDC.SetPen( mSelectedTrack == (int)i ? *wxRED_PEN : *wxBLACK_PEN );
       memDC.DrawRectangle( mTrackRects[ i ] );
 
       memDC.GetTextExtent( mTrackNames[ i ], &w, &h );
@@ -1133,7 +1133,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    SetFont( memDC, wxT( "Channel: XX" ), mBoxWidth, mChannelHeight );
    memDC.GetTextExtent( wxT( "Channel: XX" ), &w, &h );
 
-   for( int i = 0; i < mMixerSpec->GetNumChannels(); i++ )
+   for( unsigned int i = 0; i < mMixerSpec->GetNumChannels(); i++ )
    {
       mChannelRects[ i ].x = (int)( mBoxWidth * 4 - radius  + radius *
          cos( totAngle * 0.5 - angle * ( i + 1 ) ) + 0.5 );
@@ -1144,7 +1144,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       mChannelRects[ i ].width = mBoxWidth;
       mChannelRects[ i ].height = mChannelHeight;
 
-      memDC.SetPen( mSelectedChannel == i ? *wxRED_PEN : *wxBLACK_PEN );
+      memDC.SetPen( mSelectedChannel == (int)i ? *wxRED_PEN : *wxBLACK_PEN );
       memDC.DrawRectangle( mChannelRects[ i ] );
 
       memDC.DrawText( wxString::Format( _( "Channel: %2d" ), i + 1 ),
@@ -1154,8 +1154,8 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    //draw links
    memDC.SetPen( wxPen( *wxBLACK, mHeight / 200 ) );
-   for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
-      for( int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
+   for( unsigned int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
+      for( unsigned int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
          if( mMixerSpec->mMap[ i ][ j ] )
             AColor::Line(memDC, mTrackRects[ i ].x + mBoxWidth,
                   mTrackRects[ i ].y + mTrackHeight / 2, mChannelRects[ j ].x,
@@ -1181,11 +1181,11 @@ void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
    {
       bool reset = true;
       //check tracks
-      for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
+      for( unsigned int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
          if( mTrackRects[ i ].Contains( event.m_x, event.m_y ) )
          {
             reset = false;
-            if( mSelectedTrack == i )
+            if( mSelectedTrack == (int)i )
                mSelectedTrack = -1;
             else
             {
@@ -1198,11 +1198,11 @@ void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
          }
 
       //check channels
-      for( int i = 0; i < mMixerSpec->GetNumChannels(); i++ )
+      for( unsigned int i = 0; i < mMixerSpec->GetNumChannels(); i++ )
          if( mChannelRects[ i ].Contains( event.m_x, event.m_y ) )
          {
             reset = false;
-            if( mSelectedChannel == i )
+            if( mSelectedChannel == (int)i )
                mSelectedChannel = -1;
             else
             {
@@ -1215,8 +1215,8 @@ void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
          }
 
       //check links
-      for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
-         for( int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
+      for( unsigned int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
+         for( unsigned int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
             if( mMixerSpec->mMap[ i ][ j ]  && IsOnLine( wxPoint( event.m_x,
                         event.m_y ), wxPoint( mTrackRects[ i ].x + mBoxWidth,
                            mTrackRects[ i ].y + mTrackHeight / 2 ),

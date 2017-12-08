@@ -1310,7 +1310,7 @@ auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
    SetName(textIn);
 }
  
-void auStaticText::OnPaint(wxPaintEvent & evt)
+void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
    //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));

@@ -1495,7 +1495,7 @@ bool VSTEffect::RealtimeResume()
 
 bool VSTEffect::RealtimeProcessStart()
 {
-   for (int i = 0; i < mAudioIns; i++)
+   for (unsigned int i = 0; i < mAudioIns; i++)
       memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
 
    mNumSamples = 0;
@@ -1507,7 +1507,7 @@ size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
 {
    wxASSERT(numSamples <= mBlockSize);
 
-   for (int c = 0; c < mAudioIns; c++)
+   for (unsigned int c = 0; c < mAudioIns; c++)
    {
       for (decltype(numSamples) s = 0; s < numSamples; s++)
       {

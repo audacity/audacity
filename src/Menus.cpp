@@ -5908,7 +5908,6 @@ void AudacityProject::OnSplitNew()
 int AudacityProject::CountSelectedWaveTracks() 
 {
    TrackListIterator iter(GetTracks());
-   Track *t = iter.First();
 
    int count =0;
    for (Track *t = iter.First(); t; t = iter.Next()) {
@@ -5921,7 +5920,6 @@ int AudacityProject::CountSelectedWaveTracks()
 int AudacityProject::CountSelectedTracks() 
 {
    TrackListIterator iter(GetTracks());
-   Track *t = iter.First();
 
    int count =0;
    for (Track *t = iter.First(); t; t = iter.Next()) {

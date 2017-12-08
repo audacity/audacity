@@ -1406,7 +1406,6 @@ void WaveTrack::Silence(double t0, double t1)
 
    auto start = (sampleCount)floor(t0 * mRate + 0.5);
    auto len = (sampleCount)floor(t1 * mRate + 0.5) - start;
-   bool result = true;
 
    for (const auto &clip : mClips)
    {
@@ -2059,7 +2058,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       {
          wxASSERT( format==floatSample );
          float * pBuffer = (float*)buffer;
-         for(int i=0;i<len;i++)
+         for(size_t i=0;i<len;i++)
             pBuffer[i]=2.0f;
       }
       else

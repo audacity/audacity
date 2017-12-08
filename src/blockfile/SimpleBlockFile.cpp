@@ -239,7 +239,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       // memory
       int *int24sampleData = (int*)sampleData;
 
-      for( int i = 0; i < sampleLen; i++ )
+      for( size_t i = 0; i < sampleLen; i++ )
       {
          nBytesToWrite = 3;
          nBytesWritten =

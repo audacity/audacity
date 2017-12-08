@@ -71,6 +71,7 @@ std::unique_ptr<wxFileConfig> ugPrefs {};
 wxFileConfig *gPrefs = NULL;
 int gMenusDirty = 0;
 
+#if 0
 // Copy one entry from one wxConfig object to another
 static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString entry)
 {
@@ -102,7 +103,7 @@ static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxStr
    }
 }
 
-#if 0
+
 // Recursive routine to copy all groups and entries from one wxConfig object to another
 static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase *dst)
 {

@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 #include "RawAudioGuess.h"
+#include "../AudacityException.h"
 #include "../MemoryX.h"
 
 #include <stdio.h>
@@ -187,7 +188,7 @@ static void Extract(bool bits16,
                     bool stereo,
                     bool bigendian,
                     bool offset,
-                    char *rawData, int dataSize,
+                    char *rawData, int dataSizeIn,
                     float *data1, float *data2, size_t *len1, size_t *len2)
 {
    size_t rawCount = 0;
@@ -201,13 +202,18 @@ static void Extract(bool bits16,
       /* Special case so as to not flip stereo channels during analysis */
       if (stereo && !bigendian) {
          rawData += 3;
-         dataSize -= 3;
+         dataSizeIn -= 3;
       }
       else {
          rawData++;
-         dataSize--;
+         dataSizeIn--;
       }
    }
+
+   if( dataSizeIn < 1 )
+      throw SimpleMessageBoxException{_("Bad data size")};
+
+   size_t dataSize = (size_t)dataSizeIn;
 
    if (bits16) {
       if (sign && bigendian)
@@ -322,7 +328,7 @@ static int GuessFloatFormats(unsigned numTests, const ArrayOf<char> rawData[], s
     * floats with a 1-byte offset.
     */
 
-   for(int prec = 0; prec < 2; prec++) {
+   for(unsigned int prec = 0; prec < 2; prec++) {
       for(int endian = 0; endian < 2; endian++) {
          for(size_t offset = 0; offset < (4 * prec + 4); offset++) {
             unsigned finiteVotes = 0;

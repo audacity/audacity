@@ -37,7 +37,7 @@ std::shared_ptr<Track> TrackControls::FindTrack()
 
 std::vector<UIHandlePtr> TrackControls::HitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *project)
+ const AudacityProject *WXUNUSED(project))
 {
    // Hits are mutually exclusive, results single
 

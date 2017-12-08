@@ -164,7 +164,9 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
 
    Floats buffer;
    try {
-      if (blockSize < mStart)
+      // mStart should be positive.
+      // if we are throwing bad_alloc and mStart is negative, find out why.
+      if (blockSize < (size_t)mStart)
          // overflow
          throw std::bad_alloc{};
       buffer.reinit(blockSize);

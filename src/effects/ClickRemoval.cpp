@@ -260,8 +260,8 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
 {
    bool bResult = false; // This effect usually does nothing.
-   int i;
-   int j;
+   size_t i;
+   size_t j;
    int left = 0;
 
    float msw;
@@ -279,7 +279,7 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    for(i=0;i<len;i++)
       ms_seq[i]=b2[i];
 
-   for(i=1; i < sep; i *= 2) {
+   for(i=1; (int)i < sep; i *= 2) {
       for(j=0;j<len-i; j++)
          ms_seq[j] += ms_seq[j+i];
       }
@@ -299,7 +299,7 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
 
          for( i=0; i<len-sep; i++ ){
             msw = 0;
-            for( j=0; j<ww; j++) {
+            for( j=0; (int)j<ww; j++) {
                msw += b2[i+s2+j];
             }
             msw /= ww;
@@ -309,7 +309,7 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
                   left = i+s2;
                }
             } else {
-               if(left != 0 && i-left+s2 <= ww*2) {
+               if(left != 0 && (int)(i-left+s2) <= ww*2) {
                   float lv = buffer[left];
                   float rv = buffer[i+ww+s2];
                   for(j=left; j<i+ww+s2; j++) {

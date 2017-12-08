@@ -117,7 +117,7 @@ HitTestPreview NoteTrackVZoomHandle::Preview
 
 UIHandle::Result NoteTrackVZoomHandle::Release
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject,
- wxWindow *pParent)
+ wxWindow *WXUNUSED(pParent))
 {
    using namespace RefreshCode;
    auto pTrack = pProject->GetTracks()->Lock(mpTrack);
@@ -148,7 +148,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    return RefreshAll;
 }
 
-UIHandle::Result NoteTrackVZoomHandle::Cancel(AudacityProject *pProject)
+UIHandle::Result NoteTrackVZoomHandle::Cancel(AudacityProject *WXUNUSED(pProject))
 {
    // Cancel is implemented!  And there is no initial state to restore,
    // so just return a code.

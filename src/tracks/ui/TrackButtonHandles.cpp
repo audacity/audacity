@@ -152,7 +152,7 @@ MenuButtonHandle::~MenuButtonHandle()
 }
 
 UIHandle::Result MenuButtonHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *pProject, wxWindow *pParent)
+(const wxMouseEvent &, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
    auto pPanel = pProject->GetTrackPanel();
    auto pCell = mpCell.lock();

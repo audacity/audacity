@@ -740,10 +740,10 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Separate the channels and convert input sample format to 16-bit
    uint8_t *in = sc->m_decodedAudioSamples.get();
    int index = 0;
-   int pos = 0;
+   unsigned int pos = 0;
    while (pos < insamples)
    {
-      for (int chn = 0; chn < sc->m_stream->codec->channels; chn++)
+      for (size_t chn = 0; chn < (size_t)sc->m_stream->codec->channels; chn++)
       {
          if (chn < nChannels)
          {
@@ -788,7 +788,7 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
 
    // Write audio into WaveTracks
    auto iter2 = iter->begin();
-   for (int chn=0; chn < nChannels; ++iter2, ++chn)
+   for (size_t chn=0; chn < nChannels; ++iter2, ++chn)
    {
       iter2->get()->Append((samplePtr)tmp[chn].get(), sc->m_osamplefmt, index);
    }

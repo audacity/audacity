@@ -3234,8 +3234,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
    mEffect->Apply();
-
-   return;
 }
 
 void EffectUIHost::DoCancel()
@@ -3252,13 +3250,10 @@ void EffectUIHost::DoCancel()
    }
 }
 
-void EffectUIHost::OnCancel(wxCommandEvent & evt)
+void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 {
    DoCancel();
-
    Close();
-
-   return;
 }
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
@@ -3277,10 +3272,7 @@ void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 void EffectUIHost::OnDebug(wxCommandEvent & evt)
 {
    OnApply(evt);
-
    mEffect->mUIResultID = evt.GetId();
-
-   return;
 }
 
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))

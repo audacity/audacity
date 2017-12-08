@@ -74,9 +74,8 @@ UIHandlePtr StretchHandle::HitTest
    // later, we may want a different policy, but for now, stretch is
    // selected when the cursor is near the center of the track and
    // within the selection
-
    const ViewInfo &viewInfo = pProject->GetViewInfo();
-   const bool unsafe = pProject->IsAudioActive();
+
    if (!pTrack || !pTrack->GetSelected() || pTrack->GetKind() != Track::Note)
       return {};
 
@@ -221,11 +220,10 @@ UIHandle::Result StretchHandle::Release
       return RefreshAll | Cancelled;
    }
 
-   bool left;
+   bool left = mStretchState.mMode == stretchLeft;
+   bool right = mStretchState.mMode == stretchRight;
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   if ( pProject->IsSyncLocked() &&
-        ( ( left = mStretchState.mMode == stretchLeft ) ||
-          mStretchState.mMode == stretchRight ) ) {
+   if ( pProject->IsSyncLocked() && ( left || right ) ) {
       SyncLockedTracksIterator syncIter( pProject->GetTracks() );
       for ( auto track = syncIter.StartWith( mpTrack.get() ); track != nullptr;
            track = syncIter.Next() ) {
@@ -280,7 +278,6 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
    Track *pTrack)
 {
    ViewInfo &viewInfo = pProject->GetViewInfo();
-   TrackList *const trackList = pProject->GetTracks();
 
    if (pTrack == NULL && mpTrack != NULL)
       pTrack = mpTrack.get();

@@ -65,9 +65,6 @@ void WaveTrackVZoomHandle::DoZoom
     bool fixedMousePoint)
 {
    static const float ZOOMLIMIT = 0.001f;
-
-   TrackList *const tracks = pProject->GetTracks();
-
    // Assume linked track is wave or null
    const auto partner = static_cast<WaveTrack *>(pTrack->GetLink());
    int height = rect.height;
