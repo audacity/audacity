@@ -3497,7 +3497,8 @@ void TrackPanelCellIterator::UpdateRect()
          }
          case CellType::VRuler:
             mRect.x = kTrackInfoWidth;
-            mRect.width = mPanel->GetLeftOffset() - mRect.x;
+            // Only half the VRuler is active.
+            mRect.width = (mPanel->GetLeftOffset() - mRect.x)/2.0;
             mRect.y += kTopMargin;
             mRect.height -= (kBottomMargin + kTopMargin);
             break;
