@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-11-28 21:28+0100\n"
+"PO-Revision-Date: 2017-12-09 00:57+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -2886,7 +2886,7 @@ msgstr "Aut&re sauvegarde"
 
 #: src/Menus.cpp
 msgid "Export as MP&3"
-msgstr "Exporter enMP&3"
+msgstr "Exporter en MP&3"
 
 #: src/Menus.cpp
 msgid "Export as &WAV"
