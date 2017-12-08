@@ -1291,11 +1291,11 @@ void AudacityProject::CreateMenusAndCommands()
       }
 
       /////////////////////////////////////////////////////////////////////////////
-      // Ext-Bar Menu
+      // Ext-Menu
       /////////////////////////////////////////////////////////////////////////////
 
-      // i18n-hint: Ext-Bar is a menu with extra commands from tool bars
-      c->BeginMenu(_("Ext-&Bar"));
+      // i18n-hint: Extra is a menu with extra commands
+      c->BeginMenu(_("E&xtra"));
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -1458,16 +1458,9 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->EndSubMenu();
 
-      c->EndMenu();
-
-
-      /////////////////////////////////////////////////////////////////////////////
-      // Ext-Command Menu
-      /////////////////////////////////////////////////////////////////////////////
 
       c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
-      // i18n-hint: Ext-Command is a menu with extra commands
-      c->BeginMenu(_("Ext-Co&mmand"));
+      c->AddSeparator();
 
       c->AddGlobalCommand(wxT("PrevWindow"), _("Move backward thru active windows"), FN(PrevWindow), wxT("Alt+Shift+F6"));
       c->AddGlobalCommand(wxT("NextWindow"), _("Move forward thru active windows"), FN(NextWindow), wxT("Alt+F6"));
