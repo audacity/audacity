@@ -10491,7 +10491,7 @@ msgstr "Fichiers AC3 (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR (bande étroite) Fichiers (FFmpeg)"
+msgstr "Fichiers (FFmpeg) AMR (bande étroite)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
