@@ -224,7 +224,7 @@ msgstr "Harvey Lubin (logo)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
-msgstr "Gallerie d’icône Tango (icônes de barre d’outils)"
+msgstr "Galerie d’icône Tango (icônes de barre d’outils)"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
@@ -238,7 +238,7 @@ msgstr "(C) 2009 par Leland Lucius"
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
-"Module Audacity externe qui fourni un IDE simple pour l’écriture d’effets."
+"Module Audacity externe qui fournit un IDE simple pour l’écriture d’effets."
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -449,7 +449,7 @@ msgstr "documentation et support"
 
 #: src/AboutDialog.cpp
 msgid "documentation and support, French"
-msgstr "documentation and support, français"
+msgstr "documentation et support, français"
 
 #: src/AboutDialog.cpp
 msgid "accessibility advisor"
@@ -561,7 +561,7 @@ msgstr "Émérite&nbsp;:"
 
 #: src/AboutDialog.cpp
 msgid "Distinguished Audacity Team members, not currently active"
-msgstr "Éminent membres de l’équipe d’Audacity, pas actif actuellement"
+msgstr "Éminent membres de l’équipe d’Audacity, inactif actuellement"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -731,7 +731,7 @@ msgstr "Préfixe d’intallation&nbsp;: "
 
 #: src/AboutDialog.cpp
 msgid "Settings folder: "
-msgstr "Répertoire de paramêtres&nbsp;: "
+msgstr "Répertoire de paramètres&nbsp;: "
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -903,7 +903,7 @@ msgid ""
 "process to open multiple projects simultaneously.\n"
 msgstr ""
 "À partir de la session actuellement lancée d’Audacity, utilisez Nouveau ou\n"
-"Ouvrir pour démarrer plusieurs projets simultannément.\n"
+"Ouvrir pour démarrer plusieurs projets simultanément.\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is already running"
@@ -1447,7 +1447,7 @@ msgstr "Nombre d’éditions&nbsp;:"
 
 #: src/Benchmark.cpp
 msgid "Test Data Size (MB):"
-msgstr "Taile de donnée de test (Mo)&nbsp;:"
+msgstr "Taille de donnée de test (Mo)&nbsp;:"
 
 #. i18n-hint: A "seed" is a number that initializes a
 #. pseudorandom number generating algorithm
@@ -1657,7 +1657,7 @@ msgstr ""
 "\n"
 "Les fichiers marqués MANQUANT ont été effacés ou déplacés et ne peuvent être "
 "copiés.\n"
-"Restorez-les à leur emplacement original pour pouvoir les copier dans le "
+"Restaurez-les à leur emplacement original pour pouvoir les copier dans le "
 "projet."
 
 #: src/Dependencies.cpp
@@ -1874,7 +1874,7 @@ msgid ""
 "project in its current state, unless you \"Close \n"
 "project immediately\" on further error alerts."
 msgstr ""
-"La vérificattion du projet du dossier \"%s\" \n"
+"La vérification du projet du dossier \"%s\" \n"
 "a détecté qu’il manque %lld fichier(s) audio externe(s) \n"
 "('fichier(s) alias'). Audacity ne peut pas \n"
 "récupérer ces fichiers automatiquement. \n"
@@ -1964,7 +1964,7 @@ msgstr ""
 "La vérification du projet du dossier \"%s\" \n"
 "a détecté %lld fichier(s)-bloc (.au) de donnée manquant(s). \n"
 "probablement à cause d’un bogue, d’un plantage du système, ou d’un \n"
-"effacement accidentuel. Audacity ne peut pas récupérer \n"
+"effacement accidentel. Audacity ne peut pas récupérer \n"
 "ces fichiers manquants automatiquement. \n"
 "\n"
 "Si vous choisissez la première ou la deuxième option ci-dessous, \n"
@@ -2042,7 +2042,7 @@ msgid ""
 "Select 'Show Log...' in the Help menu to see details."
 msgstr ""
 "Le vérificateur de projet a trouvé des incohérences de fichier pendant la "
-"récupération automatique\n"
+"récupération automatique.\n"
 "\n"
 "Sélectionnez 'Afficher le journal…' dans le menu Aide pour voir les "
 "détails."
@@ -2460,7 +2460,7 @@ msgid ""
 "You can help us get Audacity ready for release by joining our [[http://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Vous pouvez nous aider à prépare le prochain Audacity en rejoignant notre "
+"Vous pouvez nous aider à préparer le prochain Audacity en rejoignant notre "
 "[[http://www.audacityteam.org/community/|communauté (en anglais]]."
 "<hr><br><br>"
 
@@ -2490,7 +2490,7 @@ msgid ""
 "with DarkAudacity."
 msgstr ""
 " [[http://www.darkaudacity.com/video.html|Tutoriels (en anglais)]] - pour "
-"démarrer avec with DarkAudacity."
+"démarrer avec DarkAudacity."
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2522,7 +2522,7 @@ msgid ""
 " [[http://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
 msgstr ""
-" [[http://forum.audacityteam.org/|Forum (en anglais)]] - poser votre "
+" [[http://forum.audacityteam.org/|Forum (en anglais)]] - posez votre "
 "question en ligne directement."
 
 #: src/HelpText.cpp
@@ -2567,7 +2567,7 @@ msgid ""
 "online]].<br><br>To always view the Manual online, change \"Location of "
 "Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
-"Le manuel ne semble pas être installé. Veuillez [[*URL*|consultrer le manuel "
+"Le manuel ne semble pas être installé. Veuillez [[*URL*|consulter le manuel "
 "en ligne]].<br><br>Pour voir le manuel toujours en ligne, modifier "
 "\"Localisation du manuel\" dans les préférences de l’interface dans \"Depuis "
 "l’internet\"."
@@ -2579,7 +2579,7 @@ msgid ""
 "download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
-"Le manuel ne semble pas être installé. Veuillez [[*URL*|consultrer le manuel "
+"Le manuel ne semble pas être installé. Veuillez [[*URL*|consulter le manuel "
 "en ligne]] ou [[http://manual.audacityteam.org/man/unzipping_the_manual."
 "html| téléchargez le manuel]].<br><br>Pour voir le manuel toujours en ligne, "
 "modifier \"Localisation du manuel\" dans les préférences de l’interface dans "
@@ -2848,7 +2848,7 @@ msgstr ""
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
-msgstr "Erreur de conversion un ancien fichier-projet"
+msgstr "Erreur de conversion d’un ancien fichier-projet"
 
 #: src/Legacy.cpp
 #, c-format
@@ -2866,7 +2866,7 @@ msgstr "Ouverture d’un projet Audacity"
 #: src/LyricsWindow.cpp
 #, c-format
 msgid "Audacity Karaoke%s"
-msgstr "Karaoke%s Audacity "
+msgstr "Karaoké%s Audacity "
 
 #: src/Menus.cpp
 msgid "Uncategorized"
@@ -3424,7 +3424,7 @@ msgstr "Poursuite de l’en&registrement"
 
 #: src/Menus.cpp
 msgid "Record &New Track"
-msgstr "Enregistrer un &nouvelle piste"
+msgstr "Enregistrer une &nouvelle piste"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
@@ -3635,7 +3635,7 @@ msgstr "Descendre la séle&ction et les pistes"
 
 #: src/Menus.cpp
 msgid "Synchronize MIDI with Audio"
-msgstr "Synchoniser le MIDI avec l’audio"
+msgstr "Synchroniser le MIDI avec l’audio"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
@@ -3744,7 +3744,7 @@ msgstr "&Diagnostiques"
 
 #: src/Menus.cpp
 msgid "Au&dio Device Info..."
-msgstr "&Périphériques audio…"
+msgstr "Informations sur les périphériques au&dio…"
 
 #: src/Menus.cpp
 msgid "&MIDI Device Info..."
@@ -3847,7 +3847,7 @@ msgstr "Outil de glissement &temporel"
 
 #: src/Menus.cpp
 msgid "&Multi Tool"
-msgstr "&Multi outils"
+msgstr "&Multi-outils"
 
 #: src/Menus.cpp
 msgid "&Previous Tool"
@@ -3926,11 +3926,11 @@ msgstr "Ré&duire la vitesse de lecture"
 
 #: src/Menus.cpp
 msgid "Move to &Previous Label"
-msgstr "Aller à l’étiquette &précédente"
+msgstr "Aller au marqueur &précédent"
 
 #: src/Menus.cpp
 msgid "Move to &Next Label"
-msgstr "Aller à l’étiquette suiva&nte"
+msgstr "Aller au marqueur suiva&nt"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier le scrub/frottement)
@@ -4272,7 +4272,7 @@ msgstr "Déplacer les clips étirés temporellement vers la droite"
 
 #: src/Menus.cpp
 msgid "Time shifted clips to the left"
-msgstr "Décalage les pistes étirés temporement vers la gauche"
+msgstr "Décalage les pistes étirés temporellement vers la gauche"
 
 #: src/Menus.cpp src/prefs/MousePrefs.cpp src/tracks/ui/TimeShiftHandle.cpp
 msgid "Time-Shift"
@@ -4382,7 +4382,7 @@ msgstr "Couper et raccorder vers le presse-papier"
 
 #: src/Menus.cpp
 msgid "Split Cut"
-msgstr "Couper"
+msgstr "Couper-séparer"
 
 #: src/Menus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -4514,7 +4514,7 @@ msgstr "Régions audio marquées muettes"
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Silence Labeled Audio"
-msgstr "Rendre les audio marquées muettes"
+msgstr "Rendre muet l’audio marqué"
 
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
 #: src/Menus.cpp
@@ -4590,7 +4590,7 @@ msgstr "Analyse de fréquence"
 
 #: src/Menus.cpp
 msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Analyse de contraste (conformité WCAG 2 )"
+msgstr "Analyse de contraste (conformité WCAG 2)"
 
 #: src/Menus.cpp
 #, c-format
@@ -4739,7 +4739,7 @@ msgstr "Aligner %s"
 
 #: src/Menus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "Synchonisation pistes MIDI et audio"
+msgstr "Synchronisation pistes MIDI et audio"
 
 #: src/Menus.cpp
 #, c-format
@@ -4751,7 +4751,7 @@ msgstr ""
 
 #: src/Menus.cpp
 msgid "Sync MIDI with Audio"
-msgstr "Synchroniser MIDI avec Audio"
+msgstr "Synchroniser le MIDI avec l’audio"
 
 #: src/Menus.cpp
 #, c-format
@@ -4790,7 +4790,7 @@ msgstr ""
 
 #: src/Menus.cpp
 msgid "Created new time track"
-msgstr "Nouvelle piste de temp0 créée"
+msgstr "Nouvelle piste de tempo créée"
 
 #: src/Menus.cpp
 msgid ""
@@ -5082,7 +5082,7 @@ msgstr "Nouveau (&w)"
 #: src/PluginManager.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "Show new"
-msgstr "Affiché les nouveaux"
+msgstr "Afficher les nouveaux"
 
 #: src/PluginManager.cpp
 msgid "State"
@@ -5102,10 +5102,12 @@ msgid "C&lear All"
 msgstr "Nettoyer tout (&l)"
 
 #: src/PluginManager.cpp src/effects/Effect.cpp src/prefs/RecordingPrefs.cpp
+# trebmuh to check : "activé" ou "activer" ?
 msgid "&Enable"
 msgstr "activé (&e)"
 
 #: src/PluginManager.cpp
+# trebmuh to check : "désactivé" ou "désactiver" ?
 msgid "&Disable"
 msgstr "&Désactivé"
 
@@ -5271,7 +5273,7 @@ msgid ""
 "\n"
 "Please open the actual Audacity project file instead."
 msgstr ""
-"Vous essayez d’ouvrir un fichier de sauvergarde créé automatiquement.\n"
+"Vous essayez d’ouvrir un fichier de sauvegarde créé automatiquement.\n"
 "Le faire peut causer ddes pertes sévères de données.\n"
 "\n"
 "Ouvrez plutôt le projet Audacity actuel."
@@ -5805,7 +5807,7 @@ msgid ""
 "Truncating to this maximum length."
 msgstr ""
 "La séquence a un fichier de bloc excédant un maximum de %s échantillons par"
-" bloc.\n"
+"bloc.\n"
 "Tronquage à cette longueur maximum."
 
 #: src/Sequence.cpp
@@ -6013,7 +6015,7 @@ msgid ""
 "Theme as Cee code written to:\n"
 "  %s."
 msgstr ""
-"Thème en code C écrit dans:\n"
+"Thème en code C écrit dans&nbsp;:\n"
 "  %s."
 
 #: src/Theme.cpp
@@ -6357,7 +6359,7 @@ msgstr "Redémarrer le système"
 
 #: src/TimerRecordDialog.cpp
 msgid "Shutdown system"
-msgstr "Fermet le système"
+msgstr "Éteindre le système"
 
 #: src/TimerRecordDialog.cpp
 msgid "After Recording completes:"
@@ -6499,7 +6501,7 @@ msgstr "Résultats de la calibration\n"
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "Énergie                  -- soit: %1.4f  sd: (%1.4f)\n"
+msgstr "Énergie                  -- signifie&nbsp;: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
@@ -6771,7 +6773,7 @@ msgstr "Seuil&nbsp;:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
-msgstr "La prévisualistion n’est pas disponible"
+msgstr "La prévisualisation n’est pas disponible"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
@@ -14041,7 +14043,7 @@ msgstr "Outil de retouche"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Multi Tool"
-msgstr "Multi outils"
+msgstr "Multi-outils"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Slide Tool"
