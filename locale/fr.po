@@ -398,7 +398,7 @@ msgid "Go to previous S-expr"
 msgstr "Aller au S-expr précédent"
 
 #: lib-src/mod-nyq-bench/NyqBench.cpp
-# trebmuh to check (besoin d’ajouter "outil"&nbsp;?)
+# trebmuh to check (besoin d’ajouter "outil"?)
 msgid "Next"
 msgstr "Outil suivant"
 
