@@ -10483,7 +10483,7 @@ msgstr "LTP"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
-msgstr " Fichiers (FFmpeg) M4A (AAC)"
+msgstr "Fichiers (FFmpeg) M4A (AAC)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "AC3 Files (FFmpeg)"
