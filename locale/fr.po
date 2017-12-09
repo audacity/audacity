@@ -524,7 +524,7 @@ msgstr ""
 "Pour toute remarque ou suggestion à propos de la traduction française, \n"
 "envoyez moi un message à l'adresse de courriel : trebmuh@tuxfamily.org\n"
 "\n"
-"Précédent traducteur : Christian Brochec."
+"Précédent traducteur en français : Christian Brochec."
 
 #: src/AboutDialog.cpp
 msgid "<h3>Audacity "
@@ -592,7 +592,7 @@ msgid ""
 "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
 "&copy; 1999-2017 Audacity Team.<br>"
 msgstr ""
-"<p>Le logiciel <br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> est sous "
+"<p><br>&nbsp; &nbsp; Le logiciel <b>Audacity<sup>&reg;</sup></b> est sous "
 "copyright &copy; 1999-2017 Audacity Team.<br>"
 
 #: src/AboutDialog.cpp
@@ -600,7 +600,7 @@ msgid ""
 "&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
 "Mazzoni.<br><br>"
 msgstr ""
-"Le nom &nbsp; &nbsp; The name <b>Audacity</b> est une marque déposée par "
+"&nbsp; &nbsp; Le nom <b>Audacity</b> est une marque déposée par "
 "Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp src/effects/Effect.cpp src/effects/nyquist/Nyquist.cpp
@@ -2882,7 +2882,7 @@ msgstr "S&auvegarder le projet sous..."
 
 #: src/Menus.cpp
 msgid "Save Othe&r"
-msgstr "Aut&re sauvegarde"
+msgstr "Sauvega&rde autre"
 
 #: src/Menus.cpp
 msgid "Export as MP&3"
@@ -3140,11 +3140,11 @@ msgstr "Pis&tes"
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "In All &Tracks"
-msgstr "dans &toutes les pistes"
+msgstr "Dans &toutes les pistes"
 
 #: src/Menus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "dans toutes les pistes verrouillées-&synchro"
+msgstr "Dans toutes les pistes verrouillées-&synchro"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
@@ -3155,20 +3155,20 @@ msgstr "Ré&gion"
 # trebmuh to check (vérifier dans un contexte graphique)
 # trebmuh to check (accélérateur)
 msgid "&Left at Playback Position"
-msgstr "de la limite &gauche de la sélection au point de lecture"
+msgstr "De la limite &gauche de la sélection au point de lecture"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Right at Playback Position"
-msgstr "de la limite d&roite de la sélection au point de lecture"
+msgstr "De la limite d&roite de la sélection au point de lecture"
 
 #: src/Menus.cpp
 msgid "Track &Start to Cursor"
-msgstr "du début de la pi&ste jusqu'au curseur"
+msgstr "Du début de la pi&ste jusqu'au curseur"
 
 #: src/Menus.cpp
 msgid "Cursor to Track &End"
-msgstr "du curseur jusqu'à la fin de la pist&e"
+msgstr "Du curseur jusqu'à la fin de la pist&e"
 
 #: src/Menus.cpp
 msgid "S&tore Selection"
@@ -3198,12 +3198,12 @@ msgstr "Prochain pic p&lus bas de fréquence"
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "limite précédente du clip au curseur (&v)"
+msgstr "Limite précédente du clip au curseur (&v)"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "curseur à la prochaine limite du clip (&x)"
+msgstr "Curseur à la prochaine limite du clip (&x)"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
@@ -3216,7 +3216,7 @@ msgstr "Clip suivant (&e)"
 
 #: src/Menus.cpp
 msgid "Cursor to Stored &Cursor Position"
-msgstr "curseur à la position stockée du &curseur"
+msgstr "Curseur à la position stockée du &curseur"
 
 #: src/Menus.cpp
 msgid "Store Cursor Pos&ition"
@@ -3442,11 +3442,11 @@ msgstr "Débu&t de la sélection"
 
 #: src/Menus.cpp
 msgid "Track &Start"
-msgstr "au début de la pi&ste"
+msgstr "Début de la pi&ste"
 
 #: src/Menus.cpp
 msgid "Track &End"
-msgstr "à la fin de la pist&e"
+msgstr "Fin de la pist&e"
 
 #: src/Menus.cpp
 # trebmuh to check (accélérateur)
@@ -3736,7 +3736,7 @@ msgstr "&Outils de capture d'écran..."
 
 #: src/Menus.cpp
 msgid "&Run Benchmark..."
-msgstr "&Lancer Test de performance..."
+msgstr "&Lancer le test de performance..."
 
 #: src/Menus.cpp
 msgid "&Diagnostics"
