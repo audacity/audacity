@@ -56,7 +56,7 @@ HitTestPreview NoteTrackVZoomHandle::HitPreview(const wxMouseState &state)
    static auto zoomOutCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
    const auto message =
-_("Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
+_("Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
    return {
       message,
       (state.ShiftDown() ? &*zoomOutCursor : &*zoomInCursor)
