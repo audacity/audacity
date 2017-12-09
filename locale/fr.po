@@ -5205,11 +5205,11 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 "\n"
-"En cas de sauvegarde, le projet n'aura pas de piste.\n"
+"Si sauvegardé, le projet n'aura pas de piste.\n"
 "\n"
 "Pour sauvegarder toute piste précédemment ouverte :\n"
-"Annuler, Edition > Annuler, jusqu'à ce que toutes les pistes\n"
-"soient ouverte, puis Fichier > Sauvegarder le projet."
+"Annuler, Édition > Annuler, jusqu'à ce que toutes les pistes\n"
+"soient ouvertes, puis Fichier > Sauvegarder le projet."
 
 #: src/Project.cpp
 msgid "Select one or more files"
@@ -6422,19 +6422,17 @@ msgstr "(Échap pour annuler)"
 
 #: src/TrackPanel.cpp
 msgid "Stereo, "
-msgstr "Stéréo,"
+msgstr "Stéréo, "
 
 #: src/TrackPanel.cpp
 msgid "Mono, "
-msgstr "Mono,"
+msgstr "Mono, "
 
 #: src/TrackPanel.cpp
 msgid "Left, "
-msgstr "Gauche,"
+msgstr "Gauche, "
 
-#: src/TrackPanel.cpp
-msgid "Right, "
-msgstr "Droit,"
+#: src/TrackPan "
 
 #: src/TrackPanel.cpp
 msgid "Stereo, 999999Hz"
@@ -11060,7 +11058,7 @@ msgstr "canaux stéréo joints"
 
 #: src/export/ExportMP3.cpp
 msgid "Stereo"
-msgstr "Stéréo,"
+msgstr "Stéréo"
 
 #: src/export/ExportMP3.cpp
 msgid "Force export to mono"
@@ -13637,11 +13635,11 @@ msgstr "Canaux d'enregistrement"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1 (Mono) canal d'enregistrement"
+msgstr "1 canal d'enregistrement (mono)"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 (Stereo) canaux d'enregistrement"
+msgstr "2 canaux d'enregistrement (stéréo)"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
