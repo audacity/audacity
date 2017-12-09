@@ -2531,7 +2531,7 @@ msgid ""
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
 "Davantage :</b> Visitez notre [[http://wiki.audacityteam.org/index.php|Wiki "
-"en anglais)]] pour des conseils, astuces, tutoriels et greffons d'effets "
+"(en anglais)]] pour des conseils, astuces, tutoriels et greffons d'effets "
 "supplémentaires."
 
 #: src/HelpText.cpp
