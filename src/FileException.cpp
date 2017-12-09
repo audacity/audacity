@@ -32,16 +32,9 @@ wxString FileException::ErrorMessage() const
          break;
       case Cause::Write: {
          auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-         if (lang.empty() || lang.Left(2) == wxT("en"))
-            // PRL: last-minute improved message for 2.2.0 RC1.
-            // It was too late to translate the new message, so improve it
-            // in English only.
-            // This message is more like that for failed save of a project.
             format =
 _("Audacity failed to write to a file.\n"
   "Perhaps %s is not writable or the disk is full.");
-         else
-            format = _("Audacity failed to write to a file in %s.");
          break;
       }
       case Cause::Rename:

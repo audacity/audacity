@@ -334,14 +334,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       {
          auto lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-         if (lang.empty() || lang.Left(2) == wxT("en"))
-            // PRL: last-minute improved message for 2.2.1 RC1, English only.
             c->BeginSubMenu( _("&Export") );
-         else
-            // This string was already in catalogs for 2.2.0
-            // So the translation may still replace "Save Other"
-            // But translation will have no accelerator.
-            c->BeginSubMenu( _("Export") );
       }
 
       // Enable Export audio commands only when there are audio tracks.
