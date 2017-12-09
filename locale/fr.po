@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-12-09 00:57+0100\n"
+"PO-Revision-Date: 2017-12-09 01:29+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -2882,7 +2882,7 @@ msgstr "S&auvegarder le projet sous..."
 
 #: src/Menus.cpp
 msgid "Save Othe&r"
-msgstr "Sauvega&rde autre"
+msgstr "Aut&re type de sauvegarde"
 
 #: src/Menus.cpp
 msgid "Export as MP&3"
@@ -6432,7 +6432,9 @@ msgstr "Mono, "
 msgid "Left, "
 msgstr "Gauche, "
 
-#: src/TrackPan "
+#: src/TrackPanel.cpp
+msgid "Right, "
+msgstr "Droit, "
 
 #: src/TrackPanel.cpp
 msgid "Stereo, 999999Hz"
