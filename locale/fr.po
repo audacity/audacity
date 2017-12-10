@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-11-06 13:24-0500\n"
-"PO-Revision-Date: 2017-12-10 00:04+0100\n"
+"PO-Revision-Date: 2017-12-10 02:32+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/audacity/language/"
 "fr/)\n"
@@ -484,7 +484,7 @@ msgstr "À propos d’Audacity"
 #: src/AboutDialog.cpp src/effects/nyquist/Nyquist.cpp
 #: src/widgets/ErrorDialog.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
-msgstr "OK"
+msgstr "Valider"
 
 #: src/AboutDialog.cpp
 msgid ""
@@ -636,7 +636,7 @@ msgstr "Import et export Ogg Vorbis "
 
 #: src/AboutDialog.cpp
 msgid "ID3 tag support"
-msgstr "Support des tag ID3"
+msgstr "Support des balises ID3"
 
 #: src/AboutDialog.cpp
 msgid "FLAC import and export"
@@ -1626,7 +1626,7 @@ msgstr "TEST ÉCHOUÉ&nbsp;!!!\n"
 #: src/Benchmark.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "Benchmark completed successfully.\n"
-msgstr "Test de performance complété avec succès.\n"
+msgstr "Test de performance terminé avec succès.\n"
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -1833,7 +1833,7 @@ msgstr "Bloc %s modifié pour un nouveau nom d’alias\n"
 #. "Found problems with <sequence> when checking project file."
 #: src/DirManager.cpp
 msgid "Project check read faulty Sequence tags."
-msgstr "La vérification du projet a lu des tags de séquence incorrects."
+msgstr "La vérification du projet a lu des balises de séquence incorrectes."
 
 #: src/DirManager.cpp
 msgid "Close project immediately with no changes"
@@ -1851,7 +1851,7 @@ msgstr ""
 
 #: src/DirManager.cpp
 msgid "Warning - Problems Reading Sequence Tags"
-msgstr "Attention - problème de lecture des tags de séquence"
+msgstr "Attention - problème de lecture des balises de séquence"
 
 #: src/DirManager.cpp
 msgid "Inspecting project file data"
@@ -2626,15 +2626,16 @@ msgstr "Abandonner (&s)"
 
 #: src/HistoryWindow.cpp
 msgid "Clipboard space used"
-msgstr "Espace presse-papier utilisé"
+msgstr "Espace utilisé du presse-papier"
 
 #: src/HistoryWindow.cpp
 msgid "Discard"
 msgstr "Abandonner"
 
 #: src/HistoryWindow.cpp src/export/ExportCL.cpp
+# trebmuh to check (accélérateur)
 msgid "&OK"
-msgstr "&OK"
+msgstr "Valider (&o)"
 
 #: src/InconsistencyException.cpp
 #, c-format
@@ -3074,7 +3075,7 @@ msgstr "Coller le te&xte dans un nouveau marqueur"
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "&Type to Create a Label (on/off)"
-msgstr "&Taper pour créer un marqueur (on/off)"
+msgstr "&Taper pour créer un marqueur (marche/arrêt)"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
@@ -3563,17 +3564,18 @@ msgid "Remo&ve Tracks"
 msgstr "Sup&primer la (les) piste(s)"
 
 #: src/Menus.cpp
-# trebmuh to check
+# trebmuh to check (accélérateur)
 msgid "M&ute/Unmute"
-msgstr "Muet basc&ule marche/arrêt sur la piste visée"
+msgstr "Silencer/désilencer (&u)"
 
 #: src/Menus.cpp
+# trebmuh to check (accélérateur)
 msgid "&Mute All Tracks"
-msgstr "Toutes les pistes &muettes"
+msgstr "Silencer toutes les pistes (&m)"
 
 #: src/Menus.cpp
 msgid "&Unmute All Tracks"
-msgstr "&Aucune piste muette"
+msgstr "Désilencer to&utes les pistes"
 
 #: src/Menus.cpp
 # trebmuh to check (vérifier que ce n’est pas une abbréviation)
@@ -4165,8 +4167,9 @@ msgid "Op&en menu on focused track"
 msgstr "Ouvrir le me&nu sur la piste visée"
 
 #: src/Menus.cpp
+# trebmuh to check (accélérateur)
 msgid "M&ute/Unmute focused track"
-msgstr "M&uet ou pas sur la piste visée"
+msgstr "Silencer/désilencer la piste visée (&u)"
 
 #: src/Menus.cpp
 # trebmuh to check
@@ -4463,7 +4466,7 @@ msgstr "Dupliquer"
 #. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
 #: src/Menus.cpp
 msgid "Cut labeled audio regions to clipboard"
-msgstr "Régions audio marquées coupées vers le presse-papier"
+msgstr "Couper les régions audio marquées vers le presse-papier"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4473,7 +4476,7 @@ msgstr "Couper l’audio marquée"
 #. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
 #: src/Menus.cpp
 msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Régions audio marquées scindées vers le presse-papiers"
+msgstr "Régions audio marquées scindées vers le presse-papier"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/Menus.cpp
@@ -4482,7 +4485,7 @@ msgstr "Scinder l’audio marquée"
 
 #: src/Menus.cpp
 msgid "Copied labeled audio regions to clipboard"
-msgstr "Régions de l’audio marquée copiées vers le presse-papiers"
+msgstr "Régions de l’audio marquée copiées vers le presse-papier"
 
 #. i18n-hint: (verb)
 #: src/Menus.cpp
@@ -4517,7 +4520,7 @@ msgstr "Régions audio marquées muettes"
 #. i18n-hint: (verb)
 #: src/Menus.cpp
 msgid "Silence Labeled Audio"
-msgstr "Rendre muet l’audio marquée"
+msgstr "Silencer l’audio marquée"
 
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
 #: src/Menus.cpp
@@ -4930,7 +4933,7 @@ msgstr "Panoramique"
 #: src/MixerBoard.cpp src/TrackPanel.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 msgid "Mute"
-msgstr "Muet"
+msgstr "Silencer"
 
 #. i18n-hint: This is on a button that will silence all the other tracks.
 #: src/MixerBoard.cpp src/TrackPanel.cpp
@@ -5045,7 +5048,7 @@ msgstr "Gestionnaire de greffon&nbsp;: effets, générateurs, et analyseurs"
 msgid "Select effects, click the Enable or Disable button, then click OK."
 msgstr ""
 "Sélectionnez des effets, cliquez sur le bouton Activer ou Désactiver, puis "
-"cliquez sur OK."
+"cliquez sur Valider."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -5904,7 +5907,7 @@ msgstr ""
 
 #: src/Tags.cpp
 msgid "Tag"
-msgstr "Étiquette "
+msgstr "Balise "
 
 #: src/Tags.cpp
 msgid "Value"
@@ -5968,7 +5971,7 @@ msgstr "Sauvegarder les métadonnées sous&nbsp;:"
 
 #: src/Tags.cpp
 msgid "Error Saving Tags File"
-msgstr "Erreur de sauvegarde du fichier tags"
+msgstr "Erreur de sauvegarde du fichier de balises"
 
 #: src/Theme.cpp
 #, c-format
@@ -6923,7 +6926,7 @@ msgstr "Changer la vitesse, en modifiant tempo et hauteur"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Speed Multiplier:"
-msgstr "Multiplicateur de Vitesse&nbsp;:"
+msgstr "Multiplicateur de vitesse&nbsp;:"
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #: src/effects/ChangeSpeed.cpp
@@ -7052,11 +7055,11 @@ msgstr "Attaque"
 
 #: src/effects/Compressor.cpp
 msgid "Release Time:"
-msgstr "Temps de relâchement&nbsp;:"
+msgstr "Temps de relâche&nbsp;:"
 
 #: src/effects/Compressor.cpp
 msgid "Release Time"
-msgstr "Temps de relâchement"
+msgstr "Temps de relâche"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp
@@ -7120,7 +7123,7 @@ msgstr "%.2f secs"
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "Release Time %.1f secs"
-msgstr "Temps de relâchement de %.1f secs"
+msgstr "Temps de relâche de %.1f secs"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -8269,7 +8272,7 @@ msgid ""
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
 "Renommer 'sans nom' pour sauvegarder une nouvelle entrée.\n"
-"'OK' sauvegarde toutes les modifications, 'Annuler' aucune."
+"'Valider' sauvegarde toutes les modifications, 'Annuler' aucune."
 
 #: src/effects/Equalization.cpp
 msgid "'unnamed' always stays at the bottom of the list"
@@ -8590,7 +8593,7 @@ msgid ""
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
 "Sélectionnez toute l’audio devant être filtrée, choisissez la quantité de\n"
-"bruit que vous souhaitez retirer, et cliquez sur 'OK' pour réduire le bruit.\n"
+"bruit que vous souhaitez retirer, et cliquez sur 'Valider' pour réduire le bruit.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -8702,7 +8705,7 @@ msgid ""
 msgstr ""
 "Sélectionnez toute l’audio devant être filtrée,\n"
 "choisissez la quantité de bruit que vous souhaitez retirer,\n"
-"cliquez ensuite sur 'OK' pour supprimer le bruit.\n"
+"cliquez ensuite sur 'Valider' pour supprimer le bruit.\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -10113,7 +10116,7 @@ msgstr "Toute la sélection audio est muette."
 
 #: src/export/Export.cpp src/export/ExportMultiple.cpp
 msgid "All audio is muted."
-msgstr "Tout l’audio est muette."
+msgstr "Toute l’audio est muette."
 
 #: src/export/Export.cpp
 msgid "Unable to export"
@@ -10506,7 +10509,7 @@ msgstr "Fichiers (FFmpeg) AMR (bande étroite)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "WMA (version 2) Fichiers (FFmpeg)"
+msgstr "Fichiers (FFmpeg) WMA (version 2)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Custom FFmpeg Export"
@@ -10609,16 +10612,15 @@ msgstr "VBL"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Tag:"
-msgstr "Étiquette&nbsp;:"
+msgstr "Balise&nbsp;:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-# trebmuh to check ("tag" -> "entête" ? "Étiquette" peut être)
 msgid ""
 "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
 msgstr ""
-"Entête de codec (FOURCC)\n"
+"Balise de codec (FOURCC)\n"
 "Optionnel\n"
 "vide - automatique"
 
@@ -11281,7 +11283,7 @@ msgstr "Renommer le fichier&nbsp;:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Using Label/Track Name"
-msgstr "selon le marqueur ou le nom de piste"
+msgstr "Selon le marqueur ou le nom de piste"
 
 #: src/export/ExportMultiple.cpp
 msgid "Numbering before Label/Track Name"
@@ -12551,7 +12553,7 @@ msgstr ""
 "\n"
 "\t'%s'\n"
 "\n"
-"Cliquez OK pour plutôt assigner le raccourci à&nbsp;:\n"
+"Cliquez sur Valider pour plutôt assigner le raccourci à&nbsp;:\n"
 "\n"
 "\t'%s'.\n"
 "\n"
@@ -12880,7 +12882,7 @@ msgstr "Défilement des pistes haut ou bas"
 #: src/prefs/MousePrefs.cpp
 # trebmuh to check (vérifier dans un contexte graphique)
 msgid "Shift-Wheel-Rotate"
-msgstr "Maj + roulette de souris"
+msgstr "Maj + molette de souris"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Scroll waveform"
@@ -14685,7 +14687,7 @@ msgstr "Déplacé '%s' %s"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
-msgstr "Cliauer pour zoom avant, Maj + clic pour zoom arrière"
+msgstr "Cliquer pour zoom avant, Maj + clic pour zoom arrière"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
