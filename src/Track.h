@@ -187,7 +187,7 @@ class AUDACITY_DLL_API Track /* not final */
    virtual void SetHeight(int h);
 #endif
    bool GetMinimized() const;
-   void SetMinimized(bool isMinimized);
+   virtual void SetMinimized(bool isMinimized);
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    float GetVirtualTrackPercentage() const { return mPerY;}
    void SetVirtualTrackPercentage(float val) { mPerY = val;}

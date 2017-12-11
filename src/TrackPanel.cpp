@@ -1572,7 +1572,9 @@ void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
    ClearTargets();
    
+   // This is bad.  We are lying abou the event by saying it is a mouse up.
    wxMouseEvent e(wxEVT_LEFT_UP);
+   e.SetId( kCaptureLostEventId );
 
    e.m_x = mMouseMostRecentX;
    e.m_y = mMouseMostRecentY;
@@ -3496,11 +3498,14 @@ void TrackPanelCellIterator::UpdateRect()
             break;
          }
          case CellType::VRuler:
-            mRect.x = kTrackInfoWidth;
-            // Only half the VRuler is active.
-            mRect.width = (mPanel->GetLeftOffset() - mRect.x)/2.0;
-            mRect.y += kTopMargin;
-            mRect.height -= (kBottomMargin + kTopMargin);
+            {
+               const int kGuard = 8; // 8 pixels to reduce risk of VZooming accidentally
+               mRect.x = kTrackInfoWidth;
+               // Right edge of the VRuler is inactive.
+               mRect.width = mPanel->GetLeftOffset() - mRect.x -kGuard;
+               mRect.y += kTopMargin;
+               mRect.height -= (kBottomMargin + kTopMargin);
+            }
             break;
          case CellType::Resizer: {
             // The resizer region encompasses the bottom margin proper to this

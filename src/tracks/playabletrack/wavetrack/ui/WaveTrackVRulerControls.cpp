@@ -45,6 +45,22 @@ std::vector<UIHandlePtr> WaveTrackVRulerControls::HitTest
    return results;
 }
 
+void WaveTrackVRulerControls::DoZoomPreset( int i)
+{
+
+   const auto pTrack = FindTrack();
+   if (!pTrack)
+      return;
+   wxASSERT(pTrack->GetKind() == Track::Wave);
+
+   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+
+   WaveTrackVZoomHandle::DoZoom(
+         NULL, wt, (i==1)?kZoomHalfWave: kZoom1to1,
+         wxRect(0,0,0,0), 0,0, true);
+}
+
+
 unsigned WaveTrackVRulerControls::HandleWheelRotation
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -122,7 +138,7 @@ unsigned WaveTrackVRulerControls::HandleWheelRotation
    else if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
       WaveTrackVZoomHandle::DoZoom(
-         pProject, wt, false, (steps < 0),
+         pProject, wt, (steps < 0)?kZoomOut:kZoomIn,
          evt.rect, yy, yy, true);
    }
    else if (!event.CmdDown() && event.ShiftDown()) {

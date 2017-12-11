@@ -18,6 +18,10 @@ class wxSize;
 class TrackPanelCell;
 #include "MemoryX.h"
 
+// This is a hack so that the code that fakes a MOUSE_LEFT_BTN_UP on
+// capture lost doesn't get in the way of handling MOUSE_RIGHT_BTN_UP.
+const int kCaptureLostEventId = 19019;
+
 // Augment a mouse state with information about which track panel cell and
 // sub-rectangle was hit.
 struct TrackPanelMouseState

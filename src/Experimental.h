@@ -67,6 +67,10 @@
 // Wavetrack, and draws its notes and lines over the top.
 #define EXPERIMENTAL_NOTETRACK_OVERLAY
 
+// Define this, and the option to zoom to half wave is added in the VZoom menu.
+// Also we go to half wave on collapse, full wave on restore.
+#define EXPERIMENTAL_HALF_WAVE
+
 // EXPERIMENTAL_THEMING is mostly mainstream now.
 // the define is still present to mark out old code before theming, that we might
 // conceivably need.

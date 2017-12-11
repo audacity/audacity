@@ -162,6 +162,8 @@ class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
    void SetVirtualState(bool state, bool half=false);
 #endif
 
+   void SetMinimized(bool isMinimized) override;
+
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 

@@ -61,6 +61,10 @@ Track classes.
 #include "Experimental.h"
 
 #include "TrackPanel.h" // for TrackInfo
+// Assumptions in objects separation were wrong.  We need to activate
+// VZooming (that lives in WaveTrackVRulerHandle) from an action on the
+// TCP collapse/expand.  So we need visibility here.
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackVRulerControls.h"
 
 using std::max;
 
@@ -538,6 +542,22 @@ float WaveTrack::GetChannelGain(int channel) const
       return left*mGain;
    else
       return right*mGain;
+}
+
+void WaveTrack::SetMinimized(bool isMinimized){
+
+#ifdef EXPERIMENTAL_HALF_WAVE
+   // Show half wave on collapse, full on restore.
+   std::shared_ptr<TrackVRulerControls> pTvc = GetVRulerControls();
+
+   // An awkward workaround for a function that lives 'in the wrong place'.
+   // We use magic numbers, 0 and 1, to tell it to zoom reset or zoom half-wave.
+   WaveTrackVRulerControls * pWtvc = reinterpret_cast<WaveTrackVRulerControls*>(pTvc.get());
+   if( pWtvc )
+      pWtvc->DoZoomPreset( isMinimized ? 1:0);
+#endif
+
+   Track::SetMinimized( isMinimized );
 }
 
 void WaveTrack::SetWaveColorIndex(int colorIndex)
