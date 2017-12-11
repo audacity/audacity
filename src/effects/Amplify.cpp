@@ -242,8 +242,8 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
          double maxAmp = MAX_Amp + LINEAR_TO_DB(mPeak);
 
          // min and max need same precision as what we're validating (bug 963)
-         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precission));
-         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precission));
+         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precission +1));
+         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precission +1));
 
          vldNewPeak.SetRange(minAmp, maxAmp);
          mNewPeakT = S.Id(ID_Peak).AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);
