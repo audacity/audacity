@@ -694,7 +694,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
          {
              wxMenuItem *pItem = *iter;
              // Remove accelerator, if any.
-             pItem->SetText( (pItem->GetText() + "\t" ).BeforeFirst('\t') );
+             pItem->SetItemLabel( (pItem->GetItemLabel() + "\t" ).BeforeFirst('\t') );
          }
       }
 
