@@ -57,6 +57,16 @@
 // DA: Enables dark audacity theme and customisations.
 //#define EXPERIMENTAL_DA
 
+// These CFG macros allow easy distinction between Audacity and DA defaults.
+#ifdef EXPERIMENTAL_DA
+#define CFG_A( x ) 
+#define CFG_DA( x ) x
+#else
+#define CFG_A( x ) x
+#define CFG_DA( x ) 
+#endif
+
+
 // Define this so that sync-lock tiles shine through spectrogram.
 // The spectrogram pastes a bitmap over the tiles.
 // This makes it use alpha blending, most transparent where least intense.

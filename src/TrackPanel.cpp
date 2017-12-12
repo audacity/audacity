@@ -3499,7 +3499,7 @@ void TrackPanelCellIterator::UpdateRect()
          }
          case CellType::VRuler:
             {
-               const int kGuard = 8; // 8 pixels to reduce risk of VZooming accidentally
+               const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
                mRect.x = kTrackInfoWidth;
                // Right edge of the VRuler is inactive.
                mRect.width = mPanel->GetLeftOffset() - mRect.x -kGuard;

@@ -41,7 +41,7 @@ bool IsDragZooming(int zoomStart, int zoomEnd)
 {
    const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
    bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
    return bVZoom && (abs(zoomEnd - zoomStart) > DragThreshold);
 }
 
@@ -607,7 +607,7 @@ HitTestPreview WaveTrackVZoomHandle::HitPreview(const wxMouseState &state)
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
    static  wxCursor arrowCursor{ wxCURSOR_ARROW };
    bool bVZoom;
-   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+   gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
    bVZoom &= !state.RightIsDown();
    const auto message = bVZoom ? 
       _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.") :
@@ -682,7 +682,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
       std::unique_ptr<PopupMenuTable::Menu>
          pMenu(PopupMenuTable::BuildMenu(pParent, pTable, &data));
       bool bVZoom;
-      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
 
       // Accelerators only if zooming enabled.
       if( !bVZoom )
@@ -705,7 +705,7 @@ UIHandle::Result WaveTrackVZoomHandle::Release
    }
    else{
       bool bVZoom;
-      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, false);
+      gPrefs->Read(wxT("/GUI/VerticalZooming"), &bVZoom, CFG_DA(!) true);
       // Ignore Capture Lost event 
       bVZoom &= event.GetId() != kCaptureLostEventId;
       // shiftDown | rightUp | ZoomKind
